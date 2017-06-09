@@ -19,12 +19,14 @@
 
 package org.comixed.ui;
 
+import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
 
 import org.comixed.ComixEdApp;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <code>MainFrame</code> defines the main window for the GUI application.
@@ -36,6 +38,9 @@ public class MainFrame extends JFrame implements
                        InitializingBean
 {
     private static final long serialVersionUID = -6880161504037716183L;
+
+    @Autowired
+    private MainClientPanel mainClientPane;
 
     public MainFrame() throws HeadlessException
     {

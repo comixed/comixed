@@ -19,24 +19,17 @@
 
 package org.comixed.ui;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import javax.swing.JPanel;
 
-@Configuration
-public class GuiConfiguration
+/**
+ * <code>MainClientPanel</code> manages the main portion of the application's
+ * window, including the status bar and comic cover views.
+ * 
+ * @author Darryl L. Pierce
+ *
+ */
+public class MainClientPanel extends JPanel
 {
-    private MainFrame mainFrame = new MainFrame();
-    private MainClientPanel mainClientPanel = new MainClientPanel();
+    private static final long serialVersionUID = -6194561704845594236L;
 
-    @Bean
-    public MainFrame mainFrame()
-    {
-        return mainFrame;
-    }
-
-    @Bean
-    public MainClientPanel mainClientPanel()
-    {
-        return mainClientPanel;
-    }
 }
