@@ -44,6 +44,8 @@ public class MainFrame extends JFrame implements
 
     @Autowired
     private MainClientPanel mainClientPane;
+    @Autowired
+    private StatusBar statusBar;
 
     public MainFrame() throws HeadlessException
     {
@@ -57,6 +59,7 @@ public class MainFrame extends JFrame implements
         updateFrameTitle();
         // build the user interface
         getContentPane().add(mainClientPane, BorderLayout.CENTER);
+        getContentPane().add(statusBar, BorderLayout.SOUTH);
         // set a default size and location
         setSize(getDefaultDimensions());
         setLocation(getDefaultLocation());

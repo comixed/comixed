@@ -19,31 +19,22 @@
 
 package org.comixed.ui;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
-@Configuration
-public class GuiConfiguration
+/**
+ * <code>StatusBar</code> shows ongoing status of the application subsystems.
+ * 
+ * @author Darryl L. Pierce
+ *
+ */
+public class StatusBar extends JPanel
 {
-    private MainFrame mainFrame = new MainFrame();
-    private MainClientPanel mainClientPanel = new MainClientPanel();
-    private StatusBar statusBar = new StatusBar();
+    private static final long serialVersionUID = 228129338982896691L;
 
-    @Bean
-    public MainFrame mainFrame()
+    public StatusBar()
     {
-        return mainFrame;
-    }
-
-    @Bean
-    public MainClientPanel mainClientPanel()
-    {
-        return mainClientPanel;
-    }
-
-    @Bean
-    public StatusBar statusBar()
-    {
-        return statusBar;
+        super();
+        this.setBorder(new BevelBorder(BevelBorder.LOWERED));
     }
 }
