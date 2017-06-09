@@ -30,6 +30,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ComixEdApp implements
                         CommandLineRunner
 {
+    private static final int VERSION_MAJOR = 0;
+    private static final int VERSION_MINOR = 1;
+    private static final int VERSION_RELEASE = 1;
+    private static final String VERSION = VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_RELEASE;
+    private static final String FULL_NAME = "ComixEd";
+    public static final String FULL_NAME_AND_VERSION = FULL_NAME + " " + VERSION;
+
     @Autowired
     private MainFrame mainFrame;
 

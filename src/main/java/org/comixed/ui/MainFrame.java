@@ -19,7 +19,12 @@
 
 package org.comixed.ui;
 
+import java.awt.HeadlessException;
+
 import javax.swing.JFrame;
+
+import org.comixed.ComixEdApp;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * <code>MainFrame</code> defines the main window for the GUI application.
@@ -27,7 +32,25 @@ import javax.swing.JFrame;
  * @author Darryl L. Pierce
  *
  */
-public class MainFrame extends JFrame
+public class MainFrame extends JFrame implements
+                       InitializingBean
 {
     private static final long serialVersionUID = -6880161504037716183L;
+
+    public MainFrame() throws HeadlessException
+    {
+        super();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        updateFrameTitle();
+    }
+
+    private void updateFrameTitle()
+    {
+        setTitle(ComixEdApp.FULL_NAME_AND_VERSION);
+    }
 }
