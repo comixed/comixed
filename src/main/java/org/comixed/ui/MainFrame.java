@@ -20,7 +20,10 @@
 package org.comixed.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.Point;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
@@ -52,6 +55,31 @@ public class MainFrame extends JFrame implements
     public void afterPropertiesSet() throws Exception
     {
         updateFrameTitle();
+        // build the user interface
+        getContentPane().add(mainClientPane, BorderLayout.CENTER);
+        // set a default size and location
+        setSize(getDefaultDimensions());
+        setLocation(getDefaultLocation());
+    }
+
+    private Dimension getDefaultDimensions()
+    {
+        Dimension area = Toolkit.getDefaultToolkit().getScreenSize();
+
+        int width = (int )(area.getWidth() * 0.75);
+        int height = (int )(area.getHeight() * 0.75);
+
+        return new Dimension(width, height);
+    }
+
+    private Point getDefaultLocation()
+    {
+        Dimension area = Toolkit.getDefaultToolkit().getScreenSize();
+
+        int xpos = (int )(area.getWidth() * 0.125);
+        int ypos = (int )(area.getHeight() * 0.125);
+
+        return new Point(xpos, ypos);
     }
 
     private void updateFrameTitle()
