@@ -17,40 +17,19 @@
  * org.comixed;
  */
 
-package org.comixed.ui;
+package org.comixed.ui.actions;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class GuiConfiguration
+public class ActionConfiguration
 {
-    private MainFrame mainFrame = new MainFrame();
-    private MainClientPanel mainClientPanel = new MainClientPanel();
-    private StatusBar statusBar = new StatusBar();
-    private MainMenuBar mainMenuBar = new MainMenuBar();
+    private FileExitAction fileExitAction = new FileExitAction();
 
     @Bean
-    public MainFrame mainFrame()
+    public FileExitAction fileExitAction()
     {
-        return mainFrame;
-    }
-
-    @Bean
-    public MainClientPanel mainClientPanel()
-    {
-        return mainClientPanel;
-    }
-
-    @Bean
-    public StatusBar statusBar()
-    {
-        return statusBar;
-    }
-
-    @Bean
-    public MainMenuBar mainMenuBar()
-    {
-        return mainMenuBar;
+        return fileExitAction;
     }
 }

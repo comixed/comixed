@@ -46,6 +46,8 @@ public class MainFrame extends JFrame implements
     private MainClientPanel mainClientPane;
     @Autowired
     private StatusBar statusBar;
+    @Autowired
+    private MainMenuBar menuBar;
 
     public MainFrame() throws HeadlessException
     {
@@ -63,6 +65,8 @@ public class MainFrame extends JFrame implements
         // set a default size and location
         setSize(getDefaultDimensions());
         setLocation(getDefaultLocation());
+        // add the menubar
+        setJMenuBar(menuBar);
     }
 
     private Dimension getDefaultDimensions()

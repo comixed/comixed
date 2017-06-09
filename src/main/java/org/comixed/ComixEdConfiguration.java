@@ -17,40 +17,27 @@
  * org.comixed;
  */
 
-package org.comixed.ui;
+package org.comixed;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.AbstractResourceBasedMessageSource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
-public class GuiConfiguration
+public class ComixEdConfiguration
 {
-    private MainFrame mainFrame = new MainFrame();
-    private MainClientPanel mainClientPanel = new MainClientPanel();
-    private StatusBar statusBar = new StatusBar();
-    private MainMenuBar mainMenuBar = new MainMenuBar();
+    private MessageSource messageSource;
 
     @Bean
-    public MainFrame mainFrame()
+    public MessageSource messageSource()
     {
-        return mainFrame;
-    }
-
-    @Bean
-    public MainClientPanel mainClientPanel()
-    {
-        return mainClientPanel;
-    }
-
-    @Bean
-    public StatusBar statusBar()
-    {
-        return statusBar;
-    }
-
-    @Bean
-    public MainMenuBar mainMenuBar()
-    {
-        return mainMenuBar;
+        if (messageSource == null)
+        {
+            messageSource = new ReloadableResourceBundleMessageSource();
+            ((AbstractResourceBasedMessageSource )messageSource).setBasename("classpath:locale/messages");
+        }
+        return messageSource;
     }
 }

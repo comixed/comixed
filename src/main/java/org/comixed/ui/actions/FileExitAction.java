@@ -17,40 +17,33 @@
  * org.comixed;
  */
 
-package org.comixed.ui;
+package org.comixed.ui.actions;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 
-@Configuration
-public class GuiConfiguration
+import javax.swing.AbstractAction;
+
+import org.comixed.ui.MainFrame;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * <code>FileExitAction</code> responds to the File->Exit menu item.
+ * 
+ * @author Darryl L. Pierce
+ *
+ */
+public class FileExitAction extends AbstractAction
 {
-    private MainFrame mainFrame = new MainFrame();
-    private MainClientPanel mainClientPanel = new MainClientPanel();
-    private StatusBar statusBar = new StatusBar();
-    private MainMenuBar mainMenuBar = new MainMenuBar();
+    private static final long serialVersionUID = 7400132309418120634L;
 
-    @Bean
-    public MainFrame mainFrame()
+    @Autowired
+    private MainFrame mainFrame;
+
+    @Override
+    public void actionPerformed(ActionEvent e)
     {
-        return mainFrame;
+        mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
     }
 
-    @Bean
-    public MainClientPanel mainClientPanel()
-    {
-        return mainClientPanel;
-    }
-
-    @Bean
-    public StatusBar statusBar()
-    {
-        return statusBar;
-    }
-
-    @Bean
-    public MainMenuBar mainMenuBar()
-    {
-        return mainMenuBar;
-    }
 }
