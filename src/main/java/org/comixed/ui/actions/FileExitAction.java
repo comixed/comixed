@@ -21,11 +21,14 @@ package org.comixed.ui.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
+import java.util.Locale;
 
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 
 import org.comixed.ui.MainFrame;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 
 /**
  * <code>FileExitAction</code> responds to the File->Exit menu item.
@@ -38,12 +41,23 @@ public class FileExitAction extends AbstractAction
     private static final long serialVersionUID = 7400132309418120634L;
 
     @Autowired
+    private MessageSource messageSource;
+    @Autowired
     private MainFrame mainFrame;
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+        int choice = JOptionPane.showConfirmDialog(mainFrame,
+                                                   messageSource.getMessage("dialog.confirm.exit.label", null,
+                                                                            Locale.getDefault()),
+                                                   messageSource.getMessage("dialog.confirm.exit.title", null,
+                                                                            Locale.getDefault()),
+                                                   JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (choice == JOptionPane.YES_OPTION)
+        {
+            mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+        }
     }
 
 }
