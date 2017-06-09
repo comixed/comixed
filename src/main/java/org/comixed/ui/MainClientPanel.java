@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 
 /**
  * <code>MainClientPanel</code> manages the main portion of the application's
- * window, including the status bar and comic cover views.
+ * window.
  * 
  * @author Darryl L. Pierce
  *
@@ -31,5 +31,4 @@ import javax.swing.JPanel;
 public class MainClientPanel extends JPanel
 {
     private static final long serialVersionUID = -6194561704845594236L;
-
 }
