@@ -16,4 +16,4 @@ log4j.appender.file.layout=org.apache.log4j.PatternLayout
 log4j.appender.file.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
 
 logging.level.org.springframework=INFO
-logging.level.org.comixed=WARN
+logging.level.org.comixed=DEBUG
