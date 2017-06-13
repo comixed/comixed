@@ -24,13 +24,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,53 +49,78 @@ import org.slf4j.LoggerFactory;
  *
  */
 @Entity
+@Table(name = "comics")
 public class Comic
 {
+    @Transient
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "filename",
-            nullable = false)
+            nullable = false,
+            unique = true)
     private String filename;
 
-    @Transient
+    @Column(name = "comic_vine_id")
     private String comicVineId;
 
-    @Transient
+    @Column(name = "added_date",
+            updatable = false,
+            nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateAdded = new Date();
+
+    @Column(name = "cover_date",
+            nullable = true)
+    @Temporal(TemporalType.DATE)
     private Date coverDate;
 
-    @Transient
-    private Date dateAdded;
-
-    @Transient
-    private String description;
-
-    @Transient
-    private String issueNumber;
-
-    @Transient
+    @Column(name = "last_read_date",
+            nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastReadDate;
 
-    @Transient
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Transient
-    private List<String> storyArcs = new ArrayList<>();
-
-    @Transient
+    @Column(name = "volume")
     private String volume;
 
-    @Transient
+    @Column(name = "issue_number")
+    private String issueNumber;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "summary")
     private String summary;
 
-    @Transient
+    @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @CollectionTable(name = "comic_story_arcs",
+                     joinColumns = @JoinColumn(name = "comic_id"))
+    @Column(name = "story_arc_name")
+    private List<String> storyArcs = new ArrayList<>();
+
+    @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @CollectionTable(name = "comic_teams",
+                     joinColumns = @JoinColumn(name = "comic_id"))
+    @Column(name = "team_name")
     private List<String> teams = new ArrayList<>();
 
-    @Transient
+    @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @CollectionTable(name = "comic_characters",
+                     joinColumns = @JoinColumn(name = "comic_id"))
+    @Column(name = "character_name")
     private List<String> characters = new ArrayList<>();
 
-    @Transient
+    @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @CollectionTable(name = "comic_locations",
+                     joinColumns = @JoinColumn(name = "comic_id"))
+    @Column(name = "location_name")
     private List<String> locations = new ArrayList<>();
 
     /**
@@ -265,6 +298,16 @@ public class Comic
     public String getFilename()
     {
         return this.filename;
+    }
+
+    /**
+     * Returns the comic's ID.
+     *
+     * @return the ID
+     */
+    public Long getId()
+    {
+        return this.id;
     }
 
     /**
