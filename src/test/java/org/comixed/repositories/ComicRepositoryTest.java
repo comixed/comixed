@@ -76,7 +76,7 @@ public class ComicRepositoryTest
         repository.save(comic);
     }
 
-    @Test(expected = JpaSystemException.class)
+    @Test(expected = DataIntegrityViolationException.class)
     public void testFilenameMustBeUnique()
     {
         Comic newComic = new Comic();
