@@ -1,3 +1,11 @@
+# JPA configuration
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.naming-strategy = org.hibernate.cfg.ImprovedNamingStrategy
+
+spring.datasource.url=jdbc:h2:file:./test_database/comixed;create=true
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+
 # Logging
 logging.level.root=WARN
 logging.level.org.springframework=INFO
