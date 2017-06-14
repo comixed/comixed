@@ -19,8 +19,19 @@
 
 package org.comixed.ui;
 
+import javax.swing.JFileChooser;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GuiContext
-{}
+{
+    private JFileChooser fileChooser = new JFileChooser();
+
+    @Bean
+    public JFileChooser fileChooser()
+    {
+        return fileChooser;
+    }
+}
