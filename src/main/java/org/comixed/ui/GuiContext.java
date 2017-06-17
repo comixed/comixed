@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class GuiConfiguration
+public class GuiContext
 {
     private MainFrame mainFrame = new MainFrame();
     private MainClientPanel mainClientPanel = new MainClientPanel();
