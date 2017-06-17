@@ -21,6 +21,8 @@ package org.comixed.ui;
 
 import javax.swing.JPanel;
 
+import org.springframework.stereotype.Component;
+
 /**
  * <code>MainClientPanel</code> manages the main portion of the application's
  * window.
@@ -28,6 +30,7 @@ import javax.swing.JPanel;
  * @author Darryl L. Pierce
  *
  */
+@Component
 public class MainClientPanel extends JPanel
 {
     private static final long serialVersionUID = -6194561704845594236L;
