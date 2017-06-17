@@ -31,6 +31,7 @@ import org.comixed.ui.actions.FileExitAction;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Component;
 
 /**
  * <code>MainMenuBar</code> manages the menu bar for the main application
@@ -39,6 +40,7 @@ import org.springframework.context.MessageSource;
  * @author Darryl L. Pierce
  *
  */
+@Component
 public class MainMenuBar extends JMenuBar implements
                          InitializingBean
 {

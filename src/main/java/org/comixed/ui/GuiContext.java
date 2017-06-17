@@ -19,17 +19,8 @@
 
 package org.comixed.ui;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GuiContext
-{
-    private MainMenuBar mainMenuBar = new MainMenuBar();
-
-    @Bean
-    public MainMenuBar mainMenuBar()
-    {
-        return mainMenuBar;
-    }
-}
+{}
