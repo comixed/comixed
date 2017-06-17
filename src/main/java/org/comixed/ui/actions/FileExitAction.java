@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import org.comixed.ui.MainFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Component;
 
 /**
  * <code>FileExitAction</code> responds to the File->Exit menu item.
@@ -36,6 +37,7 @@ import org.springframework.context.MessageSource;
  * @author Darryl L. Pierce
  *
  */
+@Component
 public class FileExitAction extends AbstractAction
 {
     private static final long serialVersionUID = 7400132309418120634L;

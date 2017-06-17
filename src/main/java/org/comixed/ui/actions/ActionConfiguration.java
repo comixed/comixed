@@ -19,17 +19,8 @@
 
 package org.comixed.ui.actions;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ActionConfiguration
-{
-    private FileExitAction fileExitAction = new FileExitAction();
-
-    @Bean
-    public FileExitAction fileExitAction()
-    {
-        return fileExitAction;
-    }
-}
+{}
