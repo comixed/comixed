@@ -19,10 +19,28 @@
 
 package org.comixed.library.utils;
 
+import org.apache.tika.Tika;
+import org.apache.tika.metadata.Metadata;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan
 class UtilsContext
-{}
+{
+    private Tika tika = new Tika();
+    private Metadata metadata = new Metadata();
+
+    @Bean
+    public Tika tika()
+    {
+        return tika;
+    }
+
+    @Bean
+    public Metadata metadata()
+    {
+        return metadata;
+    }
+}
