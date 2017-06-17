@@ -22,12 +22,15 @@ package org.comixed.ui;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+import org.springframework.stereotype.Component;
+
 /**
  * <code>StatusBar</code> shows ongoing status of the application subsystems.
  * 
  * @author Darryl L. Pierce
  *
  */
+@Component
 public class StatusBar extends JPanel
 {
     private static final long serialVersionUID = 228129338982896691L;

@@ -25,14 +25,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GuiContext
 {
-    private StatusBar statusBar = new StatusBar();
     private MainMenuBar mainMenuBar = new MainMenuBar();
-
-    @Bean
-    public StatusBar statusBar()
-    {
-        return statusBar;
-    }
 
     @Bean
     public MainMenuBar mainMenuBar()
