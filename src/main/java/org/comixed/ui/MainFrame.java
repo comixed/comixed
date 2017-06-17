@@ -30,6 +30,7 @@ import javax.swing.JFrame;
 import org.comixed.ComixEdApp;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * <code>MainFrame</code> defines the main window for the GUI application.
@@ -37,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Darryl L. Pierce
  *
  */
+@Component
 public class MainFrame extends JFrame implements
                        InitializingBean
 {
