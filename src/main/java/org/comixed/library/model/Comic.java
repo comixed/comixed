@@ -24,14 +24,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -123,6 +127,12 @@ public class Comic
     @Column(name = "location_name")
     private List<String> locations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "comic",
+               cascade = CascadeType.ALL,
+               fetch = FetchType.EAGER)
+    @OrderColumn(name = "index")
+    private List<Page> pages;
+
     /**
      * Adds a character to the comic.
      *
@@ -155,6 +165,22 @@ public class Comic
             return;
         }
         this.locations.add(location);
+    }
+
+    /**
+     * Adds a new page to the comic.
+     *
+     * @param index
+     *            the index
+     *
+     * @param page
+     *            the page
+     */
+    public void addPage(int index, Page page)
+    {
+        this.logger.debug("Adding page: index=" + index + " hash=" + page.getHash());
+        page.setComic(this);
+        this.pages.add(index, page);
     }
 
     /**
@@ -215,6 +241,18 @@ public class Comic
     {
         this.logger.debug("Clearing story arcs");
         this.storyArcs.clear();
+    }
+
+    /**
+     * Deletes a page from the comic.
+     *
+     * @param index
+     *            the page index
+     */
+    public void deletePage(int index)
+    {
+        this.logger.debug("Deleting page: index=" + index);
+        this.pages.remove(index);
     }
 
     /**
@@ -340,6 +378,29 @@ public class Comic
     public int getLocationCount()
     {
         return this.locations.size();
+    }
+
+    /**
+     * Returns the page at the given index.
+     *
+     * @param index
+     *            the page index
+     * @return the page
+     */
+    public Page getPage(int index)
+    {
+        this.logger.debug("Returning page: index=" + index);
+        return this.pages.get(index);
+    }
+
+    /**
+     * Returns the number of pages associated with this comic.
+     *
+     * @return the page count
+     */
+    public int getPageCount()
+    {
+        return this.pages.size();
     }
 
     /**

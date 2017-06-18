@@ -22,13 +22,13 @@ package org.comixed.repositories;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.Page;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -322,12 +322,26 @@ public class ComicRepositoryTest
     @Test
     public void testPagesCanBeDeleted()
     {
-        fail("Not implemented yet");
+        int count = comic.getPageCount() - 1;
+        comic.deletePage(0);
+        repository.save(comic);
+
+        Comic result = repository.findOne(comic.getId());
+
+        assertEquals(count, result.getPageCount());
     }
 
     @Test
     public void testPagesCanBeAdded()
     {
-        fail("Not implemented yet");
+        int count = comic.getPageCount() + 1;
+        Page page = new Page("src/test/example.jpg", new byte[1024]);
+        comic.addPage(0, page);
+        repository.save(comic);
+
+        Comic result = repository.findOne(comic.getId());
+
+        assertEquals(count, result.getPageCount());
+        assertEquals(page, result.getPage(0));
     }
 }
