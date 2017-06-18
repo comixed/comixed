@@ -10,3 +10,7 @@ spring.jpa.hibernate.ddl-auto=update
 logging.level.root=WARN
 logging.level.org.springframework=INFO
 logging.level.org.comixed=DEBUG
+
+# Comic entry loaders
+comic-file.loaders.image/jpeg=ImageEntryLoader
+comic-file.loaders.image/png=ImageEntryLoader
