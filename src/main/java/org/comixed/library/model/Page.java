@@ -24,6 +24,14 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.swing.ImageIcon;
 
@@ -36,14 +44,35 @@ import org.slf4j.LoggerFactory;
  * @author Darryl L. Pierce
  *
  */
+@Entity
+@Table(name = "pages")
 public class Page
 {
     @Transient
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "comic_id")
     private Comic comic;
+
+    @Column(name = "filename",
+            updatable = true,
+            nullable = false)
     private String filename;
-    private byte[] content;
+
+    @Column(name = "hash",
+            updatable = true,
+            nullable = false)
     private String hash;
+
+    @Transient
+    private byte[] content;
+
+    @Transient
     private ImageIcon icon;
 
     /**

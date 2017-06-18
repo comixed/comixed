@@ -22,6 +22,7 @@ package org.comixed.repositories;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -34,7 +35,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -311,5 +311,23 @@ public class ComicRepositoryTest
     public void testLocations()
     {
         assertEquals(3, comic.getLocationCount());
+    }
+
+    @Test
+    public void testPageCount()
+    {
+        assertEquals(5, comic.getPageCount());
+    }
+
+    @Test
+    public void testPagesCanBeDeleted()
+    {
+        fail("Not implemented yet");
+    }
+
+    @Test
+    public void testPagesCanBeAdded()
+    {
+        fail("Not implemented yet");
     }
 }
