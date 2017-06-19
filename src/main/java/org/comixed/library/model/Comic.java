@@ -131,7 +131,7 @@ public class Comic
                cascade = CascadeType.ALL,
                fetch = FetchType.EAGER)
     @OrderColumn(name = "index")
-    private List<Page> pages;
+    private List<Page> pages = new ArrayList<Page>();
 
     /**
      * Adds a character to the comic.
