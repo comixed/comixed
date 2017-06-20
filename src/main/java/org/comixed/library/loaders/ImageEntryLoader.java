@@ -21,7 +21,16 @@ package org.comixed.library.loaders;
 
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
+import org.springframework.stereotype.Component;
 
+/**
+ * <code>ImageEntryLoader</code> loads an image and makes it a {@link Page} for
+ * a comic.
+ * 
+ * @author Darryl L. Pierce
+ *
+ */
+@Component
 public class ImageEntryLoader extends AbstractEntryLoader
 {
     @Override
