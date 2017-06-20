@@ -72,7 +72,7 @@ public class FileTypeIdentifier
         }
 
         logger.debug("result=" + result);
-        return result != null ? result.toString() : null;
+        return result != null ? result.getSubtype() : null;
     }
 
 }

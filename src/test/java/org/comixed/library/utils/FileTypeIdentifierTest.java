@@ -48,7 +48,7 @@ public class FileTypeIdentifierTest
         String result = fileTypeIdentifier.typeFor(new BufferedInputStream(new FileInputStream(TEST_CBZ_FILE)));
 
         assertNotNull(result);
-        assertEquals("application/zip", result);
+        assertEquals("zip", result);
     }
 
     @Test
@@ -57,6 +57,6 @@ public class FileTypeIdentifierTest
         String result = fileTypeIdentifier.typeFor(new BufferedInputStream(new FileInputStream(TEST_CBR_FILE)));
 
         assertNotNull(result);
-        assertEquals("application/x-rar-compressed", result);
+        assertEquals("x-rar-compressed", result);
     }
 }
