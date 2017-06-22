@@ -44,7 +44,7 @@ public class ZipArchiveLoaderTest
     private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
 
     @Autowired
-    private AbstractArchiveLoader archiveLoader;
+    private ZipArchiveLoader archiveLoader;
 
     private Comic comic;
 
