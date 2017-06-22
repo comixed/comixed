@@ -12,5 +12,7 @@ logging.level.org.springframework=INFO
 logging.level.org.comixed=DEBUG
 
 # Comic entry loaders
-comic-file.loaders.image/jpeg=ImageEntryLoader
-comic-file.loaders.image/png=ImageEntryLoader
+comic.entry.loaders[0].type=jpeg
+comic.entry.loaders[0].bean=imageEntryLoader
+comic.entry.loaders[1].type=png
+comic.entry.loaders[1]..bean=imageEntryLoader
