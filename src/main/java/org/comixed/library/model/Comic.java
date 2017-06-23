@@ -41,6 +41,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.comixed.library.loaders.ArchiveLoader;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
@@ -131,7 +132,10 @@ public class Comic
                cascade = CascadeType.ALL,
                fetch = FetchType.EAGER)
     @OrderColumn(name = "index")
-    private List<Page> pages = new ArrayList<Page>();
+    private List<Page> pages = new ArrayList<>();
+
+    @Transient
+    private ArchiveLoader loader;
 
     /**
      * Adds a character to the comic.
@@ -507,6 +511,18 @@ public class Comic
     public boolean hasTeams()
     {
         return (this.teams.isEmpty() == false);
+    }
+
+    /**
+     * Sets the archive loader for the comic.
+     *
+     * @param loader
+     *            the archive loader
+     */
+    public void setArchiveLoader(ArchiveLoader loader)
+    {
+        this.logger.debug("Setting archive loader: " + loader);
+        this.loader = loader;
     }
 
     /**
