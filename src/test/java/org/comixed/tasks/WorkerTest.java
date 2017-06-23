@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import net.jodah.concurrentunit.ConcurrentTestCase;
@@ -34,6 +35,7 @@ import net.jodah.concurrentunit.Waiter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Worker.class)
+@TestPropertySource(locations = "classpath:test-application.properties")
 public class WorkerTest extends ConcurrentTestCase
 {
     @Autowired

@@ -31,9 +31,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
+@TestPropertySource(locations = "classpath:test-application.properties")
 public class ImageEntryLoaderTest extends BaseLoaderTest
 {
     private static final String TEST_FILENAME = "src/test/resources/example.jpg";

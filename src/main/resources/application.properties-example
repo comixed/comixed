@@ -1,15 +1,25 @@
+# turn off banner
+spring.main.banner-mode=off
+
 # JPA configuration
 spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 spring.jpa.hibernate.naming-strategy = org.hibernate.cfg.ImprovedNamingStrategy
+spring.jpa.show-sql=false
+spring.jpa.generate-ddl=true
+spring.jpa.hibernate.ddl-auto=create
 
+# Datasource
 spring.datasource.url=jdbc:h2:file:./test_database/comixed;create=true
-spring.jpa.show-sql=true
-spring.jpa.hibernate.ddl-auto=update
+
+# H2
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2
 
 # Logging
-logging.level.root=WARN
+logging.level.root=INFO
 logging.level.org.springframework=INFO
-logging.level.org.comixed=DEBUG
+logging.level.org.hibernate=INFO
+logging.level.org.comixed=INFO
 
 # Comic entry loaders
 comic.entry.loaders[0].type=jpeg

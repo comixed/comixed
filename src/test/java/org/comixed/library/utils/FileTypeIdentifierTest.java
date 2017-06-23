@@ -30,10 +30,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = UtilsContext.class)
+@TestPropertySource(locations = "classpath:test-application.properties")
 public class FileTypeIdentifierTest
 {
     private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
