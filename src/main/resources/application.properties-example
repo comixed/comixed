@@ -26,3 +26,9 @@ comic.entry.loaders[0].type=jpeg
 comic.entry.loaders[0].bean=imageEntryLoader
 comic.entry.loaders[1].type=png
 comic.entry.loaders[1]..bean=imageEntryLoader
+
+# Archive loaders
+comic.archive.loaders[0].type=zip
+comic.archive.loaders[0].bean=zipArchiveLoader
+comic.archive.loaders[1].type=rar
+comic.archive.loaders[1].bean=rarArchiveLoader
