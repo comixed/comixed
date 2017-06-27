@@ -28,5 +28,12 @@ public interface ComicRepository extends
                                  CrudRepository<Comic,
                                                 Long>
 {
-
+    /**
+     * Finds a comic based on filename.
+     * 
+     * @param filename
+     *            the filename
+     * @return the comic
+     */
+    Comic findByFilename(String filename);
 }

@@ -52,10 +52,16 @@ public class AddComicWorkerTask extends AbstractWorkerTask
     {
         logger.debug("Adding file to library: " + file);
 
-        Comic result = new Comic();
+        Comic result = comicRepository.findByFilename(this.file.getAbsolutePath());
+        if (result != null)
+        {
+            logger.debug("Comic already imported: " + file.getAbsolutePath());
+            return;
+        }
 
         try
         {
+            result = new Comic();
             result.setFilename(this.file.getAbsolutePath());
             comicFileHandler.loadComic(result);
             comicRepository.save(result);
