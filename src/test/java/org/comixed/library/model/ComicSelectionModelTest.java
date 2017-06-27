@@ -1,0 +1,114 @@
+/*
+ * ComixEd - A digital comic book library management application.
+ * Copyright (C) 2017, Darryl L. Pierce
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * org.comixed;
+ */
+
+package org.comixed.library.model;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
+import java.util.List;
+
+import org.comixed.repositories.ComicRepository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
+public class ComicSelectionModelTest
+{
+    private static final int TEST_COMIC_LIST_SIZE = 717;
+    private static final int TEST_COMIC_INDEX = 65;
+
+    @InjectMocks
+    private ComicSelectionModel model;
+
+    @Mock
+    private ComicRepository comicRepository;
+
+    @Mock
+    private List<Comic> comicList;
+
+    @Mock
+    private Comic comic;
+
+    @Test
+    public void testGetComicCountReload()
+    {
+        model.reload = true;
+
+        Mockito.when(comicRepository.findAll()).thenReturn(comicList);
+        Mockito.doNothing().when(comicList).clear();
+        Mockito.when(comicList.size()).thenReturn(TEST_COMIC_LIST_SIZE);
+
+        assertEquals(TEST_COMIC_LIST_SIZE, model.getComicCount());
+
+        Mockito.verify(comicRepository, Mockito.times(1)).findAll();
+        Mockito.verify(comicList, Mockito.times(1)).clear();
+        Mockito.verify(comicList, Mockito.times(1)).size();
+    }
+
+    @Test
+    public void testGetComicCount()
+    {
+        model.reload = false;
+
+        Mockito.when(comicList.size()).thenReturn(TEST_COMIC_LIST_SIZE);
+
+        assertEquals(TEST_COMIC_LIST_SIZE, model.getComicCount());
+
+        Mockito.verify(comicRepository, Mockito.never()).findAll();
+        Mockito.verify(comicList, Mockito.never()).clear();
+        Mockito.verify(comicList, Mockito.times(1)).size();
+    }
+
+    @Test
+    public void testGetComicReload()
+    {
+        model.reload = true;
+
+        Mockito.when(comicRepository.findAll()).thenReturn(comicList);
+        Mockito.doNothing().when(comicList).clear();
+        Mockito.when(comicList.get(Mockito.anyInt())).thenReturn(comic);
+
+        assertSame(comic, model.getComic(TEST_COMIC_INDEX));
+
+        Mockito.verify(comicRepository, Mockito.times(1)).findAll();
+        Mockito.verify(comicList, Mockito.times(1)).clear();
+        Mockito.verify(comicList, Mockito.times(1)).get(TEST_COMIC_INDEX);
+    }
+
+    @Test
+    public void testGetComic()
+    {
+        model.reload = false;
+
+        Mockito.when(comicList.get(Mockito.anyInt())).thenReturn(comic);
+
+        assertSame(comic, model.getComic(TEST_COMIC_INDEX));
+
+        Mockito.verify(comicRepository, Mockito.never()).findAll();
+        Mockito.verify(comicList, Mockito.never()).clear();
+        Mockito.verify(comicList, Mockito.times(1)).get(TEST_COMIC_INDEX);
+    }
+}
