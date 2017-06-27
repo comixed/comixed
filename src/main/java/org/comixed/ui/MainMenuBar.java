@@ -29,6 +29,7 @@ import javax.swing.KeyStroke;
 
 import org.comixed.ui.actions.FileAddAction;
 import org.comixed.ui.actions.FileExitAction;
+import org.comixed.ui.actions.FileImportAction;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -52,6 +53,8 @@ public class MainMenuBar extends JMenuBar implements
     private FileExitAction fileExitAction;
     @Autowired
     private FileAddAction fileAddAction;
+    @Autowired
+    private FileImportAction fileImportAction;
 
     @Override
     public void afterPropertiesSet() throws Exception
@@ -65,6 +68,8 @@ public class MainMenuBar extends JMenuBar implements
 
         configureMenuItem(result, "file");
         result.add(createMenuItem("file.add", fileAddAction));
+        result.add(createMenuItem("file.import", fileImportAction));
+        result.addSeparator();
         result.add(createMenuItem("file.exit", fileExitAction));
 
         return result;
