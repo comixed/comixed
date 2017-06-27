@@ -1,17 +1,17 @@
 /*
  * ComixEd - A digital comic book library management application.
  * Copyright (C) 2017, Darryl L. Pierce
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -32,12 +33,14 @@ import org.springframework.stereotype.Component;
 /**
  * <code>ComicTableModel</code> provides the model for viewing the set of comics
  * in the library.
- * 
+ *
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class ComicTableModel extends DefaultTableModel
+public class ComicTableModel extends DefaultTableModel implements
+                             InitializingBean,
+                             ComicSelectionListener
 {
     private static final int TEAMS = 13;
     private static final int SUMMARY = 12;
@@ -54,8 +57,6 @@ public class ComicTableModel extends DefaultTableModel
     private static final int VOLUME = 1;
     private static final int NAME = 0;
     private static final long serialVersionUID = -2124724909306232112L;
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     static final String[] COLUMN_NAMES =
     {"name",
      "volume",
@@ -72,6 +73,8 @@ public class ComicTableModel extends DefaultTableModel
      "summary",
      "teams"};
 
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private MessageSource messageSource;
 
@@ -79,9 +82,9 @@ public class ComicTableModel extends DefaultTableModel
     private ComicSelectionModel comicSelectionModel;
 
     @Override
-    public int getRowCount()
+    public void afterPropertiesSet() throws Exception
     {
-        return comicSelectionModel != null ? comicSelectionModel.getComicCount() : 0;
+        this.comicSelectionModel.addComicSelectionListener(this);
     }
 
     @Override
@@ -93,14 +96,21 @@ public class ComicTableModel extends DefaultTableModel
     @Override
     public String getColumnName(int column)
     {
-        return messageSource.getMessage("view.table." + COLUMN_NAMES[column] + ".label", null, Locale.getDefault());
+        return this.messageSource.getMessage("view.table." + COLUMN_NAMES[column] + ".label", null,
+                                             Locale.getDefault());
+    }
+
+    @Override
+    public int getRowCount()
+    {
+        return this.comicSelectionModel != null ? this.comicSelectionModel.getComicCount() : 0;
     }
 
     @Override
     public Object getValueAt(int row, int column)
     {
-        logger.debug("Getting value at " + row + "x" + column);
-        Comic comic = (comicSelectionModel != null) ? comicSelectionModel.getComic(row) : null;
+        this.logger.debug("Getting value at " + row + "x" + column);
+        Comic comic = (this.comicSelectionModel != null) ? this.comicSelectionModel.getComic(row) : null;
 
         if (comic != null)
         {
@@ -140,4 +150,9 @@ public class ComicTableModel extends DefaultTableModel
         return null;
     }
 
+    @Override
+    public void selectionChanged()
+    {
+        this.fireTableDataChanged();
+    }
 }
