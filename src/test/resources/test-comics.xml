@@ -3,6 +3,7 @@
 <dataset>
 
   <comics ID="1000" FILENAME="C:/users/mcpierce/Documents/comics/example.cbz"
+    publisher="Marvel" name="Steve Rogers: Captain America"
     COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00" cover_date="2017-01-31"
     volume="2017" issue_number="512" description="This is a comic book's description"
     summary="This is a summary" />
@@ -22,15 +23,10 @@
   <comic_locations comic_id="1000" location_name="Genosha" />
   <comic_locations comic_id="1000" location_name="The Savage Land" />
 
-  <pages comic_id="1000" filename="front_page.jpg"
-    index="0" hash="12345" />
-  <pages comic_id="1000" filename="page1.jpg" index="1"
-    hash="12346" />
-  <pages comic_id="1000" filename="page2.jpg" index="2"
-    hash="12347" />
-  <pages comic_id="1000" filename="page3.jpg" index="3"
-    hash="12348" />
-  <pages comic_id="1000" filename="back_page.jpg"
-    index="4" hash="12349" />
+  <pages comic_id="1000" filename="front_page.jpg" index="0" hash="12345" />
+  <pages comic_id="1000" filename="page1.jpg" index="1" hash="12346" />
+  <pages comic_id="1000" filename="page2.jpg" index="2" hash="12347" />
+  <pages comic_id="1000" filename="page3.jpg" index="3" hash="12348" />
+  <pages comic_id="1000" filename="back_page.jpg" index="4" hash="12349" />
 
 </dataset>

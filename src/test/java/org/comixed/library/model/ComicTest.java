@@ -32,7 +32,9 @@ import org.junit.Test;
 
 public class ComicTest
 {
+    private static final String TEST_NAME = "Batman";
     private static final String TEST_VOLUME = "2017";
+    private static final String TEST_PUBLISHER = "DC Comics";
     private static final String TEST_ISSUE_NUMBER = "23.1";
     private static final Date TEST_DATE = new Date();
     private static final String TEST_STORY_ARC_NAME = "First story arc name";
@@ -66,10 +68,24 @@ public class ComicTest
     }
 
     @Test
+    public void testName()
+    {
+        comic.setName(TEST_NAME);
+        assertEquals(TEST_NAME, comic.getName());
+    }
+
+    @Test
     public void testVolume()
     {
         comic.setVolume(TEST_VOLUME);
         assertEquals(TEST_VOLUME, comic.getVolume());
+    }
+
+    @Test
+    public void testPublisher()
+    {
+        comic.setPublisher(TEST_PUBLISHER);
+        assertEquals(TEST_PUBLISHER, comic.getPublisher());
     }
 
     @Test

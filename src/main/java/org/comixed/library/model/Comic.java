@@ -72,6 +72,12 @@ public class Comic
     @Column(name = "comic_vine_id")
     private String comicVineId;
 
+    @Column(name = "publisher")
+    private String publisher;
+
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "added_date",
             updatable = false,
             nullable = false)
@@ -385,6 +391,16 @@ public class Comic
     }
 
     /**
+     * Returns the series name for the comic.
+     *
+     * @return the series name
+     */
+    public String getName()
+    {
+        return this.name;
+    }
+
+    /**
      * Returns the page at the given index.
      *
      * @param index
@@ -405,6 +421,16 @@ public class Comic
     public int getPageCount()
     {
         return this.pages.size();
+    }
+
+    /**
+     * Returns the publisher name.
+     *
+     * @return the publisher name
+     */
+    public String getPublisher()
+    {
+        return this.publisher;
     }
 
     /**
@@ -613,6 +639,29 @@ public class Comic
     }
 
     /**
+     * Sets the name of the comic series.
+     *
+     * @param name
+     *            the name
+     */
+    public void setName(String name)
+    {
+        this.logger.debug("Setting name=" + name);
+        this.name = name;
+    }
+
+    /**
+     * Sets the publisher for the comic
+     *
+     * @param publisher
+     */
+    public void setPublisher(String publisher)
+    {
+        this.logger.debug("Setting publisher=" + publisher);
+        this.publisher = publisher;
+    }
+
+    /**
      * Sets the summary for the comic.
      *
      * @param summary
@@ -639,5 +688,35 @@ public class Comic
     private String formatDate(Date date)
     {
         return date != null ? DateFormat.getDateInstance().format(date) : "[NULL]";
+    }
+
+    /**
+     * Returns the list of locations for this comic.
+     * 
+     * @return the locations
+     */
+    public List<String> getLocations()
+    {
+        return locations;
+    }
+
+    /**
+     * Returns the list of story arcs.
+     * 
+     * @return the story arcs
+     */
+    public List<String> getStoryArcs()
+    {
+        return this.storyArcs;
+    }
+
+    /**
+     * REturns the list of teams in this comic.
+     * 
+     * @return the teams
+     */
+    public List<String> getTeams()
+    {
+        return this.teams;
     }
 }
