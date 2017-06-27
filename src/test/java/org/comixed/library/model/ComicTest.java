@@ -32,10 +32,11 @@ import org.junit.Test;
 
 public class ComicTest
 {
-    private static final String TEST_NAME = "Batman";
+    private static final String TEST_SERIES = "Batman";
     private static final String TEST_VOLUME = "2017";
     private static final String TEST_PUBLISHER = "DC Comics";
     private static final String TEST_ISSUE_NUMBER = "23.1";
+    private static final String TEST_TITLE = "Test title";
     private static final Date TEST_DATE = new Date();
     private static final String TEST_STORY_ARC_NAME = "First story arc name";
     private static final String TEST_COMIC_VINE_ID = "206568";
@@ -45,6 +46,7 @@ public class ComicTest
     private static final String TEST_CHARACTER = "Test Man";
     private static final String TEST_LOCATION = "Test Location";
     private static final String TEST_FILENAME = "C:/example.cbz";
+    private static final String TEST_NOTES = "Some sample notes";
     private Comic comic;
 
     @Before
@@ -68,10 +70,10 @@ public class ComicTest
     }
 
     @Test
-    public void testName()
+    public void testSeries()
     {
-        comic.setName(TEST_NAME);
-        assertEquals(TEST_NAME, comic.getName());
+        comic.setSeries(TEST_SERIES);
+        assertEquals(TEST_SERIES, comic.getSeries());
     }
 
     @Test
@@ -86,6 +88,13 @@ public class ComicTest
     {
         comic.setPublisher(TEST_PUBLISHER);
         assertEquals(TEST_PUBLISHER, comic.getPublisher());
+    }
+
+    @Test
+    public void testTitle()
+    {
+        comic.setTitle(TEST_TITLE);
+        assertEquals(TEST_TITLE, comic.getTitle());
     }
 
     @Test
@@ -134,6 +143,13 @@ public class ComicTest
     {
         comic.setDateLastRead(null);
         assertNull(comic.getDateLastRead());
+    }
+
+    @Test
+    public void testNotes()
+    {
+        comic.setNotes(TEST_NOTES);
+        assertEquals(TEST_NOTES, comic.getNotes());
     }
 
     @Test

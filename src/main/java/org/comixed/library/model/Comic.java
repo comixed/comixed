@@ -75,8 +75,8 @@ public class Comic
     @Column(name = "publisher")
     private String publisher;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "series")
+    private String series;
 
     @Column(name = "added_date",
             updatable = false,
@@ -100,8 +100,14 @@ public class Comic
     @Column(name = "issue_number")
     private String issueNumber;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "description")
     private String description;
+
+    @Column(name = "notes")
+    private String notes;
 
     @Column(name = "summary")
     private String summary;
@@ -196,8 +202,8 @@ public class Comic
     /**
      * Adds a story arc to the comic.
      *
-     * @param name
-     *            the story arc name
+     * @param series
+     *            the story arc series
      */
     public void addStoryArc(String name)
     {
@@ -391,13 +397,33 @@ public class Comic
     }
 
     /**
-     * Returns the series name for the comic.
+     * Returns the list of locations for this comic.
      *
-     * @return the series name
+     * @return the locations
      */
-    public String getName()
+    public List<String> getLocations()
     {
-        return this.name;
+        return this.locations;
+    }
+
+    /**
+     * Returns the series for the comic.
+     *
+     * @return the series
+     */
+    public String getSeries()
+    {
+        return this.series;
+    }
+
+    /**
+     * Returns the notes for the issue.
+     *
+     * @return the notes
+     */
+    public String getNotes()
+    {
+        return this.notes;
     }
 
     /**
@@ -424,9 +450,9 @@ public class Comic
     }
 
     /**
-     * Returns the publisher name.
+     * Returns the publisher series.
      *
-     * @return the publisher name
+     * @return the publisher series
      */
     public String getPublisher()
     {
@@ -438,7 +464,7 @@ public class Comic
      *
      * @param index
      *            the index
-     * @return the story arc name
+     * @return the story arc series
      */
     public String getStoryArc(int index)
     {
@@ -455,6 +481,16 @@ public class Comic
     {
         this.logger.debug("Getting story arc count");
         return this.storyArcs.size();
+    }
+
+    /**
+     * Returns the list of story arcs.
+     *
+     * @return the story arcs
+     */
+    public List<String> getStoryArcs()
+    {
+        return this.storyArcs;
     }
 
     /**
@@ -487,6 +523,26 @@ public class Comic
     public int getTeamCount()
     {
         return this.teams.size();
+    }
+
+    /**
+     * REturns the list of teams in this comic.
+     *
+     * @return the teams
+     */
+    public List<String> getTeams()
+    {
+        return this.teams;
+    }
+
+    /**
+     * Returns the title of the issue.
+     *
+     * @return the title
+     */
+    public String getTitle()
+    {
+        return this.title;
     }
 
     /**
@@ -639,15 +695,15 @@ public class Comic
     }
 
     /**
-     * Sets the name of the comic series.
+     * Sets the notes for the issue.
      *
-     * @param name
-     *            the name
+     * @param notes
+     *            the notes
      */
-    public void setName(String name)
+    public void setNotes(String notes)
     {
-        this.logger.debug("Setting name=" + name);
-        this.name = name;
+        this.logger.debug("Setting the notes");
+        this.notes = notes;
     }
 
     /**
@@ -662,6 +718,18 @@ public class Comic
     }
 
     /**
+     * Sets the series of the comic series.
+     *
+     * @param series
+     *            the series
+     */
+    public void setSeries(String name)
+    {
+        this.logger.debug("Setting series=" + name);
+        this.series = name;
+    }
+
+    /**
      * Sets the summary for the comic.
      *
      * @param summary
@@ -671,6 +739,18 @@ public class Comic
     {
         this.logger.debug("Setting summary: " + summary);
         this.summary = summary;
+    }
+
+    /**
+     * Sets the title for the issue.
+     *
+     * @param title
+     *            the title
+     */
+    public void setTitle(String title)
+    {
+        this.logger.debug("Setting title=" + title);
+        this.title = title;
     }
 
     /**
@@ -688,35 +768,5 @@ public class Comic
     private String formatDate(Date date)
     {
         return date != null ? DateFormat.getDateInstance().format(date) : "[NULL]";
-    }
-
-    /**
-     * Returns the list of locations for this comic.
-     * 
-     * @return the locations
-     */
-    public List<String> getLocations()
-    {
-        return locations;
-    }
-
-    /**
-     * Returns the list of story arcs.
-     * 
-     * @return the story arcs
-     */
-    public List<String> getStoryArcs()
-    {
-        return this.storyArcs;
-    }
-
-    /**
-     * REturns the list of teams in this comic.
-     * 
-     * @return the teams
-     */
-    public List<String> getTeams()
-    {
-        return this.teams;
     }
 }
