@@ -19,8 +19,15 @@
 
 package org.comixed.ui;
 
-import javax.swing.JPanel;
+import java.awt.BorderLayout;
 
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,7 +38,24 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class MainClientPanel extends JPanel
+public class MainClientPanel extends JPanel implements
+                             InitializingBean
 {
     private static final long serialVersionUID = -6194561704845594236L;
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private ComicTableView tableView;
+
+    public MainClientPanel()
+    {
+        super(new BorderLayout(), true);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        logger.debug("Setting up table view");
+        this.add(new JScrollPane(tableView), BorderLayout.CENTER);
+    }
 }
