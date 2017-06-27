@@ -90,11 +90,11 @@ public class ComicTableModelTest
     public void testGetValueAt()
     {
         Mockito.when(comicSelectionModel.getComic(Mockito.anyInt())).thenReturn(comic);
-        Mockito.when(comic.getName()).thenReturn(TEST_COMIC_NAME);
+        Mockito.when(comic.getSeries()).thenReturn(TEST_COMIC_NAME);
 
         assertEquals(TEST_COMIC_NAME, comicTableModel.getValueAt(TEST_COMIC_ROW, 0));
 
         Mockito.verify(comicSelectionModel, Mockito.times(1)).getComic(TEST_COMIC_ROW);
-        Mockito.verify(comic, Mockito.times(1)).getName();
+        Mockito.verify(comic, Mockito.times(1)).getSeries();
     }
 }

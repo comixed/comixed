@@ -117,7 +117,7 @@ public class ComicTableModel extends DefaultTableModel implements
             switch (column)
             {
                 case NAME:
-                    return comic.getName();
+                    return comic.getSeries();
                 case VOLUME:
                     return comic.getVolume();
                 case PUBLISHER:
