@@ -20,7 +20,9 @@
 package org.comixed.library.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -51,6 +53,9 @@ public class ComicSelectionModelTest
 
     @Mock
     private Comic comic;
+
+    @Mock
+    private ComicSelectionListener comicSelectionListener;
 
     @Test
     public void testGetComicCountReload()
@@ -110,5 +115,25 @@ public class ComicSelectionModelTest
         Mockito.verify(comicRepository, Mockito.never()).findAll();
         Mockito.verify(comicList, Mockito.never()).clear();
         Mockito.verify(comicList, Mockito.times(1)).get(TEST_COMIC_INDEX);
+    }
+
+    @Test
+    public void testAddComicSelectionListener()
+    {
+        assertTrue(model.listeners.isEmpty());
+        model.addComicSelectionListener(comicSelectionListener);
+        assertFalse(model.listeners.isEmpty());
+    }
+
+    @Test
+    public void testReload()
+    {
+        model.addComicSelectionListener(comicSelectionListener);
+
+        Mockito.doNothing().when(comicSelectionListener).selectionChanged();
+
+        model.reload();
+
+        Mockito.verify(comicSelectionListener, Mockito.times(1)).selectionChanged();
     }
 }
