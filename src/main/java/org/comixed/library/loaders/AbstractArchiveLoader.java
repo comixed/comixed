@@ -178,7 +178,15 @@ public abstract class AbstractArchiveLoader implements
         EntryLoader loader = this.getLoaderForContent(content);
         if (loader != null)
         {
-            loader.loadContent(comic, filename, content);
+            try
+            {
+                loader.loadContent(comic, filename, content);
+            }
+            catch (EntryLoaderException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         else
         {
