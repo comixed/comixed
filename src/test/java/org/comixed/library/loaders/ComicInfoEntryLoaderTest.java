@@ -1,0 +1,66 @@
+/*
+ * ComixEd - A digital comic book library management application.
+ * Copyright (C) 2017, Darryl L. Pierce
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * org.comixed;
+ */
+
+package org.comixed.library.loaders;
+
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+
+import org.comixed.library.model.Comic;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
+
+@RunWith(MockitoJUnitRunner.class)
+public class ComicInfoEntryLoaderTest extends BaseLoaderTest
+{
+    private static final String TEST_COMICINFO_FILE_COMPLETE = "src/test/resources/ComicInfo-complete.xml";
+    private static final String TEST_PUBLISHER_NAME = "Test Publisher";
+    private static final String TEST_SERIES_NAME = "Test Series";
+    private static final String TEST_VOLUME_NAME = "2011";
+    @InjectMocks
+    ComicInfoEntryLoader loader;
+
+    private Comic comic;
+
+    @Before
+    public void setUp()
+    {
+        comic = new Comic();
+    }
+
+    @Test
+    public void testLoadComicInfoXml() throws IOException, EntryLoaderException
+    {
+        loader.loadContent(comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+
+        assertEquals(TEST_PUBLISHER_NAME, comic.getPublisher());
+        assertEquals(TEST_SERIES_NAME, comic.getSeries());
+        assertEquals(TEST_VOLUME_NAME, comic.getVolume());
+        assertEquals("Test Title", comic.getTitle());
+        assertEquals("24", comic.getIssueNumber());
+        assertEquals("Test summary", comic.getSummary());
+        assertEquals("Test notes", comic.getNotes());
+        assertEquals(2013, comic.getCoverDate().getYear());
+        assertEquals(11, comic.getCoverDate().getMonth());
+    }
+}

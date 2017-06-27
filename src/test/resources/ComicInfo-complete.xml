@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ComicInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Title>Test Title</Title>
+  <Series>Test Series</Series>
+  <AlternateSeries>Test Alternate Series</AlternateSeries>
+  <Number>24</Number>
+  <Volume>2011</Volume>
+  <Summary>Test summary</Summary>
+  <Notes>Test notes</Notes>
+  <Year>2013</Year>
+  <Month>12</Month>
+  <Writer>Test Writer1, Test Writer2</Writer>
+  <Penciller>Test Penciller1, Test Penciller2</Penciller>
+  <Inker>Test Inker1, Test Inker2</Inker>
+  <Colorist>Test Colorist1, Test Colorist2</Colorist>
+  <Letterer>Test Letterer1, Test Letterer2</Letterer>
+  <CoverArtist>Test CoverArtist1, Test CoverArtist2</CoverArtist>
+  <Editor>Test Editor1, Test Editor2</Editor>
+  <Publisher>Test Publisher</Publisher>
+  <Web>http://comicvine.gamespot.com/foo/71765-12971/</Web>
+  <PageCount>20</PageCount>
+  <Characters>Chareacter1, Character2</Characters>
+  <Teams>Test Team 1, Test Team 2</Teams>
+  <Locations>Test Location 1, Test Location 2</Locations>
+  <Pages>
+    <Page Image="0" ImageSize="762694" ImageWidth="1440"
+      ImageHeight="2214" Type="FrontCover" />
+    <Page Image="1" ImageSize="736690" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="2" ImageSize="713093" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="3" ImageSize="620017" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="4" ImageSize="1379962" ImageWidth="2880"
+      ImageHeight="2213" />
+    <Page Image="5" ImageSize="748871" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="6" ImageSize="863017" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="7" ImageSize="1597046" ImageWidth="2880"
+      ImageHeight="2213" />
+    <Page Image="8" ImageSize="640363" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="9" ImageSize="597280" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="10" ImageSize="565942" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="11" ImageSize="626838" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="12" ImageSize="809706" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="13" ImageSize="665441" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="14" ImageSize="668657" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="15" ImageSize="695300" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="16" ImageSize="1021125" ImageWidth="2880"
+      ImageHeight="2213" />
+    <Page Image="17" ImageSize="972152" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="18" ImageSize="510149" ImageWidth="1440"
+      ImageHeight="2214" />
+    <Page Image="19" ImageSize="672544" ImageWidth="1440"
+      ImageHeight="2214" />
+  </Pages>
+</ComicInfo>
+
