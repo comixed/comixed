@@ -34,6 +34,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -104,12 +105,15 @@ public class Comic
     private String title;
 
     @Column(name = "description")
+    @Lob
     private String description;
 
     @Column(name = "notes")
+    @Lob
     private String notes;
 
     @Column(name = "summary")
+    @Lob
     private String summary;
 
     @ElementCollection
