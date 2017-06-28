@@ -26,8 +26,12 @@ import java.awt.Point;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.comixed.ComixEdApp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,6 +47,7 @@ public class MainFrame extends JFrame implements
                        InitializingBean
 {
     private static final long serialVersionUID = -6880161504037716183L;
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private MainClientPanel mainClientPane;
@@ -55,6 +60,18 @@ public class MainFrame extends JFrame implements
     {
         super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        try
+        {
+            logger.debug("Setting default look and feel for OS (" + System.getProperty("os.name") + ")");
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (ClassNotFoundException
+               | InstantiationException
+               | IllegalAccessException
+               | UnsupportedLookAndFeelException cause)
+        {
+            logger.error("Unable to set look and feel", cause);
+        }
     }
 
     @Override
