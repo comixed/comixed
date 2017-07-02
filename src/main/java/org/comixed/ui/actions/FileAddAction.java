@@ -26,6 +26,7 @@ import java.util.Locale;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
+import org.comixed.AppConfiguration;
 import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.comixed.ui.MainFrame;
@@ -47,6 +48,7 @@ import org.springframework.stereotype.Component;
 public class FileAddAction extends AbstractAction
 {
     private static final long serialVersionUID = -3668945997213296168L;
+    private static final String LAST_ADD_DIRECTORY = "file.add.last-directory";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -60,6 +62,8 @@ public class FileAddAction extends AbstractAction
     private Worker worker;
     @Autowired
     private ObjectFactory<AddComicWorkerTask> taskFactory;
+    @Autowired
+    private AppConfiguration configuration;
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -68,6 +72,15 @@ public class FileAddAction extends AbstractAction
 
         fileChooser.setDialogTitle(messageSource.getMessage("dialog.file-chooser.add.title", null,
                                                             Locale.getDefault()));
+        if (configuration.hasOption(LAST_ADD_DIRECTORY))
+        {
+            File file = new File(configuration.getOption(LAST_ADD_DIRECTORY));
+            if (file.exists() && file.isDirectory())
+            {
+                logger.debug("Setting directory to the one last used: " + file.getAbsolutePath());
+                fileChooser.setCurrentDirectory(file);
+            }
+        }
         if (fileChooser.showOpenDialog(mainFrame) == JFileChooser.APPROVE_OPTION)
         {
             File file = fileChooser.getSelectedFile();
@@ -75,6 +88,8 @@ public class FileAddAction extends AbstractAction
             AddComicWorkerTask task = taskFactory.getObject();
             task.setFile(file.getAbsoluteFile());
             worker.addTasksToQueue(task);
+            configuration.setOption(LAST_ADD_DIRECTORY, file.getParent());
+            configuration.save();
         }
     }
 }
