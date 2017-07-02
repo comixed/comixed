@@ -21,6 +21,7 @@ package org.comixed.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -29,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.comixed.AppConfiguration;
 import org.comixed.ComixEdApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,13 +50,22 @@ public class MainFrame extends JFrame implements
 {
     private static final long serialVersionUID = -6880161504037716183L;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    static final String MAINWIN_XPOS = "window.main.xpos";
+    static final String MAINWIN_YPOS = "window.main.ypos";
+    static final String MAINWIN_WIDTH = "window.main.width";
+    static final String MAINWIN_HEIGHT = "window.main.height";
+    static final String MAINWIN_MAXIMIZED = "window.main.maximized";
 
+    @Autowired
+    private AppConfiguration appConfiguration;
     @Autowired
     private MainClientPanel mainClientPane;
     @Autowired
     private StatusBar statusBar;
     @Autowired
     private MainMenuBar menuBar;
+    @Autowired
+    private MainFrameComponentListener mainFrameComponentListener;
 
     public MainFrame() throws HeadlessException
     {
@@ -81,11 +92,37 @@ public class MainFrame extends JFrame implements
         // build the user interface
         getContentPane().add(mainClientPane, BorderLayout.CENTER);
         getContentPane().add(statusBar, BorderLayout.SOUTH);
-        // set a default size and location
-        setSize(getDefaultDimensions());
-        setLocation(getDefaultLocation());
         // add the menubar
         setJMenuBar(menuBar);
+
+        // restore the last size and location if stored
+        if (appConfiguration.hasOption(MAINWIN_XPOS) && appConfiguration.hasOption(MAINWIN_YPOS))
+        {
+            setLocation(new Point(Integer.valueOf(appConfiguration.getOption(MAINWIN_XPOS)),
+                                  Integer.valueOf(appConfiguration.getOption(MAINWIN_YPOS))));
+        }
+        else
+        {
+            setLocation(getDefaultLocation());
+        }
+        if (appConfiguration.hasOption(MAINWIN_WIDTH) && appConfiguration.hasOption(MAINWIN_HEIGHT))
+        {
+            setSize(new Dimension(Integer.valueOf(appConfiguration.getOption(MAINWIN_WIDTH)),
+                                  Integer.valueOf(appConfiguration.getOption(MAINWIN_HEIGHT))));
+        }
+        else
+        {
+            setSize(getDefaultDimensions());
+        }
+
+        if (appConfiguration.hasOption(MAINWIN_MAXIMIZED)
+            && Boolean.valueOf(appConfiguration.getOption(MAINWIN_MAXIMIZED)))
+        {
+            setExtendedState(Frame.MAXIMIZED_BOTH);
+        }
+
+        // now register a listener to store this data
+        this.addComponentListener(mainFrameComponentListener);
     }
 
     private Dimension getDefaultDimensions()
