@@ -29,6 +29,7 @@ import java.util.Locale;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
+import org.comixed.AppConfiguration;
 import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.comixed.ui.MainFrame;
@@ -50,6 +51,7 @@ import org.springframework.stereotype.Component;
 public class FileImportAction extends AbstractAction
 {
     private static final long serialVersionUID = -5509387083770877459L;
+    private static final String LAST_IMPORT_DIRECTORY = "file.import.last-directory";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -62,6 +64,8 @@ public class FileImportAction extends AbstractAction
     private Worker worker;
     @Autowired
     private ObjectFactory<AddComicWorkerTask> taskFactory;
+    @Autowired
+    private AppConfiguration configuration;
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -70,6 +74,15 @@ public class FileImportAction extends AbstractAction
         this.fileChooser.setDialogTitle(this.messageSource.getMessage("dialog.file-chooser.import.title", null,
                                                                       Locale.getDefault()));
         this.fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (this.configuration.hasOption(LAST_IMPORT_DIRECTORY))
+        {
+            File file = new File(this.configuration.getOption(LAST_IMPORT_DIRECTORY));
+            if (file.exists() && file.isDirectory())
+            {
+                this.logger.debug("Setting directory to the one last used: " + file.getAbsolutePath());
+                this.fileChooser.setCurrentDirectory(file);
+            }
+        }
         if (this.fileChooser.showOpenDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION)
         {
             // build the list of files to be imported
@@ -81,6 +94,9 @@ public class FileImportAction extends AbstractAction
                 task.setFile(filename);
                 this.worker.addTasksToQueue(task);
             }
+
+            this.configuration.setOption(LAST_IMPORT_DIRECTORY, this.fileChooser.getSelectedFile().getAbsolutePath());
+            this.configuration.save();
         }
     }
 
