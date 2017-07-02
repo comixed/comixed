@@ -1,6 +1,9 @@
 # turn off banner
 spring.main.banner-mode=off
 
+# configuration filename
+configuration.filename=${user.home}/.comixedrc
+
 # JPA configuration
 spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 spring.jpa.hibernate.naming-strategy = org.hibernate.cfg.ImprovedNamingStrategy
