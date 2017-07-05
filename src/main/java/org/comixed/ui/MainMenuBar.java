@@ -27,10 +27,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import org.comixed.ui.actions.DisplayRefreshAction;
+import org.comixed.ui.actions.WindowPreferencesAction;
 import org.comixed.ui.actions.FileAddAction;
 import org.comixed.ui.actions.FileExitAction;
 import org.comixed.ui.actions.FileImportAction;
-import org.comixed.ui.actions.DisplayRefreshAction;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -51,11 +52,13 @@ public class MainMenuBar extends JMenuBar implements
     @Autowired
     private MessageSource messageSource;
     @Autowired
-    private FileExitAction fileExitAction;
-    @Autowired
     private FileAddAction fileAddAction;
     @Autowired
     private FileImportAction fileImportAction;
+    @Autowired
+    private FileExitAction fileExitAction;
+    @Autowired
+    private WindowPreferencesAction windowPreferencesAction;
     @Autowired
     private DisplayRefreshAction displayRefreshAction;
 
@@ -64,6 +67,16 @@ public class MainMenuBar extends JMenuBar implements
     {
         this.add(this.buildFileMenu());
         this.add(this.buildViewMenu());
+        this.add(this.buildWindowMenu());
+    }
+
+    private JMenu buildWindowMenu()
+    {
+        JMenu result = new JMenu();
+
+        this.configureMenuItem(result, "window");
+        result.add(this.createMenuItem("window.preferences", this.windowPreferencesAction));
+        return result;
     }
 
     private JMenu buildFileMenu()
