@@ -21,21 +21,17 @@ package org.comixed.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
 
+import org.comixed.ui.menus.MenuHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -78,9 +74,7 @@ public class MainMenuBar extends JMenuBar implements
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    private MessageSource messageSource;
-    @Autowired
-    private ApplicationContext context;
+    private MenuHelper menuHelper;
 
     @Override
     public void afterPropertiesSet() throws Exception
@@ -101,7 +95,7 @@ public class MainMenuBar extends JMenuBar implements
             {
                 this.logger.debug("Creating menu: " + item.menu);
                 menu = new JMenu();
-                this.configureMenuItem(menu, item.menu);
+                this.menuHelper.configureMenuItem(menu, item.menu);
                 this.add(menu);
             }
             // create and add the menu item
@@ -112,7 +106,7 @@ public class MainMenuBar extends JMenuBar implements
             }
             else
             {
-                JMenuItem menuItem = this.createMenuItem(item.menu + "." + item.label, item.bean);
+                JMenuItem menuItem = this.menuHelper.createMenuItem(item.menu + "." + item.label, item.bean);
                 if (menuItem != null)
                 {
                     menu.add(menuItem);
@@ -121,35 +115,6 @@ public class MainMenuBar extends JMenuBar implements
 
             lastItem = item;
         }
-    }
-
-    private void configureMenuItem(JMenuItem menuItem, String label)
-    {
-        menuItem.setText(this.messageSource.getMessage("menu." + label + ".label", null, Locale.getDefault()));
-        menuItem.setMnemonic(this.messageSource.getMessage("menu." + label + ".mnemonic", null, Locale.getDefault())
-                                               .charAt(0));
-        String accelerator = this.messageSource.getMessage("menu." + label + ".accelerator", null, null,
-                                                           Locale.getDefault());
-
-        if (accelerator != null)
-        {
-            menuItem.setAccelerator(KeyStroke.getKeyStroke(accelerator));
-        }
-    }
-
-    private JMenuItem createMenuItem(String label, String actionName)
-    {
-        if (!this.context.containsBean(actionName))
-        {
-            this.logger.warn("No such menu bean: name=" + actionName);
-            return null;
-        }
-
-        AbstractAction action = (AbstractAction )this.context.getBean(actionName);
-        JMenuItem result = new JMenuItem(action);
-        this.configureMenuItem(result, label);
-
-        return result;
     }
 
     public List<Menu> getMainMenu()
