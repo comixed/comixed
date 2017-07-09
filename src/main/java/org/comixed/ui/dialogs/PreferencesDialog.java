@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.comixed.AppConfiguration;
+import org.comixed.ui.components.ComicVineConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -41,15 +42,15 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PreferencesDialog</code> displays a dialog allowing the user to
- * modify the application configuration.
+ * <code>PreferencesDialog</code> displays a dialog allowing the user to modify
+ * the application configuration.
  *
  * @author Darryl L. Pierce
  *
  */
 @Component
 public class PreferencesDialog extends JDialog implements
-                                 InitializingBean
+                               InitializingBean
 {
     private static final long serialVersionUID = -2326299346696630087L;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -64,6 +65,9 @@ public class PreferencesDialog extends JDialog implements
 
     @Autowired
     private AppConfiguration configuration;
+
+    @Autowired
+    private ComicVineConfiguration comicVineConfiguration;
 
     public PreferencesDialog()
     {
@@ -104,13 +108,13 @@ public class PreferencesDialog extends JDialog implements
             private void saveState(ComponentEvent event)
             {
                 PreferencesDialog.this.configuration.setOption(CONFIG_DIALOG_XPOS,
-                                                                 String.valueOf(PreferencesDialog.this.getX()));
+                                                               String.valueOf(PreferencesDialog.this.getX()));
                 PreferencesDialog.this.configuration.setOption(CONFIG_DIALOG_YPOS,
-                                                                 String.valueOf(PreferencesDialog.this.getY()));
+                                                               String.valueOf(PreferencesDialog.this.getY()));
                 PreferencesDialog.this.configuration.setOption(CONFIG_DIALOG_WIDTH,
-                                                                 String.valueOf(PreferencesDialog.this.getWidth()));
+                                                               String.valueOf(PreferencesDialog.this.getWidth()));
                 PreferencesDialog.this.configuration.setOption(CONFIG_DIALOG_HEIGHT,
-                                                                 String.valueOf(PreferencesDialog.this.getHeight()));
+                                                               String.valueOf(PreferencesDialog.this.getHeight()));
                 PreferencesDialog.this.configuration.save();
             }
         });
@@ -121,10 +125,10 @@ public class PreferencesDialog extends JDialog implements
         JPanel content = new JPanel();
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.setTabPlacement(JTabbedPane.LEFT);
-
         tabbedPane.addTab(messageSource.getMessage("dialog.config.tab.general.label", null, getLocale()),
                           getGeneralTab());
+        tabbedPane.addTab(messageSource.getMessage("dialog.config.tab.comicvine.label", null, getLocale()),
+                          comicVineConfiguration);
         content.add(tabbedPane, BorderLayout.CENTER);
         // create the buttons
         JButton save = new JButton(messageSource.getMessage("dialog.button.save.label", null, getLocale()));
@@ -134,6 +138,8 @@ public class PreferencesDialog extends JDialog implements
             public void actionPerformed(ActionEvent e)
             {
                 logger.debug("Saving configuration");
+                comicVineConfiguration.saveConfiguration();
+                configuration.save();
                 PreferencesDialog.this.setVisible(false);
             }
         });
@@ -144,6 +150,14 @@ public class PreferencesDialog extends JDialog implements
             public void actionPerformed(ActionEvent e)
             {
                 logger.debug("Canceling configuration changes");
+                try
+                {
+                    comicVineConfiguration.afterPropertiesSet();
+                }
+                catch (Exception error)
+                {
+                    logger.error("Unable to reset configuration changes", error);
+                }
                 PreferencesDialog.this.setVisible(false);
             }
         });
@@ -162,8 +176,7 @@ public class PreferencesDialog extends JDialog implements
     private Point getDefaultLocation()
     {
         if (this.configuration.hasOption(CONFIG_DIALOG_XPOS)
-            && this.configuration.hasOption(CONFIG_DIALOG_YPOS)) return new Point(Integer.valueOf(this.configuration.getOption(CONFIG_DIALOG_XPOS)),
-                                                                                  Integer.valueOf(this.configuration.getOption(CONFIG_DIALOG_YPOS)));
+            && this.configuration.hasOption(CONFIG_DIALOG_YPOS)) return new Point(Integer.valueOf(this.configuration.getOption(CONFIG_DIALOG_XPOS)), Integer.valueOf(this.configuration.getOption(CONFIG_DIALOG_YPOS)));
 
         // TODO get a better location
         return new Point(100, 100);
@@ -172,8 +185,7 @@ public class PreferencesDialog extends JDialog implements
     private Dimension getDefaultSize()
     {
         if (this.configuration.hasOption(CONFIG_DIALOG_WIDTH)
-            && this.configuration.hasOption(CONFIG_DIALOG_HEIGHT)) return new Dimension(Integer.valueOf(this.configuration.getOption(CONFIG_DIALOG_WIDTH)),
-                                                                                        Integer.valueOf(this.configuration.getOption(CONFIG_DIALOG_HEIGHT)));
+            && this.configuration.hasOption(CONFIG_DIALOG_HEIGHT)) return new Dimension(Integer.valueOf(this.configuration.getOption(CONFIG_DIALOG_WIDTH)), Integer.valueOf(this.configuration.getOption(CONFIG_DIALOG_HEIGHT)));
         // TODO get a better size
         return new Dimension(640, 480);
     }
