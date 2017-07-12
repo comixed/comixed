@@ -19,21 +19,22 @@
 
 package org.comixed.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
-import javax.swing.Action;
+import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-import org.comixed.ui.actions.DisplayRefreshAction;
-import org.comixed.ui.actions.WindowPreferencesAction;
-import org.comixed.ui.actions.FileAddAction;
-import org.comixed.ui.actions.FileExitAction;
-import org.comixed.ui.actions.FileImportAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -45,61 +46,81 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
+@ConfigurationProperties("app.menus")
 public class MainMenuBar extends JMenuBar implements
                          InitializingBean
 {
+    public static class Menu
+    {
+        String menu;
+        String label;
+        String bean;
+
+        public void setBean(String bean)
+        {
+            this.bean = bean;
+        }
+
+        public void setLabel(String label)
+        {
+            this.label = label;
+        }
+
+        public void setMenu(String menu)
+        {
+            this.menu = menu;
+        }
+    }
+
     private static final long serialVersionUID = -3549352202994937250L;
+
+    private List<Menu> mainMenu = new ArrayList<>();
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private MessageSource messageSource;
     @Autowired
-    private FileAddAction fileAddAction;
-    @Autowired
-    private FileImportAction fileImportAction;
-    @Autowired
-    private FileExitAction fileExitAction;
-    @Autowired
-    private WindowPreferencesAction windowPreferencesAction;
-    @Autowired
-    private DisplayRefreshAction displayRefreshAction;
+    private ApplicationContext context;
 
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        this.add(this.buildFileMenu());
-        this.add(this.buildViewMenu());
-        this.add(this.buildWindowMenu());
-    }
+        // build the menu
+        JMenu menu = null;
+        Menu lastItem = null;
+        for (Menu item : this.mainMenu)
+        {
+            // skip any undefined item due to the number in
+            // application.properties
+            if (item.menu == null)
+            {
+                continue;
+            }
+            // create the menu if necessary
+            if ((lastItem == null) || !lastItem.menu.equals(item.menu))
+            {
+                this.logger.debug("Creating menu: " + item.menu);
+                menu = new JMenu();
+                this.configureMenuItem(menu, item.menu);
+                this.add(menu);
+            }
+            // create and add the menu item
+            this.logger.debug("Creating menu item: " + item.menu + "->" + item.label);
+            if (item.label.equals("---"))
+            {
+                menu.addSeparator();
+            }
+            else
+            {
+                JMenuItem menuItem = this.createMenuItem(item.menu + "." + item.label, item.bean);
+                if (menuItem != null)
+                {
+                    menu.add(menuItem);
+                }
+            }
 
-    private JMenu buildWindowMenu()
-    {
-        JMenu result = new JMenu();
-
-        this.configureMenuItem(result, "window");
-        result.add(this.createMenuItem("window.preferences", this.windowPreferencesAction));
-        return result;
-    }
-
-    private JMenu buildFileMenu()
-    {
-        JMenu result = new JMenu();
-
-        this.configureMenuItem(result, "file");
-        result.add(this.createMenuItem("file.add", this.fileAddAction));
-        result.add(this.createMenuItem("file.import", this.fileImportAction));
-        result.addSeparator();
-        result.add(this.createMenuItem("file.exit", this.fileExitAction));
-
-        return result;
-    }
-
-    private JMenu buildViewMenu()
-    {
-        JMenu result = new JMenu();
-
-        this.configureMenuItem(result, "display");
-        result.add(this.createMenuItem("display.refresh", this.displayRefreshAction));
-
-        return result;
+            lastItem = item;
+        }
     }
 
     private void configureMenuItem(JMenuItem menuItem, String label)
@@ -116,12 +137,23 @@ public class MainMenuBar extends JMenuBar implements
         }
     }
 
-    private JMenuItem createMenuItem(String label, Action action)
+    private JMenuItem createMenuItem(String label, String actionName)
     {
-        JMenuItem result = new JMenuItem(action);
+        if (!this.context.containsBean(actionName))
+        {
+            this.logger.warn("No such menu bean: name=" + actionName);
+            return null;
+        }
 
+        AbstractAction action = (AbstractAction )this.context.getBean(actionName);
+        JMenuItem result = new JMenuItem(action);
         this.configureMenuItem(result, label);
 
         return result;
+    }
+
+    public List<Menu> getMainMenu()
+    {
+        return this.mainMenu;
     }
 }

@@ -41,3 +41,33 @@ comic.archive.loaders[1].bean=rarArchiveLoaderr
 # Filename entry loaders
 comic.filename-entry.loaders[0].mask=ComicInfo.xml
 comic.filename-entry.loaders[0].bean=comicInfoEntryLoader
+
+# =====================
+# == Menu definition ==
+# =====================
+
+app.menus.mainMenu[10].menu=file
+app.menus.mainMenu[10].label=add
+app.menus.mainMenu[10].bean=fileAddAction
+app.menus.mainMenu[11].menu=file
+app.menus.mainMenu[11].label=import
+app.menus.mainMenu[11].bean=fileImportAction
+app.menus.mainMenu[12].menu=file
+app.menus.mainMenu[12].label=---
+app.menus.mainMenu[13].menu=file
+app.menus.mainMenu[13].label=exit
+app.menus.mainMenu[13].bean=fileExitAction
+
+# app.menus.mainMenu[20].menu=edit
+
+# app.menus.mainMenu[30].menu=tools
+
+app.menus.mainMenu[40].menu=display
+app.menus.mainMenu[40].label=refresh
+app.menus.mainMenu[40].bean=displayRefreshAction
+
+app.menus.mainMenu[80].menu=window
+app.menus.mainMenu[80].label=preferences
+app.menus.mainMenu[80].bean=windowPreferencesAction
+
+# app.menu.mainMenu[90].menu=help
