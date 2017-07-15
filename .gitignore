@@ -1,6 +1,8 @@
 *.class
 application.properties
 comixedrc
+test_database
+test_library
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
