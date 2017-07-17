@@ -23,12 +23,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
+import org.codehaus.plexus.util.FileUtils;
 import org.comixed.library.model.Comic;
 import org.comixed.library.utils.FileTypeIdentifier;
 import org.slf4j.Logger;
@@ -86,6 +89,13 @@ public abstract class AbstractArchiveLoader implements
     protected List<EntryLoaderForType> loaders = new ArrayList<>();
     protected Map<String,
                   EntryLoader> entryLoaders = new HashMap<>();
+    private String defaultExtension;
+
+    public AbstractArchiveLoader(String defaultExtension)
+    {
+        super();
+        this.defaultExtension = defaultExtension;
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception
@@ -118,6 +128,33 @@ public abstract class AbstractArchiveLoader implements
         }
     }
 
+    private String findAvailableFilename(String filename, int attempt)
+    {
+        String candidate = filename;
+
+        if (attempt > 0)
+        {
+            candidate = MessageFormat.format("{0}-{1}.{2}", filename, attempt, this.defaultExtension);
+        }
+        else
+        {
+            candidate = MessageFormat.format("{0}.{1}", filename, this.defaultExtension);
+        }
+
+        logger.debug("Candidate filename=" + candidate);
+        File file = new File(candidate);
+        return (!file.exists()) ? candidate : this.findAvailableFilename(filename, ++attempt);
+    }
+
+    protected EntryLoader getLoaderForContent(byte[] content)
+    {
+        String type = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content));
+
+        this.logger.debug("Content type: " + type);
+
+        return this.entryLoaders.get(type);
+    }
+
     public List<EntryLoaderForType> getLoaders()
     {
         return this.loaders;
@@ -129,22 +166,6 @@ public abstract class AbstractArchiveLoader implements
         this.logger.debug("Opening archive: " + comic.getFilename());
 
         this.loadComicInternal(comic, null);
-    }
-
-    @Override
-    public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveLoaderException
-    {
-        this.logger.debug("Loading single entry from archive: filename=" + comic.getFilename() + " entry=" + entryName);
-        return this.loadComicInternal(comic, entryName);
-    }
-
-    protected EntryLoader getLoaderForContent(byte[] content)
-    {
-        String type = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content));
-
-        this.logger.debug("Content type: " + type);
-
-        return this.entryLoaders.get(type);
     }
 
     /**
@@ -173,6 +194,13 @@ public abstract class AbstractArchiveLoader implements
         return content;
     }
 
+    @Override
+    public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveLoaderException
+    {
+        this.logger.debug("Loading single entry from archive: filename=" + comic.getFilename() + " entry=" + entryName);
+        return this.loadComicInternal(comic, entryName);
+    }
+
     protected void processContent(Comic comic, String filename, byte[] content)
     {
         EntryLoader loader = this.getLoaderForContent(content);
@@ -193,6 +221,51 @@ public abstract class AbstractArchiveLoader implements
             this.logger.debug("No registered loader for type");
         }
     }
+
+    @Override
+    public String saveComic(Comic source) throws ArchiveLoaderException
+    {
+        this.logger.debug("Saving comic: " + source.getFilename());
+
+        String tempFilename;
+        try
+        {
+            tempFilename = File.createTempFile(source.getBaseFilename() + "-temporary", "tmp").getAbsolutePath();
+        }
+        catch (IOException error)
+        {
+            throw new ArchiveLoaderException("unable to write comic", error);
+        }
+
+        this.saveComicInternal(source, tempFilename);
+
+        String filename = this.findAvailableFilename(source.getBaseFilename(), 0);
+        File file1 = new File(tempFilename);
+        File file2 = new File(filename);
+        try
+        {
+            logger.debug("Copying " + tempFilename + " to " + filename + ".");
+            FileUtils.copyFile(file1, file2);
+        }
+        catch (IOException error)
+        {
+            throw new ArchiveLoaderException("Unable to copy file", error);
+        }
+
+        return filename;
+    }
+
+    /**
+     * Performs the underlying creation of the new comic.
+     *
+     * @param source
+     *            the source comic
+     * @param filename
+     *            the new filename
+     * @throws ArchiveException
+     *             if an error occurs
+     */
+    abstract void saveComicInternal(Comic source, String filename) throws ArchiveLoaderException;
 
     protected File validateFile(Comic comic) throws ArchiveLoaderException
     {

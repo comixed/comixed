@@ -32,7 +32,7 @@ public interface ArchiveLoader
 {
     /**
      * Loads the entire comic's contents from disk.
-     * 
+     *
      * @param comic
      *            the comic
      * @throws ArchiveLoaderException
@@ -42,7 +42,7 @@ public interface ArchiveLoader
 
     /**
      * Loads a single file from the archive file.
-     * 
+     *
      * @param comic
      *            the comic
      * @param entryName
@@ -52,4 +52,22 @@ public interface ArchiveLoader
      *             if an error occurs
      */
     byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveLoaderException;
+
+    /**
+     * Saves the comic.
+     *
+     * The new comic will have the same base filename and directory as the
+     * source, but the extension will comic be determined by the instance of
+     * {@link ArchiveLoader}.
+     *
+     * If a comic already exists with the filename, it is replaced by the new
+     * comic.
+     *
+     * @param comic
+     *            the comic
+     * @return the filename for the new comic
+     * @throws ArchiveLoaderException
+     *             if an error occurs
+     */
+    String saveComic(Comic comic) throws ArchiveLoaderException;
 }
