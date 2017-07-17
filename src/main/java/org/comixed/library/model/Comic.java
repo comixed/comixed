@@ -42,6 +42,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.io.FilenameUtils;
 import org.comixed.library.loaders.ArchiveLoader;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -275,6 +276,21 @@ public class Comic
         this.pages.remove(index);
     }
 
+    private String formatDate(Date date)
+    {
+        return date != null ? DateFormat.getDateInstance().format(date) : "[NULL]";
+    }
+
+    /**
+     * Returns just the filename portion of the comic file's name.
+     *
+     * @return the base filename
+     */
+    public String getBaseFilename()
+    {
+        return FilenameUtils.removeExtension(this.filename);
+    }
+
     /**
      * Returns the character reference at the given index.
      *
@@ -411,16 +427,6 @@ public class Comic
     }
 
     /**
-     * Returns the series for the comic.
-     *
-     * @return the series
-     */
-    public String getSeries()
-    {
-        return this.series;
-    }
-
-    /**
      * Returns the notes for the issue.
      *
      * @return the notes
@@ -461,6 +467,16 @@ public class Comic
     public String getPublisher()
     {
         return this.publisher;
+    }
+
+    /**
+     * Returns the series for the comic.
+     *
+     * @return the series
+     */
+    public String getSeries()
+    {
+        return this.series;
     }
 
     /**
@@ -767,10 +783,5 @@ public class Comic
     {
         this.logger.debug("Setting volume=" + volume);
         this.volume = volume;
-    }
-
-    private String formatDate(Date date)
-    {
-        return date != null ? DateFormat.getDateInstance().format(date) : "[NULL]";
     }
 }

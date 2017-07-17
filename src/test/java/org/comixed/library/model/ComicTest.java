@@ -1,17 +1,17 @@
 /*
  * ComixEd - A digital comic book library management application.
  * Copyright (C) 2017, Darryl L. Pierce
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
@@ -45,371 +45,379 @@ public class ComicTest
     private static final String TEST_TEAM = "Super test team";
     private static final String TEST_CHARACTER = "Test Man";
     private static final String TEST_LOCATION = "Test Location";
-    private static final String TEST_FILENAME = "C:/example.cbz";
+    private static final String TEST_FILENAME = "C:/library/example.cbz";
     private static final String TEST_NOTES = "Some sample notes";
+    private static final String TEST_BASE_FILENAME = "C:/library/example";
     private Comic comic;
 
     @Before
     public void setUp() throws Exception
     {
-        comic = new Comic();
+        this.comic = new Comic();
     }
 
     @Test
-    public void testFilename()
+    public void testBaseFilename()
     {
-        comic.setFilename(TEST_FILENAME);
-        assertEquals(TEST_FILENAME, comic.getFilename());
-    }
-
-    @Test
-    public void testFilenameCanBeNull()
-    {
-        comic.setFilename(null);
-        assertNull(comic.getFilename());
-    }
-
-    @Test
-    public void testSeries()
-    {
-        comic.setSeries(TEST_SERIES);
-        assertEquals(TEST_SERIES, comic.getSeries());
-    }
-
-    @Test
-    public void testVolume()
-    {
-        comic.setVolume(TEST_VOLUME);
-        assertEquals(TEST_VOLUME, comic.getVolume());
-    }
-
-    @Test
-    public void testPublisher()
-    {
-        comic.setPublisher(TEST_PUBLISHER);
-        assertEquals(TEST_PUBLISHER, comic.getPublisher());
-    }
-
-    @Test
-    public void testTitle()
-    {
-        comic.setTitle(TEST_TITLE);
-        assertEquals(TEST_TITLE, comic.getTitle());
-    }
-
-    @Test
-    public void testIssueNumber()
-    {
-        comic.setIssueNumber(TEST_ISSUE_NUMBER);
-        assertEquals(TEST_ISSUE_NUMBER, comic.getIssueNumber());
-    }
-
-    @Test
-    public void testCoverDate()
-    {
-        comic.setCoverDate(TEST_DATE);
-        assertEquals(TEST_DATE, comic.getCoverDate());
-    }
-
-    @Test
-    public void testCoverDateCanBeNull()
-    {
-        comic.setCoverDate(null);
-        assertNull(comic.getCoverDate());
-    }
-
-    @Test
-    public void testDateAdded()
-    {
-        comic.setDateAdded(TEST_DATE);
-        assertEquals(TEST_DATE, comic.getDateAdded());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testDateAddedCannotBeNull()
-    {
-        comic.setDateAdded(null);
-    }
-
-    @Test
-    public void testDateLastRead()
-    {
-        comic.setDateLastRead(TEST_DATE);
-        assertEquals(TEST_DATE, comic.getDateLastRead());
-    }
-
-    @Test
-    public void testDateLastReadCanBeNull()
-    {
-        comic.setDateLastRead(null);
-        assertNull(comic.getDateLastRead());
-    }
-
-    @Test
-    public void testNotes()
-    {
-        comic.setNotes(TEST_NOTES);
-        assertEquals(TEST_NOTES, comic.getNotes());
-    }
-
-    @Test
-    public void testNoStoryArc()
-    {
-        comic = new Comic();
-        assertFalse(comic.hasStoryArcs());
-        assertEquals(0, comic.getStoryArcCount());
-    }
-
-    @Test
-    public void testOneStoryArc()
-    {
-        comic.addStoryArc(TEST_STORY_ARC_NAME);
-        assertTrue(comic.hasStoryArcs());
-        assertEquals(1, comic.getStoryArcCount());
-        assertEquals(TEST_STORY_ARC_NAME, comic.getStoryArc(0));
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetStoryArcIndexOutOfBounds()
-    {
-        comic.addStoryArc(TEST_STORY_ARC_NAME);
-        assertTrue(comic.hasStoryArcs());
-        assertEquals(1, comic.getStoryArcCount());
-        comic.getStoryArc(comic.getStoryArcCount() + 1);
+        this.comic.setFilename(TEST_FILENAME);
+        assertEquals(TEST_BASE_FILENAME, this.comic.getBaseFilename());
     }
 
     @Test
     public void testBlockDuplicateStoryArc()
     {
-        comic.addStoryArc(TEST_STORY_ARC_NAME);
-        assertTrue(comic.hasStoryArcs());
-        assertEquals(1, comic.getStoryArcCount());
-        assertEquals(TEST_STORY_ARC_NAME, comic.getStoryArc(0));
+        this.comic.addStoryArc(TEST_STORY_ARC_NAME);
+        assertTrue(this.comic.hasStoryArcs());
+        assertEquals(1, this.comic.getStoryArcCount());
+        assertEquals(TEST_STORY_ARC_NAME, this.comic.getStoryArc(0));
         // try to add the duplicate
-        comic.addStoryArc(TEST_STORY_ARC_NAME);
-        assertTrue(comic.hasStoryArcs());
-        assertEquals(1, comic.getStoryArcCount());
+        this.comic.addStoryArc(TEST_STORY_ARC_NAME);
+        assertTrue(this.comic.hasStoryArcs());
+        assertEquals(1, this.comic.getStoryArcCount());
     }
 
     @Test
-    public void testMultipleStoryArcs()
+    public void testClearCharacters()
     {
-        String otherStoryArc = TEST_STORY_ARC_NAME.substring(1);
-        comic.addStoryArc(TEST_STORY_ARC_NAME);
-        comic.addStoryArc(otherStoryArc);
-        assertTrue(comic.hasStoryArcs());
-        assertEquals(2, comic.getStoryArcCount());
-        assertEquals(TEST_STORY_ARC_NAME, comic.getStoryArc(0));
-        assertEquals(otherStoryArc, comic.getStoryArc(1));
+        this.comic.addCharacter(TEST_CHARACTER);
+        assertTrue(this.comic.hasCharacters());
+        this.comic.clearCharacters();
+        assertFalse(this.comic.hasCharacters());
+    }
+
+    @Test
+    public void testClearLocations()
+    {
+        this.comic.addLocation(TEST_LOCATION);
+        this.comic.clearLocations();
+        assertFalse(this.comic.hasLocations());
+        assertEquals(0, this.comic.getLocationCount());
     }
 
     @Test
     public void testClearStoryArcs()
     {
-        comic.addStoryArc(TEST_STORY_ARC_NAME);
-        assertTrue(comic.hasStoryArcs());
-        assertEquals(1, comic.getStoryArcCount());
-        comic.clearStoryArcs();
-        assertFalse(comic.hasStoryArcs());
-        assertEquals(0, comic.getStoryArcCount());
+        this.comic.addStoryArc(TEST_STORY_ARC_NAME);
+        assertTrue(this.comic.hasStoryArcs());
+        assertEquals(1, this.comic.getStoryArcCount());
+        this.comic.clearStoryArcs();
+        assertFalse(this.comic.hasStoryArcs());
+        assertEquals(0, this.comic.getStoryArcCount());
     }
 
     @Test
-    public void testSummary()
+    public void testClearTeams()
     {
-        comic.setSummary(TEST_SUMMARY);
-        assertNotNull(comic.getSummary());
-        assertEquals(TEST_SUMMARY, comic.getSummary());
+        this.comic.addCharacter(TEST_CHARACTER);
+        this.comic.clearCharacters();
+        assertFalse(this.comic.hasCharacters());
+        assertEquals(0, this.comic.getCharacterCount());
     }
 
     @Test
-    public void testSummaryCanBeNull()
+    public void testComicVineId()
     {
-        comic.setSummary(null);
-        assertNull(comic.getSummary());
+        this.comic.setComicVineId(TEST_COMIC_VINE_ID);
+        assertNotNull(this.comic.getComicVineId());
+        assertEquals(TEST_COMIC_VINE_ID, this.comic.getComicVineId());
+    }
+
+    @Test
+    public void testComicVineIdCanBeNull()
+    {
+        this.comic.setComicVineId(null);
+        assertNull(this.comic.getComicVineId());
+    }
+
+    @Test
+    public void testCoverDate()
+    {
+        this.comic.setCoverDate(TEST_DATE);
+        assertEquals(TEST_DATE, this.comic.getCoverDate());
+    }
+
+    @Test
+    public void testCoverDateCanBeNull()
+    {
+        this.comic.setCoverDate(null);
+        assertNull(this.comic.getCoverDate());
+    }
+
+    @Test
+    public void testDateAdded()
+    {
+        this.comic.setDateAdded(TEST_DATE);
+        assertEquals(TEST_DATE, this.comic.getDateAdded());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDateAddedCannotBeNull()
+    {
+        this.comic.setDateAdded(null);
+    }
+
+    @Test
+    public void testDateLastRead()
+    {
+        this.comic.setDateLastRead(TEST_DATE);
+        assertEquals(TEST_DATE, this.comic.getDateLastRead());
+    }
+
+    @Test
+    public void testDateLastReadCanBeNull()
+    {
+        this.comic.setDateLastRead(null);
+        assertNull(this.comic.getDateLastRead());
     }
 
     @Test
     public void testDescription()
     {
-        comic.setDescription(TEST_DESCRIPTION);
-        assertNotNull(comic.getDescription());
-        assertEquals(TEST_DESCRIPTION, comic.getDescription());
+        this.comic.setDescription(TEST_DESCRIPTION);
+        assertNotNull(this.comic.getDescription());
+        assertEquals(TEST_DESCRIPTION, this.comic.getDescription());
     }
 
     @Test
     public void testDescriptionCanBeNull()
     {
-        comic.setDescription(null);
-        assertNull(comic.getDescription());
+        this.comic.setDescription(null);
+        assertNull(this.comic.getDescription());
     }
 
     @Test
-    public void testNoCharacters()
+    public void testDuplicateCharacter()
     {
-        assertFalse(comic.hasCharacters());
-        assertEquals(0, comic.getCharacterCount());
+        this.comic.addCharacter(TEST_CHARACTER);
+        this.comic.addCharacter(TEST_CHARACTER);
+        assertTrue(this.comic.hasCharacters());
+        assertEquals(1, this.comic.getCharacterCount());
+        assertEquals(TEST_CHARACTER, this.comic.getCharacter(0));
+    }
+
+    @Test
+    public void testDuplicateLocation()
+    {
+        this.comic.addLocation(TEST_LOCATION);
+        this.comic.addLocation(TEST_LOCATION);
+        assertTrue(this.comic.hasLocations());
+        assertEquals(1, this.comic.getLocationCount());
+        assertEquals(TEST_LOCATION, this.comic.getLocation(0));
+    }
+
+    @Test
+    public void testFilename()
+    {
+        this.comic.setFilename(TEST_FILENAME);
+        assertEquals(TEST_FILENAME, this.comic.getFilename());
+    }
+
+    @Test
+    public void testFilenameCanBeNull()
+    {
+        this.comic.setFilename(null);
+        assertNull(this.comic.getFilename());
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetCharactersIndexOutOfBounds()
+    {
+        this.comic.addCharacter(TEST_CHARACTER);
+        this.comic.getCharacter(this.comic.getCharacterCount() + 1);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetLocationsIndexOutOfBounds()
+    {
+        this.comic.addLocation(TEST_LOCATION);
+        this.comic.getLocation(this.comic.getLocationCount() + 1);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetStoryArcIndexOutOfBounds()
+    {
+        this.comic.addStoryArc(TEST_STORY_ARC_NAME);
+        assertTrue(this.comic.hasStoryArcs());
+        assertEquals(1, this.comic.getStoryArcCount());
+        this.comic.getStoryArc(this.comic.getStoryArcCount() + 1);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetTeamsIndexOutOfBounds()
+    {
+        this.comic.addTeam(TEST_TEAM);
+        this.comic.getTeam(this.comic.getTeamCount() + 1);
+    }
+
+    @Test
+    public void testIgnoreDuplicateTeam()
+    {
+        this.comic.addTeam(TEST_TEAM);
+        assertTrue(this.comic.hasTeams());
+        assertEquals(1, this.comic.getTeamCount());
+        // add the duplicate
+        this.comic.addTeam(TEST_TEAM);
+        assertTrue(this.comic.hasTeams());
+        assertEquals(1, this.comic.getTeamCount());
+    }
+
+    @Test
+    public void testIssueNumber()
+    {
+        this.comic.setIssueNumber(TEST_ISSUE_NUMBER);
+        assertEquals(TEST_ISSUE_NUMBER, this.comic.getIssueNumber());
     }
 
     @Test
     public void testMultipleCharacters()
     {
         String secondCharacter = TEST_CHARACTER.substring(1);
-        comic.addCharacter(TEST_CHARACTER);
-        comic.addCharacter(secondCharacter);
-        assertTrue(comic.hasCharacters());
-        assertEquals(2, comic.getCharacterCount());
-        assertEquals(TEST_CHARACTER, comic.getCharacter(0));
-        assertEquals(secondCharacter, comic.getCharacter(1));
-    }
-
-    @Test
-    public void testDuplicateCharacter()
-    {
-        comic.addCharacter(TEST_CHARACTER);
-        comic.addCharacter(TEST_CHARACTER);
-        assertTrue(comic.hasCharacters());
-        assertEquals(1, comic.getCharacterCount());
-        assertEquals(TEST_CHARACTER, comic.getCharacter(0));
-    }
-
-    @Test
-    public void testClearCharacters()
-    {
-        comic.addCharacter(TEST_CHARACTER);
-        assertTrue(comic.hasCharacters());
-        comic.clearCharacters();
-        assertFalse(comic.hasCharacters());
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetCharactersIndexOutOfBounds()
-    {
-        comic.addCharacter(TEST_CHARACTER);
-        comic.getCharacter(comic.getCharacterCount() + 1);
-    }
-
-    @Test
-    public void testNoTeams()
-    {
-        assertFalse(comic.hasTeams());
-    }
-
-    @Test
-    public void testOneTeam()
-    {
-        comic.addTeam(TEST_TEAM);
-        assertTrue(comic.hasTeams());
-        assertEquals(1, comic.getTeamCount());
-        assertEquals(TEST_TEAM, comic.getTeam(0));
-    }
-
-    @Test
-    public void testIgnoreDuplicateTeam()
-    {
-        comic.addTeam(TEST_TEAM);
-        assertTrue(comic.hasTeams());
-        assertEquals(1, comic.getTeamCount());
-        // add the duplicate
-        comic.addTeam(TEST_TEAM);
-        assertTrue(comic.hasTeams());
-        assertEquals(1, comic.getTeamCount());
-    }
-
-    @Test
-    public void testMultipleTeams()
-    {
-        String secondTeamName = TEST_TEAM.substring(1);
-        comic.addTeam(TEST_TEAM);
-        comic.addTeam(secondTeamName);
-        assertTrue(comic.hasTeams());
-        assertEquals(2, comic.getTeamCount());
-        assertEquals(TEST_TEAM, comic.getTeam(0));
-        assertEquals(secondTeamName, comic.getTeam(1));
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetTeamsIndexOutOfBounds()
-    {
-        comic.addTeam(TEST_TEAM);
-        comic.getTeam(comic.getTeamCount() + 1);
-    }
-
-    @Test
-    public void testClearTeams()
-    {
-        comic.addCharacter(TEST_CHARACTER);
-        comic.clearCharacters();
-        assertFalse(comic.hasCharacters());
-        assertEquals(0, comic.getCharacterCount());
-    }
-
-    @Test
-    public void testNoLocations()
-    {
-        assertFalse(comic.hasLocations());
-        assertEquals(0, comic.getLocationCount());
-    }
-
-    @Test
-    public void testOneLocation()
-    {
-        comic.addLocation(TEST_LOCATION);
-        assertTrue(comic.hasLocations());
-        assertEquals(1, comic.getLocationCount());
-        assertEquals(TEST_LOCATION, comic.getLocation(0));
-    }
-
-    @Test
-    public void testDuplicateLocation()
-    {
-        comic.addLocation(TEST_LOCATION);
-        comic.addLocation(TEST_LOCATION);
-        assertTrue(comic.hasLocations());
-        assertEquals(1, comic.getLocationCount());
-        assertEquals(TEST_LOCATION, comic.getLocation(0));
+        this.comic.addCharacter(TEST_CHARACTER);
+        this.comic.addCharacter(secondCharacter);
+        assertTrue(this.comic.hasCharacters());
+        assertEquals(2, this.comic.getCharacterCount());
+        assertEquals(TEST_CHARACTER, this.comic.getCharacter(0));
+        assertEquals(secondCharacter, this.comic.getCharacter(1));
     }
 
     @Test
     public void testMultipleLocations()
     {
         String secondLocation = TEST_LOCATION.substring(1);
-        comic.addLocation(TEST_LOCATION);
-        comic.addLocation(secondLocation);
-        assertTrue(comic.hasLocations());
-        assertEquals(2, comic.getLocationCount());
-        assertEquals(TEST_LOCATION, comic.getLocation(0));
-        assertEquals(secondLocation, comic.getLocation(1));
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetLocationsIndexOutOfBounds()
-    {
-        comic.addLocation(TEST_LOCATION);
-        comic.getLocation(comic.getLocationCount() + 1);
+        this.comic.addLocation(TEST_LOCATION);
+        this.comic.addLocation(secondLocation);
+        assertTrue(this.comic.hasLocations());
+        assertEquals(2, this.comic.getLocationCount());
+        assertEquals(TEST_LOCATION, this.comic.getLocation(0));
+        assertEquals(secondLocation, this.comic.getLocation(1));
     }
 
     @Test
-    public void testClearLocations()
+    public void testMultipleStoryArcs()
     {
-        comic.addLocation(TEST_LOCATION);
-        comic.clearLocations();
-        assertFalse(comic.hasLocations());
-        assertEquals(0, comic.getLocationCount());
+        String otherStoryArc = TEST_STORY_ARC_NAME.substring(1);
+        this.comic.addStoryArc(TEST_STORY_ARC_NAME);
+        this.comic.addStoryArc(otherStoryArc);
+        assertTrue(this.comic.hasStoryArcs());
+        assertEquals(2, this.comic.getStoryArcCount());
+        assertEquals(TEST_STORY_ARC_NAME, this.comic.getStoryArc(0));
+        assertEquals(otherStoryArc, this.comic.getStoryArc(1));
     }
 
     @Test
-    public void testComicVineId()
+    public void testMultipleTeams()
     {
-        comic.setComicVineId(TEST_COMIC_VINE_ID);
-        assertNotNull(comic.getComicVineId());
-        assertEquals(TEST_COMIC_VINE_ID, comic.getComicVineId());
+        String secondTeamName = TEST_TEAM.substring(1);
+        this.comic.addTeam(TEST_TEAM);
+        this.comic.addTeam(secondTeamName);
+        assertTrue(this.comic.hasTeams());
+        assertEquals(2, this.comic.getTeamCount());
+        assertEquals(TEST_TEAM, this.comic.getTeam(0));
+        assertEquals(secondTeamName, this.comic.getTeam(1));
     }
 
     @Test
-    public void testComicVineIdCanBeNull()
+    public void testNoCharacters()
     {
-        comic.setComicVineId(null);
-        assertNull(comic.getComicVineId());
+        assertFalse(this.comic.hasCharacters());
+        assertEquals(0, this.comic.getCharacterCount());
+    }
+
+    @Test
+    public void testNoLocations()
+    {
+        assertFalse(this.comic.hasLocations());
+        assertEquals(0, this.comic.getLocationCount());
+    }
+
+    @Test
+    public void testNoStoryArc()
+    {
+        this.comic = new Comic();
+        assertFalse(this.comic.hasStoryArcs());
+        assertEquals(0, this.comic.getStoryArcCount());
+    }
+
+    @Test
+    public void testNoTeams()
+    {
+        assertFalse(this.comic.hasTeams());
+    }
+
+    @Test
+    public void testNotes()
+    {
+        this.comic.setNotes(TEST_NOTES);
+        assertEquals(TEST_NOTES, this.comic.getNotes());
+    }
+
+    @Test
+    public void testOneLocation()
+    {
+        this.comic.addLocation(TEST_LOCATION);
+        assertTrue(this.comic.hasLocations());
+        assertEquals(1, this.comic.getLocationCount());
+        assertEquals(TEST_LOCATION, this.comic.getLocation(0));
+    }
+
+    @Test
+    public void testOneStoryArc()
+    {
+        this.comic.addStoryArc(TEST_STORY_ARC_NAME);
+        assertTrue(this.comic.hasStoryArcs());
+        assertEquals(1, this.comic.getStoryArcCount());
+        assertEquals(TEST_STORY_ARC_NAME, this.comic.getStoryArc(0));
+    }
+
+    @Test
+    public void testOneTeam()
+    {
+        this.comic.addTeam(TEST_TEAM);
+        assertTrue(this.comic.hasTeams());
+        assertEquals(1, this.comic.getTeamCount());
+        assertEquals(TEST_TEAM, this.comic.getTeam(0));
+    }
+
+    @Test
+    public void testPublisher()
+    {
+        this.comic.setPublisher(TEST_PUBLISHER);
+        assertEquals(TEST_PUBLISHER, this.comic.getPublisher());
+    }
+
+    @Test
+    public void testSeries()
+    {
+        this.comic.setSeries(TEST_SERIES);
+        assertEquals(TEST_SERIES, this.comic.getSeries());
+    }
+
+    @Test
+    public void testSummary()
+    {
+        this.comic.setSummary(TEST_SUMMARY);
+        assertNotNull(this.comic.getSummary());
+        assertEquals(TEST_SUMMARY, this.comic.getSummary());
+    }
+
+    @Test
+    public void testSummaryCanBeNull()
+    {
+        this.comic.setSummary(null);
+        assertNull(this.comic.getSummary());
+    }
+
+    @Test
+    public void testTitle()
+    {
+        this.comic.setTitle(TEST_TITLE);
+        assertEquals(TEST_TITLE, this.comic.getTitle());
+    }
+
+    @Test
+    public void testVolume()
+    {
+        this.comic.setVolume(TEST_VOLUME);
+        assertEquals(TEST_VOLUME, this.comic.getVolume());
     }
 }
