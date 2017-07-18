@@ -106,4 +106,10 @@ public class RarArchiveLoaderTest
 
         assertNull(result);
     }
+
+    @Test(expected = ArchiveLoaderException.class)
+    public void testSaveComic() throws ArchiveLoaderException
+    {
+        archiveLoader.saveComic(comic);
+    }
 }

@@ -40,6 +40,11 @@ import com.github.junrar.rarfile.FileHeader;
 @Component
 public class RarArchiveLoader extends AbstractArchiveLoader
 {
+    public RarArchiveLoader()
+    {
+        super("cbr");
+    }
+
     @Override
     protected byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveLoaderException
     {
@@ -86,5 +91,12 @@ public class RarArchiveLoader extends AbstractArchiveLoader
             throw new ArchiveLoaderException("unable to open file: " + file.getAbsolutePath(), error);
         }
         return result;
+    }
+
+    @Override
+    void saveComicInternal(Comic source, String filename) throws ArchiveLoaderException
+    {
+        logger.warn("Saving RAR comics is not supported");
+        throw new ArchiveLoaderException("Saving CBR comics is not supported");
     }
 }
