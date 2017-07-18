@@ -29,6 +29,8 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,7 +45,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.apache.commons.io.FilenameUtils;
-import org.comixed.library.loaders.ArchiveLoader;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
@@ -65,6 +66,9 @@ public class Comic
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    ArchiveType archiveType;
 
     @Column(name = "filename",
             nullable = false,
@@ -768,5 +772,15 @@ public class Comic
     {
         this.logger.debug("Setting volume=" + volume);
         this.volume = volume;
+    }
+
+    public void setArchiveType(ArchiveType archiveType)
+    {
+        this.archiveType = archiveType;
+    }
+
+    public ArchiveType getArchiveType()
+    {
+        return this.archiveType;
     }
 }

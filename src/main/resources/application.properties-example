@@ -33,10 +33,12 @@ comic.entry.loaders[2].type=xml
 comic.entry.loaders[2].bean=filenameEntryLoader
 
 # Archive loaders
-comic.archive.loaders[0].type=zip
+comic.archive.loaders[0].format=zip
 comic.archive.loaders[0].bean=zipArchiveLoader
-comic.archive.loaders[1].type=rar
-comic.archive.loaders[1].bean=rarArchiveLoaderr
+comic.archive.loaders[0].archiveType=CBZ
+comic.archive.loaders[1].format=rar
+comic.archive.loaders[1].bean=rarArchiveLoader
+comic.archive.loaders[1].archiveType=CBR
 
 # Filename entry loaders
 comic.filename-entry.loaders[0].mask=ComicInfo.xml

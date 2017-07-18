@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,15 +64,18 @@ public class ComicFileHandler implements
     private Map<String,
                 ArchiveLoader> archiveLoaders;
     private List<ArchiveLoaderEntry> loaders = new ArrayList<>();
+    private Map<String,
+                ArchiveType> archiveTypes = new HashMap<>();
 
     public static class ArchiveLoaderEntry
     {
-        private String type;
+        private String format;
         private String bean;
+        private ArchiveType archiveType;
 
-        public void setType(String type)
+        public void setFormat(String format)
         {
-            this.type = type;
+            this.format = format;
         }
 
         public void setBean(String bean)
@@ -79,9 +83,15 @@ public class ComicFileHandler implements
             this.bean = bean;
         }
 
+        public void setArchiveType(ArchiveType archiveType)
+        {
+            this.archiveType = archiveType;
+        }
+
         public boolean isValid()
         {
-            return this.type != null && !this.type.isEmpty() && this.bean != null && !this.bean.isEmpty();
+            return this.format != null && !this.format.isEmpty() && this.bean != null && !this.bean.isEmpty()
+                   && this.archiveType != null;
         }
     }
 
@@ -121,6 +131,8 @@ public class ComicFileHandler implements
         if (archiveLoader == null) { throw new ComicFileHandlerException("No archive loader defined for type: "
                                                                          + archiveType); }
 
+        comic.setArchiveType(this.archiveTypes.get(archiveType));
+
         try
         {
             archiveLoader.loadComic(comic);
@@ -136,15 +148,22 @@ public class ComicFileHandler implements
     {
         logger.debug("Initializing ComicFileHandler");
         archiveLoaders.clear();
+        archiveTypes.clear();
         for (ArchiveLoaderEntry loader : this.loaders)
         {
             if (loader.isValid())
             {
-                logger.debug("Adding new archive loader: type=" + loader.type + " bean=" + loader.bean);
+                ArchiveLoader bean = (ArchiveLoader )context.getBean(loader.bean);
 
                 if (context.containsBean(loader.bean))
                 {
-                    this.archiveLoaders.put(loader.type, (ArchiveLoader )context.getBean(loader.bean));
+                    logger.debug("Adding new archive loader: format=" + loader.format + " bean=" + loader.bean);
+                    this.archiveLoaders.put(loader.format, bean);
+                    logger.debug("Associating archive type with format: format=" + loader.format + " archive type="
+                                 + loader.archiveType);
+                    this.archiveTypes.put(loader.format, loader.archiveType);
+                    logger.debug("Registering loader with archive type: " + loader.archiveType);
+                    loader.archiveType.setArchiveLoader(bean);
                 }
                 else
                 {
@@ -153,7 +172,7 @@ public class ComicFileHandler implements
             }
             else
             {
-                if (loader.type == null || loader.type.isEmpty())
+                if (loader.format == null || loader.format.isEmpty())
                 {
                     logger.warn("Missing type for archive loader");
                 }
