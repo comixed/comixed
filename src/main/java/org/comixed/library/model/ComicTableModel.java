@@ -42,6 +42,7 @@ public class ComicTableModel extends DefaultTableModel implements
                              InitializingBean,
                              ComicSelectionListener
 {
+    private static final int ARCHIVE_TYPE = 14;
     private static final int TEAMS = 13;
     private static final int SUMMARY = 12;
     private static final int STORY_ARCS = 11;
@@ -71,7 +72,8 @@ public class ComicTableModel extends DefaultTableModel implements
      "pages",
      "story_arcs",
      "summary",
-     "teams"};
+     "teams",
+     "archive_type"};
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -144,6 +146,8 @@ public class ComicTableModel extends DefaultTableModel implements
                     return comic.getSummary();
                 case TEAMS:
                     return comic.getTeams();
+                case ARCHIVE_TYPE:
+                    return comic.getArchiveType();
             }
         }
 
