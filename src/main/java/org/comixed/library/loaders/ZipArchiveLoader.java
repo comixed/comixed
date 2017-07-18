@@ -20,13 +20,11 @@
 package org.comixed.library.loaders;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.zip.ZipEntry;
+import java.util.Enumeration;
 
-import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.compress.archivers.ArchiveInputStream;
-import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixed.library.model.Comic;
 import org.springframework.stereotype.Component;
 
@@ -46,17 +44,22 @@ public class ZipArchiveLoader extends AbstractArchiveLoader
 
         try
         {
-            FileInputStream istream = new FileInputStream(file);
-            ArchiveInputStream input = new ArchiveStreamFactory().createArchiveInputStream("zip", istream);
-            ZipEntry entry = null;
-            byte[] result = null;
+            // FileInputStream istream = new FileInputStream(file);
+            // ZipArchiveInputStream input = (ZipArchiveInputStream )new
+            // ArchiveStreamFactory().createArchiveInputStream(ArchiveStreamFactory.ZIP,
+            // istream);
 
-            while ((entry = (ZipEntry )input.getNextEntry()) != null)
+            ZipFile input = new ZipFile(file);
+            byte[] result = null;
+            Enumeration<ZipArchiveEntry> entries = input.getEntries();
+
+            while (entries.hasMoreElements())
             {
+                ZipArchiveEntry entry = entries.nextElement();
                 String filename = entry.getName();
                 if (entryName == null || entryName.equals(filename))
                 {
-                    byte[] content = this.loadContent(entry.getName(), entry.getSize(), input);
+                    byte[] content = this.loadContent(entry.getName(), entry.getSize(), input.getInputStream(entry));
                     // if we were looking for a file, then we're done
                     if (entryName != null)
                     {
@@ -73,12 +76,10 @@ public class ZipArchiveLoader extends AbstractArchiveLoader
             }
 
             input.close();
-            istream.close();
 
             return result;
         }
-        catch (IOException
-               | ArchiveException error)
+        catch (IOException error)
         {
             throw new ArchiveLoaderException("unable to open file: " + file.getAbsolutePath(), error);
         }
