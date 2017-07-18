@@ -56,7 +56,11 @@ public class RarArchiveLoader extends AbstractArchiveLoader
             Archive archive = new Archive(new FileVolumeManager(file));
             FileHeader entry = archive.nextFileHeader();
 
-            if (entry == null) { throw new ArchiveLoaderException("Invalid or corrupt RAR file: " + file.getName()); }
+            if (entry == null)
+            {
+                archive.close();
+                throw new ArchiveLoaderException("Invalid or corrupt RAR file: " + file.getName());
+            }
 
             while (entry != null)
             {
