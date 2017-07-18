@@ -25,6 +25,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -39,6 +41,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MenuHelper
 {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private MessageSource messageSource;
     @Autowired
@@ -60,6 +64,7 @@ public class MenuHelper
 
     public JMenuItem createMenuItem(String label, String beanName)
     {
+        logger.debug("Creating menu item: label=" + label + " beanName=" + beanName);
         if (!this.context.containsBean(beanName)) return null;
 
         AbstractAction action = (AbstractAction )this.context.getBean(beanName);
