@@ -19,13 +19,19 @@
 
 package org.comixed.library.loaders;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Enumeration;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.Page;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,6 +44,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ZipArchiveLoader extends AbstractArchiveLoader
 {
+    public ZipArchiveLoader()
+    {
+        super("cbz");
+    }
+
     protected byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveLoaderException
     {
         File file = validateFile(comic);
@@ -82,6 +93,68 @@ public class ZipArchiveLoader extends AbstractArchiveLoader
         catch (IOException error)
         {
             throw new ArchiveLoaderException("unable to open file: " + file.getAbsolutePath(), error);
+        }
+    }
+
+    void saveComicInternal(Comic source, String filename) throws ArchiveLoaderException
+    {
+        logger.debug("Creating temporary file: " + filename);
+
+        ZipArchiveOutputStream zoutput;
+        try
+        {
+            zoutput = new ZipArchiveOutputStream(new FileOutputStream(filename));
+        }
+        catch (FileNotFoundException error)
+        {
+            throw new ArchiveLoaderException("error opening output comic archive", error);
+        }
+
+        // TODO write the comic meta-data to the archive
+        for (int index = 0;
+             index < source.getPageCount();
+             index++)
+        {
+            // TODO if the page is deleted, then skip it
+            Page page = source.getPage(index);
+            ZipArchiveEntry entry = new ZipArchiveEntry(page.getFilename());
+            try
+            {
+                logger.debug("Adding entry: " + page.getFilename() + " size=" + page.getContent().length);
+                // entry.setSize(page.getContent().length);
+                zoutput.addRawArchiveEntry(entry, new ByteArrayInputStream(page.getContent()));
+                zoutput.putArchiveEntry(entry);
+                zoutput.write(page.getContent(), 0, page.getContent().length);
+                zoutput.closeArchiveEntry();
+            }
+            catch (IOException error)
+            {
+                throw new ArchiveLoaderException("unable to create archive entry: " + page.getFilename(), error);
+            }
+        }
+
+        try
+        {
+            zoutput.close();
+        }
+        catch (IOException error)
+        {
+            throw new ArchiveLoaderException("error closing output comic archive", error);
+        }
+    }
+
+    private void saveContent(String entryName, byte[] content, OutputStream output) throws ArchiveLoaderException
+    {
+        logger.debug("Writing archive entry: " + entryName + " size=" + content.length);
+        ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
+        entry.setSize(content.length);
+        try
+        {
+            output.write(content);
+        }
+        catch (IOException error)
+        {
+            throw new ArchiveLoaderException("Failed to write archive entry: " + entryName, error);
         }
     }
 }

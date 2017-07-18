@@ -106,4 +106,25 @@ public class ZipArchiveLoaderTest
 
         assertNull(result);
     }
+
+    @Test
+    public void testSaveComic() throws ArchiveLoaderException
+    {
+        // load an existing comic
+        archiveLoader.loadComic(comic);
+
+        // now save it and reload it
+        String filename = archiveLoader.saveComic(comic);
+
+        Comic result = new Comic();
+
+        result.setFilename(filename);
+        archiveLoader.loadComic(result);
+
+        assertEquals(4, result.getPageCount());
+        assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
+        assertEquals(TEST_FILE_ENTRY_1, result.getPage(1).getFilename());
+        assertEquals(TEST_FILE_ENTRY_2, result.getPage(2).getFilename());
+        assertEquals(TEST_FILE_ENTRY_3, result.getPage(3).getFilename());
+    }
 }
