@@ -35,6 +35,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.swing.ImageIcon;
 
+import org.comixed.library.loaders.ArchiveLoaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +98,25 @@ public class Page
         this.hash = this.createHash(content);
     }
 
+    private String createHash(byte[] bytes)
+    {
+        this.logger.debug("Generating MD5 hash");
+        String result = "";
+        MessageDigest md;
+        try
+        {
+            md = MessageDigest.getInstance("MD5");
+            md.update(bytes);
+            result = new BigInteger(1, md.digest()).toString(16).toUpperCase();
+        }
+        catch (NoSuchAlgorithmException error)
+        {
+            this.logger.error("Failed to generate hash", error);
+        }
+        this.logger.debug("Returning: " + result);
+        return result;
+    }
+
     @Override
     public boolean equals(Object obj)
     {
@@ -134,6 +154,17 @@ public class Page
      */
     public byte[] getContent()
     {
+        if (this.content == null)
+        {
+            try
+            {
+                this.content = this.comic.archiveType.getArchiveLoader().loadSingleFile(this.comic, this.filename);
+            }
+            catch (ArchiveLoaderException error)
+            {
+                logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(), error);
+            }
+        }
         return this.content;
     }
 
@@ -195,6 +226,11 @@ public class Page
         return result;
     }
 
+    void setComic(Comic comic)
+    {
+        this.comic = comic;
+    }
+
     /**
      * Sets a new filename for the page.
      *
@@ -205,29 +241,5 @@ public class Page
     {
         this.logger.debug("Changing filename: " + this.filename + " -> " + filename);
         this.filename = filename;
-    }
-
-    private String createHash(byte[] bytes)
-    {
-        this.logger.debug("Generating MD5 hash");
-        String result = "";
-        MessageDigest md;
-        try
-        {
-            md = MessageDigest.getInstance("MD5");
-            md.update(bytes);
-            result = new BigInteger(1, md.digest()).toString(16).toUpperCase();
-        }
-        catch (NoSuchAlgorithmException error)
-        {
-            this.logger.error("Failed to generate hash", error);
-        }
-        this.logger.debug("Returning: " + result);
-        return result;
-    }
-
-    void setComic(Comic comic)
-    {
-        this.comic = comic;
     }
 }
