@@ -132,7 +132,6 @@ public class ComicFileHandlerTest
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
         Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
         Mockito.when(archiveLoaders.get(Mockito.anyString())).thenReturn(archiveLoader);
-        Mockito.doNothing().when(comic).setArchiveLoader(Mockito.any(ArchiveLoader.class));
         Mockito.doNothing().when(archiveLoader).loadComic(Mockito.any(Comic.class));
 
         handler.loadComic(comic);
@@ -140,7 +139,6 @@ public class ComicFileHandlerTest
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
         Mockito.verify(identifier, Mockito.times(1)).typeFor(input.capture());
         Mockito.verify(archiveLoaders, Mockito.times(1)).get(TEST_COMIC_FILE_TYPE);
-        Mockito.verify(comic, Mockito.times(1)).setArchiveLoader(archiveLoader);
         Mockito.verify(archiveLoader, Mockito.times(1)).loadComic(comic);
     }
 }

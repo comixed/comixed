@@ -121,7 +121,6 @@ public class ComicFileHandler implements
         if (archiveLoader == null) { throw new ComicFileHandlerException("No archive loader defined for type: "
                                                                          + archiveType); }
 
-        comic.setArchiveLoader(archiveLoader);
         try
         {
             archiveLoader.loadComic(comic);
