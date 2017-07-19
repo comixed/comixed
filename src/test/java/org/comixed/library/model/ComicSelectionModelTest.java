@@ -126,14 +126,32 @@ public class ComicSelectionModelTest
     }
 
     @Test
+    public void testFireComicSelectionChangedEvent()
+    {
+        Mockito.doNothing().when(comicSelectionListener).selectionChanged();
+        model.addComicSelectionListener(comicSelectionListener);
+        model.fireSelectionChangedEvent();
+        Mockito.verify(comicSelectionListener, Mockito.times(1)).selectionChanged();
+    }
+
+    @Test
+    public void testFireComicListChangedEvent()
+    {
+        Mockito.doNothing().when(comicSelectionListener).comicListChanged();
+        model.addComicSelectionListener(comicSelectionListener);
+        model.fireListChangedEvent();
+        Mockito.verify(comicSelectionListener, Mockito.times(1)).comicListChanged();
+    }
+
+    @Test
     public void testReload()
     {
         model.addComicSelectionListener(comicSelectionListener);
 
-        Mockito.doNothing().when(comicSelectionListener).selectionChanged();
+        Mockito.doNothing().when(comicSelectionListener).comicListChanged();
 
         model.reload();
 
-        Mockito.verify(comicSelectionListener, Mockito.times(1)).selectionChanged();
+        Mockito.verify(comicSelectionListener, Mockito.times(1)).comicListChanged();
     }
 }

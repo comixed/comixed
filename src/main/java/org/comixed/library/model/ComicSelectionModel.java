@@ -67,7 +67,15 @@ public class ComicSelectionModel implements
         this.listeners.add(listener);
     }
 
-    private void fireSelectionChanged()
+    void fireListChangedEvent()
+    {
+        for (ComicSelectionListener listener : this.listeners)
+        {
+            listener.comicListChanged();
+        }
+    }
+
+    void fireSelectionChangedEvent()
     {
         for (ComicSelectionListener listener : this.listeners)
         {
@@ -115,7 +123,7 @@ public class ComicSelectionModel implements
     public void reload()
     {
         this.reload = true;
-        this.fireSelectionChanged();
+        this.fireListChangedEvent();
     }
 
     private void reloadComics()
@@ -150,5 +158,6 @@ public class ComicSelectionModel implements
                 }
             }
         }
+        this.fireSelectionChangedEvent();
     }
 }

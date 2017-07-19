@@ -32,4 +32,9 @@ public interface ComicSelectionListener
      * Invoked when a change occurs to the selection model.
      */
     void selectionChanged();
+
+    /**
+     * Invoked when the list of comics in the model changes.
+     */
+    void comicListChanged();
 }

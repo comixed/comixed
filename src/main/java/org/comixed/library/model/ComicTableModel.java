@@ -156,6 +156,10 @@ public class ComicTableModel extends DefaultTableModel implements
 
     @Override
     public void selectionChanged()
+    {/* do nothing */}
+
+    @Override
+    public void comicListChanged()
     {
         this.fireTableDataChanged();
     }
