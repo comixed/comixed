@@ -117,6 +117,11 @@ public class ComicSelectionModel implements
         return result;
     }
 
+    public boolean hasSelections()
+    {
+        return this.selections.isEmpty() == false;
+    }
+
     /**
      * Sets the reload flag and causes a reload to occur.
      */

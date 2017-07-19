@@ -154,4 +154,20 @@ public class ComicSelectionModelTest
 
         Mockito.verify(comicSelectionListener, Mockito.times(1)).comicListChanged();
     }
+
+    @Test
+    public void testHasSelections()
+    {
+        model.selections.add(comic);
+
+        assertTrue(model.hasSelections());
+    }
+
+    @Test
+    public void testHasSelectionsNothingSelected()
+    {
+        model.selections.clear();
+
+        assertFalse(model.hasSelections());
+    }
 }
