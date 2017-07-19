@@ -50,6 +50,7 @@ public class ComicSelectionModel implements
 
     @Autowired
     private ComicRepository comicRepository;
+
     List<Comic> selected = new ArrayList<>();
     boolean reload = true;
     List<ComicSelectionListener> listeners = new ArrayList<>();
@@ -137,6 +138,7 @@ public class ComicSelectionModel implements
         Iterable<Comic> selection = this.comicRepository.findAll();
         this.selected.clear();
         selection.forEach(this.selected::add);
+        this.reload = false;
     }
 
     @Override

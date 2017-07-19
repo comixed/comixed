@@ -24,17 +24,21 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.comixed.library.loaders.ZipArchiveLoader;
+import org.comixed.library.model.ComicSelectionListener;
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.tasks.ExportComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.comixed.ui.ComicTableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EditExportZipAction extends AbstractAction
+public class EditExportZipAction extends AbstractAction implements
+                                 InitializingBean,
+                                 ComicSelectionListener
 {
     private static final long serialVersionUID = 1187062644992838350L;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -54,15 +58,40 @@ public class EditExportZipAction extends AbstractAction
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        logger.debug("Preparing to export comic to zip format");
+        this.logger.debug("Preparing to export comic to zip format");
 
-        int[] selections = tableView.getSelectedRows();
+        int[] selections = this.tableView.getSelectedRows();
 
         for (int selection : selections)
         {
-            ExportComicWorkerTask task = new ExportComicWorkerTask(selectionModel.getComic(selection), archiveLoader);
+            ExportComicWorkerTask task = new ExportComicWorkerTask(this.selectionModel.getComic(selection),
+                                                                   this.archiveLoader);
 
-            worker.addTasksToQueue(task);
+            this.worker.addTasksToQueue(task);
         }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        this.selectionModel.addComicSelectionListener(this);
+    }
+
+    private void changeEnabledState()
+    {
+        this.setEnabled(this.selectionModel.hasSelections());
+        this.logger.debug("Export Zip is now " + (this.isEnabled() ? "enabled" : "disabled"));
+    }
+
+    @Override
+    public void comicListChanged()
+    {
+        this.changeEnabledState();
+    }
+
+    @Override
+    public void selectionChanged()
+    {
+        this.changeEnabledState();
     }
 }
