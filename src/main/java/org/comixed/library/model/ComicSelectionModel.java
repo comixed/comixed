@@ -22,6 +22,10 @@ package org.comixed.library.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +43,8 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class ComicSelectionModel
+public class ComicSelectionModel implements
+                                 ListSelectionListener
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -48,6 +53,7 @@ public class ComicSelectionModel
     List<Comic> selected = new ArrayList<>();
     boolean reload = true;
     List<ComicSelectionListener> listeners = new ArrayList<>();
+    List<Comic> selections = new ArrayList<>();
 
     /**
      * Adds a new listener.
@@ -59,6 +65,14 @@ public class ComicSelectionModel
     {
         this.logger.debug("Adding listener: " + listener);
         this.listeners.add(listener);
+    }
+
+    private void fireSelectionChanged()
+    {
+        for (ComicSelectionListener listener : this.listeners)
+        {
+            listener.selectionChanged();
+        }
     }
 
     /**
@@ -101,15 +115,7 @@ public class ComicSelectionModel
     public void reload()
     {
         this.reload = true;
-        fireSelectionChanged();
-    }
-
-    private void fireSelectionChanged()
-    {
-        for (ComicSelectionListener listener : listeners)
-        {
-            listener.selectionChanged();
-        }
+        this.fireSelectionChanged();
     }
 
     private void reloadComics()
@@ -118,5 +124,31 @@ public class ComicSelectionModel
         Iterable<Comic> selection = this.comicRepository.findAll();
         this.selected.clear();
         selection.forEach(this.selected::add);
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent event)
+    {
+        this.logger.debug("Table view selection changed");
+
+        if (event.getSource() instanceof DefaultListSelectionModel)
+        {
+            this.selections.clear();
+
+            if (event.getFirstIndex() >= 0)
+            {
+                DefaultListSelectionModel source = (DefaultListSelectionModel )event.getSource();
+                for (int index = source.getMinSelectionIndex();
+                     index <= source.getMaxSelectionIndex();
+                     index++)
+                {
+                    this.logger.debug("Selected: index=" + index);
+                    if (source.isSelectedIndex(index))
+                    {
+                        this.selections.add(this.getComic(index));
+                    }
+                }
+            }
+        }
     }
 }
