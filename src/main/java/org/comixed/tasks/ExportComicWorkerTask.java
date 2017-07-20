@@ -21,23 +21,18 @@ package org.comixed.tasks;
 
 import org.comixed.library.loaders.ArchiveLoader;
 import org.comixed.library.loaders.ArchiveLoaderException;
+import org.comixed.library.loaders.ZipArchiveLoader;
 import org.comixed.library.model.Comic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Component;
 
-@Configurable
+@Component
 public class ExportComicWorkerTask extends AbstractWorkerTask
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private Comic comic;
     private ArchiveLoader archiveLoader;
-
-    public ExportComicWorkerTask(Comic comic, ArchiveLoader archiveLoader)
-    {
-        this.comic = comic;
-        this.archiveLoader = archiveLoader;
-    }
 
     @Override
     public void startTask() throws WorkerTaskException
@@ -54,4 +49,13 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
         }
     }
 
+    public void setComics(Comic comic)
+    {
+        this.comic = comic;
+    }
+
+    public void setArchiveLoader(ZipArchiveLoader archiveLoader)
+    {
+        this.archiveLoader = archiveLoader;
+    }
 }

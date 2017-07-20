@@ -32,6 +32,7 @@ import org.comixed.ui.ComicTableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +56,9 @@ public class EditExportZipAction extends AbstractAction implements
     @Autowired
     private Worker worker;
 
+    @Autowired
+    private ObjectFactory<ExportComicWorkerTask> taskFactory;
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -64,8 +68,10 @@ public class EditExportZipAction extends AbstractAction implements
 
         for (int selection : selections)
         {
-            ExportComicWorkerTask task = new ExportComicWorkerTask(this.selectionModel.getComic(selection),
-                                                                   this.archiveLoader);
+            ExportComicWorkerTask task = taskFactory.getObject();
+
+            task.setComics(this.selectionModel.getComic(selection));
+            task.setArchiveLoader(this.archiveLoader);
 
             this.worker.addTasksToQueue(task);
         }
