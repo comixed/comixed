@@ -57,8 +57,13 @@ app.menus.mainMenu[11].bean=fileImportAction
 app.menus.mainMenu[12].menu=file
 app.menus.mainMenu[12].label=---
 app.menus.mainMenu[13].menu=file
-app.menus.mainMenu[13].label=exit
-app.menus.mainMenu[13].bean=fileExitAction
+app.menus.mainMenu[13].label=delete
+app.menus.mainMenu[13].bean=deleteComicsAction
+app.menus.mainMenu[14].menu=file
+app.menus.mainMenu[14].label=---
+app.menus.mainMenu[15].menu=file
+app.menus.mainMenu[15].label=exit
+app.menus.mainMenu[15].bean=fileExitAction
 
 # app.menus.mainMenu[20].menu=edit
 
