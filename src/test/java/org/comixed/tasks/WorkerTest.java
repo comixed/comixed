@@ -23,7 +23,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.concurrent.TimeoutException;
 
-import org.comixed.ui.components.StatusBar;
+import org.comixed.adaptors.StatusAdaptor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +46,7 @@ public class WorkerTest extends ConcurrentTestCase
     private Worker worker;
 
     @Mock
-    private StatusBar statusBar;
+    private StatusAdaptor statusAdaptor;
 
     @Before
     public void setUp()
@@ -67,7 +67,7 @@ public class WorkerTest extends ConcurrentTestCase
     @Test
     public void testStartAndStopWorker() throws InterruptedException, TimeoutException
     {
-        Mockito.doNothing().when(statusBar).statusTextChanged(Mockito.anyString());
+        Mockito.doNothing().when(statusAdaptor).updateStatusText(Mockito.anyString());
 
         assertSame(Worker.State.IDLE, worker.state);
         final Waiter waiter = new Waiter();
