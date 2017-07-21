@@ -20,6 +20,7 @@
 package org.comixed.tasks;
 
 import java.io.File;
+import java.util.Locale;
 
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
@@ -30,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +43,11 @@ public class AddComicWorkerTask extends AbstractWorkerTask
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
     private ComicFileHandler comicFileHandler;
+
     @Autowired
     private ComicRepository comicRepository;
 
@@ -61,6 +67,8 @@ public class AddComicWorkerTask extends AbstractWorkerTask
 
         try
         {
+            showStatusText(messageSource.getMessage("status.comic.add", new Object[]
+            {file.getAbsoluteFile()}, Locale.getDefault()));
             result = new Comic();
             result.setFilename(this.file.getAbsolutePath());
             comicFileHandler.loadComic(result);
