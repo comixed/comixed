@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.ui;
+package org.comixed.ui.frames;
 
 import java.awt.Frame;
 import java.awt.event.ComponentEvent;

@@ -19,7 +19,7 @@
 
 package org.comixed;
 
-import org.comixed.ui.MainFrame;
+import org.comixed.ui.frames.MainFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;

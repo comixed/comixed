@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.ui;
+package org.comixed.ui.frames;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -32,6 +32,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.comixed.AppConfiguration;
 import org.comixed.ComixEdApp;
+import org.comixed.ui.MainClientPanel;
+import org.comixed.ui.MainMenuBar;
+import org.comixed.ui.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

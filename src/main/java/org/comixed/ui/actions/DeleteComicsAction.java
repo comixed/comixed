@@ -33,7 +33,7 @@ import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.tasks.DeleteComicsWorkerTask;
 import org.comixed.tasks.Worker;
 import org.comixed.ui.ComicTableView;
-import org.comixed.ui.MainFrame;
+import org.comixed.ui.frames.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
