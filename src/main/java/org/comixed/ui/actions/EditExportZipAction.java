@@ -81,12 +81,12 @@ public class EditExportZipAction extends AbstractAction implements
     public void afterPropertiesSet() throws Exception
     {
         this.selectionModel.addComicSelectionListener(this);
+        changeEnabledState();
     }
 
     private void changeEnabledState()
     {
         this.setEnabled(this.selectionModel.hasSelections());
-        this.logger.debug("Export Zip is now " + (this.isEnabled() ? "enabled" : "disabled"));
     }
 
     @Override
