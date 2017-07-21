@@ -20,6 +20,8 @@
 package org.comixed.tasks;
 
 import org.apache.log4j.Logger;
+import org.comixed.ui.components.StatusBar;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <code>AbstractWorkerTask</code> provides a foundation for creating new
@@ -33,6 +35,14 @@ public abstract class AbstractWorkerTask implements
 {
     protected static final Logger logger = Logger.getLogger(AbstractWorkerTask.class);
 
+    @Autowired
+    private StatusBar statusBar;
+
     public AbstractWorkerTask()
     {}
+
+    protected void showStatusText(String message)
+    {
+        statusBar.setStatusText(message);
+    }
 }
