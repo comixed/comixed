@@ -19,12 +19,16 @@
 
 package org.comixed.tasks;
 
+import java.util.Locale;
+
 import org.comixed.library.loaders.ArchiveLoader;
 import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.loaders.ZipArchiveLoader;
 import org.comixed.library.model.Comic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,19 +38,12 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
     private Comic comic;
     private ArchiveLoader archiveLoader;
 
-    @Override
-    public void startTask() throws WorkerTaskException
-    {
-        logger.debug("Converting comic: " + comic.getFilename());
+    @Autowired
+    private MessageSource messageSource;
 
-        try
-        {
-            archiveLoader.saveComic(comic);
-        }
-        catch (ArchiveLoaderException error)
-        {
-            throw new WorkerTaskException("Unable to convert comic", error);
-        }
+    public void setArchiveLoader(ZipArchiveLoader archiveLoader)
+    {
+        this.archiveLoader = archiveLoader;
     }
 
     public void setComics(Comic comic)
@@ -54,8 +51,20 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
         this.comic = comic;
     }
 
-    public void setArchiveLoader(ZipArchiveLoader archiveLoader)
+    @Override
+    public void startTask() throws WorkerTaskException
     {
-        this.archiveLoader = archiveLoader;
+        this.logger.debug("Converting comic: " + this.comic.getFilename());
+
+        try
+        {
+            this.showStatusText(this.messageSource.getMessage("status.comic.exported", new Object[]
+            {this.comic.getFilename()}, Locale.getDefault()));
+            this.archiveLoader.saveComic(this.comic);
+        }
+        catch (ArchiveLoaderException error)
+        {
+            throw new WorkerTaskException("Unable to convert comic", error);
+        }
     }
 }
