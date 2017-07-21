@@ -21,11 +21,11 @@ package org.comixed.tasks;
 
 import java.io.File;
 
+import org.comixed.adaptors.StatusAdaptor;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
 import org.comixed.repositories.ComicRepository;
-import org.comixed.ui.components.StatusBar;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -50,7 +50,7 @@ public class AddComicWorkerTaskTest
     private MessageSource messageSource;
 
     @Mock
-    private StatusBar statusBar;
+    private StatusAdaptor statusAdaptor;
 
     @Mock
     private ComicFileHandler comicFileHandler;

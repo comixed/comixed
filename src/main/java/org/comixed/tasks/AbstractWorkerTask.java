@@ -20,7 +20,7 @@
 package org.comixed.tasks;
 
 import org.apache.log4j.Logger;
-import org.comixed.ui.components.StatusBar;
+import org.comixed.adaptors.StatusAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -36,13 +36,13 @@ public abstract class AbstractWorkerTask implements
     protected static final Logger logger = Logger.getLogger(AbstractWorkerTask.class);
 
     @Autowired
-    private StatusBar statusBar;
+    private StatusAdaptor statusAdaptor;
 
     public AbstractWorkerTask()
     {}
 
     protected void showStatusText(String message)
     {
-        statusBar.setStatusText(message);
+        this.statusAdaptor.updateStatusText(message);
     }
 }
