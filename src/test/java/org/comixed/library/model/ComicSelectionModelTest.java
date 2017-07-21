@@ -41,6 +41,7 @@ public class ComicSelectionModelTest
 {
     private static final int TEST_COMIC_LIST_SIZE = 717;
     private static final int TEST_COMIC_INDEX = 65;
+    private static final long TEST_COMIC_COUNT = 71765L;
 
     @InjectMocks
     private ComicSelectionModel model;
@@ -169,5 +170,15 @@ public class ComicSelectionModelTest
         model.selections.clear();
 
         assertFalse(model.hasSelections());
+    }
+
+    @Test
+    public void testTotalComicCount()
+    {
+        Mockito.when(comicRepository.count()).thenReturn(TEST_COMIC_COUNT);
+
+        assertEquals(TEST_COMIC_COUNT, model.getTotalComics());
+
+        Mockito.verify(comicRepository, Mockito.times(1)).count();
     }
 }

@@ -118,6 +118,11 @@ public class ComicSelectionModel implements
         return result;
     }
 
+    public long getTotalComics()
+    {
+        return this.comicRepository.count();
+    }
+
     public boolean hasSelections()
     {
         return this.selections.isEmpty() == false;
@@ -139,6 +144,7 @@ public class ComicSelectionModel implements
         this.selected.clear();
         selection.forEach(this.selected::add);
         this.reload = false;
+        this.fireSelectionChangedEvent();
     }
 
     @Override
