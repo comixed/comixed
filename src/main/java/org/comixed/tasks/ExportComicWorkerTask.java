@@ -25,6 +25,8 @@ import org.comixed.library.loaders.ArchiveLoader;
 import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.loaders.ZipArchiveLoader;
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.ComicSelectionModel;
+import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,12 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private ComicRepository comicRepository;
+
+    @Autowired
+    private ComicSelectionModel comicSelectionModel;
 
     public void setArchiveLoader(ZipArchiveLoader archiveLoader)
     {
@@ -60,7 +68,9 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
         {
             this.showStatusText(this.messageSource.getMessage("status.comic.exported", new Object[]
             {this.comic.getFilename()}, Locale.getDefault()));
-            this.archiveLoader.saveComic(this.comic);
+            Comic result = this.archiveLoader.saveComic(this.comic);
+            comicRepository.save(result);
+            comicSelectionModel.reload();
         }
         catch (ArchiveLoaderException error)
         {

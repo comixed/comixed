@@ -33,6 +33,8 @@ import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.ComicFileHandler;
+import org.comixed.library.model.ComicFileHandlerException;
 import org.comixed.library.utils.FileTypeIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,8 +86,13 @@ public abstract class AbstractArchiveLoader implements
 
     @Autowired
     protected FileTypeIdentifier fileTypeIdentifier;
+
     @Autowired
     private ApplicationContext context;
+
+    @Autowired
+    private ComicFileHandler comicFileHandler;
+
     protected List<EntryLoaderForType> loaders = new ArrayList<>();
     protected Map<String,
                   EntryLoader> entryLoaders = new HashMap<>();
@@ -141,7 +148,7 @@ public abstract class AbstractArchiveLoader implements
             candidate = MessageFormat.format("{0}.{1}", filename, this.defaultExtension);
         }
 
-        logger.debug("Candidate filename=" + candidate);
+        this.logger.debug("Candidate filename=" + candidate);
         File file = new File(candidate);
         return (!file.exists()) ? candidate : this.findAvailableFilename(filename, ++attempt);
     }
@@ -223,7 +230,7 @@ public abstract class AbstractArchiveLoader implements
     }
 
     @Override
-    public String saveComic(Comic source) throws ArchiveLoaderException
+    public Comic saveComic(Comic source) throws ArchiveLoaderException
     {
         this.logger.debug("Saving comic: " + source.getFilename());
 
@@ -244,7 +251,7 @@ public abstract class AbstractArchiveLoader implements
         File file2 = new File(filename);
         try
         {
-            logger.debug("Copying " + tempFilename + " to " + filename + ".");
+            this.logger.debug("Copying " + tempFilename + " to " + filename + ".");
             FileUtils.copyFile(file1, file2);
         }
         catch (IOException error)
@@ -252,7 +259,20 @@ public abstract class AbstractArchiveLoader implements
             throw new ArchiveLoaderException("Unable to copy file", error);
         }
 
-        return filename;
+        Comic result = new Comic();
+
+        result.setFilename(filename);
+
+        try
+        {
+            comicFileHandler.loadComic(result);
+        }
+        catch (ComicFileHandlerException error)
+        {
+            throw new ArchiveLoaderException("Error loading new comic", error);
+        }
+
+        return result;
     }
 
     /**

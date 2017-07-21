@@ -114,12 +114,7 @@ public class ZipArchiveLoaderTest
         archiveLoader.loadComic(comic);
 
         // now save it and reload it
-        String filename = archiveLoader.saveComic(comic);
-
-        Comic result = new Comic();
-
-        result.setFilename(filename);
-        archiveLoader.loadComic(result);
+        Comic result = archiveLoader.saveComic(comic);
 
         assertEquals(4, result.getPageCount());
         assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());

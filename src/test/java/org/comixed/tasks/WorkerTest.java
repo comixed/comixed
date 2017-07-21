@@ -24,6 +24,7 @@ import static org.junit.Assert.assertSame;
 import java.util.concurrent.TimeoutException;
 
 import org.comixed.adaptors.StatusAdaptor;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +59,12 @@ public class WorkerTest extends ConcurrentTestCase
         }).start();
     }
 
+    @After
+    public void tearDown()
+    {
+        worker.stop();
+    }
+
     @Test
     public void testStartsAsIdle()
     {
@@ -69,7 +76,6 @@ public class WorkerTest extends ConcurrentTestCase
     {
         Mockito.doNothing().when(statusAdaptor).updateStatusText(Mockito.anyString());
 
-        assertSame(Worker.State.IDLE, worker.state);
         final Waiter waiter = new Waiter();
 
         new Thread(() ->

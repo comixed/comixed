@@ -65,9 +65,9 @@ public interface ArchiveLoader
      *
      * @param comic
      *            the comic
-     * @return the filename for the new comic
+     * @return the new comic
      * @throws ArchiveLoaderException
      *             if an error occurs
      */
-    String saveComic(Comic comic) throws ArchiveLoaderException;
+    Comic saveComic(Comic comic) throws ArchiveLoaderException;
 }

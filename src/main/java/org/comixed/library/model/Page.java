@@ -158,6 +158,10 @@ public class Page
         {
             try
             {
+                if (this.comic.archiveType == null)
+                {
+                    logger.debug("WTF?");
+                }
                 this.content = this.comic.archiveType.getArchiveLoader().loadSingleFile(this.comic, this.filename);
             }
             catch (ArchiveLoaderException error)

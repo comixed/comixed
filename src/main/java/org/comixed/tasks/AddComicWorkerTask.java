@@ -25,6 +25,7 @@ import java.util.Locale;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
+import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,9 @@ public class AddComicWorkerTask extends AbstractWorkerTask
     @Autowired
     private ComicRepository comicRepository;
 
+    @Autowired
+    private ComicSelectionModel comicSelectionModel;
+
     File file;
 
     @Override
@@ -73,6 +77,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask
             result.setFilename(this.file.getAbsolutePath());
             comicFileHandler.loadComic(result);
             comicRepository.save(result);
+            comicSelectionModel.reload();
         }
         catch (ComicFileHandlerException error)
         {
