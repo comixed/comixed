@@ -23,23 +23,40 @@ import static org.junit.Assert.assertSame;
 
 import java.util.concurrent.TimeoutException;
 
+import org.comixed.ui.components.StatusBar;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import net.jodah.concurrentunit.ConcurrentTestCase;
 import net.jodah.concurrentunit.Waiter;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Worker.class)
+@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 @TestPropertySource(locations = "classpath:test-application.properties")
 public class WorkerTest extends ConcurrentTestCase
 {
-    @Autowired
+    @InjectMocks
     private Worker worker;
+
+    @Mock
+    private StatusBar statusBar;
+
+    @Before
+    public void setUp()
+    {
+        // start the worker
+        new Thread(() ->
+        {
+            worker.run();
+        }).start();
+    }
 
     @Test
     public void testStartsAsIdle()
@@ -50,8 +67,11 @@ public class WorkerTest extends ConcurrentTestCase
     @Test
     public void testStartAndStopWorker() throws InterruptedException, TimeoutException
     {
+        Mockito.doNothing().when(statusBar).statusTextChanged(Mockito.anyString());
+
         assertSame(Worker.State.IDLE, worker.state);
         final Waiter waiter = new Waiter();
+
         new Thread(() ->
         {
             worker.addTasksToQueue(new AbstractWorkerTask()

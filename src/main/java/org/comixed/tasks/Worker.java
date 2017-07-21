@@ -22,11 +22,9 @@ package org.comixed.tasks;
 import java.util.Queue;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import org.comixed.ui.components.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,9 +54,6 @@ public class Worker implements
     Queue<WorkerTask> queue = new CircularFifoQueue<>();
     State state = State.IDLE;
     private Object semaphore = new Object();
-
-    @Autowired
-    private StatusBar statusBar;
 
     public Worker()
     {
@@ -122,7 +117,6 @@ public class Worker implements
                 if (this.queue.isEmpty())
                 {
                     this.logger.debug("Waiting for task or notification");
-                    this.statusBar.setStatusText("");
                     try
                     {
                         this.state = State.IDLE;
