@@ -17,13 +17,14 @@
  * org.comixed;
  */
 
-package org.comixed.ui;
+package org.comixed.ui.components;
 
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.comixed.ui.ComicTableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
