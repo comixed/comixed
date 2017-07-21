@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
+@PropertySource("classpath:menus.properties")
 @ConfigurationProperties("app.menus")
 public class MainMenuBar extends JMenuBar implements
                          InitializingBean
