@@ -19,6 +19,9 @@
 
 package org.comixed.ui.components;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
@@ -35,9 +38,18 @@ public class StatusBar extends JPanel
 {
     private static final long serialVersionUID = 228129338982896691L;
 
+    private JLabel statusText = new JLabel();
+
     public StatusBar()
     {
         super();
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        this.add(statusText, BorderLayout.CENTER);
+        statusText.setHorizontalAlignment(JLabel.LEFT);
+    }
+
+    public void setStatusText(String message)
+    {
+        statusText.setText(message);
     }
 }
