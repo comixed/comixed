@@ -21,7 +21,7 @@ package org.comixed.tasks;
 
 import java.util.Locale;
 
-import org.comixed.library.loaders.ArchiveLoader;
+import org.comixed.library.adaptors.ArchiveAdaptor;
 import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.loaders.ZipArchiveLoader;
 import org.comixed.library.model.Comic;
@@ -40,7 +40,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private Comic comic;
-    private ArchiveLoader archiveLoader;
+    private ArchiveAdaptor archiveAdaptor;
 
     @Autowired
     private MessageSource messageSource;
@@ -53,7 +53,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
 
     public void setArchiveLoader(ZipArchiveLoader archiveLoader)
     {
-        this.archiveLoader = archiveLoader;
+        this.archiveAdaptor = archiveLoader;
     }
 
     public void setComics(Comic comic)
@@ -70,7 +70,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
         {
             this.showStatusText(this.messageSource.getMessage("status.comic.exported", new Object[]
             {this.comic.getFilename()}, Locale.getDefault()));
-            Comic result = this.archiveLoader.saveComic(this.comic);
+            Comic result = this.archiveAdaptor.saveComic(this.comic);
             comicRepository.save(result);
             comicSelectionModel.reload();
         }

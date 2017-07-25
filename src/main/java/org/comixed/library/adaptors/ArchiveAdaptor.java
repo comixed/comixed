@@ -17,18 +17,19 @@
  * org.comixed;
  */
 
-package org.comixed.library.loaders;
+package org.comixed.library.adaptors;
 
+import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.model.Comic;
 
 /**
- * <code>ArchiveLoader</code> defines a type which handles loading from and
+ * <code>ArchiveAdaptor</code> defines a type which handles loading from and
  * saving to an archive file.
  *
  * @author Darryl L. Pierce
  *
  */
-public interface ArchiveLoader
+public interface ArchiveAdaptor
 {
     /**
      * Loads the entire comic's contents from disk.
@@ -58,7 +59,7 @@ public interface ArchiveLoader
      *
      * The new comic will have the same base filename and directory as the
      * source, but the extension will comic be determined by the instance of
-     * {@link ArchiveLoader}.
+     * {@link ArchiveAdaptor}.
      *
      * If a comic already exists with the filename, it is replaced by the new
      * comic.

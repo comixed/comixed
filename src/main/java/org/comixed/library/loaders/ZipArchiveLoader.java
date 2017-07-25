@@ -29,13 +29,14 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.comixed.library.adaptors.ArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
 import org.springframework.stereotype.Component;
 
 /**
  * <code>ZipArchiveLoader</code> provides a concrete implementation of
- * {@link ArchiveLoader} for ZIP files.
+ * {@link ArchiveAdaptor} for ZIP files.
  *
  * @author Darryl L. Pierce
  *

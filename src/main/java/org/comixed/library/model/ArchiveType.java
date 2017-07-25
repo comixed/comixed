@@ -19,11 +19,11 @@
 
 package org.comixed.library.model;
 
-import org.comixed.library.loaders.ArchiveLoader;
+import org.comixed.library.adaptors.ArchiveAdaptor;
 
 /**
  * <code>ArchiveType</code> provides a means for association a
- * {@link ArchiveLoader} to a disk format.
+ * {@link ArchiveAdaptor} to a disk format.
  *
  * @author Darryl L. Pierce
  *
@@ -34,21 +34,21 @@ public enum ArchiveType
  CBR("RAR Comic");
 
     private String name;
-    private ArchiveLoader archiveLoader;
+    private ArchiveAdaptor archiveAdaptor;
 
     private ArchiveType(String name)
     {
         this.name = name;
     }
 
-    public ArchiveLoader getArchiveLoader()
+    public ArchiveAdaptor getArchiveLoader()
     {
-        return this.archiveLoader;
+        return this.archiveAdaptor;
     }
 
-    public void setArchiveLoader(ArchiveLoader archiveLoader)
+    public void setArchiveLoader(ArchiveAdaptor archiveAdaptor)
     {
-        this.archiveLoader = archiveLoader;
+        this.archiveAdaptor = archiveAdaptor;
     }
 
     @Override

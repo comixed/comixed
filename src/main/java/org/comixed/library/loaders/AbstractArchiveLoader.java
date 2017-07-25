@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
+import org.comixed.library.adaptors.ArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
@@ -47,7 +48,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * <code>AbstractArchiveLoader</code> provides a foundation for creating new
- * instances of {@link ArchiveLoader}.
+ * instances of {@link ArchiveAdaptor}.
  *
  * @author Darryl L. Pierce
  *
@@ -57,7 +58,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "comic.entry",
                          ignoreUnknownFields = false)
 public abstract class AbstractArchiveLoader implements
-                                            ArchiveLoader,
+                                            ArchiveAdaptor,
                                             InitializingBean
 {
     public static class EntryLoaderForType
