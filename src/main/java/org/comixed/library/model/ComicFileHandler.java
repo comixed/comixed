@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -49,6 +50,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @EnableConfigurationProperties
+@PropertySource("classpath:archiveadaptors.properties")
 @ConfigurationProperties(prefix = "comic.archive",
                          ignoreUnknownFields = false)
 public class ComicFileHandler implements
@@ -63,7 +65,7 @@ public class ComicFileHandler implements
     @Autowired
     private Map<String,
                 ArchiveAdaptor> archiveAdaptors;
-    private List<ArchiveAdaptorEntry> loaders = new ArrayList<>();
+    private List<ArchiveAdaptorEntry> adaptors = new ArrayList<>();
     private Map<String,
                 ArchiveType> archiveTypes = new HashMap<>();
 
@@ -95,9 +97,9 @@ public class ComicFileHandler implements
         }
     }
 
-    public List<ArchiveAdaptorEntry> getLoaders()
+    public List<ArchiveAdaptorEntry> getAdaptors()
     {
-        return loaders;
+        return adaptors;
     }
 
     /**
@@ -129,7 +131,7 @@ public class ComicFileHandler implements
         ArchiveAdaptor archiveAdaptor = archiveAdaptors.get(archiveType);
 
         if (archiveAdaptor == null) { throw new ComicFileHandlerException("No archive loader defined for type: "
-                                                                         + archiveType); }
+                                                                          + archiveType); }
 
         comic.setArchiveType(this.archiveTypes.get(archiveType));
 
@@ -149,7 +151,7 @@ public class ComicFileHandler implements
         logger.debug("Initializing ComicFileHandler");
         archiveAdaptors.clear();
         archiveTypes.clear();
-        for (ArchiveAdaptorEntry loader : this.loaders)
+        for (ArchiveAdaptorEntry loader : this.adaptors)
         {
             if (loader.isValid())
             {
