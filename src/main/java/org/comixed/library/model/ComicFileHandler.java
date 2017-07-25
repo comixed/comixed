@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.comixed.library.adaptors.ArchiveAdaptor;
-import org.comixed.library.loaders.ArchiveLoaderException;
+import org.comixed.library.adaptors.ArchiveAdaptorException;
 import org.comixed.library.utils.FileTypeIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,7 +137,7 @@ public class ComicFileHandler implements
         {
             archiveAdaptor.loadComic(comic);
         }
-        catch (ArchiveLoaderException error)
+        catch (ArchiveAdaptorException error)
         {
             throw new ComicFileHandlerException("Unable to load comic", error);
         }

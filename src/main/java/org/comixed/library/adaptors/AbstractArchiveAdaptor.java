@@ -32,7 +32,6 @@ import java.util.Map;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
-import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.loaders.EntryLoader;
 import org.comixed.library.loaders.EntryLoaderException;
 import org.comixed.library.model.Comic;
@@ -171,7 +170,7 @@ public abstract class AbstractArchiveAdaptor implements
     }
 
     @Override
-    public void loadComic(Comic comic) throws ArchiveLoaderException
+    public void loadComic(Comic comic) throws ArchiveAdaptorException
     {
         this.logger.debug("Opening archive: " + comic.getFilename());
 
@@ -189,10 +188,10 @@ public abstract class AbstractArchiveAdaptor implements
      * @param entryName
      *            the entry name
      * @return
-     * @throws ArchiveLoaderException
+     * @throws ArchiveAdaptorException
      *             if an error occurs
      */
-    protected abstract byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveLoaderException;
+    protected abstract byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveAdaptorException;
 
     protected byte[] loadContent(String filename, long size, InputStream input) throws IOException
     {
@@ -205,7 +204,7 @@ public abstract class AbstractArchiveAdaptor implements
     }
 
     @Override
-    public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveLoaderException
+    public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException
     {
         this.logger.debug("Loading single entry from archive: filename=" + comic.getFilename() + " entry=" + entryName);
         return this.loadComicInternal(comic, entryName);
@@ -233,7 +232,7 @@ public abstract class AbstractArchiveAdaptor implements
     }
 
     @Override
-    public Comic saveComic(Comic source) throws ArchiveLoaderException
+    public Comic saveComic(Comic source) throws ArchiveAdaptorException
     {
         this.logger.debug("Saving comic: " + source.getFilename());
 
@@ -244,7 +243,7 @@ public abstract class AbstractArchiveAdaptor implements
         }
         catch (IOException error)
         {
-            throw new ArchiveLoaderException("unable to write comic", error);
+            throw new ArchiveAdaptorException("unable to write comic", error);
         }
 
         this.saveComicInternal(source, tempFilename);
@@ -259,7 +258,7 @@ public abstract class AbstractArchiveAdaptor implements
         }
         catch (IOException error)
         {
-            throw new ArchiveLoaderException("Unable to copy file", error);
+            throw new ArchiveAdaptorException("Unable to copy file", error);
         }
 
         Comic result = new Comic();
@@ -272,7 +271,7 @@ public abstract class AbstractArchiveAdaptor implements
         }
         catch (ComicFileHandlerException error)
         {
-            throw new ArchiveLoaderException("Error loading new comic", error);
+            throw new ArchiveAdaptorException("Error loading new comic", error);
         }
 
         return result;
@@ -288,14 +287,14 @@ public abstract class AbstractArchiveAdaptor implements
      * @throws ArchiveException
      *             if an error occurs
      */
-    abstract void saveComicInternal(Comic source, String filename) throws ArchiveLoaderException;
+    abstract void saveComicInternal(Comic source, String filename) throws ArchiveAdaptorException;
 
-    protected File validateFile(Comic comic) throws ArchiveLoaderException
+    protected File validateFile(Comic comic) throws ArchiveAdaptorException
     {
         File file = new File(comic.getFilename());
 
-        if (!file.exists()) throw new ArchiveLoaderException("File not found: " + file.getAbsolutePath());
-        if (file.isDirectory()) throw new ArchiveLoaderException("Cannot open directory: " + file.getAbsolutePath());
+        if (!file.exists()) throw new ArchiveAdaptorException("File not found: " + file.getAbsolutePath());
+        if (file.isDirectory()) throw new ArchiveAdaptorException("Cannot open directory: " + file.getAbsolutePath());
 
         return file;
     }

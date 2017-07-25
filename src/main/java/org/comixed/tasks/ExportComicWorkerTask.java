@@ -22,8 +22,8 @@ package org.comixed.tasks;
 import java.util.Locale;
 
 import org.comixed.library.adaptors.ArchiveAdaptor;
+import org.comixed.library.adaptors.ArchiveAdaptorException;
 import org.comixed.library.adaptors.ZipArchiveAdaptor;
-import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.repositories.ComicRepository;
@@ -74,7 +74,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
             comicRepository.save(result);
             comicSelectionModel.reload();
         }
-        catch (ArchiveLoaderException error)
+        catch (ArchiveAdaptorException error)
         {
             throw new WorkerTaskException("Unable to convert comic", error);
         }

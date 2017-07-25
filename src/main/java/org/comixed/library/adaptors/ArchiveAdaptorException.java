@@ -17,25 +17,25 @@
  * org.comixed;
  */
 
-package org.comixed.library.loaders;
+package org.comixed.library.adaptors;
 
 /**
- * <code>ArchiveLoaderException</code> is thrown when an error occurs while
+ * <code>ArchiveAdaptorException</code> is thrown when an error occurs while
  * working with the contents of an archive.
  *
  * @author Darryl L. Pierce
  *
  */
-public class ArchiveLoaderException extends Exception
+public class ArchiveAdaptorException extends Exception
 {
     private static final long serialVersionUID = 5895095739317473196L;
 
-    public ArchiveLoaderException(String message)
+    public ArchiveAdaptorException(String message)
     {
         super(message);
     }
 
-    public ArchiveLoaderException(String message, Exception cause)
+    public ArchiveAdaptorException(String message, Exception cause)
     {
         super(message, cause);
     }

@@ -22,7 +22,6 @@ package org.comixed.library.adaptors;
 import java.io.File;
 import java.io.IOException;
 
-import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.model.Comic;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +46,7 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor
     }
 
     @Override
-    protected byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveLoaderException
+    protected byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveAdaptorException
     {
         File file = validateFile(comic);
         byte[] result = null;
@@ -60,7 +59,7 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor
             if (entry == null)
             {
                 archive.close();
-                throw new ArchiveLoaderException("Invalid or corrupt RAR file: " + file.getName());
+                throw new ArchiveAdaptorException("Invalid or corrupt RAR file: " + file.getName());
             }
 
             while (entry != null)
@@ -93,15 +92,15 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor
         catch (RarException
                | IOException error)
         {
-            throw new ArchiveLoaderException("unable to open file: " + file.getAbsolutePath(), error);
+            throw new ArchiveAdaptorException("unable to open file: " + file.getAbsolutePath(), error);
         }
         return result;
     }
 
     @Override
-    void saveComicInternal(Comic source, String filename) throws ArchiveLoaderException
+    void saveComicInternal(Comic source, String filename) throws ArchiveAdaptorException
     {
         logger.warn("Saving RAR comics is not supported");
-        throw new ArchiveLoaderException("Saving CBR comics is not supported");
+        throw new ArchiveAdaptorException("Saving CBR comics is not supported");
     }
 }

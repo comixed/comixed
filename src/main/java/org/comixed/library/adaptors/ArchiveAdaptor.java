@@ -19,7 +19,6 @@
 
 package org.comixed.library.adaptors;
 
-import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.model.Comic;
 
 /**
@@ -36,10 +35,10 @@ public interface ArchiveAdaptor
      *
      * @param comic
      *            the comic
-     * @throws ArchiveLoaderException
+     * @throws ArchiveAdaptorException
      *             if an error occurs
      */
-    void loadComic(Comic comic) throws ArchiveLoaderException;
+    void loadComic(Comic comic) throws ArchiveAdaptorException;
 
     /**
      * Loads a single file from the archive file.
@@ -49,10 +48,10 @@ public interface ArchiveAdaptor
      * @param entryName
      *            the entry name
      * @return the content of the entry
-     * @throws ArchiveLoaderException
+     * @throws ArchiveAdaptorException
      *             if an error occurs
      */
-    byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveLoaderException;
+    byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException;
 
     /**
      * Saves the comic.
@@ -67,8 +66,8 @@ public interface ArchiveAdaptor
      * @param comic
      *            the comic
      * @return the new comic
-     * @throws ArchiveLoaderException
+     * @throws ArchiveAdaptorException
      *             if an error occurs
      */
-    Comic saveComic(Comic comic) throws ArchiveLoaderException;
+    Comic saveComic(Comic comic) throws ArchiveAdaptorException;
 }

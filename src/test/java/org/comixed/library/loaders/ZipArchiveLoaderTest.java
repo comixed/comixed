@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.comixed.ComixEdTestContext;
+import org.comixed.library.adaptors.ArchiveAdaptorException;
 import org.comixed.library.adaptors.ZipArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.junit.Before;
@@ -58,29 +59,29 @@ public class ZipArchiveLoaderTest
         comic.setFilename(TEST_CBZ_FILE);
     }
 
-    @Test(expected = ArchiveLoaderException.class)
-    public void testOpenFileNotFound() throws ArchiveLoaderException
+    @Test(expected = ArchiveAdaptorException.class)
+    public void testOpenFileNotFound() throws ArchiveAdaptorException
     {
         comic.setFilename(TEST_CBZ_FILE.substring(1));
         archiveLoader.loadComic(comic);
     }
 
-    @Test(expected = ArchiveLoaderException.class)
-    public void testOpenFileIsDirectory() throws ArchiveLoaderException
+    @Test(expected = ArchiveAdaptorException.class)
+    public void testOpenFileIsDirectory() throws ArchiveAdaptorException
     {
         comic.setFilename("src/test/resources");
         archiveLoader.loadComic(comic);
     }
 
-    @Test(expected = ArchiveLoaderException.class)
-    public void testOpenInvalidFile() throws ArchiveLoaderException
+    @Test(expected = ArchiveAdaptorException.class)
+    public void testOpenInvalidFile() throws ArchiveAdaptorException
     {
         comic.setFilename(TEST_CBR_FILE);
         archiveLoader.loadComic(comic);
     }
 
     @Test
-    public void testLoadComic() throws ArchiveLoaderException
+    public void testLoadComic() throws ArchiveAdaptorException
     {
         archiveLoader.loadComic(comic);
 
@@ -92,7 +93,7 @@ public class ZipArchiveLoaderTest
     }
 
     @Test
-    public void testGetSingleFile() throws ArchiveLoaderException
+    public void testGetSingleFile() throws ArchiveAdaptorException
     {
         byte[] result = archiveLoader.loadSingleFile(comic, TEST_FILE_ENTRY_1);
 
@@ -101,7 +102,7 @@ public class ZipArchiveLoaderTest
     }
 
     @Test
-    public void testGetSingleFileNotFound() throws ArchiveLoaderException
+    public void testGetSingleFileNotFound() throws ArchiveAdaptorException
     {
         byte[] result = archiveLoader.loadSingleFile(comic, TEST_FILE_ENTRY_1.substring(1));
 
@@ -109,7 +110,7 @@ public class ZipArchiveLoaderTest
     }
 
     @Test
-    public void testSaveComic() throws ArchiveLoaderException
+    public void testSaveComic() throws ArchiveAdaptorException
     {
         // load an existing comic
         archiveLoader.loadComic(comic);

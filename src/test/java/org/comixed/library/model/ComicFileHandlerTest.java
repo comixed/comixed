@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.comixed.library.adaptors.ArchiveAdaptor;
-import org.comixed.library.loaders.ArchiveLoaderException;
+import org.comixed.library.adaptors.ArchiveAdaptorException;
 import org.comixed.library.utils.FileTypeIdentifier;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,7 +87,7 @@ public class ComicFileHandlerTest
     }
 
     @Test(expected = ComicFileHandlerException.class)
-    public void testLoadComicNoDefinedArchiveLoader() throws ComicFileHandlerException, ArchiveLoaderException
+    public void testLoadComicNoDefinedArchiveLoader() throws ComicFileHandlerException, ArchiveAdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
         Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
@@ -106,12 +106,12 @@ public class ComicFileHandlerTest
     }
 
     @Test(expected = ComicFileHandlerException.class)
-    public void testLoadComicArchiveLoaderException() throws ComicFileHandlerException, ArchiveLoaderException
+    public void testLoadComicArchiveLoaderException() throws ComicFileHandlerException, ArchiveAdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
         Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
         Mockito.when(archiveAdaptors.get(Mockito.anyString())).thenReturn(archiveAdaptor);
-        Mockito.doThrow(ArchiveLoaderException.class).when(archiveAdaptor).loadComic(Mockito.any(Comic.class));
+        Mockito.doThrow(ArchiveAdaptorException.class).when(archiveAdaptor).loadComic(Mockito.any(Comic.class));
 
         try
         {
@@ -127,7 +127,7 @@ public class ComicFileHandlerTest
     }
 
     @Test
-    public void testLoadComic() throws ComicFileHandlerException, ArchiveLoaderException
+    public void testLoadComic() throws ComicFileHandlerException, ArchiveAdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
         Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);

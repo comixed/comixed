@@ -35,7 +35,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.swing.ImageIcon;
 
-import org.comixed.library.loaders.ArchiveLoaderException;
+import org.comixed.library.adaptors.ArchiveAdaptorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,7 +164,7 @@ public class Page
                 }
                 this.content = this.comic.archiveType.getArchiveLoader().loadSingleFile(this.comic, this.filename);
             }
-            catch (ArchiveLoaderException error)
+            catch (ArchiveAdaptorException error)
             {
                 logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(), error);
             }

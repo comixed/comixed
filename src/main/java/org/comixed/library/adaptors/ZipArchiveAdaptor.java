@@ -29,7 +29,6 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
 import org.springframework.stereotype.Component;
@@ -49,7 +48,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
         super("cbz");
     }
 
-    protected byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveLoaderException
+    protected byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveAdaptorException
     {
         File file = validateFile(comic);
 
@@ -92,11 +91,11 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
         }
         catch (IOException error)
         {
-            throw new ArchiveLoaderException("unable to open file: " + file.getAbsolutePath(), error);
+            throw new ArchiveAdaptorException("unable to open file: " + file.getAbsolutePath(), error);
         }
     }
 
-    void saveComicInternal(Comic source, String filename) throws ArchiveLoaderException
+    void saveComicInternal(Comic source, String filename) throws ArchiveAdaptorException
     {
         logger.debug("Creating temporary file: " + filename);
 
@@ -127,7 +126,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
         catch (IOException
                | ArchiveException error)
         {
-            throw new ArchiveLoaderException("error creating comic archive", error);
+            throw new ArchiveAdaptorException("error creating comic archive", error);
         }
     }
 }
