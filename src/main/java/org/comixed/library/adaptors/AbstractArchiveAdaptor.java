@@ -59,8 +59,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "comic.entry",
                          ignoreUnknownFields = false)
 public abstract class AbstractArchiveAdaptor implements
-                                            ArchiveAdaptor,
-                                            InitializingBean
+                                             ArchiveAdaptor,
+                                             InitializingBean
 {
     public static class EntryLoaderForType
     {
@@ -155,6 +155,11 @@ public abstract class AbstractArchiveAdaptor implements
         return (!file.exists()) ? candidate : this.findAvailableFilename(filename, ++attempt);
     }
 
+    protected String getFilenameForEntry(String filename, int index)
+    {
+        return String.format("page-%03d.%s", index, FileUtils.getExtension(filename));
+    }
+
     protected EntryLoader getLoaderForContent(byte[] content)
     {
         String type = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content));
@@ -232,7 +237,7 @@ public abstract class AbstractArchiveAdaptor implements
     }
 
     @Override
-    public Comic saveComic(Comic source) throws ArchiveAdaptorException
+    public Comic saveComic(Comic source, boolean renamePages) throws ArchiveAdaptorException
     {
         this.logger.debug("Saving comic: " + source.getFilename());
 
@@ -246,7 +251,7 @@ public abstract class AbstractArchiveAdaptor implements
             throw new ArchiveAdaptorException("unable to write comic", error);
         }
 
-        this.saveComicInternal(source, tempFilename);
+        this.saveComicInternal(source, tempFilename, renamePages);
 
         String filename = this.findAvailableFilename(source.getBaseFilename(), 0);
         File file1 = new File(tempFilename);
@@ -267,7 +272,7 @@ public abstract class AbstractArchiveAdaptor implements
 
         try
         {
-            comicFileHandler.loadComic(result);
+            this.comicFileHandler.loadComic(result);
         }
         catch (ComicFileHandlerException error)
         {
@@ -284,10 +289,12 @@ public abstract class AbstractArchiveAdaptor implements
      *            the source comic
      * @param filename
      *            the new filename
+     * @param renamePages
+     *            rename pages
      * @throws ArchiveException
      *             if an error occurs
      */
-    abstract void saveComicInternal(Comic source, String filename) throws ArchiveAdaptorException;
+    abstract void saveComicInternal(Comic source, String filename, boolean renamePages) throws ArchiveAdaptorException;
 
     protected File validateFile(Comic comic) throws ArchiveAdaptorException
     {

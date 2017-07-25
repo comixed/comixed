@@ -95,7 +95,8 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
         }
     }
 
-    void saveComicInternal(Comic source, String filename) throws ArchiveAdaptorException
+    @Override
+    void saveComicInternal(Comic source, String filename, boolean renamePages) throws ArchiveAdaptorException
     {
         logger.debug("Creating temporary file: " + filename);
 
@@ -112,8 +113,9 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
             {
                 // TODO if the page is deleted, then skip it
                 Page page = source.getPage(index);
-                logger.debug("Adding entry: " + page.getFilename() + " size=" + page.getContent().length);
-                ZipArchiveEntry entry = new ZipArchiveEntry(page.getFilename());
+                String pagename = renamePages ? getFilenameForEntry(page.getFilename(), index) : page.getFilename();
+                logger.debug("Adding entry: " + pagename + " size=" + page.getContent().length);
+                ZipArchiveEntry entry = new ZipArchiveEntry(pagename);
                 entry.setSize(page.getContent().length);
                 zoutput.putArchiveEntry(entry);
                 zoutput.write(page.getContent());

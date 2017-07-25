@@ -65,9 +65,11 @@ public interface ArchiveAdaptor
      *
      * @param comic
      *            the comic
+     * @param renamePages
+     *            true rename pages
      * @return the new comic
      * @throws ArchiveAdaptorException
      *             if an error occurs
      */
-    Comic saveComic(Comic comic) throws ArchiveAdaptorException;
+    Comic saveComic(Comic comic, boolean renamePages) throws ArchiveAdaptorException;
 }

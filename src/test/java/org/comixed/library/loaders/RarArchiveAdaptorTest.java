@@ -112,6 +112,6 @@ public class RarArchiveAdaptorTest
     @Test(expected = ArchiveAdaptorException.class)
     public void testSaveComic() throws ArchiveAdaptorException
     {
-        archiveAdaptor.saveComic(comic);
+        archiveAdaptor.saveComic(comic, false);
     }
 }
