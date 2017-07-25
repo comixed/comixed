@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.comixed.ComixEdTestContext;
+import org.comixed.library.adaptors.ZipArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class ZipArchiveLoaderTest
     private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
 
     @Autowired
-    private ZipArchiveLoader archiveLoader;
+    private ZipArchiveAdaptor archiveLoader;
 
     private Comic comic;
 

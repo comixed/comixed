@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.library.loaders;
+package org.comixed.library.adaptors;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,23 +29,22 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.comixed.library.adaptors.AbstractArchiveAdaptor;
-import org.comixed.library.adaptors.ArchiveAdaptor;
+import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ZipArchiveLoader</code> provides a concrete implementation of
+ * <code>ZipArchiveAdaptor</code> provides a concrete implementation of
  * {@link ArchiveAdaptor} for ZIP files.
  *
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class ZipArchiveLoader extends AbstractArchiveAdaptor
+public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
 {
-    public ZipArchiveLoader()
+    public ZipArchiveAdaptor()
     {
         super("cbz");
     }
