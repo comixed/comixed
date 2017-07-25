@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.comixed.ComixEdTestContext;
+import org.comixed.library.adaptors.RarArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class RarArchiveLoaderTest
     private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
 
     @Autowired
-    private RarArchiveLoader archiveLoader;
+    private RarArchiveAdaptor archiveLoader;
 
     private Comic comic;
 

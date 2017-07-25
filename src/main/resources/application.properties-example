@@ -37,7 +37,7 @@ comic.archive.loaders[0].format=zip
 comic.archive.loaders[0].bean=zipArchiveAdaptor
 comic.archive.loaders[0].archiveType=CBZ
 comic.archive.loaders[1].format=rar
-comic.archive.loaders[1].bean=rarArchiveLoader
+comic.archive.loaders[1].bean=rarArchiveAdaptor
 comic.archive.loaders[1].archiveType=CBR
 
 # Filename entry loaders

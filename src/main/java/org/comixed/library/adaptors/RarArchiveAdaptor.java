@@ -17,13 +17,12 @@
  * org.comixed;
  */
 
-package org.comixed.library.loaders;
+package org.comixed.library.adaptors;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.comixed.library.adaptors.AbstractArchiveAdaptor;
-import org.comixed.library.adaptors.ArchiveAdaptor;
+import org.comixed.library.loaders.ArchiveLoaderException;
 import org.comixed.library.model.Comic;
 import org.springframework.stereotype.Component;
 
@@ -33,16 +32,16 @@ import com.github.junrar.impl.FileVolumeManager;
 import com.github.junrar.rarfile.FileHeader;
 
 /**
- * <code>RarArchiveLoader</code> provides a concrete implementation of
+ * <code>RarArchiveAdaptor</code> provides a concrete implementation of
  * {@link ArchiveAdaptor} for RAR files.
  * 
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class RarArchiveLoader extends AbstractArchiveAdaptor
+public class RarArchiveAdaptor extends AbstractArchiveAdaptor
 {
-    public RarArchiveLoader()
+    public RarArchiveAdaptor()
     {
         super("cbr");
     }
