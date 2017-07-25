@@ -41,12 +41,12 @@ public enum ArchiveType
         this.name = name;
     }
 
-    public ArchiveAdaptor getArchiveLoader()
+    public ArchiveAdaptor getArchiveAdaptor()
     {
         return this.archiveAdaptor;
     }
 
-    public void setArchiveLoader(ArchiveAdaptor archiveAdaptor)
+    public void setArchiveAdaptor(ArchiveAdaptor archiveAdaptor)
     {
         this.archiveAdaptor = archiveAdaptor;
     }

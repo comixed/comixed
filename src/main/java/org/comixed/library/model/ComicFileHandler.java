@@ -63,11 +63,11 @@ public class ComicFileHandler implements
     @Autowired
     private Map<String,
                 ArchiveAdaptor> archiveAdaptors;
-    private List<ArchiveLoaderEntry> loaders = new ArrayList<>();
+    private List<ArchiveAdaptorEntry> loaders = new ArrayList<>();
     private Map<String,
                 ArchiveType> archiveTypes = new HashMap<>();
 
-    public static class ArchiveLoaderEntry
+    public static class ArchiveAdaptorEntry
     {
         private String format;
         private String bean;
@@ -95,7 +95,7 @@ public class ComicFileHandler implements
         }
     }
 
-    public List<ArchiveLoaderEntry> getLoaders()
+    public List<ArchiveAdaptorEntry> getLoaders()
     {
         return loaders;
     }
@@ -149,7 +149,7 @@ public class ComicFileHandler implements
         logger.debug("Initializing ComicFileHandler");
         archiveAdaptors.clear();
         archiveTypes.clear();
-        for (ArchiveLoaderEntry loader : this.loaders)
+        for (ArchiveAdaptorEntry loader : this.loaders)
         {
             if (loader.isValid())
             {
@@ -163,7 +163,7 @@ public class ComicFileHandler implements
                                  + loader.archiveType);
                     this.archiveTypes.put(loader.format, loader.archiveType);
                     logger.debug("Registering loader with archive type: " + loader.archiveType);
-                    loader.archiveType.setArchiveLoader(bean);
+                    loader.archiveType.setArchiveAdaptor(bean);
                 }
                 else
                 {

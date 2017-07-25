@@ -87,7 +87,7 @@ public class ComicFileHandlerTest
     }
 
     @Test(expected = ComicFileHandlerException.class)
-    public void testLoadComicNoDefinedArchiveLoader() throws ComicFileHandlerException, ArchiveAdaptorException
+    public void testLoadComicNoDefinedArchiveAdaptor() throws ComicFileHandlerException, ArchiveAdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
         Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
@@ -106,7 +106,7 @@ public class ComicFileHandlerTest
     }
 
     @Test(expected = ComicFileHandlerException.class)
-    public void testLoadComicArchiveLoaderException() throws ComicFileHandlerException, ArchiveAdaptorException
+    public void testLoadComicArchiveAdaptorException() throws ComicFileHandlerException, ArchiveAdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
         Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);

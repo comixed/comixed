@@ -38,7 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ComixEdTestContext.class)
 @TestPropertySource(locations = "classpath:test-application.properties")
-public class RarArchiveLoaderTest
+public class RarArchiveAdaptorTest
 {
     private static final String TEST_FILE_ENTRY_0 = "exampleCBR.jpg";
     private static final String TEST_FILE_ENTRY_1 = "example.jpeg";
@@ -48,7 +48,7 @@ public class RarArchiveLoaderTest
     private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
 
     @Autowired
-    private RarArchiveAdaptor archiveLoader;
+    private RarArchiveAdaptor archiveAdaptor;
 
     private Comic comic;
 
@@ -63,27 +63,27 @@ public class RarArchiveLoaderTest
     public void testOpenFileNotFound() throws ArchiveAdaptorException
     {
         comic.setFilename(TEST_CBR_FILE.substring(1));
-        archiveLoader.loadComic(comic);
+        archiveAdaptor.loadComic(comic);
     }
 
     @Test(expected = ArchiveAdaptorException.class)
     public void testOpenFileIsDirectory() throws ArchiveAdaptorException
     {
         comic.setFilename("src/test/resources");
-        archiveLoader.loadComic(comic);
+        archiveAdaptor.loadComic(comic);
     }
 
     @Test(expected = ArchiveAdaptorException.class)
     public void testOpenInvalidFile() throws ArchiveAdaptorException
     {
         comic.setFilename(TEST_CBZ_FILE);
-        archiveLoader.loadComic(comic);
+        archiveAdaptor.loadComic(comic);
     }
 
     @Test
     public void testLoadComic() throws ArchiveAdaptorException
     {
-        archiveLoader.loadComic(comic);
+        archiveAdaptor.loadComic(comic);
 
         assertEquals(4, comic.getPageCount());
         assertEquals(TEST_FILE_ENTRY_0, comic.getPage(0).getFilename());
@@ -95,7 +95,7 @@ public class RarArchiveLoaderTest
     @Test
     public void testGetSingleFile() throws ArchiveAdaptorException
     {
-        byte[] result = archiveLoader.loadSingleFile(comic, TEST_FILE_ENTRY_1);
+        byte[] result = archiveAdaptor.loadSingleFile(comic, TEST_FILE_ENTRY_1);
 
         assertNotNull(result);
         assertEquals(7449985, result.length);
@@ -104,7 +104,7 @@ public class RarArchiveLoaderTest
     @Test
     public void testGetSingleFileNotFound() throws ArchiveAdaptorException
     {
-        byte[] result = archiveLoader.loadSingleFile(comic, TEST_FILE_ENTRY_1.substring(1));
+        byte[] result = archiveAdaptor.loadSingleFile(comic, TEST_FILE_ENTRY_1.substring(1));
 
         assertNull(result);
     }
@@ -112,6 +112,6 @@ public class RarArchiveLoaderTest
     @Test(expected = ArchiveAdaptorException.class)
     public void testSaveComic() throws ArchiveAdaptorException
     {
-        archiveLoader.saveComic(comic);
+        archiveAdaptor.saveComic(comic);
     }
 }

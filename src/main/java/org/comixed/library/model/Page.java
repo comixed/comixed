@@ -162,7 +162,7 @@ public class Page
                 {
                     logger.debug("WTF?");
                 }
-                this.content = this.comic.archiveType.getArchiveLoader().loadSingleFile(this.comic, this.filename);
+                this.content = this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
             }
             catch (ArchiveAdaptorException error)
             {

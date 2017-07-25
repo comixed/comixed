@@ -45,7 +45,7 @@ public class EditExportZipAction extends AbstractAction implements
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ZipArchiveAdaptor archiveLoader;
+    private ZipArchiveAdaptor archiveAdaptor;
 
     @Autowired
     private ComicTableView tableView;
@@ -71,7 +71,7 @@ public class EditExportZipAction extends AbstractAction implements
             ExportComicWorkerTask task = taskFactory.getObject();
 
             task.setComics(this.selectionModel.getComic(selection));
-            task.setArchiveLoader(this.archiveLoader);
+            task.setArchiveAdaptor(this.archiveAdaptor);
 
             this.worker.addTasksToQueue(task);
         }

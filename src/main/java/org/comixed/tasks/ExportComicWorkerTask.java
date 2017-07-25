@@ -51,9 +51,9 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
     @Autowired
     private ComicSelectionModel comicSelectionModel;
 
-    public void setArchiveLoader(ZipArchiveAdaptor archiveLoader)
+    public void setArchiveAdaptor(ZipArchiveAdaptor archiveAdaptor)
     {
-        this.archiveAdaptor = archiveLoader;
+        this.archiveAdaptor = archiveAdaptor;
     }
 
     public void setComics(Comic comic)
