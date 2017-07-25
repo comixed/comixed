@@ -29,6 +29,7 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.comixed.library.adaptors.AbstractArchiveAdaptor;
 import org.comixed.library.adaptors.ArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
@@ -42,7 +43,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class ZipArchiveLoader extends AbstractArchiveLoader
+public class ZipArchiveLoader extends AbstractArchiveAdaptor
 {
     public ZipArchiveLoader()
     {

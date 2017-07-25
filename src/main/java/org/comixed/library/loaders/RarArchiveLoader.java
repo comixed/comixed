@@ -22,6 +22,7 @@ package org.comixed.library.loaders;
 import java.io.File;
 import java.io.IOException;
 
+import org.comixed.library.adaptors.AbstractArchiveAdaptor;
 import org.comixed.library.adaptors.ArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ import com.github.junrar.rarfile.FileHeader;
  *
  */
 @Component
-public class RarArchiveLoader extends AbstractArchiveLoader
+public class RarArchiveLoader extends AbstractArchiveAdaptor
 {
     public RarArchiveLoader()
     {

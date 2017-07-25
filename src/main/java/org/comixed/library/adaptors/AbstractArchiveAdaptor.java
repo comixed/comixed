@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.library.loaders;
+package org.comixed.library.adaptors;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -32,7 +32,9 @@ import java.util.Map;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
-import org.comixed.library.adaptors.ArchiveAdaptor;
+import org.comixed.library.loaders.ArchiveLoaderException;
+import org.comixed.library.loaders.EntryLoader;
+import org.comixed.library.loaders.EntryLoaderException;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
@@ -47,7 +49,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>AbstractArchiveLoader</code> provides a foundation for creating new
+ * <code>AbstractArchiveAdaptor</code> provides a foundation for creating new
  * instances of {@link ArchiveAdaptor}.
  *
  * @author Darryl L. Pierce
@@ -57,7 +59,7 @@ import org.springframework.stereotype.Component;
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "comic.entry",
                          ignoreUnknownFields = false)
-public abstract class AbstractArchiveLoader implements
+public abstract class AbstractArchiveAdaptor implements
                                             ArchiveAdaptor,
                                             InitializingBean
 {
@@ -99,7 +101,7 @@ public abstract class AbstractArchiveLoader implements
                   EntryLoader> entryLoaders = new HashMap<>();
     private String defaultExtension;
 
-    public AbstractArchiveLoader(String defaultExtension)
+    public AbstractArchiveAdaptor(String defaultExtension)
     {
         super();
         this.defaultExtension = defaultExtension;
