@@ -34,6 +34,7 @@ import javax.swing.JTabbedPane;
 
 import org.comixed.AppConfiguration;
 import org.comixed.ui.components.ComicVineConfiguration;
+import org.comixed.ui.components.LibraryConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -68,6 +69,9 @@ public class PreferencesDialog extends JDialog implements
 
     @Autowired
     private ComicVineConfiguration comicVineConfiguration;
+
+    @Autowired
+    private LibraryConfiguration libraryConfiguration;
 
     public PreferencesDialog()
     {
@@ -129,6 +133,8 @@ public class PreferencesDialog extends JDialog implements
                           getGeneralTab());
         tabbedPane.addTab(messageSource.getMessage("dialog.config.tab.comicvine.label", null, getLocale()),
                           comicVineConfiguration);
+        tabbedPane.addTab(messageSource.getMessage("dialog.config.tab.library.label", null, getLocale()),
+                          libraryConfiguration);
         content.add(tabbedPane, BorderLayout.CENTER);
         // create the buttons
         JButton save = new JButton(messageSource.getMessage("dialog.button.save.label", null, getLocale()));
@@ -139,6 +145,7 @@ public class PreferencesDialog extends JDialog implements
             {
                 logger.debug("Saving configuration");
                 comicVineConfiguration.saveConfiguration();
+                libraryConfiguration.saveConfiguration();
                 configuration.save();
                 PreferencesDialog.this.setVisible(false);
             }
