@@ -26,6 +26,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import org.comixed.ui.menus.MenuHelper.Menu;
+import org.comixed.ui.menus.MenuHelper.MenuType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -47,46 +49,11 @@ import org.springframework.stereotype.Component;
 public class MainMenuBar extends JMenuBar implements
                          InitializingBean
 {
-    public enum MenuType
-    {
-     ITEM,
-     SUBMENU,
-     SEPARATOR,
-    }
-
-    public static class Menu
-    {
-        MenuType type = MenuType.ITEM;
-        String menu;
-        String label;
-        String bean;
-
-        public void setType(MenuType type)
-        {
-            this.type = type;
-        }
-
-        public void setBean(String bean)
-        {
-            this.bean = bean;
-        }
-
-        public void setLabel(String label)
-        {
-            this.label = label;
-        }
-
-        public void setMenu(String menu)
-        {
-            this.menu = menu;
-        }
-    }
-
     private static final long serialVersionUID = -3549352202994937250L;
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private List<Menu> mainMenu = new ArrayList<>();
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private MenuHelper menuHelper;
 
@@ -129,7 +96,6 @@ public class MainMenuBar extends JMenuBar implements
             }
 
             lastItem = item;
-
         }
     }
 

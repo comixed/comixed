@@ -41,6 +41,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class MenuHelper
 {
+    public enum MenuType
+    {
+     ITEM,
+     SUBMENU,
+     SEPARATOR,
+    }
+
+    public static class Menu
+    {
+        MenuType type = MenuType.ITEM;
+        String menu;
+        String label;
+        String bean;
+
+        public void setType(MenuType type)
+        {
+            this.type = type;
+        }
+
+        public void setBean(String bean)
+        {
+            this.bean = bean;
+        }
+
+        public void setLabel(String label)
+        {
+            this.label = label;
+        }
+
+        public void setMenu(String menu)
+        {
+            this.menu = menu;
+        }
+    }
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
