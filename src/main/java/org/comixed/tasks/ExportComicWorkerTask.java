@@ -21,6 +21,7 @@ package org.comixed.tasks;
 
 import java.util.Locale;
 
+import org.comixed.AppConfiguration;
 import org.comixed.library.adaptors.AbstractArchiveAdaptor;
 import org.comixed.library.adaptors.ArchiveAdaptor;
 import org.comixed.library.adaptors.ArchiveAdaptorException;
@@ -51,6 +52,9 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
     @Autowired
     private ComicSelectionModel comicSelectionModel;
 
+    @Autowired
+    private AppConfiguration configuration;
+
     public void setArchiveAdaptor(AbstractArchiveAdaptor archiveAdaptor)
     {
         this.archiveAdaptor = archiveAdaptor;
@@ -70,7 +74,12 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
         {
             this.showStatusText(this.messageSource.getMessage("status.comic.exported", new Object[]
             {this.comic.getFilename()}, Locale.getDefault()));
-            Comic result = this.archiveAdaptor.saveComic(this.comic, false);
+            boolean rename = false;
+            if (configuration.hasOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT))
+            {
+                rename = Boolean.valueOf(configuration.getOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT));
+            }
+            Comic result = this.archiveAdaptor.saveComic(this.comic, rename);
             comicRepository.save(result);
             comicSelectionModel.reload();
         }
