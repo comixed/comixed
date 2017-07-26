@@ -47,11 +47,24 @@ import org.springframework.stereotype.Component;
 public class MainMenuBar extends JMenuBar implements
                          InitializingBean
 {
+    public enum MenuType
+    {
+     ITEM,
+     SUBMENU,
+     SEPARATOR,
+    }
+
     public static class Menu
     {
+        MenuType type = MenuType.ITEM;
         String menu;
         String label;
         String bean;
+
+        public void setType(MenuType type)
+        {
+            this.type = type;
+        }
 
         public void setBean(String bean)
         {
@@ -91,6 +104,7 @@ public class MainMenuBar extends JMenuBar implements
             {
                 continue;
             }
+
             // create the menu if necessary
             if ((lastItem == null) || !lastItem.menu.equals(item.menu))
             {
@@ -99,13 +113,13 @@ public class MainMenuBar extends JMenuBar implements
                 this.menuHelper.configureMenuItem(menu, item.menu);
                 this.add(menu);
             }
-            // create and add the menu item
-            this.logger.debug("Creating menu item: " + item.menu + "->" + item.label);
-            if (item.label.equals("---"))
+
+            if (item.type == MenuType.SEPARATOR)
             {
+                this.logger.debug("Creating menu item: " + item.menu + "->" + item.label);
                 menu.addSeparator();
             }
-            else
+            else if (item.type == MenuType.ITEM)
             {
                 JMenuItem menuItem = this.menuHelper.createMenuItem(item.menu + "." + item.label, item.bean);
                 if (menuItem != null)
@@ -115,6 +129,7 @@ public class MainMenuBar extends JMenuBar implements
             }
 
             lastItem = item;
+
         }
     }
 
