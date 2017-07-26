@@ -30,14 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>DisplayRefreshAction</code> instructs the current views to refresh by
+ * <code>RefreshDisplayAction</code> instructs the current views to refresh by
  * notifying the selection model to reload its content.
  * 
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class DisplayRefreshAction extends AbstractAction
+public class RefreshDisplayAction extends AbstractAction
 {
     private static final long serialVersionUID = 5309197704080743070L;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
