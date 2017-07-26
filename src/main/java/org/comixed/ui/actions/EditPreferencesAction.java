@@ -28,14 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>WindowPreferencesAction</code> lets the user display the configuration
+ * <code>EditPreferencesAction</code> lets the user display the configuration
  * dialog.
  * 
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class WindowPreferencesAction extends AbstractAction
+public class EditPreferencesAction extends AbstractAction
 {
     private static final long serialVersionUID = 1619821554868956470L;
 
