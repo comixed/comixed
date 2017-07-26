@@ -32,13 +32,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>FileExitAction</code> responds to the File->Exit menu item.
+ * <code>ExitApplicationAction</code> responds to the File->Exit menu item.
  * 
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class FileExitAction extends AbstractAction
+public class ExitApplicationAction extends AbstractAction
 {
     private static final long serialVersionUID = 7400132309418120634L;
 
