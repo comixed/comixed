@@ -47,6 +47,8 @@ import org.springframework.stereotype.Component;
 public class AppConfiguration implements
                               InitializingBean
 {
+    public static final String RENAME_COMIC_PAGES_ON_EXPORT = "library.export.rename-pages";
+
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
