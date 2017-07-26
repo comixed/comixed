@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.ui;
+package org.comixed.ui.menus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import org.comixed.ui.menus.MenuHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
