@@ -41,14 +41,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>FileImportAction</code> imports all comic files within a specified
+ * <code>ImportComicsAction</code> imports all comic files within a specified
  * directory.
  *
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class FileImportAction extends AbstractAction
+public class ImportComicsAction extends AbstractAction
 {
     private static final long serialVersionUID = -5509387083770877459L;
     private static final String LAST_IMPORT_DIRECTORY = "file.import.last-directory";
