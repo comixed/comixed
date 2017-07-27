@@ -19,14 +19,24 @@
 
 package org.comixed.ui.components;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.library.model.ComicTableModel;
+import org.comixed.ui.menus.MenuHelper;
+import org.comixed.ui.menus.MenuHelper.Menu;
+import org.comixed.ui.menus.MenuHelper.MenuType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,6 +47,8 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
+@PropertySource("classpath:menus.properties")
+@ConfigurationProperties("app.table-view.popup")
 public class ComicTableView extends JTable implements
                             InitializingBean
 {
@@ -49,6 +61,11 @@ public class ComicTableView extends JTable implements
     @Autowired
     private ComicSelectionModel comicSelectionModel;
 
+    @Autowired
+    private MenuHelper menuHelper;
+
+    private List<Menu> menu = new ArrayList<>();
+
     @Override
     public void afterPropertiesSet() throws Exception
     {
@@ -56,5 +73,35 @@ public class ComicTableView extends JTable implements
         this.setModel(this.comicTableModel);
         this.logger.debug("Subscribing selection model to table view updates");
         this.getSelectionModel().addListSelectionListener(this.comicSelectionModel);
+        this.logger.debug("Building comic table view popup menu");
+        JPopupMenu popup = new JPopupMenu();
+
+        for (Menu item : this.menu)
+        {
+            if (item.label == null)
+            {
+                continue;
+            }
+            if (item.type == MenuType.SEPARATOR)
+            {
+                this.logger.debug("Creating menu separator");
+                popup.addSeparator();
+            }
+            else if (item.type == MenuType.ITEM)
+            {
+                JMenuItem menuItem = this.menuHelper.createMenuItem(item.label, item.bean);
+                if (menuItem != null)
+                {
+                    popup.add(menuItem);
+                }
+            }
+        }
+
+        this.setComponentPopupMenu(popup);
+    }
+
+    public List<Menu> getMenu()
+    {
+        return this.menu;
     }
 }
