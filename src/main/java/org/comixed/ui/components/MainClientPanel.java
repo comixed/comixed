@@ -26,7 +26,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import org.comixed.AppConfiguration;
-import org.comixed.ui.ComicTableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

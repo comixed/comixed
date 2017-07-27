@@ -32,7 +32,7 @@ import org.comixed.library.model.ComicSelectionListener;
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.tasks.DeleteComicsWorkerTask;
 import org.comixed.tasks.Worker;
-import org.comixed.ui.ComicTableView;
+import org.comixed.ui.components.ComicTableView;
 import org.comixed.ui.frames.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

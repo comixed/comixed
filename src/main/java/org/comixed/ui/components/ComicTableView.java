@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.ui;
+package org.comixed.ui.components;
 
 import javax.swing.JTable;
 
