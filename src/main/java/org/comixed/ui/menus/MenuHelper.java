@@ -50,10 +50,10 @@ public class MenuHelper
 
     public static class Menu
     {
-        MenuType type = MenuType.ITEM;
-        String menu;
-        String label;
-        String bean;
+        public MenuType type = MenuType.ITEM;
+        public String menu;
+        public String label;
+        public String bean;
 
         public void setType(MenuType type)
         {
