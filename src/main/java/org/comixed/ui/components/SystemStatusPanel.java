@@ -30,26 +30,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>DetailsPane</code> shows details of the library, and of any selected
- * comics, in the main window frame of the application.
+ * <code>SystemStatusPanel</code> shows details of the library, and of any
+ * selected comics, in the main window frame of the application.
  *
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class DetailsPane extends JPanel implements
-                         InitializingBean
+public class SystemStatusPanel extends JPanel implements
+                               InitializingBean
 {
     private static final long serialVersionUID = -2506202865075901419L;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private LibraryDetailsPane libraryDetailsPane;
+    private LibraryDetailsPanel libraryDetailsPanel;
+
+    @Autowired
+    private WorkerQueueDetailsPanel workerQueueDetailsPanel;
 
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        this.setLayout(new GridLayout(1, 1));
-        this.add(libraryDetailsPane);
+        this.setLayout(new GridLayout(2, 1));
+        this.add(this.libraryDetailsPanel);
+        this.add(this.workerQueueDetailsPanel);
     }
 }

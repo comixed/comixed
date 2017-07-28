@@ -50,7 +50,7 @@ public class MainClientPanel extends JPanel implements
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private DetailsPane detailsPane;
+    private SystemStatusPanel systemStatusPanel;
 
     @Autowired
     private ComicTableView tableView;
@@ -72,7 +72,7 @@ public class MainClientPanel extends JPanel implements
 
     private void createLayout()
     {
-        JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.detailsPane),
+        JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.systemStatusPanel),
                                               new JScrollPane(this.tableView));
         this.add(splitpane, BorderLayout.CENTER);
 
