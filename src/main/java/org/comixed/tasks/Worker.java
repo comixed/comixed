@@ -19,6 +19,8 @@
 
 package org.comixed.tasks;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -56,9 +58,11 @@ public class Worker implements
     @Autowired
     private StatusAdaptor statusAdaptor;
 
-    BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<WorkerTask>();
+    BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<>();
     State state = State.IDLE;
     private Object semaphore = new Object();
+
+    public List<WorkerListener> listeners = new ArrayList<>();
 
     public Worker()
     {
@@ -86,6 +90,12 @@ public class Worker implements
         this.wakeUpWorker();
     }
 
+    public void addWorkerListener(WorkerListener listener)
+    {
+        this.logger.debug("Adding worker listener: " + listener);
+        this.listeners.add(listener);
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception
     {
@@ -97,6 +107,33 @@ public class Worker implements
     public void beginWorkerThread()
     {
         new Thread(this, "ComixEd-Worker").start();
+    }
+
+    void fireQueueChangedEvent()
+    {
+        this.logger.debug("Notifying worker listeners");
+        for (WorkerListener listener : this.listeners)
+        {
+            listener.queueChanged();
+        }
+    }
+
+    private void fireWorkerStateChangedEvent()
+    {
+        for (WorkerListener listener : this.listeners)
+        {
+            listener.workerStateChanged();
+        }
+    }
+
+    /**
+     * Returns the current state of the worker.
+     *
+     * @return the state
+     */
+    public State getState()
+    {
+        return this.state;
     }
 
     /**
@@ -122,6 +159,7 @@ public class Worker implements
     {
         this.logger.debug("Starting worker queue");
         this.state = State.RUNNING;
+        this.fireWorkerStateChangedEvent();
         while (this.state != State.STOP)
         {
             synchronized (this.semaphore)
@@ -129,10 +167,11 @@ public class Worker implements
                 if (this.queue.isEmpty())
                 {
                     this.logger.debug("Waiting for task or notification");
-                    statusAdaptor.updateStatusText("");
+                    this.statusAdaptor.updateStatusText("");
                     try
                     {
                         this.state = State.IDLE;
+                        this.fireWorkerStateChangedEvent();
                         this.semaphore.wait();
                         this.state = State.RUNNING;
                     }
@@ -144,6 +183,7 @@ public class Worker implements
                 if (!this.queue.isEmpty() && (this.state == State.RUNNING))
                 {
                     WorkerTask task = this.queue.poll();
+                    this.fireQueueChangedEvent();
                     try
                     {
                         this.logger.debug("Starting task: " + task);
@@ -160,6 +200,7 @@ public class Worker implements
             }
         }
         this.logger.debug("Stop processing the work queue");
+        this.fireWorkerStateChangedEvent();
     }
 
     /**

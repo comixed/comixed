@@ -19,13 +19,14 @@
 
 package org.comixed.tasks;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.TimeoutException;
 
 import org.comixed.adaptors.StatusAdaptor;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -49,21 +50,8 @@ public class WorkerTest extends ConcurrentTestCase
     @Mock
     private StatusAdaptor statusAdaptor;
 
-    @Before
-    public void setUp()
-    {
-        // start the worker
-        new Thread(() ->
-        {
-            worker.run();
-        }).start();
-    }
-
-    @After
-    public void tearDown()
-    {
-        worker.stop();
-    }
+    @Mock
+    private WorkerListener workerListener;
 
     @Test
     public void testStartsAsIdle()
@@ -74,24 +62,55 @@ public class WorkerTest extends ConcurrentTestCase
     @Test
     public void testStartAndStopWorker() throws InterruptedException, TimeoutException
     {
-        Mockito.doNothing().when(statusAdaptor).updateStatusText(Mockito.anyString());
-
         final Waiter waiter = new Waiter();
 
+        worker.addWorkerListener(new WorkerListener()
+        {
+            private boolean called = false;
+
+            @Override
+            public void queueChanged()
+            {}
+
+            @Override
+            public void workerStateChanged()
+            {
+                if (!called)
+                {
+                    called = true;
+                    assertEquals(Worker.State.RUNNING, worker.state);
+                    worker.stop();
+                }
+            }
+        });
         new Thread(() ->
         {
-            worker.addTasksToQueue(new AbstractWorkerTask()
-            {
-                @Override
-                public void startTask()
-                {
-                    waiter.assertEquals(Worker.State.RUNNING, worker.state);
-                    waiter.resume();
-                }
-            });
+            worker.run();
+            waiter.resume();
         }).start();
+
         waiter.await(1000);
-        worker.stop();
+
         assertSame(Worker.State.STOP, worker.state);
+    }
+
+    @Test
+    public void testAddWorkerListener()
+    {
+        assertTrue(worker.listeners.isEmpty());
+        worker.addWorkerListener(workerListener);
+        assertFalse(worker.listeners.isEmpty());
+    }
+
+    @Test
+    public void testFireQueueChangedEvent()
+    {
+        worker.addWorkerListener(workerListener);
+
+        Mockito.doNothing().when(workerListener).queueChanged();
+
+        worker.fireQueueChangedEvent();
+
+        Mockito.verify(workerListener, Mockito.times(1)).queueChanged();
     }
 }
