@@ -160,13 +160,14 @@ public class Page
             {
                 if (this.comic.archiveType == null)
                 {
-                    logger.debug("WTF?");
+                    this.logger.debug("WTF?");
                 }
                 this.content = this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
             }
             catch (ArchiveAdaptorException error)
             {
-                logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(), error);
+                this.logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(),
+                                 error);
             }
         }
         return this.content;
@@ -218,6 +219,27 @@ public class Page
         this.logger.debug("Fetching resized image: " + width + "x" + height);
 
         return new ImageIcon(this.icon.getImage().getScaledInstance(width, height, Image.SCALE_FAST));
+    }
+
+    /**
+     * Returns a scaled copy of the page image.
+     *
+     * @param width
+     *            the scaled width
+     * @return the scaled image
+     */
+    public Image getScaledImage(int width)
+    {
+        this.logger.debug("Getting scaled page image: width=" + width);
+        ImageIcon image = this.getImage();
+        float w = (float )image.getIconWidth();
+        float h = (float )image.getIconHeight();
+
+        int height = (int )(((h / w) * ((float )width)));
+
+        this.logger.debug("Returning image scaled to " + width + "x" + height);
+
+        return image.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 
     @Override
