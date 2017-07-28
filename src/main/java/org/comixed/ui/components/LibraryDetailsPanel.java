@@ -19,36 +19,29 @@
 
 package org.comixed.ui.components;
 
-import java.util.Locale;
-
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
 
 import org.comixed.library.model.ComicSelectionListener;
 import org.comixed.library.model.ComicSelectionModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LibraryDetailsPane</code> shows details about the current state of the
+ * <code>LibraryDetailsPanel</code> shows details about the current state of the
  * library.
  *
  * @author Darryl L. Pierce
  *
  */
 @Component
-public class LibraryDetailsPane extends JPanel implements
-                                InitializingBean,
-                                ComicSelectionListener
+public class LibraryDetailsPanel extends DetailsPanel implements
+                                 InitializingBean,
+                                 ComicSelectionListener
 {
     private static final long serialVersionUID = -8742844084547538845L;
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private MessageSource messageSource;
@@ -59,7 +52,7 @@ public class LibraryDetailsPane extends JPanel implements
     private JLabel totalComics = new JLabel();
     private JLabel displayedComics = new JLabel();
 
-    public LibraryDetailsPane()
+    public LibraryDetailsPanel()
     {
         super();
     }
@@ -68,7 +61,6 @@ public class LibraryDetailsPane extends JPanel implements
     public void afterPropertiesSet() throws Exception
     {
         this.comicSelectionModel.addComicSelectionListener(this);
-        this.setBorder(new BevelBorder(BevelBorder.LOWERED));
         this.buildLayout();
         this.updateDisplayedComicCount();
         this.updateTotalComicCount();
