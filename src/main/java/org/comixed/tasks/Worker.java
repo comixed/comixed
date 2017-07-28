@@ -19,9 +19,9 @@
 
 package org.comixed.tasks;
 
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.comixed.adaptors.StatusAdaptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class Worker implements
     @Autowired
     private StatusAdaptor statusAdaptor;
 
-    Queue<WorkerTask> queue = new CircularFifoQueue<>();
+    BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<WorkerTask>();
     State state = State.IDLE;
     private Object semaphore = new Object();
 
@@ -74,7 +74,14 @@ public class Worker implements
     public void addTasksToQueue(WorkerTask task)
     {
         this.logger.debug("Adding task to queue: " + task);
-        this.queue.add(task);
+        try
+        {
+            this.queue.put(task);
+        }
+        catch (InterruptedException error)
+        {
+            this.logger.error("Unable to queue task", error);
+        }
         this.logger.debug("Queue size is now " + this.queue.size());
         this.wakeUpWorker();
     }
