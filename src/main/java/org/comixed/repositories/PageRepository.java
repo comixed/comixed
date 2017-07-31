@@ -31,6 +31,13 @@ public interface PageRepository extends
                                                Long>
 {
     /**
+     * Returns the number of duplicate pages in the repository.
+     *
+     * @return the page count
+     */
+    int getDuplicatePageCount();
+
+    /**
      * Returns the list of pages that are duplicates.
      *
      * @return the page list

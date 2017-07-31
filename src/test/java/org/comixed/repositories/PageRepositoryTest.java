@@ -64,4 +64,10 @@ public class PageRepositoryTest
         assertEquals(1001L, result.get(1).getComic().getId().longValue());
         assertEquals(1002L, result.get(2).getComic().getId().longValue());
     }
+
+    @Test
+    public void testGetDuplicatePageCount()
+    {
+        assertEquals(3, repository.getDuplicatePageCount());
+    }
 }

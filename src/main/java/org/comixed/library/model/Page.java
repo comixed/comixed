@@ -51,7 +51,9 @@ import org.slf4j.LoggerFactory;
 @Table(name = "pages")
 @NamedQueries(
 {@NamedQuery(name = "Page.getDuplicatePageList",
-             query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)")})
+             query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),
+ @NamedQuery(name = "Page.getDuplicatePageCount",
+             query = "SELECT COUNT(p) FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),})
 public class Page
 {
     @Transient
