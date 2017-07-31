@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.PageRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -42,12 +43,16 @@ public class ComicSelectionModelTest
     private static final int TEST_COMIC_LIST_SIZE = 717;
     private static final int TEST_COMIC_INDEX = 65;
     private static final long TEST_COMIC_COUNT = 71765L;
+    private static final int TEST_DUPLICATE_PAGE_COUNT = 129;
 
     @InjectMocks
     private ComicSelectionModel model;
 
     @Mock
     private ComicRepository comicRepository;
+
+    @Mock
+    private PageRepository pageRepository;
 
     @Mock
     private List<Comic> comicList;
@@ -180,5 +185,15 @@ public class ComicSelectionModelTest
         assertEquals(TEST_COMIC_COUNT, model.getTotalComics());
 
         Mockito.verify(comicRepository, Mockito.times(1)).count();
+    }
+
+    @Test
+    public void testDuplicatePageCount()
+    {
+        Mockito.when(pageRepository.getDuplicatePageCount()).thenReturn(TEST_DUPLICATE_PAGE_COUNT);
+
+        assertEquals(TEST_DUPLICATE_PAGE_COUNT, model.getDuplicatePageCount());
+
+        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePageCount();
     }
 }

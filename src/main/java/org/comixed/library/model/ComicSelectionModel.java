@@ -27,6 +27,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.PageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public class ComicSelectionModel implements
 
     @Autowired
     private ComicRepository comicRepository;
+
+    @Autowired
+    private PageRepository pageRepository;
 
     List<Comic> selected = new ArrayList<>();
     boolean reload = true;
@@ -116,6 +120,12 @@ public class ComicSelectionModel implements
         int result = (this.selected != null) ? this.selected.size() : 0;
         this.logger.debug("Return comic count: " + result);
         return result;
+    }
+
+    public int getDuplicatePageCount()
+    {
+        this.logger.debug("Returning duplicate page count");
+        return this.pageRepository.getDuplicatePageCount();
     }
 
     public long getTotalComics()
