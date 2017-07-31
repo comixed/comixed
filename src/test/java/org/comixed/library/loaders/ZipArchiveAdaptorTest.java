@@ -144,4 +144,21 @@ public class ZipArchiveAdaptorTest
         assertEquals(TEST_FILE_ENTRY_RENAMED_2, result.getPage(2).getFilename());
         assertEquals(TEST_FILE_ENTRY_RENAMED_3, result.getPage(3).getFilename());
     }
+
+    @Test
+    public void testSaveComicDeletePages() throws ArchiveAdaptorException
+    {
+        // load an existing comic
+        archiveAdaptor.loadComic(comic);
+
+        comic.getPage(1).markDeleted(true);
+
+        // now save it and reload it
+        Comic result = archiveAdaptor.saveComic(comic, false);
+
+        assertEquals(3, result.getPageCount());
+        assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
+        assertEquals(TEST_FILE_ENTRY_2, result.getPage(1).getFilename());
+        assertEquals(TEST_FILE_ENTRY_3, result.getPage(2).getFilename());
+    }
 }

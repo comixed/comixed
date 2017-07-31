@@ -54,11 +54,6 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
 
         try
         {
-            // FileInputStream istream = new FileInputStream(file);
-            // ZipArchiveInputStream input = (ZipArchiveInputStream )new
-            // ArchiveStreamFactory().createArchiveInputStream(ArchiveStreamFactory.ZIP,
-            // istream);
-
             ZipFile input = new ZipFile(file);
             byte[] result = null;
             Enumeration<ZipArchiveEntry> entries = input.getEntries();
@@ -111,8 +106,12 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
                  index < source.getPageCount();
                  index++)
             {
-                // TODO if the page is deleted, then skip it
                 Page page = source.getPage(index);
+                if (page.isMarkedDeleted())
+                {
+                    logger.debug("Skipping page marked for deletion");
+                    continue;
+                }
                 String pagename = renamePages ? getFilenameForEntry(page.getFilename(), index) : page.getFilename();
                 logger.debug("Adding entry: " + pagename + " size=" + page.getContent().length);
                 ZipArchiveEntry entry = new ZipArchiveEntry(pagename);
