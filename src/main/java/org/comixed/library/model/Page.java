@@ -31,6 +31,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.swing.ImageIcon;
@@ -47,6 +49,9 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @Table(name = "pages")
+@NamedQueries(
+{@NamedQuery(name = "Page.getDuplicatePageList",
+             query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)")})
 public class Page
 {
     @Transient
