@@ -70,6 +70,11 @@ public class Page
             nullable = false)
     private String hash;
 
+    @Column(name = "deleted",
+            updatable = true,
+            nullable = false)
+    private boolean deleted = false;
+
     @Transient
     private byte[] content;
 
@@ -232,10 +237,10 @@ public class Page
     {
         this.logger.debug("Getting scaled page image: width=" + width);
         ImageIcon image = this.getImage();
-        float w = (float )image.getIconWidth();
-        float h = (float )image.getIconHeight();
+        float w = image.getIconWidth();
+        float h = image.getIconHeight();
 
-        int height = (int )(((h / w) * ((float )width)));
+        int height = (int )(((h / w) * (width)));
 
         this.logger.debug("Returning image scaled to " + width + "x" + height);
 
@@ -250,6 +255,28 @@ public class Page
         result = (prime * result) + ((this.filename == null) ? 0 : this.filename.hashCode());
         result = (prime * result) + ((this.hash == null) ? 0 : this.hash.hashCode());
         return result;
+    }
+
+    /**
+     * Returns if the page is marked for deletion.
+     *
+     * @return true if marked for deletion
+     */
+    public boolean isMarkedDeleted()
+    {
+        return this.deleted;
+    }
+
+    /**
+     * Sets the deleted flag for the page.
+     *
+     * @param deleted
+     *            true if the page is to be deleted
+     */
+    public void markDeleted(boolean deleted)
+    {
+        this.logger.debug("Mark deletion: " + deleted);
+        this.deleted = deleted;
     }
 
     void setComic(Comic comic)

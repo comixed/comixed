@@ -21,7 +21,9 @@ package org.comixed.library.model;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -117,5 +119,19 @@ public class PageTest
         assertNotNull(result);
         assertEquals(169, result.getIconWidth());
         assertEquals(239, result.getIconHeight());
+    }
+
+    @Test
+    public void testDelete()
+    {
+        // check the default
+        assertFalse(page.isMarkedDeleted());
+    }
+
+    @Test
+    public void testMarkDeleted()
+    {
+        page.markDeleted(true);
+        assertTrue(page.isMarkedDeleted());
     }
 }
