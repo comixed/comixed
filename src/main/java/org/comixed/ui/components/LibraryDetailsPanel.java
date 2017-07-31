@@ -51,6 +51,7 @@ public class LibraryDetailsPanel extends DetailsPanel implements
 
     private JLabel totalComics = new JLabel();
     private JLabel displayedComics = new JLabel();
+    private JLabel duplicatePages = new JLabel();
 
     public LibraryDetailsPanel()
     {
@@ -72,6 +73,7 @@ public class LibraryDetailsPanel extends DetailsPanel implements
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.add(this.totalComics);
         this.add(this.displayedComics);
+        this.add(this.duplicatePages);
     }
 
     @Override
@@ -100,5 +102,9 @@ public class LibraryDetailsPanel extends DetailsPanel implements
         this.logger.debug("Updating total comic count");
         this.totalComics.setText(this.messageSource.getMessage("view.details.library.total-comics.text", new Object[]
         {this.comicSelectionModel.getTotalComics()}, this.getLocale()));
+        this.duplicatePages.setText(this.messageSource.getMessage("view.details.library.duplicate-pages.text",
+                                                                  new Object[]
+                                                                  {this.comicSelectionModel.getDuplicatePageCount()},
+                                                                  this.getLocale()));
     }
 }
