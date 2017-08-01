@@ -22,6 +22,7 @@ package org.comixed.library.adaptors;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import org.comixed.library.loaders.BaseLoaderTest;
 import org.comixed.library.loaders.EntryLoaderException;
@@ -62,7 +63,10 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest
         assertEquals("24", comic.getIssueNumber());
         assertEquals("Test summary", comic.getSummary());
         assertEquals("Test notes", comic.getNotes());
-        assertEquals(2013, comic.getCoverDate().getYear());
-        assertEquals(11, comic.getCoverDate().getMonth());
+
+        Calendar gc = Calendar.getInstance();
+        gc.setTime(comic.getCoverDate());
+        assertEquals(2013, gc.get(Calendar.YEAR));
+        assertEquals(11, gc.get(Calendar.MONTH));
     }
 }

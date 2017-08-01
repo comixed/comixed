@@ -22,7 +22,7 @@ package org.comixed.library.adaptors;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ComicInfoEntryAdaptor implements
-                                  EntryLoader
+                                   EntryLoader
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final XMLInputFactory xmlInputFactory;
@@ -144,14 +144,9 @@ public class ComicInfoEntryAdaptor implements
         // if we have the published year and/or month then set them
         if (publishedYear > -1)
         {
-            if (publishedMonth > -1)
-            {
-                comic.setCoverDate(new Date(publishedYear, publishedMonth - 1, 1));
-            }
-            else
-            {
-                comic.setCoverDate(new Date(publishedYear, 0, 1));
-            }
+            GregorianCalendar gc = (publishedMonth > -1) ? new GregorianCalendar(publishedYear, publishedMonth - 1, 1)
+                                                         : new GregorianCalendar(publishedYear, 0, 1);
+            comic.setCoverDate(gc.getTime());
         }
 
     }
