@@ -95,6 +95,9 @@ public abstract class AbstractArchiveAdaptor implements
     @Autowired
     private ComicFileHandler comicFileHandler;
 
+    @Autowired
+    protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
+
     protected List<EntryLoaderForType> loaders = new ArrayList<>();
     protected Map<String,
                   EntryLoader> entryLoaders = new HashMap<>();

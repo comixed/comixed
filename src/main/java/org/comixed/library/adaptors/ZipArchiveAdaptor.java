@@ -98,10 +98,19 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
         ZipArchiveOutputStream zoutput = null;
         try
         {
+            ZipArchiveEntry entry;
+
             zoutput = (ZipArchiveOutputStream )new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP,
                                                                                                     new FileOutputStream(filename));
 
-            // TODO write the comic meta-data to the archive
+            logger.debug("Adding the ComicInfo.xml entry");
+            entry = new ZipArchiveEntry("ComicInfo.xml");
+            byte[] content = comicInfoEntryAdaptor.saveContent(source);
+            entry.setSize(content.length);
+            zoutput.putArchiveEntry(entry);
+            zoutput.write(content);
+            zoutput.closeArchiveEntry();
+
             for (int index = 0;
                  index < source.getPageCount();
                  index++)
@@ -114,7 +123,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor
                 }
                 String pagename = renamePages ? getFilenameForEntry(page.getFilename(), index) : page.getFilename();
                 logger.debug("Adding entry: " + pagename + " size=" + page.getContent().length);
-                ZipArchiveEntry entry = new ZipArchiveEntry(pagename);
+                entry = new ZipArchiveEntry(pagename);
                 entry.setSize(page.getContent().length);
                 zoutput.putArchiveEntry(entry);
                 zoutput.write(page.getContent());
