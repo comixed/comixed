@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.library.loaders;
+package org.comixed.library.adaptors;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -30,25 +30,27 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.comixed.library.loaders.EntryLoader;
+import org.comixed.library.loaders.EntryLoaderException;
 import org.comixed.library.model.Comic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * * <code>ComicInfoEntryLoader</code> loads data from the ComicInfo.xml file
+ * * <code>ComicInfoEntryAdaptor</code> loads data from the ComicInfo.xml file
  * created by ComicRack.
  * 
  * @author Darryl L. Pierce
  */
 @Component
-public class ComicInfoEntryLoader implements
+public class ComicInfoEntryAdaptor implements
                                   EntryLoader
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final XMLInputFactory xmlInputFactory;
 
-    public ComicInfoEntryLoader()
+    public ComicInfoEntryAdaptor()
     {
         this.xmlInputFactory = XMLInputFactory.newInstance();
     }

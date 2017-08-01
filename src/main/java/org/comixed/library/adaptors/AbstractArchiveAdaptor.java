@@ -120,18 +120,18 @@ public abstract class AbstractArchiveAdaptor implements
                 }
                 else
                 {
-                    this.logger.debug("No such entry loader bean: " + entry.bean);
+                    this.logger.debug("No such entry adaptor bean: " + entry.bean);
                 }
             }
             else
             {
                 if ((entry.type == null) || entry.type.isEmpty())
                 {
-                    this.logger.debug("Missing type for entry loader");
+                    this.logger.debug("Missing type for entry adaptor");
                 }
                 if ((entry.bean == null) || entry.bean.isEmpty())
                 {
-                    this.logger.debug("Missing bean for entry loader");
+                    this.logger.debug("Missing bean for entry adaptor");
                 }
             }
         }
@@ -232,7 +232,7 @@ public abstract class AbstractArchiveAdaptor implements
         }
         else
         {
-            this.logger.debug("No registered loader for type");
+            this.logger.debug("No registered adaptor for type");
         }
     }
 

@@ -17,12 +17,14 @@
  * org.comixed;
  */
 
-package org.comixed.library.loaders;
+package org.comixed.library.adaptors;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.comixed.library.loaders.BaseLoaderTest;
+import org.comixed.library.loaders.EntryLoaderException;
 import org.comixed.library.model.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,14 +33,14 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicInfoEntryLoaderTest extends BaseLoaderTest
+public class ComicInfoEntryAdaptorTest extends BaseLoaderTest
 {
     private static final String TEST_COMICINFO_FILE_COMPLETE = "src/test/resources/ComicInfo-complete.xml";
     private static final String TEST_PUBLISHER_NAME = "Test Publisher";
     private static final String TEST_SERIES_NAME = "Test Series";
     private static final String TEST_VOLUME_NAME = "2011";
     @InjectMocks
-    ComicInfoEntryLoader loader;
+    ComicInfoEntryAdaptor adaptor;
 
     private Comic comic;
 
@@ -51,7 +53,7 @@ public class ComicInfoEntryLoaderTest extends BaseLoaderTest
     @Test
     public void testLoadComicInfoXml() throws IOException, EntryLoaderException
     {
-        loader.loadContent(comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+        adaptor.loadContent(comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
 
         assertEquals(TEST_PUBLISHER_NAME, comic.getPublisher());
         assertEquals(TEST_SERIES_NAME, comic.getSeries());

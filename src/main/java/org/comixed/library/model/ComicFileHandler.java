@@ -130,7 +130,7 @@ public class ComicFileHandler implements
 
         ArchiveAdaptor archiveAdaptor = archiveAdaptors.get(archiveType);
 
-        if (archiveAdaptor == null) { throw new ComicFileHandlerException("No archive loader defined for type: "
+        if (archiveAdaptor == null) { throw new ComicFileHandlerException("No archive adaptor defined for type: "
                                                                           + archiveType); }
 
         comic.setArchiveType(this.archiveTypes.get(archiveType));
@@ -159,12 +159,12 @@ public class ComicFileHandler implements
 
                 if (context.containsBean(loader.bean))
                 {
-                    logger.debug("Adding new archive loader: format=" + loader.format + " bean=" + loader.bean);
+                    logger.debug("Adding new archive adaptor: format=" + loader.format + " bean=" + loader.bean);
                     this.archiveAdaptors.put(loader.format, bean);
                     logger.debug("Associating archive type with format: format=" + loader.format + " archive type="
                                  + loader.archiveType);
                     this.archiveTypes.put(loader.format, loader.archiveType);
-                    logger.debug("Registering loader with archive type: " + loader.archiveType);
+                    logger.debug("Registering adaptor with archive type: " + loader.archiveType);
                     loader.archiveType.setArchiveAdaptor(bean);
                 }
                 else
@@ -176,11 +176,11 @@ public class ComicFileHandler implements
             {
                 if (loader.format == null || loader.format.isEmpty())
                 {
-                    logger.warn("Missing type for archive loader");
+                    logger.warn("Missing type for archive adaptor");
                 }
                 if (loader.bean == null || loader.bean.isEmpty())
                 {
-                    logger.warn("Missing name for archive loader");
+                    logger.warn("Missing name for archive adaptor");
                 }
             }
         }

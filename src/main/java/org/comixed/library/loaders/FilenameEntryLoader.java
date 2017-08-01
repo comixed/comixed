@@ -102,16 +102,16 @@ public class FilenameEntryLoader extends AbstractEntryLoader implements
     {
         // get the filename.ext only
         String key = new File(filename).getName();
-        this.logger.debug("Determining filename loader for: " + filename);
+        this.logger.debug("Determining filename adaptor for: " + filename);
         EntryLoader loader = this.entryLoaders.get(key);
         if (loader != null)
         {
-            this.logger.debug("Using loader: " + loader);
+            this.logger.debug("Using adaptor: " + loader);
             loader.loadContent(comic, filename, content);
         }
         else
         {
-            this.logger.debug("No filename loader defined");
+            this.logger.debug("No filename adaptor defined");
         }
     }
 
