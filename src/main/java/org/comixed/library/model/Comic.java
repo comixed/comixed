@@ -282,6 +282,11 @@ public class Comic
         return date != null ? DateFormat.getDateInstance().format(date) : "[NULL]";
     }
 
+    public ArchiveType getArchiveType()
+    {
+        return this.archiveType;
+    }
+
     /**
      * Returns just the filename portion of the comic file's name.
      *
@@ -313,6 +318,11 @@ public class Comic
     public int getCharacterCount()
     {
         return this.characters.size();
+    }
+
+    public List<String> getCharacters()
+    {
+        return this.characters;
     }
 
     /**
@@ -616,6 +626,11 @@ public class Comic
         return (this.teams.isEmpty() == false);
     }
 
+    public void setArchiveType(ArchiveType archiveType)
+    {
+        this.archiveType = archiveType;
+    }
+
     /**
      * Sets the ComicVine.com unique ID for this comic.
      *
@@ -772,15 +787,5 @@ public class Comic
     {
         this.logger.debug("Setting volume=" + volume);
         this.volume = volume;
-    }
-
-    public void setArchiveType(ArchiveType archiveType)
-    {
-        this.archiveType = archiveType;
-    }
-
-    public ArchiveType getArchiveType()
-    {
-        return this.archiveType;
     }
 }
