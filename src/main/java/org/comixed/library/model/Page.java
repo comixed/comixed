@@ -210,7 +210,7 @@ public class Page
         if (this.icon == null)
         {
             this.logger.debug("Generating image from content");
-            this.icon = new ImageIcon(this.content);
+            this.icon = new ImageIcon(this.getContent());
         }
         return this.icon;
     }
