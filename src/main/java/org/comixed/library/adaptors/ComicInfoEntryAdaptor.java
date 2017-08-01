@@ -1,17 +1,17 @@
 /*
  * ComixEd - A digital comic book library management application.
  * Copyright (C) 2017, Darryl L. Pierce
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
@@ -20,8 +20,14 @@
 package org.comixed.library.adaptors;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -40,7 +46,7 @@ import org.springframework.stereotype.Component;
 /**
  * * <code>ComicInfoEntryAdaptor</code> loads data from the ComicInfo.xml file
  * created by ComicRack.
- * 
+ *
  * @author Darryl L. Pierce
  */
 @Component
@@ -53,6 +59,36 @@ public class ComicInfoEntryAdaptor implements
     public ComicInfoEntryAdaptor()
     {
         this.xmlInputFactory = XMLInputFactory.newInstance();
+    }
+
+    private String arrayToString(List<String> items)
+    {
+        if ((items == null) || items.isEmpty()) return null;
+
+        StringBuffer result = new StringBuffer();
+
+        for (String item : items)
+        {
+            if (result.length() > 0)
+            {
+                result.append(",");
+            }
+            result.append(item);
+        }
+        return result.toString();
+    }
+
+    private List<String> commandSeparatedList(String text)
+    {
+        List<String> result = new ArrayList<>();
+        StringTokenizer tokens = new StringTokenizer(text, ",");
+
+        while (tokens.hasMoreTokens())
+        {
+            result.add(tokens.nextToken().trim());
+        }
+
+        return result;
     }
 
     @Override
@@ -79,7 +115,7 @@ public class ComicInfoEntryAdaptor implements
             if (xmlInputReader.isStartElement())
             {
                 final String tagName = xmlInputReader.getLocalName();
-                logger.info("Processing tag: " + tagName);
+                this.logger.info("Processing tag: " + tagName);
                 switch (tagName)
                 {
                     case "Publisher":
@@ -114,28 +150,28 @@ public class ComicInfoEntryAdaptor implements
                     case "PageCount":
                         break;
                     case "Characters":
-                        List<String> characters = commandSeparatedList(xmlInputReader.getElementText());
+                        List<String> characters = this.commandSeparatedList(xmlInputReader.getElementText());
                         for (String character : characters)
                         {
                             comic.addCharacter(character);
                         }
                         break;
                     case "Teams":
-                        List<String> teams = commandSeparatedList(xmlInputReader.getElementText());
+                        List<String> teams = this.commandSeparatedList(xmlInputReader.getElementText());
                         for (String team : teams)
                         {
                             comic.addTeam(team);
                         }
                         break;
                     case "Locations":
-                        List<String> locations = commandSeparatedList(xmlInputReader.getElementText());
+                        List<String> locations = this.commandSeparatedList(xmlInputReader.getElementText());
                         for (String location : locations)
                         {
                             comic.addLocation(location);
                         }
                         break;
                     default:
-                        logger.info("Unrecognized tag");
+                        this.logger.info("Unrecognized tag");
                         break;
                 }
             }
@@ -151,16 +187,54 @@ public class ComicInfoEntryAdaptor implements
 
     }
 
-    private List<String> commandSeparatedList(String text)
+    /**
+     * Writes the content of the provided comic as a ComicInfo.xml file to the
+     * provided output stream.
+     *
+     * @param comic
+     *            the comic
+     * @return the content of the file
+     * @throws IOException
+     *             if an error occurs
+     */
+    public byte[] saveContent(Comic comic) throws IOException
     {
-        List<String> result = new ArrayList<>();
-        StringTokenizer tokens = new StringTokenizer(text, ",");
+        this.logger.debug("Generating comic info data from comic");
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(result));
 
-        while (tokens.hasMoreTokens())
+        writer.write("<?xml version=\"1.0\"?><ComicInfo xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
+        this.writeEntry(writer, "Publisher", comic.getPublisher());
+        this.writeEntry(writer, "Series", comic.getSeries());
+        this.writeEntry(writer, "Volume", comic.getVolume());
+        this.writeEntry(writer, "Number", comic.getIssueNumber());
+        this.writeEntry(writer, "Title", comic.getTitle());
+        this.writeEntry(writer, "Summary", comic.getSummary());
+        this.writeEntry(writer, "Notes", comic.getNotes());
+
+        if (comic.getCoverDate() != null)
         {
-            result.add(tokens.nextToken().trim());
+            Calendar gc = Calendar.getInstance();
+            gc.setTime(comic.getCoverDate());
+            this.writeEntry(writer, "Year", String.valueOf(gc.get(Calendar.YEAR)));
+            this.writeEntry(writer, "Month", String.valueOf(gc.get(Calendar.MONTH) + 1));
         }
+        this.writeEntry(writer, "PageCount", String.valueOf(comic.getPageCount()));
+        this.writeEntry(writer, "Characters", this.arrayToString(comic.getCharacters()));
+        this.writeEntry(writer, "Teams", this.arrayToString(comic.getTeams()));
+        this.writeEntry(writer, "Locations", this.arrayToString(comic.getLocations()));
+        writer.write("</ComicInfo>");
+        writer.flush();
 
-        return result;
+        return result.toByteArray();
+
+    }
+
+    private void writeEntry(PrintWriter writer, String tagName, String value)
+    {
+        if (value != null)
+        {
+            writer.write(MessageFormat.format("<{0}>{1}</{0}>", tagName, value));
+        }
     }
 }

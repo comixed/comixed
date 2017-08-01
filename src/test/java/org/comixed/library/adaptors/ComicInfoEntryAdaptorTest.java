@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.comixed.library.loaders.BaseLoaderTest;
 import org.comixed.library.loaders.EntryLoaderException;
@@ -49,6 +50,13 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest
     public void setUp()
     {
         comic = new Comic();
+
+        comic.setPublisher(TEST_PUBLISHER_NAME);
+        comic.setSeries(TEST_SERIES_NAME);
+        comic.setVolume(TEST_VOLUME_NAME);
+        comic.setCoverDate(new Date());
+        comic.setDateLastRead(new Date());
+        comic.setDateAdded(new Date());
     }
 
     @Test
@@ -68,5 +76,28 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest
         gc.setTime(comic.getCoverDate());
         assertEquals(2013, gc.get(Calendar.YEAR));
         assertEquals(11, gc.get(Calendar.MONTH));
+    }
+
+    @Test
+    public void testSaveComicInfoXml() throws EntryLoaderException, IOException
+    {
+        adaptor.loadContent(comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+
+        byte[] result = adaptor.saveContent(comic);
+
+        Comic second = new Comic();
+        adaptor.loadContent(second, TEST_COMICINFO_FILE_COMPLETE, result);
+
+        assertEquals(comic.getPublisher(), second.getPublisher());
+        assertEquals(comic.getSeries(), second.getSeries());
+        assertEquals(comic.getVolume(), second.getVolume());
+        assertEquals(comic.getIssueNumber(), second.getIssueNumber());
+        assertEquals(comic.getTitle(), second.getTitle());
+        assertEquals(comic.getSummary(), second.getSummary());
+        assertEquals(comic.getNotes(), second.getNotes());
+        assertEquals(comic.getCoverDate(), second.getCoverDate());
+        assertEquals(comic.getCharacters(), second.getCharacters());
+        assertEquals(comic.getTeams(), second.getTeams());
+        assertEquals(comic.getLocations(), second.getLocations());
     }
 }
