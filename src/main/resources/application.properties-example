@@ -34,4 +34,4 @@ comic.entry.loaders[2].bean=filenameEntryLoader
 
 # Filename entry loaders
 comic.filename-entry.loaders[0].mask=ComicInfo.xml
-comic.filename-entry.loaders[0].bean=comicInfoEntryLoader
+comic.filename-entry.loaders[0].bean=comicInfoEntryAdaptor
