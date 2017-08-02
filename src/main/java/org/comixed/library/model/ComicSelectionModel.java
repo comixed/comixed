@@ -128,6 +128,17 @@ public class ComicSelectionModel implements
         return this.pageRepository.getDuplicatePageCount();
     }
 
+    /**
+     * Returns only those comics that are selected.
+     *
+     * @return the selected comics
+     */
+    public List<Comic> getSelectedComics()
+    {
+        this.logger.debug("Returning selected comics");
+        return this.selections;
+    }
+
     public long getTotalComics()
     {
         return this.comicRepository.count();
