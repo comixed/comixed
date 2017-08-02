@@ -20,12 +20,18 @@
 package org.comixed.ui.components;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.comixed.AppConfiguration;
+import org.comixed.ui.adaptors.FileChooserAdaptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -36,7 +42,7 @@ import org.springframework.stereotype.Component;
 /**
  * <code>LibraryConfiguration</code> allows for editing general library settings
  * and default values.
- * 
+ *
  * @author Darryl L. Pierce
  *
  */
@@ -53,24 +59,64 @@ public class LibraryConfiguration extends JPanel implements
     @Autowired
     private AppConfiguration configuration;
 
+    @Autowired
+    private FileChooserAdaptor fileChooserAdaptor;
+
+    private JTextField libraryRootDirectory = new JTextField();
     private JCheckBox renamePagesOnExport = new JCheckBox();
 
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        setLayout(new GridLayout(0, 2));
-        this.add(new JLabel(messageSource.getMessage("dialog.config.tab.library.rename-pages.text", null,
-                                                     getLocale())));
-        if (configuration.hasOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT))
+        this.setLayout(new GridLayout(0, 3));
+        this.add(new JLabel(this.messageSource.getMessage("dialog.config.tab.library.root-directory.text", null,
+                                                          this.getLocale())));
+        JButton directoryButton = new JButton(new AbstractAction()
         {
-            renamePagesOnExport.setSelected(Boolean.valueOf(configuration.getOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT)));
+            private static final long serialVersionUID = 3769006433361648049L;
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                File dir = LibraryConfiguration.this.fileChooserAdaptor.chooseDirectory(LibraryConfiguration.this.messageSource.getMessage("dialog.config.tab.library.root-directory.title",
+                                                                                                                                           null,
+                                                                                                                                           LibraryConfiguration.this.getLocale()),
+                                                                                        LibraryConfiguration.this.configuration.getOption(AppConfiguration.LIBRARY_ROOT));
+
+                if (dir != null)
+                {
+                    LibraryConfiguration.this.logger.debug("User choose directory: " + dir.getAbsolutePath());
+                    LibraryConfiguration.this.libraryRootDirectory.setText(dir.getAbsolutePath());
+                }
+            }
+        });
+        directoryButton.setText(this.messageSource.getMessage("dialog.button.browse.label", null, this.getLocale()));
+        this.add(this.libraryRootDirectory);
+        this.add(new JLabel()); // padding out the label area
+        this.add(directoryButton);
+        this.add(new JLabel(this.messageSource.getMessage("dialog.config.tab.library.rename-pages.text", null,
+                                                          this.getLocale())));
+        this.add(this.renamePagesOnExport);
+        this.loadConfiguration();
+    }
+
+    private void loadConfiguration()
+    {
+        if (this.configuration.hasOption(AppConfiguration.LIBRARY_ROOT))
+        {
+            this.libraryRootDirectory.setText(this.configuration.getOption(AppConfiguration.LIBRARY_ROOT));
         }
-        this.add(renamePagesOnExport);
+        if (this.configuration.hasOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT))
+        {
+            this.renamePagesOnExport.setSelected(Boolean.valueOf(this.configuration.getOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT)));
+        }
     }
 
     public void saveConfiguration()
     {
-        configuration.setOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT,
-                                String.valueOf(renamePagesOnExport.isSelected()));
+        this.configuration.setOption(AppConfiguration.LIBRARY_ROOT, this.libraryRootDirectory.getText());
+        this.configuration.setOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT,
+                                     String.valueOf(this.renamePagesOnExport.isSelected()));
+        this.configuration.save();
     }
 }

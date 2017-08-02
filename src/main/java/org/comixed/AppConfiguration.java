@@ -49,6 +49,8 @@ public class AppConfiguration implements
 {
     public static final String RENAME_COMIC_PAGES_ON_EXPORT = "library.export.rename-pages";
 
+    public static final String LIBRARY_ROOT = "library.directory-root";
+
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
