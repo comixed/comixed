@@ -196,4 +196,16 @@ public class ComicSelectionModelTest
 
         Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePageCount();
     }
+
+    @Test
+    public void testSelectedComics()
+    {
+        assertSame(model.selections, model.getSelectedComics());
+    }
+
+    @Test
+    public void testAllComics()
+    {
+        assertSame(model.allComics, model.getAllComics());
+    }
 }
