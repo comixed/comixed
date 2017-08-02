@@ -62,8 +62,6 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
     {
         for (Comic comic : this.comics)
         {
-            this.logger.debug("Removing comic from repository: " + comic);
-            this.repository.delete(comic);
             if (this.deleteFiles)
             {
                 this.logger.debug("Deleting comic file: " + comic.getFilename());
@@ -72,6 +70,9 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
                 try
                 {
                     FileUtils.forceDelete(file);
+                    this.logger.debug("Removing comic from repository: " + comic);
+                    this.repository.delete(comic);
+                    this.comicSelectionModel.reload();
                 }
                 catch (IOException error)
                 {
@@ -79,7 +80,5 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
                 }
             }
         }
-
-        this.comicSelectionModel.reload();
     }
 }
