@@ -27,12 +27,11 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
 
 import org.comixed.AppConfiguration;
 import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.Worker;
-import org.comixed.ui.frames.MainFrame;
+import org.comixed.ui.adaptors.FileChooserAdaptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
@@ -57,13 +56,15 @@ public class ImportComicsAction extends AbstractAction
     @Autowired
     private MessageSource messageSource;
     @Autowired
-    private JFileChooser fileChooser;
-    @Autowired
-    private MainFrame mainFrame;
+
+    private FileChooserAdaptor fileChooserAdaptor;
+
     @Autowired
     private Worker worker;
+
     @Autowired
     private ObjectFactory<AddComicWorkerTask> taskFactory;
+
     @Autowired
     private AppConfiguration configuration;
 
@@ -71,22 +72,14 @@ public class ImportComicsAction extends AbstractAction
     public void actionPerformed(ActionEvent e)
     {
         this.logger.debug("Asking user to select the top directory for import");
-        this.fileChooser.setDialogTitle(this.messageSource.getMessage("dialog.file-chooser.import.title", null,
-                                                                      Locale.getDefault()));
-        this.fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if (this.configuration.hasOption(LAST_IMPORT_DIRECTORY))
-        {
-            File file = new File(this.configuration.getOption(LAST_IMPORT_DIRECTORY));
-            if (file.exists() && file.isDirectory())
-            {
-                this.logger.debug("Setting directory to the one last used: " + file.getAbsolutePath());
-                this.fileChooser.setCurrentDirectory(file);
-            }
-        }
-        if (this.fileChooser.showOpenDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION)
+        File directory = this.fileChooserAdaptor.chooseDirectory(this.messageSource.getMessage("dialog.file-chooser.import.title",
+                                                                                               null,
+                                                                                               Locale.getDefault()),
+                                                                 this.configuration.getOption(LAST_IMPORT_DIRECTORY));
+        if (directory != null && directory.exists())
         {
             // build the list of files to be imported
-            List<File> filenames = this.getFileList(this.fileChooser.getSelectedFile());
+            List<File> filenames = this.getFileList(directory);
             for (File filename : filenames)
             {
                 AddComicWorkerTask task = this.taskFactory.getObject();
@@ -95,7 +88,7 @@ public class ImportComicsAction extends AbstractAction
                 this.worker.addTasksToQueue(task);
             }
 
-            this.configuration.setOption(LAST_IMPORT_DIRECTORY, this.fileChooser.getSelectedFile().getAbsolutePath());
+            this.configuration.setOption(LAST_IMPORT_DIRECTORY, directory.getAbsolutePath());
             this.configuration.save();
         }
     }
