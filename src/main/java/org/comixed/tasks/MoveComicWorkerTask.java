@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
  * <code>MoveComicWorkerTask</code> handles moving a single comic file to a new
  * location, creating the subdirectory structure as needed, and updating the
  * database.
- * 
+ *
  * @author Darryl L. Pierce
  *
  */
@@ -56,34 +56,29 @@ public class MoveComicWorkerTask extends AbstractWorkerTask
     private Comic comic;
     private String destination;
 
-    @Override
-    public void startTask() throws WorkerTaskException
+    private void addDirectory(StringBuffer result, String value)
     {
-        File sourceFile = new File(comic.getFilename());
-        File destFile = new File(destination, FilenameUtils.getName(comic.getFilename()));
+        result.append(File.separator);
 
-        // if the source and target are the same, then skip the file
-        if (destFile.equals(sourceFile))
+        if ((value != null) && !value.isEmpty())
         {
-            logger.debug("Source and target are the same...");
-            return;
+            result.append(value);
         }
-
-        try
+        else
         {
-            logger.debug("Moving comic: " + comic.getFilename() + " -> " + destination);
-
-            FileUtils.moveFile(sourceFile, destFile);
-
-            logger.debug("Updating comic in database");
-            comic.setFilename(destFile.getAbsolutePath());
-            comicRepository.save(comic);
-            comicSelectionModel.reload();
+            result.append("Unknown");
         }
-        catch (IOException error)
-        {
-            throw new WorkerTaskException("Failed to move comic", error);
-        }
+    }
+
+    private String getRelativeDestination()
+    {
+        StringBuffer result = new StringBuffer(this.destination);
+
+        this.addDirectory(result, this.comic.getPublisher());
+        this.addDirectory(result, this.comic.getSeries());
+        this.addDirectory(result, this.comic.getVolume());
+
+        return result.toString();
     }
 
     public void setComic(Comic comic)
@@ -94,5 +89,41 @@ public class MoveComicWorkerTask extends AbstractWorkerTask
     public void setDestination(String destination)
     {
         this.destination = destination;
+    }
+
+    @Override
+    public void startTask() throws WorkerTaskException
+    {
+        File sourceFile = new File(this.comic.getFilename());
+        File destFile = new File(this.getRelativeDestination(), FilenameUtils.getName(this.comic.getFilename()));
+
+        // if the source and target are the same, then skip the file
+        if (destFile.equals(sourceFile))
+        {
+            this.logger.debug("Source and target are the same...");
+            return;
+        }
+
+        // create the directory if it doesn't exist
+        if (!destFile.getParentFile().exists())
+        {
+            this.logger.debug("Creating directory: " + destFile.getParentFile().getAbsolutePath());
+            destFile.getParentFile().mkdirs();
+        }
+        try
+        {
+            this.logger.debug("Moving comic: " + this.comic.getFilename() + " -> " + this.destination);
+
+            FileUtils.moveFile(sourceFile, destFile);
+
+            this.logger.debug("Updating comic in database");
+            this.comic.setFilename(destFile.getAbsolutePath());
+            this.comicRepository.save(this.comic);
+            this.comicSelectionModel.reload();
+        }
+        catch (IOException error)
+        {
+            throw new WorkerTaskException("Failed to move comic", error);
+        }
     }
 }
