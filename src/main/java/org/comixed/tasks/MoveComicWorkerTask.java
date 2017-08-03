@@ -27,6 +27,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.repositories.ComicRepository;
+import org.comixed.utils.ComicFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,12 +96,14 @@ public class MoveComicWorkerTask extends AbstractWorkerTask
     public void startTask() throws WorkerTaskException
     {
         File sourceFile = new File(this.comic.getFilename());
-        File destFile = new File(this.getRelativeDestination(), FilenameUtils.getName(this.comic.getFilename()));
+        File destFile = new File(this.getRelativeDestination(), getRelativeComicFilename());
+        String defaultExtension = FilenameUtils.getExtension(comic.getFilename());
+        destFile = new File(ComicFileUtils.findAvailableFilename(destFile.getAbsolutePath(), 0, defaultExtension));
 
         // if the source and target are the same, then skip the file
         if (destFile.equals(sourceFile))
         {
-            this.logger.debug("Source and target are the same...");
+            this.logger.debug("Source and target are the same: " + destFile.getAbsolutePath());
             return;
         }
 
@@ -125,5 +128,16 @@ public class MoveComicWorkerTask extends AbstractWorkerTask
         {
             throw new WorkerTaskException("Failed to move comic", error);
         }
+    }
+
+    private String getRelativeComicFilename()
+    {
+        StringBuffer result = new StringBuffer();
+
+        result.append(comic.getSeries() != null ? comic.getSeries() : "Unknown");
+        result.append(" v" + (comic.getVolume() != null ? comic.getVolume() : "Unknown"));
+        result.append(" #" + (comic.getIssueNumber() != null ? comic.getIssueNumber() : "0000"));
+
+        return result.toString();
     }
 }
