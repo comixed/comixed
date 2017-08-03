@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +37,7 @@ import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
 import org.comixed.library.utils.FileTypeIdentifier;
+import org.comixed.utils.ComicFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -140,24 +140,6 @@ public abstract class AbstractArchiveAdaptor implements
         }
     }
 
-    private String findAvailableFilename(String filename, int attempt)
-    {
-        String candidate = filename;
-
-        if (attempt > 0)
-        {
-            candidate = MessageFormat.format("{0}-{1}.{2}", filename, attempt, this.defaultExtension);
-        }
-        else
-        {
-            candidate = MessageFormat.format("{0}.{1}", filename, this.defaultExtension);
-        }
-
-        this.logger.debug("Candidate filename=" + candidate);
-        File file = new File(candidate);
-        return (!file.exists()) ? candidate : this.findAvailableFilename(filename, ++attempt);
-    }
-
     protected String getFilenameForEntry(String filename, int index)
     {
         return String.format("page-%03d.%s", index, FileUtils.getExtension(filename));
@@ -256,7 +238,7 @@ public abstract class AbstractArchiveAdaptor implements
 
         this.saveComicInternal(source, tempFilename, renamePages);
 
-        String filename = this.findAvailableFilename(source.getBaseFilename(), 0);
+        String filename = ComicFileUtils.findAvailableFilename(source.getBaseFilename(), 0, this.defaultExtension);
         File file1 = new File(tempFilename);
         File file2 = new File(filename);
         try
