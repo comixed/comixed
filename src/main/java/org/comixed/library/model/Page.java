@@ -214,7 +214,7 @@ public class Page
      *            the maximum scaled height
      * @return the scaled image
      */
-    public Image getScaledImage(int maxWidth, int maxHeight)
+    public Image getImage(int maxWidth, int maxHeight)
     {
         this.logger.debug("Scaling page: maxWidth=" + maxWidth + ", maxHeight=" + maxHeight);
         Image image = this.getImage();

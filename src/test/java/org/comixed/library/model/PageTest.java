@@ -114,7 +114,7 @@ public class PageTest
     @Test
     public void testCanResizeImagesByWidth()
     {
-        Image result = page.getScaledImage(169, 0);
+        Image result = page.getImage(169, 0);
 
         assertNotNull(result);
         assertEquals(169, result.getWidth(null));
@@ -124,7 +124,7 @@ public class PageTest
     @Test
     public void testCanResizeImagesByHeight()
     {
-        Image result = page.getScaledImage(0, 224);
+        Image result = page.getImage(0, 224);
 
         assertNotNull(result);
         assertEquals(158, result.getWidth(null));
@@ -134,7 +134,7 @@ public class PageTest
     @Test
     public void testCanResizeImagesReturnsOriginalImage()
     {
-        Image result = page.getScaledImage(0, 0);
+        Image result = page.getImage(0, 0);
 
         assertNotNull(result);
         assertEquals(338, result.getWidth(null));
