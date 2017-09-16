@@ -71,14 +71,16 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
                 {
                     FileUtils.forceDelete(file);
                     this.logger.debug("Removing comic from repository: " + comic);
-                    this.repository.delete(comic);
-                    this.comicSelectionModel.reload();
                 }
                 catch (IOException error)
                 {
                     this.logger.error("Unable to delete comic: " + comic.getFilename(), error);
                 }
             }
+
+            this.repository.delete(comic);
         }
+
+        this.comicSelectionModel.reload();
     }
 }

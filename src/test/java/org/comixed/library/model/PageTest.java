@@ -25,14 +25,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import javax.swing.ImageIcon;
 
 import org.h2.util.IOUtils;
 import org.junit.Before;
@@ -104,21 +103,21 @@ public class PageTest
     @Test
     public void testHasImage()
     {
-        ImageIcon result = page.getImage();
+        Image result = page.getImage();
 
         assertNotNull(result);
-        assertEquals(338, result.getIconWidth());
-        assertEquals(479, result.getIconHeight());
+        assertEquals(338, result.getWidth(null));
+        assertEquals(479, result.getHeight(null));
     }
 
     @Test
     public void testCanResizeImages()
     {
-        ImageIcon result = page.getImage(169);
+        Image result = page.getImage(169);
 
         assertNotNull(result);
-        assertEquals(169, result.getIconWidth());
-        assertEquals(239, result.getIconHeight());
+        assertEquals(169, result.getWidth(null));
+        assertEquals(239, result.getHeight(null));
     }
 
     @Test
