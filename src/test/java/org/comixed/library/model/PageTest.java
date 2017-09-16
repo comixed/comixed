@@ -23,16 +23,19 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.awt.Image;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import javax.imageio.ImageIO;
 
 import org.h2.util.IOUtils;
 import org.junit.Before;
@@ -41,23 +44,24 @@ import org.junit.Test;
 public class PageTest
 {
     private static final String TEST_JPG_FILE = "src/test/resources/example.jpg";
-    private Page page;
-    private static String expected_hash;
-    private static byte[] content;
+    private static String EXPECTED_HASH;
+    private static byte[] CONTENT;
+    private static Image TEST_IMAGE;
 
     static
     {
         File file = new File(TEST_JPG_FILE);
-        content = new byte[(int )file.length()];
+        CONTENT = new byte[(int )file.length()];
         FileInputStream input;
         try
         {
             input = new FileInputStream(file);
-            IOUtils.readFully(input, content, content.length);
+            IOUtils.readFully(input, CONTENT, CONTENT.length);
             input.close();
             MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(content);
-            expected_hash = new BigInteger(1, md.digest()).toString(16).toUpperCase();
+            md.update(CONTENT);
+            EXPECTED_HASH = new BigInteger(1, md.digest()).toString(16).toUpperCase();
+            TEST_IMAGE = ImageIO.read(new ByteArrayInputStream(CONTENT));
         }
         catch (IOException
                | NoSuchAlgorithmException e)
@@ -67,10 +71,12 @@ public class PageTest
         }
     }
 
+    private Page page;
+
     @Before
     public void setUp() throws IOException
     {
-        page = new Page(TEST_JPG_FILE, content);
+        page = new Page(TEST_JPG_FILE, CONTENT);
     }
 
     @Test
@@ -92,13 +98,13 @@ public class PageTest
     public void testHasContent()
     {
         assertNotNull(page.getContent());
-        assertArrayEquals(content, page.getContent());
+        assertArrayEquals(CONTENT, page.getContent());
     }
 
     @Test
     public void testHasHash()
     {
-        assertEquals(expected_hash, page.getHash());
+        assertEquals(EXPECTED_HASH, page.getHash());
     }
 
     @Test
@@ -139,6 +145,28 @@ public class PageTest
         assertNotNull(result);
         assertEquals(338, result.getWidth(null));
         assertEquals(479, result.getHeight(null));
+    }
+
+    @Test
+    public void testResizeImageIsPlacedIntoCache()
+    {
+        String key = Page.createImageCacheKey(158, 224);
+        Image result = page.getImage(158, 224);
+
+        assertNotNull(result);
+        assertTrue(page.imageCache.containsKey(key));
+        assertSame(result, page.imageCache.get(key));
+    }
+
+    @Test
+    public void testResizedImageInCacheIsReturned()
+    {
+        page.imageCache.put(Page.createImageCacheKey(158, 224), TEST_IMAGE);
+
+        Image result = page.getImage(158, 224);
+
+        assertNotNull(result);
+        assertSame(TEST_IMAGE, result);
     }
 
     @Test

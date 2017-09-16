@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.imageio.ImageIO;
 import javax.persistence.Column;
@@ -58,6 +60,11 @@ import org.slf4j.LoggerFactory;
              query = "SELECT COUNT(p) FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),})
 public class Page
 {
+    public static String createImageCacheKey(int width, int height)
+    {
+        return String.valueOf(width) + "x" + String.valueOf(height);
+    }
+
     @Transient
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -89,6 +96,10 @@ public class Page
 
     @Transient
     private Image icon;
+
+    @Transient
+    protected Map<String,
+                  Image> imageCache = new WeakHashMap<>();
 
     /**
      * Default constructor.
@@ -242,10 +253,24 @@ public class Page
             boundHeight = (int )(((float )oldHeight * (float )boundWidth) / oldWidth);
         }
 
-        this.logger.debug("Scaling image: old=(" + oldWidth + "x" + oldHeight + ") new=(" + boundWidth + "x"
-                          + boundHeight + ")");
+        Image result = null;
+        String key = Page.createImageCacheKey(boundWidth, boundHeight);
 
-        return image.getScaledInstance(boundWidth, boundHeight, Image.SCALE_SMOOTH);
+        if (this.imageCache.containsKey(key))
+        {
+            this.logger.debug("Found image in cache: (" + boundWidth + "x" + boundHeight + ")");
+            result = this.imageCache.get(key);
+        }
+        else
+        {
+            this.logger.debug("Scaling image: old=(" + oldWidth + "x" + oldHeight + ") new=(" + boundWidth + "x"
+                              + boundHeight + ")");
+            result = image.getScaledInstance(boundWidth, boundHeight, Image.SCALE_SMOOTH);
+            this.logger.debug("Placing scaled image into cache");
+            this.imageCache.put(key, result);
+        }
+
+        return result;
     }
 
     @Override
