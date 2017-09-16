@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.Image;
 import java.io.File;
@@ -111,13 +112,33 @@ public class PageTest
     }
 
     @Test
-    public void testCanResizeImages()
+    public void testCanResizeImagesByWidth()
     {
-        Image result = page.getScaledImage(169);
+        Image result = page.getScaledImage(169, 0);
 
         assertNotNull(result);
         assertEquals(169, result.getWidth(null));
         assertEquals(239, result.getHeight(null));
+    }
+
+    @Test
+    public void testCanResizeImagesByHeight()
+    {
+        Image result = page.getScaledImage(0, 224);
+
+        assertNotNull(result);
+        assertEquals(158, result.getWidth(null));
+        assertEquals(224, result.getHeight(null));
+    }
+
+    @Test
+    public void testCanResizeImagesReturnsOriginalImage()
+    {
+        Image result = page.getScaledImage(0, 0);
+
+        assertNotNull(result);
+        assertEquals(338, result.getWidth(null));
+        assertEquals(479, result.getHeight(null));
     }
 
     @Test

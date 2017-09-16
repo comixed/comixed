@@ -246,7 +246,7 @@ public class DuplicatePagesPanel extends JPanel implements
             Page page = this.hashes.get(this.hashList.getSelectedValue()).get(0);
 
             this.logger.debug("Showing selected page: " + page);
-            this.coverImage.add(new JScrollPane(new JLabel(new ImageIcon(page.getScaledImage(this.coverImage.getWidth())))));
+            this.coverImage.add(new JScrollPane(new JLabel(new ImageIcon(page.getScaledImage(this.coverImage.getWidth(), -1)))));
             this.repaint();
             this.revalidate();
         }

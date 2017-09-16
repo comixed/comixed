@@ -208,22 +208,44 @@ public class Page
     /**
      * Returns a scaled copy of the page image.
      *
-     * @param width
-     *            the scaled width
+     * @param maxWidth
+     *            the maximum scaled width
+     * @param maxHeight
+     *            the maximum scaled height
      * @return the scaled image
      */
-    public Image getScaledImage(int width)
+    public Image getScaledImage(int maxWidth, int maxHeight)
     {
-        this.logger.debug("Getting scaled page image: width=" + width);
+        this.logger.debug("Scaling page: maxWidth=" + maxWidth + ", maxHeight=" + maxHeight);
         Image image = this.getImage();
-        float w = image.getWidth(null);
-        float h = image.getHeight(null);
 
-        int height = (int )(((h / w) * (width)));
+        int boundWidth = maxWidth;
+        int boundHeight = maxHeight;
+        int oldWidth = image.getWidth(null);
+        int oldHeight = image.getHeight(null);
 
-        this.logger.debug("Returning image scaled to " + width + "x" + height);
+        this.logger.debug("oldWidth=" + oldWidth);
+        this.logger.debug("oldHeight=" + oldHeight);
 
-        return image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        if ((boundWidth < 1) && (boundHeight < 1))
+        {
+            this.logger.debug("If both maxWidth and maxHeight are less than 1, then consider using getImage()");
+            boundWidth = oldWidth;
+            boundHeight = oldHeight;
+        }
+        else if (boundWidth < 1)
+        {
+            boundWidth = (int )(((float )oldWidth * (float )boundHeight) / oldHeight);
+        }
+        else if (boundHeight < 1)
+        {
+            boundHeight = (int )(((float )oldHeight * (float )boundWidth) / oldWidth);
+        }
+
+        this.logger.debug("Scaling image: old=(" + oldWidth + "x" + oldHeight + ") new=(" + boundWidth + "x"
+                          + boundHeight + ")");
+
+        return image.getScaledInstance(boundWidth, boundHeight, Image.SCALE_SMOOTH);
     }
 
     @Override
