@@ -206,24 +206,6 @@ public class Page
     }
 
     /**
-     * Returns the image, resized so that the width is the specified width.
-     *
-     * @param width
-     *            the maximum width
-     * @return the resized image
-     */
-    public Image getImage(int width)
-    {
-        Image image = this.getImage();
-        int oldWidth = image.getWidth(null);
-        int oldHeight = image.getHeight(null);
-        int height = (int )(((float )width / (float )oldWidth) * oldHeight);
-        this.logger.debug("Fetching resized image: " + width + "x" + height);
-
-        return image.getScaledInstance(width, height, Image.SCALE_FAST);
-    }
-
-    /**
      * Returns a scaled copy of the page image.
      *
      * @param width

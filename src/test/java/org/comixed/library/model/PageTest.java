@@ -113,7 +113,7 @@ public class PageTest
     @Test
     public void testCanResizeImages()
     {
-        Image result = page.getImage(169);
+        Image result = page.getScaledImage(169);
 
         assertNotNull(result);
         assertEquals(169, result.getWidth(null));
