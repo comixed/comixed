@@ -32,7 +32,7 @@ import org.comixed.library.model.ComicSelectionListener;
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.tasks.DeleteComicsWorkerTask;
 import org.comixed.tasks.Worker;
-import org.comixed.ui.components.ComicTableView;
+import org.comixed.ui.components.ComicDetailsView;
 import org.comixed.ui.frames.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,7 @@ public class DeleteComicsAction extends AbstractAction implements
     private MainFrame mainFrame;
 
     @Autowired
-    private ComicTableView comicTableView;
+    private ComicDetailsView comicTableView;
 
     @Autowired
     private ComicSelectionModel comicSelectionModel;

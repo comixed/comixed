@@ -53,7 +53,7 @@ public class MainClientPanel extends JPanel implements
     private SystemStatusPanel systemStatusPanel;
 
     @Autowired
-    private ComicTableView tableView;
+    private ComicDetailsView tableView;
 
     @Autowired
     private AppConfiguration configuration;

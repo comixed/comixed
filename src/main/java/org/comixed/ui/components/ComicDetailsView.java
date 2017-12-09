@@ -40,7 +40,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicTableView</code> provides a detailed view of the comics in the
+ * <code>ComicDetailsView</code> provides a detailed view of the comics in the
  * library.
  *
  * @author Darryl L. Pierce
@@ -48,8 +48,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @PropertySource("classpath:menus.properties")
-@ConfigurationProperties("app.table-view.popup")
-public class ComicTableView extends JTable implements
+@ConfigurationProperties("app.comic-details-view.popup")
+public class ComicDetailsView extends JTable implements
                             InitializingBean
 {
     private static final long serialVersionUID = -4512908003749212065L;
