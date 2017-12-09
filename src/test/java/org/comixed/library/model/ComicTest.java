@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
@@ -49,6 +50,7 @@ public class ComicTest
     private static final String TEST_NOTES = "Some sample notes";
     private static final String TEST_BASE_FILENAME = "C:/library/example";
     private Comic comic;
+    private Page page = new Page();
 
     @Before
     public void setUp() throws Exception
@@ -419,5 +421,14 @@ public class ComicTest
     {
         this.comic.setVolume(TEST_VOLUME);
         assertEquals(TEST_VOLUME, this.comic.getVolume());
+    }
+
+    @Test
+    public void testGetCover()
+    {
+        this.comic.addPage(0, this.page);
+        Page cover = this.comic.getCover();
+        assertNotNull(cover);
+        assertSame(this.comic.getPage(0), cover);
     }
 }

@@ -336,6 +336,16 @@ public class Comic
     }
 
     /**
+     * Returns the cover {@link Page}.
+     *
+     * @return the cover, or <code>null</code> if the comic is empty
+     */
+    public Page getCover()
+    {
+        return this.pages.isEmpty() ? null : this.pages.get(0);
+    }
+
+    /**
      * Returns the cover date for the comic.
      *
      * @return the cover date, or <code>null</code> if no date was set
