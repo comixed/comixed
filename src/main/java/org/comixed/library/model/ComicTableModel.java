@@ -19,6 +19,10 @@
 
 package org.comixed.library.model;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.table.DefaultTableModel;
@@ -27,7 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,68 +45,89 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
+@EnableConfigurationProperties
+@PropertySource("classpath:details-view.properties")
+@ConfigurationProperties(prefix = "comic.details-view",
+                         ignoreUnknownFields = false)
 public class ComicTableModel extends DefaultTableModel implements
                              InitializingBean,
                              ComicSelectionListener
 {
-    private static final int ARCHIVE_TYPE = 14;
-    private static final int TEAMS = 13;
-    private static final int SUMMARY = 12;
-    private static final int STORY_ARCS = 11;
-    private static final int PAGE_COUNT = 10;
-    private static final int LOCATIONS = 9;
-    private static final int ISSUE_NUMBER = 8;
-    private static final int FILENAME = 7;
-    private static final int DESCRIPTION = 6;
-    private static final int LAST_READ_DATE = 5;
-    private static final int ADDED_DATE = 4;
-    private static final int COVER_DATE = 3;
-    private static final int PUBLISHER = 2;
-    private static final int VOLUME = 1;
-    private static final int NAME = 0;
     private static final long serialVersionUID = -2124724909306232112L;
-    static final String[] COLUMN_NAMES =
-    {"name",
-     "volume",
-     "publisher",
-     "date_published",
-     "date_added",
-     "date_last_ready",
-     "description",
-     "filename",
-     "issue_number",
-     "locations",
-     "pages",
-     "story_arcs",
-     "summary",
-     "teams",
-     "archive_type"};
+
+    /**
+     * <code>ColumnDefinition</code> captures the details for a single column in
+     * the details view.
+     *
+     * @author Darryl L. Pierce
+     *
+     */
+    public static class ColumnDefinition
+    {
+        private String name;
+        private String method;
+
+        public String getMethod()
+        {
+            return this.method;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        public void setMethod(String method)
+        {
+            this.method = method;
+        }
+
+        public void setName(String label)
+        {
+            this.name = label;
+        }
+    }
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private MessageSource messageSource;
-
     @Autowired
     private ComicSelectionModel comicSelectionModel;
+    List<ColumnDefinition> columnNames = new ArrayList<>();
 
     @Override
     public void afterPropertiesSet() throws Exception
     {
+        this.logger.debug("afterPropertiesSet()");
         this.comicSelectionModel.addComicSelectionListener(this);
+    }
+
+    @Override
+    public void comicListChanged()
+    {
+        this.fireTableDataChanged();
     }
 
     @Override
     public int getColumnCount()
     {
-        return COLUMN_NAMES.length;
+        return this.columnNames.size();
     }
 
     @Override
     public String getColumnName(int column)
     {
-        return this.messageSource.getMessage("view.table." + COLUMN_NAMES[column] + ".label", null,
-                                             Locale.getDefault());
+        String name = this.columnNames.get(column).getName();
+        String key = "view.table." + name + ".label";
+
+        this.logger.debug("Fetching translated column name: key=" + key);
+        return this.messageSource.getMessage(key, null, name, Locale.getDefault());
+    }
+
+    public List<ColumnDefinition> getColumnNames()
+    {
+        return this.columnNames;
     }
 
     @Override
@@ -116,38 +144,27 @@ public class ComicTableModel extends DefaultTableModel implements
 
         if (comic != null)
         {
-            switch (column)
+            if (column < this.columnNames.size())
             {
-                case NAME:
-                    return comic.getSeries();
-                case VOLUME:
-                    return comic.getVolume();
-                case PUBLISHER:
-                    return comic.getPublisher();
-                case COVER_DATE:
-                    return comic.getCoverDate();
-                case ADDED_DATE:
-                    return comic.getDateAdded();
-                case LAST_READ_DATE:
-                    return comic.getDateLastRead();
-                case DESCRIPTION:
-                    return comic.getDescription();
-                case FILENAME:
-                    return comic.getFilename();
-                case ISSUE_NUMBER:
-                    return comic.getIssueNumber();
-                case LOCATIONS:
-                    return comic.getLocations();
-                case PAGE_COUNT:
-                    return comic.getPageCount();
-                case STORY_ARCS:
-                    return comic.getStoryArcs();
-                case SUMMARY:
-                    return comic.getSummary();
-                case TEAMS:
-                    return comic.getTeams();
-                case ARCHIVE_TYPE:
-                    return comic.getArchiveType();
+                try
+                {
+                    Method method = comic.getClass().getMethod(this.columnNames.get(column).getMethod());
+
+                    return method.invoke(comic);
+                }
+                catch (IllegalAccessException
+                       | IllegalArgumentException
+                       | InvocationTargetException
+                       | NoSuchMethodException
+                       | SecurityException error)
+                {
+                    this.logger.error(error.getLocalizedMessage());
+                    throw new RuntimeException(error);
+                }
+            }
+            else
+            {
+                throw new RuntimeException("invalid or unknown column: " + column);
             }
         }
 
@@ -157,10 +174,4 @@ public class ComicTableModel extends DefaultTableModel implements
     @Override
     public void selectionChanged()
     {/* do nothing */}
-
-    @Override
-    public void comicListChanged()
-    {
-        this.fireTableDataChanged();
-    }
 }
