@@ -20,6 +20,7 @@
 package org.comixed.ui.components;
 
 import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -44,7 +45,9 @@ public class TableCellPageRenderer extends DefaultTableCellRenderer
     public void paint(Graphics g)
     {
         // constrain the image to the width of the cell
-        g.drawImage(this.page.getImage(this.getWidth(), -1), 0, 0, null);
+        Image image = this.page.getImage(this.getWidth(), -1);
+
+        if (image != null) g.drawImage(image, 0, 0, null);
     }
 
     @Override

@@ -112,6 +112,11 @@ public class ComicFileHandler implements
      */
     public void loadComic(Comic comic) throws ComicFileHandlerException
     {
+        if (comic.isMissing())
+        {
+            logger.info("Unable to load missing file: " + comic.getFilename());
+            return;
+        }
         logger.debug("Loading comic: " + comic.getFilename());
 
         String archiveType = null;

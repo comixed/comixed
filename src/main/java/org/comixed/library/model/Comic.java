@@ -19,6 +19,7 @@
 
 package org.comixed.library.model;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -154,6 +155,9 @@ public class Comic
                fetch = FetchType.EAGER)
     @OrderColumn(name = "index")
     private List<Page> pages = new ArrayList<>();
+
+    @Transient
+    private File backingFile;
 
     /**
      * Adds a character to the comic.
@@ -797,5 +801,22 @@ public class Comic
     {
         this.logger.debug("Setting volume=" + volume);
         this.volume = volume;
+    }
+
+    /**
+     * Reports if the underlying comic file is missing.
+     * 
+     * @return <code>true</code> if the file is missing
+     */
+    public boolean isMissing()
+    {
+        return this.getBackingFile() != null ? !this.backingFile.exists() : true;
+    }
+
+    private File getBackingFile()
+    {
+        if (this.backingFile == null) this.backingFile = new File(filename);
+
+        return this.backingFile;
     }
 }

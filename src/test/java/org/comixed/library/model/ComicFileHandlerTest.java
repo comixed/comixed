@@ -19,6 +19,9 @@
 
 package org.comixed.library.model;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.InputStream;
 import java.util.Map;
 
@@ -78,12 +81,14 @@ public class ComicFileHandlerTest
         Mockito.verify(identifier, Mockito.times(1)).typeFor(input.capture());
     }
 
-    @Test(expected = ComicFileHandlerException.class)
+    @Test
     public void testLoadComicFileNotFound() throws ComicFileHandlerException
     {
-        Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
+        Mockito.when(comic.isMissing()).thenReturn(true);
 
         handler.loadComic(comic);
+
+        Mockito.verify(comic, Mockito.times(1)).isMissing();
     }
 
     @Test(expected = ComicFileHandlerException.class)

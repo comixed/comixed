@@ -26,8 +26,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -430,5 +433,15 @@ public class ComicTest
         Page cover = this.comic.getCover();
         assertNotNull(cover);
         assertSame(this.comic.getPage(0), cover);
+    }
+
+    @Test
+    public void testIsMissing() throws IOException
+    {
+        Comic testComic = new Comic();
+
+        testComic.setFilename(System.getProperty("user.home") + File.separator + RandomStringUtils.randomAlphabetic(16)
+                              + ".cbz");
+        assertTrue(testComic.isMissing());
     }
 }
