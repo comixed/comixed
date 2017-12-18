@@ -107,7 +107,9 @@ public class ImportComicsAction extends AbstractAction
         File[] files = root.listFiles((FileFilter )pathname ->
         {
             String name = pathname.getName().toLowerCase();
-            if (pathname.isFile() && !(name.endsWith(".cbz") || name.endsWith(".cbr"))) return false;
+            // TODO need a better way to evaluate file extensions than this
+            if (pathname.isFile()
+                && !(name.endsWith(".cbz") || name.endsWith(".cbr") || name.endsWith(".cb7"))) return false;
             return true;
         });
 
