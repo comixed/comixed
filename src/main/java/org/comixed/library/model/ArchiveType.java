@@ -31,7 +31,8 @@ import org.comixed.library.adaptors.ArchiveAdaptor;
 public enum ArchiveType
 {
  CBZ("ZIP Comic"),
- CBR("RAR Comic");
+ CBR("RAR Comic"),
+ CB7("7Z Comic");
 
     private String name;
     private ArchiveAdaptor archiveAdaptor;

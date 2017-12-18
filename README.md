@@ -15,6 +15,14 @@ Paired with an application that can read your comics (such as
 [Chunky Reader](http://chunkyreader.com/)) you will have a very powerful
 and useful solution for reading your comic collection.
 
+## Supported Comic Formats
+
+The following digital comic formats are supported:
+
+ * CBZ (ZIP)
+ * CBR (RAR)
+ * CB7 (7ZIP)
+
 ## Contributing
 
 Please see the [wiki page](../../wiki/Developer-Setup) page for getting your
