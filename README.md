@@ -15,6 +15,25 @@ Paired with an application that can read your comics (such as
 [Chunky Reader](http://chunkyreader.com/)) you will have a very powerful
 and useful solution for reading your comic collection.
 
+## Contributing
+
+Please see the [wiki page](../../wiki/Developer-Setup) page for getting your
+environment up and running.
+
+This project uses [Git Flow](http://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+when developing code. When working on a feature or fixing a bug, please write
+and test your code against the *develop* branch. Then, when it is completed,
+please send a [pull request](http://help.github.com/articles/creating-a-pull-request/)
+to have the code imported.
+
+If the code is in good shape, then it will be included.
+
+If the code needs some fixes or changes, the developers will provide feedback
+asking for those changes. Then please resubmit your changes.
+
+And, if this is your first addition to the project, please add your name to
+the [CONTRIBUTORS.md](./CONTRIBUTORS.md) file with your pull request.
+
 ## Credits
 
 example.cbz - https://www.contrapositivediary.com/?p=1197
