@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.library.loaders;
+package org.comixed.library.adaptors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNull;
 
 import org.comixed.ComixEdTestContext;
 import org.comixed.library.adaptors.ArchiveAdaptorException;
-import org.comixed.library.adaptors.RarArchiveAdaptor;
+import org.comixed.library.adaptors.ZipArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,17 +38,21 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ComixEdTestContext.class)
 @TestPropertySource(locations = "classpath:test-application.properties")
-public class RarArchiveAdaptorTest
+public class ZipArchiveAdaptorTest
 {
-    private static final String TEST_FILE_ENTRY_0 = "exampleCBR.jpg";
-    private static final String TEST_FILE_ENTRY_1 = "example.jpeg";
-    private static final String TEST_FILE_ENTRY_2 = "example.jpg";
-    private static final String TEST_FILE_ENTRY_3 = "example.png";
-    private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
-    private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
+    private static final String TEST_FILE_ENTRY_3 = "exampleCBR.jpg";
+    private static final String TEST_FILE_ENTRY_2 = "example.png";
+    private static final String TEST_FILE_ENTRY_1 = "example.jpg";
+    private static final String TEST_FILE_ENTRY_0 = "example.jpeg";
+    private static final String TEST_CBZ_FILE = "target/test-classes/example.cbz";
+    private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
+    private static final Object TEST_FILE_ENTRY_RENAMED_0 = "page-000.jpeg";
+    private static final Object TEST_FILE_ENTRY_RENAMED_1 = "page-001.jpg";
+    private static final Object TEST_FILE_ENTRY_RENAMED_2 = "page-002.png";
+    private static final Object TEST_FILE_ENTRY_RENAMED_3 = "page-003.jpg";
 
     @Autowired
-    private RarArchiveAdaptor archiveAdaptor;
+    private ZipArchiveAdaptor archiveAdaptor;
 
     private Comic comic;
 
@@ -56,13 +60,13 @@ public class RarArchiveAdaptorTest
     public void setUp()
     {
         comic = new Comic();
-        comic.setFilename(TEST_CBR_FILE);
+        comic.setFilename(TEST_CBZ_FILE);
     }
 
     @Test(expected = ArchiveAdaptorException.class)
     public void testOpenFileNotFound() throws ArchiveAdaptorException
     {
-        comic.setFilename(TEST_CBR_FILE.substring(1));
+        comic.setFilename(TEST_CBZ_FILE.substring(1));
         archiveAdaptor.loadComic(comic);
     }
 
@@ -76,7 +80,7 @@ public class RarArchiveAdaptorTest
     @Test(expected = ArchiveAdaptorException.class)
     public void testOpenInvalidFile() throws ArchiveAdaptorException
     {
-        comic.setFilename(TEST_CBZ_FILE);
+        comic.setFilename(TEST_CBR_FILE);
         archiveAdaptor.loadComic(comic);
     }
 
@@ -98,7 +102,7 @@ public class RarArchiveAdaptorTest
         byte[] result = archiveAdaptor.loadSingleFile(comic, TEST_FILE_ENTRY_1);
 
         assertNotNull(result);
-        assertEquals(7449985, result.length);
+        assertEquals(7443280, result.length);
     }
 
     @Test
@@ -109,9 +113,52 @@ public class RarArchiveAdaptorTest
         assertNull(result);
     }
 
-    @Test(expected = ArchiveAdaptorException.class)
+    @Test
     public void testSaveComic() throws ArchiveAdaptorException
     {
-        archiveAdaptor.saveComic(comic, false);
+        // load an existing comic
+        archiveAdaptor.loadComic(comic);
+
+        // now save it and reload it
+        Comic result = archiveAdaptor.saveComic(comic, false);
+
+        assertEquals(4, result.getPageCount());
+        assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
+        assertEquals(TEST_FILE_ENTRY_1, result.getPage(1).getFilename());
+        assertEquals(TEST_FILE_ENTRY_2, result.getPage(2).getFilename());
+        assertEquals(TEST_FILE_ENTRY_3, result.getPage(3).getFilename());
+    }
+
+    @Test
+    public void testSaveComicRenamePages() throws ArchiveAdaptorException
+    {
+        // load an existing comic
+        archiveAdaptor.loadComic(comic);
+
+        // now save it and reload it
+        Comic result = archiveAdaptor.saveComic(comic, true);
+
+        assertEquals(4, result.getPageCount());
+        assertEquals(TEST_FILE_ENTRY_RENAMED_0, result.getPage(0).getFilename());
+        assertEquals(TEST_FILE_ENTRY_RENAMED_1, result.getPage(1).getFilename());
+        assertEquals(TEST_FILE_ENTRY_RENAMED_2, result.getPage(2).getFilename());
+        assertEquals(TEST_FILE_ENTRY_RENAMED_3, result.getPage(3).getFilename());
+    }
+
+    @Test
+    public void testSaveComicDeletePages() throws ArchiveAdaptorException
+    {
+        // load an existing comic
+        archiveAdaptor.loadComic(comic);
+
+        comic.getPage(1).markDeleted(true);
+
+        // now save it and reload it
+        Comic result = archiveAdaptor.saveComic(comic, false);
+
+        assertEquals(3, result.getPageCount());
+        assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
+        assertEquals(TEST_FILE_ENTRY_2, result.getPage(1).getFilename());
+        assertEquals(TEST_FILE_ENTRY_3, result.getPage(2).getFilename());
     }
 }
