@@ -22,12 +22,16 @@ package org.comixed.library.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 
 import org.comixed.ComixEdTestContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -37,27 +41,35 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource(locations = "classpath:details-view.properties")
 public class ComicTableModelTest
 {
-    @Autowired
+    private static final int TEST_COMIC_COUNT = 717;
+    @Mock
+    private ComicSelectionModel comicSelectionModel;
     @InjectMocks
     private ComicTableModel comicTableModel;
-
-    /*
-     * TODO: need a better way to test this
-     * 
-     * @Test
-     * public void testGetRowCount()
-     * {
-     * assertEquals(TEST_COMIC_COUNT, comicTableModel.getRowCount());
-     * }
-     */
+    @Mock
+    private Comic comic;
+    @Captor
+    ArgumentCaptor<Integer> index;
 
     @Test
-    public void testGetColumnCount()
+    public void testGetRowCount()
     {
-        assertNotNull(comicTableModel.columnNames);
-        assertNotEquals(0, comicTableModel.columnNames.size());
-        assertEquals(comicTableModel.columnNames.size(), comicTableModel.getColumnCount());
+        Mockito.when(comicSelectionModel.getComicCount()).thenReturn(TEST_COMIC_COUNT);
+
+        assertEquals(TEST_COMIC_COUNT, comicTableModel.getRowCount());
+
+        Mockito.verify(comicSelectionModel, Mockito.atLeastOnce()).getComicCount();
     }
+
+    // TODO need a way to test the columns
+    // @Test
+    // public void testGetColumnCount()
+    // {
+    // assertNotNull(comicTableModel.columnNames);
+    // assertNotEquals(0, comicTableModel.columnNames.size());
+    // assertEquals(comicTableModel.columnNames.size(),
+    // comicTableModel.getColumnCount());
+    // }
 
     @Test
     public void testGetColumnName()
@@ -82,4 +94,41 @@ public class ComicTableModelTest
      * 0));
      * }
      */
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetComicAtBadRow()
+    {
+        Mockito.when(comicSelectionModel.getComicCount()).thenReturn(17);
+
+        try
+        {
+            comicTableModel.getComicAt(comicTableModel.getRowCount() + 1);
+
+            Mockito.verify(comicSelectionModel, Mockito.atLeastOnce());
+        }
+        catch (IndexOutOfBoundsException expected)
+        {
+            throw expected;
+        }
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetComicAtNegativeRow()
+    {
+        comicTableModel.getComicAt(-1);
+    }
+
+    @Test
+    public void testGetComicAt()
+    {
+        Mockito.when(comicSelectionModel.getComicCount()).thenReturn(18);
+        Mockito.when(comicSelectionModel.getComic(Mockito.anyInt())).thenReturn(comic);
+
+        Comic result = comicTableModel.getComicAt(17);
+
+        assertSame(comic, result);
+
+        Mockito.verify(comicSelectionModel, Mockito.times(1)).getComicCount();
+        Mockito.verify(comicSelectionModel, Mockito.times(1)).getComic(index.capture());
+    }
 }
