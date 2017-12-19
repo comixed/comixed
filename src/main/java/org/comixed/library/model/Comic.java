@@ -19,7 +19,6 @@
 
 package org.comixed.library.model;
 
-import java.awt.Image;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.ArrayList;
