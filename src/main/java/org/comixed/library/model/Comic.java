@@ -346,7 +346,11 @@ public class Comic
      */
     public Page getCover()
     {
-        return this.pages.isEmpty() ? null : this.pages.get(0);
+        /*
+         * if there are no pages or the underlying file is missing then show the
+         * missing page image
+         */
+        return this.pages.isEmpty() || this.isMissing() ? null : this.pages.get(0);
     }
 
     /**

@@ -37,10 +37,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource(locations = "classpath:details-view.properties")
 public class ComicTableModelTest
 {
-    private static final int TEST_COMIC_COUNT = 17;
-    private static final String TEST_COMIC_NAME = "Comic Name";
-    private static final int TEST_COMIC_ROW = 7;
-
     @Autowired
     @InjectMocks
     private ComicTableModel comicTableModel;
