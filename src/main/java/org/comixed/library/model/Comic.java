@@ -19,6 +19,7 @@
 
 package org.comixed.library.model;
 
+import java.awt.Image;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -350,7 +351,7 @@ public class Comic
          * if there are no pages or the underlying file is missing then show the
          * missing page image
          */
-        return this.pages.isEmpty() || this.isMissing() ? null : this.pages.get(0);
+        return this.pages.isEmpty() || this.isMissing() ? Page.MISSING_PAGE : this.pages.get(0);
     }
 
     /**

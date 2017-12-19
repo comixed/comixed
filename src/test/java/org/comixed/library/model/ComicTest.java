@@ -49,9 +49,9 @@ public class ComicTest
     private static final String TEST_TEAM = "Super test team";
     private static final String TEST_CHARACTER = "Test Man";
     private static final String TEST_LOCATION = "Test Location";
-    private static final String TEST_FILENAME = "C:/library/example.cbz";
+    private static final String TEST_FILENAME = "src/test/resources/example.cbz";
     private static final String TEST_NOTES = "Some sample notes";
-    private static final String TEST_BASE_FILENAME = "C:/library/example";
+    private static final String TEST_BASE_FILENAME = "src/test/resources/example";
     private Comic comic;
     private Page page = new Page();
 
@@ -429,6 +429,7 @@ public class ComicTest
     @Test
     public void testGetCover()
     {
+        this.comic.setFilename(TEST_FILENAME);
         this.comic.addPage(0, this.page);
         Page cover = this.comic.getCover();
         assertNotNull(cover);
@@ -443,5 +444,14 @@ public class ComicTest
         testComic.setFilename(System.getProperty("user.home") + File.separator + RandomStringUtils.randomAlphabetic(16)
                               + ".cbz");
         assertTrue(testComic.isMissing());
+    }
+
+    @Test
+    public void testMissingImage()
+    {
+        Comic testComic = new Comic();
+
+        Page cover = testComic.getCover();
+        assertSame(Page.MISSING_PAGE, cover);
     }
 }

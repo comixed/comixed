@@ -45,3 +45,4 @@ the [CONTRIBUTORS.md](./CONTRIBUTORS.md) file with your pull request.
 ## Credits
 
 example.cbz - https://www.contrapositivediary.com/?p=1197
+missing_page.png - Original found at https://commons.wikimedia.org/wiki/File:Comic_image_missing.svg
