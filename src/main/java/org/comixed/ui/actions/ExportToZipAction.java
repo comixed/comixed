@@ -28,7 +28,7 @@ import org.comixed.library.model.ComicSelectionListener;
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.tasks.ExportComicWorkerTask;
 import org.comixed.tasks.Worker;
-import org.comixed.ui.components.ComicDetailsView;
+import org.comixed.ui.components.ComicDetailsTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -38,8 +38,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ExportToZipAction extends AbstractAction implements
-                                 InitializingBean,
-                                 ComicSelectionListener
+                               InitializingBean,
+                               ComicSelectionListener
 {
     private static final long serialVersionUID = 1187062644992838350L;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -48,7 +48,7 @@ public class ExportToZipAction extends AbstractAction implements
     private ZipArchiveAdaptor archiveAdaptor;
 
     @Autowired
-    private ComicDetailsView tableView;
+    private ComicDetailsTable detailsTable;
 
     @Autowired
     private ComicSelectionModel selectionModel;
@@ -64,7 +64,7 @@ public class ExportToZipAction extends AbstractAction implements
     {
         this.logger.debug("Preparing to export comic to zip format");
 
-        int[] selections = this.tableView.getSelectedRows();
+        int[] selections = this.detailsTable.getSelectedRows();
 
         for (int selection : selections)
         {

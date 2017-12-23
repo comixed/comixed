@@ -346,6 +346,7 @@ public class Comic
      */
     public Page getCover()
     {
+        this.logger.debug("Getting cover for comic: filename=" + this.filename);
         /*
          * if there are no pages or the underlying file is missing then show the
          * missing page image

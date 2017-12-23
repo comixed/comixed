@@ -32,7 +32,7 @@ import org.comixed.library.model.ComicSelectionListener;
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.tasks.DeleteComicsWorkerTask;
 import org.comixed.tasks.Worker;
-import org.comixed.ui.components.ComicDetailsView;
+import org.comixed.ui.components.ComicDetailsTable;
 import org.comixed.ui.frames.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,7 @@ public class DeleteComicsAction extends AbstractAction implements
     private MainFrame mainFrame;
 
     @Autowired
-    private ComicDetailsView comicTableView;
+    private ComicDetailsTable detailsTable;
 
     @Autowired
     private ComicSelectionModel comicSelectionModel;
@@ -78,7 +78,7 @@ public class DeleteComicsAction extends AbstractAction implements
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        int[] rows = this.comicTableView.getSelectedRows();
+        int[] rows = this.detailsTable.getSelectedRows();
         List<Comic> comics = new ArrayList<>();
 
         for (int row : rows)

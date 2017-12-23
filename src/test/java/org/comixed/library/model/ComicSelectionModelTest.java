@@ -206,6 +206,7 @@ public class ComicSelectionModelTest
     @Test
     public void testAllComics()
     {
+        model.reload = false;
         assertSame(model.allComics, model.getAllComics());
     }
 }

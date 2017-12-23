@@ -53,7 +53,7 @@ public class MainClientPanel extends JPanel implements
     private SystemStatusPanel systemStatusPanel;
 
     @Autowired
-    private ComicDetailsView tableView;
+    private ComicDetailsView detailsView;
 
     @Autowired
     private AppConfiguration configuration;
@@ -73,7 +73,7 @@ public class MainClientPanel extends JPanel implements
     private void createLayout()
     {
         JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.systemStatusPanel),
-                                              new JScrollPane(this.tableView));
+                                              new JScrollPane(this.detailsView));
         this.add(splitpane, BorderLayout.CENTER);
 
         // restore layout

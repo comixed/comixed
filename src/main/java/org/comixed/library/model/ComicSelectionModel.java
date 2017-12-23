@@ -96,6 +96,7 @@ public class ComicSelectionModel implements
     public List<Comic> getAllComics()
     {
         this.logger.debug("Returning all comics");
+        if (this.reload) this.reloadComics();
         return this.allComics;
     }
 

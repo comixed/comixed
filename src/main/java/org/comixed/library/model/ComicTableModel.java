@@ -107,6 +107,7 @@ public class ComicTableModel extends DefaultTableModel implements
     public void comicListChanged()
     {
         this.fireTableDataChanged();
+        this.comicSelectionModel.fireListChangedEvent();
     }
 
     @Override

@@ -179,13 +179,13 @@ public class Page
     {
         if (this.content == null)
         {
+            this.logger.debug("Loading page image: filename=" + this.filename);
             try
             {
-                if (this.comic.archiveType == null)
+                if (this.comic.archiveType != null)
                 {
-                    this.logger.debug("WTF?");
+                    this.content = this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
                 }
-                this.content = this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
             }
             catch (ArchiveAdaptorException error)
             {
