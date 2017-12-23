@@ -19,10 +19,11 @@
 
 package org.comixed.ui.components;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.List;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicSelectionListener;
@@ -57,6 +58,27 @@ public class ComicCoverFlowPanel extends JPanel implements
     public void afterPropertiesSet() throws Exception
     {
         this.comicSelectionModel.addComicSelectionListener(this);
+
+        this.addComponentListener(new ComponentListener()
+        {
+            @Override
+            public void componentHidden(ComponentEvent e)
+            {}
+
+            @Override
+            public void componentMoved(ComponentEvent e)
+            {}
+
+            @Override
+            public void componentResized(ComponentEvent e)
+            {
+                ComicCoverFlowPanel.this.redisplayCovers(false);
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e)
+            {}
+        });
     }
 
     @Override
@@ -71,9 +93,9 @@ public class ComicCoverFlowPanel extends JPanel implements
         this.logger.debug("Refreshing comic covers view");
         List<Comic> allComics = this.comicSelectionModel.getAllComics();
 
-        if (!refresh && this.lastHash == allComics.hashCode()) return;
+        if (!refresh && (this.lastHash == allComics.hashCode())) return;
 
-        if (this.lastHash == -1 || this.lastHash != allComics.hashCode())
+        if ((this.lastHash == -1) || (this.lastHash != allComics.hashCode()))
         {
             this.logger.debug("Reloading comic covers");
             this.removeAll();
@@ -95,11 +117,8 @@ public class ComicCoverFlowPanel extends JPanel implements
 
         }
 
-        SwingUtilities.invokeLater(() ->
-        {
-            ComicCoverFlowPanel.this.repaint();
-            ComicCoverFlowPanel.this.revalidate();
-        });
+        ComicCoverFlowPanel.this.repaint();
+        ComicCoverFlowPanel.this.revalidate();
     }
 
     @Override

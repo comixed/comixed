@@ -73,7 +73,7 @@ public class MainClientPanel extends JPanel implements
     private void createLayout()
     {
         JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.systemStatusPanel),
-                                              new JScrollPane(this.detailsView));
+                                              this.detailsView);
         this.add(splitpane, BorderLayout.CENTER);
 
         // restore layout
