@@ -108,20 +108,11 @@ public class ComicCoverFlowPanel extends JPanel implements
             for (Comic comic : allComics)
             {
                 this.logger.debug("Adding cover for " + comic.getFilename());
-                ComicCoverDetails cover = comicCoverDetailsFactory.getObject();
+                ComicCoverDetails cover = this.comicCoverDetailsFactory.getObject();
                 cover.setComic(comic);
                 cover.setParentHeight((int )this.getVisibleRect().getHeight());
                 this.add(cover);
             }
-        }
-
-        for (java.awt.Component component : this.getComponents())
-        {
-            this.logger.debug("Marking selected comics");
-            ComicCoverDetails details = (ComicCoverDetails )component;
-
-            details.setSelected(this.comicSelectionModel.getSelectedComics().contains(details.getComic()));
-
         }
 
         ComicCoverFlowPanel.this.repaint();

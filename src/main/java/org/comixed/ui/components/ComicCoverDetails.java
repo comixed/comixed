@@ -19,7 +19,6 @@
 
 package org.comixed.ui.components;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -55,7 +54,6 @@ public class ComicCoverDetails extends JPanel
     private MessageSource messageSource;
 
     private Comic comic;
-    private boolean selected;
     private Image image = null;
     private Dimension dimensions;
     private int parentHeight;
@@ -96,11 +94,6 @@ public class ComicCoverDetails extends JPanel
             this.loadImage();
         }
         g.drawImage(this.image, IMAGE_BORDER_WIDTH, IMAGE_BORDER_WIDTH, this);
-        if (this.selected)
-        {
-            g.setColor(Color.RED);
-            g.draw3DRect(0, 0, this.getWidth(), this.getHeight(), true);
-        }
     }
 
     /**
@@ -138,17 +131,5 @@ public class ComicCoverDetails extends JPanel
          this.comic.getIssueNumber(),
          this.comic.getCoverDate(),
          this.comic.getFilename()}, this.getLocale()));
-    }
-
-    /**
-     * Sests the selected flag for this cover.
-     *
-     * @param selected
-     *            the flag setting
-     */
-    public void setSelected(boolean selected)
-    {
-        this.logger.debug("Setting selected flag: " + selected + " filename=" + this.comic.getFilename());
-        this.selected = selected;
     }
 }
