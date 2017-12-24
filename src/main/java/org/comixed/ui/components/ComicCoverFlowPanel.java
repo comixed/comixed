@@ -94,7 +94,9 @@ public class ComicCoverFlowPanel extends JPanel implements
     private void redisplayCovers(boolean refresh)
     {
         this.logger.debug("Refreshing comic covers view");
-        List<Comic> allComics = this.comicSelectionModel.getAllComics();
+        List<Comic> allComics = this.comicSelectionModel.getSelectedComics()
+                                                        .isEmpty() ? this.comicSelectionModel.getAllComics()
+                                                                   : this.comicSelectionModel.getSelectedComics();
 
         if (!refresh && (this.lastHash == allComics.hashCode())) return;
 
