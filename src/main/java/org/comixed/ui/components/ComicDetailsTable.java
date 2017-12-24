@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,9 +42,6 @@ public class ComicDetailsTable extends JTable implements
     private MenuHelper menuHelper;
     @Autowired
     private TableCellPageRenderer pageRenderer;
-    @Autowired
-    private MessageSource messageSource;
-
     private List<Menu> menu = new ArrayList<>();
 
     @Override

@@ -27,6 +27,13 @@ import java.awt.Image;
 import javax.swing.JPanel;
 
 import org.comixed.library.model.Comic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * <code>ComicCoverDetails</code> shows a single comic's cover and the details
@@ -35,22 +42,23 @@ import org.comixed.library.model.Comic;
  * @author Darryl L. Pierce
  *
  */
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ComicCoverDetails extends JPanel
 {
     private static final long serialVersionUID = 5410694331744499379L;
     private static final int IMAGE_BORDER_WIDTH = 5;
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private MessageSource messageSource;
 
     private Comic comic;
     private boolean selected;
     private Image image = null;
     private Dimension dimensions;
     private int parentHeight;
-
-    public ComicCoverDetails(Comic comic, int parentHeight)
-    {
-        this.comic = comic;
-        this.parentHeight = parentHeight;
-    }
 
     /**
      * Returns the comic.
@@ -95,8 +103,52 @@ public class ComicCoverDetails extends JPanel
         }
     }
 
+    /**
+     * Sets the comic displayed by this panel.
+     *
+     * @param comic
+     *            the comic
+     */
+    public void setComic(Comic comic)
+    {
+        this.logger.debug("Setting the comic: filename=" + comic.getFilename());
+        this.comic = comic;
+        this.setPopupDetails();
+    }
+
+    /**
+     * Sets the height of the parent component.
+     *
+     * @param parentHeight
+     *            the height
+     */
+    public void setParentHeight(int parentHeight)
+    {
+        this.logger.debug("Setting the parent height: " + parentHeight);
+        this.parentHeight = parentHeight;
+    }
+
+    private void setPopupDetails()
+    {
+        this.logger.debug("Creating the tool tip text details");
+        this.setToolTipText(this.messageSource.getMessage("view.cover.hover_text", new Object[]
+        {this.comic.getSeries(),
+         this.comic.getPublisher(),
+         this.comic.getVolume(),
+         this.comic.getIssueNumber(),
+         this.comic.getCoverDate(),
+         this.comic.getFilename()}, this.getLocale()));
+    }
+
+    /**
+     * Sests the selected flag for this cover.
+     *
+     * @param selected
+     *            the flag setting
+     */
     public void setSelected(boolean selected)
     {
+        this.logger.debug("Setting selected flag: " + selected + " filename=" + this.comic.getFilename());
         this.selected = selected;
     }
 }

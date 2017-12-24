@@ -31,6 +31,7 @@ import org.comixed.library.model.ComicSelectionModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +53,8 @@ public class ComicCoverFlowPanel extends JPanel implements
 
     @Autowired
     private ComicSelectionModel comicSelectionModel;
+    @Autowired
+    private ObjectFactory<ComicCoverDetails> comicCoverDetailsFactory;
     private int lastHash = -1;
 
     @Override
@@ -103,7 +106,9 @@ public class ComicCoverFlowPanel extends JPanel implements
             for (Comic comic : allComics)
             {
                 this.logger.debug("Adding cover for " + comic.getFilename());
-                ComicCoverDetails cover = new ComicCoverDetails(comic, (int )this.getVisibleRect().getHeight());
+                ComicCoverDetails cover = comicCoverDetailsFactory.getObject();
+                cover.setComic(comic);
+                cover.setParentHeight((int )this.getVisibleRect().getHeight());
                 this.add(cover);
             }
         }
