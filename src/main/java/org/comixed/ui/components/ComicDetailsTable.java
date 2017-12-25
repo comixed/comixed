@@ -37,6 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,6 +48,8 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
+@PropertySource("classpath:menus.properties")
+@ConfigurationProperties("app.comic-details-view.popup")
 public class ComicDetailsTable extends JTable implements
                                InitializingBean
 {
@@ -74,6 +78,7 @@ public class ComicDetailsTable extends JTable implements
 
         for (Menu item : this.menu)
         {
+            this.logger.debug("Menu item type: " + item.type);
             if (item.label == null)
             {
                 continue;
@@ -85,6 +90,8 @@ public class ComicDetailsTable extends JTable implements
             }
             else if (item.type == MenuType.ITEM)
             {
+                this.logger.debug("Menu item label: " + item.label);
+                this.logger.debug("Menu item bean: " + item.bean);
                 JMenuItem menuItem = this.menuHelper.createMenuItem(item.label, item.bean);
                 if (menuItem != null)
                 {

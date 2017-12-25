@@ -43,8 +43,6 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-@PropertySource("classpath:menus.properties")
-@ConfigurationProperties("app.comic-details-view.popup")
 public class ComicDetailsView extends JPanel implements
                               InitializingBean
 {
