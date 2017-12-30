@@ -219,4 +219,41 @@ public class ComicTableModel extends DefaultTableModel implements
     @Override
     public void selectionChanged()
     {/* do nothing */}
+
+    @Override
+    public void setValueAt(Object aValue, int row, int column)
+    {
+        Comic comic = this.comicSelectionModel.getComic(row);
+        String field = "set" + this.columnNames.get(column).getProperty();
+        Method method = null;
+        try
+        {
+            method = comic.getClass().getMethod(field, String.class);
+        }
+        catch (NoSuchMethodException
+               | SecurityException error)
+        {
+            this.logger.error("Unable to fetch method: " + field, error);
+        }
+
+        if (method == null)
+        {
+            this.logger.error("No such setter method: " + field);
+            return;
+        }
+
+        String value = aValue != null ? aValue.toString() : null;
+        this.logger.debug("Setting value: comic file=" + comic.getFilename() + " field=" + field + " value=" + value);
+        try
+        {
+            method.invoke(comic, value);
+        }
+        catch (IllegalAccessException
+               | IllegalArgumentException
+               | InvocationTargetException error)
+        {
+            this.logger.error("Failed to set value", error);
+        }
+    }
+
 }
