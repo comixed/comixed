@@ -27,6 +27,7 @@ import java.util.Locale;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -120,6 +121,8 @@ public class ComicTableModel extends DefaultTableModel implements
     private MessageSource messageSource;
     @Autowired
     private ComicSelectionModel comicSelectionModel;
+    @Autowired
+    private ComicRepository comicRepository;
     List<ColumnDefinition> columnNames = new ArrayList<>();
 
     @Override
@@ -247,6 +250,7 @@ public class ComicTableModel extends DefaultTableModel implements
         try
         {
             method.invoke(comic, value);
+            comicRepository.save(comic);
         }
         catch (IllegalAccessException
                | IllegalArgumentException
