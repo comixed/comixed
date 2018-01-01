@@ -45,13 +45,9 @@ public class LibraryDetailsPanel extends DetailsPanel implements
 
     @Autowired
     private MessageSource messageSource;
-
     @Autowired
     private ComicSelectionModel comicSelectionModel;
-
-    private JLabel totalComics = new JLabel();
-    private JLabel displayedComics = new JLabel();
-    private JLabel duplicatePages = new JLabel();
+    private JLabel detailsLabel = new JLabel();
 
     public LibraryDetailsPanel()
     {
@@ -63,48 +59,33 @@ public class LibraryDetailsPanel extends DetailsPanel implements
     {
         this.comicSelectionModel.addComicSelectionListener(this);
         this.buildLayout();
-        this.updateDisplayedComicCount();
-        this.updateTotalComicCount();
+        this.updateDetails();
     }
 
     private void buildLayout()
     {
         this.logger.debug("Laying out UI components");
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        this.add(this.totalComics);
-        this.add(this.displayedComics);
-        this.add(this.duplicatePages);
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        this.add(this.detailsLabel);
     }
 
     @Override
     public void comicListChanged()
     {
-        this.updateTotalComicCount();
+        this.updateDetails();
     }
 
     @Override
     public void selectionChanged()
     {
-        this.updateDisplayedComicCount();
+        this.updateDetails();
     }
 
-    private void updateDisplayedComicCount()
+    private void updateDetails()
     {
-        this.logger.debug("Updating displayed comic count");
-        this.displayedComics.setText(this.messageSource.getMessage("view.details.library.displayed-comics.text",
-                                                                   new Object[]
-                                                                   {this.comicSelectionModel.getComicCount()},
-                                                                   this.getLocale()));
-    }
-
-    private void updateTotalComicCount()
-    {
-        this.logger.debug("Updating total comic count");
-        this.totalComics.setText(this.messageSource.getMessage("view.details.library.total-comics.text", new Object[]
-        {this.comicSelectionModel.getTotalComics()}, this.getLocale()));
-        this.duplicatePages.setText(this.messageSource.getMessage("view.details.library.duplicate-pages.text",
-                                                                  new Object[]
-                                                                  {this.comicSelectionModel.getDuplicatePageCount()},
-                                                                  this.getLocale()));
+        this.detailsLabel.setText(this.messageSource.getMessage("view.details.library.text", new Object[]
+        {this.comicSelectionModel.getTotalComics(),
+         this.comicSelectionModel.getSelectedComics().size(),
+         this.comicSelectionModel.getDuplicatePageCount()}, this.getLocale()));
     }
 }
