@@ -22,8 +22,6 @@ package org.comixed.ui.components;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 
 import org.comixed.AppConfiguration;
 import org.slf4j.Logger;
@@ -44,13 +42,7 @@ public class MainClientPanel extends JPanel implements
                              InitializingBean
 {
     private static final long serialVersionUID = -6194561704845594236L;
-    private static final String MAIN_CLIENT_DIVIDER_LOCATION = "window.main.client.divider.location";
-
-    private static final String MAIN_CLIENT_LAST_DIVIDER_LOCATION = "window.main.client.divider.last.location";
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private SystemStatusPanel systemStatusPanel;
 
     @Autowired
     private ComicDetailsView detailsView;
@@ -72,28 +64,6 @@ public class MainClientPanel extends JPanel implements
 
     private void createLayout()
     {
-        JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.systemStatusPanel),
-                                              this.detailsView);
-        this.add(splitpane, BorderLayout.CENTER);
-
-        // restore layout
-        if (this.configuration.hasOption(MAIN_CLIENT_DIVIDER_LOCATION))
-        {
-            splitpane.setDividerLocation(Integer.parseInt(this.configuration.getOption(MAIN_CLIENT_DIVIDER_LOCATION)));
-        }
-        if (this.configuration.hasOption(MAIN_CLIENT_LAST_DIVIDER_LOCATION))
-        {
-            splitpane.setLastDividerLocation(Integer.parseInt(this.configuration.getOption(MAIN_CLIENT_LAST_DIVIDER_LOCATION)));
-        }
-
-        // add listener
-        splitpane.addPropertyChangeListener(evt ->
-        {
-            MainClientPanel.this.configuration.setOption(MAIN_CLIENT_DIVIDER_LOCATION,
-                                                         String.valueOf(splitpane.getDividerLocation()));
-            MainClientPanel.this.configuration.setOption(MAIN_CLIENT_LAST_DIVIDER_LOCATION,
-                                                         String.valueOf(splitpane.getLastDividerLocation()));
-            MainClientPanel.this.configuration.save();
-        });
+        this.add(detailsView, BorderLayout.CENTER);
     }
 }
