@@ -48,6 +48,8 @@ public class StatusBar extends JPanel implements
 
     @Autowired
     private StatusAdaptor statusAdaptor;
+    @Autowired
+    private LibraryDetailsPanel libraryDetailsPanel;
 
     public StatusBar()
     {
@@ -60,6 +62,8 @@ public class StatusBar extends JPanel implements
     @Override
     public void afterPropertiesSet() throws Exception
     {
+        // add components to the status bar
+        this.add(libraryDetailsPanel);
         this.statusAdaptor.addStatusListener(this);
     }
 

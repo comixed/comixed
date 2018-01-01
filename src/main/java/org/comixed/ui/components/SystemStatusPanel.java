@@ -44,16 +44,11 @@ public class SystemStatusPanel extends JPanel implements
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private LibraryDetailsPanel libraryDetailsPanel;
-
-    @Autowired
     private WorkerQueueDetailsPanel workerQueueDetailsPanel;
 
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        this.setLayout(new GridLayout(2, 1));
-        this.add(this.libraryDetailsPanel);
-        this.add(this.workerQueueDetailsPanel);
+        this.setLayout(new GridLayout(2, 1));        this.add(this.workerQueueDetailsPanel);
     }
 }
