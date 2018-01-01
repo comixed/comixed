@@ -19,8 +19,6 @@
 
 package org.comixed.ui.components;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -53,6 +51,8 @@ public class StatusBar extends JPanel implements
     private StatusAdaptor statusAdaptor;
     @Autowired
     private LibraryDetailsPanel libraryDetailsPanel;
+    @Autowired
+    private WorkerQueueDetailsPanel workerQueueDetailsPanel;
 
     public StatusBar()
     {
@@ -70,18 +70,23 @@ public class StatusBar extends JPanel implements
         // add components to the status bar
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 0.1;
+        c.weightx = 0.0;
         c.ipadx = 5;
         c.ipady = 5;
         c.anchor = GridBagConstraints.LINE_START;
         this.add(libraryDetailsPanel, c);
 
         c.gridx = 1;
-        c.weightx = 0.9;
-        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1.0;
         c.fill = GridBagConstraints.HORIZONTAL;
         this.add(this.statusText, c);
         this.statusText.setHorizontalAlignment(JLabel.LEFT);
+
+        c.gridx = 2;
+        c.weightx = 0.0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.fill = GridBagConstraints.NONE;
+        this.add(this.workerQueueDetailsPanel, c);
 
         this.statusAdaptor.addStatusListener(this);
     }

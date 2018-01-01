@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,12 +42,9 @@ public class SystemStatusPanel extends JPanel implements
     private static final long serialVersionUID = -2506202865075901419L;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private WorkerQueueDetailsPanel workerQueueDetailsPanel;
-
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        this.setLayout(new GridLayout(2, 1));        this.add(this.workerQueueDetailsPanel);
+        this.setLayout(new GridLayout(2, 1));
     }
 }
