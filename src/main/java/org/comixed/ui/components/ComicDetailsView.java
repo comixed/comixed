@@ -20,16 +20,17 @@
 package org.comixed.ui.components;
 
 import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
+import org.comixed.AppConfiguration;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,10 +49,15 @@ public class ComicDetailsView extends JPanel implements
 {
     private static final long serialVersionUID = -6175224786713877654L;
 
+    private static final String DETAILS_VIEW_SEPARATOR_LOCATION = "view.comic-details.divider.pos";
+
     @Autowired
     private ComicDetailsTable comicDetailsTable;
     @Autowired
+    private static final String DETAILS_VIEW_SEPARATOR_LAST_LOCATION = "view.comic-details.divider.last-pos";
     private ComicCoverFlowPanel comicCoverFlowPanel;
+    @Autowired
+    private AppConfiguration config;
 
     @Override
     public void afterPropertiesSet() throws Exception
@@ -65,6 +71,29 @@ public class ComicDetailsView extends JPanel implements
         dividedView.setBottomComponent(new JScrollPane(this.comicCoverFlowPanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
                                                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         this.add(dividedView, BorderLayout.CENTER);
-    }
 
+        // restore the view state and start looking for changes
+        if (config.hasOption(DETAILS_VIEW_SEPARATOR_LOCATION))
+        {
+            dividedView.setDividerLocation(Integer.valueOf(config.getOption(DETAILS_VIEW_SEPARATOR_LOCATION)));
+        }
+        if (config.hasOption(DETAILS_VIEW_SEPARATOR_LAST_LOCATION))
+        {
+            dividedView.setLastDividerLocation(Integer.valueOf(config.getOption(DETAILS_VIEW_SEPARATOR_LAST_LOCATION)));
+        }
+
+        dividedView.addPropertyChangeListener(new PropertyChangeListener()
+        {
+
+            @Override
+            public void propertyChange(PropertyChangeEvent evt)
+            {
+                config.setOption(DETAILS_VIEW_SEPARATOR_LAST_LOCATION,
+                                 String.valueOf(dividedView.getLastDividerLocation()));
+                config.setOption(DETAILS_VIEW_SEPARATOR_LOCATION, String.valueOf(dividedView.getDividerLocation()));
+                config.save();
+
+            }
+        });
+    }
 }
