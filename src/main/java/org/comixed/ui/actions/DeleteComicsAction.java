@@ -25,8 +25,10 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.AbstractAction;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
+import org.comixed.AppConfiguration;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicSelectionListener;
 import org.comixed.library.model.ComicSelectionModel;
@@ -55,23 +57,21 @@ public class DeleteComicsAction extends AbstractAction implements
                                 ComicSelectionListener
 {
     private static final long serialVersionUID = -2294529876125471390L;
+    private static final String DELETE_COMIC_FILE = "file.remove.delete-also";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private MessageSource messageSource;
-
+    @Autowired
+    private AppConfiguration config;
     @Autowired
     private MainFrame mainFrame;
-
     @Autowired
     private ComicDetailsTable detailsTable;
-
     @Autowired
     private ComicSelectionModel comicSelectionModel;
-
     @Autowired
     private Worker worker;
-
     @Autowired
     private ObjectFactory<DeleteComicsWorkerTask> taskFactory;
 
@@ -87,31 +87,30 @@ public class DeleteComicsAction extends AbstractAction implements
         }
 
         this.logger.debug("Prompting the user to delete " + comics.size() + " comics");
+        JCheckBox deleteFiles = new JCheckBox(messageSource.getMessage("dialog.confirm.delete.include-file.label", null,
+                                                                       Locale.getDefault()));
+        if (config.hasOption(DELETE_COMIC_FILE))
+        {
+            deleteFiles.setSelected(Boolean.valueOf(config.getOption(DELETE_COMIC_FILE)));
+        }
+        Object[] params =
+        {this.messageSource.getMessage("dialog.confirm.delete.message", new Object[]
+                {comics.size()}, Locale.getDefault()),
+         deleteFiles};
 
-        if (JOptionPane.showConfirmDialog(this.mainFrame,
-                                          this.messageSource.getMessage("dialog.confirm.delete.message", new Object[]
-                                          {comics.size()}, Locale.getDefault()),
+        if (JOptionPane.showConfirmDialog(this.mainFrame, params,
                                           this.messageSource.getMessage("dialog.confirm.delete.title", null,
                                                                         Locale.getDefault()),
-                                          JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                                          JOptionPane.YES_NO_OPTION,
+                                          JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
         {
-            boolean deleteFileAsWell = (JOptionPane.showConfirmDialog(this.mainFrame,
-                                                                      this.messageSource.getMessage("dialog.confirm.delete.include-file.label",
-                                                                                                    new Object[]
-                                                                                                    {comics.size()},
-                                                                                                    Locale.getDefault()),
-                                                                      this.messageSource.getMessage("dialog.confirm.delete.include-file.title",
-                                                                                                    null,
-                                                                                                    Locale.getDefault()),
-                                                                      JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
-            {
-                this.logger.debug("Deleting comics...");
-                DeleteComicsWorkerTask task = this.taskFactory.getObject();
+            logger.debug("Delete files? " + (deleteFiles.isSelected() ? "Yes" : "No"));
+            DeleteComicsWorkerTask task = this.taskFactory.getObject();
 
-                task.setComics(comics);
-                task.setDeleteFiles(deleteFileAsWell);
-                this.worker.addTasksToQueue(task);
-            }
+            task.setComics(comics);
+            task.setDeleteFiles(deleteFiles.isSelected());
+            this.worker.addTasksToQueue(task);
+            config.setOption(DELETE_COMIC_FILE, String.valueOf(deleteFiles.isSelected()));
         }
         else
         {
