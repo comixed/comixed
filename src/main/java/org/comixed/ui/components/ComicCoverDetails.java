@@ -115,8 +115,7 @@ public class ComicCoverDetails extends JPanel
         this.logger.debug("The parent height is " + this.parentHeight);
         this.image = null;
         this.image = this.comic.getCover().getImage(0, this.parentHeight - (2 * IMAGE_BORDER_WIDTH));
-        this.dimensions = new Dimension(this.image.getWidth(null) + (2 * IMAGE_BORDER_WIDTH),
-                                        this.image.getHeight(null) + (2 * IMAGE_BORDER_WIDTH));
+        this.dimensions = new Dimension(this.image.getWidth(null), this.image.getHeight(null));
     }
 
     @Override
