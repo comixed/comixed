@@ -56,8 +56,8 @@ public class ComicCoverDetails extends JPanel
     private Comic comic;
     private Image image = null;
     private Dimension dimensions;
-    private int parentHeight;
-    private boolean parentHeightChanged;
+    private int parentHeight = 0;
+    private boolean parentHeightChanged = false;
 
     /**
      * Returns the comic.
@@ -78,9 +78,41 @@ public class ComicCoverDetails extends JPanel
 
     private void loadImage()
     {
+        // if we don't have a parent, then just return
+        if (this.getParent() == null) return;
+
+        if (this.parentHeight == 0)
+        {
+            this.logger.debug("Getting parent's height directly");
+            this.parentHeight = this.getParent().getHeight();
+        }
+        else
+        {
+            int newHeight = this.getParent().getHeight();
+            if (newHeight != this.parentHeight)
+            {
+                logger.debug("Parent height changed");
+                this.parentHeight = newHeight;
+                this.parentHeightChanged = true;
+            }
+            else
+            {
+                logger.debug("Parent height has not changed");
+            }
+        }
+        // if the parent height is still 0 then just blow out
+        if (this.parentHeight == 0)
+        {
+            this.logger.debug("No parent height, so no cover will be displayed");
+            this.dimensions = new Dimension(0, 0);
+            return;
+        }
         // return if we already have an image and our height hasn't changed
         if ((this.image != null) && !this.parentHeightChanged) return;
 
+        // turn off the parent height changed flag
+        this.parentHeightChanged = false;
+        this.logger.debug("The parent height is " + this.parentHeight);
         this.image = null;
         this.image = this.comic.getCover().getImage(0, this.parentHeight - (2 * IMAGE_BORDER_WIDTH));
         this.dimensions = new Dimension(this.image.getWidth(null) + (2 * IMAGE_BORDER_WIDTH),

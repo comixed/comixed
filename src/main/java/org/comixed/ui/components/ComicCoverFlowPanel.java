@@ -104,7 +104,11 @@ public class ComicCoverFlowPanel extends JPanel implements
                                                         .isEmpty() ? this.comicSelectionModel.getAllComics()
                                                                    : this.comicSelectionModel.getSelectedComics();
 
-        if (!refresh && (this.lastHash == allComics.hashCode())) return;
+        if (!refresh && (this.lastHash == allComics.hashCode()))
+        {
+            this.logger.debug("Not refreshing and no selection change, so returning");
+            return;
+        }
 
         if ((this.lastHash == -1) || (this.lastHash != allComics.hashCode()))
         {
@@ -121,11 +125,6 @@ public class ComicCoverFlowPanel extends JPanel implements
                     cover.setParentHeight((int )this.getVisibleRect().getHeight());
                     this.add(cover);
                     this.comicCovers.put(comic.getFilename(), cover);
-                }
-                else
-                {
-                    // let's just update the parent height for the component
-                    this.comicCovers.get(comic.getFilename()).setParentHeight(this.getHeight());
                 }
             }
             this.lastHash = allComics.hashCode();
@@ -155,7 +154,7 @@ public class ComicCoverFlowPanel extends JPanel implements
             if (!allComics.contains(coverDetails.getComic()))
             {
                 this.logger.debug("Removing cover for comic: " + coverDetails.getComic().getFilename());
-                comicCovers.remove(coverDetails.getComic().getFilename());
+                this.comicCovers.remove(coverDetails.getComic().getFilename());
                 this.remove(coverDetails);
             }
         }
