@@ -75,7 +75,7 @@ public class ComicCoverFlowPanel extends JPanel implements
             @Override
             public void componentResized(ComponentEvent e)
             {
-                ComicCoverFlowPanel.this.redisplayCovers(false);
+                ComicCoverFlowPanel.this.redisplayCovers(true);
             }
 
             @Override
