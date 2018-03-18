@@ -50,11 +50,11 @@ public class ComicDetailsView extends JPanel implements
     private static final long serialVersionUID = -6175224786713877654L;
 
     private static final String DETAILS_VIEW_SEPARATOR_LOCATION = "view.comic-details.divider.pos";
+    private static final String DETAILS_VIEW_SEPARATOR_LAST_LOCATION = "view.comic-details.divider.last-pos";
 
     @Autowired
     private ComicDetailsTable comicDetailsTable;
     @Autowired
-    private static final String DETAILS_VIEW_SEPARATOR_LAST_LOCATION = "view.comic-details.divider.last-pos";
     private ComicCoverFlowPanel comicCoverFlowPanel;
     @Autowired
     private AppConfiguration config;
