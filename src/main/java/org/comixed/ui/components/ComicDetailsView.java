@@ -24,6 +24,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -88,6 +89,8 @@ public class ComicDetailsView extends JPanel implements
             @Override
             public void propertyChange(PropertyChangeEvent evt)
             {
+                comicCoverFlowPanel.setPreferredSize(((JComponent )dividedView.getBottomComponent()).getVisibleRect()
+                                                                                                    .getSize());
                 config.setOption(DETAILS_VIEW_SEPARATOR_LAST_LOCATION,
                                  String.valueOf(dividedView.getLastDividerLocation()));
                 config.setOption(DETAILS_VIEW_SEPARATOR_LOCATION, String.valueOf(dividedView.getDividerLocation()));
