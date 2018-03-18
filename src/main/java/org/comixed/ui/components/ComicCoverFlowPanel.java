@@ -122,6 +122,11 @@ public class ComicCoverFlowPanel extends JPanel implements
                     this.add(cover);
                     this.comicCovers.put(comic.getFilename(), cover);
                 }
+                else
+                {
+                    // let's just update the parent height for the component
+                    this.comicCovers.get(comic.getFilename()).setParentHeight(this.getHeight());
+                }
             }
             this.lastHash = allComics.hashCode();
         }

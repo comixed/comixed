@@ -57,6 +57,7 @@ public class ComicCoverDetails extends JPanel
     private Image image = null;
     private Dimension dimensions;
     private int parentHeight;
+    private boolean parentHeightChanged;
 
     /**
      * Returns the comic.
@@ -71,15 +72,15 @@ public class ComicCoverDetails extends JPanel
     @Override
     public Dimension getPreferredSize()
     {
-        if (this.image == null)
-        {
-            this.loadImage();
-        }
+        this.loadImage();
         return this.dimensions;
     }
 
     private void loadImage()
     {
+        // return if we already have an image and our height hasn't changed
+        if ((this.image != null) && !this.parentHeightChanged) return;
+
         this.image = null;
         this.image = this.comic.getCover().getImage(0, this.parentHeight - (2 * IMAGE_BORDER_WIDTH));
         this.dimensions = new Dimension(this.image.getWidth(null) + (2 * IMAGE_BORDER_WIDTH),
@@ -89,10 +90,7 @@ public class ComicCoverDetails extends JPanel
     @Override
     public void paint(Graphics g)
     {
-        if (this.image == null)
-        {
-            this.loadImage();
-        }
+        this.loadImage();
         g.drawImage(this.image, IMAGE_BORDER_WIDTH, IMAGE_BORDER_WIDTH, this);
     }
 
@@ -117,8 +115,13 @@ public class ComicCoverDetails extends JPanel
      */
     public void setParentHeight(int parentHeight)
     {
-        this.logger.debug("Setting the parent height: " + parentHeight);
-        this.parentHeight = parentHeight;
+        // only set the parent height if it's changed
+        if (parentHeight != this.parentHeight)
+        {
+            this.logger.debug("Setting the parent height: " + parentHeight);
+            this.parentHeight = parentHeight;
+            this.parentHeightChanged = true;
+        }
     }
 
     private void setPopupDetails()
