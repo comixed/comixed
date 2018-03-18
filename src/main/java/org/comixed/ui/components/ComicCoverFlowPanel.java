@@ -21,7 +21,10 @@ package org.comixed.ui.components;
 
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -56,6 +59,9 @@ public class ComicCoverFlowPanel extends JPanel implements
     @Autowired
     private ObjectFactory<ComicCoverDetails> comicCoverDetailsFactory;
     private int lastHash = -1;
+    private List<String> coverHashes = new ArrayList<>();
+    private Map<String,
+                ComicCoverDetails> comicCovers = new HashMap<>();
 
     @Override
     public void afterPropertiesSet() throws Exception
@@ -102,21 +108,52 @@ public class ComicCoverFlowPanel extends JPanel implements
 
         if ((this.lastHash == -1) || (this.lastHash != allComics.hashCode()))
         {
+            this.removeUnselectedComics(allComics);
             this.logger.debug("Reloading comic covers");
-            this.removeAll();
-            this.lastHash = allComics.hashCode();
+            // add only the covers for comics not previously displayed
             for (Comic comic : allComics)
             {
-                this.logger.debug("Adding cover for " + comic.getFilename());
-                ComicCoverDetails cover = this.comicCoverDetailsFactory.getObject();
-                cover.setComic(comic);
-                cover.setParentHeight((int )this.getVisibleRect().getHeight());
-                this.add(cover);
+                if (!this.comicCovers.containsKey(comic.getFilename()))
+                {
+                    this.logger.debug("Adding cover for " + comic.getFilename());
+                    ComicCoverDetails cover = this.comicCoverDetailsFactory.getObject();
+                    cover.setComic(comic);
+                    cover.setParentHeight((int )this.getVisibleRect().getHeight());
+                    this.add(cover);
+                    this.comicCovers.put(comic.getFilename(), cover);
+                }
             }
+            this.lastHash = allComics.hashCode();
+        }
+        else
+        {
+            this.logger.debug("No need to reload comics");
         }
 
         ComicCoverFlowPanel.this.repaint();
         ComicCoverFlowPanel.this.revalidate();
+    }
+
+    /**
+     * Removes any covers that are displayed but no longer selected.
+     *
+     * @param allComics
+     *            The set of all currently selected comics
+     */
+    private void removeUnselectedComics(List<Comic> allComics)
+    {
+        this.logger.debug("Remove any comic not in the selection set");
+        for (java.awt.Component component : this.getComponents())
+        {
+            ComicCoverDetails coverDetails = (ComicCoverDetails )component;
+
+            if (!allComics.contains(coverDetails.getComic()))
+            {
+                this.logger.debug("Removing cover for comic: " + coverDetails.getComic().getFilename());
+                comicCovers.remove(coverDetails.getComic().getFilename());
+                this.remove(coverDetails);
+            }
+        }
     }
 
     @Override
