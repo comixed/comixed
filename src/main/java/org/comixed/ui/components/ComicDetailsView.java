@@ -92,7 +92,6 @@ public class ComicDetailsView extends JPanel implements
                                  String.valueOf(dividedView.getLastDividerLocation()));
                 config.setOption(DETAILS_VIEW_SEPARATOR_LOCATION, String.valueOf(dividedView.getDividerLocation()));
                 config.save();
-
             }
         });
     }

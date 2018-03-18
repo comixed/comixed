@@ -55,7 +55,6 @@ public class ComicCoverDetails extends JPanel
 
     private Comic comic;
     private Image image = null;
-    private Dimension dimensions;
     private int parentHeight = 0;
     private boolean parentHeightChanged = false;
 
@@ -73,7 +72,7 @@ public class ComicCoverDetails extends JPanel
     public Dimension getPreferredSize()
     {
         this.loadImage();
-        return this.dimensions;
+        return super.getPreferredSize();
     }
 
     private void loadImage()
@@ -104,7 +103,7 @@ public class ComicCoverDetails extends JPanel
         if (this.parentHeight == 0)
         {
             this.logger.debug("No parent height, so no cover will be displayed");
-            this.dimensions = new Dimension(0, 0);
+            setPreferredSize(new Dimension(0, 0));
             return;
         }
         // return if we already have an image and our height hasn't changed
@@ -115,7 +114,7 @@ public class ComicCoverDetails extends JPanel
         this.logger.debug("The parent height is " + this.parentHeight);
         this.image = null;
         this.image = this.comic.getCover().getImage(0, this.parentHeight - (2 * IMAGE_BORDER_WIDTH));
-        this.dimensions = new Dimension(this.image.getWidth(null), this.image.getHeight(null));
+        setPreferredSize(new Dimension(this.image.getWidth(null), this.image.getHeight(null)));
     }
 
     @Override
