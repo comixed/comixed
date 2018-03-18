@@ -73,6 +73,43 @@ public class FileChooserAdaptor
                 this.fileChooser.setCurrentDirectory(file);
             }
         }
+        return this.promptUserForFile();
+    }
+
+    /**
+     * Prompts the user to select a single comic file.
+     *
+     * @param title
+     *            the dialog title
+     * @param startDirectory
+     *            the starting directory
+     * @return the file, or null if no was selected
+     */
+    public File chooseFile(String title, String startDirectory)
+    {
+        this.logger.debug("Prompting user for a file");
+
+        this.fileChooser.setDialogTitle(title);
+        this.fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        if (startDirectory != null)
+        {
+
+        }
+        if (startDirectory != null)
+        {
+            File file = new File(startDirectory);
+            if (file.exists() && file.isDirectory())
+            {
+                this.logger.debug("Setting directory to the one last used: " + file.getAbsolutePath());
+                this.fileChooser.setCurrentDirectory(file);
+            }
+        }
+        return this.promptUserForFile();
+    }
+
+    private File promptUserForFile()
+    {
         if (this.fileChooser.showOpenDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION)
         {
             this.logger.debug("User selected directory: " + this.fileChooser.getSelectedFile());
