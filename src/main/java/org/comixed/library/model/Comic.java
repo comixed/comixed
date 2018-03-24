@@ -291,6 +291,16 @@ public class Comic
         return this.archiveType;
     }
 
+    private File getBackingFile()
+    {
+        if (this.backingFile == null)
+        {
+            this.backingFile = new File(this.filename);
+        }
+
+        return this.backingFile;
+    }
+
     /**
      * Returns just the filename portion of the comic file's name.
      *
@@ -490,6 +500,23 @@ public class Comic
     }
 
     /**
+     * Returns the page for the given filename.
+     *
+     * @param filename
+     * @return the {@link Page} or null
+     */
+    public Page getPageWithFilename(String filename)
+    {
+        if (this.pages.isEmpty()) return null;
+        for (Page page : this.pages)
+        {
+            if (page.getFilename().equals(filename)) return page;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the publisher series.
      *
      * @return the publisher series
@@ -626,6 +653,18 @@ public class Comic
     }
 
     /**
+     * Returns whether a page with the given filename is present.
+     *
+     * @param filename
+     *            the filename
+     * @return true if such a page exists
+     */
+    public boolean hasPageWithFilename(String filename)
+    {
+        return this.getPageWithFilename(filename) != null;
+    }
+
+    /**
      * Returns if the comic is a part of any story arcs.
      *
      * @return true if there are story arcs
@@ -643,6 +682,16 @@ public class Comic
     public boolean hasTeams()
     {
         return (this.teams.isEmpty() == false);
+    }
+
+    /**
+     * Reports if the underlying comic file is missing.
+     *
+     * @return <code>true</code> if the file is missing
+     */
+    public boolean isMissing()
+    {
+        return this.getBackingFile() != null ? !this.backingFile.exists() : true;
     }
 
     public void setArchiveType(ArchiveType archiveType)
@@ -806,22 +855,5 @@ public class Comic
     {
         this.logger.debug("Setting volume=" + volume);
         this.volume = volume;
-    }
-
-    /**
-     * Reports if the underlying comic file is missing.
-     * 
-     * @return <code>true</code> if the file is missing
-     */
-    public boolean isMissing()
-    {
-        return this.getBackingFile() != null ? !this.backingFile.exists() : true;
-    }
-
-    private File getBackingFile()
-    {
-        if (this.backingFile == null) this.backingFile = new File(filename);
-
-        return this.backingFile;
     }
 }

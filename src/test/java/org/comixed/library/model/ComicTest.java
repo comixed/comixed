@@ -52,13 +52,15 @@ public class ComicTest
     private static final String TEST_FILENAME = "src/test/resources/example.cbz";
     private static final String TEST_NOTES = "Some sample notes";
     private static final String TEST_BASE_FILENAME = "src/test/resources/example";
+    private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
     private Comic comic;
-    private Page page = new Page();
+    private Page page;
 
     @Before
     public void setUp() throws Exception
     {
         this.comic = new Comic();
+        this.page = new Page(TEST_PAGE_FILENAME, new byte[] {});
     }
 
     @Test
@@ -453,5 +455,39 @@ public class ComicTest
 
         Page cover = testComic.getCover();
         assertSame(Page.MISSING_PAGE, cover);
+    }
+
+    @Test
+    public void testHasPageWithFilenameForMissingPage()
+    {
+        comic.setFilename(TEST_FILENAME);
+        comic.addPage(0, page);
+        assertFalse(comic.hasPageWithFilename(comic.getCover().getFilename() + "-nope"));
+    }
+
+    @Test
+    public void testHashPageWithFilename()
+    {
+        comic.setFilename(TEST_FILENAME);
+        comic.addPage(0, page);
+        assertTrue(comic.hasPageWithFilename(comic.getCover().getFilename()));
+    }
+
+    @Test
+    public void testGetPageWithFilenameForMissingPage()
+    {
+        comic.setFilename(TEST_FILENAME);
+        comic.addPage(0, page);
+        assertNull(comic.getPageWithFilename(comic.getCover().getFilename() + "-nope"));
+    }
+
+    @Test
+    public void testGetPageWithFilename()
+    {
+        comic.setFilename(TEST_FILENAME);
+        comic.addPage(0, page);
+        Page result = comic.getPageWithFilename(comic.getCover().getFilename());
+
+        assertNotNull(result);
     }
 }
