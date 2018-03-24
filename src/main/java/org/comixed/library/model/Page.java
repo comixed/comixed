@@ -140,6 +140,25 @@ public class Page
         this.hash = this.createHash(content);
     }
 
+    private String createHash(byte[] bytes)
+    {
+        this.logger.debug("Generating MD5 hash");
+        String result = "";
+        MessageDigest md;
+        try
+        {
+            md = MessageDigest.getInstance("MD5");
+            md.update(bytes);
+            result = new BigInteger(1, md.digest()).toString(16).toUpperCase();
+        }
+        catch (NoSuchAlgorithmException error)
+        {
+            this.logger.error("Failed to generate hash", error);
+        }
+        this.logger.debug("Returning: " + result);
+        return result;
+    }
+
     @Override
     public boolean equals(Object obj)
     {
@@ -322,6 +341,23 @@ public class Page
         this.deleted = deleted;
     }
 
+    void setComic(Comic comic)
+    {
+        this.comic = comic;
+    }
+
+    /**
+     * Sets the content for the page. Also updates the hash.
+     * 
+     * @param content
+     *            the content
+     */
+    public void setContent(byte[] content)
+    {
+        this.content = content;
+        this.hash = this.createHash(content);
+    }
+
     /**
      * Sets a new filename for the page.
      *
@@ -332,29 +368,5 @@ public class Page
     {
         this.logger.debug("Changing filename: " + this.filename + " -> " + filename);
         this.filename = filename;
-    }
-
-    private String createHash(byte[] bytes)
-    {
-        this.logger.debug("Generating MD5 hash");
-        String result = "";
-        MessageDigest md;
-        try
-        {
-            md = MessageDigest.getInstance("MD5");
-            md.update(bytes);
-            result = new BigInteger(1, md.digest()).toString(16).toUpperCase();
-        }
-        catch (NoSuchAlgorithmException error)
-        {
-            this.logger.error("Failed to generate hash", error);
-        }
-        this.logger.debug("Returning: " + result);
-        return result;
-    }
-
-    void setComic(Comic comic)
-    {
-        this.comic = comic;
     }
 }
