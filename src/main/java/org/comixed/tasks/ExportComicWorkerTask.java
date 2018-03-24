@@ -26,6 +26,8 @@ import org.comixed.library.adaptors.AbstractArchiveAdaptor;
 import org.comixed.library.adaptors.ArchiveAdaptor;
 import org.comixed.library.adaptors.ArchiveAdaptorException;
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.ComicFileHandler;
+import org.comixed.library.model.ComicFileHandlerException;
 import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
@@ -45,13 +47,12 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
 
     @Autowired
     private MessageSource messageSource;
-
     @Autowired
     private ComicRepository comicRepository;
-
     @Autowired
     private ComicSelectionModel comicSelectionModel;
-
+    @Autowired
+    private ComicFileHandler comicFileHandler;
     @Autowired
     private AppConfiguration configuration;
 
@@ -68,20 +69,29 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
     @Override
     public void startTask() throws WorkerTaskException
     {
-        this.logger.debug("Converting comic: " + this.comic.getFilename());
+        this.logger.debug("Loading comic to be converted: " + this.comic.getFilename());
+        try
+        {
+            this.comicFileHandler.loadComic(comic);
+        }
+        catch (ComicFileHandlerException error)
+        {
+            throw new WorkerTaskException("unable to load comic file: " + comic.getFilename(), error);
+        }
+        this.logger.debug("Converting comic");
 
         try
         {
             this.showStatusText(this.messageSource.getMessage("status.comic.exported", new Object[]
             {this.comic.getFilename()}, Locale.getDefault()));
             boolean rename = false;
-            if (configuration.hasOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT))
+            if (this.configuration.hasOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT))
             {
-                rename = Boolean.valueOf(configuration.getOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT));
+                rename = Boolean.valueOf(this.configuration.getOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT));
             }
             Comic result = this.archiveAdaptor.saveComic(this.comic, rename);
-            comicRepository.save(result);
-            comicSelectionModel.reload();
+            this.comicRepository.save(result);
+            this.comicSelectionModel.reload();
         }
         catch (ArchiveAdaptorException error)
         {
