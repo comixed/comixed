@@ -1,6 +1,10 @@
 # turn off banner
 spring.main.banner-mode=off
 
+# web configuration
+server.port=7171
+server.servlet.context-path=/
+
 # configuration filename
 configuration.filename=${user.home}/.comixedrc
 
