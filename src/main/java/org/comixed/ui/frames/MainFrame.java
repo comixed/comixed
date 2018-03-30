@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>MainFrame</code> defines the main window for the GUI application.
@@ -47,7 +46,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class MainFrame extends JFrame implements
                        InitializingBean
 {

@@ -26,7 +26,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.comixed.library.model.Page;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>TableCellPageRenderer</code> captures the logic for displaying a
@@ -35,7 +34,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class TableCellPageRenderer extends DefaultTableCellRenderer
 {
     private static final long serialVersionUID = -1913616697134663978L;

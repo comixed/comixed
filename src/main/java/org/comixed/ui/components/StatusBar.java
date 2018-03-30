@@ -30,7 +30,6 @@ import org.comixed.adaptors.StatusAdaptor;
 import org.comixed.adaptors.StatusListener;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>StatusBar</code> shows ongoing status of the application subsystems.
@@ -38,7 +37,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class StatusBar extends JPanel implements
                        InitializingBean,
                        StatusListener

@@ -27,7 +27,6 @@ import org.comixed.library.model.ComicSelectionModel;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>LibraryDetailsPanel</code> shows details about the current state of the
@@ -36,7 +35,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class LibraryDetailsPanel extends DetailsPanel implements
                                  InitializingBean,
                                  ComicSelectionListener

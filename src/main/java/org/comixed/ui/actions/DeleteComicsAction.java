@@ -42,7 +42,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>DeleteComicsAction</code> prompts the user and, if the user agrees,
@@ -51,7 +50,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class DeleteComicsAction extends AbstractAction implements
                                 InitializingBean,
                                 ComicSelectionListener

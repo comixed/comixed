@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>ImportComicsAction</code> imports all comic files within a specified
@@ -46,7 +45,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class ImportComicsAction extends AbstractAction
 {
     private static final long serialVersionUID = -5509387083770877459L;

@@ -32,7 +32,6 @@ import javax.swing.JSplitPane;
 import org.comixed.AppConfiguration;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>ComicDetailsView</code> provides a detailed view of the comics in the
@@ -44,7 +43,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class ComicDetailsView extends JPanel implements
                               InitializingBean
 {

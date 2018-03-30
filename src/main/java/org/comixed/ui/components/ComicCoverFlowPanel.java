@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>ComicCoverFlowPanel</code> shows the covers for the current selection
@@ -46,7 +45,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class ComicCoverFlowPanel extends JPanel implements
                                  InitializingBean,
                                  ComicSelectionListener

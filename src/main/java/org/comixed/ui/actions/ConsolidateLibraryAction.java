@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>ConsolidateLibraryAction</code> allows for beginning the process of
@@ -48,7 +47,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class ConsolidateLibraryAction extends AbstractAction
 {
     private static final long serialVersionUID = 609363007445174158L;

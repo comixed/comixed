@@ -27,7 +27,6 @@ import org.comixed.library.model.ComicSelectionModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>RefreshDisplayAction</code> instructs the current views to refresh by
@@ -36,7 +35,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class RefreshDisplayAction extends AbstractAction
 {
     private static final long serialVersionUID = 5309197704080743070L;

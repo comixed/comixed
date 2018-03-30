@@ -25,7 +25,6 @@ import javax.swing.AbstractAction;
 
 import org.comixed.ui.dialogs.PreferencesDialog;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>EditPreferencesAction</code> lets the user display the configuration
@@ -34,7 +33,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class EditPreferencesAction extends AbstractAction
 {
     private static final long serialVersionUID = 1619821554868956470L;

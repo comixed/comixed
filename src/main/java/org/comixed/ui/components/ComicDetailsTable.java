@@ -39,7 +39,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>ComicDetailsTable</code> shows the details for a selection of comics.
@@ -47,7 +46,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 @PropertySource("classpath:menus.properties")
 @ConfigurationProperties("app.comic-details-view.popup")
 public class ComicDetailsTable extends JTable implements

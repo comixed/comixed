@@ -30,7 +30,6 @@ import org.comixed.web.ComicVineWebRequest;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>ComicVineConfiguration</code> captures the configuration settings used
@@ -39,7 +38,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class ComicVineConfiguration extends JPanel implements
                                     InitializingBean
 {

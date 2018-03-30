@@ -28,7 +28,6 @@ import org.comixed.tasks.WorkerListener;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>WorkerQueueDetails</code> shows the status of the {@link Worker} as it
@@ -37,7 +36,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class WorkerQueueDetailsPanel extends DetailsPanel implements
                                      InitializingBean,
                                      WorkerListener

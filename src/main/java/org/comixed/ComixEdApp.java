@@ -19,8 +19,6 @@
 
 package org.comixed;
 
-import org.comixed.ui.frames.MainFrame;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -37,22 +35,15 @@ public class ComixEdApp implements
     private static final String FULL_NAME = "ComixEd";
     public static final String FULL_NAME_AND_VERSION = FULL_NAME + " " + VERSION;
 
-    @Autowired
-    private MainFrame mainFrame;
-
     public static void main(String[] args)
     {
         SpringApplication app = new SpringApplication(ComixEdApp.class);
 
         app.setBannerMode(Banner.Mode.OFF);
-        app.setHeadless(false);
         app.run(args);
     }
 
     @Override
-    public void run(String... arg0) throws Exception
-    {
-        // show the main window
-        mainFrame.setVisible(true);
-    }
+    public void run(String... args) throws Exception
+    {}
 }

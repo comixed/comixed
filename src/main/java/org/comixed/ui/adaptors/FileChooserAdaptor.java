@@ -27,7 +27,6 @@ import org.comixed.ui.frames.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>FileChooserAdaptor</code> provides a centralized way for the UI to show
@@ -36,7 +35,6 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  *
  */
-@Component
 public class FileChooserAdaptor
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

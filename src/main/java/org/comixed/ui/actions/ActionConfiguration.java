@@ -19,8 +19,5 @@
 
 package org.comixed.ui.actions;
 
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
 public class ActionConfiguration
 {}
