@@ -36,7 +36,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ComixEdTestContext.class)
-@TestPropertySource(locations = "classpath:details-view.properties")
+@TestPropertySource(locations =
+{"classpath:details-view.properties",
+ "classpath:test-application.properties"})
 public class ComicTableModelTest
 {
     private static final int TEST_COMIC_COUNT = 717;
