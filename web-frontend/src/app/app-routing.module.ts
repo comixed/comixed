@@ -4,7 +4,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {ComicListComponent} from './comic/comic-list/comic-list.component';
 
 const routes: Routes = [
-  {path: 'comic', component: ComicListComponent},
+  {path: 'library/comics', component: ComicListComponent},
 ];
 
 @NgModule({

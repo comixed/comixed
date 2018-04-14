@@ -1,3 +1,50 @@
-<p>
-  comic-list works!
-</p>
+<div clas="container">
+	<div class="row">
+		<div class="col">
+			<section>
+				<header class="header">
+					<div class="row">
+						<div class="col-md-4">
+							<h1>Comics</h1>
+						</div>
+						<div class="col-md-6"></div>
+						<div class="col-md-2">
+							<button type="button" class="btn btn-primary"
+								(click)="redirectAddComicPage()">Add Comics</button>
+						</div>
+					</div>
+				</header>
+			</section>
+
+			<section class="main">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Series</th>
+							<th>Volume</th>
+							<th>Issue #</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr *ngFor="let comic of comics">
+							<th scope="row">{{comic.id}}</th>
+							<td>{{comic.series}}</td>
+							<td>{{comic.volum}}</td>
+							<td>{{comic.issueNumber}}</td>
+							<td>
+								<button type="button" class="btn btn-success"
+									(click)="editComicPage(comic)">Edit</button>
+								<button type="button" class="btn btn-danger"
+									(click)="deleteComic(comic)">Delete</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</div>
+	</div>
+</div>
