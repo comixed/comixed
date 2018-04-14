@@ -166,15 +166,15 @@ public class ComicTest
     @Test
     public void testDateLastRead()
     {
-        this.comic.setDateLastRead(TEST_DATE);
-        assertEquals(TEST_DATE, this.comic.getDateLastRead());
+        this.comic.setLastReadDate(TEST_DATE);
+        assertEquals(TEST_DATE, this.comic.getLastReadDate());
     }
 
     @Test
     public void testDateLastReadCanBeNull()
     {
-        this.comic.setDateLastRead(null);
-        assertNull(this.comic.getDateLastRead());
+        this.comic.setLastReadDate(null);
+        assertNull(this.comic.getLastReadDate());
     }
 
     @Test

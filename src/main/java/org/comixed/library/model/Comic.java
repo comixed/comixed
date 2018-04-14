@@ -51,6 +51,9 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * <code>Comic</code> represents a single digital comic issue.
  *
@@ -62,64 +65,80 @@ import org.slf4j.LoggerFactory;
 public class Comic
 {
     @Transient
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @JsonProperty("archive-type")
     ArchiveType archiveType;
 
     @Column(name = "filename",
             nullable = false,
             unique = true)
+    @JsonProperty
     private String filename;
 
     @Column(name = "comic_vine_id")
+    @JsonProperty("comic-vine-id")
     private String comicVineId;
 
     @Column(name = "publisher")
+    @JsonProperty
     private String publisher;
 
     @Column(name = "series")
+    @JsonProperty
     private String series;
 
     @Column(name = "added_date",
             updatable = false,
             nullable = false)
+    @JsonProperty("added-date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded = new Date();
 
     @Column(name = "cover_date",
             nullable = true)
     @Temporal(TemporalType.DATE)
+    @JsonProperty("cover-date")
     private Date coverDate;
 
     @Column(name = "last_read_date",
             nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty("last-read-date")
     private Date lastReadDate;
 
     @Column(name = "volume")
+    @JsonProperty
     private String volume;
 
     @Column(name = "issue_number")
+    @JsonProperty("issue-number")
     private String issueNumber;
 
     @Column(name = "title")
+    @JsonProperty
     private String title;
 
     @Column(name = "description")
     @Lob
+    @JsonProperty
     private String description;
 
     @Column(name = "notes")
     @Lob
+    @JsonProperty
     private String notes;
 
     @Column(name = "summary")
     @Lob
+    @JsonProperty
     private String summary;
 
     @ElementCollection
@@ -127,6 +146,7 @@ public class Comic
     @CollectionTable(name = "comic_story_arcs",
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "story_arc_name")
+    @JsonProperty("story-arcs")
     private List<String> storyArcs = new ArrayList<>();
 
     @ElementCollection
@@ -134,6 +154,7 @@ public class Comic
     @CollectionTable(name = "comic_teams",
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "team_name")
+    @JsonProperty("teams")
     private List<String> teams = new ArrayList<>();
 
     @ElementCollection
@@ -141,6 +162,7 @@ public class Comic
     @CollectionTable(name = "comic_characters",
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "character_name")
+    @JsonProperty("characters")
     private List<String> characters = new ArrayList<>();
 
     @ElementCollection
@@ -148,15 +170,18 @@ public class Comic
     @CollectionTable(name = "comic_locations",
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "location_name")
+    @JsonProperty("locations")
     private List<String> locations = new ArrayList<>();
 
     @OneToMany(mappedBy = "comic",
                cascade = CascadeType.ALL,
                fetch = FetchType.EAGER)
     @OrderColumn(name = "index")
+    @JsonProperty("pages")
     private List<Page> pages = new ArrayList<>();
 
     @Transient
+    @JsonIgnore
     private File backingFile;
 
     /**
@@ -306,6 +331,7 @@ public class Comic
      *
      * @return the base filename
      */
+    @JsonIgnore
     public String getBaseFilename()
     {
         return FilenameUtils.removeExtension(this.filename);
@@ -329,6 +355,7 @@ public class Comic
      *
      * @return the reference count
      */
+    @JsonIgnore
     public int getCharacterCount()
     {
         return this.characters.size();
@@ -359,7 +386,8 @@ public class Comic
         this.logger.debug("Getting cover for comic: filename=" + this.filename);
         /*
          * if there are no pages or the underlying file is missing then show the
-         * missing page image
+         * missing
+         * page image
          */
         return this.pages.isEmpty() || this.isMissing() ? Page.MISSING_PAGE : this.pages.get(0);
     }
@@ -382,16 +410,6 @@ public class Comic
     public Date getDateAdded()
     {
         return this.dateAdded;
-    }
-
-    /**
-     * Returns the date the comic was lsat read.
-     *
-     * @return the last read date
-     */
-    public Date getDateLastRead()
-    {
-        return this.lastReadDate;
     }
 
     /**
@@ -435,6 +453,16 @@ public class Comic
     }
 
     /**
+     * Returns the date the comic was lsat read.
+     *
+     * @return the last read date
+     */
+    public Date getLastReadDate()
+    {
+        return this.lastReadDate;
+    }
+
+    /**
      * Returns the location referenced at the given index.
      *
      * @param index
@@ -451,6 +479,7 @@ public class Comic
      *
      * @return the location count
      */
+    @JsonIgnore
     public int getLocationCount()
     {
         return this.locations.size();
@@ -494,9 +523,20 @@ public class Comic
      *
      * @return the page count
      */
+    @JsonIgnore
     public int getPageCount()
     {
         return this.pages.size();
+    }
+
+    /**
+     * Returns all pages for the comic.
+     *
+     * @return the pages
+     */
+    public List<Page> getPages()
+    {
+        return this.pages;
     }
 
     /**
@@ -554,6 +594,7 @@ public class Comic
      *
      * @return the story arc count
      */
+    @JsonIgnore
     public int getStoryArcCount()
     {
         this.logger.debug("Getting story arc count");
@@ -597,6 +638,7 @@ public class Comic
      *
      * @return the team count
      */
+    @JsonIgnore
     public int getTeamCount()
     {
         return this.teams.size();
@@ -739,18 +781,6 @@ public class Comic
     }
 
     /**
-     * Sets the date the comic was last read.
-     *
-     * @param date
-     *            the last read date
-     */
-    public void setDateLastRead(Date date)
-    {
-        this.logger.debug("Setting last read date=" + this.formatDate(date));
-        this.lastReadDate = date;
-    }
-
-    /**
      * Sets a description for the comic.
      *
      * @param description
@@ -784,6 +814,18 @@ public class Comic
     {
         this.logger.debug("Setting issue number=" + issueNumber);
         this.issueNumber = issueNumber;
+    }
+
+    /**
+     * Sets the date the comic was last read.
+     *
+     * @param date
+     *            the last read date
+     */
+    public void setLastReadDate(Date date)
+    {
+        this.logger.debug("Setting last read date=" + this.formatDate(date));
+        this.lastReadDate = date;
     }
 
     /**

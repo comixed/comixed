@@ -55,7 +55,7 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest
         comic.setSeries(TEST_SERIES_NAME);
         comic.setVolume(TEST_VOLUME_NAME);
         comic.setCoverDate(new Date());
-        comic.setDateLastRead(new Date());
+        comic.setLastReadDate(new Date());
         comic.setDateAdded(new Date());
     }
 

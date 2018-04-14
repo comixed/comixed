@@ -167,26 +167,26 @@ public class ComicRepositoryTest
     @Test
     public void testLastReadDateCanBeNull()
     {
-        comic.setDateLastRead(null);
+        comic.setLastReadDate(null);
 
         repository.save(comic);
 
         Comic result = repository.findOne(comic.getId());
 
-        assertNull(result.getDateLastRead());
+        assertNull(result.getLastReadDate());
     }
 
     @Test
     public void testLastReadDateCanBeUpdated()
     {
-        comic.setDateLastRead(new Date());
+        comic.setLastReadDate(new Date());
 
         repository.save(comic);
 
         Comic result = repository.findOne(comic.getId());
 
-        assertEquals(DateUtils.truncate(comic.getDateLastRead(), Calendar.SECOND),
-                     DateUtils.truncate(result.getDateLastRead(), Calendar.SECOND));
+        assertEquals(DateUtils.truncate(comic.getLastReadDate(), Calendar.SECOND),
+                     DateUtils.truncate(result.getLastReadDate(), Calendar.SECOND));
     }
 
     @Test
