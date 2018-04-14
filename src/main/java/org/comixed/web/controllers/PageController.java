@@ -26,6 +26,7 @@ import org.comixed.library.model.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,6 +43,7 @@ public class PageController
 
     @RequestMapping(value = "/pages",
                     method = RequestMethod.GET)
+    @CrossOrigin
     public List<Page> getAll(@PathVariable("comicId") long comicId)
     {
         this.logger.debug("Getting all pages for comic: id={}", comicId);
@@ -51,6 +53,7 @@ public class PageController
 
     @RequestMapping(value = "/pages/{id}",
                     method = RequestMethod.GET)
+    @CrossOrigin
     public Page getPage(@PathVariable("comicId") long comicId, @PathVariable("id") int index)
     {
         this.logger.debug("Getting page for comic: id={} page={}", comicId, index);

@@ -27,6 +27,7 @@ import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,6 +43,7 @@ public class ComicController
     private ComicRepository comicRepository;
 
     @RequestMapping(method = RequestMethod.GET)
+    @CrossOrigin
     public List<Comic> getAll()
     {
         this.logger.debug("Getting all comics");
@@ -66,6 +68,7 @@ public class ComicController
 
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.GET)
+    @CrossOrigin
     public Comic getComic(@PathVariable("id") long id)
     {
         this.logger.debug("Fetching comic: id={}", id);
