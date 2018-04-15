@@ -523,7 +523,7 @@ public class Comic
      *
      * @return the page count
      */
-    @JsonIgnore
+    @JsonProperty("page-count")
     public int getPageCount()
     {
         return this.pages.size();
