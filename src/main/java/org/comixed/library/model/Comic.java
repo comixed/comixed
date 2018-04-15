@@ -74,7 +74,7 @@ public class Comic
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @JsonProperty("archive-type")
+    @JsonProperty("archive_type")
     ArchiveType archiveType;
 
     @Column(name = "filename",
@@ -84,7 +84,7 @@ public class Comic
     private String filename;
 
     @Column(name = "comic_vine_id")
-    @JsonProperty("comic-vine-id")
+    @JsonProperty("comic_vine_id")
     private String comicVineId;
 
     @Column(name = "publisher")
@@ -98,20 +98,20 @@ public class Comic
     @Column(name = "added_date",
             updatable = false,
             nullable = false)
-    @JsonProperty("added-date")
+    @JsonProperty("added_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded = new Date();
 
     @Column(name = "cover_date",
             nullable = true)
     @Temporal(TemporalType.DATE)
-    @JsonProperty("cover-date")
+    @JsonProperty("cover_date")
     private Date coverDate;
 
     @Column(name = "last_read_date",
             nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonProperty("last-read-date")
+    @JsonProperty("last_read_date")
     private Date lastReadDate;
 
     @Column(name = "volume")
@@ -119,7 +119,7 @@ public class Comic
     private String volume;
 
     @Column(name = "issue_number")
-    @JsonProperty("issue-number")
+    @JsonProperty("issue_number")
     private String issueNumber;
 
     @Column(name = "title")
@@ -146,7 +146,7 @@ public class Comic
     @CollectionTable(name = "comic_story_arcs",
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "story_arc_name")
-    @JsonProperty("story-arcs")
+    @JsonProperty("story_arcs")
     private List<String> storyArcs = new ArrayList<>();
 
     @ElementCollection
@@ -523,7 +523,7 @@ public class Comic
      *
      * @return the page count
      */
-    @JsonProperty("page-count")
+    @JsonProperty("page_count")
     public int getPageCount()
     {
         return this.pages.size();

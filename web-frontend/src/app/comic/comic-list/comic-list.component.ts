@@ -37,12 +37,14 @@ export class ComicListComponent implements OnInit {
 
   editComicPage(comic: Comic) {
     if (comic) {
-      this.router.navigate(['/comic/edit', comic.id]);
+      console.log('Edit comic: id=' + comic.id + " filename=" + comic.filename);
     }
   }
 
   deleteComic(comic: Comic) {
-    console.log('Delete Comic!');
+    if (comic) {
+      console.log('Delete comic: id=' + comic.id + " filename=" + comic.filename);
+    }
   }
 
 

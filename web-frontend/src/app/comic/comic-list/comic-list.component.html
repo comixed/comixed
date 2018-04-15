@@ -20,10 +20,16 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th>#</th>
+							<th></th>
+							<th>Publisher</th>
 							<th>Series</th>
 							<th>Volume</th>
 							<th>Issue #</th>
+							<th>Title</th>
+							<th>Type</th>
+							<th>Published</th>
+							<th>Added</th>
+							<th>Pages</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -31,10 +37,16 @@
 					<tbody>
 
 						<tr *ngFor="let comic of comics">
-							<th scope="row">{{comic.id}}</th>
+							<th scope="row"></th>
+							<td>{{comic.publisher}}</td>
 							<td>{{comic.series}}</td>
-							<td>{{comic.volum}}</td>
-							<td>{{comic.issueNumber}}</td>
+							<td>{{comic.volume}}</td>
+							<td>{{comic.issue_number}}</td>
+							<td>{{comic.title}}</td>
+							<td>{{comic.archive_type}}</td>
+							<td>{{comic.cover_date}}</td>
+							<td>{{comic.added_date}}</td>
+							<td>{{comic.page_count}}</td>
 							<td>
 								<button type="button" class="btn btn-success"
 									(click)="editComicPage(comic)">Edit</button>
