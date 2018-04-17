@@ -6,11 +6,13 @@ import {AppComponent} from './app.component';
 import {HttpModule} from '@angular/http';
 
 import {ComicModule} from './comic/comic.module';
+import { MainPageComponent } from './main-page/main-page.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MainPageComponent
   ],
   imports: [
     BrowserModule,

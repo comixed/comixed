@@ -10,7 +10,7 @@ import {Comic} from './comic';
 @Injectable()
 export class ComicService {
 
-  private apiUrl = 'http://localhost:8080';
+  private apiUrl = 'http://localhost:7171';
 
   constructor(private http: Http) {}
 
