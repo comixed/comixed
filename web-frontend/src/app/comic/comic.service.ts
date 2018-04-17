@@ -19,4 +19,10 @@ export class ComicService {
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
+
+  getComicCount(): Observable<number> {
+    return this.http.get(this.apiUrl + "/comics/count")
+      .map((res: Response) => res.json())
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
 }

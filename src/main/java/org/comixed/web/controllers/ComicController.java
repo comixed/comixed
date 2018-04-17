@@ -20,7 +20,9 @@
 package org.comixed.web.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.comixed.library.model.Comic;
 import org.comixed.repositories.ComicRepository;
@@ -85,5 +87,17 @@ public class ComicController
         }
 
         return comic;
+    }
+
+    @RequestMapping(value = "/count",
+                    method = RequestMethod.GET)
+    @CrossOrigin
+    public Map<String,
+               String> getCount()
+    {
+        Map<String,
+            String> result = new HashMap<>();
+        result.put("count", String.valueOf(this.comicRepository.count()));
+        return result;
     }
 }
