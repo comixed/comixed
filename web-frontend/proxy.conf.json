@@ -3,7 +3,7 @@
 		"target": {
 			"host": "localhost",
 			"protocol": "http",
-			"port": 8080
+			"port": 7171
 		},
 		"secure": false,
 		"changeOrigin": true,
