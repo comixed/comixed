@@ -1,1 +1,18 @@
-<router-outlet></router-outlet>
+<div class="page-header">
+  <div class="container">
+    <h1>ComixEd</h1>
+    <div class="nav navbar">
+      <a [routerLink]="['/']">Home</a>
+      <a [routerLink]="['/library/comics']">Comics</a>
+      <a [routerLink]="['/']">Import...</a>
+      <a [routerLink]="['/']">Login</a>
+      <a [routerLink]="['/']">About</a>
+    </div>
+  </div>
+</div>
+
+<div id="content">
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
