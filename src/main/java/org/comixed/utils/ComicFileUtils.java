@@ -53,4 +53,12 @@ public class ComicFileUtils
         File file = new File(candidate);
         return (!file.exists()) ? candidate : findAvailableFilename(filename, ++attempt, defaultExtension);
     }
+
+    public static boolean isComicFile(File file)
+    {
+        String name = file.getName().toUpperCase();
+        boolean result = (name.endsWith("CBZ") || name.endsWith("CBR") || name.endsWith("CB7"));
+        logger.debug("Is {} a comic? {}", file.getName(), result ? "Yes" : "No");
+        return result;
+    }
 }
