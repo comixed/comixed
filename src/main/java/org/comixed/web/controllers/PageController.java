@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/comics/{comicId}")
+@RequestMapping("/comics/{id}")
 public class PageController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -44,34 +44,57 @@ public class PageController
     @RequestMapping(value = "/pages",
                     method = RequestMethod.GET)
     @CrossOrigin
-    public List<Page> getAll(@PathVariable("comicId") long comicId)
+    public List<Page> getAll(@PathVariable("id") long id)
     {
-        this.logger.debug("Getting all pages for comic: id={}", comicId);
+        this.logger.debug("Getting all pages for comic: id={}", id);
 
-        return this.getPagesForComic(comicId);
+        return this.getPagesForComic(id);
     }
 
-    @RequestMapping(value = "/pages/{id}",
+    @RequestMapping(value = "/pages/{index}",
                     method = RequestMethod.GET)
     @CrossOrigin
-    public Page getPage(@PathVariable("comicId") long comicId, @PathVariable("id") int index)
+    public Page getPage(@PathVariable("id") long id, @PathVariable("index") int index)
     {
-        this.logger.debug("Getting page for comic: id={} page={}", comicId, index);
+        this.logger.debug("Getting page for comic: id={} page={}", id, index);
 
-        List<Page> pages = this.getPagesForComic(comicId);
+        List<Page> pages = this.getPagesForComic(id);
 
         return (pages == null) || (index >= pages.size()) ? null : pages.get(index);
     }
 
-    private List<Page> getPagesForComic(long comicId)
+    private List<Page> getPagesForComic(long id)
     {
-        Comic comic = this.comicRepository.getComic(comicId);
+        Comic comic = this.comicRepository.getComic(id);
         if (comic == null)
         {
-            this.logger.debug("No such comic found: id={}", comicId);
+            this.logger.debug("No such comic found: id={}", id);
 
             return null;
         }
         else return comic.getPages();
+    }
+
+    @RequestMapping(value = "/pages/{index}/content",
+                    method = RequestMethod.GET)
+    @CrossOrigin
+    public byte[] getImage(@PathVariable("id") long id, @PathVariable("index") int index)
+    {
+        this.logger.debug("Getting the image for comic: id={} index={}", id, index);
+
+        Comic comic = comicRepository.getComic(id);
+
+        if (comic != null && index < comic.getPageCount()) { return comic.getPage(index).getContent(); }
+
+        if (comic == null)
+        {
+            logger.debug("No such comic: id={}", id);
+        }
+        else
+        {
+            logger.debug("No such page: index={} page count={}", index, comic.getPageCount());
+        }
+
+        return null;
     }
 }
