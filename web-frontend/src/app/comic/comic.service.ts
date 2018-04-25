@@ -41,7 +41,7 @@ export class ComicService {
     return this.http.post(this.apiUrl + '/files/import', formData);
   }
 
-  getImageUrl(comicId: number, index: number): Observable<any> {
-    return `${this.apiUrl}/comics/${comicId}/pages/${index}/content`);
+  getImageUrl(comicId: number, index: number): string {
+    return `${this.apiUrl}/comics/${comicId}/pages/${index}/content`;
   }
 }

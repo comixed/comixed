@@ -12,7 +12,7 @@ import {ComicService} from '../comic.service';
 
 export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
-  coverUrl: Observable<string>;
+  coverUrl: string;
 
   constructor(private comicService: ComicService) {}
 
