@@ -16,19 +16,19 @@ export class ComicService {
   constructor(private http: Http) {}
 
   findAll(): Observable<Comic[]> {
-    return this.http.get(this.apiUrl + '/comics')
+    return this.http.get(`${this.apiUrl}/comics`)
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
   getComicCount(): Observable<number> {
-    return this.http.get(this.apiUrl + '/comics/count')
+    return this.http.get(`${this.apiUrl}/comics/count`)
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
   getFilesUnder(directory: string): Observable<FileDetails[]> {
-    return this.http.get(this.apiUrl + '/files/contents?directory=' + directory)
+    return this.http.get(`${this.apiUrl}/files/contents?directory=${directory}`)
       .map((res: Response) => <FileDetails[]>res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
@@ -39,5 +39,9 @@ export class ComicService {
       formData.append('filenames', filenames[index]);
     }
     return this.http.post(this.apiUrl + '/files/import', formData);
+  }
+
+  getImageUrl(comicId: number, index: number): Observable<any> {
+    return `${this.apiUrl}/comics/${comicId}/pages/${index}/content`);
   }
 }

@@ -1,6 +1,8 @@
 import {Component, OnInit, Input} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 
 import {Comic} from '../comic.model';
+import {ComicService} from '../comic.service';
 
 @Component({
   selector: 'app-comic-list-entry',
@@ -10,10 +12,12 @@ import {Comic} from '../comic.model';
 
 export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
+  coverUrl: Observable<string>;
 
-  constructor() {}
+  constructor(private comicService: ComicService) {}
 
   ngOnInit() {
+    this.coverUrl = this.comicService.getImageUrl(this.comic.id, 0);
   }
 
 }

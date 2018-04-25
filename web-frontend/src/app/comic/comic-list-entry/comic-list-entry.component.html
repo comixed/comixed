@@ -1,14 +1,29 @@
 <div class="row">
-	<div class="pull-left">
-		<h2>The Cover Image</h2>
+	<div class="col-md-2">
+		<img src="{{coverUrl}}" width="128"
+			alt="Cover for {{comic.series}} #{{comic.issue_number}}">
 	</div>
-	<div>
-		<div *ngIf="comic.series">
-			<div class="row">
-				<h5>{{comic.series}}</h5>
+	<div class="col-md-10">
+		<div class="row">
+			<div *ngIf="comic.series && comic.volume && comic.issue_number">
+				<h5>{{comic.series}} #{{comic.issue_number}} (Vol.
+					{{comic.volume}})</h5>
 			</div>
 		</div>
-		<div class="row">{{comic.filename}}</div>
+		<div class="row">
+			<div *ngIf="comic.title">
+				<h4>{{comic.title}}</h4>
+			</div>
+		</div>
+		<div class="row">Added {{comic.added_date | date:'fullDate'}}</div>
+		<div class="row">
+			<div *ngIf="comic.last_read_date">Last read
+				{{comic.last_read_date | date:'fullDate'}}</div>
+		</div>
+		<div class="row">
+			<a href="{{comic.filename}}">Download Comic
+				({{comic.archive_type}}, {{comic.page_count}} pages)</a>
+		</div>
 	</div>
 </div>
 <br />
