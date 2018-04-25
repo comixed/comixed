@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {Comic} from '../comic';
+import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
 
 @Component({

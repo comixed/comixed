@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Observable} from 'rxjs/Observable';
 
-import {Comic} from './comic';
+import {Comic} from './comic.model';
 import {FileDetails} from './fileDetails';
 
 @Injectable()
