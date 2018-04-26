@@ -26,7 +26,7 @@ export class ComicListEntryComponent implements OnInit {
     console.log('Deleting the comic an id of ', this.comic.id, '...');
     this.comicService.deleteComic(this.comic).subscribe(
       success => {
-        console.log('success: ', success._body);
+        console.log('success: ', success);
         if (success._body) {
           console.log('Comic was deleted.');
           this.comicListComponent.getAllComics();
