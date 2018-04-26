@@ -6,6 +6,7 @@ import {ComicRoutingModule} from './comic-routing.module';
 import {ComicListComponent} from './comic-list/comic-list.component';
 import {ImportComicsComponent} from './import-comics/import-comics.component';
 import {ComicListEntryComponent} from './comic-list-entry/comic-list-entry.component';
+import { ComicDetailsComponent } from './comic-details/comic-details.component';
 
 @NgModule({
   imports: [
@@ -14,6 +15,6 @@ import {ComicListEntryComponent} from './comic-list-entry/comic-list-entry.compo
     FormsModule,
     ReactiveFormsModule,
   ],
-  declarations: [ComicListComponent, ImportComicsComponent, ComicListEntryComponent]
+  declarations: [ComicListComponent, ImportComicsComponent, ComicListEntryComponent, ComicDetailsComponent]
 })
 export class ComicModule {}

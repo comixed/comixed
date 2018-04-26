@@ -1,0 +1,63 @@
+<div id='comic_title_section' class='row'
+	*ngIf='comic.series && comic.volume && comic.issue_number'>
+	<div class='col-md-12'>
+		<h2 class='media-heading'>{{comic.series}}
+			#{{comic.issue_number}} (Vol.{{comic.volume}})</h2>
+	</div>
+</div>
+<div id='comic_detail_section' class='media'>
+	<div class='media-left'>
+		<img src='{{cover_url}}' class='img-thumbnail' width='480'>
+	</div>
+	<div class='media-body'>
+		<div *ngIf='comic.title'>
+			<h4 class='media-heading'>{{comic.title}}</h4>
+		</div>
+		<div *ngIf='comic.story_arcs && comic.story_arcs.length > 0'>
+			<h4 (click)='show_story_arcs = !show_story_arcs'>Story Arcs</h4>
+			<ul *ngIf='show_story_arcs'>
+				<li *ngFor='let story_arc of comic.story_arcs'>{{story_arc}}</li>
+			</ul>
+		</div>
+		<div *ngIf='comic.cover_date'>
+			<p>Published {{comic.cover_date | date:'MM/yyyy' }}
+		</div>
+		<p>Added {{comic.added_date | date: 'MM/dd/yyyy' }}</p>
+		<div *ngIf='comic.last_read_date'>
+			<p>Last read {{comic.last_read_date | date:'MM/dd/yyyy' }}</p>
+		</div>
+		<div *ngIf='comic.summary && comic.summary.length != 0'>
+			<h4>Summary</h4>
+			<p>{{comic.summary}}
+		</div>
+		<div *ngIf='comic.notes && comic.notes.length != 0'>
+			<h4>Notes</h4>
+			<p>{{comic.notes}}
+		</div>
+		<div *ngIf='comic.characters && comic.characters.length != 0'>
+			<h4 (click)='show_characters = !show_characters'>Characters</h4>
+			<ul *ngIf='show_characters'>
+				<li *ngFor='let character of comic.characters'>{{character}}</li>
+			</ul>
+		</div>
+		<div *ngIf='comic.teams && comic.teams.length != 0'>
+			<h4 (click)='show_teams = !show_teams'>Teams</h4>
+			<ul *ngIf='show_teams'>
+				<li *ngFor='let character of comic.teams'>{{character}}</li>
+			</ul>
+		</div>
+		<div *ngIf='comic.locations && comic.locations.length != 0'>
+			<h4 (click)='show_locations = !show_locations'>Locations</h4>
+			<ul *ngIf='show_locations'>
+				<li *ngFor='let location of comic.locations'>{{location}}</li>
+			</ul>
+		</div>
+		<div *ngIf='!comic.missing'>
+			<hr />
+			<p>
+				<a href='{{comic.filename}}'>Download Comic
+					({{comic.archive_type}}, {{comic.page_count}} pages)</a>
+			</p>
+		</div>
+	</div>
+</div>
