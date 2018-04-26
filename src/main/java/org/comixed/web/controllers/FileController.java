@@ -42,15 +42,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <code>FileImportController</code> allows the remote agent to query
- * directories and import files.
+ * <code>FileController</code> allows the remote agent to query directories and
+ * import files, to download files and work with the file system.
  * 
  * @author Darryl L. Pierce
  *
  */
 @RestController
 @RequestMapping("/files")
-public class FileImportController
+public class FileController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
