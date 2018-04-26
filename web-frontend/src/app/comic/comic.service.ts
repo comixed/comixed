@@ -33,6 +33,10 @@ export class ComicService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
+  deleteComic(comic: Comic): Observable<boolean> {
+    return this.http.delete(`${this.apiUrl}/comics/${comic.id}`);
+  }
+
   importFiles(filenames: string[]): Observable<Response> {
     const formData: FormData = new FormData();
     for (let index = 0; index < filenames.length; index++) {
