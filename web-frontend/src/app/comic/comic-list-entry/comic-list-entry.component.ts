@@ -14,6 +14,7 @@ import {ComicListComponent} from '../comic-list/comic-list.component';
 export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
   coverUrl: string;
+  showSummary = false;
 
   constructor(private comicService: ComicService,
     private comicListComponent: ComicListComponent) {}
@@ -22,12 +23,18 @@ export class ComicListEntryComponent implements OnInit {
     this.coverUrl = this.comicService.getImageUrl(this.comic.id, 0);
   }
 
+  toggleSummary(): void {
+    if (this.comic.summary) {
+      this.showSummary = !this.showSummary;
+    }
+  }
+
   deleteComic() {
     console.log('Deleting the comic an id of ', this.comic.id, '...');
     this.comicService.deleteComic(this.comic).subscribe(
       success => {
         console.log('success: ', success);
-        if (success._body) {
+        if (success) {
           console.log('Comic was deleted.');
           this.comicListComponent.getAllComics();
         } else {

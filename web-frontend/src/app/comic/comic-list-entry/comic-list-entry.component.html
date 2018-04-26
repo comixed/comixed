@@ -1,9 +1,19 @@
-<div class="media" *ngIf="!comic.missing">
+<div class="media" *ngIf="!comic.missing" (click)="toggleSummary()">
 	<div class="media-left">
 		<img src="{{coverUrl}}" class="img-thumbnail" width="128">
 	</div>
 	<div class="media-body">
-		<div class="row">
+		<div *ngIf="comic.summary" class="row">
+			<div *ngIf="showSummary" class="col-sm-12">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Summary</h4>
+					</div>
+					<div class="modal-body">{{comic.summary}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" *ngIf="!showSummary">
 			<div class="col-sm-8">
 				<div *ngIf="comic.series && comic.volume && comic.issue_number">
 					<h5 class="media-heading">{{comic.series}}
