@@ -44,6 +44,28 @@ public class ComicController
     @Autowired
     private ComicRepository comicRepository;
 
+    @RequestMapping(value = "/{id}",
+                    method = RequestMethod.DELETE)
+    @CrossOrigin
+    public boolean deleteComic(@PathVariable("id") long id)
+    {
+        this.logger.debug("Preparing to delete comic: id={}", id);
+
+        Comic comic = this.comicRepository.findOne(id);
+
+        if (comic == null)
+        {
+            this.logger.debug("No such comic: id={}", id);
+            return false;
+        }
+        else
+        {
+            this.comicRepository.delete(comic);
+            this.logger.debug("Comic deleted: id={}", id);
+            return true;
+        }
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     @CrossOrigin
     public List<Comic> getAll()
