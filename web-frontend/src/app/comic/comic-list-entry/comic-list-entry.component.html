@@ -1,34 +1,44 @@
-<div class="row">
-	<div class="col-md-2">
-		<img src="{{coverUrl}}" width="128"
-			alt="Cover for {{comic.series}} #{{comic.issue_number}}">
+<div class="media" *ngIf="!comic.missing">
+	<div class="media-left">
+		<img src="{{coverUrl}}" class="img-thumbnail" width="128">
 	</div>
-	<div class="col-md-10">
+	<div class="media-body">
 		<div class="row">
-			<div *ngIf="comic.series && comic.volume && comic.issue_number">
-				<h5>{{comic.series}} #{{comic.issue_number}} (Vol.
-					{{comic.volume}})</h5>
+			<div class="col-sm-8">
+				<div *ngIf="comic.series && comic.volume && comic.issue_number">
+					<h5 class="media-heading">{{comic.series}}
+						#{{comic.issue_number}} (Vol.{{comic.volume}})</h5>
+				</div>
+
+				<div *ngIf="comic.title">
+					<h4 class="media-heading">{{comic.title}}</h4>
+				</div>
+				<p>Added {{comic.added_date}}</p>
+				<div *ngIf="comic.last_read_date">
+					<p>Last read {{comic.last_read_date | date}}</p>
+				</div>
+				<p *ngIf="!comic.missing">
+					<a href="{{comic.filename}}">Download Comic
+						({{comic.archive_type}}, {{comic.page_count}} pages)</a>
+				</p>
 			</div>
-		</div>
-		<div class="row">
-			<div *ngIf="comic.title">
-				<h4>{{comic.title}}</h4>
+			<div class="col-sm-4">
+				<button type="button" class="btn btn-primary" (click)="editComic()">Edit</button>
+				&nbsp;
+				<button type="button" class="btn btn-danger" (click)="deleteComic()">Delete</button>
 			</div>
-		</div>
-		<div class="row">Added {{comic.added_date}}</div>
-		<div class="row">
-			<div *ngIf="comic.last_read_date">Last read
-				{{comic.last_read_date | date}}</div>
-		</div>
-		<div class="row">
-			<a href="{{comic.filename}}">Download Comic
-				({{comic.archive_type}}, {{comic.page_count}} pages)</a>
-		</div>
-		<div class="row">
-			<button type="button" class="btn btn-primary" (click)="editComic()">Edit</button>
-			&nbsp;
-			<button type="button" class="btn btn-danger" (click)="deleteComic()">Delete</button>
 		</div>
 	</div>
 </div>
-<br />
+<div *ngIf="comic.missing" class="alert alert-warning">
+	<div class="row">
+		<div class="col-md-10">
+			<strong>The comic file is missing!</strong> Can't find
+			{{comic.filename}}.
+		</div>
+		<div class="col-md-2">
+			<button type="button" class="btn btn-danger pull-right"
+				(click)="deleteComic()">Remove</button>
+		</div>
+	</div>
+</div>
