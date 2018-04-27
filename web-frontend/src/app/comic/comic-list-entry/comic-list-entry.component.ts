@@ -1,5 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import {Router} from '@angular/router';
 
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
@@ -16,7 +17,7 @@ export class ComicListEntryComponent implements OnInit {
   coverUrl: string;
   showSummary = false;
 
-  constructor(private comicService: ComicService,
+  constructor(private router: Router, private comicService: ComicService,
     private comicListComponent: ComicListComponent) {}
 
   ngOnInit() {
@@ -29,7 +30,11 @@ export class ComicListEntryComponent implements OnInit {
     }
   }
 
-  deleteComic() {
+  viewComic(): void {
+    this.router.navigate([`library/comics/${this.comic.id}`]);
+  }
+
+  deleteComic(): void {
     console.log('Deleting the comic an id of ', this.comic.id, '...');
     this.comicService.deleteComic(this.comic).subscribe(
       success => {
