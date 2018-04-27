@@ -1,5 +1,5 @@
-<div class="media" *ngIf="!comic.missing" (click)="toggleSummary()">
-	<div class="media-left">
+<div class="media" *ngIf="!comic.missing">
+	<div class="media-left" (click)="toggleSummary()">
 		<img src="{{coverUrl}}" class="img-thumbnail" width="128">
 	</div>
 	<div class="media-body">
