@@ -3,10 +3,14 @@ import {Routes, RouterModule} from '@angular/router';
 
 import {MainPageComponent} from './main-page/main-page.component';
 import {ComicListComponent} from './comic/comic-list/comic-list.component';
+import {ImportComicsComponent} from './comic/import-comics/import-comics.component';
+import {ComicDetailsComponent} from './comic/comic-details/comic-details.component';
 
 const routes: Routes = [
   {path: '', component: MainPageComponent},
   {path: 'library/comics', component: ComicListComponent},
+  {path: 'library/comics/:id', component: ComicDetailsComponent},
+  {path: 'library/import', component: ImportComicsComponent}
 ];
 
 @NgModule({
