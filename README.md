@@ -23,6 +23,45 @@ The following digital comic formats are supported:
  * CBR (RAR)
  * CB7 (7ZIP)
 
+## Running The Application
+
+The project is broken up into two parts:
+1. the Java backend, and
+1. the Angular web frontend.
+
+### The Java Backend
+
+The backend needs to have a few lines of configuration setup.
+
+#### application.properties
+
+The two main entries that need to be setup are:
+
+    configuration.filename=C:/Users/comics/comixedrc
+    spring.datasource.url=jdbc:h2:file:C:/Users/comics/comixed;create=true
+
+The *configurtion.filename* entry tells the application where to find the persisted configuration for the application.
+
+The *spring.datasource.url* entry tells the application where the database is location, and the *create=true* portion tells it to create the database file if it's not found.
+
+#### Running the backend
+
+To start the backend, launch it from the command line with:
+
+    $ mvn spring-boot:run
+
+### The Web Frontend
+
+You will need to have [Angular](https://angular.io/) available on your system. You can find instructions for installing Angular [here](https://angular.io/guide/setup). This portion is a little more involved on Windows systems, but not impossible.
+
+To start the frontend, launch it from the command line with:
+
+    $ ng s
+
+### Interacting With The Application
+
+To connect to the web application, point a browser to *http://localhost:4200/library/comics*.
+
 ## Contributing
 
 Please see the [wiki page](../../wiki/Developer-Setup) page for getting your
