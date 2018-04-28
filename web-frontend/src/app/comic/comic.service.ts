@@ -34,7 +34,9 @@ export class ComicService {
   }
 
   deleteComic(comic: Comic): Observable<boolean> {
-    return this.http.delete(`${this.apiUrl}/comics/${comic.id}`);
+    return this.http.delete(`${this.apiUrl}/comics/${comic.id}`)
+      .map((res: Response) => res.json())
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
   importFiles(filenames: string[]): Observable<Response> {
