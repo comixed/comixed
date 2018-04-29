@@ -1,58 +1,58 @@
-<div class="media" *ngIf="!comic.missing">
-	<div class="media-left" (click)="toggleSummary()">
-		<img src="{{coverUrl}}" class="img-thumbnail" width="128">
+<div class='media' *ngIf='!comic.missing'>
+	<div class='media-left' (click)='toggleSummary()'>
+		<img src='{{coverUrl}}' class='img-thumbnail' width='128'>
 	</div>
-	<div class="media-body">
-		<div *ngIf="comic.summary" class="row">
-			<div *ngIf="showSummary" class="col-sm-12">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title">Summary</h4>
+	<div class='media-body'>
+		<div *ngIf='comic.summary' class='row'>
+			<div *ngIf='showSummary' class='col-sm-12'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<h4 class='modal-title'>Summary</h4>
 					</div>
-					<div class="modal-body">{{comic.summary}}</div>
+					<div class='modal-body'>{{comic.summary}}</div>
 				</div>
 			</div>
 		</div>
-		<div class="row" *ngIf="!showSummary">
-			<div class="col-sm-8">
-				<div *ngIf="comic.series && comic.volume && comic.issue_number">
-					<h5 class="media-heading">{{comic.series}}
+		<div class='row' *ngIf='!showSummary'>
+			<div class='col-sm-8'>
+				<div *ngIf='comic.series && comic.volume && comic.issue_number'>
+					<h5 class='media-heading'>{{comic.series}}
 						#{{comic.issue_number}} (Vol.{{comic.volume}})</h5>
 				</div>
-				<div *ngIf="comic.title">
-					<h4 class="media-heading">{{comic.title}}</h4>
+				<div *ngIf='comic.title'>
+					<h4 class='media-heading'>{{comic.title}}</h4>
 				</div>
-				<div *ngIf="comic.cover_date">
+				<div *ngIf='comic.cover_date'>
 					<p>Published {{comic.cover_date | date:'MM/yyyy' }}
 				</div>
 				<p>Added {{comic.added_date | date: 'MM/dd/yyyy' }}</p>
-				<div *ngIf="comic.last_read_date">
+				<div *ngIf='comic.last_read_date'>
 					<p>Last read {{comic.last_read_date | date:'MM/dd/yyyy' }}</p>
 				</div>
-				<p *ngIf="!comic.missing">
-					<a href="{{comic.filename}}">Download Comic
+				<p *ngIf='!comic.missing'>
+					<a href='{{comic.filename}}'>Download Comic
 						({{comic.archive_type}}, {{comic.page_count}} pages)</a>
 				</p>
 			</div>
-			<div class="col-sm-4">
-				<button type="button" class="btn btn-default" (click)="viewComic()">View</button>
+			<div class='col-sm-4'>
+				<button type='button' class='btn btn-default' (click)='viewComic()'>View</button>
 				&nbsp;
-				<button type="button" class="btn btn-primary" (click)="editComic()">Edit</button>
+				<button type='button' class='btn btn-primary' (click)='editComic()'>Edit</button>
 				&nbsp;
-				<button type="button" class="btn btn-danger" (click)="deleteComic()">Delete</button>
+				<button type='button' class='btn btn-danger' (click)='deleteComic()'>Delete</button>
 			</div>
 		</div>
 	</div>
 </div>
-<div *ngIf="comic.missing" class="alert alert-warning">
-	<div class="row">
-		<div class="col-md-10">
+<div *ngIf='comic.missing' class='alert alert-warning'>
+	<div class='row'>
+		<div class='col-md-10'>
 			<strong>The comic file is missing!</strong> Can't find
 			{{comic.filename}}.
 		</div>
-		<div class="col-md-2">
-			<button type="button" class="btn btn-danger pull-right"
-				(click)="deleteComic()">Remove</button>
+		<div class='col-md-2'>
+			<button type='button' class='btn btn-danger pull-right'
+				(click)='deleteComic()'>Remove</button>
 		</div>
 	</div>
 </div>
