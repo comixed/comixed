@@ -6,6 +6,7 @@ export class Comic {
   volume: string;
   issue_number: string;
   title: string;
+  story_arcs: string[];
   description: string;
   notes: string;
   summary: string;
@@ -16,6 +17,9 @@ export class Comic {
   cover_date: string;
   last_read_date: string;
   page_count: number;
+  characters: string[];
+  teams: string[];
+  locations: string[];
 
   constructor(
     id: number,
@@ -25,6 +29,7 @@ export class Comic {
     volume: string,
     issue_number: string,
     title: string,
+    story_arcs: string[],
     description: string,
     notes: string,
     summary: string,
@@ -35,6 +40,9 @@ export class Comic {
     cover_date: string,
     last_read_date: string,
     page_count: number,
+    characters: string[],
+    teams: string[],
+    locations: string[],
   ) {
     this.id = id;
     this.filename = filename;
@@ -43,6 +51,7 @@ export class Comic {
     this.volume = volume;
     this.issue_number = issue_number;
     this.title = title;
+    this.story_arcs = story_arcs;
     this.description = description;
     this.notes = notes;
     this.summary = summary;
@@ -53,5 +62,8 @@ export class Comic {
     this.cover_date = cover_date;
     this.last_read_date = last_read_date;
     this.page_count = page_count;
+    this.characters = characters;
+    this.teams = teams;
+    this.locations = locations;
   }
 }
