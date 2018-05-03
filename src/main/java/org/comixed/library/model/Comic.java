@@ -87,6 +87,10 @@ public class Comic
     @JsonProperty("comic_vine_id")
     private String comicVineId;
 
+    @Column(name = "comic_vine_url")
+    @JsonProperty("comic_vine_url")
+    private String comicVineURL;
+
     @Column(name = "publisher")
     @JsonProperty
     private String publisher;
@@ -374,6 +378,17 @@ public class Comic
     public String getComicVineId()
     {
         return this.comicVineId;
+    }
+
+    /**
+     * Gthe ComicVine URL for the comic. This corresponds to the site_detail_url
+     * value for the comic from their API.
+     *
+     * @return the URL
+     */
+    public String getComicVineURL()
+    {
+        return this.comicVineURL;
     }
 
     /**
@@ -751,6 +766,17 @@ public class Comic
     {
         this.logger.debug("Setting the comicvine.com id=" + id);
         this.comicVineId = id;
+    }
+
+    /**
+     * Sets the ComicVine URL for the comic.
+     *
+     * @param urlL
+     *            the url
+     */
+    public void setComicVineURL(String urlL)
+    {
+        this.comicVineURL = urlL;
     }
 
     /**
