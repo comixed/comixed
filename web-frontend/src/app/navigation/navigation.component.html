@@ -1,0 +1,24 @@
+<div class="container-fluid">
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary">
+		<button navigationToggle class="navbar-toggler navbar-toggler-right"
+			type="button" data-toggle="collapse" data-target="#navbarCollapse"
+			aria-controls="navbarCollapse" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<a class="navbar-brand" href="#">ComixEd</a>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item" routerLinkActive="active"><a
+					(click)="collapseNavigation()" class="nav-link"
+					[routerLink]="['/home']">Home</a></li>
+				<li class="nav-item" routerLinkActive="active"><a
+					(click)="collapseNavigation()" class="nav-link"
+					[routerLink]="['comics']">Library</a></li>
+				<li class="nav-item" routerLinkActive="active"><a
+					(click)="collapseNavigation()" class="nav-link"
+					[routerLink]="['import']">Import comics</a></li>
+			</ul>
+		</div>
+	</nav>
+</div>
