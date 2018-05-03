@@ -31,7 +31,7 @@ export class ComicListEntryComponent implements OnInit {
   }
 
   viewComic(): void {
-    this.router.navigate([`library/comics/${this.comic.id}`]);
+    this.router.navigate([`comics/${this.comic.id}`]);
   }
 
   deleteComic(): void {

@@ -1,18 +1,14 @@
-<div class="page-header">
-  <div class="container">
-    <h1>ComixEd</h1>
-    <div class="nav navbar">
-      <a [routerLink]="['/']">Home</a>
-      <a [routerLink]="['/library/comics']">Comics</a>
-      <a [routerLink]="['/']">Import...</a>
-      <a [routerLink]="['/']">Login</a>
-      <a [routerLink]="['/']">About</a>
-    </div>
-  </div>
-</div>
+<nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+	<div class="container">
+		<a class="navbar-brand">ComixEd</a>
+		<ul class="nav navbar-nav" routerLinkActive="active">
+			<li class="nav-item"><a class="nav-link" routerLink="home">Home</a></li>
+			<li class="nav-item"><a class="nav-link" routerLink="comics">Library</a></li>
+			<li class="nav-item"><a class="nav-link"
+				routerLink="import">Import</a></li>
+		</ul>
+	</div>
+</nav>
 
-<div id="content">
-  <div class="container">
-    <router-outlet></router-outlet>
-  </div>
-</div>
+
+<router-outlet></router-outlet>

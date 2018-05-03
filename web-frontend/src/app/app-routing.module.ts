@@ -7,10 +7,12 @@ import {ImportComicsComponent} from './comic/import-comics/import-comics.compone
 import {ComicDetailsComponent} from './comic/comic-details/comic-details.component';
 
 const routes: Routes = [
-  {path: '', component: MainPageComponent},
-  {path: 'library/comics', component: ComicListComponent},
-  {path: 'library/comics/:id', component: ComicDetailsComponent},
-  {path: 'library/import', component: ImportComicsComponent}
+  {path: 'home', component: MainPageComponent},
+  {path: 'comics', component: ComicListComponent},
+  {path: 'comics/:id', component: ComicDetailsComponent},
+  {path: 'import', component: ImportComicsComponent},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: '**', redirectTo: 'home'},
 ];
 
 @NgModule({
