@@ -13,6 +13,7 @@ export class Comic {
   missing: boolean;
   archive_type: string;
   comic_vine_id: string;
+  comic_vine_url: string;
   added_date: string;
   cover_date: string;
   last_read_date: string;
@@ -36,6 +37,7 @@ export class Comic {
     missing: boolean,
     archive_type: string,
     comic_vine_id: string,
+    comic_vine_url: string,
     added_date: string,
     cover_date: string,
     last_read_date: string,
@@ -58,6 +60,7 @@ export class Comic {
     this.missing = missing;
     this.archive_type = archive_type;
     this.comic_vine_id = comic_vine_id;
+    this.comic_vine_url = comic_vine_url;
     this.added_date = added_date;
     this.cover_date = cover_date;
     this.last_read_date = last_read_date;

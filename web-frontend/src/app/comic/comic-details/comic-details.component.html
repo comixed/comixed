@@ -12,6 +12,8 @@
 	<div class='media-body'>
 		<div *ngIf='comic.title'>
 			<h4 class='media-heading'>{{comic.title}}</h4>
+            <a *ngIf='comic.comic_vine_url && comic.comic_vine_url.length > 0'
+            href='{{comic.comic_vine_url}}' target='_blank'>View this comic on ComicVine...</a>
 		</div>
 		<div *ngIf='comic.story_arcs && comic.story_arcs.length > 0'>
 			<h4 (click)='show_story_arcs = !show_story_arcs'>Story Arcs</h4>
