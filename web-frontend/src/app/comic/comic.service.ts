@@ -6,6 +6,7 @@ import 'rxjs/add/operator/catch';
 import {Observable} from 'rxjs/Observable';
 
 import {Comic} from './comic.model';
+import {Page} from './page.model';
 import {FileDetails} from './fileDetails';
 
 @Injectable()
@@ -55,5 +56,9 @@ export class ComicService {
 
   getImageUrl(comicId: number, index: number): string {
     return `${this.apiUrl}/comics/${comicId}/pages/${index}/content`;
+  }
+
+  getImageUrlForId(pageId: number): string {
+    return `${this.apiUrl}/pages/${pageId}/content`;
   }
 }
