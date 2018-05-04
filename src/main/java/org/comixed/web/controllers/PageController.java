@@ -108,6 +108,27 @@ public class PageController
         return (pages == null) || (index >= pages.size()) ? null : pages.get(index);
     }
 
+    @RequestMapping(value = "/pages/{id}/content",
+                    method = RequestMethod.GET)
+    @CrossOrigin
+    public byte[] getPageContent(@PathVariable("id") long id)
+    {
+        this.logger.debug("Getting page: id={}", id);
+
+        Page page = this.pageRepository.findOne(id);
+
+        if (page == null)
+        {
+            this.logger.debug("No such page: id={}", id);
+            return null;
+        }
+        else
+        {
+            this.logger.debug("Returning {} bytes", page.getContent().length);
+            return page.getContent();
+        }
+    }
+
     private List<Page> getPagesForComic(long id)
     {
         Comic comic = this.comicRepository.getComic(id);
