@@ -57,283 +57,336 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Entity
 @Table(name = "pages")
-@NamedQueries({
-		@NamedQuery(name = "Page.getDuplicatePageList", query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),
-		@NamedQuery(name = "Page.getDuplicatePageCount", query = "SELECT COUNT(p) FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"), })
-public class Page {
-	private static final String MISSING_PAGE_URL = "/images/missing.png";
-	public static Page MISSING_PAGE = null;
+@NamedQueries(
+{@NamedQuery(name = "Page.getDuplicatePageList",
+             query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),
+ @NamedQuery(name = "Page.getDuplicatePageCount",
+             query = "SELECT COUNT(p) FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),})
+public class Page
+{
+    private static final String MISSING_PAGE_URL = "/images/missing.png";
+    public static Page MISSING_PAGE = null;
 
-	static {
-		try {
-			byte[] content = IOUtils.resourceToByteArray(MISSING_PAGE_URL);
-			MISSING_PAGE = new Page("", content);
-		} catch (IOException error) {
-			throw new RuntimeException("Failed to load resource file", error);
-		}
-	}
+    static
+    {
+        try
+        {
+            byte[] content = IOUtils.resourceToByteArray(MISSING_PAGE_URL);
+            MISSING_PAGE = new Page("", content);
+        }
+        catch (IOException error)
+        {
+            throw new RuntimeException("Failed to load resource file", error);
+        }
+    }
 
-	public static String createImageCacheKey(int width, int height) {
-		return String.valueOf(width) + "x" + String.valueOf(height);
-	}
+    public static String createImageCacheKey(int width, int height)
+    {
+        return String.valueOf(width) + "x" + String.valueOf(height);
+    }
 
-	@Transient
-	@JsonIgnore
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Transient
+    @JsonIgnore
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonProperty
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
+    private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "comic_id")
-	@JsonIgnore
-	private Comic comic;
+    @ManyToOne
+    @JoinColumn(name = "comic_id")
+    @JsonIgnore
+    private Comic comic;
 
-	@Column(name = "filename", updatable = true, nullable = false)
-	@JsonProperty
-	private String filename;
+    @Column(name = "filename",
+            updatable = true,
+            nullable = false)
+    @JsonProperty
+    private String filename;
 
-	@Column(name = "hash", updatable = true, nullable = false)
-	@JsonProperty
-	private String hash;
+    @Column(name = "hash",
+            updatable = true,
+            nullable = false)
+    @JsonProperty
+    private String hash;
 
-	@Column(name = "deleted", updatable = true, nullable = false)
-	@JsonProperty
-	private boolean deleted = false;
+    @Column(name = "deleted",
+            updatable = true,
+            nullable = false)
+    @JsonProperty
+    private boolean deleted = false;
 
-	@Transient
-	@JsonIgnore
-	private byte[] content;
+    @Transient
+    @JsonIgnore
+    private byte[] content;
 
-	@Transient
-	@JsonIgnore
-	private Image icon;
+    @Transient
+    @JsonIgnore
+    private Image icon;
 
-	@Transient
-	@JsonIgnore
-	protected Map<String, Image> imageCache = new WeakHashMap<>();
+    @Transient
+    @JsonIgnore
+    protected Map<String,
+                  Image> imageCache = new WeakHashMap<>();
 
-	/**
-	 * Default constructor.
-	 */
-	public Page() {
-	}
+    /**
+     * Default constructor.
+     */
+    public Page()
+    {}
 
-	/**
-	 * Creates a new instance with the given filename and image content.
-	 *
-	 * @param filename
-	 *            the filename
-	 * @param content
-	 *            the content
-	 */
-	public Page(String filename, byte[] content) {
-		this.logger.debug("Creating page: filename=" + filename + " content.size=" + content.length);
-		this.filename = filename;
-		this.content = content;
-		this.hash = this.createHash(content);
-	}
+    /**
+     * Creates a new instance with the given filename and image content.
+     *
+     * @param filename
+     *            the filename
+     * @param content
+     *            the content
+     */
+    public Page(String filename, byte[] content)
+    {
+        this.logger.debug("Creating page: filename=" + filename + " content.size=" + content.length);
+        this.filename = filename;
+        this.content = content;
+        this.hash = this.createHash(content);
+    }
 
-	private String createHash(byte[] bytes) {
-		this.logger.debug("Generating MD5 hash");
-		String result = "";
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("MD5");
-			md.update(bytes);
-			result = new BigInteger(1, md.digest()).toString(16).toUpperCase();
-		} catch (NoSuchAlgorithmException error) {
-			this.logger.error("Failed to generate hash", error);
-		}
-		this.logger.debug("Returning: " + result);
-		return result;
-	}
+    private String createHash(byte[] bytes)
+    {
+        this.logger.debug("Generating MD5 hash");
+        String result = "";
+        MessageDigest md;
+        try
+        {
+            md = MessageDigest.getInstance("MD5");
+            md.update(bytes);
+            result = new BigInteger(1, md.digest()).toString(16).toUpperCase();
+        }
+        catch (NoSuchAlgorithmException error)
+        {
+            this.logger.error("Failed to generate hash", error);
+        }
+        this.logger.debug("Returning: " + result);
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (this.getClass() != obj.getClass())
-			return false;
-		Page other = (Page) obj;
-		if (this.filename == null) {
-			if (other.filename != null)
-				return false;
-		} else if (!this.filename.equals(other.filename))
-			return false;
-		if (this.hash == null) {
-			if (other.hash != null)
-				return false;
-		} else if (!this.hash.equals(other.hash))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        Page other = (Page )obj;
+        if (this.filename == null)
+        {
+            if (other.filename != null) return false;
+        }
+        else if (!this.filename.equals(other.filename)) return false;
+        if (this.hash == null)
+        {
+            if (other.hash != null) return false;
+        }
+        else if (!this.hash.equals(other.hash)) return false;
+        return true;
+    }
 
-	/**
-	 * Returns the owning comic.
-	 *
-	 * @return the comic
-	 */
-	public Comic getComic() {
-		return this.comic;
-	}
+    /**
+     * Returns the owning comic.
+     *
+     * @return the comic
+     */
+    public Comic getComic()
+    {
+        return this.comic;
+    }
 
-	/**
-	 * Returns the content for the page.
-	 *
-	 * @return the content
-	 */
-	public byte[] getContent() {
-		if (this.content == null) {
-			this.logger.debug("Loading page image: filename=" + this.filename);
-			try {
-				if (this.comic.archiveType != null) {
-					this.content = this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
-				}
-			} catch (ArchiveAdaptorException error) {
-				this.logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(),
-						error);
-			}
-		}
-		return this.content;
-	}
+    @JsonProperty(value = "comic_id")
+    public Long getComicId()
+    {
+        return this.comic.getId();
+    }
 
-	/**
-	 * Returns the filename for the page.
-	 *
-	 * @return the filename
-	 */
-	public String getFilename() {
-		return this.filename;
-	}
+    /**
+     * Returns the content for the page.
+     *
+     * @return the content
+     */
+    public byte[] getContent()
+    {
+        if (this.content == null)
+        {
+            this.logger.debug("Loading page image: filename=" + this.filename);
+            try
+            {
+                if (this.comic.archiveType != null)
+                {
+                    this.content = this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
+                }
+            }
+            catch (ArchiveAdaptorException error)
+            {
+                this.logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(),
+                                 error);
+            }
+        }
+        return this.content;
+    }
 
-	public String getHash() {
-		return this.hash;
-	}
+    /**
+     * Returns the filename for the page.
+     *
+     * @return the filename
+     */
+    public String getFilename()
+    {
+        return this.filename;
+    }
 
-	/**
-	 * Returns the original image for the page.
-	 *
-	 * @return the image
-	 */
-	@JsonIgnore
-	public Image getImage() {
-		if (this.icon == null) {
-			this.logger.debug("Generating image from content");
-			try {
-				this.icon = ImageIO.read(new ByteArrayInputStream(this.getContent()));
-			} catch (IOException error) {
-				this.logger.error("Failed to load image from " + this.comic.getFilename(), error);
-			}
-		}
-		return this.icon;
-	}
+    public String getHash()
+    {
+        return this.hash;
+    }
 
-	/**
-	 * Returns a scaled copy of the page image.
-	 *
-	 * @param maxWidth
-	 *            the maximum scaled width
-	 * @param maxHeight
-	 *            the maximum scaled height
-	 * @return the scaled image
-	 */
-	public Image getImage(int maxWidth, int maxHeight) {
-		this.logger.debug("Scaling page: maxWidth=" + maxWidth + ", maxHeight=" + maxHeight);
-		Image image = this.getImage();
+    /**
+     * Returns the original image for the page.
+     *
+     * @return the image
+     */
+    @JsonIgnore
+    public Image getImage()
+    {
+        if (this.icon == null)
+        {
+            this.logger.debug("Generating image from content");
+            try
+            {
+                this.icon = ImageIO.read(new ByteArrayInputStream(this.getContent()));
+            }
+            catch (IOException error)
+            {
+                this.logger.error("Failed to load image from " + this.comic.getFilename(), error);
+            }
+        }
+        return this.icon;
+    }
 
-		int boundWidth = maxWidth;
-		int boundHeight = maxHeight;
-		int oldWidth = image.getWidth(null);
-		int oldHeight = image.getHeight(null);
+    /**
+     * Returns a scaled copy of the page image.
+     *
+     * @param maxWidth
+     *            the maximum scaled width
+     * @param maxHeight
+     *            the maximum scaled height
+     * @return the scaled image
+     */
+    public Image getImage(int maxWidth, int maxHeight)
+    {
+        this.logger.debug("Scaling page: maxWidth=" + maxWidth + ", maxHeight=" + maxHeight);
+        Image image = this.getImage();
 
-		this.logger.debug("oldWidth=" + oldWidth);
-		this.logger.debug("oldHeight=" + oldHeight);
+        int boundWidth = maxWidth;
+        int boundHeight = maxHeight;
+        int oldWidth = image.getWidth(null);
+        int oldHeight = image.getHeight(null);
 
-		if ((boundWidth < 1) && (boundHeight < 1)) {
-			this.logger.debug("If both maxWidth and maxHeight are less than 1, then consider using getImage()");
-			boundWidth = oldWidth;
-			boundHeight = oldHeight;
-		} else if (boundWidth < 1) {
-			boundWidth = (int) (((float) oldWidth * (float) boundHeight) / oldHeight);
-		} else if (boundHeight < 1) {
-			boundHeight = (int) (((float) oldHeight * (float) boundWidth) / oldWidth);
-		}
+        this.logger.debug("oldWidth=" + oldWidth);
+        this.logger.debug("oldHeight=" + oldHeight);
 
-		Image result = null;
-		String key = Page.createImageCacheKey(boundWidth, boundHeight);
+        if ((boundWidth < 1) && (boundHeight < 1))
+        {
+            this.logger.debug("If both maxWidth and maxHeight are less than 1, then consider using getImage()");
+            boundWidth = oldWidth;
+            boundHeight = oldHeight;
+        }
+        else if (boundWidth < 1)
+        {
+            boundWidth = (int )(((float )oldWidth * (float )boundHeight) / oldHeight);
+        }
+        else if (boundHeight < 1)
+        {
+            boundHeight = (int )(((float )oldHeight * (float )boundWidth) / oldWidth);
+        }
 
-		if (this.imageCache.containsKey(key)) {
-			this.logger.debug("Found image in cache: (" + boundWidth + "x" + boundHeight + ")");
-			result = this.imageCache.get(key);
-		} else {
-			this.logger.debug("Scaling image: old=(" + oldWidth + "x" + oldHeight + ") new=(" + boundWidth + "x"
-					+ boundHeight + ")");
-			result = image.getScaledInstance(boundWidth, boundHeight, Image.SCALE_SMOOTH);
-			this.logger.debug("Placing scaled image into cache");
-			this.imageCache.put(key, result);
-		}
+        Image result = null;
+        String key = Page.createImageCacheKey(boundWidth, boundHeight);
 
-		return result;
-	}
+        if (this.imageCache.containsKey(key))
+        {
+            this.logger.debug("Found image in cache: (" + boundWidth + "x" + boundHeight + ")");
+            result = this.imageCache.get(key);
+        }
+        else
+        {
+            this.logger.debug("Scaling image: old=(" + oldWidth + "x" + oldHeight + ") new=(" + boundWidth + "x"
+                              + boundHeight + ")");
+            result = image.getScaledInstance(boundWidth, boundHeight, Image.SCALE_SMOOTH);
+            this.logger.debug("Placing scaled image into cache");
+            this.imageCache.put(key, result);
+        }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = (prime * result) + ((this.filename == null) ? 0 : this.filename.hashCode());
-		result = (prime * result) + ((this.hash == null) ? 0 : this.hash.hashCode());
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * Returns if the page is marked for deletion.
-	 *
-	 * @return true if marked for deletion
-	 */
-	@JsonIgnore
-	public boolean isMarkedDeleted() {
-		return this.deleted;
-	}
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = (prime * result) + ((this.filename == null) ? 0 : this.filename.hashCode());
+        result = (prime * result) + ((this.hash == null) ? 0 : this.hash.hashCode());
+        return result;
+    }
 
-	/**
-	 * Sets the deleted flag for the page.
-	 *
-	 * @param deleted
-	 *            true if the page is to be deleted
-	 */
-	public void markDeleted(boolean deleted) {
-		this.logger.debug("Mark deletion: " + deleted);
-		this.deleted = deleted;
-	}
+    /**
+     * Returns if the page is marked for deletion.
+     *
+     * @return true if marked for deletion
+     */
+    @JsonIgnore
+    public boolean isMarkedDeleted()
+    {
+        return this.deleted;
+    }
 
-	void setComic(Comic comic) {
-		this.comic = comic;
-	}
+    /**
+     * Sets the deleted flag for the page.
+     *
+     * @param deleted
+     *            true if the page is to be deleted
+     */
+    public void markDeleted(boolean deleted)
+    {
+        this.logger.debug("Mark deletion: " + deleted);
+        this.deleted = deleted;
+    }
 
-	/**
-	 * Sets the content for the page. Also updates the hash.
-	 * 
-	 * @param content
-	 *            the content
-	 */
-	public void setContent(byte[] content) {
-		this.content = content;
-		this.hash = this.createHash(content);
-	}
+    void setComic(Comic comic)
+    {
+        this.comic = comic;
+    }
 
-	/**
-	 * Sets a new filename for the page.
-	 *
-	 * @param filename
-	 *            the new filename
-	 */
-	public void setFilename(String filename) {
-		this.logger.debug("Changing filename: " + this.filename + " -> " + filename);
-		this.filename = filename;
-	}
+    /**
+     * Sets the content for the page. Also updates the hash.
+     * 
+     * @param content
+     *            the content
+     */
+    public void setContent(byte[] content)
+    {
+        this.content = content;
+        this.hash = this.createHash(content);
+    }
+
+    /**
+     * Sets a new filename for the page.
+     *
+     * @param filename
+     *            the new filename
+     */
+    public void setFilename(String filename)
+    {
+        this.logger.debug("Changing filename: " + this.filename + " -> " + filename);
+        this.filename = filename;
+    }
 }

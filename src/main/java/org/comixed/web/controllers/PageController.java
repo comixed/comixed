@@ -63,6 +63,16 @@ public class PageController
         return this.pageRepository.getDuplicatePageCount();
     }
 
+    @RequestMapping(value = "/pages/duplicates",
+                    method = RequestMethod.GET)
+    @CrossOrigin
+    public List<Page> getDuplicatePages()
+    {
+        this.logger.debug("Getting the list of duplicate pages");
+
+        return this.pageRepository.getDuplicatePageList();
+    }
+
     @RequestMapping(value = "/comics/{id}/pages/{index}/content",
                     method = RequestMethod.GET)
     @CrossOrigin
