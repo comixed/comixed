@@ -70,7 +70,11 @@ public class PageController
     {
         this.logger.debug("Getting the list of duplicate pages");
 
-        return this.pageRepository.getDuplicatePageList();
+        List<Page> result = this.pageRepository.getDuplicatePageList();
+
+        this.logger.debug("Returning {} duplicate pages", result.size());
+
+        return result;
     }
 
     @RequestMapping(value = "/comics/{id}/pages/{index}/content",
