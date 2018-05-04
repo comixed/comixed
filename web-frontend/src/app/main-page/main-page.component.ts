@@ -11,6 +11,7 @@ import {ComicService} from '../comic/comic.service';
 export class MainPageComponent implements OnInit {
   public comicCount: Observable<number>;
   public plural = false;
+  public duplicate_pages = 0;
 
   constructor(private comicService: ComicService) {}
 
@@ -19,6 +20,14 @@ export class MainPageComponent implements OnInit {
       res => {
         this.comicCount = res['count'];
         this.plural = res['count'] !== 1;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+    this.comicService.getDuplicatePageCount().subscribe(
+      res => {
+        this.duplicate_pages = res;
       },
       err => {
         console.log(err);
