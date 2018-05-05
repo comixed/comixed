@@ -114,12 +114,8 @@ public class ComicController
     @RequestMapping(value = "/count",
                     method = RequestMethod.GET)
     @CrossOrigin
-    public Map<String,
-               String> getCount()
+    public long getCount()
     {
-        Map<String,
-            String> result = new HashMap<>();
-        result.put("count", String.valueOf(this.comicRepository.count()));
-        return result;
+        return this.comicRepository.count();
     }
 }

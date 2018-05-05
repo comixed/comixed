@@ -18,8 +18,8 @@ export class MainPageComponent implements OnInit {
   ngOnInit() {
     this.comicService.getComicCount().subscribe(
       res => {
-        this.comicCount = res['count'];
-        this.plural = res['count'] !== 1;
+        this.comicCount = res;
+        this.plural = res !== 1;
       },
       err => {
         console.log(err);
