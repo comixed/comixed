@@ -1,0 +1,10 @@
+<div class='media'>
+ <div class='media-left'>
+  <img src='{{ image_url }}' width='192' />
+ </div>
+ <div class='media-body'>
+  <h4>Found In {{ comic.filename }}</h4>
+  <button type="button" class="btn btn-default"
+   (click)="showComic(comic.id)">View Comic</button>
+ </div>
+</div>
