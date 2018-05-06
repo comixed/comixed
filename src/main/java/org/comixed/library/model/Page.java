@@ -204,7 +204,7 @@ public class Page
     @JsonProperty(value = "comic_id")
     public Long getComicId()
     {
-        return this.comic.getId();
+        return this.comic != null ? this.comic.getId() : null;
     }
 
     /**
