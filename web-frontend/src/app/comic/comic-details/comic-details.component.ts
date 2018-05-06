@@ -43,4 +43,8 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+
+  getImageURL(page_id: number): string {
+    return this.comicService.getImageUrlForId(page_id);
+  }
 }
