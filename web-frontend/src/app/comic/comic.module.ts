@@ -9,6 +9,7 @@ import {ComicListEntryComponent} from './comic-list-entry/comic-list-entry.compo
 import {ComicDetailsComponent} from './comic-details/comic-details.component';
 import {DuplicatePageListComponent} from './duplicate-page-list/duplicate-page-list.component';
 import {DuplicatePageListEntryComponent} from './duplicate-page-list-entry/duplicate-page-list-entry.component';
+import { PageThumbnailComponent } from './page-thumbnail/page-thumbnail.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import {DuplicatePageListEntryComponent} from './duplicate-page-list-entry/dupli
     ComicDetailsComponent,
     DuplicatePageListComponent,
     DuplicatePageListEntryComponent,
+    PageThumbnailComponent,
   ]
 })
 export class ComicModule {}

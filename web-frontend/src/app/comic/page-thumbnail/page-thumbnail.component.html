@@ -1,0 +1,9 @@
+<div (click)="show_details = !show_details">
+ <img class="img-thumbnail" src="{{page_url}}" width="{{width}}"
+  height="{{height}}" />
+ <ng-container *ngIf="show_details">
+ <h5>Details</h5>
+ <p>{{page.filename}}</p>
+ <p>({{page.width}}x{{page.height}})</p>
+ </ng-container>
+</div>
