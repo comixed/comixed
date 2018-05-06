@@ -26,10 +26,10 @@ export class ImportComicListComponent implements OnInit {
   }
 
   onLoad(): void {
-    this.loadImportList();
+    this.getFilesForImport();
   }
 
-  loadImportList(): void {
+  getFilesForImport(): void {
     const directory = this.directory.value;
     console.log('Attempting to get a list of comes from:', directory);
     this.comicService.getFilesUnder(directory).subscribe(
@@ -46,20 +46,20 @@ export class ImportComicListComponent implements OnInit {
     file.selected = !file.selected;
   }
 
-  onImportFiles(): void {
+  importFiles(): void {
     this.importing = true;
     const selectedFiles = this.files.filter(file => file.selected).map(file => file.filename);
+    console.log(`selectedFiles='${selectedFiles}'`);
     this.comicService.importFiles(selectedFiles).subscribe(
       value => {
         console.log('[POST] response: ', JSON.stringify(value));
         this.importing = false;
-        this.loadImportList();
+        this.getFilesForImport();
       },
       error => {
         console.log('[POST] failed: ', JSON.stringify(error));
         this.importing = false;
       }
     );
-    console.log('Attempting to import filenames:', selectedFiles);
   }
 }

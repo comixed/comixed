@@ -24,22 +24,25 @@
 	</div>
 
 	<div *ngIf="this.files && this.files.length != 0">
-		<form (ngSubmit)="onImportFiles()" class="ui form">
+		<form (ngSubmit)="importFiles()" class="ui form">
 			<button type="submit" class="ui button">Import</button>
 
 			<table class="ui celled table">
 				<thead>
 					<tr>
-						<th></th>
 						<th>Filename</th>
 						<th>Size</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr *ngFor="let file of this.files">
-						<td><input type="checkbox" (change)="toggleSelected(file)"></td>
 						<td>{{file.filename}}</td>
 						<td>{{file.size}}</td>
+						<td><button *ngIf="!file.selected" class="btn btn-primary"
+								(click)="file.selected = true">Select</button>
+							<button *ngIf="file.selected" class="btn btn-danger"
+								(click)="file.selected = false">Deselect</button></td>
 					</tr>
 				</tbody>
 			</table>
