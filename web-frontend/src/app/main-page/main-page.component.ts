@@ -9,7 +9,7 @@ import {ComicService} from '../comic/comic.service';
   styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent implements OnInit {
-  public comicCount: Observable<number>;
+  public comicCount: number;
   public plural = false;
   public duplicate_pages = 0;
 
