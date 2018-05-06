@@ -28,6 +28,12 @@ export class ComicService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
+  getComicSummary(id: number): Observable<Comic> {
+    return this.http.get(`${this.apiUrl}/comics/${id}/summary`)
+      .map((res: Response) => res.json())
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
+
   getComicCount(): Observable<number> {
     return this.http.get(`${this.apiUrl}/comics/count`)
       .map((res: Response) => res.json())

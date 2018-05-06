@@ -114,6 +114,28 @@ public class ComicController
         return comic;
     }
 
+    @RequestMapping(value = "/{id}/summary",
+                    method = RequestMethod.GET)
+    @CrossOrigin
+    @JsonView(View.Summary.class)
+    public Comic getComicSummary(@PathVariable("id") long id)
+    {
+        this.logger.debug("Fetching comic: id={}", id);
+
+        Comic comic = this.comicRepository.findOne(id);
+
+        if (comic == null)
+        {
+            this.logger.debug("No such comic found: id={}", id);
+        }
+        else
+        {
+            this.logger.debug("Found: {}", comic.getFilename());
+        }
+
+        return comic;
+    }
+
     @RequestMapping(value = "/count",
                     method = RequestMethod.GET)
     @CrossOrigin

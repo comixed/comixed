@@ -21,7 +21,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
 
   ngOnInit() {
     this.image_url = this.comicService.getImageUrlForId(this.page.id);
-    this.comicService.getComic(this.page.comic_id).subscribe(
+    this.comicService.getComicSummary(this.page.comic_id).subscribe(
       comic => {
         this.comic = comic;
       },
