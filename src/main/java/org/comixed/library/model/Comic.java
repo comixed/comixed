@@ -53,6 +53,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <code>Comic</code> represents a single digital comic issue.
@@ -71,20 +72,24 @@ public class Comic
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
+    @JsonView(View.List.class)
     private Long id;
 
     @Enumerated(EnumType.STRING)
     @JsonProperty("archive_type")
+    @JsonView(View.List.class)
     ArchiveType archiveType;
 
     @Column(name = "filename",
             nullable = false,
             unique = true)
     @JsonProperty
+    @JsonView(View.List.class)
     private String filename;
 
     @Column(name = "comic_vine_id")
     @JsonProperty("comic_vine_id")
+    @JsonView(View.List.class)
     private String comicVineId;
 
     @Column(name = "comic_vine_url")
@@ -93,16 +98,19 @@ public class Comic
 
     @Column(name = "publisher")
     @JsonProperty
+    @JsonView(View.List.class)
     private String publisher;
 
     @Column(name = "series")
     @JsonProperty
+    @JsonView(View.List.class)
     private String series;
 
     @Column(name = "added_date",
             updatable = false,
             nullable = false)
     @JsonProperty("added_date")
+    @JsonView(View.List.class)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded = new Date();
 
@@ -110,39 +118,47 @@ public class Comic
             nullable = true)
     @Temporal(TemporalType.DATE)
     @JsonProperty("cover_date")
+    @JsonView(View.List.class)
     private Date coverDate;
 
     @Column(name = "last_read_date",
             nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty("last_read_date")
+    @JsonView(View.List.class)
     private Date lastReadDate;
 
     @Column(name = "volume")
     @JsonProperty
+    @JsonView(View.List.class)
     private String volume;
 
     @Column(name = "issue_number")
     @JsonProperty("issue_number")
+    @JsonView(View.List.class)
     private String issueNumber;
 
     @Column(name = "title")
     @JsonProperty
+    @JsonView(View.List.class)
     private String title;
 
     @Column(name = "description")
     @Lob
     @JsonProperty
+    @JsonView(View.List.class)
     private String description;
 
     @Column(name = "notes")
     @Lob
     @JsonProperty
+    @JsonView(View.List.class)
     private String notes;
 
     @Column(name = "summary")
     @Lob
     @JsonProperty
+    @JsonView(View.List.class)
     private String summary;
 
     @ElementCollection
@@ -151,6 +167,7 @@ public class Comic
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "story_arc_name")
     @JsonProperty("story_arcs")
+    @JsonView(View.List.class)
     private List<String> storyArcs = new ArrayList<>();
 
     @ElementCollection
@@ -159,6 +176,7 @@ public class Comic
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "team_name")
     @JsonProperty("teams")
+    @JsonView(View.List.class)
     private List<String> teams = new ArrayList<>();
 
     @ElementCollection
@@ -167,6 +185,7 @@ public class Comic
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "character_name")
     @JsonProperty("characters")
+    @JsonView(View.List.class)
     private List<String> characters = new ArrayList<>();
 
     @ElementCollection
@@ -175,13 +194,14 @@ public class Comic
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "location_name")
     @JsonProperty("locations")
+    @JsonView(View.List.class)
     private List<String> locations = new ArrayList<>();
 
     @OneToMany(mappedBy = "comic",
                cascade = CascadeType.ALL,
                fetch = FetchType.EAGER)
     @OrderColumn(name = "index")
-    @JsonProperty("pages")
+    @JsonView(View.Details.class)
     private List<Page> pages = new ArrayList<>();
 
     @Transient

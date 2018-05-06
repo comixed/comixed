@@ -20,6 +20,7 @@
 package org.comixed.library.model;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <code>Page</code> represents a single page from a comic.
@@ -91,7 +93,7 @@ public class Page
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty
+    @JsonView(View.List.class)
     private Long id;
 
     @ManyToOne
@@ -102,20 +104,30 @@ public class Page
     @Column(name = "filename",
             updatable = true,
             nullable = false)
-    @JsonProperty
+    @JsonView(View.List.class)
     private String filename;
 
     @Column(name = "hash",
             updatable = true,
             nullable = false)
-    @JsonProperty
+    @JsonView(View.List.class)
     private String hash;
 
     @Column(name = "deleted",
             updatable = true,
             nullable = false)
-    @JsonProperty
+    @JsonView(View.List.class)
     private boolean deleted = false;
+
+    @Column(name = "width",
+            updatable = true)
+    @JsonView(View.Details.class)
+    private Integer width = 0;
+
+    @Column(name = "height",
+            updatable = true)
+    @JsonView(View.Details.class)
+    private Integer height = 0;
 
     @Transient
     @JsonIgnore
@@ -202,6 +214,7 @@ public class Page
     }
 
     @JsonProperty(value = "comic_id")
+    @JsonView(View.Details.class)
     public Long getComicId()
     {
         return this.comic != null ? this.comic.getId() : null;
@@ -212,6 +225,7 @@ public class Page
      *
      * @return the content
      */
+    @JsonIgnore
     public byte[] getContent()
     {
         if (this.content == null)
@@ -253,10 +267,25 @@ public class Page
      *
      * @return the image height
      */
-    @Transient
     public int getHeight()
     {
-        return this.getImage().getHeight(null);
+        if (this.height == null || this.height == 0) this.getImageMetrics();
+        return this.height;
+    }
+
+    private void getImageMetrics()
+    {
+        try
+        {
+            BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(this.getContent()));
+            this.width = bimage.getWidth();
+            this.height = bimage.getHeight();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -273,6 +302,8 @@ public class Page
             try
             {
                 this.icon = ImageIO.read(new ByteArrayInputStream(this.getContent()));
+                this.width = this.icon.getWidth(null);
+                this.height = this.icon.getHeight(null);
             }
             catch (IOException error)
             {
@@ -345,10 +376,10 @@ public class Page
      * @return the image width
      *
      */
-    @Transient
     public int getWidth()
     {
-        return this.getImage().getWidth(null);
+        if (this.width == null || this.width == 0) this.getImageMetrics();
+        return this.width;
     }
 
     @Override

@@ -6,6 +6,7 @@ public class View
     public interface List
     {}
 
-    public interface Details
+    public interface Details extends
+                             List
     {}
 }

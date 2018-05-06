@@ -20,11 +20,10 @@
 package org.comixed.web.controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.View;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 @RequestMapping(value = "/comics")
@@ -68,6 +69,7 @@ public class ComicController
 
     @RequestMapping(method = RequestMethod.GET)
     @CrossOrigin
+    @JsonView(View.List.class)
     public List<Comic> getAll()
     {
         this.logger.debug("Getting all comics");
@@ -93,6 +95,7 @@ public class ComicController
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.GET)
     @CrossOrigin
+    @JsonView(View.Details.class)
     public Comic getComic(@PathVariable("id") long id)
     {
         this.logger.debug("Fetching comic: id={}", id);
