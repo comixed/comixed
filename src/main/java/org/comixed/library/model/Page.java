@@ -249,6 +249,17 @@ public class Page
     }
 
     /**
+     * Returns the height of the image.
+     *
+     * @return the image height
+     */
+    @Transient
+    public int getHeight()
+    {
+        return this.getImage().getHeight(null);
+    }
+
+    /**
      * Returns the original image for the page.
      *
      * @return the image
@@ -328,6 +339,18 @@ public class Page
         return result;
     }
 
+    /**
+     * Returns the width of the image.
+     *
+     * @return the image width
+     *
+     */
+    @Transient
+    public int getWidth()
+    {
+        return this.getImage().getWidth(null);
+    }
+
     @Override
     public int hashCode()
     {
@@ -368,7 +391,7 @@ public class Page
 
     /**
      * Sets the content for the page. Also updates the hash.
-     * 
+     *
      * @param content
      *            the content
      */
