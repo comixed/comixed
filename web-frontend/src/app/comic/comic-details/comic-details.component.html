@@ -63,3 +63,12 @@
 		</div>
 	</div>
 </div>
+
+<div id='comic_pages' class="col-md-12">
+ <div class="row">
+  <h4>Comic Pages</h4>
+ </div>
+ <div class="row">
+  <app-page-thumbnail *ngFor='let page of comic.pages' [page]='page'></app-page-thumbnail>
+ </div>
+</div>
