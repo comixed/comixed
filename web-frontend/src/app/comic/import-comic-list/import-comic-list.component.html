@@ -1,0 +1,48 @@
+<div class="ui raised segment">
+	<h2 class="ui header">Import Comics</h2>
+	<form #f="ngForm" (ngSubmit)="onLoad()" class="ui form">
+		<div class="field">
+			<label for="directory">Root directory:</label> <input type="text"
+				id="directory" placeholder="Root Directory"
+				[formControl]="directoryForm.controls['directory']">
+		</div>
+
+		<button type="submit" class="ui button">Load</button>
+	</form>
+
+	<div *ngIf="importing">
+		<p class="text-center text-muted">
+			<span class="fa fa-spinner fa-spin fa-4x"></span> <br /> <br />
+			Importing, please wait...
+		</p>
+	</div>
+
+	<div *ngIf="this.files && this.files.length == 0">
+		<div>
+			<p>Nothing new to import...
+		</div>
+	</div>
+
+	<div *ngIf="this.files && this.files.length != 0">
+		<form (ngSubmit)="onImportFiles()" class="ui form">
+			<button type="submit" class="ui button">Import</button>
+
+			<table class="ui celled table">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Filename</th>
+						<th>Size</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let file of this.files">
+						<td><input type="checkbox" (change)="toggleSelected(file)"></td>
+						<td>{{file.filename}}</td>
+						<td>{{file.size}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>

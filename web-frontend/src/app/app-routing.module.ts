@@ -4,7 +4,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {MainPageComponent} from './main-page/main-page.component';
 import {DuplicatePageListComponent} from './comic/duplicate-page-list/duplicate-page-list.component';
 import {ComicListComponent} from './comic/comic-list/comic-list.component';
-import {ImportComicsComponent} from './comic/import-comics/import-comics.component';
+import {ImportComicListComponent} from './comic/import-comic-list/import-comic-list.component';
 import {ComicDetailsComponent} from './comic/comic-details/comic-details.component';
 
 const routes: Routes = [
@@ -12,7 +12,7 @@ const routes: Routes = [
   {path: 'duplicates', component: DuplicatePageListComponent},
   {path: 'comics', component: ComicListComponent},
   {path: 'comics/:id', component: ComicDetailsComponent},
-  {path: 'import', component: ImportComicsComponent},
+  {path: 'import', component: ImportComicListComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: '**', redirectTo: 'home'},
 ];
