@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, AbstractControl} from '@angular/forms';
 
-import {FileDetails} from '../FileDetails';
+import {FileDetails} from '../file-details.model';
 import {ComicService} from '../comic.service';
 
 @Component({
