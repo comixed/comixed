@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Observable';
 
 import {Comic} from './comic.model';
 import {Page} from './page.model';
-import {FileDetails} from './fileDetails';
+import {FileDetails} from './file-details.model';
 
 @Injectable()
 export class ComicService {
