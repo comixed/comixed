@@ -10,11 +10,11 @@ import {ComicService} from '../comic.service';
   styleUrls: ['./import-comic-list.component.css']
 })
 export class ImportComicListComponent implements OnInit {
-
   directoryForm: FormGroup;
   directory: AbstractControl;
   files: FileDetails[];
   importing = false;
+  plural = true;
 
   constructor(private comicService: ComicService,
     builder: FormBuilder) {
@@ -35,6 +35,7 @@ export class ImportComicListComponent implements OnInit {
     this.comicService.getFilesUnder(directory).subscribe(
       files => {
         this.files = files;
+        this.plural = this.files.length != 1;
       },
       err => {
         console.log(err);
