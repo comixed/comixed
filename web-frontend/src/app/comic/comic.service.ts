@@ -65,11 +65,7 @@ export class ComicService {
   }
 
   importFiles(filenames: string[]): Observable<Response> {
-    const formData: FormData = new FormData();
-    for (let index = 0; index < filenames.length; index++) {
-      formData.append('filenames', filenames[index]);
-    }
-    return this.http.post(this.apiUrl + '/files/import', formData);
+    return this.http.post(`${this.apiUrl}/files/import`, filenames);
   }
 
   getImageUrl(comicId: number, index: number): string {

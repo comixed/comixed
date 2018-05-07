@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -101,7 +102,7 @@ public class FileController
     @RequestMapping(value = "/import",
                     method = RequestMethod.POST)
     @CrossOrigin
-    public void importComicFiles(@RequestParam(value = "filenames") List<String> filenames)
+    public void importComicFiles(@RequestBody String[] filenames)
     {
         logger.debug("Attempting to post to controller");
         for (String filename : filenames)
