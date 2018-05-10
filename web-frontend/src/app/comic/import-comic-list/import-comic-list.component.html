@@ -18,11 +18,12 @@
 	<div class="row">
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
-			<div *ngIf="!this.files && this.files.length == 0">
+			<div *ngIf="!this.files || this.files.length == 0">
 				<p>Nothing new to import...
 			</div>
 			<div *ngIf="this.files && this.files.length > 0">
-				<p>Found {{ this.files.length }} {{ plural ? 'comics' : 'comic' }} for import.</p>
+				<p>Found {{ this.files.length }} {{ plural ? 'comics' : 'comic'
+					}} for import.</p>
 			</div>
 			<div *ngIf="importing">
 				<p class="text-center text-muted">
@@ -34,7 +35,7 @@
 	</div>
 
 
-	<div *ngIf="this.files && this.files.length != 0">
+	<div *ngIf="this.files && this.files.length > 0">
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -44,6 +45,13 @@
 				</tr>
 			</thead>
 			<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td><button *ngIf="this.files.length > 0"
+							class="btn btn-primary" (click)="selectAllFiles()">Select
+							All</button></td>
+				</tr>
 				<tr *ngFor="let file of this.files">
 					<td>{{file.filename}}</td>
 					<td>{{file.size}}</td>
