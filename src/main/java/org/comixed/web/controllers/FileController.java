@@ -22,7 +22,6 @@ package org.comixed.web.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.comixed.library.model.FileDetails;
@@ -45,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * <code>FileController</code> allows the remote agent to query directories and
  * import files, to download files and work with the file system.
- * 
+ *
  * @author Darryl L. Pierce
  *
  */
@@ -70,22 +69,15 @@ public class FileController
     public List<FileDetails> getAllComicsUnder(@RequestParam(value = "directory") String directory) throws IOException,
                                                                                                     JSONException
     {
-        logger.debug("Searching for comics below: " + directory);
+        this.logger.debug("Searching for comics below: " + directory);
 
         File root = new File(directory);
         List<FileDetails> result = new ArrayList<>();
 
         if (root.isDirectory())
         {
-            getAllFilesUnder(root, result);
-            result.sort(new Comparator<FileDetails>()
-            {
-                @Override
-                public int compare(FileDetails o1, FileDetails o2)
-                {
-                    return o1.getFilename().compareTo(o2.getFilename());
-                }
-            });
+            this.getAllFilesUnder(root, result);
+            result.sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
         }
         else if (root.isFile())
         {
@@ -93,35 +85,12 @@ public class FileController
         }
         else
         {
-            logger.debug("Not a file or directory: " + directory);
+            this.logger.debug("Not a file or directory: " + directory);
         }
+
+        this.logger.debug("Returning {} comic filenames", result.size());
 
         return result;
-    }
-
-    @RequestMapping(value = "/import",
-                    method = RequestMethod.POST)
-    @CrossOrigin
-    public void importComicFiles(@RequestBody String[] filenames)
-    {
-        logger.debug("Attempting to post to controller");
-        for (String filename : filenames)
-        {
-            File file = new File(filename);
-
-            if (file.exists() && file.isFile())
-            {
-                logger.debug("Importing: {}", filename);
-                AddComicWorkerTask task = this.taskFactory.getObject();
-
-                task.setFile(file);
-                worker.addTasksToQueue(task);
-            }
-            else
-            {
-                logger.error("Unable to import file: {}", filename);
-            }
-        }
     }
 
     private void getAllFilesUnder(File root, List<FileDetails> result) throws IOException
@@ -130,14 +99,43 @@ public class FileController
         {
             if (file.isDirectory())
             {
-                logger.debug("Searching directory: " + file.getAbsolutePath());
-                getAllFilesUnder(file, result);
+                this.logger.debug("Searching directory: " + file.getAbsolutePath());
+                this.getAllFilesUnder(file, result);
             }
             else
             {
-                logger.debug("Adding file: " + file.getCanonicalPath());
+
                 if (ComicFileUtils.isComicFile(file)
-                    && comicRepository.findByFilename(file.getAbsolutePath()) == null) result.add(new FileDetails(file.getAbsolutePath(), file.length()));
+                    && (this.comicRepository.findByFilename(file.getCanonicalPath()) == null))
+                {
+                    this.logger.debug("Adding file: " + file.getCanonicalPath());
+                    result.add(new FileDetails(file.getCanonicalPath(), file.length()));
+                }
+            }
+        }
+    }
+
+    @RequestMapping(value = "/import",
+                    method = RequestMethod.POST)
+    @CrossOrigin
+    public void importComicFiles(@RequestBody String[] filenames)
+    {
+        this.logger.debug("Attempting to post to controller");
+        for (String filename : filenames)
+        {
+            File file = new File(filename);
+
+            if (file.exists() && file.isFile())
+            {
+                this.logger.debug("Importing: {}", filename);
+                AddComicWorkerTask task = this.taskFactory.getObject();
+
+                task.setFile(file);
+                this.worker.addTasksToQueue(task);
+            }
+            else
+            {
+                this.logger.error("Unable to import file: {}", filename);
             }
         }
     }
