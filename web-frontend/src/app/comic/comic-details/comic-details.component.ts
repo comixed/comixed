@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
+import {ReadViewerComponent} from '../read-viewer/read-viewer.component';
 
 @Component({
   selector: 'app-comic-details',
