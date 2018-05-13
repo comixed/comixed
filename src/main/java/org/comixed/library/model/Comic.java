@@ -559,6 +559,7 @@ public class Comic
      * @return the page count
      */
     @JsonProperty("page_count")
+    @JsonView(View.List.class)
     public int getPageCount()
     {
         return this.pages.size();
