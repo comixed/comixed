@@ -9,8 +9,9 @@ import {Page} from '../page.model';
   styleUrls: ['./page-thumbnail.component.css']
 })
 export class PageThumbnailComponent implements OnInit {
+  @Input() missing: boolean;
   @Input() page: Page;
-  page_url = "";
+  page_url: string;
   show_details = false;
   width = 192;
   height = 256;
@@ -18,7 +19,7 @@ export class PageThumbnailComponent implements OnInit {
   constructor(private comicService: ComicService) {}
 
   ngOnInit() {
-    this.page_url = this.comicService.getImageUrlForId(this.page.id);
+    this.page_url = this.missing ? '/assets/img/missing.png' : this.comicService.getImageUrlForId(this.page.id);
   }
 
 }

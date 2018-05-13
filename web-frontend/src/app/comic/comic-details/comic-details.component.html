@@ -7,13 +7,15 @@
 </div>
 <div id='comic_detail_section' class='media'>
 	<div class='media-left'>
-		<img src='{{cover_url}}' class='img-thumbnail' width='480'>
+		<img src='{{comic.missing ? "/assets/img/missing.png" : cover_url}}'
+			class='img-thumbnail' width='480'>
 	</div>
 	<div class='media-body'>
 		<div *ngIf='comic.title'>
 			<h4 class='media-heading'>{{comic.title}}</h4>
-            <a *ngIf='comic.comic_vine_url && comic.comic_vine_url.length > 0'
-            href='{{comic.comic_vine_url}}' target='_blank'>View this comic on ComicVine...</a>
+			<a *ngIf='comic.comic_vine_url && comic.comic_vine_url.length > 0'
+				href='{{comic.comic_vine_url}}' target='_blank'>View this comic
+				on ComicVine...</a>
 		</div>
 		<div *ngIf='comic.story_arcs && comic.story_arcs.length > 0'>
 			<h4 (click)='show_story_arcs = !show_story_arcs'>Story Arcs</h4>
@@ -65,10 +67,11 @@
 </div>
 
 <div id='comic_pages' class="col-md-12">
- <div class="row">
-  <h4>Comic Pages</h4>
- </div>
- <div class="row">
-  <app-page-thumbnail *ngFor='let page of comic.pages' [page]='page'></app-page-thumbnail>
- </div>
+	<div class="row">
+		<h4>Comic Pages</h4>
+	</div>
+	<div class="row">
+		<app-page-thumbnail *ngFor='let page of comic.pages'
+			[missing]='comic.missing' [page]='page'></app-page-thumbnail>
+	</div>
 </div>
