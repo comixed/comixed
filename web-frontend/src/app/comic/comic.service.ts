@@ -75,4 +75,8 @@ export class ComicService {
   getImageUrlForId(pageId: number): string {
     return `${this.apiUrl}/pages/${pageId}/content`;
   }
+
+  getComicDownloadLink(comicId: number): string {
+    return `${this.apiUrl}/comics/${comicId}/download`;
+  }
 }
