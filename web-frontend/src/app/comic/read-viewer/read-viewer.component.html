@@ -1,0 +1,19 @@
+<div id='comic-reader-dialog' class='modal'>
+	<div class='modal-dialog modal-lg'>
+		<div class='modal-content'>
+			<div class='modal-header'>
+				<div class='row'>
+					<h4 class='modal-title'>{{comic.title}}</h4>
+				</div>
+				<div class='row'>
+					<button class='btn btn-secondary' (click)='goToPreviousPage()'
+						[class.disabled]='!hasPreviousPage()'>Previous</button>
+					<button class='btn btn-secondary' (click)='goToNextPage()' [class.disabled]='!hasNextPage()'>Next</button>
+				</div>
+			</div>
+			<div class='modal-body'>
+				<img src='{{getCurrentPageURL()}}' width='768'>
+			</div>
+		</div>
+	</div>
+</div>

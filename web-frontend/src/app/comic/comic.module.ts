@@ -10,6 +10,7 @@ import {ComicDetailsComponent} from './comic-details/comic-details.component';
 import {DuplicatePageListComponent} from './duplicate-page-list/duplicate-page-list.component';
 import {DuplicatePageListEntryComponent} from './duplicate-page-list-entry/duplicate-page-list-entry.component';
 import {PageThumbnailComponent} from './page-thumbnail/page-thumbnail.component';
+import {ReadViewerComponent} from './read-viewer/read-viewer.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import {PageThumbnailComponent} from './page-thumbnail/page-thumbnail.component'
     DuplicatePageListComponent,
     DuplicatePageListEntryComponent,
     PageThumbnailComponent,
+    ReadViewerComponent,
   ]
 })
 export class ComicModule {}
