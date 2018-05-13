@@ -277,9 +277,16 @@ public class Page
     {
         try
         {
-            BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(this.getContent()));
-            this.width = bimage.getWidth();
-            this.height = bimage.getHeight();
+            if (!this.comic.isMissing())
+            {
+                BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(this.getContent()));
+                this.width = bimage.getWidth();
+                this.height = bimage.getHeight();
+            }
+            else
+            {
+                this.width = this.height = 0;
+            }
         }
         catch (IOException e)
         {
