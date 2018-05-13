@@ -19,6 +19,10 @@
 
 package org.comixed.web.controllers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +32,9 @@ import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +72,37 @@ public class ComicController
             this.logger.debug("Comic deleted: id={}", id);
             return true;
         }
+    }
+
+    @RequestMapping(value = "/{id}/download",
+                    method = RequestMethod.GET)
+    @CrossOrigin
+    public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id) throws FileNotFoundException,
+                                                                                          IOException
+    {
+        this.logger.debug("Attempting to download comic: id={}", id);
+
+        Comic comic = this.comicRepository.findOne(id);
+
+        if (comic == null)
+        {
+            this.logger.error("No such comic");
+            return null;
+        }
+
+        File file = new File(comic.getFilename());
+
+        if (!file.exists() || !file.isFile())
+        {
+            this.logger.error("Missing or invalid comic file: {}", comic.getFilename());
+            return null;
+        }
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+        return ResponseEntity.ok().contentLength(file.length())
+                             .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+                             .contentType(MediaType.parseMediaType("application/x-cbr")).body(resource);
     }
 
     @RequestMapping(method = RequestMethod.GET)
