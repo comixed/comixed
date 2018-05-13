@@ -29,10 +29,6 @@
 				<div *ngIf='comic.last_read_date'>
 					<p>Last read {{comic.last_read_date | date:'MM/dd/yyyy' }}</p>
 				</div>
-				<p *ngIf='!comic.missing'>
-					<a href='{{getDownloadLink()}}'>Download Comic
-						({{comic.archive_type}}, {{comic.page_count}} pages)</a>
-				</p>
 			</div>
 			<div class='col-sm-4'>
 				<button type='button' class='btn btn-default' (click)='viewComic()'>View</button>
@@ -40,6 +36,9 @@
 				<button type='button' class='btn btn-primary' (click)='editComic()'>Edit</button>
 				&nbsp;
 				<button type='button' class='btn btn-danger' (click)='deleteComic()'>Delete</button>
+                <p *ngIf='!comic.missing'>
+                    <a href='{{getDownloadLink()}}'>Download ({{comic.archive_type}}, {{comic.page_count}} pages)</a>
+                </p>
 			</div>
 		</div>
 	</div>
