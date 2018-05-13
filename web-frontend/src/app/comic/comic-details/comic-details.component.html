@@ -57,7 +57,7 @@
 		<div *ngIf='!comic.missing'>
 			<hr />
 			<p>
-				<a href='{{comic.filename}}'>Download Comic
+				<a href='{{getDownloadLink()}}'>Download Comic
 					({{comic.archive_type}}, {{comic.page_count}} pages)</a>
 			</p>
 		</div>
