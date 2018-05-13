@@ -767,6 +767,8 @@ public class Comic
      *
      * @return <code>true</code> if the file is missing
      */
+    @JsonProperty("missing")
+    @JsonView(View.List.class)
     public boolean isMissing()
     {
         return this.getBackingFile() != null ? !this.backingFile.exists() : true;
