@@ -52,4 +52,8 @@ export class ComicListEntryComponent implements OnInit {
     );
   }
 
+  getDownloadLink(): string {
+    return this.comicService.getComicDownloadLink(this.comic.id);
+  }
+
 }

@@ -30,7 +30,7 @@
 					<p>Last read {{comic.last_read_date | date:'MM/dd/yyyy' }}</p>
 				</div>
 				<p *ngIf='!comic.missing'>
-					<a href='{{comic.filename}}'>Download Comic
+					<a href='{{getDownloadLink()}}'>Download Comic
 						({{comic.archive_type}}, {{comic.page_count}} pages)</a>
 				</p>
 			</div>
