@@ -14,14 +14,14 @@ import {ComicListComponent} from '../comic-list/comic-list.component';
 
 export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
-  coverUrl: string;
+  cover_url: string;
   showSummary = false;
 
   constructor(private router: Router, private comicService: ComicService,
     private comicListComponent: ComicListComponent) {}
 
   ngOnInit() {
-    this.coverUrl = this.comicService.getImageUrl(this.comic.id, 0);
+    this.cover_url = this.comicService.getImageUrl(this.comic.id, 0);
   }
 
   toggleSummary(): void {

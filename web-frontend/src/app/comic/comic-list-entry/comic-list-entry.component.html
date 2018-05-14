@@ -1,6 +1,6 @@
 <div class='media'>
 	<div class='media-left' (click)='toggleSummary()'>
-		<img src='{{comic.missing ? "/assets/img/missing.png" : coverUrl}}' class='img-thumbnail' width='128'>
+		<img src='{{comic.missing ? "/assets/img/missing.png" : cover_url}}' class='img-thumbnail' width='128'>
 	</div>
 	<div class='media-body'>
 		<div *ngIf='comic.summary' class='row'>
