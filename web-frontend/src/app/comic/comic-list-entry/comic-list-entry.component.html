@@ -4,16 +4,20 @@
   </div>
   <div class='media-body'>
     <div class='row'>
-      <div class='col-sm-10'>
+      <div class='col-sm-12'>
         <span class='media-heading text-primary'><a
           [routerLink]='["/comics", comic.id]'>{{title_text}}</a> -
-          added {{comic.added_date | date: 'MM/dd/yyyy' }}</span><br /> <span
-          class='text-info' *ngIf='comic.title'>{{comic.title}}<br /></span>
-      </div>
-      <div class='col-sm-2'>
+          added {{comic.added_date | date: 'MM/dd/yyyy' }}</span>
+        <button type='button' class='btn btn-sm btn-danger'
+          (click)='deleteComic()'>
+          <span class='fa fa-trash'></span>
+        </button>
         <button type='button' class='btn btn-sm btn-primary'
           (click)='clicked($event)' data-toggle='modal'
-          data-target='#display_comic_details'>Details</button>
+          data-target='#display_comic_details'>
+          <span class='fa fa-info-circle'></span>
+        </button>
+        <br /> <span class='text-info' *ngIf='comic.title'>{{comic.title}}<br /></span>
       </div>
     </div>
   </div>

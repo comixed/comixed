@@ -19,7 +19,7 @@ export class ComicListComponent implements OnInit {
 
   ngOnInit() {
     this.getAllComics();
-    this.current_comic = this.comicService.current_comic.subscribe(
+    this.comicService.current_comic.subscribe(
       (comic: Comic) => {
         this.current_comic = comic;
       });
