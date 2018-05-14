@@ -5,9 +5,9 @@
   <div class='media-body'>
     <div class='row'>
       <div class='col-sm-10'>
-        <span class='media-heading'>{{title_text}} - added
-          {{comic.added_date | date: 'MM/dd/yyyy' }}</span><br /> <span
-          *ngIf='comic.title'>{{comic.title}}</span>
+        <span class='media-heading text-primary'>{{title_text}} -
+          added {{comic.added_date | date: 'MM/dd/yyyy' }}</span><br /> <span
+          class='text-info' *ngIf='comic.title'>{{comic.title}}<br /></span>
       </div>
       <div class='col-sm-2'>
         <button type='button' class='btn btn-sm btn-primary'

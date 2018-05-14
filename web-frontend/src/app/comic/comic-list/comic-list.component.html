@@ -1,22 +1,27 @@
 <div id='display_comic_details' class='modal fade' role='dialog'>
-  <div class='modal-dialog'>
+  <div class='modal-dialog modal-lg'>
     <div class='modal-content'>
       <div class='modal-header'>
-        <div class='row'>
-          <div class='col-sm-10'>
-            <h4 class='modal-title'>{{current_comic.series}}</h4>
-          </div>
-          <div class='col-sm-2'>
-            <button type='button' class='close' data-dismiss='modal'>&times;</button>
-          </div>
-        </div>
+        <h4 class='modal-title'>{{getTitleTextFor(current_comic)}}</h4>
       </div>
       <div class='modal-body'>
         <div class='media'>
           <div class='media-left media-center'>
-            <img src='{{getImageURL(current_comic)}}' class='img-thumbnail' width='640'>
+            <img src='{{getImageURL(current_comic)}}'
+              class='img-thumbnail' width='256'>
           </div>
-          <div class='media-body'>{{current_comic.summary}}</div>
+          <div class='media-body'>
+            <h5 class='media-heading'>{{current_comic.title}}</h5>
+            <p class='text-important small'>{{current_comic.summary}}</p>
+            <span class='text-muted'><strong>Pages:</strong>
+              {{current_comic.page_count}}</span><br /> <span
+              *ngIf='current_comic.cover_date !=null' class='text-muted'><strong>Published
+                on</strong> {{current_comic.cover_date|date:'MM/yyyy'}}<br /> </span> <span
+              *ngIf='current_comic.last_read_date != null'
+              class='text-muted'> <strong>Last read on</strong>
+              {{current_comic.last_read_date | date:'MM/dd/yyyy'}}
+            </span>
+          </div>
         </div>
       </div>
     </div>

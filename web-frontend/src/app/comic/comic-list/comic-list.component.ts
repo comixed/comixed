@@ -33,6 +33,19 @@ export class ComicListComponent implements OnInit {
     }
   }
 
+  getTitleTextFor(comic: Comic): string {
+    let result = comic.series || comic.filename;
+
+    if (comic.issue_number != null) {
+      result = result + ' #' + comic.issue_number;
+    }
+    if (comic.volume != null) {
+      result = result + ' (v' + comic.volume + ')';
+    }
+
+    return result;
+  }
+
   getAllComics() {
     this.comicService.findAll().subscribe(
       comics => {
