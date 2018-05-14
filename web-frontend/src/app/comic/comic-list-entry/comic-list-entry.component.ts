@@ -15,12 +15,24 @@ import {ComicListComponent} from '../comic-list/comic-list.component';
 export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
   cover_url: string;
+  title_text: string;
+  @Input() selected: boolean;
 
   constructor(private router: Router, private comicService: ComicService,
-    private comicListComponent: ComicListComponent) {}
+    private comicListComponent: ComicListComponent) {
+  }
 
   ngOnInit() {
     this.cover_url = this.comic.missing ? '/assets/img/missing.png' : this.comicService.getImageUrl(this.comic.id, 0);
+    this.title_text = this.comic.series || 'Unknown Series';
+    if (this.comic.issue_number) this.title_text = this.title_text + ' #' + this.comic.issue_number;
+    if (this.comic.volume) this.title_text = this.title_text + ' (v' + this.comic.volume + ')';
+  }
+
+  clicked(event: any): void {
+    console.log('Selected comic: id=' + this.comic.id);
+    this.comicService.setCurrentComic(this.comic);
+    event.preventDefault();
   }
 
   viewComic(): void {

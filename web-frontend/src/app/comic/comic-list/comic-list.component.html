@@ -1,3 +1,28 @@
+<div id='display_comic_details' class='modal fade' role='dialog'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <div class='row'>
+          <div class='col-sm-10'>
+            <h4 class='modal-title'>{{current_comic.series}}</h4>
+          </div>
+          <div class='col-sm-2'>
+            <button type='button' class='close' data-dismiss='modal'>&times;</button>
+          </div>
+        </div>
+      </div>
+      <div class='modal-body'>
+        <div class='media'>
+          <div class='media-left media-center'>
+            <img src='{{getImageURL(current_comic)}}' class='img-thumbnail' width='640'>
+          </div>
+          <div class='media-body'>{{current_comic.summary}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class='container'>
-	<app-comic-list-entry *ngFor='let comic of comics' [comic]='comic'></app-comic-list-entry>
+  <app-comic-list-entry *ngFor='let comic of comics' [comic]='comic'
+    (onComicSelected)='handleComicClicked($event)'></app-comic-list-entry>
 </div>

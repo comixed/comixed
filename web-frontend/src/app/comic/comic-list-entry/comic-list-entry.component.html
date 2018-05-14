@@ -1,38 +1,18 @@
 <div class='media'>
-  <div class='media-left'>
-    <img src='{{cover_url}}' class='img-thumbnail' width='128'>
+  <div class='media-left media-center'>
+    <img src='{{cover_url}}' class='img-thumbnail' width='64'>
   </div>
   <div class='media-body'>
     <div class='row'>
-      <div class='col-sm-8'>
-        <div *ngIf='comic.series && comic.volume && comic.issue_number'>
-          <h5 class='media-heading'>{{comic.series}}
-            #{{comic.issue_number}} (Vol.{{comic.volume}})</h5>
-        </div>
-        <div *ngIf='comic.title'>
-          <h4 class='media-heading'>{{comic.title}}</h4>
-        </div>
-        <div *ngIf='comic.cover_date'>
-          <p>Published {{comic.cover_date | date:'MM/yyyy' }}
-        </div>
-        <p>Added {{comic.added_date | date: 'MM/dd/yyyy' }}</p>
-        <div *ngIf='comic.last_read_date'>
-          <p>Last read {{comic.last_read_date | date:'MM/dd/yyyy' }}</p>
-        </div>
+      <div class='col-sm-10'>
+        <span class='media-heading'>{{title_text}} - added
+          {{comic.added_date | date: 'MM/dd/yyyy' }}</span><br /> <span
+          *ngIf='comic.title'>{{comic.title}}</span>
       </div>
-      <div class='col-sm-4'>
-        <button type='button' class='btn btn-default'
-          (click)='viewComic()'>View</button>
-        &nbsp;
-        <button type='button' class='btn btn-primary'
-          (click)='editComic()'>Edit</button>
-        &nbsp;
-        <button type='button' class='btn btn-danger'
-          (click)='deleteComic()'>Delete</button>
-        <p *ngIf='!comic.missing'>
-          <a href='{{getDownloadLink()}}'>Download
-            ({{comic.archive_type}}, {{comic.page_count}} pages)</a>
-        </p>
+      <div class='col-sm-2'>
+        <button type='button' class='btn btn-sm btn-primary'
+          (click)='clicked($event)' data-toggle='modal'
+          data-target='#display_comic_details'>Details</button>
       </div>
     </div>
   </div>

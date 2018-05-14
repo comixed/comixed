@@ -4,6 +4,8 @@ import {Http, Response} from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import {Comic} from './comic.model';
 import {Page} from './page.model';
@@ -11,10 +13,14 @@ import {FileDetails} from './file-details.model';
 
 @Injectable()
 export class ComicService {
-
   private apiUrl = 'http://localhost:7171';
+  current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
 
   constructor(private http: Http) {}
+
+  setCurrentComic(comic: Comic): void {
+    this.current_comic.next(comic);
+  }
 
   findAll(): Observable<Comic[]> {
     return this.http.get(`${this.apiUrl}/comics`)
@@ -70,6 +76,10 @@ export class ComicService {
 
   getImageUrl(comicId: number, index: number): string {
     return `${this.apiUrl}/comics/${comicId}/pages/${index}/content`;
+  }
+
+  getMissingImageUrl(): string {
+    return '/assets/img/missing.png';
   }
 
   getImageUrlForId(pageId: number): string {
