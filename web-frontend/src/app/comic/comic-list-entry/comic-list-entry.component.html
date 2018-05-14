@@ -5,7 +5,8 @@
   <div class='media-body'>
     <div class='row'>
       <div class='col-sm-10'>
-        <span class='media-heading text-primary'>{{title_text}} -
+        <span class='media-heading text-primary'><a
+          [routerLink]='["/comics", comic.id]'>{{title_text}}</a> -
           added {{comic.added_date | date: 'MM/dd/yyyy' }}</span><br /> <span
           class='text-info' *ngIf='comic.title'>{{comic.title}}<br /></span>
       </div>
