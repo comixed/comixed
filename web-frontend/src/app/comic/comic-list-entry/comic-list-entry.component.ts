@@ -15,19 +15,12 @@ import {ComicListComponent} from '../comic-list/comic-list.component';
 export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
   cover_url: string;
-  showSummary = false;
 
   constructor(private router: Router, private comicService: ComicService,
     private comicListComponent: ComicListComponent) {}
 
   ngOnInit() {
-    this.cover_url = this.comicService.getImageUrl(this.comic.id, 0);
-  }
-
-  toggleSummary(): void {
-    if (this.comic.summary) {
-      this.showSummary = !this.showSummary;
-    }
+    this.cover_url = this.comic.missing ? '/assets/img/missing.png' : this.comicService.getImageUrl(this.comic.id, 0);
   }
 
   viewComic(): void {
