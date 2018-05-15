@@ -27,7 +27,7 @@
     </div>
   </div>
 </div>
-<div class='container'>
+<div class='row'>
   <app-comic-list-entry *ngFor='let comic of comics' [comic]='comic'
     (onComicSelected)='handleComicClicked($event)'></app-comic-list-entry>
 </div>

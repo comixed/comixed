@@ -35,8 +35,8 @@ export class ComicListEntryComponent implements OnInit {
     event.preventDefault();
   }
 
-  viewComic(): void {
-    this.router.navigate([`comics/${this.comic.id}`]);
+  openComic(): void {
+    this.router.navigate(['/comics', this.comic.id]);
   }
 
   deleteComic(): void {

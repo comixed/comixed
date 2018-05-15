@@ -1,23 +1,25 @@
-<div class='media'>
-  <div class='media-left media-center'>
-    <img src='{{cover_url}}' class='img-thumbnail' width='64'>
-  </div>
-  <div class='media-body'>
-    <div class='row'>
-      <div class='col-sm-12'>
-        <span class='media-heading text-primary'><a
-          [routerLink]='["/comics", comic.id]'>{{title_text}}</a> -
-          added {{comic.added_date | date: 'MM/dd/yyyy' }}</span>
-        <button type='button' class='btn btn-sm btn-danger'
+<div>
+  <div class='img-wrapper'>
+    <img src='{{cover_url}}' class='img-thumbnail img-responsive'
+      width='256'>
+    <div class='img-overlay'>
+      <div>
+        <span class='label label-comic-title'>{{title_text}}</span>
+      </div>
+      <div>
+        <button type='button' class='btn btn-default'
+          (click)='openComic()'>
+          <span class='fa fa-eye'></span>
+        </button>
+        <button type='button' class='btn btn-danger'
           (click)='deleteComic()'>
           <span class='fa fa-trash'></span>
         </button>
-        <button type='button' class='btn btn-sm btn-primary'
+        <button type='button' class='btn btn-primary'
           (click)='clicked($event)' data-toggle='modal'
           data-target='#display_comic_details'>
           <span class='fa fa-info-circle'></span>
         </button>
-        <br /> <span class='text-info' *ngIf='comic.title'>{{comic.title}}<br /></span>
       </div>
     </div>
   </div>
