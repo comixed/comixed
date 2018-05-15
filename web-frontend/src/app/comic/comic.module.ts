@@ -2,6 +2,8 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
+import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
+
 import {ComicRoutingModule} from './comic-routing.module';
 import {ComicListComponent} from './comic-list/comic-list.component';
 import {ImportComicListComponent} from './import-comic-list/import-comic-list.component';
@@ -19,6 +21,10 @@ import {SeriesFilterPipe} from './series-filter.pipe';
     ComicRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger',
+      cancelButtonType: 'basic',
+    })
   ],
   declarations: [
     ComicListComponent,

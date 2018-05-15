@@ -12,7 +12,11 @@
           <span class='fa fa-eye'></span>
         </button>
         <button type='button' class='btn btn-danger'
-          (click)='deleteComic()'>
+          mwlConfirmationPopover [popoverTitle]='delete_comic_title'
+          [popoverMessage]='delete_comic_message'
+          [cancelText]='cancel_button'
+          [confirmText]='confirm_button'
+          (confirm)='deleteComic()'>
           <span class='fa fa-trash'></span>
         </button>
         <button type='button' class='btn btn-primary'
