@@ -11,6 +11,7 @@ import {DuplicatePageListComponent} from './duplicate-page-list/duplicate-page-l
 import {DuplicatePageListEntryComponent} from './duplicate-page-list-entry/duplicate-page-list-entry.component';
 import {PageThumbnailComponent} from './page-thumbnail/page-thumbnail.component';
 import {ReadViewerComponent} from './read-viewer/read-viewer.component';
+import {SeriesFilterPipe} from './series-filter.pipe';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import {ReadViewerComponent} from './read-viewer/read-viewer.component';
     DuplicatePageListEntryComponent,
     PageThumbnailComponent,
     ReadViewerComponent,
+    SeriesFilterPipe,
   ]
 })
 export class ComicModule {}

@@ -8,7 +8,7 @@ import {HttpModule} from '@angular/http';
 
 import {ComicModule} from './comic/comic.module';
 import {MainPageComponent} from './main-page/main-page.component';
-import { NavigationComponent } from './navigation/navigation.component';
+import {NavigationComponent} from './navigation/navigation.component';
 
 
 @NgModule({
