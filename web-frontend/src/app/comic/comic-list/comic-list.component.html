@@ -1,6 +1,12 @@
-<!-- search box -->
 <div class='row'>
-  <div class='col-md-10'></div>
+  <div class='col-md-8'></div>
+  <!-- sort options -->
+  <div class='col-md-2'>
+    <select #selectElem (change)='setSortOption(selectElem.value)'>
+      <option *ngFor='let option of sort_options' [value]='option.id'>{{option.label}}</option>
+    </select>
+  </div>
+  <!-- search box -->
   <div class='col-md-2'>
     <input [(ngModel)]='title_search'
       placeholder='enter search terms here'>

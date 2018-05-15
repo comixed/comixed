@@ -15,6 +15,13 @@ export class ComicListComponent implements OnInit {
   private comics: Comic[];
   private all_series: string[];
   private current_comic: Comic;
+  private sort_options: any[] = [
+    {id: 0, label: 'Default'},
+    {id: 1, label: 'Sort by series'},
+    {id: 2, label: 'Sort by added date'},
+    {id: 3, label: 'Sort by cover date'},
+    {id: 4, label: 'Sort by last read date'},
+  ];
 
   constructor(private router: Router, private comicService: ComicService) {}
 
@@ -34,6 +41,26 @@ export class ComicListComponent implements OnInit {
     }
   }
 
+  setSortOption(sort_id: any): void {
+    this.comics.sort((comic1: Comic, comic2: Comic) => {
+
+      let left: any;
+      let right: any;
+
+      switch (parseInt(sort_id, 10)) {
+        case 1: left = comic1.series; right = comic2.series; break;
+        case 2: left = comic1.added_date; right = comic2.added_date; break;
+        case 3: left = comic1.cover_date; right = comic2.cover_date; break;
+        case 4: left = comic1.last_read_date; right = comic2.last_read_date; break;
+        default: left = comic1.id; right = comic2.id; break;
+      }
+
+      if (left < right) {return -1;}
+      if (left > right) {return 1;}
+      return 0;
+    });
+  }
+
   getTitleTextFor(comic: Comic): string {
     let result = comic.series || comic.filename;
 
@@ -47,7 +74,7 @@ export class ComicListComponent implements OnInit {
     return result;
   }
 
-  getAllComics() {
+  getAllComics(): void {
     this.comicService.findAll().subscribe(
       comics => {
         this.comics = comics;
