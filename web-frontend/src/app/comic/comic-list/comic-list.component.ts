@@ -13,6 +13,7 @@ import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.comp
 })
 export class ComicListComponent implements OnInit {
   private comics: Comic[];
+  private all_series: string[];
   private current_comic: Comic;
 
   constructor(private router: Router, private comicService: ComicService) {}
@@ -50,6 +51,10 @@ export class ComicListComponent implements OnInit {
     this.comicService.findAll().subscribe(
       comics => {
         this.comics = comics;
+        this.all_series = new Array();
+        this.comics.forEach((comic: Comic) => {
+          this.all_series.push(comic.series || comic.filename);
+        });
       },
       err => {
         console.log(err);

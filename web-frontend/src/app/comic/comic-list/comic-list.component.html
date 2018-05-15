@@ -1,3 +1,11 @@
+<!-- search box -->
+<div class='row'>
+  <div class='col-md-10'></div>
+  <div class='col-md-2'>
+    <input [(ngModel)]='title_search'
+      placeholder='enter search terms here'>
+  </div>
+</div>
 <div id='display_comic_details' class='modal fade' role='dialog'>
   <div class='modal-dialog modal-lg'>
     <div class='modal-content'>
@@ -28,6 +36,7 @@
   </div>
 </div>
 <div class='row'>
-  <app-comic-list-entry *ngFor='let comic of comics' [comic]='comic'
-    (onComicSelected)='handleComicClicked($event)'></app-comic-list-entry>
+  <app-comic-list-entry
+    *ngFor='let comic of comics | series_filter : title_search'
+    [comic]='comic' (onComicSelected)='handleComicClicked($event)'></app-comic-list-entry>
 </div>
