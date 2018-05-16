@@ -26,7 +26,11 @@ export class ComicListComponent implements OnInit {
   constructor(private router: Router, private comicService: ComicService) {}
 
   ngOnInit() {
-    this.getAllComics();
+    this.comicService.all_comics_update.subscribe(
+      (comics: Comic[]) => {
+        this.comics = comics;
+      }
+    );
     this.comicService.current_comic.subscribe(
       (comic: Comic) => {
         this.current_comic = comic;
@@ -73,37 +77,4 @@ export class ComicListComponent implements OnInit {
 
     return result;
   }
-
-  getAllComics(): void {
-    this.comicService.findAll().subscribe(
-      comics => {
-        this.comics = comics;
-        this.all_series = new Array();
-        this.comics.forEach((comic: Comic) => {
-          this.all_series.push(comic.series || comic.filename);
-        });
-      },
-      err => {
-        console.log(err);
-      }
-    )
-  }
-
-  redirectAddComicPage() {
-    this.router.navigate(['/comic/add']);
-  }
-
-  editComicPage(comic: Comic) {
-    if (comic) {
-      console.log('Edit comic: id=' + comic.id + " filename=" + comic.filename);
-    }
-  }
-
-  deleteComic(comic: Comic) {
-    if (comic) {
-      console.log('Delete comic: id=' + comic.id + " filename=" + comic.filename);
-    }
-  }
-
-
 }

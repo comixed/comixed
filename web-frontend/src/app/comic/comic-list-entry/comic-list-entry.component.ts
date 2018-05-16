@@ -46,15 +46,10 @@ export class ComicListEntryComponent implements OnInit {
   }
 
   deleteComic(): void {
-    console.log('Deleting the comic an id of ', this.comic.id, '...');
     this.comicService.deleteComic(this.comic).subscribe(
       success => {
-        console.log('success: ', success);
         if (success) {
-          console.log('Comic was deleted.');
-          this.comicListComponent.getAllComics();
-        } else {
-          console.log('Comic not delete');
+          this.comicService.removeComic(this.comic.id);
         }
       },
       error => {
@@ -62,9 +57,4 @@ export class ComicListEntryComponent implements OnInit {
       }
     );
   }
-
-  getDownloadLink(): string {
-    return this.comicService.getComicDownloadLink(this.comic.id);
-  }
-
 }
