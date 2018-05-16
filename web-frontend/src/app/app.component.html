@@ -1,3 +1,9 @@
 <app-navigation></app-navigation>
-
+<div class='container' *ngIf='error_message && error_message.length > 0'>
+  <div class='alert alert-error alert-dismissable' role='alert'>
+    <a href="#" class="close" data-dismiss="alert" aria-label="close"
+      (click)='clearErrorMessage()'>&times;</a> <strong>Error!</strong>
+    {{error_message}}
+  </div>
+</div>
 <router-outlet></router-outlet>

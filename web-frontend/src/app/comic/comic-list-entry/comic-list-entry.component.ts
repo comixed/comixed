@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
+import {ErrorsService} from '../../errors.service';
 import {ComicListComponent} from '../comic-list/comic-list.component';
 
 @Component({
@@ -22,7 +23,7 @@ export class ComicListEntryComponent implements OnInit {
   confirm_button = 'Yes';
   cancel_button = 'No!';
 
-  constructor(private router: Router, private comicService: ComicService,
+  constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorsService,
     private comicListComponent: ComicListComponent) {
   }
 
@@ -52,8 +53,9 @@ export class ComicListEntryComponent implements OnInit {
           this.comicService.removeComic(this.comic.id);
         }
       },
-      error => {
-        console.log('ERROR: ', error);
+      (err: any) => {
+        console.log('ERROR: ', error.message);
+        this.errorsService.fireErrorMessage('Failed to delete comic from teh library');
       }
     );
   }
