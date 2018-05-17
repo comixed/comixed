@@ -115,7 +115,7 @@ public class ComicInfoEntryAdaptor implements
             if (xmlInputReader.isStartElement())
             {
                 final String tagName = xmlInputReader.getLocalName();
-                this.logger.info("Processing tag: " + tagName);
+                this.logger.debug("Processing tag: " + tagName);
                 switch (tagName)
                 {
                     case "Publisher":
@@ -171,7 +171,7 @@ public class ComicInfoEntryAdaptor implements
                         }
                         break;
                     default:
-                        this.logger.info("Unrecognized tag");
+                        this.logger.debug("Unrecognized tag");
                         break;
                 }
             }

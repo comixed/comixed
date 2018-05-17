@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
 import org.comixed.adaptors.StatusAdaptor;
@@ -44,6 +45,13 @@ import net.jodah.concurrentunit.Waiter;
 @TestPropertySource(locations = "classpath:test-application.properties")
 public class WorkerTest extends ConcurrentTestCase
 {
+    class TestingWorkerTask extends AbstractWorkerTask
+    {
+        @Override
+        public void startTask() throws WorkerTaskException
+        {}
+    }
+
     @InjectMocks
     private Worker worker;
 
@@ -112,5 +120,26 @@ public class WorkerTest extends ConcurrentTestCase
         worker.fireQueueChangedEvent();
 
         Mockito.verify(workerListener, Mockito.times(1)).queueChanged();
+    }
+
+    @Test
+    public void testGetCountForEmptyQueue()
+    {
+        assertEquals(0, worker.getCountFor(AddComicWorkerTask.class));
+    }
+
+    @Test
+    public void testGetCountFor()
+    {
+        int count = ThreadLocalRandom.current().nextInt(25);
+
+        for (int index = 0;
+             index < count;
+             index++)
+        {
+            worker.addTasksToQueue(new TestingWorkerTask());
+        }
+
+        assertEquals(count, worker.getCountFor(TestingWorkerTask.class));
     }
 }

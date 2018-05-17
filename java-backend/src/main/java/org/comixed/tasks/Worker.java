@@ -20,7 +20,9 @@
 package org.comixed.tasks;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -64,6 +66,9 @@ public class Worker implements
 
     public List<WorkerListener> listeners = new ArrayList<>();
 
+    private Map<Class<? extends WorkerTask>,
+                Integer> taskCounts = new HashMap<>();
+
     public Worker()
     {
         super();
@@ -77,10 +82,21 @@ public class Worker implements
      */
     public void addTasksToQueue(WorkerTask task)
     {
-        this.logger.debug("Adding task to queue: " + task);
+        this.logger.debug("Adding task of type {} to queue", task.getClass());
         try
         {
             this.queue.put(task);
+
+            int count = 0;
+
+            if (this.taskCounts.containsKey(task.getClass()))
+            {
+                count = this.taskCounts.get(task.getClass());
+            }
+            count++;
+            this.taskCounts.put(task.getClass(), count);
+            this.logger.debug("There are now {} tasks of type {}", count, task.getClass());
+
         }
         catch (InterruptedException error)
         {
@@ -123,6 +139,24 @@ public class Worker implements
         for (WorkerListener listener : this.listeners)
         {
             listener.workerStateChanged();
+        }
+    }
+
+    /**
+     * Returns the number of pending tasks of the specified type are in the
+     * queue.
+     *
+     * @param taskClass
+     *            the task type
+     * @return the count
+     */
+    public int getCountFor(Class<? extends WorkerTask> taskClass)
+    {
+        synchronized (this.semaphore)
+        {
+            if (this.queue.isEmpty() || !this.taskCounts.containsKey(taskClass)) return 0;
+
+            return this.taskCounts.get(taskClass);
         }
     }
 
@@ -183,6 +217,10 @@ public class Worker implements
                 if (!this.queue.isEmpty() && (this.state == State.RUNNING))
                 {
                     WorkerTask task = this.queue.poll();
+                    this.logger.debug("Popping task of type {}", task.getClass());
+                    int count = this.taskCounts.get(task.getClass()) - 1;
+                    this.taskCounts.put(task.getClass(), count);
+                    this.logger.debug("There are now {} tasks of type {}", count, task.getClass());
                     this.fireQueueChangedEvent();
                     try
                     {
