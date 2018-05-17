@@ -1,10 +1,25 @@
-<div class='media'>
- <div class='media-left'>
-  <img src='{{ image_url }}' width='192' />
- </div>
- <div class='media-body'>
-  <h4>Found In {{ comic.filename }}</h4>
-  <button type="button" class="btn btn-default"
-   (click)="showComic(comic.id)">View Comic</button>
- </div>
+<div class='comic-entry'>
+  <div class='img-wrapper'>
+    <img src='{{cover_url}}' class='img-thumbnail img-responsive'
+      width='256'>
+    <div class='img-overlay'>
+      <div>
+        <span class='label label-comic-title'>{{page_title}}</span>
+      </div>
+      <div>
+        <button type='button' class='btn btn-default'
+          (click)='openComic()'>
+          <span class='fa fa-eye'></span>
+        </button>
+        <button type='button' class='btn btn-danger'
+          *ngIf='!page.deleted' mwlConfirmationPopover
+          [popoverTitle]='delete_page_title'
+          [popoverMessage]='delete_page_message'
+          [cancelText]='cancel_button' [confirmText]='confirm_button'
+          (confirm)='deletePage()'>
+          <span class='fa fa-minus'></span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

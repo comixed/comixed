@@ -56,6 +56,10 @@ export class ComicService {
     return this.http.get(`${this.api_url}/pages/duplicates`);
   }
 
+  markPageAsDeleted(page: Page): Observable<any> {
+    return this.http.delete(`${this.api_url}/pages/${page.id}`);
+  }
+
   getFilesUnder(directory: string): Observable<any> {
     return this.http.get(`${this.api_url}/files/contents?directory=${directory}`);
   }

@@ -14,16 +14,36 @@ import {Comic} from '../comic.model';
 })
 export class DuplicatePageListEntryComponent implements OnInit {
   @Input() page: Page;
-  image_url: string;
+  cover_url: string;
   comic: Comic;
+  page_title: string;
+  delete_page_title: string;
+  delete_page_message: string;
+  confirm_button = 'Yes';
+  cancel_button = 'No';
 
   constructor(private router: Router, private comicService: ComicService) {}
 
   ngOnInit() {
-    this.image_url = this.comicService.getImageUrlForId(this.page.id);
+    this.cover_url = this.comicService.getImageUrlForId(this.page.id);
     this.comicService.getComicSummary(this.page.comic_id).subscribe(
-      comic => {
+      (comic: Comic) => {
         this.comic = comic;
+        this.page_title = this.page.filename + ' in ' + this.comic.filename + ' [';
+        if (this.comic.series) {
+          this.page_title = this.page_title + this.comic.series;
+        } else {
+          this.page_title = this.page_title + 'Unknown Series';
+        }
+        if (this.comic.issue_number) {
+          this.page_title = this.page_title + ' #' + this.comic.issue_number;
+        }
+        if (this.comic.volume) {
+          this.page_title = this.page_title + ' (v' + this.comic.volume + ')';
+        }
+        this.page_title = this.page_title + ']';
+        this.delete_page_title = `Delete the page ${this.page.filename}`;
+        this.delete_page_message = 'Are you sure you want to delete this page?';
       },
       error => {
         console.log(error);
@@ -31,7 +51,12 @@ export class DuplicatePageListEntryComponent implements OnInit {
     );
   }
 
-  showComic(id: number) {
-    this.router.navigate(['comics', id]);
+  openComic(): void {
+    this.router.navigate(['comics', this.comic.id]);
+  }
+
+  deletePage(): void {
+    this.comicService.markPageAsDeleted(this.page)
+      .subscribe(response => this.page.deleted = true);
   }
 }

@@ -1,7 +1,6 @@
 <div>
-	<p>There are currently {{count}} duplicate pages.
+  <p>There are currently {{count}} duplicate pages.
 </div>
-
-<div>
-	<app-duplicate-list-entry *ngFor='let page of pages' [page]='page'></app-duplicate-list-entry>
+<div class='row'>
+  <app-duplicate-list-entry *ngFor='let page of pages' [page]='page'></app-duplicate-list-entry>
 </div>
