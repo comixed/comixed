@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, FormArray, Validators, AbstractControl} from '@a
 
 import {FileDetails} from '../file-details.model';
 import {ComicService} from '../comic.service';
+import {ErrorsService} from '../../errors.service';
 
 @Component({
   selector: 'app-import-comics',
@@ -15,8 +16,10 @@ export class ImportComicListComponent implements OnInit {
   files: FileDetails[];
   importing = false;
   plural = true;
+  busy = false;
+  display = 'none';
 
-  constructor(private comicService: ComicService,
+  constructor(private comicService: ComicService, private errorsService: ErrorsService,
     builder: FormBuilder) {
     this.directoryForm = builder.group({'directory': ['', Validators.required]});
     this.directory = this.directoryForm.controls['directory'];
@@ -30,15 +33,19 @@ export class ImportComicListComponent implements OnInit {
   }
 
   getFilesForImport(): void {
+    this.setBusyMode(true);
     const directory = this.directory.value;
     console.log('Attempting to get a list of comes from:', directory);
     this.comicService.getFilesUnder(directory).subscribe(
       files => {
         this.files = files;
-        this.plural = this.files.length != 1;
+        this.plural = this.files.length !== 1;
+        this.setBusyMode(false);
       },
       err => {
         console.log(err);
+        this.errorsService.fireErrorMessage('Error while loading filenames...');
+        this.setBusyMode(false);
       }
     );
   }
@@ -66,5 +73,10 @@ export class ImportComicListComponent implements OnInit {
         this.importing = false;
       }
     );
+  }
+
+  setBusyMode(mode: boolean): void {
+    this.busy = mode;
+    this.display = this.busy ? 'block' : 'none';
   }
 }

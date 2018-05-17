@@ -1,66 +1,78 @@
-<div class="ui raised segment">
-	<div class="row">
-		<div class="col-md-2"></div>
-		<div class="col-md-10">
-			<h2 class="ui header">Import Comics</h2>
-			<form #f="ngForm" (ngSubmit)="onLoad()" class="ui form">
-				<div class="field">
-					<label for="directory">Root directory:</label> <input type="text"
-						id="directory" placeholder="Root Directory"
-						[formControl]="directoryForm.controls['directory']">
-					<button type="submit" class="btn btn-primary">Load</button>
-					<button *ngIf="this.files && this.files.length != 0"
-						class="btn btn-default" type="button" (click)="importFiles()">Import</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2"></div>
-		<div class="col-md-10">
-			<div *ngIf="!this.files || this.files.length == 0">
-				<p>Nothing new to import...
-			</div>
-			<div *ngIf="this.files && this.files.length > 0">
-				<p>Found {{ this.files.length }} {{ plural ? 'comics' : 'comic'
-					}} for import.</p>
-			</div>
-			<div *ngIf="importing">
-				<p class="text-center text-muted">
-					<span class="fa fa-spinner fa-spin fa-4x"></span> <br /> <br />
-					Importing, please wait...
-				</p>
-			</div>
-		</div>
-	</div>
-
-
-	<div *ngIf="this.files && this.files.length > 0">
-		<table class="ui celled table">
-			<thead>
-				<tr>
-					<th>Filename</th>
-					<th>Size</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td></td>
-					<td></td>
-					<td><button *ngIf="this.files.length > 0"
-							class="btn btn-primary" (click)="selectAllFiles()">Select
-							All</button></td>
-				</tr>
-				<tr *ngFor="let file of this.files">
-					<td>{{file.filename}}</td>
-					<td>{{file.size}}</td>
-					<td><button *ngIf="!file.selected" class="btn btn-primary"
-							(click)="file.selected = true">Select</button>
-						<button *ngIf="file.selected" class="btn btn-danger"
-							(click)="file.selected = false">Deselect</button></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+<div class="modal" role='dialog' [ngStyle]="{'display':display}">
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h4 class='modal-title'>Loading File Details...</h4>
+      </div>
+      <div class='modal-body'>
+        <i class='fa fa-refresh fa-spin'
+          style='font-size: 128px; color: red'></i>
+      </div>
+    </div>
+  </div>
+</div>
+<div class='ui raised segment' [class.import-backdrop]='busy'>
+  <div class='row'>
+    <div class='col-md-2'></div>
+    <div class='col-md-10'>
+      <h2 class='ui header'>Import Comics</h2>
+      <form #f='ngForm' (ngSubmit)='onLoad()' class='ui form'>
+        <div class='field'>
+          <label for='directory'>Root directory:</label> <input
+            type='text' id='directory' placeholder='Root Directory'
+            [formControl]='directoryForm.controls["directory"]'>
+          <button type='submit' class='btn btn-primary'>Load</button>
+          <button *ngIf='this.files && this.files.length != 0'
+            class='btn btn-default' type='button'
+            (click)='importFiles()'>Import</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-2'></div>
+    <div class='col-md-10'>
+      <div *ngIf='!this.files || this.files.length == 0'>
+        <p>Nothing new to import...
+      </div>
+      <div *ngIf='this.files && this.files.length > 0'>
+        <p>Found {{ this.files.length }} {{ plural ? 'comics' :
+          'comic' }} for import.</p>
+      </div>
+      <div *ngIf='importing'>
+        <p class='text-center text-muted'>
+          <span class='fa fa-spinner fa-spin fa-4x'></span> <br /> <br />
+          Importing, please wait...
+        </p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf='this.files && this.files.length > 0'>
+    <table class='ui celled table'>
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th>Size</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td><button *ngIf='this.files.length > 0'
+              class='btn btn-primary' (click)='selectAllFiles()'>Select
+              All</button></td>
+        </tr>
+        <tr *ngFor='let file of this.files'>
+          <td>{{file.filename}}</td>
+          <td>{{file.size}}</td>
+          <td><button *ngIf='!file.selected'
+              class='btn btn-primary' (click)='file.selected = true'>Select</button>
+            <button *ngIf='file.selected' class='btn btn-danger'
+              (click)='file.selected = false'>Deselect</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
