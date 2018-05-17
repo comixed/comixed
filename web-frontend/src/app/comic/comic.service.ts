@@ -60,6 +60,10 @@ export class ComicService {
     return this.http.delete(`${this.api_url}/pages/${page.id}`);
   }
 
+  markPageAsUndeleted(page: Page): Observable<any> {
+    return this.http.post(`${this.api_url}/pages/${page.id}/undelete`, {});
+  }
+
   getFilesUnder(directory: string): Observable<any> {
     return this.http.get(`${this.api_url}/files/contents?directory=${directory}`);
   }

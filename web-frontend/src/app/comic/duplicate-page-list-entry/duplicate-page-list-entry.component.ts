@@ -18,7 +18,9 @@ export class DuplicatePageListEntryComponent implements OnInit {
   comic: Comic;
   page_title: string;
   delete_page_title: string;
+  undelete_page_title: string;
   delete_page_message: string;
+  undelete_page_message: string;
   confirm_button = 'Yes';
   cancel_button = 'No';
 
@@ -43,7 +45,9 @@ export class DuplicatePageListEntryComponent implements OnInit {
         }
         this.page_title = this.page_title + ']';
         this.delete_page_title = `Delete the page ${this.page.filename}`;
+        this.undelete_page_title = `Undelete the page ${this.page.filename}`;
         this.delete_page_message = 'Are you sure you want to delete this page?';
+        this.undelete_page_message = 'Are you sure you want to undelete this page?';
       },
       error => {
         console.log(error);
@@ -58,5 +62,10 @@ export class DuplicatePageListEntryComponent implements OnInit {
   deletePage(): void {
     this.comicService.markPageAsDeleted(this.page)
       .subscribe(response => this.page.deleted = true);
+  }
+
+  undeletePage(): void {
+    this.comicService.markPageAsUndeleted(this.page)
+      .subscribe(response => this.page.deleted = false);
   }
 }

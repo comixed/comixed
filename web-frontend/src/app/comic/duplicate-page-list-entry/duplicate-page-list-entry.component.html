@@ -19,6 +19,13 @@
           (confirm)='deletePage()'>
           <span class='fa fa-minus'></span>
         </button>
+        <button type='button' class='btn btn-basic' *ngIf='page.deleted'
+          mwlConfirmationPopover [popoverTitle]='undelete_page_title'
+          [popoverMessage]='undelete_page_message'
+          [cancelText]='cancel_button' [confirmText]='confirm_button'
+          (confirm)='undeletePage()'>
+          <span class='fa fa-plus'></span>
+        </button>
       </div>
     </div>
   </div>
