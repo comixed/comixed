@@ -21,6 +21,7 @@ export class Comic {
   characters: string[];
   teams: string[];
   locations: string[];
+  pages: any[];
 
   constructor(
     id?: number,
@@ -45,6 +46,7 @@ export class Comic {
     characters?: string[],
     teams?: string[],
     locations?: string[],
+    pages?: any[],
   ) {
     this.id = id;
     this.filename = filename;
@@ -68,5 +70,6 @@ export class Comic {
     this.characters = characters;
     this.teams = teams;
     this.locations = locations;
+    this.pages = pages;
   }
 }

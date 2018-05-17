@@ -4,7 +4,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 
 import {ComicModule} from './comic/comic.module';
 import {MainPageComponent} from './main-page/main-page.component';
@@ -21,7 +21,7 @@ import {NavigationComponent} from './navigation/navigation.component';
     BrowserModule,
     NgbModule.forRoot(),
     AppRoutingModule,
-    HttpModule,
+    HttpClientModule,
     ComicModule,
   ],
   providers: [],

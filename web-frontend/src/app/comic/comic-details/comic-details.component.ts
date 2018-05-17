@@ -25,14 +25,13 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.activatedRoute.params.subscribe(params => {
       const id = +params['id'];
-      console.log('Using the id', id, 'to load a comic');
       this.comicService.getComic(id).subscribe(
-        comic => {
+        (comic: Comic) => {
           this.comic = comic;
           this.cover_url = this.comicService.getImageUrl(this.comic.id, 0);
         },
         error => {
-          console.log('error:', error);
+          console.log('error:', error.message);
         }
       );
     },

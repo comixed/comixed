@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
 import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.component';
+import {SeriesFilterPipe} from '../series-filter.pipe';
 
 @Component({
   selector: 'app-comic-list',
@@ -38,7 +39,7 @@ export class ComicListComponent implements OnInit {
   }
 
   getImageURL(comic: Comic): string {
-    if (comic.missing == true) {
+    if (comic.missing === true) {
       return this.comicService.getMissingImageUrl();
     } else {
       return this.comicService.getImageUrl(comic.id, 0);
@@ -59,8 +60,12 @@ export class ComicListComponent implements OnInit {
         default: left = comic1.id; right = comic2.id; break;
       }
 
-      if (left < right) {return -1;}
-      if (left > right) {return 1;}
+      if (left < right) {
+        return -1;
+      }
+      if (left > right) {
+        return 1;
+      }
       return 0;
     });
   }

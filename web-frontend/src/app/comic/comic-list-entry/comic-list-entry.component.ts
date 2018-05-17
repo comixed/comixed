@@ -30,8 +30,12 @@ export class ComicListEntryComponent implements OnInit {
   ngOnInit() {
     this.cover_url = this.comic.missing ? '/assets/img/missing.png' : this.comicService.getImageUrl(this.comic.id, 0);
     this.title_text = this.comic.series || 'Unknown Series';
-    if (this.comic.issue_number) this.title_text = this.title_text + ' #' + this.comic.issue_number;
-    if (this.comic.volume) this.title_text = this.title_text + ' (v' + this.comic.volume + ')';
+    if (this.comic.issue_number) {
+      this.title_text = this.title_text + ' #' + this.comic.issue_number;
+    }
+    if (this.comic.volume) {
+      this.title_text = this.title_text + ' (v' + this.comic.volume + ')';
+    }
     this.delete_comic_title = `Delete ${this.title_text}`;
     this.delete_comic_message = 'Are you sure you want to delete this comic?';
   }

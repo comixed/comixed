@@ -1,6 +1,6 @@
 import {Injectable, EventEmitter} from '@angular/core';
 
-import {Http, Response} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Observable} from 'rxjs/Observable';
@@ -19,20 +19,11 @@ export class ComicService {
   all_comics: Comic[];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
 
-  constructor(private http: Http, private errorsService: ErrorsService) {
+  constructor(private http: HttpClient, private errorsService: ErrorsService) {
     this.http.get(`${this.api_url}/comics`)
-      .map((res: Response) => res.json())
-      .catch((err: any) => {
-        this.errorsService.fireErrorMessage(err.message || 'Failed to load comics...');
-      })
-      .subscribe(
-      (comics: Comic[]) => {
+      .subscribe((comics: Comic[]) => {
         this.all_comics = comics;
         this.all_comics_update.emit(this.all_comics);
-      },
-      (err: any) => {
-        console.log('err:', err.message);
-        this.errorsService.fireErrorMessage('Failed to load comics from the library...');
       });
   }
 
@@ -41,76 +32,40 @@ export class ComicService {
   }
 
   removeComic(comic_id: number) {
-    this.all_comics = this.all_comics.filter((comic: Comic) => {return comic.id != comic_id});
+    this.all_comics = this.all_comics.filter((comic: Comic) => comic.id !== comic_id);
     this.all_comics_update.emit(this.all_comics);
   }
 
-  getComic(id: number): Observable<Comic> {
-    return this.http.get(`${this.api_url}/comics/${id}`)
-      .map((res: Response) => res.json())
-      .catch((err: any) => Observable.throw(err.json().error || 'Server error'));
+  getComic(id: number): Observable<any> {
+    return this.http.get(`${this.api_url}/comics/${id}`);
   }
 
-  getComicSummary(id: number): Observable<Comic> {
-    return this.http.get(`${this.api_url}/comics/${id}/summary`)
-      .map((res: Response) => res.json())
-      .catch((err: any) => {
-        console.log('err:', err.message);
-        this.errorsService.fireErrorMessage('Unable to load summary for comic...');
-      });
+  getComicSummary(id: number): Observable<any> {
+    return this.http.get(`${this.api_url}/comics/${id}/summary`);
   }
 
-  getComicCount(): Observable<number> {
-    return this.http.get(`${this.api_url}/comics/count`)
-      .map((res: Response) => res.json())
-      .catch((err: any) => {
-        console.log('err:', err.message);
-        this.errorsService.fireErrorMessage('Could not get the number of comics from the library...');
-      });
+  getComicCount(): Observable<any> {
+    return this.http.get(`${this.api_url}/comics/count`);
   }
 
-  getDuplicatePageCount(): Observable<number> {
-    return this.http.get(`${this.api_url}/pages/duplicates/count`)
-      .map((res: Response) => res.json())
-      .catch((err: any) => {
-        console.log('err:', err.message);
-        this.errorsService.fireErrorMessage('Could not get the duplicate page count from the library...');
-      });
+  getDuplicatePageCount(): Observable<any> {
+    return this.http.get(`${this.api_url}/pages/duplicates/count`);
   }
 
-  getDuplicatePages(): Observable<Page[]> {
-    return this.http.get(`${this.api_url}/pages/duplicates`)
-      .map((res: Response) => res.json())
-      .catch((err: any) => {
-        console.log('err:', err.message);
-        this.errorsService.fireErrorMessage('Unable to fetch the duplicate pages...');
-      });
+  getDuplicatePages(): Observable<any> {
+    return this.http.get(`${this.api_url}/pages/duplicates`);
   }
 
-  getFilesUnder(directory: string): Observable<FileDetails[]> {
-    return this.http.get(`${this.api_url}/files/contents?directory=${directory}`)
-      .map((res: Response) => <FileDetails[]>res.json())
-      .catch((err: any) => {
-        console.log('err:', err.message);
-        this.errorsService.fireErrorMessage(`Could not retrieve the files under ${directory}`);
-      });
+  getFilesUnder(directory: string): Observable<any> {
+    return this.http.get(`${this.api_url}/files/contents?directory=${directory}`);
   }
 
-  deleteComic(comic: Comic): Observable<boolean> {
-    return this.http.delete(`${this.api_url}/comics/${comic.id}`)
-      .map((res: Response) => res.json())
-      .catch((err: any) => {
-        console.log('err:', err.message);
-        this.errorsService.fireErrorMessage('Could not delete the comic...');
-      });
+  deleteComic(comic: Comic): Observable<any> {
+    return this.http.delete(`${this.api_url}/comics/${comic.id}`);
   }
 
-  importFiles(filenames: string[]): Observable<Response> {
-    return this.http.post(`${this.api_url}/files/import`, filenames)
-      .catch((err: any) => {
-        console.log('err:', err.message);
-        this.errorsService.fireErrorMessage('Failed to import the comics...');
-      });
+  importFiles(filenames: string[]): Observable<any> {
+    return this.http.post(`${this.api_url}/files/import`, filenames);
   }
 
   getImageUrl(comicId: number, index: number): string {
