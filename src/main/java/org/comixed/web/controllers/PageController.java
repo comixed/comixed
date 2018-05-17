@@ -46,6 +46,27 @@ public class PageController
     @Autowired
     private PageRepository pageRepository;
 
+    @RequestMapping(value = "/pages/{id}",
+                    method = RequestMethod.DELETE)
+    @CrossOrigin
+    public void deletePage(@PathVariable("id") long id)
+    {
+        this.logger.debug("Marking page as deleted: id={}", id);
+
+        Page page = this.pageRepository.findOne(id);
+
+        if (page == null)
+        {
+            this.logger.error("No such page: id={}", id);
+        }
+        else
+        {
+            page.markDeleted(true);
+            this.pageRepository.save(page);
+            this.logger.debug("Page deleted: id={}", id);
+        }
+    }
+
     @RequestMapping(value = "/comics/{id}/pages",
                     method = RequestMethod.GET)
     @CrossOrigin
