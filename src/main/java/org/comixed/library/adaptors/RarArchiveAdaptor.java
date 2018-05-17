@@ -1,17 +1,17 @@
 /*
  * ComixEd - A digital comic book library management application.
  * Copyright (C) 2017, Darryl L. Pierce
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
@@ -33,7 +33,7 @@ import com.github.junrar.rarfile.FileHeader;
 /**
  * <code>RarArchiveAdaptor</code> provides a concrete implementation of
  * {@link ArchiveAdaptor} for RAR files.
- * 
+ *
  * @author Darryl L. Pierce
  *
  */
@@ -48,7 +48,7 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor
     @Override
     protected byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveAdaptorException
     {
-        File file = validateFile(comic);
+        File file = this.validateFile(comic);
         byte[] result = null;
 
         try
@@ -62,29 +62,34 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor
                 throw new ArchiveAdaptorException("Invalid or corrupt RAR file: " + file.getName());
             }
 
-            while (entry != null)
+            boolean done = false;
+
+            while ((entry != null) && !done)
             {
                 String filename = entry.getFileNameString();
 
-                if (entryName == null || entryName.equals(filename))
+                this.logger.debug("Found entry: entryName={}", entryName);
+                this.logger.debug("Processing entry: filename={} size={}", entry.getFileNameString(),
+                                  entry.getFullUnpackSize());
+                byte[] content = this.loadContent(filename, entry.getFullUnpackSize(), archive.getInputStream(entry));
+
+                if ((entryName != null) && entryName.equals(filename))
                 {
-                    byte[] content = this.loadContent(filename, entry.getFullUnpackSize(),
-                                                      archive.getInputStream(entry));
-
-                    if (entryName != null)
-                    {
-                        logger.debug("Returning content for entry");
-                        result = content;
-                        break;
-                    }
-                    else
-                    {
-                        logger.debug("Processing entry content");
-                        processContent(comic, filename, content);
-                    }
+                    this.logger.debug("Returning content for desired entry");
+                    result = content;
+                    done = true;
                 }
-
-                entry = archive.nextFileHeader();
+                else if (entryName == null)
+                {
+                    this.logger.debug("Processing entry content");
+                    this.processContent(comic, filename, content);
+                    entry = archive.nextFileHeader();
+                }
+                else
+                {
+                    this.logger.debug("Ignoring entry: filename={}", filename);
+                    entry = archive.nextFileHeader();
+                }
             }
 
             archive.close();
@@ -100,7 +105,7 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor
     @Override
     void saveComicInternal(Comic source, String filename, boolean renamePages) throws ArchiveAdaptorException
     {
-        logger.warn("Saving RAR comics is not supported");
+        this.logger.warn("Saving RAR comics is not supported");
         throw new ArchiveAdaptorException("Saving CBR comics is not supported");
     }
 }

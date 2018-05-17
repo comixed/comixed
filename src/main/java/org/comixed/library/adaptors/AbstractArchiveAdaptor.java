@@ -207,12 +207,12 @@ public abstract class AbstractArchiveAdaptor implements
         {
             try
             {
+                this.logger.debug("Loading content: filename={} length={}", filename, content.length);
                 loader.loadContent(comic, filename, content);
             }
-            catch (EntryLoaderException e)
+            catch (EntryLoaderException error)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                this.logger.error("Error loading content", error);
             }
         }
         else

@@ -19,6 +19,7 @@
 
 package org.comixed.web.controllers;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 import org.comixed.library.model.Comic;
@@ -28,6 +29,9 @@ import org.comixed.repositories.PageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -141,7 +145,7 @@ public class PageController
     @RequestMapping(value = "/pages/{id}/content",
                     method = RequestMethod.GET)
     @CrossOrigin
-    public byte[] getPageContent(@PathVariable("id") long id)
+    public ResponseEntity<InputStreamResource> getPageContent(@PathVariable("id") long id)
     {
         this.logger.debug("Getting page: id={}", id);
 
@@ -155,7 +159,12 @@ public class PageController
         else
         {
             this.logger.debug("Returning {} bytes", page.getContent().length);
-            return page.getContent();
+
+            byte[] content = page.getContent();
+            InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+            return ResponseEntity.ok().contentLength(content.length)
+                                 .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
+                                 .contentType(MediaType.parseMediaType("application/x-cbr")).body(resource);
         }
     }
 
