@@ -170,4 +170,25 @@ public class PageController
         }
         else return comic.getPages();
     }
+
+    @RequestMapping(value = "/pages/{id}/undelete",
+                    method = RequestMethod.POST)
+    @CrossOrigin
+    public void undeletePage(@PathVariable("id") long id)
+    {
+        this.logger.debug("Marking page as undeleted: id={}", id);
+
+        Page page = this.pageRepository.findOne(id);
+
+        if (page == null)
+        {
+            this.logger.error("No such page: id={}", id);
+        }
+        else
+        {
+            page.markDeleted(false);
+            this.pageRepository.save(page);
+            this.logger.debug("Page undeleted: id={}", id);
+        }
+    }
 }
