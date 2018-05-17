@@ -53,7 +53,7 @@ export class ComicListEntryComponent implements OnInit {
           this.comicService.removeComic(this.comic.id);
         }
       },
-      (err: any) => {
+      (error: any) => {
         console.log('ERROR: ', error.message);
         this.errorsService.fireErrorMessage('Failed to delete comic from teh library');
       }
