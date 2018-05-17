@@ -23,8 +23,12 @@ export class DuplicatePageListComponent implements OnInit {
     this.comicService.getDuplicatePages().subscribe(
       pages => {
         this.pages = pages.sort((a, b) => {
-          if (a.hash < b.hash) return -1;
-          if (a.hash > b.hash) return 1;
+          if (a.hash < b.hash) {
+            return -1;
+          }
+          if (a.hash > b.hash) {
+            return 1;
+          }
           return 0;
         });
       });

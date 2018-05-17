@@ -122,12 +122,12 @@ public class Page
     @Column(name = "width",
             updatable = true)
     @JsonView(View.Details.class)
-    private Integer width = 0;
+    private Integer width = -1;
 
     @Column(name = "height",
             updatable = true)
     @JsonView(View.Details.class)
-    private Integer height = 0;
+    private Integer height = -1;
 
     @Transient
     @JsonIgnore
@@ -269,7 +269,7 @@ public class Page
      */
     public int getHeight()
     {
-        if (this.height == null || this.height == 0) this.getImageMetrics();
+        if (this.height == null || this.height == -1) this.getImageMetrics();
         return this.height;
     }
 
@@ -385,7 +385,7 @@ public class Page
      */
     public int getWidth()
     {
-        if (this.width == null || this.width == 0) this.getImageMetrics();
+        if (this.width == null || this.width == -1) this.getImageMetrics();
         return this.width;
     }
 
