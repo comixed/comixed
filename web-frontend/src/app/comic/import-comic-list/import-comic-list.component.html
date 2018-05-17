@@ -1,17 +1,27 @@
-<div class="modal" role='dialog' [ngStyle]="{'display':display}">
-  <div class='modal-dialog'>
+
+<p>
+<div class="modal" role='dialog'
+  [ngStyle]="{'display':busy || (pending_imports > 0) ? 'block' : 'none'}">
+  <div class='modal-dialog modal-lg'>
     <div class='modal-content'>
-      <div class='modal-header'>
-        <h4 class='modal-title'>Loading File Details...</h4>
-      </div>
       <div class='modal-body'>
-        <i class='fa fa-refresh fa-spin'
-          style='font-size: 128px; color: red'></i>
+        <div class='media'>
+          <div class='media-left media-middle'>
+            <span class='fa fa-spinner fa-spin fa-4x'></span>
+          </div>
+          <div class='media-body'>
+            <span *ngIf='this.pending_imports === 0'>Loading File
+              Details...</span> <span *ngIf='this.pending_imports > 0'>There
+              are {{this.pending_imports}} files remaining to be
+              imported...</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<div class='ui raised segment' [class.import-backdrop]='busy'>
+<div class='ui raised segment'
+  [class.import-backdrop]='busy || this.pending_imports > 0'>
   <div class='row'>
     <div class='col-md-2'></div>
     <div class='col-md-10'>
@@ -38,12 +48,6 @@
       <div *ngIf='this.files && this.files.length > 0'>
         <p>Found {{ this.files.length }} {{ plural ? 'comics' :
           'comic' }} for import.</p>
-      </div>
-      <div *ngIf='importing'>
-        <p class='text-center text-muted'>
-          <span class='fa fa-spinner fa-spin fa-4x'></span> <br /> <br />
-          Importing, please wait...
-        </p>
       </div>
     </div>
   </div>

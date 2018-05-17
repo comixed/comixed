@@ -80,6 +80,10 @@ export class ComicService {
     return this.http.post(`${this.api_url}/files/import`, filenames);
   }
 
+  getPendingImports(): Observable<any> {
+    return this.http.get(`${this.api_url}/files/import/status`);
+  }
+
   getImageUrl(comicId: number, index: number): string {
     return `${this.api_url}/comics/${comicId}/pages/${index}/content`;
   }

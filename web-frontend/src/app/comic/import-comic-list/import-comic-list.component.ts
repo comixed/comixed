@@ -18,6 +18,8 @@ export class ImportComicListComponent implements OnInit {
   plural = true;
   busy = false;
   display = 'none';
+  pending_imports = 0;
+  waiting_on_imports = false;
 
   constructor(private comicService: ComicService, private errorsService: ErrorsService,
     builder: FormBuilder) {
@@ -26,6 +28,19 @@ export class ImportComicListComponent implements OnInit {
   }
 
   ngOnInit() {
+    setInterval(() => {
+      this.waiting_on_imports = true;
+      this.comicService.getPendingImports().subscribe(
+        count => {
+          this.pending_imports = count;
+          this.waiting_on_imports = false;
+        },
+        error => {
+          console.log('ERROR', error.message;
+          this.errorsService.fireErrorMessage('Error getting the number of pending imports...');
+          this.waiting_on_imports = false;
+        });
+    }, 500);
   }
 
   onLoad(): void {
@@ -35,15 +50,14 @@ export class ImportComicListComponent implements OnInit {
   getFilesForImport(): void {
     this.setBusyMode(true);
     const directory = this.directory.value;
-    console.log('Attempting to get a list of comes from:', directory);
     this.comicService.getFilesUnder(directory).subscribe(
       files => {
         this.files = files;
         this.plural = this.files.length !== 1;
         this.setBusyMode(false);
       },
-      err => {
-        console.log(err);
+      error => {
+        console.log('ERROR:', error.message);
         this.errorsService.fireErrorMessage('Error while loading filenames...');
         this.setBusyMode(false);
       }
@@ -61,15 +75,13 @@ export class ImportComicListComponent implements OnInit {
   importFiles(): void {
     this.importing = true;
     const selectedFiles = this.files.filter(file => file.selected).map(file => file.filename);
-    console.log(`selectedFiles='${selectedFiles}'`);
     this.comicService.importFiles(selectedFiles).subscribe(
       value => {
-        console.log('[POST] response: ', JSON.stringify(value));
         this.importing = false;
         this.getFilesForImport();
       },
       error => {
-        console.log('[POST] failed: ', JSON.stringify(error));
+        console.log('ERROR:', error.message);
         this.importing = false;
       }
     );

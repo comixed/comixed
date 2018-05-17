@@ -139,4 +139,14 @@ public class FileController
             }
         }
     }
+
+    @RequestMapping(value = "/import/status",
+                    method = RequestMethod.GET)
+    @CrossOrigin
+    public int getImportStatus()
+    {
+        logger.debug("Returning the number of import tasks");
+
+        return this.worker.getCountFor(AddComicWorkerTask.class);
+    }
 }
