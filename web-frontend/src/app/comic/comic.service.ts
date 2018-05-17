@@ -24,6 +24,10 @@ export class ComicService {
       .subscribe((comics: Comic[]) => {
         this.all_comics = comics;
         this.all_comics_update.emit(this.all_comics);
+      },
+      error => {
+        this.errorsService.fireErrorMessage('Failed to get the list of comics...');
+        console.log('ERROR:', error.message);
       });
   }
 
