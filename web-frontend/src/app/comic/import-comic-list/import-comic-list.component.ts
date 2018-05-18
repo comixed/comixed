@@ -36,7 +36,7 @@ export class ImportComicListComponent implements OnInit {
           this.waiting_on_imports = false;
         },
         error => {
-          console.log('ERROR', error.message;
+          console.log('ERROR', error.message);
           this.errorsService.fireErrorMessage('Error getting the number of pending imports...');
           this.waiting_on_imports = false;
         });
