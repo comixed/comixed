@@ -69,7 +69,9 @@ export class ImportComicListComponent implements OnInit {
   }
 
   selectAllFiles(): void {
-    this.files.forEach((file) => {file.selected = true});
+    this.files.forEach((file) => {
+      file.selected = true;
+    });
   }
 
   importFiles(): void {
