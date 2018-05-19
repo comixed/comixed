@@ -41,6 +41,11 @@
     </div>
   </div>
 </div>
+<div class='row' *ngIf='title_search && title_search.length > 0'>
+  <div class='col-md-12 text-center'>
+    <h2>Comics Containing "{{title_search}}"...</h2>
+  </div>
+</div>
 <div class='row'>
   <app-comic-list-entry
     *ngFor='let comic of comics | series_filter : title_search'

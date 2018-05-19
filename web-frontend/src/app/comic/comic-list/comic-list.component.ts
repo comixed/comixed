@@ -15,6 +15,7 @@ import {SeriesFilterPipe} from '../series-filter.pipe';
 export class ComicListComponent implements OnInit {
   private comics: Comic[];
   private all_series: string[];
+  private title_search: string;
   private current_comic: Comic;
   private sort_options: any[] = [
     {id: 0, label: 'Default'},
