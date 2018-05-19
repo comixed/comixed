@@ -14,6 +14,8 @@ import {SeriesFilterPipe} from '../series-filter.pipe';
 })
 export class ComicListComponent implements OnInit {
   private comics: Comic[];
+  private comic_count: number = 0;
+  private read_count: number = 0;
   private all_series: string[];
   private title_search: string;
   private current_comic: Comic;
@@ -45,6 +47,11 @@ export class ComicListComponent implements OnInit {
       (comic: Comic) => {
         this.current_comic = comic;
       });
+    setInterval(() => {
+      this.comicService.getComicCount().subscribe(
+        count => this.comic_count = count,
+        error => console.log('ERROR:', error.message));
+    }, 250);
   }
 
   getImageURL(comic: Comic): string {
