@@ -56,14 +56,12 @@ export class ComicListComponent implements OnInit {
   }
 
   setPageSize(size_id: any): void {
-    console.log('size_id:', size_id);
     switch (parseInt(size_id, 10)) {
       case 0: this.page_size = 10; break;
       case 1: this.page_size = 25; break;
       case 2: this.page_size = 50; break;
       case 3: this.page_size = 100; break;
     }
-    console.log('page size is now', this.page_size);
   }
 
   setSortOption(sort_id: any): void {
