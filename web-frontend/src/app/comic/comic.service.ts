@@ -16,19 +16,21 @@ import {FileDetails} from './file-details.model';
 export class ComicService {
   private api_url = 'http://localhost:7171';
   current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
-  all_comics: Comic[];
+  all_comics: Comic[] = [];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
 
   constructor(private http: HttpClient, private errorsService: ErrorsService) {
-    this.http.get(`${this.api_url}/comics`)
-      .subscribe((comics: Comic[]) => {
-        this.all_comics = comics;
-        this.all_comics_update.emit(this.all_comics);
-      },
-      error => {
-        this.errorsService.fireErrorMessage('Failed to get the list of comics...');
-        console.log('ERROR:', error.message);
-      });
+    setInterval(() => {
+      this.http.get(`${this.api_url}/comics`)
+        .subscribe((comics: Comic[]) => {
+          this.all_comics = comics;
+          this.all_comics_update.emit(this.all_comics);
+        },
+        error => {
+          this.errorsService.fireErrorMessage('Failed to get the list of comics...');
+          console.log('ERROR:', error.message);
+        });
+    }, 500);
   }
 
   setCurrentComic(comic: Comic): void {
