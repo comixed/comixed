@@ -82,7 +82,8 @@ public class Comic
 
     @Column(name = "filename",
             nullable = false,
-            unique = true)
+            unique = true,
+            length = 1024)
     @JsonProperty
     @JsonView(View.List.class)
     private String filename;
