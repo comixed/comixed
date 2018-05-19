@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-
+import {NgxPaginationModule} from 'ngx-pagination';
 import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
 
 import {ComicRoutingModule} from './comic-routing.module';
@@ -24,7 +24,8 @@ import {SeriesFilterPipe} from './series-filter.pipe';
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger',
       cancelButtonType: 'basic',
-    })
+    }),
+    NgxPaginationModule,
   ],
   declarations: [
     ComicListComponent,

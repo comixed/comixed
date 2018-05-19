@@ -17,6 +17,14 @@ export class ComicListComponent implements OnInit {
   private all_series: string[];
   private title_search: string;
   private current_comic: Comic;
+  private current_page: number = 1;
+  private page_sizes: any[] = [
+    {id: 0, label: '10 comics'},
+    {id: 1, label: '25 comics'},
+    {id: 2, label: '50 comics'},
+    {id: 3, label: '100 comics'}
+  ];
+  private page_size: number = 10;
   private sort_options: any[] = [
     {id: 0, label: 'Default'},
     {id: 1, label: 'Sort by series'},
@@ -45,6 +53,17 @@ export class ComicListComponent implements OnInit {
     } else {
       return this.comicService.getImageUrl(comic.id, 0);
     }
+  }
+
+  setPageSize(size_id: any): void {
+    console.log('size_id:', size_id);
+    switch (parseInt(size_id, 10)) {
+      case 0: this.page_size = 10; break;
+      case 1: this.page_size = 25; break;
+      case 2: this.page_size = 50; break;
+      case 3: this.page_size = 100; break;
+    }
+    console.log('page size is now', this.page_size);
   }
 
   setSortOption(sort_id: any): void {
