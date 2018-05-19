@@ -86,3 +86,4 @@ the [CONTRIBUTORS.md](./CONTRIBUTORS.md) file with your pull request.
 example.cbz - https://www.contrapositivediary.com/?p=1197
 missing_page.png - Original found at https://commons.wikimedia.org/wiki/File:Comic_image_missing.svg
 ConfirmationPopoverModule - https://www.npmjs.com/package/angular-confirmation-popover
+ngx-pagination - https://github.com/michaelbromley/ngx-pagination
