@@ -1,19 +1,39 @@
 <div id='comic-reader-dialog' class='modal'>
-	<div class='modal-dialog modal-lg'>
-		<div class='modal-content'>
-			<div class='modal-header'>
-				<div class='row'>
-					<h4 class='modal-title'>{{comic.title}}</h4>
-				</div>
-				<div class='row'>
-					<button class='btn btn-secondary' (click)='goToPreviousPage()'
-						[class.disabled]='!hasPreviousPage()'>Previous</button>
-					<button class='btn btn-secondary' (click)='goToNextPage()' [class.disabled]='!hasNextPage()'>Next</button>
-				</div>
-			</div>
-			<div class='modal-body'>
-				<img src='{{getCurrentPageURL()}}' width='768'>
-			</div>
-		</div>
-	</div>
+  <div class='modal-dialog modal-lg'>
+    <div id='comic-read-viewer'
+      class='carousel slide carousel-fade pause'>
+      <div class='modal-content'>
+        <div class='row'>
+          <ol class='carousel-indicators'>
+            <li data-target='#comic-read-viewer'
+              *ngFor='let page of comic.pages;let i = index'
+              [attr.data-slide-to]='i' ngClass='i == 0 ? "active" : ""'></li>
+          </ol>
+        </div>
+        <div class='row'>
+          <div class='carousel-inner' role='listbox'>
+            <div *ngFor='let page of comic.pages; let k = index'
+              class='carousel-item'
+              [ngClass]='k == 0 ? "active" : "item"'>
+              <img class='center w-100' src='{{getImageURL(page.id)}}'
+                alt='Event Image'>
+              <div class='carousel-caption d-none d-md-block'>{{page.filename}}</div>
+              '
+            </div>
+          </div>
+        </div>
+        <div class='row bg-inverse'>
+          <a class="carousel-control-prev" href="#comic-read-viewer"
+            role="button" data-slide="prev"><span
+            class='fa fa-arrow-left big-icon'></span> <span
+            class="sr-only">Previous</span> </a> <a
+            class="carousel-control-next" href="#comic-read-viewer"
+            role="button" data-slide="next"> <span
+            class='fa fa-arrow-right big-icon'></span> <span
+            class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

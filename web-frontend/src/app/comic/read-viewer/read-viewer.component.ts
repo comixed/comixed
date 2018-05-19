@@ -18,6 +18,10 @@ export class ReadViewerComponent implements OnInit {
     if (!this.current_page) this.current_page = 0;
   }
 
+  getImageURL(page_id: number): string {
+    return this.comicService.getImageUrlForId(page_id);
+  }
+
   getCurrentPageURL(): string {
     return this.comicService.getImageUrl(this.comic.id, this.current_page);
   }
