@@ -23,8 +23,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.View;
@@ -39,6 +45,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -108,26 +115,40 @@ public class ComicController
     @RequestMapping(method = RequestMethod.GET)
     @CrossOrigin
     @JsonView(View.List.class)
-    public List<Comic> getAll()
+    // public List<Comic> getAll(@RequestParam("after") @DateTimeFormat(iso =
+    // ISO.DATE_TIME) Optional<Date> after)
+    public List<Comic> getAll(@RequestParam("after") Optional<Long> timestamp) throws ParseException
     {
         this.logger.debug("Getting all comics");
 
-        List<Comic> comics = new ArrayList<>();
+        List<Comic> result;
 
-        for (Comic comic : this.comicRepository.findAll())
+        if (timestamp.isPresent())
         {
-            this.logger.debug("Adding comic: {}", comic.getFilename());
-            comics.add(comic);
+            Date after = new Date(new Timestamp(timestamp.get()).getTime());
+            this.logger.debug("Getting comics added after {}", after);
+            result = comicRepository.findByDateAddedGreaterThan(after);
+        }
+        else
+        {
+            Iterable<Comic> comics = this.comicRepository.findAll();
+
+            this.logger.debug("Adding comics to the result");
+            result = new ArrayList<>();
+            for (Comic comic : comics)
+            {
+                result.add(comic);
+            }
         }
 
-        if (comics.isEmpty())
+        if (result.isEmpty())
         {
             this.logger.debug("No comics retrieved");
         }
 
-        this.logger.debug("Returning {} comic(s)", comics.size());
+        this.logger.debug("Returning {} comic(s)", result.size());
 
-        return comics;
+        return result;
     }
 
     @RequestMapping(value = "/{id}",

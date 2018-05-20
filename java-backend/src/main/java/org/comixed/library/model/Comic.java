@@ -51,6 +51,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -111,6 +112,7 @@ public class Comic
             updatable = false,
             nullable = false)
     @JsonProperty("added_date")
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonView(View.List.class)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded = new Date();

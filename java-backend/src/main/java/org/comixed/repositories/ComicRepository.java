@@ -19,6 +19,9 @@
 
 package org.comixed.repositories;
 
+import java.util.Date;
+import java.util.List;
+
 import org.comixed.library.model.Comic;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -36,4 +39,13 @@ public interface ComicRepository extends
      * @return the comic
      */
     Comic findByFilename(String filename);
+
+    /**
+     * Finds all comics added after the specified date
+     * 
+     * @param after
+     *            the cutoff date
+     * @return the list of comics
+     */
+    List<Comic> findByDateAddedGreaterThan(Date after);
 }
