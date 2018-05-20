@@ -1,6 +1,6 @@
 import {Injectable, EventEmitter} from '@angular/core';
 
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Observable} from 'rxjs/Observable';
@@ -18,18 +18,42 @@ export class ComicService {
   current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
   all_comics: Comic[] = [];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
+  private last_comic_date: string;
+  private fetching_comics: boolean = false;
 
   constructor(private http: HttpClient, private errorsService: ErrorsService) {
     setInterval(() => {
-      this.http.get(`${this.api_url}/comics`)
-        .subscribe((comics: Comic[]) => {
-          this.all_comics = comics;
-          this.all_comics_update.emit(this.all_comics);
-        },
-        error => {
-          this.errorsService.fireErrorMessage('Failed to get the list of comics...');
-          console.log('ERROR:', error.message);
-        });
+      if (this.fetching_comics) {
+        return;
+      } else {
+        this.fetching_comics = true;
+        let params = new HttpParams();
+        if (this.last_comic_date) {
+          console.log('Using after date:', this.last_comic_date);
+          params = new HttpParams().set('after', this.last_comic_date);
+          console.log('params:', params.toString());
+        }
+
+        this.http.get(`${this.api_url}/comics`, {params: params, responseType: 'json'})
+          .subscribe((comics: Comic[]) => {
+            if (comics.length !== 0) {
+              console.log('Retrieved ' + comics.length + ' new comics');
+              this.all_comics = this.all_comics.concat(comics);
+              this.all_comics.forEach((comic: Comic) => {
+                if (this.last_comic_date == null || comic.added_date > this.last_comic_date) {
+                  this.last_comic_date = comic.added_date;
+                }
+              });
+              this.all_comics_update.emit(this.all_comics);
+            }
+            this.fetching_comics = false;
+          },
+          error => {
+            this.errorsService.fireErrorMessage('Failed to get the list of comics...');
+            console.log('ERROR:', error.message);
+            this.fetching_comics = false;
+          });
+      }
     }, 500);
   }
 
