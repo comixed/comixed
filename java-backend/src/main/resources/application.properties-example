@@ -18,7 +18,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 spring.jpa.hibernate.naming-strategy = org.hibernate.cfg.ImprovedNamingStrategy
 spring.jpa.show-sql=false
 spring.jpa.generate-ddl=true
-spring.jpa.hibernate.ddl-auto=update
+spring.jpa.hibernate.ddl-auto=none
 
 # Datasource
 spring.datasource.url=jdbc:h2:file:./test_database/comixed;create=true
