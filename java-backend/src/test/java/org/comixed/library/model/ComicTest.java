@@ -454,7 +454,7 @@ public class ComicTest
         Comic testComic = new Comic();
 
         Page cover = testComic.getCover();
-        assertSame(Page.MISSING_PAGE, cover);
+        assertSame(null, cover);
     }
 
     @Test

@@ -66,21 +66,6 @@ import com.fasterxml.jackson.annotation.JsonView;
              query = "SELECT COUNT(p) FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),})
 public class Page
 {
-    private static final String MISSING_PAGE_URL = "/images/missing.png";
-    public static Page MISSING_PAGE = null;
-
-    static
-    {
-        try
-        {
-            byte[] content = IOUtils.resourceToByteArray(MISSING_PAGE_URL);
-            MISSING_PAGE = new Page("", content);
-        }
-        catch (IOException error)
-        {
-            throw new RuntimeException("Failed to load resource file", error);
-        }
-    }
 
     public static String createImageCacheKey(int width, int height)
     {

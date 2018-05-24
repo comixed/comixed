@@ -427,7 +427,7 @@ public class Comic
          * missing
          * page image
          */
-        return this.pages.isEmpty() || this.isMissing() ? Page.MISSING_PAGE : this.pages.get(0);
+        return this.pages.isEmpty() || this.isMissing() ? null : this.pages.get(0);
     }
 
     /**
