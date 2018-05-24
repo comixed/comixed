@@ -13,21 +13,21 @@ import {SeriesFilterPipe} from '../series-filter.pipe';
   providers: [ComicService],
 })
 export class ComicListComponent implements OnInit {
-  private comics: Comic[];
-  private comic_count: number = 0;
-  private read_count: number = 0;
-  private all_series: string[];
-  private title_search: string;
-  private current_comic: Comic;
-  private current_page: number = 1;
-  private page_sizes: any[] = [
+  comics: Comic[];
+  comic_count: number = 0;
+  read_count: number = 0;
+  all_series: string[];
+  title_search: string;
+  current_comic: Comic;
+  current_page: number = 1;
+  page_sizes: any[] = [
     {id: 0, label: '10 comics'},
     {id: 1, label: '25 comics'},
     {id: 2, label: '50 comics'},
     {id: 3, label: '100 comics'}
   ];
-  private page_size: number = 10;
-  private sort_options: any[] = [
+  page_size: number = 10;
+  sort_options: any[] = [
     {id: 0, label: 'Default'},
     {id: 1, label: 'Sort by series'},
     {id: 2, label: 'Sort by added date'},
