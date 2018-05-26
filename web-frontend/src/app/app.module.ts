@@ -7,12 +7,14 @@ import {HttpClientModule} from '@angular/common/http';
 
 import {ComicModule} from './comic/comic.module';
 import {MainPageComponent} from './main-page/main-page.component';
+import {LoginComponent} from './login/login.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
