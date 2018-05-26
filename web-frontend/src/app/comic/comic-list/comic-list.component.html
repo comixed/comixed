@@ -20,10 +20,20 @@
       <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
     </div>
   </div>
-  <!-- search box -->
-  <div class='col-md-2'>
-    <input [(ngModel)]='title_search'
-      placeholder='enter search terms here'>
+  <div class='col-md-6'>
+    <div class='d-flex flex-row'>
+      <!-- search box -->
+      <div class='mx-3'>
+        <input [(ngModel)]='title_search'
+          placeholder='enter search terms here'>
+      </div>
+      <!-- display search results label -->
+      <div class='mx-3' *ngIf='title_search && title_search.length > 0'>
+        <div class='col-md-12 text-center'>Comics Containing
+          "{{title_search}}" ({{( comics |series_filter :
+          title_search).length}} Total)...</div>
+      </div>
+    </div>
   </div>
 </div>
 <div id='display_comic_details' class='modal fade' role='dialog'>
@@ -53,12 +63,6 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
-<div class='row' *ngIf='title_search && title_search.length > 0'>
-  <div class='col-md-12 text-center'>
-    <h2>Comics Containing "{{title_search}}" ({{( comics
-      |series_filter : title_search).length}} Total)...</h2>
   </div>
 </div>
 <div class='row'>
