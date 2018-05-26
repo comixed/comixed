@@ -1,41 +1,3 @@
-<div class='row'>
-  <div class='col-md-6'>
-    <div class='d-flex flex-row'>
-      <!-- number of comics per page -->
-      <div class='mx-3'>
-        <select #sizeElem (change)='setPageSize(sizeElem.value)'>
-          <option *ngFor='let option of page_sizes' [value]='option.id'>{{option.label}}</option>
-        </select>
-      </div>
-      <!-- sort options -->
-      <div class='mx-3'>
-        <div class='float-right'>
-          <select #selectElem (change)='setSortOption(selectElem.value)'>
-            <option *ngFor='let option of sort_options'
-              [value]='option.id'>{{option.label}}</option>
-          </select>
-        </div>
-      </div>
-      <!--  page navigation -->
-      <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
-    </div>
-  </div>
-  <div class='col-md-6'>
-    <div class='d-flex flex-row'>
-      <!-- search box -->
-      <div class='mx-3'>
-        <input [(ngModel)]='title_search'
-          placeholder='enter search terms here'>
-      </div>
-      <!-- display search results label -->
-      <div class='mx-3' *ngIf='title_search && title_search.length > 0'>
-        <div class='col-md-12 text-center'>Comics Containing
-          "{{title_search}}" ({{( comics |series_filter :
-          title_search).length}} Total)...</div>
-      </div>
-    </div>
-  </div>
-</div>
 <div id='display_comic_details' class='modal fade' role='dialog'>
   <div class='modal-dialog modal-lg'>
     <div class='modal-content'>
@@ -66,22 +28,71 @@
   </div>
 </div>
 <div class='row'>
-  <app-comic-list-entry
-    *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
-    [comic]='comic' (onComicSelected)='handleComicClicked($event)'></app-comic-list-entry>
-</div>
-<footer
-  class='fixed-bottom page-footer font-small pt-4 mt-4 bg bg-primary fg-primary'>
-  <div class="container-fluid text-center text-md-left">
-    <div class='row'>
-      <div class='col-md-1'>
-        <strong>Comics:</strong> {{comic_count}}/{{read_count}}
-      </div>
-      <div class='col-md-3'></div>
-      <div class='col-md-4'>
-        <div class='footer-copyright py-3 text-center'>Copyright
-          &copy; 2017, 2018 The ComixEd Project Team</div>
+  <div class='col-sm-3 float-left'>
+    <div class='card sticky-top'>
+      <div class='card-header'>Library Search / Navigation</div>
+      <div class='card-body'>
+        <!-- number of comics per page -->
+        <div class='row m-1'>
+          <h4># Comics To Show:</h4>
+        </div>
+        <div class='row m-1'>
+          <select #sizeElem (change)='setPageSize(sizeElem.value)'>
+            <option *ngFor='let option of page_sizes'
+              [value]='option.id'>{{option.label}}</option>
+          </select>
+        </div>
+        <!-- sort options -->
+        <div class='row m-1'>
+          <h4>Sort By:</h4>
+        </div>
+        <div class='row m-1'>
+          <select #selectElem (change)='setSortOption(selectElem.value)'>
+            <option *ngFor='let option of sort_options'
+              [value]='option.id'>{{option.label}}</option>
+          </select>
+        </div>
+        <!-- search box -->
+        <div class='row m-1'>
+          <h4>Search For:</h4>
+        </div>
+        <div class='row m-1'>
+          <input [(ngModel)]='title_search'
+            placeholder='enter search terms here'>
+        </div>
+        <!--  page navigation -->
+        <div class='row m-1'>
+          <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+        </div>
       </div>
     </div>
   </div>
-</footer>
+  <div class='col-sm-9'>
+    <div class='card'>
+      <div class='card-header'>{{ (comics | series_filter :
+        title_search).length}} Total Comics Found</div>
+      <div class='card-body'>
+        <div class='row'>
+          <app-comic-list-entry
+            *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
+            [comic]='comic'
+            (onComicSelected)='handleComicClicked($event)'></app-comic-list-entry>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer
+    class='fixed-bottom page-footer font-small pt-4 mt-4 bg bg-primary fg-primary'>
+    <div class="container-fluid text-center text-md-left">
+      <div class='row'>
+        <div class='col-md-1'>
+          <strong>Comics:</strong> {{comic_count}}/{{read_count}}
+        </div>
+        <div class='col-md-3'></div>
+        <div class='col-md-4'>
+          <div class='footer-copyright py-3 text-center'>Copyright
+            &copy; 2017, 2018 The ComixEd Project Team</div>
+        </div>
+      </div>
+    </div>
+  </footer>
