@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 import {ComicService} from './comic/comic.service';
 import {ErrorsService} from './errors.service';
@@ -12,13 +13,24 @@ import {ErrorsService} from './errors.service';
 export class AppComponent implements OnInit {
   title = 'ComixEd';
   error_message: string;
+  authenticated: boolean = false;
 
-  constructor(private errorsService: ErrorsService) {}
+  constructor(private comicService: ComicService, private errorsService: ErrorsService, private router: Router) {
+    this.authenticated = this.comicService.isAuthenticated()  ;
+  }
 
   ngOnInit() {
     this.errorsService.error_messages.subscribe(
       (message: string) => {
         this.error_message = message;
+      }
+    );
+  }
+
+  logout(): void {
+    this.comicService.logout().subscribe(
+      () => {
+        this.router.navigateByUrl('/login');
       }
     );
   }
