@@ -60,14 +60,14 @@
           <input [(ngModel)]='title_search'
             placeholder='enter search terms here'>
         </div>
-        <!--  page navigation -->
-        <div class='row m-1'>
-          <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
-        </div>
       </div>
     </div>
   </div>
   <div class='col-sm-9'>
+    <!--  page navigation -->
+    <div class='row m-1 py-3 fixed-bottom'>
+      <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+    </div>
     <div class='card'>
       <div class='card-header'>{{ (comics | series_filter :
         title_search).length}} Total Comics Found</div>
