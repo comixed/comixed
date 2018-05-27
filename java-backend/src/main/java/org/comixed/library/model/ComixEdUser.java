@@ -19,30 +19,26 @@
 
 package org.comixed.library.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "users")
 public class ComixEdUser
 {
-    @Transient
-    @JsonIgnore
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(View.List.class)
@@ -69,6 +65,14 @@ public class ComixEdUser
             updatable = true)
     private Date lastLoginDate = new Date();
 
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+               joinColumns = @JoinColumn(name = "user_id",
+                                         referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "role_id",
+                                                referencedColumnName = "id"))
+    private List<Role> roles = new ArrayList<>();
+
     public String getEmail()
     {
         return this.email;
@@ -92,6 +96,11 @@ public class ComixEdUser
     public String getPasswordHash()
     {
         return this.passwordHash;
+    }
+
+    public List<Role> getRoles()
+    {
+        return this.roles;
     }
 
     public void setEmail(String email)
