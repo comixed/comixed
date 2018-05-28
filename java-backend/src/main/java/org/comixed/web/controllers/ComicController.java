@@ -51,7 +51,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
-@RequestMapping(value = "/comics")
+@RequestMapping(value = "/api/comics")
 public class ComicController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());

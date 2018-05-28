@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/api/files")
 public class FileController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
+@RequestMapping("/api")
 public class PageController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
