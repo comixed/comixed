@@ -29,8 +29,8 @@ export class MainPageComponent implements OnInit {
       res => {
         this.duplicate_pages = res;
       },
-      err => {
-        console.log(err);
+      error => {
+        console.log('ERROR: ' + error.message);
       }
     );
   }
