@@ -14,7 +14,7 @@ import {FileDetails} from './file-details.model';
 
 @Injectable()
 export class ComicService {
-  private api_url = 'http://localhost:7171';
+  private api_url = 'api';
   current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
   all_comics: Comic[] = [];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
