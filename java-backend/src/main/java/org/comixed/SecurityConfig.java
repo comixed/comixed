@@ -62,11 +62,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         this.logger.debug("Configuring HTTP security");
 
         // @formatter:off
-        http.cors()
+        http.httpBasic()
+            .and()
+                .cors()
             .and()
                 .authorizeRequests()
-                    .antMatchers("/login", "/user").permitAll()
-                    .antMatchers("/comics/count").permitAll()
+                    .antMatchers("/login", "/", "/comics/count").permitAll()
                     .antMatchers("/comics/**", "/pages/**").hasRole("READER")
                     .antMatchers("/files/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
@@ -74,8 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")
             .and()
                 .csrf()
-                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-           .and().formLogin();
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
             // .antMatchers("/files/contents", "/files/import").hasRole("ADMIN");
         // @formatter:on
     }

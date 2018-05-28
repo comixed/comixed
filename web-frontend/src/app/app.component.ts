@@ -13,10 +13,8 @@ import {ErrorsService} from './errors.service';
 export class AppComponent implements OnInit {
   title = 'ComixEd';
   error_message: string;
-  authenticated: boolean = false;
 
   constructor(private comicService: ComicService, private errorsService: ErrorsService, private router: Router) {
-    this.authenticated = this.comicService.isAuthenticated()  ;
   }
 
   ngOnInit() {
@@ -37,5 +35,9 @@ export class AppComponent implements OnInit {
 
   clearErrorMessage(): void {
     this.error_message = '';
+  }
+
+  isAuthenticated(): boolean {
+    return this.comicService.isAuthenticated();
   }
 }

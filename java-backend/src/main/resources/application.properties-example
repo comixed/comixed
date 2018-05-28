@@ -6,9 +6,6 @@ spring.application.name=ComixEd
 # web configuration
 server.port=7171
 server.servlet.context-path=/
-server.contextPath=/api
-spring.mvc.static-path-pattern=/**
-spring.resources.static-locations=classpath:/static/
 
 # configuration filename
 configuration.filename=${user.home}/.comixedrc

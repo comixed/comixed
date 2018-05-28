@@ -21,6 +21,8 @@ package org.comixed.web.controllers;
 
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,11 +31,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController
 {
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @RequestMapping(value = "/user",
                     method = RequestMethod.GET)
     @CrossOrigin
     public Principal getCurrentUser(Principal user)
     {
         return user;
+    }
+
+    @RequestMapping(value = "/{path:[^\\.]*}",
+                    method = RequestMethod.GET)
+    public String redirect()
+    {
+        this.logger.info("Getting something information...");
+        return "forward:/";
     }
 }

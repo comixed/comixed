@@ -1,6 +1,6 @@
 import {Injectable, EventEmitter} from '@angular/core';
 
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Observable} from 'rxjs/Observable';
@@ -29,7 +29,8 @@ export class ComicService {
 
   monitorAuthentication(): void {
     setInterval(() => {
-      this.http.get(`${this.api_url}/user`).subscribe(
+      const headers = new HttpHeaders();
+      this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
         response => {
           console.log('Authentication check response:', response);
           if (response && response['name']) {
@@ -152,10 +153,17 @@ export class ComicService {
     return this.authenticated;
   }
 
-  login(username: string, password: string) {
-    this.http.post(`${this.api_url}/login`, {usename: username, password: password}).subscribe(
+  login(username: string, password: string, callback) {
+    const headers = new HttpHeaders({authorization: 'Basic ' + btoa(username + ':' + password)});
+    this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
       response => {
-        console.log('Login response: ' + response);
+        if (response && response['name']) {
+          this.authenticated = true;
+        } else {
+          this.authenticated = false;
+        }
+
+        callback && callback();
       },
       error => {
         console.log('ERROR: ' + error.message);

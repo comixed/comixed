@@ -19,6 +19,9 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.comicService.login(this.username, this.password);
+    this.comicService.login(this.username, this.password,
+      () => {
+        this.router.navigateByUrl('/home');
+      });
   }
 }
