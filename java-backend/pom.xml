@@ -154,7 +154,7 @@
               <goal>exec</goal>
             </goals>
             <configuration>
-              <executable>build-angular.sh</executable>
+              <executable>build-angular</executable>
               <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
           </execution>
