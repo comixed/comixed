@@ -1,5 +1,16 @@
-language: java
-jdk:
-         - oraclejdk8
-script: cd java-backend  && mvn clean test
+os:
+        - linux
 
+language: node_js
+        - "10.1.0"
+
+jdk:
+        - oraclejdk8
+
+env:
+        - NODE_VERSION="10.1.0"
+
+before_install:
+        - (cd web-frontend && npm install --global @angular/cli && npm install)
+
+script: (cd java-backend && mvn clean test)
