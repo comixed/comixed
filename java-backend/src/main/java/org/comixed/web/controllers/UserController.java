@@ -33,7 +33,7 @@ public class UserController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping(value = "/user",
+    @RequestMapping(value = "/api/user",
                     method = RequestMethod.GET)
     @CrossOrigin
     public Principal getCurrentUser(Principal user)
