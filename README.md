@@ -50,17 +50,14 @@ To start the backend, launch it from the command line with:
 
     $ mvn spring-boot:run
 
-### The Web Frontend
-
-You will need to have [Angular](https://angular.io/) available on your system. You can find instructions for installing Angular [here](https://angular.io/guide/setup). This portion is a little more involved on Windows systems, but not impossible.
-
-To start the frontend, launch it from the command line with:
-
-    $ npm start
-
 ### Interacting With The Application
 
-To connect to the web application, point a browser to *http://localhost:4200/library/comics*.
+To connect to the web application, point a browser to *http://localhost:7171/index.html*.
+
+You can then log into the application with one of two default accounts:
+
+1. **Administrator** username=comixedadmin@localhost password=comixedadmin
+1. **Reader** username=comixedreader@localhost password=comixedreader
 
 ## Contributing
 
