@@ -56,7 +56,7 @@ You will need to have [Angular](https://angular.io/) available on your system. Y
 
 To start the frontend, launch it from the command line with:
 
-    $ ng s
+    $ npm start
 
 ### Interacting With The Application
 
