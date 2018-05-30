@@ -20,6 +20,7 @@ export class ComicListComponent implements OnInit {
   title_search: string;
   current_comic: Comic;
   current_page: number = 1;
+  show_search_box: boolean = true;
   page_sizes: any[] = [
     {id: 0, label: '10 comics'},
     {id: 1, label: '25 comics'},

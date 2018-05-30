@@ -28,9 +28,11 @@
   </div>
 </div>
 <div class='row'>
-  <div class='col-sm-3 float-left'>
-    <div class='card sticky-top'>
-      <div class='card-header'>Library Search / Display</div>
+  <div class='col-sm-3 float-left' [class.col-sm-3]='show_search_box'>
+    <div class='card sticky-top' [hidden]='!show_search_box'>
+      <div class='card-header'>
+        <h5>Library Search</h5>
+      </div>
       <div class='card-body'>
         <!-- number of comics per page -->
         <div class='row m-1'>
@@ -63,14 +65,27 @@
       </div>
     </div>
   </div>
-  <div class='col-sm-9'>
+  <div [class.col-sm-9]='show_search_box'
+    [class.col-sm-12]='!show_search_box'>
     <!--  page navigation -->
-    <div class='row m-1 py-3 fixed-bottom'>
-      <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
-    </div>
     <div class='card'>
-      <div class='card-header'>{{ (comics | series_filter :
-        title_search).length}} Total Comics Found</div>
+      <div class='card-header'>
+        <div class='row'>
+          <div class='col-sm-6'>
+            <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+          </div>
+          <div class='col-sm-4'>
+            <h3>{{ (comics | series_filter : title_search).length}}
+              Total Comics Found</h3>
+          </div>
+          <div class='col-sm-2'>
+            <button class='btn btn-info' *ngIf='show_search_box'
+              (click)='show_search_box = false'>Hide Search</button>
+            <button class='btn btn-info' *ngIf='!show_search_box'
+              (click)='show_search_box = true'>Show Search</button>
+          </div>
+        </div>
+      </div>
       <div class='card-body'>
         <div class='row'>
           <app-comic-list-entry
