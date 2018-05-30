@@ -17,6 +17,7 @@ export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
   cover_url: string;
   title_text: string;
+  subtitle_text: string;
   delete_comic_title: string;
   delete_comic_message: string;
   @Input() selected: boolean;
@@ -33,9 +34,9 @@ export class ComicListEntryComponent implements OnInit {
     if (this.comic.issue_number) {
       this.title_text = this.title_text + ' #' + this.comic.issue_number;
     }
-    if (this.comic.volume) {
-      this.title_text = this.title_text + ' (v' + this.comic.volume + ')';
-    }
+
+    this.subtitle_text = 'Volume ' + this.comic.volume || 'Unknown';
+
     this.delete_comic_title = `Delete ${this.title_text}`;
     this.delete_comic_message = 'Are you sure you want to delete this comic?';
   }
