@@ -32,13 +32,11 @@ export class ComicService {
       const headers = new HttpHeaders();
       this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
         response => {
-          console.log('Authentication check response:', response);
           if (response && response['name']) {
             this.authenticated = true;
           } else {
             this.authenticated = false;
           }
-          console.log("Are we authenticated now? " + (this.authenticated ? 'Yes' : 'No'));
         },
         error => {
           console.log('ERROR: ' + error.message);

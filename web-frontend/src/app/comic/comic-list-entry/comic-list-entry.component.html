@@ -1,22 +1,19 @@
-<div class='card h-100' style='width: 256px'>
-  <img class='card-img-top' src='{{cover_url}}'>
+<div class='card h-100 border-bottom px-1 pb-1' style='width: 256px'>
   <div class='card-body'>
     <h5 class='card-title'>{{title_text}}</h5>
     <h6 class='card-subtitle text-muted'>{{subtitle_text}}</h6>
-    <button type='button' class='btn btn-default' (click)='openComic()'>
-      <span class='fa fa-eye'></span>
-    </button>
-    <button type='button' class='btn btn-danger' mwlConfirmationPopover
-      [popoverTitle]='delete_comic_title'
-      [popoverMessage]='delete_comic_message'
-      [cancelText]='cancel_button' [confirmText]='confirm_button'
-      (confirm)='deleteComic()'>
-      <span class='fa fa-trash'></span>
-    </button>
-    <button type='button' class='btn btn-primary'
-      (click)='clicked($event)' data-toggle='modal'
-      data-target='#display_comic_details'>
-      <span class='fa fa-info-circle'></span>
-    </button>
+    <div class='row center-block'>
+      <button type='button' class='btn btn-sm px-3 btn-primary'
+        (click)='openComic()'>Open</button>
+      <button type='button' class='btn btn-sm px-3 btn-info'
+        (click)='clicked($event)' data-toggle='modal'
+        data-target='#display_comic_details'>Summary</button>
+      <button type='button' class='btn btn-sm px-3 btn-danger'
+        mwlConfirmationPopover [popoverTitle]='delete_comic_title'
+        [popoverMessage]='delete_comic_message'
+        [cancelText]='cancel_button' [confirmText]='confirm_button'
+        (confirm)='deleteComic()'>Delete</button>
+    </div>
   </div>
+  <img class='card-img-bottom' src='{{cover_url}}'>
 </div>
