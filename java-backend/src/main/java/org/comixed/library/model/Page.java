@@ -42,7 +42,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.io.IOUtils;
 import org.comixed.library.adaptors.ArchiveAdaptorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -254,30 +253,11 @@ public class Page
      */
     public int getHeight()
     {
-        if (this.height == null || this.height == -1) this.getImageMetrics();
+        if ((this.height == null) || (this.height == -1))
+        {
+            this.getImageMetrics();
+        }
         return this.height;
-    }
-
-    private void getImageMetrics()
-    {
-        try
-        {
-            if (!this.comic.isMissing())
-            {
-                BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(this.getContent()));
-                this.width = bimage.getWidth();
-                this.height = bimage.getHeight();
-            }
-            else
-            {
-                this.width = this.height = 0;
-            }
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -362,6 +342,41 @@ public class Page
         return result;
     }
 
+    private void getImageMetrics()
+    {
+        try
+        {
+            if (!this.comic.isMissing())
+            {
+                BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(this.getContent()));
+                this.width = bimage.getWidth();
+                this.height = bimage.getHeight();
+            }
+            else
+            {
+                this.width = this.height = 0;
+            }
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Returns the page's index within the comic.
+     *
+     * @return the page index
+     */
+    @Transient
+    @JsonView(View.List.class)
+    @JsonProperty(value = "index")
+    public int getIndex()
+    {
+        return this.comic.getIndexFor(this);
+    }
+
     /**
      * Returns the width of the image.
      *
@@ -370,7 +385,10 @@ public class Page
      */
     public int getWidth()
     {
-        if (this.width == null || this.width == -1) this.getImageMetrics();
+        if ((this.width == null) || (this.width == -1))
+        {
+            this.getImageMetrics();
+        }
         return this.width;
     }
 

@@ -262,6 +262,18 @@ public class Comic
     }
 
     /**
+     * Adds a page to the end of the set of pages.
+     *
+     * @param page
+     *            the page
+     */
+    public void addPage(Page page)
+    {
+        this.logger.debug("Adding page: {}", page.getFilename());
+        this.pages.add(page);
+    }
+
+    /**
      * Adds a story arc to the comic.
      *
      * @param series
@@ -478,6 +490,13 @@ public class Comic
     public Long getId()
     {
         return this.id;
+    }
+
+    public int getIndexFor(Page page)
+    {
+        if (this.pages.contains(page)) { return this.pages.indexOf(page); }
+
+        return -1;
     }
 
     /**
