@@ -4,6 +4,7 @@ export class Page {
   filename: string;
   width: number;
   height: number;
+  index: number;
   hash: string;
   deleted: boolean;
 

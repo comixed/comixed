@@ -21,6 +21,7 @@ export class PageThumbnailComponent implements OnInit {
   undelete_page_message: string;
   confirm_button = 'Yes';
   cancel_button = 'No';
+  page_title: string;
 
   constructor(private comicService: ComicService,
     private errorsService: ErrorsService) {}
@@ -31,6 +32,7 @@ export class PageThumbnailComponent implements OnInit {
     this.undelete_page_title = `Undelete the page ${this.page.filename}`;
     this.delete_page_message = 'Are you sure you want to delete this page?';
     this.undelete_page_message = 'Are you sure you want to undelete this page?';
+    this.page_title = `Page #${this.page.index}`;
   }
 
   deletePage(): void {
