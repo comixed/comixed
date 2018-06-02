@@ -74,26 +74,53 @@ export class ComicListComponent implements OnInit {
 
   setSortOption(sort_id: any): void {
     this.comics.sort((comic1: Comic, comic2: Comic) => {
-
-      let left: any;
-      let right: any;
-
       switch (parseInt(sort_id, 10)) {
-        case 1: left = comic1.series; right = comic2.series; break;
-        case 2: left = comic1.added_date; right = comic2.added_date; break;
-        case 3: left = comic1.cover_date; right = comic2.cover_date; break;
-        case 4: left = comic1.last_read_date; right = comic2.last_read_date; break;
-        default: left = comic1.id; right = comic2.id; break;
-      }
-
-      if (left < right) {
-        return -1;
-      }
-      if (left > right) {
-        return 1;
+        case 0: return this.naturalSort(comic1, comic2);
+        case 1: return this.seriesSort(comic1, comic2);
+        case 2: return this.dateAddedSort(comic1, comic2);
+        case 3: return this.coverDateSort(comic1, comic2);
+        case 4: return this.lastReadDateSort(comic1, comic2);
+        default: console.log('Invalid sort value: ' + sort_id);
       }
       return 0;
     });
+  }
+
+  naturalSort(comic1: Comic, comic2: Comic): number {
+    if (comic1.id < comic2.id) {return -1;}
+    if (comic1.id > comic2.id) {return 1;}
+    return 0;
+  }
+
+  seriesSort(comic1: Comic, comic2: Comic): number {
+    if (comic1.series != comic2.series) {
+      if (comic1.series < comic2.series) {return -1;} else {return 1;}
+    } else if (comic1.volume != comic2.volume) {
+      if (comic1.volume < comic2.volume) {return -1;} else {return 1;}
+    } else if (comic1.issue_number != comic2.issue_number) {
+      if (comic1.issue_number < comic2.issue_number) {return -1;} else {return 1;}
+    }
+
+    // if we're here then the fields are all equal
+    return 0;
+  }
+
+  dateAddedSort(comic1: Comic, comic2: Comic): number {
+    if (comic1.added_date < comic2.added_date) {return -1;}
+    if (comic1.added_date > comic2.added_date) {return 1;}
+    return 0;
+  }
+
+  coverDateSort(comic1: Comic, comic2: Comic): number {
+    if (comic1.cover_date < comic2.cover_date) {return -1;}
+    if (comic1.cover_date > comic2.cover_date) {return 1;}
+    return 0;
+  }
+
+  lastReadDateSort(comic1: Comic, comic2: Comic): number {
+    if (comic1.last_read_date < comic2.last_read_date) {return -1;}
+    if (comic1.last_read_date > comic2.last_read_date) {return 1;}
+    return 0;
   }
 
   getTitleTextFor(comic: Comic): string {
