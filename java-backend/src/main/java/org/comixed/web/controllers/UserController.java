@@ -40,14 +40,4 @@ public class UserController
     {
         return user;
     }
-
-    /*
-     * @RequestMapping(value = "/{path:[^\\.]*}",
-     * method = RequestMethod.GET)
-     * public String redirect()
-     * {
-     * this.logger.info("Getting something information...");
-     * return "forward:/";
-     * }
-     */
 }
