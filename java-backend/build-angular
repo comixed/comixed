@@ -1,4 +1,0 @@
-#!/bin/sh
-cd ../web-frontend
-npm run ng build -prod 
-cp -r dist ../java-backend/target/classes/static

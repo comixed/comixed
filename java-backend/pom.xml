@@ -150,18 +150,28 @@
         <artifactId>maven-install-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
+        <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
+            <phase>generate-resources</phase>
             <configuration>
-              <executable>build-angular</executable>
-              <workingDirectory>${project.basedir}</workingDirectory>
+              <tasks>
+                <exec executable="cmd" osfamily="windows"
+                  dir="${project.basedir}/../web-frontend">
+                  <arg value="/c" />
+                  <arg value="ng" />
+                  <arg value="build" />
+                </exec>
+                <exec executable="/bin/sh" osfamily="mac"
+                  dir="${project.basedir}/../web-frontend">
+                  <arg value="-c" />
+                  <arg value="ng build" />
+                </exec>
+              </tasks>
             </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
