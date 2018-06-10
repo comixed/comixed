@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +32,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -73,6 +75,11 @@ public class ComixEdUser
                                                 referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL,
+               orphanRemoval = true)
+    @JsonView(View.List.class)
+    private List<Preference> preferences = new ArrayList<>();
+
     public String getEmail()
     {
         return this.email;
@@ -98,6 +105,23 @@ public class ComixEdUser
         return this.passwordHash;
     }
 
+    /**
+     * Returns the user's preference with the given name.
+     *
+     * @param name
+     *            the preference name
+     * @return the value, or null if not found
+     */
+    public String getPreference(String name)
+    {
+        for (Preference preference : this.preferences)
+        {
+            if (preference.getName().equals(name)) return preference.getValue();
+        }
+
+        return null;
+    }
+
     public List<Role> getRoles()
     {
         return this.roles;
@@ -116,5 +140,26 @@ public class ComixEdUser
     public void setPasswordHash(String passwordHash)
     {
         this.passwordHash = passwordHash;
+    }
+
+    /**
+     * Sets the user preference for the given name.
+     *
+     * @param name
+     *            the preference name
+     * @param value
+     *            the preference value
+     */
+    public void setProperty(String name, String value)
+    {
+        for (Preference preference : preferences)
+        {
+            if (preference.getName().equals(name))
+            {
+                preference.setValue(value);
+                return;
+            }
+        }
+        this.preferences.add(new Preference(name, value));
     }
 }
