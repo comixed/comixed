@@ -135,4 +135,8 @@ export class ComicListComponent implements OnInit {
 
     return result;
   }
+
+  openSelectedComic(): void {
+    this.router.navigate(['comics', this.current_comic.id]);
+  }
 }

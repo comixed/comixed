@@ -4,6 +4,8 @@
     <div class='modal-content'>
       <div class='modal-header'>
         <h4 class='modal-title'>{{getTitleTextFor(current_comic)}}</h4>
+        <button class='btn btn-sm btn-primary' data-dismiss='modal'
+          (click)='openSelectedComic()'>Read</button>
       </div>
       <div class='modal-body'>
         <div class='media'>
