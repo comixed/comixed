@@ -25,7 +25,7 @@ export class ComicListEntryComponent implements OnInit {
   cancel_button = 'No!';
 
   constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorsService,
-    private comicListComponent: ComicListComponent) {
+    private comicList: ComicListComponent) {
   }
 
   ngOnInit() {

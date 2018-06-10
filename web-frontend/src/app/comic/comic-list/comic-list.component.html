@@ -74,12 +74,18 @@
     <div class='card'>
       <div class='card-header'>
         <div class='row'>
-          <div class='col-sm-6'>
+          <div class='col-sm-2'>
+            <label for='cover_size'><b>Cover Size:</b>
+              {{cover_size}}</label> <input [(ngModel)]='cover_size'
+              type='range' min='64' max='640' value='{{cover_size}}'
+              class='slider'>
+          </div>
+          <div class='col-sm-5'>
             <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
           </div>
-          <div class='col-sm-4'>
-            <h3>{{ (comics | series_filter : title_search).length}}
-              Total Comics Found</h3>
+          <div class='col-sm-3'>
+            <h5>{{ (comics | series_filter : title_search).length}}
+              Total Comics Found</h5>
           </div>
           <div class='col-sm-2'>
             <button class='btn btn-info' *ngIf='show_search_box'
