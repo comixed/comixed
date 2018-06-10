@@ -16,6 +16,7 @@ export class ComicListComponent implements OnInit {
   comics: Comic[];
   comic_count: number = 0;
   read_count: number = 0;
+  cover_size: number = 256;
   all_series: string[];
   title_search: string;
   current_comic: Comic;
