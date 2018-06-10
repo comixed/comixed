@@ -173,4 +173,21 @@ export class ComicService {
   logout(): Observable<any> {
     return this.http.get(`${this.api_url}/logout`);
   }
+
+  get_user_preference(name: String): Observable<any> {
+    return this.http.get(`${this.api_url}/user/property?name=${name}`);
+  }
+
+  set_user_preference(name: string, value: string): void {
+    let params = new HttpParams().set('name', name).set('value', value);
+    this.http.post(`${this.api_url}/user/property`, params).subscribe(
+      (response: Response) => {
+        console.log('Preference saved: ' + name + '=' + value);
+      },
+      (error: Error) => {
+        console.log('ERROR:', error.message);
+        this.errorsService.fireErrorMessage('Failed to set user preference: ' + name + '=' + value);
+      }
+    );
+  }
 }

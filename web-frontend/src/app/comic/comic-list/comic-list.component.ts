@@ -5,6 +5,7 @@ import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
 import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.component';
 import {SeriesFilterPipe} from '../series-filter.pipe';
+import {ErrorsService} from '../../errors.service';
 
 @Component({
   selector: 'app-comic-list',
@@ -16,7 +17,7 @@ export class ComicListComponent implements OnInit {
   comics: Comic[];
   comic_count: number = 0;
   read_count: number = 0;
-  cover_size: number = 256;
+  cover_size: number;
   all_series: string[];
   title_search: string;
   current_comic: Comic;
@@ -37,7 +38,7 @@ export class ComicListComponent implements OnInit {
     {id: 4, label: 'Sort by last read date'},
   ];
 
-  constructor(private router: Router, private comicService: ComicService) {}
+  constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorsService) {}
 
   ngOnInit() {
     this.comicService.all_comics_update.subscribe(
@@ -54,6 +55,15 @@ export class ComicListComponent implements OnInit {
         count => this.comic_count = count,
         error => console.log('ERROR:', error.message));
     }, 250);
+    this.comicService.get_user_preference('cover_size').subscribe(
+      (cover_size: number) => {
+        this.cover_size = cover_size;
+      },
+      (error: Error) => {
+        console.log('ERROR:', error.message);
+        this.errorsService.fireErrorMessage('Error loading user preference: cover_size');
+      }
+    );
   }
 
   getImageURL(comic: Comic): string {
@@ -139,5 +149,9 @@ export class ComicListComponent implements OnInit {
 
   openSelectedComic(): void {
     this.router.navigate(['comics', this.current_comic.id]);
+  }
+
+  save_cover_size(): void {
+    this.comicService.set_user_preference('cover_size', String(this.cover_size));
   }
 }

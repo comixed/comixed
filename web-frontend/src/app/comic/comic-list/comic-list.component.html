@@ -78,7 +78,7 @@
             <label for='cover_size'><b>Cover Size:</b>
               {{cover_size}}</label> <input [(ngModel)]='cover_size'
               type='range' min='64' max='640' value='{{cover_size}}'
-              class='slider'>
+              (blur)='save_cover_size()' class='slider'>
           </div>
           <div class='col-sm-5'>
             <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
