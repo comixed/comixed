@@ -13,6 +13,8 @@ import {ErrorsService} from './errors.service';
 export class AppComponent implements OnInit {
   title = 'ComixEd';
   error_message: string;
+  comic_count = 0;
+  read_count = 0;
 
   constructor(private comicService: ComicService, private errorsService: ErrorsService, private router: Router) {
   }
@@ -23,6 +25,11 @@ export class AppComponent implements OnInit {
         this.error_message = message;
       }
     );
+    setInterval(() => {
+      this.comicService.getComicCount().subscribe(
+        count => this.comic_count = count,
+        error => console.log('ERROR:', error.message));
+    }, 250);
   }
 
   logout(): void {

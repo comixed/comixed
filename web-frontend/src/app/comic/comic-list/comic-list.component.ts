@@ -15,21 +15,19 @@ import {ErrorsService} from '../../errors.service';
 })
 export class ComicListComponent implements OnInit {
   comics: Comic[];
-  comic_count: number = 0;
-  read_count: number = 0;
   cover_size: number;
   all_series: string[];
   title_search: string;
   current_comic: Comic;
-  current_page: number = 1;
-  show_search_box: boolean = true;
+  current_page = 1;
+  show_search_box = true;
   page_sizes: any[] = [
     {id: 0, label: '10 comics'},
     {id: 1, label: '25 comics'},
     {id: 2, label: '50 comics'},
     {id: 3, label: '100 comics'}
   ];
-  page_size: number = 10;
+  page_size = 10;
   sort_options: any[] = [
     {id: 0, label: 'Default'},
     {id: 1, label: 'Sort by series'},
@@ -50,11 +48,6 @@ export class ComicListComponent implements OnInit {
       (comic: Comic) => {
         this.current_comic = comic;
       });
-    setInterval(() => {
-      this.comicService.getComicCount().subscribe(
-        count => this.comic_count = count,
-        error => console.log('ERROR:', error.message));
-    }, 250);
     this.comicService.get_user_preference('cover_size').subscribe(
       (cover_size: number) => {
         this.cover_size = cover_size;
