@@ -5,6 +5,19 @@ email, or any other method with the owners of this repository before making a ch
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
+## Commit Template
+
+When working on code, please use the following template for your commits:
+
+    [Issue #xxx] One line description of this commit
+    
+     * this commit adds/removes/fixes something
+
+where **xxx** is the issue being addressed.
+
+Using this template, your changes are then visible on the ticket's page. This lets everybody know
+what changes were made for any issue.
+
 ## Pull Request Process
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
