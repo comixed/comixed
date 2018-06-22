@@ -18,6 +18,13 @@ where **xxx** is the issue being addressed.
 Using this template, your changes are then visible on the ticket's page. This lets everybody know
 what changes were made for any issue.
 
+## Formatting And Cleaning Up Code
+
+Before you submit your code for a pull request, please be sure to clean up and format your code.
+
+Included in the repository are Eclipse files for (formatting)[docs/eclipse formatter.xml] and (cleaning up)[docs/eclipse cleanup.xml] your code automatically. If you use Eclipse then please import these configuration files and use them.
+
+
 ## Pull Request Process
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
