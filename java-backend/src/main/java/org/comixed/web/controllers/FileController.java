@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -65,7 +64,6 @@ public class FileController
 
     @RequestMapping(value = "/contents",
                     method = RequestMethod.GET)
-    @CrossOrigin
     public List<FileDetails> getAllComicsUnder(@RequestParam(value = "directory") String directory) throws IOException,
                                                                                                     JSONException
     {
@@ -115,9 +113,17 @@ public class FileController
         }
     }
 
+    @RequestMapping(value = "/import/status",
+                    method = RequestMethod.GET)
+    public int getImportStatus()
+    {
+        this.logger.debug("Returning the number of import tasks");
+
+        return this.worker.getCountFor(AddComicWorkerTask.class);
+    }
+
     @RequestMapping(value = "/import",
                     method = RequestMethod.POST)
-    @CrossOrigin
     public void importComicFiles(@RequestBody String[] filenames)
     {
         this.logger.debug("Attempting to post to controller");
@@ -138,15 +144,5 @@ public class FileController
                 this.logger.error("Unable to import file: {}", filename);
             }
         }
-    }
-
-    @RequestMapping(value = "/import/status",
-                    method = RequestMethod.GET)
-    @CrossOrigin
-    public int getImportStatus()
-    {
-        logger.debug("Returning the number of import tasks");
-
-        return this.worker.getCountFor(AddComicWorkerTask.class);
     }
 }

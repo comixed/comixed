@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,7 +52,6 @@ public class PageController
 
     @RequestMapping(value = "/pages/{id}",
                     method = RequestMethod.DELETE)
-    @CrossOrigin
     public void deletePage(@PathVariable("id") long id)
     {
         this.logger.debug("Marking page as deleted: id={}", id);
@@ -74,7 +72,6 @@ public class PageController
 
     @RequestMapping(value = "/comics/{id}/pages",
                     method = RequestMethod.GET)
-    @CrossOrigin
     @JsonView(View.List.class)
     public List<Page> getAll(@PathVariable("id") long id)
     {
@@ -85,7 +82,6 @@ public class PageController
 
     @RequestMapping(value = "/pages/duplicates/count",
                     method = RequestMethod.GET)
-    @CrossOrigin
     public long getDuplicateCount()
     {
         this.logger.debug("Get the number of duplicate pages");
@@ -95,7 +91,6 @@ public class PageController
 
     @RequestMapping(value = "/pages/duplicates",
                     method = RequestMethod.GET)
-    @CrossOrigin
     @JsonView(View.Details.class)
     public List<Page> getDuplicatePages()
     {
@@ -110,7 +105,6 @@ public class PageController
 
     @RequestMapping(value = "/comics/{id}/pages/{index}/content",
                     method = RequestMethod.GET)
-    @CrossOrigin
     public byte[] getImage(@PathVariable("id") long id, @PathVariable("index") int index)
     {
         this.logger.debug("Getting the image for comic: id={} index={}", id, index);
@@ -133,7 +127,6 @@ public class PageController
 
     @RequestMapping(value = "/comics/{id}/pages/{index}",
                     method = RequestMethod.GET)
-    @CrossOrigin
     public Page getPage(@PathVariable("id") long id, @PathVariable("index") int index)
     {
         this.logger.debug("Getting page for comic: id={} page={}", id, index);
@@ -145,7 +138,6 @@ public class PageController
 
     @RequestMapping(value = "/pages/{id}/content",
                     method = RequestMethod.GET)
-    @CrossOrigin
     public ResponseEntity<InputStreamResource> getPageContent(@PathVariable("id") long id)
     {
         this.logger.debug("Getting page: id={}", id);
@@ -183,7 +175,6 @@ public class PageController
 
     @RequestMapping(value = "/pages/{id}/undelete",
                     method = RequestMethod.POST)
-    @CrossOrigin
     public void undeletePage(@PathVariable("id") long id)
     {
         this.logger.debug("Marking page as undeleted: id={}", id);

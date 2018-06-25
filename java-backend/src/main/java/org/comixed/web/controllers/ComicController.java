@@ -24,9 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,7 +58,6 @@ public class ComicController
 
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.DELETE)
-    @CrossOrigin
     public boolean deleteComic(@PathVariable("id") long id)
     {
         this.logger.debug("Preparing to delete comic: id={}", id);
@@ -83,7 +79,6 @@ public class ComicController
 
     @RequestMapping(value = "/{id}/download",
                     method = RequestMethod.GET)
-    @CrossOrigin
     public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id) throws FileNotFoundException,
                                                                                           IOException
     {
@@ -113,10 +108,7 @@ public class ComicController
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @CrossOrigin
     @JsonView(View.List.class)
-    // public List<Comic> getAll(@RequestParam("after") @DateTimeFormat(iso =
-    // ISO.DATE_TIME) Optional<Date> after)
     public List<Comic> getAll(@RequestParam("after") Optional<Long> timestamp) throws ParseException
     {
         this.logger.debug("Getting all comics");
@@ -127,7 +119,7 @@ public class ComicController
         {
             Date after = new Date(new Timestamp(timestamp.get()).getTime());
             this.logger.debug("Getting comics added after {}", after);
-            result = comicRepository.findByDateAddedGreaterThan(after);
+            result = this.comicRepository.findByDateAddedGreaterThan(after);
         }
         else
         {
@@ -153,7 +145,6 @@ public class ComicController
 
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.GET)
-    @CrossOrigin
     @JsonView(View.Details.class)
     public Comic getComic(@PathVariable("id") long id)
     {
@@ -175,7 +166,6 @@ public class ComicController
 
     @RequestMapping(value = "/{id}/summary",
                     method = RequestMethod.GET)
-    @CrossOrigin
     @JsonView(View.Summary.class)
     public Comic getComicSummary(@PathVariable("id") long id)
     {
@@ -197,7 +187,6 @@ public class ComicController
 
     @RequestMapping(value = "/count",
                     method = RequestMethod.GET)
-    @CrossOrigin
     public long getCount()
     {
         return this.comicRepository.count();
