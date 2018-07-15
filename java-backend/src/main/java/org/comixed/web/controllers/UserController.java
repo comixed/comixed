@@ -23,6 +23,7 @@ import java.security.Principal;
 
 import org.comixed.library.model.ComixEdUser;
 import org.comixed.repositories.ComixEdUserRepository;
+import org.comixed.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +34,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(value = "/api")
 public class UserController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ComixEdUserRepository userRepository;
+    @Autowired
+    private Utils utils;
 
-    @RequestMapping(value = "/api/user",
+    @RequestMapping(value = "/user",
                     method = RequestMethod.GET)
     public Principal getCurrentUser(Principal user)
     {
         return user;
     }
 
-    @RequestMapping(value = "/api/user/property",
+    @RequestMapping(value = "/user/property",
                     method = RequestMethod.GET)
     public String getUserProperty(Authentication authentication, @RequestParam("name") String name)
     {
@@ -58,7 +62,7 @@ public class UserController
         return user.getPreference(name);
     }
 
-    @RequestMapping(value = "/api/user/property",
+    @RequestMapping(value = "/user/property",
                     method = RequestMethod.POST)
     public void setUserProperty(Authentication authentication,
                                 @RequestParam("name") String name,
@@ -69,6 +73,21 @@ public class UserController
 
         this.logger.debug("Setting property: {}={}", name, value);
         user.setProperty(name, value);
+        this.userRepository.save(user);
+    }
+
+    @RequestMapping(value = "/user/update",
+                    method = RequestMethod.POST)
+    public void update(Authentication authentication,
+                       @RequestParam("username") String username,
+                       @RequestParam("password") String password)
+    {
+        this.logger.debug("Updating user account for: {}", authentication.getName());
+        ComixEdUser user = this.userRepository.findByEmail(authentication.getName());
+
+        user.setEmail(username);
+        user.setPasswordHash(this.utils.createHash(password.getBytes()));
+
         this.userRepository.save(user);
     }
 }
