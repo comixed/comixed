@@ -13,8 +13,6 @@
       <ul class='nav navbar-nav'>
         <li *ngIf='!isAuthenticated()' class='nav-item'><a
           class='nav-link' [routerLink]='["login"]'>Login</a></li>
-        <li *ngIf='isAuthenticated()' class='nav-item'><a
-          class='nav-link' (click)='logout()'>Logout</a></li>
         <li class='nav-item'><a class='nav-link'
           [routerLink]='["home"]'>Home</a></li>
         <li class='nav-item dropdown'><a
@@ -26,6 +24,10 @@
               class='dropdown-item' [routerLink]='["import"]'>Import
               comics</a>
           </div></li>
+        <li *ngIf='isAuthenticated()' class='nav-item'><a
+          class='nav-link' [routerLink]='["account"]'>Account</a></li>
+        <li *ngIf='isAuthenticated()' class='nav-item'><a
+          class='nav-link' (click)='logout()'>Logout</a></li>
       </ul>
     </div>
   </div>

@@ -191,7 +191,7 @@ export class ComicService {
   }
 
   set_user_preference(name: string, value: string): void {
-    let params = new HttpParams().set('name', name).set('value', value);
+    const params = new HttpParams().set('name', name).set('value', value);
     this.http.post(`${this.api_url}/user/property`, params).subscribe(
       (response: Response) => {
         console.log('Preference saved: ' + name + '=' + value);
