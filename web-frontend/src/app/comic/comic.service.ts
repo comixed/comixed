@@ -178,6 +178,11 @@ export class ComicService {
     return this.http.get(`${this.api_url}/user/property?name=${name}`);
   }
 
+  updateUsernameAndPassword(username: string, password: string): Observable<any> {
+    const params = new HttpParams().set('username', username).set('password', password);
+    return this.http.post(`${this.api_url}/user/update`, params);
+  }
+
   set_user_preference(name: string, value: string): void {
     let params = new HttpParams().set('name', name).set('value', value);
     this.http.post(`${this.api_url}/user/property`, params).subscribe(
