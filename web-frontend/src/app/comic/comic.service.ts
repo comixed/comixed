@@ -19,8 +19,9 @@ export class ComicService {
   all_comics: Comic[] = [];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
   private last_comic_date: string;
-  private fetching_comics: boolean = false;
-  private authenticated: boolean = false;
+  private fetching_comics = false;
+  private authenticated = false;
+  private username = '';
 
   constructor(private http: HttpClient, private errorsService: ErrorsService) {
     this.monitorAuthentication();
@@ -34,8 +35,10 @@ export class ComicService {
         response => {
           if (response && response['name']) {
             this.authenticated = true;
+            this.username = response['name'];
           } else {
             this.authenticated = false;
+            this.username = '';
           }
         },
         error => {
@@ -172,6 +175,10 @@ export class ComicService {
 
   logout(): Observable<any> {
     return this.http.get(`${this.api_url}/logout`);
+  }
+
+  getUsername(): string {
+    return this.username;
   }
 
   get_user_preference(name: String): Observable<any> {

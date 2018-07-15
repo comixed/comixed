@@ -9,6 +9,7 @@ import {FormsModule} from '@angular/forms';
 import {ComicModule} from './comic/comic.module';
 import {MainPageComponent} from './main-page/main-page.component';
 import {LoginComponent} from './login/login.component';
+import { AccountComponent } from './account/account.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import {LoginComponent} from './login/login.component';
     AppComponent,
     MainPageComponent,
     LoginComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule,
