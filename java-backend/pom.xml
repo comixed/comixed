@@ -175,6 +175,32 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.coderplus.maven.plugins</groupId>
+        <artifactId>copy-rename-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <id>copy-and-rename-files</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>rename</goal>
+            </goals>
+            <configuration>
+              <sourceFile>${project.build.directory}/classes/application.properties-example</sourceFile>
+              <destinationFile>${project.build.directory}/classes/application.properties</destinationFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>application.properties</exclude>
+        </excludes>
+      </resource>
+    </resources>
   </build>
 </project>
