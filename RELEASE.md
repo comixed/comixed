@@ -4,6 +4,7 @@
 Our first project release!
 
 ### Issues Addressed In This release
+ * #111  Release candidate contains development application.properties file.
  * #108  Make the library footer global.
  * #105  Need to document default password
  * #98   Show comic pages as cards
