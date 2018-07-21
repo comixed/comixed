@@ -4,6 +4,7 @@
 Our first project release!
 
 ### Issues Addressed In This release
+ * #115  NullPointerException when changing username.
  * #113  When changing the account password, display a message when the passwords don't match.
  * #111  Release candidate contains development application.properties file.
  * #108  Make the library footer global.
