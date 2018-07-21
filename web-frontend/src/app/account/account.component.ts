@@ -9,10 +9,10 @@ import {ErrorsService} from '../errors.service';
   styleUrls: ['./account.component.css']
 })
 export class AccountComponent implements OnInit {
-  private username;
-  private password = '';
-  private password_check = '';
-  private message = '';
+  username;
+  password = '';
+  password_check = '';
+  message = '';
 
   constructor(
     private comicService: ComicService,
@@ -24,7 +24,13 @@ export class AccountComponent implements OnInit {
   }
 
   passesPasswordValidation(): boolean {
-    return (this.password.length > 8) && (this.password === this.password_check);
+    if ((this.password.length > 8) && (this.password === this.password_check)) {
+      this.message = 'Passwords match...';
+      return true;
+    } else {
+      this.message = 'Passwords do not match.';
+      return false;
+    }
   }
 
   updateUsernameAndPassword(): void {
