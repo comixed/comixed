@@ -76,17 +76,16 @@ public class UserController
         this.userRepository.save(user);
     }
 
-    @RequestMapping(value = "/user/update",
+    @RequestMapping(value = "/user/update/password",
                     method = RequestMethod.POST)
-    public void update(Authentication authentication,
-                       @RequestParam("username") String username,
-                       @RequestParam("password") String password)
+    public void update(Authentication authentication, @RequestParam("password") String password)
     {
-        this.logger.debug("Updating user account for: {}", authentication.getName());
+        this.logger.debug("Updating password for: email={}", authentication.getName());
         ComixEdUser user = this.userRepository.findByEmail(authentication.getName());
 
-        user.setEmail(username);
-        user.setPasswordHash(this.utils.createHash(password.getBytes()));
+        String hash = this.utils.createHash(password.getBytes());
+        this.logger.debug("Setting password: hash={}", hash);
+        user.setPasswordHash(hash);
 
         this.userRepository.save(user);
     }

@@ -1,7 +1,11 @@
 <div class='container'>
   <h1>User Account Details</h1>
-  <div *ngIf='this.message.length > 0' class='alert alert-info'
-    role='alert'>{{this.message}}</div>
+  <div *ngIf='this.message.length > 0' class='alert alert-dismissible'
+    [class.alert-success]='!has_error' [class.alert-danger]='has_error'
+    role='alert'>
+    <span type="button" class="close" data-dismiss="alert"
+      aria-label="Close"><span aria-hidden="true">&times;</span></span>{{this.message}}
+  </div>
   <form>
     <div class='username-and-password'>
       <dl>
@@ -12,6 +16,12 @@
           <input type='text' class='form-control' id='username' required
             [(ngModel)]='username' name='username'>
         </dd>
+      </dl>
+      <div>
+        <button type='submit' class='btn btn-success'
+          (click)='updateUsername()'>Update Username</button>
+      </div>
+      <dl>
         <dt>
           <label for='password'>Your password:</label>
         </dt>
@@ -29,9 +39,12 @@
             name='password_check'>
         </dd>
       </dl>
-      <div *ngIf="passesPasswordValidation()">
-        <button type='submit' class='btn btn-success'
-          (click)='updateUsernameAndPassword()'>Save</button>
+      <div>
+        <button [disabled]='!passesPasswordValidation()' type='submit'
+          class='btn btn-success' (click)='updatePassword()'>Update
+          Password</button>
+        <div *ngIf='password_error.length > 0'
+          class='alert alert-warning'>{{password_error}}</div>
       </div>
     </div>
   </form>
