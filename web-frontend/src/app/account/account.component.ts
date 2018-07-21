@@ -36,7 +36,18 @@ export class AccountComponent implements OnInit {
   }
 
   updateUsername(): void {
-
+    this.comicService.change_username(this.username).subscribe(
+      (response: Response) => {
+        this.password_error = '';
+        this.message = 'Username updated...';
+        this.has_error = false;
+      },
+      (error: Error) => {
+        console.log('ERROR:', error.message);
+        this.message = 'Failed to update username...';
+        this.has_error = true;
+      }
+    );
   }
 
   updatePassword(): void {

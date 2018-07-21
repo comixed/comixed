@@ -76,9 +76,30 @@ public class UserController
         this.userRepository.save(user);
     }
 
-    @RequestMapping(value = "/user/update/password",
+    @RequestMapping(value = "/user/username",
                     method = RequestMethod.POST)
-    public void update(Authentication authentication, @RequestParam("password") String password)
+    public void updateUsername(Authentication authentication, @RequestParam("username") String username)
+    {
+        this.logger.debug("Updating username for: email={}", authentication.getName());
+        ComixEdUser user = this.userRepository.findByEmail(authentication.getName());
+
+        if (user != null)
+        {
+            this.logger.debug("Setting username: email={}", username);
+            user.setEmail(username);
+
+            this.userRepository.save(user);
+        }
+        else
+        {
+            logger.debug("User is no longer authenticated");
+            authentication.setAuthenticated(false);
+        }
+    }
+
+    @RequestMapping(value = "/user/password",
+                    method = RequestMethod.POST)
+    public void updatePassword(Authentication authentication, @RequestParam("password") String password)
     {
         this.logger.debug("Updating password for: email={}", authentication.getName());
         ComixEdUser user = this.userRepository.findByEmail(authentication.getName());
