@@ -4,6 +4,7 @@
 Our first project release!
 
 ### Issues Addressed In This release
+ * #118  Reader without ADMIN role are able to import comics.
  * #115  NullPointerException when changing username.
  * #113  When changing the account password, display a message when the passwords don't match.
  * #111  Release candidate contains development application.properties file.
