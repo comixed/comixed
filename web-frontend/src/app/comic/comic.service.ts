@@ -7,6 +7,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
+import {User} from '../user.model';
 import {ErrorsService} from '../errors.service';
 import {Comic} from './comic.model';
 import {Page} from './page.model';
@@ -20,8 +21,7 @@ export class ComicService {
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
   private last_comic_date: string;
   private fetching_comics = false;
-  private authenticated = false;
-  private username = '';
+  private user: User = new User();
 
   constructor(private http: HttpClient, private errorsService: ErrorsService) {
     this.monitorAuthentication();
@@ -32,25 +32,19 @@ export class ComicService {
     setInterval(() => {
       const headers = new HttpHeaders();
       this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
-        response => {
-          if (response && response['name']) {
-            this.authenticated = true;
-            this.username = response['name'];
-          } else {
-            this.authenticated = false;
-            this.username = '';
-          }
+        (user: User) => {
+          this.user = user;
         },
         error => {
           console.log('ERROR: ' + error.message);
-          this.authenticated = false;
+          this.user = new User();
         });
     }, 250);
   }
 
   monitorComicList(): void {
     setInterval(() => {
-      if (!this.authenticated || this.fetching_comics) {
+      if (!this.user.authenticated || this.fetching_comics) {
         return;
       } else {
         this.fetching_comics = true;
@@ -151,25 +145,21 @@ export class ComicService {
   }
 
   isAuthenticated(): boolean {
-    return this.authenticated;
+    return this.user.authenticated;
   }
 
   login(username: string, password: string, callback) {
     const headers = new HttpHeaders({authorization: 'Basic ' + btoa(username + ':' + password)});
     this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
-      response => {
-        if (response && response['name']) {
-          this.authenticated = true;
-        } else {
-          this.authenticated = false;
-        }
+      (user: User) => {
+        this.user = user;
 
         callback && callback();
       },
       error => {
         console.log('ERROR: ' + error.message);
         this.errorsService.fireErrorMessage('Login failure');
-        this.authenticated = false;
+        this.user = new User();
       });
   }
 
@@ -177,8 +167,12 @@ export class ComicService {
     return this.http.get(`${this.api_url}/logout`);
   }
 
+  get_user(): User {
+    return this.user;
+  }
+
   getUsername(): string {
-    return this.username;
+    return this.user.name;
   }
 
   get_user_preference(name: String): Observable<any> {
