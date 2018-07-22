@@ -47,4 +47,15 @@ export class AppComponent implements OnInit {
   isAuthenticated(): boolean {
     return this.comicService.isAuthenticated();
   }
+
+  is_admin(): boolean {
+    if (this.comicService.isAuthenticated()) {
+      for (const role of this.comicService.get_user().authorities) {
+        if (role.authority === 'ROLE_ADMIN') {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }

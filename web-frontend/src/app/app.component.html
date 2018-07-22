@@ -21,8 +21,8 @@
           aria-expanded="false">Comics</a>
           <div class="dropdown-menu" aria-labelledby="comicDropdown">
             <a class='dropdown-item' [routerLink]='["comics"]'>Library</a><a
-              class='dropdown-item' [routerLink]='["import"]'>Import
-              comics</a>
+              *ngIf='is_admin()' class='dropdown-item'
+              [routerLink]='["import"]'>Import comics</a>
           </div></li>
         <li *ngIf='isAuthenticated()' class='nav-item'><a
           class='nav-link' [routerLink]='["account"]'>Account</a></li>
@@ -34,7 +34,7 @@
 </nav>
 <div class='container' style='margin-top: 50px'
   *ngIf='error_message && error_message.length > 0'>
-  <div class='alert alert-error alert-dismissable' role='alert'>
+  <div class='alert alert-danger alert-dismissable' role='alert'>
     <a href='#' class='close' data-dismiss='alert' aria-label='close'
       (click)='clearErrorMessage()'>&times;</a> <strong>Error!</strong>
     {{error_message}}
