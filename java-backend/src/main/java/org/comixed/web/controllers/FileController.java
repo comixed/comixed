@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,6 +65,7 @@ public class FileController
 
     @RequestMapping(value = "/contents",
                     method = RequestMethod.GET)
+    @Secured("ROLE_ADMIN")
     public List<FileDetails> getAllComicsUnder(@RequestParam(value = "directory") String directory) throws IOException,
                                                                                                     JSONException
     {
@@ -124,6 +126,7 @@ public class FileController
 
     @RequestMapping(value = "/import",
                     method = RequestMethod.POST)
+    @Secured("ROLE_ADMIN")
     public void importComicFiles(@RequestBody String[] filenames)
     {
         this.logger.debug("Attempting to post to controller");
