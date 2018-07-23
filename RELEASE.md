@@ -1,9 +1,7 @@
 # Release notes.
 
-## Release 0.1
-Our first project release!
-
-### Issues Addressed In This release
+### 2018-07-15: Release 0.1-RC1 
+### 2018-07-23: Release 0.1-RC2
  * #118  Reader without ADMIN role are able to import comics.
  * #115  NullPointerException when changing username.
  * #113  When changing the account password, display a message when the passwords don't match.
