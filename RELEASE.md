@@ -2,6 +2,7 @@
 
 ### 2018-07-15: Release 0.1-RC1 
 ### 2018-07-23: Release 0.1-RC2
+ * #121  The app should attempt to get the series and issue numbers from the filename for imported comics.
  * #119  Add a "Quick Start" guide for running the application
  * #118  Reader without ADMIN role are able to import comics.
  * #115  NullPointerException when changing username.
