@@ -22,6 +22,7 @@ package org.comixed.tasks;
 import java.io.File;
 import java.util.Locale;
 
+import org.comixed.library.adaptors.FilenameScraperAdaptor;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
@@ -55,6 +56,9 @@ public class AddComicWorkerTask extends AbstractWorkerTask
     @Autowired
     private ComicSelectionModel comicSelectionModel;
 
+    @Autowired
+    private FilenameScraperAdaptor filenameScraper;
+
     File file;
 
     @Override
@@ -76,6 +80,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask
             result = new Comic();
             result.setFilename(this.file.getAbsolutePath());
             comicFileHandler.loadComic(result);
+            filenameScraper.execute(result);
             comicRepository.save(result);
             comicSelectionModel.reload();
         }

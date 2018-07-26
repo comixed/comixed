@@ -22,6 +22,7 @@ package org.comixed.tasks;
 import java.io.File;
 
 import org.comixed.adaptors.StatusAdaptor;
+import org.comixed.library.adaptors.FilenameScraperAdaptor;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
@@ -65,11 +66,15 @@ public class AddComicWorkerTaskTest
     @Mock
     private ComicSelectionModel comicSelectionModel;
 
+    @Mock
+    private FilenameScraperAdaptor filenameScraperAdaptor;
+
     @Test
     public void testAddFile() throws WorkerTaskException, ComicFileHandlerException
     {
         Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
         Mockito.doNothing().when(comicSelectionModel).reload();
+        Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
         Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(Mockito.any(Comic.class));
 
         File file = new File(TEST_CBZ_FILE);
@@ -80,6 +85,7 @@ public class AddComicWorkerTaskTest
         Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic.capture());
         Mockito.verify(comicRepository, Mockito.times(1)).save(comic.capture());
         Mockito.verify(comicSelectionModel, Mockito.times(1)).reload();
+        Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic.capture());
     }
 
     @Test(expected = WorkerTaskException.class)
