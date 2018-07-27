@@ -1,6 +1,6 @@
 {
   "name": "comixed-web-frontend",
-  "version": "0.1",
+  "version": "0.2",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
