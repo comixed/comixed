@@ -21,6 +21,7 @@ import {Component, OnInit} from '@angular/core';
 
 import {ComicService} from '../comic.service';
 import {Page} from '../page.model';
+import {Comic} from '../comic.model';
 import {DuplicatePageListEntryComponent} from '../duplicate-page-list-entry/duplicate-page-list-entry.component';
 
 @Component({
@@ -29,27 +30,54 @@ import {DuplicatePageListEntryComponent} from '../duplicate-page-list-entry/dupl
   styleUrls: ['./duplicate-page-list.component.css']
 })
 export class DuplicatePageListComponent implements OnInit {
-  count: number;
-  pages: Page[];
+  protected page_hashes = new Array<string>();
+  protected comics_by_page_hash = new Map<string, Array<Comic>>();
+  protected pages_by_page_hash = new Map<string, Array<Page>>();
+  protected page_count = 0;
+  protected comic_count = 0;
+  protected show_consolidation_div = true;
 
-  constructor(private comicService: ComicService) {}
+  constructor(
+    private comic_service: ComicService,
+  ) {}
 
   ngOnInit() {
-    this.comicService.getDuplicatePageCount().subscribe(
-      count => {
-        this.count = count;
-      });
-    this.comicService.getDuplicatePages().subscribe(
-      pages => {
-        this.pages = pages.sort((a, b) => {
-          if (a.hash < b.hash) {
-            return -1;
+    const that = this;
+    this.comic_service.getDuplicatePages().subscribe(
+      (pages: Page[]) => {
+        const comic_ids = [];
+        pages.forEach((page) => {
+          // if this is the first time we've seen this hash, register it and create the page array
+          if (that.page_hashes.includes(page.hash) === false) {
+            that.page_count = that.page_count + 1;
+            that.page_hashes.push(page.hash);
+            that.comics_by_page_hash[page.hash] = [];
+            that.pages_by_page_hash[page.hash] = [];
           }
-          if (a.hash > b.hash) {
-            return 1;
-          }
-          return 0;
+          // store the page itself
+          that.pages_by_page_hash[page.hash].push(page);
+
+          // it's possible the same page is in a comic twice, but let's ignore that
+          that.comic_service.getComic(page.comic_id).subscribe(
+            (comic: Comic) => {
+              that.comics_by_page_hash[page.hash].push(comic);
+              that.comic_count = that.comic_count + 1;
+            }
+          );
         });
       });
+  }
+
+  get_title_for_hash(page_hash): string {
+    const comics = this.comics_by_page_hash[page_hash];
+    return 'Appears in ' + comics.length + ' comic' + (comics.length > 1 ? 's' : '') + '.';
+  }
+
+  hide_consolidation_message(): void {
+    this.show_consolidation_div = false;
+  }
+
+  show_consolidation_message(): void {
+    this.show_consolidation_div = true;
   }
 }
