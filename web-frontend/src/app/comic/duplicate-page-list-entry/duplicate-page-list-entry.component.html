@@ -7,9 +7,11 @@
     <button *ngIf='show_comics' class='btn btn-info'
       (click)='show_comics=false'>Hide Comics</button>
     <button *ngIf='!all_are_deleted' type='button'
-      class='btn btn-danger'>Mark all as deleted</button>
+      class='btn btn-danger' (click)='delete_all_pages()'>Mark
+      all as deleted</button>
     <button *ngIf='all_are_deleted' type='button'
-      class='btn btn-warning'>Unmark all as deleted</button>
+      class='btn btn-warning' (click)='undelete_all_pages()'>Unmark
+      all as deleted</button>
     <p>
       <strong>Hash value:</strong> {{page_hash}}
     </p>
@@ -20,7 +22,13 @@
             src='{{get_cover_url_for_comic(comic.id)}}'>
           <div class='media-body'></div>
           <h6>{{comic.filename}}</h6>
-          <button class='btn btn-danger'>Delete Page</button>
+          <button *ngIf='!page_is_deleted_in_comic(comic)'
+            class='btn btn-danger' (click)='delete_page_in_comic(comic)'>Delete
+            Page</button>
+          <button *ngIf='page_is_deleted_in_comic(comic)'
+            class='btn btn-warning'
+            (click)='undelete_page_in_comic(comic)'>Undelete
+            Page</button>
         </div>
       </div>
     </div>

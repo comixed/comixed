@@ -33,6 +33,7 @@ export class DuplicatePageListComponent implements OnInit {
   protected page_hashes = new Array<string>();
   protected comics_by_page_hash = new Map<string, Array<Comic>>();
   protected pages_by_page_hash = new Map<string, Array<Page>>();
+  protected pages_for_comic_id_by_page_hash = new Map<string, Map<number, Page>>();
   protected page_count = 0;
   protected comic_count = 0;
   protected show_consolidation_div = true;
@@ -56,6 +57,7 @@ export class DuplicatePageListComponent implements OnInit {
             that.page_hashes.push(page.hash);
             that.comics_by_page_hash[page.hash] = [];
             that.pages_by_page_hash[page.hash] = [];
+            that.pages_for_comic_id_by_page_hash[page.hash] = new Map<number, Page>();
           }
           // store the page itself
           that.pages_by_page_hash[page.hash].push(page);
@@ -65,6 +67,7 @@ export class DuplicatePageListComponent implements OnInit {
             (comic: Comic) => {
               that.comics_by_page_hash[page.hash].push(comic);
               that.comic_count = that.comic_count + 1;
+              that.pages_for_comic_id_by_page_hash[page.hash][comic.id] = page;
               that.working.pop();
             }
           );
@@ -82,11 +85,7 @@ export class DuplicatePageListComponent implements OnInit {
     return 'Appears in ' + comics.length + ' comic' + (comics.length > 1 ? 's' : '') + '.';
   }
 
-  hide_consolidation_message(): void {
-    this.show_consolidation_div = false;
-  }
-
-  show_consolidation_message(): void {
-    this.show_consolidation_div = true;
+  toggle_consolidation_message(): void {
+    this.show_consolidation_div = !this.show_consolidation_div;
   }
 }

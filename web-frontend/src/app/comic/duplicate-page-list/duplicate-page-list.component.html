@@ -15,23 +15,20 @@
       <h4>There are currently {{page_count}} duplicate pages across
         {{comic_count}} comics.</h4>
     </div>
-    <div *ngIf='!show_consolidation_div'>
+    <div>
       <p class='text-right'>
-        <span class='fa fa-bell' (click)='show_consolidation_message()'></span>
+        <span class='fa fa-bell'
+          (click)='toggle_consolidation_message()'></span>
       </p>
     </div>
     <div class='row justify-content-center'
       *ngIf='show_consolidation_div'>
       <div class='col-md-4 border m-10'>
-        <h5 class='text-center'>
-          Deleting Duplicate Pages <a href='#' class='close'
-            data-dismiss='alert' aria-label='close'
-            (click)='hide_consolidation_message()'>&times;</a>
-        </h5>
+        <h5 class='text-center'>Deleting Duplicate Pages</h5>
         <p>
-          <span class='fa fa-bell'></span> You can delete all instances
-          of each of these pages by clicking on the <em>Mark all as
-            deleted</em> button for each duplicate page.
+          You can delete all instances of each of these pages by
+          clicking on the <em>Mark all as deleted</em> button for each
+          duplicate page.
         </p>
         <p>Then the next time you consolidate your library those
           pages will be deleted from the comics containing them.</p>
@@ -46,6 +43,7 @@
   <div class='row border' *ngFor='let page_hash of page_hashes'>
     <app-duplicate-list-entry [page_hash]='page_hash'
       [pages]='pages_by_page_hash[page_hash]'
+      [pages_for_comic_id]='pages_for_comic_id_by_page_hash[page_hash]'
       [comics]='comics_by_page_hash[page_hash]'
       [page_title]='get_title_for_hash(page_hash)'></app-duplicate-list-entry>
   </div>

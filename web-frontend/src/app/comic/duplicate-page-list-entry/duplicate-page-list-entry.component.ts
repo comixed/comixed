@@ -35,6 +35,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   @Input() page_hash: string;
   @Input() pages: Array<Page>;
   @Input() comics: Comic[];
+  @Input() pages_for_comic_id: Map<number, Page>;
   @Input() page_title: string;
   @Input() page_subtitle: string;
   image_url: string;
@@ -73,15 +74,59 @@ export class DuplicatePageListEntryComponent implements OnInit {
     this.all_are_deleted = this.pages.every((page) => page.deleted === true);
   }
 
-  mark_all_as_deleted(): void {
-    this.pages.forEach((page) => {
-      this.comic_service.markPageAsDeleted(page);
-      page.deleted = true;
-    });
-    this.update_all_are_deleted();
-  }
-
   get_cover_url_for_comic(comic_id: number): string {
     return this.comic_service.getImageUrl(comic_id, 0);
+  }
+
+  delete_all_pages(): void {
+    this.pages.forEach((page) => this.delete_page(page));
+  }
+
+  undelete_all_pages(): void {
+    this.pages.forEach((page) => this.undelete_page(page));
+  }
+
+  page_is_deleted_in_comic(comic: Comic): boolean {
+    return this.pages_for_comic_id[comic.id].deleted;
+  }
+
+  delete_page_in_comic(comic: Comic): void {
+    const page = this.pages_for_comic_id[comic.id];
+    this.delete_page(page);
+  }
+
+  undelete_page_in_comic(comic: Comic): void {
+    const page = this.pages_for_comic_id[comic.id];
+    this.undelete_page(page);
+  }
+
+  delete_page(page: Page): void {
+    this.comic_service.markPageAsDeleted(page).subscribe(
+      (response) => {
+        page.deleted = true;
+      },
+      (error: Error) => {
+        this.errors_service.fireErrorMessage(error.message);
+        console.log('ERROR:' + error.message);
+      },
+      () => {
+        this.update_all_are_deleted();
+      }
+    );
+  }
+
+  undelete_page(page: Page): void {
+    this.comic_service.markPageAsUndeleted(page).subscribe(
+      (response) => {
+        page.deleted = false;
+      },
+      (error: Error) => {
+        this.errors_service.fireErrorMessage(error.message);
+        console.log('ERROR:' + error.message);
+      },
+      () => {
+        this.update_all_are_deleted();
+      }
+    );
   }
 }
