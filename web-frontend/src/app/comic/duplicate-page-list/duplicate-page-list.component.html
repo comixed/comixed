@@ -1,11 +1,15 @@
-<div *ngIf='this.page_count === 0' class='row'>
+<div *ngIf='is_working()'>
+  <h2 class='text-center'>Loading Duplicate Pages...</h2>
+  <div id='busy_indicator'></div>
+</div>
+<div *ngIf='!is_working() && this.page_count === 0' class='row'>
   <div class='container'>
     <div class='row justify-content-center'>
       <h4>There are currently no duplicate pages in the library.</h4>
     </div>
   </div>
 </div>
-<div *ngIf='this.page_count > 0' class='row'>
+<div *ngIf='!is_working() && this.page_count > 0' class='row'>
   <div class='container'>
     <div class='row justify-content-center'>
       <h4>There are currently {{page_count}} duplicate pages across

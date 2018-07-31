@@ -36,6 +36,7 @@ export class DuplicatePageListComponent implements OnInit {
   protected page_count = 0;
   protected comic_count = 0;
   protected show_consolidation_div = true;
+  protected working = Array<any>();
 
   constructor(
     private comic_service: ComicService,
@@ -43,10 +44,12 @@ export class DuplicatePageListComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
+    this.working.push(true);
     this.comic_service.getDuplicatePages().subscribe(
       (pages: Page[]) => {
         const comic_ids = [];
         pages.forEach((page) => {
+          that.working.push(true);
           // if this is the first time we've seen this hash, register it and create the page array
           if (that.page_hashes.includes(page.hash) === false) {
             that.page_count = that.page_count + 1;
@@ -62,10 +65,16 @@ export class DuplicatePageListComponent implements OnInit {
             (comic: Comic) => {
               that.comics_by_page_hash[page.hash].push(comic);
               that.comic_count = that.comic_count + 1;
+              that.working.pop();
             }
           );
         });
+        that.working.pop();
       });
+  }
+
+  is_working(): boolean {
+    return this.working.length > 0;
   }
 
   get_title_for_hash(page_hash): string {
