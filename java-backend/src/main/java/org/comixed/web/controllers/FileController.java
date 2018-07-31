@@ -119,9 +119,10 @@ public class FileController
                     method = RequestMethod.GET)
     public int getImportStatus()
     {
-        this.logger.debug("Returning the number of import tasks");
+        int result = this.worker.getCountFor(AddComicWorkerTask.class);
+        this.logger.debug("Number of import tasks pending={}", result);
 
-        return this.worker.getCountFor(AddComicWorkerTask.class);
+        return result;
     }
 
     @RequestMapping(value = "/import",

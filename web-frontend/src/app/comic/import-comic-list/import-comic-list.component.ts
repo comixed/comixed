@@ -36,49 +36,62 @@ export class ImportComicListComponent implements OnInit {
   importing = false;
   plural = true;
   busy = false;
+  busy_title: string;
   display = 'none';
   pending_imports = 0;
   waiting_on_imports = false;
 
-  constructor(private comicService: ComicService, private errorsService: ErrorsService,
+  constructor(private comic_service: ComicService, private errorsService: ErrorsService,
     builder: FormBuilder) {
     this.directoryForm = builder.group({'directory': ['', Validators.required]});
     this.directory = this.directoryForm.controls['directory'];
   }
 
   ngOnInit() {
+    const that = this;
     setInterval(() => {
-      this.waiting_on_imports = true;
-      this.comicService.getPendingImports().subscribe(
+      // don't try to get the pending imports if we're already doing it...
+      if (that.waiting_on_imports === true) {
+        return;
+      }
+      that.waiting_on_imports = true;
+      that.comic_service.getPendingImports().subscribe(
         count => {
-          this.pending_imports = count;
-          this.waiting_on_imports = false;
+          that.pending_imports = count;
+          if (count > 0) {
+            that.busy_title = 'Importing ' + count + ' More Comic' + (that.plural ? 's' : '') + '...';
+            that.importing = true;
+          } else {
+            that.importing = false;
+          }
         },
         error => {
           console.log('ERROR', error.message);
-          this.errorsService.fireErrorMessage('Error getting the number of pending imports...');
-          this.waiting_on_imports = false;
+          that.errorsService.fireErrorMessage('Error getting the number of pending imports...');
+          that.importing = false;
+        },
+        () => {
+          that.waiting_on_imports = false;
         });
-    }, 500);
+    }, 250);
   }
 
   onLoad(): void {
-    this.getFilesForImport();
-  }
-
-  getFilesForImport(): void {
-    this.setBusyMode(true);
+    const that = this;
+    this.busy_title = 'Fetching List Of Comic Files...';
+    this.busy = true;
     const directory = this.directory.value;
-    this.comicService.getFilesUnder(directory).subscribe(
+    this.comic_service.getFilesUnder(directory).subscribe(
       files => {
-        this.files = files;
-        this.plural = this.files.length !== 1;
-        this.setBusyMode(false);
+        that.files = files;
+        that.plural = this.files.length !== 1;
       },
       error => {
         console.log('ERROR:', error.message);
-        this.errorsService.fireErrorMessage('Error while loading filenames...');
-        this.setBusyMode(false);
+        that.errorsService.fireErrorMessage('Error while loading filenames...');
+      },
+      () => {
+        that.busy = false;
       }
     );
   }
@@ -94,22 +107,15 @@ export class ImportComicListComponent implements OnInit {
   }
 
   importFiles(): void {
+    const that = this;
     this.importing = true;
     const selectedFiles = this.files.filter(file => file.selected).map(file => file.filename);
-    this.comicService.importFiles(selectedFiles).subscribe(
-      value => {
-        this.importing = false;
-        this.getFilesForImport();
-      },
+    this.comic_service.importFiles(selectedFiles).subscribe(
+      () => {},
       error => {
         console.log('ERROR:', error.message);
-        this.importing = false;
+        that.importing = false;
       }
     );
-  }
-
-  setBusyMode(mode: boolean): void {
-    this.busy = mode;
-    this.display = this.busy ? 'block' : 'none';
   }
 }
