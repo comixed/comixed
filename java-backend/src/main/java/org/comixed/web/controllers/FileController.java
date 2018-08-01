@@ -22,11 +22,13 @@ package org.comixed.web.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.comixed.library.model.FileDetails;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.tasks.AddComicWorkerTask;
+import org.comixed.tasks.QueueComicsWorkerTask;
 import org.comixed.tasks.Worker;
 import org.comixed.utils.ComicFileUtils;
 import org.json.JSONException;
@@ -61,7 +63,9 @@ public class FileController
     private Worker worker;
 
     @Autowired
-    private ObjectFactory<AddComicWorkerTask> taskFactory;
+    private ObjectFactory<QueueComicsWorkerTask> taskFactory;
+
+    private int requestId = 0;
 
     @RequestMapping(value = "/contents",
                     method = RequestMethod.GET)
@@ -119,8 +123,11 @@ public class FileController
                     method = RequestMethod.GET)
     public int getImportStatus()
     {
+        long started = System.currentTimeMillis();
+        this.logger.debug("Received import status request [{}]", ++this.requestId);
         int result = this.worker.getCountFor(AddComicWorkerTask.class);
-        this.logger.debug("Number of import tasks pending={}", result);
+        this.logger.debug("Responding to import status request [{}] in {}ms (BTW, there are {} imports pending)",
+                          this.requestId, (System.currentTimeMillis() - started), result);
 
         return result;
     }
@@ -130,23 +137,10 @@ public class FileController
     @Secured("ROLE_ADMIN")
     public void importComicFiles(@RequestBody String[] filenames)
     {
-        this.logger.debug("Attempting to post to controller");
-        for (String filename : filenames)
-        {
-            File file = new File(filename);
+        this.logger.debug("Queueing {} files for import", filenames.length);
 
-            if (file.exists() && file.isFile())
-            {
-                this.logger.debug("Importing: {}", filename);
-                AddComicWorkerTask task = this.taskFactory.getObject();
-
-                task.setFile(file);
-                this.worker.addTasksToQueue(task);
-            }
-            else
-            {
-                this.logger.error("Unable to import file: {}", filename);
-            }
-        }
+        QueueComicsWorkerTask task = this.taskFactory.getObject();
+        task.setFilenames(Arrays.asList(filenames));
+        this.worker.addTasksToQueue(task);
     }
 }
