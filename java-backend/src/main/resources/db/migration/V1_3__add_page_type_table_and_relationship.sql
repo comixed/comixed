@@ -15,9 +15,9 @@ ALTER TABLE pages add constraint pages_page_types foreign key (type_id) referenc
 
 -- insert the page types
 INSERT INTO page_types (id, name) 
-	VALUES (1, 'front.cover'),
-	       (2, 'inner.cover'),
-	       (3, 'back.cover'),
+	VALUES (1, 'front-cover'),
+	       (2, 'inner-cover'),
+	       (3, 'back-cover'),
 	       (10, 'roundup'),
 	       (20, 'story'),
 	       (30, 'advertisement'),
