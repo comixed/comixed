@@ -76,7 +76,7 @@ public class PageTest
     @Before
     public void setUp() throws IOException
     {
-        page = new Page(TEST_JPG_FILE, CONTENT);
+        page = new Page(TEST_JPG_FILE, CONTENT, new PageType());
     }
 
     @Test

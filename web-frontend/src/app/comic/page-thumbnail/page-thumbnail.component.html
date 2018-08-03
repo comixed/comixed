@@ -1,7 +1,8 @@
 <div class='card h-100 border-bottom px-1 pb-1' style='width: 256px'>
   <div class='card-body'>
     <h5 class='card-title'>{{page_title}}</h5>
-    <h6 class='card-subtitle'>{{page.filename}}</h6>
+    <h6 class='card-subtitle'>{{page_type_text}}</h6>
+    
     <div class='row center-block'>
       <button type='button' class='btn btn-sm btn-danger'
         *ngIf='!page.deleted' mwlConfirmationPopover

@@ -55,12 +55,13 @@ public class ComicTest
     private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
     private Comic comic;
     private Page page;
+    private PageType pageType = new PageType();
 
     @Before
     public void setUp() throws Exception
     {
         this.comic = new Comic();
-        this.page = new Page(TEST_PAGE_FILENAME, new byte[] {});
+        this.page = new Page(TEST_PAGE_FILENAME, new byte[] {}, pageType);
     }
 
     @Test

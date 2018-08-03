@@ -41,6 +41,7 @@ export class PageThumbnailComponent implements OnInit {
   confirm_button = 'Yes';
   cancel_button = 'No';
   page_title: string;
+  page_type_text: string;
 
   constructor(private comicService: ComicService,
     private errorsService: ErrorsService) {}
@@ -52,6 +53,21 @@ export class PageThumbnailComponent implements OnInit {
     this.delete_page_message = 'Are you sure you want to delete this page?';
     this.undelete_page_message = 'Are you sure you want to undelete this page?';
     this.page_title = `Page #${this.page.index}`;
+    // TODO this needs i18n
+    switch (this.page.page_type.name) {
+      case 'front-cover': this.page_type_text = 'Front Cover'; break;
+      case 'inner-cover': this.page_type_text = 'Inner Cover'; break;
+      case 'back-cover': this.page_type_text = 'Back Cover'; break;
+      case 'roundup': this.page_type_text = 'Roundup'; break;
+      case 'story': this.page_type_text = 'Story'; break;
+      case 'advertisement': this.page_type_text = 'Advertisement'; break;
+      case 'editorial': this.page_type_text = 'Editorial'; break;
+      case 'letters': this.page_type_text = 'Letters'; break;
+      case 'preview': this.page_type_text = 'Preview'; break;
+      case 'other': this.page_type_text = 'Other'; break;
+      case 'filtered': this.page_type_text = 'Filtered'; break;
+      default: this.page_type_text = 'Unknown (' + this.page.page_type + ')';
+    }
   }
 
   deletePage(): void {

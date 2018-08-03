@@ -21,6 +21,8 @@ package org.comixed.library.loaders;
 
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
+import org.comixed.repositories.PageTypeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,6 +35,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImageEntryLoader extends AbstractEntryLoader
 {
+    @Autowired
+    private PageTypeRepository pageTypeRepository;
+
     @Override
     public void loadContent(Comic comic, String filename, byte[] content)
     {
@@ -44,7 +49,7 @@ public class ImageEntryLoader extends AbstractEntryLoader
         }
         else
         {
-            Page page = new Page(filename, content);
+            Page page = new Page(filename, content, this.pageTypeRepository.getDefaultPageType());
             comic.addPage(comic.getPageCount(), page);
         }
     }

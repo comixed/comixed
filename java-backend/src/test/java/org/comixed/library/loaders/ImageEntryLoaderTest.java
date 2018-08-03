@@ -21,14 +21,19 @@ package org.comixed.library.loaders;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.PageType;
+import org.comixed.repositories.PageTypeRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -43,6 +48,12 @@ public class ImageEntryLoaderTest extends BaseLoaderTest
     @InjectMocks
     private ImageEntryLoader loader;
 
+    @Mock
+    private PageTypeRepository pageTypeRepository;
+
+    @Mock
+    private PageType pageType;
+
     private Comic comic;
 
     @Before
@@ -54,12 +65,17 @@ public class ImageEntryLoaderTest extends BaseLoaderTest
     @Test
     public void testLoadImage() throws IOException
     {
+        Mockito.when(pageTypeRepository.getDefaultPageType()).thenReturn(pageType);
+
         byte[] content = loadFile(TEST_FILENAME);
 
         loader.loadContent(comic, TEST_FILENAME, content);
 
+        Mockito.verify(pageTypeRepository, Mockito.times(1)).getDefaultPageType();
+
         assertEquals(1, comic.getPageCount());
         assertNotNull(comic.getPage(0));
         assertEquals(content, comic.getPage(0).getContent());
+        assertSame(pageType, comic.getPage(0).getPageType());
     }
 }

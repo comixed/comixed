@@ -17,6 +17,8 @@
  * org.comixed;
  */
 
+import {PageType} from './page-type.model';
+
 export class Page {
   id: number;
   comic_id: number;
@@ -26,6 +28,7 @@ export class Page {
   index: number;
   hash: string;
   deleted: boolean;
+  page_type: PageType;
 
   constructor(
     id: number,
@@ -34,7 +37,8 @@ export class Page {
     width: number,
     height: number,
     hash: string,
-    deleted: boolean
+    deleted: boolean,
+    page_type: PageType,
   ) {
     this.id = id;
     this.comic_id = comic_id;
@@ -43,5 +47,6 @@ export class Page {
     this.height = height;
     this.hash = hash;
     this.deleted = deleted;
+    this.page_type = page_type;
   }
 }
