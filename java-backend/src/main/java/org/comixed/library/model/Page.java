@@ -85,6 +85,12 @@ public class Page
     @JsonIgnore
     private Comic comic;
 
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    @JsonProperty("page_type")
+    @JsonView(View.List.class)
+    private PageType pageType;
+
     @Column(name = "filename",
             updatable = true,
             nullable = false)
@@ -139,13 +145,16 @@ public class Page
      *            the filename
      * @param content
      *            the content
+     * @param pageType
+     *            the page type
      */
-    public Page(String filename, byte[] content)
+    public Page(String filename, byte[] content, PageType pageType)
     {
         this.logger.debug("Creating page: filename=" + filename + " content.size=" + content.length);
         this.filename = filename;
         this.content = content;
         this.hash = this.createHash(content);
+        this.pageType = pageType;
     }
 
     private String createHash(byte[] bytes)
@@ -375,6 +384,16 @@ public class Page
     public int getIndex()
     {
         return this.comic.getIndexFor(this);
+    }
+
+    /**
+     * Returns the page type.
+     *
+     * @return the page type
+     */
+    public PageType getPageType()
+    {
+        return this.pageType;
     }
 
     /**
