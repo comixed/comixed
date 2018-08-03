@@ -24,8 +24,10 @@ import java.util.List;
 
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
+import org.comixed.library.model.PageType;
 import org.comixed.library.model.View;
 import org.comixed.repositories.PageRepository;
+import org.comixed.repositories.PageTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,15 @@ public class PageController
     private ComicController comicRepository;
     @Autowired
     private PageRepository pageRepository;
+    @Autowired
+    private PageTypeRepository pageTypeRepository;
+
+    @RequestMapping(value = "/pages/types",
+                    method = RequestMethod.GET)
+    public Iterable<PageType> getPageTypes()
+    {
+        return pageTypeRepository.findAll();
+    }
 
     @RequestMapping(value = "/pages/{id}",
                     method = RequestMethod.DELETE)
