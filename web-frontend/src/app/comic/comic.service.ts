@@ -30,12 +30,14 @@ import {User} from '../user.model';
 import {ErrorsService} from '../errors.service';
 import {Comic} from './comic.model';
 import {Page} from './page.model';
+import {PageType} from './page-type.model';
 import {FileDetails} from './file-details.model';
 
 @Injectable()
 export class ComicService {
   private api_url = 'api';
   current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
+  current_page: Subject<Page> = new BehaviorSubject<Page>(new Page());
   all_comics: Comic[] = [];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
   private last_comic_date: string;
@@ -96,6 +98,10 @@ export class ComicService {
 
   setCurrentComic(comic: Comic): void {
     this.current_comic.next(comic);
+  }
+
+  set_current_page(page: Page): void {
+    this.current_page.next(page);
   }
 
   removeComic(comic_id: number) {
