@@ -115,6 +115,10 @@ export class ComicService {
     return this.http.get(`${this.api_url}/comics/count`);
   }
 
+  get_page_types(): Observable<any> {
+    return this.http.get(`/api/pages/types`);
+  }
+
   getDuplicatePageCount(): Observable<any> {
     return this.http.get(`${this.api_url}/pages/duplicates/count`);
   }
