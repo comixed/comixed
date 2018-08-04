@@ -23,7 +23,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
+import {ErrorsService} from '../../errors.service';
 import {ReadViewerComponent} from '../read-viewer/read-viewer.component';
+import {PageType} from '../page-type.model';
 
 @Component({
   selector: 'app-comic-details',
@@ -38,16 +40,31 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   show_teams = false;
   show_story_arcs = false;
   show_locations = false;
+  page_types: Array<PageType> = [];
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private comicService: ComicService) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private comic_service: ComicService,
+    private error_service: ErrorsService,
+  ) {}
 
   ngOnInit() {
+    this.comic_service.get_page_types().subscribe(
+      (page_types: PageType[]) => {
+        this.page_types = page_types;
+      },
+      (error: Error) => {
+        this.error_service.fireErrorMessage(error.message);
+        console.log('ERROR:', error);
+      }
+    );
     this.sub = this.activatedRoute.params.subscribe(params => {
       const id = +params['id'];
-      this.comicService.getComic(id).subscribe(
+      this.comic_service.getComic(id).subscribe(
         (comic: Comic) => {
           this.comic = comic;
-          this.cover_url = this.comicService.getImageUrl(this.comic.id, 0);
+          this.cover_url = this.comic_service.getImageUrl(this.comic.id, 0);
         },
         error => {
           console.log('error:', error.message);
@@ -64,10 +81,10 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   }
 
   getImageURL(page_id: number): string {
-    return this.comicService.getImageUrlForId(page_id);
+    return this.comic_service.getImageUrlForId(page_id);
   }
 
   getDownloadLink(): string {
-    return this.comicService.getComicDownloadLink(this.comic.id);
+    return this.comic_service.getComicDownloadLink(this.comic.id);
   }
 }
