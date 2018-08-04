@@ -37,6 +37,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -204,9 +205,9 @@ public class PageController
         }
     }
 
-    @RequestMapping(value = "/pages/{id}/type/{type_id}",
+    @RequestMapping(value = "/pages/{id}/type",
                     method = RequestMethod.PUT)
-    public void updateTypeForPage(long id, long pageTypeId)
+    public void updateTypeForPage(@PathVariable("id") long id, @RequestParam("type_id") long pageTypeId)
     {
         this.logger.debug("Setting page type: id={} typeId={}", id, pageTypeId);
 

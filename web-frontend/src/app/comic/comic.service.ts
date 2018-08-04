@@ -125,6 +125,11 @@ export class ComicService {
     return this.http.get(`/api/pages/types`);
   }
 
+  set_page_type(page: Page, page_type: PageType): Observable<any> {
+    const params = new HttpParams().set('type_id', `${page_type.id}`);
+    return this.http.put(`/api/pages/${page.id}/type`, params);
+  }
+
   get_display_name_for_page_type(page_type: PageType): string {
     switch (page_type.name) {
       case 'front-cover': return 'Front Cover';

@@ -9,6 +9,20 @@
           class='img-thumbnail' width='256'>
       </div>
       <div class='media-body'>
+        <!-- select the page type -->
+        <div class='dropdown'>
+          <button class='btn btn-primary dropdown-toggle' type='button'
+            data-toggle='dropdown'>
+            {{get_display_name_for_page_type(page.page_type)}} <span
+              class='caret'></span>
+          </button>
+          <ul class='dropdown-menu'>
+            <li *ngFor='let this_page_type of page_types'><a
+              [class.active]='page.page_type.id === this_page_type.id'
+              (click)='set_page_type(this_page_type)'>
+                {{get_display_name_for_page_type(this_page_type)}}</a></li>
+          </ul>
+        </div>
         <!-- delete/undelete buttons -->
         <button type='button' class='btn btn-sm btn-danger'
           *ngIf='!page.deleted' mwlConfirmationPopover

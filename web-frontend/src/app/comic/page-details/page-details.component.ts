@@ -26,6 +26,7 @@ import {
 import {ComicService} from '../comic.service';
 import {ErrorsService} from '../../errors.service';
 import {Page} from '../page.model';
+import {PageType} from '../page-type.model';
 
 @Component({
   selector: 'app-page-details',
@@ -34,6 +35,7 @@ import {Page} from '../page.model';
 })
 export class PageDetailsComponent implements OnInit {
   @Input() page: Page;
+  private page_types: PageType[];
   delete_page_title = 'Delete This Page?';
   delete_page_message = 'Are you sure you want to delete this page?';
   undelete_page_title = 'Undelete This Page?';
@@ -47,6 +49,15 @@ export class PageDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.comic_service.get_page_types().subscribe(
+      (page_types: PageType[]) => {
+        this.page_types = page_types;
+      },
+      (error: Error) => {
+        this.error_service.fireErrorMessage('Unable to retrieve page types');
+        console.log('ERROR:', error);
+      }
+    );
   }
 
   get_title_for_current_page(): string {
@@ -55,6 +66,23 @@ export class PageDetailsComponent implements OnInit {
 
   get_image_url_for_current_page(): string {
     return this.comic_service.getImageUrlForId(this.page.id);
+  }
+
+  get_display_name_for_page_type(page_type: PageType): string {
+    return this.comic_service.get_display_name_for_page_type(page_type);
+  }
+
+  set_page_type(page_type: PageType): void {
+    const that = this;
+    this.comic_service.set_page_type(this.page, page_type).subscribe(
+      () => {
+        that.page.page_type = page_type;
+      },
+      (error: Error) => {
+        that.error_service.fireErrorMessage('Unable to set the page type');
+        console.log('ERROR:', error);
+      }
+    );
   }
 
   delete_page(): void {
