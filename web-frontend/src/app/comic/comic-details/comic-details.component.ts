@@ -22,6 +22,7 @@ import {Observable} from 'rxjs/Observable';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {Comic} from '../comic.model';
+import {Page} from '../page.model';
 import {ComicService} from '../comic.service';
 import {ErrorsService} from '../../errors.service';
 import {ReadViewerComponent} from '../read-viewer/read-viewer.component';
@@ -41,6 +42,8 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   show_story_arcs = false;
   show_locations = false;
   page_types: Array<PageType> = [];
+  current_page: Page;
+  private show_page_details = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -57,6 +60,12 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       (error: Error) => {
         this.error_service.fireErrorMessage(error.message);
         console.log('ERROR:', error);
+      }
+    );
+    this.comic_service.current_page.subscribe(
+      (page: Page) => {
+        this.current_page = page;
+        this.show_page_details = true;
       }
     );
     this.sub = this.activatedRoute.params.subscribe(params => {
@@ -86,5 +95,13 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
 
   getDownloadLink(): string {
     return this.comic_service.getComicDownloadLink(this.comic.id);
+  }
+
+  get_title_for_current_page(): string {
+    return this.current_page.filename;
+  }
+
+  get_image_url_for_current_page(): string {
+    return this.comic_service.getImageUrlForId(this.current_page.id);
   }
 }

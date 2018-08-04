@@ -31,14 +31,14 @@ export class Page {
   page_type: PageType;
 
   constructor(
-    id: number,
-    comic_id: number,
-    filename: string,
-    width: number,
-    height: number,
-    hash: string,
-    deleted: boolean,
-    page_type: PageType,
+    id?: number,
+    comic_id?: number,
+    filename?: string,
+    width?: number,
+    height?: number,
+    hash?: string,
+    deleted?: boolean,
+    page_type?: PageType,
   ) {
     this.id = id;
     this.comic_id = comic_id;
