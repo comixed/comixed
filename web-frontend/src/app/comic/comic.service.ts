@@ -125,6 +125,24 @@ export class ComicService {
     return this.http.get(`/api/pages/types`);
   }
 
+  get_display_name_for_page_type(page_type: PageType): string {
+    switch (page_type.name) {
+      case 'front-cover': return 'Front Cover';
+      case 'inner-cover': return 'Inner Cover';
+      case 'back-cover': return 'Back Cover';
+      case 'roundup': return 'Roundup';
+      case 'story': return 'Story';
+      case 'advertisement': return 'Advertisement';
+      case 'editorial': return 'Editorial';
+      case 'letters': return 'Letters';
+      case 'preview': return 'Preview';
+      case 'other': return 'Other';
+      case 'filtered': return 'Filtered';
+      default: return 'Unknown (' + page_type + ')';
+    }
+
+  }
+
   getDuplicatePageCount(): Observable<any> {
     return this.http.get(`${this.api_url}/pages/duplicates/count`);
   }
