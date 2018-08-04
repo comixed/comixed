@@ -54,13 +54,6 @@ public class PageController
     @Autowired
     private PageTypeRepository pageTypeRepository;
 
-    @RequestMapping(value = "/pages/types",
-                    method = RequestMethod.GET)
-    public Iterable<PageType> getPageTypes()
-    {
-        return pageTypeRepository.findAll();
-    }
-
     @RequestMapping(value = "/pages/{id}",
                     method = RequestMethod.DELETE)
     public void deletePage(@PathVariable("id") long id)
@@ -184,6 +177,13 @@ public class PageController
         else return comic.getPages();
     }
 
+    @RequestMapping(value = "/pages/types",
+                    method = RequestMethod.GET)
+    public Iterable<PageType> getPageTypes()
+    {
+        return this.pageTypeRepository.findAll();
+    }
+
     @RequestMapping(value = "/pages/{id}/undelete",
                     method = RequestMethod.POST)
     public void undeletePage(@PathVariable("id") long id)
@@ -201,6 +201,35 @@ public class PageController
             page.markDeleted(false);
             this.pageRepository.save(page);
             this.logger.debug("Page undeleted: id={}", id);
+        }
+    }
+
+    @RequestMapping(value = "/pages/{id}/type/{type_id}",
+                    method = RequestMethod.PUT)
+    public void updateTypeForPage(long id, long pageTypeId)
+    {
+        this.logger.debug("Setting page type: id={} typeId={}", id, pageTypeId);
+
+        Page page = this.pageRepository.findOne(id);
+
+        if (page == null)
+        {
+            this.logger.error("No such page: id={}", id);
+        }
+        else
+        {
+            PageType pageType = this.pageTypeRepository.findOne(pageTypeId);
+
+            if (pageType == null)
+            {
+                this.logger.error("No such page type: typeId={}", pageTypeId);
+            }
+            else
+            {
+                this.logger.debug("Updating page type");
+                page.setPageType(pageType);
+                this.pageRepository.save(page);
+            }
         }
     }
 }
