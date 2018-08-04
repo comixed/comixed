@@ -472,4 +472,16 @@ public class Page
         this.logger.debug("Changing filename: " + this.filename + " -> " + filename);
         this.filename = filename;
     }
+
+    /**
+     * Sets the page type for the page.
+     *
+     * @param pageType
+     *            the page type
+     */
+    public void setPageType(PageType pageType)
+    {
+        this.logger.debug("Changing page type: {}", pageType.getId());
+        this.pageType = pageType;
+    }
 }
