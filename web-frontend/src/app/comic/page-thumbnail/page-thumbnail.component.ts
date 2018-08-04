@@ -22,6 +22,7 @@ import {Component, OnInit, Input} from '@angular/core';
 import {ComicService} from '../comic.service';
 import {ErrorsService} from '../../errors.service';
 import {Page} from '../page.model';
+import {PageType} from '../page-type.model';
 
 @Component({
   selector: 'app-page-thumbnail',
@@ -31,6 +32,7 @@ import {Page} from '../page.model';
 export class PageThumbnailComponent implements OnInit {
   @Input() missing: boolean;
   @Input() page: Page;
+  @Input() page_types: PageType[];
   page_url: string;
   show_details = false;
   width = 192;
