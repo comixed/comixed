@@ -36,12 +36,6 @@ export class PageThumbnailComponent implements OnInit {
   page_url: string;
   show_details = false;
   width = 192;
-  delete_page_title: string;
-  undelete_page_title: string;
-  delete_page_message: string;
-  undelete_page_message: string;
-  confirm_button = 'Yes';
-  cancel_button = 'No';
   page_title: string;
   page_type_text: string;
 
@@ -52,34 +46,8 @@ export class PageThumbnailComponent implements OnInit {
 
   ngOnInit() {
     this.page_url = this.missing ? '/assets/img/missing.png' : this.comic_service.getImageUrlForId(this.page.id);
-    this.delete_page_title = `Delete the page ${this.page.filename}`;
-    this.undelete_page_title = `Undelete the page ${this.page.filename}`;
-    this.delete_page_message = 'Are you sure you want to delete this page?';
-    this.undelete_page_message = 'Are you sure you want to undelete this page?';
     this.page_title = `Page #${this.page.index}`;
     this.page_type_text = this.comic_service.get_display_name_for_page_type(this.page.page_type);
-  }
-
-  deletePage(): void {
-    this.comic_service.markPageAsDeleted(this.page)
-      .subscribe(
-      success => {
-        this.page.deleted = true;
-      },
-      error => {
-        this.errorsService.fireErrorMessage('Failed to delete page...');
-      });
-  }
-
-  undeletePage(): void {
-    this.comic_service.markPageAsUndeleted(this.page)
-      .subscribe(
-      success => {
-        this.page.deleted = false;
-      },
-      error => {
-        this.errorsService.fireErrorMessage('Failed to undelete page...');
-      });
   }
 
   get_page_type_text(page_type: PageType): string {

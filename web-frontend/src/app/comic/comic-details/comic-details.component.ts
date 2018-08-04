@@ -26,6 +26,7 @@ import {Page} from '../page.model';
 import {ComicService} from '../comic.service';
 import {ErrorsService} from '../../errors.service';
 import {ReadViewerComponent} from '../read-viewer/read-viewer.component';
+import {PageDetailsComponent} from '../page-details/page-details.component';
 import {PageType} from '../page-type.model';
 
 @Component({
@@ -95,13 +96,5 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
 
   getDownloadLink(): string {
     return this.comic_service.getComicDownloadLink(this.comic.id);
-  }
-
-  get_title_for_current_page(): string {
-    return this.current_page.filename;
-  }
-
-  get_image_url_for_current_page(): string {
-    return this.comic_service.getImageUrlForId(this.current_page.id);
   }
 }

@@ -1,3 +1,28 @@
-<p>
-  page-details works!
-</p>
+<div class='modal-content'>
+  <div class='modal-header'>
+    <h4 class='modal-title'>{{get_title_for_current_page()}}</h4>
+  </div>
+  <div class='modal-body'>
+    <div class='media'>
+      <div class='media-left media-center'>
+        <img src='{{get_image_url_for_current_page()}}'
+          class='img-thumbnail' width='256'>
+      </div>
+      <div class='media-body'>
+        <!-- delete/undelete buttons -->
+        <button type='button' class='btn btn-sm btn-danger'
+          *ngIf='!page.deleted' mwlConfirmationPopover
+          [popoverTitle]='delete_page_title'
+          [popoverMessage]='delete_page_message'
+          [cancelText]='cancel_button' [confirmText]='confirm_button'
+          (confirm)='delete_page()'>Delete</button>
+        <button type='button' class='btn btn-sm btn-basic'
+          *ngIf='page.deleted' mwlConfirmationPopover
+          [popoverTitle]='undelete_page_title'
+          [popoverMessage]='undelete_page_message'
+          [cancelText]='cancel_button' [confirmText]='confirm_button'
+          (confirm)='undelete_page()'>Undelete</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,18 +5,6 @@
       <button type='button' class='btn btn-sm px-3 btn-info'
         (click)='clicked($event)' data-toggle='modal'
         data-target='#display_page_details'>Details</button>
-      <button type='button' class='btn btn-sm btn-danger'
-        *ngIf='!page.deleted' mwlConfirmationPopover
-        [popoverTitle]='delete_page_title'
-        [popoverMessage]='delete_page_message'
-        [cancelText]='cancel_button' [confirmText]='confirm_button'
-        (confirm)='deletePage()'>Delete</button>
-      <button type='button' class='btn btn-sm btn-basic'
-        *ngIf='page.deleted' mwlConfirmationPopover
-        [popoverTitle]='undelete_page_title'
-        [popoverMessage]='undelete_page_message'
-        [cancelText]='cancel_button' [confirmText]='confirm_button'
-        (confirm)='undeletePage()'>Undelete</button>
     </div>
   </div>
   <img class='card-img-bottom' src='{{page_url}}'>

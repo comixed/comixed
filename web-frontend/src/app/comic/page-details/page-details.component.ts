@@ -17,8 +17,15 @@
  * org.comixed;
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Injectable, EventEmitter} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+} from '@angular/core';
+
+import {ComicService} from '../comic.service';
+import {ErrorsService} from '../../errors.service';
+import {Page} from '../page.model';
 
 @Component({
   selector: 'app-page-details',
@@ -26,10 +33,51 @@ import {Injectable, EventEmitter} from '@angular/core';
   styleUrls: ['./page-details.component.css']
 })
 export class PageDetailsComponent implements OnInit {
+  @Input() page: Page;
+  delete_page_title = 'Delete This Page?';
+  delete_page_message = 'Are you sure you want to delete this page?';
+  undelete_page_title = 'Undelete This Page?';
+  undelete_page_message = 'Are you sure you want to undelete this page?';
+  confirm_button = 'Yes';
+  cancel_button = 'No';
 
-  constructor() {}
+  constructor(
+    private comic_service: ComicService,
+    private error_service: ErrorsService,
+  ) {}
 
   ngOnInit() {
   }
 
+  get_title_for_current_page(): string {
+    return this.page.filename;
+  }
+
+  get_image_url_for_current_page(): string {
+    return this.comic_service.getImageUrlForId(this.page.id);
+  }
+
+  delete_page(): void {
+    this.comic_service.markPageAsDeleted(this.page).subscribe(
+      (response: Response) => {
+        this.page.deleted = true;
+      },
+      (error: Error) => {
+        this.error_service.fireErrorMessage('ERROR: ' + error.message);
+        console.log('ERROR:', error);
+      }
+    );
+  }
+
+  undelete_page(): void {
+    this.comic_service.markPageAsUndeleted(this.page).subscribe(
+      (response: Response) => {
+        this.page.deleted = false;
+      },
+      (error: Error) => {
+        this.error_service.fireErrorMessage('ERROR: ' + error.message);
+        console.log('ERROR:', error);
+      }
+    );
+  }
 }

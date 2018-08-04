@@ -1,23 +1,7 @@
 <!-- page details -->
 <div id='display_page_details' class='modal fade' role='dialog'>
   <div class='modal-dialog modal-lg'>
-    <div class='modal-content'>
-      <div class='modal-header'>
-        <h4 class='modal-title'>{{get_title_for_current_page()}}</h4>
-      </div>
-      <div class='modal-body'>
-        <div class='media'>
-          <div class='media-left media-center'>
-            <img src='{{get_image_url_for_current_page()}}'
-              class='img-thumbnail' width='256'>
-          </div>
-          <div class='media-body'>
-            <h5 class='media-heading'>{{current_page.filename}}</h5>
-            <!-- TODO add details and buttons to manipulate the page -->
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-page-details [page]='current_page'></app-page-details>
   </div>
 </div>
 <app-read-viewer [comic]='comic'></app-read-viewer>
