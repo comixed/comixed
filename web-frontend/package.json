@@ -1,6 +1,6 @@
 {
   "name": "comixed-web-frontend",
-  "version": "0.2",
+  "version": "0.2.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -29,6 +29,7 @@
     "jquery": "^3.3.1",
     "ngx-pagination": "^3.1.1",
     "npm": "^5.6.0",
+    "popper.js": "^1.14.4",
     "rxjs": "^5.5.6",
     "tether": "^1.4.4",
     "zone.js": "^0.8.19"
