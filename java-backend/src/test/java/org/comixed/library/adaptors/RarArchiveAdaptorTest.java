@@ -86,10 +86,10 @@ public class RarArchiveAdaptorTest
         archiveAdaptor.loadComic(comic);
 
         assertEquals(4, comic.getPageCount());
-        assertEquals(TEST_FILE_ENTRY_0, comic.getPage(0).getFilename());
-        assertEquals(TEST_FILE_ENTRY_1, comic.getPage(1).getFilename());
-        assertEquals(TEST_FILE_ENTRY_2, comic.getPage(2).getFilename());
-        assertEquals(TEST_FILE_ENTRY_3, comic.getPage(3).getFilename());
+        assertEquals(TEST_FILE_ENTRY_1, comic.getPage(0).getFilename());
+        assertEquals(TEST_FILE_ENTRY_2, comic.getPage(1).getFilename());
+        assertEquals(TEST_FILE_ENTRY_3, comic.getPage(2).getFilename());
+        assertEquals(TEST_FILE_ENTRY_0, comic.getPage(3).getFilename());
     }
 
     @Test
