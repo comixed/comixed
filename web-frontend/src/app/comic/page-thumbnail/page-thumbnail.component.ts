@@ -58,4 +58,8 @@ export class PageThumbnailComponent implements OnInit {
     this.comic_service.set_current_page(this.page);
     event.preventDefault();
   }
+
+  page_is_filtered(): boolean {
+    return this.page.page_type.name === 'filtered';
+  }
 }

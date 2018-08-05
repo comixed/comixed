@@ -33,3 +33,9 @@
 	font-weight: bold;
 	font-style: italic;
 }
+
+.filtered-page {
+	background-color: #000;
+	opacity: 0.3;
+	z-index: 9999;
+}

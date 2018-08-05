@@ -7,5 +7,6 @@
         data-target='#display_page_details'>Details</button>
     </div>
   </div>
-  <img class='card-img-bottom' src='{{page_url}}'>
+  <img class='card-img-bottom' [class.filtered-page]='page_is_filtered()'
+    src='{{page_url}}'>
 </div>
