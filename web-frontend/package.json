@@ -1,7 +1,7 @@
 {
   "name": "comixed-web-frontend",
   "version": "0.2.0",
-  "license": "MIT",
+  "license": "GPLv3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --disable-host-check",
