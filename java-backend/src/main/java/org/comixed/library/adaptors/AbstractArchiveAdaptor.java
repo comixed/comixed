@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,15 +53,16 @@ import org.springframework.stereotype.Component;
  * instances of {@link ArchiveAdaptor}.
  *
  * @author Darryl L. Pierce
- *
+ * @param <I>
+ *            the archive iterator type
  */
 @Component
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "comic.entry",
                          ignoreUnknownFields = false)
-public abstract class AbstractArchiveAdaptor implements
-                                             ArchiveAdaptor,
-                                             InitializingBean
+public abstract class AbstractArchiveAdaptor<I> implements
+                                            ArchiveAdaptor,
+                                            InitializingBean
 {
     public static class EntryLoaderForType
     {
@@ -140,6 +142,25 @@ public abstract class AbstractArchiveAdaptor implements
         }
     }
 
+    /**
+     * Closes the specified archive file.
+     *
+     * @param archiveReference
+     *            the archive reference
+     * @throws ArchiveAdaptorException
+     *             if an error occurs
+     */
+    abstract protected void closeArchive(I archiveReference) throws ArchiveAdaptorException;
+
+    /**
+     * Returns the list of filenames from the archive.
+     *
+     * @param archiveReference
+     *            the archive reference
+     * @return the list of filenames
+     */
+    abstract protected List<String> getEntryFilenames(I archiveReference);
+
     protected String getFilenameForEntry(String filename, int index)
     {
         return String.format("page-%03d.%s", index, FileUtils.getExtension(filename));
@@ -162,26 +183,38 @@ public abstract class AbstractArchiveAdaptor implements
     @Override
     public void loadComic(Comic comic) throws ArchiveAdaptorException
     {
-        this.logger.debug("Opening archive: " + comic.getFilename());
+        I archiveReference = null;
 
-        this.loadComicInternal(comic, null);
+        this.logger.debug("Processing archive: " + comic.getFilename());
+
+        try
+        {
+            File comicFile = validateFile(comic);
+            archiveReference = this.openArchive(comicFile);
+
+            // get the archive entries
+            List<String> entryFilenames = this.getEntryFilenames(archiveReference);
+            Collections.sort(entryFilenames);
+            this.logger.debug("Retrieved {} filenames", entryFilenames.size());
+
+            // load the entries
+            for (String entryFilename : entryFilenames)
+            {
+                byte[] content = this.loadSingleFileInternal(archiveReference, entryFilename);
+
+                this.processContent(comic, entryFilename, content);
+            }
+        }
+        finally
+        {
+            // clean up
+            if (archiveReference != null)
+            {
+                this.logger.debug("Closing archive: " + comic.getFilename());
+                this.closeArchive(archiveReference);
+            }
+        }
     }
-
-    /**
-     * Performs the underlying loading of the comic's contents from the archive
-     * file.
-     *
-     * If the entry name is null, then all content is loaded.
-     *
-     * @param comic
-     *            the comic
-     * @param entryName
-     *            the entry name
-     * @return
-     * @throws ArchiveAdaptorException
-     *             if an error occurs
-     */
-    protected abstract byte[] loadComicInternal(Comic comic, String entryName) throws ArchiveAdaptorException;
 
     protected byte[] loadContent(String filename, long size, InputStream input) throws IOException
     {
@@ -197,8 +230,37 @@ public abstract class AbstractArchiveAdaptor implements
     public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException
     {
         this.logger.debug("Loading single entry from archive: filename=" + comic.getFilename() + " entry=" + entryName);
-        return this.loadComicInternal(comic, entryName);
+        I archiveReference = this.openArchive(new File(comic.getFilename()));
+        byte[] result = this.loadSingleFileInternal(archiveReference, entryName);
+        this.closeArchive(archiveReference);
+
+        return result;
     }
+
+    /**
+     * Loads the content for a single entry in the specified archive.
+     * 
+     * @param archiveReference
+     *            the archive
+     * @param entryName
+     *            the entry filename
+     * @return the content of the entry
+     * @throws ArchiveAdaptorException
+     *             if an error occurs
+     */
+    abstract protected byte[] loadSingleFileInternal(I archiveReference,
+                                                     String entryName) throws ArchiveAdaptorException;
+
+    /**
+     * Opens the archive, returning an archive reference object.
+     *
+     * @param comicFile
+     *            the comic file
+     * @return the archive reference object
+     * @throws ArchiveAdaptorException
+     *             if an error occurs
+     */
+    abstract protected I openArchive(File comicFile) throws ArchiveAdaptorException;
 
     protected void processContent(Comic comic, String filename, byte[] content)
     {
