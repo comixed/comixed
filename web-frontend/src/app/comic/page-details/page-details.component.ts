@@ -113,6 +113,7 @@ export class PageDetailsComponent implements OnInit {
     this.comic_service.block_page(this.page.hash).subscribe(
       (response: Response) => {
         this.page.blocked = true;
+        this.comic_service.reload_comics();
       },
       (error: Error) => {
         this.error_service.fireErrorMessage('Failed to block pages list this...');
@@ -125,6 +126,7 @@ export class PageDetailsComponent implements OnInit {
     this.comic_service.unblock_page(this.page.hash).subscribe(
       (response: Response) => {
         this.page.blocked = false;
+        this.comic_service.reload_comics();
       },
       (error: Error) => {
         this.error_service.fireErrorMessage('Failed to unblock pages like this page...');
