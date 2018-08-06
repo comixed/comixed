@@ -33,34 +33,36 @@ import {ErrorsService} from '../../errors.service';
   providers: [ComicService],
 })
 export class ComicListComponent implements OnInit {
-  comics: Comic[];
-  cover_size: number;
-  all_series: string[];
-  title_search: string;
-  current_comic: Comic;
-  current_page = 1;
-  show_search_box = true;
-  page_sizes: any[] = [
+  private comics: Comic[];
+  private cover_size: number;
+  private all_series: string[];
+  private title_search: string;
+  private current_comic: Comic;
+  private current_page = 1;
+  private show_search_box = true;
+  private page_sizes: any[] = [
     {id: 0, label: '10 comics'},
     {id: 1, label: '25 comics'},
     {id: 2, label: '50 comics'},
     {id: 3, label: '100 comics'}
   ];
-  page_size = 10;
-  sort_options: any[] = [
+  private page_size = 10;
+  private sort_options: any[] = [
     {id: 0, label: 'Default'},
     {id: 1, label: 'Sort by series'},
     {id: 2, label: 'Sort by added date'},
     {id: 3, label: 'Sort by cover date'},
     {id: 4, label: 'Sort by last read date'},
   ];
+  private sort_option: number;
 
   constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorsService) {}
 
   ngOnInit() {
+    this.sort_option = 0;
     this.comicService.all_comics_update.subscribe(
       (comics: Comic[]) => {
-        this.comics = comics;
+        this.comics = this.sort_comics(comics);
       }
     );
     this.comicService.current_comic.subscribe(
@@ -96,32 +98,54 @@ export class ComicListComponent implements OnInit {
   }
 
   setSortOption(sort_id: any): void {
-    this.comics.sort((comic1: Comic, comic2: Comic) => {
-      switch (parseInt(sort_id, 10)) {
+    this.sort_option = parseInt(sort_id);
+    this.comics = this.sort_comics(this.comics);
+  }
+
+  sort_comics(comics: Comic[]): Comic[] {
+    comics.sort((comic1: Comic, comic2: Comic) => {
+      switch (this.sort_option) {
         case 0: return this.naturalSort(comic1, comic2);
         case 1: return this.seriesSort(comic1, comic2);
         case 2: return this.dateAddedSort(comic1, comic2);
         case 3: return this.coverDateSort(comic1, comic2);
         case 4: return this.lastReadDateSort(comic1, comic2);
-        default: console.log('Invalid sort value: ' + sort_id);
+        default: console.log('Invalid sort value: ' + this.sort_option);
       }
       return 0;
     });
+    return comics;
   }
 
   naturalSort(comic1: Comic, comic2: Comic): number {
-    if (comic1.id < comic2.id) {return -1;}
-    if (comic1.id > comic2.id) {return 1;}
+    if (comic1.id < comic2.id) {
+      return -1;
+    }
+    if (comic1.id > comic2.id) {
+      return 1;
+    }
     return 0;
   }
 
   seriesSort(comic1: Comic, comic2: Comic): number {
-    if (comic1.series != comic2.series) {
-      if (comic1.series < comic2.series) {return -1;} else {return 1;}
-    } else if (comic1.volume != comic2.volume) {
-      if (comic1.volume < comic2.volume) {return -1;} else {return 1;}
-    } else if (comic1.issue_number != comic2.issue_number) {
-      if (comic1.issue_number < comic2.issue_number) {return -1;} else {return 1;}
+    if (comic1.series !== comic2.series) {
+      if (comic1.series < comic2.series) {
+        return -1;
+      } else {
+        return 1;
+      }
+    } else if (comic1.volume !== comic2.volume) {
+      if (comic1.volume < comic2.volume) {
+        return -1;
+      } else {
+        return 1;
+      }
+    } else if (comic1.issue_number !== comic2.issue_number) {
+      if (comic1.issue_number < comic2.issue_number) {
+        return -1;
+      } else {
+        return 1;
+      }
     }
 
     // if we're here then the fields are all equal
@@ -129,20 +153,32 @@ export class ComicListComponent implements OnInit {
   }
 
   dateAddedSort(comic1: Comic, comic2: Comic): number {
-    if (comic1.added_date < comic2.added_date) {return -1;}
-    if (comic1.added_date > comic2.added_date) {return 1;}
+    if (comic1.added_date < comic2.added_date) {
+      return -1;
+    }
+    if (comic1.added_date > comic2.added_date) {
+      return 1;
+    }
     return 0;
   }
 
   coverDateSort(comic1: Comic, comic2: Comic): number {
-    if (comic1.cover_date < comic2.cover_date) {return -1;}
-    if (comic1.cover_date > comic2.cover_date) {return 1;}
+    if (comic1.cover_date < comic2.cover_date) {
+      return -1;
+    }
+    if (comic1.cover_date > comic2.cover_date) {
+      return 1;
+    }
     return 0;
   }
 
   lastReadDateSort(comic1: Comic, comic2: Comic): number {
-    if (comic1.last_read_date < comic2.last_read_date) {return -1;}
-    if (comic1.last_read_date > comic2.last_read_date) {return 1;}
+    if (comic1.last_read_date < comic2.last_read_date) {
+      return -1;
+    }
+    if (comic1.last_read_date > comic2.last_read_date) {
+      return 1;
+    }
     return 0;
   }
 
