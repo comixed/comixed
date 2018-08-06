@@ -168,6 +168,15 @@ export class ComicService {
     return this.http.get(`${this.api_url}/files/contents?directory=${directory}`);
   }
 
+  block_page(page_hash: string): Observable<any> {
+    const params = new HttpParams().set('hash', page_hash);
+    return this.http.post(`${this.api_url}/pages/blocked`, params);
+  }
+
+  unblock_page(page_hash: string): Observable<any> {
+    return this.http.delete(`${this.api_url}/pages/blocked/${page_hash}`);
+  }
+
   deleteComic(comic: Comic): Observable<any> {
     return this.http.delete(`${this.api_url}/comics/${comic.id}`);
   }
