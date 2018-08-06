@@ -56,5 +56,8 @@
   <pages comic_id="1003" filename="page2.jpg" index="2" hash="22347" deleted="false" />
   <pages comic_id="1003" filename="page3.jpg" index="3" hash="22348" deleted="false" />
   <pages comic_id="1003" filename="back_page.jpg" index="4" hash="22349" deleted="false" />
+  
+  <blocked_page_hashes hash="12345" />
+  <blocked_page_hashes hash="23456" />
 
 </dataset>

@@ -22,10 +22,12 @@ package org.comixed.web.controllers;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
+import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
 import org.comixed.library.model.PageType;
 import org.comixed.library.model.View;
+import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.PageRepository;
 import org.comixed.repositories.PageTypeRepository;
 import org.slf4j.Logger;
@@ -54,6 +56,25 @@ public class PageController
     private PageRepository pageRepository;
     @Autowired
     private PageTypeRepository pageTypeRepository;
+    @Autowired
+    private BlockedPageHashRepository blockedPageHashRepository;
+
+    @RequestMapping(value = "/pages/blocked",
+                    method = RequestMethod.POST)
+    public void addBlockedPageHash(@RequestParam("hash") String hash)
+    {
+        BlockedPageHash existing = this.blockedPageHashRepository.findByHash(hash);
+
+        if (existing != null)
+        {
+            this.logger.debug("Blocked page hash already exists: {}", hash);
+            return;
+        }
+
+        this.logger.debug("Creating new blocked page hash: {}", hash);
+        existing = new BlockedPageHash(hash);
+        this.blockedPageHashRepository.save(existing);
+    }
 
     @RequestMapping(value = "/pages/{id}",
                     method = RequestMethod.DELETE)
@@ -83,6 +104,19 @@ public class PageController
         this.logger.debug("Getting all pages for comic: id={}", id);
 
         return this.getPagesForComic(id);
+    }
+
+    @RequestMapping(value = "/pages/blocked",
+                    method = RequestMethod.GET)
+    public String[] getAllBlockedPageHashes()
+    {
+        this.logger.debug("Getting all blocked page hashes");
+
+        String[] result = this.blockedPageHashRepository.getAllHashes();
+
+        this.logger.debug("Returning {} hash(es)", result.length);
+
+        return result;
     }
 
     @RequestMapping(value = "/pages/duplicates/count",
@@ -183,6 +217,21 @@ public class PageController
     public Iterable<PageType> getPageTypes()
     {
         return this.pageTypeRepository.findAll();
+    }
+
+    @RequestMapping(value = "/pages/blocked",
+                    method = RequestMethod.DELETE)
+    public void removeBlockedPageHash(@RequestParam("hash") String hash)
+    {
+        BlockedPageHash existing = this.blockedPageHashRepository.findByHash(hash);
+
+        if (existing == null)
+        {
+            this.logger.debug("No such blocked page hash: {}", hash);
+            return;
+        }
+
+        this.blockedPageHashRepository.delete(existing);
     }
 
     @RequestMapping(value = "/pages/{id}/undelete",

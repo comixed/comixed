@@ -16,14 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
+
 package org.comixed.web.controllers;
 
+import static org.junit.Assert.assertSame;
+
+import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Page;
 import org.comixed.library.model.PageType;
+import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.PageRepository;
 import org.comixed.repositories.PageTypeRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,61 +39,136 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class PageControllerTest {
-	private static final long PAGE_TYPE_ID = 717;
-	private static final long PAGE_ID = 129;
+public class PageControllerTest
+{
+    private static final long PAGE_TYPE_ID = 717;
+    private static final long PAGE_ID = 129;
+    private static final String BLOCKED_PAGE_HASH_VALUE = "0123456789abcdef";
+    private static final String[] BLOCKED_HASH_LIST =
+    {"12345",
+     "23456",
+     "34567"};
 
-	@InjectMocks
-	private PageController pageController;
+    @InjectMocks
+    private PageController pageController;
 
-	@Mock
-	private PageRepository pageRepository;
+    @Mock
+    private PageRepository pageRepository;
 
-	@Mock
-	private Page page;
+    @Mock
+    private Page page;
 
-	@Mock
-	private PageTypeRepository pageTypeRepository;
+    @Mock
+    private PageTypeRepository pageTypeRepository;
 
-	@Mock
-	private PageType pageType;
+    @Mock
+    private PageType pageType;
 
-	@Test
-	public void testSetPageTypeForNonexistentPage() {
-		Mockito.when(pageRepository.findOne(PAGE_ID)).thenReturn(null);
+    @Captor
+    private ArgumentCaptor<BlockedPageHash> blockedPageHashCaptor;
 
-		pageController.updateTypeForPage(PAGE_ID, PAGE_TYPE_ID);
+    @Mock
+    private BlockedPageHashRepository blockedPageHashRepository;
 
-		Mockito.verify(pageRepository, Mockito.times(1)).findOne(PAGE_ID);
-		Mockito.verify(pageTypeRepository, Mockito.never()).findOne(PAGE_TYPE_ID);
-		Mockito.verify(pageRepository, Mockito.never()).save(Mockito.any(Page.class));
-	}
+    @Mock
+    private BlockedPageHash blockedPageHash = new BlockedPageHash();
 
-	@Test
-	public void testSetPageTypeWithNonexistentType() {
-		Mockito.when(pageRepository.findOne(PAGE_ID)).thenReturn(page);
-		Mockito.when(pageTypeRepository.findOne(PAGE_TYPE_ID)).thenReturn(null);
+    @Test
+    public void testSetPageTypeForNonexistentPage()
+    {
+        Mockito.when(pageRepository.findOne(PAGE_ID)).thenReturn(null);
 
-		pageController.updateTypeForPage(PAGE_ID, PAGE_TYPE_ID);
+        pageController.updateTypeForPage(PAGE_ID, PAGE_TYPE_ID);
 
-		Mockito.verify(pageRepository, Mockito.times(1)).findOne(PAGE_ID);
-		Mockito.verify(pageTypeRepository, Mockito.times(1)).findOne(PAGE_TYPE_ID);
-		Mockito.verify(pageRepository, Mockito.never()).save(Mockito.any(Page.class));
-	}
+        Mockito.verify(pageRepository, Mockito.times(1)).findOne(PAGE_ID);
+        Mockito.verify(pageTypeRepository, Mockito.never()).findOne(PAGE_TYPE_ID);
+        Mockito.verify(pageRepository, Mockito.never()).save(Mockito.any(Page.class));
+    }
 
-	@Test
-	public void testSetPageType() {
-		Mockito.when(pageRepository.findOne(PAGE_ID)).thenReturn(page);
-		Mockito.when(pageTypeRepository.findOne(PAGE_TYPE_ID)).thenReturn(pageType);
-		Mockito.doNothing().when(page).setPageType(pageType);
-		Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
+    @Test
+    public void testSetPageTypeWithNonexistentType()
+    {
+        Mockito.when(pageRepository.findOne(PAGE_ID)).thenReturn(page);
+        Mockito.when(pageTypeRepository.findOne(PAGE_TYPE_ID)).thenReturn(null);
 
-		pageController.updateTypeForPage(PAGE_ID, PAGE_TYPE_ID);
+        pageController.updateTypeForPage(PAGE_ID, PAGE_TYPE_ID);
 
-		Mockito.verify(pageRepository, Mockito.times(1)).findOne(PAGE_ID);
-		Mockito.verify(pageTypeRepository, Mockito.times(1)).findOne(PAGE_TYPE_ID);
-		Mockito.verify(page, Mockito.times(1)).setPageType(pageType);
-		Mockito.verify(pageRepository, Mockito.times(1)).save(page);
-	}
+        Mockito.verify(pageRepository, Mockito.times(1)).findOne(PAGE_ID);
+        Mockito.verify(pageTypeRepository, Mockito.times(1)).findOne(PAGE_TYPE_ID);
+        Mockito.verify(pageRepository, Mockito.never()).save(Mockito.any(Page.class));
+    }
 
+    @Test
+    public void testSetPageType()
+    {
+        Mockito.when(pageRepository.findOne(PAGE_ID)).thenReturn(page);
+        Mockito.when(pageTypeRepository.findOne(PAGE_TYPE_ID)).thenReturn(pageType);
+        Mockito.doNothing().when(page).setPageType(pageType);
+        Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
+
+        pageController.updateTypeForPage(PAGE_ID, PAGE_TYPE_ID);
+
+        Mockito.verify(pageRepository, Mockito.times(1)).findOne(PAGE_ID);
+        Mockito.verify(pageTypeRepository, Mockito.times(1)).findOne(PAGE_TYPE_ID);
+        Mockito.verify(page, Mockito.times(1)).setPageType(pageType);
+        Mockito.verify(pageRepository, Mockito.times(1)).save(page);
+    }
+
+    @Test
+    public void testAddBlockedPageHash()
+    {
+        Mockito.when(blockedPageHashRepository.findByHash(BLOCKED_PAGE_HASH_VALUE)).thenReturn(null);
+        Mockito.when(blockedPageHashRepository.save(Mockito.any(BlockedPageHash.class)))
+               .thenReturn(blockedPageHashCaptor.capture());
+
+        pageController.addBlockedPageHash(BLOCKED_PAGE_HASH_VALUE);
+
+        Mockito.verify(blockedPageHashRepository, Mockito.times(1)).save(Mockito.any(BlockedPageHash.class));
+        Mockito.verify(blockedPageHashRepository, Mockito.times(1)).findByHash(BLOCKED_PAGE_HASH_VALUE);
+    }
+
+    @Test
+    public void testAddBlockedPageHashForExistingHash()
+    {
+        Mockito.when(blockedPageHashRepository.findByHash(BLOCKED_PAGE_HASH_VALUE)).thenReturn(blockedPageHash);
+
+        pageController.addBlockedPageHash(BLOCKED_PAGE_HASH_VALUE);
+
+        Mockito.verify(blockedPageHashRepository, Mockito.times(0)).save(Mockito.any(BlockedPageHash.class));
+        Mockito.verify(blockedPageHashRepository, Mockito.times(1)).findByHash(BLOCKED_PAGE_HASH_VALUE);
+    }
+
+    @Test
+    public void testRemoveBlockedPageHash()
+    {
+        Mockito.when(blockedPageHashRepository.findByHash(BLOCKED_PAGE_HASH_VALUE)).thenReturn(blockedPageHash);
+        Mockito.doNothing().when(blockedPageHashRepository).delete(Mockito.any(BlockedPageHash.class));
+
+        pageController.removeBlockedPageHash(BLOCKED_PAGE_HASH_VALUE);
+
+        Mockito.verify(blockedPageHashRepository, Mockito.times(1)).delete(blockedPageHash);
+        Mockito.verify(blockedPageHashRepository, Mockito.times(1)).findByHash(BLOCKED_PAGE_HASH_VALUE);
+    }
+
+    @Test
+    public void testRemoveNonexistingBlockedPageHash()
+    {
+        Mockito.when(blockedPageHashRepository.findByHash(BLOCKED_PAGE_HASH_VALUE)).thenReturn(null);
+
+        pageController.removeBlockedPageHash(BLOCKED_PAGE_HASH_VALUE);
+
+        Mockito.verify(blockedPageHashRepository, Mockito.times(1)).findByHash(BLOCKED_PAGE_HASH_VALUE);
+    }
+
+    @Test
+    public void testGetBlockedPageHashes()
+    {
+        Mockito.when(blockedPageHashRepository.getAllHashes()).thenReturn(BLOCKED_HASH_LIST);
+
+        String[] result = pageController.getAllBlockedPageHashes();
+
+        assertSame(BLOCKED_HASH_LIST, result);
+
+        Mockito.verify(blockedPageHashRepository, Mockito.times(1)).getAllHashes();
+    }
 }
