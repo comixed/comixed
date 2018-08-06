@@ -35,7 +35,7 @@ import {PageType} from '../page-type.model';
 })
 export class PageDetailsComponent implements OnInit {
   @Input() page: Page;
-  private page_types: PageType[];
+  page_types: PageType[];
   delete_page_title = 'Delete This Page?';
   delete_page_message = 'Are you sure you want to delete this page?';
   undelete_page_title = 'Undelete This Page?';
@@ -105,6 +105,30 @@ export class PageDetailsComponent implements OnInit {
       (error: Error) => {
         this.error_service.fireErrorMessage('ERROR: ' + error.message);
         console.log('ERROR:', error);
+      }
+    );
+  }
+
+  block_page(): void {
+    this.comic_service.block_page(this.page.hash).subscribe(
+      (response: Response) => {
+        this.page.blocked = true;
+      },
+      (error: Error) => {
+        this.error_service.fireErrorMessage('Failed to block pages list this...');
+        console.log('Error while blocking page hash:', error);
+      }
+    );
+  }
+
+  unblock_page(): void {
+    this.comic_service.unblock_page(this.page.hash).subscribe(
+      (response: Response) => {
+        this.page.blocked = false;
+      },
+      (error: Error) => {
+        this.error_service.fireErrorMessage('Failed to unblock pages like this page...');
+        console.log('Error while unblocking page hash:', error);
       }
     );
   }

@@ -29,6 +29,7 @@ export class Page {
   hash: string;
   deleted: boolean;
   page_type: PageType;
+  blocked: boolean;
 
   constructor(
     id?: number,
@@ -39,6 +40,7 @@ export class Page {
     hash?: string,
     deleted?: boolean,
     page_type?: PageType,
+    blocked?: boolean,
   ) {
     this.id = id;
     this.comic_id = comic_id;
@@ -48,5 +50,6 @@ export class Page {
     this.hash = hash;
     this.deleted = deleted;
     this.page_type = page_type;
+    this.blocked = blocked;
   }
 }
