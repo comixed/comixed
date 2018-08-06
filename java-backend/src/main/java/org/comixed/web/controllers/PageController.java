@@ -219,9 +219,9 @@ public class PageController
         return this.pageTypeRepository.findAll();
     }
 
-    @RequestMapping(value = "/pages/blocked",
+    @RequestMapping(value = "/pages/blocked/{hash}",
                     method = RequestMethod.DELETE)
-    public void removeBlockedPageHash(@RequestParam("hash") String hash)
+    public void removeBlockedPageHash(@PathVariable("hash") String hash)
     {
         BlockedPageHash existing = this.blockedPageHashRepository.findByHash(hash);
 
