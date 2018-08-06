@@ -134,6 +134,7 @@ public class Page
                   Image> imageCache = new WeakHashMap<>();
 
     @Formula("(SELECT CASE WHEN (COUNT(SELECT * FROM blocked_page_hashes b WHERE b.hash = hash) > 0) THEN true ELSE false END)")
+    @JsonView(View.List.class)
     private boolean blocked;
 
     /**
