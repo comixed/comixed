@@ -43,6 +43,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.comixed.library.adaptors.ArchiveAdaptorException;
+import org.hibernate.annotations.Formula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,6 +132,9 @@ public class Page
     @JsonIgnore
     protected Map<String,
                   Image> imageCache = new WeakHashMap<>();
+
+    @Formula("(SELECT CASE WHEN (COUNT(SELECT * FROM blocked_page_hashes b WHERE b.hash = hash) > 0) THEN true ELSE false END)")
+    private boolean blocked;
 
     /**
      * Default constructor.
@@ -483,5 +487,10 @@ public class Page
     {
         this.logger.debug("Changing page type: {}", pageType.getId());
         this.pageType = pageType;
+    }
+
+    public boolean isBlocked()
+    {
+        return this.blocked;
     }
 }

@@ -21,6 +21,7 @@ package org.comixed.repositories;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -50,6 +51,9 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
  DbUnitTestExecutionListener.class})
 public class PageRepositoryTest
 {
+    private static final Long BLOCKED_PAGE_ID = 1000L;
+    private static final Long UNBLOCKED_PAGE_ID = 1001L;
+
     @Autowired
     private PageRepository repository;
 
@@ -69,5 +73,21 @@ public class PageRepositoryTest
     public void testGetDuplicatePageCount()
     {
         assertEquals(3, repository.getDuplicatePageCount());
+    }
+
+    @Test
+    public void testGetPageWithBlockedHash()
+    {
+        Page result = repository.findOne(BLOCKED_PAGE_ID);
+
+        assertTrue(result.isBlocked());
+    }
+
+    @Test
+    public void testGetPageWithNonBlockedHash()
+    {
+        Page result = repository.findOne(UNBLOCKED_PAGE_ID);
+
+        assertFalse(result.isBlocked());
     }
 }

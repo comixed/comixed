@@ -41,11 +41,11 @@
   <comic_locations comic_id="1000" location_name="Genosha" />
   <comic_locations comic_id="1000" location_name="The Savage Land" />
 
-  <pages comic_id="1000" filename="front_page.jpg" index="0" hash="12345" deleted="false" />
-  <pages comic_id="1000" filename="page1.jpg" index="1" hash="12346" deleted="false" />
-  <pages comic_id="1000" filename="page2.jpg" index="2" hash="12347" deleted="false" />
-  <pages comic_id="1000" filename="page3.jpg" index="3" hash="12348" deleted="false" />
-  <pages comic_id="1000" filename="back_page.jpg" index="4" hash="12349" deleted="false" />
+  <pages ID="1000" comic_id="1000" filename="front_page.jpg" index="0" hash="12345" deleted="false" />
+  <pages ID="1001" comic_id="1000" filename="page1.jpg" index="1" hash="12346" deleted="false" />
+  <pages ID="1002" comic_id="1000" filename="page2.jpg" index="2" hash="12347" deleted="false" />
+  <pages ID="1003" comic_id="1000" filename="page3.jpg" index="3" hash="12348" deleted="false" />
+  <pages ID="1004" comic_id="1000" filename="back_page.jpg" index="4" hash="12349" deleted="false" />
 
   <pages comic_id="1001" filename="front_page.jpg" index="1" hash="12346" deleted="false" />
 
