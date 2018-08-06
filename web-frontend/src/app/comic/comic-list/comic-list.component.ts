@@ -1,6 +1,6 @@
 /*
  * ComixEd - A digital comic book library management application.
- * Copyright (C) 2017, Darryl L. Pierce
+ * Copyright (C) 2017, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,12 +54,12 @@ export class ComicListComponent implements OnInit {
     {id: 3, label: 'Sort by cover date'},
     {id: 4, label: 'Sort by last read date'},
   ];
-  private sort_option: number;
+  private sort_order: number;
 
   constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorsService) {}
 
   ngOnInit() {
-    this.sort_option = 0;
+    this.sort_order = 0;
     this.comicService.all_comics_update.subscribe(
       (comics: Comic[]) => {
         this.comics = this.sort_comics(comics);
@@ -80,7 +80,7 @@ export class ComicListComponent implements OnInit {
     );
   }
 
-  getImageURL(comic: Comic): string {
+  get_image_url(comic: Comic): string {
     if (comic.missing === true) {
       return this.comicService.getMissingImageUrl();
     } else {
@@ -88,7 +88,7 @@ export class ComicListComponent implements OnInit {
     }
   }
 
-  setPageSize(size_id: any): void {
+  set_page_size(size_id: any): void {
     switch (parseInt(size_id, 10)) {
       case 0: this.page_size = 10; break;
       case 1: this.page_size = 25; break;
@@ -97,27 +97,27 @@ export class ComicListComponent implements OnInit {
     }
   }
 
-  setSortOption(sort_id: any): void {
-    this.sort_option = parseInt(sort_id);
+  set_sort_order(sort_order: any): void {
+    this.sort_order = parseInt(sort_order, 10);
     this.comics = this.sort_comics(this.comics);
   }
 
   sort_comics(comics: Comic[]): Comic[] {
     comics.sort((comic1: Comic, comic2: Comic) => {
-      switch (this.sort_option) {
-        case 0: return this.naturalSort(comic1, comic2);
-        case 1: return this.seriesSort(comic1, comic2);
-        case 2: return this.dateAddedSort(comic1, comic2);
-        case 3: return this.coverDateSort(comic1, comic2);
-        case 4: return this.lastReadDateSort(comic1, comic2);
-        default: console.log('Invalid sort value: ' + this.sort_option);
+      switch (this.sort_order) {
+        case 0: return this.sort_by_natural_order(comic1, comic2);
+        case 1: return this.sort_by_series_name(comic1, comic2);
+        case 2: return this.sort_by_date_added(comic1, comic2);
+        case 3: return this.sort_by_cover_date(comic1, comic2);
+        case 4: return this.sort_by_last_read_date(comic1, comic2);
+        default: console.log('Invalid sort value: ' + this.sort_order);
       }
       return 0;
     });
     return comics;
   }
 
-  naturalSort(comic1: Comic, comic2: Comic): number {
+  sort_by_natural_order(comic1: Comic, comic2: Comic): number {
     if (comic1.id < comic2.id) {
       return -1;
     }
@@ -127,7 +127,7 @@ export class ComicListComponent implements OnInit {
     return 0;
   }
 
-  seriesSort(comic1: Comic, comic2: Comic): number {
+  sort_by_series_name(comic1: Comic, comic2: Comic): number {
     if (comic1.series !== comic2.series) {
       if (comic1.series < comic2.series) {
         return -1;
@@ -152,7 +152,7 @@ export class ComicListComponent implements OnInit {
     return 0;
   }
 
-  dateAddedSort(comic1: Comic, comic2: Comic): number {
+  sort_by_date_added(comic1: Comic, comic2: Comic): number {
     if (comic1.added_date < comic2.added_date) {
       return -1;
     }
@@ -162,7 +162,7 @@ export class ComicListComponent implements OnInit {
     return 0;
   }
 
-  coverDateSort(comic1: Comic, comic2: Comic): number {
+  sort_by_cover_date(comic1: Comic, comic2: Comic): number {
     if (comic1.cover_date < comic2.cover_date) {
       return -1;
     }
@@ -172,7 +172,7 @@ export class ComicListComponent implements OnInit {
     return 0;
   }
 
-  lastReadDateSort(comic1: Comic, comic2: Comic): number {
+  sort_by_last_read_date(comic1: Comic, comic2: Comic): number {
     if (comic1.last_read_date < comic2.last_read_date) {
       return -1;
     }
@@ -182,7 +182,7 @@ export class ComicListComponent implements OnInit {
     return 0;
   }
 
-  getTitleTextFor(comic: Comic): string {
+  get_title_text_for(comic: Comic): string {
     let result = comic.series || comic.filename;
 
     if (comic.issue_number != null) {
@@ -195,7 +195,7 @@ export class ComicListComponent implements OnInit {
     return result;
   }
 
-  openSelectedComic(): void {
+  open_selected_comic(): void {
     this.router.navigate(['comics', this.current_comic.id]);
   }
 
