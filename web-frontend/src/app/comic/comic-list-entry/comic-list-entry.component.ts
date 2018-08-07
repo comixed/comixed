@@ -48,7 +48,7 @@ export class ComicListEntryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cover_url = this.comic.missing ? '/assets/img/missing.png' : this.comicService.getImageUrl(this.comic.id, 0);
+    this.cover_url = this.comic.missing ? '/assets/img/missing.png' : this.comicService.get_url_for_page_by_comic_index(this.comic.id, 0);
     this.title_text = this.comic.series || 'Unknown Series';
     if (this.comic.issue_number) {
       this.title_text = this.title_text + ' #' + this.comic.issue_number;
@@ -62,7 +62,7 @@ export class ComicListEntryComponent implements OnInit {
 
   clicked(event: any): void {
     console.log('Selected comic: id=' + this.comic.id);
-    this.comicService.setCurrentComic(this.comic);
+    this.comicService.set_current_comic(this.comic);
     event.preventDefault();
   }
 
@@ -71,10 +71,10 @@ export class ComicListEntryComponent implements OnInit {
   }
 
   deleteComic(): void {
-    this.comicService.deleteComic(this.comic).subscribe(
+    this.comicService.remove_comic_from_library(this.comic).subscribe(
       success => {
         if (success) {
-          this.comicService.removeComic(this.comic.id);
+          this.comicService.remove_comic_from_local(this.comic.id);
         }
       },
       (error: any) => {

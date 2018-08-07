@@ -45,11 +45,11 @@ export class ComicService {
   private user: User = new User();
 
   constructor(private http: HttpClient, private errorsService: ErrorsService) {
-    this.monitorAuthentication();
-    this.monitorComicList();
+    this.monitor_authentication_status();
+    this.monitor_remote_comic_list();
   }
 
-  monitorAuthentication(): void {
+  monitor_authentication_status(): void {
     setInterval(() => {
       const headers = new HttpHeaders();
       this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
@@ -63,7 +63,7 @@ export class ComicService {
     }, 250);
   }
 
-  monitorComicList(): void {
+  monitor_remote_comic_list(): void {
     setInterval(() => {
       if (!this.user.authenticated || this.fetching_comics) {
         return;
@@ -100,7 +100,7 @@ export class ComicService {
     this.all_comics = [];
   }
 
-  setCurrentComic(comic: Comic): void {
+  set_current_comic(comic: Comic): void {
     this.current_comic.next(comic);
   }
 
@@ -108,20 +108,20 @@ export class ComicService {
     this.current_page.next(page);
   }
 
-  removeComic(comic_id: number) {
+  remove_comic_from_local(comic_id: number) {
     this.all_comics = this.all_comics.filter((comic: Comic) => comic.id !== comic_id);
     this.all_comics_update.emit(this.all_comics);
   }
 
-  getComic(id: number): Observable<any> {
+  load_comic_from_remote(id: number): Observable<any> {
     return this.http.get(`${this.api_url}/comics/${id}`);
   }
 
-  getComicSummary(id: number): Observable<any> {
+  get_comic_summary(id: number): Observable<any> {
     return this.http.get(`${this.api_url}/comics/${id}/summary`);
   }
 
-  getComicCount(): Observable<any> {
+  get_library_comic_count(): Observable<any> {
     return this.http.get(`${this.api_url}/comics/count`);
   }
 
@@ -152,23 +152,23 @@ export class ComicService {
 
   }
 
-  getDuplicatePageCount(): Observable<any> {
+  get_duplicate_page_count(): Observable<any> {
     return this.http.get(`${this.api_url}/pages/duplicates/count`);
   }
 
-  getDuplicatePages(): Observable<any> {
+  get_duplicate_page_list(): Observable<any> {
     return this.http.get(`${this.api_url}/pages/duplicates`);
   }
 
-  markPageAsDeleted(page: Page): Observable<any> {
+  mark_page_as_deleted(page: Page): Observable<any> {
     return this.http.delete(`${this.api_url}/pages/${page.id}`);
   }
 
-  markPageAsUndeleted(page: Page): Observable<any> {
+  mark_page_as_undeleted(page: Page): Observable<any> {
     return this.http.post(`${this.api_url}/pages/${page.id}/undelete`, {});
   }
 
-  getFilesUnder(directory: string): Observable<any> {
+  get_files_under_directory(directory: string): Observable<any> {
     return this.http.get(`${this.api_url}/files/contents?directory=${directory}`);
   }
 
@@ -181,31 +181,31 @@ export class ComicService {
     return this.http.delete(`${this.api_url}/pages/blocked/${page_hash}`);
   }
 
-  deleteComic(comic: Comic): Observable<any> {
+  remove_comic_from_library(comic: Comic): Observable<any> {
     return this.http.delete(`${this.api_url}/comics/${comic.id}`);
   }
 
-  importFiles(filenames: string[]): Observable<any> {
+  import_files_into_library(filenames: string[]): Observable<any> {
     return this.http.post(`${this.api_url}/files/import`, filenames);
   }
 
-  getPendingImports(): Observable<any> {
+  get_number_of_pending_imports(): Observable<any> {
     return this.http.get(`${this.api_url}/files/import/status`);
   }
 
-  getImageUrl(comicId: number, index: number): string {
+  get_url_for_page_by_comic_index(comicId: number, index: number): string {
     return `${this.api_url}/comics/${comicId}/pages/${index}/content`;
   }
 
-  getMissingImageUrl(): string {
+  get_url_for_missing_page(): string {
     return '/assets/img/missing.png';
   }
 
-  getImageUrlForId(pageId: number): string {
+  geturl_for_page_by_id(pageId: number): string {
     return `${this.api_url}/pages/${pageId}/content`;
   }
 
-  getComicDownloadLink(comicId: number): string {
+  get_download_link_for_comic(comicId: number): string {
     return `${this.api_url}/comics/${comicId}/download`;
   }
 

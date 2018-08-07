@@ -71,10 +71,10 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     );
     this.sub = this.activatedRoute.params.subscribe(params => {
       const id = +params['id'];
-      this.comic_service.getComic(id).subscribe(
+      this.comic_service.load_comic_from_remote(id).subscribe(
         (comic: Comic) => {
           this.comic = comic;
-          this.cover_url = this.comic_service.getImageUrl(this.comic.id, 0);
+          this.cover_url = this.comic_service.get_url_for_page_by_comic_index(this.comic.id, 0);
         },
         error => {
           console.log('error:', error.message);
@@ -91,10 +91,10 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   }
 
   getImageURL(page_id: number): string {
-    return this.comic_service.getImageUrlForId(page_id);
+    return this.comic_service.geturl_for_page_by_id(page_id);
   }
 
   getDownloadLink(): string {
-    return this.comic_service.getComicDownloadLink(this.comic.id);
+    return this.comic_service.get_download_link_for_comic(this.comic.id);
   }
 }

@@ -38,11 +38,11 @@ export class ReadViewerComponent implements OnInit {
   }
 
   getImageURL(page_id: number): string {
-    return this.comicService.getImageUrlForId(page_id);
+    return this.comicService.geturl_for_page_by_id(page_id);
   }
 
   getCurrentPageURL(): string {
-    return this.comicService.getImageUrl(this.comic.id, this.current_page);
+    return this.comicService.get_url_for_page_by_comic_index(this.comic.id, this.current_page);
   }
 
   hasPreviousPage(): boolean {

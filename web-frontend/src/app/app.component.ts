@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
       }
     );
     setInterval(() => {
-      this.comicService.getComicCount().subscribe(
+      this.comicService.get_library_comic_count().subscribe(
         count => this.comic_count = count,
         error => console.log('ERROR:', error.message));
     }, 250);

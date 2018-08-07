@@ -45,7 +45,7 @@ export class PageThumbnailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.page_url = this.missing ? '/assets/img/missing.png' : this.comic_service.getImageUrlForId(this.page.id);
+    this.page_url = this.missing ? '/assets/img/missing.png' : this.comic_service.geturl_for_page_by_id(this.page.id);
     this.page_title = `Page #${this.page.index}`;
     this.page_type_text = this.comic_service.get_display_name_for_page_type(this.page.page_type);
   }

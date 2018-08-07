@@ -58,7 +58,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   ngOnInit() {
     const that = this;
     this.update_all_are_deleted();
-    this.image_url = this.comic_service.getImageUrlForId(this.pages[0].id);
+    this.image_url = this.comic_service.geturl_for_page_by_id(this.pages[0].id);
     this.comic_service.get_user_preference('cover_size').subscribe(
       (cover_size: number) => {
         that.image_size = cover_size || 175;
@@ -75,7 +75,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   }
 
   get_cover_url_for_comic(comic_id: number): string {
-    return this.comic_service.getImageUrl(comic_id, 0);
+    return this.comic_service.get_url_for_page_by_comic_index(comic_id, 0);
   }
 
   delete_all_pages(): void {
@@ -101,7 +101,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   }
 
   delete_page(page: Page): void {
-    this.comic_service.markPageAsDeleted(page).subscribe(
+    this.comic_service.mark_page_as_deleted(page).subscribe(
       (response) => {
         page.deleted = true;
       },
@@ -116,7 +116,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   }
 
   undelete_page(page: Page): void {
-    this.comic_service.markPageAsUndeleted(page).subscribe(
+    this.comic_service.mark_page_as_undeleted(page).subscribe(
       (response) => {
         page.deleted = false;
       },

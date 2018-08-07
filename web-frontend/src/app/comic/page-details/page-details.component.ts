@@ -65,7 +65,7 @@ export class PageDetailsComponent implements OnInit {
   }
 
   get_image_url_for_current_page(): string {
-    return this.comic_service.getImageUrlForId(this.page.id);
+    return this.comic_service.geturl_for_page_by_id(this.page.id);
   }
 
   get_display_name_for_page_type(page_type: PageType): string {
@@ -86,7 +86,7 @@ export class PageDetailsComponent implements OnInit {
   }
 
   delete_page(): void {
-    this.comic_service.markPageAsDeleted(this.page).subscribe(
+    this.comic_service.mark_page_as_deleted(this.page).subscribe(
       (response: Response) => {
         this.page.deleted = true;
       },
@@ -98,7 +98,7 @@ export class PageDetailsComponent implements OnInit {
   }
 
   undelete_page(): void {
-    this.comic_service.markPageAsUndeleted(this.page).subscribe(
+    this.comic_service.mark_page_as_undeleted(this.page).subscribe(
       (response: Response) => {
         this.page.deleted = false;
       },

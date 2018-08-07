@@ -46,7 +46,7 @@ export class DuplicatePageListComponent implements OnInit {
   ngOnInit() {
     const that = this;
     this.working.push(true);
-    this.comic_service.getDuplicatePages().subscribe(
+    this.comic_service.get_duplicate_page_list().subscribe(
       (pages: Page[]) => {
         const comic_ids = [];
         pages.forEach((page) => {
@@ -63,7 +63,7 @@ export class DuplicatePageListComponent implements OnInit {
           that.pages_by_page_hash[page.hash].push(page);
 
           // it's possible the same page is in a comic twice, but let's ignore that
-          that.comic_service.getComic(page.comic_id).subscribe(
+          that.comic_service.load_comic_from_remote(page.comic_id).subscribe(
             (comic: Comic) => {
               that.comics_by_page_hash[page.hash].push(comic);
               that.comic_count = that.comic_count + 1;

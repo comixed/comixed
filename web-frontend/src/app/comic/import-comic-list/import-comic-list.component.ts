@@ -55,7 +55,7 @@ export class ImportComicListComponent implements OnInit {
         return;
       }
       that.waiting_on_imports = true;
-      that.comic_service.getPendingImports().subscribe(
+      that.comic_service.get_number_of_pending_imports().subscribe(
         count => {
           that.pending_imports = count;
           if (count > 0) {
@@ -81,7 +81,7 @@ export class ImportComicListComponent implements OnInit {
     this.busy_title = 'Fetching List Of Comic Files...';
     this.busy = true;
     const directory = this.directory.value;
-    this.comic_service.getFilesUnder(directory).subscribe(
+    this.comic_service.get_files_under_directory(directory).subscribe(
       files => {
         that.files = files;
         that.plural = this.files.length !== 1;
@@ -110,7 +110,7 @@ export class ImportComicListComponent implements OnInit {
     const that = this;
     this.importing = true;
     const selectedFiles = this.files.filter(file => file.selected).map(file => file.filename);
-    this.comic_service.importFiles(selectedFiles).subscribe(
+    this.comic_service.import_files_into_library(selectedFiles).subscribe(
       () => {},
       error => {
         console.log('ERROR:', error.message);

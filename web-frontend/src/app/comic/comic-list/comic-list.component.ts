@@ -82,9 +82,9 @@ export class ComicListComponent implements OnInit {
 
   get_image_url(comic: Comic): string {
     if (comic.missing === true) {
-      return this.comicService.getMissingImageUrl();
+      return this.comicService.get_url_for_missing_page();
     } else {
-      return this.comicService.getImageUrl(comic.id, 0);
+      return this.comicService.get_url_for_page_by_comic_index(comic.id, 0);
     }
   }
 

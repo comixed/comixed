@@ -35,7 +35,7 @@ export class MainPageComponent implements OnInit {
   constructor(private comicService: ComicService) {}
 
   ngOnInit() {
-    this.comicService.getComicCount().subscribe(
+    this.comicService.get_library_comic_count().subscribe(
       res => {
         this.comicCount = res;
         this.plural = res !== 1;
@@ -44,7 +44,7 @@ export class MainPageComponent implements OnInit {
         console.log(err);
       }
     );
-    this.comicService.getDuplicatePageCount().subscribe(
+    this.comicService.get_duplicate_page_count().subscribe(
       res => {
         this.duplicate_pages = res;
       },
