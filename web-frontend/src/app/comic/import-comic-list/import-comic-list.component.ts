@@ -22,7 +22,7 @@ import {FormBuilder, FormGroup, FormArray, Validators, AbstractControl} from '@a
 
 import {FileDetails} from '../file-details.model';
 import {ComicService} from '../comic.service';
-import {ErrorsService} from '../../errors.service';
+import {ErrorService} from '../../error.service';
 
 @Component({
   selector: 'app-import-comics',
@@ -41,7 +41,7 @@ export class ImportComicListComponent implements OnInit {
   pending_imports = 0;
   waiting_on_imports = false;
 
-  constructor(private comic_service: ComicService, private errorsService: ErrorsService,
+  constructor(private comic_service: ComicService, private errorsService: ErrorService,
     builder: FormBuilder) {
     this.directoryForm = builder.group({'directory': ['', Validators.required]});
     this.directory = this.directoryForm.controls['directory'];
@@ -67,7 +67,7 @@ export class ImportComicListComponent implements OnInit {
         },
         error => {
           console.log('ERROR', error.message);
-          that.errorsService.fireErrorMessage('Error getting the number of pending imports...');
+          that.errorsService.send_error_message('Error getting the number of pending imports...');
           that.importing = false;
         },
         () => {
@@ -88,7 +88,7 @@ export class ImportComicListComponent implements OnInit {
       },
       error => {
         console.log('ERROR:', error.message);
-        that.errorsService.fireErrorMessage('Error while loading filenames...');
+        that.errorsService.send_error_message('Error while loading filenames...');
       },
       () => {
         that.busy = false;

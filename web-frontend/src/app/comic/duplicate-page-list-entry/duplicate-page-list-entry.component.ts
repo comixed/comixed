@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 
 import {ComicService} from '../comic.service';
-import {ErrorsService} from '../../errors.service';
+import {ErrorService} from '../../error.service';
 import {Page} from '../page.model';
 import {Comic} from '../comic.model';
 
@@ -52,7 +52,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   constructor(
     private router: Router,
     private comic_service: ComicService,
-    private errors_service: ErrorsService,
+    private errors_service: ErrorService,
   ) {}
 
   ngOnInit() {
@@ -65,7 +65,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
       },
       (error: Error) => {
         console.log('ERROR:', error.message);
-        that.errors_service.fireErrorMessage('Error loading user preference: cover_size');
+        that.errors_service.send_error_message('Error loading user preference: cover_size');
       }
     );
   }
@@ -106,7 +106,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
         page.deleted = true;
       },
       (error: Error) => {
-        this.errors_service.fireErrorMessage(error.message);
+        this.errors_service.send_error_message(error.message);
         console.log('ERROR:' + error.message);
       },
       () => {
@@ -121,7 +121,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
         page.deleted = false;
       },
       (error: Error) => {
-        this.errors_service.fireErrorMessage(error.message);
+        this.errors_service.send_error_message(error.message);
         console.log('ERROR:' + error.message);
       },
       () => {

@@ -24,7 +24,7 @@ import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
 import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.component';
 import {SeriesFilterPipe} from '../series-filter.pipe';
-import {ErrorsService} from '../../errors.service';
+import {ErrorService} from '../../error.service';
 
 @Component({
   selector: 'app-comic-list',
@@ -56,7 +56,7 @@ export class ComicListComponent implements OnInit {
   ];
   private sort_order: number;
 
-  constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorsService) {}
+  constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorService) {}
 
   ngOnInit() {
     this.sort_order = 0;
@@ -75,7 +75,7 @@ export class ComicListComponent implements OnInit {
       },
       (error: Error) => {
         console.log('ERROR:', error.message);
-        this.errorsService.fireErrorMessage('Error loading user preference: cover_size');
+        this.errorsService.send_error_message('Error loading user preference: cover_size');
       }
     );
   }

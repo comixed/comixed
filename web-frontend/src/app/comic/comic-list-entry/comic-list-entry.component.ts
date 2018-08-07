@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
-import {ErrorsService} from '../../errors.service';
+import {ErrorService} from '../../error.service';
 import {ComicListComponent} from '../comic-list/comic-list.component';
 
 @Component({
@@ -43,7 +43,7 @@ export class ComicListEntryComponent implements OnInit {
   confirm_button = 'Yes';
   cancel_button = 'No!';
 
-  constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorsService,
+  constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorService,
     private comicList: ComicListComponent) {
   }
 
@@ -79,7 +79,7 @@ export class ComicListEntryComponent implements OnInit {
       },
       (error: any) => {
         console.log('ERROR: ', error.message);
-        this.errorsService.fireErrorMessage('Failed to delete comic from teh library');
+        this.errorsService.send_error_message('Failed to delete comic from teh library');
       }
     );
   }

@@ -20,7 +20,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 
 import {ComicService} from '../comic.service';
-import {ErrorsService} from '../../errors.service';
+import {ErrorService} from '../../error.service';
 import {Page} from '../page.model';
 import {PageType} from '../page-type.model';
 
@@ -41,7 +41,7 @@ export class PageThumbnailComponent implements OnInit {
 
   constructor(
     private comic_service: ComicService,
-    private errorsService: ErrorsService,
+    private errorsService: ErrorService,
   ) {}
 
   ngOnInit() {

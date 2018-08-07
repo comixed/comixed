@@ -20,12 +20,12 @@
 import {Injectable, EventEmitter} from '@angular/core';
 
 @Injectable()
-export class ErrorsService {
+export class ErrorService {
   error_messages: EventEmitter<string> = new EventEmitter();
 
   constructor() {}
 
-  fireErrorMessage(message: string): void {
+  send_error_message(message: string): void {
     this.error_messages.emit(message);
   }
 }

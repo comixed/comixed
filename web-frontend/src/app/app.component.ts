@@ -21,13 +21,13 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {ComicService} from './comic/comic.service';
-import {ErrorsService} from './errors.service';
+import {ErrorService} from './error.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ComicService, ErrorsService],
+  providers: [ComicService, ErrorService],
 })
 export class AppComponent implements OnInit {
   title = 'ComixEd';
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   comic_count = 0;
   read_count = 0;
 
-  constructor(private comicService: ComicService, private errorsService: ErrorsService, private router: Router) {
+  constructor(private comicService: ComicService, private errorsService: ErrorService, private router: Router) {
   }
 
   ngOnInit() {

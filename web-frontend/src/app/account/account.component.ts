@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import {ComicService} from '../comic/comic.service';
-import {ErrorsService} from '../errors.service';
+import {ErrorService} from '../error.service';
 
 @Component({
   selector: 'app-account',
@@ -18,7 +18,7 @@ export class AccountComponent implements OnInit {
 
   constructor(
     private comicService: ComicService,
-    private errorsService: ErrorsService,
+    private errorsService: ErrorService,
   ) {}
 
   ngOnInit() {
