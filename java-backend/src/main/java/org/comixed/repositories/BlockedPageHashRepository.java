@@ -28,7 +28,7 @@ import org.springframework.data.repository.query.Param;
  * <code>BlockedPageHashRepository</code> manages persisted instances of
  * {@link BlockedPageHash}.
  *
- * @author Darryl L. Pierce
+ * @author The ComiXed Project
  *
  */
 public interface BlockedPageHashRepository extends

@@ -27,7 +27,7 @@ import org.springframework.data.repository.CrudRepository;
  * <code>PageTypeRepository</code> retrieves instances of {@link PageType} from
  * the database.
  * 
- * @author Darryl L. Pierce
+ * @author The ComiXed Project
  *
  */
 public interface PageTypeRepository extends

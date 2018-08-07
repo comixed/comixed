@@ -1,6 +1,6 @@
 /*
  * ComixEd - A digital comic book library management application.
- * Copyright (C) 2018, Darryl L. Pierce
+ * Copyright (C) 2018, The ComiXed Project
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

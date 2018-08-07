@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 /**
  * <code>PageType</code> describes the type of a {@link Page}.
  * 
- * @author Darryl L. Pierce
+ * @author The ComiXed Project
  *
  */
 @Entity
