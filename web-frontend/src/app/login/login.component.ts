@@ -19,6 +19,12 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  AbstractControl,
+  Validators,
+} from '@angular/forms';
 
 import {ComicService} from '../comic/comic.service';
 
@@ -28,17 +34,33 @@ import {ComicService} from '../comic/comic.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  login_form: FormGroup;
   email: string;
   password: string;
   error = false;
 
-  constructor(private router: Router, private comicService: ComicService) {}
+  constructor(
+    private router: Router,
+    private comic_service: ComicService,
+    private form_builder: FormBuilder,
+  ) {
+    this.login_form = form_builder.group({
+      'email': ['', Validators.compose([
+        Validators.required,
+        Validators.email,
+      ])],
+      'password': ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(6),
+      ])],
+    });
+  }
 
   ngOnInit() {
   }
 
   login(): void {
-    this.comicService.login(this.email, this.password,
+    this.comic_service.login(this.email, this.password,
       () => {
         this.router.navigateByUrl('/home');
       });

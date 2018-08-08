@@ -1,19 +1,29 @@
-<div class="alert alert-danger" [hidden]="!error">There was a
+<div class='alert alert-danger' [hidden]='!error'>There was a
   problem logging in. Please try again.</div>
 <div class='row justify-content-md-center'>
   <div class='col col-md-4 mx-3 border'>
-    <form role="form" (submit)="login()">
-      <div class="form-group">
-        <label for="username">Email:</label> <input type="text"
-          class="form-control" id="username" name="username"
-          [(ngModel)]='email' placeholder='your email address' />
+    <h2 class='text-center'>Login</h2>
+    <form [formGroup]='login_form' role='form' (ngSubmit)='login()'>
+      <div class='form-group'>
+        <div class='field'>
+          <label for='username'>Email:</label> <input
+            class='form-control' type='email' id='username'
+            placeholder='your email address'
+            [formControl]='login_form.controls["email"]'
+            [(ngModel)]='email'>
+        </div>
+        <div *ngIf='!login_form.controls["email"].valid'
+          class='invalid-tooltip'>Email is invalid...</div>
+        <div class='field'>
+          <label for='password'>Password:</label> <input
+            class='form-control' type='password' id='password'
+            [formControl]='login_form.controls["password"]'
+            [(ngModel)]='password'>
+        </div>
+        <div *ngIf='!login_form.controls["password"].valid'
+          class='invalid-tooltip'>Password is invalid...</div>
+        <button type='submit' class='btn btn-primary'>Submit</button>
       </div>
-      <div class="form-group">
-        <label for="password">Password:</label> <input type="password"
-          class="form-control" id="password" name="password"
-          [(ngModel)]='password' />
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
 </div>
