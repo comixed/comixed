@@ -28,9 +28,9 @@ import {ComicService} from '../comic/comic.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  username: string;
+  email: string;
   password: string;
-  error: boolean = false;
+  error = false;
 
   constructor(private router: Router, private comicService: ComicService) {}
 
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.comicService.login(this.username, this.password,
+    this.comicService.login(this.email, this.password,
       () => {
         this.router.navigateByUrl('/home');
       });

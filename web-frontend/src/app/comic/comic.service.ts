@@ -213,8 +213,8 @@ export class ComicService {
     return this.user.authenticated;
   }
 
-  login(username: string, password: string, callback) {
-    const headers = new HttpHeaders({authorization: 'Basic ' + btoa(username + ':' + password)});
+  login(email: string, password: string, callback) {
+    const headers = new HttpHeaders({authorization: 'Basic ' + btoa(email + ':' + password)});
     this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
       (user: User) => {
         this.user = user;
