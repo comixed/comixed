@@ -46,7 +46,7 @@ export class ComicListEntryComponent implements OnInit {
   constructor(
     protected router: Router,
     protected comic_service: ComicService,
-    protected error_service: AlertService,
+    protected alert_service: AlertService,
     protected comicList: ComicListComponent,
   ) {
   }
@@ -81,7 +81,7 @@ export class ComicListEntryComponent implements OnInit {
         }
       },
       (error: any) => {
-        this.error_service.show_error_message('Failed to delete comic from the library...', error);
+        this.alert_service.show_error_message('Failed to delete comic from the library...', error);
       }
     );
   }

@@ -45,7 +45,7 @@ export class PageDetailsComponent implements OnInit {
 
   constructor(
     private comic_service: ComicService,
-    private error_service: AlertService,
+    private alert_service: AlertService,
   ) {}
 
   ngOnInit() {
@@ -54,7 +54,7 @@ export class PageDetailsComponent implements OnInit {
         this.page_types = page_types;
       },
       (error: Error) => {
-        this.error_service.show_error_message('Unable to retrieve page types', error);
+        this.alert_service.show_error_message('Unable to retrieve page types', error);
       }
     );
   }
@@ -78,7 +78,7 @@ export class PageDetailsComponent implements OnInit {
         that.page.page_type = page_type;
       },
       (error: Error) => {
-        that.error_service.show_error_message('Unable to set the page type', error);
+        that.alert_service.show_error_message('Unable to set the page type', error);
       }
     );
   }
@@ -89,7 +89,7 @@ export class PageDetailsComponent implements OnInit {
         this.page.deleted = true;
       },
       (error: Error) => {
-        this.error_service.show_error_message('Unable to delete page...', error);
+        this.alert_service.show_error_message('Unable to delete page...', error);
       }
     );
   }
@@ -100,7 +100,7 @@ export class PageDetailsComponent implements OnInit {
         this.page.deleted = false;
       },
       (error: Error) => {
-        this.error_service.show_error_message('Unable to undelete page...', error);
+        this.alert_service.show_error_message('Unable to undelete page...', error);
       }
     );
   }
@@ -112,7 +112,7 @@ export class PageDetailsComponent implements OnInit {
         this.comic_service.reload_comics();
       },
       (error: Error) => {
-        this.error_service.show_error_message('Failed to block pages list this...', error);
+        this.alert_service.show_error_message('Failed to block pages list this...', error);
       }
     );
   }
@@ -124,7 +124,7 @@ export class PageDetailsComponent implements OnInit {
         this.comic_service.reload_comics();
       },
       (error: Error) => {
-        this.error_service.show_error_message('Failed to unblock pages like this page...', error);
+        this.alert_service.show_error_message('Failed to unblock pages like this page...', error);
       }
     );
   }

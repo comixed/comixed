@@ -59,7 +59,7 @@ export class ComicListComponent implements OnInit {
   constructor(
     private router: Router,
     private comic_service: ComicService,
-    private error_service: AlertService,
+    private alert_service: AlertService,
   ) {}
 
   ngOnInit() {
@@ -78,7 +78,7 @@ export class ComicListComponent implements OnInit {
         this.cover_size = cover_size;
       },
       (error: Error) => {
-        this.error_service.show_error_message('Error loading user preference: cover_size', error);
+        this.alert_service.show_error_message('Error loading user preference: cover_size', error);
       }
     );
   }

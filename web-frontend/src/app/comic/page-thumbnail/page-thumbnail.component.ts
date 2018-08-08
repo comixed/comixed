@@ -41,7 +41,7 @@ export class PageThumbnailComponent implements OnInit {
 
   constructor(
     private comic_service: ComicService,
-    private error_service: AlertService,
+    private alert_service: AlertService,
   ) {}
 
   ngOnInit() {

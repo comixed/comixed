@@ -43,7 +43,7 @@ export class ImportComicListComponent implements OnInit {
 
   constructor(
     private comic_service: ComicService,
-    private error_service: AlertService,
+    private alert_service: AlertService,
     builder: FormBuilder,
   ) {
     this.directoryForm = builder.group({'directory': ['', Validators.required]});
@@ -69,7 +69,7 @@ export class ImportComicListComponent implements OnInit {
           }
         },
         error => {
-          that.error_service.show_error_message('Error getting the number of pending imports...', error);
+          that.alert_service.show_error_message('Error getting the number of pending imports...', error);
           that.importing = false;
         },
         () => {
@@ -89,7 +89,7 @@ export class ImportComicListComponent implements OnInit {
         that.plural = this.files.length !== 1;
       },
       error => {
-        that.error_service.show_error_message('Error while loading filenames...', error);
+        that.alert_service.show_error_message('Error while loading filenames...', error);
       },
       () => {
         that.busy = false;
@@ -114,7 +114,7 @@ export class ImportComicListComponent implements OnInit {
     this.comic_service.import_files_into_library(selectedFiles).subscribe(
       () => {},
       error => {
-        this.error_service.show_error_message('Failed to get the list of files...', error);
+        this.alert_service.show_error_message('Failed to get the list of files...', error);
         that.importing = false;
       }
     );
