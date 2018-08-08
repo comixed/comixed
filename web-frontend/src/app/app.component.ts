@@ -50,6 +50,12 @@ export class AppComponent implements OnInit {
         this.alert_message = message;
       }
     );
+    this.alert_service.info_messages.subscribe(
+      (message: string) => {
+        this.alert_type = 'alert-info';
+        this.alert_message = message;
+      }
+    );
     setInterval(() => {
       this.comic_service.get_library_comic_count().subscribe(
         count => this.comic_count = count,

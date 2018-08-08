@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
   login_form: FormGroup;
   email: string;
   password: string;
-  error = false;
 
   constructor(
     private router: Router,

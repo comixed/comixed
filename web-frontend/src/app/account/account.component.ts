@@ -12,8 +12,6 @@ export class AccountComponent implements OnInit {
   username;
   password = '';
   password_check = '';
-  message = '';
-  has_error = false;
   password_error = '';
 
   constructor(
@@ -39,13 +37,10 @@ export class AccountComponent implements OnInit {
     this.comic_service.change_username(this.username).subscribe(
       (response: Response) => {
         this.password_error = '';
-        this.message = 'Username updated...';
-        this.has_error = false;
+        this.alert_service.show_info_message(`Your username has been updated to ${this.username}...`);
       },
       (error: Error) => {
-        console.log('ERROR:', error.message);
-        this.message = 'Failed to update username...';
-        this.has_error = true;
+        this.alert_service.show_error_message('Unable to update your username...', error);
       }
     );
   }
@@ -54,13 +49,10 @@ export class AccountComponent implements OnInit {
     this.comic_service.change_password(this.password).subscribe(
       (response: Response) => {
         this.password_error = '';
-        this.message = 'Password updated...';
-        this.has_error = false;
+        this.alert_service.show_info_message('Your password has been updated...');
       },
       (error: Error) => {
-        console.log('ERROR:', error.message);
-        this.message = 'Failed to update password...';
-        this.has_error = true;
+        this.alert_service.show_error_message('Unable to update your password...', error);
       }
     );
   }
