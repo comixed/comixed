@@ -44,7 +44,10 @@ export class ComicService {
   private fetching_comics = false;
   private user: User = new User();
 
-  constructor(private http: HttpClient, private errorsService: ErrorService) {
+  constructor(
+    private http: HttpClient,
+    private error_service: ErrorService,
+  ) {
     this.monitor_authentication_status();
     this.monitor_remote_comic_list();
   }
@@ -88,7 +91,7 @@ export class ComicService {
             this.fetching_comics = false;
           },
           error => {
-            this.errorsService.send_error_message('Failed to get the list of comics...');
+            this.error_service.send_error_message('Failed to get the list of comics...');
             console.log('ERROR:', error.message);
             this.fetching_comics = false;
           });
@@ -223,7 +226,7 @@ export class ComicService {
       },
       error => {
         console.log('ERROR: ' + error.message);
-        this.errorsService.send_error_message('Login failure');
+        this.error_service.send_error_message('Login failure');
         this.user = new User();
       });
   }
@@ -262,7 +265,7 @@ export class ComicService {
       },
       (error: Error) => {
         console.log('ERROR:', error.message);
-        this.errorsService.send_error_message('Failed to set user preference: ' + name + '=' + value);
+        this.error_service.send_error_message('Failed to set user preference: ' + name + '=' + value);
       }
     );
   }

@@ -17,12 +17,12 @@ export class AccountComponent implements OnInit {
   password_error = '';
 
   constructor(
-    private comicService: ComicService,
-    private errorsService: ErrorService,
+    private comic_service: ComicService,
+    private error_service: ErrorService,
   ) {}
 
   ngOnInit() {
-    this.username = this.comicService.getUsername();
+    this.username = this.comic_service.getUsername();
   }
 
   passesPasswordValidation(): boolean {
@@ -36,7 +36,7 @@ export class AccountComponent implements OnInit {
   }
 
   updateUsername(): void {
-    this.comicService.change_username(this.username).subscribe(
+    this.comic_service.change_username(this.username).subscribe(
       (response: Response) => {
         this.password_error = '';
         this.message = 'Username updated...';
@@ -51,7 +51,7 @@ export class AccountComponent implements OnInit {
   }
 
   updatePassword(): void {
-    this.comicService.change_password(this.password).subscribe(
+    this.comic_service.change_password(this.password).subscribe(
       (response: Response) => {
         this.password_error = '';
         this.message = 'Password updated...';

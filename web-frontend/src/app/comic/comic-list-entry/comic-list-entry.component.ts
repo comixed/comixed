@@ -43,12 +43,16 @@ export class ComicListEntryComponent implements OnInit {
   confirm_button = 'Yes';
   cancel_button = 'No!';
 
-  constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorService,
-    protected comicList: ComicListComponent) {
+  constructor(
+    protected router: Router,
+    protected comic_service: ComicService,
+    protected error_service: ErrorService,
+    protected comicList: ComicListComponent,
+  ) {
   }
 
   ngOnInit() {
-    this.cover_url = this.comic.missing ? '/assets/img/missing.png' : this.comicService.get_url_for_page_by_comic_index(this.comic.id, 0);
+    this.cover_url = this.comic.missing ? '/assets/img/missing.png' : this.comic_service.get_url_for_page_by_comic_index(this.comic.id, 0);
     this.title_text = this.comic.series || 'Unknown Series';
     if (this.comic.issue_number) {
       this.title_text = this.title_text + ' #' + this.comic.issue_number;
@@ -62,7 +66,7 @@ export class ComicListEntryComponent implements OnInit {
 
   clicked(event: any): void {
     console.log('Selected comic: id=' + this.comic.id);
-    this.comicService.set_current_comic(this.comic);
+    this.comic_service.set_current_comic(this.comic);
     event.preventDefault();
   }
 
@@ -71,15 +75,15 @@ export class ComicListEntryComponent implements OnInit {
   }
 
   deleteComic(): void {
-    this.comicService.remove_comic_from_library(this.comic).subscribe(
+    this.comic_service.remove_comic_from_library(this.comic).subscribe(
       success => {
         if (success) {
-          this.comicService.remove_comic_from_local(this.comic.id);
+          this.comic_service.remove_comic_from_local(this.comic.id);
         }
       },
       (error: any) => {
         console.log('ERROR: ', error.message);
-        this.errorsService.send_error_message('Failed to delete comic from teh library');
+        this.error_service.send_error_message('Failed to delete comic from teh library');
       }
     );
   }

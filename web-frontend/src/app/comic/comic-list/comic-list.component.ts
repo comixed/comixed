@@ -56,35 +56,39 @@ export class ComicListComponent implements OnInit {
   ];
   protected sort_order: number;
 
-  constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorService) {}
+  constructor(
+    private router: Router,
+    private comic_service: ComicService,
+    private error_service: ErrorService,
+  ) {}
 
   ngOnInit() {
     this.sort_order = 0;
-    this.comicService.all_comics_update.subscribe(
+    this.comic_service.all_comics_update.subscribe(
       (comics: Comic[]) => {
         this.comics = this.sort_comics(comics);
       }
     );
-    this.comicService.current_comic.subscribe(
+    this.comic_service.current_comic.subscribe(
       (comic: Comic) => {
         this.current_comic = comic;
       });
-    this.comicService.get_user_preference('cover_size').subscribe(
+    this.comic_service.get_user_preference('cover_size').subscribe(
       (cover_size: number) => {
         this.cover_size = cover_size;
       },
       (error: Error) => {
         console.log('ERROR:', error.message);
-        this.errorsService.send_error_message('Error loading user preference: cover_size');
+        this.error_service.send_error_message('Error loading user preference: cover_size');
       }
     );
   }
 
   get_image_url(comic: Comic): string {
     if (comic.missing === true) {
-      return this.comicService.get_url_for_missing_page();
+      return this.comic_service.get_url_for_missing_page();
     } else {
-      return this.comicService.get_url_for_page_by_comic_index(comic.id, 0);
+      return this.comic_service.get_url_for_page_by_comic_index(comic.id, 0);
     }
   }
 
@@ -200,7 +204,7 @@ export class ComicListComponent implements OnInit {
   }
 
   save_cover_size(): void {
-    this.comicService.set_user_preference('cover_size', String(this.cover_size));
+    this.comic_service.set_user_preference('cover_size', String(this.cover_size));
   }
 
   handle_comic_clicked(event): void {
