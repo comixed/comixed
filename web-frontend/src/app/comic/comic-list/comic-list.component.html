@@ -5,7 +5,7 @@
       <div class='modal-header'>
         <h4 class='modal-title'>{{get_title_text_for(current_comic)}}</h4>
         <button class='btn btn-sm btn-primary' data-dismiss='modal'
-          (click)='open_selected_comic'>Read</button>
+          (click)='open_selected_comic()'>Read</button>
       </div>
       <div class='modal-body'>
         <div class='media'>
@@ -52,7 +52,8 @@
           <h4>Sort By:</h4>
         </div>
         <div class='row m-1'>
-          <select #selectElem (change)='set_sort_order(selectElem.value)'>
+          <select #selectElem
+            (change)='set_sort_order(selectElem.value)'>
             <option *ngFor='let option of sort_options'
               [value]='option.id'>{{option.label}}</option>
           </select>
@@ -100,8 +101,9 @@
           <app-comic-list-entry
             *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
             [comic]='comic'
-            (onComicSelected)='handleComicClicked($event)'></app-comic-list-entry>
+            (onComicSelected)='handle_comic_clicked($event)'></app-comic-list-entry>
         </div>
       </div>
     </div>
   </div>
+</div>

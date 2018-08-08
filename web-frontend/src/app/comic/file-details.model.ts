@@ -34,6 +34,6 @@ export class FileDetails {
 
   toggleSelected(): void {
     this.selected = !this.selected;
-    console.log(this.filename, " is now ", (this.selected ? "" : "not"), " selected");
+    console.log(this.filename, ' is now ', (this.selected ? '' : 'not'), ' selected');
   }
 }

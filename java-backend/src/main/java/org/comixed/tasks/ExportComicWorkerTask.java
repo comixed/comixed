@@ -56,7 +56,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
     @Autowired
     private AppConfiguration configuration;
 
-    public void setArchiveAdaptor(AbstractArchiveAdaptor archiveAdaptor)
+    public void setArchiveAdaptor(AbstractArchiveAdaptor<?> archiveAdaptor)
     {
         this.archiveAdaptor = archiveAdaptor;
     }

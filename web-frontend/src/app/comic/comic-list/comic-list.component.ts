@@ -33,28 +33,28 @@ import {ErrorService} from '../../error.service';
   providers: [ComicService],
 })
 export class ComicListComponent implements OnInit {
-  private comics: Comic[];
-  private cover_size: number;
-  private all_series: string[];
-  private title_search: string;
-  private current_comic: Comic;
-  private current_page = 1;
-  private show_search_box = true;
-  private page_sizes: any[] = [
+  protected comics: Comic[];
+  protected cover_size: number;
+  protected all_series: string[];
+  protected title_search: string;
+  protected current_comic: Comic;
+  protected current_page = 1;
+  protected show_search_box = true;
+  protected page_sizes: any[] = [
     {id: 0, label: '10 comics'},
     {id: 1, label: '25 comics'},
     {id: 2, label: '50 comics'},
     {id: 3, label: '100 comics'}
   ];
-  private page_size = 10;
-  private sort_options: any[] = [
+  protected page_size = 10;
+  protected sort_options: any[] = [
     {id: 0, label: 'Default'},
     {id: 1, label: 'Sort by series'},
     {id: 2, label: 'Sort by added date'},
     {id: 3, label: 'Sort by cover date'},
     {id: 4, label: 'Sort by last read date'},
   ];
-  private sort_order: number;
+  protected sort_order: number;
 
   constructor(private router: Router, private comicService: ComicService, private errorsService: ErrorService) {}
 
@@ -201,5 +201,8 @@ export class ComicListComponent implements OnInit {
 
   save_cover_size(): void {
     this.comicService.set_user_preference('cover_size', String(this.cover_size));
+  }
+
+  handle_comic_clicked(event): void {
   }
 }

@@ -34,7 +34,9 @@ export class ReadViewerComponent implements OnInit {
   constructor(private comicService: ComicService) {}
 
   ngOnInit() {
-    if (!this.current_page) this.current_page = 0;
+    if (!this.current_page) {
+      this.current_page = 0;
+    }
   }
 
   getImageURL(page_id: number): string {
@@ -50,7 +52,9 @@ export class ReadViewerComponent implements OnInit {
   }
 
   goToPreviousPage() {
-    if (this.hasPreviousPage()) this.current_page = this.current_page - 1;
+    if (this.hasPreviousPage()) {
+      this.current_page = this.current_page - 1;
+    }
   }
 
   hasNextPage(): boolean {
@@ -58,6 +62,8 @@ export class ReadViewerComponent implements OnInit {
   }
 
   goToNextPage() {
-    if (this.hasNextPage()) this.current_page = this.current_page + 1;
+    if (this.hasNextPage()) {
+      this.current_page = this.current_page + 1;
+    }
   }
 }
