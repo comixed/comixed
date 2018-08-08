@@ -31,21 +31,23 @@ import {AlertService} from './alert.service';
 })
 export class AppComponent implements OnInit {
   title = 'ComixEd';
-  error_message: string;
+  alert_type: string;
+  alert_message: string;
   comic_count = 0;
   read_count = 0;
 
   constructor(
     private comic_service: ComicService,
-    private error_service: AlertService,
+    private alert_service: AlertService,
     private router: Router,
   ) {
   }
 
   ngOnInit() {
-    this.error_service.error_messages.subscribe(
+    this.alert_service.error_messages.subscribe(
       (message: string) => {
-        this.error_message = message;
+        this.alert_type = 'alert-danger';
+        this.alert_message = message;
       }
     );
     setInterval(() => {
@@ -64,7 +66,7 @@ export class AppComponent implements OnInit {
   }
 
   clearErrorMessage(): void {
-    this.error_message = '';
+    this.alert_message = '';
   }
 
   isAuthenticated(): boolean {

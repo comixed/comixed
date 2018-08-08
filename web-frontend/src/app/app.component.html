@@ -32,15 +32,18 @@
     </div>
   </div>
 </nav>
-<div class='container' style='margin-top: 50px'
-  *ngIf='error_message && error_message.length > 0'>
-  <div class='alert alert-danger alert-dismissable' role='alert'>
-    <a href='#' class='close' data-dismiss='alert' aria-label='close'
-      (click)='clearErrorMessage()'>&times;</a> <strong>Error!</strong>
-    {{error_message}}
+<div class='container-fluid'>
+  <div class='row justify-content-center'>
+    <div class='alert alert-dismissable {{alert_type}} w-75 text-center'
+      role='alert' *ngIf='alert_message && alert_message.length > 0'>
+      {{alert_message}} <a href='#' class='close' data-dismiss='alert'
+        aria-label='close' (click)='clearErrorMessage()'>&times;</a>
+    </div>
+  </div>
+  <div class='row m-10'>
+    <router-outlet></router-outlet>
   </div>
 </div>
-<router-outlet></router-outlet>
 <footer class='bg-light fixed-bottom page-footer font-small'>
   <div class='row'>
     <div class='col-sm-4 align-middle mx-3'>
