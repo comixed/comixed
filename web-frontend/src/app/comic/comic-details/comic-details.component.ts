@@ -50,7 +50,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private comic_service: ComicService,
-    private error_service: AlertService,
+    private alert_service: AlertService,
   ) {}
 
   ngOnInit() {
@@ -59,8 +59,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
         this.page_types = page_types;
       },
       (error: Error) => {
-        this.error_service.show_error_message(error.message);
-        console.log('ERROR:', error);
+        this.alert_service.show_error_message('Failed to retrieve page types...', error);
       }
     );
     this.comic_service.current_page.subscribe(
@@ -77,12 +76,12 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
           this.cover_url = this.comic_service.get_url_for_page_by_comic_index(this.comic.id, 0);
         },
         error => {
-          console.log('error:', error.message);
+          this.alert_service.show_error_message('Error while retrieving comic...', error);
         }
       );
     },
       error => {
-        console.log('error:', error);
+        this.alert_service.show_error_message('An error has occurred...', error);
       });
   }
 

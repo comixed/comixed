@@ -69,8 +69,7 @@ export class ImportComicListComponent implements OnInit {
           }
         },
         error => {
-          console.log('ERROR', error.message);
-          that.error_service.show_error_message('Error getting the number of pending imports...');
+          that.error_service.show_error_message('Error getting the number of pending imports...', error);
           that.importing = false;
         },
         () => {
@@ -90,8 +89,7 @@ export class ImportComicListComponent implements OnInit {
         that.plural = this.files.length !== 1;
       },
       error => {
-        console.log('ERROR:', error.message);
-        that.error_service.show_error_message('Error while loading filenames...');
+        that.error_service.show_error_message('Error while loading filenames...', error);
       },
       () => {
         that.busy = false;
@@ -116,7 +114,7 @@ export class ImportComicListComponent implements OnInit {
     this.comic_service.import_files_into_library(selectedFiles).subscribe(
       () => {},
       error => {
-        console.log('ERROR:', error.message);
+        this.error_service.show_error_message('Failed to get the list of files...', error);
         that.importing = false;
       }
     );

@@ -65,7 +65,6 @@ export class ComicListEntryComponent implements OnInit {
   }
 
   clicked(event: any): void {
-    console.log('Selected comic: id=' + this.comic.id);
     this.comic_service.set_current_comic(this.comic);
     event.preventDefault();
   }
@@ -82,8 +81,7 @@ export class ComicListEntryComponent implements OnInit {
         }
       },
       (error: any) => {
-        console.log('ERROR: ', error.message);
-        this.error_service.show_error_message('Failed to delete comic from teh library');
+        this.error_service.show_error_message('Failed to delete comic from the library...', error);
       }
     );
   }

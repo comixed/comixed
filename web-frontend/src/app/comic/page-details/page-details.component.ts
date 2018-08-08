@@ -54,8 +54,7 @@ export class PageDetailsComponent implements OnInit {
         this.page_types = page_types;
       },
       (error: Error) => {
-        this.error_service.show_error_message('Unable to retrieve page types');
-        console.log('ERROR:', error);
+        this.error_service.show_error_message('Unable to retrieve page types', error);
       }
     );
   }
@@ -79,8 +78,7 @@ export class PageDetailsComponent implements OnInit {
         that.page.page_type = page_type;
       },
       (error: Error) => {
-        that.error_service.show_error_message('Unable to set the page type');
-        console.log('ERROR:', error);
+        that.error_service.show_error_message('Unable to set the page type', error);
       }
     );
   }
@@ -91,8 +89,7 @@ export class PageDetailsComponent implements OnInit {
         this.page.deleted = true;
       },
       (error: Error) => {
-        this.error_service.show_error_message('ERROR: ' + error.message);
-        console.log('ERROR:', error);
+        this.error_service.show_error_message('Unable to delete page...', error);
       }
     );
   }
@@ -103,8 +100,7 @@ export class PageDetailsComponent implements OnInit {
         this.page.deleted = false;
       },
       (error: Error) => {
-        this.error_service.show_error_message('ERROR: ' + error.message);
-        console.log('ERROR:', error);
+        this.error_service.show_error_message('Unable to undelete page...', error);
       }
     );
   }
@@ -116,8 +112,7 @@ export class PageDetailsComponent implements OnInit {
         this.comic_service.reload_comics();
       },
       (error: Error) => {
-        this.error_service.show_error_message('Failed to block pages list this...');
-        console.log('Error while blocking page hash:', error);
+        this.error_service.show_error_message('Failed to block pages list this...', error);
       }
     );
   }
@@ -129,8 +124,7 @@ export class PageDetailsComponent implements OnInit {
         this.comic_service.reload_comics();
       },
       (error: Error) => {
-        this.error_service.show_error_message('Failed to unblock pages like this page...');
-        console.log('Error while unblocking page hash:', error);
+        this.error_service.show_error_message('Failed to unblock pages like this page...', error);
       }
     );
   }

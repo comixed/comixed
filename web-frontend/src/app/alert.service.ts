@@ -25,7 +25,11 @@ export class AlertService {
 
   constructor() {}
 
-  show_error_message(message: string): void {
+  show_error_message(message: string, error: Error): void {
     this.error_messages.emit(message);
+    console.log('ERROR:', message);
+    if (error) {
+      console.log('Context:', error);
+    }
   }
 }

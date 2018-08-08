@@ -21,6 +21,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 
 import {ComicService} from '../comic/comic.service';
+import {AlertService} from '../alert.service';
 
 @Component({
   selector: 'app-main-page',
@@ -32,7 +33,10 @@ export class MainPageComponent implements OnInit {
   public plural = false;
   public duplicate_pages = 0;
 
-  constructor(private comicService: ComicService) {}
+  constructor(
+    private comicService: ComicService,
+    private alert_service: AlertService,
+  ) {}
 
   ngOnInit() {
     this.comicService.get_library_comic_count().subscribe(
@@ -40,16 +44,16 @@ export class MainPageComponent implements OnInit {
         this.comicCount = res;
         this.plural = res !== 1;
       },
-      err => {
-        console.log(err);
+      (error: Error) => {
+        this.alert_service.show_error_message('Unable to get the library comic count...', error);
       }
     );
     this.comicService.get_duplicate_page_count().subscribe(
       res => {
         this.duplicate_pages = res;
       },
-      error => {
-        console.log('ERROR: ' + error.message);
+      (error: Error) => {
+        this.alert_service.show_error_message('Unable to get the library duplicate page...', error);
       }
     );
   }
