@@ -70,7 +70,7 @@ export class ImportComicListComponent implements OnInit {
         },
         error => {
           console.log('ERROR', error.message);
-          that.error_service.send_error_message('Error getting the number of pending imports...');
+          that.error_service.show_error_message('Error getting the number of pending imports...');
           that.importing = false;
         },
         () => {
@@ -91,7 +91,7 @@ export class ImportComicListComponent implements OnInit {
       },
       error => {
         console.log('ERROR:', error.message);
-        that.error_service.send_error_message('Error while loading filenames...');
+        that.error_service.show_error_message('Error while loading filenames...');
       },
       () => {
         that.busy = false;

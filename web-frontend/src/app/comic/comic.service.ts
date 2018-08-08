@@ -91,7 +91,7 @@ export class ComicService {
             this.fetching_comics = false;
           },
           error => {
-            this.error_service.send_error_message('Failed to get the list of comics...');
+            this.error_service.show_error_message('Failed to get the list of comics...');
             console.log('ERROR:', error.message);
             this.fetching_comics = false;
           });
@@ -226,7 +226,7 @@ export class ComicService {
       },
       error => {
         console.log('ERROR: ' + error.message);
-        this.error_service.send_error_message('Login failure');
+        this.error_service.show_error_message('Login failure');
         this.user = new User();
       });
   }
@@ -265,7 +265,7 @@ export class ComicService {
       },
       (error: Error) => {
         console.log('ERROR:', error.message);
-        this.error_service.send_error_message('Failed to set user preference: ' + name + '=' + value);
+        this.error_service.show_error_message('Failed to set user preference: ' + name + '=' + value);
       }
     );
   }

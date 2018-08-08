@@ -83,7 +83,7 @@ export class ComicListEntryComponent implements OnInit {
       },
       (error: any) => {
         console.log('ERROR: ', error.message);
-        this.error_service.send_error_message('Failed to delete comic from teh library');
+        this.error_service.show_error_message('Failed to delete comic from teh library');
       }
     );
   }

@@ -25,7 +25,7 @@ export class AlertService {
 
   constructor() {}
 
-  send_error_message(message: string): void {
+  show_error_message(message: string): void {
     this.error_messages.emit(message);
   }
 }

@@ -79,7 +79,7 @@ export class ComicListComponent implements OnInit {
       },
       (error: Error) => {
         console.log('ERROR:', error.message);
-        this.error_service.send_error_message('Error loading user preference: cover_size');
+        this.error_service.show_error_message('Error loading user preference: cover_size');
       }
     );
   }

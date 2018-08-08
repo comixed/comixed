@@ -59,7 +59,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
         this.page_types = page_types;
       },
       (error: Error) => {
-        this.error_service.send_error_message(error.message);
+        this.error_service.show_error_message(error.message);
         console.log('ERROR:', error);
       }
     );

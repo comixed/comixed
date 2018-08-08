@@ -65,7 +65,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
       },
       (error: Error) => {
         console.log('ERROR:', error.message);
-        that.errors_service.send_error_message('Error loading user preference: cover_size');
+        that.errors_service.show_error_message('Error loading user preference: cover_size');
       }
     );
   }
@@ -106,7 +106,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
         page.deleted = true;
       },
       (error: Error) => {
-        this.errors_service.send_error_message(error.message);
+        this.errors_service.show_error_message(error.message);
         console.log('ERROR:' + error.message);
       },
       () => {
@@ -121,7 +121,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
         page.deleted = false;
       },
       (error: Error) => {
-        this.errors_service.send_error_message(error.message);
+        this.errors_service.show_error_message(error.message);
         console.log('ERROR:' + error.message);
       },
       () => {
