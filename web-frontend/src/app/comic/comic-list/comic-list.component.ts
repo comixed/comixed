@@ -24,7 +24,7 @@ import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
 import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.component';
 import {SeriesFilterPipe} from '../series-filter.pipe';
-import {ErrorService} from '../../error.service';
+import {AlertService} from '../../alert.service';
 
 @Component({
   selector: 'app-comic-list',
@@ -59,7 +59,7 @@ export class ComicListComponent implements OnInit {
   constructor(
     private router: Router,
     private comic_service: ComicService,
-    private error_service: ErrorService,
+    private error_service: AlertService,
   ) {}
 
   ngOnInit() {

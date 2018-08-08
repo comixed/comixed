@@ -24,7 +24,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Comic} from '../comic.model';
 import {Page} from '../page.model';
 import {ComicService} from '../comic.service';
-import {ErrorService} from '../../error.service';
+import {AlertService} from '../../alert.service';
 import {ReadViewerComponent} from '../read-viewer/read-viewer.component';
 import {PageDetailsComponent} from '../page-details/page-details.component';
 import {PageType} from '../page-type.model';
@@ -50,7 +50,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private comic_service: ComicService,
-    private error_service: ErrorService,
+    private error_service: AlertService,
   ) {}
 
   ngOnInit() {

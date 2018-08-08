@@ -18,16 +18,16 @@
  */
 import {TestBed, inject} from '@angular/core/testing';
 
-import {ErrorService} from './error.service';
+import {AlertService} from './alert.service';
 
-describe('ErrorsService', () => {
+describe('AlertService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ErrorService]
+      providers: [AlertService]
     });
   });
 
-  it('should be created', inject([ErrorService], (service: ErrorService) => {
+  it('should be created', inject([AlertService], (service: AlertService) => {
     expect(service).toBeTruthy();
   }));
 });

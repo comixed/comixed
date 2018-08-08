@@ -27,7 +27,7 @@ import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import {User} from '../user.model';
-import {ErrorService} from '../error.service';
+import {AlertService} from '../alert.service';
 import {Comic} from './comic.model';
 import {Page} from './page.model';
 import {PageType} from './page-type.model';
@@ -46,7 +46,7 @@ export class ComicService {
 
   constructor(
     private http: HttpClient,
-    private error_service: ErrorService,
+    private error_service: AlertService,
   ) {
     this.monitor_authentication_status();
     this.monitor_remote_comic_list();

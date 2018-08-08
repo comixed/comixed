@@ -20,7 +20,7 @@
 import {Injectable, EventEmitter} from '@angular/core';
 
 @Injectable()
-export class ErrorService {
+export class AlertService {
   error_messages: EventEmitter<string> = new EventEmitter();
 
   constructor() {}

@@ -22,7 +22,7 @@ import {FormBuilder, FormGroup, FormArray, Validators, AbstractControl} from '@a
 
 import {FileDetails} from '../file-details.model';
 import {ComicService} from '../comic.service';
-import {ErrorService} from '../../error.service';
+import {AlertService} from '../../alert.service';
 
 @Component({
   selector: 'app-import-comics',
@@ -43,7 +43,7 @@ export class ImportComicListComponent implements OnInit {
 
   constructor(
     private comic_service: ComicService,
-    private error_service: ErrorService,
+    private error_service: AlertService,
     builder: FormBuilder,
   ) {
     this.directoryForm = builder.group({'directory': ['', Validators.required]});

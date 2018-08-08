@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
-import {ErrorService} from '../../error.service';
+import {AlertService} from '../../alert.service';
 import {ComicListComponent} from '../comic-list/comic-list.component';
 
 @Component({
@@ -46,7 +46,7 @@ export class ComicListEntryComponent implements OnInit {
   constructor(
     protected router: Router,
     protected comic_service: ComicService,
-    protected error_service: ErrorService,
+    protected error_service: AlertService,
     protected comicList: ComicListComponent,
   ) {
   }

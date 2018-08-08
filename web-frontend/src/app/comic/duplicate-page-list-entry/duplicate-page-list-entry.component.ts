@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 
 import {ComicService} from '../comic.service';
-import {ErrorService} from '../../error.service';
+import {AlertService} from '../../alert.service';
 import {Page} from '../page.model';
 import {Comic} from '../comic.model';
 
@@ -52,7 +52,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   constructor(
     private router: Router,
     private comic_service: ComicService,
-    private errors_service: ErrorService,
+    private errors_service: AlertService,
   ) {}
 
   ngOnInit() {
