@@ -31,6 +31,17 @@ import org.comixed.library.model.Comic;
 public interface ArchiveAdaptor
 {
     /**
+     * Retrieves the filename for the first image file in the comic archive.
+     *
+     * @param filename
+     *            the comic filename
+     * @return the image filename
+     * @throws ArchiveAdaptorException
+     *             if an error occurs
+     */
+    String getFirstImageFileName(String filename) throws ArchiveAdaptorException;
+
+    /**
      * Loads the entire comic's contents from disk.
      *
      * @param comic
@@ -52,6 +63,18 @@ public interface ArchiveAdaptor
      *             if an error occurs
      */
     byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException;
+
+    /**
+     * Loads a single file from the specified archive.
+     *
+     * @param filename
+     *            the archive name
+     * @param entryName
+     *            the entry name
+     * @return the content
+     * @throws ArchiveAdaptorException
+     */
+    byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException;
 
     /**
      * Saves the comic.

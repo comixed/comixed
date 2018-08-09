@@ -114,4 +114,19 @@ public class RarArchiveAdaptorTest
     {
         archiveAdaptor.saveComic(comic, false);
     }
+
+    @Test
+    public void testLoadSingleFile() throws ArchiveAdaptorException
+    {
+        byte[] result = archiveAdaptor.loadSingleFile(TEST_CBR_FILE, TEST_FILE_ENTRY_1);
+
+        assertNotNull(result);
+        assertEquals(7449985, result.length);
+    }
+
+    @Test
+    public void testGetFirstImageFileName() throws ArchiveAdaptorException
+    {
+        assertEquals(TEST_FILE_ENTRY_1, archiveAdaptor.getFirstImageFileName(TEST_CBR_FILE));
+    }
 }

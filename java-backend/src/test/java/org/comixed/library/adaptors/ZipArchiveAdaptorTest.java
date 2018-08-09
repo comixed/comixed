@@ -23,9 +23,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixed.ComixEdTestContext;
-import org.comixed.library.adaptors.ArchiveAdaptorException;
-import org.comixed.library.adaptors.ZipArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class ZipArchiveAdaptorTest
     private static final Object TEST_FILE_ENTRY_RENAMED_3 = "page-003.jpg";
 
     @Autowired
-    private ZipArchiveAdaptor archiveAdaptor;
+    private AbstractArchiveAdaptor<ZipFile> archiveAdaptor;
 
     private Comic comic;
 
@@ -160,5 +159,20 @@ public class ZipArchiveAdaptorTest
         assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
         assertEquals(TEST_FILE_ENTRY_2, result.getPage(1).getFilename());
         assertEquals(TEST_FILE_ENTRY_3, result.getPage(2).getFilename());
+    }
+
+    @Test
+    public void testGetFirstImageFileName() throws ArchiveAdaptorException
+    {
+        assertEquals(TEST_FILE_ENTRY_0, archiveAdaptor.getFirstImageFileName(TEST_CBZ_FILE));
+    }
+
+    @Test
+    public void testLoadSingleFile() throws ArchiveAdaptorException
+    {
+        byte[] result = archiveAdaptor.loadSingleFile(TEST_CBZ_FILE, TEST_FILE_ENTRY_1);
+
+        assertNotNull(result);
+        assertEquals(7443280, result.length);
     }
 }

@@ -42,7 +42,7 @@ public class SevenZipArchiveAdaptorTest
     private static final String TEST_FILE_ENTRY_2 = "example.png";
     private static final String TEST_FILE_ENTRY_1 = "example.jpg";
     private static final String TEST_FILE_ENTRY_0 = "example.jpeg";
-    private static final String TEST_CBZ_FILE = "target/test-classes/example.cb7";
+    private static final String TEST_CB7_FILE = "target/test-classes/example.cb7";
     private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
     private static final Object TEST_FILE_ENTRY_RENAMED_0 = "page-000.jpeg";
     private static final Object TEST_FILE_ENTRY_RENAMED_1 = "page-001.jpg";
@@ -58,13 +58,13 @@ public class SevenZipArchiveAdaptorTest
     public void setUp()
     {
         comic = new Comic();
-        comic.setFilename(TEST_CBZ_FILE);
+        comic.setFilename(TEST_CB7_FILE);
     }
 
     @Test(expected = ArchiveAdaptorException.class)
     public void testOpenFileNotFound() throws ArchiveAdaptorException
     {
-        comic.setFilename(TEST_CBZ_FILE.substring(1));
+        comic.setFilename(TEST_CB7_FILE.substring(1));
         archiveAdaptor.loadComic(comic);
     }
 
@@ -158,5 +158,11 @@ public class SevenZipArchiveAdaptorTest
         assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
         assertEquals(TEST_FILE_ENTRY_2, result.getPage(1).getFilename());
         assertEquals(TEST_FILE_ENTRY_3, result.getPage(2).getFilename());
+    }
+
+    @Test
+    public void testGetFirstImageFileName() throws ArchiveAdaptorException
+    {
+        assertEquals(TEST_FILE_ENTRY_0, archiveAdaptor.getFirstImageFileName(TEST_CB7_FILE));
     }
 }

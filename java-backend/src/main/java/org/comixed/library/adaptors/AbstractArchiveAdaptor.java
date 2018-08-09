@@ -189,7 +189,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
 
         try
         {
-            File comicFile = validateFile(comic);
+            File comicFile = this.validateFile(comic);
             archiveReference = this.openArchive(comicFile);
 
             // get the archive entries
@@ -229,8 +229,16 @@ public abstract class AbstractArchiveAdaptor<I> implements
     @Override
     public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException
     {
-        this.logger.debug("Loading single entry from archive: filename=" + comic.getFilename() + " entry=" + entryName);
-        I archiveReference = this.openArchive(new File(comic.getFilename()));
+        this.logger.debug("Loading single entry from comic: comic=" + comic.getFilename() + " entry=" + entryName);
+
+        return this.loadSingleFile(comic.getFilename(), entryName);
+    }
+
+    @Override
+    public byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException
+    {
+        this.logger.debug("Loading single entry from file: filename={} entry={}", filename, entryName);
+        I archiveReference = this.openArchive(new File(filename));
         byte[] result = this.loadSingleFileInternal(archiveReference, entryName);
         this.closeArchive(archiveReference);
 
@@ -239,7 +247,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
 
     /**
      * Loads the content for a single entry in the specified archive.
-     * 
+     *
      * @param archiveReference
      *            the archive
      * @param entryName
@@ -351,5 +359,31 @@ public abstract class AbstractArchiveAdaptor<I> implements
         if (file.isDirectory()) throw new ArchiveAdaptorException("Cannot open directory: " + file.getAbsolutePath());
 
         return file;
+    }
+
+    @Override
+    public String getFirstImageFileName(String filename) throws ArchiveAdaptorException
+    {
+        I archiveRef = this.openArchive(new File(filename));
+
+        List<String> entries = this.getEntryFilenames(archiveRef);
+        Collections.sort(entries);
+        String result = null;
+
+        for (String entry : entries)
+        {
+            byte[] content = this.loadSingleFileInternal(archiveRef, entry);
+            String contentType = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content));
+
+            if (contentType != null && FileTypeIdentifier.IMAGE_TYPES.contains(contentType))
+            {
+                result = entry;
+                break;
+            }
+        }
+
+        this.closeArchive(archiveRef);
+
+        return result;
     }
 }
