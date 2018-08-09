@@ -19,6 +19,9 @@
 
 package org.comixed.library.model;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+
 import java.io.InputStream;
 import java.util.Map;
 
@@ -42,6 +45,7 @@ public class ComicFileHandlerTest
 {
     private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
     private static final String TEST_COMIC_FILE_TYPE = "zip";
+    private static final String TEST_NON_ARCHIVE_FILENAME = "src/test/resources/example.jpg";
 
     @InjectMocks
     private ComicFileHandler handler;
@@ -142,5 +146,28 @@ public class ComicFileHandlerTest
         Mockito.verify(identifier, Mockito.times(1)).typeFor(input.capture());
         Mockito.verify(archiveAdaptors, Mockito.times(1)).get(TEST_COMIC_FILE_TYPE);
         Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
+    }
+
+    @Test
+    public void testGetArchiveAdaptorForUnknownComicType() throws ComicFileHandlerException
+    {
+        Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
+
+        assertNull(handler.getArchiveAdaptorFor(TEST_NON_ARCHIVE_FILENAME));
+
+        Mockito.verify(identifier, Mockito.times(1)).typeFor(Mockito.any(InputStream.class));
+    }
+
+    @Test
+    public void testGetArchiveAdaptorFor() throws ComicFileHandlerException
+    {
+
+        Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
+        Mockito.when(archiveAdaptors.get(Mockito.anyString())).thenReturn(archiveAdaptor);
+
+        assertSame(archiveAdaptor, handler.getArchiveAdaptorFor(TEST_NON_ARCHIVE_FILENAME));
+
+        Mockito.verify(identifier, Mockito.times(1)).typeFor(Mockito.any(InputStream.class));
+        Mockito.verify(archiveAdaptors, Mockito.times(1)).get(TEST_COMIC_FILE_TYPE);
     }
 }
