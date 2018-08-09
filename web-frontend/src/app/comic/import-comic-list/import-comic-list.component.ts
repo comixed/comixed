@@ -42,6 +42,8 @@ export class ImportComicListComponent implements OnInit {
   pending_imports = 0;
   waiting_on_imports = false;
   cover_size: number;
+  current_page = 1;
+  selected_file_count = 0;
 
   constructor(
     private comic_service: ComicService,
@@ -88,7 +90,7 @@ export class ImportComicListComponent implements OnInit {
     );
   }
 
-  onLoad(): void {
+  on_load(): void {
     const that = this;
     this.busy_title = 'Fetching List Of Comic Files...';
     this.busy = true;
@@ -97,6 +99,7 @@ export class ImportComicListComponent implements OnInit {
       files => {
         that.files = files;
         that.plural = this.files.length !== 1;
+        that.selected_file_count = 0;
       },
       error => {
         that.alert_service.show_error_message('Error while loading filenames...', error);
@@ -107,17 +110,23 @@ export class ImportComicListComponent implements OnInit {
     );
   }
 
-  toggleSelected(file: FileDetails): void {
+  toggle_comic_selection(file: FileDetails): void {
     file.selected = !file.selected;
+    if (file.selected) {
+      this.selected_file_count = this.selected_file_count + 1;
+    } else {
+      this.selected_file_count = this.selected_file_count - 1;
+    }
   }
 
-  selectAllFiles(): void {
+  select_all_files(): void {
     this.files.forEach((file) => {
       file.selected = true;
     });
+    this.selected_file_count = this.files.length;
   }
 
-  importFiles(): void {
+  import_selected_files(): void {
     const that = this;
     this.importing = true;
     const selectedFiles = this.files.filter(file => file.selected).map(file => file.filename);
