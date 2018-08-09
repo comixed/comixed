@@ -21,6 +21,8 @@ package org.comixed.library.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
@@ -41,6 +43,11 @@ import org.springframework.stereotype.Component;
 public class FileTypeIdentifier
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public static final List<String> IMAGE_TYPES = Arrays.asList(new String[]
+    {"jpeg",
+     "png",
+     "gif"});
 
     @Autowired
     private Tika tika;
