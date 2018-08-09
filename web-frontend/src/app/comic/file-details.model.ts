@@ -19,14 +19,17 @@
 
 export class FileDetails {
   filename: string;
+  base_filename: string;
   size: number;
   selected: boolean;
 
   constructor(
     filename: string,
+    base_filename: string,
     size: number,
   ) {
     this.filename = filename;
+    this.base_filename = base_filename;
     this.size = size;
     this.selected = false;
   }

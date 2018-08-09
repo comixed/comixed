@@ -19,15 +19,21 @@
 
 package org.comixed.library.model;
 
+import org.h2.store.fs.FileUtils;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class FileDetails
 {
     private String filename;
+    private String baseFilename;
     private long size;
 
     public FileDetails(String filename, long size)
     {
         super();
         this.filename = filename;
+        this.baseFilename = FileUtils.getName(filename);
         this.size = size;
     }
 
@@ -39,5 +45,11 @@ public class FileDetails
     public long getSize()
     {
         return size;
+    }
+
+    @JsonProperty("base_filename")
+    public String getBaseFilename()
+    {
+        return baseFilename;
     }
 }
