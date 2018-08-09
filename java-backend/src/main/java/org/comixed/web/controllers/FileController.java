@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.comixed.library.adaptors.ArchiveAdaptor;
+import org.comixed.library.adaptors.ArchiveAdaptorException;
+import org.comixed.library.model.ComicFileHandler;
+import org.comixed.library.model.ComicFileHandlerException;
 import org.comixed.library.model.FileDetails;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.tasks.AddComicWorkerTask;
@@ -58,6 +62,9 @@ public class FileController
 
     @Autowired
     private ComicRepository comicRepository;
+
+    @Autowired
+    private ComicFileHandler comicFileHandler;
 
     @Autowired
     private Worker worker;
@@ -117,6 +124,37 @@ public class FileController
                 }
             }
         }
+    }
+
+    @RequestMapping(value = "/import/cover",
+                    method = RequestMethod.GET)
+    public byte[] getImportFileCover(@RequestParam("filename") String filename) throws ComicFileHandlerException,
+                                                                                ArchiveAdaptorException
+    {
+        // for some reason, during development, this value ALWAYS had a trailing space...
+        filename = filename.trim();
+        ArchiveAdaptor archiveAdaptor = this.comicFileHandler.getArchiveAdaptorFor(filename);
+        byte[] result = null;
+
+        if (archiveAdaptor == null)
+        {
+            this.logger.debug("No archive adaptor available");
+        }
+        else
+        {
+            String entryName = archiveAdaptor.getFirstImageFileName(filename);
+            if (entryName == null)
+            {
+                this.logger.debug("No image files found");
+            }
+            else
+            {
+                result = archiveAdaptor.loadSingleFile(filename, entryName);
+            }
+        }
+
+        this.logger.debug("Returning {} bytes", result != null ? result.length : 0);
+        return result;
     }
 
     @RequestMapping(value = "/import/status",
