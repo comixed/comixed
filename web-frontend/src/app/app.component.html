@@ -1,38 +1,38 @@
-<nav class='navbar navbar-expand-lg navbar-light bg-light fixed-top'>
-  <div class='container-fluid'>
-    <div class='navbar-header'>
-      <button class="navbar-toggler" type="button"
-        data-toggle="collapse" data-target="#id-navbar-collapse"
-        aria-controls="id-navbar-collapse" aria-expanded="false"
-        aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <a class='navbar-brand'>ComixEd</a>
+<div class='container w-100 mx-10 justify-content-center'>
+  <nav class='navbar navbar-expand-lg navbar-light bg-light fixed-top'>
+    <div class='container-fluid'>
+      <div class='navbar-header'>
+        <button class="navbar-toggler" type="button"
+          data-toggle="collapse" data-target="#id-navbar-collapse"
+          aria-controls="id-navbar-collapse" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class='navbar-brand'>ComixEd</a>
+      </div>
+      <div id='id-navbar-collapse' class='collapse navbar-collapse'>
+        <ul class='nav navbar-nav'>
+          <li *ngIf='!isAuthenticated()' class='nav-item'><a
+            class='nav-link' [routerLink]='["login"]'>Login</a></li>
+          <li class='nav-item'><a class='nav-link'
+            [routerLink]='["home"]'>Home</a></li>
+          <li class='nav-item dropdown'><a
+            class="nav-link dropdown-toggle" href="#" id="comicDropdown"
+            role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">Comics</a>
+            <div class="dropdown-menu" aria-labelledby="comicDropdown">
+              <a class='dropdown-item' [routerLink]='["comics"]'>Library</a><a
+                *ngIf='is_admin()' class='dropdown-item'
+                [routerLink]='["import"]'>Import comics</a>
+            </div></li>
+          <li *ngIf='isAuthenticated()' class='nav-item'><a
+            class='nav-link' [routerLink]='["account"]'>Account</a></li>
+          <li *ngIf='isAuthenticated()' class='nav-item'><a
+            class='nav-link' (click)='logout()'>Logout</a></li>
+        </ul>
+      </div>
     </div>
-    <div id='id-navbar-collapse' class='collapse navbar-collapse'>
-      <ul class='nav navbar-nav'>
-        <li *ngIf='!isAuthenticated()' class='nav-item'><a
-          class='nav-link' [routerLink]='["login"]'>Login</a></li>
-        <li class='nav-item'><a class='nav-link'
-          [routerLink]='["home"]'>Home</a></li>
-        <li class='nav-item dropdown'><a
-          class="nav-link dropdown-toggle" href="#" id="comicDropdown"
-          role="button" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">Comics</a>
-          <div class="dropdown-menu" aria-labelledby="comicDropdown">
-            <a class='dropdown-item' [routerLink]='["comics"]'>Library</a><a
-              *ngIf='is_admin()' class='dropdown-item'
-              [routerLink]='["import"]'>Import comics</a>
-          </div></li>
-        <li *ngIf='isAuthenticated()' class='nav-item'><a
-          class='nav-link' [routerLink]='["account"]'>Account</a></li>
-        <li *ngIf='isAuthenticated()' class='nav-item'><a
-          class='nav-link' (click)='logout()'>Logout</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-<div class='container-fluid'>
+  </nav>
   <div class='row justify-content-center'>
     <div class='alert alert-dismissable {{alert_type}} w-75 text-center'
       role='alert' *ngIf='alert_message && alert_message.length > 0'>
@@ -40,7 +40,7 @@
         aria-label='close' (click)='clearErrorMessage()'>&times;</a>
     </div>
   </div>
-  <div class='row m-10'>
+  <div class='row m-10 justify-content-center'>
     <router-outlet></router-outlet>
   </div>
 </div>
