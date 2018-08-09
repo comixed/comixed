@@ -6,7 +6,8 @@
   <h2 class='text-center'>Fetching List Of Comic Files...</h2>
   <div id='busy_indicator'></div>
 </div>
-<div [class.import-backdrop]='busy || importing'>
+<div id='comic-selection-list'
+  [class.import-backdrop]='busy || importing'>
   <div class='row'>
     <div class='col-md-2'></div>
     <div class='col-md-10'>

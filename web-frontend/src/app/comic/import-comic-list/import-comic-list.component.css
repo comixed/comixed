@@ -1,3 +1,7 @@
 .import-backdrop {
 	opacity: 0.2 !important;
 }
+
+#comic-selection-list {
+	margin-bottom: 50px;
+}
