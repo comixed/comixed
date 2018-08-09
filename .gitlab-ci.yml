@@ -12,7 +12,7 @@ maven-build:
   script: 
     - Xvfb :99 -ac &
     - export DISPLAY=:99
-    - mvn package -B
+    - mvn clean test package jacoco:report -B
   artifacts:
     paths:
       - target/*.jar
