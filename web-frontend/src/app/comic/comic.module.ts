@@ -34,6 +34,7 @@ import {PageThumbnailComponent} from './page-thumbnail/page-thumbnail.component'
 import {ReadViewerComponent} from './read-viewer/read-viewer.component';
 import {SeriesFilterPipe} from './series-filter.pipe';
 import { PageDetailsComponent } from './page-details/page-details.component';
+import { ImportComicListEntryComponent } from './import-comic-list-entry/import-comic-list-entry.component';
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import { PageDetailsComponent } from './page-details/page-details.component';
     ReadViewerComponent,
     SeriesFilterPipe,
     PageDetailsComponent,
+    ImportComicListEntryComponent,
   ]
 })
 export class ComicModule {}
