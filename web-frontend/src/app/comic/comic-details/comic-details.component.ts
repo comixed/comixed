@@ -90,7 +90,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   }
 
   getImageURL(page_id: number): string {
-    return this.comic_service.geturl_for_page_by_id(page_id);
+    return this.comic_service.get_url_for_page_by_id(page_id);
   }
 
   getDownloadLink(): string {

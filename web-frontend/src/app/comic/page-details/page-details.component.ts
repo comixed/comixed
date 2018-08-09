@@ -64,7 +64,7 @@ export class PageDetailsComponent implements OnInit {
   }
 
   get_image_url_for_current_page(): string {
-    return this.comic_service.geturl_for_page_by_id(this.page.id);
+    return this.comic_service.get_url_for_page_by_id(this.page.id);
   }
 
   get_display_name_for_page_type(page_type: PageType): string {

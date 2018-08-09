@@ -23,6 +23,7 @@ import {FormBuilder, FormGroup, FormArray, Validators, AbstractControl} from '@a
 import {FileDetails} from '../file-details.model';
 import {ComicService} from '../comic.service';
 import {AlertService} from '../../alert.service';
+import {ImportComicListEntryComponent} from '../import-comic-list-entry/import-comic-list-entry.component';
 
 @Component({
   selector: 'app-import-comics',
@@ -40,6 +41,7 @@ export class ImportComicListComponent implements OnInit {
   display = 'none';
   pending_imports = 0;
   waiting_on_imports = false;
+  cover_size: number;
 
   constructor(
     private comic_service: ComicService,
@@ -76,6 +78,14 @@ export class ImportComicListComponent implements OnInit {
           that.waiting_on_imports = false;
         });
     }, 250);
+    this.comic_service.get_user_preference('cover_size').subscribe(
+      (cover_size: number) => {
+        this.cover_size = cover_size || 64;
+      },
+      (error: Error) => {
+        this.alert_service.show_error_message('Error loading user preference: cover_size', error);
+      }
+    );
   }
 
   onLoad(): void {

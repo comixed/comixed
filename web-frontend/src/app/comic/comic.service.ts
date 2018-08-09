@@ -35,7 +35,7 @@ import {FileDetails} from './file-details.model';
 
 @Injectable()
 export class ComicService {
-  private api_url = 'api';
+  private api_url = '/api';
   current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
   current_page: Subject<Page> = new BehaviorSubject<Page>(new Page());
   all_comics: Comic[] = [];
@@ -171,7 +171,7 @@ export class ComicService {
   }
 
   get_files_under_directory(directory: string): Observable<any> {
-    return this.http.get(`${this.api_url}/files/contents?directory=${directory}`);
+    return this.http.get(`${this.api_url}/files/contents?directory=${encodeURI(directory)}`);
   }
 
   block_page(page_hash: string): Observable<any> {
@@ -203,8 +203,14 @@ export class ComicService {
     return '/assets/img/missing.png';
   }
 
-  geturl_for_page_by_id(pageId: number): string {
+  get_url_for_page_by_id(pageId: number): string {
     return `${this.api_url}/pages/${pageId}/content`;
+  }
+
+  get_cover_url_for_file(filename: string): string {
+    // not fond of this, but encodeURI was NOT doing it for me...
+    const encoded_filename = filename.replace('#', '%23').replace('&', '%26');
+    return `${this.api_url}/files/import/cover?filename=` + encoded_filename;
   }
 
   get_download_link_for_comic(comicId: number): string {

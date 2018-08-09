@@ -58,7 +58,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   ngOnInit() {
     const that = this;
     this.update_all_are_deleted();
-    this.image_url = this.comic_service.geturl_for_page_by_id(this.pages[0].id);
+    this.image_url = this.comic_service.get_url_for_page_by_id(this.pages[0].id);
     this.comic_service.get_user_preference('cover_size').subscribe(
       (cover_size: number) => {
         that.image_size = cover_size || 175;

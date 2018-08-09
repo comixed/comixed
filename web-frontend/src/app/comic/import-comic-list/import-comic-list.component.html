@@ -6,8 +6,7 @@
   <h2 class='text-center'>Fetching List Of Comic Files...</h2>
   <div id='busy_indicator'></div>
 </div>
-<div class='ui raised segment'
-  [class.import-backdrop]='busy || importing'>
+<div [class.import-backdrop]='busy || importing'>
   <div class='row'>
     <div class='col-md-2'></div>
     <div class='col-md-10'>
@@ -38,31 +37,24 @@
     </div>
   </div>
   <div *ngIf='this.files && this.files.length > 0'>
-    <table class='ui celled table'>
-      <thead>
-        <tr>
-          <th>Filename</th>
-          <th>Size</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td></td>
-          <td></td>
-          <td><button *ngIf='this.files.length > 0'
-              class='btn btn-primary' (click)='selectAllFiles()'>Select
-              All</button></td>
-        </tr>
-        <tr *ngFor='let file of this.files'>
-          <td>{{file.filename}}</td>
-          <td>{{file.size}}</td>
-          <td><button *ngIf='!file.selected'
-              class='btn btn-primary' (click)='file.selected = true'>Select</button>
-            <button *ngIf='file.selected' class='btn btn-danger'
-              (click)='file.selected = false'>Deselect</button></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class='row py-3'>
+      <div class='col'></div>
+      <div class='col-1 justify-content-center'>
+        <button class='btn btn-sm btn-primary'
+          (click)='selectAllFiles()'>Select All</button>
+      </div>
+    </div>
+    <div *ngFor='let file of this.files' class='row pb-3'>
+      <div class='col'>
+        <app-import-comic-list-entry [file_details]='file'
+          [cover_size]='cover_size'></app-import-comic-list-entry>
+      </div>
+      <div class='col-1 justify-content-center'>
+        <button *ngIf='!file.selected' class='btn btn-sm btn-primary'
+          (click)='file.selected = true'>Select</button>
+        <button *ngIf='file.selected' class='btn btn-sm btn-danger'
+          (click)='file.selected = false'>Deselect</button>
+      </div>
+    </div>
   </div>
 </div>

@@ -40,7 +40,7 @@ export class ReadViewerComponent implements OnInit {
   }
 
   getImageURL(page_id: number): string {
-    return this.comicService.geturl_for_page_by_id(page_id);
+    return this.comicService.get_url_for_page_by_id(page_id);
   }
 
   getCurrentPageURL(): string {
