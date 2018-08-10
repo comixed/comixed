@@ -19,6 +19,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {LoadingModule} from 'ngx-loading';
 
 import {ComicService} from './comic/comic.service';
 import {AlertService} from './alert.service';
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
   title = 'ComixEd';
   alert_type: string;
   alert_message: string;
+  busy = false;
   comic_count = 0;
   read_count = 0;
 

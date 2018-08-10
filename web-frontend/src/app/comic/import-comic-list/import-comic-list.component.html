@@ -1,11 +1,3 @@
-<div *ngIf='importing'>
-  <h2 class='text-center'>Importing {{pending_imports}} Comics...</h2>
-  <div id='busy_indicator'></div>
-</div>
-<div *ngIf='busy'>
-  <h2 class='text-center'>Fetching List Of Comic Files...</h2>
-  <div id='busy_indicator'></div>
-</div>
 <div id='comic-selection-list'
   [class.import-backdrop]='busy || importing'>
   <div class='row'>
