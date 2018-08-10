@@ -18,14 +18,14 @@
             type='text' id='directory' placeholder='Root Directory'
             [formControl]='directoryForm.controls["directory"]'>
           <button type='submit' class='btn btn-primary'>Load</button>
-          <button *ngIf='this.files && this.files.length != 0'
+          <button *ngIf='this.file_details.length != 0'
             class='btn btn-default' type='button'
             (click)='import_selected_files()'>Import</button>
         </div>
       </form>
     </div>
   </div>
-  <div *ngIf='this.files && this.files.length > 0'>
+  <div *ngIf='this.file_details.length > 0'>
     <div class='row py-3'>
       <div class='col'></div>
       <div class='col-1 justify-content-center'>
@@ -34,26 +34,28 @@
       </div>
     </div>
     <div
-      *ngFor='let file of this.files | paginate: { itemsPerPage: 25, currentPage: current_page }'
+      *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: 25, currentPage: current_page }'
       class='row pb-3'>
       <div class='col'>
-        <app-import-comic-list-entry [file_details]='file'
+        <app-import-comic-list-entry [file_details]='file_detail'
           [cover_size]='cover_size'></app-import-comic-list-entry>
       </div>
       <div class='col-1 justify-content-center'>
-        <button *ngIf='!file.selected' class='btn btn-sm btn-primary'
-          (click)='toggle_comic_selection(file)'>Select</button>
-        <button *ngIf='file.selected' class='btn btn-sm btn-danger'
-          (click)='toggle_comic_selection(file)'>Deselect</button>
+        <button *ngIf='!file_detail.selected'
+          class='btn btn-sm btn-primary'
+          (click)='toggle_comic_selection(file_detail)'>Select</button>
+        <button *ngIf='file_detail.selected'
+          class='btn btn-sm btn-danger'
+          (click)='toggle_comic_selection(file_detail)'>Deselect</button>
       </div>
     </div>
   </div>
 </div>
-<div *ngIf='this.files.length > 0'
+<div *ngIf='file_details.length > 0'
   class='fixed-bottom w-100 border pb-3 bg-secondary text-white justify-content-center'>
   <div class='row'>
     <div class='col-4'>You have selected {{selected_file_count}}
-      of {{files.length}} comics found.</div>
+      of {{file_details.length}} comics found.</div>
     <div class='col-2'>
       <button class='btn btn-sm btn-info'
         (click)='show_selections_only = !show_selections_only'>{{

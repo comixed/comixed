@@ -25,6 +25,8 @@ import {ComicService} from '../comic.service';
 import {AlertService} from '../../alert.service';
 import {ImportComicListEntryComponent} from '../import-comic-list-entry/import-comic-list-entry.component';
 
+import {SelectedForImportPipe} from './selected-for-import.pipe';
+
 @Component({
   selector: 'app-import-comics',
   templateUrl: './import-comic-list.component.html',
@@ -33,7 +35,7 @@ import {ImportComicListEntryComponent} from '../import-comic-list-entry/import-c
 export class ImportComicListComponent implements OnInit {
   directoryForm: FormGroup;
   directory: AbstractControl;
-  files: FileDetails[];
+  file_details: FileDetails[];
   importing = false;
   plural = true;
   busy = false;
@@ -97,9 +99,10 @@ export class ImportComicListComponent implements OnInit {
     this.busy = true;
     const directory = this.directory.value;
     this.comic_service.get_files_under_directory(directory).subscribe(
-      files => {
-        that.files = files;
-        that.plural = this.files.length !== 1;
+      (files: FileDetails[]) => {
+        that.file_details = files;
+        that.file_details.forEach((file_detail: FileDetails) => file_detail.selected = false);
+        that.plural = this.file_details.length !== 1;
         that.selected_file_count = 0;
       },
       error => {
@@ -121,16 +124,16 @@ export class ImportComicListComponent implements OnInit {
   }
 
   select_all_files(): void {
-    this.files.forEach((file) => {
+    this.file_details.forEach((file) => {
       file.selected = true;
     });
-    this.selected_file_count = this.files.length;
+    this.selected_file_count = this.file_details.length;
   }
 
   import_selected_files(): void {
     const that = this;
     this.importing = true;
-    const selectedFiles = this.files.filter(file => file.selected).map(file => file.filename);
+    const selectedFiles = this.file_details.filter(file => file.selected).map(file => file.filename);
     this.comic_service.import_files_into_library(selectedFiles).subscribe(
       () => {},
       error => {

@@ -33,8 +33,9 @@ import {DuplicatePageListEntryComponent} from './duplicate-page-list-entry/dupli
 import {PageThumbnailComponent} from './page-thumbnail/page-thumbnail.component';
 import {ReadViewerComponent} from './read-viewer/read-viewer.component';
 import {SeriesFilterPipe} from './series-filter.pipe';
-import { PageDetailsComponent } from './page-details/page-details.component';
-import { ImportComicListEntryComponent } from './import-comic-list-entry/import-comic-list-entry.component';
+import {PageDetailsComponent} from './page-details/page-details.component';
+import {ImportComicListEntryComponent} from './import-comic-list-entry/import-comic-list-entry.component';
+import {SelectedForImportPipe} from './import-comic-list/selected-for-import.pipe';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import { ImportComicListEntryComponent } from './import-comic-list-entry/import-
     SeriesFilterPipe,
     PageDetailsComponent,
     ImportComicListEntryComponent,
+    SelectedForImportPipe,
   ]
 })
 export class ComicModule {}
