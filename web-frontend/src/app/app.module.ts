@@ -27,13 +27,16 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import {
+  LoadingModule,
+  ANIMATION_TYPES,
+} from 'ngx-loading';
 
 import {ComicModule} from './comic/comic.module';
 import {MainPageComponent} from './main-page/main-page.component';
 import {LoginComponent} from './login/login.component';
 import {AccountComponent} from './account/account.component';
 import {AlertService} from './alert.service';
-
 
 @NgModule({
   declarations: [
@@ -50,6 +53,10 @@ import {AlertService} from './alert.service';
     ComicModule,
     FormsModule,
     ReactiveFormsModule,
+    LoadingModule.forRoot({
+      animationType: ANIMATION_TYPES.pulse,
+      fullScreenBackdrop: true,
+    }),
   ],
   providers: [
     AlertService,
