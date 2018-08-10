@@ -44,6 +44,7 @@ export class ImportComicListComponent implements OnInit {
   cover_size: number;
   current_page = 1;
   selected_file_count = 0;
+  show_selections_only = false;
 
   constructor(
     private comic_service: ComicService,
