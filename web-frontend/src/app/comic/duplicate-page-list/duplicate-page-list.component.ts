@@ -20,6 +20,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import {ComicService} from '../comic.service';
+import {AlertService} from '../../alert.service';
 import {Page} from '../page.model';
 import {Comic} from '../comic.model';
 import {DuplicatePageListEntryComponent} from '../duplicate-page-list-entry/duplicate-page-list-entry.component';
@@ -37,20 +38,22 @@ export class DuplicatePageListComponent implements OnInit {
   protected page_count = 0;
   protected comic_count = 0;
   protected show_consolidation_div = true;
-  protected working = Array<any>();
+  protected work_queue = Array<any>();
 
   constructor(
     private comic_service: ComicService,
+    private alert_service: AlertService,
   ) {}
 
   ngOnInit() {
     const that = this;
-    this.working.push(true);
+    this.work_queue.push(true);
+    this.alert_service.show_busy_message('Loading Duplicate Pages...');
     this.comic_service.get_duplicate_page_list().subscribe(
       (pages: Page[]) => {
         const comic_ids = [];
         pages.forEach((page) => {
-          that.working.push(true);
+          that.work_queue.push(true);
           // if this is the first time we've seen this hash, register it and create the page array
           if (that.page_hashes.includes(page.hash) === false) {
             that.page_count = that.page_count + 1;
@@ -68,16 +71,18 @@ export class DuplicatePageListComponent implements OnInit {
               that.comics_by_page_hash[page.hash].push(comic);
               that.comic_count = that.comic_count + 1;
               that.pages_for_comic_id_by_page_hash[page.hash][comic.id] = page;
-              that.working.pop();
+              that.work_queue.pop();
+              if (that.work_queue.length === 0) {
+                this.alert_service.show_busy_message('');
+              }
             }
           );
         });
-        that.working.pop();
+        that.work_queue.pop();
+        if (that.work_queue.length === 0) {
+          this.alert_service.show_busy_message('');
+        }
       });
-  }
-
-  is_working(): boolean {
-    return this.working.length > 0;
   }
 
   get_title_for_hash(page_hash): string {
