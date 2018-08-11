@@ -38,8 +38,6 @@ export class ImportComicListComponent implements OnInit {
   file_details: FileDetails[];
   importing = false;
   plural = true;
-  busy = false;
-  busy_title: string;
   display = 'none';
   pending_imports = 0;
   waiting_on_imports = false;
@@ -59,6 +57,7 @@ export class ImportComicListComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
+    this.alert_service.show_busy_message('');
     setInterval(() => {
       // don't try to get the pending imports if we're already doing it...
       if (that.waiting_on_imports === true) {
@@ -67,19 +66,14 @@ export class ImportComicListComponent implements OnInit {
       that.waiting_on_imports = true;
       that.comic_service.get_number_of_pending_imports().subscribe(
         count => {
-          that.pending_imports = count;
-          if (count > 0) {
-            that.busy_title = 'Importing ' + count + ' More Comic' + (that.plural ? 's' : '') + '...';
-            that.importing = true;
-          } else {
-            that.importing = false;
+          if (count === 0) {
+            that.waiting_on_imports = false;
           }
+          that.pending_imports = count;
         },
         error => {
           that.alert_service.show_error_message('Error getting the number of pending imports...', error);
-          that.importing = false;
-        },
-        () => {
+          that.alert_service.show_busy_message('');
           that.waiting_on_imports = false;
         });
     }, 250);
@@ -95,8 +89,7 @@ export class ImportComicListComponent implements OnInit {
 
   on_load(): void {
     const that = this;
-    this.busy_title = 'Fetching List Of Comic Files...';
-    this.busy = true;
+    this.alert_service.show_busy_message('Fetching List Of Comic Files...');
     const directory = this.directory.value;
     this.comic_service.get_files_under_directory(directory).subscribe(
       (files: FileDetails[]) => {
@@ -104,12 +97,12 @@ export class ImportComicListComponent implements OnInit {
         that.file_details.forEach((file_detail: FileDetails) => file_detail.selected = false);
         that.plural = this.file_details.length !== 1;
         that.selected_file_count = 0;
+        that.alert_service.show_info_message('Fetched ' + that.file_details.length + ' comic' + (that.plural ? 's' : '') + '...');
+        that.alert_service.show_busy_message('');
       },
       error => {
         that.alert_service.show_error_message('Error while loading filenames...', error);
-      },
-      () => {
-        that.busy = false;
+        that.alert_service.show_busy_message('');
       }
     );
   }
@@ -133,8 +126,8 @@ export class ImportComicListComponent implements OnInit {
   import_selected_files(): void {
     const that = this;
     this.importing = true;
-    const selectedFiles = this.file_details.filter(file => file.selected).map(file => file.filename);
-    this.comic_service.import_files_into_library(selectedFiles).subscribe(
+    const selected_files = this.file_details.filter(file => file.selected).map(file => file.filename);
+    this.comic_service.import_files_into_library(selected_files).subscribe(
       () => {},
       error => {
         this.alert_service.show_error_message('Failed to get the list of files...', error);
