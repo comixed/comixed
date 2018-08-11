@@ -1,17 +1,17 @@
 /*
  * ComixEd - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
@@ -23,13 +23,16 @@ import java.io.File;
 import java.util.Locale;
 
 import org.comixed.library.adaptors.FilenameScraperAdaptor;
+import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
 import org.comixed.library.model.ComicSelectionModel;
+import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -48,10 +51,16 @@ public class AddComicWorkerTask extends AbstractWorkerTask
     private MessageSource messageSource;
 
     @Autowired
+    private ObjectFactory<Comic> comicFactory;
+
+    @Autowired
     private ComicFileHandler comicFileHandler;
 
     @Autowired
     private ComicRepository comicRepository;
+
+    @Autowired
+    private BlockedPageHashRepository blockedPageHashRepository;
 
     @Autowired
     private ComicSelectionModel comicSelectionModel;
@@ -61,44 +70,74 @@ public class AddComicWorkerTask extends AbstractWorkerTask
 
     File file;
 
-    @Override
-    public void startTask() throws WorkerTaskException
+    private boolean deleteBlockedPages;
+
+    /**
+     * Sets whether blocked pages are marked as deleted.
+     *
+     * @param deleteBlockedPages
+     *            the flag
+     */
+    public void setDeleteBlockedPages(boolean deleteBlockedPages)
     {
-        logger.debug("Adding file to library: " + file);
-
-        Comic result = comicRepository.findByFilename(this.file.getAbsolutePath());
-        if (result != null)
-        {
-            logger.debug("Comic already imported: " + file.getAbsolutePath());
-            return;
-        }
-
-        try
-        {
-            showStatusText(messageSource.getMessage("status.comic.add", new Object[]
-            {file.getAbsoluteFile()}, Locale.getDefault()));
-            result = new Comic();
-            result.setFilename(this.file.getAbsolutePath());
-            comicFileHandler.loadComic(result);
-            filenameScraper.execute(result);
-            comicRepository.save(result);
-            comicSelectionModel.reload();
-        }
-        catch (ComicFileHandlerException error)
-        {
-            throw new WorkerTaskException("Failed to load comic", error);
-        }
+        this.deleteBlockedPages = deleteBlockedPages;
     }
 
     /**
      * Sets the name of the file to be added.
-     * 
+     *
      * @param file
      *            the file
      */
     public void setFile(File file)
     {
-        logger.debug("Setting filename: " + file.getName());
+        this.logger.debug("Setting filename: " + file.getName());
         this.file = file;
+    }
+
+    @Override
+    public void startTask() throws WorkerTaskException
+    {
+        this.logger.debug("Adding file to library: " + this.file);
+
+        Comic result = this.comicRepository.findByFilename(this.file.getAbsolutePath());
+        if (result != null)
+        {
+            this.logger.debug("Comic already imported: " + this.file.getAbsolutePath());
+            return;
+        }
+
+        try
+        {
+            this.showStatusText(this.messageSource.getMessage("status.comic.add", new Object[]
+            {this.file.getAbsoluteFile()}, Locale.getDefault()));
+            result = this.comicFactory.getObject();
+            result.setFilename(this.file.getAbsolutePath());
+            this.comicFileHandler.loadComic(result);
+            this.filenameScraper.execute(result);
+            if (this.deleteBlockedPages)
+            {
+                this.logger.debug("Looking for blocked pages");
+                for (int index = 0;
+                     index < result.getPageCount();
+                     index++)
+                {
+                    String hash = result.getPage(index).getHash();
+                    BlockedPageHash blocked = this.blockedPageHashRepository.findByHash(hash);
+
+                    if (blocked != null)
+                    {
+                        this.logger.debug("Marking blocked page as deleted: hash={}", hash);
+                        result.getPage(index).markDeleted(true);
+                    }
+                }
+            }
+            this.comicRepository.save(result);
+            this.comicSelectionModel.reload();
+        }
+        catch (ComicFileHandlerException error)
+        {
+            throw new WorkerTaskException("Failed to load comic", error);
+        }
     }
 }
