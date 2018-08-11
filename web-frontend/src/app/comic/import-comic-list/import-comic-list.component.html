@@ -1,4 +1,8 @@
-<div id='comic-selection-list'>
+<div *ngIf='pending_imports > 0'>
+  <h2>There {{plural_imports() ? 'Are' : 'Is'}} {{pending_imports |
+    number}} Comic{{plural_imports() ? 's' : ''}} To Import...</h2>
+</div>
+<div *ngIf='pending_imports === 0'>
   <div class='row'>
     <div class='col-md-2'></div>
     <div class='col-md-10'>
@@ -9,8 +13,8 @@
             type='text' id='directory' placeholder='Root Directory'
             [formControl]='directoryForm.controls["directory"]'>
           <button type='submit' class='btn btn-primary'>Load</button>
-          <button *ngIf='this.file_details.length != 0'
-            class='btn btn-default' type='button'
+          <button *ngIf='selected_file_count > 0'
+            class='btn btn-secondary' type='button'
             (click)='import_selected_files()'>Import</button>
         </div>
       </form>
@@ -41,20 +45,20 @@
       </div>
     </div>
   </div>
-</div>
-<div *ngIf='file_details.length > 0'
-  class='fixed-bottom w-100 border pb-3 bg-secondary text-white justify-content-center'>
-  <div class='row'>
-    <div class='col-4'>You have selected {{selected_file_count}}
-      of {{file_details.length}} comics found.</div>
-    <div class='col-2'>
-      <button class='btn btn-sm btn-info'
-        (click)='show_selections_only = !show_selections_only'>{{
-        show_selections_only ? 'Show All Comics' : 'Show Selected
-        Comics'}}</button>
-    </div>
-    <div class='col'>
-      <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+  <div *ngIf='file_details.length > 0'
+    class='fixed-bottom w-100 border pb-3 bg-secondary text-white justify-content-center'>
+    <div class='row'>
+      <div class='col-4'>You have selected {{selected_file_count}}
+        of {{file_details.length}} comics found.</div>
+      <div class='col-2'>
+        <button class='btn btn-sm btn-info'
+          (click)='show_selections_only = !show_selections_only'>{{
+          show_selections_only ? 'Show All Comics' : 'Show Selected
+          Comics'}}</button>
+      </div>
+      <div class='col'>
+        <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+      </div>
     </div>
   </div>
 </div>

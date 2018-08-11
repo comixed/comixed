@@ -66,14 +66,13 @@ export class ImportComicListComponent implements OnInit {
       that.waiting_on_imports = true;
       that.comic_service.get_number_of_pending_imports().subscribe(
         count => {
-          if (count === 0) {
-            that.waiting_on_imports = false;
-          }
           that.pending_imports = count;
         },
         error => {
           that.alert_service.show_error_message('Error getting the number of pending imports...', error);
           that.alert_service.show_busy_message('');
+        },
+        () => {
           that.waiting_on_imports = false;
         });
     }, 250);
@@ -127,12 +126,22 @@ export class ImportComicListComponent implements OnInit {
     const that = this;
     this.importing = true;
     const selected_files = this.file_details.filter(file => file.selected).map(file => file.filename);
+    this.alert_service.show_busy_message('Preparing to import ' + selected_files + ' comics...');
     this.comic_service.import_files_into_library(selected_files).subscribe(
-      () => {},
+      () => {
+        this.file_details = [];
+      },
       error => {
         this.alert_service.show_error_message('Failed to get the list of files...', error);
         that.importing = false;
+      },
+      () => {
+        this.alert_service.show_busy_message('');
       }
     );
+  }
+
+  plural_imports(): boolean {
+    return (this.pending_imports !== 1);
   }
 }
