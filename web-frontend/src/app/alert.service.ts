@@ -23,6 +23,7 @@ import {Injectable, EventEmitter} from '@angular/core';
 export class AlertService {
   error_messages: EventEmitter<string> = new EventEmitter();
   info_messages: EventEmitter<string> = new EventEmitter();
+  busy_messages: EventEmitter<string> = new EventEmitter();
 
   constructor() {}
 
@@ -36,5 +37,9 @@ export class AlertService {
     if (error) {
       console.log('Context:', error);
     }
+  }
+
+  show_busy_message(message: string): void {
+    this.busy_messages.emit(message);
   }
 }
