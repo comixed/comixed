@@ -152,11 +152,18 @@ public class Worker implements
      */
     public int getCountFor(Class<? extends WorkerTask> taskClass)
     {
+        this.logger.debug("Getting worker queue count: class={}", taskClass.getName());
+        long started = System.currentTimeMillis();
+        this.logger.debug("Waiting to get semaphore lock");
         synchronized (this.semaphore)
         {
-            if (this.queue.isEmpty() || !this.taskCounts.containsKey(taskClass)) return 0;
+            logger.debug("Got the lock in {}ms", (System.currentTimeMillis() - started));
+            int result = (this.queue.isEmpty()
+                          || !this.taskCounts.containsKey(taskClass)) ? 0 : this.taskCounts.get(taskClass);
 
-            return this.taskCounts.get(taskClass);
+            logger.debug("There are {} instances", result);
+
+            return result;
         }
     }
 
@@ -196,6 +203,8 @@ public class Worker implements
         this.fireWorkerStateChangedEvent();
         while (this.state != State.STOP)
         {
+            WorkerTask currentTask = null;
+
             synchronized (this.semaphore)
             {
                 if (this.queue.isEmpty())
@@ -216,29 +225,37 @@ public class Worker implements
                 }
                 if (!this.queue.isEmpty() && (this.state == State.RUNNING))
                 {
-                    WorkerTask task = this.queue.poll();
-                    this.logger.debug("Popping task of type {}", task.getClass());
-                    int count = this.taskCounts.get(task.getClass()) - 1;
-                    this.taskCounts.put(task.getClass(), count);
-                    this.logger.debug("There are now {} tasks of type {}", count, task.getClass());
+                    currentTask = this.queue.poll();
+                    this.logger.debug("Popping task of type {}", currentTask.getClass());
+                    int count = this.taskCounts.get(currentTask.getClass()) - 1;
+                    this.taskCounts.put(currentTask.getClass(), count);
+                    this.logger.debug("There are now {} tasks of type {}", count, currentTask.getClass());
                     this.fireQueueChangedEvent();
-                    try
-                    {
-                        this.logger.debug("Starting task: " + task);
-                        long start = System.currentTimeMillis();
-                        task.startTask();
-                        this.logger.debug("Finished task: " + task + " [" + (System.currentTimeMillis() - start)
-                                          + "ms]");
-                    }
-                    catch (WorkerTaskException error)
-                    {
-                        this.logger.debug("Failed to complete task", error);
-                    }
+                }
+                this.semaphore.notifyAll();
+            }
+
+            // if we have a task then run it
+            if (currentTask != null)
+            {
+
+                try
+                {
+                    this.logger.debug("Starting task: " + currentTask);
+                    long start = System.currentTimeMillis();
+                    currentTask.startTask();
+                    this.logger.debug("Finished task: " + currentTask + " [" + (System.currentTimeMillis() - start)
+                                      + "ms]");
+                }
+                catch (WorkerTaskException error)
+                {
+                    this.logger.debug("Failed to complete task", error);
                 }
             }
         }
         this.logger.debug("Stop processing the work queue");
         this.fireWorkerStateChangedEvent();
+
     }
 
     /**
