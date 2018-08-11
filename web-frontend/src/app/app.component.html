@@ -1,7 +1,5 @@
 <div class='container w-100 mx-10 justify-content-center'>
-  <div class='container'>
-    <ngx-loading [show]='busy'></ngx-loading>
-  </div>
+  <ngx-loading [show]='busy'>{{busy_message}}</ngx-loading>
   <nav class='navbar navbar-expand-lg navbar-light bg-light fixed-top'>
     <div class='container-fluid'>
       <div class='navbar-header'>
@@ -46,15 +44,15 @@
   <div class='row m-10 justify-content-center'>
     <router-outlet></router-outlet>
   </div>
+  <footer class='bg-light fixed-bottom page-footer font-small'>
+    <div class='row'>
+      <div class='col-sm-4 align-middle mx-3'>
+        <strong>Comics:</strong> {{comic_count}}/{{read_count}}
+      </div>
+      <div class='col-md-4'>
+        <div class='footer-copyright align-middle text-center'>Copyright
+          &copy; 2017, 2018 The ComixEd Project Team</div>
+      </div>
+    </div>
+  </footer>
 </div>
-<footer class='bg-light fixed-bottom page-footer font-small'>
-  <div class='row'>
-    <div class='col-sm-4 align-middle mx-3'>
-      <strong>Comics:</strong> {{comic_count}}/{{read_count}}
-    </div>
-    <div class='col-md-4'>
-      <div class='footer-copyright align-middle text-center'>Copyright
-        &copy; 2017, 2018 The ComixEd Project Team</div>
-    </div>
-  </div>
-</footer>

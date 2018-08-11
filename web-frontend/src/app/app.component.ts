@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
   title = 'ComixEd';
   alert_type: string;
   alert_message: string;
+  busy_message: string;
   busy = false;
   comic_count = 0;
   read_count = 0;
@@ -56,6 +57,16 @@ export class AppComponent implements OnInit {
       (message: string) => {
         this.alert_type = 'alert-info';
         this.alert_message = message;
+      }
+    );
+    this.alert_service.busy_messages.subscribe(
+      (message: string) => {
+        if (message.length > 0) {
+          this.busy_message = message;
+          this.busy = true;
+        } else {
+          this.busy = false;
+        }
       }
     );
     setInterval(() => {
