@@ -35,6 +35,7 @@ import {SelectedForImportPipe} from './selected-for-import.pipe';
 export class ImportComicListComponent implements OnInit {
   directoryForm: FormGroup;
   directory: AbstractControl;
+  delete_blocked_pages: AbstractControl;
   file_details: FileDetails[];
   importing = false;
   plural = true;
@@ -51,8 +52,12 @@ export class ImportComicListComponent implements OnInit {
     private alert_service: AlertService,
     builder: FormBuilder,
   ) {
-    this.directoryForm = builder.group({'directory': ['', Validators.required]});
+    this.directoryForm = builder.group({
+      'directory': ['', Validators.required],
+      'delete_blocked_pages': [''],
+    });
     this.directory = this.directoryForm.controls['directory'];
+    this.delete_blocked_pages = this.directoryForm.controls['delete_blocked_pages'];
   }
 
   ngOnInit() {
@@ -127,13 +132,14 @@ export class ImportComicListComponent implements OnInit {
     this.importing = true;
     const selected_files = this.file_details.filter(file => file.selected).map(file => file.filename);
     this.alert_service.show_busy_message('Preparing to import ' + selected_files + ' comics...');
-    this.comic_service.import_files_into_library(selected_files).subscribe(
+    this.comic_service.import_files_into_library(selected_files, this.delete_blocked_pages.value).subscribe(
       () => {
         this.file_details = [];
       },
       error => {
-        this.alert_service.show_error_message('Failed to get the list of files...', error);
+        this.alert_service.show_error_message('Failed to import comics...', error);
         that.importing = false;
+        that.alert_service.show_busy_message('');
       },
       () => {
         this.alert_service.show_busy_message('');

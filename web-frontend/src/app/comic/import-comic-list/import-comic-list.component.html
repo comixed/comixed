@@ -1,26 +1,42 @@
 <div *ngIf='pending_imports > 0'>
   <h2>There {{plural_imports() ? 'Are' : 'Is'}} {{pending_imports |
     number}} Comic{{plural_imports() ? 's' : ''}} To Import...</h2>
+  <div *ngIf='delete_blocked_pages' class='border col-4 m-10'>
+    <p>
+      Blocked pages in those comics will be automatically marked as <em>deleted</em>...
+    </p>
+  </div>
 </div>
 <div *ngIf='pending_imports === 0'>
-  <div class='row'>
-    <div class='col-md-2'></div>
-    <div class='col-md-10'>
-      <h2 class='ui header'>Import Comics</h2>
-      <form #f='ngForm' (ngSubmit)='on_load()' class='ui form'>
-        <div class='field'>
-          <label for='directory'>Root directory:</label> <input
-            type='text' id='directory' placeholder='Root Directory'
-            [formControl]='directoryForm.controls["directory"]'>
-          <button type='submit' class='btn btn-primary'>Load</button>
-          <button *ngIf='selected_file_count > 0'
-            class='btn btn-secondary' type='button'
-            (click)='import_selected_files()'>Import</button>
-        </div>
-      </form>
-    </div>
+  <h2 class='text-center'>Import New Comics</h2>
+  <div class='m-10 border'>
+    <form #f='ngForm' (ngSubmit)='on_load()' class='ui form'>
+      <div>
+        <dl>
+          <dt>Directory containing new comics:</dt>
+          <dd>
+            <input type='text' id='directory'
+              placeholder='c:/path/to/files'
+              [formControl]='directoryForm.controls["directory"]'>
+          </dd>
+        </dl>
+      </div>
+      <div class='container'>
+        <button type='submit' class='btn btn-primary'>Load</button>
+        <button *ngIf='selected_file_count > 0'
+          class='btn btn-secondary' type='button'
+          (click)='import_selected_files()'>Import</button>
+      </div>
+      <div *ngIf='selected_file_count > 0'>
+        <input id='delete_blocked_pages_checkbox' type='checkbox'
+          class='form-check-input'
+          [formControl]='directoryForm.controls["delete_blocked_pages"]'><label
+          for='delete_blocked_pages_checkbox' class='form-check-label'>Delete
+          blocked pages when found.</label>
+      </div>
+    </form>
   </div>
-  <div *ngIf='this.file_details.length > 0'>
+  <div *ngIf='file_details.length > 0'>
     <div class='row py-3'>
       <div class='col'></div>
       <div class='col-1 justify-content-center'>

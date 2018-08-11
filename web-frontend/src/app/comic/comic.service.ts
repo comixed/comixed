@@ -187,8 +187,10 @@ export class ComicService {
     return this.http.delete(`${this.api_url}/comics/${comic.id}`);
   }
 
-  import_files_into_library(filenames: string[]): Observable<any> {
-    return this.http.post(`${this.api_url}/files/import`, filenames);
+  import_files_into_library(filenames: string[], delete_blocked_pages: boolean): Observable<any> {
+    filenames.forEach((filename, index, source) => source[index] = filename.replace(',', '%2C'));
+    const params = new HttpParams().set('filenames', filenames.toString()).set('delete_blocked_pages', delete_blocked_pages.toString());
+    return this.http.post(`${this.api_url}/files/import`, params);
   }
 
   get_number_of_pending_imports(): Observable<any> {
