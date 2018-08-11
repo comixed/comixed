@@ -21,6 +21,7 @@ package org.comixed.web.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -131,7 +131,8 @@ public class FileController
     public byte[] getImportFileCover(@RequestParam("filename") String filename) throws ComicFileHandlerException,
                                                                                 ArchiveAdaptorException
     {
-        // for some reason, during development, this value ALWAYS had a trailing space...
+        // for some reason, during development, this value ALWAYS had a trailing
+        // space...
         filename = filename.trim();
         ArchiveAdaptor archiveAdaptor = this.comicFileHandler.getArchiveAdaptorFor(filename);
         byte[] result = null;
@@ -173,12 +174,24 @@ public class FileController
     @RequestMapping(value = "/import",
                     method = RequestMethod.POST)
     @Secured("ROLE_ADMIN")
-    public void importComicFiles(@RequestBody String[] filenames)
+    public void importComicFiles(@RequestParam("filenames") String[] filenames,
+                                 @RequestParam("delete_blocked_pages") boolean deleteBlockedPages)
     {
         this.logger.debug("Queueing {} files for import", filenames.length);
 
         QueueComicsWorkerTask task = this.taskFactory.getObject();
+        for (int index = 0;
+             index < filenames.length;
+             index++)
+        {
+            filenames[index] = URLDecoder.decode(filenames[index]);
+        }
         task.setFilenames(Arrays.asList(filenames));
+        if (deleteBlockedPages)
+        {
+            this.logger.debug("Setting delete blocked pages flag");
+            task.setDeleteBlockedPages(true);
+        }
         this.worker.addTasksToQueue(task);
     }
 }
