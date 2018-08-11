@@ -81,10 +81,25 @@ public class QueueComicsWorkerTaskTest
     }
 
     @Test
+    public void testAddFilesAndDeleteBlockedPages()
+    {
+        task.setFilenames(filenames);
+        task.setDeleteBlockedPages(true);
+
+        assertFalse(task.filenames.isEmpty());
+        for (String filename : filenames)
+        {
+            assertTrue(task.filenames.contains(filename));
+        }
+        assertTrue(task.deleteBlockedPages);
+    }
+
+    @Test
     public void testStartTask() throws WorkerTaskException
     {
         Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
         Mockito.when(addComicTaskFactory.getObject()).thenReturn(addComicTask);
+        Mockito.doNothing().when(addComicTask).setDeleteBlockedPages(false);
 
         task.filenames = filenames;
 
@@ -92,5 +107,23 @@ public class QueueComicsWorkerTaskTest
 
         Mockito.verify(worker, Mockito.times(filenames.size())).addTasksToQueue(addComicTask);
         Mockito.verify(addComicTask, Mockito.times(filenames.size())).setFile(Mockito.any(File.class));
+        Mockito.verify(addComicTask, Mockito.times(filenames.size())).setDeleteBlockedPages(false);
+    }
+
+    @Test
+    public void testStartTaskAndDeleteBlockedPages() throws WorkerTaskException
+    {
+        Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
+        Mockito.when(addComicTaskFactory.getObject()).thenReturn(addComicTask);
+        Mockito.doNothing().when(addComicTask).setDeleteBlockedPages(true);
+
+        task.filenames = filenames;
+        task.deleteBlockedPages = true;
+
+        task.startTask();
+
+        Mockito.verify(worker, Mockito.times(filenames.size())).addTasksToQueue(addComicTask);
+        Mockito.verify(addComicTask, Mockito.times(filenames.size())).setFile(Mockito.any(File.class));
+        Mockito.verify(addComicTask, Mockito.times(filenames.size())).setDeleteBlockedPages(true);
     }
 }
