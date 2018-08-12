@@ -19,25 +19,8 @@
 
 package org.comixed;
 
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.AbstractResourceBasedMessageSource;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
 public class ComixEdConfiguration
-{
-    private MessageSource messageSource;
-
-    @Bean
-    public MessageSource messageSource()
-    {
-        if (messageSource == null)
-        {
-            messageSource = new ReloadableResourceBundleMessageSource();
-            ((AbstractResourceBasedMessageSource )messageSource).setBasename("classpath:locale/messages");
-        }
-        return messageSource;
-    }
-}
+{}

@@ -27,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
-import org.comixed.adaptors.StatusAdaptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -54,9 +53,6 @@ public class WorkerTest extends ConcurrentTestCase
 
     @InjectMocks
     private Worker worker;
-
-    @Mock
-    private StatusAdaptor statusAdaptor;
 
     @Mock
     private WorkerListener workerListener;

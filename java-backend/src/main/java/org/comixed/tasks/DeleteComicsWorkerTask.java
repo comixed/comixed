@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.comixed.library.model.Comic;
-import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +39,6 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
 
     @Autowired
     private ComicRepository repository;
-
-    @Autowired
-    private ComicSelectionModel comicSelectionModel;
 
     private List<Comic> comics;
     private boolean deleteFiles;
@@ -80,7 +76,5 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
 
             this.repository.delete(comic);
         }
-
-        this.comicSelectionModel.reload();
     }
 }

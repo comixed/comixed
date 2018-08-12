@@ -26,11 +26,9 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.comixed.adaptors.StatusAdaptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,9 +54,6 @@ public class Worker implements
     }
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());;
-
-    @Autowired
-    private StatusAdaptor statusAdaptor;
 
     BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<>();
     State state = State.IDLE;
@@ -210,7 +205,6 @@ public class Worker implements
                 if (this.queue.isEmpty())
                 {
                     this.logger.debug("Waiting for task or notification");
-                    this.statusAdaptor.updateStatusText("");
                     try
                     {
                         this.state = State.IDLE;

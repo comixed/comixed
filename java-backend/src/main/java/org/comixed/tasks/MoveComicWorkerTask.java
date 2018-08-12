@@ -25,7 +25,6 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.library.model.Comic;
-import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.utils.ComicFileUtils;
 import org.slf4j.Logger;
@@ -50,9 +49,6 @@ public class MoveComicWorkerTask extends AbstractWorkerTask
 
     @Autowired
     private ComicRepository comicRepository;
-
-    @Autowired
-    private ComicSelectionModel comicSelectionModel;
 
     private Comic comic;
     private String destination;
@@ -121,8 +117,7 @@ public class MoveComicWorkerTask extends AbstractWorkerTask
 
             this.logger.debug("Updating comic in database");
             this.comic.setFilename(destFile.getAbsolutePath());
-            this.comicRepository.save(this.comic);
-            this.comicSelectionModel.reload();
+            this.comicRepository.save(this.comic);      
         }
         catch (IOException error)
         {

@@ -24,15 +24,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 
@@ -52,9 +49,6 @@ public class AppConfiguration implements
     public static final String LIBRARY_ROOT = "library.directory-root";
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Value("${configuration.filename}")
     private String filename;
@@ -98,8 +92,7 @@ public class AppConfiguration implements
             try
             {
                 this.properties.store(new FileOutputStream(this.filename),
-                                      this.messageSource.getMessage("configuration.save-header", new Object[]
-                                      {new Date()}, Locale.getDefault()));
+                                      "# Configuration saved " + (new Date().toLocaleString()));
             }
             catch (NoSuchMessageException
                    | IOException cause)

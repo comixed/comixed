@@ -21,13 +21,11 @@ package org.comixed.tasks;
 
 import java.io.File;
 
-import org.comixed.adaptors.StatusAdaptor;
 import org.comixed.library.adaptors.FilenameScraperAdaptor;
 import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
-import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.library.model.Page;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
@@ -55,9 +53,6 @@ public class AddComicWorkerTaskTest
     private MessageSource messageSource;
 
     @Mock
-    private StatusAdaptor statusAdaptor;
-
-    @Mock
     private ComicFileHandler comicFileHandler;
 
     @Mock
@@ -76,9 +71,6 @@ public class AddComicWorkerTaskTest
     private Page page;
 
     @Mock
-    private ComicSelectionModel comicSelectionModel;
-
-    @Mock
     private FilenameScraperAdaptor filenameScraperAdaptor;
 
     @Mock
@@ -89,7 +81,6 @@ public class AddComicWorkerTaskTest
     {
         Mockito.when(comicFactory.getObject()).thenReturn(comic);
         Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
-        Mockito.doNothing().when(comicSelectionModel).reload();
         Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
         Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(Mockito.any(Comic.class));
 
@@ -101,7 +92,6 @@ public class AddComicWorkerTaskTest
         Mockito.verify(comicFactory, Mockito.times(1)).getObject();
         Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic);
         Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
-        Mockito.verify(comicSelectionModel, Mockito.times(1)).reload();
         Mockito.verify(blockedPageHashRepository, Mockito.never()).findByHash(Mockito.anyString());
         Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
     }
@@ -111,7 +101,6 @@ public class AddComicWorkerTaskTest
     {
         Mockito.when(comicFactory.getObject()).thenReturn(comic);
         Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
-        Mockito.doNothing().when(comicSelectionModel).reload();
         Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
         Mockito.when(comic.getPageCount()).thenReturn(1);
         Mockito.when(comic.getPage(Mockito.anyInt())).thenReturn(page);
@@ -128,7 +117,6 @@ public class AddComicWorkerTaskTest
 
         Mockito.verify(comicFactory, Mockito.times(1)).getObject();
         Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic);
-        Mockito.verify(comicSelectionModel, Mockito.times(1)).reload();
         Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
         Mockito.verify(comic, Mockito.times(2)).getPageCount();
         Mockito.verify(comic, Mockito.times(2)).getPage(0);
@@ -143,7 +131,6 @@ public class AddComicWorkerTaskTest
     {
         Mockito.when(comicFactory.getObject()).thenReturn(comic);
         Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
-        Mockito.doNothing().when(comicSelectionModel).reload();
         Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
         Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
 
@@ -155,7 +142,6 @@ public class AddComicWorkerTaskTest
 
         Mockito.verify(comicFactory, Mockito.times(1)).getObject();
         Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic);
-        Mockito.verify(comicSelectionModel, Mockito.times(1)).reload();
         Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
         Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
     }

@@ -20,14 +20,12 @@
 package org.comixed.tasks;
 
 import java.io.File;
-import java.util.Locale;
 
 import org.comixed.library.adaptors.FilenameScraperAdaptor;
 import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
-import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
@@ -36,7 +34,6 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -46,9 +43,6 @@ import org.springframework.stereotype.Component;
 public class AddComicWorkerTask extends AbstractWorkerTask
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Autowired
     private ObjectFactory<Comic> comicFactory;
@@ -61,9 +55,6 @@ public class AddComicWorkerTask extends AbstractWorkerTask
 
     @Autowired
     private BlockedPageHashRepository blockedPageHashRepository;
-
-    @Autowired
-    private ComicSelectionModel comicSelectionModel;
 
     @Autowired
     private FilenameScraperAdaptor filenameScraper;
@@ -109,8 +100,6 @@ public class AddComicWorkerTask extends AbstractWorkerTask
 
         try
         {
-            this.showStatusText(this.messageSource.getMessage("status.comic.add", new Object[]
-            {this.file.getAbsoluteFile()}, Locale.getDefault()));
             result = this.comicFactory.getObject();
             result.setFilename(this.file.getAbsolutePath());
             this.comicFileHandler.loadComic(result);
@@ -133,7 +122,6 @@ public class AddComicWorkerTask extends AbstractWorkerTask
                 }
             }
             this.comicRepository.save(result);
-            this.comicSelectionModel.reload();
         }
         catch (ComicFileHandlerException error)
         {

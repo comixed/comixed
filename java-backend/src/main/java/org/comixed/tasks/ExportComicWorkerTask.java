@@ -19,8 +19,6 @@
 
 package org.comixed.tasks;
 
-import java.util.Locale;
-
 import org.comixed.AppConfiguration;
 import org.comixed.library.adaptors.AbstractArchiveAdaptor;
 import org.comixed.library.adaptors.ArchiveAdaptor;
@@ -28,12 +26,10 @@ import org.comixed.library.adaptors.ArchiveAdaptorException;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
-import org.comixed.library.model.ComicSelectionModel;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -46,11 +42,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
     private ArchiveAdaptor archiveAdaptor;
 
     @Autowired
-    private MessageSource messageSource;
-    @Autowired
     private ComicRepository comicRepository;
-    @Autowired
-    private ComicSelectionModel comicSelectionModel;
     @Autowired
     private ComicFileHandler comicFileHandler;
     @Autowired
@@ -82,8 +74,6 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
 
         try
         {
-            this.showStatusText(this.messageSource.getMessage("status.comic.exported", new Object[]
-            {this.comic.getFilename()}, Locale.getDefault()));
             boolean rename = false;
             if (this.configuration.hasOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT))
             {
@@ -91,7 +81,6 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
             }
             Comic result = this.archiveAdaptor.saveComic(this.comic, rename);
             this.comicRepository.save(result);
-            this.comicSelectionModel.reload();
         }
         catch (ArchiveAdaptorException error)
         {
