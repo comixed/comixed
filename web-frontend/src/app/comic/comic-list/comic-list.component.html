@@ -30,79 +30,76 @@
     </div>
   </div>
 </div>
-<div class='row'>
-  <div class='col-sm-3 float-left' [class.col-sm-3]='show_search_box'>
-    <div class='card sticky-top' [hidden]='!show_search_box'>
-      <div class='card-header'>
-        <h5>Library Search</h5>
-      </div>
-      <div class='card-body'>
-        <!-- number of comics per page -->
-        <div class='row m-1'>
-          <h4># Comics To Show:</h4>
+<!-- library view -->
+<div class='container-fluid w-100' id='library_view'>
+  <div class='row w-100'>
+    <div class='col-3 bg-light text-black pl-5'>
+      <h4 class='text-center'>Library Search</h4>
+      <!-- number of comics per page -->
+      <div class='row w-100'>
+        <div class='field'>
+          <label for='number-of-comics-per-page'># of comics per
+            page: </label>
         </div>
-        <div class='row m-1'>
-          <select #sizeElem (change)='set_page_size(sizeElem.value)'>
+        <div class='field row w-100'>
+          <select id='number-of-comics-per-page' class='form-control'
+            #sizeElem (change)='set_page_size(sizeElem.value)'>
             <option *ngFor='let option of page_sizes'
               [value]='option.id'>{{option.label}}</option>
           </select>
         </div>
-        <!-- sort options -->
-        <div class='row m-1'>
-          <h4>Sort By:</h4>
+      </div>
+      <!-- sort options -->
+      <div class='row w-100'>
+        <div class='field'>
+          <label for='comic-sort-order'>Sort comics by: </label>
         </div>
-        <div class='row m-1'>
-          <select #selectElem
+        <div class='field row w-100'>
+          <select id='comic-sort-order' class='form-control' #selectElem
             (change)='set_sort_order(selectElem.value)'>
             <option *ngFor='let option of sort_options'
               [value]='option.id'>{{option.label}}</option>
           </select>
         </div>
-        <!-- search box -->
-        <div class='row m-1'>
-          <h4>Search For:</h4>
+      </div>
+      <!-- search box -->
+      <div class='row w-100'>
+        <div class='field'>
+          <label for='search-terms'>Search text:</label>
         </div>
-        <div class='row m-1'>
-          <input [(ngModel)]='title_search'
+        <div class='field row w-100'>
+          <input id='search-terms' class='form-control'
+            [(ngModel)]='title_search'
             placeholder='enter search terms here'>
         </div>
       </div>
-    </div>
-  </div>
-  <div [class.col-sm-9]='show_search_box'
-    [class.col-sm-12]='!show_search_box'>
-    <!--  page navigation -->
-    <div class='card'>
-      <div class='card-header'>
-        <div class='row'>
-          <div class='col-sm-2'>
-            <label for='cover_size'><b>Cover Size:</b>
-              {{cover_size}}</label> <input [(ngModel)]='cover_size'
-              type='range' min='64' max='640' value='{{cover_size}}'
-              (blur)='save_cover_size()' class='slider'>
-          </div>
-          <div class='col-sm-5'>
-            <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
-          </div>
-          <div class='col-sm-3'>
-            <h5>{{ (comics | series_filter : title_search).length}}
-              Total Comics Found</h5>
-          </div>
-          <div class='col-sm-2'>
-            <button class='btn btn-info' *ngIf='show_search_box'
-              (click)='show_search_box = false'>Hide Search</button>
-            <button class='btn btn-info' *ngIf='!show_search_box'
-              (click)='show_search_box = true'>Show Search</button>
-          </div>
+      <!-- cover size slider -->
+      <div class='row w-100'>
+        <div class='field'>
+          <label for='cover_size'>Cover size: {{cover_size}}</label>
+        </div>
+        <div class='field row w-100'>
+          <input class='form-control-range' [(ngModel)]='cover_size'
+            type='range' min='64' max='640' value='{{cover_size}}'
+            (blur)='save_cover_size()' class='slider w-100'>
         </div>
       </div>
-      <div class='card-body'>
-        <div class='row'>
-          <app-comic-list-entry
-            *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
-            [comic]='comic'
-            (onComicSelected)='handle_comic_clicked($event)'></app-comic-list-entry>
-        </div>
+    </div>
+    <div class='col-9'>
+      <div class='container-fluid w-100'>
+        <h2 class='text-center'>{{ (comics | series_filter :
+          title_search).length}} Total Comics Found</h2>
+      </div>
+      <!--  page navigation -->
+      <div
+        class='row w-100 justify-content-center bg-secondary text-white'>
+        <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+      </div>
+      <div class='row w-100'>
+        <app-comic-list-entry
+          *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
+          [comic]='comic'
+          (onComicSelected)='handle_comic_clicked($event)'></app-comic-list-entry>
       </div>
     </div>
   </div>
