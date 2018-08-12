@@ -1,79 +1,104 @@
-<div *ngIf='pending_imports > 0'>
-  <h2>There {{plural_imports() ? 'Are' : 'Is'}} {{pending_imports |
-    number}} Comic{{plural_imports() ? 's' : ''}} To Import...</h2>
-  <div *ngIf='delete_blocked_pages' class='border col-4 m-10'>
+<div *ngIf='pending_imports > 0' class='container-fluid w-100'>
+  <h2 class='text-center'>{{get_import_title()}}</h2>
+  <div *ngIf='delete_blocked_pages'>
     <p>
       Blocked pages in those comics will be automatically marked as <em>deleted</em>...
     </p>
   </div>
 </div>
-<div *ngIf='pending_imports === 0'>
-  <h2 class='text-center'>Import New Comics</h2>
-  <div class='m-10 border'>
-    <form #f='ngForm' (ngSubmit)='on_load()' class='ui form'>
-      <div>
-        <dl>
-          <dt>Directory containing new comics:</dt>
-          <dd>
-            <input type='text' id='directory'
+<div *ngIf='pending_imports === 0' id='import-comic-display'
+  class='container-fluid w-100'>
+  <div class='row w-100'>
+    <div class='col-3 bg-light text-black'>
+      <h4 class='text-center'>Find New Comics</h4>
+      <form #f='ngForm' (ngSubmit)='on_load()'>
+        <div class='form-group'>
+          <div class='field'>
+            <label for='directory'>Root directory to search:</label>
+          </div>
+          <div class='field row w-100'>
+            <input type='text' id='directory' class='form-control w-100'
               placeholder='c:/path/to/files'
-              [formControl]='directoryForm.controls["directory"]'>
-          </dd>
-        </dl>
-      </div>
-      <div class='container'>
-        <button type='submit' class='btn btn-primary'>Load</button>
-        <button *ngIf='selected_file_count > 0'
-          class='btn btn-secondary' type='button'
-          (click)='import_selected_files()'>Import</button>
-      </div>
-      <div *ngIf='selected_file_count > 0'>
-        <input id='delete_blocked_pages_checkbox' type='checkbox'
-          class='form-check-input'
-          [formControl]='directoryForm.controls["delete_blocked_pages"]'><label
-          for='delete_blocked_pages_checkbox' class='form-check-label'>Delete
-          blocked pages when found.</label>
-      </div>
-    </form>
-  </div>
-  <div *ngIf='file_details.length > 0'>
-    <div class='row py-3'>
-      <div class='col'></div>
-      <div class='col-1 justify-content-center'>
-        <button class='btn btn-sm btn-primary'
-          (click)='select_all_files()'>Select All</button>
+              [formControl]='directory_form.controls["directory"]'
+              [(ngModel)]='directory'>
+          </div>
+        </div>
+        <div *ngIf='!directory_form.controls["directory"].valid'
+          class='invalid-tooltip w=100 justify-content-center mb-3'>Please
+          enter a directory to search...</div>
+        <div class='row w-100 justify-content-center mb-3'>
+          <button type='submit' class='btn btn-primary w-75'
+            [disabled]='!directory_form.valid'>Find Comics</button>
+        </div>
+      </form>
+      <div *ngIf='file_details.length > 0' class='container-fluid w-100'>
+        <hr />
+        <div class='container-fluid w-100'>
+          <!--  select/deselect all comics -->
+          <div class='row w-100 justify-content-center mb-3'>
+            <button
+              *ngIf='file_details.length > 0 && selected_file_count < file_details.length'
+              class='btn btn-primary w-75' (click)='select_all_files()'>Select
+              All</button>
+            <button
+              *ngIf='file_details.length > 0 && selected_file_count === file_details.length'
+              class='btn btn-primary w-75'
+              (click)='deselect_all_files()'>Deselect All</button>
+          </div>
+          <!--  show all/selected -->
+          <div class='row w-100 justify-content-center mb-3'>
+            <button *ngIf='show_selections_only'
+              class='btn btn-info w-75' (click)='set_show_all_comics()'>Show
+              All Comics</button>
+            <button *ngIf='!show_selections_only'
+              class='btn btn-info w-75'
+              (click)='set_show_selected_comics()'>Show
+              Selected Comics</button>
+          </div>
+          <div class='row w-100 justify-content-center mb-3'>
+            <button *ngIf='delete_blocked_pages === false'
+              class='btn btn-danger w-75'
+              (click)='delete_blocked_pages = true'>Delete
+              Blocked Pages</button>
+            <button *ngIf='delete_blocked_pages === true'
+              class='btn btn-danger w-75'
+              (click)='delete_blocked_pages = false'>Ignore
+              Blocked Pages</button>
+          </div>
+          <div class='row w-100 justify-content-center mb-3'>
+            <button [disabled]='selected_file_count === 0'
+              class='btn btn-secondary w-75' type='button'
+              (click)='import_selected_files()'>Import</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div
-      *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: 25, currentPage: current_page }'
-      class='row pb-3'>
-      <div class='col'>
-        <app-import-comic-list-entry [file_details]='file_detail'
-          [cover_size]='cover_size'></app-import-comic-list-entry>
-      </div>
-      <div class='col-1 justify-content-center'>
-        <button *ngIf='!file_detail.selected'
-          class='btn btn-sm btn-primary'
-          (click)='toggle_comic_selection(file_detail)'>Select</button>
-        <button *ngIf='file_detail.selected'
-          class='btn btn-sm btn-danger'
-          (click)='toggle_comic_selection(file_detail)'>Deselect</button>
-      </div>
-    </div>
-  </div>
-  <div *ngIf='file_details.length > 0'
-    class='fixed-bottom w-100 border pb-3 bg-secondary text-white justify-content-center'>
-    <div class='row'>
-      <div class='col-4'>You have selected {{selected_file_count}}
-        of {{file_details.length}} comics found.</div>
-      <div class='col-2'>
-        <button class='btn btn-sm btn-info'
-          (click)='show_selections_only = !show_selections_only'>{{
-          show_selections_only ? 'Show All Comics' : 'Show Selected
-          Comics'}}</button>
-      </div>
-      <div class='col'>
-        <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+    <div class='col-9'>
+      <div class='container-fluid w-100'>
+        <h2 class='text-center'>{{get_comic_selection_title()}}</h2>
+        <div
+          class='row w-100 justify-content-center bg-secondary text-white'
+          *ngIf='file_details.length > 0'>
+          <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+        </div>
+        <div class='row w-100'>
+          <div
+            *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: 25, currentPage: current_page }'
+            class='border border-info p-1 m-1'>
+            <div class='container w-100 justify-content-center mb-1'>
+              <button *ngIf='!file_detail.selected'
+                class='btn btn-primary w-100'
+                (click)='toggle_comic_selection(file_detail)'>Select</button>
+              <button *ngIf='file_detail.selected'
+                class='btn btn-danger w-100'
+                (click)='toggle_comic_selection(file_detail)'>Deselect</button>
+            </div>
+            <div>
+              <app-import-comic-list-entry [file_details]='file_detail'
+                [cover_size]='cover_size'></app-import-comic-list-entry>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

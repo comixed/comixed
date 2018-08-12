@@ -33,10 +33,10 @@ import {SelectedForImportPipe} from './selected-for-import.pipe';
   styleUrls: ['./import-comic-list.component.css']
 })
 export class ImportComicListComponent implements OnInit {
-  directoryForm: FormGroup;
-  directory: AbstractControl;
-  delete_blocked_pages: AbstractControl;
-  file_details: FileDetails[];
+  directory_form: FormGroup;
+  directory = '';
+  delete_blocked_pages = false;
+  file_details = [];
   importing = false;
   plural = true;
   display = 'none';
@@ -52,12 +52,9 @@ export class ImportComicListComponent implements OnInit {
     private alert_service: AlertService,
     builder: FormBuilder,
   ) {
-    this.directoryForm = builder.group({
+    this.directory_form = builder.group({
       'directory': ['', Validators.required],
-      'delete_blocked_pages': [''],
     });
-    this.directory = this.directoryForm.controls['directory'];
-    this.delete_blocked_pages = this.directoryForm.controls['delete_blocked_pages'];
   }
 
   ngOnInit() {
@@ -83,7 +80,7 @@ export class ImportComicListComponent implements OnInit {
     }, 250);
     this.comic_service.get_user_preference('cover_size').subscribe(
       (cover_size: number) => {
-        this.cover_size = cover_size || 64;
+        this.cover_size = cover_size || 200;
       },
       (error: Error) => {
         this.alert_service.show_error_message('Error loading user preference: cover_size', error);
@@ -94,7 +91,7 @@ export class ImportComicListComponent implements OnInit {
   on_load(): void {
     const that = this;
     this.alert_service.show_busy_message('Fetching List Of Comic Files...');
-    const directory = this.directory.value;
+    const directory = this.directory;
     this.comic_service.get_files_under_directory(directory).subscribe(
       (files: FileDetails[]) => {
         that.file_details = files;
@@ -127,12 +124,19 @@ export class ImportComicListComponent implements OnInit {
     this.selected_file_count = this.file_details.length;
   }
 
+  deselect_all_files(): void {
+    this.file_details.forEach((file) => {
+      file.selected = false;
+    });
+    this.selected_file_count = 0;
+  }
+
   import_selected_files(): void {
     const that = this;
     this.importing = true;
     const selected_files = this.file_details.filter(file => file.selected).map(file => file.filename);
     this.alert_service.show_busy_message('Preparing to import ' + selected_files + ' comics...');
-    this.comic_service.import_files_into_library(selected_files, this.delete_blocked_pages.value).subscribe(
+    this.comic_service.import_files_into_library(selected_files, this.delete_blocked_pages).subscribe(
       () => {
         this.file_details = [];
       },
@@ -149,5 +153,25 @@ export class ImportComicListComponent implements OnInit {
 
   plural_imports(): boolean {
     return (this.pending_imports !== 1);
+  }
+
+  get_import_title(): string {
+    return `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.pending_imports} Comic${this.plural_imports() ? 's' : ''} Remaining...`;
+  }
+
+  get_comic_selection_title(): string {
+    if (this.file_details.length === 0) {
+      return 'No Comics Are Loaded';
+    } else {
+      return `Selected ${this.selected_file_count} Of ${this.file_details.length} Comics...`;
+    }
+  }
+
+  set_show_all_comics(): void {
+    this.show_selections_only = false;
+  }
+
+  set_show_selected_comics(): void {
+    this.show_selections_only = true;
   }
 }

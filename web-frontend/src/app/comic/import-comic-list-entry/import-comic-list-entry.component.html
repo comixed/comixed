@@ -1,9 +1,16 @@
-<div class='media'>
-  <img class='m4-3' src='{{cover_url}}' width='{{cover_size}}'>
-  <div class='media-body'>
-    <h4>{{file_details.base_filename}}</h4>
-    <p>
-      <strong>Size:</strong> {{file_size}} Mb.
-    </p>
+<div class='card px-1 pb-1 border-0'
+  [style.width]='"" + cover_size + "px"'>
+  <div class='card-body comic-cover-container'>
+    <img class='card-img-bottom' src='{{cover_url}}'>
+    <div class='comic-cover-overlay bg-info text-white'>
+      <div class='comic-cover-overlay-text h-100 w-100'>
+        <dl>
+          <dt>Filename:</dt>
+          <dd>{{file_details.base_filename}}</dd>
+          <dt>Size:</dt>
+          <dd>{{file_details.size | number}} bytes</dd>
+        </dl>
+      </div>
+    </div>
   </div>
 </div>
