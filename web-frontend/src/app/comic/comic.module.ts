@@ -24,6 +24,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
 
 import {ComicRoutingModule} from './comic-routing.module';
+import {ComicService} from './comic.service';
 import {ComicListComponent} from './comic-list/comic-list.component';
 import {ImportComicListComponent} from './import-comic-list/import-comic-list.component';
 import {ComicListEntryComponent} from './comic-list-entry/comic-list-entry.component';
@@ -48,6 +49,9 @@ import {SelectedForImportPipe} from './import-comic-list/selected-for-import.pip
       cancelButtonType: 'basic',
     }),
     NgxPaginationModule,
+  ],
+  providers: [
+    ComicService,
   ],
   declarations: [
     ComicListComponent,

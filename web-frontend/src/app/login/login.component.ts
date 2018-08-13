@@ -26,7 +26,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import {ComicService} from '../comic/comic.service';
+import {UserService} from '../user.service';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private comic_service: ComicService,
+    private user_service: UserService,
     private form_builder: FormBuilder,
   ) {
     this.login_form = form_builder.group({
@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.comic_service.login(this.email, this.password,
+    this.user_service.login(this.email, this.password,
       () => {
         this.router.navigateByUrl('/home');
       });

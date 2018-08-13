@@ -21,18 +21,78 @@ import {Injectable} from '@angular/core';
 import {
   HttpClient,
   HttpParams,
+  HttpHeaders,
 } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 
 import {AlertService} from './alert.service';
+import {User} from './user.model';
 
 @Injectable()
 export class UserService {
   private api_url = '/api';
+  private user: User;
+
   constructor(
     private http: HttpClient,
     private alert_service: AlertService,
-  ) {}
+  ) {
+    this.monitor_authentication_status();
+  }
+
+  monitor_authentication_status(): void {
+    setInterval(() => {
+      const headers = new HttpHeaders();
+      this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
+        (user: User) => {
+          this.user = user;
+        },
+        error => {
+          console.log('ERROR: ' + error.message);
+          this.user = new User();
+        });
+    }, 250);
+  }
+
+  login(email: string, password: string, callback) {
+    const headers = new HttpHeaders({authorization: 'Basic ' + btoa(email + ':' + password)});
+    this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
+      (user: User) => {
+        this.user = user;
+
+        callback && callback();
+      },
+      error => {
+        this.alert_service.show_error_message('Login failure', error);
+        this.user = new User();
+      });
+  }
+
+  logout(): Observable<any> {
+    return this.http.get(`/logout`);
+  }
+
+  get_user(): User {
+    return this.user;
+  }
+
+  getUsername(): string {
+    return this.user.name;
+  }
+
+  is_authenticated(): boolean {
+    return this.user != null && this.user.authenticated;
+  }
+
+  change_username(username: string): Observable<any> {
+    const params = new HttpParams().set('username', username);
+    return this.http.post(`${this.api_url}/user/username`, params);
+  }
+
+  change_password(password: string): Observable<any> {
+    const params = new HttpParams().set('password', password);
+    return this.http.post(`${this.api_url}/user/password`, params);
+  }
 
   get_user_preference(name: String): Observable<any> {
     return this.http.get(`${this.api_url}/user/property?name=${name}`);

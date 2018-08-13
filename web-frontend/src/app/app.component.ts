@@ -21,14 +21,14 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {LoadingModule} from 'ngx-loading';
 
-import {ComicService} from './comic/comic.service';
+import {UserService} from './user.service';
 import {AlertService} from './alert.service';
+import {ComicService} from './comic/comic.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ComicService, AlertService],
 })
 export class AppComponent implements OnInit {
   title = 'ComixEd';
@@ -40,8 +40,9 @@ export class AppComponent implements OnInit {
   read_count = 0;
 
   constructor(
-    private comic_service: ComicService,
+    private user_service: UserService,
     private alert_service: AlertService,
+    private comic_service: ComicService,
     private router: Router,
   ) {
   }
@@ -77,7 +78,7 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
-    this.comic_service.logout().subscribe(
+    this.user_service.logout().subscribe(
       () => {
         this.router.navigateByUrl('/login');
       }
@@ -88,13 +89,13 @@ export class AppComponent implements OnInit {
     this.alert_message = '';
   }
 
-  isAuthenticated(): boolean {
-    return this.comic_service.isAuthenticated();
+  is_authenticated(): boolean {
+    return this.user_service.is_authenticated();
   }
 
   is_admin(): boolean {
-    if (this.comic_service.isAuthenticated()) {
-      for (const role of this.comic_service.get_user().authorities) {
+    if (this.user_service.is_authenticated()) {
+      for (const role of this.user_service.get_user().authorities) {
         if (role.authority === 'ROLE_ADMIN') {
           return true;
         }
