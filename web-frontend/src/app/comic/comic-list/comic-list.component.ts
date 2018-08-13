@@ -20,6 +20,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
+import {UserService} from '../../user.service';
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
 import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.component';
@@ -30,7 +31,6 @@ import {AlertService} from '../../alert.service';
   selector: 'app-comic-list',
   templateUrl: './comic-list.component.html',
   styleUrls: ['./comic-list.component.css'],
-  providers: [ComicService],
 })
 export class ComicListComponent implements OnInit {
   protected comics: Comic[];
@@ -58,6 +58,7 @@ export class ComicListComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private user_service: UserService,
     private comic_service: ComicService,
     private alert_service: AlertService,
   ) {}
@@ -73,7 +74,7 @@ export class ComicListComponent implements OnInit {
       (comic: Comic) => {
         this.current_comic = comic;
       });
-    this.comic_service.get_user_preference('cover_size').subscribe(
+    this.user_service.get_user_preference('cover_size').subscribe(
       (cover_size: number) => {
         this.cover_size = cover_size || 128;
       },
@@ -203,7 +204,7 @@ export class ComicListComponent implements OnInit {
   }
 
   save_cover_size(): void {
-    this.comic_service.set_user_preference('cover_size', String(this.cover_size));
+    this.user_service.set_user_preference('cover_size', String(this.cover_size));
   }
 
   handle_comic_clicked(event): void {

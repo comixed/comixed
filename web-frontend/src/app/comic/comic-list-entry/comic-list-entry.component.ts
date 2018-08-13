@@ -24,7 +24,6 @@ import {Router} from '@angular/router';
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
 import {AlertService} from '../../alert.service';
-import {ComicListComponent} from '../comic-list/comic-list.component';
 
 @Component({
   selector: 'app-comic-list-entry',
@@ -34,6 +33,7 @@ import {ComicListComponent} from '../comic-list/comic-list.component';
 
 export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
+  @Input() cover_size: number;
   cover_url: string;
   title_text: string;
   subtitle_text: string;
@@ -47,7 +47,6 @@ export class ComicListEntryComponent implements OnInit {
     protected router: Router,
     protected comic_service: ComicService,
     protected alert_service: AlertService,
-    protected comicList: ComicListComponent,
   ) {
   }
 

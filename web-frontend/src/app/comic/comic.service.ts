@@ -249,10 +249,6 @@ export class ComicService {
     return this.user.name;
   }
 
-  get_user_preference(name: String): Observable<any> {
-    return this.http.get(`${this.api_url}/user/property?name=${name}`);
-  }
-
   change_username(username: string): Observable<any> {
     const params = new HttpParams().set('username', username);
     return this.http.post(`${this.api_url}/user/username`, params);
@@ -261,17 +257,5 @@ export class ComicService {
   change_password(password: string): Observable<any> {
     const params = new HttpParams().set('password', password);
     return this.http.post(`${this.api_url}/user/password`, params);
-  }
-
-  set_user_preference(name: string, value: string): void {
-    const params = new HttpParams().set('name', name).set('value', value);
-    this.http.post(`${this.api_url}/user/property`, params).subscribe(
-      (response: Response) => {
-        console.log('Preference saved: ' + name + '=' + value);
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Failed to set user preference: ' + name + '=' + value, error);
-      }
-    );
   }
 }

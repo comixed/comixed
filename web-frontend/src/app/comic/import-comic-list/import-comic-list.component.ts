@@ -20,6 +20,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, AbstractControl} from '@angular/forms';
 
+import {UserService} from '../../user.service';
 import {FileDetails} from '../file-details.model';
 import {ComicService} from '../comic.service';
 import {AlertService} from '../../alert.service';
@@ -48,6 +49,7 @@ export class ImportComicListComponent implements OnInit {
   show_selections_only = false;
 
   constructor(
+    private user_service: UserService,
     private comic_service: ComicService,
     private alert_service: AlertService,
     builder: FormBuilder,
@@ -78,7 +80,7 @@ export class ImportComicListComponent implements OnInit {
           that.waiting_on_imports = false;
         });
     }, 250);
-    this.comic_service.get_user_preference('cover_size').subscribe(
+    this.user_service.get_user_preference('cover_size').subscribe(
       (cover_size: number) => {
         this.cover_size = cover_size || 200;
       },

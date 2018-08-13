@@ -21,6 +21,7 @@ import {Component, OnInit, Input} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 
+import {UserService} from '../../user.service';
 import {ComicService} from '../comic.service';
 import {AlertService} from '../../alert.service';
 import {Page} from '../page.model';
@@ -51,6 +52,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private user_service: UserService,
     private comic_service: ComicService,
     private errors_service: AlertService,
   ) {}
@@ -59,7 +61,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
     const that = this;
     this.update_all_are_deleted();
     this.image_url = this.comic_service.get_url_for_page_by_id(this.pages[0].id);
-    this.comic_service.get_user_preference('cover_size').subscribe(
+    this.user_service.get_user_preference('cover_size').subscribe(
       (cover_size: number) => {
         that.image_size = cover_size || 175;
       },
