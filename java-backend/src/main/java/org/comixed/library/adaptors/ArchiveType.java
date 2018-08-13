@@ -19,6 +19,8 @@
 
 package org.comixed.library.adaptors;
 
+import org.comixed.library.adaptors.archive.ArchiveAdaptor;
+
 /**
  * <code>ArchiveType</code> provides a means for association a
  * {@link ArchiveAdaptor} to a disk format.

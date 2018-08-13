@@ -42,7 +42,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.comixed.library.adaptors.ArchiveAdaptorException;
+import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.hibernate.annotations.Formula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

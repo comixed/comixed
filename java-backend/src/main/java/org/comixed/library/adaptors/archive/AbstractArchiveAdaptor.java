@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.library.adaptors;
+package org.comixed.library.adaptors.archive;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
+import org.comixed.library.adaptors.ComicInfoEntryAdaptor;
 import org.comixed.library.loaders.EntryLoader;
 import org.comixed.library.loaders.EntryLoaderException;
 import org.comixed.library.model.Comic;

@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.comixed.library.adaptors.ArchiveAdaptor;
-import org.comixed.library.adaptors.ArchiveAdaptorException;
+import org.comixed.library.adaptors.archive.ArchiveAdaptor;
+import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;
 import org.comixed.library.model.FileDetails;

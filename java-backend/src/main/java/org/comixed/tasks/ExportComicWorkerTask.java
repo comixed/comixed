@@ -20,9 +20,9 @@
 package org.comixed.tasks;
 
 import org.comixed.AppConfiguration;
-import org.comixed.library.adaptors.AbstractArchiveAdaptor;
-import org.comixed.library.adaptors.ArchiveAdaptor;
-import org.comixed.library.adaptors.ArchiveAdaptorException;
+import org.comixed.library.adaptors.archive.AbstractArchiveAdaptor;
+import org.comixed.library.adaptors.archive.ArchiveAdaptor;
+import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;

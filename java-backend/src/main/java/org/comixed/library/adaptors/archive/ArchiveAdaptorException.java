@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.library.adaptors;
+package org.comixed.library.adaptors.archive;
 
 /**
  * <code>ArchiveAdaptorException</code> is thrown when an error occurs while

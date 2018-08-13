@@ -25,8 +25,8 @@ import static org.junit.Assert.assertSame;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.comixed.library.adaptors.ArchiveAdaptor;
-import org.comixed.library.adaptors.ArchiveAdaptorException;
+import org.comixed.library.adaptors.archive.ArchiveAdaptor;
+import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.library.utils.FileTypeIdentifier;
 import org.junit.Before;
 import org.junit.Test;

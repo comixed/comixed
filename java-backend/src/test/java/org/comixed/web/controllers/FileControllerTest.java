@@ -31,8 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.comixed.library.adaptors.ArchiveAdaptor;
-import org.comixed.library.adaptors.ArchiveAdaptorException;
+import org.comixed.library.adaptors.archive.ArchiveAdaptor;
+import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFileHandler;
 import org.comixed.library.model.ComicFileHandlerException;

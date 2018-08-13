@@ -17,13 +17,16 @@
  * org.comixed;
  */
 
-package org.comixed.library.adaptors;
+package org.comixed.library.adaptors.archive;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixed.ComixEdTestContext;
+import org.comixed.library.adaptors.archive.AbstractArchiveAdaptor;
+import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.library.model.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,13 +39,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ComixEdTestContext.class)
 @TestPropertySource(locations = "classpath:test-application.properties")
-public class SevenZipArchiveAdaptorTest
+public class ZipArchiveAdaptorTest
 {
     private static final String TEST_FILE_ENTRY_3 = "exampleCBR.jpg";
     private static final String TEST_FILE_ENTRY_2 = "example.png";
     private static final String TEST_FILE_ENTRY_1 = "example.jpg";
     private static final String TEST_FILE_ENTRY_0 = "example.jpeg";
-    private static final String TEST_CB7_FILE = "target/test-classes/example.cb7";
+    private static final String TEST_CBZ_FILE = "target/test-classes/example.cbz";
     private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
     private static final Object TEST_FILE_ENTRY_RENAMED_0 = "page-000.jpeg";
     private static final Object TEST_FILE_ENTRY_RENAMED_1 = "page-001.jpg";
@@ -50,7 +53,7 @@ public class SevenZipArchiveAdaptorTest
     private static final Object TEST_FILE_ENTRY_RENAMED_3 = "page-003.jpg";
 
     @Autowired
-    private SevenZipArchiveAdaptor archiveAdaptor;
+    private AbstractArchiveAdaptor<ZipFile> archiveAdaptor;
 
     private Comic comic;
 
@@ -58,13 +61,13 @@ public class SevenZipArchiveAdaptorTest
     public void setUp()
     {
         comic = new Comic();
-        comic.setFilename(TEST_CB7_FILE);
+        comic.setFilename(TEST_CBZ_FILE);
     }
 
     @Test(expected = ArchiveAdaptorException.class)
     public void testOpenFileNotFound() throws ArchiveAdaptorException
     {
-        comic.setFilename(TEST_CB7_FILE.substring(1));
+        comic.setFilename(TEST_CBZ_FILE.substring(1));
         archiveAdaptor.loadComic(comic);
     }
 
@@ -163,6 +166,15 @@ public class SevenZipArchiveAdaptorTest
     @Test
     public void testGetFirstImageFileName() throws ArchiveAdaptorException
     {
-        assertEquals(TEST_FILE_ENTRY_0, archiveAdaptor.getFirstImageFileName(TEST_CB7_FILE));
+        assertEquals(TEST_FILE_ENTRY_0, archiveAdaptor.getFirstImageFileName(TEST_CBZ_FILE));
+    }
+
+    @Test
+    public void testLoadSingleFile() throws ArchiveAdaptorException
+    {
+        byte[] result = archiveAdaptor.loadSingleFile(TEST_CBZ_FILE, TEST_FILE_ENTRY_1);
+
+        assertNotNull(result);
+        assertEquals(7443280, result.length);
     }
 }

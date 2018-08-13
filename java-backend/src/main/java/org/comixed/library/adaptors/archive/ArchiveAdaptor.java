@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.library.adaptors;
+package org.comixed.library.adaptors.archive;
 
 import org.comixed.library.model.Comic;
 

@@ -17,15 +17,15 @@
  * org.comixed;
  */
 
-package org.comixed.library.adaptors;
+package org.comixed.library.adaptors.archive;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.comixed.ComixEdTestContext;
-import org.comixed.library.adaptors.ArchiveAdaptorException;
-import org.comixed.library.adaptors.RarArchiveAdaptor;
+import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
+import org.comixed.library.adaptors.archive.RarArchiveAdaptor;
 import org.comixed.library.model.Comic;
 import org.junit.Before;
 import org.junit.Test;
