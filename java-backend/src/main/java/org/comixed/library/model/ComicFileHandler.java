@@ -30,6 +30,7 @@ import java.util.Map;
 
 import org.comixed.library.adaptors.ArchiveAdaptor;
 import org.comixed.library.adaptors.ArchiveAdaptorException;
+import org.comixed.library.adaptors.ArchiveType;
 import org.comixed.library.utils.FileTypeIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -17,9 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.library.model;
-
-import org.comixed.library.adaptors.ArchiveAdaptor;
+package org.comixed.library.adaptors;
 
 /**
  * <code>ArchiveType</code> provides a means for association a
