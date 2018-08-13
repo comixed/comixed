@@ -22,7 +22,10 @@ import {NgModule} from '@angular/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HttpClientModule} from '@angular/common/http';
+import {
+  HttpClientModule,
+  HTTP_INTERCEPTORS,
+} from '@angular/common/http';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -32,6 +35,7 @@ import {
   ANIMATION_TYPES,
 } from 'ngx-loading';
 
+import {XhrInterceptor} from './xhr.interceptor';
 import {ComicModule} from './comic/comic.module';
 import {MainPageComponent} from './main-page/main-page.component';
 import {LoginComponent} from './login/login.component';
@@ -62,6 +66,9 @@ import {UserService} from './user.service';
   providers: [
     AlertService,
     UserService,
+    [
+      {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
+    ],
   ],
   bootstrap: [AppComponent]
 })

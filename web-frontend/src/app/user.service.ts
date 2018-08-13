@@ -23,7 +23,9 @@ import {
   HttpParams,
   HttpHeaders,
 } from '@angular/common/http';
+import {Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/finally';
 
 import {AlertService} from './alert.service';
 import {User} from './user.model';
@@ -35,6 +37,7 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     private alert_service: AlertService,
   ) {
     this.monitor_authentication_status();
@@ -58,18 +61,25 @@ export class UserService {
     const headers = new HttpHeaders({authorization: 'Basic ' + btoa(email + ':' + password)});
     this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
       (user: User) => {
-        this.user = user;
+        if (user.name) {
+          this.user = user;
+        } else {
+          this.user = null;
+        }
 
         callback && callback();
       },
       error => {
         this.alert_service.show_error_message('Login failure', error);
-        this.user = new User();
+        this.user = null;
       });
   }
 
   logout(): Observable<any> {
-    return this.http.get(`/logout`);
+    return this.http.post('logout', {}).finally(() => {
+      this.user = null;
+      this.router.navigate(['home']);
+    });
   }
 
   get_user(): User {
