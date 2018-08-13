@@ -37,6 +37,7 @@ import {MainPageComponent} from './main-page/main-page.component';
 import {LoginComponent} from './login/login.component';
 import {AccountComponent} from './account/account.component';
 import {AlertService} from './alert.service';
+import {UserService} from './user.service';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import {AlertService} from './alert.service';
   ],
   providers: [
     AlertService,
+    UserService,
   ],
   bootstrap: [AppComponent]
 })
