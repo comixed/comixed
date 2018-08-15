@@ -25,7 +25,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ComixEdApp implements
+public class ComiXedApp implements
                         CommandLineRunner
 {
     private static final int VERSION_MAJOR = 0;
@@ -37,7 +37,7 @@ public class ComixEdApp implements
 
     public static void main(String[] args)
     {
-        SpringApplication app = new SpringApplication(ComixEdApp.class);
+        SpringApplication app = new SpringApplication(ComiXedApp.class);
 
         app.setBannerMode(Banner.Mode.OFF);
         app.run(args);

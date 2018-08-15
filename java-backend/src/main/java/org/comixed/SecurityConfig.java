@@ -21,7 +21,7 @@ package org.comixed;
 
 import java.util.Arrays;
 
-import org.comixed.web.authentication.ComixEdAuthenticationProvider;
+import org.comixed.web.authentication.ComiXedAuthenticationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ComixEdAuthenticationProvider authenticationProvider;
+    private ComiXedAuthenticationProvider authenticationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception

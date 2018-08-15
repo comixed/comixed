@@ -145,7 +145,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <manifest>
-            <mainClass>org.comixed.ComixEdApp</mainClass>
+            <mainClass>org.comixed.ComiXedApp</mainClass>
           </manifest>
         </configuration>
       </plugin>

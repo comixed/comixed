@@ -21,8 +21,8 @@ package org.comixed.web.controllers;
 
 import java.security.Principal;
 
-import org.comixed.library.model.ComixEdUser;
-import org.comixed.repositories.ComixEdUserRepository;
+import org.comixed.library.model.ComiXedUser;
+import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class UserController
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ComixEdUserRepository userRepository;
+    private ComiXedUserRepository userRepository;
     @Autowired
     private Utils utils;
 
@@ -56,7 +56,7 @@ public class UserController
     public String getUserProperty(Authentication authentication, @RequestParam("name") String name)
     {
         this.logger.debug("Loading user: email={}", authentication.getName());
-        ComixEdUser user = this.userRepository.findByEmail(authentication.getName());
+        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
 
         this.logger.debug("Return property: {}={}", name, user.getPreference(name));
         return user.getPreference(name);
@@ -69,7 +69,7 @@ public class UserController
                                 @RequestParam("value") String value)
     {
         this.logger.debug("Loading user: email={}", authentication.getName());
-        ComixEdUser user = this.userRepository.findByEmail(authentication.getName());
+        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
 
         this.logger.debug("Setting property: {}={}", name, value);
         user.setProperty(name, value);
@@ -81,7 +81,7 @@ public class UserController
     public void updateUsername(Authentication authentication, @RequestParam("username") String username)
     {
         this.logger.debug("Updating username for: email={}", authentication.getName());
-        ComixEdUser user = this.userRepository.findByEmail(authentication.getName());
+        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
 
         if (user != null)
         {
@@ -102,7 +102,7 @@ public class UserController
     public void updatePassword(Authentication authentication, @RequestParam("password") String password)
     {
         this.logger.debug("Updating password for: email={}", authentication.getName());
-        ComixEdUser user = this.userRepository.findByEmail(authentication.getName());
+        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
 
         String hash = this.utils.createHash(password.getBytes());
         this.logger.debug("Setting password: hash={}", hash);

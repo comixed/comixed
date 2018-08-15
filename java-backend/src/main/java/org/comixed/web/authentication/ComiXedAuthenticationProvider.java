@@ -22,9 +22,9 @@ package org.comixed.web.authentication;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.comixed.library.model.ComixEdUser;
+import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.Role;
-import org.comixed.repositories.ComixEdUserRepository;
+import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,13 +38,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComixEdAuthenticationProvider implements
+public class ComiXedAuthenticationProvider implements
                                            AuthenticationProvider
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ComixEdUserRepository userRepository;
+    private ComiXedUserRepository userRepository;
 
     @Autowired
     private Utils utils;
@@ -65,7 +65,7 @@ public class ComixEdAuthenticationProvider implements
 
         this.logger.debug("Authenticating user: email={}", email);
 
-        ComixEdUser dbuser = this.userRepository.findByEmail(email);
+        ComiXedUser dbuser = this.userRepository.findByEmail(email);
 
         if (dbuser != null)
         {

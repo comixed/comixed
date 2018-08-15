@@ -39,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "users")
-public class ComixEdUser
+public class ComiXedUser
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

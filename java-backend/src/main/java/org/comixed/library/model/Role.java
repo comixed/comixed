@@ -48,7 +48,7 @@ public class Role
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    private List<ComixEdUser> users = new ArrayList<>();
+    private List<ComiXedUser> users = new ArrayList<>();
 
     public Long getId()
     {
@@ -60,7 +60,7 @@ public class Role
         return this.name;
     }
 
-    public List<ComixEdUser> getUsers()
+    public List<ComiXedUser> getUsers()
     {
         return this.users;
     }

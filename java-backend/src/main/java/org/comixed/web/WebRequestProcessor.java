@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.comixed.ComixEdApp;
+import org.comixed.ComiXedApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 public class WebRequestProcessor
 {
     public static final String AGENT_HEADER = "User-Agent";
-    public static final String AGENT_NAME = "ComixEd/" + ComixEdApp.VERSION;
+    public static final String AGENT_NAME = "ComixEd/" + ComiXedApp.VERSION;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
