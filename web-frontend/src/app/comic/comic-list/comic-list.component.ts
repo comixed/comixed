@@ -50,11 +50,10 @@ export class ComicListComponent implements OnInit {
   ];
   protected page_size = 10;
   protected sort_options: any[] = [
-    {id: 0, label: 'Default'},
-    {id: 1, label: 'Sort by series'},
-    {id: 2, label: 'Sort by added date'},
-    {id: 3, label: 'Sort by cover date'},
-    {id: 4, label: 'Sort by last read date'},
+    {id: 0, label: 'Sort by series'},
+    {id: 1, label: 'Sort by added date'},
+    {id: 2, label: 'Sort by cover date'},
+    {id: 3, label: 'Sort by last read date'},
   ];
   protected sort_order = new BehaviorSubject<number>(0);
 
@@ -110,11 +109,10 @@ export class ComicListComponent implements OnInit {
   sort_comics(comics: Comic[]): Comic[] {
     comics.sort((comic1: Comic, comic2: Comic) => {
       switch (this.sort_order.value) {
-        case 0: return this.sort_by_natural_order(comic1, comic2);
-        case 1: return this.sort_by_series_name(comic1, comic2);
-        case 2: return this.sort_by_date_added(comic1, comic2);
-        case 3: return this.sort_by_cover_date(comic1, comic2);
-        case 4: return this.sort_by_last_read_date(comic1, comic2);
+        case 0: return this.sort_by_series_name(comic1, comic2);
+        case 1: return this.sort_by_date_added(comic1, comic2);
+        case 2: return this.sort_by_cover_date(comic1, comic2);
+        case 3: return this.sort_by_last_read_date(comic1, comic2);
         default: console.log('Invalid sort value: ' + this.sort_order);
       }
       return 0;

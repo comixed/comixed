@@ -67,11 +67,10 @@ export class ComicListEntryComponent implements OnInit {
     this.sort_order.subscribe(
       (sort_order: number) => {
         switch (sort_order) {
-          case 0: this.subtitle_text = this.comic.base_filename; break;
-          case 1: this.subtitle_text = `Volume #${this.comic.volume}`; break;
-          case 2: this.subtitle_text = `Added: ${this.convert_date(this.comic.added_date, 'This should never happen...')}`; break;
-          case 3: this.subtitle_text = `Cover date: ${this.comic.cover_date || 'Unknown'}`; break;
-          case 4: this.subtitle_text = `Last read: ${this.convert_date(this.comic.last_read_date, 'Never')}`; break;
+          case 0: this.subtitle_text = `Volume #${this.comic.volume}`; break;
+          case 1: this.subtitle_text = `Added: ${this.convert_date(this.comic.added_date, 'This should never happen...')}`; break;
+          case 2: this.subtitle_text = `Cover date: ${this.comic.cover_date || 'Unknown'}`; break;
+          case 3: this.subtitle_text = `Last read: ${this.convert_date(this.comic.last_read_date, 'Never')}`; break;
           default: console.log('Invalid sort value: ' + this.sort_order);
         }
       });
