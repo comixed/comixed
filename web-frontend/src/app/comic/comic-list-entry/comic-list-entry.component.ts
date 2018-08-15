@@ -68,11 +68,11 @@ export class ComicListEntryComponent implements OnInit {
     event.preventDefault();
   }
 
-  openComic(): void {
+  open_comic(): void {
     this.router.navigate(['/comics', this.comic.id]);
   }
 
-  deleteComic(): void {
+  delete_comic(): void {
     this.comic_service.remove_comic_from_library(this.comic).subscribe(
       success => {
         if (success) {
@@ -83,5 +83,9 @@ export class ComicListEntryComponent implements OnInit {
         this.alert_service.show_error_message('Failed to delete comic from the library...', error);
       }
     );
+  }
+
+  toggle_selected(): void {
+    this.selected = !this.selected;
   }
 }

@@ -8,6 +8,14 @@ body {
   margin-top: 2em;
 }
 
+.comic-card-cover, .comic-cover-overlay {
+  border-radius: 5px;
+}
+
+.comic-cover-container, .comic-cover-card {
+  background: transparent;
+}
+
 .comic-cover-overlay {
   position: absolute;
   top: 0;
@@ -21,14 +29,18 @@ body {
 }
 
 .comic-cover-container:hover .comic-cover-overlay {
-  opacity: 1;
+  opacity: 0.8;
 }
 
 .comic-cover-overlay-text {
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.comic-selected {
+	background-color: #339933;
 }

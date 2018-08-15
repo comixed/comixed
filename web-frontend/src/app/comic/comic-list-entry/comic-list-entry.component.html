@@ -1,34 +1,27 @@
-<div class='border border-info p-1 m-1'>
-  <div class='container w-100 justify-content-center mb-1'>
-    <button type='button' class='btn btn-primary w-100'
-      (click)='openComic()'>Open</button>
-  </div>
-  <div class='card px-1 pb-1 border-0'
+<div class='p-1 m-1' [class.border-0]='selected'
+  [class.comic-selected]='selected'>
+  <div class='card comic-cover-card'
     [style.width]='"" + cover_size + "px"'>
     <div class='card-body comic-cover-container'>
-      <img class='card-img-bottom' src='{{cover_url}}'>
-      <div class='comic-cover-overlay bg-primary text-white'>
-        <div class='comic-cover-overlay-text h-100 w-100 '>
-          <dl>
-            <dt>Issue</dt>
-            <dd>{{title_text}}</dd>
-            <dt>Volume</dt>
-            <dd>{{subtitle_text}}</dd>
-          </dl>
-          <div class='container w-100 justify-content-center mb-1'>
-            <button type='button' class='btn btn-info w-100'
-              (click)='clicked($event)' data-toggle='modal'
-              data-target='#display_comic_details'>Summary</button>
-          </div>
-          <div class='container w-100 justify-content-center mb-1'>
-            <button type='button' class='btn btn-danger w-100'
+      <div class='comic-cover-overlay bg-dark text-light'>
+        <div class='comic-cover-overlay-text h-100 w-100'>
+          <div class='comic-cover-details-container h-100 w-100'>
+            <i id='comic-select' class='fa fa-check-circle'
+              (click)='toggle_selected()'></i> <i id='comic-summary'
+              class='fa fa-info-circle' (click)='clicked($event)'
+              data-toggle='modal' data-target='#display_comic_details'></i>
+            <i id='comic-delete' class='fa fa-trash'
               mwlConfirmationPopover [popoverTitle]='delete_comic_title'
               [popoverMessage]='delete_comic_message'
               [cancelText]='cancel_button'
-              [confirmText]='confirm_button' (confirm)='deleteComic()'>Delete</button>
+              [confirmText]='confirm_button' (confirm)='delete_comic()'></i>
+            <i id='comic-open'
+              class='fa fa-play-circle align-middle align-self-center'
+              (click)='open_comic()'></i>
           </div>
         </div>
       </div>
+      <img class='card-img-bottom' src='{{cover_url}}'>
     </div>
   </div>
 </div>
