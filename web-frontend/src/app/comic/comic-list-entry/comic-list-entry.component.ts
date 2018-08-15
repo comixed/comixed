@@ -34,12 +34,13 @@ import {AlertService} from '../../alert.service';
 export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
   @Input() cover_size: number;
+  @Input() selected: boolean;
+  @Input() sort_order: Observable<number>;
   cover_url: string;
   title_text: string;
   subtitle_text: string;
   delete_comic_title: string;
   delete_comic_message: string;
-  @Input() selected: boolean;
   confirm_button = 'Yes';
   cancel_button = 'No!';
 
@@ -61,6 +62,27 @@ export class ComicListEntryComponent implements OnInit {
 
     this.delete_comic_title = `Delete ${this.title_text}`;
     this.delete_comic_message = 'Are you sure you want to delete this comic?';
+    this.title_text = this.comic.series || 'Unknown';
+
+    this.sort_order.subscribe(
+      (sort_order: number) => {
+        switch (sort_order) {
+          case 0: this.subtitle_text = this.comic.base_filename; break;
+          case 1: this.subtitle_text = `Volume #${this.comic.volume}`; break;
+          case 2: this.subtitle_text = `Added: ${this.convert_date(this.comic.added_date, 'This should never happen...')}`; break;
+          case 3: this.subtitle_text = `Cover date: ${this.comic.cover_date || 'Unknown'}`; break;
+          case 4: this.subtitle_text = `Last read: ${this.convert_date(this.comic.last_read_date, 'Never')}`; break;
+          default: console.log('Invalid sort value: ' + this.sort_order);
+        }
+      });
+  }
+
+  convert_date(date: string, default_value: string): string {
+    if (date) {
+      return new Date(parseInt(date, 10)).toLocaleDateString();
+    } else {
+      return default_value;
+    }
   }
 
   clicked(event: any): void {

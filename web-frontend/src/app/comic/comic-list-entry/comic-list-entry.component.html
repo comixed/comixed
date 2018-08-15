@@ -2,7 +2,7 @@
   [class.comic-selected]='selected'>
   <div class='card comic-cover-card'
     [style.width]='"" + cover_size + "px"'>
-    <div class='card-body comic-cover-container'>
+    <div class='card-body comic-cover-container text-center'>
       <div class='comic-cover-overlay bg-dark text-light'>
         <div class='comic-cover-overlay-text h-100 w-100'>
           <div class='comic-cover-details-container h-100 w-100'>
@@ -22,6 +22,8 @@
         </div>
       </div>
       <img class='card-img-bottom' src='{{cover_url}}'>
+      <h5 class='card-title comic-title-text'>{{title_text}}</h5>
+      <h6 class='card-subtitle comic-subtitle-text'>{{subtitle_text}}</h6>
     </div>
   </div>
 </div>

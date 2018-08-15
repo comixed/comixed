@@ -19,6 +19,8 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import {UserService} from '../../user.service';
 import {Comic} from '../comic.model';
@@ -54,7 +56,7 @@ export class ComicListComponent implements OnInit {
     {id: 3, label: 'Sort by cover date'},
     {id: 4, label: 'Sort by last read date'},
   ];
-  protected sort_order: number;
+  protected sort_order = new BehaviorSubject<number>(0);
 
   constructor(
     private router: Router,
@@ -64,7 +66,6 @@ export class ComicListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.sort_order = 0;
     this.comic_service.all_comics_update.subscribe(
       (comics: Comic[]) => {
         this.comics = this.sort_comics(comics);
@@ -102,13 +103,13 @@ export class ComicListComponent implements OnInit {
   }
 
   set_sort_order(sort_order: any): void {
-    this.sort_order = parseInt(sort_order, 10);
+    this.sort_order.next(parseInt(sort_order, 10));
     this.comics = this.sort_comics(this.comics);
   }
 
   sort_comics(comics: Comic[]): Comic[] {
     comics.sort((comic1: Comic, comic2: Comic) => {
-      switch (this.sort_order) {
+      switch (this.sort_order.value) {
         case 0: return this.sort_by_natural_order(comic1, comic2);
         case 1: return this.sort_by_series_name(comic1, comic2);
         case 2: return this.sort_by_date_added(comic1, comic2);
@@ -119,6 +120,10 @@ export class ComicListComponent implements OnInit {
       return 0;
     });
     return comics;
+  }
+
+  get_sort_order(): Observable<number> {
+    return this.sort_order.asObservable();
   }
 
   sort_by_natural_order(comic1: Comic, comic2: Comic): number {

@@ -1,3 +1,9 @@
+.comic-title-text, .comic-subtitle-text {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 .comic-cover-details-container {
 	position: relative;
 	width: 100%;

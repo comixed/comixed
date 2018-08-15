@@ -99,6 +99,7 @@
         <app-comic-list-entry
           *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
           [comic]='comic' [cover_size]='cover_size'
+          [sort_order]='get_sort_order()'
           (onComicSelected)='handle_comic_clicked($event)'></app-comic-list-entry>
       </div>
     </div>
