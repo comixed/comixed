@@ -1,5 +1,5 @@
 /*
- * ComixEd - A digital comic book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ComixEdTestContext.class)
+@SpringBootTest(classes = ComiXedTestContext.class)
 @TestPropertySource(locations = "classpath:test-application.properties")
 public class ZipArchiveAdaptorTest
 {

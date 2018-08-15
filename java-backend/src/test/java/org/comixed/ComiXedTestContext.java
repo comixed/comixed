@@ -1,5 +1,5 @@
 /*
- * ComixEd - A digital comic book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
  "org.comixed.library",
  "org.comixed.repositories",
  "org.comixed.tasks"})
-public class ComixEdTestContext
+public class ComiXedTestContext
 {
 
 }
