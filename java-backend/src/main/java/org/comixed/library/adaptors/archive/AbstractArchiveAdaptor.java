@@ -300,7 +300,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
         String tempFilename;
         try
         {
-            tempFilename = File.createTempFile(source.getBaseFilename() + "-temporary", "tmp").getAbsolutePath();
+            tempFilename = File.createTempFile(source.getFilenameWithoutExtension() + "-temporary", "tmp").getAbsolutePath();
         }
         catch (IOException error)
         {
@@ -309,7 +309,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
 
         this.saveComicInternal(source, tempFilename, renamePages);
 
-        String filename = ComicFileUtils.findAvailableFilename(source.getBaseFilename(), 0, this.defaultExtension);
+        String filename = ComicFileUtils.findAvailableFilename(source.getFilenameWithoutExtension(), 0, this.defaultExtension);
         File file1 = new File(tempFilename);
         File file2 = new File(filename);
         try

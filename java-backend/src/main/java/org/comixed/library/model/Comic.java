@@ -372,14 +372,15 @@ public class Comic
     }
 
     /**
-     * Returns just the filename portion of the comic file's name.
+     * Returns just the filename without the path.
      *
-     * @return the base filename
+     * @return the filename
      */
-    @JsonIgnore
+    @JsonProperty("base_filename")
+    @JsonView(View.List.class)
     public String getBaseFilename()
     {
-        return FilenameUtils.removeExtension(this.filename);
+        return FilenameUtils.getName(this.filename);
     }
 
     /**
@@ -489,6 +490,17 @@ public class Comic
     }
 
     /**
+     * Returns just the filename portion of the comic file's name.
+     *
+     * @return the base filename
+     */
+    @JsonIgnore
+    public String getFilenameWithoutExtension()
+    {
+        return FilenameUtils.removeExtension(this.filename);
+    }
+
+    /**
      * Returns the comic's ID.
      *
      * @return the ID
@@ -500,7 +512,7 @@ public class Comic
 
     public int getIndexFor(Page page)
     {
-        if (this.pages.contains(page)) { return this.pages.indexOf(page); }
+        if (this.pages.contains(page)) return this.pages.indexOf(page);
 
         return -1;
     }

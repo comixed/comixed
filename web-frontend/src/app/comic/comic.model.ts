@@ -20,6 +20,7 @@
 export class Comic {
   id: number;
   filename: string;
+  base_filename: string;
   publisher: string;
   series: string;
   volume: string;
@@ -45,6 +46,7 @@ export class Comic {
   constructor(
     id?: number,
     filename?: string,
+    base_filename?: string,
     publisher?: string,
     series?: string,
     volume?: string,
@@ -69,6 +71,7 @@ export class Comic {
   ) {
     this.id = id;
     this.filename = filename;
+    this.base_filename = base_filename;
     this.publisher = publisher;
     this.series = series;
     this.volume = volume;

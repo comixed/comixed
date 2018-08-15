@@ -68,7 +68,7 @@ public class ComicTest
     public void testBaseFilename()
     {
         this.comic.setFilename(TEST_FILENAME);
-        assertEquals(TEST_BASE_FILENAME, this.comic.getBaseFilename());
+        assertEquals(TEST_BASE_FILENAME, this.comic.getFilenameWithoutExtension());
     }
 
     @Test
