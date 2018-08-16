@@ -80,14 +80,7 @@ export class ImportComicListComponent implements OnInit {
           that.waiting_on_imports = false;
         });
     }, 250);
-    this.user_service.get_user_preference('cover_size').subscribe(
-      (cover_size: number) => {
-        this.cover_size = cover_size || 200;
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Error loading user preference: cover_size', error);
-      }
-    );
+    this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
   }
 
   on_load(): void {

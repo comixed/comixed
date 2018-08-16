@@ -104,8 +104,15 @@ export class UserService {
     return this.http.post(`${this.api_url}/user/password`, params);
   }
 
-  get_user_preference(name: String): Observable<any> {
-    return this.http.get(`${this.api_url}/user/property?name=${name}`);
+  get_user_preference(name: String, default_value: string): string {
+    if (this.user) {
+      for (const preference of this.user.preferences) {
+        if (preference.name === name) {
+          return preference.value;
+        }
+      }
+    }
+    return default_value;
   }
 
   set_user_preference(name: string, value: string): void {

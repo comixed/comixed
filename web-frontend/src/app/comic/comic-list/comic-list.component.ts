@@ -74,14 +74,7 @@ export class ComicListComponent implements OnInit {
       (comic: Comic) => {
         this.current_comic = comic;
       });
-    this.user_service.get_user_preference('cover_size').subscribe(
-      (cover_size: number) => {
-        this.cover_size = cover_size || 128;
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Error loading user preference: cover_size', error);
-      }
-    );
+    this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
   }
 
   get_image_url(comic: Comic): string {
