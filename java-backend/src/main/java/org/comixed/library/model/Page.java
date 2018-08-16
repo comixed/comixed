@@ -63,7 +63,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 {@NamedQuery(name = "Page.getDuplicatePageList",
              query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),
  @NamedQuery(name = "Page.getDuplicatePageCount",
-             query = "SELECT COUNT(p) FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),})
+             query = "SELECT COUNT(p) FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),
+ @NamedQuery(name = "Page.getDuplicatePageHashes",
+             query = "SELECT DISTINCT(p.hash) from Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)")})
 public class Page
 {
 
@@ -426,6 +428,11 @@ public class Page
         return result;
     }
 
+    public boolean isBlocked()
+    {
+        return this.blocked;
+    }
+
     /**
      * Returns if the page is marked for deletion.
      *
@@ -488,10 +495,5 @@ public class Page
     {
         this.logger.debug("Changing page type: {}", pageType.getId());
         this.pageType = pageType;
-    }
-
-    public boolean isBlocked()
-    {
-        return this.blocked;
     }
 }

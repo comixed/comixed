@@ -38,6 +38,13 @@ public interface PageRepository extends
     int getDuplicatePageCount();
 
     /**
+     * Returns an array of duplicate page hashes.
+     *
+     * @return the duplicate page hashes
+     */
+    List<String> getDuplicatePageHashes();
+
+    /**
      * Returns the list of pages that are duplicates.
      *
      * @return the page list

@@ -21,6 +21,7 @@ package org.comixed.repositories;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -53,6 +54,7 @@ public class PageRepositoryTest
 {
     private static final Long BLOCKED_PAGE_ID = 1000L;
     private static final Long UNBLOCKED_PAGE_ID = 1001L;
+    private static final String TEST_DUPLICATE_PAGE_HASH = "12346";
 
     @Autowired
     private PageRepository repository;
@@ -89,5 +91,16 @@ public class PageRepositoryTest
         Page result = repository.findOne(UNBLOCKED_PAGE_ID);
 
         assertFalse(result.isBlocked());
+    }
+
+    @Test
+    public void testGetDuplicatePageHashes()
+    {
+        List<String> result = repository.getDuplicatePageHashes();
+
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(1, result.size());
+        assertEquals(TEST_DUPLICATE_PAGE_HASH, result.get(0));
     }
 }
