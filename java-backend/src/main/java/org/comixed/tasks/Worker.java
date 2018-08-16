@@ -112,12 +112,12 @@ public class Worker implements
     {
         this.logger.debug("Starting worker thread");
 
-        new Thread(this, "ComixEd-Worker").start();
+        new Thread(this, "ComiXed-Worker").start();
     }
 
     public void beginWorkerThread()
     {
-        new Thread(this, "ComixEd-Worker").start();
+        new Thread(this, "ComiXed-Worker").start();
     }
 
     void fireQueueChangedEvent()

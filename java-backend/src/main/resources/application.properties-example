@@ -1,7 +1,7 @@
 # turn off banner
 spring.main.banner-mode=off
 
-spring.application.name=ComixEd
+spring.application.name=ComiXed
 
 # web configuration
 server.port=7171

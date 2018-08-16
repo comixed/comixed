@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 public class WebRequestProcessor
 {
     public static final String AGENT_HEADER = "User-Agent";
-    public static final String AGENT_NAME = "ComixEd/" + ComiXedApp.VERSION;
+    public static final String AGENT_NAME = "ComiXed/" + ComiXedApp.VERSION;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
