@@ -1,5 +1,5 @@
 /*
- * ComixEd - A digital comic book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ import {ComicService} from './comic/comic.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  title = 'ComixEd';
+  title = 'ComiXed';
   alert_type: string;
   alert_message: string;
   busy_message: string;

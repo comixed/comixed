@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('ComixEd Web App', () => {
+describe('ComiXed Web App', () => {
   let page: AppPage;
 
   beforeEach(() => {
