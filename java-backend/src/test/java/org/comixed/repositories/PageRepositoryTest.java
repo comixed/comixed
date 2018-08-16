@@ -22,6 +22,7 @@ package org.comixed.repositories;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -121,5 +122,22 @@ public class PageRepositoryTest
 
         assertNotNull(result);
         assertEquals(3, result.size());
+    }
+
+    @Test
+    public void testFindFirstByHashForNonexistentHash()
+    {
+        Page result = repository.findFirstByHash(TEST_UNKNOWN_PAGE_HASH);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void testFindFirstByHash()
+    {
+        Page result = repository.findFirstByHash(TEST_DUPLICATE_PAGE_HASH);
+
+        assertNotNull(result);
+        assertEquals(TEST_DUPLICATE_PAGE_HASH, result.getHash());
     }
 }
