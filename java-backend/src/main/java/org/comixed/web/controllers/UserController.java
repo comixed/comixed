@@ -22,6 +22,7 @@ package org.comixed.web.controllers;
 import java.security.Principal;
 
 import org.comixed.library.model.ComiXedUser;
+import org.comixed.library.model.View;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.util.Utils;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -46,9 +49,22 @@ public class UserController
 
     @RequestMapping(value = "/user",
                     method = RequestMethod.GET)
-    public Principal getCurrentUser(Principal user)
+    @JsonView(View.Details.class)
+    public ComiXedUser getCurrentUser(Principal user)
     {
-        return user;
+        logger.debug("Returning current user");
+
+        if (user == null)
+        {
+            logger.debug("Not authenticated");
+            return null;
+        }
+
+        logger.debug("Loading user: {}", user.getName());
+        ComiXedUser comiXedUser = userRepository.findByEmail(user.getName());
+        comiXedUser.setAuthenticated(true);
+
+        return comiXedUser;
     }
 
     @RequestMapping(value = "/user/property",

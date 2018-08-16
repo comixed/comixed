@@ -26,6 +26,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,7 +35,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
@@ -50,6 +53,7 @@ public class ComiXedUser
             updatable = true,
             nullable = false,
             unique = true)
+    @JsonView(View.List.class)
     private String email;
 
     @Column(name = "password_hash",
@@ -60,11 +64,15 @@ public class ComiXedUser
     @Column(name = "first_login_date",
             nullable = false,
             updatable = false)
+    @JsonProperty("first_login_date")
+    @JsonView(View.Details.class)
     private Date firstLoginDate = new Date();
 
     @Column(name = "last_login_date",
             nullable = false,
             updatable = true)
+    @JsonProperty("last_login_date")
+    @JsonView(View.List.class)
     private Date lastLoginDate = new Date();
 
     @ManyToMany
@@ -73,12 +81,18 @@ public class ComiXedUser
                                          referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "role_id",
                                                 referencedColumnName = "id"))
+    @JsonView(View.Details.class)
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL,
-               orphanRemoval = true)
-    @JsonView(View.List.class)
+    @OneToMany(mappedBy = "user",
+               cascade = CascadeType.ALL,
+               fetch = FetchType.EAGER)
+    @JsonView(View.Details.class)
     private List<Preference> preferences = new ArrayList<>();
+
+    @Transient
+    @JsonView(View.Details.class)
+    private boolean authenticated = false;
 
     public String getEmail()
     {
@@ -127,6 +141,16 @@ public class ComiXedUser
         return this.roles;
     }
 
+    public boolean isAuthenticated()
+    {
+        return this.authenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated)
+    {
+        this.authenticated = authenticated;
+    }
+
     public void setEmail(String email)
     {
         this.email = email;
@@ -152,7 +176,7 @@ public class ComiXedUser
      */
     public void setProperty(String name, String value)
     {
-        for (Preference preference : preferences)
+        for (Preference preference : this.preferences)
         {
             if (preference.getName().equals(name))
             {
@@ -160,6 +184,6 @@ public class ComiXedUser
                 return;
             }
         }
-        this.preferences.add(new Preference(name, value));
+        this.preferences.add(new Preference(this, name, value));
     }
 }

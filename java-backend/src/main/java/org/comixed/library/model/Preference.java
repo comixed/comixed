@@ -24,7 +24,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "user_preferences")
@@ -34,20 +39,28 @@ public class Preference
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private ComiXedUser user;
+
     @Column(name = "name",
             nullable = false)
+    @JsonView(View.Details.class)
     private String name;
 
     @Column(name = "value",
             updatable = true,
             nullable = false)
+    @JsonView(View.Details.class)
     private String value;
 
     public Preference()
     {}
 
-    public Preference(String name, String value)
+    public Preference(ComiXedUser user, String name, String value)
     {
+        this.user = user;
         this.name = name;
         this.value = value;
     }

@@ -30,6 +30,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
@@ -38,16 +39,18 @@ public class Role
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(View.List.class)
+    @JsonIgnore
     private Long id;
 
     @Column(name = "name",
             updatable = true,
             nullable = false,
             unique = true)
+    @JsonView(View.Details.class)
     private String name;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     private List<ComiXedUser> users = new ArrayList<>();
 
     public Long getId()
