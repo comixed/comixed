@@ -1,36 +1,25 @@
-<div class='media'>
-  <img class='m4-3' src='{{image_url}}' width='{{image_size}}'>
-  <div class='media-body'>
-    <h4>{{page_title}}</h4>
-    <button *ngIf='!show_comics' class='btn btn-info'
-      (click)='show_comics=true'>Show Comics</button>
-    <button *ngIf='show_comics' class='btn btn-info'
-      (click)='show_comics=false'>Hide Comics</button>
-    <button *ngIf='!all_are_deleted' type='button'
-      class='btn btn-danger' (click)='delete_all_pages()'>Mark
-      all as deleted</button>
-    <button *ngIf='all_are_deleted' type='button'
-      class='btn btn-warning' (click)='undelete_all_pages()'>Unmark
-      all as deleted</button>
-    <p>
-      <strong>Hash value:</strong> {{page_hash}}
-    </p>
-    <div *ngIf='show_comics' class='container'>
-      <div *ngFor='let comic of comics'>
-        <div class='media mt-3'>
-          <img class='m4-3' width='128'
-            src='{{get_cover_url_for_comic(comic.id)}}'>
-          <div class='media-body'></div>
-          <h6>{{comic.filename}}</h6>
-          <button *ngIf='!page_is_deleted_in_comic(comic)'
-            class='btn btn-danger' (click)='delete_page_in_comic(comic)'>Delete
-            Page</button>
-          <button *ngIf='page_is_deleted_in_comic(comic)'
-            class='btn btn-warning'
-            (click)='undelete_page_in_comic(comic)'>Undelete
-            Page</button>
-        </div>
-      </div>
+<div class='card comic-cover-card p-1 m-1'>
+  <div class='card-body p-1' [style.width]='"" + image_size + "px"'>
+    <div class='card-title text-nowrap text-truncate'>{{page_hash}}</div>
+    <div class='card-subtitle text-nowrap text-truncate'
+      [style.width]='"" + image_size + "px"'>{{pages.length}}
+      instance{{pages.length !== 1 ? 's' : ''}}</div>
+    <div *ngIf='!all_are_deleted'
+      class='container-fluid w-100 justify-content-center mb-2'>
+      <button type='button' class='btn btn-sm btn-danger w-100'
+        (click)='delete_all_pages()'>Delete All</button>
     </div>
+    <div *ngIf='all_are_deleted'
+      class='container-fluid w-100 justify-content-center mb-2'>
+      <button type='button' class='btn btn-sm btn-warning w-100'
+        (click)='undelete_all_pages()'>Undelete All</button>
+    </div>
+    <div class='container-fluid w-100 justify-content-center mb-2'>
+      <button type='button' class='btn btn-small btn-info w-100'
+        (click)='show_comics_clicked($event)' data-toggle='modal'
+        data-target='#display_comics_with_duplicates'>Show
+        Comics</button>
+    </div>
+    <img class='card-img-bottom mb-2 img-fluid' src='{{image_url}}'>
   </div>
 </div>

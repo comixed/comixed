@@ -17,9 +17,16 @@
  * org.comixed;
  */
 
-import {Component, OnInit} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
+import {Subject} from 'rxjs/Subject';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import {ComicService} from '../comic.service';
+import {UserService} from '../../user.service';
 import {AlertService} from '../../alert.service';
 import {Page} from '../page.model';
 import {Comic} from '../comic.model';
@@ -30,67 +37,72 @@ import {DuplicatePageListEntryComponent} from '../duplicate-page-list-entry/dupl
   templateUrl: './duplicate-page-list.component.html',
   styleUrls: ['./duplicate-page-list.component.css']
 })
-export class DuplicatePageListComponent implements OnInit {
-  protected page_hashes = new Array<string>();
-  protected comics_by_page_hash = new Map<string, Array<Comic>>();
-  protected pages_by_page_hash = new Map<string, Array<Page>>();
-  protected pages_for_comic_id_by_page_hash = new Map<string, Map<number, Page>>();
-  protected page_count = 0;
-  protected comic_count = 0;
-  protected show_consolidation_div = true;
-  protected work_queue = Array<any>();
+export class DuplicatePageListComponent implements OnInit, OnDestroy {
+  protected page_hashes: Array<string>;
+  protected page_sizes: any[] = [
+    {id: 0, label: '10 comics'},
+    {id: 1, label: '25 comics'},
+    {id: 2, label: '50 comics'},
+    {id: 3, label: '100 comics'}
+  ];
+  protected page_size = 10;
+  protected current_page;
+  protected show_pages_subject: Subject<Array<Page>>;
+  protected delete_page_subject: Subject<Page>;
+  protected undelete_page_subject: Subject<Page>;
+  protected show_pages: Array<Page>;
+  protected image_size: number;
 
   constructor(
     private comic_service: ComicService,
+    private user_service: UserService,
     private alert_service: AlertService,
-  ) {}
+  ) {
+    this.page_hashes = [];
+    this.show_pages = [];
+    this.show_pages_subject = new BehaviorSubject<Array<Page>>([]);
+    this.delete_page_subject = new BehaviorSubject<Page>(null);
+    this.undelete_page_subject = new BehaviorSubject<Page>(null);
+  }
 
   ngOnInit() {
     const that = this;
-    this.work_queue.push(true);
+    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
     this.alert_service.show_busy_message('Loading Duplicate Pages...');
-    this.comic_service.get_duplicate_page_list().subscribe(
-      (pages: Page[]) => {
-        const comic_ids = [];
-        pages.forEach((page) => {
-          that.work_queue.push(true);
-          // if this is the first time we've seen this hash, register it and create the page array
-          if (that.page_hashes.includes(page.hash) === false) {
-            that.page_count = that.page_count + 1;
-            that.page_hashes.push(page.hash);
-            that.comics_by_page_hash[page.hash] = [];
-            that.pages_by_page_hash[page.hash] = [];
-            that.pages_for_comic_id_by_page_hash[page.hash] = new Map<number, Page>();
-          }
-          // store the page itself
-          that.pages_by_page_hash[page.hash].push(page);
-
-          // it's possible the same page is in a comic twice, but let's ignore that
-          that.comic_service.load_comic_from_remote(page.comic_id).subscribe(
-            (comic: Comic) => {
-              that.comics_by_page_hash[page.hash].push(comic);
-              that.comic_count = that.comic_count + 1;
-              that.pages_for_comic_id_by_page_hash[page.hash][comic.id] = page;
-              that.work_queue.pop();
-              if (that.work_queue.length === 0) {
-                this.alert_service.show_busy_message('');
-              }
-            }
-          );
-        });
-        that.work_queue.pop();
-        if (that.work_queue.length === 0) {
-          this.alert_service.show_busy_message('');
-        }
+    this.comic_service.get_duplicate_page_hashes().subscribe(
+      (page_hashes: Array<string>) => {
+        that.page_hashes = page_hashes;
+        that.alert_service.show_busy_message('');
       });
+    this.show_pages_subject.subscribe(
+      (pages: Page[]) => {
+        that.show_pages = pages;
+      }
+    );
   }
 
-  get_title_for_hash(page_hash): string {
-    const comics = this.comics_by_page_hash[page_hash];
-    return 'Appears in ' + comics.length + ' comic' + (comics.length > 1 ? 's' : '') + '.';
+  ngOnDestroy(): void {
+    this.alert_service.show_busy_message('');
   }
 
-  toggle_consolidation_message(): void {
-    this.show_consolidation_div = !this.show_consolidation_div;
+  set_page_size(page_size_choice: string): void {
+    switch (parseInt(page_size_choice, 10)) {
+      case 0: this.page_size = 10; break;
+      case 1: this.page_size = 25; break;
+      case 2: this.page_size = 50; break;
+      case 3: this.page_size = 100; break;
+    }
+  }
+
+  get_cover_url_for_page(page: Page): string {
+    return this.comic_service.get_url_for_page_by_comic_index(page.comic_id, 0);
+  }
+
+  delete_page(page: Page): void {
+    this.delete_page_subject.next(page);
+  }
+
+  undelete_page(page: Page): void {
+    this.undelete_page_subject.next(page);
   }
 }

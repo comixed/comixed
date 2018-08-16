@@ -28,3 +28,11 @@
 .comic-entry {
 	padding: 0px 0px 5px 15px;
 }
+
+.duplicate-page-buttons {
+	bottom: 0;
+}
+
+.affected-comic {
+	background: #996666;
+}

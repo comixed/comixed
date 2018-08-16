@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, AfterViewInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {LoadingModule} from 'ngx-loading';
 
@@ -30,7 +30,7 @@ import {ComicService} from './comic/comic.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements AfterViewInit {
   title = 'ComiXed';
   alert_type: string;
   alert_message: string;
@@ -47,7 +47,8 @@ export class AppComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+
+  ngAfterViewInit(): void {
     this.alert_service.error_messages.subscribe(
       (message: string) => {
         this.alert_type = 'alert-danger';

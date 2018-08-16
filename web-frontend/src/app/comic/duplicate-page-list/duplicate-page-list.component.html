@@ -1,44 +1,105 @@
-<div *ngIf='this.page_count === 0' class='row'>
-  <div class='container'>
-    <div class='row justify-content-center'>
-      <h4>There are currently no duplicate pages in the library.</h4>
+<!-- comics with duplicate pages modal -->
+<div id='display_comics_with_duplicates' class='modal fade'
+  role='dialog'>
+  <div class='modal-dialog modal-lg'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h4 class='modal-title w-100 text-center'>Comics Containing
+          This Page</h4>
+      </div>
+      <div class='modal-body'>
+        <div class='media'>
+          <div class='media-left media-center'></div>
+          <div class='media-body'>
+            <div class='row w-100 justify-content-center'>
+              <div *ngFor='let page of show_pages'
+                class='card comic-cover-card p-1 m-1'
+                [style.width]='"" + image_size + "px"'>
+                <div class='card-body p-1 comic-with-duplicate-page'>
+                  <img class='card-img-bottom mb-2 img-fluid'
+                    src='{{get_cover_url_for_page(page)}}'
+                    [style.width]='"" + image_size + "px"'>
+                  <div class='container w-100 align-items-center'>
+                    <div *ngIf='page.deleted'>
+                      <button class='btn btn-sm btn-warning w-100'
+                        (click)='undelete_page(page)'>Undelete</button>
+                    </div>
+                    <div *ngIf='!page.deleted'>
+                      <button class='btn btn-sm btn-danger w-100'
+                        (click)='delete_page(page)'>Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-<div *ngIf='this.page_count > 0' class='row'>
-  <div class='container'>
-    <div class='row justify-content-center'>
-      <h4>There are currently {{page_count}} duplicate pages across
-        {{comic_count}} comics.</h4>
-    </div>
-    <div>
-      <p class='text-right'>
-        <span class='fa fa-bell'
-          (click)='toggle_consolidation_message()'></span>
-      </p>
-    </div>
-    <div class='row justify-content-center'
-      *ngIf='show_consolidation_div'>
-      <div class='col-md-4 border m-10'>
-        <h5 class='text-center'>Deleting Duplicate Pages</h5>
-        <p>
-          You can delete all instances of each of these pages by
-          clicking on the <em>Mark all as deleted</em> button for each
-          duplicate page.
-        </p>
-        <p>Then the next time you consolidate your library those
-          pages will be deleted from the comics containing them.</p>
-        <p class='text-center'>
-          <a href='#' class='card-link'>Consolidate library now...</a>
-        </p>
+<!-- duplicate pages view -->
+<div *ngIf='page_hashes.length === 0' class='container-fluid'>
+  <div class='container w-100 justify-content-center'>
+    <h4 class='text-center'>No Duplicate Pages To Show.</h4>
+  </div>
+</div>
+<div *ngIf='page_hashes.length > 0' class='container-fluid w-100'>
+  <div class='row w-100'>
+    <div class='row w-100'>
+      <div class='col-3 bg-light text-black pl-5'>
+        <h4 class='text-center'>Duplicate Pages</h4>
+        <div class='row w-100'>
+          <div class='field'>
+            <label for='number-of-comics-per-page'># of comics
+              per page: </label>
+          </div>
+          <div class='field row w-100'>
+            <select id='number-of-comics-per-page'
+              class='form-control w-100' #sizeElem
+              (change)='set_page_size(sizeElem.value)'>
+              <option *ngFor='let option of page_sizes'
+                [value]='option.id'>{{option.label}}</option>
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class='row border' *ngFor='let page_hash of page_hashes'>
-      <app-duplicate-list-entry [page_hash]='page_hash'
-        [pages]='pages_by_page_hash[page_hash]'
-        [pages_for_comic_id]='pages_for_comic_id_by_page_hash[page_hash]'
-        [comics]='comics_by_page_hash[page_hash]'
-        [page_title]='get_title_for_hash(page_hash)'></app-duplicate-list-entry>
+      <div class='col-9'>
+        <div class='container-fluid w-100'>
+          <h2 class='text-center'>There Are {{page_hashes.length}}
+            Pages Duplicated In The Library.</h2>
+        </div>
+        <!--  page navigation -->
+        <div
+          class='container-fluid w-100 justify-content-center bg-secondary text-white'>
+          <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+        </div>
+        <div class='container-fluid justify-content-center'>
+          <div id='consolidation-message' class='bg-info text-white p-3'>
+            <h5 class='text-center'>Deleting Duplicate Pages</h5>
+            <p>
+              You can delete all instances of each of these pages by
+              clicking on the <em>Mark all as deleted</em> button for
+              each duplicate page.
+            </p>
+            <p>Then the next time you consolidate your library those
+              pages will be deleted from the comics containing them.</p>
+            <p class='text-center'>
+              <a href='#' class='card-link text-light'>Consolidate
+                library now...</a>
+            </p>
+          </div>
+        </div>
+        <div class='row w-100'>
+          <app-duplicate-list-entry
+            *ngFor='let page_hash of page_hashes | paginate: { itemsPerPage: page_size, currentPage: current_page }'
+            [page_hash]='page_hash'
+            [show_pages_target]='show_pages_subject'
+            [delete_page_target]='delete_page_subject'
+            [undelete_page_target]='undelete_page_subject'>
+          </app-duplicate-list-entry>
+        </div>
+      </div>
     </div>
   </div>
 </div>

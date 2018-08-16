@@ -17,9 +17,15 @@
  * org.comixed;
  */
 
-import {Component, OnInit, Input} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import {UserService} from '../../user.service';
 import {ComicService} from '../comic.service';
@@ -34,42 +40,58 @@ import {Comic} from '../comic.model';
 })
 export class DuplicatePageListEntryComponent implements OnInit {
   @Input() page_hash: string;
-  @Input() pages: Array<Page>;
-  @Input() comics: Comic[];
-  @Input() pages_for_comic_id: Map<number, Page>;
-  @Input() page_title: string;
-  @Input() page_subtitle: string;
-  image_url: string;
-  image_size: number;
-  all_are_deleted: boolean;
-  show_comics = false;
-  delete_page_title: string;
-  undelete_page_title: string;
-  delete_page_message: string;
-  undelete_page_message: string;
+  @Input() show_pages_target: Subject<Array<Page>>;
+  @Input() delete_page_target: Subject<Page>;
+  @Input() undelete_page_target: Subject<Page>;
+  pages: Array<Page>;
+  all_are_deleted = false;
   confirm_button = 'Yes';
   cancel_button = 'No';
+  image_url: string;
+  image_size: number;
+  show_comics = false;
 
   constructor(
     private router: Router,
     private user_service: UserService,
     private comic_service: ComicService,
-    private errors_service: AlertService,
-  ) {}
+    private alert_service: AlertService,
+  ) {
+    this.pages = [];
+  }
 
   ngOnInit() {
     const that = this;
-    this.update_all_are_deleted();
-    this.image_url = this.comic_service.get_url_for_page_by_id(this.pages[0].id);
+    this.image_url = this.comic_service.get_url_for_page_by_hash(this.page_hash);
     this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
+    this.update_all_are_deleted();
+    this.comic_service.get_pages_for_hash(this.page_hash).subscribe(
+      (pages: Array<Page>) => {
+        this.pages = pages;
+        this.update_all_are_deleted();
+      },
+      (error: Error) => {
+        this.alert_service.show_error_message('Error getting pages for duplicate hash...', error);
+      }
+    );
+    this.delete_page_target.subscribe(
+      (page: Page) => {
+        if (this.pages.includes(page)) {
+          this.delete_page(page);
+        }
+      }
+    );
+    this.undelete_page_target.subscribe(
+      (page: Page) => {
+        if (this.pages.includes(page)) {
+          this.undelete_page(page);
+        }
+      }
+    );
   }
 
   update_all_are_deleted(): void {
     this.all_are_deleted = this.pages.every((page) => page.deleted === true);
-  }
-
-  get_cover_url_for_comic(comic_id: number): string {
-    return this.comic_service.get_url_for_page_by_comic_index(comic_id, 0);
   }
 
   delete_all_pages(): void {
@@ -80,27 +102,13 @@ export class DuplicatePageListEntryComponent implements OnInit {
     this.pages.forEach((page) => this.undelete_page(page));
   }
 
-  page_is_deleted_in_comic(comic: Comic): boolean {
-    return this.pages_for_comic_id[comic.id].deleted;
-  }
-
-  delete_page_in_comic(comic: Comic): void {
-    const page = this.pages_for_comic_id[comic.id];
-    this.delete_page(page);
-  }
-
-  undelete_page_in_comic(comic: Comic): void {
-    const page = this.pages_for_comic_id[comic.id];
-    this.undelete_page(page);
-  }
-
   delete_page(page: Page): void {
     this.comic_service.mark_page_as_deleted(page).subscribe(
       (response) => {
         page.deleted = true;
       },
       (error: Error) => {
-        this.errors_service.show_error_message(error.message, error);
+        this.alert_service.show_error_message(error.message, error);
       },
       () => {
         this.update_all_are_deleted();
@@ -114,11 +122,16 @@ export class DuplicatePageListEntryComponent implements OnInit {
         page.deleted = false;
       },
       (error: Error) => {
-        this.errors_service.show_error_message(error.message, error);
+        this.alert_service.show_error_message(error.message, error);
       },
       () => {
         this.update_all_are_deleted();
       }
     );
+  }
+
+  show_comics_clicked(event: any): void {
+    this.show_pages_target.next(this.pages);
+    event.preventDefault();
   }
 }
