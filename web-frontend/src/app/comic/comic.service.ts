@@ -147,6 +147,10 @@ export class ComicService {
     return this.http.get(`${this.api_url}/pages/duplicates/hashes`);
   }
 
+  get_pages_for_hash(page_hash: string): Observable<any> {
+    return this.http.get(`${this.api_url}/pages/hashes/${page_hash}`);
+  }
+
   mark_page_as_deleted(page: Page): Observable<any> {
     return this.http.delete(`${this.api_url}/pages/${page.id}`);
   }
