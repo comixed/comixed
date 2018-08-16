@@ -143,8 +143,8 @@ export class ComicService {
     return this.http.get(`${this.api_url}/pages/duplicates/count`);
   }
 
-  get_duplicate_page_list(): Observable<any> {
-    return this.http.get(`${this.api_url}/pages/duplicates`);
+  get_duplicate_page_hashes(): Observable<any> {
+    return this.http.get(`${this.api_url}/pages/duplicates/hashes`);
   }
 
   mark_page_as_deleted(page: Page): Observable<any> {
