@@ -52,30 +52,19 @@ public class UserController
     @JsonView(View.Details.class)
     public ComiXedUser getCurrentUser(Principal user)
     {
-        logger.debug("Returning current user");
+        this.logger.debug("Returning current user");
 
         if (user == null)
         {
-            logger.debug("Not authenticated");
+            this.logger.debug("Not authenticated");
             return null;
         }
 
-        logger.debug("Loading user: {}", user.getName());
-        ComiXedUser comiXedUser = userRepository.findByEmail(user.getName());
+        this.logger.debug("Loading user: {}", user.getName());
+        ComiXedUser comiXedUser = this.userRepository.findByEmail(user.getName());
         comiXedUser.setAuthenticated(true);
 
         return comiXedUser;
-    }
-
-    @RequestMapping(value = "/user/property",
-                    method = RequestMethod.GET)
-    public String getUserProperty(Authentication authentication, @RequestParam("name") String name)
-    {
-        this.logger.debug("Loading user: email={}", authentication.getName());
-        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
-
-        this.logger.debug("Return property: {}={}", name, user.getPreference(name));
-        return user.getPreference(name);
     }
 
     @RequestMapping(value = "/user/property",
@@ -84,11 +73,35 @@ public class UserController
                                 @RequestParam("name") String name,
                                 @RequestParam("value") String value)
     {
-        this.logger.debug("Loading user: email={}", authentication.getName());
-        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
+        this.logger.debug("Setting user property");
+
+        String email = authentication.getName();
+
+        this.logger.debug("Loading user: email={}", email);
+        ComiXedUser user = this.userRepository.findByEmail(email);
+
+        if (user == null)
+        {
+            this.logger.debug("No such user: {}", email);
+            return;
+        }
 
         this.logger.debug("Setting property: {}={}", name, value);
         user.setProperty(name, value);
+        this.userRepository.save(user);
+    }
+
+    @RequestMapping(value = "/user/password",
+                    method = RequestMethod.POST)
+    public void updatePassword(Authentication authentication, @RequestParam("password") String password)
+    {
+        this.logger.debug("Updating password for: email={}", authentication.getName());
+        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
+
+        String hash = this.utils.createHash(password.getBytes());
+        this.logger.debug("Setting password: hash={}", hash);
+        user.setPasswordHash(hash);
+
         this.userRepository.save(user);
     }
 
@@ -108,22 +121,8 @@ public class UserController
         }
         else
         {
-            logger.debug("User is no longer authenticated");
+            this.logger.debug("User is no longer authenticated");
             authentication.setAuthenticated(false);
         }
-    }
-
-    @RequestMapping(value = "/user/password",
-                    method = RequestMethod.POST)
-    public void updatePassword(Authentication authentication, @RequestParam("password") String password)
-    {
-        this.logger.debug("Updating password for: email={}", authentication.getName());
-        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
-
-        String hash = this.utils.createHash(password.getBytes());
-        this.logger.debug("Setting password: hash={}", hash);
-        user.setPasswordHash(hash);
-
-        this.userRepository.save(user);
     }
 }
