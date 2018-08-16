@@ -128,6 +128,19 @@ public class PageController
         return this.pageRepository.getDuplicatePageCount();
     }
 
+    @RequestMapping(value = "/pages/duplicates/hashes",
+                    method = RequestMethod.GET)
+    public List<String> getDuplicatePageHashes()
+    {
+        this.logger.debug("Fetching the list of duplicate page hashes");
+
+        List<String> result = this.pageRepository.getDuplicatePageHashes();
+
+        this.logger.debug("Retrieved {} hashes", result.size());
+
+        return result;
+    }
+
     @RequestMapping(value = "/pages/duplicates",
                     method = RequestMethod.GET)
     @JsonView(View.Details.class)

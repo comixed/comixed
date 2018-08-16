@@ -19,7 +19,15 @@
 
 package org.comixed.web.controllers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Page;
@@ -48,6 +56,17 @@ public class PageControllerTest
     {"12345",
      "23456",
      "34567"};
+    private static final String DUPLICATE_PAGE_HASH_1 = "01234567890ABCDEF";
+    private static final String DUPLICATE_PAGE_HASH_2 = "1234567890ABCDEF1";
+    private static final String DUPLICATE_PAGE_HASH_3 = "234567890ABCDEF01";
+    private static final String DUPLICATE_PAGE_HASH_4 = "34567890ABCDEF012";
+    private static final String DUPLICATE_PAGE_HASH_5 = "4567890ABCDEF0123";
+    private static final List<String> TEST_DUPLICATE_PAGE_HASHES = Arrays.asList(new String[]
+    {DUPLICATE_PAGE_HASH_1,
+     DUPLICATE_PAGE_HASH_2,
+     DUPLICATE_PAGE_HASH_3,
+     DUPLICATE_PAGE_HASH_4,
+     DUPLICATE_PAGE_HASH_5,});
 
     @InjectMocks
     private PageController pageController;
@@ -170,5 +189,33 @@ public class PageControllerTest
         assertSame(BLOCKED_HASH_LIST, result);
 
         Mockito.verify(blockedPageHashRepository, Mockito.times(1)).getAllHashes();
+    }
+
+    @Test
+    public void testGetDuplicatePageHashesNoHashes()
+    {
+        Mockito.when(pageRepository.getDuplicatePageHashes()).thenReturn(new ArrayList<String>());
+
+        List<String> result = pageController.getDuplicatePageHashes();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePageHashes();
+    }
+
+    @Test
+    public void testGetDuplicatePageHashes()
+    {
+
+        Mockito.when(pageRepository.getDuplicatePageHashes()).thenReturn(TEST_DUPLICATE_PAGE_HASHES);
+
+        List<String> result = pageController.getDuplicatePageHashes();
+
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(TEST_DUPLICATE_PAGE_HASHES, result);
+
+        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePageHashes();
     }
 }
