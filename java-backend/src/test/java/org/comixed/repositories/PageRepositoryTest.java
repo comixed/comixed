@@ -55,6 +55,7 @@ public class PageRepositoryTest
     private static final Long BLOCKED_PAGE_ID = 1000L;
     private static final Long UNBLOCKED_PAGE_ID = 1001L;
     private static final String TEST_DUPLICATE_PAGE_HASH = "12346";
+    private static final String TEST_UNKNOWN_PAGE_HASH = "FEDCBA9876543210";
 
     @Autowired
     private PageRepository repository;
@@ -102,5 +103,23 @@ public class PageRepositoryTest
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
         assertEquals(TEST_DUPLICATE_PAGE_HASH, result.get(0));
+    }
+
+    @Test
+    public void testFindAllByHashForNonexistentHash()
+    {
+        List<Page> result = repository.findAllByHash(TEST_UNKNOWN_PAGE_HASH);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFindAllByHash()
+    {
+        List<Page> result = repository.findAllByHash(TEST_DUPLICATE_PAGE_HASH);
+
+        assertNotNull(result);
+        assertEquals(3, result.size());
     }
 }

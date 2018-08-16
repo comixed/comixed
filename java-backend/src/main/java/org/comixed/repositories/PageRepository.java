@@ -31,6 +31,16 @@ public interface PageRepository extends
                                                Long>
 {
     /**
+     * Returns the pages with the given hash.
+     *
+     * @param hash
+     *            the page hash
+     *
+     * @return the pages
+     */
+    List<Page> findAllByHash(String hash);
+
+    /**
      * Returns the number of duplicate pages in the repository.
      *
      * @return the page count
