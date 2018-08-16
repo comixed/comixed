@@ -1,6 +1,6 @@
 # Architecture
 
-This document seeks to describe the big picture architecture of the ComixEd application.
+This document seeks to describe the big picture architecture of the ComiXed application.
 
 ## Working With Comic Files
 

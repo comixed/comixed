@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document is to help you go from 0 to running the ComixEd application on your system.
+This document is to help you go from 0 to running the ComiXed application on your system.
 
 ## Installation
 
@@ -32,14 +32,14 @@ This will launch the application in the current window as a text-only applicatio
 2018-07-24 08:38:44.509  INFO 75198 --- [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
 2018-07-24 08:38:44.520  INFO 75198 --- [           main] o.s.c.support.DefaultLifecycleProcessor  : Starting beans in phase 0
 2018-07-24 08:38:44.640  INFO 75198 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 7171 (http)
-2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixed.ComixEdApp                   : Started ComixEdApp in 8.979 seconds (JVM running for 9.62)
+2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixed.ComiXedApp                   : Started ComiXedApp in 8.979 seconds (JVM running for 9.62)
 ```
 
 ## Logging In And Configuring Your Account
 
 ![account administration](images/account_change.png)
 
-When run for the first time, ComixEd creates two default accounts for logging into the system:
+When run for the first time, ComiXed creates two default accounts for logging into the system:
 
 1. Username: comixedadmin@localhost Password: comixedadmin
 1. Username: comixedreader@localhost Password: comixedreader

@@ -1,8 +1,8 @@
-# ComixEd
+# ComiXed
 An application for managing digital comics.
 
 ## Overview And Goals
-ComixEd is designed to be a digital comics manager. It will:
+ComiXed is designed to be a digital comics manager. It will:
 
  * import your existing and new digital comics
  * organize your comics under a single directory
