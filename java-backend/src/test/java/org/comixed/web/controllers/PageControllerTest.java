@@ -92,6 +92,9 @@ public class PageControllerTest
     @Mock
     private BlockedPageHash blockedPageHash = new BlockedPageHash();
 
+    @Mock
+    private List<Page> pageList;
+
     @Test
     public void testSetPageTypeForNonexistentPage()
     {
@@ -217,5 +220,17 @@ public class PageControllerTest
         assertEquals(TEST_DUPLICATE_PAGE_HASHES, result);
 
         Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePageHashes();
+    }
+
+    @Test
+    public void testGetPagesForHash()
+    {
+        Mockito.when(pageRepository.findAllByHash(Mockito.anyString())).thenReturn(pageList);
+
+        List<Page> result = pageController.getPagesForHash(DUPLICATE_PAGE_HASH_1);
+
+        assertEquals(pageList, result);
+
+        Mockito.verify(pageRepository, Mockito.times(1)).findAllByHash(DUPLICATE_PAGE_HASH_1);
     }
 }

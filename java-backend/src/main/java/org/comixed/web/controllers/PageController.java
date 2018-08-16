@@ -213,6 +213,19 @@ public class PageController
         }
     }
 
+    @RequestMapping(value = "/pages/hashes/{hash}",
+                    method = RequestMethod.GET)
+    public List<Page> getPagesForHash(@PathVariable("hash") String hash)
+    {
+        this.logger.debug("Getting occurances of page hash: {}", hash);
+
+        List<Page> result = this.pageRepository.findAllByHash(hash);
+
+        this.logger.debug("Returning count={}", result);
+
+        return result;
+    }
+
     private List<Page> getPagesForComic(long id)
     {
         Comic comic = this.comicRepository.getComic(id);
