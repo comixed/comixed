@@ -186,6 +186,10 @@ export class ComicService {
     return `${this.api_url}/comics/${comicId}/pages/${index}/content`;
   }
 
+  get_url_for_page_by_hash(hash: string): string {
+    return `${this.api_url}/pages/hashes/${hash}/content`;
+  }
+
   get_url_for_missing_page(): string {
     return '/assets/img/missing.png';
   }
