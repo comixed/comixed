@@ -17,26 +17,48 @@
  * org.comixed;
  */
 
-export class Authority {
-  authority: string;
+export class Role {
+  name: string;
 
-  constructor(authority: string) {
-    this.authority = authority;
+  constructor(
+    name: string,
+  ) {
+    this.name = name;
+  }
+}
+
+export class Preference {
+  name: string;
+  value: string;
+
+  constructor(
+    name: string,
+    value: string,
+  ) {
+    this.name = name;
+    this.value = value;
   }
 }
 
 export class User {
   name: string;
-  authorities: Authority[];
-  authenticated = false;
+  authenticated = true;
+  first_login_date: number;
+  last_login_date: number;
+  roles: Role[];
+  preferences: Preference[];
 
   constructor(
     name?: string,
-    authorities?: Authority[],
-    authenticated?: boolean
+    first_login_date?: number,
+    last_login_date?: number,
+    roles?: Role[],
+    preferences?: Preference[],
   ) {
     this.name = name;
-    this.authorities = authorities;
-    this.authenticated = authenticated;
+    this.first_login_date = first_login_date;
+    this.last_login_date = last_login_date;
+    this.roles = roles;
+    this.preferences = preferences;
   }
 }
