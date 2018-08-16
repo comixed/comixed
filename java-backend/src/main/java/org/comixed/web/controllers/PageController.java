@@ -96,6 +96,18 @@ public class PageController
         }
     }
 
+    private ResponseEntity<InputStreamResource> encodePageContent(Page page)
+    {
+        byte[] content = page.getContent();
+
+        this.logger.debug("Returning {} bytes", content.length);
+
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+        return ResponseEntity.ok().contentLength(content.length)
+                             .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
+                             .contentType(MediaType.parseMediaType("application/x-cbr")).body(resource);
+    }
+
     @RequestMapping(value = "/comics/{id}/pages",
                     method = RequestMethod.GET)
     @JsonView(View.List.class)
@@ -201,16 +213,25 @@ public class PageController
             this.logger.debug("No such page: id={}", id);
             return null;
         }
-        else
-        {
-            this.logger.debug("Returning {} bytes", page.getContent().length);
 
-            byte[] content = page.getContent();
-            InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-            return ResponseEntity.ok().contentLength(content.length)
-                                 .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
-                                 .contentType(MediaType.parseMediaType("application/x-cbr")).body(resource);
+        return this.encodePageContent(page);
+    }
+
+    @RequestMapping(value = "/pages/hashes/{hash}/content",
+                    method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> getPageContentForHash(@PathVariable("hash") String hash)
+    {
+        this.logger.debug("Getting first page content for hash: {}", hash);
+
+        Page page = this.pageRepository.findFirstByHash(hash);
+
+        if (page == null)
+        {
+            this.logger.debug("No page found");
+            return null;
         }
+
+        return this.encodePageContent(page);
     }
 
     @RequestMapping(value = "/pages/hashes/{hash}",
