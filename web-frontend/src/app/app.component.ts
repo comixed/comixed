@@ -96,7 +96,7 @@ export class AppComponent implements OnInit {
   is_admin(): boolean {
     if (this.user_service.is_authenticated()) {
       for (const role of this.user_service.get_user().roles) {
-        if (role.name === 'ROLE_ADMIN') {
+        if (role.name === 'ADMIN') {
           return true;
         }
       }
