@@ -153,20 +153,6 @@ public class PageController
         return result;
     }
 
-    @RequestMapping(value = "/pages/duplicates",
-                    method = RequestMethod.GET)
-    @JsonView(View.Details.class)
-    public List<Page> getDuplicatePages()
-    {
-        this.logger.debug("Getting the list of duplicate pages");
-
-        List<Page> result = this.pageRepository.getDuplicatePageList();
-
-        this.logger.debug("Returning {} duplicate pages", result.size());
-
-        return result;
-    }
-
     @RequestMapping(value = "/comics/{id}/pages/{index}/content",
                     method = RequestMethod.GET)
     public byte[] getImage(@PathVariable("id") long id, @PathVariable("index") int index)
