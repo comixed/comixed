@@ -77,6 +77,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       this.comic_service.load_comic_from_remote(id).subscribe(
         (comic: Comic) => {
           this.comic = comic;
+          this.cover_url = this.comic_service.get_url_for_page_by_comic_index(this.comic.id, 0);
           this.title_text = this.comic_service.get_issue_label_text_for_comic(this.comic);
           this.subtitle_text = this.comic_service.get_issue_content_label_for_comic(this.comic);
         },
