@@ -1,3 +1,13 @@
 #comic-details-info-block {
 	border-radius: 5px;
 }
+
+.horizontal-scrolling-div {
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+}
+
+.horizontal-scrolling-page {
+	display: inline-block;
+}

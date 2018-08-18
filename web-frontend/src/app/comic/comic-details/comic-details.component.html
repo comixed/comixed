@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class='col'>
+    <div class='col-9'>
       <div class='row w-100'>
         <p
           *ngIf='comic.comic_vine_url && comic.comic_vine_url.length > 0'>
@@ -51,100 +51,105 @@
           'MM/yyyy'}}
         </div>
       </div>
-      <div *ngIf='show_story_arcs && has_story_arcs()' class='row w-100'>
-        <ul>
-          <li *ngFor='let story_arc of (comic.story_arcs || [])'>{{story_arc}}</li>
-        </ul>
-      </div>
-      <div class='row w-100'>
+      <div class='row w-100 border'>
         <h4 class='text-left'>
-          <span class='badge badge-info'
+          <span class='badge badge-info mr-3'
             (click)='show_summary = !show_summary'><i class='fa'
             [class.fa-chevron-circle-down]='!show_summary'
             [class.fa-chevron-circle-up]='show_summary'></i></span>Summary
         </h4>
+        <div *ngIf='show_summary' class='row w-100'>
+          <p>{{comic.summary}}</p>
+        </div>
       </div>
-      <div *ngIf='show_summary' class='row w-100'>
-        <p>{{comic.summary}}</p>
-      </div>
-      <div class='row w-100'>
+      <div class='row w-100 border'>
         <h4 class='text-left'>
-          <span class='badge badge-info'
+          <span class='badge badge-info mr-3'
             (click)='show_notes = !show_notes'><i class='fa'
             [class.fa-chevron-circle-down]='!show_notes'
             [class.fa-chevron-circle-up]='show_notes'></i></span>Notes
         </h4>
+        <div *ngIf='show_notes && has_notes()' class='row w-100'>
+          <p>{{comic.notes}}</p>
+        </div>
       </div>
-      <div *ngIf='show_notes' class='row w-100'>
-        <p>{{comic.notes}}</p>
-      </div>
-      <div class='row w-100'>
+      <div class='row w-100 border'>
         <h4 class='text-left'>
-          <span class='badge badge-info'
+          <span class='badge badge-info mr-3'
             (click)='show_characters = !show_characters'><i
             class='fa' [class.fa-chevron-circle-down]='!show_characters'
             [class.fa-chevron-circle-up]='show_characters'></i></span>Characters
-          <span class='badge badge-info'
+          <span class='badge badge-info ml-3'
             (click)='show_characters = !show_characters'>{{(comic.characters
             || []).length}}</span>
         </h4>
+        <div *ngIf='show_characters && has_characters()'
+          class='row w-100'>
+          <ul>
+            <li *ngFor='let character of (comic.characters || [])'>{{character}}</li>
+          </ul>
+        </div>
       </div>
-      <div *ngIf='show_characters' class='row w-100'>
-        <ul>
-          <li *ngFor='let character of (comic.characters || [])'>{{character}}</li>
-        </ul>
-      </div>
-      <div class='row w-100'>
+      <div class='row w-100 border'>
         <h4 class='text-left'>
-          <span class='badge badge-info'
+          <span class='badge badge-info mr-3'
             (click)='show_teams = !show_teams'><i class='fa'
             [class.fa-chevron-circle-down]='!show_teams'
-            [class.fa-chevron-circle-up]='show_teams'></i></span>Teams <span
-            class='badge badge-info' (click)='show_teams = !show_teams'>{{
-            (comic.teams || []).length }}</span>
+            [class.fa-chevron-circle-up]='show_teams'></i></span>Teams<span
+            class='badge badge-info ml-3'
+            (click)='show_teams = !show_teams'>{{ (comic.teams ||
+            []).length }}</span>
         </h4>
+        <div *ngIf='show_teams && has_teams()' class='row w-100'>
+          <ul>
+            <li *ngFor='let character of (comic.teams || [])'>{{character}}</li>
+          </ul>
+        </div>
       </div>
-      <div *ngIf='show_teams' class='row w-100'>
-        <ul>
-          <li *ngFor='let character of (comic.teams || [])'>{{character}}</li>
-        </ul>
-      </div>
-      <div class='row w-100'>
+      <div class='row w-100 border'>
         <h4 class='text-left'>
-          <span class='badge badge-info'
+          <span class='badge badge-info mr-3'
             (click)='show_story_arcs = !show_story_arcs'><i
             class='fa' [class.fa-chevron-circle-down]='!show_story_arcs'
             [class.fa-chevron-circle-up]='show_story_arcs'></i></span>Story
-          Arcs <span class='badge badge-info'>{{(comic.story_arcs
+          Arcs<span class='badge badge-info ml-3'>{{(comic.story_arcs
             || []).length}}</span>
         </h4>
+        <div *ngIf='show_story_arcs && has_story_arcs()'
+          class='row w-100'>
+          <ul>
+            <li *ngFor='let story_arc of (comic.story_arcs || [])'>{{story_arc}}</li>
+          </ul>
+        </div>
       </div>
-      <div class='row w-100'>
+      <div class='row w-100 border'>
         <h4 class='text-left'>
-          <span class='badge badge-info'
+          <span class='badge badge-info mr-3'
             (click)='show_locations = !show_locations'><i
             class='fa' [class.fa-chevron-circle-down]='!show_locations'
             [class.fa-chevron-circle-up]='show_locations'></i></span>Locations<span
-            class='badge badge-info'
+            class='badge badge-info ml-3'
             (click)='show_locations = !show_locations'>{{
             (comic.locations || []).length }}</span>
         </h4>
-      </div>
-      <div *ngIf='show_locations' class='row w-100'>
-        <ul>
-          <li *ngFor='let location of (comic.locations || [])'>{{location}}</li>
-        </ul>
+        <div *ngIf='show_locations && has_locations()' class='row w-100'>
+          <ul>
+            <li *ngFor='let location of (comic.locations || [])'>{{location}}</li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-  <div id='comic_pages' class='container-fluid w-100'>
-    <div class='row w-100'>
-      <h4>Comic Pages</h4>
-    </div>
-    <div class='row w-100'>
-      <app-page-thumbnail *ngFor='let page of comic.pages'
-        [missing]='comic.missing' [page]='page'
-        [page_types]='page_types'></app-page-thumbnail>
+    <div id='comic_pages' class='container-fluid w-100'>
+      <div class='row w-100'>
+        <h4 class='text-center bg-dark text-white w-100 my-3'>Comic
+          Pages</h4>
+      </div>
+      <div class='horizontal-scrolling-div'>
+        <app-page-thumbnail *ngFor='let page of comic.pages'
+          class='horizontal-scrolling-page'
+          [class.d-none]='page_is_cover(page)' [missing]='comic.missing'
+          [page]='page' [page_types]='page_types'></app-page-thumbnail>
+      </div>
     </div>
   </div>
 </div>

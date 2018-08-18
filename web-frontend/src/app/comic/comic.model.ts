@@ -17,6 +17,8 @@
  * org.comixed;
  */
 
+import {Page} from './page.model';
+
 export class Comic {
   id: number;
   filename: string;
@@ -41,7 +43,7 @@ export class Comic {
   characters: string[];
   teams: string[];
   locations: string[];
-  pages: any[];
+  pages: Page[];
 
   constructor(
     id?: number,
@@ -67,7 +69,7 @@ export class Comic {
     characters?: string[],
     teams?: string[],
     locations?: string[],
-    pages?: any[],
+    pages?: Page[],
   ) {
     this.id = id;
     this.filename = filename;

@@ -99,8 +99,28 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     return `${(this.comic.story_arcs || []).length}`;
   }
 
+  has_notes(): boolean {
+    return this.comic.notes && this.comic.notes.length > 0;
+  }
+
+  has_characters(): boolean {
+    return (this.comic.characters || []).length > 0;
+  }
+
+  has_teams(): boolean {
+    return (this.comic.teams || []).length > 0;
+  }
+
   has_story_arcs(): boolean {
     return this.comic.story_arcs && this.comic.story_arcs.length > 0;
+  }
+
+  has_locations(): boolean {
+    return (this.comic.locations || []).length > 0;
+  }
+
+  page_is_cover(page: Page): boolean {
+    return this.comic.pages[0].id === page.id;
   }
 
   getImageURL(page_id: number): string {
