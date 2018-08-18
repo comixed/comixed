@@ -208,6 +208,14 @@ export class ComicService {
     return `${this.api_url}/files/import/cover?filename=` + encoded_filename;
   }
 
+  get_issue_label_text_for_comic(comic: Comic): string {
+    return `${comic.series || 'Unknown Series'} #${comic.issue_number || '??'} (v.${comic.volume || '????'})`;
+  }
+
+  get_issue_content_label_for_comic(comic: Comic): string {
+    return `${comic.title || '[no title defined]'}`;
+  }
+
   get_download_link_for_comic(comicId: number): string {
     return `${this.api_url}/comics/${comicId}/download`;
   }

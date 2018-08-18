@@ -5,13 +5,15 @@
   </div>
 </div>
 <app-read-viewer [comic]='comic'></app-read-viewer>
-<div id='comic_title_section' class='row'
-  *ngIf='comic.series && comic.volume && comic.issue_number'>
-  <div class='col-md-10'>
-    <h2 class='media-heading'>{{comic.series}}
-      #{{comic.issue_number}} (Vol.{{comic.volume}})</h2>
+<div id='comic-details-info-block'
+  class='container-fluid w-100 p-5 border'>
+  <div class='row w-100'>
+    <h2 class='text-center w-100'>{{title_text}}</h2>
   </div>
-  <div class='col-md-2'>
+  <div class='row w-100'>
+    <h3 class='text-center w-100'>{{subtitle_text}}</h3>
+  </div>
+  <div class='row w-100'>
     <button class='btn btn-primary' data-toggle='modal'
       data-target='#comic-reader-dialog'>Read</button>
   </div>
@@ -72,7 +74,6 @@
     </div>
   </div>
 </div>
-<div id='comic_pages' class='col-md-12'>
   <div class='row'>
     <h4>Comic Pages</h4>
   </div>
