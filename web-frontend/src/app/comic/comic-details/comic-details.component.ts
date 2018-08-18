@@ -40,6 +40,8 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   subtitle_text: string;
   sub: any;
   cover_url = '';
+  show_summary = false;
+  show_notes = false;
   show_characters = false;
   show_teams = false;
   show_story_arcs = false;
@@ -90,6 +92,14 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  get_story_arc_badge_text(): string {
+    return `${(this.comic.story_arcs || []).length}`;
+  }
+
+  has_story_arcs(): boolean {
+    return this.comic.story_arcs && this.comic.story_arcs.length > 0;
   }
 
   getImageURL(page_id: number): string {

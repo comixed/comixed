@@ -17,67 +17,119 @@
     <button class='btn btn-primary' data-toggle='modal'
       data-target='#comic-reader-dialog'>Read</button>
   </div>
-</div>
-<div id='comic_detail_section' class='media'>
-  <div class='media-body'>
-    <div *ngIf='comic.title'>
-      <h4 class='media-heading'>{{comic.title}}</h4>
-      <a *ngIf='comic.comic_vine_url && comic.comic_vine_url.length > 0'
-        href='{{comic.comic_vine_url}}' target='_blank'>View this
+  <div class='row w-100'>
+    <p *ngIf='comic.comic_vine_url && comic.comic_vine_url.length > 0'>
+      <a href='{{comic.comic_vine_url}}' target='_blank'>View this
         comic on ComicVine...</a>
+    </p>
+  </div>
+  <div *ngIf='comic.cover_date' class='row w-100 text-left'>
+    <strong>Published: </strong>{{comic.cover_date | date:'MM/yyyy' }}
+  </div>
+  <div class='row w-100'>
+    <div class='col'>
+      <strong>Added: </strong>{{comic.added_date | date: 'MM/dd/yyyy'}}
     </div>
-    <div *ngIf='comic.story_arcs && comic.story_arcs.length > 0'>
-      <h4 (click)='show_story_arcs = !show_story_arcs'>Story Arcs</h4>
-      <ul *ngIf='show_story_arcs'>
-        <li *ngFor='let story_arc of comic.story_arcs'>{{story_arc}}</li>
-      </ul>
-    </div>
-    <div *ngIf='comic.cover_date'>
-      <p>Published {{comic.cover_date | date:'MM/yyyy' }}
-    </div>
-    <p>Added {{comic.added_date | date: 'MM/dd/yyyy' }}</p>
-    <div *ngIf='comic.last_read_date'>
-      <p>Last read {{comic.last_read_date | date:'MM/dd/yyyy' }}</p>
-    </div>
-    <div *ngIf='comic.summary && comic.summary.length != 0'>
-      <h4>Summary</h4>
-      <p>{{comic.summary}}
-    </div>
-    <div *ngIf='comic.notes && comic.notes.length != 0'>
-      <h4>Notes</h4>
-      <p>{{comic.notes}}
-    </div>
-    <div *ngIf='comic.characters && comic.characters.length != 0'>
-      <h4 (click)='show_characters = !show_characters'>Characters</h4>
-      <ul *ngIf='show_characters'>
-        <li *ngFor='let character of comic.characters'>{{character}}</li>
-      </ul>
-    </div>
-    <div *ngIf='comic.teams && comic.teams.length != 0'>
-      <h4 (click)='show_teams = !show_teams'>Teams</h4>
-      <ul *ngIf='show_teams'>
-        <li *ngFor='let character of comic.teams'>{{character}}</li>
-      </ul>
-    </div>
-    <div *ngIf='comic.locations && comic.locations.length != 0'>
-      <h4 (click)='show_locations = !show_locations'>Locations</h4>
-      <ul *ngIf='show_locations'>
-        <li *ngFor='let location of comic.locations'>{{location}}</li>
-      </ul>
-    </div>
-    <div *ngIf='!comic.missing'>
-      <hr />
-      <p>
-        <a href='{{getDownloadLink()}}'>Download Comic
-          ({{comic.archive_type}}, {{comic.page_count}} pages)</a>
-      </p>
+    <div *ngIf='comic.last_read_date' class='col'>
+      <strong>Last read:</strong> {{comic.last_read_date | date:
+      'MM/yyyy'}}
     </div>
   </div>
+  <div *ngIf='show_story_arcs && has_story_arcs()' class='row w-100'>
+    <ul>
+      <li *ngFor='let story_arc of (comic.story_arcs || [])'>{{story_arc}}</li>
+    </ul>
+  </div>
+  <div class='row w-100'>
+    <h4 class='text-left'>
+      <span class='badge badge-info'
+        (click)='show_summary = !show_summary'><i class='fa'
+        [class.fa-chevron-circle-down]='!show_summary'
+        [class.fa-chevron-circle-up]='show_summary'></i></span>Summary
+    </h4>
+  </div>
+  <div *ngIf='show_summary' class='row w-100'>
+    <p>{{comic.summary}}</p>
+  </div>
+  <div class='row w-100'>
+    <h4 class='text-left'>
+      <span class='badge badge-info' (click)='show_notes = !show_notes'><i
+        class='fa' [class.fa-chevron-circle-down]='!show_notes'
+        [class.fa-chevron-circle-up]='show_notes'></i></span>Notes
+    </h4>
+  </div>
+  <div *ngIf='show_notes' class='row w-100'>
+    <p>{{comic.notes}}</p>
+  </div>
+  <div class='row w-100'>
+    <h4 class='text-left'>
+      <span class='badge badge-info'
+        (click)='show_characters = !show_characters'><i
+        class='fa' [class.fa-chevron-circle-down]='!show_characters'
+        [class.fa-chevron-circle-up]='show_characters'></i></span>Characters <span
+        class='badge badge-info'
+        (click)='show_characters = !show_characters'>{{(comic.characters
+        || []).length}}</span>
+    </h4>
+  </div>
+  <div *ngIf='show_characters' class='row w-100'>
+    <ul>
+      <li *ngFor='let character of (comic.characters || [])'>{{character}}</li>
+    </ul>
+  </div>
+  <div class='row w-100'>
+    <h4 class='text-left'>
+      <span class='badge badge-info' (click)='show_teams = !show_teams'><i
+        class='fa' [class.fa-chevron-circle-down]='!show_teams'
+        [class.fa-chevron-circle-up]='show_teams'></i></span>Teams <span
+        class='badge badge-info' (click)='show_teams = !show_teams'>{{
+        (comic.teams || []).length }}</span>
+    </h4>
+  </div>
+  <div *ngIf='show_teams' class='row w-100'>
+    <ul>
+      <li *ngFor='let character of (comic.teams || [])'>{{character}}</li>
+    </ul>
+  </div>
+  <div class='row w-100'>
+    <h4 class='text-left'>
+      <span class='badge badge-info'
+        (click)='show_story_arcs = !show_story_arcs'><i
+        class='fa' [class.fa-chevron-circle-down]='!show_story_arcs'
+        [class.fa-chevron-circle-up]='show_story_arcs'></i></span>Story Arcs <span
+        class='badge badge-info'>{{(comic.story_arcs ||
+        []).length}}</span>
+    </h4>
+  </div>
+  <div class='row w-100'>
+    <h4 class='text-left'>
+      <span class='badge badge-info'
+        (click)='show_locations = !show_locations'><i class='fa'
+        [class.fa-chevron-circle-down]='!show_locations'
+        [class.fa-chevron-circle-up]='show_locations'></i></span>Locations<span
+        class='badge badge-info'
+        (click)='show_locations = !show_locations'>{{
+        (comic.locations || []).length }}</span>
+    </h4>
+  </div>
+  <div *ngIf='show_locations' class='row w-100'>
+    <ul>
+      <li *ngFor='let location of (comic.locations || [])'>{{location}}</li>
+    </ul>
+  </div>
+  <div *ngIf='!comic.missing' class='row w-100'>
+    <hr />
+    <p>
+      <a href='{{getDownloadLink()}}'>Download Comic
+        ({{comic.archive_type}}, {{comic.page_count}} pages)</a>
+    </p>
+  </div>
 </div>
-  <div class='row'>
+<div id='comic_pages' class='container-fluid w-100'>
+  <div class='row w-100'>
     <h4>Comic Pages</h4>
   </div>
-  <div class='row'>
+  <div class='row w-100'>
     <app-page-thumbnail *ngFor='let page of comic.pages'
       [missing]='comic.missing' [page]='page' [page_types]='page_types'></app-page-thumbnail>
   </div>
