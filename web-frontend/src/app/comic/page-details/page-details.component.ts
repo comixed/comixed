@@ -90,9 +90,14 @@ export class PageDetailsComponent implements OnInit {
   }
 
   delete_page(): void {
+    // if this page is already deleted, then return
+    if (this.page.deleted) {
+      return;
+    }
     this.comic_service.mark_page_as_deleted(this.page).subscribe(
       (response: Response) => {
         this.page.deleted = true;
+        this.comic.deleted_page_count = this.comic.deleted_page_count + 1;
       },
       (error: Error) => {
         this.alert_service.show_error_message('Unable to delete page...', error);
@@ -101,9 +106,14 @@ export class PageDetailsComponent implements OnInit {
   }
 
   undelete_page(): void {
+    // if this page isn't deleted then exit
+    if (this.page.deleted === false) {
+      return;
+    }
     this.comic_service.mark_page_as_undeleted(this.page).subscribe(
       (response: Response) => {
         this.page.deleted = false;
+        this.comic.deleted_page_count = this.comic.deleted_page_count - 1;
       },
       (error: Error) => {
         this.alert_service.show_error_message('Unable to undelete page...', error);

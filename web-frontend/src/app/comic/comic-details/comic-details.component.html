@@ -36,22 +36,24 @@
           <a href='{{comic.comic_vine_url}}' target='_blank'>View
             this comic on ComicVine...</a>
         </p>
-        <div *ngIf='comic.cover_date' class='row w-100 text-left'>
+        <div *ngIf='comic.cover_date' class='row w-100  ml-1'>
           <strong>Published: </strong>{{comic.cover_date |
           date:'MM/yyyy' }}
         </div>
-        <div class='row w-100'>
+        <div class='row w-100 ml-1'>
           <strong>Added: </strong>{{comic.added_date | date:
           'MM/dd/yyyy'}}
         </div>
-        <div *ngIf='comic.last_read_date' class='col'>
+        <div *ngIf='comic.last_read_date' class='row w-100 ml-1'>
           <strong>Last read:</strong> {{comic.last_read_date | date:
           'MM/yyyy'}}
         </div>
-        <div *ngIf='comic.blocked_page_count > 0'>
-          <p>This comic contains {{comic.blocked_page_count}}
-            blocked page(s).</p>
-        </div>
+        <div *ngIf='comic.blocked_page_count > 0' class='row w-100 ml-1'>
+          This comic contains {{comic.blocked_page_count}} blocked
+          page(s).</div>
+        <div *ngIf='comic.deleted_page_count > 0' class='row w-100 ml-1'>
+          This comic contains {{comic.deleted_page_count}} page(s)
+          marked for deletion.</div>
       </div>
       <div class='row w-100 border'>
         <h4 class='text-left'>
