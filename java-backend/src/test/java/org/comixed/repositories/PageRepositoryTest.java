@@ -55,7 +55,7 @@ public class PageRepositoryTest
 {
     private static final Long BLOCKED_PAGE_ID = 1000L;
     private static final Long UNBLOCKED_PAGE_ID = 1001L;
-    private static final String TEST_DUPLICATE_PAGE_HASH = "12346";
+    private static final String TEST_DUPLICATE_PAGE_HASH = "12345";
     private static final String TEST_UNKNOWN_PAGE_HASH = "FEDCBA9876543210";
 
     @Autowired
@@ -67,16 +67,16 @@ public class PageRepositoryTest
         List<Page> result = repository.getDuplicatePageList();
 
         assertFalse(result.isEmpty());
-        assertEquals(3, result.size());
+        assertEquals(11, result.size());
         assertEquals(1000L, result.get(0).getComic().getId().longValue());
-        assertEquals(1001L, result.get(1).getComic().getId().longValue());
-        assertEquals(1002L, result.get(2).getComic().getId().longValue());
+        assertEquals(1000L, result.get(1).getComic().getId().longValue());
+        assertEquals(1000L, result.get(2).getComic().getId().longValue());
     }
 
     @Test
     public void testGetDuplicatePageCount()
     {
-        assertEquals(3, repository.getDuplicatePageCount());
+        assertEquals(11, repository.getDuplicatePageCount());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class PageRepositoryTest
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
+        assertEquals(3, result.size());
         assertEquals(TEST_DUPLICATE_PAGE_HASH, result.get(0));
     }
 
