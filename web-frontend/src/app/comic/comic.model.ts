@@ -44,6 +44,7 @@ export class Comic {
   teams: string[];
   locations: string[];
   pages: Page[];
+  blocked_page_count: number;
 
   constructor(
     id?: number,
@@ -70,6 +71,7 @@ export class Comic {
     teams?: string[],
     locations?: string[],
     pages?: Page[],
+    blocked_page_count?: number;
   ) {
     this.id = id;
     this.filename = filename;
@@ -95,5 +97,6 @@ export class Comic {
     this.teams = teams;
     this.locations = locations;
     this.pages = pages;
+    this.blocked_page_count = blocked_page_count;
   }
 }
