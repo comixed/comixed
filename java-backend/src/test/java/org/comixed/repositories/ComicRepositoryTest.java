@@ -57,6 +57,8 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 public class ComicRepositoryTest
 {
     private static final String TEST_COMIC_VINE_ID = "ABCDEFG";
+    private static final long TEST_COMIC = 1000L;
+    private static final long TEST_COMIC_WITH_BLOCKED_PAGES = 1001L;
 
     @Autowired
     private ComicRepository repository;
@@ -69,7 +71,7 @@ public class ComicRepositoryTest
     @Before
     public void setUp() throws Exception
     {
-        comic = repository.findOne(1000L);
+        comic = repository.findOne(TEST_COMIC);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -346,5 +348,13 @@ public class ComicRepositoryTest
 
         assertEquals(count, result.getPageCount());
         assertEquals(page, result.getPage(0));
+    }
+
+    @Test
+    public void testComicsReturnTheirBlockedPageCount()
+    {
+        Comic result = repository.findOne(TEST_COMIC_WITH_BLOCKED_PAGES);
+
+        assertEquals(2, result.getBlockedPageCount());
     }
 }

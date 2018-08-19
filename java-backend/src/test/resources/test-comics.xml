@@ -47,6 +47,11 @@
   <pages ID="1003" comic_id="1000" filename="page3.jpg" index="3" hash="12348" deleted="false" />
   <pages ID="1004" comic_id="1000" filename="back_page.jpg" index="4" hash="12349" deleted="false" />
 
+  <pages ID="2000" comic_id="1001" filename="front_page.jpg" index="0" hash="12345" deleted="false" />
+  <pages ID="2001" comic_id="1001" filename="page1.jpg" index="1" hash="12346" deleted="false" />
+  <pages ID="2002" comic_id="1001" filename="page2.jpg" index="2" hash="12347" deleted="false" />
+  <pages ID="2003" comic_id="1001" filename="back_cover.jpg" index="4" hash="23456" deleted="false" />
+
   <pages comic_id="1001" filename="front_page.jpg" index="1" hash="12346" deleted="false" />
 
   <pages comic_id="1002" filename="back_page.jpg" index="1" hash="12346" deleted="false" />
