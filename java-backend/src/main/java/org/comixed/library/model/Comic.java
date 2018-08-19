@@ -486,6 +486,29 @@ public class Comic
     }
 
     /**
+     * Returns the number of pages marked as deleted in this comic.
+     *
+     * @return the deleted page count
+     */
+    @Transient
+    @JsonProperty("deleted_page_count")
+    @JsonView(View.Details.class)
+    public int getDeletedPageCount()
+    {
+        int result = 0;
+
+        for (Page page : this.pages)
+        {
+            if (page.isMarkedDeleted())
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Returns the description for the comic.
      *
      * @return the description

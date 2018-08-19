@@ -59,6 +59,7 @@ public class ComicRepositoryTest
     private static final String TEST_COMIC_VINE_ID = "ABCDEFG";
     private static final long TEST_COMIC = 1000L;
     private static final long TEST_COMIC_WITH_BLOCKED_PAGES = 1001L;
+    private static final Long TEST_COMIC_WITH_DELETED_PAGES = 1002L;
 
     @Autowired
     private ComicRepository repository;
@@ -356,5 +357,13 @@ public class ComicRepositoryTest
         Comic result = repository.findOne(TEST_COMIC_WITH_BLOCKED_PAGES);
 
         assertEquals(2, result.getBlockedPageCount());
+    }
+
+    @Test
+    public void testComicsReturnTheirDeletedPageCount()
+    {
+        Comic result = repository.findOne(TEST_COMIC_WITH_DELETED_PAGES);
+
+        assertEquals(3, result.getDeletedPageCount());
     }
 }
