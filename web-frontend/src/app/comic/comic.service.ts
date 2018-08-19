@@ -54,27 +54,28 @@ export class ComicService {
   }
 
   monitor_remote_comic_list(): void {
+    const that = this;
     setInterval(() => {
       if (!this.user_service.is_authenticated() || this.fetching_comics) {
         return;
       } else {
-        this.fetching_comics = true;
-        this.http.get(`${this.api_url}/comics/since/${this.last_comic_date}`)
+        that.fetching_comics = true;
+        that.http.get(`${that.api_url}/comics/since/${that.last_comic_date}`)
           .subscribe((comics: Comic[]) => {
             if ((comics || []).length > 0) {
-              this.all_comics = this.all_comics.concat(comics);
-              this.all_comics.forEach((comic: Comic) => {
-                if (parseInt(comic.added_date, 10) > parseInt(this.last_comic_date, 10)) {
-                  this.last_comic_date = comic.added_date;
+              that.all_comics = that.all_comics.concat(comics);
+              that.all_comics.forEach((comic: Comic) => {
+                if (parseInt(comic.added_date, 10) > parseInt(that.last_comic_date, 10)) {
+                  that.last_comic_date = comic.added_date;
                 }
               });
-              this.all_comics_update.emit(this.all_comics);
+              that.all_comics_update.emit(that.all_comics);
             }
-            this.fetching_comics = false;
+            that.fetching_comics = false;
           },
           error => {
-            this.alert_service.show_error_message('Failed to get the list of comics...', error);
-            this.fetching_comics = false;
+            that.alert_service.show_error_message('Failed to get the list of comics...', error);
+            that.fetching_comics = false;
           });
       }
     }, 500);
