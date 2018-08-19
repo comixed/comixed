@@ -1,7 +1,7 @@
-<div class='card px-1 pb-1 border-0'
-  [style.width]='"" + cover_size + "px"'>
+<div class='card px-1 pb-1 border-0'>
   <div class='card-body comic-cover-container'>
-    <img class='card-img-bottom' src='{{cover_url}}'>
+    <img class='card-img-bottom img-thumbnail' src='{{cover_url}}'
+      [style.height]='"" + cover_size + "px"' width='auto'>
     <div class='comic-cover-overlay bg-info text-white'>
       <div class='comic-cover-overlay-text h-100 w-100'>
         <dl>

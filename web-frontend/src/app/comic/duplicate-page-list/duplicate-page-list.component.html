@@ -14,11 +14,11 @@
             <div class='row w-100 justify-content-center'>
               <div *ngFor='let page of show_pages'
                 class='card comic-cover-card p-1 m-1'
-                [style.width]='"" + image_size + "px"'>
+                [style.height]='"" + image_size + "px"'>
                 <div class='card-body p-1 comic-with-duplicate-page'>
                   <img class='card-img-bottom mb-2 img-fluid'
                     src='{{get_cover_url_for_page(page)}}'
-                    [style.width]='"" + image_size + "px"'>
+                    [style.height]='"" + image_size + "px"'>
                   <div class='container w-100 align-items-center'>
                     <div *ngIf='page.deleted'>
                       <button class='btn btn-sm btn-warning w-100'

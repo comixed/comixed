@@ -1,4 +1,4 @@
-<div class='card h-100 border-bottom px-1 pb-1' style='width: 256px'>
+<div class='card h-100 border-bottom px-1 pb-1'>
   <div class='card-body'>
     <h5 class='card-title'>{{page_title}}</h5>
     <div class='row center-block'>
@@ -7,6 +7,7 @@
         data-target='#display_page_details'>Details</button>
     </div>
   </div>
-  <img class='card-img-bottom' [class.filtered-page]='page_is_filtered()'
-    src='{{page_url}}'>
+  <img class='card-img-bottom img-fluid'
+    [style.height]='"" + image_size + "px"' [style.width]='"auto"'
+    [class.filtered-page]='page_is_filtered()' src='{{page_url}}'>
 </div>

@@ -24,6 +24,7 @@ import {
 } from '@angular/core';
 
 import {ComicService} from '../comic.service';
+import {UserService} from '../../user.service';
 import {AlertService} from '../../alert.service';
 import {Page} from '../page.model';
 import {PageType} from '../page-type.model';
@@ -42,9 +43,11 @@ export class PageDetailsComponent implements OnInit {
   undelete_page_message = 'Are you sure you want to undelete this page?';
   confirm_button = 'Yes';
   cancel_button = 'No';
+  image_size: number;
 
   constructor(
     private comic_service: ComicService,
+    private user_service: UserService,
     private alert_service: AlertService,
   ) {}
 
@@ -57,6 +60,7 @@ export class PageDetailsComponent implements OnInit {
         this.alert_service.show_error_message('Unable to retrieve page types', error);
       }
     );
+    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
   }
 
   get_title_for_current_page(): string {

@@ -11,7 +11,8 @@
         <div class='media'>
           <div class='media-left media-center'>
             <img src='{{get_image_url(current_comic)}}'
-              class='img-thumbnail' width='256'>
+              class='img-thumbnail'
+              [style.height]='"" + cover_size + "px"'>
           </div>
           <div class='media-body'>
             <h5 class='media-heading'>{{current_comic.title}}</h5>

@@ -20,6 +20,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 
 import {ComicService} from '../comic.service';
+import {UserService} from '../../user.service';
 import {AlertService} from '../../alert.service';
 import {Page} from '../page.model';
 import {PageType} from '../page-type.model';
@@ -35,12 +36,13 @@ export class PageThumbnailComponent implements OnInit {
   @Input() page_types: PageType[];
   page_url: string;
   show_details = false;
-  width = 192;
+  image_size: number;
   page_title: string;
   page_type_text: string;
 
   constructor(
     private comic_service: ComicService,
+    private user_service: UserService,
     private alert_service: AlertService,
   ) {}
 
@@ -48,6 +50,7 @@ export class PageThumbnailComponent implements OnInit {
     this.page_url = this.missing ? '/assets/img/missing.png' : this.comic_service.get_url_for_page_by_id(this.page.id);
     this.page_title = `Page #${this.page.index}`;
     this.page_type_text = this.comic_service.get_display_name_for_page_type(this.page.page_type);
+    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
   }
 
   get_page_type_text(page_type: PageType): string {

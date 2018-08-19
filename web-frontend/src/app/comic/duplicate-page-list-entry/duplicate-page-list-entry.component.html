@@ -1,8 +1,8 @@
 <div class='card comic-cover-card p-1 m-1'>
-  <div class='card-body p-1' [style.width]='"" + image_size + "px"'>
+  <div class='card-body p-1'>
     <div class='card-title text-nowrap text-truncate'>{{page_hash}}</div>
     <div class='card-subtitle text-nowrap text-truncate'
-      [style.width]='"" + image_size + "px"'>{{pages.length}}
+      [style.height]='"" + image_size + "px"'>{{pages.length}}
       instance{{pages.length !== 1 ? 's' : ''}}</div>
     <div *ngIf='!all_are_deleted'
       class='container-fluid w-100 justify-content-center mb-2'>
@@ -20,6 +20,7 @@
         data-target='#display_comics_with_duplicates'>Show
         Comics</button>
     </div>
-    <img class='card-img-bottom mb-2 img-fluid' src='{{image_url}}'>
+    <img class='card-img-bottom mb-2 img-fluid' src='{{image_url}}'
+      [style.height]='"" + image_size + "px"' [style.width]='"auto"'>
   </div>
 </div>
