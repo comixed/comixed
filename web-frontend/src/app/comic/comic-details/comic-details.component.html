@@ -1,7 +1,7 @@
 <!-- page details -->
 <div id='display_page_details' class='modal fade' role='dialog'>
   <div class='modal-dialog modal-lg'>
-    <app-page-details [page]='current_page'></app-page-details>
+    <app-page-details [page]='current_page' [comic]='comic'></app-page-details>
   </div>
 </div>
 <app-read-viewer *ngIf='comic != null' [comic]='comic'></app-read-viewer>
@@ -30,25 +30,27 @@
       </div>
     </div>
     <div class='col-9'>
-      <div class='row w-100'>
+      <div class='row w-100 border'>
         <p
           *ngIf='comic.comic_vine_url && comic.comic_vine_url.length > 0'>
           <a href='{{comic.comic_vine_url}}' target='_blank'>View
             this comic on ComicVine...</a>
         </p>
-      </div>
-      <div *ngIf='comic.cover_date' class='row w-100 text-left'>
-        <strong>Published: </strong>{{comic.cover_date | date:'MM/yyyy'
-        }}
-      </div>
-      <div class='row w-100'>
-        <div class='col'>
+        <div *ngIf='comic.cover_date' class='row w-100 text-left'>
+          <strong>Published: </strong>{{comic.cover_date |
+          date:'MM/yyyy' }}
+        </div>
+        <div class='row w-100'>
           <strong>Added: </strong>{{comic.added_date | date:
           'MM/dd/yyyy'}}
         </div>
         <div *ngIf='comic.last_read_date' class='col'>
           <strong>Last read:</strong> {{comic.last_read_date | date:
           'MM/yyyy'}}
+        </div>
+        <div *ngIf='comic.blocked_page_count > 0'>
+          <p>This comic contains {{comic.blocked_page_count}}
+            blocked page(s).</p>
         </div>
       </div>
       <div class='row w-100 border'>

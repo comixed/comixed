@@ -71,7 +71,7 @@ export class Comic {
     teams?: string[],
     locations?: string[],
     pages?: Page[],
-    blocked_page_count?: number;
+    blocked_page_count?: number,
   ) {
     this.id = id;
     this.filename = filename;
