@@ -62,7 +62,9 @@ export class ComicListComponent implements OnInit {
     private user_service: UserService,
     private comic_service: ComicService,
     private alert_service: AlertService,
-  ) {}
+  ) {
+    this.comics = this.comic_service.all_comics;
+  }
 
   ngOnInit() {
     this.comic_service.all_comics_update.subscribe(
