@@ -38,7 +38,7 @@ export class ComicService {
   private api_url = '/api';
   current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
   current_page: Subject<Page> = new BehaviorSubject<Page>(new Page());
-  all_comics: Comic[] = [];
+  all_comics: Comic[];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
   private last_comic_date: string;
   private fetching_comics = false;
@@ -49,6 +49,8 @@ export class ComicService {
     private user_service: UserService,
   ) {
     this.monitor_remote_comic_list();
+    this.all_comics = [];
+    this.last_comic_date = '0';
   }
 
   monitor_remote_comic_list(): void {
@@ -58,16 +60,16 @@ export class ComicService {
       } else {
         this.fetching_comics = true;
         let params = new HttpParams();
-        if (this.all_comics.length > 0 && this.last_comic_date) {
+        if (this.all_comics.length > 0) {
           params = new HttpParams().set('after', this.last_comic_date);
         }
 
         this.http.get(`${this.api_url}/comics`, {params: params, responseType: 'json'})
           .subscribe((comics: Comic[]) => {
-            if (comics.length !== 0) {
+            if ((comics || []).length > 0) {
               this.all_comics = this.all_comics.concat(comics);
               this.all_comics.forEach((comic: Comic) => {
-                if (this.last_comic_date == null || comic.added_date > this.last_comic_date) {
+                if (parseInt(comic.added_date, 10) > parseInt(this.last_comic_date, 10)) {
                   this.last_comic_date = comic.added_date;
                 }
               });
