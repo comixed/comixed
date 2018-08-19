@@ -59,12 +59,7 @@ export class ComicService {
         return;
       } else {
         this.fetching_comics = true;
-        let params = new HttpParams();
-        if (this.all_comics.length > 0) {
-          params = new HttpParams().set('after', this.last_comic_date);
-        }
-
-        this.http.get(`${this.api_url}/comics`, {params: params, responseType: 'json'})
+        this.http.get(`${this.api_url}/comics/since/${this.last_comic_date}`)
           .subscribe((comics: Comic[]) => {
             if ((comics || []).length > 0) {
               this.all_comics = this.all_comics.concat(comics);

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,12 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.View;
@@ -42,7 +38,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -107,42 +102,6 @@ public class ComicController
                              .contentType(MediaType.parseMediaType("application/x-cbr")).body(resource);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    @JsonView(View.List.class)
-    public List<Comic> getAll(@RequestParam("after") Optional<Long> timestamp) throws ParseException
-    {
-        this.logger.debug("Getting all comics");
-
-        List<Comic> result;
-
-        if (timestamp.isPresent())
-        {
-            Date after = new Date(new Timestamp(timestamp.get()).getTime());
-            this.logger.debug("Getting comics added after {}", after);
-            result = this.comicRepository.findByDateAddedGreaterThan(after);
-        }
-        else
-        {
-            Iterable<Comic> comics = this.comicRepository.findAll();
-
-            this.logger.debug("Adding comics to the result");
-            result = new ArrayList<>();
-            for (Comic comic : comics)
-            {
-                result.add(comic);
-            }
-        }
-
-        if (result.isEmpty())
-        {
-            this.logger.debug("No comics retrieved");
-        }
-
-        this.logger.debug("Returning {} comic(s)", result.size());
-
-        return result;
-    }
-
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.GET)
     @JsonView(View.Details.class)
@@ -162,6 +121,22 @@ public class ComicController
         }
 
         return comic;
+    }
+
+    @RequestMapping(value = "/since/{timestamp}",
+                    method = RequestMethod.GET)
+    @JsonView(View.List.class)
+    public List<Comic> getComicsAddedSince(@PathVariable("timestamp") long timestamp)
+    {
+        Date latestDate = new Date(timestamp);
+
+        this.logger.debug("Looking for comics added since {}", latestDate);
+
+        List<Comic> result = this.comicRepository.findByDateAddedGreaterThan(latestDate);
+
+        this.logger.debug("Found {} comics", result.size());
+
+        return result;
     }
 
     @RequestMapping(value = "/{id}/summary",
