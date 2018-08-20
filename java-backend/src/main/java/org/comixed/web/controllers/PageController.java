@@ -28,6 +28,7 @@ import org.comixed.library.model.Page;
 import org.comixed.library.model.PageType;
 import org.comixed.library.model.View;
 import org.comixed.repositories.BlockedPageHashRepository;
+import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.PageRepository;
 import org.comixed.repositories.PageTypeRepository;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ public class PageController
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ComicController comicRepository;
+    private ComicRepository comicRepository;
     @Autowired
     private PageRepository pageRepository;
     @Autowired
@@ -78,7 +79,7 @@ public class PageController
 
     @RequestMapping(value = "/pages/{id}",
                     method = RequestMethod.DELETE)
-    public void deletePage(@PathVariable("id") long id)
+    public boolean deletePage(@PathVariable("id") long id)
     {
         this.logger.debug("Marking page as deleted: id={}", id);
 
@@ -87,12 +88,14 @@ public class PageController
         if (page == null)
         {
             this.logger.error("No such page: id={}", id);
+            return false;
         }
         else
         {
             page.markDeleted(true);
             this.pageRepository.save(page);
             this.logger.debug("Page deleted: id={}", id);
+            return true;
         }
     }
 
@@ -155,11 +158,11 @@ public class PageController
 
     @RequestMapping(value = "/comics/{id}/pages/{index}/content",
                     method = RequestMethod.GET)
-    public byte[] getImage(@PathVariable("id") long id, @PathVariable("index") int index)
+    public byte[] getImageInComicByIndex(@PathVariable("id") long id, @PathVariable("index") int index)
     {
         this.logger.debug("Getting the image for comic: id={} index={}", id, index);
 
-        Comic comic = this.comicRepository.getComic(id);
+        Comic comic = this.comicRepository.findOne(id);
 
         if ((comic != null) && (index < comic.getPageCount())) return comic.getPage(index).getContent();
 
@@ -173,17 +176,6 @@ public class PageController
         }
 
         return null;
-    }
-
-    @RequestMapping(value = "/comics/{id}/pages/{index}",
-                    method = RequestMethod.GET)
-    public Page getPage(@PathVariable("id") long id, @PathVariable("index") int index)
-    {
-        this.logger.debug("Getting page for comic: id={} page={}", id, index);
-
-        List<Page> pages = this.getPagesForComic(id);
-
-        return (pages == null) || (index >= pages.size()) ? null : pages.get(index);
     }
 
     @RequestMapping(value = "/pages/{id}/content",
@@ -220,6 +212,32 @@ public class PageController
         return this.encodePageContent(page);
     }
 
+    @RequestMapping(value = "/comics/{comic_id}/pages/{index}",
+                    method = RequestMethod.GET)
+    public Page getPageInComicByIndex(@PathVariable("comic_id") long comicId, @PathVariable("index") int index)
+    {
+        this.logger.debug("Getting page for comic: id={} page={}", comicId, index);
+
+        Comic comic = this.comicRepository.findOne(comicId);
+
+        if ((comic != null) && (index < comic.getPageCount())) return comic.getPage(index);
+
+        return null;
+    }
+
+    private List<Page> getPagesForComic(long id)
+    {
+        this.logger.debug("Getting pages for comic: id={}", id);
+        Comic comic = this.comicRepository.findOne(id);
+        if (comic == null)
+        {
+            this.logger.debug("No such comic found: id={}", id);
+
+            return null;
+        }
+        else return comic.getPages();
+    }
+
     @RequestMapping(value = "/pages/hashes/{hash}",
                     method = RequestMethod.GET)
     public List<Page> getPagesForHash(@PathVariable("hash") String hash)
@@ -233,22 +251,11 @@ public class PageController
         return result;
     }
 
-    private List<Page> getPagesForComic(long id)
-    {
-        Comic comic = this.comicRepository.getComic(id);
-        if (comic == null)
-        {
-            this.logger.debug("No such comic found: id={}", id);
-
-            return null;
-        }
-        else return comic.getPages();
-    }
-
     @RequestMapping(value = "/pages/types",
                     method = RequestMethod.GET)
     public Iterable<PageType> getPageTypes()
     {
+        this.logger.debug("Returning page types");
         return this.pageTypeRepository.findAll();
     }
 
@@ -269,7 +276,7 @@ public class PageController
 
     @RequestMapping(value = "/pages/{id}/undelete",
                     method = RequestMethod.POST)
-    public void undeletePage(@PathVariable("id") long id)
+    public boolean undeletePage(@PathVariable("id") long id)
     {
         this.logger.debug("Marking page as undeleted: id={}", id);
 
@@ -278,12 +285,14 @@ public class PageController
         if (page == null)
         {
             this.logger.error("No such page: id={}", id);
+            return false;
         }
         else
         {
             page.markDeleted(false);
             this.pageRepository.save(page);
             this.logger.debug("Page undeleted: id={}", id);
+            return true;
         }
     }
 
