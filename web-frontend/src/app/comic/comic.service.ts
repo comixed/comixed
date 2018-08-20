@@ -175,7 +175,7 @@ export class ComicService {
   }
 
   import_files_into_library(filenames: string[], delete_blocked_pages: boolean): Observable<any> {
-    filenames.forEach((filename, index, source) => source[index] = filename.replace(',', '%2C'));
+    filenames.forEach((filename, index, source) => source[index] = this.encode_filename(filename));
     const params = new HttpParams().set('filenames', filenames.toString()).set('delete_blocked_pages', delete_blocked_pages.toString());
     return this.http.post(`${this.api_url}/files/import`, params);
   }
