@@ -180,6 +180,10 @@ export class ComicService {
     return this.http.post(`${this.api_url}/files/import`, params);
   }
 
+  encode_filename(filename: string): string {
+    return filename.replace(/,/g, '%2C').replace(/#/g, '%23').replace(/&/g, '%26');
+  }
+
   get_number_of_pending_imports(): Observable<any> {
     return this.http.get(`${this.api_url}/files/import/status`);
   }
