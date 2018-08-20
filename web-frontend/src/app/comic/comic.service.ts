@@ -206,7 +206,7 @@ export class ComicService {
 
   get_cover_url_for_file(filename: string): string {
     // not fond of this, but encodeURI was NOT doing it for me...
-    const encoded_filename = filename.replace('#', '%23').replace('&', '%26');
+    const encoded_filename = this.encode_filename(filename);
     return `${this.api_url}/files/import/cover?filename=` + encoded_filename;
   }
 
