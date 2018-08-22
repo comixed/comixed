@@ -34,6 +34,16 @@
       <div *ngIf='file_details.length > 0' class='container-fluid w-100'>
         <hr />
         <div class='container-fluid w-100'>
+          <!-- # of comics per page to show -->
+          <div class='row w-100 justify-content-center mb-3'>
+            <div class='field'>
+              <label for='number-of-comics-per-page'># of comics
+                per page: </label>
+            </div>
+            <div class='field row w-100 justify-content-center mb-3'>
+              <app-page-size [page_size]='page_size'></app-page-size>
+            </div>
+          </div>
           <!--  select/deselect all comics -->
           <div class='row w-100 justify-content-center mb-3'>
             <button
@@ -83,7 +93,7 @@
         </div>
         <div class='row w-100'>
           <div
-            *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: 25, currentPage: current_page }'
+            *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
             class='border border-info p-1 m-1'>
             <div class='container w-100 justify-content-center mb-1'>
               <button *ngIf='!file_detail.selected'

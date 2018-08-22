@@ -22,6 +22,7 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
+import {PageSizeComponent} from '../page-size/page-size.component';
 import {UserService} from '../../user.service';
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
@@ -42,13 +43,8 @@ export class ComicListComponent implements OnInit {
   protected current_comic: Comic;
   protected current_page = 1;
   protected show_search_box = true;
-  protected page_sizes: any[] = [
-    {id: 0, label: '10 comics'},
-    {id: 1, label: '25 comics'},
-    {id: 2, label: '50 comics'},
-    {id: 3, label: '100 comics'}
-  ];
-  protected page_size = 10;
+  protected page_size: BehaviorSubject<number>;
+  protected use_page_size: number;
   protected sort_options: any[] = [
     {id: 0, label: 'Sort by series'},
     {id: 1, label: 'Sort by added date'},
@@ -77,6 +73,12 @@ export class ComicListComponent implements OnInit {
         this.current_comic = comic;
       });
     this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
+    this.use_page_size = 10;
+    this.page_size = new BehaviorSubject<number>(this.use_page_size);
+    this.page_size.subscribe(
+      (page_size: number) => {
+        this.use_page_size = page_size;
+      });
   }
 
   get_image_url(comic: Comic): string {
@@ -84,15 +86,6 @@ export class ComicListComponent implements OnInit {
       return this.comic_service.get_url_for_missing_page();
     } else {
       return this.comic_service.get_url_for_page_by_comic_index(comic.id, 0);
-    }
-  }
-
-  set_page_size(size_id: any): void {
-    switch (parseInt(size_id, 10)) {
-      case 0: this.page_size = 10; break;
-      case 1: this.page_size = 25; break;
-      case 2: this.page_size = 50; break;
-      case 3: this.page_size = 100; break;
     }
   }
 

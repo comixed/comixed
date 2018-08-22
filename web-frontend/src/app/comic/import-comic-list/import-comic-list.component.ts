@@ -19,6 +19,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, AbstractControl} from '@angular/forms';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import {UserService} from '../../user.service';
 import {FileDetails} from '../file-details.model';
@@ -44,6 +45,8 @@ export class ImportComicListComponent implements OnInit {
   pending_imports = 0;
   waiting_on_imports = false;
   cover_size: number;
+  protected page_size: BehaviorSubject<number>;
+  protected use_page_size: number;
   current_page = 1;
   selected_file_count = 0;
   show_selections_only = false;
@@ -81,6 +84,12 @@ export class ImportComicListComponent implements OnInit {
         });
     }, 250);
     this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
+    this.use_page_size = 10;
+    this.page_size = new BehaviorSubject<number>(this.use_page_size);
+    this.page_size.subscribe(
+      (page_size: number) => {
+        this.use_page_size = page_size;
+      });
   }
 
   on_load(): void {
