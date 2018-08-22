@@ -37,6 +37,7 @@ import {SeriesFilterPipe} from './series-filter.pipe';
 import {PageDetailsComponent} from './page-details/page-details.component';
 import {ImportComicListEntryComponent} from './import-comic-list-entry/import-comic-list-entry.component';
 import {SelectedForImportPipe} from './import-comic-list/selected-for-import.pipe';
+import {PageSizeComponent} from './page-size/page-size.component';
 
 @NgModule({
   imports: [
@@ -66,6 +67,7 @@ import {SelectedForImportPipe} from './import-comic-list/selected-for-import.pip
     PageDetailsComponent,
     ImportComicListEntryComponent,
     SelectedForImportPipe,
+    PageSizeComponent,
   ]
 })
 export class ComicModule {}

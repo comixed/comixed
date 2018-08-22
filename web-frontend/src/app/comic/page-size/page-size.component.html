@@ -1,0 +1,4 @@
+<select id='number-of-comics-per-page' class='form-control w-100'
+  #sizeElem (change)='set_page_size(sizeElem.value)'>
+  <option *ngFor='let option of page_sizes' [value]='option.id'>{{option.label}}</option>
+</select>
