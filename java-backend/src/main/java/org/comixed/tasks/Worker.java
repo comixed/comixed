@@ -48,6 +48,7 @@ public class Worker implements
 {
     public enum State
     {
+     NOT_STARTED,
      IDLE,
      RUNNING,
      STOP,
@@ -56,13 +57,15 @@ public class Worker implements
     private final Logger logger = LoggerFactory.getLogger(this.getClass());;
 
     BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<>();
-    State state = State.IDLE;
-    private Object semaphore = new Object();
+
+    State state = State.NOT_STARTED;
+
+    Object semaphore = new Object();
 
     public List<WorkerListener> listeners = new ArrayList<>();
 
-    private Map<Class<? extends WorkerTask>,
-                Integer> taskCounts = new HashMap<>();
+    Map<Class<? extends WorkerTask>,
+        Integer> taskCounts = new HashMap<>();
 
     public Worker()
     {
@@ -115,11 +118,6 @@ public class Worker implements
         new Thread(this, "ComiXed-Worker").start();
     }
 
-    public void beginWorkerThread()
-    {
-        new Thread(this, "ComiXed-Worker").start();
-    }
-
     void fireQueueChangedEvent()
     {
         this.logger.debug("Notifying worker listeners");
@@ -152,11 +150,11 @@ public class Worker implements
         this.logger.debug("Waiting to get semaphore lock");
         synchronized (this.semaphore)
         {
-            logger.debug("Got the lock in {}ms", (System.currentTimeMillis() - started));
+            this.logger.debug("Got the lock in {}ms", (System.currentTimeMillis() - started));
             int result = (this.queue.isEmpty()
                           || !this.taskCounts.containsKey(taskClass)) ? 0 : this.taskCounts.get(taskClass);
 
-            logger.debug("There are {} instances", result);
+            this.logger.debug("There are {} instances", result);
 
             return result;
         }
@@ -173,8 +171,9 @@ public class Worker implements
     }
 
     /**
-     * * Returns whether the worker queue is empty or has tasks remaining. *
-     * * @return true if the queue is empty
+     * Returns whether the worker queue is empty or has tasks remaining.
+     *
+     * @return true if the queue is empty
      */
     public boolean isQueueEmpty()
     {
@@ -182,8 +181,11 @@ public class Worker implements
     }
 
     /**
-     * * Returns the size of the task queue. * * The size of the task queue does
-     * not include any currently executing task. * * @return the size
+     * Returns the size of the task queue.
+     *
+     * The size of the task queue does not include any currently executing task.
+     *
+     * @return the size
      */
     public int queueSize()
     {
@@ -210,7 +212,12 @@ public class Worker implements
                         this.state = State.IDLE;
                         this.fireWorkerStateChangedEvent();
                         this.semaphore.wait();
-                        this.state = State.RUNNING;
+                        logger.debug("Woke up: state={}", this.state.name());
+                        // if we're in the stopped state then exit
+                        if (this.state == State.STOP)
+                        {
+                            logger.debug("We are in the stopped state. Exiting...");
+                        }
                     }
                     catch (InterruptedException cause)
                     {
@@ -219,12 +226,17 @@ public class Worker implements
                 }
                 if (!this.queue.isEmpty() && (this.state == State.RUNNING))
                 {
+                    this.state = State.RUNNING;
                     currentTask = this.queue.poll();
                     this.logger.debug("Popping task of type {}", currentTask.getClass());
                     int count = this.taskCounts.get(currentTask.getClass()) - 1;
                     this.taskCounts.put(currentTask.getClass(), count);
                     this.logger.debug("There are now {} tasks of type {}", count, currentTask.getClass());
                     this.fireQueueChangedEvent();
+                }
+                else
+                {
+                    logger.debug("Task queue is empty");
                 }
                 this.semaphore.notifyAll();
             }
@@ -246,6 +258,12 @@ public class Worker implements
                     this.logger.debug("Failed to complete task", error);
                 }
             }
+            else
+            {
+                logger.debug("No current task to process");
+            }
+
+            logger.debug("Bottom of loop in state={}", this.state.name());
         }
         this.logger.debug("Stop processing the work queue");
         this.fireWorkerStateChangedEvent();
@@ -253,9 +271,10 @@ public class Worker implements
     }
 
     /**
-     * * Signals the worker to stop processing the task queue. * * If a task is
-     * current being processed, the worker will wait until that * task
-     * completes.
+     * Signals the worker to stop processing the task queue.
+     *
+     * If a task is current being processed, the worker will wait until that
+     * task completes.
      */
     public void stop()
     {
@@ -266,8 +285,9 @@ public class Worker implements
 
     private void wakeUpWorker()
     {
-        if (this.state == State.IDLE)
+        // if (this.state == State.IDLE)
         {
+            logger.debug("Getting mutex lock");
             synchronized (this.semaphore)
             {
                 this.logger.debug("Waking up worker thread");
