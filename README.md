@@ -2,7 +2,7 @@
 An application for managing digital comics.
 
 ## Overview And Goals
-ComiXed is designed to be a digital comics manager. It will:
+ComiXed is designed to be a cross-platform digital comics manager. It will:
 
  * import your existing and new digital comics
  * organize your comics under a single directory
@@ -13,7 +13,7 @@ ComiXed is designed to be a digital comics manager. It will:
 
 Paired with an application that can read your comics (such as
 [Chunky Reader](http://chunkyreader.com/)) you will have a very powerful
-and useful solution for reading your comic collection.
+and useful solution for managing and reading your digital comic collection.
 
 ## Supported Comic Formats
 
@@ -25,30 +25,9 @@ The following digital comic formats are supported:
 
 ## Running The Application
 
-The project is broken up into two parts:
-1. the Java backend, and
-1. the Angular web frontend.
+To start the application, launch it from the command line with:
 
-### The Java Backend
-
-The backend needs to have a few lines of configuration setup.
-
-#### application.properties
-
-The two main entries that need to be setup are:
-
-    configuration.filename=C:/Users/comics/comixedrc
-    spring.datasource.url=jdbc:h2:file:C:/Users/comics/comixed;create=true
-
-The *configurtion.filename* entry tells the application where to find the persisted configuration for the application.
-
-The *spring.datasource.url* entry tells the application where the database is location, and the *create=true* portion tells it to create the database file if it's not found.
-
-#### Running the backend
-
-To start the backend, launch it from the command line with:
-
-    $ mvn spring-boot:run
+    $ java -jar comixed-app-*.jar
 
 ### Interacting With The Application
 
@@ -69,6 +48,8 @@ when developing code. When working on a feature or fixing a bug, please write
 and test your code against the *develop* branch. Then, when it is completed,
 please send a [pull request](http://help.github.com/articles/creating-a-pull-request/)
 to have the code imported.
+
+All code should come with unit tests.
 
 If the code is in good shape, then it will be included.
 
