@@ -62,7 +62,12 @@ public class UserController
 
         this.logger.debug("Loading user: {}", user.getName());
         ComiXedUser comiXedUser = this.userRepository.findByEmail(user.getName());
-        comiXedUser.setAuthenticated(true);
+
+        if (comiXedUser != null)
+        {
+            logger.debug("Setting authenticated flag");
+            comiXedUser.setAuthenticated(true);
+        }
 
         return comiXedUser;
     }

@@ -19,8 +19,12 @@
 
 package org.comixed.web.controllers;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.comixed.library.model.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
+import org.comixed.util.Utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,6 +41,9 @@ public class UserControllerTest
     private static final String TEST_PROPERTY_NAME = "screen_width";
     private static final String TEST_PROPERTY_VALUE = "717";
     private static final String TEST_EMAIL = "comixedreader@comixed.org";
+    private static final String INVALID_EMAIL = "nosuchreader@comixed.org";
+    private static final String TEST_PASSWORD = "this!is!my!password";
+    private static final String TEST_PASSWORD_HASH = "0123456789ABCDEF";
 
     @InjectMocks
     private UserController controller;
@@ -49,6 +56,9 @@ public class UserControllerTest
 
     @Mock
     private Authentication authentication;
+
+    @Mock
+    private Utils utils;
 
     @Test
     public void testUpdateUserSettings()
@@ -76,5 +86,84 @@ public class UserControllerTest
 
         Mockito.verify(authentication, Mockito.times(1)).getName();
         Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
+
+    @Test
+    public void testGetCurrentUserWhenNotAuthented()
+    {
+        assertNull(controller.getCurrentUser(null));
+    }
+
+    @Test
+    public void testGetCurrentUserForMissingName()
+    {
+        Mockito.when(authentication.getName()).thenReturn(INVALID_EMAIL);
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
+
+        assertNull(controller.getCurrentUser(authentication));
+
+        Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(INVALID_EMAIL);
+    }
+
+    @Test
+    public void testGetCurrentUser()
+    {
+        Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+        Mockito.doNothing().when(user).setAuthenticated(Mockito.anyBoolean());
+
+        assertNotNull(controller.getCurrentUser(authentication));
+
+        Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+        Mockito.verify(user, Mockito.times(1)).setAuthenticated(true);
+    }
+
+    @Test
+    public void testUpdatePassword()
+    {
+        Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+        Mockito.when(utils.createHash(Mockito.any())).thenReturn(TEST_PASSWORD_HASH);
+        Mockito.doNothing().when(user).setPasswordHash(Mockito.anyString());
+        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
+
+        controller.updatePassword(authentication, TEST_PASSWORD);
+
+        Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+        Mockito.verify(user, Mockito.times(1)).setPasswordHash(TEST_PASSWORD_HASH);
+        Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    }
+
+    @Test
+    public void testUpdateUsernameForInvalidUser()
+    {
+        Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
+        Mockito.doNothing().when(authentication).setAuthenticated(Mockito.anyBoolean());
+
+        controller.updateUsername(authentication, TEST_EMAIL);
+
+        Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+        Mockito.verify(authentication, Mockito.times(1)).setAuthenticated(false);
+    }
+
+    @Test
+    public void testUpdateUsername()
+    {
+        Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+        Mockito.doNothing().when(user).setEmail(Mockito.anyString());
+        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
+
+        controller.updateUsername(authentication, TEST_EMAIL);
+
+        Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+        Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
+        Mockito.verify(userRepository, Mockito.times(1)).save(user);
     }
 }
