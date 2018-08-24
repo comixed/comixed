@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -129,6 +130,18 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>1.7.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>1.7.4</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -160,16 +173,20 @@
             <phase>generate-resources</phase>
             <configuration>
               <tasks>
-                <exec executable="cmd" osfamily="windows"
+                <exec
+                  executable="cmd"
+                  osfamily="windows"
                   dir="${project.basedir}/../web-frontend">
-                  <arg value="/c" />
-                  <arg value="ng" />
-                  <arg value="build" />
+                  <arg value="/c"/>
+                  <arg value="ng"/>
+                  <arg value="build"/>
                 </exec>
-                <exec executable="/bin/sh" osfamily="unix"
+                <exec
+                  executable="/bin/sh"
+                  osfamily="unix"
                   dir="${project.basedir}/../web-frontend">
-                  <arg value="-c" />
-                  <arg value="ng build" />
+                  <arg value="-c"/>
+                  <arg value="ng build"/>
                 </exec>
               </tasks>
             </configuration>

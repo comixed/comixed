@@ -56,8 +56,14 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
     @Override
     public void startTask() throws WorkerTaskException
     {
-        for (Comic comic : this.comics)
+        for (int index = 0;
+             index < this.comics.size();
+             index++)
         {
+            Comic comic = this.comics.get(index);
+
+            this.logger.debug("Deleting {} of {} comic(s)", index + 1, this.comics.size());
+
             if (this.deleteFiles)
             {
                 this.logger.debug("Deleting comic file: " + comic.getFilename());
