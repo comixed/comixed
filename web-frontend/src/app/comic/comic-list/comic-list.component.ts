@@ -23,10 +23,13 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import {PageSizeComponent} from '../page-size/page-size.component';
+import {GroupComicsComponent} from '../group-comics/group-comics.component';
+import {GroupByPipe} from '../group-by.pipe';
 import {UserService} from '../../user.service';
 import {Comic} from '../comic.model';
 import {ComicService} from '../comic.service';
 import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.component';
+import {ComicListGroupComponent} from '../comic-list-group/comic-list-group.component';
 import {SeriesFilterPipe} from '../series-filter.pipe';
 import {AlertService} from '../../alert.service';
 
@@ -45,6 +48,11 @@ export class ComicListComponent implements OnInit {
   protected show_search_box = true;
   protected page_size: BehaviorSubject<number>;
   protected use_page_size: number;
+  protected current_pages = new Map<string, number>();
+  protected group_by_subject: BehaviorSubject<number>;
+  protected group_by_value: number;
+  protected last_group_label: string;
+  protected groups: Map<string, Array<Comic>>;
   protected sort_options: any[] = [
     {id: 0, label: 'Sort by series'},
     {id: 1, label: 'Sort by added date'},
@@ -60,6 +68,8 @@ export class ComicListComponent implements OnInit {
     private alert_service: AlertService,
   ) {
     this.comics = this.comic_service.all_comics;
+    this.group_by_value = 0;
+    this.last_group_label = '';
   }
 
   ngOnInit() {
@@ -78,6 +88,12 @@ export class ComicListComponent implements OnInit {
     this.page_size.subscribe(
       (page_size: number) => {
         this.use_page_size = page_size;
+      });
+    this.group_by_subject = new BehaviorSubject<number>(this.group_by_value);
+    this.group_by_subject.subscribe(
+      (group_by_value: number) => {
+        this.last_group_label = '';
+        this.group_by_value = group_by_value;
       });
   }
 
@@ -199,5 +215,66 @@ export class ComicListComponent implements OnInit {
   }
 
   handle_comic_clicked(event): void {
+  }
+
+  show_group_label(comic: Comic): boolean {
+    switch (this.group_by_value) {
+      case 1:
+        if (this.last_group_label !== this.get_comic_series_label(comic)) {
+          this.last_group_label = this.get_comic_series_label(comic);
+          return true;
+        }
+        break;
+      case 2:
+        if (this.last_group_label !== this.get_comic_publisher_label(comic)) {
+          this.last_group_label = this.get_comic_publisher_label(comic);
+          return true;
+        }
+    }
+    return false;
+  }
+
+  get_group_label(comic: Comic): string {
+    switch (this.group_by_value) {
+      case 1: return this.get_comic_series_label(comic);
+      case 2: return this.get_comic_series_label(comic);
+    }
+    return comic.filename;
+  }
+
+  get_comic_series_label(comic: Comic): string {
+    return `${comic.series || 'Unknown'} (${comic.volume || 'Unknown'})`;
+  }
+
+  get_comic_publisher_label(comic: Comic): string {
+    return `${comic.publisher || 'Unknown'}`;
+  }
+
+  get_comic_published_year_label(comic: Comic): string {
+    return `${comic.year_published || '1900'}`;
+  }
+
+  is_new_label(last_group_label: string, comic: Comic): boolean {
+    switch (this.group_by_value) {
+      case 1: return (last_group_label !== this.get_comic_series_label(comic));
+      case 2: return (last_group_label !== this.get_comic_publisher_label(comic));
+      case 3: return (last_group_label !== this.get_comic_published_year_label(comic));
+    }
+
+    return true;
+  }
+
+  get_label_for(comic: Comic): string {
+    let result = comic.filename;
+
+    switch (this.group_by_value) {
+      case 1: result = this.get_comic_series_label(comic); break;
+      case 2: result = this.get_comic_publisher_label(comic); break;
+      case 3: result = this.get_comic_published_year_label(comic); break;
+    }
+
+    this.last_group_label = result;
+
+    return result;
   }
 }
