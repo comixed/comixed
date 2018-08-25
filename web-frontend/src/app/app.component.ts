@@ -45,8 +45,9 @@ export class AppComponent implements AfterViewInit {
     private comic_service: ComicService,
     private router: Router,
   ) {
+    this.alert_message = '';
+    this.busy_message = '';
   }
-
 
   ngAfterViewInit(): void {
     this.alert_service.error_messages.subscribe(
@@ -64,11 +65,11 @@ export class AppComponent implements AfterViewInit {
     this.alert_service.busy_messages.subscribe(
       (message: string) => {
         if (message.length > 0) {
-          this.busy_message = message;
           this.busy = true;
         } else {
           this.busy = false;
         }
+        this.busy_message = message;
       }
     );
     setInterval(() => {
