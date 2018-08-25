@@ -1,0 +1,11 @@
+<div class='container-fluid'>
+  <h4 class='w-100 text-left bg-light text-dark pl-3'
+    (click)='show_comics = !show_comics'>
+    <span class='fa' [class.fa-chevron-circle-down]='!show_comics'
+      [class.fa-chevron-circle-up]='show_comics'></span> {{group_name}}
+  </h4>
+  <div *ngIf='show_comics' class='row w-100'>
+    <app-comic-list-entry *ngFor='let comic of comics' [comic]='comic'
+      [cover_size]='cover_size'></app-comic-list-entry>
+  </div>
+</div>

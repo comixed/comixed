@@ -40,6 +40,7 @@ import {SelectedForImportPipe} from './import-comic-list/selected-for-import.pip
 import {PageSizeComponent} from './page-size/page-size.component';
 import {GroupComicsComponent} from './group-comics/group-comics.component';
 import {GroupByPipe} from './group-by.pipe';
+import { ComicListGroupComponent } from './comic-list-group/comic-list-group.component';
 
 @NgModule({
   imports: [
@@ -72,6 +73,7 @@ import {GroupByPipe} from './group-by.pipe';
     PageSizeComponent,
     GroupComicsComponent,
     GroupByPipe,
+    ComicListGroupComponent,
   ]
 })
 export class ComicModule {}
