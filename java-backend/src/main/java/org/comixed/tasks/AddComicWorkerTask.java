@@ -21,6 +21,7 @@ package org.comixed.tasks;
 
 import java.io.File;
 
+import org.comixed.library.adaptors.AdaptorException;
 import org.comixed.library.adaptors.FilenameScraperAdaptor;
 import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Comic;
@@ -123,7 +124,8 @@ public class AddComicWorkerTask extends AbstractWorkerTask
             }
             this.comicRepository.save(result);
         }
-        catch (ComicFileHandlerException error)
+        catch (ComicFileHandlerException
+               | AdaptorException error)
         {
             throw new WorkerTaskException("Failed to load comic", error);
         }

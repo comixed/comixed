@@ -109,7 +109,7 @@ public class FilenameScraperAdaptor
      RULESET2,
      RULESET3,};
 
-    private boolean applyRule(Comic comic, String filename, RuleSet ruleset)
+    private boolean applyRule(Comic comic, String filename, RuleSet ruleset) throws AdaptorException
     {
         boolean result = false;
 
@@ -136,7 +136,7 @@ public class FilenameScraperAdaptor
                 }
                 catch (ParseException error)
                 {
-                    this.logger.error("Failed to parse date string: " + elements[ruleset.coverDate], error);
+                    throw new AdaptorException("Invalid date: " + elements[ruleset.coverDate], error);
                 }
             }
             result = true;
@@ -150,8 +150,10 @@ public class FilenameScraperAdaptor
      *
      * @param comic
      *            the comic to be updated
+     * @throws AdaptorException
+     *             if an error occurs
      */
-    public void execute(Comic comic)
+    public void execute(Comic comic) throws AdaptorException
     {
         String filename = FilenameUtils.getName(comic.getFilename());
         this.logger.debug("Attempting to extract comic meta-data from filename: {}", filename);

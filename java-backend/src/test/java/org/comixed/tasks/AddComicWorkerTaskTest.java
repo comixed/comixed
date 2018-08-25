@@ -21,6 +21,7 @@ package org.comixed.tasks;
 
 import java.io.File;
 
+import org.comixed.library.adaptors.AdaptorException;
 import org.comixed.library.adaptors.FilenameScraperAdaptor;
 import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Comic;
@@ -77,7 +78,7 @@ public class AddComicWorkerTaskTest
     private BlockedPageHash blockedPageHash;
 
     @Test
-    public void testAddFile() throws WorkerTaskException, ComicFileHandlerException
+    public void testAddFile() throws WorkerTaskException, ComicFileHandlerException, AdaptorException
     {
         Mockito.when(comicFactory.getObject()).thenReturn(comic);
         Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
@@ -97,7 +98,9 @@ public class AddComicWorkerTaskTest
     }
 
     @Test
-    public void testAddFileWithBlockedPageToBeDeleted() throws WorkerTaskException, ComicFileHandlerException
+    public void testAddFileWithBlockedPageToBeDeleted() throws WorkerTaskException,
+                                                        ComicFileHandlerException,
+                                                        AdaptorException
     {
         Mockito.when(comicFactory.getObject()).thenReturn(comic);
         Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
@@ -127,7 +130,8 @@ public class AddComicWorkerTaskTest
 
     @Test
     public void testAddFileWithNoBlockedPageButBlockedPagesToBeDeleted() throws WorkerTaskException,
-                                                                         ComicFileHandlerException
+                                                                         ComicFileHandlerException,
+                                                                         AdaptorException
     {
         Mockito.when(comicFactory.getObject()).thenReturn(comic);
         Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));

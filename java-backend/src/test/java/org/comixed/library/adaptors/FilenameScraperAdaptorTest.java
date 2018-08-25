@@ -42,12 +42,16 @@ public class FilenameScraperAdaptorTest
     private static final String VOLUME_NAME = "2018";
     private static final String ISSUE_NUMBER = "012";
     private static final String COVER_DATE_1 = "May, 2018";
+    private static final String BAD_COVER_DATE = "Flg, 2018";
     private static final String COMIC_FILENAME_RULESET_1 = FILE_LOCATION + SERIES_NAME + " Vol." + VOLUME_NAME + " #"
                                                            + ISSUE_NUMBER + " (" + COVER_DATE_1 + ")";
     private static final String COMIC_FILENAME_RULESET_2 = FILE_LOCATION + SERIES_NAME + " " + ISSUE_NUMBER + " ("
                                                            + VOLUME_NAME + ") (Digital) (Blah blah) blah.cbr";
     private static final String COMIC_FILENAME_RULESET_3 = FILE_LOCATION + SERIES_NAME + " (" + VOLUME_NAME
                                                            + ") (Lots of other crap)";
+    private static final String COMIC_FILENAME_RULESET_1_BAD_DATE = FILE_LOCATION + SERIES_NAME + " Vol." + VOLUME_NAME
+                                                                    + " #" + ISSUE_NUMBER + " (" + BAD_COVER_DATE
+                                                                    + ")";;
 
     private FilenameScraperAdaptor adaptor = new FilenameScraperAdaptor();
 
@@ -56,8 +60,30 @@ public class FilenameScraperAdaptorTest
     @Captor
     private ArgumentCaptor<Date> cover_date;
 
+    @Test(expected = AdaptorException.class)
+    public void testExecuteWithMalformedDate() throws ParseException, AdaptorException
+    {
+        Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_1_BAD_DATE);
+        Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
+        Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
+        Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
+        Mockito.doNothing().when(comic).setCoverDate(Mockito.any(Date.class));
+
+        try
+        {
+            adaptor.execute(comic);
+        }
+        finally
+        {
+            Mockito.verify(comic, Mockito.times(1)).getFilename();
+            Mockito.verify(comic, Mockito.times(1)).setSeries(SERIES_NAME);
+            Mockito.verify(comic, Mockito.times(1)).setVolume(VOLUME_NAME);
+            Mockito.verify(comic, Mockito.times(1)).setIssueNumber(ISSUE_NUMBER);
+        }
+    }
+
     @Test
-    public void testExecuteRuleset1() throws ParseException
+    public void testExecuteRuleset1() throws ParseException, AdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_1);
         Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
@@ -75,7 +101,7 @@ public class FilenameScraperAdaptorTest
     }
 
     @Test
-    public void testExecuteRuleset2()
+    public void testExecuteRuleset2() throws AdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_2);
         Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
@@ -91,7 +117,7 @@ public class FilenameScraperAdaptorTest
     }
 
     @Test
-    public void testExecuteRuleset3()
+    public void testExecuteRuleset3() throws AdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_3);
         Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
