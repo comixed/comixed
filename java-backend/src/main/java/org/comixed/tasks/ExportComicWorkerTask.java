@@ -19,8 +19,6 @@
 
 package org.comixed.tasks;
 
-import org.comixed.AppConfiguration;
-import org.comixed.library.adaptors.archive.AbstractArchiveAdaptor;
 import org.comixed.library.adaptors.archive.ArchiveAdaptor;
 import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.library.model.Comic;
@@ -43,19 +41,32 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
 
     @Autowired
     private ComicRepository comicRepository;
+
     @Autowired
     private ComicFileHandler comicFileHandler;
-    @Autowired
-    private AppConfiguration configuration;
 
-    public void setArchiveAdaptor(AbstractArchiveAdaptor<?> archiveAdaptor)
+    private boolean renamePages = false;
+
+    public void setArchiveAdaptor(ArchiveAdaptor archiveAdaptor)
     {
         this.archiveAdaptor = archiveAdaptor;
     }
 
-    public void setComics(Comic comic)
+    public void setComic(Comic comic)
     {
         this.comic = comic;
+    }
+
+    /**
+     * If set to true then pages are renamed as the comic is exported.
+     *
+     * @param renamePages
+     *            the flag
+     */
+    public void setRenamePages(boolean renamePages)
+    {
+        this.logger.debug("Setting renamePages={}", renamePages);
+        this.renamePages = renamePages;
     }
 
     @Override
@@ -64,22 +75,17 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
         this.logger.debug("Loading comic to be converted: " + this.comic.getFilename());
         try
         {
-            this.comicFileHandler.loadComic(comic);
+            this.comicFileHandler.loadComic(this.comic);
         }
         catch (ComicFileHandlerException error)
         {
-            throw new WorkerTaskException("unable to load comic file: " + comic.getFilename(), error);
+            throw new WorkerTaskException("unable to load comic file: " + this.comic.getFilename(), error);
         }
         this.logger.debug("Converting comic");
 
         try
         {
-            boolean rename = false;
-            if (this.configuration.hasOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT))
-            {
-                rename = Boolean.valueOf(this.configuration.getOption(AppConfiguration.RENAME_COMIC_PAGES_ON_EXPORT));
-            }
-            Comic result = this.archiveAdaptor.saveComic(this.comic, rename);
+            Comic result = this.archiveAdaptor.saveComic(this.comic, this.renamePages);
             this.comicRepository.save(result);
         }
         catch (ArchiveAdaptorException error)
@@ -87,4 +93,5 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
             throw new WorkerTaskException("Unable to convert comic", error);
         }
     }
+
 }
