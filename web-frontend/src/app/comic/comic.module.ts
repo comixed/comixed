@@ -38,7 +38,8 @@ import {PageDetailsComponent} from './page-details/page-details.component';
 import {ImportComicListEntryComponent} from './import-comic-list-entry/import-comic-list-entry.component';
 import {SelectedForImportPipe} from './import-comic-list/selected-for-import.pipe';
 import {PageSizeComponent} from './page-size/page-size.component';
-import { GroupComicsComponent } from './group-comics/group-comics.component';
+import {GroupComicsComponent} from './group-comics/group-comics.component';
+import {GroupByPipe} from './group-by.pipe';
 
 @NgModule({
   imports: [
@@ -70,6 +71,7 @@ import { GroupComicsComponent } from './group-comics/group-comics.component';
     SelectedForImportPipe,
     PageSizeComponent,
     GroupComicsComponent,
+    GroupByPipe,
   ]
 })
 export class ComicModule {}
