@@ -144,7 +144,7 @@ public class FileControllerTest
         File file = new File(TEST_FILE);
 
         assertEquals(1, result.size());
-        assertEquals(file.getAbsolutePath(), result.get(0).getFilename());
+        assertEquals(file.getAbsolutePath().replaceAll("\\\\", "/"), result.get(0).getFilename());
         assertEquals(FileUtils.getName(TEST_FILE), result.get(0).getBaseFilename());
         assertEquals(file.length(), result.get(0).getSize());
     }
@@ -201,7 +201,8 @@ public class FileControllerTest
         }
         else
         {
-            if (ComicFileUtils.isComicFile(file)) expectations.put(file.getAbsolutePath(), file);
+            if (ComicFileUtils.isComicFile(file)) expectations.put(file.getAbsolutePath().replaceAll("\\\\", "/"),
+                                                                   file);
         }
     }
 
