@@ -58,20 +58,22 @@ export class ComicListEntryComponent implements OnInit {
       this.title_text = this.title_text + ' #' + this.comic.issue_number;
     }
 
-    this.subtitle_text = 'Volume ' + this.comic.volume || 'Unknown';
-
     this.delete_comic_title = `Delete ${this.title_text}`;
     this.delete_comic_message = 'Are you sure you want to delete this comic?';
-    this.title_text = this.comic.series || 'Unknown';
 
+    this.title_text = this.comic.series || 'Unknown';
+    this.set_subtitle();
+  }
+
+  set_subtitle() {
     this.sort_order.subscribe(
       (sort_order: number) => {
         switch (sort_order) {
-          case 0: this.subtitle_text = `Volume #${this.comic.volume}`; break;
+          case 0: this.subtitle_text = `(v.${this.comic.volume || 'Unknown'})`; break;
           case 1: this.subtitle_text = `Added: ${this.convert_date(this.comic.added_date, 'This should never happen...')}`; break;
           case 2: this.subtitle_text = `Cover date: ${this.comic.cover_date || 'Unknown'}`; break;
           case 3: this.subtitle_text = `Last read: ${this.convert_date(this.comic.last_read_date, 'Never')}`; break;
-          default: console.log('Invalid sort value: ' + this.sort_order);
+          default: this.subtitle_text = `Invalid sort value: ${this.sort_order}`;
         }
       });
   }
