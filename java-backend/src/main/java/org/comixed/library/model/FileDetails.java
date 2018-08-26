@@ -32,8 +32,8 @@ public class FileDetails
     public FileDetails(String filename, long size)
     {
         super();
-        this.filename = filename;
         this.baseFilename = FileUtils.getName(filename);
+        this.filename = filename.replaceAll("\\\\", "/");
         this.size = size;
     }
 
