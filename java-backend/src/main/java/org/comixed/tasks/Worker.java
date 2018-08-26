@@ -224,7 +224,7 @@ public class Worker implements
                         this.logger.error("Worker interrupted", cause);
                     }
                 }
-                if (!this.queue.isEmpty() && (this.state == State.RUNNING))
+                if (!this.queue.isEmpty() && (this.state != State.STOP))
                 {
                     this.state = State.RUNNING;
                     currentTask = this.queue.poll();
@@ -233,10 +233,6 @@ public class Worker implements
                     this.taskCounts.put(currentTask.getClass(), count);
                     this.logger.debug("There are now {} tasks of type {}", count, currentTask.getClass());
                     this.fireQueueChangedEvent();
-                }
-                else
-                {
-                    logger.debug("Task queue is empty");
                 }
                 this.semaphore.notifyAll();
             }
@@ -258,12 +254,6 @@ public class Worker implements
                     this.logger.debug("Failed to complete task", error);
                 }
             }
-            else
-            {
-                logger.debug("No current task to process");
-            }
-
-            logger.debug("Bottom of loop in state={}", this.state.name());
         }
         this.logger.debug("Stop processing the work queue");
         this.fireWorkerStateChangedEvent();
