@@ -38,6 +38,7 @@ export class Comic {
   comic_vine_url: string;
   added_date: string;
   cover_date: string;
+  year_published: number;
   last_read_date: string;
   page_count: number;
   characters: string[];
@@ -66,6 +67,7 @@ export class Comic {
     comic_vine_url?: string,
     added_date?: string,
     cover_date?: string,
+    year_published?: number,
     last_read_date?: string,
     page_count?: number,
     characters?: string[],
@@ -93,6 +95,7 @@ export class Comic {
     this.comic_vine_url = comic_vine_url;
     this.added_date = added_date;
     this.cover_date = cover_date;
+    this.year_published = year_published;
     this.last_read_date = last_read_date;
     this.page_count = page_count;
     this.characters = characters;

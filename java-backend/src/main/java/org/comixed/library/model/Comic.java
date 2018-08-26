@@ -789,6 +789,13 @@ public class Comic
         return this.volume;
     }
 
+    @Transient
+    @JsonProperty(value = "published_year")
+    public int getYearPublished()
+    {
+        return this.coverDate != null ? this.coverDate.getYear() + 1900 : 0;
+    }
+
     /**
      * Returns whether the comic has characters or not.
      *
