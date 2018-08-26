@@ -4,7 +4,12 @@ An application for managing digital comics.
 ## Status
  * TravisCI Build Status: [![Build Status](https://travis-ci.org/mcpierce/comixed.svg?branch=develop)](https://travis-ci.org/mcpierce/comixed)
  * CircleCI Build Status: [![CircleCI](https://circleci.com/gh/mcpierce/comixed/tree/develop.svg?style=svg)](https://circleci.com/gh/mcpierce/comixed/tree/develop)
- * Download an **unsupported** snapshot build from [here](https://32-114534553-gh.circle-artifacts.com/0/home/circleci/comixed/java-backend/target/comixed-app-0.2.0-SNAPSHOT.jar)
+ * Download an **unsupported** snapshot by clicking on the CircleCI link above.
+   * On the destination page, click on the top-most build indicator that reads **SUCCESS**, then
+   * Click on the tab labeled **Artifacts**, then
+   * Click on the **Container** link's lowest tab (home -> circleci -> comixed -> java-backend -> target), and finally
+   * Click on the **comixed-app-0.2.0-SNAPSHOT.jar** file to download the latest interim build.
+   * Use at your own risk...
 
 ## Overview And Goals
 ComiXed is designed to be a cross-platform digital comics manager. It will:
