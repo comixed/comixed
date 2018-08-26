@@ -61,7 +61,7 @@ export class ComicListEntryComponent implements OnInit {
     this.delete_comic_title = `Delete ${this.title_text}`;
     this.delete_comic_message = 'Are you sure you want to delete this comic?';
 
-    this.title_text = this.comic.series || 'Unknown';
+    this.title_text = `${this.comic.series || 'Unknown'} #${this.comic.issue_number || '???'}`;
     this.set_subtitle();
   }
 
