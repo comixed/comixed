@@ -1,6 +1,9 @@
 # ComiXed
 An application for managing digital comics.
 
+## Status
+**CircleCI Build Status:** [![CircleCI](https://circleci.com/gh/mcpierce/comixed/tree/develop.svg?style=svg)](https://circleci.com/gh/mcpierce/comixed/tree/develop)
+
 ## Overview And Goals
 ComiXed is designed to be a cross-platform digital comics manager. It will:
 
