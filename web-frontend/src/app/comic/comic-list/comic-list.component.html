@@ -19,10 +19,10 @@
             <span class='text-muted'><strong>Pages:</strong>
               {{current_comic.page_count}}</span><br /> <span
               *ngIf='current_comic.cover_date !=null' class='text-muted'><strong>Published
-                on</strong> {{current_comic.cover_date|date:'MM/yyyy'}}<br /> </span> <span
+                on</strong> {{current_comic.cover_date|date:'MMM yyyy'}}<br /> </span> <span
               *ngIf='current_comic.last_read_date != null'
               class='text-muted'> <strong>Last read on</strong>
-              {{current_comic.last_read_date | date:'MM/dd/yyyy'}}
+              {{current_comic.last_read_date | date:'MMM dd yyyy'}}
             </span>
           </div>
         </div>
