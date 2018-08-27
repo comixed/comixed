@@ -70,20 +70,30 @@ export class ComicListEntryComponent implements OnInit {
       (sort_order: number) => {
         switch (sort_order) {
           case 0: this.subtitle_text = `(v.${this.comic.volume || 'Unknown'})`; break;
-          case 1: this.subtitle_text = `Added: ${this.convert_date(this.comic.added_date, 'This should never happen...')}`; break;
-          case 2: this.subtitle_text = `Cover date: ${this.comic.cover_date || 'Unknown'}`; break;
-          case 3: this.subtitle_text = `Last read: ${this.convert_date(this.comic.last_read_date, 'Never')}`; break;
+          case 1: this.subtitle_text = `Added: ${this.format_date_full(this.comic.added_date, 'This should never happen...')}`; break;
+          case 2: this.subtitle_text = `Cover date: ${this.format_date_month_year(this.comic.cover_date, 'Unknown')}`; break;
+          case 3: this.subtitle_text = `Last read: ${this.format_date_full(this.comic.last_read_date, 'Never')}`; break;
           default: this.subtitle_text = `Invalid sort value: ${this.sort_order}`;
         }
       });
   }
 
-  convert_date(date: string, default_value: string): string {
+  format_date_month_year(date: string, otherwise: string): string {
+    return this.format_date(date, otherwise, {month: 'short', year: 'numeric'});
+  }
+
+  format_date_full(date: string, otherwise: string): string {
+    return this.format_date(date, otherwise, {month: 'short', day: 'numeric', year: 'numeric'});
+  }
+
+  format_date(date: string, otherwise: string, options: any): string {
     if (date) {
-      return new Date(parseInt(date, 10)).toLocaleDateString();
-    } else {
-      return default_value;
+      const formatter = new Intl.DateTimeFormat('en-us', options);
+
+      return formatter.format(new Date(date));
     }
+
+    return otherwise;
   }
 
   clicked(event: any): void {
