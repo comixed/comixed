@@ -37,16 +37,16 @@
             this comic on ComicVine...</a>
         </p>
         <div *ngIf='comic.cover_date' class='row w-100  ml-1'>
-          <strong>Published: </strong>{{comic.cover_date |
-          date:'MM/yyyy' }}
+          <strong>Published: </strong>{{comic.cover_date | date:'MMM
+          yyyy' }}
         </div>
         <div class='row w-100 ml-1'>
-          <strong>Added: </strong>{{comic.added_date | date:
-          'MM/dd/yyyy'}}
+          <strong>Added: </strong>{{comic.added_date | date: 'MMM dd
+          yyyy'}}
         </div>
         <div *ngIf='comic.last_read_date' class='row w-100 ml-1'>
           <strong>Last read:</strong> {{comic.last_read_date | date:
-          'MM/yyyy'}}
+          'MMM dd yyyy'}}
         </div>
         <div *ngIf='comic.blocked_page_count > 0' class='row w-100 ml-1'>
           This comic contains {{comic.blocked_page_count}} blocked
