@@ -17,7 +17,11 @@
  * org.comixed;
  */
 
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -49,6 +53,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   page_types: Array<PageType> = [];
   current_page: Page;
   private show_page_details = false;
+  protected editing = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -135,5 +140,13 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
 
   getDownloadLink(): string {
     return this.comic_service.get_download_link_for_comic(this.comic.id);
+  }
+
+  start_editing(): void {
+    this.editing = true;
+  }
+
+  stop_editing(): void {
+    this.editing = false;
   }
 }
