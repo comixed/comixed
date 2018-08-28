@@ -41,7 +41,7 @@ To start the application, launch it from the command line with:
 
 ### Interacting With The Application
 
-To connect to the web application, point a browser to *http://localhost:7171/index.html*.
+To connect to the web application, point a browser to *http://localhost:7171/home*.
 
 You can then log into the application with one of two default accounts:
 
