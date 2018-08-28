@@ -1,0 +1,72 @@
+<div class='container-fluid'>
+  <div class='row w-100'>
+    <div class='col'>
+      <form>
+        <div>
+          <dl>
+            <dt>
+              <label for='api_key'>API Key:</label>
+            <dt>
+            <dd>
+              <input type='text' class='form-control' required
+                name='api_key' [(ngModel)]='api_key'>
+            </dd>
+            <dt>
+              <label for='series'>Series name:</label>
+            </dt>
+            <dd>
+              <input type='text' class='form-control' required
+                name='series' [(ngModel)]='series'>
+            </dd>
+            <dt>
+              <label for='volume'>Volume:</label>
+            </dt>
+            <dd>
+              <input type='text' class='form-control' name='volume'
+                [(ngModel)]='volume'>
+            </dd>
+            <dt>
+              <label for='issue_number'>Issue number:</label>
+            </dt>
+            <dd>
+              <input type='text' class='form-control'
+                name='issue_number' [(ngModel)]='issue_number'>
+            </dd>
+          </dl>
+        </div>
+      </form>
+    </div>
+    <div class='col-5'>
+      <div *ngIf='show_candidates()' class='container-fluid'>
+        <h3 class='w-100 text-center'>{{volume_selection_banner}}</h3>
+        <div class='card w-100'>
+          <div class='card-header'>
+            <h5 class='card-title text-center text-nowrap text-truncate'>{{volume_selection_title}}</h5>
+            <h6 class='card-subtitle text-center'>{{volume_selection_subtitle}}</h6>
+          </div>
+          <div class='card-body'>
+            <img class='card-img-bottom img-fluid'
+              src='{{current_volume.image_url}}'
+              alt={{current_volume.name}}>
+          </div>
+          <div class='card-footer'>
+            <div class='row w-100 justify-content-center'>
+              <button class='btn btn-primary ml-1' type='button'
+                (click)='go_to_previous_volume()'>Previous</button>
+              <button class='btn btn-secondary ml-1' type='button'
+                (click)='select_current_volume()'>Select</button>
+              <button class='btn btn-primary ml-1' type='button'
+                (click)='go_to_next_volume()'>Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='row w-100'>
+    <button class='btn btn-info' type='button'
+      (click)='fetch_candidates()'>Fetch</button>
+    <button class='btn btn-danger' type='button'
+      (click)='stop_editing()'>Cancel</button>
+  </div>
+</div>

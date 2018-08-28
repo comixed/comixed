@@ -41,6 +41,7 @@ import {PageSizeComponent} from './page-size/page-size.component';
 import {GroupComicsComponent} from './group-comics/group-comics.component';
 import {GroupByPipe} from './group-by.pipe';
 import { ComicListGroupComponent } from './comic-list-group/comic-list-group.component';
+import { ComicDetailsEditorComponent } from './comic-details-editor/comic-details-editor.component';
 
 @NgModule({
   imports: [
@@ -74,6 +75,7 @@ import { ComicListGroupComponent } from './comic-list-group/comic-list-group.com
     GroupComicsComponent,
     GroupByPipe,
     ComicListGroupComponent,
+    ComicDetailsEditorComponent,
   ]
 })
 export class ComicModule {}
