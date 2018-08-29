@@ -3,6 +3,7 @@ An application for managing digital comics.
 
 ## Status
  * TravisCI Build Status: [![Build Status](https://travis-ci.org/mcpierce/comixed.svg?branch=develop)](https://travis-ci.org/mcpierce/comixed)
+ * You can download the latest **unsupported** release from the **Releases** tab. Every merge to the **Develop** branch triggers a new build.
 
 ## Overview And Goals
 ComiXed is designed to be a cross-platform digital comics manager. It will:
