@@ -2,15 +2,25 @@ os:
         - linux
 
 language: node_js
-        - "10.1.0"
+        - "9.11.1"
 
 jdk:
         - oraclejdk8
 
 env:
-        - NODE_VERSION="10.1.0"
+        - NODE_VERSION="9.11.1"
 
 before_install:
         - (cd web-frontend && npm install --global @angular/cli && npm install)
 
-script: (cd java-backend && mvn clean test)
+script: (cd java-backend && mvn clean test package)
+
+deploy:
+        provider: releases
+        api_key: $GITHUB_AUTH_TOKEN
+        file: java-backend/target/comixed-app-0.2.0-SNAPSHOT.jar
+        skip_cleanup: true
+        keep-history: true
+        overwrite: true
+        on:
+                branch: develop
