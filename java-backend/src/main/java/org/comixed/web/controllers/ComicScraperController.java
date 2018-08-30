@@ -19,15 +19,51 @@
 
 package org.comixed.web.controllers;
 
+import org.comixed.web.ComicVineQueryWebRequest;
+import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
+import org.comixed.web.comicvine.ComicVineAdaptorException;
+import org.comixed.web.comicvine.ComicVineQueryAdaptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/scraper")
 public class ComicScraperController
 {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private WebRequestProcessor webRequestProcessor;
+
+    @Autowired
+    private ObjectFactory<ComicVineQueryWebRequest> searchQueryForIssuesFactory;
+
+    @Autowired
+    private ComicVineQueryAdaptor comicVineQueryAdaptor;
+
+    @RequestMapping(value = "/query",
+                    method = RequestMethod.POST)
+    public byte[] queryForIssues(@RequestParam("api_key") String apiKey,
+                                 @RequestParam("series_name") String seriesName) throws WebRequestException,
+                                                                                 ComicVineAdaptorException
+    {
+        this.logger.debug("Preparing to retrieve issues for the given series: {}", seriesName);
+
+        ComicVineQueryWebRequest request = this.searchQueryForIssuesFactory.getObject();
+        request.setApiKey(apiKey);
+        request.setSeriesName(seriesName);
+
+        byte[] content = this.webRequestProcessor.execute(request);
+
+        this.logger.debug("Transforming query content");
+
+        return this.comicVineQueryAdaptor.execute(content);
+    }
 }

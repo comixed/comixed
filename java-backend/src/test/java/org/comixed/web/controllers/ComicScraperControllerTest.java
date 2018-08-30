@@ -19,11 +19,17 @@
 
 package org.comixed.web.controllers;
 
+import static org.junit.Assert.fail;
+
+import org.comixed.web.ComicVineQueryWebRequest;
 import org.comixed.web.WebRequestProcessor;
+import org.comixed.web.comicvine.ComicVineQueryAdaptor;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,4 +41,31 @@ public class ComicScraperControllerTest
 
     @Mock
     private WebRequestProcessor webRequestProcessor;
+
+    @Mock
+    private ComicVineQueryAdaptor comicVineQueryAdaptor;
+
+    @Mock
+    private ObjectFactory<ComicVineQueryWebRequest> searchQueryForIssuesFactory;
+
+    @Mock
+    private ComicVineQueryWebRequest searchQueryForIssues;
+
+    @Test
+    public void testQueryForVolumesAdaptorRaisesException()
+    {
+        fail("Not implemented yet");
+    }
+
+    @Test
+    public void testQueryForVolumes()
+    {
+        fail("Not implemented yet");
+    }
+
+    @Test
+    public void testQueryForVolumesMultipointPages()
+    {
+        fail("Not implemented yet");
+    }
 }
