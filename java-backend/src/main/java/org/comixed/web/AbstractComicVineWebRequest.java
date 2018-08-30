@@ -37,18 +37,19 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractComicVineWebRequest extends AbstractWebRequest
 {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final String COMICVINE_URL_PATTERN = "http://comicvine.gamespot.com/api/{0}/?api_key={1}&format=json{2}{3}";
 
-    private static final String COMICVINE_URL_PATTERN = "http://comicvine.gamespot.com/api/{0}/?api_key={1}&format=json{2}";
     private static final String FILTER_ARGUMENT = "&filter={0}";
     private static final String FILTER_FORMAT = "{0}:{1}";
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     String endpoint;
 
     Map<String,
         String> filterset = new HashMap<>();
 
-    private List<String> parameterSet = new ArrayList<>();
+    Map<String,
+        String> parameterSet = new HashMap<>();
 
     private String apiKey;
 
@@ -71,44 +72,73 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest
         this.filterset.put(name, value);
     }
 
+    /**
+     * Adds a parameter to the request.
+     *
+     * @param name
+     *            the parameter name
+     * @param value
+     *            the parameter value
+     */
+    protected void addParameter(String name, String value)
+    {
+        this.logger.debug("Adding parameter: {}={}", name, value);
+        this.parameterSet.put(name, value);
+    }
+
+    protected void checkForMissingRequiredParameter(String required) throws WebRequestException
+    {
+        if (!this.parameterSet.containsKey(required)) throw new WebRequestException("Missing required parameter: "
+                                                                                    + required);
+    }
+
     @Override
     public String getURL() throws WebRequestException
     {
-        if (this.endpoint == null) { throw new WebRequestException("Missing or undefined endpoint"); }
-        if (StringUtils.isEmpty(this.apiKey)) { throw new WebRequestException("Missing or undefined API key"); }
+        if (this.endpoint == null) throw new WebRequestException("Missing or undefined endpoint");
+        if (StringUtils.isEmpty(this.apiKey)) throw new WebRequestException("Missing or undefined API key");
         this.logger.debug("Generating ComicVine URL");
-        String filtering = "";
+        StringBuffer parameters = new StringBuffer();
+        if (!this.parameterSet.isEmpty())
+        {
+            this.logger.debug("Adding parameters");
+            for (String key : this.parameterSet.keySet())
+            {
+                String value = this.parameterSet.get(key);
+                this.logger.debug("Adding parameter: {}={}", key, value);
+
+                parameters.append("&");
+                parameters.append(key);
+                parameters.append("=");
+                parameters.append(value);
+            }
+        }
+
+        StringBuffer filtering = new StringBuffer();
         if (!this.filterset.isEmpty())
         {
-            this.logger.debug("Applying filters");
-            StringBuffer filters = new StringBuffer();
+            this.logger.debug("Adding filters");
             for (String key : this.filterset.keySet())
             {
                 String value = this.filterset.get(key);
                 this.logger.debug("Adding filter: " + key + "=" + value);
                 String f = MessageFormat.format(FILTER_FORMAT, key, value);
-                if (filters.length() > 0)
+                if (filtering.length() > 0)
                 {
-                    filters.append(",");
+                    filtering.append(",");
                 }
-                filters.append(f);
+                filtering.append(f);
             }
-            filtering = MessageFormat.format(FILTER_ARGUMENT, filters.toString());
         }
-        String result = MessageFormat.format(COMICVINE_URL_PATTERN, this.endpoint, apiKey, filtering, parameters);
+
+        String result = MessageFormat.format(COMICVINE_URL_PATTERN, this.endpoint, this.apiKey,
+                                             MessageFormat.format(FILTER_ARGUMENT, filtering.toString()),
+                                             parameters.toString());
         return result;
     }
 
-    protected void addParameter(String parameter)
-    {
-        logger.debug("Adding parameter: {}", parameter);
-        this.parameterSet.add(parameter);
-    }
-
-    @Override
     public void setApiKey(String apiKey)
     {
-        logger.debug("Setting the API key: {}", apiKey.replace(".*(....)", "X\\\\1"));
         this.apiKey = apiKey;
     }
 }
