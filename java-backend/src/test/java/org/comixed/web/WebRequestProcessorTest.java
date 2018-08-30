@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -36,12 +37,21 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(
+{IOUtils.class})
+@SpringBootTest
 public class WebRequestProcessorTest
 {
     private static final String TEST_REQUEST_URL = "http://www.testsite.org/getdata";
+    private static final long TEST_CONTENT_LENGTH = 2342L;
+    private static final byte[] TEST_CONTENT = "This is the content".getBytes();
+
     @InjectMocks
     private WebRequestProcessor processor;
 
@@ -66,8 +76,11 @@ public class WebRequestProcessorTest
     @Mock
     private WebRequestClient requestClient;
 
-    @Mock
-    private WebResponseHandler responseHandler;
+    @Captor
+    private ArgumentCaptor<InputStream> inputStreamCaptor;
+
+    @Captor
+    private ArgumentCaptor<byte[]> content;
 
     @Test
     public void testExecute() throws ClientProtocolException, IOException, WebRequestException
@@ -76,20 +89,21 @@ public class WebRequestProcessorTest
         Mockito.when(this.request.getURL()).thenReturn(TEST_REQUEST_URL);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        Mockito.when(httpEntity.getContentLength()).thenReturn(TEST_CONTENT_LENGTH);
         Mockito.when(httpEntity.getContent()).thenReturn(inputStream);
-        Mockito.doNothing().when(responseHandler).processContent(Mockito.any(InputStream.class));
+        PowerMockito.mockStatic(IOUtils.class);
+        PowerMockito.doReturn(TEST_CONTENT).when(IOUtils.class);
+        IOUtils.toByteArray(Mockito.any(InputStream.class));
 
-        this.processor.execute(this.request, responseHandler);
+        this.processor.execute(this.request);
 
         Mockito.verify(requestClient, Mockito.times(1)).createClient();
         Mockito.verify(request, Mockito.times(1)).getURL();
         Mockito.verify(httpClient, Mockito.times(1)).execute(httpGet.capture());
         Mockito.verify(httpResponse, Mockito.times(1)).getEntity();
         Mockito.verify(httpEntity, Mockito.times(1)).getContent();
-        Mockito.verify(responseHandler, Mockito.times(1)).processContent(inputStream);
-
-        assertEquals(WebRequestProcessor.AGENT_NAME,
-                     this.httpGet.getValue().getFirstHeader(WebRequestProcessor.AGENT_HEADER).getValue());
+        PowerMockito.verifyStatic(IOUtils.class, Mockito.times(1));
+        IOUtils.toByteArray(inputStreamCaptor.capture());
     }
 
     @Test(expected = WebRequestException.class)
@@ -101,7 +115,7 @@ public class WebRequestProcessorTest
 
         try
         {
-            this.processor.execute(this.request, responseHandler);
+            this.processor.execute(this.request);
         }
         catch (WebRequestException expected)
         {

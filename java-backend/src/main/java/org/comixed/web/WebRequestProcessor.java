@@ -21,6 +21,7 @@ package org.comixed.web;
 
 import java.io.IOException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -52,17 +53,16 @@ public class WebRequestProcessor
      *
      * @param request
      *            the request
-     * @param handler
-     *            the response handler
+     * @return the response bytes
      * @throws WebRequestException
      *             if an error occurs
      */
-    public void execute(WebRequest request, WebResponseHandler handler) throws WebRequestException
+    public byte[] execute(WebRequest request) throws WebRequestException
     {
         String url = request.getURL();
         this.logger.debug("Executing web request: " + url);
 
-        HttpClient client = clientSource.createClient();
+        HttpClient client = this.clientSource.createClient();
         HttpGet getRequest = new HttpGet(url);
 
         getRequest.addHeader(AGENT_HEADER, AGENT_NAME);
@@ -70,8 +70,9 @@ public class WebRequestProcessor
         try
         {
             HttpResponse response = client.execute(getRequest);
-            logger.debug("Sending response to handler");
-            handler.processContent(response.getEntity().getContent());
+            byte[] result = IOUtils.toByteArray(response.getEntity().getContent());
+            this.logger.debug("Returning {} byte response", result.length);
+            return result;
         }
         catch (IOException error)
         {

@@ -24,18 +24,15 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleWebRequestTest extends BaseWebRequestTest
 {
     private static final String TEST_URL = "http://www.test.org/getsomething";
+
     @InjectMocks
     private SimpleWebRequest request = new SimpleWebRequest(TEST_URL);
-
-    @Mock
-    private WebResponseHandler handler;
 
     @Test
     public void testGetURLBase()
