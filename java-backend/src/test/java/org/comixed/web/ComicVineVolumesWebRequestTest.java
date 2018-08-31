@@ -20,28 +20,21 @@
 package org.comixed.web;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-import org.comixed.AppConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicVineVolumesWebRequestTest extends BaseWebRequestTest
 {
     private static final String TEST_API_KEY = "12345";
-    private static final String TEST_BASE_URL = "http://comicvine.gamespot.com/api/volumes/?api_key=" + TEST_API_KEY
-                                                + "&format=json";
-    private static final String TEST_FILTERED_URL = "http://comicvine.gamespot.com/api/volumes/?api_key=" + TEST_API_KEY
-                                                    + "&format=json&filter=name:Batman";
+    private static final String TEST_EXPECTED_FILTER = "filter=name:Batman";
+
     @InjectMocks
     private ComicVineVolumesWebRequest request;
-
-    @Mock
-    private AppConfiguration config;
 
     @Test
     public void testEnsureSetup()
@@ -50,23 +43,13 @@ public class ComicVineVolumesWebRequestTest extends BaseWebRequestTest
     }
 
     @Test
-    public void testGetURLBase() throws WebRequestException
-    {
-        Mockito.when(config.getOption(ComicVineWebRequest.COMICVINE_API_KEY)).thenReturn(TEST_API_KEY);
-
-        String result = request.getURL();
-
-        assertEquals(TEST_BASE_URL, result);
-    }
-
-    @Test
     public void testGetURLWithFilters() throws WebRequestException
     {
+        request.setApiKey(TEST_API_KEY);
         request.addFilter("name", "Batman");
-        Mockito.when(config.getOption(ComicVineWebRequest.COMICVINE_API_KEY)).thenReturn(TEST_API_KEY);
 
         String result = request.getURL();
 
-        assertEquals(TEST_FILTERED_URL, result);
+        assertNotEquals(-1, result.indexOf(TEST_EXPECTED_FILTER));
     }
 }

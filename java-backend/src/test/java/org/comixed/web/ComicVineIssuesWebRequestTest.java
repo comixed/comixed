@@ -20,28 +20,20 @@
 package org.comixed.web;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-import org.comixed.AppConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicVineIssuesWebRequestTest extends BaseWebRequestTest
 {
     private static final String TEST_API_KEY = "12345";
-    private static final String TEST_BASE_URL = "http://comicvine.gamespot.com/api/issues/?api_key=" + TEST_API_KEY
-                                                + "&format=json";
-    private static final String TEST_FILTERED_URL = "http://comicvine.gamespot.com/api/issues/?api_key=" + TEST_API_KEY
-                                                    + "&format=json&filter=volume:4055";
+    private static final String TEST_EXPECTED_FILTERED = "id:4055";
     @InjectMocks
     private ComicVineIssuesWebRequest request;
-
-    @Mock
-    private AppConfiguration config;
 
     @Test
     public void testEnsureSetup()
@@ -50,23 +42,13 @@ public class ComicVineIssuesWebRequestTest extends BaseWebRequestTest
     }
 
     @Test
-    public void testGetURLBase() throws WebRequestException
-    {
-        Mockito.when(config.getOption(ComicVineWebRequest.COMICVINE_API_KEY)).thenReturn(TEST_API_KEY);
-
-        String result = request.getURL();
-
-        assertEquals(TEST_BASE_URL, result);
-    }
-
-    @Test
     public void testGetURLWithFilters() throws WebRequestException
     {
-        request.addFilter("volume", "4055");
-        Mockito.when(config.getOption(ComicVineWebRequest.COMICVINE_API_KEY)).thenReturn(TEST_API_KEY);
+        request.setApiKey(TEST_API_KEY);
+        request.addFilter("id", "4055");
 
         String result = request.getURL();
 
-        assertEquals(TEST_FILTERED_URL, result);
+        assertNotEquals(-1, result.indexOf(TEST_EXPECTED_FILTERED));
     }
 }

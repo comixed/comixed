@@ -23,10 +23,9 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.comixed.AppConfiguration;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <code>AbstractComicVineWebRequest</code> defines a foundation for creating
@@ -36,8 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Darryl L. Pierce
  *
  */
-public abstract class AbstractComicVineWebRequest extends AbstractWebRequest implements
-                                                  ComicVineWebRequest
+public abstract class AbstractComicVineWebRequest extends AbstractWebRequest
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -45,13 +43,14 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest imp
     private static final String FILTER_ARGUMENT = "&filter={0}";
     private static final String FILTER_FORMAT = "{0}:{1}";
 
-    @Autowired
-    private AppConfiguration configuration;
-
     String endpoint;
 
     Map<String,
         String> filterset = new HashMap<>();
+
+    private List<String> parameterSet = new ArrayList<>();
+
+    private String apiKey;
 
     public AbstractComicVineWebRequest(String endpoint)
     {
@@ -76,6 +75,7 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest imp
     public String getURL() throws WebRequestException
     {
         if (this.endpoint == null) { throw new WebRequestException("Missing or undefined endpoint"); }
+        if (StringUtils.isEmpty(this.apiKey)) { throw new WebRequestException("Missing or undefined API key"); }
         this.logger.debug("Generating ComicVine URL");
         String filtering = "";
         if (!this.filterset.isEmpty())
@@ -95,8 +95,20 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest imp
             }
             filtering = MessageFormat.format(FILTER_ARGUMENT, filters.toString());
         }
-        String apikey = this.configuration.getOption(COMICVINE_API_KEY);
-        String result = MessageFormat.format(COMICVINE_URL_PATTERN, this.endpoint, apikey, filtering);
+        String result = MessageFormat.format(COMICVINE_URL_PATTERN, this.endpoint, apiKey, filtering, parameters);
         return result;
+    }
+
+    protected void addParameter(String parameter)
+    {
+        logger.debug("Adding parameter: {}", parameter);
+        this.parameterSet.add(parameter);
+    }
+
+    @Override
+    public void setApiKey(String apiKey)
+    {
+        logger.debug("Setting the API key: {}", apiKey.replace(".*(....)", "X\\\\1"));
+        this.apiKey = apiKey;
     }
 }
