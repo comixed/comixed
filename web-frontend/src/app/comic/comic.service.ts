@@ -223,4 +223,10 @@ export class ComicService {
   get_download_link_for_comic(comicId: number): string {
     return `${this.api_url}/comics/${comicId}/download`;
   }
+
+  fetch_candidates_for(api_key: string, series_name: string): Observable<any> {
+    const params = new HttpParams().set('api_key', api_key).set('series_name', series_name);
+
+    return this.http.post(`${this.api_url}/scraper/query`, params);
+  }
 }
