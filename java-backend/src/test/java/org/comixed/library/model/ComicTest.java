@@ -272,7 +272,7 @@ public class ComicTest
     @Test
     public void testIssueNumber()
     {
-        this.comic.setIssueNumber(TEST_ISSUE_NUMBER);
+        this.comic.setIssueNumber("0" + TEST_ISSUE_NUMBER);
         assertEquals(TEST_ISSUE_NUMBER, this.comic.getIssueNumber());
     }
 

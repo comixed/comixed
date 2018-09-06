@@ -948,6 +948,14 @@ public class Comic
     public void setIssueNumber(String issueNumber)
     {
         this.logger.debug("Setting issue number=" + issueNumber);
+        if (issueNumber.startsWith("0"))
+        {
+            this.logger.debug("Removing leading 0s from issue number");
+            while (issueNumber.startsWith("0"))
+            {
+                issueNumber = issueNumber.substring(1);
+            }
+        }
         this.issueNumber = issueNumber;
     }
 
