@@ -178,7 +178,7 @@ public class Comic
     @Column(name = "story_arc_name")
     @JsonProperty("story_arcs")
     @JsonView(View.List.class)
-    private List<String> storyArcs = new ArrayList<>();
+    List<String> storyArcs = new ArrayList<>();
 
     @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -212,11 +212,11 @@ public class Comic
                fetch = FetchType.EAGER)
     @OrderColumn(name = "index")
     @JsonView(View.Details.class)
-    private List<Page> pages = new ArrayList<>();
+    List<Page> pages = new ArrayList<>();
 
     @Transient
     @JsonIgnore
-    private File backingFile;
+    File backingFile;
 
     @Formula(value = "SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d)")
     @JsonProperty("blocked_page_count")
@@ -365,16 +365,6 @@ public class Comic
     public ArchiveType getArchiveType()
     {
         return this.archiveType;
-    }
-
-    private File getBackingFile()
-    {
-        if (this.backingFile == null)
-        {
-            this.backingFile = new File(this.filename);
-        }
-
-        return this.backingFile;
     }
 
     /**
@@ -857,7 +847,12 @@ public class Comic
     @JsonView(View.List.class)
     public boolean isMissing()
     {
-        return this.getBackingFile() != null ? !this.backingFile.exists() : true;
+        if (this.backingFile == null)
+        {
+            this.backingFile = new File(this.filename);
+        }
+
+        return !this.backingFile.exists();
     }
 
     public void setArchiveType(ArchiveType archiveType)

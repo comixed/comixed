@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.comixed.library.adaptors.ArchiveType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,8 +52,11 @@ public class ComicTest
     private static final String TEST_LOCATION = "Test Location";
     private static final String TEST_FILENAME = "src/test/resources/example.cbz";
     private static final String TEST_NOTES = "Some sample notes";
-    private static final String TEST_BASE_FILENAME = "src/test/resources/example";
+    private static final String TEST_FILENAME_WITHOUT_EXTENSION = "src/test/resources/example";
     private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
+    private static final String TEST_BASE_FILENAME = "example.cbz";
+    private static final String TEST_COMIC_VINE_URL = "http://comicvine.gamespot.com/blah/blah/blah";
+
     private Comic comic;
     private Page page;
     private PageType pageType = new PageType();
@@ -65,10 +69,17 @@ public class ComicTest
     }
 
     @Test
-    public void testBaseFilename()
+    public void testGetFilenameWithoutExtension()
     {
         this.comic.setFilename(TEST_FILENAME);
-        assertEquals(TEST_BASE_FILENAME, this.comic.getFilenameWithoutExtension());
+        assertEquals(TEST_FILENAME_WITHOUT_EXTENSION, this.comic.getFilenameWithoutExtension());
+    }
+
+    @Test
+    public void testGetBaseFilename()
+    {
+        this.comic.setFilename(TEST_FILENAME);
+        assertEquals(TEST_BASE_FILENAME, this.comic.getBaseFilename());
     }
 
     @Test
@@ -138,10 +149,60 @@ public class ComicTest
     }
 
     @Test
+    public void testComicVineURL()
+    {
+        this.comic.setComicVineURL(TEST_COMIC_VINE_URL);
+        assertEquals(TEST_COMIC_VINE_URL, this.comic.getComicVineURL());
+    }
+
+    @Test
+    public void testArchiveType()
+    {
+        this.comic.archiveType = ArchiveType.CBZ;
+        assertEquals(ArchiveType.CBZ, this.comic.getArchiveType());
+    }
+
+    @Test
     public void testCoverDate()
     {
         this.comic.setCoverDate(TEST_DATE);
         assertEquals(TEST_DATE, this.comic.getCoverDate());
+    }
+
+    @Test
+    public void testPageCount()
+    {
+        assertEquals(this.comic.pages.size(), this.comic.getPageCount());
+        for (int index = 0;
+             index < this.comic.pages.size();
+             index++)
+        {
+            assertSame(this.comic.pages.get(index), this.comic.getPage(index));
+        }
+    }
+
+    @Test
+    public void testPages()
+    {
+        assertSame(this.comic.pages, this.comic.getPages());
+    }
+
+    @Test
+    public void testGetStoryArcs()
+    {
+        assertSame(this.comic.storyArcs, this.comic.getStoryArcs());
+    }
+
+    @Test
+    public void testStoryArcs()
+    {
+        assertEquals(this.comic.storyArcs.size(), this.comic.getStoryArcCount());
+        for (int index = 0;
+             index < this.comic.storyArcs.size();
+             index++)
+        {
+            assertSame(this.comic.storyArcs.get(index), this.comic.getStoryArc(index));
+        }
     }
 
     @Test
@@ -440,13 +501,35 @@ public class ComicTest
     }
 
     @Test
-    public void testIsMissing() throws IOException
+    public void testGetYearPublishedWhenCoverDateIsNull()
+    {
+        this.comic.setCoverDate(null);
+        assertEquals(0, this.comic.getYearPublished());
+    }
+
+    @Test
+    public void testGetYearPublished()
+    {
+        this.comic.setCoverDate(TEST_DATE);
+        assertEquals(TEST_DATE.getYear() + 1900, this.comic.getYearPublished());
+    }
+
+    @Test
+    public void testIsMissingForNonexistingComic() throws IOException
     {
         Comic testComic = new Comic();
 
         testComic.setFilename(System.getProperty("user.home") + File.separator + RandomStringUtils.randomAlphabetic(16)
                               + ".cbz");
         assertTrue(testComic.isMissing());
+    }
+
+    @Test
+    public void testIsMissing()
+    {
+        Comic testComic = new Comic();
+        testComic.setFilename(TEST_FILENAME);
+        assertFalse(testComic.isMissing());
     }
 
     @Test
