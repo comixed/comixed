@@ -501,6 +501,24 @@ public class ComicTest
     }
 
     @Test
+    public void testGetCoverForMissingFile()
+    {
+        this.comic.setFilename(TEST_FILENAME.substring(1));
+        this.comic.addPage(0, this.page);
+        Page cover = this.comic.getCover();
+        assertNull(cover);
+    }
+
+    @Test
+    public void testGetCoverWithNoPages()
+    {
+        this.comic.setFilename(TEST_FILENAME);
+        this.comic.pages.clear();
+        Page cover = this.comic.getCover();
+        assertNull(cover);
+    }
+
+    @Test
     public void testGetYearPublishedWhenCoverDateIsNull()
     {
         this.comic.setCoverDate(null);
@@ -519,9 +537,16 @@ public class ComicTest
     {
         Comic testComic = new Comic();
 
-        testComic.setFilename(System.getProperty("user.home") + File.separator + RandomStringUtils.randomAlphabetic(16)
-                              + ".cbz");
+        testComic.setFilename(TEST_FILENAME.substring(1));
         assertTrue(testComic.isMissing());
+    }
+
+    @Test
+    public void testIsMissingCachesLastResult()
+    {
+        comic.backingFile = new File(TEST_FILENAME);
+
+        assertFalse(comic.isMissing());
     }
 
     @Test
