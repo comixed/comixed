@@ -32,8 +32,8 @@ import {User} from './user.model';
 
 @Injectable()
 export class UserService {
-  private api_url = '/api';
-  private user: User;
+  api_url = '/api';
+  user: User;
 
   constructor(
     private http: HttpClient,
@@ -86,8 +86,8 @@ export class UserService {
     return this.user;
   }
 
-  getUsername(): string {
-    return this.user.name;
+  get_username(): string {
+    return this.user !== null ? this.user.name : null;
   }
 
   is_authenticated(): boolean {

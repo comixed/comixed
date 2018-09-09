@@ -17,18 +17,91 @@
  * org.comixed;
  */
 
-import {TestBed, inject} from '@angular/core/testing';
+import {
+  TestBed,
+  getTestBed,
+} from '@angular/core/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+import {
+  RouterModule,
+  Routes,
+} from '@angular/router';
+
+import {AlertService} from './alert.service';
+import {User} from './user.model';
 
 import {UserService} from './user.service';
 
 describe('UserService', () => {
+  let injector;
+  let service: UserService;
+  let http_mock: HttpTestingController;
+
+  const routes = [
+  ];
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [UserService]
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes(routes),
+      ],
+      providers: [
+        AlertService,
+        UserService,
+      ]
+    });
+
+    injector = getTestBed();
+    service = injector.get(UserService);
+    http_mock = injector.get(HttpTestingController);
+  });
+
+  describe('#get_user()', () => {
+    const user: User = new User();
+
+    beforeEach(() => {
+      service.user = user;
+    });
+
+    it('returns the user instance', () => {
+      expect(service.get_user()).toBe(service.user);
     });
   });
 
-  it('should be created', inject([UserService], (service: UserService) => {
-    expect(service).toBeTruthy();
-  }));
+  describe('#get_username()', () => {
+    const username: string = 'comixeduser';
+    const user: User = new User();
+    user.name = username;
+
+    it('returns the username for the user object', () => {
+      service.user = user;
+
+      expect(service.get_username()).toEqual(username);
+    });
+
+    it('returns null when the user is not authenticated', () => {
+      service.user = null;
+
+      expect(service.get_username()).toBe(null);
+    });
+  });
+
+  describe('#is_authenticated()', () => {
+    it('returns false if the user is not set', () => {
+      service.user = null;
+
+      expect(service.is_authenticated()).toBe(false);
+    });
+
+    it('returns the authenticated field if the user is set', () => {
+      service.user = new User();
+
+      expect(service.is_authenticated()).toBe(true);
+    });
+  });
 });
