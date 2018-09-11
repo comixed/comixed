@@ -17,17 +17,44 @@
  * org.comixed;
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {
+  async,
+  ComponentFixture,
+  TestBed,
+} from '@angular/core/testing';
+import {DebugElement} from '@angular/core';
+import {By} from '@angular/platform-browser';
+import {RouterTestingModule} from "@angular/router/testing";
+import {Router} from "@angular/router";
+
+import {ComicService} from '../comic/comic.service';
+import {AlertService} from '../alert.service';
 
 import {MainPageComponent} from './main-page.component';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
+  let debugElement: DebugElement;
+  let comic_service: ComicService;
+  let alert_service: AlertService;
+  let router: Router;
+
+  const routes = [
+  ];
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MainPageComponent]
+      imports: [
+        RouterTestingModule.withRoutes(routes),
+      ],
+      declarations: [
+        MainPageComponent,
+      ],
+      providers: [
+        AlertService,
+        ComicService,
+      ],
     })
       .compileComponents();
   }));
@@ -36,9 +63,29 @@ describe('MainPageComponent', () => {
     fixture = TestBed.createComponent(MainPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    comic_service = debugElement.injector.get(ComicService);
+    alert_service = debugElement.injector.get(AlertService);
+    router = debugElement.injector.get(Router);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should show the current library size', () => {
+    expect(true).toBe(false);
+  });
+
+  it('should show an error when the library size call fails', () => {
+    expect(true).toBe(false);
+  });
+
+  it('should show the duplicate page count', () => {
+    expect(true).toBe(false);
+  });
+
+  it('should show an error when the dupliate page call fails', () => {
+    expect(true).toBe(false);
+  });
+
+  it('sends the user to the duplicates page', () => {
+    expect(true).toBe(false);
   });
 });
