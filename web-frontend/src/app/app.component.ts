@@ -72,11 +72,10 @@ export class AppComponent implements AfterViewInit {
         this.busy_message = message;
       }
     );
-    setInterval(() => {
-      this.comic_service.get_library_comic_count().subscribe(
-        count => this.comic_count = count,
-        error => console.log('ERROR:', error.message));
-    }, 250);
+
+    this.comic_service.get_library_comic_count().subscribe(
+      count => this.comic_count = count,
+      error => console.log('ERROR:', error.message));
   }
 
   logout(): void {
@@ -87,7 +86,7 @@ export class AppComponent implements AfterViewInit {
     );
   }
 
-  clearErrorMessage(): void {
+  clear_error_message(): void {
     this.alert_message = '';
   }
 

@@ -40,6 +40,7 @@ export class ComicService {
   current_page: Subject<Page> = new BehaviorSubject<Page>(new Page());
   all_comics: Comic[];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
+  comic_count: Subject<number> = new BehaviorSubject<number>(0);
   private last_comic_date: string;
   private fetching_comics = false;
 
@@ -64,6 +65,7 @@ export class ComicService {
           .subscribe((comics: Comic[]) => {
             if ((comics || []).length > 0) {
               that.all_comics = that.all_comics.concat(comics);
+              that.comic_count.next(that.all_comics.length);
               that.all_comics.forEach((comic: Comic) => {
                 if (parseInt(comic.added_date, 10) > parseInt(that.last_comic_date, 10)) {
                   that.last_comic_date = comic.added_date;
@@ -107,7 +109,7 @@ export class ComicService {
   }
 
   get_library_comic_count(): Observable<any> {
-    return this.http.get(`${this.api_url}/comics/count`);
+    return this.comic_count.asObservable();
   }
 
   get_page_types(): Observable<any> {

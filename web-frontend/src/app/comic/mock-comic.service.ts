@@ -17,48 +17,13 @@
  * org.comixed;
  */
 
-export class Role {
-  name: string;
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
-  constructor(
-    name?: string,
-  ) {
-    this.name = name;
-  }
-}
+export class MockComicService {
+  library_comic_count = 0;
 
-export class Preference {
-  name: string;
-  value: string;
-
-  constructor(
-    name?: string,
-    value?: string,
-  ) {
-    this.name = name;
-    this.value = value;
-  }
-}
-
-export class User {
-  name: string;
-  authenticated = true;
-  first_login_date: number;
-  last_login_date: number;
-  roles: Role[];
-  preferences: Preference[];
-
-  constructor(
-    name?: string,
-    first_login_date?: number,
-    last_login_date?: number,
-    roles?: Role[],
-    preferences?: Preference[],
-  ) {
-    this.name = name;
-    this.first_login_date = first_login_date;
-    this.last_login_date = last_login_date;
-    this.roles = roles;
-    this.preferences = preferences;
+  get_library_comic_count(): Observable<any> {
+    return Observable.of(this.library_comic_count);
   }
 }

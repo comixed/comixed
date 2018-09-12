@@ -1,5 +1,6 @@
 <div class='container-fluid w-100 mx-10'>
-  <div *ngIf='busy' class='container-fluid w-100 mx-10'>
+  <div *ngIf='busy' id='busy-message'
+    class='container-fluid w-100 mx-10'>
     <h1 class='text-center'>{{busy_message}}</h1>
     <ngx-loading [show]='busy'></ngx-loading>
   </div>
@@ -38,10 +39,12 @@
     </div>
   </nav>
   <div class='row justify-content-center'>
-    <div class='alert alert-dismissable {{alert_type}} w-75 text-center'
+    <div id='alert-message'
+      class='alert alert-dismissable {{alert_type}} w-75 text-center'
       role='alert' *ngIf='alert_message && alert_message.length > 0'>
-      {{alert_message}} <a href='#' class='close' data-dismiss='alert'
-        aria-label='close' (click)='clearErrorMessage()'>&times;</a>
+      {{alert_message}} <a id='alert-message-dismiss' href='#'
+        class='close' data-dismiss='alert' aria-label='close'
+        (click)='clear_error_message()'>&times;</a>
     </div>
   </div>
   <div class='container-fluid w-100 h-100 m-10'>

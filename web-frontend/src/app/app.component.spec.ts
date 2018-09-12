@@ -17,34 +17,222 @@
  * org.comixed;
  */
 
-import {TestBed, async} from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  async,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
+import {DebugElement} from '@angular/core';
+import {By} from '@angular/platform-browser';
+
+import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
+import {Router} from '@angular/router';
+import {LoadingModule} from 'ngx-loading';
+
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+
+import {AlertService} from './alert.service';
+import {UserService} from './user.service';
+import {MockUserService} from './mock-user.service';
+import {
+  User,
+  Role,
+} from './user.model';
+import {ComicService} from './comic/comic.service';
+import {MockComicService} from './comic/mock-comic.service';
+
 import {AppComponent} from './app.component';
+
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+  let user_service: UserService;
+  let alert_service: AlertService;
+  let comic_service: ComicService;
+  let router: Router;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        LoadingModule,
+        HttpClientModule,
       ],
       declarations: [
         AppComponent
       ],
+      providers: [
+        AlertService,
+        {provide: UserService, useClass: MockUserService},
+        {provide: ComicService, useClass: MockComicService},
+      ],
     }).compileComponents();
-  }));
-  it('should create the app', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
-  it(`should have as title 'app'`, async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app');
-  }));
-  it('should render title in a h1 tag', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+
+    user_service = TestBed.get(UserService);
+    alert_service = TestBed.get(AlertService);
+    comic_service = TestBed.get(ComicService);
+    router = TestBed.get(Router);
+
     fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to app!');
+    router.initialNavigation();
   }));
+
+  describe('Alerts', () => {
+    it('should initialize as not shown', fakeAsync(() => {
+      fixture.detectChanges();
+
+      let alert_message = fixture.debugElement.query(By.css('div#alert-message'));
+
+      expect(alert_message).toBe(null);
+    }));
+
+    it('alerts can be dismissed', fakeAsync(() => {
+      const expected: string = "This is an error message";
+
+      alert_service.show_error_message(expected, null);
+      component.ngAfterViewInit();
+
+      fixture.detectChanges();
+      tick();
+
+      let dismiss_alert = fixture.debugElement.query(By.css('#alert-message-dismiss'));
+
+      expect(dismiss_alert).not.toBe(null);
+
+      dismiss_alert.triggerEventHandler('click', null);
+
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.debugElement.query(By.css('#alert-message'))).toBe(null);
+    }));
+
+    it('#clear_alert_message() sets the message to an empty string', fakeAsync(() => {
+      component.alert_message = 'old message';
+
+      component.clear_error_message();
+
+      expect(component.alert_message).toBe('');
+    }));
+
+    it('should show error alerts when an error message is received', fakeAsync(() => {
+      const expected: string = "This is an error message";
+
+      alert_service.show_error_message(expected, null);
+      component.ngAfterViewInit();
+
+      fixture.detectChanges();
+
+      tick();
+
+      let alert_message = fixture.debugElement.query(By.css('#alert-message'));
+
+      expect(alert_message).not.toBe(null);
+      expect(alert_message.nativeElement.textContent.trim()).toContain(expected);
+      expect(fixture.debugElement.query(By.css('div.alert-danger'))).toBe(alert_message);
+    }));
+
+    it('should show alerts when an info message is received', fakeAsync(() => {
+      const expected: string = "This is an info message";
+
+      alert_service.show_info_message(expected);
+      component.ngAfterViewInit();
+
+      fixture.detectChanges();
+
+      tick();
+
+      let alert_message = fixture.debugElement.query(By.css('#alert-message'));
+
+      expect(alert_message).not.toBe(null);
+      expect(alert_message.nativeElement.textContent.trim()).toContain(expected);
+      expect(fixture.debugElement.query(By.css('div.alert-info'))).toBe(alert_message);
+    }));
+
+    it('should show the busy overlay when a busy message is received', fakeAsync(() => {
+      const expected: string = "This is a busy message";
+
+      expect(component.busy).toBe(false);
+
+      alert_service.show_busy_message(expected);
+      component.ngAfterViewInit();
+
+      fixture.detectChanges();
+      tick();
+
+      expect(component.busy).toBe(true);
+      expect(fixture.debugElement.query(By.css('#busy-message'))).not.toBe(null);
+      expect(fixture.debugElement.query(By.css('h1')).nativeElement.textContent.trim()).toContain(expected);
+
+      alert_service.show_busy_message('');
+
+      fixture.detectChanges();
+      tick();
+
+      expect(component.busy).toBe(false);
+      expect(fixture.debugElement.query(By.css('#busy-message'))).toBe(null);
+    }));
+
+  });
+
+  it('delegates to UserService when checking authentication', () => {
+    spyOn(user_service, 'is_authenticated').and.returnValue(true);
+
+    expect(component.is_authenticated()).toBe(true);
+
+    expect(user_service.is_authenticated).toHaveBeenCalled();
+  });
+
+  describe('#is_admin()', () => {
+    let user: User = new User();
+
+    beforeEach(() => {
+      user.name = 'reader';
+      user.authenticated = true;
+      user.roles = [new Role()];
+    });
+
+    it('returns false when the user is not logged in', () => {
+      spyOn(user_service, 'is_authenticated').and.returnValue(false);
+
+      expect(component.is_admin()).toBe(false);
+
+      expect(user_service.is_authenticated).toHaveBeenCalled();
+    });
+
+    it('returns false when the user does not have the role ADMIN', () => {
+      user.roles[0].name = 'READER';
+
+      spyOn(user_service, 'is_authenticated').and.returnValue(true);
+      spyOn(user_service, 'get_user').and.returnValue(user);
+
+      expect(component.is_admin()).toBe(false);
+
+      expect(user_service.is_authenticated).toHaveBeenCalled();
+      expect(user_service.get_user).toHaveBeenCalled();
+    });
+
+    it('returns true when the user has the role ADMIN', fakeAsync(() => {
+      user.roles[0].name = 'ADMIN';
+
+      console.log('user=', user);
+
+      spyOn(user_service, 'is_authenticated').and.returnValue(true);
+      spyOn(user_service, 'get_user').and.returnValue(user);
+
+      expect(component.is_admin()).toBe(true);
+
+      expect(user_service.is_authenticated).toHaveBeenCalled();
+      expect(user_service.get_user).toHaveBeenCalled();
+    }));
+
+  });
+
 });
