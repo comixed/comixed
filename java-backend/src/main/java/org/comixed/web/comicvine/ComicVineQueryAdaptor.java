@@ -53,8 +53,8 @@ public class ComicVineQueryAdaptor
             try
             {
                 logger.debug("Preparing to process {} bytes", content.length);
-                ComicVineVolumeQueryResult queryResult = objectMapper.readValue(content,
-                                                                                ComicVineVolumeQueryResult.class);
+                ComicVineVolumesReponseProcessor queryResult = objectMapper.readValue(content,
+                                                                                ComicVineVolumesReponseProcessor.class);
                 List<ComicVolume> tranformed = queryResult.transform();
 
                 result = objectMapper.writeValueAsBytes(tranformed);

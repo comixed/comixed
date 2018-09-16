@@ -19,8 +19,6 @@
 
 package org.comixed.web.comicvine;
 
-import java.io.IOException;
-
 public class ComicVineAdaptorException extends Exception
 {
     private static final long serialVersionUID = 6461648847543912621L;
@@ -30,7 +28,7 @@ public class ComicVineAdaptorException extends Exception
         super(message);
     }
 
-    public ComicVineAdaptorException(String message, IOException cause)
+    public ComicVineAdaptorException(String message, Exception cause)
     {
         super(message, cause);
     }

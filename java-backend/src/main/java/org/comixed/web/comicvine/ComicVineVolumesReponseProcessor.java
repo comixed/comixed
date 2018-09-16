@@ -27,14 +27,15 @@ import org.comixed.web.model.ComicVolume;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * <code>ComicVineVolumeQueryResult</code> represents a single volume entry from
+ * <code>ComicVineVolumesReponseProcessor</code> represents a single volume
+ * entry from
  * the
  * ComicVine database.
  *
  * @author Darryl L. Pierce
  *
  */
-public class ComicVineVolumeQueryResult
+public class ComicVineVolumesReponseProcessor
 {
     @JsonProperty(value = "error")
     String statusText;
@@ -99,7 +100,7 @@ public class ComicVineVolumeQueryResult
         for (ComicVineVolume volume : this.volumes)
         {
             /*
-             * there is an existing bug in the ComicVine APIs wehre it's
+             * there is an existing bug in the ComicVine APIs where it's
              * returning 1 less than the total number of issues for a volume
              */
             ComicVolume entry = new ComicVolume();
@@ -115,5 +116,23 @@ public class ComicVineVolumeQueryResult
         }
 
         return result;
+    }
+
+    /**
+     * Processes the supplied response content, appending the retrieved volumes
+     * into the supplied list.
+     * 
+     * @param volumes
+     *            the list of comic volumes
+     * @param content
+     *            the response content
+     * @return true if there is no more data to process
+     * @throws ComicVineAdaptorException
+     *             if an error occurs
+     */
+    public boolean process(List<ComicVolume> volumes, byte[] content) throws ComicVineAdaptorException
+    {
+        // TODO Auto-generated method stub
+        return true;
     }
 }

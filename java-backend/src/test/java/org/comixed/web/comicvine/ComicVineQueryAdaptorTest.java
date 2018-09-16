@@ -52,7 +52,7 @@ public class ComicVineQueryAdaptorTest
     private ObjectMapper objectMapper;
 
     @Mock
-    private ComicVineVolumeQueryResult volumeResult;
+    private ComicVineVolumesReponseProcessor volumeResult;
 
     @Mock
     private List<ComicVolume> comicVolumeList;
@@ -81,7 +81,7 @@ public class ComicVineQueryAdaptorTest
         }
         finally
         {
-            Mockito.verify(objectMapper, Mockito.times(1)).readValue(TEST_CONTENT, ComicVineVolumeQueryResult.class);
+            Mockito.verify(objectMapper, Mockito.times(1)).readValue(TEST_CONTENT, ComicVineVolumesReponseProcessor.class);
         }
     }
 
@@ -99,7 +99,7 @@ public class ComicVineQueryAdaptorTest
         }
         finally
         {
-            Mockito.verify(objectMapper, Mockito.times(1)).readValue(TEST_CONTENT, ComicVineVolumeQueryResult.class);
+            Mockito.verify(objectMapper, Mockito.times(1)).readValue(TEST_CONTENT, ComicVineVolumesReponseProcessor.class);
             Mockito.verify(volumeResult, Mockito.times(1)).transform();
             Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsBytes(comicVolumeList);
         }
@@ -117,6 +117,6 @@ public class ComicVineQueryAdaptorTest
 
         assertSame(TEST_RESULT, result);
 
-        Mockito.verify(objectMapper, Mockito.times(1)).readValue(TEST_CONTENT, ComicVineVolumeQueryResult.class);
+        Mockito.verify(objectMapper, Mockito.times(1)).readValue(TEST_CONTENT, ComicVineVolumesReponseProcessor.class);
     }
 }

@@ -19,17 +19,67 @@
 
 package org.comixed.web.comicvine;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.comixed.web.ComicVineQueryWebRequest;
+import org.comixed.web.WebRequestException;
+import org.comixed.web.WebRequestProcessor;
 import org.comixed.web.model.ComicVolume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ComicVineQueryForVolumesAdaptor
 {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private WebRequestProcessor webRequestProcessor;
+
+    @Autowired
+    private ObjectFactory<ComicVineQueryWebRequest> webRequestFactory;
+
+    @Autowired
+    private ComicVineVolumesReponseProcessor responseProcessor;
+
     public List<ComicVolume> execute(String apiKey, String name) throws ComicVineAdaptorException
     {
-        // TODO Auto-generated method stub
-        return null;
+        this.logger.debug("Preparing to query volumes: name={} API key={}", name, apiKey);
+
+        List<ComicVolume> result = new ArrayList<>();
+        boolean done = false;
+        int page = 0;
+
+        while (!done)
+        {
+            ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
+            page++;
+            // ComicVine bug: CVS said there's an issue when setting page to 1
+            if (page > 1)
+            {
+                this.logger.debug("Setting page to {}", page);
+                request.setPage(page);
+            }
+
+            try
+            {
+                byte[] response = this.webRequestProcessor.execute(request);
+                done = this.responseProcessor.process(result, response);
+                this.logger.debug("More pages to fetch? {}", (done ? "No" : "Yes"));
+
+            }
+            catch (WebRequestException error)
+            {
+                throw new ComicVineAdaptorException("unable to query for volumes", error);
+            }
+        }
+
+        this.logger.debug("Returning {} volumes", result.size());
+
+        return result;
     }
 }

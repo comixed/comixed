@@ -47,14 +47,14 @@ public class ComicVineVolumeQueryResultTest
     private static final int TEST_VOLUME_START_YEAR = 1994;
     private static final String TEST_PUBLISHER = "ComiXed Publications";
 
-    private ComicVineVolumeQueryResult subject;
+    private ComicVineVolumesReponseProcessor subject;
 
     private ComicVineVolume volume;
 
     @Before
     public void setUp() throws JsonParseException, JsonMappingException, IOException
     {
-        subject = new ComicVineVolumeQueryResult();
+        subject = new ComicVineVolumesReponseProcessor();
         subject.statusText = TEST_STATUS_TEXT;
         subject.limit = TEST_LIMIT;
         subject.page = TEST_PAGE;

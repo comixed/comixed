@@ -58,6 +58,11 @@ public class ComicVineQueryWebRequest extends AbstractComicVineWebRequest
         return super.getURL();
     }
 
+    public void setPage(int page)
+    {
+        this.addParameter("page", String.valueOf(page));
+    }
+
     /**
      * Sets the name for the series to be queried.
      *
