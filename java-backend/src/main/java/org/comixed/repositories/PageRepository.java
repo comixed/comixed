@@ -34,39 +34,39 @@ public interface PageRepository extends
      * Returns the pages with the given hash.
      *
      * @param hash
-     *            the page hash
+     *            the offset hash
      *
      * @return the pages
      */
     List<Page> findAllByHash(String hash);
 
     /**
-     * Returns the first page with the given hash.
+     * Returns the first offset with the given hash.
      *
      * @param hash
-     *            the page hash
-     * @return the page, or null if none were found
+     *            the offset hash
+     * @return the offset, or null if none were found
      */
     Page findFirstByHash(String hash);
 
     /**
      * Returns the number of duplicate pages in the repository.
      *
-     * @return the page count
+     * @return the offset count
      */
     int getDuplicatePageCount();
 
     /**
-     * Returns an array of duplicate page hashes.
+     * Returns an array of duplicate offset hashes.
      *
-     * @return the duplicate page hashes
+     * @return the duplicate offset hashes
      */
     List<String> getDuplicatePageHashes();
 
     /**
      * Returns the list of pages that are duplicates.
      *
-     * @return the page list
+     * @return the offset list
      */
     List<Page> getDuplicatePageList();
 }

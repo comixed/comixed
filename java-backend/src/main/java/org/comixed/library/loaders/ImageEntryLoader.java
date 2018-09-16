@@ -42,7 +42,7 @@ public class ImageEntryLoader extends AbstractEntryLoader
     public void loadContent(Comic comic, String filename, byte[] content)
     {
         this.logger.debug("Loading image into comic");
-        // if the comic already has this page then update the page's content
+        // if the comic already has this offset then update the offset's content
         if (comic.hasPageWithFilename(filename))
         {
             comic.getPageWithFilename(filename).setContent(content);

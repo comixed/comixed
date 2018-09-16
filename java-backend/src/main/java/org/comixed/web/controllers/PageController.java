@@ -68,11 +68,11 @@ public class PageController
 
         if (existing != null)
         {
-            this.logger.debug("Blocked page hash already exists: {}", hash);
+            this.logger.debug("Blocked offset hash already exists: {}", hash);
             return;
         }
 
-        this.logger.debug("Creating new blocked page hash: {}", hash);
+        this.logger.debug("Creating new blocked offset hash: {}", hash);
         existing = new BlockedPageHash(hash);
         this.blockedPageHashRepository.save(existing);
     }
@@ -81,13 +81,13 @@ public class PageController
                     method = RequestMethod.DELETE)
     public boolean deletePage(@PathVariable("id") long id)
     {
-        this.logger.debug("Marking page as deleted: id={}", id);
+        this.logger.debug("Marking offset as deleted: id={}", id);
 
         Page page = this.pageRepository.findOne(id);
 
         if (page == null)
         {
-            this.logger.error("No such page: id={}", id);
+            this.logger.error("No such offset: id={}", id);
             return false;
         }
         else
@@ -125,7 +125,7 @@ public class PageController
                     method = RequestMethod.GET)
     public String[] getAllBlockedPageHashes()
     {
-        this.logger.debug("Getting all blocked page hashes");
+        this.logger.debug("Getting all blocked offset hashes");
 
         String[] result = this.blockedPageHashRepository.getAllHashes();
 
@@ -147,7 +147,7 @@ public class PageController
                     method = RequestMethod.GET)
     public List<String> getDuplicatePageHashes()
     {
-        this.logger.debug("Fetching the list of duplicate page hashes");
+        this.logger.debug("Fetching the list of duplicate offset hashes");
 
         List<String> result = this.pageRepository.getDuplicatePageHashes();
 
@@ -172,7 +172,7 @@ public class PageController
         }
         else
         {
-            this.logger.debug("No such page: index={} page count={}", index, comic.getPageCount());
+            this.logger.debug("No such offset: index={} offset count={}", index, comic.getPageCount());
         }
 
         return null;
@@ -182,13 +182,13 @@ public class PageController
                     method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> getPageContent(@PathVariable("id") long id)
     {
-        this.logger.debug("Getting page: id={}", id);
+        this.logger.debug("Getting offset: id={}", id);
 
         Page page = this.pageRepository.findOne(id);
 
         if (page == null)
         {
-            this.logger.debug("No such page: id={}", id);
+            this.logger.debug("No such offset: id={}", id);
             return null;
         }
 
@@ -199,13 +199,13 @@ public class PageController
                     method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> getPageContentForHash(@PathVariable("hash") String hash)
     {
-        this.logger.debug("Getting first page content for hash: {}", hash);
+        this.logger.debug("Getting first offset content for hash: {}", hash);
 
         Page page = this.pageRepository.findFirstByHash(hash);
 
         if (page == null)
         {
-            this.logger.debug("No page found");
+            this.logger.debug("No offset found");
             return null;
         }
 
@@ -216,7 +216,7 @@ public class PageController
                     method = RequestMethod.GET)
     public Page getPageInComicByIndex(@PathVariable("comic_id") long comicId, @PathVariable("index") int index)
     {
-        this.logger.debug("Getting page for comic: id={} page={}", comicId, index);
+        this.logger.debug("Getting offset for comic: id={} offset={}", comicId, index);
 
         Comic comic = this.comicRepository.findOne(comicId);
 
@@ -242,7 +242,7 @@ public class PageController
                     method = RequestMethod.GET)
     public List<Page> getPagesForHash(@PathVariable("hash") String hash)
     {
-        this.logger.debug("Getting occurances of page hash: {}", hash);
+        this.logger.debug("Getting occurances of offset hash: {}", hash);
 
         List<Page> result = this.pageRepository.findAllByHash(hash);
 
@@ -255,7 +255,7 @@ public class PageController
                     method = RequestMethod.GET)
     public Iterable<PageType> getPageTypes()
     {
-        this.logger.debug("Returning page types");
+        this.logger.debug("Returning offset types");
         return this.pageTypeRepository.findAll();
     }
 
@@ -267,7 +267,7 @@ public class PageController
 
         if (existing == null)
         {
-            this.logger.debug("No such blocked page hash: {}", hash);
+            this.logger.debug("No such blocked offset hash: {}", hash);
             return;
         }
 
@@ -278,13 +278,13 @@ public class PageController
                     method = RequestMethod.POST)
     public boolean undeletePage(@PathVariable("id") long id)
     {
-        this.logger.debug("Marking page as undeleted: id={}", id);
+        this.logger.debug("Marking offset as undeleted: id={}", id);
 
         Page page = this.pageRepository.findOne(id);
 
         if (page == null)
         {
-            this.logger.error("No such page: id={}", id);
+            this.logger.error("No such offset: id={}", id);
             return false;
         }
         else
@@ -300,13 +300,13 @@ public class PageController
                     method = RequestMethod.PUT)
     public void updateTypeForPage(@PathVariable("id") long id, @RequestParam("type_id") long pageTypeId)
     {
-        this.logger.debug("Setting page type: id={} typeId={}", id, pageTypeId);
+        this.logger.debug("Setting offset type: id={} typeId={}", id, pageTypeId);
 
         Page page = this.pageRepository.findOne(id);
 
         if (page == null)
         {
-            this.logger.error("No such page: id={}", id);
+            this.logger.error("No such offset: id={}", id);
         }
         else
         {
@@ -314,11 +314,11 @@ public class PageController
 
             if (pageType == null)
             {
-                this.logger.error("No such page type: typeId={}", pageTypeId);
+                this.logger.error("No such offset type: typeId={}", pageTypeId);
             }
             else
             {
-                this.logger.debug("Updating page type");
+                this.logger.debug("Updating offset type");
                 page.setPageType(pageType);
                 this.pageRepository.save(page);
             }

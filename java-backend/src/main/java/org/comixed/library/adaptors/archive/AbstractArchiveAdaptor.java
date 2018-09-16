@@ -164,7 +164,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
 
     protected String getFilenameForEntry(String filename, int index)
     {
-        return String.format("page-%03d.%s", index, FileUtils.getExtension(filename));
+        return String.format("offset-%03d.%s", index, FileUtils.getExtension(filename));
     }
 
     protected EntryLoader getLoaderForContent(byte[] content)

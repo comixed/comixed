@@ -39,7 +39,7 @@ public interface BlockedPageHashRepository extends
      * Returns the one instance with the given hash.
      *
      * @param hash
-     *            the page hash
+     *            the offset hash
      * @return the instance, or <code>null</code> if no such hash is registered
      */
     @Query("SELECT b FROM BlockedPageHash b WHERE b.hash = :#{#hash}")

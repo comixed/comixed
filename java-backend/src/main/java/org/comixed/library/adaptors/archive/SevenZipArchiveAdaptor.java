@@ -167,7 +167,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile>
                 Page page = source.getPage(index);
                 if (page.isMarkedDeleted())
                 {
-                    this.logger.debug("Skipping page marked for deletion");
+                    this.logger.debug("Skipping offset marked for deletion");
                     continue;
                 }
                 String pagename = renamePages ? this.getFilenameForEntry(page.getFilename(), index)

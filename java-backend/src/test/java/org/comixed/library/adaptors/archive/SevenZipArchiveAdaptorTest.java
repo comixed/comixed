@@ -44,10 +44,10 @@ public class SevenZipArchiveAdaptorTest
     private static final String TEST_FILE_ENTRY_0 = "example.jpeg";
     private static final String TEST_CB7_FILE = "target/test-classes/example.cb7";
     private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
-    private static final Object TEST_FILE_ENTRY_RENAMED_0 = "page-000.jpeg";
-    private static final Object TEST_FILE_ENTRY_RENAMED_1 = "page-001.jpg";
-    private static final Object TEST_FILE_ENTRY_RENAMED_2 = "page-002.png";
-    private static final Object TEST_FILE_ENTRY_RENAMED_3 = "page-003.jpg";
+    private static final Object TEST_FILE_ENTRY_RENAMED_0 = "offset-000.jpeg";
+    private static final Object TEST_FILE_ENTRY_RENAMED_1 = "offset-001.jpg";
+    private static final Object TEST_FILE_ENTRY_RENAMED_2 = "offset-002.png";
+    private static final Object TEST_FILE_ENTRY_RENAMED_3 = "offset-003.jpg";
 
     @Autowired
     private SevenZipArchiveAdaptor archiveAdaptor;

@@ -54,13 +54,13 @@ public class ComicVineVolumesResponseProcessor
         int limit;
 
         @JsonProperty(value = "offset")
-        int page;
+        int offset;
 
         @JsonProperty(value = "number_of_page_results")
-        int totalPages;
+        int numberOfPageResults;
 
         @JsonProperty(value = "number_of_total_results")
-        int totalResults;
+        int numberOfTotalResults;
 
         @JsonProperty(value = "status_code")
         int statusCode;
@@ -73,9 +73,9 @@ public class ComicVineVolumesResponseProcessor
             return this.limit;
         }
 
-        public int getPage()
+        public int getOffset()
         {
-            return this.page;
+            return this.offset;
         }
 
         public int getStatusCode()
@@ -88,14 +88,14 @@ public class ComicVineVolumesResponseProcessor
             return this.statusText;
         }
 
-        public int getTotalPages()
+        public int getNumberOfPageResults()
         {
-            return this.totalPages;
+            return this.numberOfPageResults;
         }
 
-        public int getTotalResults()
+        public int getNumberOfTotalResults()
         {
-            return this.totalResults;
+            return this.numberOfTotalResults;
         }
 
         public List<ComicVineVolume> getVolumes()
@@ -130,8 +130,7 @@ public class ComicVineVolumesResponseProcessor
 
         public boolean isLastPage()
         {
-            // TODO Auto-generated method stub
-            return false;
+            return (this.offset + this.numberOfPageResults) >= this.numberOfTotalResults;
         }
     }
 

@@ -79,6 +79,6 @@ public class ComicVineVolume
 
     public String getPublisher()
     {
-        return this.publisher.get(PUBLISHER_NAME_KEY);
+        return this.publisher != null ? this.publisher.get(PUBLISHER_NAME_KEY) : "";
     }
 }

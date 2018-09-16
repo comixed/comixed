@@ -35,9 +35,9 @@ public interface PageTypeRepository extends
                                                    Long>
 {
     /**
-     * Returns the default page type.
+     * Returns the default offset type.
      * 
-     * @return the default page type
+     * @return the default offset type
      */
     @Query("SELECT pt FROM PageType pt WHERE pt.name = 'story'")
     PageType getDefaultPageType();

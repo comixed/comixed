@@ -258,30 +258,30 @@ public class Comic
     }
 
     /**
-     * Adds a new page to the comic.
+     * Adds a new offset to the comic.
      *
      * @param index
      *            the index
      *
-     * @param page
-     *            the page
+     * @param offset
+     *            the offset
      */
     public void addPage(int index, Page page)
     {
-        this.logger.debug("Adding page: index=" + index + " hash=" + page.getHash());
+        this.logger.debug("Adding offset: index=" + index + " hash=" + page.getHash());
         page.setComic(this);
         this.pages.add(index, page);
     }
 
     /**
-     * Adds a page to the end of the set of pages.
+     * Adds a offset to the end of the set of pages.
      *
-     * @param page
-     *            the page
+     * @param offset
+     *            the offset
      */
     public void addPage(Page page)
     {
-        this.logger.debug("Adding page: {}", page.getFilename());
+        this.logger.debug("Adding offset: {}", page.getFilename());
         this.pages.add(page);
     }
 
@@ -346,14 +346,14 @@ public class Comic
     }
 
     /**
-     * Deletes a page from the comic.
+     * Deletes a offset from the comic.
      *
      * @param index
-     *            the page index
+     *            the offset index
      */
     public void deletePage(int index)
     {
-        this.logger.debug("Deleting page: index=" + index);
+        this.logger.debug("Deleting offset: index=" + index);
         this.pages.remove(index);
     }
 
@@ -382,7 +382,7 @@ public class Comic
     /**
      * Returns the number of blocked pages for the comic.
      *
-     * @return the blocked page count
+     * @return the blocked offset count
      */
     public int getBlockedPageCount()
     {
@@ -450,7 +450,7 @@ public class Comic
         /*
          * if there are no pages or the underlying file is missing then show the
          * missing
-         * page image
+         * offset image
          */
         return this.pages.isEmpty() || this.isMissing() ? null : this.pages.get(0);
     }
@@ -478,7 +478,7 @@ public class Comic
     /**
      * Returns the number of pages marked as deleted in this comic.
      *
-     * @return the deleted page count
+     * @return the deleted offset count
      */
     @Transient
     @JsonProperty("deleted_page_count")
@@ -610,22 +610,22 @@ public class Comic
     }
 
     /**
-     * Returns the page at the given index.
+     * Returns the offset at the given index.
      *
      * @param index
-     *            the page index
-     * @return the page
+     *            the offset index
+     * @return the offset
      */
     public Page getPage(int index)
     {
-        this.logger.debug("Returning page: index=" + index);
+        this.logger.debug("Returning offset: index=" + index);
         return this.pages.get(index);
     }
 
     /**
      * Returns the number of pages associated with this comic.
      *
-     * @return the page count
+     * @return the offset count
      */
     @JsonProperty("page_count")
     @JsonView(View.List.class)
@@ -645,7 +645,7 @@ public class Comic
     }
 
     /**
-     * Returns the page for the given filename.
+     * Returns the offset for the given filename.
      *
      * @param filename
      * @return the {@link Page} or null
@@ -807,11 +807,11 @@ public class Comic
     }
 
     /**
-     * Returns whether a page with the given filename is present.
+     * Returns whether a offset with the given filename is present.
      *
      * @param filename
      *            the filename
-     * @return true if such a page exists
+     * @return true if such a offset exists
      */
     public boolean hasPageWithFilename(String filename)
     {

@@ -78,7 +78,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile>
                 Page page = source.getPage(index);
                 if (page.isMarkedDeleted())
                 {
-                    logger.debug("Skipping page marked for deletion");
+                    logger.debug("Skipping offset marked for deletion");
                     continue;
                 }
                 String pagename = renamePages ? getFilenameForEntry(page.getFilename(), index) : page.getFilename();

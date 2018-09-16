@@ -52,7 +52,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 /**
- * <code>Page</code> represents a single page from a comic.
+ * <code>Page</code> represents a single offset from a comic.
  *
  * @author Darryl L. Pierce
  *
@@ -153,11 +153,11 @@ public class Page
      * @param content
      *            the content
      * @param pageType
-     *            the page type
+     *            the offset type
      */
     public Page(String filename, byte[] content, PageType pageType)
     {
-        this.logger.debug("Creating page: filename=" + filename + " content.size=" + content.length);
+        this.logger.debug("Creating offset: filename=" + filename + " content.size=" + content.length);
         this.filename = filename;
         this.content = content;
         this.hash = this.createHash(content);
@@ -221,7 +221,7 @@ public class Page
     }
 
     /**
-     * Returns the content for the page.
+     * Returns the content for the offset.
      *
      * @return the content
      */
@@ -230,7 +230,7 @@ public class Page
     {
         if (this.content == null)
         {
-            this.logger.debug("Loading page image: filename=" + this.filename);
+            this.logger.debug("Loading offset image: filename=" + this.filename);
             try
             {
                 if (this.comic.archiveType != null)
@@ -248,7 +248,7 @@ public class Page
     }
 
     /**
-     * Returns the filename for the page.
+     * Returns the filename for the offset.
      *
      * @return the filename
      */
@@ -277,7 +277,7 @@ public class Page
     }
 
     /**
-     * Returns the original image for the page.
+     * Returns the original image for the offset.
      *
      * @return the image
      */
@@ -302,7 +302,7 @@ public class Page
     }
 
     /**
-     * Returns a scaled copy of the page image.
+     * Returns a scaled copy of the offset image.
      *
      * @param maxWidth
      *            the maximum scaled width
@@ -312,7 +312,7 @@ public class Page
      */
     public Image getImage(int maxWidth, int maxHeight)
     {
-        this.logger.debug("Scaling page: maxWidth=" + maxWidth + ", maxHeight=" + maxHeight);
+        this.logger.debug("Scaling offset: maxWidth=" + maxWidth + ", maxHeight=" + maxHeight);
         Image image = this.getImage();
 
         int boundWidth = maxWidth;
@@ -381,9 +381,9 @@ public class Page
     }
 
     /**
-     * Returns the page's index within the comic.
+     * Returns the offset's index within the comic.
      *
-     * @return the page index
+     * @return the offset index
      */
     @Transient
     @JsonView(View.List.class)
@@ -394,9 +394,9 @@ public class Page
     }
 
     /**
-     * Returns the page type.
+     * Returns the offset type.
      *
-     * @return the page type
+     * @return the offset type
      */
     public PageType getPageType()
     {
@@ -434,7 +434,7 @@ public class Page
     }
 
     /**
-     * Returns if the page is marked for deletion.
+     * Returns if the offset is marked for deletion.
      *
      * @return true if marked for deletion
      */
@@ -445,10 +445,10 @@ public class Page
     }
 
     /**
-     * Sets the deleted flag for the page.
+     * Sets the deleted flag for the offset.
      *
      * @param deleted
-     *            true if the page is to be deleted
+     *            true if the offset is to be deleted
      */
     public void markDeleted(boolean deleted)
     {
@@ -462,7 +462,7 @@ public class Page
     }
 
     /**
-     * Sets the content for the page. Also updates the hash.
+     * Sets the content for the offset. Also updates the hash.
      *
      * @param content
      *            the content
@@ -474,7 +474,7 @@ public class Page
     }
 
     /**
-     * Sets a new filename for the page.
+     * Sets a new filename for the offset.
      *
      * @param filename
      *            the new filename
@@ -486,14 +486,14 @@ public class Page
     }
 
     /**
-     * Sets the page type for the page.
+     * Sets the offset type for the offset.
      *
      * @param pageType
-     *            the page type
+     *            the offset type
      */
     public void setPageType(PageType pageType)
     {
-        this.logger.debug("Changing page type: {}", pageType.getId());
+        this.logger.debug("Changing offset type: {}", pageType.getId());
         this.pageType = pageType;
     }
 }

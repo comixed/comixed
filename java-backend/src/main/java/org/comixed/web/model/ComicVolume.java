@@ -74,7 +74,7 @@ public class ComicVolume
 
     public String getStartYear()
     {
-        return this.startYear;
+        return this.startYear != null ? this.startYear : "";
     }
 
     public void setId(long id)

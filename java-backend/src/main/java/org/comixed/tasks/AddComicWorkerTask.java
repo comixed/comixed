@@ -117,7 +117,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask
 
                     if (blocked != null)
                     {
-                        this.logger.debug("Marking blocked page as deleted: hash={}", hash);
+                        this.logger.debug("Marking blocked offset as deleted: hash={}", hash);
                         result.getPage(index).markDeleted(true);
                     }
                 }

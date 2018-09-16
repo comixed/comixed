@@ -48,6 +48,7 @@ public class ComicVineQueryWebRequest extends AbstractComicVineWebRequest
 
         this.addParameter("field_list", "name,start_year,publisher,id,image,count_of_issues");
         this.addParameter("resources", "volume");
+        this.addParameter("limit", "100");
     }
 
     @Override
