@@ -23,10 +23,8 @@ import static org.junit.Assert.assertSame;
 
 import java.util.List;
 
-import org.comixed.web.ComicVineQueryWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.ComicVineAdaptorException;
-import org.comixed.web.comicvine.ComicVineQueryAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForVolumesAdaptor;
 import org.comixed.web.model.ComicVolume;
 import org.junit.Test;
@@ -35,7 +33,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,12 +44,6 @@ public class ComicScraperControllerTest
 
     @InjectMocks
     private ComicScraperController controller;
-
-    @Mock
-    private ComicVineQueryAdaptor comicVineQueryAdaptor;
-
-    @Mock
-    private ObjectFactory<ComicVineQueryWebRequest> searchQueryForIssuesFactory;
 
     @Mock
     private ComicVineQueryForVolumesAdaptor comicVineQueryForVolumesAdaptor;

@@ -42,7 +42,7 @@ public class ComicVolume
     private String imageURL;
 
     @JsonProperty(value = "start_year")
-    private int startYear;
+    private String startYear;
 
     @JsonProperty(value = "publisher")
     private String publisher;
@@ -72,7 +72,7 @@ public class ComicVolume
         return this.publisher;
     }
 
-    public int getStartYear()
+    public String getStartYear()
     {
         return this.startYear;
     }
@@ -102,7 +102,7 @@ public class ComicVolume
         this.publisher = publisher;
     }
 
-    public void setStartYear(int startYear)
+    public void setStartYear(String startYear)
     {
         this.startYear = startYear;
     }

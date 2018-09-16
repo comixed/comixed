@@ -58,7 +58,7 @@ public class ComicVineQueryForVolumesAdaptorTest
     private ComicVineQueryWebRequest webRequest;
 
     @Mock
-    private ComicVineVolumesReponseProcessor queryResult;
+    private ComicVineVolumesResponseProcessor queryResult;
 
     @Captor
     private ArgumentCaptor<List<ComicVolume>> comicVolumeList;
@@ -67,6 +67,8 @@ public class ComicVineQueryForVolumesAdaptorTest
     public void testExecuteWebRequestProcessorRaisesException() throws WebRequestException, ComicVineAdaptorException
     {
         Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
+        Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
+        Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class)))
                .thenThrow(new WebRequestException("expected"));
 
@@ -77,6 +79,8 @@ public class ComicVineQueryForVolumesAdaptorTest
         finally
         {
             Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
+            Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
+            Mockito.verify(webRequest, Mockito.times(1)).setSeriesName(TEST_VOLUME_NAME);
             Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
         }
     }
@@ -85,6 +89,8 @@ public class ComicVineQueryForVolumesAdaptorTest
     public void testExecuteResultProcessorRaisesException() throws WebRequestException, ComicVineAdaptorException
     {
         Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
+        Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
+        Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class)))
                .thenThrow(new ComicVineAdaptorException("expected"));
@@ -96,6 +102,8 @@ public class ComicVineQueryForVolumesAdaptorTest
         finally
         {
             Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
+            Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
+            Mockito.verify(webRequest, Mockito.times(1)).setSeriesName(TEST_VOLUME_NAME);
             Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
             Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
         }
@@ -105,6 +113,8 @@ public class ComicVineQueryForVolumesAdaptorTest
     public void testExecute() throws WebRequestException, ComicVineAdaptorException
     {
         Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
+        Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
+        Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
@@ -114,6 +124,8 @@ public class ComicVineQueryForVolumesAdaptorTest
         assertSame(comicVolumeList.getValue(), result);
 
         Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
+        Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
+        Mockito.verify(webRequest, Mockito.times(1)).setSeriesName(TEST_VOLUME_NAME);
         Mockito.verify(webRequest, Mockito.never()).setPage(1);
         Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
         Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
@@ -123,6 +135,8 @@ public class ComicVineQueryForVolumesAdaptorTest
     public void testExecuteWithMultiplePages() throws WebRequestException, ComicVineAdaptorException
     {
         Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
+        Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
+        Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(false, true);
@@ -132,6 +146,8 @@ public class ComicVineQueryForVolumesAdaptorTest
         assertSame(comicVolumeList.getValue(), result);
 
         Mockito.verify(webRequestFactory, Mockito.times(2)).getObject();
+        Mockito.verify(webRequest, Mockito.times(2)).setApiKey(TEST_API_KEY);
+        Mockito.verify(webRequest, Mockito.times(2)).setSeriesName(TEST_VOLUME_NAME);
         Mockito.verify(webRequest, Mockito.never()).setPage(1);
         Mockito.verify(webRequest, Mockito.times(1)).setPage(2);
         Mockito.verify(webRequestProcessor, Mockito.times(2)).execute(webRequest);

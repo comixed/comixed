@@ -43,7 +43,7 @@ public class ComicVineVolume
         String> imageURLs = new HashMap<>();
 
     @JsonProperty(value = "start_year")
-    int startYear;
+    String startYear;
 
     @JsonProperty(value = "publisher")
     Map<String,
@@ -72,7 +72,7 @@ public class ComicVineVolume
         return this.name;
     }
 
-    public int getStartYear()
+    public String getStartYear()
     {
         return this.startYear;
     }

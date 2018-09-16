@@ -44,9 +44,9 @@ public class ComicVineQueryForVolumesAdaptor
     private ObjectFactory<ComicVineQueryWebRequest> webRequestFactory;
 
     @Autowired
-    private ComicVineVolumesReponseProcessor responseProcessor;
+    private ComicVineVolumesResponseProcessor responseProcessor;
 
-    public List<ComicVolume> execute(String apiKey, String name) throws ComicVineAdaptorException
+    public List<ComicVolume> execute(String apiKey, String name) throws ComicVineAdaptorException, WebRequestException
     {
         this.logger.debug("Preparing to query volumes: name={} API key={}", name, apiKey);
 
@@ -57,6 +57,9 @@ public class ComicVineQueryForVolumesAdaptor
         while (!done)
         {
             ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
+            request.setApiKey(apiKey);
+            request.setSeriesName(name);
+
             page++;
             // ComicVine bug: CVS said there's an issue when setting page to 1
             if (page > 1)
