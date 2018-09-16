@@ -95,6 +95,10 @@ export class ComicDetailsEditorComponent implements OnInit {
     return (this.volumes.length > 0) && (this.current_volume !== null) && (this.selected_volume === null);
   }
 
+  get_current_volume_image_url(): string {
+    return `${this.current_volume.image_url}?api_key=${this.api_key}`;
+  }
+
   go_to_previous_volume(): void {
     let index = this.current_volume_index - 1;
     if (index < 0) {
