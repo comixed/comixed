@@ -19,19 +19,17 @@
 
 package org.comixed.web.comicvine;
 
-import java.io.IOException;
+import java.util.List;
 
-public class ComicVineAdaptorException extends Exception
+import org.comixed.web.model.ComicVolume;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ComicVineQueryForVolumesAdaptor
 {
-    private static final long serialVersionUID = 6461648847543912621L;
-
-    public ComicVineAdaptorException(String message)
+    public List<ComicVolume> execute(String apiKey, String name) throws ComicVineAdaptorException
     {
-        super(message);
-    }
-
-    public ComicVineAdaptorException(String message, IOException cause)
-    {
-        super(message, cause);
+        // TODO Auto-generated method stub
+        return null;
     }
 }

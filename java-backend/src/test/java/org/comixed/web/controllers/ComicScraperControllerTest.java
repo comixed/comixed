@@ -19,15 +19,21 @@
 
 package org.comixed.web.controllers;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertSame;
+
+import java.util.List;
 
 import org.comixed.web.ComicVineQueryWebRequest;
-import org.comixed.web.WebRequestProcessor;
+import org.comixed.web.WebRequestException;
+import org.comixed.web.comicvine.ComicVineAdaptorException;
 import org.comixed.web.comicvine.ComicVineQueryAdaptor;
+import org.comixed.web.comicvine.ComicVineQueryForVolumesAdaptor;
+import org.comixed.web.model.ComicVolume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,11 +42,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class ComicScraperControllerTest
 {
+    private static final String TEST_API_KEY = "12345";
+    private static final String TEST_SERIES_NAME = "Awesome Comic";
+
     @InjectMocks
     private ComicScraperController controller;
-
-    @Mock
-    private WebRequestProcessor webRequestProcessor;
 
     @Mock
     private ComicVineQueryAdaptor comicVineQueryAdaptor;
@@ -49,23 +55,32 @@ public class ComicScraperControllerTest
     private ObjectFactory<ComicVineQueryWebRequest> searchQueryForIssuesFactory;
 
     @Mock
-    private ComicVineQueryWebRequest searchQueryForIssues;
+    private ComicVineQueryForVolumesAdaptor comicVineQueryForVolumesAdaptor;
 
-    @Test
-    public void testQueryForVolumesAdaptorRaisesException()
+    @Mock
+    private List<ComicVolume> comicVolumeList;
+
+    @Test(expected = ComicVineAdaptorException.class)
+    public void testQueryForVolumesAdaptorRaisesException() throws WebRequestException, ComicVineAdaptorException
     {
-        fail("Not implemented yet");
+        Mockito.when(comicVineQueryForVolumesAdaptor.execute(Mockito.anyString(), Mockito.anyString()))
+               .thenThrow(new ComicVineAdaptorException("expected"));
+
+        controller.queryForIssues(TEST_API_KEY, TEST_SERIES_NAME);
+
+        Mockito.verify(comicVineQueryForVolumesAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_SERIES_NAME);
     }
 
     @Test
-    public void testQueryForVolumes()
+    public void testQueryForVolumes() throws ComicVineAdaptorException, WebRequestException
     {
-        fail("Not implemented yet");
-    }
+        Mockito.when(comicVineQueryForVolumesAdaptor.execute(Mockito.anyString(), Mockito.anyString()))
+               .thenReturn(comicVolumeList);
 
-    @Test
-    public void testQueryForVolumesMultipointPages()
-    {
-        fail("Not implemented yet");
+        List<ComicVolume> result = controller.queryForIssues(TEST_API_KEY, TEST_SERIES_NAME);
+
+        assertSame(comicVolumeList, result);
+
+        Mockito.verify(comicVineQueryForVolumesAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_SERIES_NAME);
     }
 }
