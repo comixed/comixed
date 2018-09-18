@@ -5,6 +5,7 @@
 			"protocol": "http",
 			"port": 7171
 		},
+		"auth": "user:password",
 		"secure": false,
 		"changeOrigin": true,
 		"logLevel": "debug"
