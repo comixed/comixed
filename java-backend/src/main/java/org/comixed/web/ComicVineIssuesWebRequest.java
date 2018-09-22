@@ -36,4 +36,22 @@ public class ComicVineIssuesWebRequest extends AbstractComicVineWebRequest
     {
         super("issues");
     }
+
+    @Override
+    public String getURL() throws WebRequestException
+    {
+        if (!this.filterset.containsKey("issue_number")) { throw new WebRequestException("Missing required filter: issue_number"); }
+        if (!this.filterset.containsKey("volume")) { throw new WebRequestException("Missing required filter: volume"); }
+        return super.getURL();
+    }
+
+    public void setIssueNumber(String issueNumber)
+    {
+        this.filterset.put("issue_number", issueNumber);
+    }
+
+    public void setVolume(String volume)
+    {
+        this.filterset.put("volume", volume);
+    }
 }
