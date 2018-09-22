@@ -61,7 +61,6 @@ public class ComicVineQueryForVolumesAdaptor
             request.setSeriesName(name);
 
             page++;
-            // ComicVine bug: CVS said there's an issue when setting offset to 1
             if (page > 1)
             {
                 this.logger.debug("Setting offset to {}", page);

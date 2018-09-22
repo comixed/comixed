@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ComicIssue
 {
     @JsonProperty(value = "id")
-    private long id;
+    private int id;
 
     @JsonProperty(value = "cover_date")
     private String coverDate;
@@ -41,6 +41,12 @@ public class ComicIssue
     @JsonProperty(value = "name")
     private String name;
 
+    @JsonProperty(value = "volume_name")
+    private String volumeName;
+
+    @JsonProperty(value = "volume_id")
+    private int volumeId;
+
     public String getCoverDate()
     {
         return this.coverDate;
@@ -56,7 +62,7 @@ public class ComicIssue
         return this.description;
     }
 
-    public long getId()
+    public int getId()
     {
         return this.id;
     }
@@ -69,6 +75,16 @@ public class ComicIssue
     public String getName()
     {
         return this.name;
+    }
+
+    public int getVolumeId()
+    {
+        return this.volumeId;
+    }
+
+    public String getVolumeName()
+    {
+        return this.volumeName;
     }
 
     public void setCoverDate(String coverDate)
@@ -86,7 +102,7 @@ public class ComicIssue
         this.description = description;
     }
 
-    public void setId(long id)
+    public void setId(int id)
     {
         this.id = id;
     }
@@ -99,5 +115,15 @@ public class ComicIssue
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public void setVolumeId(int volumeId)
+    {
+        this.volumeId = volumeId;
+    }
+
+    public void setVolumeName(String volumeName)
+    {
+        this.volumeName = volumeName;
     }
 }

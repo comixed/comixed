@@ -17,21 +17,21 @@
  * org.comixed;
  */
 
-import {Injectable, EventEmitter} from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {UserService} from '../user.service';
-import {AlertService} from '../alert.service';
-import {Comic} from './comic.model';
-import {Page} from './page.model';
-import {PageType} from './page-type.model';
-import {FileDetails} from './file-details.model';
+import { UserService } from '../user.service';
+import { AlertService } from '../alert.service';
+import { Comic } from './comic.model';
+import { Page } from './page.model';
+import { PageType } from './page-type.model';
+import { FileDetails } from './file-details.model';
 
 @Injectable()
 export class ComicService {
@@ -224,9 +224,23 @@ export class ComicService {
     return `${this.api_url}/comics/${comicId}/download`;
   }
 
-  fetch_candidates_for(api_key: string, series_name: string): Observable<any> {
-    const params = new HttpParams().set('api_key', api_key).set('series_name', series_name);
+  fetch_candidates_for(api_key: string, series_name: string, volume: string, issue_number: string): Observable<any> {
+    const params = new HttpParams()
+      .set('api_key', api_key)
+      .set('series_name', series_name)
+      .set('volume', volume)
+      .set('issue_number', issue_number);
 
-    return this.http.post(`${this.api_url}/scraper/query`, params);
+    return this.http.post(`${this.api_url}/scraper/query/volumes`, params);
+  }
+
+  scrape_comic_details_for(api_key: string, volume: number, issue_number: string): Observable<any> {
+    const params = new HttpParams()
+      .set('api_key', api_key)
+      .set('volume', `${volume}`)
+      .set('issue_number', issue_number);
+
+    return this.http.post(`${this.api_url}/scraper/query/issue`, params);
   }
 }
+

@@ -22,15 +22,15 @@ export class Volume {
   name: string;
   issue_count: number;
   image_url: string;
-  start_year: number;
+  start_year: string;
   publisher: string;
 
-  contstructor(
+  constructor(
     id?: number,
     name?: string,
     issue_count?: number,
     image_url?: string,
-    start_year?: number,
+    start_year?: string,
     publisher?: string,
   ) {
     this.id = id;

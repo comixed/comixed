@@ -23,7 +23,9 @@ import java.util.List;
 
 import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.ComicVineAdaptorException;
+import org.comixed.web.comicvine.ComicVineQueryForIssueAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForVolumesAdaptor;
+import org.comixed.web.model.ComicIssue;
 import org.comixed.web.model.ComicVolume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,16 +42,36 @@ public class ComicVineScraperController
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ComicVineQueryForVolumesAdaptor comicVineQueryForVolumesAdaptor;
+    private ComicVineQueryForVolumesAdaptor queryForVolumesAdaptor;
 
-    @RequestMapping(value = "/query",
+    @Autowired
+    private ComicVineQueryForIssueAdaptor queryForIssuesAdaptor;
+
+    @RequestMapping(value = "/query/issue",
                     method = RequestMethod.POST)
-    public List<ComicVolume> queryForIssues(@RequestParam("api_key") String apiKey,
-                                            @RequestParam("series_name") String seriesName) throws WebRequestException,
-                                                                                            ComicVineAdaptorException
+    public ComicIssue queryForIssue(@RequestParam("api_key") String apiKey,
+                                    @RequestParam("volume") String volume,
+                                    @RequestParam("issue_number") String issueNumber) throws ComicVineAdaptorException
+    {
+        this.logger.debug("Preparing to retrieve issue={} for volume={}", issueNumber, volume);
+
+        return this.queryForIssuesAdaptor.execute(apiKey, volume, issueNumber);
+    }
+
+    @RequestMapping(value = "/query/volumes",
+                    method = RequestMethod.POST)
+    public List<ComicVolume> queryForVolumes(@RequestParam("api_key") String apiKey,
+                                             @RequestParam("series_name") String seriesName,
+                                             @RequestParam("volume") String volume,
+                                             @RequestParam("issue_number") String issueNumber) throws WebRequestException,
+                                                                                               ComicVineAdaptorException
     {
         this.logger.debug("Preparing to retrieve issues for the given series: {}", seriesName);
 
-        return this.comicVineQueryForVolumesAdaptor.execute(apiKey, seriesName);
+        List<ComicVolume> result = this.queryForVolumesAdaptor.execute(apiKey, seriesName);
+
+        this.logger.debug("Returning {} volumes", result.size());
+
+        return result;
     }
 }

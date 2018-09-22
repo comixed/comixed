@@ -35,6 +35,7 @@ public class ComicVineIssuesWebRequest extends AbstractComicVineWebRequest
     public ComicVineIssuesWebRequest()
     {
         super("issues");
+        this.parameterSet.put("field_list", "cover_date,description,id,image,issue_number,name,store_date,volume");
     }
 
     @Override

@@ -64,7 +64,8 @@ public class ComicVineVolume
 
     public int getIssueCount()
     {
-        return this.issueCount;
+        // BUG ComicVine returns the issue count - 1 for some reason
+        return this.issueCount + 1;
     }
 
     public String getName()
@@ -74,7 +75,7 @@ public class ComicVineVolume
 
     public String getStartYear()
     {
-        return this.startYear;
+        return this.startYear == null ? "" : this.startYear;
     }
 
     public String getPublisher()
