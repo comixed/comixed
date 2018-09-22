@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-    <div class='col-9'>
+    <div class='col'>
       <div class='container-fluid w-100'>
         <h2 class='text-center'>{{get_comic_selection_title()}}</h2>
       </div>
@@ -94,7 +94,20 @@
         </div>
         <app-import-comic-list-entry
           *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
+          (onSelected)='set_selected(file_detail)'
           [file_details]='file_detail' [cover_size]='cover_size'></app-import-comic-list-entry>
+      </div>
+    </div>
+    <div *ngIf='selected_file_detail' class='col-2'>
+      <div class='container-fluid w-100'>
+        <div class='card'>
+          <div class='card-header'>
+            <h5 class='text-nowrap text-truncate'>{{selected_file_detail_title}}</h5>
+            <h6 class='text-nowrap text-truncate'>{{selected_file_detail_subtitle}}</h6>
+          </div>
+          <img class='card-img-bottom img-fluid'
+            src='{{selected_file_image_url}}'>
+        </div>
       </div>
     </div>
   </div>

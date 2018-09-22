@@ -17,17 +17,17 @@
  * org.comixed;
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, Validators, AbstractControl} from '@angular/forms';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {UserService} from '../../user.service';
-import {FileDetails} from '../file-details.model';
-import {ComicService} from '../comic.service';
-import {AlertService} from '../../alert.service';
-import {ImportComicListEntryComponent} from '../import-comic-list-entry/import-comic-list-entry.component';
+import { UserService } from '../../user.service';
+import { FileDetails } from '../file-details.model';
+import { ComicService } from '../comic.service';
+import { AlertService } from '../../alert.service';
+import { ImportComicListEntryComponent } from '../import-comic-list-entry/import-comic-list-entry.component';
 
-import {SelectedForImportPipe} from './selected-for-import.pipe';
+import { SelectedForImportPipe } from './selected-for-import.pipe';
 
 @Component({
   selector: 'app-import-comics',
@@ -50,6 +50,10 @@ export class ImportComicListComponent implements OnInit {
   current_page = 1;
   selected_file_count = 0;
   show_selections_only = false;
+  selected_file_detail: FileDetails;
+  selected_file_detail_title: string;
+  selected_file_detail_subtitle: string;
+  selected_file_image_url = '';
 
   constructor(
     private user_service: UserService,
@@ -60,6 +64,7 @@ export class ImportComicListComponent implements OnInit {
     this.directory_form = builder.group({
       'directory': ['', Validators.required],
     });
+    this.selected_file_detail = null;
   }
 
   ngOnInit() {
@@ -177,5 +182,19 @@ export class ImportComicListComponent implements OnInit {
 
   set_show_selected_comics(): void {
     this.show_selections_only = true;
+  }
+
+  set_selected(file_detail: FileDetails): void {
+    if (this.selected_file_detail !== null && this.selected_file_detail.filename === file_detail.filename) {
+      this.selected_file_detail = null;
+      this.selected_file_image_url = '';
+    } else {
+      this.selected_file_detail = file_detail;
+      this.selected_file_image_url = this.comic_service.get_cover_url_for_file(this.selected_file_detail.filename);
+      this.selected_file_detail_title = this.selected_file_detail.base_filename;
+      this.selected_file_detail_subtitle = `${(this.selected_file_detail.size / 1024 ** 2).toPrecision(2)} Mb`;
+    }
+
+    console.log('this.selected_file_detail:', this.selected_file_detail);
   }
 }

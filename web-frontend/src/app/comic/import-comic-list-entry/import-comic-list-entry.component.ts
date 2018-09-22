@@ -20,6 +20,8 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Input } from '@angular/core';
+import { Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { ComicService } from '../comic.service';
 import { AlertService } from '../../alert.service';
 import { FileDetails } from '../file-details.model';
@@ -32,6 +34,7 @@ import { FileDetails } from '../file-details.model';
 export class ImportComicListEntryComponent implements OnInit {
   @Input() file_details: FileDetails;
   @Input() cover_size: number;
+  @Output() onSelected = new EventEmitter<FileDetails>();
   file_size: string;
   cover_url: string;
   page_count: number;
@@ -51,11 +54,13 @@ export class ImportComicListEntryComponent implements OnInit {
     this.subtitle_text = `${(this.file_details.size / 1024 ** 2).toFixed(2)} Mb`;
   }
 
-  toggle_selected(): void {
+  toggle_selected(event: any): void {
     this.file_details.selected = !this.file_details.selected;
+    event.preventDefault();
   }
 
   clicked(event: any): void {
+    this.onSelected.next(this.file_details);
     event.preventDefault();
   }
 }
