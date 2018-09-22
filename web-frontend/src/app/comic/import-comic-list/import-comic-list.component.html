@@ -86,29 +86,15 @@
     <div class='col-9'>
       <div class='container-fluid w-100'>
         <h2 class='text-center'>{{get_comic_selection_title()}}</h2>
+      </div>
+      <div *ngIf='file_details.length > 0' class='row w-100'>
         <div
-          class='row w-100 justify-content-center bg-secondary text-white'
-          *ngIf='file_details.length > 0'>
+          class='row w-100 justify-content-center bg-secondary text-white'>
           <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
         </div>
-        <div class='row w-100'>
-          <div
-            *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
-            class='border border-info p-1 m-1'>
-            <div class='container w-100 justify-content-center mb-1'>
-              <button *ngIf='!file_detail.selected'
-                class='btn btn-primary w-100'
-                (click)='toggle_comic_selection(file_detail)'>Select</button>
-              <button *ngIf='file_detail.selected'
-                class='btn btn-danger w-100'
-                (click)='toggle_comic_selection(file_detail)'>Deselect</button>
-            </div>
-            <div>
-              <app-import-comic-list-entry [file_details]='file_detail'
-                [cover_size]='cover_size'></app-import-comic-list-entry>
-            </div>
-          </div>
-        </div>
+        <app-import-comic-list-entry
+          *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
+          [file_details]='file_detail' [cover_size]='cover_size'></app-import-comic-list-entry>
       </div>
     </div>
   </div>

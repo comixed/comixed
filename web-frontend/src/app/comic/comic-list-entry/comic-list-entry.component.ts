@@ -17,13 +17,14 @@
  * org.comixed;
  */
 
-import {Component, OnInit, Input} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Router} from '@angular/router';
-
-import {Comic} from '../comic.model';
-import {ComicService} from '../comic.service';
-import {AlertService} from '../../alert.service';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Input } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
+import { Comic } from '../comic.model';
+import { ComicService } from '../comic.service';
+import { AlertService } from '../../alert.service';
 
 @Component({
   selector: 'app-comic-list-entry',
@@ -48,8 +49,7 @@ export class ComicListEntryComponent implements OnInit {
     protected router: Router,
     protected comic_service: ComicService,
     protected alert_service: AlertService,
-  ) {
-  }
+  ) { }
 
   ngOnInit() {
     this.cover_url = this.comic.missing ? '/assets/img/missing.png' : this.comic_service.get_url_for_page_by_comic_index(this.comic.id, 0);
@@ -79,11 +79,11 @@ export class ComicListEntryComponent implements OnInit {
   }
 
   format_date_month_year(date: string, otherwise: string): string {
-    return this.format_date(date, otherwise, {month: 'short', year: 'numeric'});
+    return this.format_date(date, otherwise, { month: 'short', year: 'numeric' });
   }
 
   format_date_full(date: string, otherwise: string): string {
-    return this.format_date(date, otherwise, {month: 'short', day: 'numeric', year: 'numeric'});
+    return this.format_date(date, otherwise, { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   format_date(date: string, otherwise: string, options: any): string {

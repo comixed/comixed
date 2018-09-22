@@ -1,16 +1,22 @@
-<div class='card px-1 pb-1 border-0'>
-  <div class='card-body comic-cover-container'>
-    <img class='card-img-bottom img-fluid' src='{{cover_url}}'
-      [style.height]='"" + cover_size + "px"' [style.width]='"auto"'>
-    <div class='comic-cover-overlay bg-info text-white'>
-      <div class='comic-cover-overlay-text h-100 w-100'>
-        <dl>
-          <dt>Filename:</dt>
-          <dd>{{file_details.base_filename}}</dd>
-          <dt>Size:</dt>
-          <dd>{{file_details.size | number}} bytes</dd>
-        </dl>
+<div class='p-1 m-1' [class.border-0]='file_details.selected'
+  [class.comic-selected]='file_details.selected'>
+  <div class='card comic-cover-card'>
+    <div class='card-body comic-cover-container text-center'>
+      <div class='comic-cover-overlay bg-dark text-light'>
+        <div class='comic-cover-overlay-text h-100 w-100'>
+          <div class='comic-cover-details-container h-100 w-100'>
+            <i id='comic-selection-toggle' (click)='toggle_selected()'
+              class='fa' [class.fa-plus-circle]='!file_details.selected'
+              [class.fa-minus-circle]='file_details.selected'
+              (click)='clicked($event)'></i>
+          </div>
+        </div>
       </div>
+      <img class='card-img-bottom img-fluid' src='{{cover_url}}'
+        [style.height]='"" + cover_size + "px"' [style.width]='"auto"'>
+      <h5 class='card-title text-nowrap text-truncate'>{{title_text}}
+      </h5>
+      <h6 class='card-subtitle text-nowrap text-truncate'>{{subtitle_text}}</h6>
     </div>
   </div>
 </div>

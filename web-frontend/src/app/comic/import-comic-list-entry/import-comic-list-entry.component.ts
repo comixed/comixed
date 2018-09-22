@@ -17,15 +17,12 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-} from '@angular/core';
-
-import {ComicService} from '../comic.service';
-import {AlertService} from '../../alert.service';
-import {FileDetails} from '../file-details.model';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Input } from '@angular/core';
+import { ComicService } from '../comic.service';
+import { AlertService } from '../../alert.service';
+import { FileDetails } from '../file-details.model';
 
 @Component({
   selector: 'app-import-comic-list-entry',
@@ -38,14 +35,27 @@ export class ImportComicListEntryComponent implements OnInit {
   file_size: string;
   cover_url: string;
   page_count: number;
+  title_text: string;
+  subtitle_text: string;
 
   constructor(
     private comic_service: ComicService,
     private alert_service: AlertService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.cover_url = this.comic_service.get_cover_url_for_file(this.file_details.filename);
     this.file_size = (this.file_details.size / (1024 ** 2)).toPrecision(3).toLocaleLowerCase();
+
+    this.title_text = this.file_details.base_filename;
+    this.subtitle_text = `${(this.file_details.size / 1024 ** 2).toFixed(2)} Mb`;
+  }
+
+  toggle_selected(): void {
+    this.file_details.selected = !this.file_details.selected;
+  }
+
+  clicked(event: any): void {
+    event.preventDefault();
   }
 }
