@@ -19,6 +19,9 @@
 
 package org.comixed.web.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -46,6 +49,9 @@ public class ComicVolume
 
     @JsonProperty(value = "publisher")
     private String publisher;
+
+    @JsonProperty(value = "issue")
+    private List<ComicIssue> comicIssue = new ArrayList<ComicIssue>();
 
     public long getId()
     {
