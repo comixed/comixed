@@ -1,22 +1,22 @@
 <div class='p-1 m-1' [class.border-0]='file_details.selected'
   [class.comic-selected]='file_details.selected'>
-  <div class='card comic-cover-card'>
-    <div class='card-body comic-cover-container text-center'>
-      <div class='comic-cover-overlay bg-dark text-light'>
-        <div class='comic-cover-overlay-text h-100 w-100'>
-          <div class='comic-cover-details-container h-100 w-100'>
-            <i id='comic-selection-toggle' (click)='toggle_selected()'
-              class='fa' [class.fa-plus-circle]='!file_details.selected'
-              [class.fa-minus-circle]='file_details.selected'
-              (click)='clicked($event)'></i>
-          </div>
-        </div>
+  <div class='card'>
+    <div class='card-body w-100 h-100 text-center'>
+      <div class='row w-100 justify-content-center'>
+        <button type='button' class='btn btn-small'
+          (click)='toggle_selected()'>
+          <i class='fa' [class.fa-plus-circle]='!file_details.selected'
+            [class.fa-minus-circle]='file_details.selected'
+            (click)='clicked($event)'></i>
+        </button>
+        <button type='button' class='btn btn-small'
+          data-toggle='popover' title='{{title_text}}'
+          data-content='Just some text'>
+          <i class='fa fa-info-circle'></i>
+        </button>
       </div>
-      <img class='card-img-bottom img-fluid' src='{{cover_url}}'
+      <img class='card-img-top img-fluid' src='{{cover_url}}'
         [style.height]='"" + cover_size + "px"' [style.width]='"auto"'>
-      <h5 class='card-title text-nowrap text-truncate'>{{title_text}}
-      </h5>
-      <h6 class='card-subtitle text-nowrap text-truncate'>{{subtitle_text}}</h6>
     </div>
   </div>
 </div>
