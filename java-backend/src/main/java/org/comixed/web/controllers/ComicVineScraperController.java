@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/scraper")
-public class ComicScraperController
+public class ComicVineScraperController
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

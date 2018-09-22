@@ -37,13 +37,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class ComicScraperControllerTest
+public class ComicVineScraperControllerTest
 {
     private static final String TEST_API_KEY = "12345";
     private static final String TEST_SERIES_NAME = "Awesome Comic";
 
     @InjectMocks
-    private ComicScraperController controller;
+    private ComicVineScraperController controller;
 
     @Mock
     private ComicVineQueryForVolumesAdaptor comicVineQueryForVolumesAdaptor;
