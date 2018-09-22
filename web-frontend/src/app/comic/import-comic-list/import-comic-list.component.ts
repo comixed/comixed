@@ -184,7 +184,7 @@ export class ImportComicListComponent implements OnInit {
     this.show_selections_only = true;
   }
 
-  set_selected(file_detail: FileDetails): void {
+  show_details(file_detail: FileDetails): void {
     if (this.selected_file_detail !== null && this.selected_file_detail.filename === file_detail.filename) {
       this.selected_file_detail = null;
       this.selected_file_image_url = '';

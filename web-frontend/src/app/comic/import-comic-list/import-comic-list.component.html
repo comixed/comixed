@@ -94,7 +94,8 @@
         </div>
         <app-import-comic-list-entry
           *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
-          (onSelected)='set_selected(file_detail)'
+          (clicked)='show_details(file_detail)'
+          (selected)='toggle_comic_selection(file_detail)'
           [file_details]='file_detail' [cover_size]='cover_size'></app-import-comic-list-entry>
       </div>
     </div>
@@ -113,11 +114,11 @@
             <div class='row w-100 mb-3 justify-content-center'>
               <button *ngIf='!selected_file_detail.selected'
                 type='button' class='btn w-75 bg-primary text-white'
-                (click)='selected_file_detail.selected = true'>
+                (click)='toggle_comic_selection(selected_file_detail)'>
                 Select</button>
               <button *ngIf='selected_file_detail.selected'
                 type='button' class='btn w-75 bg-danger text-white'
-                (click)='selected_file_detail.selected = false'>
+                (click)='toggle_comic_selection(selected_file_detail)'>
                 Deselect</button>
             </div>
             <div class='row w-100 mb-3 justify-content-center'>

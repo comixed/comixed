@@ -34,7 +34,8 @@ import { FileDetails } from '../file-details.model';
 export class ImportComicListEntryComponent implements OnInit {
   @Input() file_details: FileDetails;
   @Input() cover_size: number;
-  @Output() onSelected = new EventEmitter<FileDetails>();
+  @Output() clicked = new EventEmitter<FileDetails>();
+  @Output() selected = new EventEmitter<boolean>();
   file_size: string;
   cover_url: string;
   page_count: number;
@@ -55,12 +56,12 @@ export class ImportComicListEntryComponent implements OnInit {
   }
 
   toggle_selected(event: any): void {
-    this.file_details.selected = !this.file_details.selected;
+    this.selected.next(this.file_details.selected === false);
     event.preventDefault();
   }
 
-  clicked(event: any): void {
-    this.onSelected.next(this.file_details);
+  on_clicked(event: any): void {
+    this.clicked.next(this.file_details);
     event.preventDefault();
   }
 }
