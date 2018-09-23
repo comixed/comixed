@@ -104,10 +104,16 @@ public class FilenameScraperAdaptor
                                                         3, 2, -1, "");
     // SERIES (VVVV)
     private static final RuleSet RULESET3 = new RuleSet("^([\\w[\\s][,-]]+)\\s+\\(([0-9]{4})\\).*$", 1, 2, -1, -1, "");
+
+    // SERIES nn (of nn) (VVVV)
+    private static final RuleSet RULESET4 = new RuleSet("^([\\w[\\s][,-]]+)\\s([0-9]{1,5})\\s+\\(of.*\\)\\s+\\(([0-9]{4})\\).*$",
+                                                        1, 3, 2, -1, "");
+
     private static final RuleSet[] RULESET = new RuleSet[]
     {RULESET1,
      RULESET2,
-     RULESET3,};
+     RULESET3,
+     RULESET4,};
 
     private boolean applyRule(Comic comic, String filename, RuleSet ruleset) throws AdaptorException
     {
