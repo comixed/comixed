@@ -21,9 +21,13 @@ package org.comixed.web.controllers;
 
 import java.util.List;
 
+import org.comixed.library.model.Comic;
+import org.comixed.repositories.ComicRepository;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.ComicVineAdaptorException;
 import org.comixed.web.comicvine.ComicVineQueryForIssueAdaptor;
+import org.comixed.web.comicvine.ComicVineQueryForIssueDetailsAdaptor;
+import org.comixed.web.comicvine.ComicVineQueryForVolumeDetailsAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForVolumesAdaptor;
 import org.comixed.web.model.ComicIssue;
 import org.comixed.web.model.ComicVolume;
@@ -46,6 +50,15 @@ public class ComicVineScraperController
 
     @Autowired
     private ComicVineQueryForIssueAdaptor queryForIssuesAdaptor;
+
+    @Autowired
+    private ComicVineQueryForIssueDetailsAdaptor queryForIssueDetailsAdaptor;
+
+    @Autowired
+    private ComicVineQueryForVolumeDetailsAdaptor queryForVolumeDetailsAdaptor;
+
+    @Autowired
+    private ComicRepository comicRepository;
 
     @RequestMapping(value = "/query/issue",
                     method = RequestMethod.POST)
@@ -71,6 +84,32 @@ public class ComicVineScraperController
         List<ComicVolume> result = this.queryForVolumesAdaptor.execute(apiKey, seriesName);
 
         this.logger.debug("Returning {} volumes", result.size());
+
+        return result;
+    }
+
+    @RequestMapping(value = "/save")
+    public Comic scrapeAndSaveComicDetails(@RequestParam("api_key") String apiKey,
+                                           @RequestParam("comic_id") long comicId,
+                                           @RequestParam("issue_id") String issueId) throws ComicVineAdaptorException
+    {
+        this.logger.debug("Preparing to retrieve details for comic: id={} issue={}", comicId, issueId);
+
+        Comic result = this.comicRepository.findOne(comicId);
+
+        if (result != null)
+        {
+            this.logger.debug("Fetching details for comic");
+            String volumeId = this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, result);
+            this.logger.debug("Fetching details for volume");
+            this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, result);
+            this.logger.debug("Updating details for comic in database");
+            result = this.comicRepository.save(result);
+        }
+        else
+        {
+            this.logger.debug("No such comic found");
+        }
 
         return result;
     }
