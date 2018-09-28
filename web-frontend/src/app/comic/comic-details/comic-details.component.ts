@@ -22,16 +22,16 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {Comic} from '../comic.model';
-import {Page} from '../page.model';
-import {ComicService} from '../comic.service';
-import {AlertService} from '../../alert.service';
-import {ReadViewerComponent} from '../read-viewer/read-viewer.component';
-import {PageDetailsComponent} from '../page-details/page-details.component';
-import {PageType} from '../page-type.model';
+import { Comic } from '../comic.model';
+import { Page } from '../page.model';
+import { ComicService } from '../comic.service';
+import { AlertService } from '../../alert.service';
+import { ReadViewerComponent } from '../read-viewer/read-viewer.component';
+import { PageDetailsComponent } from '../page-details/page-details.component';
+import { PageType } from '../page-type.model';
 
 @Component({
   selector: 'app-comic-details',
@@ -44,7 +44,9 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   subtitle_text: string;
   sub: any;
   cover_url = '';
+  show_credits = false;
   show_summary = false;
+  show_description = false;
   show_notes = false;
   show_characters = false;
   show_teams = false;
@@ -60,7 +62,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     private comic_service: ComicService,
     private alert_service: AlertService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.alert_service.show_busy_message('Retrieving comic details...');

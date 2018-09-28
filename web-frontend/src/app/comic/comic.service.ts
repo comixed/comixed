@@ -242,5 +242,14 @@ export class ComicService {
 
     return this.http.post(`${this.api_url}/scraper/query/issue`, params);
   }
+
+  scrape_and_save_comic_details(api_key: string, comic_id: number, issue_id: number): Observable<any> {
+    const params = new HttpParams()
+      .set('api_key', api_key)
+      .set('comic_id', `${comic_id}`)
+      .set('issue_id', `${issue_id}`);
+
+    return this.http.post(`${this.api_url}/scraper/save`, params);
+  }
 }
 

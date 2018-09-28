@@ -71,9 +71,24 @@
         <div class='row w-100 border'>
           <h4 class='text-left'>
             <span class='badge badge-info mr-3'
+              (click)='show_credits = !show_credits'><i
+              class='fa' [class.fa-plus-circle]='!show_credits'
+              [class.fa-minus-circle]='show_credits'></i></span>Credits<span
+              class='badge badge-info ml-3'>{{comic.credits.length}}</span>
+          </h4>
+          <div *ngIf='show_credits' class='row w-100'>
+            <ul>
+              <li *ngFor='let credit of comic.credits'>{{credit.name}}:
+                {{credit.role}}
+            </ul>
+          </div>
+        </div>
+        <div class='row w-100 border'>
+          <h4 class='text-left'>
+            <span class='badge badge-info mr-3'
               (click)='show_summary = !show_summary'><i
-              class='fa' [class.fa-chevron-circle-down]='!show_summary'
-              [class.fa-chevron-circle-up]='show_summary'></i></span>Summary
+              class='fa' [class.fa-plus-circle]='!show_summary'
+              [class.fa-minus-circle]='show_summary'></i></span>Summary
           </h4>
           <div *ngIf='show_summary' class='row w-100'>
             <p>{{comic.summary}}</p>
@@ -82,9 +97,20 @@
         <div class='row w-100 border'>
           <h4 class='text-left'>
             <span class='badge badge-info mr-3'
+              (click)='show_description = !show_description'><i
+              class='fa' [class.fa-plus-circle]='!show_description'
+              [class.fa-minus-circle]='show_description'></i></span>Description
+          </h4>
+          <div *ngIf='show_description' class='row w-100'>
+            <p>{{comic.description}}</p>
+          </div>
+        </div>
+        <div class='row w-100 border'>
+          <h4 class='text-left'>
+            <span class='badge badge-info mr-3'
               (click)='show_notes = !show_notes'><i class='fa'
-              [class.fa-chevron-circle-down]='!show_notes'
-              [class.fa-chevron-circle-up]='show_notes'></i></span>Notes
+              [class.fa-plus-circle]='!show_notes'
+              [class.fa-minus-circle]='show_notes'></i></span>Notes
           </h4>
           <div *ngIf='show_notes && has_notes()' class='row w-100'>
             <p>{{comic.notes}}</p>
@@ -94,10 +120,9 @@
           <h4 class='text-left'>
             <span class='badge badge-info mr-3'
               (click)='show_characters = !show_characters'><i
-              class='fa'
-              [class.fa-chevron-circle-down]='!show_characters'
-              [class.fa-chevron-circle-up]='show_characters'></i></span>Characters
-            <span class='badge badge-info ml-3'
+              class='fa' [class.fa-plus-circle]='!show_characters'
+              [class.fa-minus-circle]='show_characters'></i></span>Characters <span
+              class='badge badge-info ml-3'
               (click)='show_characters = !show_characters'>{{(comic.characters
               || []).length}}</span>
           </h4>
@@ -112,8 +137,8 @@
           <h4 class='text-left'>
             <span class='badge badge-info mr-3'
               (click)='show_teams = !show_teams'><i class='fa'
-              [class.fa-chevron-circle-down]='!show_teams'
-              [class.fa-chevron-circle-up]='show_teams'></i></span>Teams<span
+              [class.fa-plus-circle]='!show_teams'
+              [class.fa-minus-circle]='show_teams'></i></span>Teams<span
               class='badge badge-info ml-3'
               (click)='show_teams = !show_teams'>{{ (comic.teams
               || []).length }}</span>
@@ -128,10 +153,9 @@
           <h4 class='text-left'>
             <span class='badge badge-info mr-3'
               (click)='show_story_arcs = !show_story_arcs'><i
-              class='fa'
-              [class.fa-chevron-circle-down]='!show_story_arcs'
-              [class.fa-chevron-circle-up]='show_story_arcs'></i></span>Story
-            Arcs<span class='badge badge-info ml-3'>{{(comic.story_arcs
+              class='fa' [class.fa-plus-circle]='!show_story_arcs'
+              [class.fa-minus-circle]='show_story_arcs'></i></span>Story Arcs<span
+              class='badge badge-info ml-3'>{{(comic.story_arcs
               || []).length}}</span>
           </h4>
           <div *ngIf='show_story_arcs && has_story_arcs()'
@@ -145,9 +169,8 @@
           <h4 class='text-left'>
             <span class='badge badge-info mr-3'
               (click)='show_locations = !show_locations'><i
-              class='fa'
-              [class.fa-chevron-circle-down]='!show_locations'
-              [class.fa-chevron-circle-up]='show_locations'></i></span>Locations<span
+              class='fa' [class.fa-plus-circle]='!show_locations'
+              [class.fa-minus-circle]='show_locations'></i></span>Locations<span
               class='badge badge-info ml-3'
               (click)='show_locations = !show_locations'>{{
               (comic.locations || []).length }}</span>

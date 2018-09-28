@@ -170,6 +170,18 @@ export class ComicDetailsEditorComponent implements OnInit {
   }
 
   select_current_issue(): void {
+    this.alert_service.show_busy_message('Updating Comic Details. Please Wait...');
+    const that = this;
 
+    this.comic_service.scrape_and_save_comic_details(this.api_key, this.comic.id, this.current_issue.id).subscribe(
+      (comic: Comic) => {
+        const index = that.comic_service.all_comics.findIndex((thisComic: Comic) => {
+          return thisComic.id === that.comic.id;
+        });
+
+        that.comic_service.all_comics[index] = comic;
+
+        that.alert_service.show_busy_message('');
+      });
   }
 }
