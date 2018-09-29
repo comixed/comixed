@@ -605,25 +605,4 @@ public class ComicTest
     {
         assertEquals(-1, comic.getIndexFor(new Page()));
     }
-
-    @Test
-    public void testGetIndexOf()
-    {
-        for (int count = 0;
-             count < 10;
-             count++)
-
-        {
-            Page page = new Page();
-            page.setFilename(String.valueOf(count));
-            comic.addPage(page);
-        }
-
-        for (int count = 0;
-             count < comic.getPageCount();
-             count++)
-        {
-            assertEquals(count, comic.getIndexFor(comic.getPage(count)));
-        }
-    }
 }

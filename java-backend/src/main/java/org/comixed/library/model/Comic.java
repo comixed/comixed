@@ -346,6 +346,15 @@ public class Comic
     }
 
     /**
+     * Removes all team references from the comic.
+     */
+    public void clearTeams()
+    {
+        this.logger.debug("Clearing out teams");
+        this.teams.clear();
+    }
+
+    /**
      * Deletes a offset from the comic.
      *
      * @param index
@@ -943,7 +952,7 @@ public class Comic
     public void setIssueNumber(String issueNumber)
     {
         this.logger.debug("Setting issue number=" + issueNumber);
-        if (issueNumber != null && issueNumber.startsWith("0"))
+        if ((issueNumber != null) && issueNumber.startsWith("0"))
         {
             this.logger.debug("Removing leading 0s from issue number");
             while (issueNumber.startsWith("0"))
