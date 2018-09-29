@@ -1,30 +1,33 @@
 <div class='p-1 m-1' [class.border-0]='selected'
   [class.comic-selected]='selected'>
-  <div class='card comic-cover-card'>
-    <div class='card-body comic-cover-container text-center'>
-      <div class='comic-cover-overlay bg-dark text-light'>
-        <div class='comic-cover-overlay-text h-100 w-100'>
-          <div class='comic-cover-details-container h-100 w-100'>
-            <i id='comic-select' class='fa fa-check-circle'
-              (click)='toggle_selected()'></i> <i id='comic-summary'
-              class='fa fa-info-circle' (click)='clicked($event)'
-              data-toggle='modal' data-target='#display_comic_details'></i>
-            <i id='comic-delete' class='fa fa-trash'
-              mwlConfirmationPopover [popoverTitle]='delete_comic_title'
-              [popoverMessage]='delete_comic_message'
-              [cancelText]='cancel_button'
-              [confirmText]='confirm_button' (confirm)='delete_comic()'></i>
-            <i id='comic-open'
-              class='fa fa-play-circle align-middle align-self-center'
-              (click)='open_comic()'></i>
-          </div>
+  <div class='card card-inverse card-info'>
+    <img class='card-img-top' src='{{cover_url}}'
+      [style.height]='"" + cover_size + "px"' [style.width]='"auto"'>
+    <div class='card-img-overlay'>
+      <div class='card-img-overlay-content'>
+        <div class='row w-100'>
+          <span (click)='open_comic()' class='text-nowrap text-truncate'><i
+            class='fa fa-play-circle'></i>Open</span>
+        </div>
+        <div class='row w-100'>
+          <span (click)='clicked($event)' data-toggle='modal'
+            data-target='#display_comic_details'><i
+            class='fa fa-info-circle'></i>Summary</span>
+        </div>
+        <div class='row w-100'>
+          <span (click)='toggle_selected()'
+            class='text-nowrap text-truncate'><i class='fa'
+            [class.fa-plus-circle]='!selected'
+            [class.fa-minus-circle]='selected'></i><span
+            *ngIf='selected'>Unselect</span><span *ngIf='!selected'>Select</span></span>
+        </div>
+        <div class='row w-100'>
+          <span mwlConfirmationPopover
+            [popoverTitle]='delete_comic_title'
+            [popoverMessage]='delete_comic_message'
+            [cancelText]='cancel_button' [confirmText]='confirm_button'
+            (confirm)='delete_comic()'><i class='fa fa-trash'></i>Delete</span>
         </div>
       </div>
-      <img class='card-img-bottom img-fluid' src='{{cover_url}}'
-        [style.height]='"" + cover_size + "px"' [style.width]='"auto"'>
-      <h5 class='card-title text-nowrap text-truncate'>{{title_text}}
-      </h5>
-      <h6 class='card-subtitle text-nowrap text-truncate'>{{subtitle_text}}</h6>
     </div>
   </div>
-</div>
