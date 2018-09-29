@@ -11,19 +11,3 @@
 	margin-right: 5px;
 	margin-top: 5px;
 }
-
-.card-img-top {
-	opacity: 1;
-}
-
-.card:hover .card-img-top {
-	opacity: 0.1;
-}
-
-.card:hover .card-img-overlay-content {
-	opacity: 0.9;
-}
-
-.card-img-overlay-content {
-	opacity: 0;
-}
