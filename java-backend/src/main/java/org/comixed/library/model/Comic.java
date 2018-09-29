@@ -23,7 +23,9 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -209,10 +211,19 @@ public class Comic
 
     @OneToMany(mappedBy = "comic",
                cascade = CascadeType.ALL,
-               fetch = FetchType.EAGER)
+               fetch = FetchType.EAGER,
+               orphanRemoval = true)
     @OrderColumn(name = "index")
     @JsonView(View.Details.class)
     List<Page> pages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comic",
+               cascade = CascadeType.ALL,
+               fetch = FetchType.EAGER,
+               orphanRemoval = true)
+    @JsonProperty("credits")
+    @JsonView(View.Details.class)
+    private Set<Credit> credits = new HashSet<>();
 
     @Transient
     @JsonIgnore
@@ -238,6 +249,15 @@ public class Comic
             return;
         }
         this.characters.add(character);
+    }
+
+    public void addCredit(String name, String role)
+    {
+        this.logger.debug("Adding a credit: name={} role={}", name, role);
+        Credit credit = new Credit(name, role);
+
+        credit.setComic(this);
+        this.credits.add(credit);
     }
 
     /**
@@ -271,18 +291,6 @@ public class Comic
         this.logger.debug("Adding offset: index=" + index + " hash=" + page.getHash());
         page.setComic(this);
         this.pages.add(index, page);
-    }
-
-    /**
-     * Adds a offset to the end of the set of pages.
-     *
-     * @param offset
-     *            the offset
-     */
-    public void addPage(Page page)
-    {
-        this.logger.debug("Adding offset: {}", page.getFilename());
-        this.pages.add(page);
     }
 
     /**
@@ -325,6 +333,15 @@ public class Comic
     public void clearCharacters()
     {
         this.characters.clear();
+    }
+
+    /**
+     * Removes all associated credits.
+     */
+    public void clearCredits()
+    {
+        this.logger.debug("Clearing credits");
+        this.credits.clear();
     }
 
     /**

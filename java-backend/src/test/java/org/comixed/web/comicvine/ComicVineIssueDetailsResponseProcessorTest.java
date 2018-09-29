@@ -19,6 +19,9 @@
 
 package org.comixed.web.comicvine;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Date;
 
 import org.comixed.library.model.Comic;
@@ -65,13 +68,18 @@ public class ComicVineIssueDetailsResponseProcessorTest
         Mockito.doNothing().when(comic).addStoryArc(Mockito.anyString());
         Mockito.doNothing().when(comic).clearTeams();
         Mockito.doNothing().when(comic).addTeam(Mockito.anyString());
+        Mockito.doNothing().when(comic).clearCredits();
+        Mockito.doNothing().when(comic).addCredit(Mockito.anyString(), Mockito.anyString());
         Mockito.doNothing().when(comic).setComicVineId(Mockito.anyString());
         Mockito.doNothing().when(comic).setDescription(Mockito.anyString());
         Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
         Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
         Mockito.doNothing().when(comic).setTitle(Mockito.anyString());
 
-        processor.process(TEST_GOOD_CONTENT, comic);
+        String result = processor.process(TEST_GOOD_CONTENT, comic);
+
+        assertNotNull(result);
+        assertEquals("108548", result);
 
         Mockito.verify(comic, Mockito.times(1)).clearCharacters();
         Mockito.verify(comic, Mockito.times(1)).addCharacter("Cassandra Nova");
@@ -84,6 +92,13 @@ public class ComicVineIssueDetailsResponseProcessorTest
         Mockito.verify(comic, Mockito.times(1)).addStoryArc("The Hate Machine");
         Mockito.verify(comic, Mockito.times(1)).clearTeams();
         Mockito.verify(comic, Mockito.times(1)).addTeam("X-Men");
+        Mockito.verify(comic, Mockito.times(1)).clearCredits();
+        Mockito.verify(comic, Mockito.times(1)).addCredit("Annalise Bissa", "editor");
+        Mockito.verify(comic, Mockito.times(1)).addCredit("Annalise Bissa", "other");
+        Mockito.verify(comic, Mockito.times(1)).addCredit("Anthony Gambino", "other");
+        Mockito.verify(comic, Mockito.times(1)).addCredit("Alan Fine", "other");
+        Mockito.verify(comic, Mockito.times(1)).addCredit("C.B. Cebulski", "other");
+        Mockito.verify(comic, Mockito.times(1)).addCredit("Carlos Lao", "other");
         Mockito.verify(comic, Mockito.times(1)).setComicVineId("686403");
         Mockito.verify(comic, Mockito.times(1))
                .setDescription("<p><em>In the wake of an unprecedented assault on Atlantis, the X-Men must react and recover...while at the mercy of a world that grows more hostile to mutants every day, and a foe who is determined to keep it that way!</em></p><h4>List of covers and their creators:</h4><table data-max-width=\"true\"><thead><tr><th scope=\"col\">Cover</th><th scope=\"col\">Name</th><th scope=\"col\">Creator(s)</th><th scope=\"col\">Sidebar Location</th></tr></thead><tbody><tr><td>Reg</td><td>Regular Cover</td><td>Jenny Frison</td><td>1</td></tr><tr><td>Var</td><td>Cosmic Ghost Rider Vs. Variant Cover</td><td>Jamal Campbell</td><td>2</td></tr><tr><td>Var</td><td>Legacy Headshot Variant Cover (Trinary)</td><td>Travis Charest &amp; Tamra Bonvillain</td><td>3</td></tr></tbody></table>");

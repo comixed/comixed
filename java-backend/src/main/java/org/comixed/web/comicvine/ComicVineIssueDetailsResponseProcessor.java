@@ -20,6 +20,7 @@
 package org.comixed.web.comicvine;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import org.comixed.library.model.Comic;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class ComicVineIssueDetailsResponseProcessor
     @Autowired
     private ObjectMapper objectMapper;
 
-    public void process(byte[] content, Comic comic) throws ComicVineAdaptorException
+    public String process(byte[] content, Comic comic) throws ComicVineAdaptorException
     {
         try
         {
@@ -44,6 +45,8 @@ public class ComicVineIssueDetailsResponseProcessor
             JsonNode jsonNode = objectMapper.readTree(content);
 
             applyDetails(jsonNode, comic);
+
+            return jsonNode.get("results").get("volume").get("id").asText();
         }
         catch (IOException error)
         {
@@ -114,6 +117,27 @@ public class ComicVineIssueDetailsResponseProcessor
             {
                 JsonNode team = teams.get(index++);
                 comic.addTeam(team.get("name").asText());
+            }
+        }
+
+        // apply credits
+        comic.clearCredits();
+        if (results.has("person_credits"))
+        {
+            JsonNode people = results.get("person_credits");
+            int index = 0;
+
+            while (people.has(index))
+            {
+                JsonNode person = people.get(index++);
+
+                String name = person.get("name").asText();
+                StringTokenizer roles = new StringTokenizer(person.get("role").asText(), ",");
+                while (roles.hasMoreTokens())
+                {
+                    String role = roles.nextToken();
+                    comic.addCredit(name, role.trim());
+                }
             }
         }
     }
