@@ -89,15 +89,34 @@ export class ComicDetailsEditorComponent implements OnInit {
             initial_index = 0;
           }
           that.set_current_volume(initial_index);
+        } else {
+          that.alert_service.show_info_message('No Matching Comic Series Found...');
         }
-        that.alert_service.show_info_message(`Retrieved ${this.volumes.length} Volumes...`);
         if (that.volumes.length === 0) {
           that.alert_service.show_busy_message('');
         }
       });
   }
 
+  get_volume_option_label(volume: Volume): string {
+    return `${volume.name} v${volume.start_year} (${volume.issue_count} Issue${volume.issue_count !== 1 ? 's' : ''})`;
+  }
+
+  get_index_for_volume(volume: Volume): number {
+    return this.volumes.findIndex((entry: Volume) => {
+      return entry.id === volume.id;
+    });
+  }
+
+  set_current_volume_by_id(volume_id: string): void {
+    const index = this.volumes.findIndex((volume: Volume) => {
+      return volume.id === parseInt(volume_id, 10);
+    });
+    this.set_current_volume(index);
+  }
+
   set_current_volume(index: number): void {
+    index = parseInt(`${index}`, 10);
     if (index < this.volumes.length) {
       this.current_volume_index = index;
       this.current_volume = this.volumes[this.current_volume_index];
@@ -121,12 +140,9 @@ export class ComicDetailsEditorComponent implements OnInit {
     this.comic_service.scrape_comic_details_for(this.api_key, this.current_volume.id, this.issue_number).subscribe(
       (issue: ComicIssue) => {
         if (issue === null) {
-          let index = that.current_volume_index;
-          that.volumes.splice(that.current_volume_index, 1);
-          if (that.volumes.length < that.current_volume_index) {
-            index = 0;
-          }
-          that.set_current_volume(index);
+          that.current_issue = null;
+          that.alert_service.show_busy_message('');
+          that.alert_service.show_info_message('No matching issue found. Please try another series...');
         } else {
           that.issues.set(`${that.current_volume.id}`, issue);
           that.load_current_issue_details();
@@ -143,7 +159,7 @@ export class ComicDetailsEditorComponent implements OnInit {
   }
 
   show_candidates(): boolean {
-    return (this.volumes.length > 0) && (this.current_volume_index >= 0) && (this.current_issue !== null);
+    return (this.volumes.length > 0) && (this.current_volume_index >= 0);
   }
 
   get_current_issue_image_url(): string {
@@ -151,22 +167,6 @@ export class ComicDetailsEditorComponent implements OnInit {
       return '';
     }
     return `${this.current_issue.cover_url}?api_key=${this.api_key}`;
-  }
-
-  go_to_previous_volume(): void {
-    let index = this.current_volume_index - 1;
-    if (index < 0) {
-      index = this.volumes.length - 1;
-    }
-    this.set_current_volume(index);
-  }
-
-  go_to_next_volume(): void {
-    let index = this.current_volume_index + 1;
-    if (index === this.volumes.length) {
-      index = 0;
-    }
-    this.set_current_volume(index);
   }
 
   select_current_issue(): void {
@@ -178,10 +178,13 @@ export class ComicDetailsEditorComponent implements OnInit {
         const index = that.comic_service.all_comics.findIndex((thisComic: Comic) => {
           return thisComic.id === that.comic.id;
         });
-
-        that.comic_service.all_comics[index] = comic;
-
-        that.alert_service.show_busy_message('');
+        if (index !== -1) {
+          that.comic_service.all_comics[index] = comic;
+          that.alert_service.show_busy_message('');
+          that.stopEditing.next(true);
+        } else {
+          that.alert_service.show_error_message(`Invalid comic index: ${index}`, null);
+        }
       });
   }
 }

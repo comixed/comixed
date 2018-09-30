@@ -149,6 +149,10 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   }
 
   stop_editing(): void {
+    const that = this;
     this.editing = false;
+    this.comic = this.comic_service.all_comics.find((element: Comic) => {
+      return element.id === that.comic.id;
+    });
   }
 }
