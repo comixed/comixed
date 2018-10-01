@@ -6,14 +6,17 @@
 </div>
 <app-read-viewer *ngIf='comic != null' [comic]='comic'></app-read-viewer>
 <div *ngIf='comic != null' id='comic-details-info-block'
-  class='container-fluid w-100 p-5 border'>
+  class='container-fluid w-100 pt-1 px-3 border'>
+  <div class='row w-100'>
+    <h2 class='w-100 text-center text-nowrap text-truncate'>
+      {{title_text}}</h2>
+    <h3 class='w-100 text-center text-nowrap text-truncate'>
+      {{subtitle_text}}</h3>
+  </div>
   <div class='row w-100'>
     <div class='col-3'>
       <div class='card w-100'>
         <div class='card-body'>
-          <h5 class='card-title text-center text-nowrap text-truncate'>{{title_text}}</h5>
-          <h6
-            class='card-subtitle text-center text-nowrap text-truncate'>{{subtitle_text}}</h6>
           <img src='{{cover_url}}' class='card-img-bottom img-fluid'>
         </div>
         <div class='card-footer justify-content-center'>
