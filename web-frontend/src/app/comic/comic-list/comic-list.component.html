@@ -19,8 +19,8 @@
             <span class='text-muted'><strong>Pages:</strong>
               {{current_comic.page_count}}</span><br /> <span
               *ngIf='current_comic.cover_date !=null' class='text-muted'><strong>Published
-                on</strong> {{current_comic.cover_date|date:'MMM yyyy'}}<br /> </span> <span
-              *ngIf='current_comic.last_read_date != null'
+                on</strong> {{current_comic.cover_date|date:'MMM yyyy'}}<br /> </span>
+            <span *ngIf='current_comic.last_read_date != null'
               class='text-muted'> <strong>Last read on</strong>
               {{current_comic.last_read_date | date:'MMM dd yyyy'}}
             </span>
@@ -76,7 +76,7 @@
         </div>
         <div class='field row w-100'>
           <input class='form-control-range' [(ngModel)]='cover_size'
-            type='range' min='64' max='640' value='{{cover_size}}'
+            type='range' min='200' max='640' value='{{cover_size}}'
             (blur)='save_cover_size()' class='slider w-100'>
         </div>
       </div>

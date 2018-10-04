@@ -88,7 +88,7 @@ export class ImportComicListComponent implements OnInit {
           that.waiting_on_imports = false;
         });
     }, 250);
-    this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
+    this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
     this.use_page_size = 10;
     this.page_size = new BehaviorSubject<number>(this.use_page_size);
     this.page_size.subscribe(

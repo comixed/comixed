@@ -17,21 +17,21 @@
  * org.comixed;
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {PageSizeComponent} from '../page-size/page-size.component';
-import {GroupComicsComponent} from '../group-comics/group-comics.component';
-import {GroupByPipe} from '../group-by.pipe';
-import {UserService} from '../../user.service';
-import {Comic} from '../comic.model';
-import {ComicService} from '../comic.service';
-import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.component';
-import {ComicListGroupComponent} from '../comic-list-group/comic-list-group.component';
-import {SeriesFilterPipe} from '../series-filter.pipe';
-import {AlertService} from '../../alert.service';
+import { PageSizeComponent } from '../page-size/page-size.component';
+import { GroupComicsComponent } from '../group-comics/group-comics.component';
+import { GroupByPipe } from '../group-by.pipe';
+import { UserService } from '../../user.service';
+import { Comic } from '../comic.model';
+import { ComicService } from '../comic.service';
+import { ComicListEntryComponent } from '../comic-list-entry/comic-list-entry.component';
+import { ComicListGroupComponent } from '../comic-list-group/comic-list-group.component';
+import { SeriesFilterPipe } from '../series-filter.pipe';
+import { AlertService } from '../../alert.service';
 
 @Component({
   selector: 'app-comic-list',
@@ -54,10 +54,10 @@ export class ComicListComponent implements OnInit {
   protected last_group_label: string;
   protected groups: Map<string, Array<Comic>>;
   protected sort_options: any[] = [
-    {id: 0, label: 'Sort by series'},
-    {id: 1, label: 'Sort by added date'},
-    {id: 2, label: 'Sort by cover date'},
-    {id: 3, label: 'Sort by last read date'},
+    { id: 0, label: 'Sort by series' },
+    { id: 1, label: 'Sort by added date' },
+    { id: 2, label: 'Sort by cover date' },
+    { id: 3, label: 'Sort by last read date' },
   ];
   protected sort_order = new BehaviorSubject<number>(0);
 
@@ -82,7 +82,13 @@ export class ComicListComponent implements OnInit {
       (comic: Comic) => {
         this.current_comic = comic;
       });
-    this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
+    this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
+    if (this.cover_size < 200) {
+      this.cover_size = 200;
+    }
+    if (this.cover_size > 640) {
+      this.cover_size = 640;
+    }
     this.use_page_size = 10;
     this.page_size = new BehaviorSubject<number>(this.use_page_size);
     this.page_size.subscribe(

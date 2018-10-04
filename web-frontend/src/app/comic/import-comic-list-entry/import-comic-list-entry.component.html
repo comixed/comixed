@@ -9,12 +9,13 @@
           <span (click)='toggle_selected()'
             class='text-nowrap text-truncate'><i class='fa'
             [class.fa-plus-circle]='!file_details.selected'
-            [class.fa-minus-circle]='file_details.selected'></i>Toggle
-            selected</span>
+            [class.fa-minus-circle]='file_details.selected'></i><span
+            *ngIf='file_details.selected'>Deselect</span> <span
+            *ngIf='!file_details.selected'>Select</span></span>
         </div>
         <div class='row w-100'>
           <span (click)='on_clicked()' class='text-nowrap text-truncate'><i
-            class='fa fa-info-circle'></i>Show details</span>
+            class='fa fa-info-circle'></i>Details</span>
         </div>
       </div>
     </div>
