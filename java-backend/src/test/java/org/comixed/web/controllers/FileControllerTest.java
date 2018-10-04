@@ -66,7 +66,7 @@ public class FileControllerTest
     {"First.cbz",
      "Second.cbz",
      "Third.cbr",
-     "Fourth.cb7"};;
+     "Fourth.cb7"};
 
     @InjectMocks
     private FileController controller;
@@ -229,6 +229,28 @@ public class FileControllerTest
 
         Mockito.verify(taskFactory, Mockito.times(1)).getObject();
         Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(queueComicsWorkerTask);
+    }
+
+    @Test
+    public void testImportComicFilesEncoded()
+    {
+        String[] fileNamesEncoded = new String[]
+        {"e%3A%2Fcomics%20%26%20manga%2C%20etc%2B%2Ffirst_%231%3B.cbr",
+         "f%3A%2Fcomics%40Home%2F~%2Fla%24t%20-%20(2000's)!.cbz"};
+
+        QueueComicsWorkerTask dummyWorkerTask = new QueueComicsWorkerTask();
+
+        Mockito.when(taskFactory.getObject()).thenReturn(dummyWorkerTask);
+        Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
+
+        controller.importComicFiles(fileNamesEncoded, false);
+
+        Mockito.verify(taskFactory, Mockito.times(1)).getObject();
+        Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(dummyWorkerTask);
+
+        assertEquals(2, dummyWorkerTask.filenames.size());
+        assertEquals("e:/comics & manga, etc+/first_#1;.cbr", dummyWorkerTask.filenames.get(0));
+        assertEquals("f:/comics@Home/~/la$t - (2000's)!.cbz", dummyWorkerTask.filenames.get(1));
     }
 
     @Test
