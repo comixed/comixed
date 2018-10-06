@@ -5,3 +5,4 @@ what it is today.
 
  * Darryl L. Pierce <mcpierce@gmail.com>
  * Giao Phan <casret@pobox.com>
+ * Alex Engelhardt <alex.engelhardt@readinow.com>
