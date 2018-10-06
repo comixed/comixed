@@ -52,6 +52,7 @@
         </div>
         <div class='field row w-100'>
           <select id='comic-sort-order' class='form-control' #selectElem
+            [(ngModel)]='sort_order_value'
             (change)='set_sort_order(selectElem.value)'>
             <option *ngFor='let option of sort_options'
               [value]='option.id'>{{option.label}}</option>

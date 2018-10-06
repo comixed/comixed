@@ -19,9 +19,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { PageSizeComponent } from '../page-size/page-size.component';
 import { GroupComicsComponent } from '../group-comics/group-comics.component';
 import { GroupByPipe } from '../group-by.pipe';
@@ -59,17 +59,37 @@ export class ComicListComponent implements OnInit {
     { id: 2, label: 'Sort by cover date' },
     { id: 3, label: 'Sort by last read date' },
   ];
-  protected sort_order = new BehaviorSubject<number>(0);
+  protected sort_order_value: number;
+  protected sort_order: BehaviorSubject<number>;
 
   constructor(
     private router: Router,
     private user_service: UserService,
     private comic_service: ComicService,
     private alert_service: AlertService,
+    private route: ActivatedRoute,
   ) {
+    const that = this;
+
     this.comics = this.comic_service.all_comics;
     this.group_by_value = 0;
     this.last_group_label = '';
+    route.queryParams.subscribe(params => {
+      this.reload_sort_order(params['sort_order']);
+    });
+  }
+
+  private reload_sort_order(sort_order: string): void {
+    if (sort_order) {
+      this.sort_order_value = parseInt(sort_order, 10);
+
+      if ((this.sort_order_value < 0) || (this.sort_order_value > 3)) {
+        this.sort_order_value = 0;
+      }
+    } else {
+      this.sort_order_value = 0;
+    }
+    this.sort_order = new BehaviorSubject<number>(this.sort_order_value);
   }
 
   ngOnInit() {
@@ -112,18 +132,18 @@ export class ComicListComponent implements OnInit {
   }
 
   set_sort_order(sort_order: any): void {
-    this.sort_order.next(parseInt(sort_order, 10));
+    this.sort_order_value = parseInt(sort_order, 10);
     this.comics = this.sort_comics(this.comics);
   }
 
   sort_comics(comics: Comic[]): Comic[] {
     comics.sort((comic1: Comic, comic2: Comic) => {
-      switch (this.sort_order.value) {
+      switch (this.sort_order_value) {
         case 0: return this.sort_by_series_name(comic1, comic2);
         case 1: return this.sort_by_date_added(comic1, comic2);
         case 2: return this.sort_by_cover_date(comic1, comic2);
         case 3: return this.sort_by_last_read_date(comic1, comic2);
-        default: console.log('Invalid sort value: ' + this.sort_order);
+        default: console.log('Invalid sort value: ' + this.sort_order_value);
       }
       return 0;
     });
