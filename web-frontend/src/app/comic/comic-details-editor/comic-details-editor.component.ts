@@ -78,7 +78,7 @@ export class ComicDetailsEditorComponent implements OnInit {
 
     const that = this;
     this.alert_service.show_busy_message('Fetching Matching Volumes...');
-    this.comic_service.fetch_candidates_for(this.api_key, this.series, this.volume, this.issue_number).subscribe(
+    this.comic_service.fetch_candidates_for(this.api_key.trim(), this.series, this.volume, this.issue_number).subscribe(
       (volumes: Array<Volume>) => {
         that.volumes = volumes || [];
         if (that.volumes.length > 0) {
@@ -137,7 +137,7 @@ export class ComicDetailsEditorComponent implements OnInit {
   load_current_issue(): void {
     const that = this;
     this.alert_service.show_busy_message('Retrieving Details For Comic...');
-    this.comic_service.scrape_comic_details_for(this.api_key, this.current_volume.id, this.issue_number).subscribe(
+    this.comic_service.scrape_comic_details_for(this.api_key.trim(), this.current_volume.id, this.issue_number).subscribe(
       (issue: ComicIssue) => {
         if (issue === null) {
           that.current_issue = null;
@@ -166,14 +166,14 @@ export class ComicDetailsEditorComponent implements OnInit {
     if (this.current_issue === null) {
       return '';
     }
-    return `${this.current_issue.cover_url}?api_key=${this.api_key}`;
+    return `${this.current_issue.cover_url}?api_key=${this.api_key.trim()}`;
   }
 
   select_current_issue(): void {
     this.alert_service.show_busy_message('Updating Comic Details. Please Wait...');
     const that = this;
 
-    this.comic_service.scrape_and_save_comic_details(this.api_key, this.comic.id, this.current_issue.id).subscribe(
+    this.comic_service.scrape_and_save_comic_details(this.api_key.trim(), this.comic.id, this.current_issue.id).subscribe(
       (comic: Comic) => {
         const index = that.comic_service.all_comics.findIndex((thisComic: Comic) => {
           return thisComic.id === that.comic.id;
@@ -189,6 +189,11 @@ export class ComicDetailsEditorComponent implements OnInit {
   }
 
   save_api_key(): void {
+    this.api_key = this.api_key.trim();
     this.user_service.set_user_preference('comic_vine_api_key', this.api_key);
+  }
+
+  is_api_key_valid(): boolean {
+    return (this.api_key || '').trim().length > 0;
   }
 }

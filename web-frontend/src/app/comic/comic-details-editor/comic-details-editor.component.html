@@ -15,7 +15,8 @@
                 </div>
                 <div class='col-2'>
                   <button type='button' class='btn btn-primary'
-                    (click)='save_api_key()'>Save Key</button>
+                    (click)='save_api_key()'
+                    [disabled]='!is_api_key_valid()'>Save Key</button>
                 </div>
               </div>
             </dd>
