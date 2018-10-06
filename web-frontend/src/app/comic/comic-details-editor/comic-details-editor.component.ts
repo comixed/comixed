@@ -58,7 +58,7 @@ export class ComicDetailsEditorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.user_service.get_user_preference('comic_vine_api_key', '');
+    this.api_key = this.user_service.get_user_preference('comic_vine_api_key', '');
     this.series = this.comic.series;
     this.volume = this.comic.volume;
     this.issue_number = this.comic.issue_number;
@@ -186,5 +186,9 @@ export class ComicDetailsEditorComponent implements OnInit {
           that.alert_service.show_error_message(`Invalid comic index: ${index}`, null);
         }
       });
+  }
+
+  save_api_key(): void {
+    this.user_service.set_user_preference('comic_vine_api_key', this.api_key);
   }
 }

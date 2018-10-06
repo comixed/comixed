@@ -8,8 +8,16 @@
               <label for='api_key'>API Key:</label>
             <dt>
             <dd>
-              <input type='text' class='form-control' required
-                name='api_key' [(ngModel)]='api_key'>
+              <div class='row'>
+                <div class='col'>
+                  <input type='text' class='form-control' required
+                    name='api_key' [(ngModel)]='api_key'>
+                </div>
+                <div class='col-2'>
+                  <button type='button' class='btn btn-primary'
+                    (click)='save_api_key()'>Save Key</button>
+                </div>
+              </div>
             </dd>
             <dt>
               <label for='series'>Series name:</label>
