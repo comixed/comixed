@@ -49,7 +49,6 @@ export class ComicListComponent implements OnInit {
   protected page_size: BehaviorSubject<number>;
   protected use_page_size: number;
   protected current_pages = new Map<string, number>();
-  protected group_by_subject: BehaviorSubject<number>;
   protected group_by_value: number;
   protected last_group_label: string;
   protected groups: Map<string, Array<Comic>>;
@@ -76,6 +75,7 @@ export class ComicListComponent implements OnInit {
     this.last_group_label = '';
     route.queryParams.subscribe(params => {
       this.reload_sort_order(params['sort_order']);
+      this.reload_group_by(params['group_by']);
     });
   }
 
@@ -90,6 +90,18 @@ export class ComicListComponent implements OnInit {
       this.sort_order_value = parseInt(this.user_service.get_user_preference('sort_order', '0'), 10);
     }
     this.sort_order = new BehaviorSubject<number>(this.sort_order_value);
+  }
+
+  private reload_group_by(group_by: string): void {
+    if (group_by) {
+      this.group_by_value = parseInt(group_by, 10);
+
+      if ((this.group_by_value < 0) || (this.group_by_value > 3)) {
+        this.group_by_value = 0;
+      }
+    } else {
+      this.group_by_value = parseInt(this.user_service.get_user_preference('group_by', '0'), 10);
+    }
   }
 
   ngOnInit() {
@@ -114,12 +126,6 @@ export class ComicListComponent implements OnInit {
     this.page_size.subscribe(
       (page_size: number) => {
         this.use_page_size = page_size;
-      });
-    this.group_by_subject = new BehaviorSubject<number>(this.group_by_value);
-    this.group_by_subject.subscribe(
-      (group_by_value: number) => {
-        this.last_group_label = '';
-        this.group_by_value = group_by_value;
       });
   }
 
@@ -303,5 +309,10 @@ export class ComicListComponent implements OnInit {
     this.last_group_label = result;
 
     return result;
+  }
+
+  set_grouping(value: Event): void {
+    this.group_by_value = parseInt(value.target.value, 10);
+    this.user_service.set_user_preference('group_by', `${this.group_by_value}`);
   }
 }

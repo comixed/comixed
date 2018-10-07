@@ -87,7 +87,8 @@
             by:</label>
         </div>
         <div class='field row w-100'>
-          <app-group-comics [group_by]='group_by_subject'></app-group-comics>
+          <app-group-comics [initial]='group_by_value'
+            (change)='set_grouping($event)'></app-group-comics>
         </div>
       </div>
     </div>

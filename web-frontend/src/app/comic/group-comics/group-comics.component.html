@@ -1,4 +1,4 @@
 <select id='comic-grouping-selection' class='form-control w-100'
-  #sizeElem (change)='set_group_by(sizeElem.value)'>
+  #sizeElem [(ngModel)]='initial'>
   <option *ngFor='let option of group_by_options' [value]='option.id'>{{option.label}}</option>
 </select>

@@ -17,34 +17,23 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-group-comics',
   templateUrl: './group-comics.component.html',
   styleUrls: ['./group-comics.component.css']
 })
-export class GroupComicsComponent implements OnInit {
-  @Input() group_by: BehaviorSubject<number>;
+export class GroupComicsComponent {
+  @Input() initial: number;
 
   protected group_by_options: any[] = [
-    {id: 0, label: 'Not grouped'},
-    {id: 1, label: 'Series'},
-    {id: 2, label: 'Publisher'},
-    {id: 3, label: 'Year published'},
+    { id: 0, label: 'Not grouped' },
+    { id: 1, label: 'Series' },
+    { id: 2, label: 'Publisher' },
+    { id: 3, label: 'Year published' },
   ];
 
-  constructor() {}
-
-  ngOnInit() {
-  }
-
-  set_group_by(option: string): void {
-    this.group_by.next(parseInt(option, 10));
-  }
+  constructor() { }
 }
