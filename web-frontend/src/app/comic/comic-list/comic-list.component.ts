@@ -46,7 +46,6 @@ export class ComicListComponent implements OnInit {
   protected current_comic: Comic;
   protected current_page = 1;
   protected show_search_box = true;
-  protected page_size: BehaviorSubject<number>;
   protected use_page_size: number;
   protected current_pages = new Map<string, number>();
   protected group_by_value: number;
@@ -81,7 +80,11 @@ export class ComicListComponent implements OnInit {
   }
 
   private reload_page_size(page_size: string): void {
-
+    if (page_size) {
+      this.use_page_size = parseInt(page_size, 10);
+    } else {
+      this.use_page_size = parseInt(this.user_service.get_user_preference('page_size', '10'), 10);
+    }
   }
 
   private reload_sort_order(sort_order: string): void {
@@ -126,12 +129,6 @@ export class ComicListComponent implements OnInit {
     if (this.cover_size > 640) {
       this.cover_size = 640;
     }
-    this.use_page_size = 10;
-    this.page_size = new BehaviorSubject<number>(this.use_page_size);
-    this.page_size.subscribe(
-      (page_size: number) => {
-        this.use_page_size = page_size;
-      });
   }
 
   get_image_url(comic: Comic): string {
@@ -319,5 +316,10 @@ export class ComicListComponent implements OnInit {
   set_grouping(value: Event): void {
     this.group_by_value = parseInt(value.target.value, 10);
     this.user_service.set_user_preference('group_by', `${this.group_by_value}`);
+  }
+
+  set_page_size(value: Event): void {
+    this.use_page_size = parseInt(value.target.value, 10);
+    this.user_service.set_user_preference('page_size', `${this.use_page_size}`);
   }
 }

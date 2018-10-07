@@ -17,10 +17,15 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormArray } from '@angular/forms';
+import { Validators } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { UserService } from '../../user.service';
 import { FileDetails } from '../file-details.model';
 import { ComicService } from '../comic.service';
@@ -45,7 +50,6 @@ export class ImportComicListComponent implements OnInit {
   pending_imports = 0;
   waiting_on_imports = false;
   cover_size: number;
-  protected page_size: BehaviorSubject<number>;
   protected use_page_size: number;
   current_page = 1;
   selected_file_count = 0;
@@ -60,11 +64,23 @@ export class ImportComicListComponent implements OnInit {
     private comic_service: ComicService,
     private alert_service: AlertService,
     builder: FormBuilder,
+    private activeRoute: ActivatedRoute,
   ) {
     this.directory_form = builder.group({
       'directory': ['', Validators.required],
     });
     this.selected_file_detail = null;
+    activeRoute.queryParams.subscribe(params => {
+      this.reload_page_size(params['page_size']);
+    });
+  }
+
+  private reload_page_size(page_size: string): void {
+    if (page_size) {
+      this.use_page_size = parseInt(page_size, 10);
+    } else {
+      this.use_page_size = parseInt(this.user_service.get_user_preference('import_page_size', '10'), 10);
+    }
   }
 
   ngOnInit() {
@@ -89,12 +105,6 @@ export class ImportComicListComponent implements OnInit {
         });
     }, 250);
     this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
-    this.use_page_size = 10;
-    this.page_size = new BehaviorSubject<number>(this.use_page_size);
-    this.page_size.subscribe(
-      (page_size: number) => {
-        this.use_page_size = page_size;
-      });
   }
 
   on_load(): void {
@@ -196,5 +206,10 @@ export class ImportComicListComponent implements OnInit {
     }
 
     console.log('this.selected_file_detail:', this.selected_file_detail);
+  }
+
+  set_page_size(page_size: Event): void {
+    this.use_page_size = parseInt(page_size.target.value, 10);
+    this.user_service.set_user_preference('import_page_size', `${this.use_page_size}`);
   }
 }

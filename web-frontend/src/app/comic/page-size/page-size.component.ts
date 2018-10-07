@@ -17,7 +17,8 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
@@ -25,8 +26,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   templateUrl: './page-size.component.html',
   styleUrls: ['./page-size.component.css']
 })
-export class PageSizeComponent implements OnInit {
-  @Input() page_size: BehaviorSubject<number>;
+export class PageSizeComponent {
+  @Input() initial: number;
 
   protected page_sizes: any[] = [
     { id: 10, label: '10 comics' },
@@ -36,16 +37,4 @@ export class PageSizeComponent implements OnInit {
   ];
 
   constructor() { }
-
-  ngOnInit() {
-  }
-
-  set_page_size(size_id: any): void {
-    switch (parseInt(size_id, 10)) {
-      case 0: this.page_size.next(10); break;
-      case 1: this.page_size.next(25); break;
-      case 2: this.page_size.next(50); break;
-      case 3: this.page_size.next(100); break;
-    }
-  }
 }

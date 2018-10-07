@@ -42,7 +42,8 @@
             page: </label>
         </div>
         <div class='field row w-100'>
-          <app-page-size [page_size]='page_size'></app-page-size>
+          <app-page-size [initial]='use_page_size'
+            (change)='set_page_size($event)'></app-page-size>
         </div>
       </div>
       <!-- sort options -->
