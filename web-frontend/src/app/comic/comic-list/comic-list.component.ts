@@ -87,7 +87,7 @@ export class ComicListComponent implements OnInit {
         this.sort_order_value = 0;
       }
     } else {
-      this.sort_order_value = 0;
+      this.sort_order_value = parseInt(this.user_service.get_user_preference('sort_order', '0'), 10);
     }
     this.sort_order = new BehaviorSubject<number>(this.sort_order_value);
   }
@@ -134,6 +134,7 @@ export class ComicListComponent implements OnInit {
   set_sort_order(sort_order: any): void {
     this.sort_order_value = parseInt(sort_order, 10);
     this.comics = this.sort_comics(this.comics);
+    this.user_service.set_user_preference('sort_order', `${sort_order}`);
   }
 
   sort_comics(comics: Comic[]): Comic[] {
