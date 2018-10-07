@@ -94,29 +94,29 @@
       </div>
     </div>
     <div class='col-9'>
-      <div class='container-fluid w-100'>
+      <div class='container w-100 justify-content-center'>
         <h2 class='text-center'>{{ (comics | series_filter :
           title_search).length}} Total Comics Found</h2>
-      </div>
-      <!--  show ungrouped comics -->
-      <div *ngIf='group_by_value === 0' class='row w-100'>
-        <!--  page navigation -->
-        <div
-          class='row w-100 justify-content-center bg-secondary text-white'>
-          <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+        <!--  show ungrouped comics -->
+        <div *ngIf='group_by_value === 0' class='row w-100'>
+          <!--  page navigation -->
+          <div
+            class='row w-100 justify-content-center bg-secondary text-white'>
+            <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+          </div>
+          <app-comic-list-entry
+            *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
+            [comic]='comic' [cover_size]='cover_size'
+            [sort_order]='get_sort_order()'
+            (onComicSelected)='handle_comic_clicked($event)'></app-comic-list-entry>
         </div>
-        <app-comic-list-entry
-          *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
-          [comic]='comic' [cover_size]='cover_size'
-          [sort_order]='get_sort_order()'
-          (onComicSelected)='handle_comic_clicked($event)'></app-comic-list-entry>
-      </div>
-      <!--  show grouped comics -->
-      <div *ngIf='group_by_value !== 0' class='container-fluid'>
-        <app-comic-list-group
-          *ngFor='let comic_group of comics | series_filter : title_search | group_by : group_by_value | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
-          [group_name]='comic_group.key' [comics]='comic_group.values'
-          [cover_size]='cover_size'> </app-comic-list-group>
+        <!--  show grouped comics -->
+        <div *ngIf='group_by_value !== 0' class='container-fluid'>
+          <app-comic-list-group
+            *ngFor='let comic_group of comics | series_filter : title_search | group_by : group_by_value | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
+            [group_name]='comic_group.key' [comics]='comic_group.values'
+            [cover_size]='cover_size'> </app-comic-list-group>
+        </div>
       </div>
     </div>
   </div>
