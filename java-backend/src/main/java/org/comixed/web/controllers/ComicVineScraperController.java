@@ -27,6 +27,7 @@ import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.ComicVineAdaptorException;
 import org.comixed.web.comicvine.ComicVineQueryForIssueAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForIssueDetailsAdaptor;
+import org.comixed.web.comicvine.ComicVineQueryForPublisherDetailsAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForVolumeDetailsAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForVolumesAdaptor;
 import org.comixed.web.model.ComicIssue;
@@ -56,6 +57,9 @@ public class ComicVineScraperController
 
     @Autowired
     private ComicVineQueryForVolumeDetailsAdaptor queryForVolumeDetailsAdaptor;
+
+    @Autowired
+    private ComicVineQueryForPublisherDetailsAdaptor queryForPublisherDetailsAdaptor;
 
     @Autowired
     private ComicRepository comicRepository;
@@ -102,7 +106,9 @@ public class ComicVineScraperController
             this.logger.debug("Fetching details for comic");
             String volumeId = this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, result);
             this.logger.debug("Fetching details for volume");
-            this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, result);
+            String publisherId = this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, result);
+            this.logger.debug("Fetching publisher details");
+            this.queryForPublisherDetailsAdaptor.execute(apiKey, publisherId, result);
             this.logger.debug("Updating details for comic in database");
             result = this.comicRepository.save(result);
         }

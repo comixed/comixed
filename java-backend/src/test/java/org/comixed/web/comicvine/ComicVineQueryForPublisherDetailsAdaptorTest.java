@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,8 @@
 
 package org.comixed.web.comicvine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.comixed.library.model.Comic;
-import org.comixed.web.ComicVineVolumeDetailsWebRequest;
+import org.comixed.web.ComicVinePublisherDetailsWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
 import org.junit.Test;
@@ -35,30 +32,29 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicVineQueryForVolumeDetailsAdaptorTest
+public class ComicVineQueryForPublisherDetailsAdaptorTest
 {
     private static final String TEST_API_KEY = "12345";
-    private static final String TEST_VOLUME_ID = "54312";
     private static final byte[] TEST_CONTENT = "The response body".getBytes();
     private static final String TEST_PUBLISHER_ID = "92134";
 
     @InjectMocks
-    private ComicVineQueryForVolumeDetailsAdaptor adaptor;
+    private ComicVineQueryForPublisherDetailsAdaptor adaptor;
 
     @Mock
     private WebRequestProcessor webRequestProcessor;
 
     @Mock
-    private ObjectFactory<ComicVineVolumeDetailsWebRequest> requestFactory;
+    private ObjectFactory<ComicVinePublisherDetailsWebRequest> requestFactory;
 
     @Mock
-    private ComicVineVolumeDetailsWebRequest request;
+    private ComicVinePublisherDetailsWebRequest request;
 
     @Mock
     private Comic comic;
 
     @Mock
-    private ComicVineVolumeDetailsResponseProcessor contentProcessor;
+    private ComicVinePublisherDetailsResponseProcessor contentProcessor;
 
     @Test(expected = ComicVineAdaptorException.class)
     public void testExecuteWebRequestProcessorRaisesException() throws WebRequestException, ComicVineAdaptorException
@@ -68,7 +64,7 @@ public class ComicVineQueryForVolumeDetailsAdaptorTest
 
         try
         {
-            adaptor.execute(TEST_API_KEY, TEST_VOLUME_ID, comic);
+            adaptor.execute(TEST_API_KEY, TEST_PUBLISHER_ID, comic);
         }
         finally
         {
@@ -82,13 +78,9 @@ public class ComicVineQueryForVolumeDetailsAdaptorTest
     {
         Mockito.when(requestFactory.getObject()).thenReturn(request);
         Mockito.when(webRequestProcessor.execute(Mockito.any())).thenReturn(TEST_CONTENT);
-        Mockito.when(contentProcessor.process(Mockito.any(byte[].class), Mockito.any(Comic.class)))
-               .thenReturn(TEST_PUBLISHER_ID);
+        Mockito.doNothing().when(contentProcessor).process(Mockito.any(byte[].class), Mockito.any(Comic.class));
 
-        String result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_ID, comic);
-
-        assertNotNull(result);
-        assertEquals(TEST_PUBLISHER_ID, result);
+        adaptor.execute(TEST_API_KEY, TEST_PUBLISHER_ID, comic);
 
         Mockito.verify(requestFactory, Mockito.times(1)).getObject();
         Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(request);

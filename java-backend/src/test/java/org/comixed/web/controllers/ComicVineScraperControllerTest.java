@@ -30,6 +30,7 @@ import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.ComicVineAdaptorException;
 import org.comixed.web.comicvine.ComicVineQueryForIssueAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForIssueDetailsAdaptor;
+import org.comixed.web.comicvine.ComicVineQueryForPublisherDetailsAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForVolumeDetailsAdaptor;
 import org.comixed.web.comicvine.ComicVineQueryForVolumesAdaptor;
 import org.comixed.web.model.ComicIssue;
@@ -53,6 +54,7 @@ public class ComicVineScraperControllerTest
     private static final long TEST_COMIC_ID = 213L;
     private static final String TEST_ISSUE_ID = "48132";
     private static final String TEST_VOLUME_ID = "23184";
+    private static final String TEST_PUBLISHER_ID = "8213";
 
     @InjectMocks
     private ComicVineScraperController controller;
@@ -68,6 +70,9 @@ public class ComicVineScraperControllerTest
 
     @Mock
     private ComicVineQueryForVolumeDetailsAdaptor queryForVolumeDetailsAdaptor;
+
+    @Mock
+    private ComicVineQueryForPublisherDetailsAdaptor queryForPublisherDetailsAdaptor;
 
     @Mock
     private List<ComicVolume> comicVolumeList;
@@ -194,6 +199,34 @@ public class ComicVineScraperControllerTest
         }
     }
 
+    @Test(expected = ComicVineAdaptorException.class)
+    public void testScrapeAndSaveComicPublisherDetailsAdaptorRaisesException() throws ComicVineAdaptorException
+    {
+        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.when(queryForIssueDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyLong(), Mockito.anyString(),
+                                                         Mockito.any(Comic.class)))
+               .thenReturn(TEST_VOLUME_ID);
+        Mockito.when(queryForVolumeDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyString(),
+                                                          Mockito.any(Comic.class)))
+               .thenReturn(TEST_PUBLISHER_ID);
+        Mockito.doThrow(new ComicVineAdaptorException("expected")).when(queryForPublisherDetailsAdaptor)
+               .execute(Mockito.anyString(), Mockito.anyString(), Mockito.any(Comic.class));
+
+        try
+        {
+            controller.scrapeAndSaveComicDetails(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID);
+        }
+        finally
+        {
+            Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+            Mockito.verify(queryForIssueDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_COMIC_ID,
+                                                                                  TEST_ISSUE_ID, comic);
+            Mockito.verify(queryForVolumeDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_VOLUME_ID, comic);
+            Mockito.verify(queryForPublisherDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_PUBLISHER_ID,
+                                                                                      comic);
+        }
+    }
+
     @Test
     public void testScrapeAndSaveComicDetails() throws ComicVineAdaptorException
     {
@@ -201,8 +234,12 @@ public class ComicVineScraperControllerTest
         Mockito.when(queryForIssueDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyLong(), Mockito.anyString(),
                                                          Mockito.any(Comic.class)))
                .thenReturn(TEST_VOLUME_ID);
-        Mockito.doNothing().when(queryForVolumeDetailsAdaptor).execute(Mockito.anyString(), Mockito.anyString(),
-                                                                       Mockito.any(Comic.class));
+        Mockito.when(queryForVolumeDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyString(),
+                                                          Mockito.any(Comic.class)))
+               .thenReturn(TEST_PUBLISHER_ID);
+        Mockito.when(queryForVolumeDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyString(),
+                                                          Mockito.any(Comic.class)))
+               .thenReturn(TEST_PUBLISHER_ID);
         Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
 
         Comic result = controller.scrapeAndSaveComicDetails(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID);
@@ -214,6 +251,8 @@ public class ComicVineScraperControllerTest
         Mockito.verify(queryForIssueDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_COMIC_ID,
                                                                               TEST_ISSUE_ID, comic);
         Mockito.verify(queryForVolumeDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_VOLUME_ID, comic);
+        Mockito.verify(queryForPublisherDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_PUBLISHER_ID,
+                                                                                  comic);
         Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
     }
 }

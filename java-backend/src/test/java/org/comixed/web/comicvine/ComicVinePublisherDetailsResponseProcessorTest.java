@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,6 @@
 
 package org.comixed.web.comicvine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.comixed.library.model.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,36 +32,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes =
-{ComicVineVolumeDetailsResponseProcessor.class,
+{ComicVinePublisherDetailsResponseProcessor.class,
  ObjectMapper.class})
-public class ComicVineVolumeDetailsResponseProcessorTest
+public class ComicVinePublisherDetailsResponseProcessorTest
 {
-    private static final byte[] TEST_BAD_CONTENT = "This is invalid content".getBytes();
-    private static final byte[] TEST_GOOD_CONTENT = "{\"error\":\"OK\",\"limit\":1,\"offset\":0,\"number_of_page_results\":1,\"number_of_total_results\":1,\"status_code\":1,\"results\":{\"name\":\"Harley Quinn\",\"publisher\":{\"api_detail_url\":\"https:\\/\\/comicvine.gamespot.com\\/api\\/publisher\\/4010-10\\/\",\"id\":10,\"name\":\"DC Comics\"},\"start_year\":\"2016\"},\"version\":\"1.0\"}".getBytes();
+    private static final byte[] BAD_DATA = "This is not a response".getBytes();
+    private static final byte[] GOOD_DATA = "{\"error\":\"OK\",\"limit\":1,\"offset\":0,\"number_of_page_results\":1,\"number_of_total_results\":1,\"status_code\":1,\"results\":{\"name\":\"DC Comics\"},\"version\":\"1.0\"}".getBytes();
 
     @Autowired
-    private ComicVineVolumeDetailsResponseProcessor processor;
+    private ComicVinePublisherDetailsResponseProcessor processor;
 
     @Mock
     private Comic comic;
 
     @Test(expected = ComicVineAdaptorException.class)
-    public void testProcessBadContent() throws ComicVineAdaptorException
+    public void testProcessBadData() throws ComicVineAdaptorException
     {
-        processor.process(TEST_BAD_CONTENT, comic);
+        processor.process(BAD_DATA, comic);
     }
 
     @Test
     public void testProcess() throws ComicVineAdaptorException
     {
-        Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
+        Mockito.doNothing().when(comic).setPublisher(Mockito.anyString());
 
-        String result = processor.process(TEST_GOOD_CONTENT, comic);
+        processor.process(GOOD_DATA, comic);
 
-        assertNotNull(result);
-        assertEquals("10", result);
-
-        Mockito.verify(comic, Mockito.times(1)).setVolume("2016");
-        Mockito.verify(comic, Mockito.times(1)).setSeries("Harley Quinn");
+        Mockito.verify(comic, Mockito.times(1)).setPublisher("DC Comics");
     }
 }

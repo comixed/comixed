@@ -20,7 +20,7 @@
 package org.comixed.web.comicvine;
 
 import org.comixed.library.model.Comic;
-import org.comixed.web.ComicVineVolumeDetailsWebRequest;
+import org.comixed.web.ComicVinePublisherDetailsWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
 import org.slf4j.Logger;
@@ -30,38 +30,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineQueryForVolumeDetailsAdaptor
+public class ComicVineQueryForPublisherDetailsAdaptor
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ObjectFactory<ComicVineVolumeDetailsWebRequest> requestFactory;
+    private ObjectFactory<ComicVinePublisherDetailsWebRequest> webRequestFactory;
 
     @Autowired
     private WebRequestProcessor webRequestProcessor;
 
     @Autowired
-    private ComicVineVolumeDetailsResponseProcessor responseProcessor;
+    private ComicVinePublisherDetailsResponseProcessor contentProcessor;
 
-    public String execute(String apiKey, String volumeId, Comic comic) throws ComicVineAdaptorException
+    public void execute(String apiKey, String publisherId, Comic comic) throws ComicVineAdaptorException
     {
-        String result = null;
-        logger.debug("Preparing to get volume details: id={}", volumeId);
+        this.logger.debug("Fetching publisher details: publisherId={}", publisherId);
 
-        ComicVineVolumeDetailsWebRequest request = requestFactory.getObject();
+        ComicVinePublisherDetailsWebRequest request = this.webRequestFactory.getObject();
+
         request.setApiKey(apiKey);
-        request.setVolumeId(volumeId);
+        request.setPublisherId(publisherId);
 
         try
         {
-            byte[] content = webRequestProcessor.execute(request);
-            result = responseProcessor.process(content, comic);
+            byte[] content = this.webRequestProcessor.execute(request);
+            this.logger.debug("Retrieved {} bytes of data", content.length);
+            this.contentProcessor.process(content, comic);
         }
         catch (WebRequestException error)
         {
-            throw new ComicVineAdaptorException("Failed to get volume details", error);
+            throw new ComicVineAdaptorException("Failed to retrieve publisher details", error);
         }
-
-        return result;
     }
 }

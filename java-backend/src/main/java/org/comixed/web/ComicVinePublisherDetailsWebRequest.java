@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,16 +22,16 @@ package org.comixed.web;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineVolumeDetailsWebRequest extends AbstractComicVineWebRequest
+public class ComicVinePublisherDetailsWebRequest extends AbstractComicVineWebRequest
 {
-    public ComicVineVolumeDetailsWebRequest()
+    public ComicVinePublisherDetailsWebRequest()
     {
-        super("volume");
-        this.addParameter("field_list", "publisher,start_year,name");
+        super("publisher");
+        this.addParameter("field_list", "name");
     }
 
-    public void setVolumeId(String volumeId)
+    public void setPublisherId(String publisherId)
     {
-        this.endpoint = "volume/4050-" + volumeId;
+        super.endpoint = "publisher/4010-" + publisherId;
     }
 }

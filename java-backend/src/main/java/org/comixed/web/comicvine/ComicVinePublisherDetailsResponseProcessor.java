@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,27 +29,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class ComicVineVolumeDetailsResponseProcessor
+public class ComicVinePublisherDetailsResponseProcessor
 {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String process(byte[] content, Comic comic) throws ComicVineAdaptorException
+    public void process(byte[] content, Comic comic) throws ComicVineAdaptorException
     {
-        String result = null;
         try
         {
-            JsonNode jsonNode = objectMapper.readTree(content);
+            JsonNode jsonNode = this.objectMapper.readTree(content);
 
-            comic.setVolume(jsonNode.get("results").get("start_year").asText());
-            comic.setSeries(jsonNode.get("results").get("name").asText());
-            result = jsonNode.get("results").get("publisher").get("id").asText();
+            comic.setPublisher(jsonNode.get("results").get("name").asText());
         }
         catch (IOException error)
         {
-            throw new ComicVineAdaptorException("Invalid response content", error);
+            throw new ComicVineAdaptorException("Failed to get publisher details", error);
         }
-
-        return result;
     }
+
 }
