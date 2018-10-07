@@ -313,12 +313,12 @@ export class ComicListComponent implements OnInit {
     return result;
   }
 
-  set_grouping(value: Event): void {
+  set_grouping(value: any): void {
     this.group_by_value = parseInt(value.target.value, 10);
     this.user_service.set_user_preference('group_by', `${this.group_by_value}`);
   }
 
-  set_page_size(value: Event): void {
+  set_page_size(value: any): void {
     this.use_page_size = parseInt(value.target.value, 10);
     this.user_service.set_user_preference('page_size', `${this.use_page_size}`);
   }

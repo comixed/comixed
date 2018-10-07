@@ -208,7 +208,7 @@ export class ImportComicListComponent implements OnInit {
     console.log('this.selected_file_detail:', this.selected_file_detail);
   }
 
-  set_page_size(page_size: Event): void {
+  set_page_size(page_size: any): void {
     this.use_page_size = parseInt(page_size.target.value, 10);
     this.user_service.set_user_preference('import_page_size', `${this.use_page_size}`);
   }
