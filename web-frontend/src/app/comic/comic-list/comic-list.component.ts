@@ -74,9 +74,14 @@ export class ComicListComponent implements OnInit {
     this.group_by_value = 0;
     this.last_group_label = '';
     route.queryParams.subscribe(params => {
+      this.reload_page_size(params['page_size']);
       this.reload_sort_order(params['sort_order']);
       this.reload_group_by(params['group_by']);
     });
+  }
+
+  private reload_page_size(page_size: string): void {
+
   }
 
   private reload_sort_order(sort_order: string): void {
