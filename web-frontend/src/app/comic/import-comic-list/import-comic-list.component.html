@@ -103,7 +103,7 @@
               src='{{selected_file_image_url}}'>
           </div>
           <div class='card-footer'>
-            <div class='row w-100 mb-3 justify-content-center'>
+            <div class='row w-100 justify-content-center ml-0 mb-3'>
               <button *ngIf='!selected_file_detail.selected'
                 type='button' class='btn w-75 bg-primary text-white'
                 (click)='toggle_comic_selection(selected_file_detail)'>
@@ -113,7 +113,7 @@
                 (click)='toggle_comic_selection(selected_file_detail)'>
                 Deselect</button>
             </div>
-            <div class='row w-100 mb-3 justify-content-center'>
+            <div class='row w-100 justify-content-center ml-0 mb-3'>
               <button type='button'
                 class='btn w-75 bg-secondary text-white'
                 (click)='selected_file_detail = null'>Close</button>
