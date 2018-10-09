@@ -56,16 +56,6 @@
               class='btn btn-primary w-75'
               (click)='deselect_all_files()'>Deselect All</button>
           </div>
-          <!--  show all/selected -->
-          <div class='row w-100 justify-content-center mb-3'>
-            <button *ngIf='show_selections_only'
-              class='btn btn-info w-75' (click)='set_show_all_comics()'>Show
-              All Comics</button>
-            <button *ngIf='!show_selections_only'
-              class='btn btn-info w-75'
-              (click)='set_show_selected_comics()'>Show
-              Selected</button>
-          </div>
           <div class='row w-100 justify-content-center mb-3'>
             <button [disabled]='selected_file_count === 0'
               class='btn btn-secondary w-75' type='button'
@@ -77,6 +67,12 @@
               (change)='toggle_blocked_page_deletion()'>Delete
               Blocked Pages?
             </label>
+          </div>
+          <div class='row w-100 mb-3'>
+            <label><input class='mr-1' type='checkbox'
+              [checked]='show_selections_only'
+              (click)='toggle_show_selected()'>Show Selections
+              Only</label>
           </div>
         </div>
       </div>
