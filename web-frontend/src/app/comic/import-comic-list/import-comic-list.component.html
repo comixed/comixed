@@ -64,22 +64,19 @@
             <button *ngIf='!show_selections_only'
               class='btn btn-info w-75'
               (click)='set_show_selected_comics()'>Show
-              Selected Comics</button>
-          </div>
-          <div class='row w-100 justify-content-center mb-3'>
-            <button *ngIf='delete_blocked_pages === false'
-              class='btn btn-danger w-75'
-              (click)='delete_blocked_pages = true'>Delete
-              Blocked Pages</button>
-            <button *ngIf='delete_blocked_pages === true'
-              class='btn btn-danger w-75'
-              (click)='delete_blocked_pages = false'>Ignore
-              Blocked Pages</button>
+              Selected</button>
           </div>
           <div class='row w-100 justify-content-center mb-3'>
             <button [disabled]='selected_file_count === 0'
               class='btn btn-secondary w-75' type='button'
               (click)='import_selected_files()'>Import</button>
+          </div>
+          <div class='row w-100 mb-3'>
+            <label> <input class='mr-1' type='checkbox'
+              [checked]='delete_blocked_pages'
+              (change)='toggle_blocked_page_deletion()'>Delete
+              Blocked Pages?
+            </label>
           </div>
         </div>
       </div>

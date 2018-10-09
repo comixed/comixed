@@ -212,4 +212,9 @@ export class ImportComicListComponent implements OnInit {
     this.use_page_size = parseInt(page_size.target.value, 10);
     this.user_service.set_user_preference('import_page_size', `${this.use_page_size}`);
   }
+
+  toggle_blocked_page_deletion(): void {
+    this.delete_blocked_pages = !this.delete_blocked_pages;
+    this.alert_service.show_info_message(`Blocked pages will ${this.delete_blocked_pages ? '' : 'not '} be deleted...`);
+  }
 }
