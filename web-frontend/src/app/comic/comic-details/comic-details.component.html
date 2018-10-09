@@ -104,8 +104,8 @@
               class='fa' [class.fa-plus-circle]='!show_description'
               [class.fa-minus-circle]='show_description'></i></span>Description
           </h4>
-          <div *ngIf='show_description' class='row w-100'>
-            <p>{{comic.description}}</p>
+          <div *ngIf='show_description' class='row w-100 ml-0'>
+            <div [innerHTML]='comic.description'></div>
           </div>
         </div>
         <!-- div class='row w-100 border'>
