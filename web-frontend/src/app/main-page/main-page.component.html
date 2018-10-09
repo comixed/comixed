@@ -1,6 +1,13 @@
 <div>
   <div id="library_details">
-    <p>There {{plural ? 'are' : 'is'}} {{comicCount}} comic{{plural ? 's' : ''}} in the library.</p>
-    <p>There are <a [routerLink]="['/duplicates']">{{duplicate_pages}}</a> duplicate pages.</p> 
+    <p>
+      There {{plural ? 'are' : 'is'}} <a [routerLink]="['/comics']">{{comicCount}}
+        comic{{plural ? 's' : ''}}</a> in the library.
+    </p>
+    <p>
+      There {{duplicate_pages === 1 ? 'is' : 'are'}} <a
+        [routerLink]="['/duplicates']">{{duplicate_pages}} duplicate
+        pages</a> in the library.
+    </p>
   </div>
 </div>
