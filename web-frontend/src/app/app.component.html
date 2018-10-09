@@ -1,4 +1,4 @@
-<div class='container-fluid w-100 mx-10'>
+<div class='container-fluid pl-0 mx-0'>
   <div *ngIf='busy' id='busy-message'
     class='container-fluid w-100 mx-10'>
     <h1 class='text-center'>{{busy_message}}</h1>
@@ -47,8 +47,10 @@
         (click)='clear_error_message()'>&times;</a>
     </div>
   </div>
-  <div class='container-fluid w-100 h-100 m-10'>
-    <router-outlet></router-outlet>
+  <div class='row w-100'>
+    <div class='col'>
+      <router-outlet></router-outlet>
+    </div>
   </div>
   <footer class='bg-light fixed-bottom page-footer font-small'>
     <div class='row'>
