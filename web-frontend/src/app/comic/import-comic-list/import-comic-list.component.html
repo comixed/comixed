@@ -90,33 +90,33 @@
             [file_details]='file_detail' [cover_size]='cover_size'></app-import-comic-list-entry>
         </div>
       </div>
-      <div *ngIf='selected_file_detail' class='col-3'>
-        <div class='container-fluid w-100'>
-          <div class='card'>
-            <div class='card-header'>
-              <h5 class='text-nowrap text-truncate'>{{selected_file_detail_title}}</h5>
-              <h6 class='text-nowrap text-truncate'>{{selected_file_detail_subtitle}}</h6>
+    </div>
+    <div *ngIf='selected_file_detail' class='col-3'>
+      <div class='container-fluid w-100'>
+        <div class='card'>
+          <div class='card-header'>
+            <h5 class='text-nowrap text-truncate'>{{selected_file_detail_title}}</h5>
+            <h6 class='text-nowrap text-truncate'>{{selected_file_detail_subtitle}}</h6>
+          </div>
+          <div class='card-body'>
+            <img class='card-img-bottom img-fluid'
+              src='{{selected_file_image_url}}'>
+          </div>
+          <div class='card-footer'>
+            <div class='row w-100 mb-3 justify-content-center'>
+              <button *ngIf='!selected_file_detail.selected'
+                type='button' class='btn w-75 bg-primary text-white'
+                (click)='toggle_comic_selection(selected_file_detail)'>
+                Select</button>
+              <button *ngIf='selected_file_detail.selected'
+                type='button' class='btn w-75 bg-danger text-white'
+                (click)='toggle_comic_selection(selected_file_detail)'>
+                Deselect</button>
             </div>
-            <div class='card-body'>
-              <img class='card-img-bottom img-fluid'
-                src='{{selected_file_image_url}}'>
-            </div>
-            <div class='card-footer'>
-              <div class='row w-100 mb-3 justify-content-center'>
-                <button *ngIf='!selected_file_detail.selected'
-                  type='button' class='btn w-75 bg-primary text-white'
-                  (click)='toggle_comic_selection(selected_file_detail)'>
-                  Select</button>
-                <button *ngIf='selected_file_detail.selected'
-                  type='button' class='btn w-75 bg-danger text-white'
-                  (click)='toggle_comic_selection(selected_file_detail)'>
-                  Deselect</button>
-              </div>
-              <div class='row w-100 mb-3 justify-content-center'>
-                <button type='button'
-                  class='btn w-75 bg-secondary text-white'
-                  (click)='selected_file_detail = null'>Close</button>
-              </div>
+            <div class='row w-100 mb-3 justify-content-center'>
+              <button type='button'
+                class='btn w-75 bg-secondary text-white'
+                (click)='selected_file_detail = null'>Close</button>
             </div>
           </div>
         </div>
