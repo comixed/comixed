@@ -68,7 +68,7 @@
               Blocked Pages?
             </label>
           </div>
-          <div class='row w-100 mb-3'>
+          <div *ngIf='selected_file_count > 0' class='row w-100 mb-3'>
             <label><input class='mr-1' type='checkbox'
               [checked]='show_selections_only'
               (click)='toggle_show_selected()'>Show Selections
