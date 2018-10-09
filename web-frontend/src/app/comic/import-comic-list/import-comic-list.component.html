@@ -31,50 +31,48 @@
             [disabled]='!directory_form.valid'>Find Comics</button>
         </div>
       </form>
-      <div *ngIf='file_details.length > 0' class='container-fluid w-100'>
-        <hr />
-        <div class='container-fluid w-100'>
-          <!-- # of comics per page to show -->
-          <div class='row w-100 justify-content-center mb-3'>
-            <div class='field'>
-              <label for='number-of-comics-per-page'># of comics
-                per page: </label>
-            </div>
-            <div class='field row w-100 justify-content-center mb-3'>
-              <app-page-size [initial]='use_page_size'
-                (change)='set_page_size($event)'></app-page-size>
-            </div>
-          </div>
-          <!--  select/deselect all comics -->
-          <div class='row w-100 justify-content-center mb-3'>
-            <button
-              *ngIf='file_details.length > 0 && selected_file_count < file_details.length'
-              class='btn btn-primary w-75' (click)='select_all_files()'>Select
-              All</button>
-            <button
-              *ngIf='file_details.length > 0 && selected_file_count === file_details.length'
-              class='btn btn-primary w-75'
-              (click)='deselect_all_files()'>Deselect All</button>
-          </div>
-          <div class='row w-100 justify-content-center mb-3'>
-            <button [disabled]='selected_file_count === 0'
-              class='btn btn-secondary w-75' type='button'
-              (click)='import_selected_files()'>Import</button>
-          </div>
-          <div class='row w-100 mb-3'>
-            <label> <input class='mr-1' type='checkbox'
-              [checked]='delete_blocked_pages'
-              (change)='toggle_blocked_page_deletion()'>Delete
-              Blocked Pages?
-            </label>
-          </div>
-          <div *ngIf='selected_file_count > 0' class='row w-100 mb-3'>
-            <label><input class='mr-1' type='checkbox'
-              [checked]='show_selections_only'
-              (click)='toggle_show_selected()'>Show Selections
-              Only</label>
-          </div>
+      <hr />
+      <!-- # of comics per page to show -->
+      <div *ngIf='file_details.length > 0'
+        class='row w-100 justify-content-center mb-3'>
+        <div class='field'>
+          <label for='number-of-comics-per-page'># of comics per
+            page: </label>
         </div>
+        <div class='field row w-100 justify-content-center mb-3'>
+          <app-page-size [initial]='use_page_size'
+            (change)='set_page_size($event)'></app-page-size>
+        </div>
+      </div>
+      <!--  select/deselect all comics -->
+      <div *ngIf='file_details.length > 0'
+        class='row w-100 justify-content-center mb-3'>
+        <button
+          *ngIf='file_details.length > 0 && selected_file_count < file_details.length'
+          class='btn btn-primary w-75' (click)='select_all_files()'>Select
+          All</button>
+        <button
+          *ngIf='file_details.length > 0 && selected_file_count === file_details.length'
+          class='btn btn-primary w-75' (click)='deselect_all_files()'>Deselect
+          All</button>
+      </div>
+      <div *ngIf='file_details.length > 0'
+        class='row w-100 justify-content-center mb-3'>
+        <button [disabled]='selected_file_count === 0'
+          class='btn btn-secondary w-75' type='button'
+          (click)='import_selected_files()'>Import</button>
+      </div>
+      <div *ngIf='file_details.length > 0' class='row w-100 mb-3 ml-3'>
+        <label> <input class='mr-1' type='checkbox'
+          [checked]='delete_blocked_pages'
+          (change)='toggle_blocked_page_deletion()'>Delete
+          Blocked Pages?
+        </label>
+      </div>
+      <div *ngIf='selected_file_count > 0' class='row w-100 mb-3 ml-3'>
+        <label><input class='mr-1' type='checkbox'
+          [checked]='show_selections_only'
+          (click)='toggle_show_selected()'>Show Selections Only</label>
       </div>
     </div>
     <div class='col'>
