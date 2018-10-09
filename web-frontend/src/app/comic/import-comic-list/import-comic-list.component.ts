@@ -110,6 +110,7 @@ export class ImportComicListComponent implements OnInit {
   on_load(): void {
     const that = this;
     this.alert_service.show_busy_message('Fetching List Of Comic Files...');
+    this.selected_file_detail = null;
     const directory = this.directory;
     this.comic_service.get_files_under_directory(directory).subscribe(
       (files: FileDetails[]) => {
