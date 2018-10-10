@@ -49,15 +49,27 @@ body {
   opacity: 0.8;
 }
 
+.comic-cover-img-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .comic-selected {
 	background-color: #339933;
 }
 
 .card-img-top {
-	opacity: 1;
+  opacity: 1;
+  border-radius: 0;
 }
 
-.card:hover .card-img-top {
+.comic-cover-title-container {
+  opacity: 1;
+}
+
+.card:hover .card-img-top,
+.card:hover .comic-cover-title-container {
 	opacity: 0.1;
 }
 
