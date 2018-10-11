@@ -1,6 +1,6 @@
 <div class='p-1 m-1' [class.border-0]='selected'
   [class.comic-selected]='selected'>
-  <div class='card card-inverse card-info p-3'>
+  <div class='card card-inverse card-info px-1 pt-2 pb-3'>
     <div class='comic-cover-img-container' [style.height]='"" + cover_size + "px"'>
         <img class='card-img-top' src='{{cover_url}}'
         [style.max-height]='"" + cover_size + "px"' [style.max-width]='"" + cover_size + "px"'
@@ -9,7 +9,7 @@
     <div class='comic-cover-title-container text-center' [style.width]='"" + cover_size + "px"'>
         <h5 class='card-title text-nowrap text-truncate'>{{title_text}}</h5>
         <h6 class='card-subtitle text-nowrap text-truncate'>{{subtitle_text}}</h6>
-    </div>          
+    </div>
     <div class='card-img-overlay'>
       <div class='card-img-overlay-content'>
         <div class='row w-100 mx-0'>
