@@ -17,23 +17,23 @@
  * org.comixed;
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ComicVineScraperComponent} from './comic-vine-scraper.component';
+import { ComicDetailsEditorComponent } from './comic-details-editor.component';
 
-describe('ComicVineScraperComponent', () => {
-  let component: ComicVineScraperComponent;
-  let fixture: ComponentFixture<ComicVineScraperComponent>;
+describe('ComicDetailsEditorComponent', () => {
+  let component: ComicDetailsEditorComponent;
+  let fixture: ComponentFixture<ComicDetailsEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicVineScraperComponent]
+      declarations: [ComicDetailsEditorComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ComicVineScraperComponent);
+    fixture = TestBed.createComponent(ComicDetailsEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
