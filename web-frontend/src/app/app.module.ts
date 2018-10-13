@@ -35,13 +35,14 @@ import {
   ANIMATION_TYPES,
 } from 'ngx-loading';
 
-import {XhrInterceptor} from './xhr.interceptor';
-import {ComicModule} from './comic/comic.module';
-import {MainPageComponent} from './main-page/main-page.component';
-import {LoginComponent} from './login/login.component';
-import {AccountComponent} from './account/account.component';
-import {AlertService} from './alert.service';
-import {UserService} from './user.service';
+import { XhrInterceptor } from './xhr.interceptor';
+import { ComicModule } from './comic/comic.module';
+import { MainPageComponent } from './main-page/main-page.component';
+import { LoginComponent } from './login/login.component';
+import { AccountComponent } from './account/account.component';
+import { AlertService } from './alert.service';
+import { UserService } from './user.service';
+import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import {UserService} from './user.service';
     MainPageComponent,
     LoginComponent,
     AccountComponent,
+    BusyIndicatorComponent,
   ],
   imports: [
     BrowserModule,
