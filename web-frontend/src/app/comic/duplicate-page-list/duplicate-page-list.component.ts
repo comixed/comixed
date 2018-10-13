@@ -22,15 +22,15 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {ComicService} from '../comic.service';
-import {UserService} from '../../user.service';
-import {AlertService} from '../../alert.service';
-import {Page} from '../page.model';
-import {Comic} from '../comic.model';
-import {DuplicatePageListEntryComponent} from '../duplicate-page-list-entry/duplicate-page-list-entry.component';
+import { ComicService } from '../comic.service';
+import { UserService } from '../../user.service';
+import { AlertService } from '../../alert.service';
+import { Page } from '../page.model';
+import { Comic } from '../comic.model';
+import { DuplicatePageListEntryComponent } from '../duplicate-page-list-entry/duplicate-page-list-entry.component';
 
 @Component({
   selector: 'app-duplicate-page-list',
@@ -40,10 +40,10 @@ import {DuplicatePageListEntryComponent} from '../duplicate-page-list-entry/dupl
 export class DuplicatePageListComponent implements OnInit, OnDestroy {
   protected page_hashes: Array<string>;
   protected page_sizes: any[] = [
-    {id: 0, label: '10 comics'},
-    {id: 1, label: '25 comics'},
-    {id: 2, label: '50 comics'},
-    {id: 3, label: '100 comics'}
+    { id: 0, label: '10 comics' },
+    { id: 1, label: '25 comics' },
+    { id: 2, label: '50 comics' },
+    { id: 3, label: '100 comics' }
   ];
   protected page_size = 10;
   protected current_page;
@@ -96,6 +96,22 @@ export class DuplicatePageListComponent implements OnInit, OnDestroy {
 
   get_cover_url_for_page(page: Page): string {
     return this.comic_service.get_url_for_page_by_comic_index(page.comic_id, 0);
+  }
+
+  get_title_text_for_page(page: Page): string {
+    const comic = this.comic_service.all_comics.find((this_comic: Comic) => {
+      return this_comic.id === page.comic_id;
+    });
+
+    if (!comic) {
+      return '';
+    }
+
+    return `${comic.series || 'Unknown'} #${comic.issue_number || '???'}`;
+  }
+
+  get_subtitle_text_for_page(page: Page): string {
+    return `${page.width} x ${page.height}`;
   }
 
   delete_page(page: Page): void {

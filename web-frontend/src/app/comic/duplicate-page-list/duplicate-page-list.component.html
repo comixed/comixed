@@ -8,28 +8,25 @@
           This Page</h4>
       </div>
       <div class='modal-body'>
-        <div class='media'>
-          <div class='media-left media-center'></div>
-          <div class='media-body'>
-            <div class='row w-100 justify-content-center'>
-              <div *ngFor='let page of show_pages'
-                class='card comic-cover-card p-1 m-1'
-                [style.height]='"" + image_size + "px"'>
-                <div class='card-body p-1 comic-with-duplicate-page'>
-                  <img class='card-img-bottom mb-2 img-fluid'
-                    src='{{get_cover_url_for_page(page)}}'
-                    [style.height]='"" + image_size + "px"'
-                    [style.width]='"auto"'>
-                  <div class='container w-100 align-items-center'>
-                    <div *ngIf='page.deleted'>
-                      <button class='btn btn-sm btn-warning w-100'
-                        (click)='undelete_page(page)'>Undelete</button>
-                    </div>
-                    <div *ngIf='!page.deleted'>
-                      <button class='btn btn-sm btn-danger w-100'
-                        (click)='delete_page(page)'>Delete</button>
-                    </div>
-                  </div>
+        <div class='row w-100'>
+          <div *ngFor='let page of show_pages' class='p-1 m-1'>
+            <div class='card px-1 pt-2 pb-3'>
+              <div class='card-header text-center'
+                [style.width]='"" + image_size + "px"'>
+                <h5 class='card-title text-nowrap text-truncate'>{{get_title_text_for_page(page)}}</h5>
+              </div>
+              <img class='card-img-top img-thumbnail'
+                src='{{get_cover_url_for_page(page)}}'
+                [style.width]='"" + image_size + "px"'
+                [style.height]='"auto"'>
+              <div class='card-footer'>
+                <div class='row w-100 justify-content-center ml-0 mb-3'>
+                  <button *ngIf='!page.deleted' type='button'
+                    class='btn w-75 bg-danger text-white'
+                    (click)='delete_page(page)'>Delete</button>
+                  <button *ngIf='page.deleted' type='button'
+                    class='btn w-75 bg-primary text-white'
+                    (click)='undelete_page(page)'>Undelete</button>
                 </div>
               </div>
             </div>
