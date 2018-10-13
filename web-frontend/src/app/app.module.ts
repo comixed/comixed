@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
@@ -69,9 +69,9 @@ import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.componen
     AlertService,
     UserService,
     [
-      {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
+      { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }
     ],
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -24,28 +24,27 @@ import {
   fakeAsync,
   tick,
 } from '@angular/core/testing';
-import {DebugElement} from '@angular/core';
-import {By} from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
-import {HttpClientModule} from '@angular/common/http';
-import {RouterTestingModule} from '@angular/router/testing';
-import {Router} from '@angular/router';
-import {LoadingModule} from 'ngx-loading';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-import {AlertService} from './alert.service';
-import {UserService} from './user.service';
-import {MockUserService} from './mock-user.service';
+import { AlertService } from './alert.service';
+import { UserService } from './user.service';
+import { MockUserService } from './mock-user.service';
 import {
   User,
   Role,
 } from './user.model';
-import {ComicService} from './comic/comic.service';
-import {MockComicService} from './comic/mock-comic.service';
+import { ComicService } from './comic/comic.service';
+import { MockComicService } from './comic/mock-comic.service';
 
-import {AppComponent} from './app.component';
+import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -59,7 +58,6 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        LoadingModule,
         HttpClientModule,
       ],
       declarations: [
@@ -67,8 +65,8 @@ describe('AppComponent', () => {
       ],
       providers: [
         AlertService,
-        {provide: UserService, useClass: MockUserService},
-        {provide: ComicService, useClass: MockComicService},
+        { provide: UserService, useClass: MockUserService },
+        { provide: ComicService, useClass: MockComicService },
       ],
     }).compileComponents();
 
@@ -155,31 +153,6 @@ describe('AppComponent', () => {
       expect(alert_message.nativeElement.textContent.trim()).toContain(expected);
       expect(fixture.debugElement.query(By.css('div.alert-info'))).toBe(alert_message);
     }));
-
-    it('should show the busy overlay when a busy message is received', fakeAsync(() => {
-      const expected: string = "This is a busy message";
-
-      expect(component.busy).toBe(false);
-
-      alert_service.show_busy_message(expected);
-      component.ngAfterViewInit();
-
-      fixture.detectChanges();
-      tick();
-
-      expect(component.busy).toBe(true);
-      expect(fixture.debugElement.query(By.css('#busy-message'))).not.toBe(null);
-      expect(fixture.debugElement.query(By.css('h1')).nativeElement.textContent.trim()).toContain(expected);
-
-      alert_service.show_busy_message('');
-
-      fixture.detectChanges();
-      tick();
-
-      expect(component.busy).toBe(false);
-      expect(fixture.debugElement.query(By.css('#busy-message'))).toBe(null);
-    }));
-
   });
 
   it('delegates to UserService when checking authentication', () => {

@@ -19,8 +19,7 @@
 
 import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingModule } from 'ngx-loading';
-
+import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { UserService } from './user.service';
 import { AlertService } from './alert.service';
 import { ComicService } from './comic/comic.service';
@@ -34,8 +33,6 @@ export class AppComponent implements AfterViewInit {
   title = 'ComiXed';
   alert_type: string;
   alert_messages = [];
-  busy_message: string;
-  busy = false;
   comic_count = 0;
   read_count = 0;
 
@@ -45,7 +42,6 @@ export class AppComponent implements AfterViewInit {
     private comic_service: ComicService,
     private router: Router,
   ) {
-    this.busy_message = '';
   }
 
   ngAfterViewInit(): void {
@@ -57,16 +53,6 @@ export class AppComponent implements AfterViewInit {
     this.alert_service.info_messages.subscribe(
       (message: string) => {
         this.alert_messages.push([message, 'alert-info']);
-      }
-    );
-    this.alert_service.busy_messages.subscribe(
-      (message: string) => {
-        if (message.length > 0) {
-          this.busy = true;
-        } else {
-          this.busy = false;
-        }
-        this.busy_message = message;
       }
     );
 

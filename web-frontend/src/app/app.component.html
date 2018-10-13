@@ -1,9 +1,5 @@
 <div class='container-fluid pl-0 mx-0'>
-  <div *ngIf='busy' id='busy-message'
-    class='container-fluid w-100 mx-10'>
-    <h1 class='text-center'>{{busy_message}}</h1>
-    <ngx-loading [show]='busy'></ngx-loading>
-  </div>
+  <app-busy-indicator></app-busy-indicator>
   <nav class='navbar navbar-expand-lg navbar-light bg-light fixed-top'>
     <div class='container-fluid'>
       <div class='navbar-header'>
