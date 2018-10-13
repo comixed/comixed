@@ -80,3 +80,9 @@ body {
 .card-img-overlay-content {
 	opacity: 0;
 }
+
+.comixed-scrollable-div {
+	overflow-y: auto;
+	height: 100%;
+	margin-left: 25%;
+}
