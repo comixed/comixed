@@ -75,7 +75,9 @@
           (click)='toggle_show_selected()'>Show Selections Only</label>
       </div>
     </div>
-    <div class='col'>
+    <div class='position-fixed comixed-scrollable-div'
+      [class.col-9]='!selected_file_detail'
+      [class.col-6]='selected_file_detail'>
       <div class='container w-100 justify-content-center'>
         <h2 class='text-center'>{{get_comic_selection_title()}}</h2>
         <div *ngIf='file_details.length > 0' class='row w-100'>
@@ -91,7 +93,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf='selected_file_detail' class='col-3'>
+    <div *ngIf='selected_file_detail' class='col-3 comixed-import-comic-details-box'>
       <div class='container-fluid w-100'>
         <div class='card'>
           <div class='card-header'>
