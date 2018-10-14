@@ -38,13 +38,13 @@
       </div>
     </div>
   </nav>
-  <div class='row justify-content-center'>
-    <div id='alert-message'
-      class='alert alert-dismissable {{alert_type}} w-75 text-center'
-      role='alert' *ngIf='alert_message && alert_message.length > 0'>
-      {{alert_message}} <a id='alert-message-dismiss' href='#'
+  <div *ngIf='alert_messages.length > 0'
+    class='row justify-content-center'>
+    <div *ngFor='let alert_message of alert_messages; let i = index'
+      class='alert {{alert_message[1]}} w-75 text-center' role='alert'>
+      {{alert_message[0]}} <a id='alert-message-dismiss' href='#'
         class='close' data-dismiss='alert' aria-label='close'
-        (click)='clear_error_message()'>&times;</a>
+        (click)='clear_error_message(i)'>&times;</a>
     </div>
   </div>
   <div class='row w-100'>

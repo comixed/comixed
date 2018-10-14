@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import {Component, AfterViewInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {LoadingModule} from 'ngx-loading';
+import { Component, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { LoadingModule } from 'ngx-loading';
 
-import {UserService} from './user.service';
-import {AlertService} from './alert.service';
-import {ComicService} from './comic/comic.service';
+import { UserService } from './user.service';
+import { AlertService } from './alert.service';
+import { ComicService } from './comic/comic.service';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +33,7 @@ import {ComicService} from './comic/comic.service';
 export class AppComponent implements AfterViewInit {
   title = 'ComiXed';
   alert_type: string;
-  alert_message: string;
+  alert_messages = [];
   busy_message: string;
   busy = false;
   comic_count = 0;
@@ -45,21 +45,18 @@ export class AppComponent implements AfterViewInit {
     private comic_service: ComicService,
     private router: Router,
   ) {
-    this.alert_message = '';
     this.busy_message = '';
   }
 
   ngAfterViewInit(): void {
     this.alert_service.error_messages.subscribe(
       (message: string) => {
-        this.alert_type = 'alert-danger';
-        this.alert_message = message;
+        this.alert_messages.push([message, 'alert-danger']);
       }
     );
     this.alert_service.info_messages.subscribe(
       (message: string) => {
-        this.alert_type = 'alert-info';
-        this.alert_message = message;
+        this.alert_messages.push([message, 'alert-info']);
       }
     );
     this.alert_service.busy_messages.subscribe(
@@ -86,8 +83,8 @@ export class AppComponent implements AfterViewInit {
     );
   }
 
-  clear_error_message(): void {
-    this.alert_message = '';
+  clear_error_message(index: number): void {
+    this.alert_messages.splice(index, 1);
   }
 
   is_authenticated(): boolean {
