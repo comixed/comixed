@@ -1,5 +1,5 @@
 <div id='busy-message-container' *ngIf='is_busy()'
   class='container-fluid w-100 mx-10'>
-  <h1 class='text-center'>{{busy_message}}</h1>
+  <h1 class='text-center bg-dark text-white rounded'>{{busy_message}}</h1>
   <ngx-loading [show]='is_busy()'></ngx-loading>
 </div>
