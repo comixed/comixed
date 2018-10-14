@@ -116,8 +116,8 @@ export class ComicService {
     return this.http.get(`/api/pages/types`);
   }
 
-  set_page_type(page: Page, page_type: PageType): Observable<any> {
-    const params = new HttpParams().set('type_id', `${page_type.id}`);
+  set_page_type(page: Page, page_type_id: number): Observable<any> {
+    const params = new HttpParams().set('type_id', `${page_type_id}`);
     return this.http.put(`/api/pages/${page.id}/type`, params);
   }
 
@@ -199,6 +199,9 @@ export class ComicService {
   }
 
   get_url_for_page_by_id(pageId: number): string {
+    if (pageId === null || pageId === undefined) {
+      return '';
+    }
     return `${this.api_url}/pages/${pageId}/content`;
   }
 

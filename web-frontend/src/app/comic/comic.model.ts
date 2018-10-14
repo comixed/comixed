@@ -17,7 +17,8 @@
  * org.comixed;
  */
 
-import {Page} from './page.model';
+import { Page } from './page.model';
+import { ComicCredit } from './comic-credit.model';
 
 export class Comic {
   id: number;
@@ -47,6 +48,7 @@ export class Comic {
   pages: Page[];
   blocked_page_count: number;
   deleted_page_count: number;
+  credits: ComicCredit[];
 
   constructor(
     id?: number,
@@ -76,6 +78,7 @@ export class Comic {
     pages?: Page[],
     blocked_page_count?: number,
     deleted_page_count?: number,
+    credits?: ComicCredit[],
   ) {
     this.id = id;
     this.filename = filename;
@@ -104,5 +107,6 @@ export class Comic {
     this.pages = pages;
     this.blocked_page_count = blocked_page_count;
     this.deleted_page_count = deleted_page_count;
+    this.credits = credits;
   }
 }

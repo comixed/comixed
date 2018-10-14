@@ -23,12 +23,12 @@ import {
   Input,
 } from '@angular/core';
 
-import {ComicService} from '../comic.service';
-import {UserService} from '../../user.service';
-import {AlertService} from '../../alert.service';
-import {Comic} from '../comic.model';
-import {Page} from '../page.model';
-import {PageType} from '../page-type.model';
+import { ComicService } from '../comic.service';
+import { UserService } from '../../user.service';
+import { AlertService } from '../../alert.service';
+import { Comic } from '../comic.model';
+import { Page } from '../page.model';
+import { PageType } from '../page-type.model';
 
 @Component({
   selector: 'app-page-details',
@@ -51,7 +51,10 @@ export class PageDetailsComponent implements OnInit {
     private comic_service: ComicService,
     private user_service: UserService,
     private alert_service: AlertService,
-  ) {}
+  ) {
+    this.page_types = [];
+    this.image_size = 200;
+  }
 
   ngOnInit() {
     this.comic_service.get_page_types().subscribe(
@@ -70,23 +73,27 @@ export class PageDetailsComponent implements OnInit {
   }
 
   get_image_url_for_current_page(): string {
-    return this.comic_service.get_url_for_page_by_id(this.page.id);
+    if (this.page) {
+      return this.comic_service.get_url_for_page_by_id(this.page.id);
+    }
+    return '';
   }
 
   get_display_name_for_page_type(page_type: PageType): string {
     return this.comic_service.get_display_name_for_page_type(page_type);
   }
 
-  set_page_type(page_type: PageType): void {
+  set_page_type(page_type_id: number): void {
     const that = this;
-    this.comic_service.set_page_type(this.page, page_type).subscribe(
+    this.comic_service.set_page_type(this.page, page_type_id).subscribe(
       () => {
-        that.page.page_type = page_type;
+        that.page.page_type = that.page_types.find((the_type: PageType) => {
+          return the_type.id === page_type_id;
+        });
       },
       (error: Error) => {
         that.alert_service.show_error_message('Unable to set the page type', error);
-      }
-    );
+      });
   }
 
   delete_page(): void {

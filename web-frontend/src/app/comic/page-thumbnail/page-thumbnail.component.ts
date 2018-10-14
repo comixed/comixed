@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import {Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
-import {ComicService} from '../comic.service';
-import {UserService} from '../../user.service';
-import {AlertService} from '../../alert.service';
-import {Page} from '../page.model';
-import {PageType} from '../page-type.model';
+import { ComicService } from '../comic.service';
+import { UserService } from '../../user.service';
+import { AlertService } from '../../alert.service';
+import { Page } from '../page.model';
+import { PageType } from '../page-type.model';
 
 @Component({
   selector: 'app-page-thumbnail',
@@ -44,7 +44,7 @@ export class PageThumbnailComponent implements OnInit {
     private comic_service: ComicService,
     private user_service: UserService,
     private alert_service: AlertService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.page_url = this.missing ? '/assets/img/missing.png' : this.comic_service.get_url_for_page_by_id(this.page.id);
@@ -63,6 +63,6 @@ export class PageThumbnailComponent implements OnInit {
   }
 
   page_is_filtered(): boolean {
-    return this.page.page_type.name === 'filtered';
+    return this.page.page_type && (this.page.page_type.name === 'filtered');
   }
 }
