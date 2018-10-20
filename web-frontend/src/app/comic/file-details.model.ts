@@ -24,9 +24,9 @@ export class FileDetails {
   selected: boolean;
 
   constructor(
-    filename: string,
-    base_filename: string,
-    size: number,
+    filename?: string,
+    base_filename?: string,
+    size?: number,
   ) {
     this.filename = filename;
     this.base_filename = base_filename;
