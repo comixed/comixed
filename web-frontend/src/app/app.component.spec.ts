@@ -113,11 +113,11 @@ describe('AppComponent', () => {
     }));
 
     it('#clear_alert_message() sets the message to an empty string', fakeAsync(() => {
-      component.alert_message = 'old message';
+      component.alert_messages = ['old message'];
 
-      component.clear_error_message();
+      component.clear_error_message(0);
 
-      expect(component.alert_message).toBe('');
+      expect(component.alert_messages).toBe([]);
     }));
 
     it('should show error alerts when an error message is received', fakeAsync(() => {
