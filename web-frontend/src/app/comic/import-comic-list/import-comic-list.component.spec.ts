@@ -17,28 +17,41 @@
  * org.comixed;
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {ImportComicListComponent} from './import-comic-list.component';
+import {
+  async,
+  fakeAsync,
+  ComponentFixture,
+  TestBed,
+} from '@angular/core/testing';
+import { ImportComicListComponent } from './import-comic-list.component';
+import { FileDetails } from '../file-details.model';
 
 describe('ImportComicListComponent', () => {
   let component: ImportComicListComponent;
   let fixture: ComponentFixture<ImportComicListComponent>;
+  let file_details: FileDetails;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ImportComicListComponent]
     })
       .compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ImportComicListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    file_details = new FileDetails();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('import_selected_files()', () => {
+
+    it('clears the selected file', fakeAsync(() => {
+      component.selected_file_detail = file_details;
+
+      component.import_selected_files();
+
+      expect(component.selected_file_detail).toBe(null);
+    }));
+
   });
 });

@@ -153,6 +153,7 @@ export class ImportComicListComponent implements OnInit {
 
   import_selected_files(): void {
     const that = this;
+    this.selected_file_detail = null;
     this.importing = true;
     const selected_files = this.file_details.filter(file => file.selected).map(file => file.filename);
     this.alert_service.show_busy_message('Preparing to import ' + selected_files + ' comics...');
