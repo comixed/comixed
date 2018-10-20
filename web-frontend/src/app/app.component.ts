@@ -52,7 +52,11 @@ export class AppComponent implements AfterViewInit {
     );
     this.alert_service.info_messages.subscribe(
       (message: string) => {
-        this.alert_messages.push([message, 'alert-info']);
+        const newLength = this.alert_messages.push([message, 'alert-info']);
+        const index = newLength - 1;
+        // create a timer to remove this info message after 5 seconds
+        const timer = setTimeout(() => { this.clear_error_message(index); }, 5000);
+        this.alert_messages[index].push(timer);
       }
     );
 
@@ -70,7 +74,14 @@ export class AppComponent implements AfterViewInit {
   }
 
   clear_error_message(index: number): void {
-    this.alert_messages.splice(index, 1);
+    if (this.alert_messages.length > index) {
+      if (this.alert_messages[index].length > 2) {
+        // cancel the timer if clear was clicked before it fired
+        const timeout = this.alert_messages[index][2];
+        clearTimeout(timeout);
+      }
+      this.alert_messages.splice(index, 1);
+    }
   }
 
   is_authenticated(): boolean {
