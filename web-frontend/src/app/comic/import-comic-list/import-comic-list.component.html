@@ -89,38 +89,29 @@
             *ngFor='let file_detail of file_details | selected_for_import : show_selections_only | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
             (clicked)='show_details(file_detail)'
             (selected)='toggle_comic_selection(file_detail)'
-            [file_details]='file_detail' [cover_size]='cover_size'></app-import-comic-list-entry>
+            [file_details]='file_detail' [cover_size]='cover_size'>
+          </app-import-comic-list-entry>
         </div>
       </div>
     </div>
-    <div *ngIf='selected_file_detail' class='col-3 comixed-import-comic-details-box'>
+    <div *ngIf='selected_file_detail'
+      class='col-3 comixed-import-comic-details-box'>
       <div class='container-fluid w-100'>
-        <div class='card'>
-          <div class='card-header'>
-            <button type='button' class='close'
-              (click)='selected_file_detail = null'>
-              <span class='fa fa-times'></span>
-            </button>
-            <h5 class='text-nowrap text-truncate'>{{selected_file_detail_title}}</h5>
-            <h6 class='text-nowrap text-truncate'>{{selected_file_detail_subtitle}}</h6>
-          </div>
-          <div class='card-body'>
-            <img class='card-img-bottom img-fluid'
-              src='{{selected_file_image_url}}'>
-          </div>
-          <div class='card-footer'>
-            <div class='row w-100 justify-content-center ml-0 mb-3'>
-              <button *ngIf='!selected_file_detail.selected'
-                type='button' class='btn w-75 bg-primary text-white'
-                (click)='toggle_comic_selection(selected_file_detail)'>
-                Select</button>
-              <button *ngIf='selected_file_detail.selected'
-                type='button' class='btn w-75 bg-danger text-white'
-                (click)='toggle_comic_selection(selected_file_detail)'>
-                Deselect</button>
-            </div>
-          </div>
+        <app-issue-details [title]='selected_file_detail_title'
+          [subtitle]='selected_file_detail_subtitle'
+          [cover_url]='selected_file_image_url'
+          (close)='selected_file_detail = null'>
+        <div class='row w-100 justify-content-center ml-0 mb-3'>
+          <button *ngIf='!selected_file_detail.selected' type='button'
+            class='btn w-75 bg-primary text-white'
+            (click)='toggle_comic_selection(selected_file_detail)'>
+            Select</button>
+          <button *ngIf='selected_file_detail.selected' type='button'
+            class='btn w-75 bg-danger text-white'
+            (click)='toggle_comic_selection(selected_file_detail)'>
+            Deselect</button>
         </div>
+        </app-issue-details>
       </div>
     </div>
   </div>

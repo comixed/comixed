@@ -31,7 +31,7 @@ import { FileDetails } from '../file-details.model';
 import { ComicService } from '../comic.service';
 import { AlertService } from '../../alert.service';
 import { ImportComicListEntryComponent } from '../import-comic-list-entry/import-comic-list-entry.component';
-
+import { IssueDetailsComponent } from '../issue/details/issue-details/issue-details.component';
 import { SelectedForImportPipe } from './selected-for-import.pipe';
 
 @Component({
