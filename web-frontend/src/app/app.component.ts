@@ -24,6 +24,16 @@ import { UserService } from './user.service';
 import { AlertService } from './alert.service';
 import { ComicService } from './comic/comic.service';
 
+interface AlertMessage {
+  message: string;
+  class: string;
+  timer?: any;
+}
+
+interface AlertMessages {
+  [id: number]: AlertMessage;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -31,8 +41,10 @@ import { ComicService } from './comic/comic.service';
 })
 export class AppComponent implements AfterViewInit {
   title = 'ComiXed';
-  alert_type: string;
-  alert_messages = [];
+  object_keys = Object.keys;
+  alert_messages: AlertMessages = {};
+  alert_runningId = 0;
+  alert_count = 0;
   comic_count = 0;
   read_count = 0;
 
@@ -47,16 +59,21 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.alert_service.error_messages.subscribe(
       (message: string) => {
-        this.alert_messages.push([message, 'alert-danger']);
+        const alertId = this.alert_runningId++;
+        this.alert_messages[alertId] = { message, class: 'alert-danger' };
+        this.alert_count++;
       }
     );
+
     this.alert_service.info_messages.subscribe(
       (message: string) => {
-        const newLength = this.alert_messages.push([message, 'alert-info']);
-        const index = newLength - 1;
+        const alertId = this.alert_runningId++;
+        this.alert_messages[alertId] = { message, class: 'alert-info' };
+        this.alert_count++;
+
         // create a timer to remove this info message after 5 seconds
-        const timer = setTimeout(() => { this.clear_error_message(index); }, 5000);
-        this.alert_messages[index].push(timer);
+        const timer = setTimeout(() => { this.clear_alert_message(alertId); }, 5000);
+        this.alert_messages[alertId].timer = timer;
       }
     );
 
@@ -73,14 +90,14 @@ export class AppComponent implements AfterViewInit {
     );
   }
 
-  clear_error_message(index: number): void {
-    if (this.alert_messages.length > index) {
-      if (this.alert_messages[index].length > 2) {
+  clear_alert_message(alertId: number): void {
+    if (this.alert_messages[alertId]) {
+      if (this.alert_messages[alertId].timer) {
         // cancel the timer if clear was clicked before it fired
-        const timeout = this.alert_messages[index][2];
-        clearTimeout(timeout);
+        clearTimeout(this.alert_messages[alertId].timer);
       }
-      this.alert_messages.splice(index, 1);
+      delete this.alert_messages[alertId];
+      this.alert_count--;
     }
   }
 
