@@ -34,12 +34,13 @@
       </div>
     </div>
   </nav>
-  <div *ngIf='alert_count > 0' class='row justify-content-center'>
-    <div *ngFor='let key of object_keys(alert_messages)'
-      class='alert {{alert_messages[key].class}} w-75 text-center' role='alert'>
-      {{alert_messages[key].message}} <a id='alert-message-dismiss' href='#'
-      class='close' data-dismiss='alert' aria-label='close'
-      (click)='clear_alert_message(key)'>&times;</a>
+  <div *ngIf='alert_messages.length > 0'
+    class='row justify-content-center'>
+    <div *ngFor='let alert_message of alert_messages; let i = index'
+      class='alert {{alert_message[1]}} w-75 text-center' role='alert'>
+      {{alert_message[0]}} <a id='alert-message-dismiss' href='#'
+        class='close' data-dismiss='alert' aria-label='close'
+        (click)='clear_alert_message(i)'>&times;</a>
     </div>
   </div>
   <div class='row w-100'>
