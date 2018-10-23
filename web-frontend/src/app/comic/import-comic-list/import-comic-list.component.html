@@ -3,7 +3,8 @@
   <div class='modal-dialog modal-lg'>
     <div class='modal-content'>
       <div class='modal-body'>
-        <div class='container-fluid w-100'>
+        <div class='container-fluid w-100 p-1'
+          [class.comic-selected]='selected_file_detail && selected_file_detail.selected'>
           <app-issue-details [title]='selected_file_detail_title'
             [subtitle]='selected_file_detail_subtitle'
             [cover_url]='selected_file_image_url'
