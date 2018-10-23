@@ -43,6 +43,8 @@ import {
 } from './user.model';
 import { ComicService } from './comic/comic.service';
 import { MockComicService } from './comic/mock-comic.service';
+import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
+import { LoadingModule } from 'ngx-loading';
 
 import { AppComponent } from './app.component';
 
@@ -59,8 +61,10 @@ describe('AppComponent', () => {
       imports: [
         RouterTestingModule,
         HttpClientModule,
+        LoadingModule
       ],
       declarations: [
+        BusyIndicatorComponent,
         AppComponent
       ],
       providers: [
@@ -86,13 +90,13 @@ describe('AppComponent', () => {
     it('should initialize as not shown', fakeAsync(() => {
       fixture.detectChanges();
 
-      let alert_message = fixture.debugElement.query(By.css('div#alert-message'));
+      const alert_message = fixture.debugElement.query(By.css('div.alert'));
 
       expect(alert_message).toBe(null);
     }));
 
     it('alerts can be dismissed', fakeAsync(() => {
-      const expected: string = "This is an error message";
+      const expected = 'This is an error message';
 
       alert_service.show_error_message(expected, null);
       component.ngAfterViewInit();
@@ -100,7 +104,7 @@ describe('AppComponent', () => {
       fixture.detectChanges();
       tick();
 
-      let dismiss_alert = fixture.debugElement.query(By.css('#alert-message-dismiss'));
+      const dismiss_alert = fixture.debugElement.query(By.css('#alert-message-dismiss'));
 
       expect(dismiss_alert).not.toBe(null);
 
@@ -109,19 +113,30 @@ describe('AppComponent', () => {
       fixture.detectChanges();
       tick();
 
-      expect(fixture.debugElement.query(By.css('#alert-message'))).toBe(null);
+      expect(fixture.debugElement.query(By.css('div.alert'))).toBe(null);
     }));
 
-    it('#clear_alert_message() sets the message to an empty string', fakeAsync(() => {
-      component.alert_messages = ['old message'];
+    it('#clear_alert_message() removes the message at an index', fakeAsync(() => {
+      component.alert_messages.push(['old message', '']);
 
-      component.clear_error_message(0);
+      component.clear_alert_message(0);
 
-      expect(component.alert_messages).toBe([]);
+      expect(component.alert_messages.length).toBe(0);
+    }));
+
+    it('#clear_info_message() removes the first message to match', fakeAsync(() => {
+      const newMessage = 'new message';
+      component.alert_messages.push(['old message', '']);
+      component.alert_messages.push([newMessage, '']);
+      component.alert_messages.push([newMessage, '']);
+
+      component.clear_info_message(newMessage);
+
+      expect(component.alert_messages.length).toBe(2);
     }));
 
     it('should show error alerts when an error message is received', fakeAsync(() => {
-      const expected: string = "This is an error message";
+      const expected = 'This is an error message';
 
       alert_service.show_error_message(expected, null);
       component.ngAfterViewInit();
@@ -130,15 +145,15 @@ describe('AppComponent', () => {
 
       tick();
 
-      let alert_message = fixture.debugElement.query(By.css('#alert-message'));
+      const alert_message = fixture.debugElement.query(By.css('div.alert'));
 
       expect(alert_message).not.toBe(null);
       expect(alert_message.nativeElement.textContent.trim()).toContain(expected);
       expect(fixture.debugElement.query(By.css('div.alert-danger'))).toBe(alert_message);
     }));
 
-    it('should show alerts when an info message is received', fakeAsync(() => {
-      const expected: string = "This is an info message";
+    it('should show alerts when an info message is received and remove after 5 seconds', fakeAsync(() => {
+      const expected = 'This is an info message';
 
       alert_service.show_info_message(expected);
       component.ngAfterViewInit();
@@ -147,11 +162,19 @@ describe('AppComponent', () => {
 
       tick();
 
-      let alert_message = fixture.debugElement.query(By.css('#alert-message'));
+      const alert_message = fixture.debugElement.query(By.css('div.alert'));
 
       expect(alert_message).not.toBe(null);
       expect(alert_message.nativeElement.textContent.trim()).toContain(expected);
       expect(fixture.debugElement.query(By.css('div.alert-info'))).toBe(alert_message);
+
+      tick(5000); // wait for the timeout to end
+
+      fixture.detectChanges();
+
+      const alert_message_again = fixture.debugElement.query(By.css('div.alert'));
+
+      expect(alert_message_again).toBe(null);
     }));
   });
 
@@ -164,7 +187,7 @@ describe('AppComponent', () => {
   });
 
   describe('#is_admin()', () => {
-    let user: User = new User();
+    const user: User = new User();
 
     beforeEach(() => {
       user.name = 'reader';
