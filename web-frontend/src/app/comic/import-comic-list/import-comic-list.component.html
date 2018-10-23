@@ -1,3 +1,33 @@
+<!-- import details modal -->
+<div id='import-comic-details' class='modal fade' role='dialog'>
+  <div class='modal-dialog modal-lg'>
+    <div class='modal-content'>
+      <div class='modal-body'>
+        <div class='container-fluid w-100'>
+          <app-issue-details [title]='selected_file_detail_title'
+            [subtitle]='selected_file_detail_subtitle'
+            [cover_url]='selected_file_image_url'
+            (close)='selected_file_detail = null'> </app-issue-details>
+        </div>
+      </div>
+      <div class='modal-footer'>
+        <div class='row w-100 justify-content-center ml-0 mb-3'>
+          <button
+            *ngIf='selected_file_detail && !selected_file_detail.selected'
+            type='button' class='btn w-75 bg-primary text-white'
+            (click)='toggle_comic_selection(selected_file_detail)'>
+            Select</button>
+          <button
+            *ngIf='selected_file_detail && selected_file_detail.selected'
+            type='button' class='btn w-75 bg-danger text-white'
+            (click)='toggle_comic_selection(selected_file_detail)'>
+            Deselect</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  main import content area -->
 <div *ngIf='pending_imports > 0' class='container-fluid w-100'>
   <h2 class='text-center'>{{get_import_title()}}</h2>
   <div *ngIf='delete_blocked_pages'>
@@ -75,9 +105,7 @@
           (click)='toggle_show_selected()'>Show Selections Only</label>
       </div>
     </div>
-    <div class='position-fixed comixed-scrollable-div'
-      [class.col-9]='!selected_file_detail'
-      [class.col-6]='selected_file_detail'>
+    <div class='position-fixed comixed-scrollable-div col-9'>
       <div class='container w-100 justify-content-center'>
         <h2 class='text-center'>{{get_comic_selection_title()}}</h2>
         <div *ngIf='file_details.length > 0' class='row w-100'>
@@ -92,26 +120,6 @@
             [file_details]='file_detail' [cover_size]='cover_size'>
           </app-import-comic-list-entry>
         </div>
-      </div>
-    </div>
-    <div *ngIf='selected_file_detail'
-      class='col-3 comixed-import-comic-details-box'>
-      <div class='container-fluid w-100'>
-        <app-issue-details [title]='selected_file_detail_title'
-          [subtitle]='selected_file_detail_subtitle'
-          [cover_url]='selected_file_image_url'
-          (close)='selected_file_detail = null'>
-        <div class='row w-100 justify-content-center ml-0 mb-3'>
-          <button *ngIf='!selected_file_detail.selected' type='button'
-            class='btn w-75 bg-primary text-white'
-            (click)='toggle_comic_selection(selected_file_detail)'>
-            Select</button>
-          <button *ngIf='selected_file_detail.selected' type='button'
-            class='btn w-75 bg-danger text-white'
-            (click)='toggle_comic_selection(selected_file_detail)'>
-            Deselect</button>
-        </div>
-        </app-issue-details>
       </div>
     </div>
   </div>

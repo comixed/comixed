@@ -24,8 +24,9 @@
             *ngIf='!file_details.selected'>Select</span></span>
         </div>
         <div class='row w-100 mx-0'>
-          <span (click)='on_clicked()' class='text-nowrap text-truncate'><i
-            class='fa fa-info-circle'></i>Details</span>
+          <span class='text-nowrap text-truncate'><i
+            (click)='on_clicked()' class='fa fa-info-circle'
+            data-toggle='modal' data-target='#import-comic-details'></i>Details</span>
         </div>
       </div>
     </div>

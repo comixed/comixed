@@ -70,6 +70,9 @@ export class ImportComicListComponent implements OnInit {
       'directory': ['', Validators.required],
     });
     this.selected_file_detail = null;
+    this.selected_file_detail_title = '';
+    this.selected_file_detail_subtitle = '';
+    this.selected_file_image_url = '';
     activeRoute.queryParams.subscribe(params => {
       this.reload_page_size(params['page_size']);
     });
