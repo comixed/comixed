@@ -36,6 +36,7 @@ export class IssueDetailsComponent implements OnInit {
   @Input() title: string;
   @Input() subtitle: string;
   @Input() cover_url: string;
+  @Input() show_close_button = false;
   @Output() close = new EventEmitter<boolean>();
 
   constructor() { }

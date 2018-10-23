@@ -27,7 +27,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { IssueDetailsComponent } from './issue-details.component';
 
-describe('IssueDetailsComponent', () => {
+fdescribe('IssueDetailsComponent', () => {
   const TEST_TITLE_VALUE = 'Test comic title';
   const TEST_SUBTITLE_VALUE = 'Test comic subtitle';
   const TEST_COVER_IMAGE_URL = 'http://localhost:7171/api/page/15/content';
@@ -73,16 +73,31 @@ describe('IssueDetailsComponent', () => {
     expect(fixture.debugElement.query(By.css('img#issue-details-cover')).nativeElement.src).toContain(TEST_COVER_IMAGE_URL);
   }));
 
-  it('sends a notification when the close button is clicked', fakeAsync(() => {
-    let passed = false;
+  it('does not have a close button by default', fakeAsync(() => {
+    expect(fixture.debugElement.query(By.css('#issue-details-close-button'))).toBe(null);
+  }));
 
-    component.close.subscribe((event) => {
-      passed = true;
+  describe('when the close button is enabled', () => {
+    beforeEach(() => {
+      component.show_close_button = true;
+      fixture.detectChanges();
     });
 
-    fixture.debugElement.query(By.css('#issue-details-close-button')).nativeElement.click();
-    tick();
+    it('shows a close button when enabled', fakeAsync(() => {
+      expect(fixture.debugElement.query(By.css('#issue-details-close-button'))).not.toBe(null);
+    }));
 
-    expect(passed).toBe(true);
-  }));
+    it('sends a notification when the close button is clicked', fakeAsync(() => {
+      let passed = false;
+
+      component.close.subscribe((event) => {
+        passed = true;
+      });
+
+      fixture.debugElement.query(By.css('#issue-details-close-button')).nativeElement.click();
+      tick();
+
+      expect(passed).toBe(true);
+    }));
+  });
 });
