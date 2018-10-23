@@ -7,21 +7,20 @@
           <app-issue-details [title]='selected_file_detail_title'
             [subtitle]='selected_file_detail_subtitle'
             [cover_url]='selected_file_image_url'
-            (close)='selected_file_detail = null'> </app-issue-details>
-        </div>
-      </div>
-      <div class='modal-footer'>
-        <div class='row w-100 justify-content-center ml-0 mb-3'>
-          <button
-            *ngIf='selected_file_detail && !selected_file_detail.selected'
-            type='button' class='btn w-75 bg-primary text-white'
-            (click)='toggle_comic_selection(selected_file_detail)'>
-            Select</button>
-          <button
-            *ngIf='selected_file_detail && selected_file_detail.selected'
-            type='button' class='btn w-75 bg-danger text-white'
-            (click)='toggle_comic_selection(selected_file_detail)'>
-            Deselect</button>
+            (close)='selected_file_detail = null'>
+          <div class='row w-100 justify-content-center ml-0 mb-3'>
+            <button
+              *ngIf='selected_file_detail && !selected_file_detail.selected'
+              type='button' class='btn w-75 bg-primary text-white'
+              (click)='toggle_comic_selection(selected_file_detail)'>
+              Select</button>
+            <button
+              *ngIf='selected_file_detail && selected_file_detail.selected'
+              type='button' class='btn w-75 bg-danger text-white'
+              (click)='toggle_comic_selection(selected_file_detail)'>
+              Deselect</button>
+          </div>
+          </app-issue-details>
         </div>
       </div>
     </div>
