@@ -19,7 +19,10 @@
           <span (click)='show_comics_clicked($event)'
             data-toggle='modal'
             data-target='#display_comics_with_duplicates'><i
-            class='fa fa-info-circle'></i> Show Comics</span> <span
+            class='fa fa-info-circle'></i> Show Comics</span>
+        </div>
+        <div class='row w-100 mx-0'>
+          <span
             (click)='all_are_deleted ? undelete_all_pages() : delete_all_pages()'
             class='text-nowrap text-truncate'><i class='fa'
             [class.fa-plus-circle]='all_are_deleted'
