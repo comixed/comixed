@@ -22,16 +22,16 @@ import {
   OnInit,
   Input,
 } from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {UserService} from '../../user.service';
-import {ComicService} from '../comic.service';
-import {AlertService} from '../../alert.service';
-import {Page} from '../page.model';
-import {Comic} from '../comic.model';
+import { UserService } from '../../user.service';
+import { ComicService } from '../comic.service';
+import { AlertService } from '../../alert.service';
+import { Page } from '../page.model';
+import { Comic } from '../comic.model';
 
 @Component({
   selector: 'app-duplicate-list-entry',
@@ -63,7 +63,7 @@ export class DuplicatePageListEntryComponent implements OnInit {
   ngOnInit() {
     const that = this;
     this.image_url = this.comic_service.get_url_for_page_by_hash(this.page_hash);
-    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
+    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
     this.update_all_are_deleted();
     this.comic_service.get_pages_for_hash(this.page_hash).subscribe(
       (pages: Array<Page>) => {

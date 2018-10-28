@@ -1,26 +1,33 @@
-<div class='card comic-cover-card p-1 m-1'>
-  <div class='card-body p-1'>
-    <div class='card-title text-nowrap text-truncate'>{{page_hash}}</div>
-    <div class='card-subtitle text-nowrap text-truncate'
-      [style.height]='"" + image_size + "px"'>{{pages.length}}
-      instance{{pages.length !== 1 ? 's' : ''}}</div>
-    <div *ngIf='!all_are_deleted'
-      class='container-fluid w-100 justify-content-center mb-2'>
-      <button type='button' class='btn btn-sm btn-danger w-100'
-        (click)='delete_all_pages()'>Delete All</button>
+<div class='p-1 m-1'>
+  <div class='card card-inverse card-info px-1 pt-2 pb-3'>
+    <div class='comic-cover-img-container'
+      [style.height]='"" + image_size + "px"'>
+      <img class='card-img-top' src='{{image_url}}'
+        [style.max-height]='"" + image_size + "px"'
+        [style.max-width]='"" + image_size + "px"'
+        [style.height]='"auto"' [style.width]='"auto"'>
     </div>
-    <div *ngIf='all_are_deleted'
-      class='container-fluid w-100 justify-content-center mb-2'>
-      <button type='button' class='btn btn-sm btn-warning w-100'
-        (click)='undelete_all_pages()'>Undelete All</button>
+    <div class='comic-cover-title-container text-center'
+      [style.width]='"" + image_size + "px"'>
+      <h5 class='card-title text-nowrap text-truncate'>{{page_hash}}</h5>
+      <h6 class='card-subtitle text-nowrap text-truncate'>{{pages.length}}
+        instance{{pages.length !== 1 ? 's' : ''}}</h6>
     </div>
-    <div class='container-fluid w-100 justify-content-center mb-2'>
-      <button type='button' class='btn btn-small btn-info w-100'
-        (click)='show_comics_clicked($event)' data-toggle='modal'
-        data-target='#display_comics_with_duplicates'>Show
-        Comics</button>
+    <div class='card-img-overlay'>
+      <div class='card-img-overlay-content'>
+        <div class='row w-100 mx-0'>
+          <span (click)='show_comics_clicked($event)'
+            data-toggle='modal'
+            data-target='#display_comics_with_duplicates'><i
+            class='fa fa-info-circle'></i> Show Comics</span> <span
+            (click)='all_are_deleted ? undelete_all_pages() : delete_all_pages()'
+            class='text-nowrap text-truncate'><i class='fa'
+            [class.fa-plus-circle]='all_are_deleted'
+            [class.fa-minus-circle]='!all_are_deleted'></i><span
+            *ngIf='all_are_deleted'> Undelete All</span><span
+            *ngIf='!all_are_deleted'> Delete All</span></span>
+        </div>
+      </div>
     </div>
-    <img class='card-img-bottom mb-2 img-fluid' src='{{image_url}}'
-      [style.height]='"" + image_size + "px"' [style.width]='"auto"'>
   </div>
 </div>
