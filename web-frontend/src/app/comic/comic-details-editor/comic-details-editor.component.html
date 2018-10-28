@@ -64,6 +64,10 @@
               <button class='btn btn-primary ml-1 w-75' type='button'
                 (click)='select_current_issue()'>Select</button>
             </div>
+            <div *ngIf='!current_issue'>
+              <p class='text-danger'>No issue in this volume matches
+                the search details entered.</p>
+            </div>
             <div class='row w-100 justify-content-center'>
               <select id='comicvine-issue-selection'
                 class='form-control w-75' #selectElem
