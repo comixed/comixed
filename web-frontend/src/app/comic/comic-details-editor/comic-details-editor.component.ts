@@ -153,7 +153,7 @@ export class ComicDetailsEditorComponent implements OnInit {
 
   load_current_issue_details(): void {
     this.current_issue = this.issues.get(`${this.current_volume.id}`);
-    this.volume_selection_banner = `Showing ${this.current_volume_index + 1} Of ${this.volumes.length}`;
+    this.volume_selection_banner = `Showing Volume #${this.current_volume_index + 1}`;
     this.volume_selection_title = `${this.current_issue.volume_name} #${this.current_issue.issue_number}`;
     this.volume_selection_subtitle = `Cover Date: ${this.date_formatter.format(new Date(this.current_issue.cover_date))}`;
   }

@@ -45,26 +45,32 @@
         </div>
       </form>
     </div>
-    <div class='col-5'>
+    <div class='col-4'>
       <div *ngIf='show_candidates()' class='container-fluid'>
-        <h3 class='w-100 text-center'>{{volume_selection_banner}}</h3>
         <div class='card w-100'>
           <div class='card-header'>
-            <label>Issue:</label> <select id='comicvine-issue-selection'
-              class='form-control' #selectElem
-              (change)='set_current_volume_by_id(selectElem.value)'>
-              <option *ngFor='let volume of volumes' [value]='volume.id'>{{get_volume_option_label(volume)}}</option>
-            </select>
+            <h2 class='w-100 text-center'>Found {{ volumes.length
+              }} Volumes</h2>
+            <h3 class='w-100 text-center'>{{volume_selection_banner}}</h3>
           </div>
           <div *ngIf='current_issue' class='card-body'>
             <img class='card-img-bottom img-fluid'
               src='{{get_current_issue_image_url()}}'
               alt={{current_issue.name}}>
           </div>
-          <div *ngIf='current_issue' class='card-footer'>
-            <div class='row w-100 justify-content-center'>
+          <div class='card-footer'>
+            <div *ngIf='current_issue'
+              class='row w-100 justify-content-center pb-1'>
               <button class='btn btn-primary ml-1 w-75' type='button'
                 (click)='select_current_issue()'>Select</button>
+            </div>
+            <div class='row w-100 justify-content-center'>
+              <select id='comicvine-issue-selection'
+                class='form-control w-75' #selectElem
+                (change)='set_current_volume_by_id(selectElem.value)'>
+                <option *ngFor='let volume of volumes'
+                  [value]='volume.id'>{{get_volume_option_label(volume)}}</option>
+              </select>
             </div>
           </div>
         </div>
