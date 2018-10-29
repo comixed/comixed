@@ -248,5 +248,12 @@ export class ComicService {
 
     return this.http.post(`${this.api_url}/scraper/save`, params);
   }
-}
 
+  save_changes_to_comic(comic_id: number, series: string, volume: string, issue_number: string): Observable<any> {
+    const params = new HttpParams()
+      .set('series', series)
+      .set('volume', volume)
+      .set('issue_number', issue_number);
+    return this.http.put(`${this.api_url}/comics/${comic_id}`, params);
+  }
+}
