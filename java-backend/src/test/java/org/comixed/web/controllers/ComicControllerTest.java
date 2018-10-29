@@ -54,6 +54,9 @@ public class ComicControllerTest
     private static final String TEST_DIRECTORY = "src/test/resources";
     private static final String TEST_COMIC_FILE = "src/test/resources/example.cbz";
     private static final long TEST_COMIC_COUNT = 320L;
+    private static final String TEST_SERIES = "Awesome comic series";
+    private static final String TEST_VOLUME = "2018";
+    private static final String TEST_ISSUE_NUMBER = "52";
 
     @InjectMocks
     private ComicController controller;
@@ -211,5 +214,33 @@ public class ComicControllerTest
         assertEquals(TEST_COMIC_COUNT, result);
 
         Mockito.verify(comicRepository, Mockito.times(1)).count();
+    }
+
+    @Test
+    public void testUpdateComicBadComicId()
+    {
+        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(null);
+
+        controller.updateComic(TEST_COMIC_ID, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+
+        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+    }
+
+    @Test
+    public void testUpdateComic()
+    {
+        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
+        Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
+        Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
+        Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+
+        controller.updateComic(TEST_COMIC_ID, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+
+        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
+        Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
+        Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+        Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
     }
 }

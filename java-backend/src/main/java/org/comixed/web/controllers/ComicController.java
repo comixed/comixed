@@ -38,6 +38,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -165,5 +166,30 @@ public class ComicController
     public long getCount()
     {
         return this.comicRepository.count();
+    }
+
+    @RequestMapping(value = "/{id}",
+                    method = RequestMethod.PUT)
+    public void updateComic(@PathVariable("id") long id,
+                            @RequestParam("series") String series,
+                            @RequestParam("volume") String volume,
+                            @RequestParam("issue_number") String issueNumber)
+    {
+        this.logger.debug("Updating comic: id={}", id);
+
+        Comic comic = this.comicRepository.findOne(id);
+
+        if (comic != null)
+        {
+            comic.setSeries(series);
+            comic.setVolume(volume);
+            comic.setIssueNumber(issueNumber);
+            this.logger.debug("Saving updates to comic");
+            this.comicRepository.save(comic);
+        }
+        else
+        {
+            this.logger.debug("No such comic found");
+        }
     }
 }
