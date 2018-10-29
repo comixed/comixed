@@ -188,6 +188,15 @@ export class ComicDetailsEditorComponent implements OnInit {
       });
   }
 
+  save_changes(): void {
+    this.alert_service.show_busy_message('Saving Changes...');
+    this.comic_service.save_changes_to_comic(this.comic.id, this.series, this.volume, this.issue_number).subscribe(
+      () => {
+        this.alert_service.show_busy_message('');
+      }
+    );
+  }
+
   save_api_key(): void {
     this.api_key = this.api_key.trim();
     this.user_service.set_user_preference('comic_vine_api_key', this.api_key);
