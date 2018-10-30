@@ -85,11 +85,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       this.comic_service.load_comic_from_remote(id).subscribe(
         (comic: Comic) => {
           this.comic = comic;
-          if (this.comic) {
-            this.cover_url = this.comic_service.get_url_for_page_by_comic_index(this.comic.id, 0);
-            this.title_text = this.comic_service.get_issue_label_text_for_comic(this.comic);
-            this.subtitle_text = this.comic_service.get_issue_content_label_for_comic(this.comic);
-          }
+          this.load_comic_details();
           this.alert_service.show_busy_message('');
         },
         error => {
@@ -102,6 +98,17 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
         this.alert_service.show_error_message('An error has occurred...', error);
         this.alert_service.show_busy_message('');
       });
+  }
+
+  load_comic_details(): void {
+    this.cover_url = '';
+    this.title_text = '';
+    this.subtitle_text = '';
+    if (this.comic) {
+      this.cover_url = this.comic_service.get_url_for_page_by_comic_index(this.comic.id, 0);
+      this.title_text = this.comic_service.get_issue_label_text_for_comic(this.comic);
+      this.subtitle_text = this.comic_service.get_issue_content_label_for_comic(this.comic);
+    }
   }
 
   ngOnDestroy() {
@@ -154,5 +161,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     this.comic = this.comic_service.all_comics.find((element: Comic) => {
       return element.id === that.comic.id;
     });
+    this.load_comic_details();
   }
 }
