@@ -22,7 +22,7 @@ import { OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { ComicService } from '../comic.service';
+import { ComicService } from '../../services/comic.service';
 import { AlertService } from '../../services/alert.service';
 import { FileDetails } from '../file-details.model';
 

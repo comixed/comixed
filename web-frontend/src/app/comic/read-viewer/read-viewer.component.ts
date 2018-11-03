@@ -20,7 +20,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 
 import {Comic} from '../comic.model';
-import {ComicService} from '../comic.service';
+import {ComicService} from '../../services/comic.service';
 
 @Component({
   selector: 'app-read-viewer',

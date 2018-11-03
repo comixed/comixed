@@ -20,7 +20,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ComicService } from '../comic/comic.service';
+import { ComicService } from '../services/comic.service';
 import { AlertService } from '../services/alert.service';
 
 @Component({

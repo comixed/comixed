@@ -17,29 +17,29 @@
  * org.comixed;
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgxPaginationModule} from 'ngx-pagination';
-import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
-import {ComicRoutingModule} from './comic-routing.module';
-import {ComicService} from './comic.service';
-import {ComicListComponent} from './comic-list/comic-list.component';
-import {ImportComicListComponent} from './import-comic-list/import-comic-list.component';
-import {ComicListEntryComponent} from './comic-list-entry/comic-list-entry.component';
-import {ComicDetailsComponent} from './comic-details/comic-details.component';
-import {DuplicatePageListComponent} from './duplicate-page-list/duplicate-page-list.component';
-import {DuplicatePageListEntryComponent} from './duplicate-page-list-entry/duplicate-page-list-entry.component';
-import {PageThumbnailComponent} from './page-thumbnail/page-thumbnail.component';
-import {ReadViewerComponent} from './read-viewer/read-viewer.component';
-import {SeriesFilterPipe} from './series-filter.pipe';
-import {PageDetailsComponent} from './page-details/page-details.component';
-import {ImportComicListEntryComponent} from './import-comic-list-entry/import-comic-list-entry.component';
-import {SelectedForImportPipe} from './import-comic-list/selected-for-import.pipe';
-import {PageSizeComponent} from './page-size/page-size.component';
-import {GroupComicsComponent} from './group-comics/group-comics.component';
-import {GroupByPipe} from './group-by.pipe';
+import { ComicRoutingModule } from './comic-routing.module';
+import { ComicService } from '../services/comic.service';
+import { ComicListComponent } from './comic-list/comic-list.component';
+import { ImportComicListComponent } from './import-comic-list/import-comic-list.component';
+import { ComicListEntryComponent } from './comic-list-entry/comic-list-entry.component';
+import { ComicDetailsComponent } from './comic-details/comic-details.component';
+import { DuplicatePageListComponent } from './duplicate-page-list/duplicate-page-list.component';
+import { DuplicatePageListEntryComponent } from './duplicate-page-list-entry/duplicate-page-list-entry.component';
+import { PageThumbnailComponent } from './page-thumbnail/page-thumbnail.component';
+import { ReadViewerComponent } from './read-viewer/read-viewer.component';
+import { SeriesFilterPipe } from './series-filter.pipe';
+import { PageDetailsComponent } from './page-details/page-details.component';
+import { ImportComicListEntryComponent } from './import-comic-list-entry/import-comic-list-entry.component';
+import { SelectedForImportPipe } from './import-comic-list/selected-for-import.pipe';
+import { PageSizeComponent } from './page-size/page-size.component';
+import { GroupComicsComponent } from './group-comics/group-comics.component';
+import { GroupByPipe } from './group-by.pipe';
 import { ComicListGroupComponent } from './comic-list-group/comic-list-group.component';
 import { ComicDetailsEditorComponent } from './comic-details-editor/comic-details-editor.component';
 import { IssueDetailsComponent } from './issue/details/issue-details/issue-details.component';
@@ -80,4 +80,4 @@ import { IssueDetailsComponent } from './issue/details/issue-details/issue-detai
     IssueDetailsComponent,
   ]
 })
-export class ComicModule {}
+export class ComicModule { }

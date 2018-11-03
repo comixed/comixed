@@ -27,7 +27,7 @@ import { GroupComicsComponent } from '../group-comics/group-comics.component';
 import { GroupByPipe } from '../group-by.pipe';
 import { UserService } from '../../services/user.service';
 import { Comic } from '../comic.model';
-import { ComicService } from '../comic.service';
+import { ComicService } from '../../services/comic.service';
 import { ComicListEntryComponent } from '../comic-list-entry/comic-list-entry.component';
 import { ComicListGroupComponent } from '../comic-list-group/comic-list-group.component';
 import { SeriesFilterPipe } from '../series-filter.pipe';

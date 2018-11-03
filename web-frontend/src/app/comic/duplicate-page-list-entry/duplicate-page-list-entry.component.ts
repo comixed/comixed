@@ -28,7 +28,7 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { UserService } from '../../services/user.service';
-import { ComicService } from '../comic.service';
+import { ComicService } from '../../services/comic.service';
 import { AlertService } from '../../services/alert.service';
 import { Page } from '../page.model';
 import { Comic } from '../comic.model';

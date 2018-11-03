@@ -26,12 +26,12 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { UserService } from '../services/user.service';
-import { AlertService } from '../services/alert.service';
-import { Comic } from './comic.model';
-import { Page } from './page.model';
-import { PageType } from './page-type.model';
-import { FileDetails } from './file-details.model';
+import { UserService } from './user.service';
+import { AlertService } from './alert.service';
+import { Comic } from '../comic/comic.model';
+import { Page } from '../comic/page.model';
+import { PageType } from '../comic/page-type.model';
+import { FileDetails } from '../comic/file-details.model';
 
 @Injectable()
 export class ComicService {
