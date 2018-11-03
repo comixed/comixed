@@ -27,7 +27,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { IssueDetailsComponent } from './issue-details.component';
 
-fdescribe('IssueDetailsComponent', () => {
+describe('IssueDetailsComponent', () => {
   const TEST_TITLE_VALUE = 'Test comic title';
   const TEST_SUBTITLE_VALUE = 'Test comic subtitle';
   const TEST_COVER_IMAGE_URL = 'http://localhost:7171/api/page/15/content';
