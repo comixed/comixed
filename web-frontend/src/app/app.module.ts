@@ -40,7 +40,7 @@ import { ComicModule } from './comic/comic.module';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './login/login.component';
 import { AccountComponent } from './account/account.component';
-import { AlertService } from './alert.service';
+import { AlertService } from './services/alert.service';
 import { UserService } from './services/user.service';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 

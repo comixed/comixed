@@ -28,7 +28,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Comic } from '../comic.model';
 import { Page } from '../page.model';
 import { ComicService } from '../comic.service';
-import { AlertService } from '../../alert.service';
+import { AlertService } from '../../services/alert.service';
 import { ReadViewerComponent } from '../read-viewer/read-viewer.component';
 import { PageDetailsComponent } from '../page-details/page-details.component';
 import { PageType } from '../page-type.model';

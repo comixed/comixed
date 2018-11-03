@@ -27,7 +27,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { ComicService } from '../comic.service';
 import { UserService } from '../../services/user.service';
-import { AlertService } from '../../alert.service';
+import { AlertService } from '../../services/alert.service';
 import { Page } from '../page.model';
 import { Comic } from '../comic.model';
 import { DuplicatePageListEntryComponent } from '../duplicate-page-list-entry/duplicate-page-list-entry.component';

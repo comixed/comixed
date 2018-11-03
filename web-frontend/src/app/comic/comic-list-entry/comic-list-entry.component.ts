@@ -24,7 +24,7 @@ import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import { Comic } from '../comic.model';
 import { ComicService } from '../comic.service';
-import { AlertService } from '../../alert.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-comic-list-entry',

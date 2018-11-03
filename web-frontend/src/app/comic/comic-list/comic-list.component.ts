@@ -31,7 +31,7 @@ import { ComicService } from '../comic.service';
 import { ComicListEntryComponent } from '../comic-list-entry/comic-list-entry.component';
 import { ComicListGroupComponent } from '../comic-list-group/comic-list-group.component';
 import { SeriesFilterPipe } from '../series-filter.pipe';
-import { AlertService } from '../../alert.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-comic-list',

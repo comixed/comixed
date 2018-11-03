@@ -27,7 +27,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 
-import { AlertService } from '../alert.service';
+import { AlertService } from './alert.service';
 import { User } from '../user.model';
 
 @Injectable()

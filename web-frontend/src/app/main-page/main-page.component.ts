@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
-import {ComicService} from '../comic/comic.service';
-import {AlertService} from '../alert.service';
+import { ComicService } from '../comic/comic.service';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-main-page',
@@ -36,7 +36,7 @@ export class MainPageComponent implements OnInit {
   constructor(
     private comicService: ComicService,
     private alert_service: AlertService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.comicService.get_library_comic_count().subscribe(

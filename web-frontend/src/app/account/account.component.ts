@@ -20,7 +20,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { UserService } from '../services/user.service';
-import { AlertService } from '../alert.service';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-account',
