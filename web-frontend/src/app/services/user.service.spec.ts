@@ -32,7 +32,7 @@ import {
 } from '@angular/router';
 
 import { AlertService } from './alert.service';
-import { User } from './user.model';
+import { User } from '../user.model';
 
 import { UserService } from './user.service';
 

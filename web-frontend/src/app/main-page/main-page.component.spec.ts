@@ -22,15 +22,15 @@ import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
-import {DebugElement} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {RouterTestingModule} from "@angular/router/testing";
-import {Router} from "@angular/router";
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from "@angular/router/testing";
+import { Router } from "@angular/router";
 
-import {ComicService} from '../comic/comic.service';
-import {AlertService} from '../alert.service';
+import { ComicService } from '../comic/comic.service';
+import { AlertService } from '../services/alert.service';
 
-import {MainPageComponent} from './main-page.component';
+import { MainPageComponent } from './main-page.component';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;

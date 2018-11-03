@@ -34,9 +34,9 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-import { AlertService } from './alert.service';
-import { UserService } from './user.service';
-import { MockUserService } from './mock-user.service';
+import { AlertService } from './services/alert.service';
+import { UserService } from './services/user.service';
+import { MockUserService } from './services/mock-user.service';
 import {
   User,
   Role,

@@ -26,7 +26,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { LoadingModule } from 'ngx-loading';
-import { AlertService } from '../alert.service';
+import { AlertService } from '../services/alert.service';
 import { By } from '@angular/platform-browser';
 
 describe('BusyIndicatorComponent', () => {
