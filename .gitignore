@@ -28,6 +28,7 @@ bin/
 /out-tsc
 
 # dependencies
+web-frontend/coverage
 node_modules
 package-lock.json
 
