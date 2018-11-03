@@ -26,7 +26,7 @@ import { FormArray } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { UserService } from '../../user.service';
+import { UserService } from '../../services/user.service';
 import { FileDetails } from '../file-details.model';
 import { ComicService } from '../comic.service';
 import { AlertService } from '../../alert.service';

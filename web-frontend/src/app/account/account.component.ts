@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {UserService} from '../user.service';
-import {AlertService} from '../alert.service';
+import { UserService } from '../services/user.service';
+import { AlertService } from '../alert.service';
 
 @Component({
   selector: 'app-account',
@@ -36,7 +36,7 @@ export class AccountComponent implements OnInit {
   constructor(
     private user_service: UserService,
     private alert_service: AlertService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.username = this.user_service.get_user().name;

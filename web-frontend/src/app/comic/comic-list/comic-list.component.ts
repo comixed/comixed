@@ -25,7 +25,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { PageSizeComponent } from '../page-size/page-size.component';
 import { GroupComicsComponent } from '../group-comics/group-comics.component';
 import { GroupByPipe } from '../group-by.pipe';
-import { UserService } from '../../user.service';
+import { UserService } from '../../services/user.service';
 import { Comic } from '../comic.model';
 import { ComicService } from '../comic.service';
 import { ComicListEntryComponent } from '../comic-list-entry/comic-list-entry.component';

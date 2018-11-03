@@ -17,18 +17,18 @@
  * org.comixed;
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HttpClient,
   HttpParams,
   HttpHeaders,
 } from '@angular/common/http';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 
-import {AlertService} from './alert.service';
-import {User} from './user.model';
+import { AlertService } from '../alert.service';
+import { User } from '../user.model';
 
 @Injectable()
 export class UserService {
@@ -46,7 +46,7 @@ export class UserService {
   monitor_authentication_status(): void {
     setInterval(() => {
       const headers = new HttpHeaders();
-      this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
+      this.http.get(`${this.api_url}/user`, { headers: headers }).subscribe(
         (user: User) => {
           this.user = user;
         },
@@ -58,8 +58,8 @@ export class UserService {
   }
 
   login(email: string, password: string, callback) {
-    const headers = new HttpHeaders({authorization: 'Basic ' + btoa(email + ':' + password)});
-    this.http.get(`${this.api_url}/user`, {headers: headers}).subscribe(
+    const headers = new HttpHeaders({ authorization: 'Basic ' + btoa(email + ':' + password) });
+    this.http.get(`${this.api_url}/user`, { headers: headers }).subscribe(
       (user: User) => {
         if (user.name) {
           this.user = user;

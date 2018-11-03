@@ -17,8 +17,8 @@
  * org.comixed;
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -26,7 +26,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import {UserService} from '../user.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-login',

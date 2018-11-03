@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 
 import { ComicService } from '../comic.service';
-import { UserService } from '../../user.service';
+import { UserService } from '../../services/user.service';
 import { AlertService } from '../../alert.service';
 import { Comic } from '../comic.model';
 import { Page } from '../page.model';

@@ -20,7 +20,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
-import { UserService } from './user.service';
+import { UserService } from './services/user.service';
 import { AlertService } from './alert.service';
 import { ComicService } from './comic/comic.service';
 

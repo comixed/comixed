@@ -25,16 +25,16 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import {RouterTestingModule} from '@angular/router/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import {
   RouterModule,
   Routes,
 } from '@angular/router';
 
-import {AlertService} from './alert.service';
-import {User} from './user.model';
+import { AlertService } from './alert.service';
+import { User } from './user.model';
 
-import {UserService} from './user.service';
+import { UserService } from './user.service';
 
 describe('UserService', () => {
   let injector;
