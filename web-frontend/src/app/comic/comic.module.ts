@@ -44,6 +44,7 @@ import { ComicListGroupComponent } from './comic-list-group/comic-list-group.com
 import { ComicDetailsEditorComponent } from './comic-details-editor/comic-details-editor.component';
 import { IssueDetailsComponent } from './issue/details/issue-details/issue-details.component';
 import { ComicOverviewComponent } from './details/overview/comic-overview/comic-overview.component';
+import { ComicStoryComponent } from './details/story/comic-story/comic-story.component';
 
 @NgModule({
   imports: [
@@ -80,6 +81,7 @@ import { ComicOverviewComponent } from './details/overview/comic-overview/comic-
     ComicDetailsEditorComponent,
     IssueDetailsComponent,
     ComicOverviewComponent,
+    ComicStoryComponent,
   ]
 })
 export class ComicModule { }
