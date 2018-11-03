@@ -29,9 +29,14 @@ import { Comic } from '../comic.model';
 import { Page } from '../page.model';
 import { ComicService } from '../../services/comic.service';
 import { AlertService } from '../../services/alert.service';
+import { UserService } from '../../services/user.service';
 import { ReadViewerComponent } from '../read-viewer/read-viewer.component';
 import { PageDetailsComponent } from '../page-details/page-details.component';
 import { PageType } from '../page-type.model';
+import { ComicOverviewComponent } from './overview/comic-overview/comic-overview.component';
+import { ComicStoryComponent } from './story/comic-story/comic-story.component';
+import { ComicCreditsComponent } from './credits/comic-credits/comic-credits.component';
+import { ComicPagesComponent } from './pages/comic-pages/comic-pages.component';
 
 @Component({
   selector: 'app-comic-details',
@@ -39,6 +44,7 @@ import { PageType } from '../page-type.model';
   styleUrls: ['./comic-details.component.css']
 })
 export class ComicDetailsComponent implements OnInit, OnDestroy {
+  current_tab = 'overview';
   comic: Comic;
   title_text: string;
   subtitle_text: string;
@@ -54,6 +60,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   show_locations = false;
   page_types: Array<PageType> = [];
   current_page: Page;
+  image_size: number;
   private show_page_details = false;
   protected editing = false;
 
@@ -62,9 +69,11 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     private comic_service: ComicService,
     private alert_service: AlertService,
+    private user_service: UserService,
   ) { }
 
   ngOnInit() {
+    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
     this.alert_service.show_busy_message('Retrieving comic details...');
     this.comic_service.get_page_types().subscribe(
       (page_types: PageType[]) => {
@@ -162,5 +171,21 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       return element.id === that.comic.id;
     });
     this.load_comic_details();
+  }
+
+  get_cover_url(): string {
+    if (this.comic) {
+      return this.comic_service.get_cover_url_for_comic(this.comic);
+    }
+
+    return '';
+  }
+
+  is_current_tab(name: string): boolean {
+    return this.current_tab === name;
+  }
+
+  set_current_tab(name: string): void {
+    this.current_tab = name;
   }
 }

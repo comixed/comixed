@@ -1,0 +1,66 @@
+<div class='row w-100'>
+  <div class='col-3'>
+    <div class='card ml-3'>
+      <div class='card-header justify-content-center'>
+        <h2 class='w-100 text-center text-nowrap text-truncate'>
+          {{title_text}}</h2>
+        <h3 class='w-100 text-center text-nowrap text-truncate'>
+          {{subtitle_text}}</h3>
+      </div>
+      <div class='card-body'>
+        <img class='card-img-bottom' [src]='get_cover_url()'>
+      </div>
+    </div>
+  </div>
+  <div class='col'>
+    <div class='container-fluid w-100 mx-2'>
+      <ul class='nav nav-tabs'>
+        <li class='nav-item' [class.active]='is_current_tab("overview")'><a
+          class='nav-link' href='#overview' data-toggle='tab'
+          (click)='set_current_tab("overview")'>Overview</a></li>
+        <li class='nav-item' [class.active]='is_current_tab("story")'><a
+          class='nav-link' href='#story' data-toggle='tab'
+          (click)='set_current_tab("story")'>Story</a></li>
+        <li class='nav-item' [class.active]='is_current_tab("reader")'><a
+          class='nav-link' href='#comic-reader' data-toggle='tab'
+          (click)='set_current_tab("reader")'>Read</a></li>
+        <li class='nav-item' [class.active]='is_current_tab("credits")'><a
+          class='nav-link' href='#credits' data-toggle='tab'
+          (click)='set_current_tab("credits")'>Credits</a></li>
+        <li class='nav-item' [class.active]='is_current_tab("pages")'><a
+          class='nav-link' href='#pages' data-toggle='tab'
+          (click)='set_current_tab("pages")'>Pages</a></li>
+        <li class='nav-item'
+          [class.active]='is_current_tab("comicvine")'><a
+          class='nav-link' href='#comicvine' data-toggle='tab'
+          (click)='set_current_tab("comicvine")'>ComicVine</a></li>
+      </ul>
+      <div class='tab-content'>
+        <div class='tab-pane active' id='overview'>
+          <div class='row w-100'>
+            <app-comic-overview [comic]='comic'></app-comic-overview>
+          </div>
+        </div>
+        <div class='tab-pane' id='story'>
+          <app-comic-story [comic]='comic'></app-comic-story>
+        </div>
+        <div class='tab-pane' id='comic-reader'>
+          <app-read-viewer [comic]='comic'></app-read-viewer>
+        </div>
+        <div class='tab-pane' id='credits'>
+          <app-comic-credits [comic]='comic'></app-comic-credits>
+        </div>
+        <div class='tab-pane' id='pages'>
+          <div *ngIf='comic' class='row w-100'>
+            <app-comic-pages [comic]='comic' [image_size]='image_size'></app-comic-pages>
+          </div>
+        </div>
+        <div class='tab-pane' id='comicvine'>
+          <div *ngIf='comic' class='row w-100'>
+            <app-comic-details-editor [comic]='comic'></app-comic-details-editor>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -28,7 +28,7 @@ import { ComicService } from '../services/comic.service';
 import { ComicListComponent } from './comic-list/comic-list.component';
 import { ImportComicListComponent } from './import-comic-list/import-comic-list.component';
 import { ComicListEntryComponent } from './comic-list-entry/comic-list-entry.component';
-import { ComicDetailsComponent } from './comic-details/comic-details.component';
+import { ComicDetailsComponent } from './details/comic-details.component';
 import { DuplicatePageListComponent } from './duplicate-page-list/duplicate-page-list.component';
 import { DuplicatePageListEntryComponent } from './duplicate-page-list-entry/duplicate-page-list-entry.component';
 import { PageThumbnailComponent } from './page-thumbnail/page-thumbnail.component';
