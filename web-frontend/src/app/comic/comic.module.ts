@@ -43,6 +43,7 @@ import { GroupByPipe } from './group-by.pipe';
 import { ComicListGroupComponent } from './comic-list-group/comic-list-group.component';
 import { ComicDetailsEditorComponent } from './comic-details-editor/comic-details-editor.component';
 import { IssueDetailsComponent } from './issue/details/issue-details/issue-details.component';
+import { ComicOverviewComponent } from './details/overview/comic-overview/comic-overview.component';
 
 @NgModule({
   imports: [
@@ -78,6 +79,7 @@ import { IssueDetailsComponent } from './issue/details/issue-details/issue-detai
     ComicListGroupComponent,
     ComicDetailsEditorComponent,
     IssueDetailsComponent,
+    ComicOverviewComponent,
   ]
 })
 export class ComicModule { }

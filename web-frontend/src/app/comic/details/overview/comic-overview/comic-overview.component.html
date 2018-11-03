@@ -1,0 +1,31 @@
+<div class='container-fluid w-100'>
+  <div *ngIf='comic' class='row w-100'>
+    <div *ngIf='comic' class='container-fluid w-100'>
+      <div class='row w-100 pl-3'>Series</div>
+      <div class='row w-100 pl-3'>{{ comic.series }}</div>
+      <div class='row w-100 pl-3'>Volume</div>
+      <div class='row w-100 pl-3'>v{{ comic.volume }}</div>
+      <div class='row w-100 pl-3'>Issue #</div>
+      <div class='row w-100 pl-3'>{{ comic.issue_number }}</div>
+      <div class='row w-100 pl-3'>Title</div>
+      <div class='row w-100 pl-3'>{{ comic.title }}</div>
+      <div class='row w-100 pl-3'>Publisher</div>
+      <div class='row w-100 pl-3'>{{ comic.publisher }}</div>
+      <div class='row w-100 pl-3'>Published</div>
+      <div class='row w-100 pl-3'>{{ comic.cover_date | date }}</div>
+      <div class='row w-100 pl-3'>Added</div>
+      <div class='row w-100 pl-3'>{{ comic.added_date | date }}</div>
+      <div *ngIf='comic.story_arcs && comic.story_arcs.length'
+        class='row w-100 pl-3'>Story Arc{{ comic.story_arcs.length
+        > 1 ? 's' : '' }}</div>
+      <div *ngIf='comic.story_arcs && comic.story_arcs.length'
+        class='row w-100 pl-3'>
+        <div *ngFor='let story_arc of comic.story_arcs' class='card'>
+          <div class='card-header'>
+            <h4>{{ story_arc }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
