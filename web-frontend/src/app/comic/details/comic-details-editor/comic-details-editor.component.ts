@@ -41,7 +41,7 @@ export class ComicDetailsEditorComponent implements OnInit {
   protected series: string;
   protected volume: string;
   protected issue_number: string;
-  protected volumes: Array<Volume> = [];
+  protected volumes: Array<Volume>;
   protected issues: Map<string, ComicIssue> = new Map<string, ComicIssue>();
   protected current_volume_index: number;
   protected current_volume: Volume;
@@ -155,7 +155,7 @@ export class ComicDetailsEditorComponent implements OnInit {
   }
 
   show_candidates(): boolean {
-    return (this.volumes.length > 0) && (this.current_volume_index >= 0);
+    return (this.volumes && this.volumes.length > 0) && (this.current_volume_index >= 0);
   }
 
   get_current_issue_image_url(): string {
