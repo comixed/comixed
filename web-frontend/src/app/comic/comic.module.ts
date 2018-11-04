@@ -49,6 +49,7 @@ import { ComicCreditsComponent } from './details/credits/comic-credits/comic-cre
 import { ComicPagesComponent } from './details/pages/comic-pages/comic-pages.component';
 import { LibraryDetailsComponent } from './library/library-details/library-details.component';
 import { LibraryCoverEntryComponent } from './library/library-cover-entry/library-cover-entry.component';
+import { LibraryCoversComponent } from './library/library-covers/library-covers.component';
 
 @NgModule({
   imports: [
@@ -90,6 +91,7 @@ import { LibraryCoverEntryComponent } from './library/library-cover-entry/librar
     ComicPagesComponent,
     LibraryDetailsComponent,
     LibraryCoverEntryComponent,
+    LibraryCoversComponent,
   ]
 })
 export class ComicModule { }

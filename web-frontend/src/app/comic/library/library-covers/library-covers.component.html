@@ -1,0 +1,22 @@
+<div class='container w-100 justify-content-center'>
+  <!--  show ungrouped comics -->
+  <div *ngIf='group_by === 0' class='row w-100'>
+    <!--  page navigation -->
+    <div
+      class='row w-100 justify-content-center bg-secondary text-white'>
+      <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+    </div>
+    <app-library-cover-entry
+      *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
+      [comic]='comic' [cover_size]='cover_size'
+      [sort_order]='sort_order'
+      (onComicSelected)='handle_comic_clicked($event)'></app-library-cover-entry>
+  </div>
+  <!--  show grouped comics -->
+  <div *ngIf='group_by !== 0' class='container-fluid'>
+    <app-comic-list-group
+      *ngFor='let comic_group of comics | series_filter : title_search | group_by : group_by | paginate: { itemsPerPage: page_size, currentPage: current_page }'
+      [group_name]='comic_group.key' [comics]='comic_group.values'
+      [cover_size]='cover_size'> </app-comic-list-group>
+  </div>
+</div>
