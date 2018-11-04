@@ -95,6 +95,11 @@
     </div>
     <div class='col-9 position-fixed comixed-scrollable-div'>
       <div class='container-fluid w-100 mx-2'>
+        <!--  page navigation -->
+        <div
+          class='row w-100 justify-content-center bg-secondary text-white'>
+          <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+        </div>
         <ul class='nav nav-tabs'>
           <li class='nav-item'
             [class.active]='is_current_tab("cover-view")'
@@ -113,13 +118,13 @@
               [cover_size]='cover_size' [title_search]='title_search'
               [group_by]='group_by_value'
               [sort_order]='get_sort_order()'
-              [page_size]='use_page_size'></app-library-covers>
+              [page_size]='use_page_size' [current_page]='current_page'></app-library-covers>
           </div>
           <div class='tab-pane' id='details-view'>
             <app-library-details [comics]='comics'
               [title_search]='title_search' [group_by]='group_by_value'
               [sort_order]='get_sort_order()'
-              [page_size]='use_page_size'
+              [page_size]='use_page_size' [current_page]='current_page'
               (selected)='set_current_comic($event)'></app-library-details>
           </div>
         </div>

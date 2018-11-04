@@ -37,7 +37,7 @@ export class LibraryCoversComponent implements OnInit {
   @Input() group_by: number;
   @Input() sort_order: number;
   @Input() page_size: number;
-  current_page = 0;
+  @Input() current_page: number;
 
   constructor() { }
 

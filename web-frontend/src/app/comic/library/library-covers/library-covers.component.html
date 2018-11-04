@@ -1,11 +1,6 @@
 <div class='container w-100 justify-content-center'>
   <!--  show ungrouped comics -->
   <div *ngIf='group_by === 0' class='row w-100'>
-    <!--  page navigation -->
-    <div
-      class='row w-100 justify-content-center bg-secondary text-white'>
-      <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
-    </div>
     <app-library-cover-entry
       *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
       [comic]='comic' [cover_size]='cover_size'
