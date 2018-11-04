@@ -93,9 +93,14 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       const id = +params['id'];
       this.comic_service.load_comic_from_remote(id).subscribe(
         (comic: Comic) => {
-          this.comic = comic;
-          this.load_comic_details();
           this.alert_service.show_busy_message('');
+          if (comic) {
+            this.comic = comic;
+            this.load_comic_details();
+          } else {
+            this.alert_service.show_error_message(`No such comic: id=${id}`, null);
+            this.router.navigateByUrl('/');
+          }
         },
         error => {
           this.alert_service.show_error_message('Error while retrieving comic...', error);
