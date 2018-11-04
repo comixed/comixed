@@ -41,7 +41,7 @@ import { PageSizeComponent } from './page-size/page-size.component';
 import { GroupComicsComponent } from './group-comics/group-comics.component';
 import { GroupByPipe } from './group-by.pipe';
 import { ComicListGroupComponent } from './comic-list-group/comic-list-group.component';
-import { ComicDetailsEditorComponent } from './comic-details-editor/comic-details-editor.component';
+import { ComicDetailsEditorComponent } from './details/comic-details-editor/comic-details-editor.component';
 import { IssueDetailsComponent } from './issue/details/issue-details/issue-details.component';
 import { ComicOverviewComponent } from './details/overview/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from './details/story/comic-story/comic-story.component';
