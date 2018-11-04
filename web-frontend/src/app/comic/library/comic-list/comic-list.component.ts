@@ -19,7 +19,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { PageSizeComponent } from '../../page-size/page-size.component';
@@ -79,6 +79,9 @@ export class ComicListComponent implements OnInit {
       this.reload_page_size(params['page_size']);
       this.reload_sort_order(params['sort_order']);
       this.reload_group_by(params['group_by']);
+      if (params['tab']) {
+        this.current_tab = params['tab'];
+      }
     });
   }
 
@@ -92,6 +95,13 @@ export class ComicListComponent implements OnInit {
 
   set_current_tab(name: string): void {
     this.current_tab = name;
+    this.update_params('tab', name);
+  }
+
+  private update_params(name: string, value: string): void {
+    const queryParams: Params = Object.assign({}, this.route.snapshot.queryParams);
+    queryParams[name] = value;
+    this.router.navigate([], { relativeTo: this.route, queryParams: queryParams });
   }
 
   private reload_page_size(page_size: string): void {
