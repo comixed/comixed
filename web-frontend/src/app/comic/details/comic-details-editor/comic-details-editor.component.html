@@ -51,6 +51,11 @@
     </div>
   </div>
   <div *ngIf='show_candidates()' class='row w-100'>
+    <div class='row w-100 justify-content-center'>
+      <h2 class='w-100 text-center'>Found {{ volumes.length }}
+        Volumes</h2>
+      <h3 class='w-100 text-center'>{{volume_selection_banner}}</h3>
+    </div>
     <div class='col'>
       <table class='table table-striped table-sm'>
         <thead>
@@ -76,11 +81,6 @@
     </div>
     <div class='col-3'>
       <div class='card w-100'>
-        <div class='card-header'>
-          <h2 class='w-100 text-center'>Found {{ volumes.length }}
-            Volumes</h2>
-          <h3 class='w-100 text-center'>{{volume_selection_banner}}</h3>
-        </div>
         <div *ngIf='current_issue' class='card-body'>
           <img class='card-img-bottom img-fluid'
             src='{{get_current_issue_image_url()}}'
