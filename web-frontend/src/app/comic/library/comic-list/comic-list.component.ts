@@ -45,6 +45,7 @@ export class ComicListComponent implements OnInit {
   readonly SORT_PARAMETER = 'sort';
   readonly GROUP_BY_PARAMETER = 'groupby';
   readonly TAB_PARAMETER = 'tab';
+  readonly SEARCH_PARAMETER = 'search';
 
   current_tab = 'cover-view';
   protected comics: Comic[];
@@ -87,6 +88,7 @@ export class ComicListComponent implements OnInit {
       if (params['tab']) {
         this.current_tab = params[this.TAB_PARAMETER];
       }
+      this.update_title_search(params[this.SEARCH_PARAMETER]);
     });
   }
 
@@ -361,5 +363,12 @@ export class ComicListComponent implements OnInit {
 
   set_current_comic(comic: Comic): void {
     this.current_comic = comic;
+  }
+
+  update_title_search(text: string): void {
+    if (this.title_search !== text) {
+      this.title_search = text;
+    }
+    this.update_params(this.SEARCH_PARAMETER, text);
   }
 }

@@ -68,6 +68,7 @@
         <div class='field row w-100'>
           <input id='search-terms' class='form-control'
             [(ngModel)]='title_search'
+            (ngModelChange)='update_title_search($event)'
             placeholder='enter search terms here'>
         </div>
       </div>
