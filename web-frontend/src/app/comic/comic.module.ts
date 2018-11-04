@@ -47,6 +47,7 @@ import { ComicOverviewComponent } from './details/overview/comic-overview/comic-
 import { ComicStoryComponent } from './details/story/comic-story/comic-story.component';
 import { ComicCreditsComponent } from './details/credits/comic-credits/comic-credits.component';
 import { ComicPagesComponent } from './details/pages/comic-pages/comic-pages.component';
+import { LibraryDetailsComponent } from './library/library-details/library-details.component';
 
 @NgModule({
   imports: [
@@ -86,6 +87,7 @@ import { ComicPagesComponent } from './details/pages/comic-pages/comic-pages.com
     ComicStoryComponent,
     ComicCreditsComponent,
     ComicPagesComponent,
+    LibraryDetailsComponent,
   ]
 })
 export class ComicModule { }
