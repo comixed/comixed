@@ -63,7 +63,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor='let volume of volumes; let i = index'>
+          <tr *ngFor='let volume of volumes; let i = index'
+            (click)='set_current_volume(i)'>
             <th scope='row'>{{ i + 1 }}</th>
             <td>{{ volume.name }}</td>
             <td>{{ volume.issue_count }}</td>
