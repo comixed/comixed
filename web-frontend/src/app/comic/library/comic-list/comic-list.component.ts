@@ -76,7 +76,7 @@ export class ComicListComponent implements OnInit {
     this.group_by_value = 0;
     this.last_group_label = '';
     route.queryParams.subscribe(params => {
-      this.reload_page_size(params['page_size']);
+      this.reload_page_size(params['pagesize']);
       this.reload_sort_order(params['sort_order']);
       this.reload_group_by(params['group_by']);
       if (params['tab']) {
@@ -346,6 +346,7 @@ export class ComicListComponent implements OnInit {
   set_page_size(value: any): void {
     this.use_page_size = parseInt(value.target.value, 10);
     this.user_service.set_user_preference('page_size', `${this.use_page_size}`);
+    this.update_params('pagesize', `${this.use_page_size}`);
   }
 
   set_current_comic(comic: Comic): void {
