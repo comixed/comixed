@@ -20,7 +20,6 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -43,7 +42,7 @@ import { ComicPagesComponent } from './pages/comic-pages/comic-pages.component';
   templateUrl: './comic-details.component.html',
   styleUrls: ['./comic-details.component.css']
 })
-export class ComicDetailsComponent implements OnInit, OnDestroy {
+export class ComicDetailsComponent implements OnInit {
   current_tab = 'overview';
   comic: Comic;
   title_text: string;
@@ -89,7 +88,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
         this.show_page_details = true;
       }
     );
-    this.sub = this.activatedRoute.params.subscribe(params => {
+    this.activatedRoute.params.subscribe(params => {
       const id = +params['id'];
       this.comic_service.load_comic_from_remote(id).subscribe(
         (comic: Comic) => {
@@ -123,10 +122,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       this.title_text = this.comic_service.get_issue_label_text_for_comic(this.comic);
       this.subtitle_text = this.comic_service.get_issue_content_label_for_comic(this.comic);
     }
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   get_story_arc_badge_text(): string {
