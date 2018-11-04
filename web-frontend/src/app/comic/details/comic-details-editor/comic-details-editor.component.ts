@@ -36,7 +36,7 @@ import { ComicIssue } from '../../comic-issue.model';
 })
 export class ComicDetailsEditorComponent implements OnInit {
   @Input() comic: Comic;
-  @Output() stopEditing: EventEmitter<any> = new EventEmitter();
+  @Output() update: EventEmitter<Comic> = new EventEmitter();
   protected api_key: string;
   protected series: string;
   protected volume: string;
@@ -62,10 +62,6 @@ export class ComicDetailsEditorComponent implements OnInit {
     this.series = this.comic.series;
     this.volume = this.comic.volume;
     this.issue_number = this.comic.issue_number;
-  }
-
-  stop_editing(): void {
-    this.stopEditing.emit(true);
   }
 
   fetch_candidates(): void {
@@ -180,8 +176,9 @@ export class ComicDetailsEditorComponent implements OnInit {
         });
         if (index !== -1) {
           that.comic_service.all_comics[index] = comic;
+          that.comic = comic;
           that.alert_service.show_busy_message('');
-          that.stopEditing.next(true);
+          that.update.next(comic);
         } else {
           that.alert_service.show_error_message(`Invalid comic index: ${index}`, null);
         }

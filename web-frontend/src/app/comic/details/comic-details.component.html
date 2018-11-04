@@ -63,7 +63,8 @@
         </div>
         <div class='tab-pane' id='comicvine'>
           <div *ngIf='comic' class='row w-100'>
-            <app-comic-details-editor [comic]='comic'></app-comic-details-editor>
+            <app-comic-details-editor [comic]='comic'
+              (update)='update_comic($event)'></app-comic-details-editor>
           </div>
         </div>
       </div>

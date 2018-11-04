@@ -165,19 +165,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     return this.comic_service.get_download_link_for_comic(this.comic.id);
   }
 
-  start_editing(): void {
-    this.editing = true;
-  }
-
-  stop_editing(): void {
-    const that = this;
-    this.editing = false;
-    this.comic = this.comic_service.all_comics.find((element: Comic) => {
-      return element.id === that.comic.id;
-    });
-    this.load_comic_details();
-  }
-
   get_cover_url(): string {
     if (this.comic) {
       return this.comic_service.get_cover_url_for_comic(this.comic);
@@ -192,5 +179,9 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
 
   set_current_tab(name: string): void {
     this.current_tab = name;
+  }
+
+  update_comic(event): void {
+    this.comic = event;
   }
 }
