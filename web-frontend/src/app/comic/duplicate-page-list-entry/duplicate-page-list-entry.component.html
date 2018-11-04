@@ -32,5 +32,18 @@
         </div>
       </div>
     </div>
+    <div *ngIf='all_are_deleted'
+      class='container-fluid w-100 justify-content-center mb-2'>
+      <button type='button' class='btn btn-sm btn-warning w-100'
+        (click)='undelete_all_pages()'>Undelete All</button>
+    </div>
+    <div class='container-fluid w-100 justify-content-center mb-2'>
+      <button type='button' class='btn btn-small btn-info w-100'
+        (click)='show_comics_clicked($event)' data-toggle='modal'
+        data-target='#display_comics_with_duplicates'>Show
+        Comics</button>
+    </div>
+    <img class='card-img-bottom mb-2 img-fluid' src='{{image_url}}'
+      [style.height]='"" + image_size + "px"' [style.width]='"auto"'>
   </div>
 </div>
