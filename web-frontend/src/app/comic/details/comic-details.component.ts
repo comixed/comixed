@@ -183,5 +183,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
 
   update_comic(event): void {
     this.comic = event;
+    this.load_comic_details();
   }
 }
