@@ -78,7 +78,7 @@ export class ComicListComponent implements OnInit {
     route.queryParams.subscribe(params => {
       this.reload_page_size(params['pagesize']);
       this.reload_sort_order(params['sort']);
-      this.reload_group_by(params['group_by']);
+      this.reload_group_by(params['groupby']);
       if (params['tab']) {
         this.current_tab = params['tab'];
       }
@@ -342,6 +342,7 @@ export class ComicListComponent implements OnInit {
   set_grouping(value: any): void {
     this.group_by_value = parseInt(value.target.value, 10);
     this.user_service.set_user_preference('group_by', `${this.group_by_value}`);
+    this.update_params('groupby', `${this.group_by_value}`);
   }
 
   set_page_size(value: any): void {
