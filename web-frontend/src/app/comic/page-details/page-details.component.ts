@@ -38,6 +38,7 @@ import { PageType } from '../page-type.model';
 export class PageDetailsComponent implements OnInit {
   @Input() page: Page;
   @Input() comic: Comic;
+  @Input() image_size: number;
   page_types: PageType[];
   delete_page_title = 'Delete This Page?';
   delete_page_message = 'Are you sure you want to delete this page?';
@@ -45,7 +46,6 @@ export class PageDetailsComponent implements OnInit {
   undelete_page_message = 'Are you sure you want to undelete this page?';
   confirm_button = 'Yes';
   cancel_button = 'No';
-  image_size: number;
 
   constructor(
     private comic_service: ComicService,
@@ -53,7 +53,6 @@ export class PageDetailsComponent implements OnInit {
     private alert_service: AlertService,
   ) {
     this.page_types = [];
-    this.image_size = 200;
   }
 
   ngOnInit() {
@@ -65,7 +64,6 @@ export class PageDetailsComponent implements OnInit {
         this.alert_service.show_error_message('Unable to retrieve page types', error);
       }
     );
-    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '128'), 10);
   }
 
   get_title_for_current_page(): string {

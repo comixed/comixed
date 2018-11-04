@@ -1,37 +1,38 @@
-<div class='modal-content'>
-  <div class='modal-header'>
-    <h4 class='modal-title'>{{get_title_for_current_page()}}</h4>
+<div class='card'>
+  <div class='card-header'>
+    <h4 class='card-title'>{{get_title_for_current_page()}}</h4>
   </div>
-  <div class='modal-body'>
-    <div class='media'>
-      <div class='media-left media-center'>
-        <img src='{{get_image_url_for_current_page()}}'
-          class='img-fluid' [style.height]='"" + image_size + "px"'>
-      </div>
-      <div class='media-body'>
+  <div class='card-body'>
+    <img src='{{get_image_url_for_current_page()}}' class='img-fluid'
+      [style.height]='"" + image_size + "px"'>
+  </div>
+  <div class='card-footer'>
+    <div class='container-fluid p-0 m-0 w-100'>
+      <div class='row w-100 p-0 mx-0 mb-1 justify-content-center'>
         <!-- select the page type -->
-        <select id='page-type-selection' *ngIf='page && page.page_type'
-          class='form-control' #selectElem
-          [(ngModel)]='page.page_type.id'
+        <select id='page-type-selection' class='form-control w-100'
+          #selectElem [(ngModel)]='page.page_type.id'
           (change)='set_page_type(selectElem.value)'>
           <option *ngFor='let page_type of page_types'
             [value]='page_type.id'>{{page_type.name}}</option>
         </select>
+      </div>
+      <div class='row w-100 p-0 mx-0 mb-1 justify-content-center'>
         <!-- block/unblock this page -->
-        <button type='button' class='btn btn-sm btn-danger'
-          *ngIf='!page.blocked' (click)='block_page()'>Block
-          Pages Like This</button>
-        <button type='button' class='btn btn-sm btn-danger'
-          *ngIf='page.blocked' (click)='unblock_page()'>Unblock
-          Pages Like This</button>
+        <button type='button' class='btn btn-sm btn-danger w-100'
+          *ngIf='!page.blocked' (click)='block_page()'>Block</button>
+        <button type='button' class='btn btn-sm btn-danger w-100'
+          *ngIf='page.blocked' (click)='unblock_page()'>Unblock</button>
+      </div>
+      <div class='row w-100 p-0 mx-0 mb-1 justify-content-center'>
         <!-- delete/undelete buttons -->
-        <button type='button' class='btn btn-sm btn-danger'
+        <button type='button' class='btn btn-sm btn-danger w-100'
           *ngIf='!page.deleted' mwlConfirmationPopover
           [popoverTitle]='delete_page_title'
           [popoverMessage]='delete_page_message'
           [cancelText]='cancel_button' [confirmText]='confirm_button'
           (confirm)='delete_page()'>Delete</button>
-        <button type='button' class='btn btn-sm btn-basic'
+        <button type='button' class='btn btn-sm btn-basic w-100'
           *ngIf='page.deleted' mwlConfirmationPopover
           [popoverTitle]='undelete_page_title'
           [popoverMessage]='undelete_page_message'
@@ -40,4 +41,3 @@
       </div>
     </div>
   </div>
-</div>
