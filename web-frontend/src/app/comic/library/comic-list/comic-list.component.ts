@@ -77,7 +77,7 @@ export class ComicListComponent implements OnInit {
     this.last_group_label = '';
     route.queryParams.subscribe(params => {
       this.reload_page_size(params['pagesize']);
-      this.reload_sort_order(params['sort_order']);
+      this.reload_sort_order(params['sort']);
       this.reload_group_by(params['group_by']);
       if (params['tab']) {
         this.current_tab = params['tab'];
@@ -168,6 +168,7 @@ export class ComicListComponent implements OnInit {
     this.sort_order_value = parseInt(sort_order, 10);
     this.comics = this.sort_comics(this.comics);
     this.user_service.set_user_preference('sort_order', `${sort_order}`);
+    this.update_params('sort', `${this.sort_order_value}`);
   }
 
   sort_comics(comics: Comic[]): Comic[] {
