@@ -1,0 +1,44 @@
+<div class='p-1 m-1' [class.border-0]='selected'
+  [class.comic-selected]='selected'>
+  <div class='card card-inverse card-info px-1 pt-2 pb-3'>
+    <div class='comic-cover-img-container'
+      [style.height]='"" + cover_size + "px"'>
+      <img class='card-img-top' src='{{cover_url}}'
+        [style.max-height]='"" + cover_size + "px"'
+        [style.max-width]='"" + cover_size + "px"'
+        [style.height]='"auto"' [style.width]='"auto"'>
+    </div>
+    <div class='comic-cover-title-container text-center'
+      [style.width]='"" + cover_size + "px"'>
+      <h5 class='card-title text-nowrap text-truncate'>{{title_text}}</h5>
+      <h6 class='card-subtitle text-nowrap text-truncate'>{{subtitle_text}}</h6>
+    </div>
+    <div class='card-img-overlay'>
+      <div class='card-img-overlay-content'>
+        <div class='row w-100 mx-0'>
+          <span (click)='open_comic()' class='text-nowrap text-truncate'><i
+            class='fa fa-play-circle'></i>Open</span>
+        </div>
+        <div class='row w-100 mx-0'>
+          <span (click)='clicked($event)' data-toggle='modal'
+            data-target='#display_comic_details'><i
+            class='fa fa-info-circle'></i>Summary</span>
+        </div>
+        <div class='row w-100 mx-0'>
+          <span (click)='toggle_selected()'
+            class='text-nowrap text-truncate'><i class='fa'
+            [class.fa-plus-circle]='!selected'
+            [class.fa-minus-circle]='selected'></i><span
+            *ngIf='selected'>Deselect</span><span *ngIf='!selected'>Select</span></span>
+        </div>
+        <div class='row w-100 mx-0'>
+          <span mwlConfirmationPopover
+            [popoverTitle]='delete_comic_title'
+            [popoverMessage]='delete_comic_message'
+            [cancelText]='cancel_button' [confirmText]='confirm_button'
+            (confirm)='delete_comic()'><i class='fa fa-trash'></i>Delete</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
