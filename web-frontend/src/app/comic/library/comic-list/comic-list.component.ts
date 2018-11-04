@@ -107,7 +107,11 @@ export class ComicListComponent implements OnInit {
 
   private update_params(name: string, value: string): void {
     const queryParams: Params = Object.assign({}, this.route.snapshot.queryParams);
-    queryParams[name] = value;
+    if (value && value.length) {
+      queryParams[name] = value;
+    } else {
+      queryParams[name] = null;
+    }
     this.router.navigate([], { relativeTo: this.route, queryParams: queryParams });
   }
 
