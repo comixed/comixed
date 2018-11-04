@@ -32,6 +32,8 @@ import { ComicListEntryComponent } from '../comic-list-entry/comic-list-entry.co
 import { ComicListGroupComponent } from '../comic-list-group/comic-list-group.component';
 import { SeriesFilterPipe } from '../series-filter.pipe';
 import { AlertService } from '../../services/alert.service';
+import { LibraryCoversComponent } from '../library/library-covers/library-covers.component';
+import { LibraryDetailsComponent } from '../library/library-details/library-details.component';
 
 @Component({
   selector: 'app-comic-list',
@@ -39,6 +41,7 @@ import { AlertService } from '../../services/alert.service';
   styleUrls: ['./comic-list.component.css'],
 })
 export class ComicListComponent implements OnInit {
+  current_tab = 'cover-view';
   protected comics: Comic[];
   protected cover_size: number;
   protected all_series: string[];
@@ -77,6 +80,18 @@ export class ComicListComponent implements OnInit {
       this.reload_sort_order(params['sort_order']);
       this.reload_group_by(params['group_by']);
     });
+  }
+
+  is_current_tab(name: string): boolean {
+    if (this.current_tab === name) {
+      return true;
+    }
+
+    return false;
+  }
+
+  set_current_tab(name: string): void {
+    this.current_tab = name;
   }
 
   private reload_page_size(page_size: string): void {
@@ -321,5 +336,9 @@ export class ComicListComponent implements OnInit {
   set_page_size(value: any): void {
     this.use_page_size = parseInt(value.target.value, 10);
     this.user_service.set_user_preference('page_size', `${this.use_page_size}`);
+  }
+
+  set_current_comic(comic: Comic): void {
+    this.current_comic = comic;
   }
 }

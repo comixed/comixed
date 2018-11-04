@@ -30,7 +30,7 @@
     </div>
   </div>
 </div>
-<!-- library view -->
+<!-- core library view -->
 <div class='container-fluid w-100' id='library_view'>
   <div class='row w-100'>
     <div class='col-3 bg-light text-black pl-5'>
@@ -94,28 +94,34 @@
       </div>
     </div>
     <div class='col-9 position-fixed comixed-scrollable-div'>
-      <div class='container w-100 justify-content-center'>
-        <h2 class='text-center'>{{ (comics | series_filter :
-          title_search).length}} Total Comics Found</h2>
-        <!--  show ungrouped comics -->
-        <div *ngIf='group_by_value === 0' class='row w-100'>
-          <!--  page navigation -->
-          <div
-            class='row w-100 justify-content-center bg-secondary text-white'>
-            <pagination-controls (pageChange)='current_page = $event'></pagination-controls>
+      <div class='container-fluid w-100 mx-2'>
+        <ul class='nav nav-tabs'>
+          <li class='nav-item'
+            [class.active]='is_current_tab("cover-view")'
+            [class.show]='is_current_tab("cover-view")'><a
+            class='nav-link' href='#cover-view' data-toggle='tab'
+            (click)='set_current_tab("cover-view")'>Covers</a></li>
+          <li class='nav-item'
+            [class.active]='is_current_tab("details-view")'
+            [class.show]='is_current_tab("details-view")'><a
+            class='nav-link' href='#details-view' data-toggle='tab'
+            (click)='set_current_tab("details-view")'>Details</a></li>
+        </ul>
+        <div class='tab-content'>
+          <div class='tab-pane active' id='cover-view'>
+            <app-library-covers [comics]='comics'
+              [cover_size]='cover_size' [title_search]='title_search'
+              [group_by]='group_by_value'
+              [sort_order]='get_sort_order()'
+              [page_size]='use_page_size'></app-library-covers>
           </div>
-          <app-comic-list-entry
-            *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
-            [comic]='comic' [cover_size]='cover_size'
-            [sort_order]='get_sort_order()'
-            (onComicSelected)='handle_comic_clicked($event)'></app-comic-list-entry>
-        </div>
-        <!--  show grouped comics -->
-        <div *ngIf='group_by_value !== 0' class='container-fluid'>
-          <app-comic-list-group
-            *ngFor='let comic_group of comics | series_filter : title_search | group_by : group_by_value | paginate: { itemsPerPage: use_page_size, currentPage: current_page }'
-            [group_name]='comic_group.key' [comics]='comic_group.values'
-            [cover_size]='cover_size'> </app-comic-list-group>
+          <div class='tab-pane' id='details-view'>
+            <app-library-details [comics]='comics'
+              [title_search]='title_search' [group_by]='group_by_value'
+              [sort_order]='get_sort_order()'
+              [page_size]='use_page_size'
+              (selected)='set_current_comic($event)'></app-library-details>
+          </div>
         </div>
       </div>
     </div>
