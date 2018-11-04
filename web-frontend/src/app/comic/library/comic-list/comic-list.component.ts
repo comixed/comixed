@@ -41,6 +41,11 @@ import { LibraryDetailsComponent } from '../library-details/library-details.comp
   styleUrls: ['./comic-list.component.css'],
 })
 export class ComicListComponent implements OnInit {
+  readonly PAGESIZE_PARAMETER = 'pagesize';
+  readonly SORT_PARAMETER = 'sort';
+  readonly GROUP_BY_PARAMETER = 'groupby';
+  readonly TAB_PARAMETER = 'tab';
+
   current_tab = 'cover-view';
   protected comics: Comic[];
   protected cover_size: number;
@@ -76,11 +81,11 @@ export class ComicListComponent implements OnInit {
     this.group_by_value = 0;
     this.last_group_label = '';
     route.queryParams.subscribe(params => {
-      this.reload_page_size(params['pagesize']);
-      this.reload_sort_order(params['sort']);
-      this.reload_group_by(params['groupby']);
+      this.reload_page_size(params[this.PAGESIZE_PARAMETER]);
+      this.reload_sort_order(params[this.SORT_PARAMETER]);
+      this.reload_group_by(params[this.GROUP_BY_PARAMETER]);
       if (params['tab']) {
-        this.current_tab = params['tab'];
+        this.current_tab = params[this.TAB_PARAMETER];
       }
     });
   }
@@ -95,7 +100,7 @@ export class ComicListComponent implements OnInit {
 
   set_current_tab(name: string): void {
     this.current_tab = name;
-    this.update_params('tab', name);
+    this.update_params(this.TAB_PARAMETER, name);
   }
 
   private update_params(name: string, value: string): void {
@@ -109,6 +114,7 @@ export class ComicListComponent implements OnInit {
       this.use_page_size = parseInt(page_size, 10);
     } else {
       this.use_page_size = parseInt(this.user_service.get_user_preference('page_size', '10'), 10);
+      this.update_params(this.PAGESIZE_PARAMETER, `${this.use_page_size}`);
     }
   }
 
@@ -121,6 +127,7 @@ export class ComicListComponent implements OnInit {
       }
     } else {
       this.sort_order_value = parseInt(this.user_service.get_user_preference('sort_order', '0'), 10);
+      this.update_params(this.SORT_PARAMETER, `${this.sort_order_value}`);
     }
     this.sort_order = new BehaviorSubject<number>(this.sort_order_value);
   }
@@ -134,6 +141,7 @@ export class ComicListComponent implements OnInit {
       }
     } else {
       this.group_by_value = parseInt(this.user_service.get_user_preference('group_by', '0'), 10);
+      this.update_params(this.GROUP_BY_PARAMETER, `${this.group_by_value}`);
     }
   }
 
@@ -168,7 +176,7 @@ export class ComicListComponent implements OnInit {
     this.sort_order_value = parseInt(sort_order, 10);
     this.comics = this.sort_comics(this.comics);
     this.user_service.set_user_preference('sort_order', `${sort_order}`);
-    this.update_params('sort', `${this.sort_order_value}`);
+    this.update_params(this.SORT_PARAMETER, `${this.sort_order_value}`);
   }
 
   sort_comics(comics: Comic[]): Comic[] {
@@ -342,13 +350,13 @@ export class ComicListComponent implements OnInit {
   set_grouping(value: any): void {
     this.group_by_value = parseInt(value.target.value, 10);
     this.user_service.set_user_preference('group_by', `${this.group_by_value}`);
-    this.update_params('groupby', `${this.group_by_value}`);
+    this.update_params(this.GROUP_BY_PARAMETER, `${this.group_by_value}`);
   }
 
   set_page_size(value: any): void {
     this.use_page_size = parseInt(value.target.value, 10);
     this.user_service.set_user_preference('page_size', `${this.use_page_size}`);
-    this.update_params('pagesize', `${this.use_page_size}`);
+    this.update_params(this.PAGESIZE_PARAMETER, `${this.use_page_size}`);
   }
 
   set_current_comic(comic: Comic): void {
