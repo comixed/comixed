@@ -25,9 +25,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 import { ComicRoutingModule } from './comic-routing.module';
 import { ComicService } from '../services/comic.service';
-import { ComicListComponent } from './comic-list/comic-list.component';
+import { ComicListComponent } from './library/comic-list/comic-list.component';
 import { ImportComicListComponent } from './import-comic-list/import-comic-list.component';
-import { ComicListEntryComponent } from './comic-list-entry/comic-list-entry.component';
+import { ComicListEntryComponent } from './library/comic-list-entry/comic-list-entry.component';
 import { ComicDetailsComponent } from './details/comic-details.component';
 import { DuplicatePageListComponent } from './duplicate-page-list/duplicate-page-list.component';
 import { DuplicatePageListEntryComponent } from './duplicate-page-list-entry/duplicate-page-list-entry.component';
@@ -40,7 +40,7 @@ import { SelectedForImportPipe } from './import-comic-list/selected-for-import.p
 import { PageSizeComponent } from './page-size/page-size.component';
 import { GroupComicsComponent } from './group-comics/group-comics.component';
 import { GroupByPipe } from './group-by.pipe';
-import { ComicListGroupComponent } from './comic-list-group/comic-list-group.component';
+import { ComicListGroupComponent } from './library/comic-list-group/comic-list-group.component';
 import { ComicDetailsEditorComponent } from './details/comic-details-editor/comic-details-editor.component';
 import { IssueDetailsComponent } from './issue/details/issue-details/issue-details.component';
 import { ComicOverviewComponent } from './details/overview/comic-overview/comic-overview.component';
