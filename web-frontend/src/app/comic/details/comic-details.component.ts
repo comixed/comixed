@@ -22,7 +22,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 
 import { Comic } from '../comic.model';
 import { Page } from '../page.model';
@@ -43,6 +43,8 @@ import { ComicPagesComponent } from './pages/comic-pages/comic-pages.component';
   styleUrls: ['./comic-details.component.css']
 })
 export class ComicDetailsComponent implements OnInit {
+  readonly TAB_PARAMETER = 'tab';
+
   current_tab = 'overview';
   comic: Comic;
   title_text: string;
@@ -88,6 +90,9 @@ export class ComicDetailsComponent implements OnInit {
         this.show_page_details = true;
       }
     );
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.set_current_tab(params[this.TAB_PARAMETER]);
+    });
     this.activatedRoute.params.subscribe(params => {
       const id = +params['id'];
       this.comic_service.load_comic_from_remote(id).subscribe(
@@ -111,6 +116,16 @@ export class ComicDetailsComponent implements OnInit {
         this.alert_service.show_error_message('An error has occurred...', error);
         this.alert_service.show_busy_message('');
       });
+  }
+
+  private update_params(name: string, value: string): void {
+    const queryParams: Params = Object.assign({}, this.activatedRoute.snapshot.queryParams);
+    if (value && value.length) {
+      queryParams[name] = value;
+    } else {
+      queryParams[name] = null;
+    }
+    this.router.navigate([], { relativeTo: this.activatedRoute, queryParams: queryParams });
   }
 
   load_comic_details(): void {
@@ -174,6 +189,7 @@ export class ComicDetailsComponent implements OnInit {
 
   set_current_tab(name: string): void {
     this.current_tab = name;
+    this.update_params(this.TAB_PARAMETER, name);
   }
 
   update_comic(event): void {

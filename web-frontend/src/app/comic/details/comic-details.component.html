@@ -42,26 +42,38 @@
           (click)='set_current_tab("comicvine")'>ComicVine</a></li>
       </ul>
       <div class='tab-content'>
-        <div class='tab-pane active' id='overview'>
+        <div class='tab-pane active' id='overview'
+          [class.active]='is_current_tab("overview")'
+          [class.show]='is_current_tab("overview")'>
           <div class='row w-100'>
             <app-comic-overview [comic]='comic'></app-comic-overview>
           </div>
         </div>
-        <div class='tab-pane' id='story'>
+        <div class='tab-pane' id='story'
+          [class.active]='is_current_tab("story")'
+          [class.show]='is_current_tab("story")'>
           <app-comic-story [comic]='comic'></app-comic-story>
         </div>
-        <div class='tab-pane' id='comic-reader'>
+        <div class='tab-pane' id='comic-reader'
+          [class.active]='is_current_tab("reader")'
+          [class.show]='is_current_tab("reader")'>
           <app-read-viewer [comic]='comic'></app-read-viewer>
         </div>
-        <div class='tab-pane' id='credits'>
+        <div class='tab-pane' id='credits'
+          [class.active]='is_current_tab("credits")'
+          [class.show]='is_current_tab("credits")'>
           <app-comic-credits [comic]='comic'></app-comic-credits>
         </div>
-        <div class='tab-pane' id='pages'>
+        <div class='tab-pane' id='pages'
+          [class.active]='is_current_tab("pages")'
+          [class.show]='is_current_tab("pages")'>
           <div *ngIf='comic' class='row w-100'>
             <app-comic-pages [comic]='comic' [image_size]='image_size'></app-comic-pages>
           </div>
         </div>
-        <div class='tab-pane' id='comicvine'>
+        <div class='tab-pane' id='comicvine'
+          [class.active]='is_current_tab("comicvine")'
+          [class.show]='is_current_tab("comicvine")'>
           <div *ngIf='comic' class='row w-100'>
             <app-comic-details-editor [comic]='comic'
               (update)='update_comic($event)'></app-comic-details-editor>
