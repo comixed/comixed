@@ -217,4 +217,8 @@ export class ComicDetailsEditorComponent implements OnInit {
       (this.comic.series === volume.name)
     );
   }
+
+  cancel_volume_selection(): void {
+    this.volumes = null;
+  }
 }
