@@ -202,4 +202,19 @@ export class ComicDetailsEditorComponent implements OnInit {
   is_api_key_valid(): boolean {
     return (this.api_key || '').trim().length > 0;
   }
+
+  is_good_match(volume: Volume): boolean {
+    if (!this.is_perfect_match(volume)) {
+      return this.comic.volume === volume.start_year;
+    }
+
+    return false;
+  }
+
+  is_perfect_match(volume: Volume): boolean {
+    return (
+      (this.comic.volume === volume.start_year) &&
+      (this.comic.series === volume.name)
+    );
+  }
 }
