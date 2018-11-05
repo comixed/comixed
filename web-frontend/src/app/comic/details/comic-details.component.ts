@@ -91,7 +91,7 @@ export class ComicDetailsComponent implements OnInit {
       }
     );
     this.activatedRoute.queryParams.subscribe(params => {
-      this.set_current_tab(params[this.TAB_PARAMETER]);
+      this.set_current_tab(params[this.TAB_PARAMETER] || 'overview');
     });
     this.activatedRoute.params.subscribe(params => {
       const id = +params['id'];
