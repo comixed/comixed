@@ -20,6 +20,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MenubarModule } from 'primeng/menubar';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {
@@ -43,6 +44,7 @@ import { AccountComponent } from './account/account.component';
 import { AlertService } from './services/alert.service';
 import { UserService } from './services/user.service';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
+import { MenubarComponent } from './ui/component/menubar/menubar.component';
 
 @NgModule({
   declarations: [
@@ -51,12 +53,14 @@ import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.componen
     LoginComponent,
     AccountComponent,
     BusyIndicatorComponent,
+    MenubarComponent,
   ],
   imports: [
     BrowserModule,
     NgbModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    MenubarModule,
     ComicModule,
     FormsModule,
     ReactiveFormsModule,
