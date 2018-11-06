@@ -1,0 +1,46 @@
+<p-sidebar [visible]='true' [modal]='false' [dismissible]='false'
+  [showCloseIcon]='false'>
+<h4 class='w-100 text-center'>Find New Comics</h4>
+<div class='container-fluid w-100'>
+  <div class='row w-100 justify-content-center pb-1'>
+    <div class='ui-g ui-fluid'>
+      <div class='ui-inputgroup'>
+        <input id='directory' type='text' class='w-75'
+          [(ngModel)]='directory' placeholder='C:/Path/To/Files'>
+        <button pButton label='Load' (click)='find_comics()'></button>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class='row w-100 justify-content-center pb-1'>
+    <label for='number-of-comics-per-page'># of comics per page:
+    </label>
+  </div>
+  <div class='row w-100 justify-content-center pb-1'>
+    <app-page-size [initial]='page_size'
+      (change)='set_page_size($event)'></app-page-size>
+  </div>
+  <div class='row w-100 justify-content-center pb-1'>
+    <button pButton class='ui-button-info w-75'
+      [disabled]='disable_inputs'
+      [label]='any_selected === true ? "Deselect All" : "Select All"'
+      (click)='toggle_select_all()'></button>
+  </div>
+  <div class='row w-100 justify-content-center pb-1'>
+    <button pButton class='ui-button-secondary w-75'
+      [disabled]='!any_selected' label='Import' (click)='on_import()'></button>
+  </div>
+  <div class='row w-100 justify-content-center pb-1'>
+    <p-checkbox [(ngModel)]='delete_blocked_pages' binary='true'
+      [disabled]='disable_inputs'
+      (onChange)='toggle_delete_blocked_pages($event)'></p-checkbox>
+    Delete Blocked Pages
+  </div>
+  <div class='row w-100 justify-content-center pb-1'>
+    <p-checkbox [(ngModel)]='show_selections_only' binary='true'
+      [disabled]='disable_inputs || !any_selected'
+      (onChange)='toggle_show_selections_only($event)'></p-checkbox>
+    Show Selections Only
+  </div>
+</div>
+</p-sidebar>
