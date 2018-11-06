@@ -2,12 +2,6 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~font-awesome/css/font-awesome.css";
 
-/* Prevent Bootstrap fixed navigation from covering up the body content */
-body {
-  padding-top: 2em;
-  margin-top: 2em;
-}
-
 /* displaying a comic cover and its overlay details */
 
 .comic-card-cover, .comic-cover-overlay {

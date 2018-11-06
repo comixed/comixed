@@ -23,6 +23,7 @@ import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.componen
 import { UserService } from './services/user.service';
 import { AlertService } from './services/alert.service';
 import { ComicService } from './services/comic.service';
+import { MenubarComponent } from './ui/component/menubar/menubar.component';
 
 @Component({
   selector: 'app-root',

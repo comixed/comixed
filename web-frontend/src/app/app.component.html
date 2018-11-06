@@ -1,39 +1,6 @@
 <div class='container-fluid pl-0 mx-0'>
+  <app-menubar></app-menubar>
   <app-busy-indicator></app-busy-indicator>
-  <nav class='navbar navbar-expand-lg navbar-light bg-light fixed-top'>
-    <div class='container-fluid'>
-      <div class='navbar-header'>
-        <button class="navbar-toggler" type="button"
-          data-toggle="collapse" data-target="#id-navbar-collapse"
-          aria-controls="id-navbar-collapse" aria-expanded="false"
-          aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class='navbar-brand'>ComiXed</a>
-      </div>
-      <div id='id-navbar-collapse' class='collapse navbar-collapse'>
-        <ul class='nav navbar-nav'>
-          <li *ngIf='!is_authenticated()' class='nav-item'><a
-            class='nav-link' [routerLink]='["login"]'>Login</a></li>
-          <li class='nav-item'><a class='nav-link'
-            [routerLink]='["home"]'>Home</a></li>
-          <li class='nav-item dropdown'><a
-            class="nav-link dropdown-toggle" href="#" id="comicDropdown"
-            role="button" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">Comics</a>
-            <div class="dropdown-menu" aria-labelledby="comicDropdown">
-              <a class='dropdown-item' [routerLink]='["comics"]'>Library</a><a
-                *ngIf='is_admin()' class='dropdown-item'
-                [routerLink]='["import"]'>Import comics</a>
-            </div></li>
-          <li *ngIf='is_authenticated()' class='nav-item'><a
-            class='nav-link' [routerLink]='["account"]'>Account</a></li>
-          <li *ngIf='is_authenticated()' class='nav-item'><a
-            class='nav-link' (click)='logout()'>Logout</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
   <div *ngIf='alert_messages.length > 0'
     class='row justify-content-center'>
     <div *ngFor='let alert_message of alert_messages; let i = index'
