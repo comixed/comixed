@@ -24,6 +24,10 @@ import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { MenubarModule } from 'primeng/menubar';
+import { SidebarModule } from 'primeng/sidebar';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -105,6 +109,14 @@ import { MenubarComponent } from './ui/component/menubar/menubar.component';
     AppRoutingModule,
     HttpClientModule,
     MenubarModule,
+    SidebarModule,
+    InputTextModule,
+    ButtonModule,
+    ToggleButtonModule,
+    LoadingModule.forRoot({
+      animationType: ANIMATION_TYPES.pulse,
+      fullScreenBackdrop: true,
+    }),
     CommonModule,
     ComicRoutingModule,
     FormsModule,
