@@ -20,24 +20,43 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { MenubarModule } from 'primeng/menubar';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {
-  HttpClientModule,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import {
-  LoadingModule,
-  ANIMATION_TYPES,
-} from 'ngx-loading';
-
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 import { XhrInterceptor } from './xhr.interceptor';
-import { ComicModule } from './comic/comic.module';
+import { ComicRoutingModule } from './comic/comic-routing.module';
+import { ComicService } from './services/comic.service';
+import { ComicListComponent } from './comic/library/comic-list/comic-list.component';
+import { ImportComicListComponent } from './comic/import-comic-list/import-comic-list.component';
+import { ComicListEntryComponent } from './comic/library/comic-list-entry/comic-list-entry.component';
+import { ComicDetailsComponent } from './comic/details/comic-details.component';
+import { DuplicatePageListComponent } from './comic/duplicate-page-list/duplicate-page-list.component';
+import { DuplicatePageListEntryComponent } from './comic/duplicate-page-list-entry/duplicate-page-list-entry.component';
+import { PageThumbnailComponent } from './comic/page-thumbnail/page-thumbnail.component';
+import { ReadViewerComponent } from './comic/read-viewer/read-viewer.component';
+import { SeriesFilterPipe } from './comic/series-filter.pipe';
+import { PageDetailsComponent } from './comic/page-details/page-details.component';
+import { ImportComicListEntryComponent } from './comic/import-comic-list-entry/import-comic-list-entry.component';
+import { SelectedForImportPipe } from './comic/import-comic-list/selected-for-import.pipe';
+import { PageSizeComponent } from './comic/page-size/page-size.component';
+import { GroupComicsComponent } from './comic/group-comics/group-comics.component';
+import { GroupByPipe } from './comic/group-by.pipe';
+import { ComicListGroupComponent } from './comic/library/comic-list-group/comic-list-group.component';
+import { ComicDetailsEditorComponent } from './comic/details/comic-details-editor/comic-details-editor.component';
+import { IssueDetailsComponent } from './comic/issue/details/issue-details/issue-details.component';
+import { ComicOverviewComponent } from './comic/details/overview/comic-overview/comic-overview.component';
+import { ComicStoryComponent } from './comic/details/story/comic-story/comic-story.component';
+import { ComicCreditsComponent } from './comic/details/credits/comic-credits/comic-credits.component';
+import { ComicPagesComponent } from './comic/details/pages/comic-pages/comic-pages.component';
+import { LibraryDetailsComponent } from './comic/library/library-details/library-details.component';
+import { LibraryCoverEntryComponent } from './comic/library/library-cover-entry/library-cover-entry.component';
+import { LibraryCoversComponent } from './comic/library/library-covers/library-covers.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './login/login.component';
 import { AccountComponent } from './account/account.component';
@@ -54,6 +73,31 @@ import { MenubarComponent } from './ui/component/menubar/menubar.component';
     AccountComponent,
     BusyIndicatorComponent,
     MenubarComponent,
+    ComicListComponent,
+    ImportComicListComponent,
+    ComicListEntryComponent,
+    ComicDetailsComponent,
+    DuplicatePageListComponent,
+    DuplicatePageListEntryComponent,
+    PageThumbnailComponent,
+    ReadViewerComponent,
+    SeriesFilterPipe,
+    PageDetailsComponent,
+    ImportComicListEntryComponent,
+    SelectedForImportPipe,
+    PageSizeComponent,
+    GroupComicsComponent,
+    GroupByPipe,
+    ComicListGroupComponent,
+    ComicDetailsEditorComponent,
+    IssueDetailsComponent,
+    ComicOverviewComponent,
+    ComicStoryComponent,
+    ComicCreditsComponent,
+    ComicPagesComponent,
+    LibraryDetailsComponent,
+    LibraryCoverEntryComponent,
+    LibraryCoversComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +105,16 @@ import { MenubarComponent } from './ui/component/menubar/menubar.component';
     AppRoutingModule,
     HttpClientModule,
     MenubarModule,
-    ComicModule,
+    CommonModule,
+    ComicRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger',
+      cancelButtonType: 'basic',
+    }),
+    NgxPaginationModule,
+
     FormsModule,
     ReactiveFormsModule,
     LoadingModule.forRoot({
@@ -72,6 +125,7 @@ import { MenubarComponent } from './ui/component/menubar/menubar.component';
   providers: [
     AlertService,
     UserService,
+    ComicService,
     [
       { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }
     ],
