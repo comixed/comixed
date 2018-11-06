@@ -33,6 +33,8 @@ import { AlertService } from '../../services/alert.service';
 import { ImportComicListEntryComponent } from '../import-comic-list-entry/import-comic-list-entry.component';
 import { IssueDetailsComponent } from '../issue/details/issue-details/issue-details.component';
 import { SelectedForImportPipe } from './selected-for-import.pipe';
+import { ImportSidebarComponent } from '../../ui/component/import/import-sidebar/import-sidebar.component';
+
 
 @Component({
   selector: 'app-import-comics',
@@ -44,6 +46,7 @@ export class ImportComicListComponent implements OnInit {
   directory = '';
   delete_blocked_pages = false;
   file_details = [];
+  all_are_selected = false;
   importing = false;
   plural = true;
   display = 'none';
@@ -53,6 +56,7 @@ export class ImportComicListComponent implements OnInit {
   protected use_page_size: number;
   current_page = 1;
   selected_file_count = 0;
+  any_selected = false;
   show_selections_only = false;
   selected_file_detail: FileDetails;
   selected_file_detail_title: string;
@@ -110,11 +114,10 @@ export class ImportComicListComponent implements OnInit {
     this.cover_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
   }
 
-  on_load(): void {
+  retrieve_files(directory: string): void {
     const that = this;
     this.alert_service.show_busy_message('Fetching List Of Comic Files...');
     this.selected_file_detail = null;
-    const directory = this.directory;
     this.comic_service.get_files_under_directory(directory).subscribe(
       (files: FileDetails[]) => {
         that.file_details = files;
@@ -138,20 +141,7 @@ export class ImportComicListComponent implements OnInit {
     } else {
       this.selected_file_count = this.selected_file_count - 1;
     }
-  }
-
-  select_all_files(): void {
-    this.file_details.forEach((file) => {
-      file.selected = true;
-    });
-    this.selected_file_count = this.file_details.length;
-  }
-
-  deselect_all_files(): void {
-    this.file_details.forEach((file) => {
-      file.selected = false;
-    });
-    this.selected_file_count = 0;
+    this.any_selected = this.selected_file_count > 0;
   }
 
   import_selected_files(): void {
@@ -201,21 +191,30 @@ export class ImportComicListComponent implements OnInit {
       this.selected_file_detail_title = this.selected_file_detail.base_filename;
       this.selected_file_detail_subtitle = `${(this.selected_file_detail.size / 1024 ** 2).toPrecision(2)} Mb`;
     }
-
-    console.log('this.selected_file_detail:', this.selected_file_detail);
   }
 
-  set_page_size(page_size: any): void {
-    this.use_page_size = parseInt(page_size.target.value, 10);
+  set_page_size(page_size: number): void {
+    this.use_page_size = page_size;
     this.user_service.set_user_preference('import_page_size', `${this.use_page_size}`);
   }
 
-  toggle_blocked_page_deletion(): void {
-    this.delete_blocked_pages = !this.delete_blocked_pages;
-    this.alert_service.show_info_message(`Blocked pages will ${this.delete_blocked_pages ? '' : 'not '} be deleted...`);
+  set_show_selections_only(show: boolean): void {
+    this.show_selections_only = show;
   }
 
-  toggle_show_selected(): void {
-    this.show_selections_only = !this.show_selections_only;
+  set_delete_blocked_pages(value: boolean): void {
+    this.delete_blocked_pages = value;
+  }
+
+  set_select_all(select: boolean): void {
+    this.file_details.forEach((file) => {
+      file.selected = select;
+    });
+    this.selected_file_count = select ? this.file_details.length : 0;
+    this.any_selected = this.selected_file_count > 0;
+  }
+
+  disable_inputs(): boolean {
+    return this.file_details.length === 0;
   }
 }

@@ -57,7 +57,6 @@ export class ImportComicListEntryComponent implements OnInit {
 
   toggle_selected(event: any): void {
     this.selected.next(this.file_details.selected === false);
-    event.preventDefault();
   }
 
   on_clicked(event: any): void {
