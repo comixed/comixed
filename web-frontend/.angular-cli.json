@@ -22,7 +22,7 @@
 			"styles": [
 				"../node_modules/bootstrap/dist/css/bootstrap.css",
 				"../node_modules/primeng/resources/primeng.min.css",
-				"../node_modules/primeng/resources/themes/start/theme.css",
+				"../node_modules/primeng/resources/themes/omega/theme.css",
 				"../node_modules/@fortawesome/fontawesome-free/css/all.min.css",
 				"styles.scss"
 			],

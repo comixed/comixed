@@ -33,6 +33,7 @@
     "ngx-pagination": "^3.1.1",
     "npm": "^5.6.0",
     "popper.js": "^1.14.4",
+    "primeicons": "^1.0.0",
     "primeng": "^6.1.5",
     "rxjs": "^5.5.6",
     "tether": "^1.4.4",
