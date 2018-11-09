@@ -72,6 +72,7 @@ import { UserService } from './services/user.service';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { MenubarComponent } from './ui/component/menubar/menubar.component';
 import { ImportSidebarComponent } from './ui/component/import/import-sidebar/import-sidebar.component';
+import { LibrarySidebarComponent } from './ui/component/library/library-sidebar/library-sidebar.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,7 @@ import { ImportSidebarComponent } from './ui/component/import/import-sidebar/imp
     LibraryCoverEntryComponent,
     LibraryCoversComponent,
     ImportSidebarComponent,
+    LibrarySidebarComponent,
   ],
   imports: [
     BrowserModule,
