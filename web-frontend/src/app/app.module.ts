@@ -38,9 +38,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 import { XhrInterceptor } from './xhr.interceptor';
-import { ComicRoutingModule } from './comic/comic-routing.module';
 import { ComicService } from './services/comic.service';
-import { ComicListComponent } from './comic/library/comic-list/comic-list.component';
 import { ImportComicListComponent } from './comic/import-comic-list/import-comic-list.component';
 import { ComicListEntryComponent } from './comic/library/comic-list-entry/comic-list-entry.component';
 import { ComicDetailsComponent } from './comic/details/comic-details.component';
@@ -84,7 +82,6 @@ import { LibraryPageComponent } from './ui/page/library/library-page/library-pag
     AccountComponent,
     BusyIndicatorComponent,
     MenubarComponent,
-    ComicListComponent,
     ImportComicListComponent,
     ComicListEntryComponent,
     ComicDetailsComponent,
@@ -132,7 +129,6 @@ import { LibraryPageComponent } from './ui/page/library/library-page/library-pag
       fullScreenBackdrop: true,
     }),
     CommonModule,
-    ComicRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     ConfirmationPopoverModule.forRoot({

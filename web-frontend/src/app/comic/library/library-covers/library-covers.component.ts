@@ -31,7 +31,7 @@ import { LibraryCoverEntryComponent } from '../library-cover-entry/library-cover
   styleUrls: ['./library-covers.component.css']
 })
 export class LibraryCoversComponent implements OnInit {
-  @Input() comics: Array<Comic>;
+  @Input() comics: Array<Comic> = [];
   @Input() cover_size: number;
   @Input() title_search: string;
   @Input() group_by: number;

@@ -36,7 +36,7 @@ export class ComicListEntryComponent implements OnInit {
   @Input() comic: Comic;
   @Input() cover_size: number;
   @Input() selected: boolean;
-  @Input() sort_order: Observable<number>;
+  @Input() sort_order: number;
   cover_url: string;
   title_text: string;
   delete_comic_title: string;
@@ -64,15 +64,12 @@ export class ComicListEntryComponent implements OnInit {
   }
 
   get_subtitle(): string {
-    this.sort_order.subscribe(
-      (sort_order: number) => {
-        switch (sort_order) {
-          case 0: return `(v.${this.comic.volume || 'Unknown'})`;
-          case 1: return `Added: ${this.format_date_full(this.comic.added_date, 'This should never happen...')}`;
-          case 2: return `Cover date: ${this.format_date_month_year(this.comic.cover_date, 'Unknown')}`;
-          case 3: return `Last read: ${this.format_date_full(this.comic.last_read_date, 'Never')}`;
-        }
-      });
+    switch (this.sort_order) {
+      case 0: return `(v.${this.comic.volume || 'Unknown'})`;
+      case 1: return `Added: ${this.format_date_full(this.comic.added_date, 'This should never happen...')}`;
+      case 2: return `Cover date: ${this.format_date_month_year(this.comic.cover_date, 'Unknown')}`;
+      case 3: return `Last read: ${this.format_date_full(this.comic.last_read_date, 'Never')}`;
+    }
     return `Invalid sort value: ${this.sort_order}`;
   }
 
