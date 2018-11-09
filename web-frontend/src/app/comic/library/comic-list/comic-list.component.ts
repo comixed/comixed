@@ -199,10 +199,6 @@ export class ComicListComponent implements OnInit {
     return comics;
   }
 
-  get_sort_order(): Observable<number> {
-    return this.sort_order.asObservable();
-  }
-
   sort_by_natural_order(comic1: Comic, comic2: Comic): number {
     if (comic1.id < comic2.id) {
       return -1;
@@ -285,7 +281,8 @@ export class ComicListComponent implements OnInit {
     this.router.navigate(['comics', this.current_comic.id]);
   }
 
-  save_cover_size(): void {
+  set_cover_size(cover_size: number): void {
+    this.cover_size = cover_size;
     this.user_service.set_user_preference('cover_size', String(this.cover_size));
   }
 
@@ -354,13 +351,13 @@ export class ComicListComponent implements OnInit {
   }
 
   set_grouping(value: any): void {
-    this.group_by_value = parseInt(value.target.value, 10);
+    this.group_by_value = parseInt(value, 10);
     this.user_service.set_user_preference('group_by', `${this.group_by_value}`);
     this.update_params(this.GROUP_BY_PARAMETER, `${this.group_by_value}`);
   }
 
   set_page_size(value: any): void {
-    this.use_page_size = parseInt(value.target.value, 10);
+    this.use_page_size = parseInt(value, 10);
     this.user_service.set_user_preference('page_size', `${this.use_page_size}`);
     this.update_params(this.PAGESIZE_PARAMETER, `${this.use_page_size}`);
   }

@@ -39,7 +39,6 @@ export class ComicListEntryComponent implements OnInit {
   @Input() sort_order: Observable<number>;
   cover_url: string;
   title_text: string;
-  subtitle_text: string;
   delete_comic_title: string;
   delete_comic_message: string;
   confirm_button = 'Yes';
@@ -62,20 +61,19 @@ export class ComicListEntryComponent implements OnInit {
     this.delete_comic_message = 'Are you sure you want to delete this comic?';
 
     this.title_text = `${this.comic.series || 'Unknown'} #${this.comic.issue_number || '???'}`;
-    this.set_subtitle();
   }
 
-  set_subtitle() {
+  get_subtitle(): string {
     this.sort_order.subscribe(
       (sort_order: number) => {
         switch (sort_order) {
-          case 0: this.subtitle_text = `(v.${this.comic.volume || 'Unknown'})`; break;
-          case 1: this.subtitle_text = `Added: ${this.format_date_full(this.comic.added_date, 'This should never happen...')}`; break;
-          case 2: this.subtitle_text = `Cover date: ${this.format_date_month_year(this.comic.cover_date, 'Unknown')}`; break;
-          case 3: this.subtitle_text = `Last read: ${this.format_date_full(this.comic.last_read_date, 'Never')}`; break;
-          default: this.subtitle_text = `Invalid sort value: ${this.sort_order}`;
+          case 0: return `(v.${this.comic.volume || 'Unknown'})`;
+          case 1: return `Added: ${this.format_date_full(this.comic.added_date, 'This should never happen...')}`;
+          case 2: return `Cover date: ${this.format_date_month_year(this.comic.cover_date, 'Unknown')}`;
+          case 3: return `Last read: ${this.format_date_full(this.comic.last_read_date, 'Never')}`;
         }
       });
+    return `Invalid sort value: ${this.sort_order}`;
   }
 
   format_date_month_year(date: string, otherwise: string): string {

@@ -33,66 +33,15 @@
 <!-- core library view -->
 <div class='container-fluid w-100' id='library_view'>
   <div class='row w-100'>
-    <div class='col-3 bg-light text-black pl-5'>
-      <h4 class='text-center'>Library Search</h4>
-      <!-- number of comics per page -->
-      <div class='row w-100'>
-        <div class='field'>
-          <label for='number-of-comics-per-page'># of comics per
-            page: </label>
-        </div>
-        <div class='field row w-100'>
-          <app-page-size [initial]='use_page_size'
-            (change)='set_page_size($event)'></app-page-size>
-        </div>
-      </div>
-      <!-- sort options -->
-      <div class='row w-100'>
-        <div class='field'>
-          <label for='comic-sort-order'>Sort comics by: </label>
-        </div>
-        <div class='field row w-100'>
-          <select id='comic-sort-order' class='form-control' #selectElem
-            [(ngModel)]='sort_order_value'
-            (change)='set_sort_order(selectElem.value)'>
-            <option *ngFor='let option of sort_options'
-              [value]='option.id'>{{option.label}}</option>
-          </select>
-        </div>
-      </div>
-      <!-- search box -->
-      <div class='row w-100'>
-        <div class='field'>
-          <label for='search-terms'>Search text:</label>
-        </div>
-        <div class='field row w-100'>
-          <input id='search-terms' class='form-control'
-            [(ngModel)]='title_search'
-            (ngModelChange)='update_title_search($event)'
-            placeholder='enter search terms here'>
-        </div>
-      </div>
-      <!-- cover size slider -->
-      <div class='row w-100'>
-        <div class='field'>
-          <label for='cover_size'>Cover size: {{cover_size}}</label>
-        </div>
-        <div class='field row w-100'>
-          <input class='form-control-range' [(ngModel)]='cover_size'
-            type='range' min='200' max='640' value='{{cover_size}}'
-            (blur)='save_cover_size()' class='slider w-100'>
-        </div>
-      </div>
-      <div class='row w-100'>
-        <div class='field'>
-          <label for='number-of-comics-per-page'>Group comics
-            by:</label>
-        </div>
-        <div class='field row w-100'>
-          <app-group-comics [initial]='group_by_value'
-            (change)='set_grouping($event)'></app-group-comics>
-        </div>
-      </div>
+    <div class='col-3'>
+      <app-library-sidebar [page_size]='use_page_size'
+        [initial_sort]='sort_order_value' [search_text]='title_search'
+        [cover_size]='cover_size' [initial_grouping]='group_by_value'
+        (comicsPerPage)='set_page_size($event)'
+        (sortBy)='set_sort_order($event)'
+        (searchFor)='update_title_search($event)'
+        (changeCoverSize)='set_cover_size($event)'
+        (groupBy)='set_grouping($event)'></app-library-sidebar>
     </div>
     <div class='col-9 position-fixed comixed-scrollable-div'>
       <div class='container-fluid w-100 mx-2'>
@@ -120,7 +69,7 @@
             <app-library-covers [comics]='comics'
               [cover_size]='cover_size' [title_search]='title_search'
               [group_by]='group_by_value'
-              [sort_order]='get_sort_order()'
+              [sort_order]='sort_order_value'
               [page_size]='use_page_size' [current_page]='current_page'></app-library-covers>
           </div>
           <div class='tab-pane' id='details-view'
@@ -128,7 +77,7 @@
             [class.show]='is_current_tab("details-view")'>
             <app-library-details [comics]='comics'
               [title_search]='title_search' [group_by]='group_by_value'
-              [sort_order]='get_sort_order()'
+              [sort_order]='sort_order_value'
               [page_size]='use_page_size' [current_page]='current_page'
               (selected)='set_current_comic($event)'></app-library-details>
           </div>
