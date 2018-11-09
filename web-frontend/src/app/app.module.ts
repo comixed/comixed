@@ -31,6 +31,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { SliderModule } from 'primeng/slider';
+import { TabViewModule } from 'primeng/tabview';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -122,7 +123,8 @@ import { LibrarySidebarComponent } from './ui/component/library/library-sidebar/
     ButtonModule,
     CheckboxModule,
     DropdownModule,
-    SliderModule
+    SliderModule,
+    TabViewModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
       fullScreenBackdrop: true,
