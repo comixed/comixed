@@ -1,0 +1,14 @@
+<app-library-sidebar [page_size]='page_size' [initial_sort]='sort_order'
+  [search_text]='title_search' [initial_grouping]='group_by'
+  (comicsPerPage)='set_comics_per_page($event)'
+  (sortBy)='set_sort_order($event)'
+  (searchFor)='set_search_text($event)'
+  (changeCoverSize)='set_cover_size($event)'
+  (groupBy)='set_group_by($event)'></app-library-sidebar>
+<p-tabView [activeIndex]='current_tab'> <p-tabPanel
+  header='Covers'> <app-library-covers [comics]='comics'
+  [cover_size]='cover_size' [sort_order]='sort_order'
+  [title_search]='title_search' [group_by]='group_by'
+  [page_size]='page_size'></app-library-covers> </p-tabPanel> <p-tabPanel
+  header='Details'> <app-library-details [comics]='comics'></app-library-details></p-tabPanel>
+</p-tabView>
