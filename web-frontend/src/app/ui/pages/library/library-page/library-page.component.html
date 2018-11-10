@@ -1,4 +1,4 @@
-<app-library-sidebar [page_size]='page_size' [initial_sort]='sort_order'
+<!-- <app-library-sidebar [page_size]='page_size' [initial_sort]='sort_order'
   [search_text]='title_search' [initial_grouping]='group_by'
   (comicsPerPage)='set_comics_per_page($event)'
   (sortBy)='set_sort_order($event)'
@@ -14,3 +14,218 @@
   header='Details'> <app-library-details [comics]='comics'
   [sort_order]='sort_order' [title_search]='title_search'
   [group_by]='group_by' [page_size]='page_size'></app-library-details></p-tabPanel> </p-tabView>
+-->
+<p-tabView
+  [activeIndex]='current_tab'
+  (onChange)='set_current_tab($event.index)'> <p-tabPanel
+  header='Covers'> <p-dataView
+  #comicCoverView
+  filterBy='series'
+  [value]='comics'
+  [rows]='rows'
+  paginator='true'
+  paginatorPosition='both'
+  [sortField]='sort_by'
+  emptyMessage='No comics found.'> <p-header>
+<div class='ui-helper-clearfix'>
+  <div class='ui-g'>
+    <div class='ui-g-12 ui-md-4'>
+      Sort by:
+      <p-dropdown
+        [options]='sort_options'
+        [(ngModel)]='sort_by'
+        (onChange)='set_sort_order($event.value)'></p-dropdown>
+      Group by:
+      <p-dropdown
+        [options]='group_options'
+        [(ngModel)]='group_by'
+        (onChange)='set_group_by($event.value)'></p-dropdown>
+      Show:
+      <p-dropdown
+        [options]='rows_options'
+        [(ngModel)]='rows'
+        (onChange)='set_rows($event.value)'></p-dropdown>
+      Cover size:
+      <p-slider
+        [(ngModel)]='cover_size'
+        [min]='200'
+        [max]='640'
+        [animate]='true'
+        (onChange)='set_cover_size($event.value)'></p-slider>
+    </div>
+    <div class='ui-g-6 ui-md-4 filter-container'>
+      <div style='position: relative'>
+        <input
+          type='search'
+          pInputText
+          placeholder='Search by series name'
+          (keyup)='comicCoverView.filter($event.target.value)'>
+      </div>
+    </div>
+    <div
+      class='ui-g-6 ui-md-4'
+      style='text-align: right'>
+      <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+    </div>
+  </div>
+</div>
+</p-header> <ng-template
+  let-comic
+  pTemplate='listItem'>
+<div class='ui-g'>
+  <p-card> <img
+    [src]='get_cover_url(comic)'
+    width='auto'
+    [style.height]='"" + cover_size + "px"'> </p-card>
+  <div>
+    <h4>{{ get_comic_title(comic) }}</h4>
+    <button
+      pButton
+      type='button'
+      icon='pi pi-search'
+      (click)='set_selected_comic($event, comic)'
+      label='Details'></button>
+    <a [routerLink]='[comic.id]'><button
+        pButton
+        type='button'
+        icon='pi pi-folder-open'
+        label='Open'></button></a>
+  </div>
+</div>
+</ng-template> <ng-template
+  let-comic
+  pTemplate='gridItem'>
+<div>
+  <p-card> <img
+    [src]='get_cover_url(comic)'
+    width='auto'
+    [style.height]='"" + cover_size + "px"'> <p-footer>
+  <button
+    pButton
+    type='button'
+    icon='pi pi-search'
+    (click)='set_selected_comic($event, comic)'></button>
+  <a [routerLink]='[comic.id]'><button
+      pButton
+      type='button'
+      icon='pi pi-folder-open'></button></a> </p-footer></p-card>
+</div>
+</ng-template> </p-dataView></p-tabPanel> <p-tabPanel header='Details'> <p-table
+  #comicDetailView
+  [value]='comics'
+  paginator='true'
+  paginatorPosition='both'
+  [rows]='rows'
+  [globalFilterFields]='["series"]'
+  [sortField]='sort_by'> <ng-template pTemplate='caption'>
+<div class='ui-g-12 ui-md-4'>
+  Sort by:
+  <p-dropdown
+    [options]='sort_options'
+    [(ngModel)]='sort_by'
+    (onChange)='set_sort_order($event.value)'></p-dropdown>
+  Group by:
+  <p-dropdown
+    [options]='group_options'
+    [(ngModel)]='group_by'
+    (onChange)='set_group_by($event.value)'></p-dropdown>
+  Show:
+  <p-dropdown
+    [options]='rows_options'
+    [(ngModel)]='rows'
+    (onChange)='set_rows($event.value)'></p-dropdown>
+</div>
+<div class='ui-g-6 ui-md-4 filter-container'>
+  <div style='position: relative'>
+    <input
+      type='search'
+      pInputText
+      placeholder='Search by series name'
+      (keyup)='comicDetailView.filterGlobal($event.target.value, "contains")'>
+  </div>
+</div>
+</ng-template> <ng-template pTemplate='header'>
+<tr>
+  <th>Cover</th>
+  <th>Series</th>
+  <th>Volume</th>
+  <th>Issue #</th>
+  <th># Pages</th>
+  <th>Published</th>
+  <th>Date Added</th>
+  <th></th>
+</tr>
+</ng-template> <ng-template
+  pTemplate='body'
+  let-comic>
+<tr>
+  <td><img
+    height='64px'
+    width='auto'
+    [src]='get_cover_url(comic)'>
+  <td>{{ comic.series }}</td>
+  <td>{{ comic.volume }}</td>
+  <td>{{ comic.issue_number }}</td>
+  <td>{{ comic.page_count || 0}}</td>
+  <td>{{ comic.cover_date | date }}</td>
+  <td>{{ comic.added_date | date }}</td>
+  <td><a [routerLink]='[comic.id]'>
+      <button
+        pButton
+        type='button'
+        icon='pi pi-folder-open'></button>
+  </a>
+    <button
+      pButton
+      type='button'
+      icon='pi pi-search'
+      (click)='set_selected_comic($event, comic)'></button></td>
+</tr>
+</ng-template> </p-table></p-tabPanel></p-tabView>
+<!-- details dialog -->
+<p-dialog
+  *ngIf='selected_comic'
+  [header]='get_comic_title(selected_comic)'
+  [(visible)]='show_dialog'
+  [responsive]='true'
+  showEffect='fade'
+  [modal]='true'
+  [blockScroll]='true'
+  [maximizable]='true'
+  (onAfterHide)='hide_dialog()'>
+<div
+  class='ui-g'
+  *ngIf='selected_comic'>
+  <div
+    class='ui-g-12'
+    style='text-align: center'>
+    <img
+      [src]='get_cover_url(selected_comic)'
+      [style.height]='"" + cover_size + "px"'
+      [style.width]='auto'>
+  </div>
+  <div
+    *ngIf='selected_comic.description'
+    class='ui-g-12'
+    style='text-align: center'>
+    <p-scrollPanel [style]='{width: "100%", height: "200p"}'>
+    <div [innerHTML]='selected_comic.description'></div>
+    </p-scrollPanel>
+  </div>
+  <div *ngIf='selected_comic.credits && selected_comic.credits.length'>
+    <p-table [value]='selected_comic.credits'> <ng-template
+      pTemplate='header'>
+    <tr>
+      <th>Name</th>
+      <th>Role</th>
+    </tr>
+    </ng-template> <ng-template
+      pTemaplte='body'
+      let-credit>
+    <tr>
+      <td>{{ credit.name }}</td>
+      <td>{{ credit.role }}</td>
+    </ng-template> </p-table>
+  </div>
+</div>
+</p-dialog>
