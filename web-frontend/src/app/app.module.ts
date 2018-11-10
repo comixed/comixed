@@ -41,6 +41,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 import { XhrInterceptor } from './xhr.interceptor';
 import { ComicService } from './services/comic.service';
+import { MessageService } from 'primeng/api';
 import { ImportComicListComponent } from './comic/import-comic-list/import-comic-list.component';
 import { ComicListEntryComponent } from './comic/library/comic-list-entry/comic-list-entry.component';
 import { ComicDetailsComponent } from './comic/details/comic-details.component';
@@ -154,6 +155,7 @@ import { NotificationsComponent } from './ui/component/notifications/notificatio
     AlertService,
     UserService,
     ComicService,
+    MessageService,
     [
       { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }
     ],
