@@ -20,7 +20,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
@@ -119,7 +118,6 @@ import { NotificationsComponent } from './ui/component/notifications/notificatio
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    NgbModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
     MenubarModule,

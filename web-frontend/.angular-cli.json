@@ -20,17 +20,15 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "app",
 			"styles": [
-				"../node_modules/bootstrap/dist/css/bootstrap.css",
 				"../node_modules/primeng/resources/primeng.min.css",
-				"../node_modules/primeng/resources/themes/omega/theme.css",
+				"../node_modules/primeng/resources/themes/omega/theme.scss",
 				"../node_modules/@fortawesome/fontawesome-free/css/all.min.css",
 				"styles.scss"
 			],
 			"scripts": [
 				"../node_modules/jquery/dist/jquery.min.js",
 				"../node_modules/tether/dist/js/tether.min.js",
-				"../node_modules/popper.js/dist/umd/popper.js",
-				"../node_modules/bootstrap/dist/js/bootstrap.min.js"
+				"../node_modules/popper.js/dist/umd/popper.js"
 			],
 			"environmentSource": "environments/environment.ts",
 			"environments": {
