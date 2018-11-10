@@ -22,7 +22,7 @@ import {
   OnInit,
   Input,
 } from '@angular/core';
-import { Comic } from '../../comic.model';
+import { Comic } from '../../../models/comic.model';
 import { LibraryCoverEntryComponent } from '../library-cover-entry/library-cover-entry.component';
 
 @Component({

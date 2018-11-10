@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {Comic} from './comic.model';
+import {Comic} from '../models/comic.model';
 
 @Pipe({
   name: 'series_filter'

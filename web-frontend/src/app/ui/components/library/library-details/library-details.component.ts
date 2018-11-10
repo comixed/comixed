@@ -21,41 +21,39 @@ import {
   Component,
   OnInit,
   Input,
+  Output,
 } from '@angular/core';
-import { Comic } from '../../../comic/comic.model';
-import { ComicCredit } from '../../../comic/comic-credit.model';
+import { EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+import { Comic } from '../../../../models/comic.model';
 
 @Component({
-  selector: 'app-comic-credits',
-  templateUrl: './comic-credits.component.html',
-  styleUrls: ['./comic-credits.component.css']
+  selector: 'app-library-details',
+  templateUrl: './library-details.component.html',
+  styleUrls: ['./library-details.component.css']
 })
-export class ComicCreditsComponent implements OnInit {
-  @Input() comic: Comic;
+export class LibraryDetailsComponent implements OnInit {
+  @Input() comics: Array<Comic>;
+  @Input() title_search: string;
+  @Input() group_by: number;
+  @Input() sort_order: number;
+  @Input() page_size: number;
+  @Input() current_page: number;
+  @Output() selected: EventEmitter<Comic> = new EventEmitter<Comic>();
 
-  constructor() { }
+  constructor(
+    private router: Router,
+  ) { }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  show_comic(comic: Comic): void {
+    this.router.navigate(['/comics', comic.id]);
   }
 
-  sort_credits(): Array<ComicCredit> {
-    return this.comic.credits.sort((left: ComicCredit, right: ComicCredit) => {
-      if (left.role < right.role) {
-        return -1;
-      }
-
-      if (left.role > right.role) {
-        return 1;
-      }
-
-      if (left.name < right.name) {
-        return -1;
-      }
-      if (left.name > right.name) {
-        return 1;
-      }
-
-      return 0;
-    });
+  clicked(comic: Comic): void {
+    this.selected.next(comic);
+    event.preventDefault();
   }
+
 }

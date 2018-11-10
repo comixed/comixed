@@ -22,7 +22,7 @@ import { OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
-import { Comic } from '../../comic.model';
+import { Comic } from '../../../models/comic.model';
 import { ComicService } from '../../../services/comic.service';
 import { AlertService } from '../../../services/alert.service';
 

@@ -28,8 +28,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ComicService } from '../../services/comic.service';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
-import { Page } from '../page.model';
-import { Comic } from '../comic.model';
+import { Page } from '../../models/page.model';
+import { Comic } from '../../models/comic.model';
 import { DuplicatePageListEntryComponent } from '../duplicate-page-list-entry/duplicate-page-list-entry.component';
 
 @Component({

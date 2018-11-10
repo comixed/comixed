@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {FileDetails} from '../file-details.model';
+import {FileDetails} from '../../models/file-details.model';
 
 @Pipe({
   name: 'selected_for_import'

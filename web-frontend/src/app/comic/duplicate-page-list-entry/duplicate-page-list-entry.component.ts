@@ -30,8 +30,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UserService } from '../../services/user.service';
 import { ComicService } from '../../services/comic.service';
 import { AlertService } from '../../services/alert.service';
-import { Page } from '../page.model';
-import { Comic } from '../comic.model';
+import { Page } from '../../models/page.model';
+import { Comic } from '../../models/comic.model';
 
 @Component({
   selector: 'app-duplicate-list-entry',

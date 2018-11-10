@@ -27,13 +27,13 @@ import { Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UserService } from '../../services/user.service';
-import { FileDetails } from '../file-details.model';
+import { FileDetails } from '../../models/file-details.model';
 import { ComicService } from '../../services/comic.service';
 import { AlertService } from '../../services/alert.service';
 import { ImportComicListEntryComponent } from '../import-comic-list-entry/import-comic-list-entry.component';
 import { IssueDetailsComponent } from '../issue/details/issue-details/issue-details.component';
 import { SelectedForImportPipe } from './selected-for-import.pipe';
-import { ImportSidebarComponent } from '../../ui/component/import/import-sidebar/import-sidebar.component';
+import { ImportSidebarComponent } from '../../ui/components/import/import-sidebar/import-sidebar.component';
 
 
 @Component({

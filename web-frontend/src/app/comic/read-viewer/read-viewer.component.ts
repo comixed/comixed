@@ -19,7 +19,7 @@
 
 import {Component, OnInit, Input} from '@angular/core';
 
-import {Comic} from '../comic.model';
+import {Comic} from '../../models/comic.model';
 import {ComicService} from '../../services/comic.service';
 
 @Component({

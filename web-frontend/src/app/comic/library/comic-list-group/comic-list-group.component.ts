@@ -23,7 +23,7 @@ import {
   Input,
 } from '@angular/core';
 
-import {Comic} from '../../comic.model';
+import {Comic} from '../../../models/comic.model';
 import {ComicListEntryComponent} from '../comic-list-entry/comic-list-entry.component';
 
 @Component({

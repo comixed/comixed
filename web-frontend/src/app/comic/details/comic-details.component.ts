@@ -24,17 +24,17 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 
-import { Comic } from '../comic.model';
-import { Page } from '../page.model';
+import { Comic } from '../../models/comic.model';
+import { Page } from '../../models/page.model';
 import { ComicService } from '../../services/comic.service';
 import { AlertService } from '../../services/alert.service';
 import { UserService } from '../../services/user.service';
 import { ReadViewerComponent } from '../read-viewer/read-viewer.component';
 import { PageDetailsComponent } from '../page-details/page-details.component';
-import { PageType } from '../page-type.model';
+import { PageType } from '../../models/page-type.model';
 import { ComicOverviewComponent } from './overview/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from './story/comic-story/comic-story.component';
-import { ComicCreditsComponent } from '../../ui/component/comic-credits/comic-credits.component';
+import { ComicCreditsComponent } from '../../ui/components/comic-credits/comic-credits.component';
 import { ComicPagesComponent } from './pages/comic-pages/comic-pages.component';
 
 @Component({

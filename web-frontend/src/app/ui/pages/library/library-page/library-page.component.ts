@@ -20,7 +20,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Comic } from '../../../../comic/comic.model';
+import { Comic } from '../../../../models/comic.model';
 import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
 

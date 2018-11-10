@@ -24,7 +24,7 @@ import { Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { ComicService } from '../../services/comic.service';
 import { AlertService } from '../../services/alert.service';
-import { FileDetails } from '../file-details.model';
+import { FileDetails } from '../../models/file-details.model';
 
 @Component({
   selector: 'app-import-comic-list-entry',

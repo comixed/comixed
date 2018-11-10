@@ -28,10 +28,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { UserService } from './user.service';
 import { AlertService } from './alert.service';
-import { Comic } from '../comic/comic.model';
-import { Page } from '../comic/page.model';
-import { PageType } from '../comic/page-type.model';
-import { FileDetails } from '../comic/file-details.model';
+import { Comic } from '../models/comic.model';
+import { Page } from '../models/page.model';
+import { PageType } from '../models/page-type.model';
+import { FileDetails } from '../models/file-details.model';
 
 @Injectable()
 export class ComicService {

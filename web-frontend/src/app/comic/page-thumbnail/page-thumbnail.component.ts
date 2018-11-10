@@ -22,8 +22,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ComicService } from '../../services/comic.service';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
-import { Page } from '../page.model';
-import { PageType } from '../page-type.model';
+import { Page } from '../../models/page.model';
+import { PageType } from '../../models/page-type.model';
 
 @Component({
   selector: 'app-page-thumbnail',

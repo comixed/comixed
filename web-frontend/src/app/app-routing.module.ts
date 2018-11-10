@@ -24,7 +24,7 @@ import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './login/login.component';
 import { AccountComponent } from './account/account.component';
 import { DuplicatePageListComponent } from './comic/duplicate-page-list/duplicate-page-list.component';
-import { LibraryPageComponent } from './ui/page/library/library-page/library-page.component';
+import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { ImportComicListComponent } from './comic/import-comic-list/import-comic-list.component';
 import { ComicDetailsComponent } from './comic/details/comic-details.component';
 

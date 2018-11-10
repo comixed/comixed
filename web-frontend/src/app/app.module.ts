@@ -61,9 +61,9 @@ import { ComicDetailsEditorComponent } from './comic/details/comic-details-edito
 import { IssueDetailsComponent } from './comic/issue/details/issue-details/issue-details.component';
 import { ComicOverviewComponent } from './comic/details/overview/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from './comic/details/story/comic-story/comic-story.component';
-import { ComicCreditsComponent } from './ui/component/comic-credits/comic-credits.component';
+import { ComicCreditsComponent } from './ui/components/comic-credits/comic-credits.component';
 import { ComicPagesComponent } from './comic/details/pages/comic-pages/comic-pages.component';
-import { LibraryDetailsComponent } from './ui/component/library/library-details/library-details.component';
+import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
 import { LibraryCoverEntryComponent } from './comic/library/library-cover-entry/library-cover-entry.component';
 import { LibraryCoversComponent } from './comic/library/library-covers/library-covers.component';
 import { MainPageComponent } from './main-page/main-page.component';
@@ -72,11 +72,11 @@ import { AccountComponent } from './account/account.component';
 import { AlertService } from './services/alert.service';
 import { UserService } from './services/user.service';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
-import { MenubarComponent } from './ui/component/menubar/menubar.component';
-import { ImportSidebarComponent } from './ui/component/import/import-sidebar/import-sidebar.component';
-import { LibrarySidebarComponent } from './ui/component/library/library-sidebar/library-sidebar.component';
-import { LibraryPageComponent } from './ui/page/library/library-page/library-page.component';
-import { NotificationsComponent } from './ui/component/notifications/notifications.component';
+import { MenubarComponent } from './ui/components/menubar/menubar.component';
+import { ImportSidebarComponent } from './ui/components/import/import-sidebar/import-sidebar.component';
+import { LibrarySidebarComponent } from './ui/components/library/library-sidebar/library-sidebar.component';
+import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
+import { NotificationsComponent } from './ui/components/notifications/notifications.component';
 
 @NgModule({
   declarations: [

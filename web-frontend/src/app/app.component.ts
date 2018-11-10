@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { UserService } from './services/user.service';
 import { ComicService } from './services/comic.service';
-import { MenubarComponent } from './ui/component/menubar/menubar.component';
+import { MenubarComponent } from './ui/components/menubar/menubar.component';
 
 @Component({
   selector: 'app-root',
