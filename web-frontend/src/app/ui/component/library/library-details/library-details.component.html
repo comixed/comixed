@@ -1,29 +1,22 @@
-<div class='container-fluid w-100'>
-  <table class='table table-striped table-sm'>
-    <thead>
-      <tr>
-        <th scope='col'>#</th>
-        <th scope='col'>Series</th>
-        <th scope='col'>Volume</th>
-        <th scope='col'>Issue #</th>
-        <th scope='col'># Pages</th>
-        <th scope='col'>Published</th>
-        <th scope='col'>Date Added</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'>
-        <th scope='row'><a [routerLink]='[comic.id]'>{{
-            comic.id }}</a></th>
-        <td data-toggle='modal' data-target='#display_comic_details'
-          (click)='clicked(comic)'>{{ comic.series }}</td>
-        <td>{{ comic.volume }}</td>
-        <td>{{ comic.issue_number }}</td>
-        <td>{{ comic.page_count || 0}}</td>
-        <td>{{ comic.cover_date | date }}</td>
-        <td>{{ comic.added_date | date }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<p-table [value]='comics' paginator='true' paginatorPosition='both'
+  [rows]='page_size'> <ng-template pTemplate='header'>
+<tr>
+  <th>#</th>
+  <th>Series</th>
+  <th>Volume</th>
+  <th>Issue #</th>
+  <th># Pages</th>
+  <th>Published</th>
+  <th>Date Added</th>
+</tr>
+</ng-template> <ng-template pTemplate='body' let-comic>
+<tr>
+  <td scope='row'><a [routerLink]='[comic.id]'>{{ comic.id }}</a></td>
+  <td>{{ comic.series }}</td>
+  <td>{{ comic.volume }}</td>
+  <td>{{ comic.issue_number }}</td>
+  <td>{{ comic.page_count || 0}}</td>
+  <td>{{ comic.cover_date | date }}</td>
+  <td>{{ comic.added_date | date }}</td>
+</tr>
+</ng-template> </p-table>
