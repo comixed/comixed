@@ -21,7 +21,6 @@ import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { UserService } from './services/user.service';
-import { AlertService } from './services/alert.service';
 import { ComicService } from './services/comic.service';
 import { MenubarComponent } from './ui/component/menubar/menubar.component';
 
@@ -38,29 +37,12 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     private user_service: UserService,
-    private alert_service: AlertService,
     private comic_service: ComicService,
     private router: Router,
   ) {
   }
 
   ngAfterViewInit(): void {
-    this.alert_service.error_messages.subscribe(
-      (message: string) => {
-        this.alert_messages.push([message, 'alert-danger']);
-      }
-    );
-
-    this.alert_service.info_messages.subscribe(
-      (message: string) => {
-        const n = this.alert_messages.push([message, 'alert-info']);
-
-        // create a timer to remove this info message after 5 seconds
-        const timer = setTimeout(() => { this.clear_info_message(message); }, 5000);
-        this.alert_messages[n - 1].push(timer);
-      }
-    );
-
     this.comic_service.get_library_comic_count().subscribe(
       count => this.comic_count = count,
       error => console.log('ERROR:', error.message));

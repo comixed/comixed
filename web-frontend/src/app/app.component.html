@@ -2,16 +2,8 @@
   <app-menubar></app-menubar>
 </div>
 <div class='container-fluid pl-0 mx-0'>
+  <app-notifications></app-notifications>
   <app-busy-indicator></app-busy-indicator>
-  <div *ngIf='alert_messages.length > 0'
-    class='row justify-content-center'>
-    <div *ngFor='let alert_message of alert_messages; let i = index'
-      class='alert {{alert_message[1]}} w-75 text-center' role='alert'>
-      {{alert_message[0]}} <a id='alert-message-dismiss' href='#'
-        class='close' data-dismiss='alert' aria-label='close'
-        (click)='clear_alert_message(i)'>&times;</a>
-    </div>
-  </div>
   <div class='row w-100'>
     <div class='col'>
       <router-outlet></router-outlet>
