@@ -34,6 +34,7 @@ import { SliderModule } from 'primeng/slider';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { CardModule } from 'primeng/card';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -131,6 +132,7 @@ import { NotificationsComponent } from './ui/component/notifications/notificatio
     TabViewModule,
     TableModule,
     ToastModule,
+    CardModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
       fullScreenBackdrop: true,
