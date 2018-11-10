@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { Comic } from '../../comic.model';
+import { Comic } from '../../../../comic/comic.model';
 
 @Component({
   selector: 'app-library-details',

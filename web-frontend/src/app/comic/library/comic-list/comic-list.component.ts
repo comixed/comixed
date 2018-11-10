@@ -33,7 +33,7 @@ import { ComicListGroupComponent } from '../comic-list-group/comic-list-group.co
 import { SeriesFilterPipe } from '../../series-filter.pipe';
 import { AlertService } from '../../../services/alert.service';
 import { LibraryCoversComponent } from '../library-covers/library-covers.component';
-import { LibraryDetailsComponent } from '../library-details/library-details.component';
+import { LibraryDetailsComponent } from '../../../ui/component/library/library-details/library-details.component';
 
 @Component({
   selector: 'app-comic-list',
