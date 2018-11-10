@@ -19,21 +19,21 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LibraryCoverEntryComponent } from './library-cover-entry.component';
+import { ComicCoverComponent } from './library-cover-entry.component';
 
-describe('LibraryCoverEntryComponent', () => {
-  let component: LibraryCoverEntryComponent;
-  let fixture: ComponentFixture<LibraryCoverEntryComponent>;
+describe('ComicCoverComponent', () => {
+  let component: ComicCoverComponent;
+  let fixture: ComponentFixture<ComicCoverComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [LibraryCoverEntryComponent]
+      declarations: [ComicCoverComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LibraryCoverEntryComponent);
+    fixture = TestBed.createComponent(ComicCoverComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

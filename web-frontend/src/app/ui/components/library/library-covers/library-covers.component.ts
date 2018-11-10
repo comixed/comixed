@@ -23,7 +23,7 @@ import {
   Input,
 } from '@angular/core';
 import { Comic } from '../../../../models/comic.model';
-import { LibraryCoverEntryComponent } from '../../../../comic/library/library-cover-entry/library-cover-entry.component';
+import { ComicCoverComponent } from '../../comic-cover/comic-cover.component';
 
 @Component({
   selector: 'app-library-covers',

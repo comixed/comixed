@@ -1,11 +1,11 @@
 <div class='container w-100 justify-content-center'>
   <!--  show ungrouped comics -->
   <div *ngIf='group_by === 0' class='row w-100'>
-    <app-library-cover-entry
+    <app-comic-cover
       *ngFor='let comic of comics | series_filter : title_search | paginate: { itemsPerPage: page_size, currentPage: current_page }'
       [comic]='comic' [cover_size]='cover_size'
       [sort_order]='sort_order'
-      (onComicSelected)='handle_comic_clicked($event)'></app-library-cover-entry>
+      (onComicSelected)='handle_comic_clicked($event)'></app-comic-cover>
   </div>
   <!--  show grouped comics -->
   <div *ngIf='group_by !== 0' class='container-fluid'>

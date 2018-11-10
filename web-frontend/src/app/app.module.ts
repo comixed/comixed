@@ -64,7 +64,7 @@ import { ComicStoryComponent } from './comic/details/story/comic-story/comic-sto
 import { ComicCreditsComponent } from './ui/components/comic-credits/comic-credits.component';
 import { ComicPagesComponent } from './comic/details/pages/comic-pages/comic-pages.component';
 import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
-import { LibraryCoverEntryComponent } from './comic/library/library-cover-entry/library-cover-entry.component';
+import { ComicCoverComponent } from './ui/components/comic-cover/comic-cover.component';
 import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './login/login.component';
@@ -108,7 +108,7 @@ import { NotificationsComponent } from './ui/components/notifications/notificati
     ComicCreditsComponent,
     ComicPagesComponent,
     LibraryDetailsComponent,
-    LibraryCoverEntryComponent,
+    ComicCoverComponent,
     LibraryCoversComponent,
     ImportSidebarComponent,
     LibrarySidebarComponent,

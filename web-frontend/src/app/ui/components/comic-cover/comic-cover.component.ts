@@ -29,11 +29,11 @@ import { ComicService } from '../../../services/comic.service';
 import { AlertService } from '../../../services/alert.service';
 
 @Component({
-  selector: 'app-library-cover-entry',
-  templateUrl: './library-cover-entry.component.html',
-  styleUrls: ['./library-cover-entry.component.css']
+  selector: 'app-comic-cover',
+  templateUrl: './comic-cover.component.html',
+  styleUrls: ['./comic-cover.component.css']
 })
-export class LibraryCoverEntryComponent implements OnInit {
+export class ComicCoverComponent implements OnInit {
   @Input() comic: Comic;
   @Input() cover_size: number;
   @Input() selected: boolean;
