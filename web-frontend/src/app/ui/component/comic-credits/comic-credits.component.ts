@@ -22,8 +22,8 @@ import {
   OnInit,
   Input,
 } from '@angular/core';
-import { Comic } from '../../../comic.model';
-import { ComicCredit } from '../../../comic-credit.model';
+import { Comic } from '../../../comic/comic.model';
+import { ComicCredit } from '../../../comic/comic-credit.model';
 
 @Component({
   selector: 'app-comic-credits',
