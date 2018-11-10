@@ -3,13 +3,14 @@
     class='row w-100'>
     <i>This comic does not have any credits.</i>
   </div>
-  <div *ngIf='comic && comic.credits && comic.credits.length'
-    class='row w-100'>
-    <div *ngFor='let credit of sort_credits(comic.credits)' class='card'>
-      <div class='card-header'>
-        <h4>{{ credit.name }}</h4>
-        <h5>{{ credit.role }}</h5>
-      </div>
+  <div *ngIf='comic && comic.credits&& comic.credits.length'>
+    <div class='row w-100'>
+      <p-card *ngFor='let credit of sort_credits(comic.credits)'>
+      <p-header>
+      <h4>{{ credit.name }}</h4>
+      </p-header>
+      <h5>{{ credit.role }}</h5>
+      </p-card>
     </div>
   </div>
 </div>
