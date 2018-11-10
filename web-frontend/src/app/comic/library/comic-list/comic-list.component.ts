@@ -32,7 +32,7 @@ import { ComicListEntryComponent } from '../comic-list-entry/comic-list-entry.co
 import { ComicListGroupComponent } from '../comic-list-group/comic-list-group.component';
 import { SeriesFilterPipe } from '../../series-filter.pipe';
 import { AlertService } from '../../../services/alert.service';
-import { LibraryCoversComponent } from '../library-covers/library-covers.component';
+import { LibraryCoversComponent } from '../../../ui/components/library/library-covers/library-covers.component';
 import { LibraryDetailsComponent } from '../../../ui/components/library/library-details/library-details.component';
 
 @Component({

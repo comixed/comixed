@@ -65,7 +65,7 @@ import { ComicCreditsComponent } from './ui/components/comic-credits/comic-credi
 import { ComicPagesComponent } from './comic/details/pages/comic-pages/comic-pages.component';
 import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
 import { LibraryCoverEntryComponent } from './comic/library/library-cover-entry/library-cover-entry.component';
-import { LibraryCoversComponent } from './comic/library/library-covers/library-covers.component';
+import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './login/login.component';
 import { AccountComponent } from './account/account.component';

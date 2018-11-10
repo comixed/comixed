@@ -22,8 +22,8 @@ import {
   OnInit,
   Input,
 } from '@angular/core';
-import { Comic } from '../../../models/comic.model';
-import { LibraryCoverEntryComponent } from '../library-cover-entry/library-cover-entry.component';
+import { Comic } from '../../../../models/comic.model';
+import { LibraryCoverEntryComponent } from '../../../../comic/library/library-cover-entry/library-cover-entry.component';
 
 @Component({
   selector: 'app-library-covers',
