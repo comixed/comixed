@@ -69,6 +69,11 @@ export class LibraryPageComponent implements OnInit {
     );
   }
 
+  set_current_tab(event: any): void {
+    this.current_tab = event.index;
+    this.update_params(this.TAB_PARAMETER, `${this.current_tab}`);
+  }
+
   set_comics_per_page(page_size: number): void {
     this.page_size = page_size;
     this.update_params(this.PAGESIZE_PARAMETER, `${this.page_size}`);
