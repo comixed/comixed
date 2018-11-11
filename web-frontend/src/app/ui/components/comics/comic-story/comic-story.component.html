@@ -1,59 +1,61 @@
-<div class='container-fluid w-100'>
-  <div *ngIf='comic' class='row w-100'>
-    <div class='container-fluid w-100'>
-      <div class='row w-100'>Summary</div>
-      <div *ngIf='comic.summary' [innerHTML]='comic.summary'></div>
-      <div *ngIf='!comic.summary'>
-        <i>This comic does not have a summary.</i>
-      </div>
+<div
+  *ngIf='comic'
+  class='ui-g'>
+  <div class='ui-g-12 ui-sm-12'>
+    <p-panel
+      header='Summary'
+      [toggleable]='true'
+      [collapsed]='true'>
+    <div [innerHTML]='comic.summary || "No summary for this comic."'></div>
+    </p-panel>
+    <p-panel
+      header='Description'
+      [toggleable]='true'
+      [collapsed]='true'>
+    <div
+      [innerHTML]='comic.description || "No description for this comic."'></div>
+    </p-panel>
+    <p-panel
+      header='Characters'
+      [toggleable]='true'
+      [collapsed]='true'>
+    <div class='ui-g'>
+      <p-dataView
+        [value]='comic.characters'
+        [layout]='"grid"'> <ng-template
+        let-character
+        pTemplate='gridItem'> <p-card> <p-header>
+      <h4>{{ character }}</h4>
+      </p-header> </p-card></ng-template> </p-dataView>
     </div>
-    <div class='container-fluid w-100'>
-      <div class='row w-100'>Description</div>
-      <div *ngIf='comic.description' [innerHTML]='comic.description'></div>
-      <div *ngIf='!comic.description'>
-        <i>This comic does not have a description.</i>
-      </div>
+    </p-panel>
+    <p-panel
+      header='Teams'
+      [toggleable]='true'
+      [collapsed]='true'>
+    <div class='ui-g'>
+      <p-dataView
+        [value]='comic.teams'
+        [layout]='"grid"'> <ng-template
+        let-team
+        pTemplate='gridItem'> <p-card> <p-header>
+      <h4>{{ team }}</h4>
+      </p-header> </p-card></ng-template> </p-dataView>
     </div>
-    <div class='container-fluid w-100'>
-      <div class='row w-100'>Characters</div>
-      <div *ngIf='comic.characters && comic.characters.length'
-        class='row w-100'>
-        <div *ngFor='let character of comic.characters' class='card'>
-          <div class='card-header'>
-            <h5>{{ character }}</h5>
-          </div>
-        </div>
-      </div>
-      <div *ngIf='!comic.characters || !comic.characters.length'>
-        <i>This comic does not have any characters.</i>
-      </div>
+    </p-panel>
+    <p-panel
+      header='Locations'
+      [toggleable]='true'
+      [collapsed]='true'>
+    <div class='ui-g'>
+      <p-dataView
+        [value]='comic.locations'
+        [layout]='"grid"'> <ng-template
+        let-location
+        pTemplate='gridItem'> <p-card> <p-header>
+      <h4>{{ location }}</h4>
+      </p-header> </p-card></ng-template> </p-dataView>
     </div>
-    <div class='container-fluid w-100'>
-      <div class='row w-100'>Teams</div>
-      <div *ngIf='comic.teams && comic.teams.length' class='row w-100'>
-        <div *ngFor='let team of comic.teams' class='card'>
-          <div class='card-header'>
-            <h5>{{ team }}</h5>
-          </div>
-        </div>
-      </div>
-      <div *ngIf='!comic.teams || !comic.teams.length'>
-        <i>This comic does not have any teams.</i>
-      </div>
-    </div>
-    <div class='container-fluid w-100'>
-      <div class='row w-100'>Locations</div>
-      <div *ngIf='comic.locations && comic.locations.length'
-        class='row w-100'>
-        <div *ngFor='let location of comic.locations' class='card'>
-          <div class='card-header'>
-            <h5>{{ location }}</h5>
-          </div>
-        </div>
-      </div>
-      <div *ngIf='!comic.locations || !comic.locations.length'>
-        <i>This comic does not have any locations.</i>
-      </div>
-    </div>
+    </p-panel>
   </div>
 </div>
