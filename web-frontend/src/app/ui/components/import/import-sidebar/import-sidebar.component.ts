@@ -32,8 +32,8 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./import-sidebar.component.css']
 })
 export class ImportSidebarComponent implements OnInit {
+  @Input() show_sidebar: boolean;
   @Input() directory: string;
-  @Input() page_size: number;
   @Input() disable_inputs: boolean;
   @Input() any_selected: boolean;
   @Output() loadFiles: EventEmitter<string> = new EventEmitter<string>();
