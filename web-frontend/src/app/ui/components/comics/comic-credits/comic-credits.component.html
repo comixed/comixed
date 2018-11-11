@@ -1,16 +1,7 @@
-<div class='container-fluid w-100'>
-  <div *ngIf='comic && (!comic.credits || !comic.credits.length)'
-    class='row w-100'>
-    <i>This comic does not have any credits.</i>
-  </div>
-  <div *ngIf='comic && comic.credits&& comic.credits.length'>
-    <div class='row w-100'>
-      <p-card *ngFor='let credit of sort_credits(comic.credits)'>
-      <p-header>
-      <h4>{{ credit.name }}</h4>
-      </p-header>
-      <h5>{{ credit.role }}</h5>
-      </p-card>
-    </div>
-  </div>
-</div>
+<p-dataView
+  [value]='sort_credits(comic.credits)'
+  [layout]='"grid"'> <ng-template
+  let-credit
+  pTemplate='gridItem'> <p-card> <p-header>
+<h4>{{ credit.name }}</h4>
+</p-header> {{ credit.role }}</p-card></ng-template> </p-dataView>

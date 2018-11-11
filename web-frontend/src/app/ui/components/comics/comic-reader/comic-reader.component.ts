@@ -20,6 +20,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Comic } from '../../../../models/comic.model';
+import { Page } from '../../../../models/page.model';
 import { ComicService } from '../../../../services/comic.service';
 
 @Component({
@@ -31,39 +32,24 @@ export class ComicReaderComponent implements OnInit {
   @Input() comic: Comic;
   @Input() current_page: number;
 
-  constructor(private comicService: ComicService) { }
+  protected pages: any[];
+
+  constructor(
+    private comic_service: ComicService,
+  ) { }
 
   ngOnInit() {
     if (!this.current_page) {
       this.current_page = 0;
     }
+
+    this.pages = [];
+    this.comic.pages.forEach((page: Page) => {
+      this.pages.push({ source: this.comic_service.get_url_for_page_by_id(page.id), alt: page.filename, title: page.filename });
+    });
   }
 
-  getImageURL(page_id: number): string {
-    return this.comicService.get_url_for_page_by_id(page_id);
-  }
-
-  getCurrentPageURL(): string {
-    return this.comicService.get_url_for_page_by_comic_index(this.comic.id, this.current_page);
-  }
-
-  hasPreviousPage(): boolean {
-    return (this.current_page > 0);
-  }
-
-  goToPreviousPage() {
-    if (this.hasPreviousPage()) {
-      this.current_page = this.current_page - 1;
-    }
-  }
-
-  hasNextPage(): boolean {
-    return (this.current_page < this.comic.page_count - 1);
-  }
-
-  goToNextPage() {
-    if (this.hasNextPage()) {
-      this.current_page = this.current_page + 1;
-    }
+  set_current_page(index: number): void {
+    this.current_page = index;
   }
 }
