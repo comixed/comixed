@@ -34,7 +34,7 @@ import { PageDetailsComponent } from '../page-details/page-details.component';
 import { PageType } from '../../models/page-type.model';
 import { ComicOverviewComponent } from '../../ui/components/comics/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from '../../ui/components/comics/comic-story/comic-story.component';
-import { ComicCreditsComponent } from '../../ui/components/comic-credits/comic-credits.component';
+import { ComicCreditsComponent } from '../../ui/components/comics/comic-credits/comic-credits.component';
 import { ComicPagesComponent } from '../../ui/components/comics/comic-pages/comic-pages.component';
 
 @Component({
