@@ -43,7 +43,6 @@ export class ComicDetailsEditorComponent implements OnInit {
   protected issue_number: string;
   protected volumes: Array<Volume>;
   protected issues: Map<string, ComicIssue> = new Map<string, ComicIssue>();
-  protected current_volume_index: number;
   protected current_volume: Volume;
   protected current_issue: ComicIssue = null;
   protected volume_selection_banner: string;
@@ -68,7 +67,6 @@ export class ComicDetailsEditorComponent implements OnInit {
     // first cleanup any existing selection data
     this.volumes = [];
     this.current_issue = null;
-    this.current_volume_index = -1;
     this.current_volume = null;
     this.issues.clear();
 
@@ -78,13 +76,13 @@ export class ComicDetailsEditorComponent implements OnInit {
       (volumes: Array<Volume>) => {
         that.volumes = volumes || [];
         if (that.volumes.length > 0) {
-          let initial_index = this.volumes.findIndex((volume: Volume) => {
+          let initial_selection = this.volumes.find((volume: Volume) => {
             return (volume.start_year === that.volume) && (volume.name === that.series);
           });
-          if (initial_index === -1) {
-            initial_index = 0;
+          if (!initial_selection) {
+            initial_selection = that.volumes[0];
           }
-          that.set_current_volume(initial_index);
+          that.set_current_volume(initial_selection);
         } else {
           that.alert_service.show_info_message('No Matching Comic Series Found...');
         }
@@ -108,22 +106,18 @@ export class ComicDetailsEditorComponent implements OnInit {
     const index = this.volumes.findIndex((volume: Volume) => {
       return volume.id === parseInt(volume_id, 10);
     });
-    this.set_current_volume(index);
+    this.set_current_volume(this.volumes[0]);
   }
 
-  set_current_volume(index: number): void {
-    index = parseInt(`${index}`, 10);
-    if (index < this.volumes.length) {
-      this.current_volume_index = index;
-      this.current_volume = this.volumes[this.current_volume_index];
+  set_current_volume(volume: Volume): void {
+    if (volume) {
+      this.current_volume = volume;
       if (this.issues.has(`${this.current_volume.id}`)) {
         this.load_current_issue_details();
       } else {
         this.load_current_issue();
       }
     } else {
-      this.alert_service.show_error_message(`Index out of bounds: ${this.volumes.length} < ${index}`, null);
-      this.current_volume_index = -1;
       this.current_issue = null;
       this.current_volume = null;
       this.alert_service.show_busy_message('');
@@ -149,13 +143,12 @@ export class ComicDetailsEditorComponent implements OnInit {
 
   load_current_issue_details(): void {
     this.current_issue = this.issues.get(`${this.current_volume.id}`);
-    this.volume_selection_banner = `Showing Volume #${this.current_volume_index + 1}`;
     this.volume_selection_title = `${this.current_issue.volume_name} #${this.current_issue.issue_number}`;
     this.volume_selection_subtitle = `Cover Date: ${this.date_formatter.format(new Date(this.current_issue.cover_date))}`;
   }
 
   show_candidates(): boolean {
-    return (this.volumes && this.volumes.length > 0) && (this.current_volume_index >= 0);
+    return (this.volumes && this.volumes.length > 0);
   }
 
   get_current_issue_image_url(): string {

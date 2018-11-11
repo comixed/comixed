@@ -1,86 +1,125 @@
-<div class='container-fluid'>
-  <div *ngIf='!show_candidates()' class='row w-100 p-3'>
-    <form>
-      <div>
-        <dl>
-          <dt>
-            <label for='api_key'>API Key:</label>
-          <dt>
-          <dd>
-            <div class='row'>
-              <div class='col'>
-                <input type='text' class='form-control' required
-                  name='api_key' [(ngModel)]='api_key'>
-              </div>
-              <div class='col-2'>
-                <button type='button' class='btn btn-primary'
-                  (click)='save_api_key()'
-                  [disabled]='!is_api_key_valid()'>Save Key</button>
-              </div>
-            </div>
-          </dd>
-          <dt>
-            <label for='series'>Series name:</label>
-          </dt>
-          <dd>
-            <input type='text' class='form-control' required
-              name='series' [(ngModel)]='series'>
-          </dd>
-          <dt>
-            <label for='volume'>Volume:</label>
-          </dt>
-          <dd>
-            <input type='text' class='form-control' name='volume'
-              [(ngModel)]='volume'>
-          </dd>
-          <dt>
-            <label for='issue_number'>Issue number:</label>
-          </dt>
-          <dd>
-            <input type='text' class='form-control' name='issue_number'
-              [(ngModel)]='issue_number'>
-          </dd>
-        </dl>
+<div
+  *ngIf='!show_candidates()'
+  class='ui-g'>
+  <div class='ui-g-2 ui-sm-2'>
+    <label for='api_key'><b>ComicVine API Key:</b> </label>
+  </div>
+  <div class='ui-g-10 ui-sm-6'>
+    <input
+      id='api_key'
+      type='text'
+      [(ngModel)]='api_key'
+      pInputText>
+    <button
+      pButton
+      type='button'
+      label='Save Key'
+      (click)='save_api_key()'></button>
+  </div>
+  <div class='ui-g-2 ui-sm-2'>
+    <label for='series'><b>Series:</b> </label>
+  </div>
+  <div class='ui-g-10 ui-sm-6'>
+    <input
+      id='series'
+      type='text'
+      [(ngModel)]='series'
+      pInputText>
+  </div>
+  <div class='ui-g-2 ui-sm-6'>
+    <label for='volume'><b>Volume:</b> </label>
+  </div>
+  <div class='ui-g-10 ui-sm-6'>
+    <input
+      id='volume'
+      type='text'
+      [(ngModel)]='volume'
+      pInputText>
+  </div>
+  <div class='ui-g-2 ui-sm-6'>
+    <label for='issue_number'><b>Issue #:</b> </label>
+  </div>
+  <div class='ui-g-10 ui-sm-6'>
+    <input
+      id='issue_number'
+      type='text'
+      [(ngModel)]='issue_number'
+      pInputText>
+  </div>
+  <div class='ui-g-12 ui-sm-12'>
+    <button
+      pButton
+      type='button'
+      label='Save'
+      (click)='save_changes()'></button>
+    <button
+      pButton
+      type='button'
+      label='Fetch'
+      (click)='fetch_candidates()'></button>
+  </div>
+</div>
+<div
+  *ngIf='show_candidates()'
+  class='ui-g'>
+  <div class='ui-g-9 ui-sm-9'>
+    <p-table
+      [value]='volumes'
+      [paginator]='true'
+      [rows]='10'
+      [paginatorPosition]='"both"'
+      selectionMode='single'
+      [(selection)]='current_volume'
+      [dataKey]='"id"'
+      (onRowSelect)='set_current_volume($event.data)'
+      (onRowUnselect)='set_current_volume(null)'> <ng-template
+      pTemplate='header'>
+    <tr>
+      <th>Start Year</th>
+      <th>Series</th>
+      <th># Of Issues</th>
+      <th>Publisher</th>
+    </tr>
+    </ng-template> <ng-template
+      pTemplate='body'
+      let-volume>
+    <tr [pSelectableRow]='volume'>
+      <td>{{ volume.start_year }}</td>
+      <td>{{ volume.name }}</td>
+      <td>{{ volume.issue_count }}</td>
+      <td>{{ volume.publiser }}</td>
+    </tr>
+    </ng-template> </p-table>
+  </div>
+  <div class='ui-g-3 ui-sm-3'>
+    <p-card *ngIf='current_issue'> <p-header>
+    <h3>{{ volume_selection_title }}</h3>
+    </p-header> <img
+      [src]='get_current_issue_image_url()'
+      [style.width]='"100%"'> </p-card>
+    <div class='ui-g'>
+      <div
+        *ngIf='current_issue'
+        class='ui-g-12 ui-sm-12'>
+        <button
+          pButton
+          type='button'
+          label='Select'
+          (click)='select_current_issue()'></button>
       </div>
-    </form>
-    <div class='container w-100 pb-1 justify-content-center mx-0'>
-      <button class='btn btn-primary' type='button'
-        (click)='save_changes()'>Save</button>
-      <button class='btn btn-info' type='button'
-        (click)='fetch_candidates()'>Fetch</button>
+      <div class='ui-g-12 ui-sm-12'>
+        <button
+          pButton
+          type='button'
+          label='Cancel'
+          (click)='cancel_volume_selection()'></button>
+      </div>
     </div>
   </div>
+</div>
+<!-- 
+<div class='container-fluid'>
   <div *ngIf='show_candidates()' class='row w-100 mx-0'>
-    <div class='row w-100 justify-content-center mx-0'>
-      <h2 class='w-100 text-center'>Found {{ volumes.length }}
-        Volumes</h2>
-      <h3 class='w-100 text-center'>{{volume_selection_banner}}</h3>
-    </div>
-    <div class='col table-container'>
-      <table class='table table-sm table-fixed'>
-        <thead>
-          <tr class='d-flex'>
-            <th class='col-1' scope='col'>#</th>
-            <th class='col-4' scope='col'>Name</th>
-            <th class='col-2' scope='col'># Issues</th>
-            <th class='col-3' scope='col'>Publisher</th>
-            <th class='col-2' scope='col'>Since</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor='let volume of volumes; let i = index'
-            class='d-flex' (click)='set_current_volume(i)'
-            [class.table-primary]='is_good_match(volume)'
-            [class.table-secondary]='is_perfect_match(volume)'>
-            <th class='col-1' scope='row'>{{ i + 1 }}</th>
-            <td class='col-4'>{{ volume.name }}</td>
-            <td class='col-2'>{{ volume.issue_count }}</td>
-            <td class='col-3'>{{ volume.publisher }}</td>
-            <td class='col-2'>{{ volume.start_year }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <div class='col-3'>
       <div class='card w-100'>
         <div *ngIf='current_issue' class='card-body'>
@@ -108,3 +147,4 @@
     </div>
   </div>
 </div>
+-->
