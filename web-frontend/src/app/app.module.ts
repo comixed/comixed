@@ -50,7 +50,7 @@ import { ComicDetailsComponent } from './comic/details/comic-details.component';
 import { DuplicatePageListComponent } from './comic/duplicate-page-list/duplicate-page-list.component';
 import { DuplicatePageListEntryComponent } from './comic/duplicate-page-list-entry/duplicate-page-list-entry.component';
 import { PageThumbnailComponent } from './comic/page-thumbnail/page-thumbnail.component';
-import { ReadViewerComponent } from './comic/read-viewer/read-viewer.component';
+import { ComicReaderComponent } from './ui/components/comics/comic-reader/comic-reader.component';
 import { SeriesFilterPipe } from './comic/series-filter.pipe';
 import { PageDetailsComponent } from './comic/page-details/page-details.component';
 import { ImportComicListEntryComponent } from './comic/import-comic-list-entry/import-comic-list-entry.component';
@@ -89,7 +89,7 @@ import { NotificationsComponent } from './ui/components/notifications/notificati
     DuplicatePageListComponent,
     DuplicatePageListEntryComponent,
     PageThumbnailComponent,
-    ReadViewerComponent,
+    ComicReaderComponent,
     SeriesFilterPipe,
     PageDetailsComponent,
     ImportComicListEntryComponent,

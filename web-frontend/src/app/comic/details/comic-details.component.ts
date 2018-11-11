@@ -29,7 +29,7 @@ import { Page } from '../../models/page.model';
 import { ComicService } from '../../services/comic.service';
 import { AlertService } from '../../services/alert.service';
 import { UserService } from '../../services/user.service';
-import { ReadViewerComponent } from '../read-viewer/read-viewer.component';
+import { ComicReaderComponent } from '../../ui/components/comics/comic-reader/comic-reader.component';
 import { PageDetailsComponent } from '../page-details/page-details.component';
 import { PageType } from '../../models/page-type.model';
 import { ComicOverviewComponent } from '../../ui/components/comics/comic-overview/comic-overview.component';

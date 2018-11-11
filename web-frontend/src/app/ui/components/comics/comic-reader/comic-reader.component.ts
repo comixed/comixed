@@ -17,21 +17,21 @@
  * org.comixed;
  */
 
-import {Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
-import {Comic} from '../../models/comic.model';
-import {ComicService} from '../../services/comic.service';
+import { Comic } from '../../../../models/comic.model';
+import { ComicService } from '../../../../services/comic.service';
 
 @Component({
-  selector: 'app-read-viewer',
-  templateUrl: './read-viewer.component.html',
-  styleUrls: ['./read-viewer.component.css']
+  selector: 'app-comic-reader',
+  templateUrl: './comic-reader.component.html',
+  styleUrls: ['./comic-reader.component.css']
 })
-export class ReadViewerComponent implements OnInit {
+export class ComicReaderComponent implements OnInit {
   @Input() comic: Comic;
   @Input() current_page: number;
 
-  constructor(private comicService: ComicService) {}
+  constructor(private comicService: ComicService) { }
 
   ngOnInit() {
     if (!this.current_page) {
