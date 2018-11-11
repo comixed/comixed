@@ -163,6 +163,14 @@ export class ComicService {
     return this.http.get(`${this.api_url}/files/contents?directory=${encodeURI(directory)}`);
   }
 
+  set_block_page(page_hash: string, blocked: boolean): Observable<any> {
+    if (blocked) {
+      return this.block_page(page_hash);
+    } else {
+      return this.unblock_page(page_hash);
+    }
+  }
+
   block_page(page_hash: string): Observable<any> {
     const params = new HttpParams().set('hash', page_hash);
     return this.http.post(`${this.api_url}/pages/blocked`, params);

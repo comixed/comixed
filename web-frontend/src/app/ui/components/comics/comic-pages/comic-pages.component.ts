@@ -17,16 +17,14 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { SelectItem } from 'primeng/api';
 import { Comic } from '../../../../models/comic.model';
 import { Page } from '../../../../models/page.model';
 import { PageType } from '../../../../models/page-type.model';
 import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
+import { UserService } from '../../../../services/user.service';
 import { PageDetailsComponent } from '../../../../comic/page-details/page-details.component';
 
 @Component({
@@ -37,17 +35,22 @@ import { PageDetailsComponent } from '../../../../comic/page-details/page-detail
 export class ComicPagesComponent implements OnInit {
   @Input() comic: Comic;
   @Input() image_size: number;
-  page_types: PageType[];
+
+  protected page_type_options: Array<SelectItem> = [];
 
   constructor(
     private alert_service: AlertService,
     private comic_service: ComicService,
+    private user_service: UserService,
   ) { }
 
   ngOnInit() {
     this.comic_service.get_page_types().subscribe((page_types: PageType[]) => {
-      this.page_types = page_types;
+      page_types.forEach((page_type: PageType) => {
+        this.page_type_options.push({ label: page_type.name, value: page_type.id });
+      });
     });
+    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
   }
 
   get_url_for_page(page: Page): string {
@@ -59,9 +62,22 @@ export class ComicPagesComponent implements OnInit {
     this.comic_service.set_page_type(page, new_page_type).subscribe(
       () => {
         page.page_type.id = new_page_type;
+        this.alert_service.show_info_message('Page type changed...');
       },
       (error: Error) => {
         this.alert_service.show_error_message('Failed to change page type...', error);
       });
   }
+
+  set_blocked_state(page: Page, blocked: boolean): void {
+    this.comic_service.set_block_page(page.hash, blocked).subscribe(
+      () => {
+        page.blocked = blocked;
+        this.alert_service.show_info_message(`${blocked ? 'Blocked' : 'Unblocked'} all pages with this hash...`);
+      },
+      (error: Error) => {
+        this.alert_service.show_error_message('Failed to change blocked state...', error);
+      });
+  }
 }
+
