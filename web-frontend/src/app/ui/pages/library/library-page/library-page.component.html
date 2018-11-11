@@ -73,23 +73,48 @@
   let-comic
   pTemplate='listItem'>
 <div class='ui-g'>
-  <p-card> <img
-    [src]='get_cover_url(comic)'
-    width='auto'
-    [style.height]='"" + cover_size + "px"'> </p-card>
-  <div>
-    <h4>{{ get_comic_title(comic) }}</h4>
-    <button
-      pButton
-      type='button'
-      icon='pi pi-search'
-      (click)='set_selected_comic($event, comic)'
-      label='Details'></button>
-    <a [routerLink]='[comic.id]'><button
+  <div class='ui-g-4 ui-md-4'>
+    <p-card> <img
+      [src]='get_cover_url(comic)'
+      width='auto'
+      [style.height]='"" + cover_size + "px"'> </p-card>
+  </div>
+  <div class='ui-g-8 ui-md-8'>
+    <div>
+      <div class='ui-g'>
+        <div class='ui-g-12 ui-sm-12'>
+          <h4>{{ get_comic_title(comic) }}</h4>
+        </div>
+        <div class='ui-g-2 ui-sm-6'>
+          <b>Filename:</b>
+        </div>
+        <div class='ui-g-10 ui-sm-6'>{{ comic.base_filename }}</div>
+        <div
+          *ngIf='comic.missing'
+          class='ui-g-12 ui-sm-12'>
+          <i>This comic's file is <b>missing</b>...
+          </i>
+        </div>
+        <div class='ui-g-12 ui-sm-12'>
+          <p-scrollPanel
+            *ngIf='comic.description'
+            [style.width]='"100%"'
+            [style.max-height]='"" + cover_size + "px"'
+            [innerHTML]='comic.description'></p-scrollPanel>
+        </div>
+      </div>
+      <button
         pButton
         type='button'
-        icon='pi pi-folder-open'
-        label='Open'></button></a>
+        icon='pi pi-search'
+        (click)='set_selected_comic($event, comic)'
+        label='Details'></button>
+      <a [routerLink]='[comic.id]'><button
+          pButton
+          type='button'
+          icon='pi pi-folder-open'
+          label='Open'></button></a>
+    </div>
   </div>
 </div>
 </ng-template> <ng-template
@@ -202,7 +227,7 @@
     <img
       [src]='get_cover_url(selected_comic)'
       [style.height]='"" + cover_size + "px"'
-      [style.width]='auto'>
+      [style.width]='"auto"'>
   </div>
   <div
     *ngIf='selected_comic.description'

@@ -1,0 +1,92 @@
+<p-dataView [value]='comic.pages'> <p-header>
+<div class='ui-helper-clearfix'>
+  <div class='ui-g'>
+    <div
+      class='ui-g-6 ui-md-4'
+      style='text-align: right'>
+      <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+    </div>
+  </div>
+</div>
+</p-header> <ng-template
+  let-page
+  pTemplate='listItem'>
+<div class='ui-g'>
+  <div class='ui-g-4 ui-md-4'>
+    <img
+      [src]='get_url_for_page(page)'
+      [style.height]='"" + image_size + "px"'
+      [style.width]='"auto"'>
+  </div>
+  <div class='ui-g-8 ui-md-8'>
+    <div class='ui-g'>
+      <div class='ui-g-2 ui-sm-6'>
+        <b>Filename: </b>
+      </div>
+      <div class='ui-g-10 ui-sm-6'>{{ page.filename }}</div>
+      <div class='ui-g-2 ui-sm-6'>
+        <b>Dimensions: </b>
+      </div>
+      <div class='ui-g-10 ui-sm-6'>{{ page.width }} x {{
+        page.height }}</div>
+      <div
+        *ngIf='page.deleted'
+        class='ui-g-12 ui-sm-12'>
+        <i>This page is marked for <b>deletion</b>.
+        </i>
+      </div>
+      <div
+        *ngIf='page.blocked'
+        class='ui-g-12 ui-sm-12'>
+        <i>This page is <b>blocked</b>.
+        </i>
+      </div>
+      <div
+        *ngIf='page_type_options?.length'
+        class='ui-g-12 ui-sm-12'>
+        <p-dropdown
+          [options]='page_type_options'
+          [(ngModel)]='page.page_type.id'
+          (onChange)='set_page_type(page, $event.value)'></p-dropdown>
+      </div>
+      <div class='ui-g-12 ui-sm-12'>
+        <p-toggleButton
+          [(ngModel)]='page.blocked'
+          onLabel='Blocked'
+          onIcon='pi pi-check'
+          offLabel='Not Blocked'
+          offIcon='pi pi-times'
+          (onChange)='set_blocked_state(page, $event.value)'></p-toggleButton>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template> <ng-template
+  let-page
+  pTemplate='gridItem'>
+<div>
+  <p-card> <img
+    [src]='get_url_for_page(page)'
+    [style.height]='"" + image_size + "px"'
+    [style.width]='"auto"'>
+  <p-footer>
+  <div
+    *ngIf='page_type_options?.length'
+    class='ui-g-12 ui-sm-12'>
+    <p-dropdown
+      [options]='page_type_options'
+      [(ngModel)]='page.page_type.id'
+      (onChange)='set_page_type(page, $event.value)'></p-dropdown>
+  </div>
+  <div class='ui-g-12 ui-sm-12'>
+    <p-toggleButton
+      [(ngModel)]='page.blocked'
+      onLabel='Blocked'
+      onIcon='pi pi-check'
+      offLabel='Not Blocked'
+      offIcon='pi pi-times'
+      (onChange)='set_blocked_state(page, $event.value)'></p-toggleButton>
+  </div>
+  </p-footer></p-card>
+</div>
+</ng-template></p-dataView>
