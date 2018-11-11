@@ -46,7 +46,6 @@ import { XhrInterceptor } from './xhr.interceptor';
 import { ComicService } from './services/comic.service';
 import { MessageService } from 'primeng/api';
 import { ImportComicListComponent } from './comic/import-comic-list/import-comic-list.component';
-import { ComicListEntryComponent } from './comic/library/comic-list-entry/comic-list-entry.component';
 import { ComicDetailsComponent } from './comic/details/comic-details.component';
 import { DuplicatePageListComponent } from './comic/duplicate-page-list/duplicate-page-list.component';
 import { DuplicatePageListEntryComponent } from './comic/duplicate-page-list-entry/duplicate-page-list-entry.component';
@@ -59,16 +58,13 @@ import { SelectedForImportPipe } from './comic/import-comic-list/selected-for-im
 import { PageSizeComponent } from './comic/page-size/page-size.component';
 import { GroupComicsComponent } from './comic/group-comics/group-comics.component';
 import { GroupByPipe } from './comic/group-by.pipe';
-import { ComicListGroupComponent } from './comic/library/comic-list-group/comic-list-group.component';
 import { ComicDetailsEditorComponent } from './comic/details/comic-details-editor/comic-details-editor.component';
 import { IssueDetailsComponent } from './comic/issue/details/issue-details/issue-details.component';
 import { ComicOverviewComponent } from './comic/details/overview/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from './comic/details/story/comic-story/comic-story.component';
 import { ComicCreditsComponent } from './ui/components/comic-credits/comic-credits.component';
 import { ComicPagesComponent } from './comic/details/pages/comic-pages/comic-pages.component';
-import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
 import { ComicCoverComponent } from './ui/components/comic-cover/comic-cover.component';
-import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './login/login.component';
 import { AccountComponent } from './account/account.component';
@@ -77,7 +73,6 @@ import { UserService } from './services/user.service';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
 import { ImportSidebarComponent } from './ui/components/import/import-sidebar/import-sidebar.component';
-import { LibrarySidebarComponent } from './ui/components/library/library-sidebar/library-sidebar.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { NotificationsComponent } from './ui/components/notifications/notifications.component';
 
@@ -90,7 +85,6 @@ import { NotificationsComponent } from './ui/components/notifications/notificati
     BusyIndicatorComponent,
     MenubarComponent,
     ImportComicListComponent,
-    ComicListEntryComponent,
     ComicDetailsComponent,
     DuplicatePageListComponent,
     DuplicatePageListEntryComponent,
@@ -103,18 +97,14 @@ import { NotificationsComponent } from './ui/components/notifications/notificati
     PageSizeComponent,
     GroupComicsComponent,
     GroupByPipe,
-    ComicListGroupComponent,
     ComicDetailsEditorComponent,
     IssueDetailsComponent,
     ComicOverviewComponent,
     ComicStoryComponent,
     ComicCreditsComponent,
     ComicPagesComponent,
-    LibraryDetailsComponent,
     ComicCoverComponent,
-    LibraryCoversComponent,
     ImportSidebarComponent,
-    LibrarySidebarComponent,
     LibraryPageComponent,
     NotificationsComponent,
   ],
