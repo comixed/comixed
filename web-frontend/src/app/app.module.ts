@@ -49,7 +49,7 @@ import { XhrInterceptor } from './xhr.interceptor';
 import { ComicService } from './services/comic.service';
 import { MessageService } from 'primeng/api';
 import { ImportComicListComponent } from './comic/import-comic-list/import-comic-list.component';
-import { ComicDetailsComponent } from './comic/details/comic-details.component';
+import { ComicDetailsComponent } from './ui/pages/comic/comic-details/comic-details.component';
 import { DuplicatePageListComponent } from './comic/duplicate-page-list/duplicate-page-list.component';
 import { DuplicatePageListEntryComponent } from './comic/duplicate-page-list-entry/duplicate-page-list-entry.component';
 import { PageThumbnailComponent } from './comic/page-thumbnail/page-thumbnail.component';

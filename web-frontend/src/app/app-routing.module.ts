@@ -26,7 +26,7 @@ import { AccountComponent } from './account/account.component';
 import { DuplicatePageListComponent } from './comic/duplicate-page-list/duplicate-page-list.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { ImportComicListComponent } from './comic/import-comic-list/import-comic-list.component';
-import { ComicDetailsComponent } from './comic/details/comic-details.component';
+import { ComicDetailsComponent } from './ui/pages/comic/comic-details/comic-details.component';
 
 const routes: Routes = [
   { path: 'home', component: MainPageComponent },
