@@ -168,6 +168,7 @@ export class ComicDetailsEditorComponent implements OnInit {
           that.comic = comic;
           that.alert_service.show_busy_message('');
           that.update.next(comic);
+          this.alert_service.show_info_message('ComicVine details scraped and saved...');
         } else {
           that.alert_service.show_error_message(`Invalid comic index: ${index}`, null);
         }
