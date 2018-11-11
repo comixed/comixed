@@ -60,7 +60,7 @@ import { GroupComicsComponent } from './comic/group-comics/group-comics.componen
 import { GroupByPipe } from './comic/group-by.pipe';
 import { ComicDetailsEditorComponent } from './comic/details/comic-details-editor/comic-details-editor.component';
 import { IssueDetailsComponent } from './comic/issue/details/issue-details/issue-details.component';
-import { ComicOverviewComponent } from './comic/details/overview/comic-overview/comic-overview.component';
+import { ComicOverviewComponent } from './ui/components/comics/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from './comic/details/story/comic-story/comic-story.component';
 import { ComicCreditsComponent } from './ui/components/comic-credits/comic-credits.component';
 import { ComicPagesComponent } from './comic/details/pages/comic-pages/comic-pages.component';
