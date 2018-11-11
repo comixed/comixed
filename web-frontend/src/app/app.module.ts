@@ -40,6 +40,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { GalleriaModule } from 'primeng/galleria';
 import { PanelModule } from 'primeng/panel';
+import { TooltipModule } from 'primeng/tooltip';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -133,6 +134,7 @@ import { NotificationsComponent } from './ui/components/notifications/notificati
     ToggleButtonModule,
     GalleriaModule,
     PanelModule,
+    TooltipModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
       fullScreenBackdrop: true,
