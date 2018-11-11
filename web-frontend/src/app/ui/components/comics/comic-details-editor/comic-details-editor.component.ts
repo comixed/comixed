@@ -17,11 +17,7 @@
  * org.comixed;
  */
 
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Input } from '@angular/core';
-import { Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AlertService } from '../../../../services/alert.service';
 import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
@@ -183,6 +179,11 @@ export class ComicDetailsEditorComponent implements OnInit {
     this.comic_service.save_changes_to_comic(this.comic.id, this.series, this.volume, this.issue_number).subscribe(
       () => {
         this.alert_service.show_busy_message('');
+        this.comic.series = this.series;
+        this.comic.volume = this.volume;
+        this.comic.issue_number = this.issue_number;
+        this.update.next();
+        this.alert_service.show_info_message('Comic details updated...');
       }
     );
   }
