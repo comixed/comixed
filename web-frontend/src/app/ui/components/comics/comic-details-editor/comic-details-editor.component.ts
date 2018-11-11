@@ -22,12 +22,12 @@ import { OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { AlertService } from '../../../services/alert.service';
-import { UserService } from '../../../services/user.service';
-import { ComicService } from '../../../services/comic.service';
-import { Comic } from '../../../models/comic.model';
-import { Volume } from '../../../models/volume.model';
-import { ComicIssue } from '../../../models/comic-issue.model';
+import { AlertService } from '../../../../services/alert.service';
+import { UserService } from '../../../../services/user.service';
+import { ComicService } from '../../../../services/comic.service';
+import { Comic } from '../../../../models/comic.model';
+import { Volume } from '../../../../models/volume.model';
+import { ComicIssue } from '../../../../models/comic-issue.model';
 
 @Component({
   selector: 'app-comic-details-editor',

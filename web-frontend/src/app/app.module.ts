@@ -58,7 +58,7 @@ import { SelectedForImportPipe } from './comic/import-comic-list/selected-for-im
 import { PageSizeComponent } from './comic/page-size/page-size.component';
 import { GroupComicsComponent } from './comic/group-comics/group-comics.component';
 import { GroupByPipe } from './comic/group-by.pipe';
-import { ComicDetailsEditorComponent } from './comic/details/comic-details-editor/comic-details-editor.component';
+import { ComicDetailsEditorComponent } from './ui/components/comics/comic-details-editor/comic-details-editor.component';
 import { IssueDetailsComponent } from './comic/issue/details/issue-details/issue-details.component';
 import { ComicOverviewComponent } from './ui/components/comics/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from './comic/details/story/comic-story/comic-story.component';
