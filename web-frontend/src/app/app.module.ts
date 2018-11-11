@@ -37,6 +37,7 @@ import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -127,6 +128,7 @@ import { NotificationsComponent } from './ui/components/notifications/notificati
     DataViewModule,
     DialogModule,
     ScrollPanelModule,
+    ToggleButtonModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
       fullScreenBackdrop: true,
