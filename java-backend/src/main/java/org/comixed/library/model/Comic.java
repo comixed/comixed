@@ -222,7 +222,7 @@ public class Comic
                fetch = FetchType.EAGER,
                orphanRemoval = true)
     @JsonProperty("credits")
-    @JsonView(View.Details.class)
+    @JsonView(View.List.class)
     private Set<Credit> credits = new HashSet<>();
 
     @Transient

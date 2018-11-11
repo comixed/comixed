@@ -1,20 +1,3 @@
-<!-- <app-library-sidebar [page_size]='page_size' [initial_sort]='sort_order'
-  [search_text]='title_search' [initial_grouping]='group_by'
-  (comicsPerPage)='set_comics_per_page($event)'
-  (sortBy)='set_sort_order($event)'
-  (searchFor)='set_search_text($event)'
-  (changeCoverSize)='set_cover_size($event)'
-  (groupBy)='set_group_by($event)'></app-library-sidebar>
-<p-tabView [activeIndex]='current_tab'
-  (onChange)='set_current_tab($event)'> <p-tabPanel
-  header='Covers'> <app-library-covers [comics]='comics'
-  [cover_size]='cover_size' [sort_order]='sort_order'
-  [title_search]='title_search' [group_by]='group_by'
-  [page_size]='page_size'></app-library-covers> </p-tabPanel> <p-tabPanel
-  header='Details'> <app-library-details [comics]='comics'
-  [sort_order]='sort_order' [title_search]='title_search'
-  [group_by]='group_by' [page_size]='page_size'></app-library-details></p-tabPanel> </p-tabView>
--->
 <p-tabView
   [activeIndex]='current_tab'
   (onChange)='set_current_tab($event.index)'> <p-tabPanel
@@ -29,41 +12,48 @@
   emptyMessage='No comics found.'> <p-header>
 <div class='ui-helper-clearfix'>
   <div class='ui-g'>
-    <div class='ui-g-12 ui-md-4'>
+    <div class='ui-g-1 ui-md-1'>
       Sort by:
       <p-dropdown
         [options]='sort_options'
         [(ngModel)]='sort_by'
         (onChange)='set_sort_order($event.value)'></p-dropdown>
+    </div>
+    <div class='ui-g-1 ui-md-1'>
       Group by:
       <p-dropdown
         [options]='group_options'
         [(ngModel)]='group_by'
         (onChange)='set_group_by($event.value)'></p-dropdown>
+    </div>
+    <div class='ui-g-1 ui-md-1'>
       Show:
       <p-dropdown
         [options]='rows_options'
         [(ngModel)]='rows'
         (onChange)='set_rows($event.value)'></p-dropdown>
-      Cover size:
+    </div>
+    <div class='ui-g-3 ui-md-3'>
+      Search comic names: <input
+        type='search'
+        pInputText
+        placeholder='Search by series name'
+        [style.width]='"100%"'
+        (keyup)='comicCoverView.filter($event.target.value)'>
+    </div>
+    <div class='ui-g-5 ui-md-5'>
+      Cover size: {{ cover_size }}px
       <p-slider
         [(ngModel)]='cover_size'
         [min]='200'
         [max]='640'
         [animate]='true'
+        pTooltip='The cover size only applies to the grid view...'
+        tooltipPosition='right'
         (onChange)='set_cover_size($event.value)'></p-slider>
     </div>
-    <div class='ui-g-6 ui-md-4 filter-container'>
-      <div style='position: relative'>
-        <input
-          type='search'
-          pInputText
-          placeholder='Search by series name'
-          (keyup)='comicCoverView.filter($event.target.value)'>
-      </div>
-    </div>
     <div
-      class='ui-g-6 ui-md-4'
+      class='ui-g-1 ui-md-1'
       style='text-align: right'>
       <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
     </div>
@@ -78,8 +68,7 @@
       [src]='get_cover_url(comic)'
       width='auto'
       [style.width]='"100%"'
-      [style.max-height]='"" + cover_size + "px"'
-      [style.max-width]='"auto"'> </p-card>
+      [style.height]='"auto"'> </p-card>
   </div>
   <div class='ui-g-10 ui-md-10'>
     <div>
@@ -138,29 +127,34 @@
   [rows]='rows'
   [globalFilterFields]='["series"]'
   [sortField]='sort_by'> <ng-template pTemplate='caption'>
-<div class='ui-g-12 ui-md-4'>
-  Sort by:
-  <p-dropdown
-    [options]='sort_options'
-    [(ngModel)]='sort_by'
-    (onChange)='set_sort_order($event.value)'></p-dropdown>
-  Group by:
-  <p-dropdown
-    [options]='group_options'
-    [(ngModel)]='group_by'
-    (onChange)='set_group_by($event.value)'></p-dropdown>
-  Show:
-  <p-dropdown
-    [options]='rows_options'
-    [(ngModel)]='rows'
-    (onChange)='set_rows($event.value)'></p-dropdown>
-</div>
-<div class='ui-g-6 ui-md-4 filter-container'>
-  <div style='position: relative'>
-    <input
+<div class='ui-g'>
+  <div class='ui-g-1 ui-md-1'>
+    Sort by:
+    <p-dropdown
+      [options]='sort_options'
+      [(ngModel)]='sort_by'
+      (onChange)='set_sort_order($event.value)'></p-dropdown>
+  </div>
+  <div class='ui-g-1 ui-md-1'>
+    Group by:
+    <p-dropdown
+      [options]='group_options'
+      [(ngModel)]='group_by'
+      (onChange)='set_group_by($event.value)'></p-dropdown>
+  </div>
+  <div class='ui-g-1 ui-md-1'>
+    Show:
+    <p-dropdown
+      [options]='rows_options'
+      [(ngModel)]='rows'
+      (onChange)='set_rows($event.value)'></p-dropdown>
+  </div>
+  <div class='ui-g-3 ui-md-3'>
+    Search comic names: <input
       type='search'
       pInputText
       placeholder='Search by series name'
+      [style.width]='"100%"'
       (keyup)='comicDetailView.filterGlobal($event.target.value, "contains")'>
   </div>
 </div>
@@ -180,8 +174,8 @@
   let-comic>
 <tr>
   <td><img
-    height='64px'
-    width='auto'
+    [style.height]='"auto"'
+    [style.width]='"100%"'
     [src]='get_cover_url(comic)'>
   <td>{{ comic.series }}</td>
   <td>{{ comic.volume }}</td>
@@ -208,44 +202,49 @@
   [header]='get_comic_title(selected_comic)'
   [(visible)]='show_dialog'
   [responsive]='true'
-  showEffect='fade'
   [modal]='true'
   [blockScroll]='true'
-  [maximizable]='true'
+  [resizable]='false'
   (onAfterHide)='hide_dialog()'>
 <div
   class='ui-g'
   *ngIf='selected_comic'>
-  <div
-    class='ui-g-12'
-    style='text-align: center'>
+  <div class='ui-g-2 ui-sm-2'>
     <img
       [src]='get_cover_url(selected_comic)'
-      [style.height]='"" + cover_size + "px"'
-      [style.width]='"auto"'>
+      [style.height]='"auto"'
+      [style.width]='"100%"'>
   </div>
   <div
     *ngIf='selected_comic.description'
-    class='ui-g-12'
-    style='text-align: center'>
-    <p-scrollPanel [style]='{width: "100%", height: "200p"}'>
-    <div [innerHTML]='selected_comic.description'></div>
-    </p-scrollPanel>
-  </div>
-  <div *ngIf='selected_comic.credits && selected_comic.credits.length'>
-    <p-table [value]='selected_comic.credits'> <ng-template
-      pTemplate='header'>
-    <tr>
-      <th>Name</th>
-      <th>Role</th>
-    </tr>
-    </ng-template> <ng-template
-      pTemaplte='body'
-      let-credit>
-    <tr>
-      <td>{{ credit.name }}</td>
-      <td>{{ credit.role }}</td>
-    </ng-template> </p-table>
+    class='ui-g-10 ui-sm-10'>
+    <div class='ui-g'>
+      <div class='ui-g-12 ui-sm-12'>
+        <p-panel
+          header='Description'
+          [toggleable]='true'>
+        <div
+          [innerHTML]='selected_comic.description || "There is no description for this comic."'></div>
+        </p-panel>
+      </div>
+    </div>
+    <div
+      *ngIf='selected_comic.credits?.length'
+      class='ui-g-12 ui-sm-12'>
+      <p-table [value]='selected_comic.credits'> <ng-template
+        pTemplate='header'>
+      <tr>
+        <th>Name</th>
+        <th>Role</th>
+      </tr>
+      </ng-template> <ng-template
+        pTemplate='body'
+        let-credit>
+      <tr>
+        <td>{{ credit.name }}</td>
+        <td>{{ credit.role }}</td>
+      </ng-template> </p-table>
+    </div>
   </div>
 </div>
 </p-dialog>
