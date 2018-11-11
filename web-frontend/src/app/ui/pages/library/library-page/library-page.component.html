@@ -73,34 +73,29 @@
   let-comic
   pTemplate='listItem'>
 <div class='ui-g'>
-  <div class='ui-g-4 ui-md-4'>
+  <div class='ui-g-2 ui-md-2'>
     <p-card> <img
       [src]='get_cover_url(comic)'
       width='auto'
-      [style.height]='"" + cover_size + "px"'> </p-card>
+      [style.width]='"100%"'
+      [style.max-height]='"" + cover_size + "px"'
+      [style.max-width]='"auto"'> </p-card>
   </div>
-  <div class='ui-g-8 ui-md-8'>
+  <div class='ui-g-10 ui-md-10'>
     <div>
       <div class='ui-g'>
         <div class='ui-g-12 ui-sm-12'>
           <h4>{{ get_comic_title(comic) }}</h4>
         </div>
-        <div class='ui-g-2 ui-sm-6'>
-          <b>Filename:</b>
-        </div>
-        <div class='ui-g-10 ui-sm-6'>{{ comic.base_filename }}</div>
-        <div
-          *ngIf='comic.missing'
-          class='ui-g-12 ui-sm-12'>
-          <i>This comic's file is <b>missing</b>...
-          </i>
-        </div>
         <div class='ui-g-12 ui-sm-12'>
-          <p-scrollPanel
+          <p-panel
             *ngIf='comic.description'
-            [style.width]='"100%"'
-            [style.max-height]='"" + cover_size + "px"'
-            [innerHTML]='comic.description'></p-scrollPanel>
+            header='Description'
+            [toggleable]='true'
+            [collapsed]='true'
+            [style.width]='"100%"'>
+          <div [innerHTML]='comic.description'></div>
+          </p-panel>
         </div>
       </div>
       <button
