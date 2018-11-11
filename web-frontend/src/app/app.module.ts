@@ -79,6 +79,7 @@ import { MenubarComponent } from './ui/components/menubar/menubar.component';
 import { ImportSidebarComponent } from './ui/components/import/import-sidebar/import-sidebar.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { NotificationsComponent } from './ui/components/notifications/notifications.component';
+import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { NotificationsComponent } from './ui/components/notifications/notificati
     ImportSidebarComponent,
     LibraryPageComponent,
     NotificationsComponent,
+    ImportPageComponent,
   ],
   imports: [
     BrowserModule,
