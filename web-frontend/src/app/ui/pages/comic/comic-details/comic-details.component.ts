@@ -97,9 +97,10 @@ export class ComicDetailsComponent implements OnInit {
     return defvalue;
   }
 
-  private load_comic_details(): void {
-    this.title = `${this.comic && this.comic.series ? this.comic.series : 'Unknown'} ` +
-      `(v${this.comic && this.comic.volume ? this.comic.volume : '????'}) ` +
-      `#${this.comic && this.comic.issue_number ? this.comic.issue_number : '??'}`;
+  load_comic_details(): void {
+    this.title = `${this.comic.series || 'Unknown'} ` +
+      `(v${this.comic.volume || this.comic.volume || '????'}) ` +
+      `#${this.comic.issue_number || '??'}`;
   }
 }
+

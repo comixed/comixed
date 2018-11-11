@@ -20,6 +20,7 @@
       [comic]='comic'></app-comic-credits></p-tabPanel> <p-tabPanel header='Pages'>
     <app-comic-pages [comic]='comic'></app-comic-pages></p-tabPanel> <p-tabPanel
       header='ComicVine'> <app-comic-details-editor
-      [comic]='comic'></app-comic-details-editor></p-tabPanel> </p-tabView>
+      [comic]='comic'
+      (update)='load_comic_details()'></app-comic-details-editor></p-tabPanel> </p-tabView>
   </div>
 </div>
