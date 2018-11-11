@@ -27,7 +27,7 @@ import { Page } from '../../../../models/page.model';
 import { PageType } from '../../../../models/page-type.model';
 import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
-import { PageDetailsComponent } from '../../../page-details/page-details.component';
+import { PageDetailsComponent } from '../../../../comic/page-details/page-details.component';
 
 @Component({
   selector: 'app-comic-pages',

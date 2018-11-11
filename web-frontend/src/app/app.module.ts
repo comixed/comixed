@@ -63,7 +63,7 @@ import { IssueDetailsComponent } from './comic/issue/details/issue-details/issue
 import { ComicOverviewComponent } from './ui/components/comics/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from './ui/components/comics/comic-story/comic-story.component';
 import { ComicCreditsComponent } from './ui/components/comic-credits/comic-credits.component';
-import { ComicPagesComponent } from './comic/details/pages/comic-pages/comic-pages.component';
+import { ComicPagesComponent } from './ui/components/comics/comic-pages/comic-pages.component';
 import { ComicCoverComponent } from './ui/components/comic-cover/comic-cover.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './login/login.component';
