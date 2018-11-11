@@ -23,16 +23,16 @@ import { Routes, RouterModule } from '@angular/router';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './login/login.component';
 import { AccountComponent } from './account/account.component';
-import { DuplicatePageListComponent } from './comic/duplicate-page-list/duplicate-page-list.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { ComicDetailsComponent } from './ui/pages/comic/comic-details/comic-details.component';
 import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
+import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/duplicates-page.component';
 
 const routes: Routes = [
   { path: 'home', component: MainPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'account', component: AccountComponent },
-  { path: 'duplicates', component: DuplicatePageListComponent },
+  { path: 'duplicates', component: DuplicatesPageComponent },
   { path: 'comics', component: LibraryPageComponent },
   { path: 'comics/:id', component: ComicDetailsComponent },
   { path: 'import', component: ImportPageComponent },

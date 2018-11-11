@@ -203,7 +203,7 @@ export class ComicService {
   }
 
   get_url_for_page_by_hash(hash: string): string {
-    return `${this.api_url} /pages/hashes / ${hash} /content`;
+    return `${this.api_url}/pages/hashes/${hash}/content`;
   }
 
   get_url_for_missing_page(): string {

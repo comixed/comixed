@@ -1,0 +1,37 @@
+<p-dataView
+  [value]='duplicate_hashes'
+  [layout]='"grid"'
+  [rows]='rows'
+  paginatorPosition='both'
+  [paginator]='true'
+  emptyMessage='There are no duplicate pages! Yay!'> <p-header>
+<div class='ui-helper-clearfix'>
+  <div class='ui-g'>
+    <div class='ui-g-1 ui-md-1'>
+      Show:
+      <p-dropdown
+        [options]='rows_options'
+        [(ngModel)]='rows'
+        (onChange)='set_rows($event.value)'></p-dropdown>
+    </div>
+    <div class='ui-g-3 ui-md-3'>
+      Cover size: {{ cover_size }}px
+      <p-slider
+        [(ngModel)]='cover_size'
+        [min]='200'
+        [max]='640'
+        [animate]='true'
+        (onChange)='set_cover_size($event.value)'></p-slider>
+    </div>
+  </div>
+</div>
+</p-header> <ng-template
+  let-hash
+  pTemplate='gridItem'>
+<div>
+  <p-card> <img
+    [src]='get_url_for_hash(hash)'
+    [style.width]='"auto"'
+    [style.height]='"" + cover_size + "px"'></p-card>
+</div>
+</ng-template> </p-dataView>
