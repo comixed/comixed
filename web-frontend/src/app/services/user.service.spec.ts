@@ -31,10 +31,10 @@ import {
   Routes,
 } from '@angular/router';
 
-import { AlertService } from './alert.service';
-import { User } from '../user.model';
+import { AlertService } from '../services/alert.service';
+import { User } from '../models/user.model';
 
-import { UserService } from './user.service';
+import { UserService } from '../services/user.service';
 
 describe('UserService', () => {
   let injector;

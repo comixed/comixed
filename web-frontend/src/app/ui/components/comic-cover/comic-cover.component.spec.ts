@@ -19,7 +19,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ComicCoverComponent } from './library-cover-entry.component';
+import { ComicCoverComponent } from './comic-cover.component';
 
 describe('ComicCoverComponent', () => {
   let component: ComicCoverComponent;

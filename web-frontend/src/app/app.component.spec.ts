@@ -40,9 +40,9 @@ import { MockUserService } from './services/mock-user.service';
 import {
   User,
   Role,
-} from './user.model';
-import { ComicService } from './comic/comic.service';
-import { MockComicService } from './comic/mock-comic.service';
+  } from './models/user.model';
+import { ComicService } from './services/comic.service';
+import { MockComicService } from './services/mock-comic.service';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { LoadingModule } from 'ngx-loading';
 
