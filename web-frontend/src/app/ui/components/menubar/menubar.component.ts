@@ -46,6 +46,12 @@ export class MenubarComponent implements OnInit {
           icon: 'fas fa-file-upload',
           routerLink: ['/import'],
         },
+        { separator: true },
+        {
+          label: 'Duplicate pages',
+          icon: 'fas fa-fingerprint',
+          routerLink: ['/duplicates'],
+        }
       ]
     }
   ];
