@@ -23,6 +23,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { ComicService } from '../../../../services/comic.service';
 import { UserService } from '../../../../services/user.service';
+import { DuplicatePage } from '../../../../models/duplicate-page.model';
 
 @Component({
   selector: 'app-duplicates-page',
@@ -33,7 +34,9 @@ export class DuplicatesPageComponent implements OnInit {
   readonly ROWS_PARAMETER = 'rows';
   readonly COVER_PARAMETER = 'coversize';
 
-  protected duplicate_hashes: Array<string>;
+  protected pages: Array<DuplicatePage>;
+  protected hashes: Array<string>;
+  protected pages_by_hash: Map<string, DuplicatePage>;
 
   protected rows_options: Array<SelectItem>;
   protected rows: number;
@@ -61,9 +64,18 @@ export class DuplicatesPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.comic_service.get_duplicate_page_hashes().subscribe(
-      (hashes: Array<string>) => {
-        this.duplicate_hashes = hashes;
+    this.comic_service.get_duplicate_pages().subscribe(
+      (pages: Array<DuplicatePage>) => {
+        this.pages = pages;
+        this.hashes = [];
+        this.pages_by_hash = new Map<string, DuplicatePage>();
+        this.pages.forEach((page: DuplicatePage) => {
+          if (!this.hashes.includes(page.hash)) {
+            this.hashes.push(page.hash);
+            this.pages_by_hash[page.hash] = [];
+          }
+          this.pages_by_hash[page.hash].push(page);
+        });
       });
   }
 
@@ -85,7 +97,8 @@ export class DuplicatesPageComponent implements OnInit {
   }
 
   get_url_for_hash(hash: string): string {
-    return this.comic_service.get_url_for_page_by_hash(hash);
+    const page = this.pages_by_hash[hash][0];
+    return this.comic_service.get_url_for_page_by_id(page.id);
   }
 
   set_rows(rows: number): void {

@@ -1,6 +1,5 @@
 <p-dataView
-  [value]='duplicate_hashes'
-  [layout]='"grid"'
+  [value]='hashes'
   [rows]='rows'
   paginatorPosition='both'
   [paginator]='true'
@@ -23,15 +22,40 @@
         [animate]='true'
         (onChange)='set_cover_size($event.value)'></p-slider>
     </div>
+    <div
+      class='ui-g-1 ui-md-1'
+      style='text-align: right'>
+      <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+    </div>
   </div>
 </div>
 </p-header> <ng-template
   let-hash
+  pTemplate='listItem'>
+<div class='ui-g'>
+  <div class='ui-g-1 ui-sm-1'>
+    <p-card> <img
+      [src]='get_url_for_hash(hash)'
+      [style.width]='"100%"'
+      [style.height]='"auto"'></p-card>
+  </div>
+  <div class='ui-g-11 ui-sm-11'>
+    <div class='ui-g'>
+      <div class='ui-12'>
+        <h3>Found In {{ pages_by_hash[hash].length }} Files</h3>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template> <ng-template
+  let-hash
   pTemplate='gridItem'>
 <div>
-  <p-card> <img
+  <p-card> <p-header>
+  <h4>{{ pages_by_hash[hash].length }} Instances</h4>
+  </p-header> <img
     [src]='get_url_for_hash(hash)'
     [style.width]='"auto"'
     [style.height]='"" + cover_size + "px"'></p-card>
 </div>
-</ng-template> </p-dataView>
+</ng-template></p-dataView>

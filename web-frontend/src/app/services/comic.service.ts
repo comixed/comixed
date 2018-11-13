@@ -139,7 +139,7 @@ export class ComicService {
 
   }
 
-  get_duplicate_page_hashes(): Observable<any> {
+  get_duplicate_pages(): Observable<any> {
     return this.http.get(`${this.api_url}/pages/duplicates`);
   }
 
