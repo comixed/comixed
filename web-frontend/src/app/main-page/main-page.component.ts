@@ -31,7 +31,6 @@ import { AlertService } from '../services/alert.service';
 export class MainPageComponent implements OnInit {
   public comicCount: number;
   public plural = false;
-  public duplicate_pages = 0;
 
   constructor(
     private comicService: ComicService,
@@ -46,14 +45,6 @@ export class MainPageComponent implements OnInit {
       },
       (error: Error) => {
         this.alert_service.show_error_message('Unable to get the library comic count...', error);
-      }
-    );
-    this.comicService.get_duplicate_page_count().subscribe(
-      res => {
-        this.duplicate_pages = res;
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Unable to get the library duplicate page...', error);
       }
     );
   }
