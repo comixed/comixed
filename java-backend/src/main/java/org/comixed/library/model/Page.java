@@ -60,12 +60,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name = "pages")
 @NamedQueries(
-{@NamedQuery(name = "Page.getDuplicatePageList",
-             query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),
- @NamedQuery(name = "Page.getDuplicatePageCount",
-             query = "SELECT COUNT(p) FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)"),
- @NamedQuery(name = "Page.getDuplicatePageHashes",
-             query = "SELECT DISTINCT(p.hash) from Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)")})
+{@NamedQuery(name = "Page.getDuplicatePages",
+             query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash")})
 public class Page
 {
 

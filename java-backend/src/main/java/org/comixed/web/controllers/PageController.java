@@ -149,7 +149,7 @@ public class PageController
     {
         this.logger.debug("Fetching the list of duplicate offset hashes");
 
-        List<String> result = this.pageRepository.getDuplicatePageHashes();
+        List<String> result = this.pageRepository.getDuplicatePages();
 
         this.logger.debug("Retrieved {} hashes", result.size());
 

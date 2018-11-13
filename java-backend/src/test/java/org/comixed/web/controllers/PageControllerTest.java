@@ -219,21 +219,21 @@ public class PageControllerTest
     @Test
     public void testGetDuplicatePageHashesNoHashes()
     {
-        Mockito.when(pageRepository.getDuplicatePageHashes()).thenReturn(new ArrayList<String>());
+        Mockito.when(pageRepository.getDuplicatePages()).thenReturn(new ArrayList<String>());
 
         List<String> result = pageController.getDuplicatePageHashes();
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
 
-        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePageHashes();
+        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
     }
 
     @Test
     public void testGetDuplicatePageHashes()
     {
 
-        Mockito.when(pageRepository.getDuplicatePageHashes()).thenReturn(TEST_DUPLICATE_PAGE_HASHES);
+        Mockito.when(pageRepository.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGE_HASHES);
 
         List<String> result = pageController.getDuplicatePageHashes();
 
@@ -241,7 +241,7 @@ public class PageControllerTest
         assertFalse(result.isEmpty());
         assertEquals(TEST_DUPLICATE_PAGE_HASHES, result);
 
-        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePageHashes();
+        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
     }
 
     @Test
