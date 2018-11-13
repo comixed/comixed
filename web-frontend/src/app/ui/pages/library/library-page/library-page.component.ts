@@ -53,7 +53,7 @@ export class LibraryPageComponent implements OnInit {
   protected group_by: string;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private activated_route: ActivatedRoute,
     private router: Router,
     private user_service: UserService,
     private comic_service: ComicService,
@@ -74,8 +74,12 @@ export class LibraryPageComponent implements OnInit {
       { label: '10 comics', value: 10 },
       { label: '25 comics', value: 25 },
       { label: '50 comics', value: 50 },
-      { label: '100 comics', value: 100 },];
-    activatedRoute.queryParams.subscribe(params => {
+      { label: '100 comics', value: 100 },
+    ];
+  }
+
+  ngOnInit() {
+    this.activated_route.queryParams.subscribe(params => {
       this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
       this.rows = this.load_parameter(params[this.ROWS_PARAMETER], 10);
       this.sort_by = params[this.SORT_PARAMETER] || 'series';
@@ -83,9 +87,6 @@ export class LibraryPageComponent implements OnInit {
         parseInt(this.user_service.get_user_preference('cover_size', '200'), 10));
       this.group_by = params[this.GROUP_BY_PARAMETER] || 'none';
     });
-  }
-
-  ngOnInit() {
     this.comic_service.all_comics_update.subscribe(
       (comics: Array<Comic>) => {
         this.comics = comics;
@@ -138,13 +139,13 @@ export class LibraryPageComponent implements OnInit {
   }
 
   private update_params(name: string, value: string): void {
-    const queryParams: Params = Object.assign({}, this.activatedRoute.snapshot.queryParams);
+    const queryParams: Params = Object.assign({}, this.activated_route.snapshot.queryParams);
     if (value && value.length) {
       queryParams[name] = value;
     } else {
       queryParams[name] = null;
     }
-    this.router.navigate([], { relativeTo: this.activatedRoute, queryParams: queryParams });
+    this.router.navigate([], { relativeTo: this.activated_route, queryParams: queryParams });
   }
 
   private load_parameter(value: string, defvalue: any): any {
