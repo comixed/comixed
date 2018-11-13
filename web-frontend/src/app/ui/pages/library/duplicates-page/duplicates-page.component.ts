@@ -152,4 +152,42 @@ export class DuplicatesPageComponent implements OnInit {
         this.busy = false;
       });
   }
+
+  is_blocked(hash: string): boolean {
+    return this.pages_by_hash[hash].every((page: DuplicatePage) => {
+      return page.blocked;
+    });
+  }
+
+  block_page_hash(hash: string): void {
+    this.busy = true;
+    this.comic_service.block_page(hash).subscribe(
+      () => {
+        this.pages_by_hash[hash].forEach((page: DuplicatePage) => {
+          page.blocked = true;
+        });
+        this.alert_service.show_info_message('Blocked pages like this...');
+        this.busy = false;
+      },
+      (error: Error) => {
+        this.alert_service.show_error_message('Failed to block pages like this...', error);
+        this.busy = false;
+      });
+  }
+
+  unblock_page_hash(hash: string): void {
+    this.busy = true;
+    this.comic_service.unblock_page(hash).subscribe(
+      () => {
+        this.pages_by_hash[hash].forEach((page: DuplicatePage) => {
+          page.blocked = false;
+        });
+        this.alert_service.show_info_message('Unblocked pages like this...');
+        this.busy = false;
+      },
+      (error: Error) => {
+        this.alert_service.show_error_message('Failed to unblock pages like this...', error);
+        this.busy = false;
+      });
+  }
 }

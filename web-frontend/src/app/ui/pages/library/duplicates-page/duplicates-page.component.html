@@ -58,6 +58,18 @@
         type='button'
         (click)='undelete_all_pages(hash)'
         label='Undelete All'></button>
+      <button
+        *ngIf='is_blocked(hash)'
+        pButton
+        type='button'
+        (click)='unblock_page_hash(hash)'
+        label='Unblock'></button>
+      <button
+        *ngIf='!is_blocked(hash)'
+        pButton
+        type='button'
+        (click)='block_page_hash(hash)'
+        label='Block'></button>
     </div>
   </div>
 </div>
