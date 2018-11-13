@@ -139,16 +139,8 @@ export class ComicService {
 
   }
 
-  get_duplicate_page_count(): Observable<any> {
-    return this.http.get(`${this.api_url}/pages/duplicates/count`);
-  }
-
   get_duplicate_page_hashes(): Observable<any> {
-    return this.http.get(`${this.api_url}/pages/duplicates/hashes`);
-  }
-
-  get_pages_for_hash(page_hash: string): Observable<any> {
-    return this.http.get(`${this.api_url}/pages/hashes/${page_hash}`);
+    return this.http.get(`${this.api_url}/pages/duplicates`);
   }
 
   mark_page_as_deleted(page: Page): Observable<any> {
@@ -200,10 +192,6 @@ export class ComicService {
 
   get_cover_url_for_comic(comic: Comic): string {
     return `${this.api_url}/comics/${comic.id}/pages/0/content`;
-  }
-
-  get_url_for_page_by_hash(hash: string): string {
-    return `${this.api_url}/pages/hashes/${hash}/content`;
   }
 
   get_url_for_missing_page(): string {
