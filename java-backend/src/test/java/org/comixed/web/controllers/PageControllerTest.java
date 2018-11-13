@@ -66,6 +66,8 @@ public class PageControllerTest
     private static final int TEST_PAGE_INDEX = 7;
     private static final long TEST_COMIC_ID = 1002L;
     private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
+    private static final int TEST_DELETED_PAGE_COUNT = 17;
+    private static final String TEST_PAGE_HASH = "12345";
 
     @InjectMocks
     private PageController pageController;
@@ -407,5 +409,31 @@ public class PageControllerTest
         assertSame(pageTypes, pageController.getPageTypes());
 
         Mockito.verify(pageTypeRepository, Mockito.times(1)).findAll();
+    }
+
+    @Test
+    public void testDeletePagesByHash()
+    {
+        Mockito.when(pageRepository.updateDeleteOnAllWithHash(Mockito.anyString(), Mockito.anyBoolean()))
+               .thenReturn(TEST_DELETED_PAGE_COUNT);
+
+        int result = pageController.deleteAllWithHash(TEST_PAGE_HASH);
+
+        assertEquals(TEST_DELETED_PAGE_COUNT, result);
+
+        Mockito.verify(pageRepository, Mockito.times(1)).updateDeleteOnAllWithHash(TEST_PAGE_HASH, true);
+    }
+
+    @Test
+    public void testUndeletePagesByHash()
+    {
+        Mockito.when(pageRepository.updateDeleteOnAllWithHash(Mockito.anyString(), Mockito.anyBoolean()))
+               .thenReturn(TEST_DELETED_PAGE_COUNT);
+
+        int result = pageController.undeleteAllWithHash(TEST_PAGE_HASH);
+
+        assertEquals(TEST_DELETED_PAGE_COUNT, result);
+
+        Mockito.verify(pageRepository, Mockito.times(1)).updateDeleteOnAllWithHash(TEST_PAGE_HASH, false);
     }
 }

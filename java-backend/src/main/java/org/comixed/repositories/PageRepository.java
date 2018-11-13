@@ -22,8 +22,11 @@ package org.comixed.repositories;
 import java.util.List;
 
 import org.comixed.library.model.Page;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface PageRepository extends
@@ -36,4 +39,17 @@ public interface PageRepository extends
      * @return a list of Page objects with duplicate hashes
      */
     List<Page> getDuplicatePages();
+
+    /**
+     * Marks all pages with the given hash as deleted.
+     * 
+     * @param hash
+     *            the hash
+     * @param deleted
+     *            the deleted state
+     * @return the number of pages marked
+     */
+    @Modifying
+    @Transactional
+    int updateDeleteOnAllWithHash(@Param("hash") String hash, @Param("deleted") boolean deleted);
 }

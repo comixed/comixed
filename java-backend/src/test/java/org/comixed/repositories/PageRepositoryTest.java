@@ -94,4 +94,38 @@ public class PageRepositoryTest
             assertTrue(TEST_DUPLICATE_PAGE_HASHES.contains(page.getHash()));
         }
     }
+
+    @Test
+    public void testUpdateDeleteOnAllWithHashAsDeleted()
+    {
+        int result = repository.updateDeleteOnAllWithHash(TEST_DUPLICATE_PAGE_HASH_1, true);
+
+        assertEquals(3, result);
+
+        Iterable<Page> pages = repository.findAll();
+        for (Page page : pages)
+        {
+            if (page.getHash().equals(TEST_DUPLICATE_PAGE_HASH_1))
+            {
+                assertTrue(page.isMarkedDeleted());
+            }
+        }
+    }
+
+    @Test
+    public void testUpdateDeleteOnAllWithHashAsNotDeleted()
+    {
+        int result = repository.updateDeleteOnAllWithHash(TEST_DUPLICATE_PAGE_HASH_1, false);
+
+        assertEquals(3, result);
+
+        Iterable<Page> pages = repository.findAll();
+        for (Page page : pages)
+        {
+            if (page.getHash().equals(TEST_DUPLICATE_PAGE_HASH_1))
+            {
+                assertFalse(page.isMarkedDeleted());
+            }
+        }
+    }
 }

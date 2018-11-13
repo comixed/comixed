@@ -286,4 +286,30 @@ public class PageController
             }
         }
     }
+
+    @RequestMapping(value = "/pages/hash/{hash}",
+                    method = RequestMethod.DELETE)
+    public int deleteAllWithHash(@PathVariable("hash") String hash)
+    {
+        logger.debug("Marking as deleted all pages with hash={}", hash);
+
+        int result = pageRepository.updateDeleteOnAllWithHash(hash, true);
+
+        logger.debug("Marked {} pages", result);
+
+        return result;
+    }
+
+    @RequestMapping(value = "/pages/hash/{hash}",
+                    method = RequestMethod.PUT)
+    public int undeleteAllWithHash(@PathVariable("hash") String hash)
+    {
+        logger.debug("Marking as undeleted all pages with hash={}", hash);
+
+        int result = pageRepository.updateDeleteOnAllWithHash(hash, false);
+
+        logger.debug("Unmarked {} pages", result);
+
+        return result;
+    }
 }
