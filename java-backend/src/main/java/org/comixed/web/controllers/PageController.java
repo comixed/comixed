@@ -134,22 +134,14 @@ public class PageController
         return result;
     }
 
-    @RequestMapping(value = "/pages/duplicates/count",
+    @RequestMapping(value = "/pages/duplicates",
                     method = RequestMethod.GET)
-    public long getDuplicateCount()
-    {
-        this.logger.debug("Get the number of duplicate pages");
-
-        return this.pageRepository.getDuplicatePageCount();
-    }
-
-    @RequestMapping(value = "/pages/duplicates/hashes",
-                    method = RequestMethod.GET)
-    public List<String> getDuplicatePageHashes()
+    @JsonView(View.List.class)
+    public List<Page> getDuplicatePages()
     {
         this.logger.debug("Fetching the list of duplicate offset hashes");
 
-        List<String> result = this.pageRepository.getDuplicatePages();
+        List<Page> result = this.pageRepository.getDuplicatePages();
 
         this.logger.debug("Retrieved {} hashes", result.size());
 
@@ -195,23 +187,6 @@ public class PageController
         return this.encodePageContent(page);
     }
 
-    @RequestMapping(value = "/pages/hashes/{hash}/content",
-                    method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getPageContentForHash(@PathVariable("hash") String hash)
-    {
-        this.logger.debug("Getting first offset content for hash: {}", hash);
-
-        Page page = this.pageRepository.findFirstByHash(hash);
-
-        if (page == null)
-        {
-            this.logger.debug("No offset found");
-            return null;
-        }
-
-        return this.encodePageContent(page);
-    }
-
     @RequestMapping(value = "/comics/{comic_id}/pages/{index}",
                     method = RequestMethod.GET)
     public Page getPageInComicByIndex(@PathVariable("comic_id") long comicId, @PathVariable("index") int index)
@@ -236,19 +211,6 @@ public class PageController
             return null;
         }
         else return comic.getPages();
-    }
-
-    @RequestMapping(value = "/pages/hashes/{hash}",
-                    method = RequestMethod.GET)
-    public List<Page> getPagesForHash(@PathVariable("hash") String hash)
-    {
-        this.logger.debug("Getting occurances of offset hash: {}", hash);
-
-        List<Page> result = this.pageRepository.findAllByHash(hash);
-
-        this.logger.debug("Returning count={}", result);
-
-        return result;
     }
 
     @RequestMapping(value = "/pages/types",

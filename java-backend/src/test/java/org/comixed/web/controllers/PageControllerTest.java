@@ -28,9 +28,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Comic;
@@ -64,17 +62,7 @@ public class PageControllerTest
     {"12345",
      "23456",
      "34567"};
-    private static final String TEST_PAGE_HASH_1 = "01234567890ABCDEF";
-    private static final String TEST_PAGE_HASH_2 = "1234567890ABCDEF1";
-    private static final String TEST_PAGE_HASH_3 = "234567890ABCDEF01";
-    private static final String TEST_PAGE_HASH_4 = "34567890ABCDEF012";
-    private static final String TEST_PAGE_HASH_5 = "4567890ABCDEF0123";
-    private static final List<String> TEST_DUPLICATE_PAGE_HASHES = Arrays.asList(new String[]
-    {TEST_PAGE_HASH_1,
-     TEST_PAGE_HASH_2,
-     TEST_PAGE_HASH_3,
-     TEST_PAGE_HASH_4,
-     TEST_PAGE_HASH_5,});
+    private static final List<Page> TEST_DUPLICATE_PAGES = new ArrayList<Page>();
     private static final int TEST_PAGE_INDEX = 7;
     private static final long TEST_COMIC_ID = 1002L;
     private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
@@ -114,8 +102,6 @@ public class PageControllerTest
 
     @Mock
     private List<PageType> pageTypes;
-
-    private Random random = new Random();
 
     @Test
     public void testSetPageTypeForNonexistentPage()
@@ -217,43 +203,17 @@ public class PageControllerTest
     }
 
     @Test
-    public void testGetDuplicatePageHashesNoHashes()
+    public void testGetDuplicatePages()
     {
-        Mockito.when(pageRepository.getDuplicatePages()).thenReturn(new ArrayList<String>());
 
-        List<String> result = pageController.getDuplicatePageHashes();
+        Mockito.when(pageRepository.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGES);
+
+        List<Page> result = pageController.getDuplicatePages();
 
         assertNotNull(result);
-        assertTrue(result.isEmpty());
+        assertSame(TEST_DUPLICATE_PAGES, result);
 
         Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
-    }
-
-    @Test
-    public void testGetDuplicatePageHashes()
-    {
-
-        Mockito.when(pageRepository.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGE_HASHES);
-
-        List<String> result = pageController.getDuplicatePageHashes();
-
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(TEST_DUPLICATE_PAGE_HASHES, result);
-
-        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
-    }
-
-    @Test
-    public void testGetPagesForHash()
-    {
-        Mockito.when(pageRepository.findAllByHash(Mockito.anyString())).thenReturn(pageList);
-
-        List<Page> result = pageController.getPagesForHash(TEST_PAGE_HASH_1);
-
-        assertEquals(pageList, result);
-
-        Mockito.verify(pageRepository, Mockito.times(1)).findAllByHash(TEST_PAGE_HASH_1);
     }
 
     @Test
@@ -415,32 +375,6 @@ public class PageControllerTest
     }
 
     @Test
-    public void testGetPageContentForHashWithNonexistentHash()
-    {
-        Mockito.when(pageRepository.findFirstByHash(TEST_PAGE_HASH_1)).thenReturn(null);
-
-        assertNull(pageController.getPageContentForHash(TEST_PAGE_HASH_1));
-
-        Mockito.verify(pageRepository, Mockito.times(1)).findFirstByHash(TEST_PAGE_HASH_1);
-    }
-
-    @Test
-    public void testGetPageContentForHash() throws IOException
-    {
-        Mockito.when(pageRepository.findFirstByHash(TEST_PAGE_HASH_1)).thenReturn(page);
-        Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
-
-        ResponseEntity<InputStreamResource> result = pageController.getPageContentForHash(TEST_PAGE_HASH_1);
-
-        assertNotNull(result);
-        assertEquals(TEST_PAGE_CONTENT.length, result.getBody().contentLength());
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-
-        Mockito.verify(pageRepository, Mockito.times(1)).findFirstByHash(TEST_PAGE_HASH_1);
-        Mockito.verify(page, Mockito.times(1)).getContent();
-    }
-
-    @Test
     public void testGetAllPagesForComicWithIndexNonexistentComic()
     {
         Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(null);
@@ -463,18 +397,6 @@ public class PageControllerTest
 
         Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
         Mockito.verify(comic, Mockito.atLeast(1)).getPages();
-    }
-
-    @Test
-    public void testGetDuplicatePageCount()
-    {
-        int expected = random.nextInt(65535);
-
-        Mockito.when(pageRepository.getDuplicatePageCount()).thenReturn(expected);
-
-        assertEquals(expected, pageController.getDuplicateCount());
-
-        Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePageCount();
     }
 
     @Test
