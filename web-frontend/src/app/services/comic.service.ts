@@ -151,6 +151,14 @@ export class ComicService {
     return this.http.post(`${this.api_url}/pages/${page.id}/undelete`, {});
   }
 
+  delete_all_pages_for_hash(hash: string): Observable<any> {
+    return this.http.delete(`${this.api_url}/pages/hash/${hash}`);
+  }
+
+  undelete_all_pages_for_hash(hash: string): Observable<any> {
+    return this.http.put(`${this.api_url}/pages/hash/${hash}`, {});
+  }
+
   get_files_under_directory(directory: string): Observable<any> {
     return this.http.get(`${this.api_url}/files/contents?directory=${encodeURI(directory)}`);
   }

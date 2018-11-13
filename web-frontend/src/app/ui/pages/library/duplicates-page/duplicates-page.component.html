@@ -3,6 +3,7 @@
   [rows]='rows'
   paginatorPosition='both'
   [paginator]='true'
+  [loading]='busy'
   emptyMessage='There are no duplicate pages! Yay!'> <p-header>
 <div class='ui-helper-clearfix'>
   <div class='ui-g'>
@@ -37,13 +38,26 @@
     <p-card> <img
       [src]='get_url_for_hash(hash)'
       [style.width]='"100%"'
-      [style.height]='"auto"'></p-card>
+      [style.height]='"auto"'> <p-footer></p-footer> </p-card>
   </div>
   <div class='ui-g-11 ui-sm-11'>
     <div class='ui-g'>
       <div class='ui-12'>
         <h3>Found In {{ pages_by_hash[hash].length }} Files</h3>
       </div>
+      <div class='ui-g-12'>
+        <button
+          pButton
+          type='button'
+          (click)='delete_all_pages(hash)'
+          label='Delete All'></button>
+      </div>
+      <button
+        *ngIf='!any_pages_deleted(hash)'
+        pButton
+        type='button'
+        (click)='undelete_all_pages(hash)'
+        label='Undelete All'></button>
     </div>
   </div>
 </div>

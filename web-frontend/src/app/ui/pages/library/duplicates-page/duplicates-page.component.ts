@@ -23,6 +23,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { ComicService } from '../../../../services/comic.service';
 import { UserService } from '../../../../services/user.service';
+import { AlertService } from '../../../../services/alert.service';
 import { DuplicatePage } from '../../../../models/duplicate-page.model';
 
 @Component({
@@ -43,9 +44,12 @@ export class DuplicatesPageComponent implements OnInit {
 
   protected cover_size: number;
 
+  protected busy = false;
+
   constructor(
     private comic_service: ComicService,
     private user_service: UserService,
+    private alert_service: AlertService,
     private activated_route: ActivatedRoute,
     private router: Router,
   ) {
@@ -109,5 +113,43 @@ export class DuplicatesPageComponent implements OnInit {
   set_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
     this.update_params(this.COVER_PARAMETER, `${this.cover_size}`);
+  }
+
+  any_pages_deleted(hash: string): boolean {
+    return this.pages_by_hash[hash].every((page: DuplicatePage) => {
+      return !page.deleted;
+    });
+  }
+
+  delete_all_pages(hash: string): void {
+    this.busy = true;
+    this.comic_service.delete_all_pages_for_hash(hash).subscribe(
+      (count: number) => {
+        this.pages_by_hash[hash].forEach((page: DuplicatePage) => {
+          page.deleted = true;
+        });
+        this.alert_service.show_info_message(`Marked ${count} page(s) as deleted...`);
+        this.busy = false;
+      },
+      (error: Error) => {
+        this.alert_service.show_error_message('Failed to delete pages...', error);
+        this.busy = false;
+      });
+  }
+
+  undelete_all_pages(hash: string): void {
+    this.busy = true;
+    this.comic_service.undelete_all_pages_for_hash(hash).subscribe(
+      (count: number) => {
+        this.pages_by_hash[hash].forEach((page: DuplicatePage) => {
+          page.deleted = false;
+        });
+        this.alert_service.show_info_message(`Unmarked ${count} page(s) as deleted...`);
+        this.busy = false;
+      },
+      (error: Error) => {
+        this.alert_service.show_error_message('Failed to undelete pages...', error);
+        this.busy = false;
+      });
   }
 }
