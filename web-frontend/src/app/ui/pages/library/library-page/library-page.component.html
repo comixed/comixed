@@ -1,6 +1,7 @@
 <p-tabView
   [activeIndex]='current_tab'
   (onChange)='set_current_tab($event.index)'> <p-tabPanel
+  [disabled]='!comics'
   header='Covers'> <p-dataView
   #comicCoverView
   filterBy='series'
@@ -119,7 +120,9 @@
       type='button'
       icon='pi pi-folder-open'></button></a> </p-footer></p-card>
 </div>
-</ng-template> </p-dataView></p-tabPanel> <p-tabPanel header='Details'> <p-table
+</ng-template> </p-dataView></p-tabPanel> <p-tabPanel
+  [disabled]='!comics'
+  header='Details'> <p-table
   #comicDetailView
   [value]='comics'
   paginator='true'

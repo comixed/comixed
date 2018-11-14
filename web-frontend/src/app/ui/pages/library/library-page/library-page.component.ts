@@ -37,7 +37,7 @@ export class LibraryPageComponent implements OnInit {
   readonly GROUP_BY_PARAMETER = 'groupby';
   readonly TAB_PARAMETER = 'tab';
 
-  protected comics: Array<Comic> = [];
+  protected comics: Array<Comic>;
   protected selected_comic: Comic;
   protected show_dialog = false;
 
@@ -52,12 +52,22 @@ export class LibraryPageComponent implements OnInit {
   protected group_options: Array<SelectItem>;
   protected group_by: string;
 
+  protected busy = false;
+
   constructor(
     private activated_route: ActivatedRoute,
     private router: Router,
     private user_service: UserService,
     private comic_service: ComicService,
   ) {
+    this.activated_route.queryParams.subscribe(params => {
+      this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
+      this.rows = this.load_parameter(params[this.ROWS_PARAMETER], 10);
+      this.sort_by = params[this.SORT_PARAMETER] || 'series';
+      this.cover_size = this.load_parameter(params[this.COVER_PARAMETER],
+        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10));
+      this.group_by = params[this.GROUP_BY_PARAMETER] || 'none';
+    });
     this.sort_options = [
       { label: 'Series', value: 'series' },
       { label: 'Date Added', value: 'added_date' },
@@ -79,14 +89,7 @@ export class LibraryPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activated_route.queryParams.subscribe(params => {
-      this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
-      this.rows = this.load_parameter(params[this.ROWS_PARAMETER], 10);
-      this.sort_by = params[this.SORT_PARAMETER] || 'series';
-      this.cover_size = this.load_parameter(params[this.COVER_PARAMETER],
-        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10));
-      this.group_by = params[this.GROUP_BY_PARAMETER] || 'none';
-    });
+    this.comics = this.comic_service.all_comics;
     this.comic_service.all_comics_update.subscribe(
       (comics: Array<Comic>) => {
         this.comics = comics;
