@@ -12,22 +12,28 @@
 <div
   *ngIf='pending_imports === 0'
   class='ui-g'>
-  <div class='ui-g-2 ui-sm-3'>
-    <app-import-sidebar
-      [disable_inputs]='disable_inputs()'
-      [any_selected]='any_selected'
-      (loadFiles)='retrieve_files($event)'
-      (selectAll)='set_select_all($event)'
-      (import)='import_selected_files()'
-      (deleteBlockedPages)='set_delete_blocked_pages($event)'
-      (showSelectionsOnly)='set_show_selections_only($event)'></app-import-sidebar>
-  </div>
-  <div class='ui-g-10 ui-sm-10'>
+  <app-selected-comics
+    [selected_files]='selected_files'
+    [show_selected_files]='show_selected_files'
+    [cover_width]='"auto"'
+    [cover_height]='"" + cover_size + "px"'
+    (close)='hide_selections()'></app-selected-comics>
+  <!-- selection overlay -->
+  <div class='ui-g-12 ui-sm-12'>
     <div class='ui-g'>
-      <div class='ui-g-12'>
+      <div class='ui-g-12 ui-sm-12'>
+        <app-import-toolbar
+          (directorySelected)='retrieve_files($event)'
+          (showSelections)='show_selections()'
+          (selectAll)='set_select_all($event)'
+          (import)='import_selected_files()'></app-import-toolbar>
+      </div>
+    </div>
+    <div class='ui-g'>
+      <div class='ui-g-12 ui-sm-12'>
         <h2 class='text-center'>{{get_comic_selection_title()}}</h2>
       </div>
-      <div class='ui-g-12'>
+      <div class='ui-g-12 ui-sm-12'>
         <p-dataView
           #importComics
           [value]='file_details'
@@ -36,6 +42,7 @@
           [rows]='rows'
           [paginator]='true'
           [paginatorPosition]='"both"'
+          [loading]='busy'
           alwaysShowPaginator='true'> <p-header>
         <div class='ui-helper-clearfix'>
           <div class='ui-g'>
@@ -82,11 +89,10 @@
           pTemplate='listItem'>
         <div class='ui-g'>
           <div class='ui-g-2 ui-md-2'>
-            <p-card> <img
-              [src]='get_cover_url(file)'
-              width='auto'
-              [style.width]='"100%"'
-              [style.height]='"auto"'> </p-card>
+            <app-file-details-cover
+              [file_details]='file'
+              [width]='"100%"'
+              [height]='"auto"'></app-file-details-cover>
           </div>
           <div class='ui-g-10 ui-md-10'>
             <div class='ui-g'>
@@ -104,8 +110,8 @@
                 <button
                   pButton
                   type='button'
-                  [icon]='file.selected ? "pi pi-check" : "pi pi-times"'
-                  [label]='file.selected? "Selected" : "Not Select"'
+                  [icon]='file.selected ? "fas fa-check" : "fas fa-times"'
+                  [label]='file.selected? "Selected" : "Not Selected"'
                   (click)='toggle_selected_state(file)'></button>
               </div>
             </div>
@@ -115,16 +121,16 @@
           let-file
           pTemplate='gridItem'>
         <div>
-          <p-card> <img
-            [src]='get_cover_url(file)'
-            [style.width]='"auto"'
-            [style.height]='"" + cover_size + "px"'> <p-footer>
+          <app-file-details-cover
+            [file_details]='file'
+            [width]='"auto"'
+            [height]='"" + cover_size + "px"'>Here
+          it is!</app-file-details-cover>
           <button
             pButton
             type='button'
             [icon]='file.selected ? "pi pi-check" : "pi pi-times"'
             (click)='toggle_selected_state(file)'></button>
-          </p-footer></p-card>
         </div>
         </ng-template> </p-dataView>
       </div>

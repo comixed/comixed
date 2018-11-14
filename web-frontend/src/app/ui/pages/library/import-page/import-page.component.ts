@@ -36,6 +36,10 @@ export class ImportPageComponent implements OnInit {
   readonly SORT_PARAMETER = 'sort';
   readonly COVER_PARAMETER = 'coversize';
 
+  readonly COVER_SIZE_PREFERENCE = 'cover_size';
+  readonly SORT_PREFERENCE = 'import_sort';
+  readonly ROWS_PREFERENCE = 'import_rows';
+
   protected sort_options: Array<SelectItem>;
   protected sort_by: string;
 
@@ -46,7 +50,9 @@ export class ImportPageComponent implements OnInit {
 
   protected file_details: Array<FileDetails> = [];
   protected selected_file_detail: FileDetails;
-  protected selected_file_count = 0;
+  protected selected_files: Array<FileDetails> = [];
+  protected show_selected_files = false;
+
   protected plural = false;
   protected waiting_on_imports = false;
   protected pending_imports = 0;
@@ -54,6 +60,8 @@ export class ImportPageComponent implements OnInit {
   protected importing = false;
   protected show_selections_only = false;
   protected delete_blocked_pages = false;
+
+  protected busy = false;
 
   constructor(
     private user_service: UserService,
@@ -64,10 +72,11 @@ export class ImportPageComponent implements OnInit {
   ) {
     this.selected_file_detail = null;
     activatedRoute.queryParams.subscribe(params => {
-      this.sort_by = params[this.SORT_PARAMETER] || 'filename';
-      this.rows = this.load_parameter(params[this.ROWS_PARAMETER], 10);
+      this.sort_by = params[this.SORT_PARAMETER] || this.user_service.get_user_preference(this.SORT_PREFERENCE, 'filename');
+      this.rows = this.load_parameter(params[this.ROWS_PARAMETER],
+        parseInt(this.user_service.get_user_preference(this.ROWS_PREFERENCE, '10'), 10));
       this.cover_size = this.load_parameter(params[this.COVER_PARAMETER],
-        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10));
+        parseInt(this.user_service.get_user_preference(this.COVER_SIZE_PREFERENCE, '200'), 10));
     });
     this.sort_options = [
       { label: 'Filename', value: 'filename' },
@@ -83,7 +92,7 @@ export class ImportPageComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
-    this.alert_service.show_busy_message('');
+    this.busy = true;
     setInterval(() => {
       // don't try to get the pending imports if we're already doing it...
       if (that.waiting_on_imports === true) {
@@ -93,10 +102,11 @@ export class ImportPageComponent implements OnInit {
       that.comic_service.get_number_of_pending_imports().subscribe(
         count => {
           that.pending_imports = count;
+          that.busy = false;
         },
         error => {
           that.alert_service.show_error_message('Error getting the number of pending imports...', error);
-          that.alert_service.show_busy_message('');
+          that.busy = false;
         },
         () => {
           that.waiting_on_imports = false;
@@ -107,17 +117,19 @@ export class ImportPageComponent implements OnInit {
   set_sort_by(sort_by: string): void {
     this.sort_by = sort_by;
     this.update_params(this.SORT_PARAMETER, this.sort_by);
+    this.user_service.set_user_preference(this.SORT_PREFERENCE, this.sort_by);
   }
 
   set_rows(rows: number): void {
     this.rows = rows;
     this.update_params(this.ROWS_PARAMETER, `${this.rows}`);
+    this.user_service.set_user_preference(this.ROWS_PREFERENCE, `${this.rows}`);
   }
 
   set_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
     this.update_params(this.COVER_PARAMETER, `${this.cover_size}`);
-    this.user_service.set_user_preference('cover_size', `${this.cover_size}`);
+    this.user_service.set_user_preference(this.COVER_SIZE_PREFERENCE, `${this.cover_size}`);
   }
 
   private update_params(name: string, value: string): void {
@@ -137,36 +149,34 @@ export class ImportPageComponent implements OnInit {
     return defvalue;
   }
 
-  get_cover_url(file: FileDetails): string {
-    return this.comic_service.get_cover_url_for_file(file.filename);
-  }
-
   retrieve_files(directory: string): void {
     const that = this;
-    this.alert_service.show_busy_message('Fetching List Of Comic Files...');
+    this.busy = true;
     this.selected_file_detail = null;
     this.comic_service.get_files_under_directory(directory).subscribe(
       (files: FileDetails[]) => {
         that.file_details = files;
         that.file_details.forEach((file_detail: FileDetails) => file_detail.selected = false);
         that.plural = this.file_details.length !== 1;
-        that.selected_file_count = 0;
         that.alert_service.show_info_message('Fetched ' + that.file_details.length + ' comic' + (that.plural ? 's' : '') + '...');
-        that.alert_service.show_busy_message('');
+        that.busy = false;
       },
       error => {
         that.alert_service.show_error_message('Error while loading filenames...', error);
-        that.alert_service.show_busy_message('');
+        that.busy = false;
       }
     );
   }
 
   set_select_all(select: boolean): void {
+    this.selected_files = [];
     this.file_details.forEach((file) => {
       file.selected = select;
+      if (select) {
+        this.selected_files.push(file);
+      }
     });
-    this.selected_file_count = select ? this.file_details.length : 0;
-    this.any_selected = this.selected_file_count > 0;
+    this.any_selected = this.selected_files.length > 0;
   }
 
   import_selected_files(): void {
@@ -174,7 +184,7 @@ export class ImportPageComponent implements OnInit {
     this.selected_file_detail = null;
     this.importing = true;
     const selected_files = this.file_details.filter(file => file.selected).map(file => file.filename);
-    this.alert_service.show_busy_message('Preparing to import ' + selected_files + ' comics...');
+    that.busy = true;
     this.comic_service.import_files_into_library(selected_files, this.delete_blocked_pages).subscribe(
       () => {
         this.file_details = [];
@@ -182,10 +192,10 @@ export class ImportPageComponent implements OnInit {
       error => {
         this.alert_service.show_error_message('Failed to import comics...', error);
         that.importing = false;
-        that.alert_service.show_busy_message('');
+        that.busy = false;
       },
       () => {
-        this.alert_service.show_busy_message('');
+        that.busy = false;
       }
     );
   }
@@ -202,7 +212,7 @@ export class ImportPageComponent implements OnInit {
     if (this.file_details.length === 0) {
       return 'No Comics Are Loaded';
     } else {
-      return `Selected ${this.selected_file_count} Of ${this.file_details.length} Comics...`;
+      return `Selected ${this.selected_files.length} Of ${this.file_details.length} Comics...`;
     }
   }
 
@@ -221,11 +231,20 @@ export class ImportPageComponent implements OnInit {
   toggle_selected_state(file: FileDetails): void {
     file.selected = !file.selected;
     if (file.selected) {
-      this.selected_file_count = this.selected_file_count + 1;
+      this.selected_files.push(file);
     } else {
-      this.selected_file_count = this.selected_file_count - 1;
+      this.selected_files = this.selected_files.filter((file_detail: FileDetails) => {
+        return file_detail.filename !== file.filename;
+      });
     }
-    this.any_selected = this.selected_file_count > 0;
+    this.any_selected = this.selected_files.length > 0;
+  }
 
+  show_selections(): void {
+    this.show_selected_files = true;
+  }
+
+  hide_selections(): void {
+    this.show_selected_files = false;
   }
 }
