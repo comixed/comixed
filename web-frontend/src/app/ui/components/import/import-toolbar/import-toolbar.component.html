@@ -1,0 +1,28 @@
+<p-toolbar>
+<div class='ui-toolbar-group-left'>
+  <input
+    id='directory'
+    type='text'
+    class='w-75'
+    [(ngModel)]='directory'
+    placeholder='C:/Path/To/Files'>
+  <button
+    pButton
+    label='Find Comics'
+    (click)='directory_selected()'></button>
+  <p-splitButton
+    [model]='select_options'
+    label='Select'
+    styleClass='ui-button-secondary'></p-splitButton>
+  <button
+    pButton
+    icon='far fa-eye'
+    label='View Selections'
+    (click)='show_selections()'></button>
+  <button
+    pButton
+    icon='fas fa-file-import'
+    label='Import'
+    (click)='start_importing()'></button>
+</div>
+</p-toolbar>
