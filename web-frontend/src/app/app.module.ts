@@ -79,6 +79,7 @@ import { NotificationsComponent } from './ui/components/notifications/notificati
 import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
 import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/duplicates-page.component';
 import { ImportToolbarComponent } from './ui/components/import/import-toolbar/import-toolbar.component';
+import { SelectedComicsComponent } from './ui/components/import/selected-comics/selected-comics.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import { ImportToolbarComponent } from './ui/components/import/import-toolbar/im
     ImportPageComponent,
     DuplicatesPageComponent,
     ImportToolbarComponent,
+    SelectedComicsComponent,
   ],
   imports: [
     BrowserModule,
