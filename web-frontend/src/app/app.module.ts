@@ -73,7 +73,6 @@ import { AlertService } from './services/alert.service';
 import { UserService } from './services/user.service';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
-import { ImportSidebarComponent } from './ui/components/import/import-sidebar/import-sidebar.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { NotificationsComponent } from './ui/components/notifications/notifications.component';
 import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
@@ -105,7 +104,6 @@ import { FileDetailsCoverComponent } from './ui/components/file-details/file-det
     ComicCreditsComponent,
     ComicPagesComponent,
     ComicCoverComponent,
-    ImportSidebarComponent,
     LibraryPageComponent,
     NotificationsComponent,
     ImportPageComponent,
