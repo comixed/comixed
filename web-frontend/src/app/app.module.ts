@@ -80,6 +80,7 @@ import { ImportPageComponent } from './ui/pages/library/import-page/import-page.
 import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/duplicates-page.component';
 import { ImportToolbarComponent } from './ui/components/import/import-toolbar/import-toolbar.component';
 import { SelectedComicsComponent } from './ui/components/import/selected-comics/selected-comics.component';
+import { FileDetailsCoverComponent } from './ui/components/file-details/file-details-cover/file-details-cover.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { SelectedComicsComponent } from './ui/components/import/selected-comics/
     DuplicatesPageComponent,
     ImportToolbarComponent,
     SelectedComicsComponent,
+    FileDetailsCoverComponent,
   ],
   imports: [
     BrowserModule,
