@@ -60,6 +60,7 @@ export class LibraryPageComponent implements OnInit {
     private user_service: UserService,
     private comic_service: ComicService,
   ) {
+    this.comics = this.comic_service.get_all_comics();
     this.sort_options = [
       { label: 'Series', value: 'series' },
       { label: 'Date Added', value: 'added_date' },
@@ -81,7 +82,7 @@ export class LibraryPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.comics = this.comic_service.all_comics;
+    this.comics = this.comic_service.get_all_comics();
     this.comic_service.all_comics_update.subscribe(
       (comics: Array<Comic>) => {
         this.comics = comics;

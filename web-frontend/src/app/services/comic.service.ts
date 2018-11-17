@@ -38,7 +38,7 @@ export class ComicService {
   private api_url = '/api';
   current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
   current_page: Subject<Page> = new BehaviorSubject<Page>(new Page());
-  all_comics: Comic[];
+  protected all_comics: Comic[];
   all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
   comic_count: Subject<number> = new BehaviorSubject<number>(0);
   private last_comic_date: string;
@@ -52,6 +52,10 @@ export class ComicService {
     this.monitor_remote_comic_list();
     this.all_comics = [];
     this.last_comic_date = '0';
+  }
+
+  get_all_comics(): Array<Comic> {
+    return this.all_comics;
   }
 
   monitor_remote_comic_list(): void {

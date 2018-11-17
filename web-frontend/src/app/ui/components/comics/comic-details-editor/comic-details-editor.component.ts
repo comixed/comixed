@@ -160,11 +160,11 @@ export class ComicDetailsEditorComponent implements OnInit {
 
     this.comic_service.scrape_and_save_comic_details(this.api_key.trim(), this.comic.id, this.current_issue.id).subscribe(
       (comic: Comic) => {
-        const index = that.comic_service.all_comics.findIndex((thisComic: Comic) => {
+        const index = that.comic_service.get_all_comics().findIndex((thisComic: Comic) => {
           return thisComic.id === that.comic.id;
         });
         if (index !== -1) {
-          that.comic_service.all_comics[index] = comic;
+          that.comic_service.get_all_comics()[index] = comic;
           that.comic = comic;
           that.alert_service.show_busy_message('');
           that.update.next(comic);
