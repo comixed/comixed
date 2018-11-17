@@ -60,14 +60,6 @@ export class LibraryPageComponent implements OnInit {
     private user_service: UserService,
     private comic_service: ComicService,
   ) {
-    this.activated_route.queryParams.subscribe(params => {
-      this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
-      this.rows = this.load_parameter(params[this.ROWS_PARAMETER], 10);
-      this.sort_by = params[this.SORT_PARAMETER] || 'series';
-      this.cover_size = this.load_parameter(params[this.COVER_PARAMETER],
-        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10));
-      this.group_by = params[this.GROUP_BY_PARAMETER] || 'none';
-    });
     this.sort_options = [
       { label: 'Series', value: 'series' },
       { label: 'Date Added', value: 'added_date' },
@@ -94,6 +86,16 @@ export class LibraryPageComponent implements OnInit {
       (comics: Array<Comic>) => {
         this.comics = comics;
       });
+    this.activated_route.queryParams.subscribe(params => {
+      this.current_tab = this.load_parameter(params[this.TAB_PARAMETER],
+        parseInt(this.user_service.get_user_preference('library_tab', '0'), 10));
+      this.rows = this.load_parameter(params[this.ROWS_PARAMETER],
+        parseInt(this.user_service.get_user_preference('library_rows', '10'), 10));
+      this.sort_by = params[this.SORT_PARAMETER] || this.user_service.get_user_preference('library_sort', 'series');
+      this.cover_size = this.load_parameter(params[this.COVER_PARAMETER],
+        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10));
+      this.group_by = params[this.GROUP_BY_PARAMETER] || 'none';
+    });
   }
 
   set_selected_comic(event: Event, comic: Comic): void {
@@ -119,11 +121,13 @@ export class LibraryPageComponent implements OnInit {
   set_current_tab(current_tab: number): void {
     this.current_tab = current_tab;
     this.update_params(this.TAB_PARAMETER, `${this.current_tab}`);
+    this.user_service.set_user_preference('library_tab', `${this.current_tab}`);
   }
 
   set_sort_order(sort_order: string): void {
     this.sort_by = sort_order;
     this.update_params(this.SORT_PARAMETER, `${this.sort_by}`);
+    this.user_service.set_user_preference('library_sort', this.sort_by);
   }
 
   set_group_by(group_by: string): void {
@@ -134,6 +138,7 @@ export class LibraryPageComponent implements OnInit {
   set_rows(rows: string): void {
     this.rows = parseInt(rows, 10);
     this.update_params(this.ROWS_PARAMETER, `${this.rows}`);
+    this.user_service.set_user_preference('library_rows', `${this.rows}`);
   }
 
   set_cover_size(cover_size: number): void {
