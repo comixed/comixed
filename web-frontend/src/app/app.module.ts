@@ -73,6 +73,7 @@ import { ImportToolbarComponent } from './ui/components/import/import-toolbar/im
 import { SelectedComicsComponent } from './ui/components/import/selected-comics/selected-comics.component';
 import { FileDetailsCoverComponent } from './ui/components/file-details/file-details-cover/file-details-cover.component';
 import { StoreModule } from '@ngrx/store';
+import { libraryReducer } from './reducers/library.reducer';
 
 @NgModule({
   declarations: [
@@ -141,6 +142,8 @@ import { StoreModule } from '@ngrx/store';
       animationType: ANIMATION_TYPES.pulse,
       fullScreenBackdrop: true,
     }),
+
+    StoreModule.forRoot({ library: libraryReducer }),
   ],
   providers: [
     AlertService,
