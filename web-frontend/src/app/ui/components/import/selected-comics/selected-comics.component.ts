@@ -37,7 +37,7 @@ export class SelectedComicsComponent implements OnInit {
   @Output() close: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   protected rows_options: Array<SelectItem>;
-  protected rows = 10;
+  rows = 10;
 
   constructor(
     private comic_service: ComicService,
