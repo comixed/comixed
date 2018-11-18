@@ -23,13 +23,20 @@ import { Library } from '../models/library';
 import { Comic } from '../models/comic.model';
 
 export const SET_UPDATING = '[LIBRARY] Set updating';
-export const UPDATE_COMICS = '[LIBRARY] Update comics';
+export const UPDATE_COMIC = '[LIBRARY] Update a single comic';
+export const UPDATE_COMICS = '[LIBRARY] Add more entries to the list of comics';
 export const REMOVE_COMIC = '[LIBRARY] Remove comic';
 
 export class SetUpdating implements Action {
   readonly type = SET_UPDATING;
 
   constructor(public payload: boolean) { }
+}
+
+export class UpdateComic implements Action {
+  readonly type = UPDATE_COMIC;
+
+  constructor(public payload: Comic) { }
 }
 
 export class UpdateComics implements Action {
@@ -46,5 +53,6 @@ export class RemoveComic implements Action {
 
 export type Actions =
   SetUpdating |
+  UpdateComic |
   UpdateComics |
   RemoveComic;

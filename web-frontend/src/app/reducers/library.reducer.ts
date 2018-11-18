@@ -39,6 +39,23 @@ export function libraryReducer(
         is_updating: action.payload,
       };
 
+    case LibraryActions.UPDATE_COMIC: {
+      const index = state.comics.findIndex((comic: Comic) => {
+        return comic.id === action.payload.id;
+      });
+
+      if (index !== -1) {
+        state.comics[index] = action.payload;
+      } else {
+        console.log(`*** ERROR: DID NOT FIND COMIC: id=${action.payload.id}`);
+      }
+
+      return {
+        ...state,
+        comics: state.comics,
+      };
+    }
+
     case LibraryActions.UPDATE_COMICS: {
       const comics = state.comics.concat(action.payload);
       let latest_comic_update = state.latest_comic_update;

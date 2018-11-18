@@ -18,6 +18,9 @@
  */
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import * as LibraryActions from '../../../../actions/library.actions';
 import { AlertService } from '../../../../services/alert.service';
 import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
@@ -50,6 +53,7 @@ export class ComicDetailsEditorComponent implements OnInit {
     private alert_service: AlertService,
     private user_service: UserService,
     private comic_service: ComicService,
+    private store: Store<AppState>,
   ) { }
 
   ngOnInit() {
@@ -118,6 +122,19 @@ export class ComicDetailsEditorComponent implements OnInit {
       this.current_volume = null;
       this.alert_service.show_busy_message('');
     }
+  }
+
+  select_current_issue(): void {
+    this.alert_service.show_busy_message('Updating Comic Details. Please Wait...');
+    const that = this;
+
+    this.comic_service.scrape_and_save_comic_details(this.api_key.trim(), this.comic.id, this.current_issue.id).subscribe(
+      (comic: Comic) => {
+        this.store.dispatch(new LibraryActions.UpdateComic(comic));
+        that.alert_service.show_busy_message('');
+        that.update.next(comic);
+        this.alert_service.show_info_message('ComicVine details scraped and saved...');
+      });
   }
 
   load_current_issue(): void {
