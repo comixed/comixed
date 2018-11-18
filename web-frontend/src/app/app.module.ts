@@ -72,6 +72,7 @@ import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/dupl
 import { ImportToolbarComponent } from './ui/components/import/import-toolbar/import-toolbar.component';
 import { SelectedComicsComponent } from './ui/components/import/selected-comics/selected-comics.component';
 import { FileDetailsCoverComponent } from './ui/components/file-details/file-details-cover/file-details-cover.component';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
