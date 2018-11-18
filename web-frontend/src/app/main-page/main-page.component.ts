@@ -17,35 +17,41 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-
-import { ComicService } from '../services/comic.service';
-import { AlertService } from '../services/alert.service';
+import { Subscription } from 'rxjs/Subscription';
+import { AppState } from '../app.state';
+import { Library } from '../models/library';
 
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']
 })
-export class MainPageComponent implements OnInit {
-  public comicCount: number;
+export class MainPageComponent implements OnInit, OnDestroy {
+  private library$: Observable<Library>;
+  private library_subscription: Subscription;
+  private library: Library;
+
+  public comic_count: number;
   public plural = false;
 
   constructor(
-    private comicService: ComicService,
-    private alert_service: AlertService,
-  ) { }
+    private store: Store<AppState>,
+  ) {
+    this.library$ = store.select('library');
+  }
 
   ngOnInit() {
-    this.comicService.get_library_comic_count().subscribe(
-      res => {
-        this.comicCount = res;
-        this.plural = res !== 1;
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Unable to get the library comic count...', error);
-      }
-    );
+    this.library_subscription = this.library$.subscribe(
+      (library: Library) => {
+        this.comic_count = library.comics.length;
+        this.plural = this.comic_count !== 1;
+      });
+  }
+
+  ngOnDestroy() {
+    this.library_subscription.unsubscribe();
   }
 }

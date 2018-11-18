@@ -17,9 +17,15 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Library } from '../../../../models/library';
+import * as LibraryActions from '../../../../actions/library.actions';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { Comic } from '../../../../models/comic.model';
 import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
@@ -30,12 +36,16 @@ import { SelectItem } from 'primeng/api';
   templateUrl: './library-page.component.html',
   styleUrls: ['./library-page.component.css']
 })
-export class LibraryPageComponent implements OnInit {
+export class LibraryPageComponent implements OnInit, OnDestroy {
   readonly ROWS_PARAMETER = 'rows';
   readonly SORT_PARAMETER = 'sort';
   readonly COVER_PARAMETER = 'coversize';
   readonly GROUP_BY_PARAMETER = 'groupby';
   readonly TAB_PARAMETER = 'tab';
+
+  private library$: Observable<Library>;
+  private library_subscription: Subscription;
+  private library: Library;
 
   comics: Array<Comic>;
   selected_comic: Comic;
@@ -59,8 +69,9 @@ export class LibraryPageComponent implements OnInit {
     private router: Router,
     private user_service: UserService,
     private comic_service: ComicService,
+    private store: Store<AppState>,
   ) {
-    this.comics = this.comic_service.get_all_comics();
+    this.library$ = store.select('library');
     this.sort_options = [
       { label: 'Series', value: 'series' },
       { label: 'Date Added', value: 'added_date' },
@@ -82,10 +93,9 @@ export class LibraryPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.comics = this.comic_service.get_all_comics();
-    this.comic_service.all_comics_update.subscribe(
-      (comics: Array<Comic>) => {
-        this.comics = comics;
+    this.library_subscription = this.library$.subscribe(
+      (library: Library) => {
+        this.comics = library.comics;
       });
     this.activated_route.queryParams.subscribe(params => {
       this.current_tab = this.load_parameter(params[this.TAB_PARAMETER],
@@ -97,6 +107,10 @@ export class LibraryPageComponent implements OnInit {
         parseInt(this.user_service.get_user_preference('cover_size', '200'), 10));
       this.group_by = params[this.GROUP_BY_PARAMETER] || 'none';
     });
+  }
+
+  ngOnDestroy() {
+    this.library_subscription.unsubscribe();
   }
 
   set_selected_comic(event: Event, comic: Comic): void {
@@ -145,6 +159,10 @@ export class LibraryPageComponent implements OnInit {
   set_cover_size(cover_size: number): void {
     this.update_params(this.COVER_PARAMETER, `${this.cover_size}`);
     this.user_service.set_user_preference('cover_size', `${this.cover_size}`);
+  }
+
+  delete_comic(comic: Comic): void {
+    this.comic_service.remove_comic_from_library(comic);
   }
 
   private update_params(name: string, value: string): void {

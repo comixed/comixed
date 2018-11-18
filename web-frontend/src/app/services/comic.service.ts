@@ -23,8 +23,10 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Store } from '@ngrx/store';
+import { Library } from '../models/library';
+import { AppState } from '../app.state';
+import * as LibraryActions from '../actions/library.actions';
 
 import { UserService } from './user.service';
 import { AlertService } from './alert.service';
@@ -36,72 +38,44 @@ import { FileDetails } from '../models/file-details.model';
 @Injectable()
 export class ComicService {
   private api_url = '/api';
-  current_comic: Subject<Comic> = new BehaviorSubject<Comic>(new Comic());
-  current_page: Subject<Page> = new BehaviorSubject<Page>(new Page());
-  protected all_comics: Comic[];
-  all_comics_update: EventEmitter<Comic[]> = new EventEmitter();
-  comic_count: Subject<number> = new BehaviorSubject<number>(0);
-  private last_comic_date: string;
-  private fetching_comics = false;
+
+  private library: Library;
 
   constructor(
     private http: HttpClient,
     private alert_service: AlertService,
     private user_service: UserService,
+    private store: Store<AppState>,
   ) {
     this.monitor_remote_comic_list();
-    this.all_comics = [];
-    this.last_comic_date = '0';
-  }
 
-  get_all_comics(): Array<Comic> {
-    return this.all_comics;
+    store.select('library').subscribe(
+      (library: Library) => {
+        this.library = library;
+      });
   }
 
   monitor_remote_comic_list(): void {
-    const that = this;
     setInterval(() => {
-      if (!this.user_service.is_authenticated() || this.fetching_comics) {
+      if (!this.user_service.is_authenticated() || this.library.is_updating) {
         return;
       } else {
-        that.fetching_comics = true;
-        that.http.get(`${that.api_url}/comics/since/${that.last_comic_date}`)
+        this.http.get(`${this.api_url}/comics/since/${this.library.latest_comic_update}`)
           .subscribe((comics: Comic[]) => {
             if ((comics || []).length > 0) {
-              that.all_comics = that.all_comics.concat(comics);
-              that.comic_count.next(that.all_comics.length);
-              that.all_comics.forEach((comic: Comic) => {
-                if (parseInt(comic.added_date, 10) > parseInt(that.last_comic_date, 10)) {
-                  that.last_comic_date = comic.added_date;
-                }
-              });
-              that.all_comics_update.emit(that.all_comics);
+              this.store.dispatch(new LibraryActions.UpdateComics(comics));
             }
-            that.fetching_comics = false;
           },
-          error => {
-            that.alert_service.show_error_message('Failed to get the list of comics...', error);
-            that.fetching_comics = false;
+          (error: Error) => {
+            this.store.dispatch(new LibraryActions.SetUpdating(false));
+            this.alert_service.show_error_message('Failed to get the list of comics...', error);
           });
       }
     }, 500);
   }
 
-  reload_comics(): void {
-    this.all_comics = [];
-  }
-
-  set_current_comic(comic: Comic): void {
-    this.current_comic.next(comic);
-  }
-
-  set_current_page(page: Page): void {
-    this.current_page.next(page);
-  }
-
   remove_comic_from_local(comic_id: number) {
-    this.all_comics = this.all_comics.filter((comic: Comic) => comic.id !== comic_id);
-    this.all_comics_update.emit(this.all_comics);
+    this.store.dispatch(new LibraryActions.RemoveComic(comic_id));
   }
 
   load_comic_from_remote(id: number): Observable<any> {
@@ -110,10 +84,6 @@ export class ComicService {
 
   get_comic_summary(id: number): Observable<any> {
     return this.http.get(`${this.api_url}/comics/${id}/summary`);
-  }
-
-  get_library_comic_count(): Observable<any> {
-    return this.comic_count.asObservable();
   }
 
   get_page_types(): Observable<any> {
@@ -184,8 +154,14 @@ export class ComicService {
     return this.http.delete(`${this.api_url}/pages/blocked/${page_hash}`);
   }
 
-  remove_comic_from_library(comic: Comic): Observable<any> {
-    return this.http.delete(`${this.api_url}/comics/${comic.id}`);
+  remove_comic_from_library(comic: Comic) {
+    this.http.delete(`${this.api_url}/comics/${comic.id}`).subscribe(
+      () => {
+        this.store.dispatch(new LibraryActions.RemoveComic(comic.id));
+      },
+      (error: Error) => {
+        this.alert_service.show_error_message('Failed to delete comic...', error);
+      });
   }
 
   import_files_into_library(filenames: string[], delete_blocked_pages: boolean): Observable<any> {

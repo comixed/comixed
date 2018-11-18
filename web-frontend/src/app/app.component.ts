@@ -19,9 +19,12 @@
 
 import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { AppState } from './app.state';
+import { Library } from './models/library';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { UserService } from './services/user.service';
-import { ComicService } from './services/comic.service';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
 
 @Component({
@@ -35,17 +38,20 @@ export class AppComponent implements AfterViewInit {
   comic_count = 0;
   read_count = 0;
 
+  library: Library;
+
   constructor(
     private user_service: UserService,
-    private comic_service: ComicService,
     private router: Router,
+    private store: Store<AppState>,
   ) {
   }
 
   ngAfterViewInit(): void {
-    this.comic_service.get_library_comic_count().subscribe(
-      count => this.comic_count = count,
-      error => console.log('ERROR:', error.message));
+    this.store.select('library').subscribe(
+      (library: Library) => {
+        this.comic_count = library.comics.length;
+      });
   }
 
   logout(): void {

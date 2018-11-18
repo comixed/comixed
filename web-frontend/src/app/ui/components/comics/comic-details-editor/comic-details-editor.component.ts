@@ -154,27 +154,6 @@ export class ComicDetailsEditorComponent implements OnInit {
     return `${this.current_issue.cover_url}?api_key=${this.api_key.trim()}`;
   }
 
-  select_current_issue(): void {
-    this.alert_service.show_busy_message('Updating Comic Details. Please Wait...');
-    const that = this;
-
-    this.comic_service.scrape_and_save_comic_details(this.api_key.trim(), this.comic.id, this.current_issue.id).subscribe(
-      (comic: Comic) => {
-        const index = that.comic_service.get_all_comics().findIndex((thisComic: Comic) => {
-          return thisComic.id === that.comic.id;
-        });
-        if (index !== -1) {
-          that.comic_service.get_all_comics()[index] = comic;
-          that.comic = comic;
-          that.alert_service.show_busy_message('');
-          that.update.next(comic);
-          this.alert_service.show_info_message('ComicVine details scraped and saved...');
-        } else {
-          that.alert_service.show_error_message(`Invalid comic index: ${index}`, null);
-        }
-      });
-  }
-
   save_changes(): void {
     this.alert_service.show_busy_message('Saving Changes...');
     this.comic_service.save_changes_to_comic(this.comic.id, this.series, this.volume, this.issue_number).subscribe(
