@@ -36,15 +36,15 @@ export class DuplicatesPageComponent implements OnInit {
   readonly COVER_PARAMETER = 'coversize';
 
   protected pages: Array<DuplicatePage>;
-  protected hashes: Array<string>;
+  hashes: Array<string>;
   protected pages_by_hash: Map<string, DuplicatePage>;
 
-  protected rows_options: Array<SelectItem>;
-  protected rows: number;
+  rows_options: Array<SelectItem>;
+  rows: number;
 
-  protected cover_size: number;
+  cover_size: number;
 
-  protected busy = false;
+  busy = false;
 
   constructor(
     private comic_service: ComicService,

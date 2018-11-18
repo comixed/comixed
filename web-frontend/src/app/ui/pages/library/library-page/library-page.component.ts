@@ -37,20 +37,20 @@ export class LibraryPageComponent implements OnInit {
   readonly GROUP_BY_PARAMETER = 'groupby';
   readonly TAB_PARAMETER = 'tab';
 
-  protected comics: Array<Comic>;
-  protected selected_comic: Comic;
+  comics: Array<Comic>;
+  selected_comic: Comic;
   protected show_dialog = false;
 
-  protected rows_options: Array<SelectItem>;
-  protected rows: number;
-  protected current_tab: number;
-  protected cover_size: number;
+  rows_options: Array<SelectItem>;
+  rows: number;
+  current_tab: number;
+  cover_size: number;
 
-  protected sort_options: Array<SelectItem>;
-  protected sort_by: string;
+  sort_options: Array<SelectItem>;
+  sort_by: string;
 
-  protected group_options: Array<SelectItem>;
-  protected group_by: string;
+  group_options: Array<SelectItem>;
+  group_by: string;
 
   protected busy = false;
 

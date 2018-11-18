@@ -32,7 +32,7 @@ import { Comic } from '../../../../models/comic.model';
 export class ComicDetailsComponent implements OnInit {
   readonly TAB_PARAMETER = 'tab';
 
-  protected comic: Comic;
+  comic: Comic;
   protected current_tab: number;
   protected title: string;
 

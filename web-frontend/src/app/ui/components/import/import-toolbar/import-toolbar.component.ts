@@ -32,9 +32,9 @@ export class ImportToolbarComponent implements OnInit {
   @Output() selectAll = new EventEmitter<boolean>();
   @Output() import = new EventEmitter<boolean>();
 
-  protected select_options: MenuItem[];
+  select_options: MenuItem[];
 
-  protected directory: string;
+  directory: string;
 
   constructor() {
     this.select_options = [

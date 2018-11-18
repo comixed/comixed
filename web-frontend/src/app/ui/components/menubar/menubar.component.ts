@@ -56,7 +56,7 @@ export class MenubarComponent implements OnInit {
     }
   ];
 
-  protected items: MenuItem[];
+  items: MenuItem[];
 
   constructor() { }
 

@@ -52,15 +52,8 @@ import { XhrInterceptor } from './xhr.interceptor';
 import { ComicService } from './services/comic.service';
 import { MessageService } from 'primeng/api';
 import { ComicDetailsComponent } from './ui/pages/comic/comic-details/comic-details.component';
-import { PageThumbnailComponent } from './comic/page-thumbnail/page-thumbnail.component';
 import { ComicReaderComponent } from './ui/components/comics/comic-reader/comic-reader.component';
-import { SeriesFilterPipe } from './comic/series-filter.pipe';
-import { PageDetailsComponent } from './comic/page-details/page-details.component';
-import { PageSizeComponent } from './comic/page-size/page-size.component';
-import { GroupComicsComponent } from './comic/group-comics/group-comics.component';
-import { GroupByPipe } from './comic/group-by.pipe';
 import { ComicDetailsEditorComponent } from './ui/components/comics/comic-details-editor/comic-details-editor.component';
-import { IssueDetailsComponent } from './comic/issue/details/issue-details/issue-details.component';
 import { ComicOverviewComponent } from './ui/components/comics/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from './ui/components/comics/comic-story/comic-story.component';
 import { ComicCreditsComponent } from './ui/components/comics/comic-credits/comic-credits.component';
@@ -90,15 +83,8 @@ import { FileDetailsCoverComponent } from './ui/components/file-details/file-det
     BusyIndicatorComponent,
     MenubarComponent,
     ComicDetailsComponent,
-    PageThumbnailComponent,
     ComicReaderComponent,
-    SeriesFilterPipe,
-    PageDetailsComponent,
-    PageSizeComponent,
-    GroupComicsComponent,
-    GroupByPipe,
     ComicDetailsEditorComponent,
-    IssueDetailsComponent,
     ComicOverviewComponent,
     ComicStoryComponent,
     ComicCreditsComponent,

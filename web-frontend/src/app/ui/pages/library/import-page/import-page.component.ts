@@ -55,7 +55,7 @@ export class ImportPageComponent implements OnInit {
 
   protected plural = false;
   protected waiting_on_imports = false;
-  protected pending_imports = 0;
+  pending_imports = 0;
   protected any_selected = false;
   protected importing = false;
   protected show_selections_only = false;
