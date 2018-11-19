@@ -74,6 +74,7 @@ import { SelectedComicsComponent } from './ui/components/import/selected-comics/
 import { FileDetailsCoverComponent } from './ui/components/file-details/file-details-cover/file-details-cover.component';
 import { StoreModule } from '@ngrx/store';
 import { libraryReducer } from './reducers/library.reducer';
+import { libraryDisplayReducer } from './reducers/library-display.reducer';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,10 @@ import { libraryReducer } from './reducers/library.reducer';
       fullScreenBackdrop: true,
     }),
 
-    StoreModule.forRoot({ library: libraryReducer }),
+    StoreModule.forRoot({
+      library: libraryReducer,
+      library_display: libraryDisplayReducer,
+    }),
   ],
   providers: [
     AlertService,
