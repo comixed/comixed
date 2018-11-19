@@ -18,7 +18,9 @@
  */
 
 import { Library } from './models/library';
+import { LibraryDisplay } from './models/library-display';
 
 export interface AppState {
   readonly library: Library;
+  readonly library_display: LibraryDisplay;
 }
