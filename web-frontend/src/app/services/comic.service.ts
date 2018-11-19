@@ -47,31 +47,26 @@ export class ComicService {
     private user_service: UserService,
     private store: Store<AppState>,
   ) {
-    this.monitor_remote_comic_list();
-
     store.select('library').subscribe(
       (library: Library) => {
         this.library = library;
       });
   }
 
-  monitor_remote_comic_list(): void {
-    setInterval(() => {
-      if (!this.user_service.is_authenticated() || this.library.is_updating) {
-        return;
-      } else {
-        this.http.get(`${this.api_url}/comics/since/${this.library.latest_comic_update}`)
-          .subscribe((comics: Comic[]) => {
-            if ((comics || []).length > 0) {
-              this.store.dispatch(new LibraryActions.UpdateComics(comics));
-            }
-          },
-          (error: Error) => {
-            this.store.dispatch(new LibraryActions.SetUpdating(false));
-            this.alert_service.show_error_message('Failed to get the list of comics...', error);
-          });
-      }
-    }, 500);
+  fetch_remote_library_state(): void {
+    if (!this.library.is_updating) {
+      this.store.dispatch(new LibraryActions.SetUpdating(true));
+      this.http.get(`${this.api_url}/comics/since/${this.library.latest_comic_update}`)
+        .subscribe((comics: Comic[]) => {
+          if ((comics || []).length > 0) {
+            this.store.dispatch(new LibraryActions.UpdateComics(comics));
+          }
+        },
+        (error: Error) => {
+          this.store.dispatch(new LibraryActions.SetUpdating(false));
+          this.alert_service.show_error_message('Failed to get the list of comics...', error);
+        });
+    }
   }
 
   remove_comic_from_local(comic_id: number) {
