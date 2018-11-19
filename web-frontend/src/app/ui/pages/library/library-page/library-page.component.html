@@ -73,39 +73,88 @@
       [style.height]='"auto"'> </p-card>
   </div>
   <div class='ui-g-10 ui-md-10'>
-    <div>
-      <div class='ui-g'>
-        <div class='ui-g-12 ui-sm-12'>
-          <h4>{{ get_comic_title(comic) }}</h4>
-        </div>
-        <div class='ui-g-12 ui-sm-12'>
-          <p-panel
-            *ngIf='comic.description'
-            header='Description'
-            [toggleable]='true'
-            [collapsed]='true'
-            [style.width]='"100%"'>
-          <div [innerHTML]='comic.description'></div>
-          </p-panel>
+    <div class='ui-g'>
+      <div class='ui-g-12 ui-sm-12'>
+        <h2>{{ comic.title || 'No Title' }}</h2>
+      </div>
+      <div class='ui-g-3 ui-sm-3'>
+        <div class='ui-g'>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Filename</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>
+            <a [href]='get_download_link(comic)'>{{ comic.filename
+              }}</a>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Date Added</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.added_date | date
+            }}</div>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Last Read</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.last_read_date |
+            date }}</div>
         </div>
       </div>
-      <button
-        pButton
-        type='button'
-        icon='pi pi-search'
-        (click)='set_selected_comic($event, comic)'
-        label='Details'></button>
-      <a [routerLink]='[comic.id]'><button
+      <div class='ui-g-3 ui-sm-3'>
+        <div class='ui-g'>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Series</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.series ||
+            'Unknown' }}</div>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Volume</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.volume ||
+            'Unknown' }}</div>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Issue Number</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.issue_number ||
+            'Unknown' }}</div>
+        </div>
+      </div>
+      <div class='ui-g-3 ui-sm-3'>
+        <div class='ui-g'>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Cover Date</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.cover_date | date
+            }}</div>
+        </div>
+      </div>
+      <div class='ui-g-12 ui-sm-12'>
+        <p-panel
+          *ngIf='comic.description'
+          header='Description'
+          [toggleable]='true'
+          [collapsed]='true'
+          [style.width]='"100%"'>
+        <div [innerHTML]='comic.description'></div>
+        </p-panel>
+      </div>
+      <div class='ui-g-12 ui-sm-12'>
+        <button
           pButton
           type='button'
-          icon='pi pi-folder-open'
-          label='Open'></button></a>
-      <button
-        pButton
-        type='button'
-        icon='pi pi-trash'
-        (click)='delete_comic(comic)'
-        label='Delete'></button>
+          icon='pi pi-search'
+          (click)='set_selected_comic($event, comic)'
+          label='Details'></button>
+        <a [routerLink]='[comic.id]'><button
+            pButton
+            type='button'
+            icon='pi pi-folder-open'
+            label='Open'></button></a>
+        <button
+          pButton
+          type='button'
+          icon='pi pi-trash'
+          (click)='delete_comic(comic)'
+          label='Delete'></button>
+      </div>
     </div>
   </div>
 </div>

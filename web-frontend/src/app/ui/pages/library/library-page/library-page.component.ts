@@ -128,10 +128,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.show_dialog = false;
   }
 
-  get_comic_title(comic: Comic): string {
-    return `${comic.series ? comic.series : 'Unknown Series'} ` +
-      `(${comic.volume ? 'v' + comic.volume : '???'}) ` +
-      `${comic.issue_number ? '#' + comic.issue_number : ''}`;
+  get_download_link(comic: Comic): string {
+    return this.comic_service.get_download_link_for_comic(comic.id);
   }
 
   get_cover_url(comic: Comic): string {
