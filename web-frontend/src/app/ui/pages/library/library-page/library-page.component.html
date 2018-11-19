@@ -1,15 +1,16 @@
 <p-tabView
-  [activeIndex]='current_tab'
+  *ngIf='library_display'
+  [activeIndex]='library_display.current_tab'
   (onChange)='set_current_tab($event.index)'> <p-tabPanel
   [disabled]='!comics'
   header='Covers'> <p-dataView
   #comicCoverView
   filterBy='series'
   [value]='comics'
-  [rows]='rows'
+  [rows]='library_display.rows'
   paginator='true'
   paginatorPosition='both'
-  [sortField]='sort_by'
+  [sortField]='library_display.sort'
   emptyMessage='No comics found.'> <p-header>
 <div class='ui-helper-clearfix'>
   <div class='ui-g'>
@@ -17,7 +18,7 @@
       Sort by:
       <p-dropdown
         [options]='sort_options'
-        [(ngModel)]='sort_by'
+        [(ngModel)]='library_display.sort'
         (onChange)='set_sort_order($event.value)'></p-dropdown>
     </div>
     <div class='ui-g-1 ui-md-1'>
@@ -31,7 +32,7 @@
       Show:
       <p-dropdown
         [options]='rows_options'
-        [(ngModel)]='rows'
+        [(ngModel)]='library_display.rows'
         (onChange)='set_rows($event.value)'></p-dropdown>
     </div>
     <div class='ui-g-3 ui-md-3'>
@@ -43,9 +44,9 @@
         (keyup)='comicCoverView.filter($event.target.value)'>
     </div>
     <div class='ui-g-5 ui-md-5'>
-      Cover size: {{ cover_size }}px
+      Cover size: {{ library_display.cover_size }}px
       <p-slider
-        [(ngModel)]='cover_size'
+        [(ngModel)]='library_display.cover_size'
         [min]='200'
         [max]='640'
         [animate]='true'
@@ -115,7 +116,7 @@
   <p-card> <img
     [src]='get_cover_url(comic)'
     width='auto'
-    [style.height]='"" + cover_size + "px"'> <p-footer>
+    [style.height]='"" + library_display.cover_size + "px"'> <p-footer>
   <button
     pButton
     type='button'
@@ -133,15 +134,16 @@
   [value]='comics'
   paginator='true'
   paginatorPosition='both'
-  [rows]='rows'
+  [rows]='library_display.rows'
   [globalFilterFields]='["series"]'
-  [sortField]='sort_by'> <ng-template pTemplate='caption'>
+  [sortField]='library_display.sort'> <ng-template
+  pTemplate='caption'>
 <div class='ui-g'>
   <div class='ui-g-1 ui-md-1'>
     Sort by:
     <p-dropdown
       [options]='sort_options'
-      [(ngModel)]='sort_by'
+      [(ngModel)]='library_display.sort'
       (onChange)='set_sort_order($event.value)'></p-dropdown>
   </div>
   <div class='ui-g-1 ui-md-1'>
@@ -155,7 +157,7 @@
     Show:
     <p-dropdown
       [options]='rows_options'
-      [(ngModel)]='rows'
+      [(ngModel)]='library_display.rows'
       (onChange)='set_rows($event.value)'></p-dropdown>
   </div>
   <div class='ui-g-3 ui-md-3'>

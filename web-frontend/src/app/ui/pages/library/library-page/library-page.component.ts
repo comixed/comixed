@@ -23,7 +23,9 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import { Library } from '../../../../models/library';
+import { LibraryDisplay } from '../../../../models/library-display';
 import * as LibraryActions from '../../../../actions/library.actions';
+import * as LibraryDisplayActions from '../../../../actions/library-display.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Comic } from '../../../../models/comic.model';
@@ -47,18 +49,17 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   private library_subscription: Subscription;
   private library: Library;
 
+  private library_display$: Observable<LibraryDisplay>;
+  private library_display_subscription: Subscription;
+
+  library_display: LibraryDisplay;
+
   comics: Array<Comic>;
   selected_comic: Comic;
   protected show_dialog = false;
 
   rows_options: Array<SelectItem>;
-  rows: number;
-  current_tab: number;
-  cover_size: number;
-
   sort_options: Array<SelectItem>;
-  sort_by: string;
-
   group_options: Array<SelectItem>;
   group_by: string;
 
@@ -72,6 +73,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
   ) {
     this.library$ = store.select('library');
+    this.library_display$ = store.select('library_display');
     this.sort_options = [
       { label: 'Series', value: 'series' },
       { label: 'Date Added', value: 'added_date' },
@@ -97,15 +99,18 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       (library: Library) => {
         this.comics = library.comics;
       });
+    this.library_display_subscription = this.library_display$.subscribe(
+      (library_display: LibraryDisplay) => {
+        this.library_display = library_display;
+      });
     this.activated_route.queryParams.subscribe(params => {
-      this.current_tab = this.load_parameter(params[this.TAB_PARAMETER],
-        parseInt(this.user_service.get_user_preference('library_tab', '0'), 10));
-      this.rows = this.load_parameter(params[this.ROWS_PARAMETER],
-        parseInt(this.user_service.get_user_preference('library_rows', '10'), 10));
-      this.sort_by = params[this.SORT_PARAMETER] || this.user_service.get_user_preference('library_sort', 'series');
-      this.cover_size = this.load_parameter(params[this.COVER_PARAMETER],
-        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10));
-      this.group_by = params[this.GROUP_BY_PARAMETER] || 'none';
+      this.set_current_tab(this.load_parameter(params[this.TAB_PARAMETER],
+        parseInt(this.user_service.get_user_preference('library_tab', '0'), 10)));
+      this.set_sort_order(params[this.SORT_PARAMETER] || this.user_service.get_user_preference('library_sort', 'series'));
+      this.set_rows(this.load_parameter(params[this.ROWS_PARAMETER],
+        parseInt(this.user_service.get_user_preference('library_rows', '10'), 10)));
+      this.set_cover_size(this.load_parameter(params[this.COVER_PARAMETER],
+        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10)));
     });
   }
 
@@ -134,15 +139,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   set_current_tab(current_tab: number): void {
-    this.current_tab = current_tab;
-    this.update_params(this.TAB_PARAMETER, `${this.current_tab}`);
-    this.user_service.set_user_preference('library_tab', `${this.current_tab}`);
+    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewCurrentTab(current_tab));
+    this.update_params(this.TAB_PARAMETER, `${current_tab}`);
   }
 
   set_sort_order(sort_order: string): void {
-    this.sort_by = sort_order;
-    this.update_params(this.SORT_PARAMETER, `${this.sort_by}`);
-    this.user_service.set_user_preference('library_sort', this.sort_by);
+    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewSort(sort_order));
+    this.update_params(this.SORT_PARAMETER, sort_order);
   }
 
   set_group_by(group_by: string): void {
@@ -150,15 +153,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.update_params(this.GROUP_BY_PARAMETER, this.group_by);
   }
 
-  set_rows(rows: string): void {
-    this.rows = parseInt(rows, 10);
-    this.update_params(this.ROWS_PARAMETER, `${this.rows}`);
-    this.user_service.set_user_preference('library_rows', `${this.rows}`);
+  set_rows(rows: number): void {
+    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewRows(rows));
+    this.update_params(this.ROWS_PARAMETER, `${rows}`);
   }
 
   set_cover_size(cover_size: number): void {
-    this.update_params(this.COVER_PARAMETER, `${this.cover_size}`);
-    this.user_service.set_user_preference('cover_size', `${this.cover_size}`);
+    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewCoverSize(cover_size));
+    this.update_params(this.COVER_PARAMETER, `${cover_size}`);
   }
 
   delete_comic(comic: Comic): void {
