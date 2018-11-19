@@ -17,14 +17,17 @@
  * org.comixed;
  */
 
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { AppState } from './app.state';
 import { Library } from './models/library';
+import * as LibraryActions from './actions/library.actions';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { UserService } from './services/user.service';
+import { ComicService } from './services/comic.service';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
 
 @Component({
@@ -32,19 +35,38 @@ import { MenubarComponent } from './ui/components/menubar/menubar.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   title = 'ComiXed';
   alert_messages = [];
   comic_count = 0;
   read_count = 0;
 
+  library$: Observable<Library>;
+  library_subscription: Subscription;
   library: Library;
 
   constructor(
     private user_service: UserService,
+    private comic_service: ComicService,
     private router: Router,
     private store: Store<AppState>,
   ) {
+    this.library$ = store.select('library');
+  }
+
+  ngOnInit() {
+    this.library_subscription = this.library$.subscribe(
+      (library: Library) => {
+        this.library = library;
+        // if we're not fetching comics now then fire off a call
+        if (!this.library.is_updating) {
+          this.comic_service.fetch_remote_library_state();
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.library_subscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
