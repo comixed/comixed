@@ -76,6 +76,7 @@ import { StoreModule } from '@ngrx/store';
 import { libraryReducer } from './reducers/library.reducer';
 import { libraryDisplayReducer } from './reducers/library-display.reducer';
 import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
+import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { LibraryCoversComponent } from './ui/components/library/library-covers/l
     SelectedComicsComponent,
     FileDetailsCoverComponent,
     LibraryCoversComponent,
+    LibraryDetailsComponent,
   ],
   imports: [
     BrowserModule,

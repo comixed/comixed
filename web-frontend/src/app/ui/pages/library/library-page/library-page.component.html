@@ -2,7 +2,7 @@
   *ngIf='library_display'
   [activeIndex]='library_display.current_tab'
   (onChange)='set_current_tab($event.index)'> <p-tabPanel
-  [disabled]='!comics'
+  [disabled]='!library'
   header='Covers'> <app-library-covers
   *ngIf='library'
   [library]='library'
@@ -11,86 +11,19 @@
   [rows_options]='rows_options'
   (sortOrder)='set_sort_order($event)'
   (rows)='set_rows($event)'
-  (coverSize)='set_cover_size($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
-  [disabled]='!comics'
-  header='Details'> <p-table
-  #comicDetailView
-  [value]='comics'
-  paginator='true'
-  paginatorPosition='both'
-  [rows]='library_display.rows'
-  [globalFilterFields]='["series"]'
-  [sortField]='library_display.sort'> <ng-template
-  pTemplate='caption'>
-<div class='ui-g'>
-  <div class='ui-g-1 ui-md-1'>
-    Sort by:
-    <p-dropdown
-      [options]='sort_options'
-      [(ngModel)]='library_display.sort'
-      (onChange)='set_sort_order($event.value)'></p-dropdown>
-  </div>
-  <div class='ui-g-1 ui-md-1'>
-    Group by:
-    <p-dropdown
-      [options]='group_options'
-      [(ngModel)]='group_by'
-      (onChange)='set_group_by($event.value)'></p-dropdown>
-  </div>
-  <div class='ui-g-1 ui-md-1'>
-    Show:
-    <p-dropdown
-      [options]='rows_options'
-      [(ngModel)]='library_display.rows'
-      (onChange)='set_rows($event.value)'></p-dropdown>
-  </div>
-  <div class='ui-g-3 ui-md-3'>
-    Search comic names: <input
-      type='search'
-      pInputText
-      placeholder='Search by series name'
-      [style.width]='"100%"'
-      (keyup)='comicDetailView.filterGlobal($event.target.value, "contains")'>
-  </div>
-</div>
-</ng-template> <ng-template pTemplate='header'>
-<tr>
-  <th>Cover</th>
-  <th>Series</th>
-  <th>Volume</th>
-  <th>Issue #</th>
-  <th># Pages</th>
-  <th>Published</th>
-  <th>Date Added</th>
-  <th></th>
-</tr>
-</ng-template> <ng-template
-  pTemplate='body'
-  let-comic>
-<tr>
-  <td><img
-    [style.height]='"auto"'
-    [style.width]='"100%"'
-    [src]='get_cover_url(comic)'>
-  <td>{{ comic.series }}</td>
-  <td>{{ comic.volume }}</td>
-  <td>{{ comic.issue_number }}</td>
-  <td>{{ comic.page_count || 0}}</td>
-  <td>{{ comic.cover_date | date }}</td>
-  <td>{{ comic.added_date | date }}</td>
-  <td><a [routerLink]='[comic.id]'>
-      <button
-        pButton
-        type='button'
-        icon='pi pi-folder-open'></button>
-  </a>
-    <button
-      pButton
-      type='button'
-      icon='pi pi-search'
-      (click)='set_selected_comic($event, comic)'></button></td>
-</tr>
-</ng-template> </p-table></p-tabPanel></p-tabView>
+  (coverSize)='set_cover_size($event)'
+  (onSelection)='set_selected_comic($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
+  [disabled]='!library'
+  header='Details'> <app-library-details
+  *ngIf='library'
+  [library]='library'
+  [library_display]='library_display'
+  [sort_options]='sort_options'
+  [rows_options]='rows_options'
+  (sortOrder)='set_sort_order($event)'
+  (rows)='set_rows($event)'
+  (coverSize)='set_cover_size($event)'
+  (onSelection)='set_selected_comic($event)'></app-library-details></p-tabPanel></p-tabView>
 <!-- details dialog -->
 <p-dialog
   *ngIf='selected_comic'
