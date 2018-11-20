@@ -1,0 +1,167 @@
+<p-dataView
+  #comicCoverView
+  filterBy='series'
+  [value]='library.comics'
+  [rows]='library_display.rows'
+  paginator='true'
+  paginatorPosition='both'
+  [sortField]='library_display.sort'
+  emptyMessage='No comics found.'> <p-header>
+<div class='ui-helper-clearfix'>
+  <div class='ui-g'>
+    <div class='ui-g-1 ui-md-1'>
+      Sort by:
+      <p-dropdown
+        [options]='sort_options'
+        [(ngModel)]='library_display.sort'
+        (onChange)='set_sort_order($event.value)'></p-dropdown>
+    </div>
+    <div class='ui-g-1 ui-md-1'>
+      Show:
+      <p-dropdown
+        [options]='rows_options'
+        [(ngModel)]='library_display.rows'
+        (onChange)='set_rows($event.value)'></p-dropdown>
+    </div>
+    <div class='ui-g-3 ui-md-3'>
+      Search comic names: <input
+        type='search'
+        pInputText
+        placeholder='Search by series name'
+        [style.width]='"100%"'
+        (keyup)='comicCoverView.filter($event.target.value)'>
+    </div>
+    <div class='ui-g-6 ui-md-6'>
+      Cover size: {{ library_display.cover_size }}px
+      <p-slider
+        [(ngModel)]='library_display.cover_size'
+        [min]='200'
+        [max]='640'
+        [animate]='true'
+        pTooltip='The cover size only applies to the grid view...'
+        tooltipPosition='right'
+        (onChange)='set_cover_size($event.value)'></p-slider>
+    </div>
+    <div
+      class='ui-g-1 ui-md-1'
+      style='text-align: right'>
+      <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+    </div>
+  </div>
+</div>
+</p-header> <ng-template
+  let-comic
+  pTemplate='listItem'>
+<div class='ui-g'>
+  <div class='ui-g-2 ui-md-2'>
+    <p-card> <img
+      [src]='get_cover_url(comic)'
+      width='auto'
+      [style.width]='"100%"'
+      [style.height]='"auto"'> </p-card>
+  </div>
+  <div class='ui-g-10 ui-md-10'>
+    <div class='ui-g'>
+      <div class='ui-g-12 ui-sm-12'>
+        <h2>{{ comic.title || 'No Title' }}</h2>
+      </div>
+      <div class='ui-g-3 ui-sm-3'>
+        <div class='ui-g'>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Filename</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>
+            <a [href]='get_download_link(comic)'>{{ comic.filename
+              }}</a>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Date Added</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.added_date | date
+            }}</div>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Last Read</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.last_read_date |
+            date }}</div>
+        </div>
+      </div>
+      <div class='ui-g-3 ui-sm-3'>
+        <div class='ui-g'>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Series</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.series ||
+            'Unknown' }}</div>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Volume</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.volume ||
+            'Unknown' }}</div>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Issue Number</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.issue_number ||
+            'Unknown' }}</div>
+        </div>
+      </div>
+      <div class='ui-g-3 ui-sm-3'>
+        <div class='ui-g'>
+          <div class='ui-g-12 ui-sm-12'>
+            <b>Cover Date</b>
+          </div>
+          <div class='ui-g-12 ui-sm-12'>{{ comic.cover_date | date
+            }}</div>
+        </div>
+      </div>
+      <div class='ui-g-12 ui-sm-12'>
+        <p-panel
+          *ngIf='comic.description'
+          header='Description'
+          [toggleable]='true'
+          [collapsed]='true'
+          [style.width]='"100%"'>
+        <div [innerHTML]='comic.description'></div>
+        </p-panel>
+      </div>
+      <div class='ui-g-12 ui-sm-12'>
+        <button
+          pButton
+          type='button'
+          icon='pi pi-search'
+          (click)='set_selected_comic($event, comic)'
+          label='Details'></button>
+        <a [routerLink]='[comic.id]'><button
+            pButton
+            type='button'
+            icon='pi pi-folder-open'
+            label='Open'></button></a>
+        <button
+          pButton
+          type='button'
+          icon='pi pi-trash'
+          (click)='delete_comic(comic)'
+          label='Delete'></button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template> <ng-template
+  let-comic
+  pTemplate='gridItem'>
+<div>
+  <p-card> <img
+    [src]='get_cover_url(comic)'
+    width='auto'
+    [style.height]='"" + library_display.cover_size + "px"'> <p-footer>
+  <button
+    pButton
+    type='button'
+    icon='pi pi-search'
+    (click)='set_selected_comic($event, comic)'></button>
+  <a [routerLink]='[comic.id]'><button
+      pButton
+      type='button'
+      icon='pi pi-folder-open'></button></a> </p-footer></p-card>
+</div>
+</ng-template> </p-dataView>

@@ -47,7 +47,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   private library$: Observable<Library>;
   private library_subscription: Subscription;
-  private library: Library;
+  library: Library;
 
   private library_display$: Observable<LibraryDisplay>;
   private library_display_subscription: Subscription;
@@ -97,6 +97,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.library_subscription = this.library$.subscribe(
       (library: Library) => {
+        this.library = library;
         this.comics = library.comics;
       });
     this.library_display_subscription = this.library_display$.subscribe(
