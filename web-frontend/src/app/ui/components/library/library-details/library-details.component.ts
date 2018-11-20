@@ -37,7 +37,7 @@ export class LibraryDetailsComponent implements OnInit {
   @Output() sortOrder = new EventEmitter<string>();
   @Output() rows = new EventEmitter<number>();
   @Output() coverSize = new EventEmitter<number>();
-  @Output() selection = new EventEmitter<Comic>();
+  @Output() comicSelected = new EventEmitter<Comic>();
 
   constructor(
     private comic_service: ComicService,
@@ -66,7 +66,8 @@ export class LibraryDetailsComponent implements OnInit {
     return this.comic_service.get_download_link_for_comic(comic.id);
   }
 
-  set_selected_comic(comic: Comic): void {
-    this.selection.next(comic);
+  set_selected_comic(event: Event, comic: Comic): void {
+    this.comicSelected.next(comic);
+    event.preventDefault();
   }
 }

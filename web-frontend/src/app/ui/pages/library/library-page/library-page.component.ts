@@ -119,10 +119,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.library_subscription.unsubscribe();
   }
 
-  set_selected_comic(event: Event, comic: Comic): void {
+  set_selected_comic(comic: Comic): void {
     this.selected_comic = comic;
     this.show_dialog = true;
-    event.preventDefault();
   }
 
   hide_dialog(): void {
@@ -164,6 +163,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   delete_comic(comic: Comic): void {
     this.comic_service.remove_comic_from_library(comic);
+  }
+
+  get_comic_title(comic: Comic): string {
+    return `${comic.series || 'Unknown'} v${comic.volume || '????'} #${comic.issue_number || '??'}`;
   }
 
   private update_params(name: string, value: string): void {

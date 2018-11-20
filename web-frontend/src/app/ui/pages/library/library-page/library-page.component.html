@@ -12,7 +12,8 @@
   (sortOrder)='set_sort_order($event)'
   (rows)='set_rows($event)'
   (coverSize)='set_cover_size($event)'
-  (onSelection)='set_selected_comic($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
+  (comicSelected)='set_selected_comic($event)'></app-library-covers>
+</p-tabPanel> <p-tabPanel
   [disabled]='!library'
   header='Details'> <app-library-details
   *ngIf='library'
@@ -23,7 +24,7 @@
   (sortOrder)='set_sort_order($event)'
   (rows)='set_rows($event)'
   (coverSize)='set_cover_size($event)'
-  (onSelection)='set_selected_comic($event)'></app-library-details></p-tabPanel></p-tabView>
+  (comicSelected)='set_selected_comic($event)'></app-library-details></p-tabPanel></p-tabView>
 <!-- details dialog -->
 <p-dialog
   *ngIf='selected_comic'
