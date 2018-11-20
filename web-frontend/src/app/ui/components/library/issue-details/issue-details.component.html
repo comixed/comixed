@@ -1,0 +1,41 @@
+<div
+  class='ui-g'
+  *ngIf='comic'>
+  <div class='ui-g-2 ui-sm-2'>
+    <img
+      [src]='get_cover_url(comic)'
+      [style.height]='"auto"'
+      [style.width]='"100%"'>
+  </div>
+  <div
+    *ngIf='comic.description'
+    class='ui-g-10 ui-sm-10'>
+    <div class='ui-g'>
+      <div class='ui-g-12 ui-sm-12'>
+        <p-panel
+          header='Description'
+          [toggleable]='true'>
+        <div
+          [innerHTML]='comic.description || "There is no description for this comic."'></div>
+        </p-panel>
+      </div>
+    </div>
+    <div
+      *ngIf='comic.credits?.length'
+      class='ui-g-12 ui-sm-12'>
+      <p-table [value]='comic.credits'> <ng-template
+        pTemplate='header'>
+      <tr>
+        <th>Name</th>
+        <th>Role</th>
+      </tr>
+      </ng-template> <ng-template
+        pTemplate='body'
+        let-credit>
+      <tr>
+        <td>{{ credit.name }}</td>
+        <td>{{ credit.role }}</td>
+      </ng-template> </p-table>
+    </div>
+  </div>
+</div>

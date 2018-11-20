@@ -77,6 +77,7 @@ import { libraryReducer } from './reducers/library.reducer';
 import { libraryDisplayReducer } from './reducers/library-display.reducer';
 import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
 import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
+import { IssueDetailsComponent } from './ui/components/library/issue-details/issue-details.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { LibraryDetailsComponent } from './ui/components/library/library-details
     FileDetailsCoverComponent,
     LibraryCoversComponent,
     LibraryDetailsComponent,
+    IssueDetailsComponent,
   ],
   imports: [
     BrowserModule,

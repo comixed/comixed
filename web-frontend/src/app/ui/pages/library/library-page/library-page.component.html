@@ -12,8 +12,7 @@
   (sortOrder)='set_sort_order($event)'
   (rows)='set_rows($event)'
   (coverSize)='set_cover_size($event)'
-  (comicSelected)='set_selected_comic($event)'></app-library-covers>
-</p-tabPanel> <p-tabPanel
+  (comicSelected)='set_selected_comic($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
   [disabled]='!library'
   header='Details'> <app-library-details
   *ngIf='library'
@@ -34,46 +33,5 @@
   [modal]='true'
   [blockScroll]='true'
   [resizable]='false'
-  (onAfterHide)='hide_dialog()'>
-<div
-  class='ui-g'
-  *ngIf='selected_comic'>
-  <div class='ui-g-2 ui-sm-2'>
-    <img
-      [src]='get_cover_url(selected_comic)'
-      [style.height]='"auto"'
-      [style.width]='"100%"'>
-  </div>
-  <div
-    *ngIf='selected_comic.description'
-    class='ui-g-10 ui-sm-10'>
-    <div class='ui-g'>
-      <div class='ui-g-12 ui-sm-12'>
-        <p-panel
-          header='Description'
-          [toggleable]='true'>
-        <div
-          [innerHTML]='selected_comic.description || "There is no description for this comic."'></div>
-        </p-panel>
-      </div>
-    </div>
-    <div
-      *ngIf='selected_comic.credits?.length'
-      class='ui-g-12 ui-sm-12'>
-      <p-table [value]='selected_comic.credits'> <ng-template
-        pTemplate='header'>
-      <tr>
-        <th>Name</th>
-        <th>Role</th>
-      </tr>
-      </ng-template> <ng-template
-        pTemplate='body'
-        let-credit>
-      <tr>
-        <td>{{ credit.name }}</td>
-        <td>{{ credit.role }}</td>
-      </ng-template> </p-table>
-    </div>
-  </div>
-</div>
-</p-dialog>
+  (onAfterHide)='hide_dialog()'> <app-issue-details
+  [comic]='selected_comic'></app-issue-details> </p-dialog>
