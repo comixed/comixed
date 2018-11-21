@@ -21,8 +21,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { AppState } from '../app.state';
-import { Library } from '../models/library';
+import { AppState } from '../../../app.state';
+import { Library } from '../../../models/library';
 
 @Component({
   selector: 'app-main-page',
