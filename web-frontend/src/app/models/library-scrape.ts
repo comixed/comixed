@@ -17,12 +17,18 @@
  * org.comixed;
  */
 
-import { Library } from './models/library';
-import { LibraryDisplay } from './models/library-display';
-import { LibraryScrape } from './models/library-scrape';
+import { Comic } from './comic.model';
+import { Volume } from './volume.model';
+import { ComicIssue } from './comic-issue.model';
 
-export interface AppState {
-  readonly library: Library;
-  readonly library_display: LibraryDisplay;
-  readonly library_scraping: LibraryScrape;
+export interface LibraryScrape {
+  busy: boolean;
+  api_key: string;
+  comic: Comic;
+  series: string;
+  volume: string;
+  issue_number: string;
+  volumes: Array<Volume>;
+  current_volume: Volume;
+  current_issue: ComicIssue;
 }

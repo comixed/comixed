@@ -76,6 +76,7 @@ import { FileDetailsCoverComponent } from './ui/components/file-details/file-det
 import { StoreModule } from '@ngrx/store';
 import { libraryReducer } from './reducers/library.reducer';
 import { libraryDisplayReducer } from './reducers/library-display.reducer';
+import { libraryScrapingReducer } from './reducers/library-scraping.reducer';
 import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
 import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
 import { IssueDetailsComponent } from './ui/components/library/issue-details/issue-details.component';
@@ -155,6 +156,7 @@ import { IssueDetailsComponent } from './ui/components/library/issue-details/iss
     StoreModule.forRoot({
       library: libraryReducer,
       library_display: libraryDisplayReducer,
+      library_scraping: libraryScrapingReducer,
     }),
   ],
   providers: [
