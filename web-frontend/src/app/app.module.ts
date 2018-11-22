@@ -80,6 +80,8 @@ import { libraryScrapingReducer } from './reducers/library-scraping.reducer';
 import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
 import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
 import { IssueDetailsComponent } from './ui/components/library/issue-details/issue-details.component';
+import { EffectsModule } from '@ngrx/effects';
+import { LibraryScrapeEffects } from './effects/library-scrape.effects';
 
 @NgModule({
   declarations: [
@@ -158,6 +160,7 @@ import { IssueDetailsComponent } from './ui/components/library/issue-details/iss
       library_display: libraryDisplayReducer,
       library_scraping: libraryScrapingReducer,
     }),
+    EffectsModule.forRoot([LibraryScrapeEffects]),
   ],
   providers: [
     AlertService,

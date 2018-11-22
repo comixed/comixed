@@ -17,8 +17,10 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { AppState } from '../../../../app.state';
 import * as LibraryActions from '../../../../actions/library.actions';
 import * as LibraryScrapingActions from '../../../../actions/library-scraping.actions';
@@ -28,23 +30,21 @@ import { ComicService } from '../../../../services/comic.service';
 import { Comic } from '../../../../models/comic.model';
 import { Volume } from '../../../../models/volume.model';
 import { ComicIssue } from '../../../../models/comic-issue.model';
+import { LibraryScrape } from '../../../../models/library-scrape';
 
 @Component({
   selector: 'app-comic-details-editor',
   templateUrl: './comic-details-editor.component.html',
   styleUrls: ['./comic-details-editor.component.css']
 })
-export class ComicDetailsEditorComponent implements OnInit {
+export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   @Input() comic: Comic;
   @Output() update: EventEmitter<Comic> = new EventEmitter();
-  protected api_key: string;
-  protected series: string;
-  protected volume: string;
-  protected issue_number: string;
-  protected volumes: Array<Volume>;
-  protected issues: Map<string, ComicIssue> = new Map<string, ComicIssue>();
-  protected current_volume: Volume;
-  protected current_issue: ComicIssue = null;
+
+  library_scrape$: Observable<LibraryScrape>;
+  library_scrape_subscription: Subscription;
+  library_scrape: LibraryScrape;
+
   protected volume_selection_banner: string;
   protected volume_selection_title = '';
   protected volume_selection_subtitle = '';
@@ -55,144 +55,93 @@ export class ComicDetailsEditorComponent implements OnInit {
     private user_service: UserService,
     private comic_service: ComicService,
     private store: Store<AppState>,
-  ) { }
+  ) {
+    this.library_scrape$ = store.select('library_scraping');
+  }
 
   ngOnInit() {
-    this.api_key = this.user_service.get_user_preference('comic_vine_api_key', '');
-    this.series = this.comic.series;
-    this.volume = this.comic.volume;
-    this.issue_number = this.comic.issue_number;
+    this.library_scrape_subscription = this.library_scrape$.subscribe(
+      (library_scrape: LibraryScrape) => {
+        this.library_scrape = library_scrape;
+      });
+
+    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetup({
+      api_key: this.user_service.get_user_preference('comic_vine_api_key', ''),
+      comic: this.comic,
+      series: this.comic.series,
+      volume: this.comic.volume,
+      issue_number: this.comic.issue_number,
+    }));
+  }
+
+  ngOnDestroy() {
+    this.library_scrape_subscription.unsubscribe();
   }
 
   fetch_candidates(): void {
-    // first cleanup any existing selection data
-    this.volumes = [];
-    this.current_issue = null;
-    this.current_volume = null;
-    this.issues.clear();
-
-    const that = this;
-    this.alert_service.show_busy_message('Fetching Matching Volumes...');
-    this.comic_service.fetch_candidates_for(this.api_key.trim(), this.series, this.volume, this.issue_number).subscribe(
-      (volumes: Array<Volume>) => {
-        that.volumes = volumes || [];
-        if (that.volumes.length > 0) {
-          let initial_selection = this.volumes.find((volume: Volume) => {
-            return (volume.start_year === that.volume) && (volume.name === that.series);
-          });
-          if (!initial_selection) {
-            initial_selection = that.volumes[0];
-          }
-          that.set_current_volume(initial_selection);
-        } else {
-          that.alert_service.show_info_message('No Matching Comic Series Found...');
-        }
-        if (that.volumes.length === 0) {
-          that.alert_service.show_busy_message('');
-        }
-      });
+    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingFetchVolumes({
+      api_key: this.library_scrape.api_key,
+      series: this.library_scrape.series,
+      volume: this.library_scrape.volume,
+      issue_number: this.library_scrape.issue_number,
+    }));
   }
 
-  get_volume_option_label(volume: Volume): string {
-    return `${volume.name} v${volume.start_year} (${volume.issue_count} Issue${volume.issue_count !== 1 ? 's' : ''})`;
-  }
-
-  get_index_for_volume(volume: Volume): number {
-    return this.volumes.findIndex((entry: Volume) => {
-      return entry.id === volume.id;
-    });
-  }
-
-  set_current_volume_by_id(volume_id: string): void {
-    const index = this.volumes.findIndex((volume: Volume) => {
-      return volume.id === parseInt(volume_id, 10);
-    });
-    this.set_current_volume(this.volumes[0]);
+  cancel_volume_selection(): void {
+    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetup({
+      api_key: this.library_scrape.api_key,
+      comic: this.library_scrape.comic,
+      series: this.library_scrape.series,
+      volume: this.library_scrape.volume,
+      issue_number: this.library_scrape.issue_number,
+    }));
   }
 
   set_current_volume(volume: Volume): void {
-    if (volume) {
-      this.current_volume = volume;
-      if (this.issues.has(`${this.current_volume.id}`)) {
-        this.load_current_issue_details();
-      } else {
-        this.load_current_issue();
-      }
-    } else {
-      this.current_issue = null;
-      this.current_volume = null;
-      this.alert_service.show_busy_message('');
-    }
+    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetCurrentVolume({
+      api_key: this.library_scrape.api_key,
+      volume: volume,
+      issue_number: this.library_scrape.issue_number,
+    }));
   }
 
   select_current_issue(): void {
-    this.alert_service.show_busy_message('Updating Comic Details. Please Wait...');
-    const that = this;
-
-    this.comic_service.scrape_and_save_comic_details(this.api_key.trim(), this.comic.id, this.current_issue.id).subscribe(
-      (comic: Comic) => {
-        this.store.dispatch(new LibraryActions.UpdateComic(comic));
-        that.alert_service.show_busy_message('');
-        that.update.next(comic);
-        this.alert_service.show_info_message('ComicVine details scraped and saved...');
-      });
-  }
-
-  load_current_issue(): void {
-    const that = this;
-    this.alert_service.show_busy_message('Retrieving Details For Comic...');
-    this.comic_service.scrape_comic_details_for(this.api_key.trim(), this.current_volume.id, this.issue_number).subscribe(
-      (issue: ComicIssue) => {
-        if (issue === null) {
-          that.current_issue = null;
-          that.alert_service.show_busy_message('');
-          that.alert_service.show_info_message('No matching issue found. Please try another series...');
-        } else {
-          that.issues.set(`${that.current_volume.id}`, issue);
-          that.load_current_issue_details();
-          that.alert_service.show_busy_message('');
-        }
-      });
-  }
-
-  load_current_issue_details(): void {
-    this.current_issue = this.issues.get(`${this.current_volume.id}`);
-    this.volume_selection_title = `${this.current_issue.volume_name} #${this.current_issue.issue_number}`;
-    this.volume_selection_subtitle = `Cover Date: ${this.date_formatter.format(new Date(this.current_issue.cover_date))}`;
-  }
-
-  show_candidates(): boolean {
-    return (this.volumes && this.volumes.length > 0);
-  }
-
-  get_current_issue_image_url(): string {
-    if (this.current_issue === null) {
-      return '';
-    }
-    return `${this.current_issue.cover_url}?api_key=${this.api_key.trim()}`;
+    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingScrapeMetadata({
+      api_key: this.library_scrape.api_key,
+      comic: this.library_scrape.comic,
+      issue_id: this.library_scrape.current_issue.id,
+    }));
   }
 
   save_changes(): void {
-    this.alert_service.show_busy_message('Saving Changes...');
-    this.comic_service.save_changes_to_comic(this.comic.id, this.series, this.volume, this.issue_number).subscribe(
-      () => {
-        this.alert_service.show_busy_message('');
-        this.comic.series = this.series;
-        this.comic.volume = this.volume;
-        this.comic.issue_number = this.issue_number;
-        this.update.next();
-        this.alert_service.show_info_message('Comic details updated...');
-      }
-    );
+    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSaveLocalChanges({
+      api_key: this.library_scrape.api_key,
+      comic: this.library_scrape.comic,
+      series: this.library_scrape.series,
+      volume: this.library_scrape.volume,
+      issue_number: this.library_scrape.issue_number,
+    }));
+  }
+
+  load_current_issue_details(): void {
+    this.volume_selection_title = `${this.library_scrape.current_issue.volume_name} #${this.library_scrape.current_issue.issue_number}`;
+    this.volume_selection_subtitle = `Cover Date: ${this.date_formatter.format(new Date(this.library_scrape.current_issue.cover_date))}`;
+  }
+
+  get_current_issue_image_url(): string {
+    if (this.library_scrape.current_issue === null) {
+      return '';
+    }
+    return `${this.library_scrape.current_issue.cover_url}?api_key=${this.library_scrape.api_key.trim()}`;
   }
 
   save_api_key(): void {
-    this.api_key = this.api_key.trim();
-    this.user_service.set_user_preference('comic_vine_api_key', this.api_key);
+    this.library_scrape.api_key = this.library_scrape.api_key.trim();
+    this.user_service.set_user_preference('comic_vine_api_key', this.library_scrape.api_key);
   }
 
   is_api_key_valid(): boolean {
-    return (this.api_key || '').trim().length > 0;
+    return (this.library_scrape.api_key || '').trim().length > 0;
   }
 
   is_good_match(volume: Volume): boolean {
@@ -208,9 +157,5 @@ export class ComicDetailsEditorComponent implements OnInit {
       (this.comic.volume === volume.start_year) &&
       (this.comic.series === volume.name)
     );
-  }
-
-  cancel_volume_selection(): void {
-    this.volumes = null;
   }
 }

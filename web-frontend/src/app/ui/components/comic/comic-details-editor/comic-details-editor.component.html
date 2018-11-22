@@ -1,5 +1,11 @@
+<p-blockUI
+  [target]='comicDetailsEditor'
+  [blocked]='library_scrape.busy'> <p-progressBar
+  mode="indeterminate"
+  [style]="{'height': '6px'}"></p-progressBar> </p-blockUI>
 <div
-  *ngIf='!show_candidates()'
+  #comicDetailsEditor
+  *ngIf='library_scrape && !library_scrape.volumes.length'
   class='ui-g'>
   <div class='ui-g-2 ui-sm-2'>
     <label for='api_key'><b>ComicVine API Key:</b> </label>
@@ -8,7 +14,7 @@
     <input
       id='api_key'
       type='text'
-      [(ngModel)]='api_key'
+      [(ngModel)]='library_scrape.api_key'
       pInputText>
     <button
       pButton
@@ -23,7 +29,7 @@
     <input
       id='series'
       type='text'
-      [(ngModel)]='series'
+      [(ngModel)]='library_scrape.series'
       pInputText>
   </div>
   <div class='ui-g-2 ui-sm-6'>
@@ -33,7 +39,7 @@
     <input
       id='volume'
       type='text'
-      [(ngModel)]='volume'
+      [(ngModel)]='library_scrape.volume'
       pInputText>
   </div>
   <div class='ui-g-2 ui-sm-6'>
@@ -43,7 +49,7 @@
     <input
       id='issue_number'
       type='text'
-      [(ngModel)]='issue_number'
+      [(ngModel)]='library_scrape.issue_number'
       pInputText>
   </div>
   <div class='ui-g-12 ui-sm-12'>
@@ -60,16 +66,16 @@
   </div>
 </div>
 <div
-  *ngIf='show_candidates()'
+  *ngIf='library_scrape && library_scrape.volumes.length'
   class='ui-g'>
   <div class='ui-g-9 ui-sm-9'>
     <p-table
-      [value]='volumes'
+      [value]='library_scrape.volumes'
       [paginator]='true'
       [rows]='10'
       [paginatorPosition]='"both"'
       selectionMode='single'
-      [(selection)]='current_volume'
+      [(selection)]='library_scrape.current_volume'
       [dataKey]='"id"'
       (onRowSelect)='set_current_volume($event.data)'
       (onRowUnselect)='set_current_volume(null)'> <ng-template
@@ -92,22 +98,19 @@
     </ng-template> </p-table>
   </div>
   <div class='ui-g-3 ui-sm-3'>
-    <p-card *ngIf='current_issue'> <p-header>
+    <p-card *ngIf='library_scrape.current_issue'> <p-header>
     <h3>{{ volume_selection_title }}</h3>
     </p-header> <img
       [src]='get_current_issue_image_url()'
       [style.width]='"100%"'> </p-card>
     <div class='ui-g'>
-      <div
-        *ngIf='current_issue'
-        class='ui-g-12 ui-sm-12'>
+      <div class='ui-g-12 ui-sm-12'>
         <button
+          *ngIf='library_scrape.current_issue'
           pButton
           type='button'
           label='Select'
           (click)='select_current_issue()'></button>
-      </div>
-      <div class='ui-g-12 ui-sm-12'>
         <button
           pButton
           type='button'
@@ -117,34 +120,3 @@
     </div>
   </div>
 </div>
-<!-- 
-<div class='container-fluid'>
-  <div *ngIf='show_candidates()' class='row w-100 mx-0'>
-    <div class='col-3'>
-      <div class='card w-100'>
-        <div *ngIf='current_issue' class='card-body'>
-          <img class='card-img-bottom img-fluid'
-            src='{{get_current_issue_image_url()}}'
-            alt={{current_issue.name}}>
-        </div>
-        <div class='card-footer'>
-          <div *ngIf='current_issue'
-            class='row w-100 justify-content-center pb-1'>
-            <button class='btn btn-primary ml-1 w-75' type='button'
-              (click)='select_current_issue()'>Select</button>
-          </div>
-          <div *ngIf='current_issue'
-            class='row w-100 justify-content-center pb-1'>
-            <button class='btn btn-primary ml-1 w-75' type='button'
-              (click)='cancel_volume_selection()'>Cancel</button>
-          </div>
-          <div *ngIf='!current_issue'>
-            <p class='text-danger'>No issue in this volume matches
-              the search details entered.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
--->
