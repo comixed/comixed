@@ -45,13 +45,23 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   library_subscription: Subscription;
   library: Library;
 
+  alert_message: string;
+  busy = false;
+
   constructor(
     private user_service: UserService,
     private comic_service: ComicService,
+    private alert_service: AlertService,
     private router: Router,
     private store: Store<AppState>,
   ) {
     this.library$ = store.select('library');
+    this.alert_service.busy_messages.subscribe(
+      (message: string) => {
+        console.log(`*** Setting message='${message}'`);
+        this.alert_message = message || '';
+        this.busy = (this.alert_message != null) && (this.alert_message.length > 0);
+      });
   }
 
   ngOnInit() {

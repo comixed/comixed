@@ -1,23 +1,18 @@
-<div class='row w-100'>
-  <app-menubar></app-menubar>
-</div>
-<div class='container-fluid pl-0 mx-0'>
-  <app-notifications></app-notifications>
-  <app-busy-indicator></app-busy-indicator>
-  <div class='row w-100'>
-    <div class='col'>
-      <router-outlet></router-outlet>
-    </div>
+<app-menubar></app-menubar>
+<app-notifications></app-notifications>
+<div
+  class='ui-g'
+  [style]='{top:0,bottom:0,width:"100%"}'>
+  <div class='ui-g-12 ui-sm-12'>
+    <router-outlet></router-outlet>
   </div>
-  <footer class='bg-light fixed-bottom page-footer font-small'>
-    <div class='row'>
-      <div class='col-sm-4 align-middle mx-3'>
-        <strong>Comics:</strong> {{comic_count}}/{{read_count}}
-      </div>
-      <div class='col-md-4'>
-        <div class='footer-copyright align-middle text-center'>Copyright
-          &copy; 2017, 2018 The ComiXed Project Team</div>
-      </div>
+  <div
+    id='comixed-footer'
+    class='ui-g'>
+    <div class='ui-g-3 ui-sm-6'>
+      <strong>Comics:</strong> {{comic_count}}/{{read_count}}
     </div>
-  </footer>
+    <div class='ui-g-9 ui-sm-6'>Copyright &copy; 2017, 2018 The
+      ComiXed Project Team</div>
+  </div>
 </div>
