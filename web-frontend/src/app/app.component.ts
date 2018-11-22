@@ -25,9 +25,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { AppState } from './app.state';
 import { Library } from './models/library';
 import * as LibraryActions from './actions/library.actions';
-import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { UserService } from './services/user.service';
 import { ComicService } from './services/comic.service';
+import { AlertService } from './services/alert.service';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
 
 @Component({

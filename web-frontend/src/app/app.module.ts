@@ -63,7 +63,6 @@ import { LoginComponent } from './login/login.component';
 import { AccountComponent } from './account/account.component';
 import { AlertService } from './services/alert.service';
 import { UserService } from './services/user.service';
-import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { NotificationsComponent } from './ui/components/notifications/notifications.component';
@@ -85,7 +84,6 @@ import { IssueDetailsComponent } from './ui/components/library/issue-details/iss
     MainPageComponent,
     LoginComponent,
     AccountComponent,
-    BusyIndicatorComponent,
     MenubarComponent,
     ComicDetailsComponent,
     ComicReaderComponent,
