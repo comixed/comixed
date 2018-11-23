@@ -20,6 +20,7 @@
       pButton
       type='button'
       label='Save Key'
+      [disabled]='!is_api_key_valid()'
       (click)='save_api_key()'></button>
   </div>
   <div class='ui-g-2 ui-sm-2'>

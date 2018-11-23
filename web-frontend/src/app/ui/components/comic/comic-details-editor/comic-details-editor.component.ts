@@ -136,8 +136,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   save_api_key(): void {
-    this.library_scrape.api_key = this.library_scrape.api_key.trim();
-    this.user_service.set_user_preference('comic_vine_api_key', this.library_scrape.api_key);
+    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSaveApiKey({
+      api_key: this.library_scrape.api_key,
+      comic: this.library_scrape.comic,
+    }));
   }
 
   is_api_key_valid(): boolean {

@@ -54,6 +54,15 @@ export function libraryScrapingReducer(
       };
     }
 
+    case LibraryScrapingActions.LIBRARY_SCRAPING_SAVE_API_KEY: {
+      return {
+        ...state,
+        api_key: action.payload.api_key,
+        comic: action.payload.comic,
+        busy: true,
+      };
+    }
+
     case LibraryScrapingActions.LIBRARY_SCRAPING_SAVE_LOCAL_CHANGES: {
       return {
         ...state,

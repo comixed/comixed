@@ -115,15 +115,8 @@ export class UserService {
     return default_value;
   }
 
-  set_user_preference(name: string, value: string): void {
+  set_user_preference(name: string, value: string): Observable<any> {
     const params = new HttpParams().set('name', name).set('value', value);
-    this.http.post(`${this.api_url}/user/property`, params).subscribe(
-      (response: Response) => {
-        console.log('Preference saved: ' + name + '=' + value);
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Failed to set user preference: ' + name + '=' + value, error);
-      }
-    );
+    return this.http.post(`${this.api_url}/user/property`, params);
   }
 }

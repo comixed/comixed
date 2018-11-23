@@ -24,6 +24,7 @@ import { Volume } from '../models/volume.model';
 import { ComicIssue } from '../models/comic-issue.model';
 
 export const LIBRARY_SCRAPING_SETUP = '[LIBRARY SCRAPING] Setup scraping';
+export const LIBRARY_SCRAPING_SAVE_API_KEY = '[LIBRARY SCRAPING] Save API key';
 export const LIBRARY_SCRAPING_SAVE_LOCAL_CHANGES = '[LIBRARY SCRAPING] Save local changes';
 export const LIBRARY_SCRAPING_FETCH_VOLUMES = '[LIBRARY SCRAPING] Fetch volumes';
 export const LIBRARY_SCRAPING_FOUND_VOLUMES = '[LIBRARY SCRAPING] Found volumes';
@@ -41,6 +42,15 @@ export class LibraryScrapingSetup implements Action {
     series: string,
     volume: string,
     issue_number: string,
+  }) { }
+}
+
+export class LibraryScrapingSaveApiKey implements Action {
+  readonly type = LIBRARY_SCRAPING_SAVE_API_KEY;
+
+  constructor(public payload: {
+    api_key: string,
+    comic: Comic,
   }) { }
 }
 
@@ -114,6 +124,7 @@ export class LibraryScrapingScrapeMetadata implements Action {
 
 export type Actions =
   LibraryScrapingSetup |
+  LibraryScrapingSaveApiKey |
   LibraryScrapingSaveLocalChanges |
   LibraryScrapingFetchVolumes |
   LibraryScrapingFoundVolumes |
