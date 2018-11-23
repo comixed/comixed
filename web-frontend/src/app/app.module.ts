@@ -97,6 +97,7 @@ import { TokenStorage } from './storage/token.storage';
 import { AccountPageComponent } from './ui/pages/account/account-page/account-page.component';
 import { AccountPreferencesComponent } from './ui/components/account/account-preferences/account-preferences.component';
 import { UserDetailsComponent } from './ui/components/account/user-details/user-details.component';
+import { MultipleComicScrapingComponent } from './ui/components/scraping/multiple-comic-scraping/multiple-comic-scraping.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +128,7 @@ import { UserDetailsComponent } from './ui/components/account/user-details/user-
     AccountPageComponent,
     AccountPreferencesComponent,
     UserDetailsComponent,
+    MultipleComicScrapingComponent,
   ],
   imports: [
     BrowserModule,

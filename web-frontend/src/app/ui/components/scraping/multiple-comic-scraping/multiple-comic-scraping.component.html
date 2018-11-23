@@ -1,0 +1,30 @@
+<div class='ui-g'>
+  <div class='ui-g-3 ui-sm-6'>
+    <div
+      *ngIf='multi_scraping.current_comic'
+      class='ui-g'>
+      <div class='ui-g-12'>
+        <p-card> <p-header>
+        <h3>{{ multi_scraping.current_comic.base_filename }}</h3>
+        </p-header> <img
+          [src]='get_cover_url(multi_scraping.current_comic)'
+          [style.width]='"100%"'
+          [style.height]='"auto"'> </p-card>
+      </div>
+      <div class='ui-g-12'>
+        <app-comic-list [comics]='multi_scraping.selected_comics'></app-comic-list>
+      </div>
+    </div>
+  </div>
+  <div class='ui-g-9 ui-sm-6'>
+    <div
+      *ngIf='multi_scraping.current_comic'
+      class='ui-g'>
+      <div class='ui-g-12'>
+        <app-comic-details-editor
+          [comic]='multi_scraping.current_comic'
+          (update)='comic_scraped($event)'></app-comic-details-editor>
+      </div>
+    </div>
+  </div>
+</div>
