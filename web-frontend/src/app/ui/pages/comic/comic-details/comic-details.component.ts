@@ -20,6 +20,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { Library } from '../../../../models/library';
 import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
 import { Comic } from '../../../../models/comics/comic';
@@ -35,7 +40,12 @@ export const CURRENT_PAGE_PARAMETER = 'page';
 export class ComicDetailsComponent implements OnInit {
   readonly TAB_PARAMETER = 'tab';
 
-  comic: Comic;
+  private library$: Observable<Library>;
+  private library_subscription: Subscription;
+  public library: Library;
+
+  private comic_id = -1;
+  public comic = null;
   protected current_tab: number;
   protected title: string;
   protected page_size: number;
@@ -46,36 +56,29 @@ export class ComicDetailsComponent implements OnInit {
     private router: Router,
     private alert_service: AlertService,
     private comic_service: ComicService,
+    private store: Store<AppState>,
   ) {
-    activatedRoute.queryParams.subscribe(params => {
-      this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
+    this.library$ = store.select('library');
+    this.activatedRoute.params.subscribe(params => {
+      this.comic_id = +params['id'];
     });
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(params => {
-      const id = +params['id'];
-      this.comic_service.load_comic_from_remote(id).subscribe(
-        (comic: Comic) => {
-          this.alert_service.show_busy_message('');
-          if (comic) {
-            this.comic = comic;
-          } else {
-            this.alert_service.show_error_message(`No such comic: id=${id}`, null);
-            this.router.navigateByUrl('/');
-          }
-        },
-        error => {
-          this.alert_service.show_error_message('Error while retrieving comic...', error);
-          this.alert_service.show_busy_message('');
-        },
-        () => {
-          this.load_comic_details();
-        });
-    });
+    this.library_subscription = this.library$.subscribe(
+      (library: Library) => {
+        this.library = library;
+
+        if (this.comic === null) {
+          this.comic = library.comics.find((comic: Comic) => {
+            return comic.id === this.comic_id;
+          }) || null;
+        }
+      });
     this.activatedRoute.queryParams.subscribe(params => {
       this.set_page_size(parseInt(this.load_parameter(params[PAGE_SIZE_PARAMETER], '100'), 10));
       this.set_current_page(parseInt(this.load_parameter(params[CURRENT_PAGE_PARAMETER], '0'), 10));
+      this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
     });
   }
 

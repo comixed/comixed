@@ -43,7 +43,6 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./comic-details-editor.component.css']
 })
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
-  @Input() comic: Comic;
   @Output() update: EventEmitter<Comic> = new EventEmitter();
 
   fetch_options: Array<MenuItem>;
@@ -59,6 +58,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   protected volume_selection_banner: string;
   private date_formatter = Intl.DateTimeFormat('en-us', { month: 'short', year: 'numeric' });
 
+  protected _comic: Comic;
   protected api_key;
   protected series;
   protected volume;
@@ -99,22 +99,26 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
 
+        this._comic = this.single_comic_scraping.comic;
         this.series = this.single_comic_scraping.series;
         this.volume = this.single_comic_scraping.volume;
         this.issue_number = this.single_comic_scraping.issue_number;
       });
-
-    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetup({
-      api_key: this.api_key,
-      comic: this.comic,
-      series: this.comic.series,
-      volume: this.comic.volume,
-      issue_number: this.comic.issue_number,
-    }));
   }
 
   ngOnDestroy() {
     this.single_comic_scraping_subscription.unsubscribe();
+  }
+
+  @Input()
+  set comic(comic: Comic) {
+    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetup({
+      api_key: this.api_key,
+      comic: comic,
+      series: comic.series,
+      volume: comic.volume,
+      issue_number: comic.issue_number,
+    }));
   }
 
   fetch_candidates(skip_cache: boolean): void {
@@ -148,6 +152,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       issue_id: this.single_comic_scraping.current_issue.id,
       skip_cache: this.skip_cache,
     }));
+    this.update.next(this._comic);
   }
 
   cancel_selection(): void {
@@ -158,12 +163,13 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       volume: this.single_comic_scraping.volume,
       issue_number: this.single_comic_scraping.issue_number,
     }));
+    this.update.next(this._comic);
   }
 
   save_changes(): void {
     this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSaveLocalChanges({
       api_key: this.api_key,
-      comic: this.comic,
+      comic: this._comic,
       series: this.series,
       volume: this.volume,
       issue_number: this.issue_number,

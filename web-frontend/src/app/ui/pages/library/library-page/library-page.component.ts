@@ -118,6 +118,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           this.current_tab = parseInt(params[this.TAB_PARAMETER] || '0', 10);
         }
       });
+    this.library_display$ = store.select('library_display');
+    this.scraping$ = store.select('multiple_comic_scraping');
     this.sort_options = [
       { label: 'Series', value: 'series' },
       { label: 'Volume', value: 'volume', },
@@ -170,9 +172,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       (scraping: MultipleComicsScraping) => {
         this.scraping = scraping;
       });
-    this.store.dispatch(new ScrapingActions.MultipleComicsScrapingSetup(
-      this.user_service.get_user_preference('api_key', ''),
-    ));
+    this.store.dispatch(new ScrapingActions.MultipleComicsScrapingSetup({
+      api_key: this.user_service.get_user_preference('api_key', ''),
+    }));
     this.activated_route.queryParams.subscribe(params => {
       this.set_current_tab(this.load_parameter(params[this.TAB_PARAMETER],
         parseInt(this.user_service.get_user_preference('library_tab', '0'), 10)));

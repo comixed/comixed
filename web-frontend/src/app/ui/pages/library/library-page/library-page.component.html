@@ -32,8 +32,12 @@
   (changeCoverSize)='set_cover_size($event)'
   (saveCoverSize)='save_cover_size($event)'
   (comicSelected)='set_selected_comic($event)'
+  (delete)='delete_comic($event)'></app-library-details></p-tabPanel>
+<p-tabPanel
   (open)='open_comic($event)'
-  (delete)='delete_comic($event)'></app-library-details></p-tabPanel></p-tabView>
+  [disabled]='!library'
+  header='Scraping'> <app-library-scraping-view>
+</app-library-scraping-view></p-tabPanel></p-tabView>
 <!-- details dialog -->
 <p-dialog
   *ngIf='selected_comic'
