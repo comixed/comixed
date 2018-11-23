@@ -82,6 +82,7 @@
       (onRowUnselect)='set_current_volume(null)'> <ng-template
       pTemplate='header'>
     <tr>
+      <th></th>
       <th>Start Year</th>
       <th>Series</th>
       <th># Of Issues</th>
@@ -91,6 +92,10 @@
       pTemplate='body'
       let-volume>
     <tr [pSelectableRow]='volume'>
+      <td><span
+        class='fas'
+        [class.fa-greater-than]='is_good_match(volume)'
+        [class.fa-greater-than-equal]='is_perfect_match(volume)'></span></td>
       <td>{{ volume.start_year }}</td>
       <td>{{ volume.name }}</td>
       <td>{{ volume.issue_count }}</td>
