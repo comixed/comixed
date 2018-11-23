@@ -1,8 +1,8 @@
-<div class='ui-g'>
+<div
+  class='ui-g'
+  *ngIf='multi_scraping.current_comic'>
   <div class='ui-g-3 ui-sm-6'>
-    <div
-      *ngIf='multi_scraping.current_comic'
-      class='ui-g'>
+    <div class='ui-g'>
       <div class='ui-g-12'>
         <p-card> <p-header>
         <h3>{{ multi_scraping.current_comic.base_filename }}</h3>
@@ -17,9 +17,7 @@
     </div>
   </div>
   <div class='ui-g-9 ui-sm-6'>
-    <div
-      *ngIf='multi_scraping.current_comic'
-      class='ui-g'>
+    <div class='ui-g'>
       <div class='ui-g-12'>
         <app-comic-details-editor
           [comic]='multi_scraping.current_comic'

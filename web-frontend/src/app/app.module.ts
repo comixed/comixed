@@ -80,6 +80,7 @@ import { importingReducer } from './reducers/importing.reducer';
 import { libraryReducer } from './reducers/library.reducer';
 import { libraryDisplayReducer } from './reducers/library-display.reducer';
 import { singleComicScrapingReducer } from './reducers/single-comic-scraping.reducer';
+import { multipleComicsScrapingReducer } from './reducers/multiple-comics-scraping.reducer';
 import { duplicatesReducer } from './reducers/duplicates.reducer';
 import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
 import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
@@ -185,6 +186,7 @@ import { LibraryScrapingViewComponent } from './ui/views/library/library-scrapin
       library: libraryReducer,
       library_display: libraryDisplayReducer,
       single_comic_scraping: singleComicScrapingReducer,
+      multiple_comic_scraping: multipleComicsScrapingReducer,
       duplicates: duplicatesReducer,
     }),
     EffectsModule.forRoot([

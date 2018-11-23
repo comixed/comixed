@@ -17,20 +17,16 @@
  * org.comixed;
  */
 
-import { User } from './models/user/user';
-import { Importing } from './models/import/importing';
-import { Library } from './models/library';
-import { LibraryDisplay } from './models/library-display';
-import { SingleComicScraping } from './models/scraping/single-comic-scraping';
-import { MultipleComicsScraping } from './models/scraping/multiple-comics-scraping';
-import { Duplicates } from './models/duplicates';
+import { Comic } from '../comics/comic';
+import { Volume } from '../comics/volume';
+import { Issue } from './issue';
 
-export interface AppState {
-  readonly user: User;
-  readonly importing: Importing;
-  readonly library: Library;
-  readonly library_display: LibraryDisplay;
-  readonly single_comic_scraping: SingleComicScraping;
-  readonly multiple_comic_scraping: MultipleComicsScraping;
-  readonly duplicates: Duplicates;
+export interface MultipleComicsScraping {
+  selecting: boolean;
+  started: boolean;
+  busy: boolean;
+  api_key: string;
+  available_comics: Array<Comic>;
+  selected_comics: Array<Comic>;
+  current_comic: Comic;
 }

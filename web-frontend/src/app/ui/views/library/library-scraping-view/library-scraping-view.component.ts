@@ -22,8 +22,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { AppState } from '../../../../app.state';
-import * as ScrapingActions from '../../../../actions/multiple-comic-scraping.actions';
-import { MultipleComicScraping } from '../../../../models/multiple-comic-scraping';
+import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
+import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
 import { Comic } from '../../../../models/comics/comic';
 import { Library } from '../../../../models/library';
 
@@ -33,9 +33,9 @@ import { Library } from '../../../../models/library';
   styleUrls: ['./library-scraping-view.component.css']
 })
 export class LibraryScrapingViewComponent implements OnInit, OnDestroy {
-  scraping$: Observable<MultipleComicScraping>;
+  scraping$: Observable<MultipleComicsScraping>;
   scraping_subscription: Subscription;
-  scraping: MultipleComicScraping;
+  scraping: MultipleComicsScraping;
 
   library$: Observable<Library>;
   library_subscription: Subscription;
@@ -52,7 +52,7 @@ export class LibraryScrapingViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.scraping_subscription = this.scraping$.subscribe(
-      (scraping: MultipleComicScraping) => {
+      (scraping: MultipleComicsScraping) => {
         this.scraping = scraping;
       });
     this.library_subscription = this.library$.subscribe(
@@ -60,7 +60,7 @@ export class LibraryScrapingViewComponent implements OnInit, OnDestroy {
         this.library = library;
 
         if (!this.scraping || !this.scraping.available_comics.length) {
-          this.store.dispatch(new ScrapingActions.MultipleComicScrapingSetAvailableComics(this.library.comics));
+          this.store.dispatch(new ScrapingActions.MultipleComicsScrapingSetAvailableComics(this.library.comics));
         }
       });
     this.store.dispatch(new ScrapingActions.MultipleComicsScrapingSetup({ api_key: this.scraping.api_key }));

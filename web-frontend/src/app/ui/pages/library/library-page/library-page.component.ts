@@ -24,6 +24,10 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import { Library } from '../../../../models/library';
 import * as LibraryActions from '../../../../actions/library.actions';
+import { LibraryDisplay } from '../../../../models/library-display';
+import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
+import * as LibraryDisplayActions from '../../../../actions/library-display.actions';
+import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Comic } from '../../../../models/comics/comic';
@@ -60,6 +64,15 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
   private library_subscription: Subscription;
   library: Library;
+
+  private library_display$: Observable<LibraryDisplay>;
+  private library_display_subscription: Subscription;
+
+  scraping$: Observable<MultipleComicsScraping>;
+  scraping_subscription: Subscription;
+  scraping: MultipleComicsScraping;
+
+  library_display: LibraryDisplay;
 
   comics: Array<Comic>;
   selected_comic: Comic;
@@ -149,6 +162,26 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         this.library = library;
         this.comics = library.comics;
       });
+    this.library_display_subscription = this.library_display$.subscribe(
+      (library_display: LibraryDisplay) => {
+        this.library_display = library_display;
+      });
+    this.scraping_subscription = this.scraping$.subscribe(
+      (scraping: MultipleComicsScraping) => {
+        this.scraping = scraping;
+      });
+    this.store.dispatch(new ScrapingActions.MultipleComicsScrapingSetup(
+      this.user_service.get_user_preference('api_key', ''),
+    ));
+    this.activated_route.queryParams.subscribe(params => {
+      this.set_current_tab(this.load_parameter(params[this.TAB_PARAMETER],
+        parseInt(this.user_service.get_user_preference('library_tab', '0'), 10)));
+      this.set_sort_order(params[this.SORT_PARAMETER] || this.user_service.get_user_preference('library_sort', 'series'));
+      this.set_rows(this.load_parameter(params[this.ROWS_PARAMETER],
+        parseInt(this.user_service.get_user_preference('library_rows', '10'), 10)));
+      this.set_cover_size(this.load_parameter(params[this.COVER_PARAMETER],
+        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10)));
+    });
   }
 
   ngOnDestroy() {
