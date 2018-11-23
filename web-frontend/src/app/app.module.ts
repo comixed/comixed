@@ -43,7 +43,7 @@ import { PanelModule } from 'primeng/panel';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { BlockUIModule } from 'primeng/blockui';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -130,7 +130,7 @@ import { IssueDetailsComponent } from './ui/components/library/issue-details/iss
     TooltipModule,
     ToolbarModule,
     SplitButtonModule,
-    ProgressSpinnerModule,
+    ProgressBarModule,
     BlockUIModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
