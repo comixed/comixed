@@ -98,6 +98,7 @@ import { AccountPageComponent } from './ui/pages/account/account-page/account-pa
 import { AccountPreferencesComponent } from './ui/components/account/account-preferences/account-preferences.component';
 import { UserDetailsComponent } from './ui/components/account/user-details/user-details.component';
 import { MultipleComicScrapingComponent } from './ui/components/scraping/multiple-comic-scraping/multiple-comic-scraping.component';
+import { LibraryScrapingSelectionComponent } from './ui/components/library/library-scraping-selection/library-scraping-selection.component';
 
 @NgModule({
   declarations: [
@@ -129,6 +130,7 @@ import { MultipleComicScrapingComponent } from './ui/components/scraping/multipl
     AccountPreferencesComponent,
     UserDetailsComponent,
     MultipleComicScrapingComponent,
+    LibraryScrapingSelectionComponent,
   ],
   imports: [
     BrowserModule,
