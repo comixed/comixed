@@ -1,0 +1,20 @@
+<div class='ui-g'>
+  <div
+    *ngIf='scraping.selecting || scraping.selected_comics.length === 0'
+    class='ui-g-12'>
+    <div class='ui-g'>
+      <div class='ui-g-12'>
+        <app-library-scraping-toolbar
+          [selected_comics]='selected_comics'></app-library-scraping-toolbar>
+      </div>
+      <app-library-scraping-selection
+        [comics]='scraping.available_comics'
+        [selected_comics]='selected_comics'></app-library-scraping-selection>
+    </div>
+  </div>
+  <div
+    *ngIf='!scraping.selecting'
+    class='ui-g-12'>
+    <app-multiple-comic-scraping></app-multiple-comic-scraping>
+  </div>
+</div>

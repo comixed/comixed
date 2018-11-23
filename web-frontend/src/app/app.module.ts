@@ -99,6 +99,7 @@ import { AccountPreferencesComponent } from './ui/components/account/account-pre
 import { UserDetailsComponent } from './ui/components/account/user-details/user-details.component';
 import { MultipleComicScrapingComponent } from './ui/components/scraping/multiple-comic-scraping/multiple-comic-scraping.component';
 import { LibraryScrapingSelectionComponent } from './ui/components/library/library-scraping-selection/library-scraping-selection.component';
+import { LibraryScrapingViewComponent } from './ui/views/library/library-scraping-view/library-scraping-view.component';
 
 @NgModule({
   declarations: [
@@ -131,6 +132,7 @@ import { LibraryScrapingSelectionComponent } from './ui/components/library/libra
     UserDetailsComponent,
     MultipleComicScrapingComponent,
     LibraryScrapingSelectionComponent,
+    LibraryScrapingViewComponent,
   ],
   imports: [
     BrowserModule,
