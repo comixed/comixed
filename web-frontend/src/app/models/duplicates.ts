@@ -17,14 +17,15 @@
  * org.comixed;
  */
 
-import { Library } from './models/library';
-import { LibraryDisplay } from './models/library-display';
-import { LibraryScrape } from './models/library-scrape';
-import { Duplicates } from './models/duplicates';
+import { DuplicatePage } from './comics/duplicate-page';
 
-export interface AppState {
-  readonly library: Library;
-  readonly library_display: LibraryDisplay;
-  readonly library_scraping: LibraryScrape;
-  readonly duplicates: Duplicates;
+export interface Duplicates {
+  busy: boolean;
+  pages: Array<DuplicatePage>;
+  hashes: Array<String>;
+  pages_by_hash: Map<string, Array<DuplicatePage>>;
+  current_duplicate: DuplicatePage;
+  last_hash: string;
+  pages_deleted: number;
+  pages_undeleted: number;
 }
