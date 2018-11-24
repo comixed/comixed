@@ -19,7 +19,7 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { ComicService } from '../../../../services/comic.service';
-import { ComicFile } from '../../../../models/comic-file';
+import { ComicFile } from '../../../../models/import/comic-file';
 
 @Component({
   selector: 'app-file-details-cover',

@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { UserService } from '../../../../services/user.service';
-import { ComicFile } from '../../../../models/comic-file';
+import { ComicFile } from '../../../../models/import/comic-file';
 import { ComicService } from '../../../../services/comic.service';
 import { AlertService } from '../../../../services/alert.service';
 

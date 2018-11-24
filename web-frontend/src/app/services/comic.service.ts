@@ -33,7 +33,7 @@ import { AlertService } from './alert.service';
 import { Comic } from '../models/comics/comic';
 import { Page } from '../models/comics/page';
 import { PageType } from '../models/comics/page-type';
-import { ComicFile } from '../models/comic-file';
+import { ComicFile } from '../models/import/comic-file';
 
 @Injectable()
 export class ComicService {

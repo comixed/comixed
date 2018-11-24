@@ -21,7 +21,7 @@ import { Component, OnInit, Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { ComicService } from '../../../../services/comic.service';
-import { ComicFile } from '../../../../models/comic-file';
+import { ComicFile } from '../../../../models/import/comic-file';
 
 @Component({
   selector: 'app-selected-comics',
