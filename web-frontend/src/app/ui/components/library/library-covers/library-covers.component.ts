@@ -18,7 +18,7 @@
  */
 
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Comic } from '../../../../models/comic';
+import { Comic } from '../../../../models/comics/comic';
 import { Library } from '../../../../models/library';
 import { LibraryDisplay } from '../../../../models/library-display';
 import { ComicService } from '../../../../services/comic.service';

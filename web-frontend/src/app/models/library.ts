@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Comic } from './comic';
+import { Comic } from './comics/comic';
 
 export interface Library {
   is_updating: boolean;

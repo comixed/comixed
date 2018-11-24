@@ -19,7 +19,7 @@
 
 import { Action } from '@ngrx/store';
 import { Library } from '../models/library';
-import { Comic } from '../models/comic';
+import { Comic } from '../models/comics/comic';
 import * as LibraryActions from '../actions/library.actions';
 
 const initial_state: Library = {

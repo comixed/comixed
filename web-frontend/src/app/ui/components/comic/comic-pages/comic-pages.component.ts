@@ -19,9 +19,9 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { Comic } from '../../../../models/comic';
-import { Page } from '../../../../models/page';
-import { PageType } from '../../../../models/page-type';
+import { Comic } from '../../../../models/comics/comic';
+import { Page } from '../../../../models/comics/page';
+import { PageType } from '../../../../models/comics/page-type';
 import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
 import { UserService } from '../../../../services/user.service';

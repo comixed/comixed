@@ -19,8 +19,8 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 
-import { Comic } from '../../../../models/comic';
-import { Page } from '../../../../models/page';
+import { Comic } from '../../../../models/comics/comic';
+import { Page } from '../../../../models/comics/page';
 import { ComicService } from '../../../../services/comic.service';
 
 @Component({

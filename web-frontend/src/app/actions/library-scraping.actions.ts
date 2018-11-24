@@ -19,8 +19,8 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Comic } from '../models/comic';
-import { Volume } from '../models/volume';
+import { Comic } from '../models/comics/comic';
+import { Volume } from '../models/comics/volume';
 import { Issue } from '../models/issue';
 
 export const LIBRARY_SCRAPING_SETUP = '[LIBRARY SCRAPING] Setup scraping';
