@@ -26,7 +26,7 @@ const initial_state: Duplicates = {
   pages: [],
   hashes: [],
   pages_by_hash: new Map<string, Array<DuplicatePage>>(),
-  current_duplicate: null,
+  current_duplicates: null,
   last_hash: null,
   pages_deleted: 0,
   pages_undeleted: 0,

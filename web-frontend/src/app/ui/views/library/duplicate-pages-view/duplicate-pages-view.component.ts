@@ -133,4 +133,8 @@ export class DuplicatePagesViewComponent implements OnInit {
   unblock_page_hash(hash: string): void {
     this.store.dispatch(new DuplicatesActions.DuplicatePagesUnblockHash(hash));
   }
+
+  show_pages_with_hash(hash: string): void {
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash(hash));
+  }
 }

@@ -19,6 +19,7 @@
 
 import { Action } from '@ngrx/store';
 import { DuplicatePage } from '../models/comics/duplicate-page';
+import { Page } from '../models/comics/page';
 
 export const DUPLICATE_PAGES_FETCH_PAGES = '[DUPLICATE PAGES] Fetch list of pages';
 export const DUPLICATE_PAGES_SET_PAGES = '[DUPLICATE PAGES] Set list of pages';
@@ -29,6 +30,12 @@ export const DUPLICATE_PAGES_UNDELETED_FOR_HASH = '[DUPLICATE PAGES] Undeletion 
 export const DUPLICATE_PAGES_BLOCK_HASH = '[DUPLICATE PAGES] Block a hash';
 export const DUPLICATE_PAGES_UNBLOCK_HASH = '[DUPLICATES PAGES] Unblock a hash';
 export const DUPLICATE_PAGES_BLOCKED_HASH = '[DUPLICATE PAGES] Update hash blocked status';
+export const DUPLICATE_PAGES_SHOW_COMICS_WITH_HASH = '[DUPLICATE PAGES] Show comics with a given hash';
+export const DUPLICATE_PAGES_SHOW_ALL_PAGES = '[DUPLICATE PAGES] Show all pages';
+export const DUPLICATE_PAGES_DELETE_PAGE = '[DUPLICATE PAGES] Delete page';
+export const DUPLICATE_PAGES_PAGE_DELETED = '[DUPLICATE PAGES] Page deleted';
+export const DUPLICATE_PAGES_UNDELETE_PAGE = '[DUPLICATE PAGES] Undelete page';
+export const DUPLICATE_PAGES_PAGE_UNDELETED = '[DUPLICATE PAGES] Page undeleted';
 
 export class DuplicatePagesFetchPages implements Action {
   readonly type = DUPLICATE_PAGES_FETCH_PAGES;
@@ -93,6 +100,42 @@ export class DuplicatePagesBlockedHash implements Action {
   }) { }
 }
 
+export class DuplicatePagesShowComicsWithHash implements Action {
+  readonly type = DUPLICATE_PAGES_SHOW_COMICS_WITH_HASH;
+
+  constructor(public payload: string) { }
+}
+
+export class DuplicatePagesShowAllPages implements Action {
+  readonly type = DUPLICATE_PAGES_SHOW_ALL_PAGES;
+
+  constructor() { }
+}
+
+export class DuplicatePagesDeletePage implements Action {
+  readonly type = DUPLICATE_PAGES_DELETE_PAGE;
+
+  constructor(public payload: Page) { }
+}
+
+export class DuplicatePagesPageDeleted implements Action {
+  readonly type = DUPLICATE_PAGES_PAGE_DELETED;
+
+  constructor(public payload: Page) { }
+}
+
+export class DuplicatePagesUndeletePage implements Action {
+  readonly type = DUPLICATE_PAGES_UNDELETE_PAGE;
+
+  constructor(public payload: Page) { }
+}
+
+export class DuplicatePagesPageUndeleted implements Action {
+  readonly type = DUPLICATE_PAGES_PAGE_UNDELETED;
+
+  constructor(public payload: Page) { }
+}
+
 export type Actions =
   DuplicatePagesFetchPages |
   DuplicatePagesSetPages |
@@ -102,4 +145,10 @@ export type Actions =
   DuplicatePagesUndeletedForHash |
   DuplicatePagesBlockHash |
   DuplicatePagesUnblockHash |
-  DuplicatePagesBlockedHash;
+  DuplicatePagesBlockedHash |
+  DuplicatePagesShowComicsWithHash |
+  DuplicatePagesShowAllPages |
+  DuplicatePagesDeletePage |
+  DuplicatePagesUndeletePage |
+  DuplicatePagesPageDeleted |
+  DuplicatePagesPageUndeleted;

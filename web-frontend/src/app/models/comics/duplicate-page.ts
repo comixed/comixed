@@ -17,6 +17,7 @@
  * org.comixed;
  */
 
+import { Comic } from './comic';
 import { PageType } from './page-type';
 
 export interface DuplicatePage {
@@ -27,4 +28,5 @@ export interface DuplicatePage {
   blocked: boolean;
   page_type: PageType;
   index: number;
+  comic: Comic;
 }

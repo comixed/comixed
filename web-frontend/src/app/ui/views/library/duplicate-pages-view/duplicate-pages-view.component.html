@@ -83,6 +83,12 @@
           icon='fas fa-fingerprint'
           label='Block'
           (click)='block_page_hash(hash)'></button>
+        <button
+          pButton
+          type='button'
+          icon='far fa-eye'
+          label='Show Comics'
+          (click)='show_pages_with_hash(hash)'></button>
       </div>
     </div>
   </div>
@@ -124,6 +130,11 @@
     type='button'
     icon='fas fa-fingerprint'
     (click)='block_page_hash(hash)'></button>
+  <button
+    pButton
+    type='button'
+    icon='far fa-eye'
+    (click)='show_pages_with_hash(hash)'></button>
   </p-footer></p-card>
 </div>
 </ng-template></p-dataView>
