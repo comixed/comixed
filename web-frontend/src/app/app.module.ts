@@ -84,6 +84,7 @@ import { IssueDetailsComponent } from './ui/components/library/issue-details/iss
 import { EffectsModule } from '@ngrx/effects';
 import { LibraryScrapeEffects } from './effects/library-scrape.effects';
 import { DuplicatesEffects } from './effects/duplicates.effects';
+import { DuplicatePagesViewComponent } from './ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import { DuplicatesEffects } from './effects/duplicates.effects';
     LibraryCoversComponent,
     LibraryDetailsComponent,
     IssueDetailsComponent,
+    DuplicatePagesViewComponent,
   ],
   imports: [
     BrowserModule,

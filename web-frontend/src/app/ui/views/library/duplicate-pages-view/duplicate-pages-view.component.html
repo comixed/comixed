@@ -1,0 +1,129 @@
+<p-dataView
+  [value]='duplicates.hashes'
+  [rows]='rows'
+  paginatorPosition='both'
+  [paginator]='true'
+  [loading]='duplicates.busy'
+  emptyMessage='There are no duplicate pages! Yay!'> <p-header>
+<div class='ui-helper-clearfix'>
+  <div class='ui-g'>
+    <div class='ui-g-1 ui-md-1'>
+      Show:
+      <p-dropdown
+        [options]='rows_options'
+        [(ngModel)]='rows'
+        (onChange)='set_rows($event.value)'></p-dropdown>
+    </div>
+    <div class='ui-g-3 ui-md-3'>
+      Cover size: {{ cover_size }}px
+      <p-slider
+        [(ngModel)]='cover_size'
+        [min]='200'
+        [max]='640'
+        [animate]='true'
+        (onChange)='set_cover_size($event.value)'></p-slider>
+    </div>
+    <div
+      class='ui-g-1 ui-md-1'
+      style='text-align: right'>
+      <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+    </div>
+  </div>
+</div>
+</p-header> <ng-template
+  let-hash
+  pTemplate='listItem'>
+<div class='ui-g'>
+  <div class='ui-g-1 ui-sm-1'>
+    <p-card> <img
+      [src]='get_url_for_hash(hash)'
+      [style.width]='"100%"'
+      [style.height]='"auto"'> <p-footer></p-footer> </p-card>
+  </div>
+  <div class='ui-g-11 ui-sm-11'>
+    <div class='ui-g'>
+      <div class='ui-12'>
+        <h3>Found In {{ duplicates.pages_by_hash.get(hash).length
+          }} Files</h3>
+      </div>
+      <div class='ui-12'>
+        <div class='ui-g'>
+          <div class='ui-g-12'>
+            <b>Hash Value</b>
+          </div>
+          <div class='ui-g-12'>{{ hash }}</div>
+        </div>
+      </div>
+      <div class='ui-g-12'>
+        <button
+          *ngIf='!all_deleted(hash)'
+          pButton
+          type='button'
+          icon='fas fa-trash'
+          label='Delete All'
+          (click)='delete_all_pages(hash)'></button>
+        <button
+          *ngIf='any_pages_deleted(hash)'
+          pButton
+          type='button'
+          icon='fas fa-trash'
+          label='Undelete All'
+          (click)='undelete_all_pages(hash)'></button>
+        <button
+          *ngIf='is_blocked(hash)'
+          pButton
+          type='button'
+          icon='fas fa-fingerprint'
+          label='Unblock'
+          (click)='unblock_page_hash(hash)'></button>
+        <button
+          *ngIf='!is_blocked(hash)'
+          pButton
+          type='button'
+          icon='fas fa-fingerprint'
+          label='Block'
+          (click)='block_page_hash(hash)'></button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template> <ng-template
+  let-hash
+  pTemplate='gridItem'>
+<div>
+  <p-card> <p-header>
+  <h4>{{ duplicates.pages_by_hash.get(hash).length }} Instances</h4>
+  <h5 *ngIf='is_blocked(hash)'>Blocked</h5>
+  <h5 *ngIf='any_pages_deleted(hash)'>Some/All Deleted</h5>
+  <h5 *ngIf='!all_deleted(hash)'>None Deleted</h5>
+  </p-header> <img
+    [src]='get_url_for_hash(hash)'
+    [style.width]='"auto"'
+    [style.height]='"" + cover_size + "px"'> <p-footer>
+  <button
+    *ngIf='!all_deleted(hash)'
+    pButton
+    type='button'
+    icon='fas fa-trash'
+    (click)='delete_all_pages(hash)'></button>
+  <button
+    *ngIf='any_pages_deleted(hash)'
+    pButton
+    type='button'
+    icon='fas fa-trash'
+    (click)='undelete_all_pages(hash)'></button>
+  <button
+    *ngIf='is_blocked(hash)'
+    pButton
+    type='button'
+    icon='fas fa-fingerprint'
+    (click)='unblock_page_hash(hash)'></button>
+  <button
+    *ngIf='!is_blocked(hash)'
+    pButton
+    type='button'
+    icon='fas fa-fingerprint'
+    (click)='block_page_hash(hash)'></button>
+  </p-footer></p-card>
+</div>
+</ng-template></p-dataView>
