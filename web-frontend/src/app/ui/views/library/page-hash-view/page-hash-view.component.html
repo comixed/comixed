@@ -1,0 +1,53 @@
+<div class='ui-g'>
+  <div class='ui-g-2 ui-sm-4'>
+    <p-card> <p-header> <img
+      [src]='get_image_url()'
+      [style.width]='"100%"'
+      [style.height]='"auto"'> </p-header> <p-footer>
+    <button
+      pButton
+      type='button'
+      label='Close'
+      icon='fas fa-close'
+      (click)='close_page_view()'></button>
+    </p-footer> </p-card>
+  </div>
+  <div class='ui-g-10 ui-sm-8'>
+    <p-table [value]='duplicates.current_duplicates'> <ng-template
+      pTemplate='header'>
+    <tr>
+      <th></th>
+      <th>In Comic</th>
+      <th>Page #</th>
+      <th>Comic File</th>
+      <th>Image File</th>
+      <th></th>
+    </tr>
+    </ng-template> <ng-template
+      pTemplate='body'
+      let-duplicate>
+    <tr>
+      <td><img
+        [src]='get_cover_url(duplicate.comic)'
+        width='128px'
+        height='auto'></td>
+      <td>{{ get_label_for_comic(duplicate.comic) }}</td>
+      <td>{{ duplicate.index }}</td>
+      <td>{{ duplicate.comic.filename }}</td>
+      <td>{{ duplicate.filename }}</td>
+      <td><button
+          *ngIf='!duplicate.deleted'
+          pButton
+          icon='fas fas-trash'
+          label='Delete'
+          (click)='delete_page(duplicate)'></button>
+        <button
+          *ngIf='duplicate.deleted'
+          pButton
+          icon='fas fas-trash'
+          label='Undelete'
+          (click)='undelete_page(duplicate)'></button>
+    </tr>
+    </ng-template> </p-table>
+  </div>
+</div>

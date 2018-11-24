@@ -1,0 +1,68 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2018, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * org.comixed;
+ */
+
+import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
+import { ComicService } from '../../../../services/comic.service';
+import { Duplicates } from '../../../../models/duplicates';
+import { Comic } from '../../../../models/comics/comic';
+import { Page } from '../../../../models/comics/page';
+
+@Component({
+  selector: 'app-page-hash-view',
+  templateUrl: './page-hash-view.component.html',
+  styleUrls: ['./page-hash-view.component.css']
+})
+export class PageHashViewComponent implements OnInit {
+  @Input() duplicates: Duplicates;
+
+  constructor(
+    private store: Store<AppState>,
+    private comic_service: ComicService,
+  ) { }
+
+  ngOnInit() {
+  }
+
+  get_image_url(): string {
+    return this.comic_service.get_url_for_page_by_id(this.duplicates.current_duplicates[0].id);
+  }
+
+  get_cover_url(comic: Comic): string {
+    return this.comic_service.get_cover_url_for_comic(comic);
+  }
+
+  get_label_for_comic(comic: Comic): string {
+    return this.comic_service.get_label_for_comic(comic);
+  }
+
+  close_page_view(): void {
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesShowAllPages());
+  }
+
+  delete_page(page: Page): void {
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesDeletePage(page));
+  }
+
+  undelete_page(page: Page): void {
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesUndeletePage(page));
+  }
+}
