@@ -28,7 +28,7 @@ import * as LibraryActions from '../../../../actions/library.actions';
 import * as LibraryDisplayActions from '../../../../actions/library-display.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { Comic } from '../../../../models/comic.model';
+import { Comic } from '../../../../models/comic';
 import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
 import { SelectItem } from 'primeng/api';

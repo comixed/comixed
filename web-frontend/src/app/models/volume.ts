@@ -17,39 +17,11 @@
  * org.comixed;
  */
 
-import {PageType} from './page-type.model';
-
-export class Page {
+export interface Volume {
   id: number;
-  comic_id: number;
-  filename: string;
-  width: number;
-  height: number;
-  index: number;
-  hash: string;
-  deleted: boolean;
-  page_type: PageType;
-  blocked: boolean;
-
-  constructor(
-    id?: number,
-    comic_id?: number,
-    filename?: string,
-    width?: number,
-    height?: number,
-    hash?: string,
-    deleted?: boolean,
-    page_type?: PageType,
-    blocked?: boolean,
-  ) {
-    this.id = id;
-    this.comic_id = comic_id;
-    this.filename = filename;
-    this.width = width;
-    this.height = height;
-    this.hash = hash;
-    this.deleted = deleted;
-    this.page_type = page_type;
-    this.blocked = blocked;
-  }
+  name: string;
+  issue_count: number;
+  image_url: string;
+  start_year: string;
+  publisher: string;
 }

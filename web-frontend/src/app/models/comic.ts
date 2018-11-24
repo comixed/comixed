@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,36 @@
  * org.comixed;
  */
 
-import { Comic } from './comic';
-import { Volume } from './volume';
-import { Issue } from './issue';
+import { Page } from './page';
+import { ComicCredit } from './comic-credit';
 
-export interface LibraryScrape {
-  busy: boolean;
-  api_key: string;
-  comic: Comic;
+export interface Comic {
+  id: number;
+  filename: string;
+  base_filename: string;
+  publisher: string;
   series: string;
   volume: string;
   issue_number: string;
-  volumes: Array<Volume>;
-  current_volume: Volume;
-  current_issue: Issue;
+  title: string;
+  story_arcs: string[];
+  description: string;
+  notes: string;
+  summary: string;
+  missing: boolean;
+  archive_type: string;
+  comic_vine_id: string;
+  comic_vine_url: string;
+  added_date: string;
+  cover_date: string;
+  year_published: number;
+  last_read_date: string;
+  page_count: number;
+  characters: string[];
+  teams: string[];
+  locations: string[];
+  pages: Page[];
+  blocked_page_count: number;
+  deleted_page_count: number;
+  credits: ComicCredit[];
 }

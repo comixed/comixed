@@ -20,7 +20,7 @@
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Library } from '../models/library';
-import { Comic } from '../models/comic.model';
+import { Comic } from '../models/comic';
 
 export const SET_UPDATING = '[LIBRARY] Set updating';
 export const UPDATE_COMIC = '[LIBRARY] Update a single comic';

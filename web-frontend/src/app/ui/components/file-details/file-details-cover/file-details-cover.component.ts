@@ -19,7 +19,7 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { ComicService } from '../../../../services/comic.service';
-import { FileDetails } from '../../../../models/file-details.model';
+import { ComicFile } from '../../../../models/comic-file';
 
 @Component({
   selector: 'app-file-details-cover',
@@ -27,7 +27,7 @@ import { FileDetails } from '../../../../models/file-details.model';
   styleUrls: ['./file-details-cover.component.css']
 })
 export class FileDetailsCoverComponent implements OnInit {
-  @Input() file_details: FileDetails;
+  @Input() file_details: ComicFile;
   @Input() width: string;
   @Input() height: string;
 
@@ -38,7 +38,7 @@ export class FileDetailsCoverComponent implements OnInit {
   ngOnInit() {
   }
 
-  get_cover_url(file: FileDetails): string {
+  get_cover_url(file: ComicFile): string {
     return this.comic_service.get_cover_url_for_file(file.filename);
   }
 }

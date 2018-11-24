@@ -27,8 +27,8 @@ import * as LibraryScrapingActions from '../actions/library-scraping.actions';
 import { ComicService } from '../services/comic.service';
 import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
-import { Volume } from '../models/volume.model';
-import { ComicIssue } from '../models/comic-issue.model';
+import { Volume } from '../models/volume';
+import { Issue } from '../models/issue';
 
 @Injectable()
 export class LibraryScrapeEffects {
@@ -98,7 +98,7 @@ export class LibraryScrapeEffects {
         action.volume.id,
         action.issue_number,
       )
-        .map((issue: ComicIssue) => new LibraryScrapingActions.LibraryScrapingFoundIssue({
+        .map((issue: Issue) => new LibraryScrapingActions.LibraryScrapingFoundIssue({
           issue: issue,
           volume_id: action.volume.id,
         })
@@ -114,7 +114,7 @@ export class LibraryScrapeEffects {
         action.volume_id,
         action.issue_number,
       )
-        .map((issue: ComicIssue) => new LibraryScrapingActions.LibraryScrapingFoundIssue({
+        .map((issue: Issue) => new LibraryScrapingActions.LibraryScrapingFoundIssue({
           issue: issue,
           volume_id: action.volume_id,
         }))

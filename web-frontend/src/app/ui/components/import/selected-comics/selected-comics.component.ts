@@ -21,7 +21,7 @@ import { Component, OnInit, Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { ComicService } from '../../../../services/comic.service';
-import { FileDetails } from '../../../../models/file-details.model';
+import { ComicFile } from '../../../../models/comic-file';
 
 @Component({
   selector: 'app-selected-comics',
@@ -29,7 +29,7 @@ import { FileDetails } from '../../../../models/file-details.model';
   styleUrls: ['./selected-comics.component.css']
 })
 export class SelectedComicsComponent implements OnInit {
-  @Input() selected_files: Array<FileDetails>;
+  @Input() selected_files: Array<ComicFile>;
   @Input() show_selected_files: boolean;
   @Input() cover_width: string;
   @Input() cover_height: string;
@@ -58,16 +58,16 @@ export class SelectedComicsComponent implements OnInit {
     this.close.next(true);
   }
 
-  get_cover_url(file: FileDetails): string {
+  get_cover_url(file: ComicFile): string {
     return this.comic_service.get_cover_url_for_file(file.filename);
   }
 
-  set_selected(file: FileDetails, selected: boolean): void {
+  set_selected(file: ComicFile, selected: boolean): void {
     file.selected = selected;
     if (selected) {
       this.selected_files.push(file);
     } else {
-      this.selected_files = this.selected_files.filter((file_detail: FileDetails) => {
+      this.selected_files = this.selected_files.filter((file_detail: ComicFile) => {
         return file_detail.filename !== file.filename;
       });
     }

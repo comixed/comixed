@@ -24,7 +24,7 @@ import { SelectItem } from 'primeng/api';
 import { ComicService } from '../../../../services/comic.service';
 import { UserService } from '../../../../services/user.service';
 import { AlertService } from '../../../../services/alert.service';
-import { DuplicatePage } from '../../../../models/duplicate-page.model';
+import { DuplicatePage } from '../../../../models/duplicate-page';
 
 @Component({
   selector: 'app-duplicates-page',

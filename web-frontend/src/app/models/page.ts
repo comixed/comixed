@@ -17,27 +17,17 @@
  * org.comixed;
  */
 
-export class Volume {
-  id: number;
-  name: string;
-  issue_count: number;
-  image_url: string;
-  start_year: string;
-  publisher: string;
+import { PageType } from './page-type';
 
-  constructor(
-    id?: number,
-    name?: string,
-    issue_count?: number,
-    image_url?: string,
-    start_year?: string,
-    publisher?: string,
-  ) {
-    this.id = id;
-    this.name = name;
-    this.issue_count = issue_count;
-    this.image_url = image_url;
-    this.start_year = start_year;
-    this.publisher = publisher;
-  }
+export interface Page {
+  id: number;
+  comic_id: number;
+  filename: string;
+  width: number;
+  height: number;
+  index: number;
+  hash: string;
+  deleted: boolean;
+  page_type: PageType;
+  blocked: boolean;
 }

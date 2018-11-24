@@ -17,24 +17,12 @@
  * org.comixed;
  */
 
-export class FileDetails {
-  filename: string;
-  base_filename: string;
-  size: number;
-  selected: boolean;
-
-  constructor(
-    filename?: string,
-    base_filename?: string,
-    size?: number,
-  ) {
-    this.filename = filename;
-    this.base_filename = base_filename;
-    this.size = size;
-    this.selected = false;
-  }
-
-  toggleSelected(): void {
-    this.selected = !this.selected;
-  }
+export interface Issue {
+  id: number;
+  cover_date: string;
+  cover_url: string;
+  issue_number: number;
+  name; string;
+  volume_name: string;
+  volume_id: number;
 }

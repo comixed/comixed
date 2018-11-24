@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,7 @@
  * org.comixed;
  */
 
-export class PageType {
+export interface PageType {
   id: number;
   name: string;
-
-  constructor(
-    id: number,
-    name: string,
-  ) {
-    this.id = id;
-    this.name = name;
-  }
 }

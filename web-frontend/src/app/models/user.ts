@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,48 +17,14 @@
  * org.comixed;
  */
 
-export class Role {
+import { Role } from './role';
+import { Preference } from './preference';
+
+export interface User {
   name: string;
-
-  constructor(
-    name?: string,
-  ) {
-    this.name = name;
-  }
-}
-
-export class Preference {
-  name: string;
-  value: string;
-
-  constructor(
-    name?: string,
-    value?: string,
-  ) {
-    this.name = name;
-    this.value = value;
-  }
-}
-
-export class User {
-  name: string;
-  authenticated = true;
+  authenticated: boolean;
   first_login_date: number;
   last_login_date: number;
   roles: Role[];
   preferences: Preference[];
-
-  constructor(
-    name?: string,
-    first_login_date?: number,
-    last_login_date?: number,
-    roles?: Role[],
-    preferences?: Preference[],
-  ) {
-    this.name = name;
-    this.first_login_date = first_login_date;
-    this.last_login_date = last_login_date;
-    this.roles = roles;
-    this.preferences = preferences;
-  }
 }

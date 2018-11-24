@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { UserService } from '../../../../services/user.service';
-import { FileDetails } from '../../../../models/file-details.model';
+import { ComicFile } from '../../../../models/comic-file';
 import { ComicService } from '../../../../services/comic.service';
 import { AlertService } from '../../../../services/alert.service';
 
@@ -48,9 +48,9 @@ export class ImportPageComponent implements OnInit {
 
   protected cover_size: number;
 
-  protected file_details: Array<FileDetails> = [];
-  protected selected_file_detail: FileDetails;
-  protected selected_files: Array<FileDetails> = [];
+  protected file_details: Array<ComicFile> = [];
+  protected selected_file_detail: ComicFile;
+  protected selected_files: Array<ComicFile> = [];
   protected show_selected_files = false;
 
   protected plural = false;
@@ -154,9 +154,9 @@ export class ImportPageComponent implements OnInit {
     this.busy = true;
     this.selected_file_detail = null;
     this.comic_service.get_files_under_directory(directory).subscribe(
-      (files: FileDetails[]) => {
+      (files: ComicFile[]) => {
         that.file_details = files;
-        that.file_details.forEach((file_detail: FileDetails) => file_detail.selected = false);
+        that.file_details.forEach((file_detail: ComicFile) => file_detail.selected = false);
         that.plural = this.file_details.length !== 1;
         that.alert_service.show_info_message('Fetched ' + that.file_details.length + ' comic' + (that.plural ? 's' : '') + '...');
         that.busy = false;
@@ -228,12 +228,12 @@ export class ImportPageComponent implements OnInit {
     return this.file_details.length === 0;
   }
 
-  toggle_selected_state(file: FileDetails): void {
+  toggle_selected_state(file: ComicFile): void {
     file.selected = !file.selected;
     if (file.selected) {
       this.selected_files.push(file);
     } else {
-      this.selected_files = this.selected_files.filter((file_detail: FileDetails) => {
+      this.selected_files = this.selected_files.filter((file_detail: ComicFile) => {
         return file_detail.filename !== file.filename;
       });
     }

@@ -17,18 +17,7 @@
  * org.comixed;
  */
 
-import { Comic } from './comic';
-import { Volume } from './volume';
-import { Issue } from './issue';
-
-export interface LibraryScrape {
-  busy: boolean;
-  api_key: string;
-  comic: Comic;
-  series: string;
-  volume: string;
-  issue_number: string;
-  volumes: Array<Volume>;
-  current_volume: Volume;
-  current_issue: Issue;
+export interface Preference {
+  name: string;
+  value: string;
 }

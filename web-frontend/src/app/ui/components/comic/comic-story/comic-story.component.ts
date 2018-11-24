@@ -22,7 +22,7 @@ import {
   OnInit,
   Input,
 } from '@angular/core';
-import { Comic } from '../../../../models/comic.model';
+import { Comic } from '../../../../models/comic';
 
 @Component({
   selector: 'app-comic-story',

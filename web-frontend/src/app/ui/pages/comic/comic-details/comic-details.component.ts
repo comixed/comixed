@@ -22,7 +22,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
-import { Comic } from '../../../../models/comic.model';
+import { Comic } from '../../../../models/comic';
 
 @Component({
   selector: 'app-comic-details',

@@ -19,9 +19,9 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Comic } from '../models/comic.model';
-import { Volume } from '../models/volume.model';
-import { ComicIssue } from '../models/comic-issue.model';
+import { Comic } from '../models/comic';
+import { Volume } from '../models/volume';
+import { Issue } from '../models/issue';
 
 export const LIBRARY_SCRAPING_SETUP = '[LIBRARY SCRAPING] Setup scraping';
 export const LIBRARY_SCRAPING_SAVE_API_KEY = '[LIBRARY SCRAPING] Save API key';
@@ -107,7 +107,7 @@ export class LibraryScrapingFoundIssue implements Action {
   readonly type = LIBRARY_SCRAPING_FOUND_ISSUE;
 
   constructor(public payload: {
-    issue: ComicIssue,
+    issue: Issue,
     volume_id: number,
   }) { }
 }

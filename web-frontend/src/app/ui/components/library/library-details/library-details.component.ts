@@ -21,7 +21,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Library } from '../../../../models/library';
 import { LibraryDisplay } from '../../../../models/library-display';
-import { Comic } from '../../../../models/comic.model';
+import { Comic } from '../../../../models/comic';
 import { ComicService } from '../../../../services/comic.service';
 
 @Component({

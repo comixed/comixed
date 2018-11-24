@@ -30,10 +30,10 @@ import * as LibraryActions from '../actions/library.actions';
 
 import { UserService } from './user.service';
 import { AlertService } from './alert.service';
-import { Comic } from '../models/comic.model';
-import { Page } from '../models/page.model';
-import { PageType } from '../models/page-type.model';
-import { FileDetails } from '../models/file-details.model';
+import { Comic } from '../models/comic';
+import { Page } from '../models/page';
+import { PageType } from '../models/page-type';
+import { ComicFile } from '../models/comic-file';
 
 @Injectable()
 export class ComicService {

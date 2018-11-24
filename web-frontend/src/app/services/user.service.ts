@@ -28,7 +28,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 
 import { AlertService } from './alert.service';
-import { User } from '../models/user.model';
+import { User } from '../models/user';
 
 @Injectable()
 export class UserService {
@@ -52,7 +52,7 @@ export class UserService {
         },
         error => {
           console.log('ERROR: ' + error.message);
-          this.user = new User();
+          this.user = null;
         });
     }, 250);
   }

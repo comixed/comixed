@@ -17,17 +17,14 @@
  * org.comixed;
  */
 
-export class ComicCredit {
-  id: number;
-  name: string;
-  role: string;
+import { PageType } from './page-type';
 
-  constructor(
-    id?: number,
-    name?: string,
-    role?: string, ) {
-    this.id = id;
-    this.name = name;
-    this.role = role;
-  }
+export interface DuplicatePage {
+  id: number;
+  filename: string;
+  hash: string;
+  deleted: boolean;
+  blocked: boolean;
+  page_type: PageType;
+  index: number;
 }

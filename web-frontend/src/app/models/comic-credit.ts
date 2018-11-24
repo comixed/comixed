@@ -17,32 +17,8 @@
  * org.comixed;
  */
 
-import { PageType } from './page-type.model';
-
-export class DuplicatePage {
+export interface ComicCredit {
   id: number;
-  filename: string;
-  hash: string;
-  deleted: boolean;
-  blocked: boolean;
-  page_type: PageType;
-  index: number;
-
-  constructor(
-    id?: number,
-    filename?: string,
-    hash?: string,
-    deleted?: boolean,
-    blocked?: boolean,
-    page_type?: PageType,
-    index?: number
-  ) {
-    this.id = id;
-    this.filename = filename;
-    this.hash = hash;
-    this.deleted = deleted;
-    this.blocked = blocked;
-    this.page_type = page_type;
-    this.index = index;
-  }
+  name: string;
+  role: string;
 }
