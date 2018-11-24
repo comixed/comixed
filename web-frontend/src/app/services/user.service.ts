@@ -28,7 +28,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 
 import { AlertService } from './alert.service';
-import { User } from '../models/user';
+import { User } from '../models/scraping/user';
 
 @Injectable()
 export class UserService {
