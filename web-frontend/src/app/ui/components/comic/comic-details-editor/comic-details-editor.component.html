@@ -1,10 +1,7 @@
-<p-blockUI
-  [target]='comicDetailsEditor'
-  [blocked]='library_scrape.busy'> <p-progressBar
+<p-blockUI [blocked]='library_scrape.busy'> <p-progressBar
   mode="indeterminate"
   [style]="{'height': '6px'}"></p-progressBar> </p-blockUI>
 <div
-  #comicDetailsEditor
   *ngIf='library_scrape && !library_scrape.volumes.length'
   class='ui-g'>
   <div class='ui-g-2 ui-sm-2'>
