@@ -19,7 +19,7 @@
 
 import { Action } from '@ngrx/store';
 import { LibraryScrape } from '../models/library-scrape';
-import { Issue } from '../models/issue';
+import { Issue } from '../models/scraping/issue';
 import * as LibraryScrapingActions from '../actions/library-scraping.actions';
 
 const initial_state: LibraryScrape = {

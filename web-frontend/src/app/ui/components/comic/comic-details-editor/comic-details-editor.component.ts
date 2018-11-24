@@ -29,7 +29,7 @@ import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
 import { Comic } from '../../../../models/comics/comic';
 import { Volume } from '../../../../models/comics/volume';
-import { Issue } from '../../../../models/issue';
+import { Issue } from '../../../../models/scraping/issue';
 import { LibraryScrape } from '../../../../models/library-scrape';
 
 @Component({
