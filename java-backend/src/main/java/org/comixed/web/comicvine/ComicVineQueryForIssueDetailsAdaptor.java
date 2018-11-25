@@ -20,6 +20,8 @@
 package org.comixed.web.comicvine;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.comicvine.ComicVineIssue;
+import org.comixed.repositories.ComicVineIssueRepository;
 import org.comixed.web.ComicVineIssueDetailsWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
@@ -43,27 +45,52 @@ public class ComicVineQueryForIssueDetailsAdaptor
     @Autowired
     private ComicVineIssueDetailsResponseProcessor responseProcessor;
 
+    @Autowired
+    private ComicVineIssueRepository comicVineIssueRepository;
+
     public String execute(String apiKey, long comicId, String issueId, Comic comic) throws ComicVineAdaptorException
     {
         String result = null;
-        ComicVineIssueDetailsWebRequest request = this.webRequestFactory.getObject();
+        String content = null;
+        ComicVineIssue issue = null;
 
-        request.setApiKey(apiKey);
-        request.setIssueNumber(issueId);
+        this.logger.debug("Fetching issue details: issueId={}", issueId);
 
-        this.logger.debug("Fetching details for comic: issueId={}", issueId);
+        issue = this.comicVineIssueRepository.findByIssueId(issueId);
 
-        try
+        if (issue == null)
         {
-            byte[] content = this.webRequestProcessor.execute(request);
-            this.logger.debug("Retrieved {} bytes", content != null ? content.length : 0);
-            result = this.responseProcessor.process(content, comic);
+            this.logger.debug("Fetching issue details from ComicVine...");
 
+            ComicVineIssueDetailsWebRequest request = this.webRequestFactory.getObject();
+
+            request.setApiKey(apiKey);
+            request.setIssueNumber(issueId);
+
+            try
+            {
+                content = this.webRequestProcessor.execute(request);
+                this.logger.debug("Saving retrieved issue data...");
+                if (issue == null)
+                {
+                    issue = new ComicVineIssue();
+                }
+                issue.setIssueId(issueId);
+                issue.setContent(content);
+                comicVineIssueRepository.save(issue);
+            }
+            catch (WebRequestException error)
+            {
+                throw new ComicVineAdaptorException("Failed to scrape comic details", error);
+            }
         }
-        catch (WebRequestException error)
+        else
         {
-            throw new ComicVineAdaptorException("Failed to scrape comic details", error);
+            this.logger.debug("Issue found in database.");
+            content = issue.getContent();
         }
+
+        result = this.responseProcessor.process(content.getBytes(), comic);
 
         return result;
     }

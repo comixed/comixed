@@ -22,6 +22,8 @@ package org.comixed.web.comicvine;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.comixed.library.model.comicvine.ComicVineVolumeQueryCacheEntry;
+import org.comixed.repositories.ComicVineVolumeQueryCacheRepository;
 import org.comixed.web.ComicVineQueryWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
@@ -46,37 +48,63 @@ public class ComicVineQueryForVolumesAdaptor
     @Autowired
     private ComicVineVolumesResponseProcessor responseProcessor;
 
+    @Autowired
+    private ComicVineVolumeQueryCacheRepository queryRepository;
+
     public List<ComicVolume> execute(String apiKey, String name) throws ComicVineAdaptorException, WebRequestException
     {
-        this.logger.debug("Preparing to query volumes: name={} API key={}", name, apiKey);
+        this.logger.debug("Fetching volumes: name=\"{}\"", name, apiKey);
 
         List<ComicVolume> result = new ArrayList<>();
         boolean done = false;
         int page = 0;
 
-        while (!done)
+        List<ComicVineVolumeQueryCacheEntry> entries = queryRepository.findBySeriesName(name);
+
+        if (entries == null || entries.size() == 0)
         {
-            ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
-            request.setApiKey(apiKey);
-            request.setSeriesName(name);
-
-            page++;
-            if (page > 1)
+            while (!done)
             {
-                this.logger.debug("Setting offset to {}", page);
-                request.setPage(page);
+                logger.debug("Fetching volumes from ComicVine...");
+
+                ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
+                request.setApiKey(apiKey);
+                request.setSeriesName(name);
+
+                page++;
+                if (page > 1)
+                {
+                    this.logger.debug("Setting offset to {}", page);
+                    request.setPage(page);
+                }
+
+                try
+                {
+                    String response = this.webRequestProcessor.execute(request);
+
+                    // put the entry in the cache
+                    ComicVineVolumeQueryCacheEntry entry = new ComicVineVolumeQueryCacheEntry();
+
+                    entry.setSeriesName(name);
+                    entry.setContent(response);
+                    entry.setIndex(page);
+                    queryRepository.save(entry);
+                    done = this.responseProcessor.process(result, response.getBytes());
+                }
+                catch (WebRequestException error)
+                {
+                    throw new ComicVineAdaptorException("unable to query for volumes", error);
+                }
             }
-
-            try
+        }
+        else
+        {
+            logger.debug("Processing {} cached query entries...", entries.size());
+            for (int index = 0;
+                 index < entries.size();
+                 index++)
             {
-                byte[] response = this.webRequestProcessor.execute(request);
-                done = this.responseProcessor.process(result, response);
-                this.logger.debug("More pages to fetch? {}", (done ? "No" : "Yes"));
-
-            }
-            catch (WebRequestException error)
-            {
-                throw new ComicVineAdaptorException("unable to query for volumes", error);
+                this.responseProcessor.process(result, entries.get(index).getContent().getBytes());
             }
         }
 

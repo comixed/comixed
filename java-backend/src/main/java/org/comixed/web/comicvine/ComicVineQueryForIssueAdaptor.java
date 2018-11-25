@@ -61,8 +61,8 @@ public class ComicVineQueryForIssueAdaptor
 
         try
         {
-            byte[] content = this.webRequestProcessor.execute(request);
-            result = this.responseProcessor.process(content);
+            String content = this.webRequestProcessor.execute(request);
+            result = this.responseProcessor.process(content.getBytes());
         }
         catch (WebRequestException error)
         {

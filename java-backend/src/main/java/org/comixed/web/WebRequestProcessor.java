@@ -20,6 +20,7 @@
 package org.comixed.web;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -57,7 +58,7 @@ public class WebRequestProcessor
      * @throws WebRequestException
      *             if an error occurs
      */
-    public byte[] execute(WebRequest request) throws WebRequestException
+    public String execute(WebRequest request) throws WebRequestException
     {
         String url = request.getURL();
         this.logger.debug("Executing web request: " + url);
@@ -70,8 +71,8 @@ public class WebRequestProcessor
         try
         {
             HttpResponse response = client.execute(getRequest);
-            byte[] result = IOUtils.toByteArray(response.getEntity().getContent());
-            this.logger.debug("Returning {} byte response", result.length);
+            String result = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
+            this.logger.debug("Returning {} byte response", result.length());
             return result;
         }
         catch (IOException error)

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -48,9 +49,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class WebRequestProcessorTest
 {
+    private static final String TEST_CONTENT_TEXT = "This is the content";
     private static final String TEST_REQUEST_URL = "http://www.testsite.org/getdata";
     private static final long TEST_CONTENT_LENGTH = 2342L;
-    private static final byte[] TEST_CONTENT = "This is the content".getBytes();
+    private static final byte[] TEST_CONTENT = TEST_CONTENT_TEXT.getBytes();
 
     @InjectMocks
     private WebRequestProcessor processor;
@@ -80,6 +82,9 @@ public class WebRequestProcessorTest
     private ArgumentCaptor<InputStream> inputStreamCaptor;
 
     @Captor
+    private ArgumentCaptor<Charset> charsetCaptor;
+
+    @Captor
     private ArgumentCaptor<byte[]> content;
 
     @Test
@@ -92,8 +97,8 @@ public class WebRequestProcessorTest
         Mockito.when(httpEntity.getContentLength()).thenReturn(TEST_CONTENT_LENGTH);
         Mockito.when(httpEntity.getContent()).thenReturn(inputStream);
         PowerMockito.mockStatic(IOUtils.class);
-        PowerMockito.doReturn(TEST_CONTENT).when(IOUtils.class);
-        IOUtils.toByteArray(Mockito.any(InputStream.class));
+        PowerMockito.doReturn(TEST_CONTENT_TEXT).when(IOUtils.class);
+        IOUtils.toString(Mockito.any(InputStream.class), Mockito.any(Charset.class));
 
         this.processor.execute(this.request);
 
@@ -103,7 +108,7 @@ public class WebRequestProcessorTest
         Mockito.verify(httpResponse, Mockito.times(1)).getEntity();
         Mockito.verify(httpEntity, Mockito.times(1)).getContent();
         PowerMockito.verifyStatic(IOUtils.class, Mockito.times(1));
-        IOUtils.toByteArray(inputStreamCaptor.capture());
+        IOUtils.toString(inputStreamCaptor.capture(), charsetCaptor.capture());
     }
 
     @Test(expected = WebRequestException.class)

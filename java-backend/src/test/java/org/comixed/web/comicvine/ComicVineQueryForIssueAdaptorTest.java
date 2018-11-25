@@ -37,9 +37,10 @@ import org.springframework.beans.factory.ObjectFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class ComicVineQueryForIssueAdaptorTest
 {
+    private static final String TEST_REQUEST_CONTENT_TEXT = "This is a response body";
     private static final String TEST_API_KEY = "12345";
     private static final String TEST_ISSUE_NUMBER = "327";
-    private static final byte[] TEST_REQUEST_CONTENT = "This is a response body".getBytes();
+    private static final byte[] TEST_REQUEST_CONTENT = TEST_REQUEST_CONTENT_TEXT.getBytes();
     private static final String TEST_VOLUME = "2018";
 
     @InjectMocks
@@ -90,7 +91,7 @@ public class ComicVineQueryForIssueAdaptorTest
         Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setVolume(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setIssueNumber(Mockito.anyString());
-        Mockito.when(webRequestProcessor.execute(Mockito.any())).thenReturn(TEST_REQUEST_CONTENT);
+        Mockito.when(webRequestProcessor.execute(Mockito.any())).thenReturn(TEST_REQUEST_CONTENT_TEXT);
         Mockito.when(responseProcessor.process(Mockito.any(byte[].class)))
                .thenThrow(new ComicVineAdaptorException("expected"));
 
@@ -116,7 +117,7 @@ public class ComicVineQueryForIssueAdaptorTest
         Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setVolume(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setIssueNumber(Mockito.anyString());
-        Mockito.when(webRequestProcessor.execute(Mockito.any())).thenReturn(TEST_REQUEST_CONTENT);
+        Mockito.when(webRequestProcessor.execute(Mockito.any())).thenReturn(TEST_REQUEST_CONTENT_TEXT);
         Mockito.when(responseProcessor.process(Mockito.any(byte[].class))).thenReturn(comicIssue);
 
         ComicIssue result = adaptor.execute(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER);
@@ -139,7 +140,7 @@ public class ComicVineQueryForIssueAdaptorTest
         Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setVolume(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setIssueNumber(Mockito.anyString());
-        Mockito.when(webRequestProcessor.execute(Mockito.any())).thenReturn(TEST_REQUEST_CONTENT);
+        Mockito.when(webRequestProcessor.execute(Mockito.any())).thenReturn(TEST_REQUEST_CONTENT_TEXT);
         Mockito.when(responseProcessor.process(Mockito.any(byte[].class))).thenReturn(comicIssue);
 
         ComicIssue result = adaptor.execute(TEST_API_KEY, TEST_VOLUME, "0" + TEST_ISSUE_NUMBER);

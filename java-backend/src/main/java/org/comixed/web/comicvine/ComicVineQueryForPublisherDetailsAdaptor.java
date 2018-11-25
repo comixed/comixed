@@ -20,6 +20,8 @@
 package org.comixed.web.comicvine;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.comicvine.ComicVinePublisher;
+import org.comixed.repositories.ComicVinePublisherRepository;
 import org.comixed.web.ComicVinePublisherDetailsWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
@@ -43,24 +45,51 @@ public class ComicVineQueryForPublisherDetailsAdaptor
     @Autowired
     private ComicVinePublisherDetailsResponseProcessor contentProcessor;
 
+    @Autowired
+    private ComicVinePublisherRepository comicVinePublisherRepository;
+
     public void execute(String apiKey, String publisherId, Comic comic) throws ComicVineAdaptorException
     {
         this.logger.debug("Fetching publisher details: publisherId={}", publisherId);
 
-        ComicVinePublisherDetailsWebRequest request = this.webRequestFactory.getObject();
+        ComicVinePublisher publisher = null;
+        String content = null;
 
-        request.setApiKey(apiKey);
-        request.setPublisherId(publisherId);
+        publisher = comicVinePublisherRepository.findByPublisherId(publisherId);
 
-        try
+        if (publisher == null)
         {
-            byte[] content = this.webRequestProcessor.execute(request);
-            this.logger.debug("Retrieved {} bytes of data", content.length);
-            this.contentProcessor.process(content, comic);
+            logger.debug("Fetching publisher details from ComicVine...");
+
+            ComicVinePublisherDetailsWebRequest request = this.webRequestFactory.getObject();
+
+            request.setApiKey(apiKey);
+            request.setPublisherId(publisherId);
+
+            try
+            {
+                content = this.webRequestProcessor.execute(request);
+
+                logger.debug("Saving retrieved publisher data...");
+                if (publisher == null)
+                {
+                    publisher = new ComicVinePublisher();
+                }
+                publisher.setPublisherId(publisherId);
+                publisher.setContent(content);
+                comicVinePublisherRepository.save(publisher);
+            }
+            catch (WebRequestException error)
+            {
+                throw new ComicVineAdaptorException("Failed to retrieve publisher details", error);
+            }
         }
-        catch (WebRequestException error)
+        else
         {
-            throw new ComicVineAdaptorException("Failed to retrieve publisher details", error);
+            logger.debug("Publisher found in database.");
+            content = publisher.getContent();
         }
+
+        this.contentProcessor.process(content.getBytes(), comic);
     }
 }

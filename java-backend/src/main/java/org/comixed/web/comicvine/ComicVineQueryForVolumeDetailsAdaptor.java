@@ -20,6 +20,8 @@
 package org.comixed.web.comicvine;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.comicvine.ComicVineVolume;
+import org.comixed.repositories.ComicVineVolumeRepository;
 import org.comixed.web.ComicVineVolumeDetailsWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
@@ -43,24 +45,51 @@ public class ComicVineQueryForVolumeDetailsAdaptor
     @Autowired
     private ComicVineVolumeDetailsResponseProcessor responseProcessor;
 
+    @Autowired
+    private ComicVineVolumeRepository comicVineVolumeRepository;
+
     public String execute(String apiKey, String volumeId, Comic comic) throws ComicVineAdaptorException
     {
         String result = null;
-        logger.debug("Preparing to get volume details: id={}", volumeId);
+        String content = null;
+        ComicVineVolume volume = null;
 
-        ComicVineVolumeDetailsWebRequest request = requestFactory.getObject();
-        request.setApiKey(apiKey);
-        request.setVolumeId(volumeId);
+        this.logger.debug("Fetching volume details: volumeId={}", volumeId);
 
-        try
+        volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
+
+        if (volume == null)
         {
-            byte[] content = webRequestProcessor.execute(request);
-            result = responseProcessor.process(content, comic);
+            this.logger.debug("Fetching volume details from ComicVine...");
+
+            ComicVineVolumeDetailsWebRequest request = this.requestFactory.getObject();
+            request.setApiKey(apiKey);
+            request.setVolumeId(volumeId);
+            try
+            {
+                content = this.webRequestProcessor.execute(request);
+                this.logger.debug("Saving retrieved volume data...");
+                if (volume == null)
+                {
+                    volume = new ComicVineVolume();
+                }
+                volume.setVolumeId(volumeId);
+                volume.setContent(content.toString());
+
+                this.comicVineVolumeRepository.save(volume);
+            }
+            catch (WebRequestException error)
+            {
+                throw new ComicVineAdaptorException("Failed to get volume details", error);
+            }
         }
-        catch (WebRequestException error)
+        else
         {
-            throw new ComicVineAdaptorException("Failed to get volume details", error);
+            this.logger.debug("Volume found in database.");
+            content = volume.getContent();
         }
+
+        result = this.responseProcessor.process(content.getBytes(), comic);
 
         return result;
     }

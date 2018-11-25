@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.comicvine.ComicVineIssue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,25 +41,6 @@ public class ComicVineIssueDetailsResponseProcessor
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String process(byte[] content, Comic comic) throws ComicVineAdaptorException
-    {
-        try
-        {
-            // TODO there HAS to be a better way to configure this
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            JsonNode jsonNode = objectMapper.readTree(content);
-
-            applyDetails(jsonNode, comic);
-
-            return jsonNode.get("results").get("volume").get("id").asText();
-        }
-        catch (IOException
-               | ParseException error)
-        {
-            throw new ComicVineAdaptorException("Unable to process issue details", error);
-        }
-    }
-
     private void applyDetails(JsonNode jsonNode, Comic comic) throws ParseException
     {
         JsonNode results = jsonNode.get("results");
@@ -68,7 +50,7 @@ public class ComicVineIssueDetailsResponseProcessor
         comic.setSeries(results.get("volume").get("name").asText());
         comic.setIssueNumber(results.get("issue_number").asText());
         comic.setTitle(results.get("name").asText());
-        comic.setCoverDate(simpleDataFormat.parse(results.get("cover_date").asText()));
+        comic.setCoverDate(this.simpleDataFormat.parse(results.get("cover_date").asText()));
 
         // apply the characters
         comic.clearCharacters();
@@ -145,6 +127,25 @@ public class ComicVineIssueDetailsResponseProcessor
                     comic.addCredit(name, role.trim());
                 }
             }
+        }
+    }
+
+    public String process(byte[] content, Comic comic) throws ComicVineAdaptorException
+    {
+        try
+        {
+            // TODO there HAS to be a better way to configure this
+            this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode jsonNode = this.objectMapper.readTree(content);
+
+            this.applyDetails(jsonNode, comic);
+
+            return jsonNode.get("results").get("volume").get("id").asText();
+        }
+        catch (IOException
+               | ParseException error)
+        {
+            throw new ComicVineAdaptorException("Unable to process issue details", error);
         }
     }
 }

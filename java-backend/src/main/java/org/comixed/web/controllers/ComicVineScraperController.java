@@ -22,6 +22,7 @@ package org.comixed.web.controllers;
 import java.util.List;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.View.ComicDetails;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.ComicVineAdaptorException;
@@ -39,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 @RequestMapping("/api/scraper")
@@ -93,6 +96,7 @@ public class ComicVineScraperController
     }
 
     @RequestMapping(value = "/save")
+    @JsonView(ComicDetails.class)
     public Comic scrapeAndSaveComicDetails(@RequestParam("api_key") String apiKey,
                                            @RequestParam("comic_id") long comicId,
                                            @RequestParam("issue_id") String issueId) throws ComicVineAdaptorException

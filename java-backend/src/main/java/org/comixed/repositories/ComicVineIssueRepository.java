@@ -37,12 +37,10 @@ public interface ComicVineIssueRepository extends
     /**
      * Retrieves the entry for the given volume id and issue number.
      * 
-     * @param volumeId
-     *            TODO
-     * @param issueNumber
-     *            the issue number id
+     * @param issueId
+     *            the issue id
      * 
      * @return the issue, not null if none was found
      */
-    ComicVineIssue findByVolumeIdAndIssueId(String volumeId, String issueNumber);
+    ComicVineIssue findByIssueId(String issueId);
 }
