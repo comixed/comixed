@@ -18,6 +18,8 @@
  */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -25,6 +27,8 @@ import { AppState } from '../../../../app.state';
 import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
 import { AlertService } from '../../../../services/alert.service';
 import { Duplicates } from '../../../../models/duplicates';
+
+export const DUPLICATES_HASH_PARAMETER = 'hash';
 
 @Component({
   selector: 'app-duplicates-page',
@@ -37,6 +41,8 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
   duplicates: Duplicates;
 
   constructor(
+    private activated_route: ActivatedRoute,
+    private router: Router,
     private store: Store<AppState>,
     private alert_service: AlertService,
   ) {
@@ -54,7 +60,15 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
         if (this.duplicates.pages_undeleted) {
           this.alert_service.show_info_message(`${this.duplicates.pages_undeleted} page(s) unmarked...`);
         }
+        if (this.duplicates.current_hash && !this.duplicates.current_duplicates && this.duplicates.pages.length > 0) {
+          this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash(this.duplicates.current_hash));
+        }
       });
+    this.activated_route.queryParams.subscribe(params => {
+      if (params[DUPLICATES_HASH_PARAMETER]) {
+        this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash(params[DUPLICATES_HASH_PARAMETER]));
+      }
+    });
     this.store.dispatch(new DuplicatesActions.DuplicatePagesFetchPages());
   }
 

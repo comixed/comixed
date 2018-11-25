@@ -26,6 +26,7 @@ const initial_state: Duplicates = {
   pages: [],
   hashes: [],
   pages_by_hash: new Map<string, Array<DuplicatePage>>(),
+  current_hash: null,
   current_duplicates: null,
   last_hash: null,
   pages_deleted: 0,
@@ -150,6 +151,7 @@ export function duplicatesReducer(
     case DuplicatesActions.DUPLICATE_PAGES_SHOW_COMICS_WITH_HASH: {
       return {
         ...state,
+        current_hash: action.payload,
         current_duplicates: state.pages_by_hash.get(action.payload),
       };
     }
@@ -157,6 +159,7 @@ export function duplicatesReducer(
     case DuplicatesActions.DUPLICATE_PAGES_SHOW_ALL_PAGES: {
       return {
         ...state,
+        current_hash: null,
         current_duplicates: null,
       };
     }

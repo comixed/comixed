@@ -24,6 +24,7 @@ export interface Duplicates {
   pages: Array<DuplicatePage>;
   hashes: Array<String>;
   pages_by_hash: Map<string, Array<DuplicatePage>>;
+  current_hash: string;
   current_duplicates: Array<DuplicatePage>;
   last_hash: string;
   pages_deleted: number;

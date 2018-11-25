@@ -28,6 +28,7 @@ import { ComicService } from '../../../../services/comic.service';
 import { UserService } from '../../../../services/user.service';
 import { DuplicatePage } from '../../../../models/comics/duplicate-page';
 import { Duplicates } from '../../../../models/duplicates';
+import { DUPLICATES_HASH_PARAMETER } from '../../../pages/library/duplicates-page/duplicates-page.component';
 
 @Component({
   selector: 'app-duplicate-pages-view',
@@ -136,5 +137,6 @@ export class DuplicatePagesViewComponent implements OnInit {
 
   show_pages_with_hash(hash: string): void {
     this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash(hash));
+    this.update_params(DUPLICATES_HASH_PARAMETER, hash);
   }
 }
