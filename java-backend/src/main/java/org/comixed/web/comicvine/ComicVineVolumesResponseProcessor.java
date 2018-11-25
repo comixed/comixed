@@ -21,7 +21,9 @@ package org.comixed.web.comicvine;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.comixed.web.model.ComicVolume;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,66 @@ public class ComicVineVolumesResponseProcessor
 {
     @Autowired
     private ObjectMapper objectMapper;
+
+    static class ComicVineVolume
+    {
+        static final String IMAGE_URL_TO_USE_KEY = "original_url";
+        static final String PUBLISHER_NAME_KEY = "name";
+
+        @JsonProperty(value = "id")
+        int id;
+
+        @JsonProperty(value = "count_of_issues")
+        int issueCount;
+
+        @JsonProperty(value = "name")
+        String name;
+
+        @JsonProperty(value = "image")
+        Map<String,
+            String> imageURLs = new HashMap<>();
+
+        @JsonProperty(value = "start_year")
+        String startYear;
+
+        @JsonProperty(value = "publisher")
+        Map<String,
+            String> publisher = new HashMap<>();
+
+        public ComicVineVolume()
+        {}
+
+        public int getId()
+        {
+            return this.id;
+        }
+
+        public String getImageURL()
+        {
+            return this.imageURLs.get(IMAGE_URL_TO_USE_KEY);
+        }
+
+        public int getIssueCount()
+        {
+            // BUG ComicVine returns the issue count - 1 for some reason
+            return this.issueCount + 1;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        public String getStartYear()
+        {
+            return this.startYear == null ? "" : this.startYear;
+        }
+
+        public String getPublisher()
+        {
+            return this.publisher != null ? this.publisher.get(PUBLISHER_NAME_KEY) : "";
+        }
+    }
 
     static class ComicVineVolumesReponseContainer
     {
