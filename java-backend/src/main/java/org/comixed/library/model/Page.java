@@ -136,7 +136,7 @@ public class Page
     protected Map<String,
                   Image> imageCache = new WeakHashMap<>();
 
-    @Formula("(SELECT CASE WHEN (COUNT(SELECT * FROM blocked_page_hashes b WHERE b.hash = hash) > 0) THEN true ELSE false END)")
+    @Formula("(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
     @JsonView(
     {View.ComicList.class,
      View.PageList.class})
