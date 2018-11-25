@@ -18,6 +18,8 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
@@ -25,6 +27,7 @@ import { ComicService } from '../../../../services/comic.service';
 import { Duplicates } from '../../../../models/duplicates';
 import { Comic } from '../../../../models/comics/comic';
 import { Page } from '../../../../models/comics/page';
+import { DUPLICATES_HASH_PARAMETER } from '../../../pages/library/duplicates-page/duplicates-page.component';
 
 @Component({
   selector: 'app-page-hash-view',
@@ -37,6 +40,8 @@ export class PageHashViewComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private comic_service: ComicService,
+    private activated_route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -56,6 +61,9 @@ export class PageHashViewComponent implements OnInit {
 
   close_page_view(): void {
     this.store.dispatch(new DuplicatesActions.DuplicatePagesShowAllPages());
+    const queryParams: Params = Object.assign({}, this.activated_route.snapshot.queryParams);
+    queryParams[DUPLICATES_HASH_PARAMETER] = null;
+    this.router.navigate([], { relativeTo: this.activated_route, queryParams: queryParams });
   }
 
   delete_page(page: Page): void {
