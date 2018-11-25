@@ -38,17 +38,17 @@ public class Credit
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(View.List.class)
+    @JsonView(View.ComicList.class)
     private Long id;
 
     @Column(name = "name")
     @JsonProperty("name")
-    @JsonView(View.List.class)
+    @JsonView(View.ComicList.class)
     private String name;
 
     @Column(name = "role")
     @JsonProperty("role")
-    @JsonView(View.List.class)
+    @JsonView(View.ComicList.class)
     private String role;
 
     @ManyToOne

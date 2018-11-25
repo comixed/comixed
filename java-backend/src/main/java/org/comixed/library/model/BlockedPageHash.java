@@ -26,6 +26,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.comixed.library.model.View.PageList;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -36,7 +38,7 @@ public class BlockedPageHash
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
-    @JsonView(View.List.class)
+    @JsonView(PageList.class)
     private Long id;
 
     @Column(name = "hash",
@@ -44,7 +46,7 @@ public class BlockedPageHash
             unique = true,
             length = 1024)
     @JsonProperty
-    @JsonView(View.List.class)
+    @JsonView(PageList.class)
     private String hash;
 
     public BlockedPageHash()

@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.View;
+import org.comixed.library.model.View.ComicDetails;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +106,7 @@ public class ComicController
 
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.GET)
-    @JsonView(View.Details.class)
+    @JsonView(ComicDetails.class)
     public Comic getComic(@PathVariable("id") long id)
     {
         this.logger.debug("Fetching comic: id={}", id);
@@ -126,7 +127,7 @@ public class ComicController
 
     @RequestMapping(value = "/since/{timestamp}",
                     method = RequestMethod.GET)
-    @JsonView(View.List.class)
+    @JsonView(View.ComicList.class)
     public List<Comic> getComicsAddedSince(@PathVariable("timestamp") long timestamp)
     {
         Date latestDate = new Date(timestamp);
@@ -142,7 +143,7 @@ public class ComicController
 
     @RequestMapping(value = "/{id}/summary",
                     method = RequestMethod.GET)
-    @JsonView(View.Summary.class)
+    @JsonView(View.ComicDetails.class)
     public Comic getComicSummary(@PathVariable("id") long id)
     {
         this.logger.debug("Fetching comic: id={}", id);

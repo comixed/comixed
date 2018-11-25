@@ -28,6 +28,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.comixed.library.model.View.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -46,13 +48,13 @@ public class Preference
 
     @Column(name = "name",
             nullable = false)
-    @JsonView(View.Details.class)
+    @JsonView(UserDetails.class)
     private String name;
 
     @Column(name = "value",
             updatable = true,
             nullable = false)
-    @JsonView(View.Details.class)
+    @JsonView(UserDetails.class)
     private String value;
 
     public Preference()

@@ -40,13 +40,17 @@ public class PageType
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private Long id;
 
     @Column(name = "name",
             updatable = false,
             nullable = false)
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private String name;
 
     public PageType()

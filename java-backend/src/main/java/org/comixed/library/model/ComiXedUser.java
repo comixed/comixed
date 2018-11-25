@@ -46,14 +46,14 @@ public class ComiXedUser
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(View.List.class)
+    @JsonView(View.UserDetails.class)
     private Long id;
 
     @Column(name = "email",
             updatable = true,
             nullable = false,
             unique = true)
-    @JsonView(View.List.class)
+    @JsonView(View.UserDetails.class)
     private String email;
 
     @Column(name = "password_hash",
@@ -65,14 +65,14 @@ public class ComiXedUser
             nullable = false,
             updatable = false)
     @JsonProperty("first_login_date")
-    @JsonView(View.Details.class)
+    @JsonView(View.UserDetails.class)
     private Date firstLoginDate = new Date();
 
     @Column(name = "last_login_date",
             nullable = false,
             updatable = true)
     @JsonProperty("last_login_date")
-    @JsonView(View.List.class)
+    @JsonView(View.UserDetails.class)
     private Date lastLoginDate = new Date();
 
     @ManyToMany
@@ -81,17 +81,17 @@ public class ComiXedUser
                                          referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "role_id",
                                                 referencedColumnName = "id"))
-    @JsonView(View.Details.class)
+    @JsonView(View.UserDetails.class)
     private List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL,
                fetch = FetchType.EAGER)
-    @JsonView(View.Details.class)
+    @JsonView(View.UserDetails.class)
     private List<Preference> preferences = new ArrayList<>();
 
     @Transient
-    @JsonView(View.Details.class)
+    @JsonView(View.UserDetails.class)
     private boolean authenticated = false;
 
     public String getEmail()

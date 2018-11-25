@@ -22,32 +22,46 @@ package org.comixed.library.model;
 /**
  * <code>View</code> provides interfaces used to decide what details are
  * included in JSON responses sent to the front end.
- * 
+ *
  * @author Darryl L. Pierce
  *
  */
 public class View
 {
     /**
-     * Show complete information.
+     * Show full details on a single comic.
      *
      */
-    public interface Details extends
-                             List
+    public interface ComicDetails extends
+                                  ComicList
     {}
 
     /**
-     * Show only enough information to display a list.
+     * Show minimal details for more than one comic.
      *
      */
-    public interface List
+    public interface ComicList
     {}
 
     /**
-     * Show minimal information.
+     * Show full details on a single page.
      *
      */
-    public interface Summary extends
-                             List
+    public interface PageDetails extends
+                                 PageList
+    {}
+
+    /**
+     * Show minimal information for more than one page.
+     *
+     */
+    public interface PageList
+    {}
+
+    /**
+     * Show full details on a user.
+     *
+     */
+    public interface UserDetails
     {}
 }

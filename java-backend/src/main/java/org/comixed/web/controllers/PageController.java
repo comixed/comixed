@@ -27,6 +27,7 @@ import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
 import org.comixed.library.model.PageType;
 import org.comixed.library.model.View;
+import org.comixed.library.model.View.PageList;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.PageRepository;
@@ -126,7 +127,7 @@ public class PageController
 
     @RequestMapping(value = "/comics/{id}/pages",
                     method = RequestMethod.GET)
-    @JsonView(View.List.class)
+    @JsonView(PageList.class)
     public List<Page> getAll(@PathVariable("id") long id)
     {
         this.logger.debug("Getting all pages for comic: id={}", id);
@@ -149,7 +150,7 @@ public class PageController
 
     @RequestMapping(value = "/pages/duplicates",
                     method = RequestMethod.GET)
-    @JsonView(View.List.class)
+    @JsonView(View.PageList.class)
     public List<Page> getDuplicatePages()
     {
         this.logger.debug("Fetching the list of duplicate page hashes");

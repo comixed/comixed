@@ -23,7 +23,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.Image;
@@ -46,7 +45,6 @@ public class PageTest
     private static final String TEST_JPG_FILE = "src/test/resources/example.jpg";
     private static String EXPECTED_HASH;
     private static byte[] CONTENT;
-    private static Image TEST_IMAGE;
 
     static
     {
@@ -61,7 +59,7 @@ public class PageTest
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(CONTENT);
             EXPECTED_HASH = new BigInteger(1, md.digest()).toString(16).toUpperCase();
-            TEST_IMAGE = ImageIO.read(new ByteArrayInputStream(CONTENT));
+            ImageIO.read(new ByteArrayInputStream(CONTENT));
         }
         catch (IOException
                | NoSuchAlgorithmException e)
@@ -115,58 +113,6 @@ public class PageTest
         assertNotNull(result);
         assertEquals(338, result.getWidth(null));
         assertEquals(479, result.getHeight(null));
-    }
-
-    @Test
-    public void testCanResizeImagesByWidth()
-    {
-        Image result = page.getImage(169, 0);
-
-        assertNotNull(result);
-        assertEquals(169, result.getWidth(null));
-        assertEquals(239, result.getHeight(null));
-    }
-
-    @Test
-    public void testCanResizeImagesByHeight()
-    {
-        Image result = page.getImage(0, 224);
-
-        assertNotNull(result);
-        assertEquals(158, result.getWidth(null));
-        assertEquals(224, result.getHeight(null));
-    }
-
-    @Test
-    public void testCanResizeImagesReturnsOriginalImage()
-    {
-        Image result = page.getImage(0, 0);
-
-        assertNotNull(result);
-        assertEquals(338, result.getWidth(null));
-        assertEquals(479, result.getHeight(null));
-    }
-
-    @Test
-    public void testResizeImageIsPlacedIntoCache()
-    {
-        String key = Page.createImageCacheKey(158, 224);
-        Image result = page.getImage(158, 224);
-
-        assertNotNull(result);
-        assertTrue(page.imageCache.containsKey(key));
-        assertSame(result, page.imageCache.get(key));
-    }
-
-    @Test
-    public void testResizedImageInCacheIsReturned()
-    {
-        page.imageCache.put(Page.createImageCacheKey(158, 224), TEST_IMAGE);
-
-        Image result = page.getImage(158, 224);
-
-        assertNotNull(result);
-        assertSame(TEST_IMAGE, result);
     }
 
     @Test

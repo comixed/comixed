@@ -1,5 +1,4 @@
 /*
- * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,58 +65,62 @@ import com.fasterxml.jackson.annotation.JsonView;
              query = "UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash)")})
 public class Page
 {
-
-    public static String createImageCacheKey(int width, int height)
-    {
-        return String.valueOf(width) + "x" + String.valueOf(height);
-    }
-
     @Transient
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "comic_id")
-    @JsonIgnore
+    @JsonView(View.PageList.class)
     private Comic comic;
 
     @ManyToOne
     @JoinColumn(name = "type_id")
     @JsonProperty("page_type")
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private PageType pageType;
 
     @Column(name = "filename",
             updatable = true,
             nullable = false)
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private String filename;
 
     @Column(name = "hash",
             updatable = true,
             nullable = false)
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private String hash;
 
     @Column(name = "deleted",
             updatable = true,
             nullable = false)
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private boolean deleted = false;
 
     @Column(name = "width",
             updatable = true)
-    @JsonView(View.Details.class)
+    @JsonIgnore
     private Integer width = -1;
 
     @Column(name = "height",
             updatable = true)
-    @JsonView(View.Details.class)
+    @JsonIgnore
     private Integer height = -1;
 
     @Transient
@@ -134,7 +137,9 @@ public class Page
                   Image> imageCache = new WeakHashMap<>();
 
     @Formula("(SELECT CASE WHEN (COUNT(SELECT * FROM blocked_page_hashes b WHERE b.hash = hash) > 0) THEN true ELSE false END)")
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private boolean blocked;
 
     /**
@@ -212,7 +217,7 @@ public class Page
     }
 
     @JsonProperty(value = "comic_id")
-    @JsonView(View.Details.class)
+    @JsonView(View.PageList.class)
     public Long getComicId()
     {
         return this.comic != null ? this.comic.getId() : null;
@@ -299,63 +304,6 @@ public class Page
         return this.icon;
     }
 
-    /**
-     * Returns a scaled copy of the offset image.
-     *
-     * @param maxWidth
-     *            the maximum scaled width
-     * @param maxHeight
-     *            the maximum scaled height
-     * @return the scaled image
-     */
-    public Image getImage(int maxWidth, int maxHeight)
-    {
-        this.logger.debug("Scaling offset: maxWidth=" + maxWidth + ", maxHeight=" + maxHeight);
-        Image image = this.getImage();
-
-        int boundWidth = maxWidth;
-        int boundHeight = maxHeight;
-        int oldWidth = image.getWidth(null);
-        int oldHeight = image.getHeight(null);
-
-        this.logger.debug("oldWidth=" + oldWidth);
-        this.logger.debug("oldHeight=" + oldHeight);
-
-        if ((boundWidth < 1) && (boundHeight < 1))
-        {
-            this.logger.debug("If both maxWidth and maxHeight are less than 1, then consider using getImage()");
-            boundWidth = oldWidth;
-            boundHeight = oldHeight;
-        }
-        else if (boundWidth < 1)
-        {
-            boundWidth = (int )(((float )oldWidth * (float )boundHeight) / oldHeight);
-        }
-        else if (boundHeight < 1)
-        {
-            boundHeight = (int )(((float )oldHeight * (float )boundWidth) / oldWidth);
-        }
-
-        Image result = null;
-        String key = Page.createImageCacheKey(boundWidth, boundHeight);
-
-        if (this.imageCache.containsKey(key))
-        {
-            this.logger.debug("Found image in cache: (" + boundWidth + "x" + boundHeight + ")");
-            result = this.imageCache.get(key);
-        }
-        else
-        {
-            this.logger.debug("Scaling image: old=(" + oldWidth + "x" + oldHeight + ") new=(" + boundWidth + "x"
-                              + boundHeight + ")");
-            result = image.getScaledInstance(boundWidth, boundHeight, Image.SCALE_SMOOTH);
-            this.logger.debug("Placing scaled image into cache");
-            this.imageCache.put(key, result);
-        }
-
-        return result;
-    }
-
     private void getImageMetrics()
     {
         try
@@ -384,7 +332,9 @@ public class Page
      * @return the offset index
      */
     @Transient
-    @JsonView(View.List.class)
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     @JsonProperty(value = "index")
     public int getIndex()
     {

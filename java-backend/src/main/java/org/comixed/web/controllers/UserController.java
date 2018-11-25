@@ -23,6 +23,7 @@ import java.security.Principal;
 
 import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.View;
+import org.comixed.library.model.View.UserDetails;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.util.Utils;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class UserController
 
     @RequestMapping(value = "/user",
                     method = RequestMethod.GET)
-    @JsonView(View.Details.class)
+    @JsonView(UserDetails.class)
     public ComiXedUser getCurrentUser(Principal user)
     {
         this.logger.debug("Returning current user");
