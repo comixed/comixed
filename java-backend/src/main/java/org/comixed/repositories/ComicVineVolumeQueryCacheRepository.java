@@ -1,36 +1,35 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
- *
+ * Copyright (C) 2018, The ComiXed Project
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
 
-package org.comixed.web;
+package org.comixed.repositories;
 
-import org.springframework.stereotype.Component;
+import java.util.List;
 
-@Component
-public class ComicVinePublisherDetailsWebRequest extends AbstractComicVineWebRequest
+import org.comixed.library.model.comicvine.ComicVineVolumeQueryCacheEntry;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ComicVineVolumeQueryCacheRepository extends
+                                                     CrudRepository<ComicVineVolumeQueryCacheEntry,
+                                                                    Long>
+
 {
-    public ComicVinePublisherDetailsWebRequest()
-    {
-        super("publisher");
-    }
-
-    public void setPublisherId(String publisherId)
-    {
-        super.endpoint = "publisher/4010-" + publisherId;
-    }
+    List<ComicVineVolumeQueryCacheEntry> findBySeriesName(String series);
 }
