@@ -58,7 +58,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.library$ = store.select('library');
     this.alert_service.busy_messages.subscribe(
       (message: string) => {
-        console.log(`*** Setting message='${message}'`);
         this.alert_message = message || '';
         this.busy = (this.alert_message != null) && (this.alert_message.length > 0);
       });
@@ -69,10 +68,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       (library: Library) => {
         this.library = library;
         // if we're not fetching comics now then fire off a call
-        if (!this.library.is_updating) {
-          this.comic_service.fetch_remote_library_state();
+        if (!this.library.busy) {
+          this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
+            last_comic_date: this.library.last_comic_date,
+          }));
         }
       });
+    this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({ last_comic_date: '0' }));
   }
 
   ngOnDestroy() {

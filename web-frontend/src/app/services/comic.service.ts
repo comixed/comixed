@@ -53,20 +53,8 @@ export class ComicService {
       });
   }
 
-  fetch_remote_library_state(): void {
-    if (!this.library.is_updating) {
-      this.store.dispatch(new LibraryActions.LibraryStartUpdating(true));
-      this.http.get(`${this.api_url}/comics/since/${this.library.latest_comic_update}`)
-        .subscribe((comics: Comic[]) => {
-          if ((comics || []).length > 0) {
-            this.store.dispatch(new LibraryActions.LIbrarySetComics(comics));
-          }
-        },
-        (error: Error) => {
-          this.store.dispatch(new LibraryActions.LibraryStartUpdating(false));
-          this.alert_service.show_error_message('Failed to get the list of comics...', error);
-        });
-    }
+  fetch_remote_library_state(latest_comic_update: string): Observable<any> {
+    return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}`);
   }
 
   remove_comic_from_local(comic_id: number) {

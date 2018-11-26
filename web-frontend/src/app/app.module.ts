@@ -82,6 +82,7 @@ import { LibraryCoversComponent } from './ui/components/library/library-covers/l
 import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
 import { IssueDetailsComponent } from './ui/components/library/issue-details/issue-details.component';
 import { EffectsModule } from '@ngrx/effects';
+import { LibraryEffects } from './effects/library.effects';
 import { LibraryScrapeEffects } from './effects/library-scrape.effects';
 import { DuplicatesEffects } from './effects/duplicates.effects';
 import { DuplicatePagesViewComponent } from './ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
@@ -168,6 +169,7 @@ import { PageHashViewComponent } from './ui/views/library/page-hash-view/page-ha
       duplicates: duplicatesReducer,
     }),
     EffectsModule.forRoot([
+      LibraryEffects,
       LibraryScrapeEffects,
       DuplicatesEffects,
     ]),

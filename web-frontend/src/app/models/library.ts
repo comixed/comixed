@@ -20,7 +20,7 @@
 import { Comic } from './comics/comic';
 
 export interface Library {
-  is_updating: boolean;
-  latest_comic_update: string;
+  busy: boolean;
+  last_comic_date: string;
   comics: Array<Comic>;
 }

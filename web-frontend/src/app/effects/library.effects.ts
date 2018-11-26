@@ -17,5 +17,30 @@
  * org.comixed;
  */
 
-export class Library {
+import { Injectable } from '@angular/core';
+import { Actions, Effect } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import * as LibraryActions from '../actions/library.actions';
+import { ComicService } from '../services/comic.service';
+import { Comic } from '../models/comics/comic';
+
+@Injectable()
+export class LibraryEffects {
+  constructor(
+    private actions$: Actions,
+    private comic_service: ComicService,
+  ) { }
+
+  @Effect()
+  library_start_updating$: Observable<Action> = this.actions$
+    .ofType<LibraryActions.LibraryFetchLibraryChanges>(LibraryActions.LIBRARY_FETCH_LIBRARY_CHANGES)
+    .map(action => action.payload)
+    .switchMap(action =>
+      this.comic_service.fetch_remote_library_state(action.last_comic_date)
+        .map((comics: Array<Comic>) => new LibraryActions.LibraryMergeNewComics({
+          comics: comics,
+        })));
 }

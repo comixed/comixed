@@ -22,27 +22,31 @@ import { Action } from '@ngrx/store';
 import { Library } from '../models/library';
 import { Comic } from '../models/comics/comic';
 
-export const LIBRARY_START_UPDATING = '[LIBRARY] Start updating';
+export const LIBRARY_FETCH_LIBRARY_CHANGES = '[LIBRARY] Fetch changes to the library';
+export const LIBRARY_MERGE_NEW_COMICS = '[LIBRARY] Merge newly retrieved comics';
 export const LIBRARY_UPDATE_COMIC = '[LIBRARY] Update a single comic';
-export const LIBRARY_SET_COMICS = '[LIBRARY] Set the list of comics';
 export const REMOVE_REMOVE_COMIC = '[LIBRARY] Remove comic';
 
-export class LibraryStartUpdating implements Action {
-  readonly type = LIBRARY_START_UPDATING;
+export class LibraryFetchLibraryChanges implements Action {
+  readonly type = LIBRARY_FETCH_LIBRARY_CHANGES;
 
-  constructor(public payload: boolean) { }
+  constructor(public payload: {
+    last_comic_date: string,
+  }) { }
+}
+
+export class LibraryMergeNewComics implements Action {
+  readonly type = LIBRARY_MERGE_NEW_COMICS;
+
+  constructor(public payload: {
+    comics: Array<Comic>,
+  }) { }
 }
 
 export class LibraryUpdateComic implements Action {
   readonly type = LIBRARY_UPDATE_COMIC;
 
   constructor(public payload: Comic) { }
-}
-
-export class LIbrarySetComics implements Action {
-  readonly type = LIBRARY_SET_COMICS;
-
-  constructor(public payload: Array<Comic>) { }
 }
 
 export class LibraryRemoveComic implements Action {
@@ -52,7 +56,7 @@ export class LibraryRemoveComic implements Action {
 }
 
 export type Actions =
-  LibraryStartUpdating |
+  LibraryFetchLibraryChanges |
+  LibraryMergeNewComics |
   LibraryUpdateComic |
-  LIbrarySetComics |
   LibraryRemoveComic;
