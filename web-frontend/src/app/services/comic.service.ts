@@ -23,10 +23,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
-import { Library } from '../models/library';
-import { AppState } from '../app.state';
-import * as LibraryActions from '../actions/library.actions';
 
 import { UserService } from './user.service';
 import { AlertService } from './alert.service';
@@ -39,26 +35,18 @@ import { ComicFile } from '../models/import/comic-file';
 export class ComicService {
   private api_url = '/api';
 
-  private library: Library;
-
   constructor(
     private http: HttpClient,
     private alert_service: AlertService,
     private user_service: UserService,
-    private store: Store<AppState>,
-  ) {
-    store.select('library').subscribe(
-      (library: Library) => {
-        this.library = library;
-      });
-  }
+  ) { }
 
   fetch_remote_library_state(latest_comic_update: string): Observable<any> {
     return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}`);
   }
 
-  remove_comic_from_local(comic_id: number) {
-    this.store.dispatch(new LibraryActions.LibraryRemoveComic(comic_id));
+  delete_comic(comic: Comic): Observable<any> {
+    return this.http.delete(`${this.api_url}/comics/${comic.id}`);
   }
 
   load_comic_from_remote(id: number): Observable<any> {
@@ -135,16 +123,6 @@ export class ComicService {
 
   unblock_page(page_hash: string): Observable<any> {
     return this.http.delete(`${this.api_url}/pages/blocked/${page_hash}`);
-  }
-
-  remove_comic_from_library(comic: Comic) {
-    this.http.delete(`${this.api_url}/comics/${comic.id}`).subscribe(
-      () => {
-        this.store.dispatch(new LibraryActions.LibraryRemoveComic(comic.id));
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Failed to delete comic...', error);
-      });
   }
 
   import_files_into_library(filenames: string[], delete_blocked_pages: boolean): Observable<any> {

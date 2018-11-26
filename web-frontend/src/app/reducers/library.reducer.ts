@@ -79,11 +79,19 @@ export function libraryReducer(
       };
     }
 
-    case LibraryActions.REMOVE_REMOVE_COMIC: {
-      const comics = state.comics.filter(comic => comic.id !== action.payload);
+    case LibraryActions.LIBRARY_REMOVE_COMIC: {
       return {
         ...state,
-        comics: comics,
+        busy: true,
+      };
+    }
+
+    case LibraryActions.LIBRARY_UPDATE_COMICS_REMOVE_COMIC: {
+      const updated_comics = state.comics.filter(comic => comic.id !== action.payload.comic.id);
+      return {
+        ...state,
+        busy: false,
+        comics: updated_comics,
       };
     }
 

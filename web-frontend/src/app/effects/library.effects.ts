@@ -43,4 +43,15 @@ export class LibraryEffects {
         .map((comics: Array<Comic>) => new LibraryActions.LibraryMergeNewComics({
           comics: comics,
         })));
+
+  @Effect()
+  library_remove_comic$: Observable<Action> = this.actions$
+    .ofType<LibraryActions.LibraryRemoveComic>(LibraryActions.LIBRARY_REMOVE_COMIC)
+    .map(action => action.payload)
+    .switchMap(action =>
+      this.comic_service.delete_comic(action.comic)
+        .map(() => new LibraryActions.LibraryUpdateComicsRemoveComic({
+          comic: action.comic,
+        }))
+    );
 }

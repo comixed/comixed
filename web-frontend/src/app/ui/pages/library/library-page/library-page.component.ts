@@ -162,7 +162,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   delete_comic(comic: Comic): void {
-    this.comic_service.remove_comic_from_library(comic);
+    this.store.dispatch(new LibraryActions.LibraryRemoveComic({ comic: comic }));
   }
 
   get_comic_title(comic: Comic): string {

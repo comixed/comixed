@@ -38,6 +38,7 @@ export class LibraryCoversComponent implements OnInit {
   @Output() rows = new EventEmitter<number>();
   @Output() coverSize = new EventEmitter<number>();
   @Output() comicSelected = new EventEmitter<Comic>();
+  @Output() delete = new EventEmitter<Comic>();
 
   constructor(
     private comic_service: ComicService,
@@ -69,5 +70,9 @@ export class LibraryCoversComponent implements OnInit {
   set_selected_comic(event: Event, comic: Comic): void {
     this.comicSelected.next(comic);
     event.preventDefault();
+  }
+
+  delete_comic(comic: Comic): void {
+    this.delete.next(comic);
   }
 }

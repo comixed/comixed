@@ -25,7 +25,8 @@ import { Comic } from '../models/comics/comic';
 export const LIBRARY_FETCH_LIBRARY_CHANGES = '[LIBRARY] Fetch changes to the library';
 export const LIBRARY_MERGE_NEW_COMICS = '[LIBRARY] Merge newly retrieved comics';
 export const LIBRARY_UPDATE_COMIC = '[LIBRARY] Update a single comic';
-export const REMOVE_REMOVE_COMIC = '[LIBRARY] Remove comic';
+export const LIBRARY_REMOVE_COMIC = '[LIBRARY] Remove comic';
+export const LIBRARY_UPDATE_COMICS_REMOVE_COMIC = '[LIBRARY] Update comics by removing a comic';
 
 export class LibraryFetchLibraryChanges implements Action {
   readonly type = LIBRARY_FETCH_LIBRARY_CHANGES;
@@ -50,13 +51,24 @@ export class LibraryUpdateComic implements Action {
 }
 
 export class LibraryRemoveComic implements Action {
-  readonly type = REMOVE_REMOVE_COMIC;
+  readonly type = LIBRARY_REMOVE_COMIC;
 
-  constructor(public payload: number) { }
+  constructor(public payload: {
+    comic: Comic,
+  }) { }
+}
+
+export class LibraryUpdateComicsRemoveComic implements Action {
+  readonly type = LIBRARY_UPDATE_COMICS_REMOVE_COMIC;
+
+  constructor(public payload: {
+    comic: Comic,
+  }) { }
 }
 
 export type Actions =
   LibraryFetchLibraryChanges |
   LibraryMergeNewComics |
   LibraryUpdateComic |
-  LibraryRemoveComic;
+  LibraryRemoveComic |
+  LibraryUpdateComicsRemoveComic;
