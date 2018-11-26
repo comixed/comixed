@@ -33,13 +33,13 @@ export function libraryReducer(
   action: LibraryActions.Actions,
 ) {
   switch (action.type) {
-    case LibraryActions.SET_UPDATING:
+    case LibraryActions.LIBRARY_START_UPDATING:
       return {
         ...state,
         is_updating: action.payload,
       };
 
-    case LibraryActions.UPDATE_COMIC: {
+    case LibraryActions.LIBRARY_UPDATE_COMIC: {
       const index = state.comics.findIndex((comic: Comic) => {
         return comic.id === action.payload.id;
       });
@@ -56,7 +56,7 @@ export function libraryReducer(
       };
     }
 
-    case LibraryActions.UPDATE_COMICS: {
+    case LibraryActions.LIBRARY_SET_COMICS: {
       const comics = state.comics.concat(action.payload);
       let latest_comic_update = state.latest_comic_update;
       let latest_date = parseInt(latest_comic_update, 10);
@@ -76,7 +76,7 @@ export function libraryReducer(
       };
     }
 
-    case LibraryActions.REMOVE_COMIC: {
+    case LibraryActions.REMOVE_REMOVE_COMIC: {
       const comics = state.comics.filter(comic => comic.id !== action.payload);
       return {
         ...state,

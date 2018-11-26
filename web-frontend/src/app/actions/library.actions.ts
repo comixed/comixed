@@ -22,37 +22,37 @@ import { Action } from '@ngrx/store';
 import { Library } from '../models/library';
 import { Comic } from '../models/comics/comic';
 
-export const SET_UPDATING = '[LIBRARY] Set updating';
-export const UPDATE_COMIC = '[LIBRARY] Update a single comic';
-export const UPDATE_COMICS = '[LIBRARY] Add more entries to the list of comics';
-export const REMOVE_COMIC = '[LIBRARY] Remove comic';
+export const LIBRARY_START_UPDATING = '[LIBRARY] Start updating';
+export const LIBRARY_UPDATE_COMIC = '[LIBRARY] Update a single comic';
+export const LIBRARY_SET_COMICS = '[LIBRARY] Set the list of comics';
+export const REMOVE_REMOVE_COMIC = '[LIBRARY] Remove comic';
 
-export class SetUpdating implements Action {
-  readonly type = SET_UPDATING;
+export class LibraryStartUpdating implements Action {
+  readonly type = LIBRARY_START_UPDATING;
 
   constructor(public payload: boolean) { }
 }
 
-export class UpdateComic implements Action {
-  readonly type = UPDATE_COMIC;
+export class LibraryUpdateComic implements Action {
+  readonly type = LIBRARY_UPDATE_COMIC;
 
   constructor(public payload: Comic) { }
 }
 
-export class UpdateComics implements Action {
-  readonly type = UPDATE_COMICS;
+export class LIbrarySetComics implements Action {
+  readonly type = LIBRARY_SET_COMICS;
 
   constructor(public payload: Array<Comic>) { }
 }
 
-export class RemoveComic implements Action {
-  readonly type = REMOVE_COMIC;
+export class LibraryRemoveComic implements Action {
+  readonly type = REMOVE_REMOVE_COMIC;
 
   constructor(public payload: number) { }
 }
 
 export type Actions =
-  SetUpdating |
-  UpdateComic |
-  UpdateComics |
-  RemoveComic;
+  LibraryStartUpdating |
+  LibraryUpdateComic |
+  LIbrarySetComics |
+  LibraryRemoveComic;

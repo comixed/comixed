@@ -55,22 +55,22 @@ export class ComicService {
 
   fetch_remote_library_state(): void {
     if (!this.library.is_updating) {
-      this.store.dispatch(new LibraryActions.SetUpdating(true));
+      this.store.dispatch(new LibraryActions.LibraryStartUpdating(true));
       this.http.get(`${this.api_url}/comics/since/${this.library.latest_comic_update}`)
         .subscribe((comics: Comic[]) => {
           if ((comics || []).length > 0) {
-            this.store.dispatch(new LibraryActions.UpdateComics(comics));
+            this.store.dispatch(new LibraryActions.LIbrarySetComics(comics));
           }
         },
         (error: Error) => {
-          this.store.dispatch(new LibraryActions.SetUpdating(false));
+          this.store.dispatch(new LibraryActions.LibraryStartUpdating(false));
           this.alert_service.show_error_message('Failed to get the list of comics...', error);
         });
     }
   }
 
   remove_comic_from_local(comic_id: number) {
-    this.store.dispatch(new LibraryActions.RemoveComic(comic_id));
+    this.store.dispatch(new LibraryActions.LibraryRemoveComic(comic_id));
   }
 
   load_comic_from_remote(id: number): Observable<any> {
@@ -152,7 +152,7 @@ export class ComicService {
   remove_comic_from_library(comic: Comic) {
     this.http.delete(`${this.api_url}/comics/${comic.id}`).subscribe(
       () => {
-        this.store.dispatch(new LibraryActions.RemoveComic(comic.id));
+        this.store.dispatch(new LibraryActions.LibraryRemoveComic(comic.id));
       },
       (error: Error) => {
         this.alert_service.show_error_message('Failed to delete comic...', error);
