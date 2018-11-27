@@ -31,6 +31,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Comic } from '../../../../models/comics/comic';
 import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
+import { ConfirmationService } from 'primeng/api';
 import { SelectItem } from 'primeng/api';
 
 @Component({
@@ -70,6 +71,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private user_service: UserService,
     private comic_service: ComicService,
+    private confirm_service: ConfirmationService,
     private store: Store<AppState>,
   ) {
     this.library$ = store.select('library');
@@ -162,7 +164,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   delete_comic(comic: Comic): void {
-    this.store.dispatch(new LibraryActions.LibraryRemoveComic({ comic: comic }));
+    this.confirm_service.confirm({
+      header: `Delete ${this.comic_service.get_label_for_comic(comic)}?`,
+      message: 'Are you sure? This will not delete the file, only remove it from the library.',
+      icon: 'fa fa-exclamation',
+      accept: () => {
+        this.store.dispatch(new LibraryActions.LibraryRemoveComic({ comic: comic }));
+      }
+    });
   }
 
   get_comic_title(comic: Comic): string {
