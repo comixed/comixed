@@ -128,18 +128,18 @@
         <button
           pButton
           type='button'
-          icon='pi pi-search'
+          icon='fa fa-search'
           (click)='set_selected_comic($event, comic)'
           label='Details'></button>
         <a [routerLink]='[comic.id]'><button
             pButton
             type='button'
-            icon='pi pi-folder-open'
+            icon='fa fa-book'
             label='Open'></button></a>
         <button
           pButton
           type='button'
-          icon='pi pi-trash'
+          icon='fa fa-trash'
           (click)='delete_comic(comic)'
           label='Delete'></button>
       </div>
@@ -157,11 +157,17 @@
   <button
     pButton
     type='button'
-    icon='pi pi-search'
+    icon='fa fa-search'
     (click)='set_selected_comic($event, comic)'></button>
   <a [routerLink]='[comic.id]'><button
       pButton
       type='button'
-      icon='pi pi-folder-open'></button></a> </p-footer></p-card>
+      icon='fa fa-book'></button></a>
+  <button
+    pButton
+    type='button'
+    icon='fa fa-trash'
+    (click)='delete_comic(comic)'></button>
+  </p-footer> </p-card>
 </div>
 </ng-template> </p-dataView>
