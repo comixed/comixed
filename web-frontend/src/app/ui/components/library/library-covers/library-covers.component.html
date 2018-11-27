@@ -131,11 +131,12 @@
           icon='fa fa-search'
           (click)='set_selected_comic($event, comic)'
           label='Details'></button>
-        <a [routerLink]='[comic.id]'><button
-            pButton
-            type='button'
-            icon='fa fa-book'
-            label='Open'></button></a>
+        <button
+          pButton
+          type='button'
+          icon='fa fa-book'
+          label='Open Comic'
+          (click)='open_comic(comic)'></button>
         <button
           pButton
           type='button'
@@ -159,10 +160,11 @@
     type='button'
     icon='fa fa-search'
     (click)='set_selected_comic($event, comic)'></button>
-  <a [routerLink]='[comic.id]'><button
-      pButton
-      type='button'
-      icon='fa fa-book'></button></a>
+  <button
+    pButton
+    type='button'
+    icon='fa fa-book'
+    (click)='open_comic(comic)'></button>
   <button
     pButton
     type='button'

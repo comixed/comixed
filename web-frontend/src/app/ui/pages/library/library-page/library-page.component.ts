@@ -178,6 +178,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     return `${comic.series || 'Unknown'} v${comic.volume || '????'} #${comic.issue_number || '??'}`;
   }
 
+  open_comic(comic: Comic): void {
+    this.router.navigate(['comics', `${comic.id}`]);
+  }
+
   private update_params(name: string, value: string): void {
     const queryParams: Params = Object.assign({}, this.activated_route.snapshot.queryParams);
     if (value && value.length) {

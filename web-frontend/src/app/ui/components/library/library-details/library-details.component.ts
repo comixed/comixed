@@ -39,6 +39,8 @@ export class LibraryDetailsComponent implements OnInit {
   @Output() rows = new EventEmitter<number>();
   @Output() coverSize = new EventEmitter<number>();
   @Output() comicSelected = new EventEmitter<Comic>();
+  @Output() open = new EventEmitter<Comic>();
+  @Output() delete = new EventEmitter<Comic>();
 
   constructor(
     private router: Router,
@@ -74,6 +76,10 @@ export class LibraryDetailsComponent implements OnInit {
   }
 
   open_comic(comic: Comic): void {
-    this.router.navigate(['comics', `${comic.id}`]);
+    this.open.next(comic);
+  }
+
+  delete_comic(comic: Comic): void {
+    this.delete.next(comic);
   }
 }
