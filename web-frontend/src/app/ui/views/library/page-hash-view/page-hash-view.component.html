@@ -8,7 +8,7 @@
       pButton
       type='button'
       label='Close'
-      icon='fas fa-close'
+      icon='fa fa-close'
       (click)='close_page_view()'></button>
     </p-footer> </p-card>
   </div>
@@ -38,16 +38,15 @@
       <td><button
           *ngIf='!duplicate.deleted'
           pButton
-          icon='fas fas-trash'
+          icon='fa fa-trash'
           label='Delete'
           (click)='delete_page(duplicate)'></button>
         <button
           *ngIf='duplicate.deleted'
           pButton
-          icon='fas fas-trash'
+          icon='fa fa-trash'
           label='Undelete'
-          (click)='undelete_page(duplicate)'></button>
-    </tr>
+          (click)='undelete_page(duplicate)'></button></tr>
     </ng-template> </p-table>
   </div>
 </div>
