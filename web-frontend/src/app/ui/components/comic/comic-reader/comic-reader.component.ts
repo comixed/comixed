@@ -33,6 +33,9 @@ export class ComicReaderComponent implements OnInit {
   @Input() current_page: number;
 
   protected pages: any[];
+  protected image_size = 100;
+  protected enable_next = true;
+  protected enable_previous = false;
 
   constructor(
     private comic_service: ComicService,
@@ -51,5 +54,21 @@ export class ComicReaderComponent implements OnInit {
 
   set_current_page(index: number): void {
     this.current_page = index;
+  }
+
+  go_to_next_page(): void {
+    this.current_page++;
+    this.enable_previous = true;
+    this.enable_next = this.current_page < (this.pages.length - 1);
+  }
+
+  go_to_previous_page(): void {
+    this.current_page--;
+    this.enable_previous = this.current_page > 0;
+    this.enable_next = true;
+  }
+
+  set_image_size(image_size: number): void {
+    this.image_size = image_size;
   }
 }

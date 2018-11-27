@@ -1,6 +1,30 @@
-<p-galleria
-  *ngIf='comic'
-  [images]='pages'
-  [activeIndex]='current_page'
-  showCaption='true'
-  (onImageChange)='set_current_page($event.index)'></p-galleria>
+<div class='ui-g'>
+  <div class='ui-g-12'>
+    <button
+      pButton
+      label='Previous Page'
+      icon='fa fa-arrow-left'
+      [disabled]='!enable_previous'
+      (click)='go_to_previous_page()'></button>
+    <button
+      pButton
+      label='Next Page'
+      icon='fa fa-arrow-right'
+      [disabled]='!enable_next'
+      (click)='go_to_next_page()'></button>
+    <p-slider
+      [(ngModel)]='image_size'
+      [min]='1'
+      [max]='100'
+      [animate]='true'
+      pTooltip='The cover size only applies to the grid view...'
+      tooltipPosition='right'
+      (onChange)='set_image_size($event.value)'></p-slider>
+  </div>
+  <div class='ui-g-12'>
+    <img
+      [src]='pages[current_page].source'
+      [style.height]='"" + image_size + "%"'
+      [style.width]='"auto"'>
+  </div>
+</div>

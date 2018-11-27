@@ -37,7 +37,6 @@ import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { GalleriaModule } from 'primeng/galleria';
 import { PanelModule } from 'primeng/panel';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -136,7 +135,6 @@ import { PageHashViewComponent } from './ui/views/library/page-hash-view/page-ha
     DialogModule,
     ScrollPanelModule,
     ToggleButtonModule,
-    GalleriaModule,
     PanelModule,
     TooltipModule,
     ToolbarModule,
