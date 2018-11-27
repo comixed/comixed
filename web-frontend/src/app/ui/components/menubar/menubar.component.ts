@@ -29,27 +29,27 @@ export class MenubarComponent implements OnInit {
   CORE_MENU_ITEMS: MenuItem[] = [
     {
       label: 'Home',
-      icon: 'fas fa-home',
+      icon: 'fa fa-home',
       routerLink: ['/home'],
     },
     {
       label: 'Comics',
-      icon: 'fas fa-book',
+      icon: 'fa fa-book',
       items: [
         {
           label: 'Library',
-          icon: 'fas fa-book-reader',
+          icon: 'fa fa-book',
           routerLink: ['/comics'],
         },
         {
           label: 'Import',
-          icon: 'fas fa-file-upload',
+          icon: 'fa fa-upload',
           routerLink: ['/import'],
         },
         { separator: true },
         {
           label: 'Duplicate pages',
-          icon: 'fas fa-fingerprint',
+          icon: 'fa fa-minus',
           routerLink: ['/duplicates'],
         }
       ]

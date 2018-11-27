@@ -8,19 +8,21 @@
   <button
     pButton
     label='Find Comics'
+    icon='fa fa-search'
     (click)='directory_selected()'></button>
   <p-splitButton
     [model]='select_options'
     label='Select'
+    icon='fa fa-plus'
     styleClass='ui-button-secondary'></p-splitButton>
   <button
     pButton
-    icon='far fa-eye'
+    icon='fa fa-eye'
     label='View Selections'
     (click)='show_selections()'></button>
   <button
     pButton
-    icon='fas fa-file-import'
+    icon='fa fa-upload'
     label='Import'
     (click)='start_importing()'></button>
 </div>
