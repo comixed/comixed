@@ -16,11 +16,16 @@
       header='Overview'> <app-comic-overview
       [comic]='comic'></app-comic-overview></p-tabPanel> <p-tabPanel header='Story'>
     <app-comic-story [comic]='comic'></app-comic-story></p-tabPanel> <p-tabPanel
-      header='Reader'> <app-comic-reader [comic]='comic'></app-comic-reader></p-tabPanel>
-    <p-tabPanel header='Credits'> <app-comic-credits
-      [comic]='comic'></app-comic-credits></p-tabPanel> <p-tabPanel header='Pages'>
-    <app-comic-pages [comic]='comic'></app-comic-pages></p-tabPanel> <p-tabPanel
-      header='ComicVine'> <app-comic-details-editor
+      header='Reader'> <app-comic-reader
+      [comic]='comic'
+      [page_size]='page_size'
+      (pageSize)='set_page_size($event)'
+      [current_page]='current_page'
+      (currentPage)='set_current_page($event)'></app-comic-reader></p-tabPanel> <p-tabPanel
+      header='Credits'> <app-comic-credits [comic]='comic'></app-comic-credits></p-tabPanel>
+    <p-tabPanel header='Pages'> <app-comic-pages
+      [comic]='comic'></app-comic-pages></p-tabPanel> <p-tabPanel header='ComicVine'>
+    <app-comic-details-editor
       [comic]='comic'
       (update)='load_comic_details()'></app-comic-details-editor></p-tabPanel> </p-tabView>
   </div>

@@ -24,6 +24,9 @@ import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
 import { Comic } from '../../../../models/comics/comic';
 
+export const PAGE_SIZE_PARAMETER = 'pagesize';
+export const CURRENT_PAGE_PARAMETER = 'page';
+
 @Component({
   selector: 'app-comic-details',
   templateUrl: './comic-details.component.html',
@@ -35,6 +38,8 @@ export class ComicDetailsComponent implements OnInit {
   comic: Comic;
   protected current_tab: number;
   protected title: string;
+  protected page_size: number;
+  protected current_page: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -68,7 +73,20 @@ export class ComicDetailsComponent implements OnInit {
           this.load_comic_details();
         });
     });
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.set_page_size(parseInt(this.load_parameter(params[PAGE_SIZE_PARAMETER], '100'), 10));
+      this.set_current_page(parseInt(this.load_parameter(params[CURRENT_PAGE_PARAMETER], '0'), 10));
+    });
+  }
 
+  set_page_size(page_size: number): void {
+    this.page_size = page_size;
+    this.update_params(PAGE_SIZE_PARAMETER, `${this.page_size}`);
+  }
+
+  set_current_page(current_page: number): void {
+    this.current_page = current_page;
+    this.update_params(CURRENT_PAGE_PARAMETER, `${this.current_page}`);
   }
 
   get_cover_url(): string {

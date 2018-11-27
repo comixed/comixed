@@ -17,8 +17,8 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from '@angular/core';
-
+import { Component, OnInit, Input, Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { Comic } from '../../../../models/comics/comic';
 import { Page } from '../../../../models/comics/page';
 import { ComicService } from '../../../../services/comic.service';
@@ -31,9 +31,12 @@ import { ComicService } from '../../../../services/comic.service';
 export class ComicReaderComponent implements OnInit {
   @Input() comic: Comic;
   @Input() current_page: number;
+  @Input() page_size: number;
+
+  @Output() pageSize = new EventEmitter<number>();
+  @Output() currentPage = new EventEmitter<number>();
 
   protected pages: any[];
-  protected image_size = 100;
   protected enable_next = true;
   protected enable_previous = false;
 
@@ -54,21 +57,20 @@ export class ComicReaderComponent implements OnInit {
 
   set_current_page(index: number): void {
     this.current_page = index;
+    this.enable_previous = (this.current_page > 0);
+    this.enable_next = (this.current_page < (this.pages.length - 1));
+    this.currentPage.next(this.current_page);
   }
 
   go_to_next_page(): void {
-    this.current_page++;
-    this.enable_previous = true;
-    this.enable_next = this.current_page < (this.pages.length - 1);
+    this.set_current_page(this.current_page + 1);
   }
 
   go_to_previous_page(): void {
-    this.current_page--;
-    this.enable_previous = this.current_page > 0;
-    this.enable_next = true;
+    this.set_current_page(this.current_page - 1);
   }
 
-  set_image_size(image_size: number): void {
-    this.image_size = image_size;
+  set_page_size(page_size: number): void {
+    this.pageSize.next(page_size);
   }
 }

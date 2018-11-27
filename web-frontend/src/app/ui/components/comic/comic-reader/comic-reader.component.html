@@ -13,18 +13,18 @@
       [disabled]='!enable_next'
       (click)='go_to_next_page()'></button>
     <p-slider
-      [(ngModel)]='image_size'
+      [(ngModel)]='page_size'
       [min]='1'
       [max]='100'
       [animate]='true'
       pTooltip='The cover size only applies to the grid view...'
       tooltipPosition='right'
-      (onChange)='set_image_size($event.value)'></p-slider>
+      (onChange)='set_page_size($event.value)'></p-slider>
   </div>
   <div class='ui-g-12'>
     <img
       [src]='pages[current_page].source'
-      [style.height]='"" + image_size + "%"'
+      [style.height]='"" + page_size + "%"'
       [style.width]='"auto"'>
   </div>
 </div>
