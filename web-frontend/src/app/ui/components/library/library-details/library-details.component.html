@@ -56,16 +56,17 @@
   <td>{{ comic.page_count || 0}}</td>
   <td>{{ comic.cover_date | date }}</td>
   <td>{{ comic.added_date | date }}</td>
-  <td><a [routerLink]='[comic.id]'>
-      <button
-        pButton
-        type='button'
-        icon='pi pi-folder-open'></button>
-  </a>
+  <td>
     <button
       pButton
       type='button'
-      icon='pi pi-search'
-      (click)='set_selected_comic($event, comic)'></button></td>
+      icon='fa fa-book'
+      (click)='open_comic(comic)'></button>
+    <button
+      pButton
+      type='button'
+      icon='fa fa-search'
+      (click)='set_selected_comic($event, comic)'></button>
+  </td>
 </tr>
 </ng-template> </p-table>
