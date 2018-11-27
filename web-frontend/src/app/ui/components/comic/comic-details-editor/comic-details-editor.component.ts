@@ -119,7 +119,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingScrapeMetadata({
       api_key: this.api_key,
       comic: this.library_scrape.comic,
-      issue_id: this.current_issue.id,
+      issue_id: this.library_scrape.current_issue.id,
     }));
   }
 
