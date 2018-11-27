@@ -11,7 +11,7 @@
     <input
       id='api_key'
       type='text'
-      [(ngModel)]='library_scrape.api_key'
+      [(ngModel)]='api_key'
       pInputText>
     <button
       pButton
@@ -27,7 +27,7 @@
     <input
       id='series'
       type='text'
-      [(ngModel)]='library_scrape.series'
+      [(ngModel)]='series'
       pInputText>
   </div>
   <div class='ui-g-2 ui-sm-6'>
@@ -37,7 +37,7 @@
     <input
       id='volume'
       type='text'
-      [(ngModel)]='library_scrape.volume'
+      [(ngModel)]='volume'
       pInputText>
   </div>
   <div class='ui-g-2 ui-sm-6'>
@@ -47,7 +47,7 @@
     <input
       id='issue_number'
       type='text'
-      [(ngModel)]='library_scrape.issue_number'
+      [(ngModel)]='issue_number'
       pInputText>
   </div>
   <div class='ui-g-12 ui-sm-12'>
@@ -55,12 +55,21 @@
       pButton
       type='button'
       label='Save'
+      icon='fa fa-save'
       (click)='save_changes()'></button>
     <button
       pButton
       type='button'
       label='Fetch'
+      icon='fa fa-search'
+      [disabled]='!is_ready_to_fetch()'
       (click)='fetch_candidates()'></button>
+    <button
+      pButton
+      type='button'
+      label='Reset'
+      icon='fa fa-undo'
+      (click)='reset_changes()'></button>
   </div>
 </div>
 <div

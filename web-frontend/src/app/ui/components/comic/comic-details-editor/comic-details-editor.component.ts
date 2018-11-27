@@ -50,6 +50,11 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   protected volume_selection_subtitle = '';
   private date_formatter = Intl.DateTimeFormat('en-us', { month: 'short', year: 'numeric' });
 
+  protected api_key;
+  protected series;
+  protected volume;
+  protected issue_number;
+
   constructor(
     private alert_service: AlertService,
     private user_service: UserService,
@@ -63,6 +68,11 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     this.library_scrape_subscription = this.library_scrape$.subscribe(
       (library_scrape: LibraryScrape) => {
         this.library_scrape = library_scrape;
+
+        this.api_key = this.library_scrape.api_key;
+        this.series = this.library_scrape.series;
+        this.volume = this.library_scrape.volume;
+        this.issue_number = this.library_scrape.issue_number;
       });
 
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetup({
@@ -80,10 +90,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   fetch_candidates(): void {
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingFetchVolumes({
-      api_key: this.library_scrape.api_key,
-      series: this.library_scrape.series,
-      volume: this.library_scrape.volume,
-      issue_number: this.library_scrape.issue_number,
+      api_key: this.api_key,
+      series: this.series,
+      volume: this.volume,
+      issue_number: this.issue_number,
     }));
   }
 
@@ -99,28 +109,35 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   set_current_volume(volume: Volume): void {
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetCurrentVolume({
-      api_key: this.library_scrape.api_key,
+      api_key: this.api_key,
       volume: volume,
-      issue_number: this.library_scrape.issue_number,
+      issue_number: this.issue_number,
     }));
   }
 
   select_current_issue(): void {
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingScrapeMetadata({
-      api_key: this.library_scrape.api_key,
+      api_key: this.api_key,
       comic: this.library_scrape.comic,
-      issue_id: this.library_scrape.current_issue.id,
+      issue_id: this.current_issue.id,
     }));
   }
 
   save_changes(): void {
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSaveLocalChanges({
-      api_key: this.library_scrape.api_key,
-      comic: this.library_scrape.comic,
-      series: this.library_scrape.series,
-      volume: this.library_scrape.volume,
-      issue_number: this.library_scrape.issue_number,
+      api_key: this.api_key,
+      comic: this.comic,
+      series: this.series,
+      volume: this.volume,
+      issue_number: this.issue_number,
     }));
+  }
+
+  reset_changes(): void {
+    this.api_key = this.library_scrape.api_key;
+    this.series = this.library_scrape.comic.series;
+    this.volume = this.library_scrape.comic.volume;
+    this.issue_number = this.library_scrape.comic.issue_number;
   }
 
   load_current_issue_details(): void {
@@ -132,18 +149,22 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     if (this.library_scrape.current_issue === null) {
       return '';
     }
-    return `${this.library_scrape.current_issue.cover_url}?api_key=${this.library_scrape.api_key.trim()}`;
+    return `${this.library_scrape.current_issue.cover_url}?api_key=${this.api_key.trim()}`;
   }
 
   save_api_key(): void {
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSaveApiKey({
-      api_key: this.library_scrape.api_key,
+      api_key: this.api_key,
       comic: this.library_scrape.comic,
     }));
   }
 
   is_api_key_valid(): boolean {
-    return (this.library_scrape.api_key || '').trim().length > 0;
+    return (this.api_key || '').trim().length > 0;
+  }
+
+  is_ready_to_fetch(): boolean {
+    return this.is_api_key_valid() && (this.series || '').trim().length > 0;
   }
 
   is_good_match(volume: Volume): boolean {
