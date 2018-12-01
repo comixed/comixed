@@ -3,6 +3,7 @@
     <p-table
       [responsive]='true'
       [value]='volumes'
+      sortField='start_year'
       [paginator]='true'
       [rows]='10'
       [paginatorPosition]='"both"'
@@ -14,10 +15,14 @@
       pTemplate='header'>
     <tr>
       <th></th>
-      <th>Start Year</th>
-      <th>Series</th>
-      <th># Of Issues</th>
-      <th>Publisher</th>
+      <th pSortableColumn='start_year'><p-sortIcon
+          field="start_year"></p-sortIcon> Start Year</th>
+      <th pSortableColumn='series'><p-sortIcon field="series"></p-sortIcon>
+        Series</th>
+      <th pSortableColumn='issue_count'><p-sortIcon
+          field="issue_count"></p-sortIcon> # Of Issues</th>
+      <th pSortableColumn='publisher'><p-sortIcon field="publisher"></p-sortIcon>
+        Publisher</th>
     </tr>
     </ng-template> <ng-template
       pTemplate='body'
