@@ -5,7 +5,8 @@
   paginatorPosition='both'
   [rows]='library_display.rows'
   [globalFilterFields]='["series"]'
-  [sortField]='library_display.sort'> <ng-template
+  [sortField]='library_display.sort'
+  (onSort)='set_sort_order($event.field)'> <ng-template
   pTemplate='caption'>
 <div class='ui-g'>
   <div class='ui-g-1 ui-md-1'>
@@ -34,12 +35,15 @@
 </ng-template> <ng-template pTemplate='header'>
 <tr>
   <th>Cover</th>
-  <th>Series</th>
-  <th>Volume</th>
-  <th>Issue #</th>
+  <th [pSortableColumn]='"series"'><p-sortIcon [field]='"series"'></p-sortIcon>Series</th>
+  <th [pSortableColumn]='"volume"'><p-sortIcon [field]='"volume"'></p-sortIcon>Volume</th>
+  <th [pSortableColumn]='"issue_number"'><p-sortIcon
+      [field]='"issue_number"'></p-sortIcon>Issue #</th>
   <th># Pages</th>
-  <th>Published</th>
-  <th>Date Added</th>
+  <th [pSortableColumn]='"cover_date"'><p-sortIcon
+      [field]='"cover_date"'></p-sortIcon>Published</th>
+  <th [pSortableColumn]='"added_date"'><p-sortIcon
+      [field]='"added_date"'></p-sortIcon>Date Added</th>
   <th></th>
 </tr>
 </ng-template> <ng-template
