@@ -78,6 +78,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.library_display$ = store.select('library_display');
     this.sort_options = [
       { label: 'Series', value: 'series' },
+      { label: 'Volume', value: 'volume', },
+      { label: 'Issue #', value: 'issue_number', },
       { label: 'Date Added', value: 'added_date' },
       { label: 'Cover Date', value: 'cover_date' },
       { label: 'Last Read', value: 'last_read_date' },
