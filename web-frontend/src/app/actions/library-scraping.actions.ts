@@ -29,6 +29,7 @@ export const LIBRARY_SCRAPING_SAVE_LOCAL_CHANGES = '[LIBRARY SCRAPING] Save loca
 export const LIBRARY_SCRAPING_FETCH_VOLUMES = '[LIBRARY SCRAPING] Fetch volumes';
 export const LIBRARY_SCRAPING_FOUND_VOLUMES = '[LIBRARY SCRAPING] Found volumes';
 export const LIBRARY_SCRAPING_SET_CURRENT_VOLUME = '[LIBRARY SCRAPING] Set current volume';
+export const LIBRARY_SCRAPING_CLEAR_CURRENT_VOLUME = '[LIBRARY SCRAPING] Clear current volume';
 export const LIBRARY_SCRAPING_FETCH_ISSUES = '[LIBRARY SCRAPING] Fetch issues';
 export const LIBRARY_SCRAPING_FOUND_ISSUE = '[LIBRARY SCRAPING] Found issue';
 export const LIBRARY_SCRAPING_SCRAPE_METADATA = '[LIBRARY SCRAPING] Scrape metadata';
@@ -93,6 +94,12 @@ export class LibraryScrapingSetCurrentVolume implements Action {
   }) { }
 }
 
+export class LibraryScrapingClearCurrentVolume implements Action {
+  readonly type = LIBRARY_SCRAPING_CLEAR_CURRENT_VOLUME;
+
+  constructor() { }
+}
+
 export class LibraryScrapingFetchIssue implements Action {
   readonly type = LIBRARY_SCRAPING_FETCH_ISSUES;
 
@@ -129,6 +136,7 @@ export type Actions =
   LibraryScrapingFetchVolumes |
   LibraryScrapingFoundVolumes |
   LibraryScrapingSetCurrentVolume |
+  LibraryScrapingClearCurrentVolume |
   LibraryScrapingFetchIssue |
   LibraryScrapingFoundIssue |
   LibraryScrapingScrapeMetadata;

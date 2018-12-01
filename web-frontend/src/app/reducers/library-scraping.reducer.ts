@@ -102,6 +102,14 @@ export function libraryScrapingReducer(
       };
     }
 
+    case LibraryScrapingActions.LIBRARY_SCRAPING_CLEAR_CURRENT_VOLUME: {
+      return {
+        ...state,
+        current_volume: null,
+        current_issue: null,
+      };
+    }
+
     case LibraryScrapingActions.LIBRARY_SCRAPING_FETCH_ISSUES: {
       return {
         ...state,
