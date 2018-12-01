@@ -1,83 +1,89 @@
 <p-blockUI [blocked]='library_scrape.busy'> <p-progressBar
-  mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar> </p-blockUI>
-<div *ngIf='library_scrape && !library_scrape.volumes.length'
+  mode="indeterminate"
+  [style]="{'height': '6px'}"></p-progressBar> </p-blockUI>
+<div
+  *ngIf='library_scrape && !library_scrape.volumes.length'
   class='ui-g'>
   <div class='ui-g-2 ui-sm-2'>
     <label for='api_key'><b>ComicVine API Key:</b> </label>
   </div>
   <div class='ui-g-10 ui-sm-6'>
-    <input id='api_key' type='text' [(ngModel)]='api_key' pInputText>
-    <button pButton type='button' label='Save Key'
-      [disabled]='!is_api_key_valid()' (click)='save_api_key()'></button>
+    <input
+      id='api_key'
+      type='text'
+      [(ngModel)]='api_key'
+      pInputText>
+    <button
+      pButton
+      type='button'
+      label='Save Key'
+      [disabled]='!is_api_key_valid()'
+      (click)='save_api_key()'></button>
   </div>
   <div class='ui-g-2 ui-sm-2'>
     <label for='series'><b>Series:</b> </label>
   </div>
   <div class='ui-g-10 ui-sm-6'>
-    <input id='series' type='text' [(ngModel)]='series' pInputText>
+    <input
+      id='series'
+      type='text'
+      [(ngModel)]='series'
+      pInputText>
   </div>
   <div class='ui-g-2 ui-sm-6'>
     <label for='volume'><b>Volume:</b> </label>
   </div>
   <div class='ui-g-10 ui-sm-6'>
-    <input id='volume' type='text' [(ngModel)]='volume' pInputText>
+    <input
+      id='volume'
+      type='text'
+      [(ngModel)]='volume'
+      pInputText>
   </div>
   <div class='ui-g-2 ui-sm-6'>
     <label for='issue_number'><b>Issue #:</b> </label>
   </div>
   <div class='ui-g-10 ui-sm-6'>
-    <input id='issue_number' type='text' [(ngModel)]='issue_number'
+    <input
+      id='issue_number'
+      type='text'
+      [(ngModel)]='issue_number'
       pInputText>
   </div>
   <div class='ui-g-12 ui-sm-12'>
-    <button pButton type='button' label='Save' icon='fa fa-save'
+    <button
+      pButton
+      type='button'
+      label='Save'
+      icon='fa fa-save'
       (click)='save_changes()'></button>
-    <button pButton type='button' label='Fetch' icon='fa fa-search'
-      [disabled]='!is_ready_to_fetch()' (click)='fetch_candidates()'></button>
-    <button pButton type='button' label='Reset' icon='fa fa-undo'
+    <button
+      pButton
+      type='button'
+      label='Fetch'
+      icon='fa fa-search'
+      [disabled]='!is_ready_to_fetch()'
+      (click)='fetch_candidates()'></button>
+    <button
+      pButton
+      type='button'
+      label='Reset'
+      icon='fa fa-undo'
       (click)='reset_changes()'></button>
   </div>
 </div>
-<div *ngIf='library_scrape && library_scrape.volumes.length'
+<div
+  *ngIf='library_scrape && library_scrape.volumes?.length'
   class='ui-g'>
-  <div class='ui-g-9 ui-sm-9'>
-    <p-table [value]='library_scrape.volumes' [paginator]='true'
-      [rows]='10' [paginatorPosition]='"both"' selectionMode='single'
-      [(selection)]='library_scrape.current_volume' [dataKey]='"id"'
-      (onRowSelect)='set_current_volume($event.data)'
-      (onRowUnselect)='set_current_volume(null)'> <ng-template
-      pTemplate='header'>
-    <tr>
-      <th></th>
-      <th>Start Year</th>
-      <th>Series</th>
-      <th># Of Issues</th>
-      <th>Publisher</th>
-    </tr>
-    </ng-template> <ng-template pTemplate='body' let-volume>
-    <tr [pSelectableRow]='volume'>
-      <td><span class='fas'
-        [class.fa-greater-than]='is_good_match(volume)'
-        [class.fa-greater-than-equal]='is_perfect_match(volume)'></span></td>
-      <td>{{ volume.start_year }}</td>
-      <td>{{ volume.name }}</td>
-      <td>{{ volume.issue_count }}</td>
-      <td>{{ volume.publisher }}</td>
-    </tr>
-    </ng-template> </p-table>
-  </div>
-  <div class='ui-g-3 ui-sm-3'>
-    <p-card *ngIf='library_scrape.current_issue'> <p-header>
-    <h3>{{ volume_selection_title }}</h3>
-    </p-header> <img [src]='get_current_issue_image_url()' [style.width]='"100%"'>
-    </p-card>
-    <div class='ui-g'>
-      <div class='ui-g-12 ui-sm-12'>
-        <button *ngIf='library_scrape.current_issue' pButton
-          type='button' label='Select' (click)='select_current_issue()'></button>
-        <button pButton type='button' label='Cancel'
-          (click)='cancel_volume_selection()'></button>
-      </div>
-    </div>
+  <div class='ui-g-12'>
+    <app-volume-list
+      [api_key]='library_scrape.api_key'
+      [comic]='library_scrape.comic'
+      [volumes]='library_scrape.volumes'
+      [current_volume]='library_scrape.current_volume'
+      [current_issue]='library_scrape.current_issue'
+      (selectVolume)='select_volume($event)'
+      (selectIssue)='select_issue()'
+      (cancelSelection)='cancel_selection()'></app-volume-list>
   </div>
 </div>
