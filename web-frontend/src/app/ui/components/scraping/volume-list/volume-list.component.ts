@@ -22,6 +22,11 @@ import { Comic } from '../../../../models/comics/comic';
 import { Volume } from '../../../../models/comics/volume';
 import { Issue } from '../../../../models/scraping/issue';
 
+interface VolumeOptions {
+  volume: Volume;
+  matchability: string;
+}
+
 @Component({
   selector: 'app-volume-list',
   templateUrl: './volume-list.component.html',
@@ -30,18 +35,30 @@ import { Issue } from '../../../../models/scraping/issue';
 export class VolumeListComponent implements OnInit {
   @Input() api_key: string;
   @Input() comic: Comic;
-  @Input() volumes: Array<Volume>;
   @Input() current_volume: Volume;
   @Input() current_issue: Issue;
   @Output() selectVolume = new EventEmitter<Volume>();
   @Output() selectIssue = new EventEmitter<Issue>();
   @Output() cancelSelection = new EventEmitter<Issue>();
 
+  protected _volumes: Array<VolumeOptions>;
   protected volume_selection_title = '';
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  @Input()
+  set volumes(volumes: Array<Volume>) {
+    this._volumes = [];
+    volumes.forEach((volume: Volume) => {
+      this._volumes.push({
+        volume: volume,
+        matchability: this.is_good_match(volume) ? '1' :
+          this.is_perfect_match(volume) ? '0' : '2',
+      });
+    });
   }
 
   set_current_volume(volume: Volume): void {

@@ -1,13 +1,12 @@
 <div class='ui-g'>
   <div class='ui-g-9 ui-sm-9'>
     <p-table
-      [responsive]='true'
-      [value]='volumes'
-      sortField='start_year'
+      [value]='_volumes'
       [paginator]='true'
       [rows]='10'
       [paginatorPosition]='"both"'
       selectionMode='single'
+      [sortField]='"matchability"'
       [(selection)]='current_volume'
       [dataKey]='"id"'
       (onRowSelect)='set_current_volume($event.data)'
@@ -22,32 +21,34 @@
     </colgroup>
     </ng-template> <ng-template pTemplate='header'>
     <tr>
-      <th pResizableColumn></th>
       <th
-        pSortableColumn='start_year'
-        pResizableColumn><p-sortIcon field="start_year"></p-sortIcon>
+        [pSortableColumn]='"matchability"'
+        pResizableColumn><p-sortIcon [field]='"matchability"'></p-sortIcon></th>
+      <th
+        [pSortableColumn]='"volume.start_year"'
+        pResizableColumn><p-sortIcon [field]='"volume.start_year"'></p-sortIcon>
         Start Year</th>
-      <th pSortableColumn='series'><p-sortIcon field="series"></p-sortIcon>
-        Series</th>
+      <th [pSortableColumn]='"volume.name"'><p-sortIcon
+          [field]='"volume.name"'></p-sortIcon> Series</th>
       <th
-        pSortableColumn='issue_count'
-        pResizableColumn><p-sortIcon field="issue_count"></p-sortIcon>
+        [pSortableColumn]='"volume.issue_count"'
+        pResizableColumn><p-sortIcon [field]='"volume.issue_count"'></p-sortIcon>
         Issues</th>
-      <th pSortableColumn='publisher'><p-sortIcon field="publisher"></p-sortIcon>
-        Publisher</th>
+      <th [pSortableColumn]='"volume.publisher"'><p-sortIcon
+          [field]='"volume.publisher"'></p-sortIcon> Publisher</th>
     </tr>
     </ng-template> <ng-template
       pTemplate='body'
-      let-volume>
-    <tr [pSelectableRow]='volume'>
+      let-option>
+    <tr [pSelectableRow]='option.volume'>
       <td><span
         class='fas'
-        [class.fa-greater-than]='is_good_match(volume)'
-        [class.fa-greater-than-equal]='is_perfect_match(volume)'></span></td>
-      <td class='small-column'>{{ volume.start_year }}</td>
-      <td>{{ volume.name }}</td>
-      <td class='small-column'>{{ volume.issue_count }}</td>
-      <td class='medium-column'>{{ volume.publisher }}</td>
+        [class.fa-greater-than]='is_good_match(option.volume)'
+        [class.fa-greater-than-equal]='is_perfect_match(option.volume)'></span></td>
+      <td class='small-column'>{{ option.volume.start_year }}</td>
+      <td>{{ option.volume.name }}</td>
+      <td class='small-column'>{{ option.volume.issue_count }}</td>
+      <td class='medium-column'>{{ option.volume.publisher }}</td>
     </tr>
     </ng-template> </p-table>
   </div>
