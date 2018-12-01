@@ -96,11 +96,15 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   select_volume(volume: Volume): void {
-    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetCurrentVolume({
-      api_key: this.api_key,
-      volume: volume,
-      issue_number: this.issue_number,
-    }));
+    if (volume) {
+      this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetCurrentVolume({
+        api_key: this.api_key,
+        volume: volume,
+        issue_number: this.issue_number,
+      }));
+    } else {
+      this.store.dispatch(new LibraryScrapingActions.LibraryScrapingClearCurrentVolume());
+    }
   }
 
   select_issue(): void {
