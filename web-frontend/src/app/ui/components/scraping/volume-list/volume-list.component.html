@@ -1,0 +1,59 @@
+<div class='ui-g'>
+  <div class='ui-g-9 ui-sm-9'>
+    <p-table
+      [responsive]='true'
+      [value]='volumes'
+      [paginator]='true'
+      [rows]='10'
+      [paginatorPosition]='"both"'
+      selectionMode='single'
+      [(selection)]='current_volume'
+      [dataKey]='"id"'
+      (onRowSelect)='set_current_volume($event.data)'
+      (onRowUnselect)='set_current_volume(null)'> <ng-template
+      pTemplate='header'>
+    <tr>
+      <th></th>
+      <th>Start Year</th>
+      <th>Series</th>
+      <th># Of Issues</th>
+      <th>Publisher</th>
+    </tr>
+    </ng-template> <ng-template
+      pTemplate='body'
+      let-volume>
+    <tr [pSelectableRow]='volume'>
+      <td><span
+        class='fas'
+        [class.fa-greater-than]='is_good_match(volume)'
+        [class.fa-greater-than-equal]='is_perfect_match(volume)'></span></td>
+      <td>{{ volume.start_year }}</td>
+      <td>{{ volume.name }}</td>
+      <td>{{ volume.issue_count }}</td>
+      <td>{{ volume.publisher }}</td>
+    </tr>
+    </ng-template> </p-table>
+  </div>
+  <div class='ui-g-3 ui-sm-3'>
+    <p-card *ngIf='current_issue'> <p-header>
+    <h3>{{ volume_selection_title }}</h3>
+    </p-header> <img
+      [src]='get_current_issue_image_url()'
+      [style.width]='"100%"'> </p-card>
+    <div class='ui-g'>
+      <div class='ui-g-12 ui-sm-12'>
+        <button
+          *ngIf='current_issue'
+          pButton
+          type='button'
+          label='Select'
+          (click)='select_current_issue()'></button>
+        <button
+          pButton
+          type='button'
+          label='Cancel'
+          (click)='cancel_selection()'></button>
+      </div>
+    </div>
+  </div>
+</div>

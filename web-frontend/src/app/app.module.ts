@@ -87,6 +87,7 @@ import { LibraryScrapeEffects } from './effects/library-scrape.effects';
 import { DuplicatesEffects } from './effects/duplicates.effects';
 import { DuplicatePagesViewComponent } from './ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
 import { PageHashViewComponent } from './ui/views/library/page-hash-view/page-hash-view.component';
+import { VolumeListComponent } from './ui/components/scraping/volume-list/volume-list.component';
 
 @NgModule({
   declarations: [
@@ -114,6 +115,7 @@ import { PageHashViewComponent } from './ui/views/library/page-hash-view/page-ha
     IssueDetailsComponent,
     DuplicatePagesViewComponent,
     PageHashViewComponent,
+    VolumeListComponent,
   ],
   imports: [
     BrowserModule,
