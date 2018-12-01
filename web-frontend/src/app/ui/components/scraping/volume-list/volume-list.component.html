@@ -12,15 +12,27 @@
       [dataKey]='"id"'
       (onRowSelect)='set_current_volume($event.data)'
       (onRowUnselect)='set_current_volume(null)'> <ng-template
-      pTemplate='header'>
+      pTemplate='colgroup'>
+    <colgroup>
+      <col [style.width]='"75px"'>
+      <col [style.width]='"125px"'>
+      <col>
+      <col [style.width]='"125px"'>
+      <col>
+    </colgroup>
+    </ng-template> <ng-template pTemplate='header'>
     <tr>
-      <th></th>
-      <th pSortableColumn='start_year'><p-sortIcon
-          field="start_year"></p-sortIcon> Start Year</th>
+      <th pResizableColumn></th>
+      <th
+        pSortableColumn='start_year'
+        pResizableColumn><p-sortIcon field="start_year"></p-sortIcon>
+        Start Year</th>
       <th pSortableColumn='series'><p-sortIcon field="series"></p-sortIcon>
         Series</th>
-      <th pSortableColumn='issue_count'><p-sortIcon
-          field="issue_count"></p-sortIcon> # Of Issues</th>
+      <th
+        pSortableColumn='issue_count'
+        pResizableColumn><p-sortIcon field="issue_count"></p-sortIcon>
+        Issues</th>
       <th pSortableColumn='publisher'><p-sortIcon field="publisher"></p-sortIcon>
         Publisher</th>
     </tr>
@@ -32,10 +44,10 @@
         class='fas'
         [class.fa-greater-than]='is_good_match(volume)'
         [class.fa-greater-than-equal]='is_perfect_match(volume)'></span></td>
-      <td>{{ volume.start_year }}</td>
+      <td class='small-column'>{{ volume.start_year }}</td>
       <td>{{ volume.name }}</td>
-      <td>{{ volume.issue_count }}</td>
-      <td>{{ volume.publisher }}</td>
+      <td class='small-column'>{{ volume.issue_count }}</td>
+      <td class='medium-column'>{{ volume.publisher }}</td>
     </tr>
     </ng-template> </p-table>
   </div>
