@@ -1,0 +1,88 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2018, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * org.comixed;
+ */
+
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { User } from '../models/user/user';
+
+export const USER_AUTH_CHECK = '[USER] Check if the user is already logged in.';
+export const USER_LOADED = '[USER] Retrieved the remote user';
+export const USER_START_LOGIN = '[USER] Start the login process';
+export const USER_CANCEL_LOGIN = '[USER] Cancel the login process';
+export const USER_LOGGING_IN = '[USER] Performing the actual login process';
+export const USER_SET_AUTH_TOKEN = '[USER] Save the auth token';
+export const USER_LOGOUT = '[USER] Logout';
+
+export class UserAuthCheck implements Action {
+  readonly type = USER_AUTH_CHECK;
+
+  constructor() { }
+}
+
+export class UserLoaded implements Action {
+  readonly type = USER_LOADED;
+
+  constructor(public payload: {
+    user: User,
+  }) { }
+}
+
+export class UserStartLogin implements Action {
+  readonly type = USER_START_LOGIN;
+
+  constructor() { }
+}
+
+export class UserCancelLogin implements Action {
+  readonly type = USER_CANCEL_LOGIN;
+
+  constructor() { }
+}
+
+export class UserLoggingIn implements Action {
+  readonly type = USER_LOGGING_IN;
+
+  constructor(public payload: {
+    email: string,
+    password: string,
+  }) { }
+}
+
+export class UserSetAuthToken implements Action {
+  readonly type = USER_SET_AUTH_TOKEN;
+
+  constructor(public payload: {
+    token: string,
+  }) { }
+}
+
+export class UserLogout implements Action {
+  readonly type = USER_LOGOUT;
+
+  constructor() { }
+}
+
+export type Actions =
+  UserAuthCheck |
+  UserLoaded |
+  UserStartLogin |
+  UserCancelLogin |
+  UserLoggingIn |
+  UserSetAuthToken |
+  UserLogout;

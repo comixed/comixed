@@ -21,7 +21,11 @@ import { Role } from './role';
 import { Preference } from './preference';
 
 export interface User {
-  name: string;
+  fetching: boolean;
+  token: string;
+  authenticating: boolean;
+  busy: boolean;
+  email: string;
   authenticated: boolean;
   first_login_date: number;
   last_login_date: number;

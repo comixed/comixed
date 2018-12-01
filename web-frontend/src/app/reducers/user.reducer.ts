@@ -1,0 +1,108 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2018, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * org.comixed;
+ */
+
+import { Action } from '@ngrx/store';
+import { User } from '../models/user/user';
+import * as UserActions from '../actions/user.actions';
+
+const initial_state: User = {
+  token: null,
+  fetching: false,
+  authenticating: false,
+  busy: false,
+  authenticated: false,
+  email: null,
+  roles: [],
+  preferences: [],
+  first_login_date: null,
+  last_login_date: null,
+};
+
+export function userReducer(
+  state: User = initial_state,
+  action: UserActions.Actions,
+) {
+  switch (action.type) {
+    case UserActions.USER_AUTH_CHECK:
+      return {
+        ...state,
+        fetching: true,
+        authenticating: false,
+      };
+
+    case UserActions.USER_SET_AUTH_TOKEN:
+      return {
+        ...state,
+        fetching: false,
+        authentication: false,
+        busy: false,
+        token: action.payload.token,
+      };
+
+    case UserActions.USER_LOADED: {
+      const user = action.payload.user;
+      return {
+        ...state,
+        fetching: false,
+        authenticating: false,
+        authenticated: user ? true : false,
+        email: user ? user.email : null,
+        roles: user ? user.roles : [],
+        preferences: user ? user.preferences : [],
+        first_login_date: user ? user.first_login_date : null,
+        last_login_date: user ? user.last_login_date : null,
+      };
+    }
+
+    case UserActions.USER_START_LOGIN:
+      return {
+        ...state,
+        authenticating: true,
+      };
+
+    case UserActions.USER_CANCEL_LOGIN:
+      return {
+        ...state,
+        authenticating: false,
+      };
+
+    case UserActions.USER_LOGGING_IN:
+      return {
+        ...state,
+        authenticated: false,
+        busy: true,
+      };
+
+    case UserActions.USER_LOGOUT:
+      return {
+        ...state,
+        authenticated: false,
+        token: null,
+        busy: false,
+        email: null,
+        roles: [],
+        preferences: [],
+        first_login_date: null,
+        last_login_date: null,
+      };
+
+    default:
+      return state;
+  }
+}

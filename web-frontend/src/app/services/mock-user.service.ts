@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { User } from '../models/scraping/user';
+import { User } from '../models/user/user';
 
 export class MockUserService {
   is_authenticated(): boolean {
