@@ -128,13 +128,32 @@ public class ComicController
     @RequestMapping(value = "/since/{timestamp}",
                     method = RequestMethod.GET)
     @JsonView(View.ComicList.class)
-    public List<Comic> getComicsAddedSince(@PathVariable("timestamp") long timestamp)
+    public List<Comic> getComicsAddedSince(@PathVariable("timestamp") long timestamp,
+                                           @RequestParam(value = "timeout",
+                                                         required = false,
+                                                         defaultValue = "0") long timeout) throws InterruptedException
     {
         Date latestDate = new Date(timestamp);
+        boolean done = false;
+        long returnBy = System.currentTimeMillis() + timeout;
+        List<Comic> result = null;
 
-        this.logger.debug("Looking for comics added since {}", latestDate);
+        this.logger.debug("Looking for comics added since {}: timeout={}", latestDate, timeout);
 
-        List<Comic> result = this.comicRepository.findByDateAddedGreaterThan(latestDate);
+        while (!done)
+        {
+            result = this.comicRepository.findByDateAddedGreaterThan(latestDate);
+
+            if (result.size() == 0 && System.currentTimeMillis() <= returnBy)
+            {
+                Thread.sleep(1000);
+            }
+            else
+            {
+                logger.debug("Timeout reached. Returning no new comics...", timeout);
+                done = true;
+            }
+        }
 
         this.logger.debug("Found {} comics", result.size());
 

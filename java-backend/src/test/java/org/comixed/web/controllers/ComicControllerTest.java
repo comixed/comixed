@@ -71,13 +71,25 @@ public class ComicControllerTest
     private Comic comic;
 
     @Test
-    public void testGetComicsAddedSince() throws ParseException
+    public void testGetComicsAddedSince() throws ParseException, InterruptedException
     {
         Mockito.when(comicRepository.findByDateAddedGreaterThan(Mockito.any(Date.class))).thenReturn(comicList);
 
-        List<Comic> result = controller.getComicsAddedSince(0L);
+        List<Comic> result = controller.getComicsAddedSince(0L, 0L);
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findByDateAddedGreaterThan(new Date(0L));
+        Mockito.verify(comicRepository, Mockito.atLeast(1)).findByDateAddedGreaterThan(new Date(0L));
+
+        assertSame(comicList, result);
+    }
+
+    @Test
+    public void testGetComicsAddedSinceWithTimeout() throws ParseException, InterruptedException
+    {
+        Mockito.when(comicRepository.findByDateAddedGreaterThan(Mockito.any(Date.class))).thenReturn(comicList);
+
+        List<Comic> result = controller.getComicsAddedSince(0L, 250L);
+
+        Mockito.verify(comicRepository, Mockito.atLeast(1)).findByDateAddedGreaterThan(new Date(0L));
 
         assertSame(comicList, result);
     }
