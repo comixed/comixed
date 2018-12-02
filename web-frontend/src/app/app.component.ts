@@ -25,10 +25,13 @@ import { Subscription } from 'rxjs/Subscription';
 import { AppState } from './app.state';
 import { Library } from './models/library';
 import * as LibraryActions from './actions/library.actions';
+import { User } from './models/user/user';
+import * as UserActions from './actions/user.actions';
 import { UserService } from './services/user.service';
 import { ComicService } from './services/comic.service';
 import { AlertService } from './services/alert.service';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
+import { TokenStorage } from './storage/token.storage';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +43,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   alert_messages = [];
   comic_count = 0;
   read_count = 0;
+
+  user$: Observable<User>;
+  user_subscription: Subscription;
+  user: User;
 
   library$: Observable<Library>;
   library_subscription: Subscription;
@@ -54,7 +61,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private alert_service: AlertService,
     private router: Router,
     private store: Store<AppState>,
+    private token_storage: TokenStorage,
   ) {
+    this.user$ = store.select('user');
     this.library$ = store.select('library');
     this.alert_service.busy_messages.subscribe(
       (message: string) => {
@@ -64,6 +73,17 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this.user_subscription = this.user$.subscribe(
+      (user: User) => {
+        this.user = user;
+
+        // if the user isn't loaded, the load it
+        if (this.user.token && !this.user.fetching) {
+          this.token_storage.save_token(this.user.token);
+          this.store.dispatch(new UserActions.UserAuthCheck());
+        }
+      });
+    this.store.dispatch(new UserActions.UserAuthCheck());
     this.library_subscription = this.library$.subscribe(
       (library: Library) => {
         this.library = library;
@@ -89,11 +109,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   logout(): void {
-    this.user_service.logout().subscribe(
-      () => {
-        this.router.navigateByUrl('/login');
-      }
-    );
   }
 
   clear_alert_message(index: number): void {
@@ -115,12 +130,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   is_authenticated(): boolean {
-    return this.user_service.is_authenticated();
+    return this.user && this.user.authenticated;
   }
 
   is_admin(): boolean {
-    if (this.user_service.is_authenticated()) {
-      for (const role of this.user_service.get_user().roles) {
+    if (this.is_authenticated()) {
+      for (const role of this.user.roles) {
         if (role.name === 'ADMIN') {
           return true;
         }

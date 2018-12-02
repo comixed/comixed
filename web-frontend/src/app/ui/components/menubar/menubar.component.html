@@ -1,1 +1,24 @@
-<p-menubar styleClass='border-0' [model]='items' [autoDisplay]='false'></p-menubar>
+<p-menubar
+  styleClass='border-0'
+  [model]='items'
+  [autoDisplay]='false'>
+<div class='ui-toolbar-group-right'>
+  <span><b>User: </b>{{ user.email || 'Guest' }}</span>
+  <button
+    *ngIf='!user.authenticated'
+    pButton
+    type='button'
+    icon='fa fa-sign-in'
+    label='Login'
+    class='ui-button-success'
+    (click)='do_login()'></button>
+  <button
+    *ngIf='user.authenticated'
+    pButton
+    type='button'
+    icon='fa fa-sign-out'
+    label='Logout'
+    class='ui-button-danger'
+    (click)='do_logout()'></button>
+</div>
+</p-menubar>

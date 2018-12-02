@@ -54,6 +54,7 @@ export class LibraryScrapeEffects {
         .map((volumes: Array<Volume>) => new LibraryScrapingActions.LibraryScrapingFoundVolumes(volumes))
     );
 
+  /* TODO fix this
   @Effect()
   library_scraping_save_api_key$: Observable<Action> = this.actions$
     .ofType<LibraryScrapingActions.LibraryScrapingSaveApiKey>(LibraryScrapingActions.LIBRARY_SCRAPING_SAVE_API_KEY)
@@ -68,6 +69,7 @@ export class LibraryScrapeEffects {
           issue_number: action.comic.issue_number,
         }))
     );
+   */
 
   @Effect()
   library_scraping_save_local_changes$: Observable<Action> = this.actions$

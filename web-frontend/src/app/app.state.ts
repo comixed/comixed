@@ -17,12 +17,14 @@
  * org.comixed;
  */
 
+import { User } from './models/user/user';
 import { Library } from './models/library';
 import { LibraryDisplay } from './models/library-display';
 import { LibraryScrape } from './models/library-scrape';
 import { Duplicates } from './models/duplicates';
 
 export interface AppState {
+  readonly user: User;
   readonly library: Library;
   readonly library_display: LibraryDisplay;
   readonly library_scraping: LibraryScrape;

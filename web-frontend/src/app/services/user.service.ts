@@ -38,6 +38,18 @@ export class UserService {
 
   login(email: string, password: string): Observable<any> {
     const params = new HttpParams().set('email', email).set('password', password);
-    return this.http.post(`${this.api_url}/user`, params);
+    return this.http.post(`${this.api_url}/token/generate-token`, params);
+  }
+
+  get_user(): Observable<any> {
+    return this.http.get(`${this.api_url}/user`);
+  }
+
+  set_user_preference(name: string, value: string): void {
+
+  }
+
+  get_user_preference(name: string, defvalue: string): string {
+    return defvalue;
   }
 }

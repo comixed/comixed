@@ -17,8 +17,12 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../app.state';
+import * as UserActions from '../../../actions/user.actions';
 import { MenuItem } from 'primeng/api';
+import { User } from '../../../models/user/user';
 
 @Component({
   selector: 'app-menubar',
@@ -26,6 +30,8 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./menubar.component.css']
 })
 export class MenubarComponent implements OnInit {
+  @Input() user: User;
+
   CORE_MENU_ITEMS: MenuItem[] = [
     {
       label: 'Home',
@@ -58,9 +64,19 @@ export class MenubarComponent implements OnInit {
 
   items: MenuItem[];
 
-  constructor() { }
+  constructor(
+    private store: Store<AppState>,
+  ) { }
 
   ngOnInit() {
     this.items = this.CORE_MENU_ITEMS;
+  }
+
+  do_login(): void {
+    this.store.dispatch(new UserActions.UserStartLogin());
+  }
+
+  do_logout(): void {
+    this.store.dispatch(new UserActions.UserLogout());
   }
 }

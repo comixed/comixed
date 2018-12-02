@@ -17,8 +17,12 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
-
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { User } from '../models/user/user';
 import { UserService } from '../services/user.service';
 import { AlertService } from '../services/alert.service';
 
@@ -27,19 +31,35 @@ import { AlertService } from '../services/alert.service';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css']
 })
-export class AccountComponent implements OnInit {
-  username;
+export class AccountComponent implements OnInit, OnDestroy {
+  user$: Observable<User>;
+  user_subscription: Subscription;
+  user: User;
+
+  email: string;
   password = '';
   password_check = '';
   password_error = '';
 
   constructor(
+    private store: Store<AppState>,
     private user_service: UserService,
     private alert_service: AlertService,
-  ) { }
+  ) {
+    this.user$ = this.store.select('user');
+  }
 
   ngOnInit() {
-    this.username = this.user_service.get_user().name;
+    this.user_subscription = this.user$.subscribe(
+      (user: User) => {
+        this.user = user;
+
+        this.email = this.user.email;
+      });
+  }
+
+  ngOnDestroy() {
+    this.user_subscription.unsubscribe();
   }
 
   passesPasswordValidation(): boolean {
@@ -53,26 +73,8 @@ export class AccountComponent implements OnInit {
   }
 
   updateUsername(): void {
-    this.user_service.change_username(this.username).subscribe(
-      (response: Response) => {
-        this.password_error = '';
-        this.alert_service.show_info_message(`Your username has been updated to ${this.username}...`);
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Unable to update your username...', error);
-      }
-    );
   }
 
   updatePassword(): void {
-    this.user_service.change_password(this.password).subscribe(
-      (response: Response) => {
-        this.password_error = '';
-        this.alert_service.show_info_message('Your password has been updated...');
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Unable to update your password...', error);
-      }
-    );
   }
 }

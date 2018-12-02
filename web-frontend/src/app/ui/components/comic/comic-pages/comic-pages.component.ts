@@ -49,7 +49,8 @@ export class ComicPagesComponent implements OnInit {
         this.page_type_options.push({ label: page_type.name, value: page_type.id });
       });
     });
-    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
+    // TODO fix the preference here
+    //    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
   }
 
   get_url_for_page(page: Page): string {

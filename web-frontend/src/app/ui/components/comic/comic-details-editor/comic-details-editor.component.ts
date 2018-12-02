@@ -74,7 +74,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       });
 
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetup({
-      api_key: this.user_service.get_user_preference('comic_vine_api_key', ''),
+      api_key: this.api_key,
       comic: this.comic,
       series: this.comic.series,
       volume: this.comic.volume,
