@@ -17,28 +17,50 @@
  * org.comixed;
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-  HttpInterceptor,
-  HttpHandler,
-  HttpRequest,
-  HttpSentEvent,
-  HttpHeaderResponse,
-  HttpProgressEvent,
-  HttpResponse,
-  HttpUserEvent,
+  HttpInterceptor, HttpHandler, HttpRequest, HttpSentEvent, HttpHeaderResponse,
+  HttpErrorResponse, HttpProgressEvent, HttpResponse, HttpUserEvent,
 } from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/do';
+import { TokenStorage } from './storage/token.storage';
+import { AlertService } from './services/alert.service';
+
+export const TOKEN_HEADER_KEY = 'Authorization';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
+  constructor(
+    private token_storage: TokenStorage,
+    private router: Router,
+    private alert_service: AlertService,
+  ) { }
+
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
-    const xhr = req.clone({
-      headers: req.headers.set('X-Request-With', 'XMLHttpRequest')
+    let authReq = req;
+    if (this.token_storage.get_token() !== null) {
+      authReq = req.clone({
+        headers: req.headers
+          .set(TOKEN_HEADER_KEY, `Bearer ${this.token_storage.get_token()}`)
+          .set('X-Request-With', 'XMLHttpRequest'),
+      });
+    } else {
+      authReq = req.clone({
+        headers: req.headers.set('X-Request-With', 'XMLHttpRequest')
+      });
+    }
+    return next.handle(authReq).do((error: any) => {
+      if (error instanceof HttpResponse) {
+        if (error.status !== 200) {
+          this.alert_service.show_error_message('Unable to complete request...', null);
+          console.log('*** Non-OK status:', error);
+        }
+      }
     });
-    return next.handle(xhr);
   }
 }

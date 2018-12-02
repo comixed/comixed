@@ -88,6 +88,7 @@ import { DuplicatesEffects } from './effects/duplicates.effects';
 import { DuplicatePagesViewComponent } from './ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
 import { PageHashViewComponent } from './ui/views/library/page-hash-view/page-hash-view.component';
 import { VolumeListComponent } from './ui/components/scraping/volume-list/volume-list.component';
+import { TokenStorage } from './storage/token.storage';
 
 @NgModule({
   declarations: [
@@ -181,6 +182,7 @@ import { VolumeListComponent } from './ui/components/scraping/volume-list/volume
       { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }
     ],
     ConfirmationService,
+    TokenStorage,
   ],
   bootstrap: [AppComponent]
 })
