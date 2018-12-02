@@ -22,7 +22,6 @@ package org.comixed.web.controllers;
 import java.security.Principal;
 
 import org.comixed.library.model.ComiXedUser;
-import org.comixed.library.model.View;
 import org.comixed.library.model.View.UserDetails;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.util.Utils;

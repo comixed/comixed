@@ -37,6 +37,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -55,6 +56,10 @@ public class ComiXedUser
             unique = true)
     @JsonView(View.UserDetails.class)
     private String email;
+
+    @Transient
+    @JsonIgnore
+    private String password;
 
     @Column(name = "password_hash",
             updatable = true,
