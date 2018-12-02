@@ -42,7 +42,7 @@ export class ComicService {
   ) { }
 
   fetch_remote_library_state(latest_comic_update: string): Observable<any> {
-    return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}`);
+    return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}?timeout=60000`);
   }
 
   delete_comic(comic: Comic): Observable<any> {
