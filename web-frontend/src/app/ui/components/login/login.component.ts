@@ -17,12 +17,12 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from '../app.state';
-import * as UserActions from '../actions/user.actions';
-import { User } from '../models/user/user';
+import { AppState } from '../../../app.state';
+import * as UserActions from '../../../actions/user.actions';
+import { User } from '../../../models/user/user';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 
 @Component({
@@ -31,6 +31,7 @@ import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/fo
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  @Input() show_login_dialog: boolean;
   login_form: FormGroup;
   email: string;
   password: string;
@@ -56,7 +57,11 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  login(): void {
-    this.store.dispatch(new UserActions.UserLogin({ email: this.email, password: this.password }));
+  do_login(): void {
+    this.store.dispatch(new UserActions.UserLoggingIn({ email: this.email, password: this.password }));
+  }
+
+  cancel_login(): void {
+    this.store.dispatch(new UserActions.UserCancelLogin());
   }
 }

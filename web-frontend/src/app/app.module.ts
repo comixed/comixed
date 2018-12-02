@@ -45,6 +45,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { BlockUIModule } from 'primeng/blockui';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { PasswordModule } from 'primeng/password';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -61,7 +62,7 @@ import { ComicStoryComponent } from './ui/components/comic/comic-story/comic-sto
 import { ComicCreditsComponent } from './ui/components/comic/comic-credits/comic-credits.component';
 import { ComicPagesComponent } from './ui/components/comic/comic-pages/comic-pages.component';
 import { MainPageComponent } from './ui/pages/main-page/main-page.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './ui/components/login/login.component';
 import { AccountComponent } from './account/account.component';
 import { AlertService } from './services/alert.service';
 import { UserService } from './services/user.service';
@@ -147,6 +148,7 @@ import { TokenStorage } from './storage/token.storage';
     ProgressBarModule,
     BlockUIModule,
     ConfirmDialogModule,
+    PasswordModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
       fullScreenBackdrop: true,
