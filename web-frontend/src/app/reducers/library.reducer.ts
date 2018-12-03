@@ -95,6 +95,13 @@ export function libraryReducer(
       };
     }
 
+    case LibraryActions.LIBRARY_RESET:
+      return {
+        ...state,
+        last_comic_date: '0',
+        comics: [],
+      };
+
     default:
       return state;
   }

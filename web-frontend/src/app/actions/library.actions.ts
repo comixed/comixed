@@ -27,6 +27,7 @@ export const LIBRARY_MERGE_NEW_COMICS = '[LIBRARY] Merge newly retrieved comics'
 export const LIBRARY_UPDATE_COMIC = '[LIBRARY] Update a single comic';
 export const LIBRARY_REMOVE_COMIC = '[LIBRARY] Remove comic';
 export const LIBRARY_UPDATE_COMICS_REMOVE_COMIC = '[LIBRARY] Update comics by removing a comic';
+export const LIBRARY_RESET = '[LIBRARY] Reset the library settings';
 
 export class LibraryFetchLibraryChanges implements Action {
   readonly type = LIBRARY_FETCH_LIBRARY_CHANGES;
@@ -66,9 +67,16 @@ export class LibraryUpdateComicsRemoveComic implements Action {
   }) { }
 }
 
+export class LibraryReset implements Action {
+  readonly type = LIBRARY_RESET;
+
+  constructor() { }
+}
+
 export type Actions =
   LibraryFetchLibraryChanges |
   LibraryMergeNewComics |
   LibraryUpdateComic |
   LibraryRemoveComic |
-  LibraryUpdateComicsRemoveComic;
+  LibraryUpdateComicsRemoveComic |
+  LibraryReset;
