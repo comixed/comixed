@@ -77,10 +77,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       (user: User) => {
         this.user = user;
 
-        // if the user isn't loaded, the load it
-        if (this.user.token && !this.user.fetching) {
+        if (!this.user.authenticated && this.library && this.library.comics && this.library.comics.length) {
+          this.store.dispatch(new LibraryActions.LibraryReset());
+        } else if (this.user.token && !this.user.email && !this.user.fetching) {
           this.token_storage.save_token(this.user.token);
           this.store.dispatch(new UserActions.UserAuthCheck());
+          this.store.dispatch(new LibraryActions.LibraryReset());
+          this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({ last_comic_date: '0' }));
         }
       });
     this.store.dispatch(new UserActions.UserAuthCheck());
