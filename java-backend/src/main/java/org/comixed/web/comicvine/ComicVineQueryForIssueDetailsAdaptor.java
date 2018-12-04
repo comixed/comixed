@@ -60,16 +60,9 @@ public class ComicVineQueryForIssueDetailsAdaptor
 
         this.logger.debug("Fetching issue details: issueId={}", issueId);
 
-        if (skipCache)
-        {
-            this.logger.debug("Bypassing the cache...");
-        }
-        else
-        {
-            issue = this.comicVineIssueRepository.findByIssueId(issueId);
-        }
+        issue = this.comicVineIssueRepository.findByIssueId(issueId);
 
-        if (issue == null)
+        if (skipCache || (issue == null))
         {
             this.logger.debug("Fetching issue details from ComicVine...");
 
@@ -81,11 +74,13 @@ public class ComicVineQueryForIssueDetailsAdaptor
             try
             {
                 content = this.webRequestProcessor.execute(request);
-                this.logger.debug("Saving retrieved issue data...");
-                if (issue == null)
+
+                if (issue != null)
                 {
-                    issue = new ComicVineIssue();
+                    this.comicVineIssueRepository.delete(issue);
                 }
+                this.logger.debug("Saving retrieved issue data...");
+                issue = new ComicVineIssue();
                 issue.setIssueId(issueId);
                 issue.setContent(content);
                 this.comicVineIssueRepository.save(issue);

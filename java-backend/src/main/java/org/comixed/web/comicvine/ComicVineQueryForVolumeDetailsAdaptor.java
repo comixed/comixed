@@ -59,16 +59,9 @@ public class ComicVineQueryForVolumeDetailsAdaptor
 
         this.logger.debug("Fetching volume details: volumeId={}", volumeId);
 
-        if (skipCache)
-        {
-            this.logger.debug("Bypassing the cache...");
-        }
-        else
-        {
-            volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
-        }
+        volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
 
-        if (volume == null)
+        if (skipCache || (volume == null))
         {
             this.logger.debug("Fetching volume details from ComicVine...");
 
@@ -78,11 +71,14 @@ public class ComicVineQueryForVolumeDetailsAdaptor
             try
             {
                 content = this.webRequestProcessor.execute(request);
-                this.logger.debug("Saving retrieved volume data...");
-                if (volume == null)
+
+                if (volume != null)
                 {
-                    volume = new ComicVineVolume();
+                    this.comicVineVolumeRepository.delete(volume);
                 }
+
+                this.logger.debug("Saving retrieved volume data...");
+                volume = new ComicVineVolume();
                 volume.setVolumeId(volumeId);
                 volume.setContent(content.toString());
 

@@ -25,3 +25,5 @@ export const LIBRARY_CURRENT_TAB = 'library.current-tab';
 export const IMPORT_SORT = 'import.sort-by';
 export const IMPORT_ROWS = 'import.rows';
 export const IMPORT_COVER_SIZE = 'import.cover-size';
+
+export const COMICVINE_API_KEY = 'comicvine.api-key';

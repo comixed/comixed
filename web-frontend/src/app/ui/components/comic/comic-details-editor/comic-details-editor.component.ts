@@ -24,6 +24,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { AppState } from '../../../../app.state';
 import * as LibraryActions from '../../../../actions/library.actions';
 import * as LibraryScrapingActions from '../../../../actions/library-scraping.actions';
+import * as UserActions from '../../../../actions/user.actions';
 import { AlertService } from '../../../../services/alert.service';
 import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
@@ -31,6 +32,9 @@ import { Comic } from '../../../../models/comics/comic';
 import { Volume } from '../../../../models/comics/volume';
 import { Issue } from '../../../../models/scraping/issue';
 import { LibraryScrape } from '../../../../models/library-scrape';
+import { User } from '../../../../models/user/user';
+import { Preference } from '../../../../models/user/preference';
+import { COMICVINE_API_KEY } from '../../../../models/user/preferences.constants';
 import { MenuItem } from 'primeng/api';
 
 @Component({
@@ -44,6 +48,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   fetch_options: Array<MenuItem>;
 
+  user$: Observable<User>;
+  user_subscription: Subscription;
+  user: User;
+
   library_scrape$: Observable<LibraryScrape>;
   library_scrape_subscription: Subscription;
   library_scrape: LibraryScrape;
@@ -55,6 +63,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   protected series;
   protected volume;
   protected issue_number;
+  protected skip_cache = false;
 
   constructor(
     private alert_service: AlertService,
@@ -62,6 +71,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     private comic_service: ComicService,
     private store: Store<AppState>,
   ) {
+    this.user$ = store.select('user');
     this.library_scrape$ = store.select('library_scraping');
 
     this.fetch_options = [
@@ -75,11 +85,20 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.user_subscription = this.user$.subscribe(
+      (user: User) => {
+        this.user = user;
+
+        const api_key = this.user.preferences.find((preference: Preference) => {
+          return preference.name === COMICVINE_API_KEY;
+        });
+
+        this.api_key = api_key ? api_key.value : '';
+      });
     this.library_scrape_subscription = this.library_scrape$.subscribe(
       (library_scrape: LibraryScrape) => {
         this.library_scrape = library_scrape;
 
-        this.api_key = this.library_scrape.api_key;
         this.series = this.library_scrape.series;
         this.volume = this.library_scrape.volume;
         this.issue_number = this.library_scrape.issue_number;
@@ -99,6 +118,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   fetch_candidates(skip_cache: boolean): void {
+    this.skip_cache = skip_cache;
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingFetchVolumes({
       api_key: this.api_key,
       series: this.series,
@@ -114,6 +134,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         api_key: this.api_key,
         volume: volume,
         issue_number: this.issue_number,
+        skip_cache: this.skip_cache,
       }));
     } else {
       this.store.dispatch(new LibraryScrapingActions.LibraryScrapingClearCurrentVolume());
@@ -125,6 +146,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       api_key: this.api_key,
       comic: this.library_scrape.comic,
       issue_id: this.library_scrape.current_issue.id,
+      skip_cache: this.skip_cache,
     }));
   }
 
@@ -156,9 +178,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   save_api_key(): void {
-    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSaveApiKey({
-      api_key: this.api_key,
-      comic: this.library_scrape.comic,
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: COMICVINE_API_KEY,
+      value: this.api_key,
     }));
   }
 

@@ -59,18 +59,9 @@ public class ComicVineQueryForVolumesAdaptor
         List<ComicVolume> result = new ArrayList<>();
         boolean done = false;
         int page = 0;
-        List<ComicVineVolumeQueryCacheEntry> entries = null;
+        List<ComicVineVolumeQueryCacheEntry> entries = this.queryRepository.findBySeriesName(name);
 
-        if (skipCache)
-        {
-            this.logger.debug("Bypassing the caching...");
-        }
-        else
-        {
-            entries = this.queryRepository.findBySeriesName(name);
-        }
-
-        if ((entries == null) || (entries.size() == 0))
+        if (skipCache || entries == null || entries.isEmpty())
         {
             while (!done)
             {
@@ -90,6 +81,12 @@ public class ComicVineQueryForVolumesAdaptor
                 try
                 {
                     String response = this.webRequestProcessor.execute(request);
+
+                    // delete any existing cache
+                    if ((entries != null) && !entries.isEmpty())
+                    {
+                        this.queryRepository.delete(entries);
+                    }
 
                     // put the entry in the cache
                     ComicVineVolumeQueryCacheEntry entry = new ComicVineVolumeQueryCacheEntry();

@@ -92,6 +92,7 @@ export class LibraryScrapingSetCurrentVolume implements Action {
     api_key: string,
     volume: Volume,
     issue_number: string,
+    skip_cache: boolean,
   }) { }
 }
 
@@ -108,6 +109,7 @@ export class LibraryScrapingFetchIssue implements Action {
     api_key: string,
     volume_id: number,
     issue_number: string,
+    skip_cache: boolean,
   }) { }
 }
 
@@ -127,6 +129,7 @@ export class LibraryScrapingScrapeMetadata implements Action {
     api_key: string,
     comic: Comic,
     issue_id: number,
+    skip_cache: boolean,
   }) { }
 }
 

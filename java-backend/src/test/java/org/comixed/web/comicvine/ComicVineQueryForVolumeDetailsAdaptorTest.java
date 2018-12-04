@@ -139,6 +139,7 @@ public class ComicVineQueryForVolumeDetailsAdaptorTest
         Mockito.when(comicVineVolumeRepository.findByVolumeId(Mockito.anyString())).thenReturn(comicVineVolume);
         Mockito.when(requestFactory.getObject()).thenReturn(request);
         Mockito.when(webRequestProcessor.execute(Mockito.any())).thenReturn(TEST_CONTENT_TEXT);
+        Mockito.doNothing().when(comicVineVolumeRepository).delete(Mockito.any(ComicVineVolume.class));
         Mockito.when(comicVineVolumeRepository.save(this.comicVineVolumeCaptor.capture())).thenReturn(comicVineVolume);
         Mockito.when(contentProcessor.process(Mockito.any(byte[].class), Mockito.any(Comic.class)))
                .thenReturn(TEST_PUBLISHER_ID);
@@ -148,9 +149,10 @@ public class ComicVineQueryForVolumeDetailsAdaptorTest
         assertNotNull(result);
         assertEquals(TEST_PUBLISHER_ID, result);
 
-        Mockito.verify(comicVineVolumeRepository, Mockito.never()).findByVolumeId(TEST_VOLUME_ID);
+        Mockito.verify(comicVineVolumeRepository, Mockito.times(1)).findByVolumeId(TEST_VOLUME_ID);
         Mockito.verify(requestFactory, Mockito.times(1)).getObject();
         Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(request);
+        Mockito.verify(comicVineVolumeRepository, Mockito.times(1)).delete(comicVineVolume);
         Mockito.verify(comicVineVolumeRepository, Mockito.times(1)).save(comicVineVolumeCaptor.getValue());
         Mockito.verify(contentProcessor, Mockito.times(1)).process(TEST_CONTENT, comic);
     }

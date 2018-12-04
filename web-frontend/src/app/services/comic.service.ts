@@ -187,20 +187,22 @@ export class ComicService {
     return this.http.post(`${this.api_url}/scraper/query/volumes`, params);
   }
 
-  scrape_comic_details_for(api_key: string, volume: number, issue_number: string): Observable<any> {
+  scrape_comic_details_for(api_key: string, volume: number, issue_number: string, skip_cache: boolean): Observable<any> {
     const params = new HttpParams()
       .set('api_key', api_key)
       .set('volume', `${volume}`)
-      .set('issue_number', issue_number);
+      .set('issue_number', issue_number)
+      .set('skip_cache', `${skip_cache}`);
 
     return this.http.post(`${this.api_url}/scraper/query/issue`, params);
   }
 
-  scrape_and_save_comic_details(api_key: string, comic_id: number, issue_id: number): Observable<any> {
+  scrape_and_save_comic_details(api_key: string, comic_id: number, issue_id: number, skip_cache: boolean): Observable<any> {
     const params = new HttpParams()
       .set('api_key', api_key)
       .set('comic_id', `${comic_id}`)
-      .set('issue_id', `${issue_id}`);
+      .set('issue_id', `${issue_id}`)
+      .set('skip_cache', `${skip_cache}`);
 
     return this.http.post(`${this.api_url}/scraper/save`, params);
   }

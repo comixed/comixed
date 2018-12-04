@@ -100,6 +100,7 @@ export class LibraryScrapeEffects {
         action.api_key,
         action.volume.id,
         action.issue_number,
+        action.skip_cache,
       )
         .map((issue: Issue) => new LibraryScrapingActions.LibraryScrapingFoundIssue({
           issue: issue,
@@ -116,6 +117,7 @@ export class LibraryScrapeEffects {
         action.api_key,
         action.volume_id,
         action.issue_number,
+        action.skip_cache,
       )
         .map((issue: Issue) => new LibraryScrapingActions.LibraryScrapingFoundIssue({
           issue: issue,
@@ -131,7 +133,9 @@ export class LibraryScrapeEffects {
       this.comic_service.scrape_and_save_comic_details(
         action.api_key,
         action.comic.id,
-        action.issue_id, )
+        action.issue_id,
+        action.skip_cache,
+      )
         .map(() => new LibraryScrapingActions.LibraryScrapingSetup({
           api_key: action.api_key,
           comic: action.comic,

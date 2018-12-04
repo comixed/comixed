@@ -58,16 +58,9 @@ public class ComicVineQueryForPublisherDetailsAdaptor
         ComicVinePublisher publisher = null;
         String content = null;
 
-        if (skipCache)
-        {
-            this.logger.debug("Bypassing the cache...");
-        }
-        else
-        {
-            publisher = this.comicVinePublisherRepository.findByPublisherId(publisherId);
-        }
+        publisher = this.comicVinePublisherRepository.findByPublisherId(publisherId);
 
-        if (publisher == null)
+        if (skipCache || (publisher == null))
         {
             this.logger.debug("Fetching publisher details from ComicVine...");
 
@@ -80,11 +73,13 @@ public class ComicVineQueryForPublisherDetailsAdaptor
             {
                 content = this.webRequestProcessor.execute(request);
 
-                this.logger.debug("Saving retrieved publisher data...");
-                if (publisher == null)
+                if (publisher != null)
                 {
-                    publisher = new ComicVinePublisher();
+                    this.comicVinePublisherRepository.delete(publisher);
                 }
+
+                this.logger.debug("Saving retrieved publisher data...");
+                publisher = new ComicVinePublisher();
                 publisher.setPublisherId(publisherId);
                 publisher.setContent(content);
                 this.comicVinePublisherRepository.save(publisher);
