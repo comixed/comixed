@@ -68,7 +68,7 @@ public class UserControllerTest
         Mockito.doNothing().when(user).setProperty(TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
         Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
 
-        controller.setUserProperty(authentication, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+        controller.setUserPreference(authentication, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
 
         Mockito.verify(authentication, Mockito.times(1)).getName();
         Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
@@ -82,7 +82,7 @@ public class UserControllerTest
         Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
 
-        controller.setUserProperty(authentication, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+        controller.setUserPreference(authentication, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
 
         Mockito.verify(authentication, Mockito.times(1)).getName();
         Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);

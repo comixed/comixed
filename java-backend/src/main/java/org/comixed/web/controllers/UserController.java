@@ -20,8 +20,10 @@
 package org.comixed.web.controllers;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.comixed.library.model.ComiXedUser;
+import org.comixed.library.model.Preference;
 import org.comixed.library.model.View.UserDetails;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.util.Utils;
@@ -65,21 +67,52 @@ public class UserController
 
         if (comiXedUser != null)
         {
-            logger.debug("Setting authenticated flag");
+            this.logger.debug("Setting authenticated flag");
             comiXedUser.setAuthenticated(true);
         }
 
         return comiXedUser;
     }
 
-    @RequestMapping(value = "/user/property",
+    @RequestMapping(value = "/user/preferences",
+                    method = RequestMethod.GET)
+    public List<Preference> getUserPreferences(Authentication authentication)
+    {
+        this.logger.debug("Getting user preferences");
+
+        if (authentication == null)
+        {
+            this.logger.debug("User is not authenticated");
+            return null;
+        }
+
+        String email = authentication.getName();
+
+        this.logger.debug("Loading user: email={}", email);
+        ComiXedUser user = this.userRepository.findByEmail(email);
+
+        if (user == null)
+        {
+            this.logger.debug("No such user: {}", email);
+            return null;
+        }
+
+        return user.getPreferences();
+    }
+
+    @RequestMapping(value = "/user/preferences",
                     method = RequestMethod.POST)
-    public void setUserProperty(Authentication authentication,
-                                @RequestParam("name") String name,
-                                @RequestParam("value") String value)
+    public void setUserPreference(Authentication authentication,
+                                  @RequestParam("name") String name,
+                                  @RequestParam("value") String value)
     {
         this.logger.debug("Setting user property");
 
+        if (authentication == null)
+        {
+            this.logger.debug("User is not authenticated");
+            return;
+        }
         String email = authentication.getName();
 
         this.logger.debug("Loading user: email={}", email);
