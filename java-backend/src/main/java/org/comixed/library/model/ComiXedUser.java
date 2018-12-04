@@ -141,6 +141,11 @@ public class ComiXedUser
         return null;
     }
 
+    public List<Preference> getPreferences()
+    {
+        return this.preferences;
+    }
+
     public List<Role> getRoles()
     {
         return this.roles;
