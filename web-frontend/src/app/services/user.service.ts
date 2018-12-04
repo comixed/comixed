@@ -45,8 +45,10 @@ export class UserService {
     return this.http.get(`${this.api_url}/user`);
   }
 
-  set_user_preference(name: string, value: string): void {
+  set_user_preference(name: string, value: string): Observable<any> {
+    const params = new HttpParams().set('name', name).set('value', value);
 
+    return this.http.post(`${this.api_url}/user/preferences`, params);
   }
 
   get_user_preference(name: string, defvalue: string): string {

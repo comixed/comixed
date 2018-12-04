@@ -63,4 +63,16 @@ export class UserEffects {
       Observable.of(this.token_storage.sign_out())
         .map(() => new UserActions.UserAuthCheck())
     );
+
+  @Effect()
+  user_set_preference$: Observable<Action> = this.actions$
+    .ofType<UserActions.UserSetPreference>(UserActions.USER_SET_PREFERENCE)
+    .map(action => action.payload)
+    .switchMap(action =>
+      this.user_service.set_user_preference(action.name, action.value)
+        .map(() => new UserActions.UserPreferenceSaved({
+          name: action.name,
+          value: action.value,
+        }))
+    );
 }

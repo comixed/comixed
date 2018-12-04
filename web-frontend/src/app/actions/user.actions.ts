@@ -28,6 +28,8 @@ export const USER_CANCEL_LOGIN = '[USER] Cancel the login process';
 export const USER_LOGGING_IN = '[USER] Performing the actual login process';
 export const USER_SET_AUTH_TOKEN = '[USER] Save the auth token';
 export const USER_LOGOUT = '[USER] Logout';
+export const USER_SET_PREFERENCE = '[USER] Saves the given user preference';
+export const USER_PREFERENCE_SAVED = '[USER] The user preference was saved';
 
 export class UserAuthCheck implements Action {
   readonly type = USER_AUTH_CHECK;
@@ -78,6 +80,24 @@ export class UserLogout implements Action {
   constructor() { }
 }
 
+export class UserSetPreference implements Action {
+  readonly type = USER_SET_PREFERENCE;
+
+  constructor(public payload: {
+    name: string,
+    value: string,
+  }) { }
+}
+
+export class UserPreferenceSaved implements Action {
+  readonly type = USER_PREFERENCE_SAVED;
+
+  constructor(public payload: {
+    name: string,
+    value: string,
+  }) { }
+}
+
 export type Actions =
   UserAuthCheck |
   UserLoaded |
@@ -85,4 +105,6 @@ export type Actions =
   UserCancelLogin |
   UserLoggingIn |
   UserSetAuthToken |
-  UserLogout;
+  UserLogout |
+  UserSetPreference |
+  UserPreferenceSaved;

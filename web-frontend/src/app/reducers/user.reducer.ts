@@ -19,6 +19,7 @@
 
 import { Action } from '@ngrx/store';
 import { User } from '../models/user/user';
+import { Preference } from '../models/user/preference';
 import * as UserActions from '../actions/user.actions';
 
 const initial_state: User = {
@@ -101,6 +102,25 @@ export function userReducer(
         first_login_date: null,
         last_login_date: null,
       };
+
+    case UserActions.USER_SET_PREFERENCE:
+      return {
+        ...state,
+        busy: true,
+      };
+
+    case UserActions.USER_PREFERENCE_SAVED: {
+      const preferences = state.preferences.filter((preference: Preference) => {
+        return preference.name !== action.payload.name;
+      });
+      preferences.push({ name: action.payload.name, value: action.payload.value });
+
+      return {
+        ...state,
+        busy: false,
+        preferences: preferences,
+      };
+    }
 
     default:
       return state;
