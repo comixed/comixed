@@ -91,6 +91,7 @@ import { DuplicatePagesViewComponent } from './ui/views/library/duplicate-pages-
 import { PageHashViewComponent } from './ui/views/library/page-hash-view/page-hash-view.component';
 import { VolumeListComponent } from './ui/components/scraping/volume-list/volume-list.component';
 import { TokenStorage } from './storage/token.storage';
+import { AccountPageComponent } from './ui/pages/account/account-page/account-page.component';
 
 @NgModule({
   declarations: [
@@ -118,6 +119,7 @@ import { TokenStorage } from './storage/token.storage';
     DuplicatePagesViewComponent,
     PageHashViewComponent,
     VolumeListComponent,
+    AccountPageComponent,
   ],
   imports: [
     BrowserModule,
