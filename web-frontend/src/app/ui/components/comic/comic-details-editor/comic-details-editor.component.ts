@@ -31,6 +31,7 @@ import { Comic } from '../../../../models/comics/comic';
 import { Volume } from '../../../../models/comics/volume';
 import { Issue } from '../../../../models/scraping/issue';
 import { LibraryScrape } from '../../../../models/library-scrape';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -40,6 +41,8 @@ import { LibraryScrape } from '../../../../models/library-scrape';
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   @Input() comic: Comic;
   @Output() update: EventEmitter<Comic> = new EventEmitter();
+
+  fetch_options: Array<MenuItem>;
 
   library_scrape$: Observable<LibraryScrape>;
   library_scrape_subscription: Subscription;
@@ -60,6 +63,15 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
   ) {
     this.library_scrape$ = store.select('library_scraping');
+
+    this.fetch_options = [
+      {
+        label: 'Fetch', icon: 'fa fa-search', command: () => this.fetch_candidates(false)
+      },
+      {
+        label: 'Fetch (Skip Cache)', icon: 'fa fa-ban', command: () => this.fetch_candidates(true)
+      },
+    ];
   }
 
   ngOnInit() {
@@ -86,12 +98,13 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     this.library_scrape_subscription.unsubscribe();
   }
 
-  fetch_candidates(): void {
+  fetch_candidates(skip_cache: boolean): void {
     this.store.dispatch(new LibraryScrapingActions.LibraryScrapingFetchVolumes({
       api_key: this.api_key,
       series: this.series,
       volume: this.volume,
       issue_number: this.issue_number,
+      skip_cache: skip_cache,
     }));
   }
 

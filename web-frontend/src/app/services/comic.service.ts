@@ -174,12 +174,15 @@ export class ComicService {
     return `${this.api_url}/comics/${comicId}/download`;
   }
 
-  fetch_candidates_for(api_key: string, series_name: string, volume: string, issue_number: string): Observable<any> {
+  fetch_candidates_for(api_key: string,
+    series_name: string, volume: string, issue_number: string,
+    skip_cache: boolean): Observable<any> {
     const params = new HttpParams()
       .set('api_key', api_key)
       .set('series_name', series_name)
       .set('volume', volume)
-      .set('issue_number', issue_number);
+      .set('issue_number', issue_number)
+      .set('skip_cache', `${skip_cache}`);
 
     return this.http.post(`${this.api_url}/scraper/query/volumes`, params);
   }

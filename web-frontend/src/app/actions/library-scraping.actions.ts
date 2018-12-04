@@ -75,6 +75,7 @@ export class LibraryScrapingFetchVolumes implements Action {
     series: string,
     volume: string,
     issue_number: string,
+    skip_cache: boolean,
   }) { }
 }
 

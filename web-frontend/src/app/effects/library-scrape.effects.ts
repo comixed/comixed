@@ -50,6 +50,7 @@ export class LibraryScrapeEffects {
         action.series,
         action.volume,
         action.issue_number,
+        action.skip_cache,
       )
         .map((volumes: Array<Volume>) => new LibraryScrapingActions.LibraryScrapingFoundVolumes(volumes))
     );

@@ -57,13 +57,11 @@
       label='Save'
       icon='fa fa-save'
       (click)='save_changes()'></button>
-    <button
-      pButton
-      type='button'
+    <p-splitButton
       label='Fetch'
       icon='fa fa-search'
-      [disabled]='!is_ready_to_fetch()'
-      (click)='fetch_candidates()'></button>
+      [model]='fetch_options'
+      [disabled]='!is_ready_to_fetch()'></p-splitButton>
     <button
       pButton
       type='button'
