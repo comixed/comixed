@@ -17,29 +17,40 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import * as UserActions from '../../../../actions/user.actions';
 import { SelectItem } from 'primeng/api';
-import { UserService } from '../../../../services/user.service';
 import { ComicFile } from '../../../../models/import/comic-file';
+import { User } from '../../../../models/user/user';
+import { Preference } from '../../../../models/user/preference';
 import { ComicService } from '../../../../services/comic.service';
 import { AlertService } from '../../../../services/alert.service';
+import {
+  IMPORT_SORT,
+  IMPORT_ROWS,
+  IMPORT_COVER_SIZE,
+} from '../../../../models/user/preferences.constants';
+
+const ROWS_PARAMETER = 'rows';
+const SORT_PARAMETER = 'sort';
+const COVER_PARAMETER = 'coversize';
+
+const COVER_SIZE_PREFERENCE = 'cover_size';
+const SORT_PREFERENCE = 'import_sort';
+const ROWS_PREFERENCE = 'import_rows';
 
 @Component({
   selector: 'app-import-page',
   templateUrl: './import-page.component.html',
   styleUrls: ['./import-page.component.css']
 })
-export class ImportPageComponent implements OnInit {
-  readonly ROWS_PARAMETER = 'rows';
-  readonly SORT_PARAMETER = 'sort';
-  readonly COVER_PARAMETER = 'coversize';
-
-  readonly COVER_SIZE_PREFERENCE = 'cover_size';
-  readonly SORT_PREFERENCE = 'import_sort';
-  readonly ROWS_PREFERENCE = 'import_rows';
-
+export class ImportPageComponent implements OnInit, OnDestroy {
   protected sort_options: Array<SelectItem>;
   protected sort_by: string;
 
@@ -63,20 +74,23 @@ export class ImportPageComponent implements OnInit {
 
   protected busy = false;
 
+  user$: Observable<User>;
+  user_subscription: Subscription;
+  user: User;
+
   constructor(
-    private user_service: UserService,
     private comic_service: ComicService,
     private alert_service: AlertService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private store: Store<AppState>,
   ) {
+    this.user$ = store.select('user');
     this.selected_file_detail = null;
     activatedRoute.queryParams.subscribe(params => {
-      this.sort_by = params[this.SORT_PARAMETER] || this.user_service.get_user_preference(this.SORT_PREFERENCE, 'filename');
-      this.rows = this.load_parameter(params[this.ROWS_PARAMETER],
-        parseInt(this.user_service.get_user_preference(this.ROWS_PREFERENCE, '10'), 10));
-      this.cover_size = this.load_parameter(params[this.COVER_PARAMETER],
-        parseInt(this.user_service.get_user_preference(this.COVER_SIZE_PREFERENCE, '200'), 10));
+      this.sort_by = params[SORT_PARAMETER] || 'filename';
+      this.rows = parseInt(params[ROWS_PARAMETER] || '10', 10);
+      this.cover_size = parseInt(params[COVER_PARAMETER] || '200', 10);
     });
     this.sort_options = [
       { label: 'Filename', value: 'filename' },
@@ -90,63 +104,81 @@ export class ImportPageComponent implements OnInit {
     ];
   }
 
+  private get_parameter(name: string): string {
+    const which = this.user.preferences.find((preference: Preference) => {
+      return preference.name === name;
+    });
+
+    if (which) {
+      return which.value;
+    } else {
+      return null;
+    }
+  }
+
   ngOnInit() {
-    const that = this;
+    this.user_subscription = this.user$.subscribe(
+      (user: User) => {
+        this.user = user;
+
+        this.sort_by = this.get_parameter(IMPORT_SORT) || this.sort_by;
+        this.rows = parseInt(this.get_parameter(IMPORT_ROWS) || `${this.rows}`, 10);
+        this.cover_size = parseInt(this.get_parameter(IMPORT_COVER_SIZE) || `${this.cover_size}`, 10);
+      });
     this.busy = true;
     setInterval(() => {
       // don't try to get the pending imports if we're already doing it...
-      if (that.waiting_on_imports === true) {
+      if (this.waiting_on_imports === true) {
         return;
       }
-      that.waiting_on_imports = true;
-      that.comic_service.get_number_of_pending_imports().subscribe(
+      this.waiting_on_imports = true;
+      this.comic_service.get_number_of_pending_imports().subscribe(
         count => {
-          that.pending_imports = count;
-          that.busy = false;
+          this.pending_imports = count;
+          this.busy = false;
         },
         error => {
-          that.alert_service.show_error_message('Error getting the number of pending imports...', error);
-          that.busy = false;
+          this.alert_service.show_error_message('Error getting the number of pending imports...', error);
+          this.busy = false;
         },
         () => {
-          that.waiting_on_imports = false;
+          this.waiting_on_imports = false;
         });
     }, 250);
   }
 
+  ngOnDestroy() {
+    this.user_subscription.unsubscribe();
+  }
+
   set_sort_by(sort_by: string): void {
     this.sort_by = sort_by;
-    this.update_params(this.SORT_PARAMETER, this.sort_by);
-    this.user_service.set_user_preference(this.SORT_PREFERENCE, this.sort_by);
+    this.update_params(SORT_PARAMETER, this.sort_by);
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: IMPORT_SORT,
+      value: sort_by,
+    }));
   }
 
   set_rows(rows: number): void {
     this.rows = rows;
-    this.update_params(this.ROWS_PARAMETER, `${this.rows}`);
-    this.user_service.set_user_preference(this.ROWS_PREFERENCE, `${this.rows}`);
+    this.update_params(ROWS_PARAMETER, `${this.rows}`);
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: IMPORT_ROWS,
+      value: `${rows}`,
+    }));
   }
 
   set_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
-    this.update_params(this.COVER_PARAMETER, `${this.cover_size}`);
-    this.user_service.set_user_preference(this.COVER_SIZE_PREFERENCE, `${this.cover_size}`);
   }
 
-  private update_params(name: string, value: string): void {
-    const queryParams: Params = Object.assign({}, this.activatedRoute.snapshot.queryParams);
-    if (value && value.length) {
-      queryParams[name] = value;
-    } else {
-      queryParams[name] = null;
-    }
-    this.router.navigate([], { relativeTo: this.activatedRoute, queryParams: queryParams });
-  }
-
-  private load_parameter(value: string, defvalue: any): any {
-    if (value && value.length) {
-      return parseInt(value, 10);
-    }
-    return defvalue;
+  save_cover_size(cover_size: number): void {
+    this.update_params(COVER_PARAMETER, `${this.cover_size}`);
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: IMPORT_COVER_SIZE,
+      value: `${cover_size}`,
+    }));
   }
 
   retrieve_files(directory: string): void {
@@ -246,5 +278,15 @@ export class ImportPageComponent implements OnInit {
 
   hide_selections(): void {
     this.show_selected_files = false;
+  }
+
+  private update_params(name: string, value: string): void {
+    const queryParams: Params = Object.assign({}, this.activatedRoute.snapshot.queryParams);
+    if (value && value.length) {
+      queryParams[name] = value;
+    } else {
+      queryParams[name] = null;
+    }
+    this.router.navigate([], { relativeTo: this.activatedRoute, queryParams: queryParams });
   }
 }

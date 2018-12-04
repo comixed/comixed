@@ -75,7 +75,8 @@
                 [min]='200'
                 [max]='640'
                 [animate]='true'
-                (onChange)='set_cover_size($event.value)'></p-slider>
+                (onChange)='set_cover_size($event.value)'
+                (onSlideEnd)='save_cover_size($event.value)'></p-slider>
             </div>
             <div
               class='ui-g-1 ui-md-1'
