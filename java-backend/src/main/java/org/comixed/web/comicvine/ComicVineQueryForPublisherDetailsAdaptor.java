@@ -48,18 +48,28 @@ public class ComicVineQueryForPublisherDetailsAdaptor
     @Autowired
     private ComicVinePublisherRepository comicVinePublisherRepository;
 
-    public void execute(String apiKey, String publisherId, Comic comic) throws ComicVineAdaptorException
+    public void execute(String apiKey,
+                        String publisherId,
+                        Comic comic,
+                        boolean skipCache) throws ComicVineAdaptorException
     {
         this.logger.debug("Fetching publisher details: publisherId={}", publisherId);
 
         ComicVinePublisher publisher = null;
         String content = null;
 
-        publisher = comicVinePublisherRepository.findByPublisherId(publisherId);
+        if (skipCache)
+        {
+            this.logger.debug("Bypassing the cache...");
+        }
+        else
+        {
+            publisher = this.comicVinePublisherRepository.findByPublisherId(publisherId);
+        }
 
         if (publisher == null)
         {
-            logger.debug("Fetching publisher details from ComicVine...");
+            this.logger.debug("Fetching publisher details from ComicVine...");
 
             ComicVinePublisherDetailsWebRequest request = this.webRequestFactory.getObject();
 
@@ -70,14 +80,14 @@ public class ComicVineQueryForPublisherDetailsAdaptor
             {
                 content = this.webRequestProcessor.execute(request);
 
-                logger.debug("Saving retrieved publisher data...");
+                this.logger.debug("Saving retrieved publisher data...");
                 if (publisher == null)
                 {
                     publisher = new ComicVinePublisher();
                 }
                 publisher.setPublisherId(publisherId);
                 publisher.setContent(content);
-                comicVinePublisherRepository.save(publisher);
+                this.comicVinePublisherRepository.save(publisher);
             }
             catch (WebRequestException error)
             {
@@ -86,7 +96,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor
         }
         else
         {
-            logger.debug("Publisher found in database.");
+            this.logger.debug("Publisher found in database.");
             content = publisher.getContent();
         }
 

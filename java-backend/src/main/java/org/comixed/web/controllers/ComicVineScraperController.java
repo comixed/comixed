@@ -112,7 +112,7 @@ public class ComicVineScraperController
             this.logger.debug("Fetching details for volume");
             String publisherId = this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, result, false);
             this.logger.debug("Fetching publisher details");
-            this.queryForPublisherDetailsAdaptor.execute(apiKey, publisherId, result);
+            this.queryForPublisherDetailsAdaptor.execute(apiKey, publisherId, result, false);
             this.logger.debug("Updating details for comic in database");
             result = this.comicRepository.save(result);
         }

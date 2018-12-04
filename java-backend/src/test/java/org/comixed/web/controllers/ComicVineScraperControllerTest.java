@@ -210,7 +210,7 @@ public class ComicVineScraperControllerTest
                                                           Mockito.any(Comic.class), false))
                .thenReturn(TEST_PUBLISHER_ID);
         Mockito.doThrow(new ComicVineAdaptorException("expected")).when(queryForPublisherDetailsAdaptor)
-               .execute(Mockito.anyString(), Mockito.anyString(), Mockito.any(Comic.class));
+               .execute(Mockito.anyString(), Mockito.anyString(), Mockito.any(Comic.class), false);
 
         try
         {
@@ -223,7 +223,7 @@ public class ComicVineScraperControllerTest
                                                                                   TEST_ISSUE_ID, comic, false);
             Mockito.verify(queryForVolumeDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_VOLUME_ID, comic, false);
             Mockito.verify(queryForPublisherDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_PUBLISHER_ID,
-                                                                                      comic);
+                                                                                      comic, false);
         }
     }
 
@@ -252,7 +252,7 @@ public class ComicVineScraperControllerTest
                                                                               TEST_ISSUE_ID, comic, false);
         Mockito.verify(queryForVolumeDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_VOLUME_ID, comic, false);
         Mockito.verify(queryForPublisherDetailsAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_PUBLISHER_ID,
-                                                                                  comic);
+                                                                                  comic, false);
         Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
     }
 }
