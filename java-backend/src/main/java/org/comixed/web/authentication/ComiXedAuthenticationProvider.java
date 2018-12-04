@@ -20,6 +20,7 @@
 package org.comixed.web.authentication;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.comixed.library.model.ComiXedUser;
@@ -76,6 +77,9 @@ public class ComiXedAuthenticationProvider implements
                 logger.debug("Granting role: {}", role.getName());
                 roles.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
             }
+            // update the last authenticated date
+            user.setLastLoginDate(new Date());
+            userRepository.save(user);
             return new UsernamePasswordAuthenticationToken(email, password, roles);
         }
 
