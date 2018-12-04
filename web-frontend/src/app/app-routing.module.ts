@@ -21,7 +21,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { MainPageComponent } from './ui/pages/main-page/main-page.component';
-import { AccountComponent } from './account/account.component';
+import { AccountPageComponent } from './ui/pages/account/account-page/account-page.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { ComicDetailsComponent } from './ui/pages/comic/comic-details/comic-details.component';
 import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
@@ -29,7 +29,7 @@ import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/dupl
 
 const routes: Routes = [
   { path: 'home', component: MainPageComponent },
-  { path: 'account', component: AccountComponent },
+  { path: 'account', component: AccountPageComponent },
   { path: 'duplicates', component: DuplicatesPageComponent },
   { path: 'comics', component: LibraryPageComponent },
   { path: 'comics/:id', component: ComicDetailsComponent },

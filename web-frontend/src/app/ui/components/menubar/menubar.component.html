@@ -3,7 +3,8 @@
   [model]='items'
   [autoDisplay]='false'>
 <div class='ui-toolbar-group-right'>
-  <span><b>User: </b>{{ user.email || 'Guest' }}</span>
+  <span *ngIf='user?.email'><b>User: </b> <a
+    [routerLink]='["account"]'>{{ user.email }}</a></span>
   <button
     *ngIf='!user.authenticated'
     pButton

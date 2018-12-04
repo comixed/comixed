@@ -17,18 +17,37 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { User } from '../../../../models/user/user';
 
 @Component({
   selector: 'app-account-page',
   templateUrl: './account-page.component.html',
   styleUrls: ['./account-page.component.css']
 })
-export class AccountPageComponent implements OnInit {
+export class AccountPageComponent implements OnInit, OnDestroy {
+  private user$: Observable<User>;
+  private user_subscription: Subscription;
+  user: User;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(
+    private store: Store<AppState>,
+  ) {
+    this.user$ = store.select('user');
   }
 
+  ngOnInit() {
+    this.user_subscription = this.user$.subscribe(
+      (user: User) => {
+        this.user = user;
+      });
+  }
+
+  ngOnDestroy() {
+    this.user_subscription.unsubscribe();
+  }
 }
