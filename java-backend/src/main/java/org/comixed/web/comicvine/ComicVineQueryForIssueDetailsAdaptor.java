@@ -48,7 +48,11 @@ public class ComicVineQueryForIssueDetailsAdaptor
     @Autowired
     private ComicVineIssueRepository comicVineIssueRepository;
 
-    public String execute(String apiKey, long comicId, String issueId, Comic comic) throws ComicVineAdaptorException
+    public String execute(String apiKey,
+                          long comicId,
+                          String issueId,
+                          Comic comic,
+                          boolean skipCache) throws ComicVineAdaptorException
     {
         String result = null;
         String content = null;
@@ -56,7 +60,14 @@ public class ComicVineQueryForIssueDetailsAdaptor
 
         this.logger.debug("Fetching issue details: issueId={}", issueId);
 
-        issue = this.comicVineIssueRepository.findByIssueId(issueId);
+        if (skipCache)
+        {
+            this.logger.debug("Bypassing the cache...");
+        }
+        else
+        {
+            issue = this.comicVineIssueRepository.findByIssueId(issueId);
+        }
 
         if (issue == null)
         {
@@ -77,7 +88,7 @@ public class ComicVineQueryForIssueDetailsAdaptor
                 }
                 issue.setIssueId(issueId);
                 issue.setContent(content);
-                comicVineIssueRepository.save(issue);
+                this.comicVineIssueRepository.save(issue);
             }
             catch (WebRequestException error)
             {

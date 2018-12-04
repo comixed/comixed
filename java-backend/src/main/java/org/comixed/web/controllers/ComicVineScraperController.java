@@ -108,7 +108,7 @@ public class ComicVineScraperController
         if (result != null)
         {
             this.logger.debug("Fetching details for comic");
-            String volumeId = this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, result);
+            String volumeId = this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, result, false);
             this.logger.debug("Fetching details for volume");
             String publisherId = this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, result);
             this.logger.debug("Fetching publisher details");
