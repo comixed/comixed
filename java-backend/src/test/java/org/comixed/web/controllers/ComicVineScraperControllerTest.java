@@ -89,7 +89,7 @@ public class ComicVineScraperControllerTest
     @Test(expected = ComicVineAdaptorException.class)
     public void testQueryForVolumesAdaptorRaisesException() throws WebRequestException, ComicVineAdaptorException
     {
-        Mockito.when(queryForVolumesAdaptor.execute(Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(queryForVolumesAdaptor.execute(Mockito.anyString(), Mockito.anyString(), false))
                .thenThrow(new ComicVineAdaptorException("expected"));
 
         try
@@ -98,14 +98,14 @@ public class ComicVineScraperControllerTest
         }
         finally
         {
-            Mockito.verify(queryForVolumesAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_SERIES_NAME);
+            Mockito.verify(queryForVolumesAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_SERIES_NAME, false);
         }
     }
 
     @Test
     public void testQueryForVolumes() throws ComicVineAdaptorException, WebRequestException
     {
-        Mockito.when(queryForVolumesAdaptor.execute(Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(queryForVolumesAdaptor.execute(Mockito.anyString(), Mockito.anyString(), false))
                .thenReturn(comicVolumeList);
 
         List<ComicVolume> result = controller.queryForVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_VOLUME,
@@ -113,7 +113,7 @@ public class ComicVineScraperControllerTest
 
         assertSame(comicVolumeList, result);
 
-        Mockito.verify(queryForVolumesAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_SERIES_NAME);
+        Mockito.verify(queryForVolumesAdaptor, Mockito.times(1)).execute(TEST_API_KEY, TEST_SERIES_NAME, false);
     }
 
     @Test(expected = ComicVineAdaptorException.class)

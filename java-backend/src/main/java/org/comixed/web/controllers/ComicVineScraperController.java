@@ -88,7 +88,7 @@ public class ComicVineScraperController
     {
         this.logger.debug("Preparing to retrieve issues for the given series: {}", seriesName);
 
-        List<ComicVolume> result = this.queryForVolumesAdaptor.execute(apiKey, seriesName);
+        List<ComicVolume> result = this.queryForVolumesAdaptor.execute(apiKey, seriesName, false);
 
         this.logger.debug("Returning {} volumes", result.size());
 

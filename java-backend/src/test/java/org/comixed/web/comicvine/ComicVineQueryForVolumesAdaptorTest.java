@@ -91,7 +91,7 @@ public class ComicVineQueryForVolumesAdaptorTest
 
         try
         {
-            adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME);
+            adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME, false);
         }
         finally
         {
@@ -116,7 +116,7 @@ public class ComicVineQueryForVolumesAdaptorTest
 
         try
         {
-            adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME);
+            adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME, false);
         }
         finally
         {
@@ -141,7 +141,7 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
 
-        List<ComicVolume> result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME);
+        List<ComicVolume> result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME, false);
 
         assertSame(comicVolumeList.getValue(), result);
         assertEquals(TEST_VOLUME_NAME, queryEntryCaptor.getValue().getSeriesName());
@@ -166,7 +166,7 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.when(queryEntry.getContent()).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
 
-        List<ComicVolume> result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME);
+        List<ComicVolume> result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME, false);
 
         assertSame(comicVolumeList.getValue(), result);
 
@@ -174,6 +174,34 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.verify(queryEntries, Mockito.atLeast(1)).size();
         Mockito.verify(queryEntries, Mockito.times(1)).get(0);
         Mockito.verify(queryEntry, Mockito.times(1)).getContent();
+        Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
+    }
+
+    @Test
+    public void testExecuteEntryInDatabaseSkipCache() throws ComicVineAdaptorException, WebRequestException
+    {
+        Mockito.when(queryRepository.findBySeriesName(Mockito.anyString())).thenReturn(queryEntries);
+        Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
+        Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
+        Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
+        Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
+        Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
+        Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
+        Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
+
+        List<ComicVolume> result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME, true);
+
+        assertSame(comicVolumeList.getValue(), result);
+        assertEquals(TEST_VOLUME_NAME, queryEntryCaptor.getValue().getSeriesName());
+        assertEquals(TEST_RESPONSE_CONTENT_TEXT, queryEntryCaptor.getValue().getContent());
+
+        Mockito.verify(queryRepository, Mockito.never()).findBySeriesName(TEST_VOLUME_NAME);
+        Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
+        Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
+        Mockito.verify(webRequest, Mockito.times(1)).setSeriesName(TEST_VOLUME_NAME);
+        Mockito.verify(webRequest, Mockito.never()).setPage(1);
+        Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
+        Mockito.verify(queryRepository, Mockito.times(1)).save(queryEntryCaptor.getValue());
         Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
     }
 
@@ -190,7 +218,7 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(false, true);
 
-        List<ComicVolume> result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME);
+        List<ComicVolume> result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME, false);
 
         assertSame(comicVolumeList.getValue(), result);
 

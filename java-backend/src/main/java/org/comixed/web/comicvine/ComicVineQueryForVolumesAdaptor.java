@@ -51,21 +51,30 @@ public class ComicVineQueryForVolumesAdaptor
     @Autowired
     private ComicVineVolumeQueryCacheRepository queryRepository;
 
-    public List<ComicVolume> execute(String apiKey, String name) throws ComicVineAdaptorException, WebRequestException
+    public List<ComicVolume> execute(String apiKey, String name, boolean skipCache) throws ComicVineAdaptorException,
+                                                                                    WebRequestException
     {
         this.logger.debug("Fetching volumes: name=\"{}\"", name, apiKey);
 
         List<ComicVolume> result = new ArrayList<>();
         boolean done = false;
         int page = 0;
+        List<ComicVineVolumeQueryCacheEntry> entries = null;
 
-        List<ComicVineVolumeQueryCacheEntry> entries = queryRepository.findBySeriesName(name);
+        if (skipCache)
+        {
+            this.logger.debug("Bypassing the caching...");
+        }
+        else
+        {
+            entries = this.queryRepository.findBySeriesName(name);
+        }
 
-        if (entries == null || entries.size() == 0)
+        if ((entries == null) || (entries.size() == 0))
         {
             while (!done)
             {
-                logger.debug("Fetching volumes from ComicVine...");
+                this.logger.debug("Fetching volumes from ComicVine...");
 
                 ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
                 request.setApiKey(apiKey);
@@ -88,7 +97,7 @@ public class ComicVineQueryForVolumesAdaptor
                     entry.setSeriesName(name);
                     entry.setContent(response);
                     entry.setIndex(page);
-                    queryRepository.save(entry);
+                    this.queryRepository.save(entry);
                     done = this.responseProcessor.process(result, response.getBytes());
                 }
                 catch (WebRequestException error)
@@ -99,7 +108,7 @@ public class ComicVineQueryForVolumesAdaptor
         }
         else
         {
-            logger.debug("Processing {} cached query entries...", entries.size());
+            this.logger.debug("Processing {} cached query entries...", entries.size());
             for (int index = 0;
                  index < entries.size();
                  index++)
