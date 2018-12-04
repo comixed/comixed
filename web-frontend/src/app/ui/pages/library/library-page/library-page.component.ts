@@ -78,6 +78,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   current_tab: number;
 
   protected busy = false;
+  private first_time_user_sub = true;
+  private first_time_query = true;
 
   constructor(
     private activated_route: ActivatedRoute,
@@ -91,10 +93,17 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.library$ = store.select('library');
     this.activated_route.queryParams.subscribe(
       params => {
-        this.sort_by = params[this.SORT_PARAMETER] || 'series';
-        this.rows = parseInt(params[this.ROWS_PARAMETER] || '10', 10);
-        this.cover_size = parseInt(params[this.COVER_PARAMETER] || '200', 10);
-        this.current_tab = parseInt(params[this.TAB_PARAMETER] || '0', 10);
+        /* TODO major code stink here
+         * We need a better way to parse the query parameters
+         * and the user preferences.
+         */
+        if (this.first_time_query) {
+          this.first_time_query = false;
+          this.sort_by = params[this.SORT_PARAMETER] || 'series';
+          this.rows = parseInt(params[this.ROWS_PARAMETER] || '10', 10);
+          this.cover_size = parseInt(params[this.COVER_PARAMETER] || '200', 10);
+          this.current_tab = parseInt(params[this.TAB_PARAMETER] || '0', 10);
+        }
       });
     this.sort_options = [
       { label: 'Series', value: 'series' },
@@ -123,10 +132,17 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       (user: User) => {
         this.user = user;
 
-        this.sort_by = this.get_parameter(LIBRARY_SORT) || this.sort_by;
-        this.rows = parseInt(this.get_parameter(LIBRARY_ROWS) || `${this.rows}`, 10);
-        this.cover_size = parseInt(this.get_parameter(LIBRARY_COVER_SIZE) || `${this.cover_size}`, 10);
-        this.current_tab = parseInt(this.get_parameter(LIBRARY_CURRENT_TAB) || `${this.current_tab}`, 10);
+        /* TODO this has code stink all over it.
+         * There has to be a better way to avoid updating parameters after the initial
+         * page load...
+         */
+        if (this.first_time_user_sub) {
+          this.first_time_user_sub = false;
+          this.sort_by = this.get_parameter(LIBRARY_SORT) || this.sort_by;
+          this.rows = parseInt(this.get_parameter(LIBRARY_ROWS) || `${this.rows}`, 10);
+          this.cover_size = parseInt(this.get_parameter(LIBRARY_COVER_SIZE) || `${this.cover_size}`, 10);
+          this.current_tab = parseInt(this.get_parameter(LIBRARY_CURRENT_TAB) || `${this.current_tab}`, 10);
+        }
       });
     this.library_subscription = this.library$.subscribe(
       (library: Library) => {
