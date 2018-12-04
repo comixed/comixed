@@ -38,6 +38,7 @@ export class LibraryCoversComponent implements OnInit {
   @Output() changeSort = new EventEmitter<string>();
   @Output() changeRows = new EventEmitter<number>();
   @Output() changeCoverSize = new EventEmitter<number>();
+  @Output() saveCoverSize = new EventEmitter<number>();
   @Output() comicSelected = new EventEmitter<Comic>();
   @Output() open = new EventEmitter<Comic>();
   @Output() delete = new EventEmitter<Comic>();
@@ -55,10 +56,6 @@ export class LibraryCoversComponent implements OnInit {
 
   set_rows(rows: number): void {
     this.changeRows.next(rows);
-  }
-
-  set_cover_size(cover_size: number): void {
-    this.changeCoverSize.next(cover_size);
   }
 
   get_cover_url(comic: Comic): string {

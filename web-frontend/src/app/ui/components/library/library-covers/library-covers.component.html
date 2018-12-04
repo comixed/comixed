@@ -38,9 +38,8 @@
         [min]='200'
         [max]='640'
         [animate]='true'
-        pTooltip='The cover size only applies to the grid view...'
-        tooltipPosition='right'
-        (onChange)='set_cover_size($event.value)'></p-slider>
+        (onChange)='setCoverSize.next($event.value)'
+        (onSlideEnd)='saveCoverSize.next($event.value)'></p-slider>
     </div>
     <div
       class='ui-g-1 ui-md-1'

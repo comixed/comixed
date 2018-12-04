@@ -136,7 +136,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
          * There has to be a better way to avoid updating parameters after the initial
          * page load...
          */
-        if (this.first_time_user_sub) {
+        if (this.user.preferences.length > 0 && this.first_time_user_sub) {
           this.first_time_user_sub = false;
           this.sort_by = this.get_parameter(LIBRARY_SORT) || this.sort_by;
           this.rows = parseInt(this.get_parameter(LIBRARY_ROWS) || `${this.rows}`, 10);
@@ -203,6 +203,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   set_cover_size(cover_size: number): void {
+    this.cover_size = cover_size;
+  }
+
+  save_cover_size(cover_size: number): void {
     this.store.dispatch(new UserActions.UserSetPreference({
       name: LIBRARY_COVER_SIZE,
       value: `${cover_size}`,
