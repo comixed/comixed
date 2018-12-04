@@ -48,7 +48,10 @@ public class ComicVineQueryForVolumeDetailsAdaptor
     @Autowired
     private ComicVineVolumeRepository comicVineVolumeRepository;
 
-    public String execute(String apiKey, String volumeId, Comic comic) throws ComicVineAdaptorException
+    public String execute(String apiKey,
+                          String volumeId,
+                          Comic comic,
+                          boolean skipCache) throws ComicVineAdaptorException
     {
         String result = null;
         String content = null;
@@ -56,7 +59,14 @@ public class ComicVineQueryForVolumeDetailsAdaptor
 
         this.logger.debug("Fetching volume details: volumeId={}", volumeId);
 
-        volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
+        if (skipCache)
+        {
+            this.logger.debug("Bypassing the cache...");
+        }
+        else
+        {
+            volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
+        }
 
         if (volume == null)
         {
