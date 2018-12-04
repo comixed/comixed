@@ -23,16 +23,23 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import { Library } from '../../../../models/library';
-import { LibraryDisplay } from '../../../../models/library-display';
 import * as LibraryActions from '../../../../actions/library.actions';
-import * as LibraryDisplayActions from '../../../../actions/library-display.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Comic } from '../../../../models/comics/comic';
+import * as UserActions from '../../../../actions/user.actions';
+import { User } from '../../../../models/user/user';
+import { Preference } from '../../../../models/user/preference';
 import { UserService } from '../../../../services/user.service';
 import { ComicService } from '../../../../services/comic.service';
 import { ConfirmationService } from 'primeng/api';
 import { SelectItem } from 'primeng/api';
+import {
+  LIBRARY_SORT,
+  LIBRARY_ROWS,
+  LIBRARY_COVER_SIZE,
+  LIBRARY_CURRENT_TAB,
+} from '../../../../models/user/preferences.constants';
 
 @Component({
   selector: 'app-library-page',
@@ -46,23 +53,29 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   readonly GROUP_BY_PARAMETER = 'groupby';
   readonly TAB_PARAMETER = 'tab';
 
+  private user$: Observable<User>;
+  private user_subscription: Subscription;
+  user: User;
+
   private library$: Observable<Library>;
   private library_subscription: Subscription;
   library: Library;
-
-  private library_display$: Observable<LibraryDisplay>;
-  private library_display_subscription: Subscription;
-
-  library_display: LibraryDisplay;
 
   comics: Array<Comic>;
   selected_comic: Comic;
   protected show_dialog = false;
 
   rows_options: Array<SelectItem>;
+  rows: number;
+
   sort_options: Array<SelectItem>;
+  sort_by: string;
+
   group_options: Array<SelectItem>;
   group_by: string;
+
+  cover_size: number;
+  current_tab: number;
 
   protected busy = false;
 
@@ -74,8 +87,15 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private confirm_service: ConfirmationService,
     private store: Store<AppState>,
   ) {
+    this.user$ = store.select('user');
     this.library$ = store.select('library');
-    this.library_display$ = store.select('library_display');
+    this.activated_route.queryParams.subscribe(
+      params => {
+        this.sort_by = params[this.SORT_PARAMETER] || 'series';
+        this.rows = parseInt(params[this.ROWS_PARAMETER] || '10', 10);
+        this.cover_size = parseInt(params[this.COVER_PARAMETER] || '200', 10);
+        this.current_tab = parseInt(params[this.TAB_PARAMETER] || '0', 10);
+      });
     this.sort_options = [
       { label: 'Series', value: 'series' },
       { label: 'Volume', value: 'volume', },
@@ -99,27 +119,24 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.user_subscription = this.user$.subscribe(
+      (user: User) => {
+        this.user = user;
+
+        this.sort_by = this.get_parameter(LIBRARY_SORT) || this.sort_by;
+        this.rows = parseInt(this.get_parameter(LIBRARY_ROWS) || `${this.rows}`, 10);
+        this.cover_size = parseInt(this.get_parameter(LIBRARY_COVER_SIZE) || `${this.cover_size}`, 10);
+        this.current_tab = parseInt(this.get_parameter(LIBRARY_CURRENT_TAB) || `${this.current_tab}`, 10);
+      });
     this.library_subscription = this.library$.subscribe(
       (library: Library) => {
         this.library = library;
         this.comics = library.comics;
       });
-    this.library_display_subscription = this.library_display$.subscribe(
-      (library_display: LibraryDisplay) => {
-        this.library_display = library_display;
-      });
-    this.activated_route.queryParams.subscribe(params => {
-      this.set_current_tab(this.load_parameter(params[this.TAB_PARAMETER],
-        parseInt(this.user_service.get_user_preference('library_tab', '0'), 10)));
-      this.set_sort_order(params[this.SORT_PARAMETER] || this.user_service.get_user_preference('library_sort', 'series'));
-      this.set_rows(this.load_parameter(params[this.ROWS_PARAMETER],
-        parseInt(this.user_service.get_user_preference('library_rows', '10'), 10)));
-      this.set_cover_size(this.load_parameter(params[this.COVER_PARAMETER],
-        parseInt(this.user_service.get_user_preference('cover_size', '200'), 10)));
-    });
   }
 
   ngOnDestroy() {
+    this.user_subscription.unsubscribe();
     this.library_subscription.unsubscribe();
   }
 
@@ -141,12 +158,18 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   set_current_tab(current_tab: number): void {
-    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewCurrentTab(current_tab));
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: LIBRARY_CURRENT_TAB,
+      value: `${current_tab}`
+    }));
     this.update_params(this.TAB_PARAMETER, `${current_tab}`);
   }
 
   set_sort_order(sort_order: string): void {
-    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewSort(sort_order));
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: LIBRARY_SORT,
+      value: sort_order,
+    }));
     this.update_params(this.SORT_PARAMETER, sort_order);
   }
 
@@ -156,12 +179,18 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   set_rows(rows: number): void {
-    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewRows(rows));
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: LIBRARY_ROWS,
+      value: `${rows}`,
+    }));
     this.update_params(this.ROWS_PARAMETER, `${rows}`);
   }
 
   set_cover_size(cover_size: number): void {
-    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewCoverSize(cover_size));
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: LIBRARY_COVER_SIZE,
+      value: `${cover_size}`,
+    }));
     this.update_params(this.COVER_PARAMETER, `${cover_size}`);
   }
 
@@ -199,5 +228,17 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       return parseInt(value, 10);
     }
     return defvalue;
+  }
+
+  private get_parameter(name: string): string {
+    const which = this.user.preferences.find((preference: Preference) => {
+      return preference.name === name;
+    });
+
+    if (which) {
+      return which.value;
+    } else {
+      return null;
+    }
   }
 }

@@ -1,18 +1,19 @@
 <p-confirmDialog></p-confirmDialog>
 <p-tabView
-  *ngIf='library_display'
-  [activeIndex]='library_display.current_tab'
+  [activeIndex]='current_tab'
   (onChange)='set_current_tab($event.index)'> <p-tabPanel
   [disabled]='!library'
   header='Covers'> <app-library-covers
   *ngIf='library'
   [library]='library'
-  [library_display]='library_display'
+  [rows]='rows'
+  [sort_by]='sort_by'
+  [cover_size]='cover_size'
   [sort_options]='sort_options'
   [rows_options]='rows_options'
-  (sortOrder)='set_sort_order($event)'
-  (rows)='set_rows($event)'
-  (coverSize)='set_cover_size($event)'
+  (changeSort)='set_sort_order($event)'
+  (changeRows)='set_rows($event)'
+  (changeCoverSize)='set_cover_size($event)'
   (comicSelected)='set_selected_comic($event)'
   (open)='open_comic($event)'
   (delete)='delete_comic($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
@@ -20,12 +21,14 @@
   header='Details'> <app-library-details
   *ngIf='library'
   [library]='library'
-  [library_display]='library_display'
+  [rows]='rows'
+  [sort_by]='sort_by'
+  [cover_size]='cover_size'
   [sort_options]='sort_options'
   [rows_options]='rows_options'
-  (sortOrder)='set_sort_order($event)'
-  (rows)='set_rows($event)'
-  (coverSize)='set_cover_size($event)'
+  (changeSort)='set_sort_order($event)'
+  (changeRows)='set_rows($event)'
+  (changeCoverSize)='set_cover_size($event)'
   (comicSelected)='set_selected_comic($event)'
   (open)='open_comic($event)'
   (delete)='delete_comic($event)'></app-library-details></p-tabPanel></p-tabView>

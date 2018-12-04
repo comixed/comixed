@@ -20,7 +20,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Comic } from '../../../../models/comics/comic';
 import { Library } from '../../../../models/library';
-import { LibraryDisplay } from '../../../../models/library-display';
 import { ComicService } from '../../../../services/comic.service';
 import { SelectItem } from 'primeng/api';
 
@@ -31,12 +30,14 @@ import { SelectItem } from 'primeng/api';
 })
 export class LibraryCoversComponent implements OnInit {
   @Input() library: Library;
-  @Input() library_display: LibraryDisplay;
+  @Input() rows: number;
+  @Input() sort_by: string;
+  @Input() cover_size: number;
   @Input() sort_options: Array<SelectItem>;
   @Input() rows_options: Array<SelectItem>;
-  @Output() sortOrder = new EventEmitter<string>();
-  @Output() rows = new EventEmitter<number>();
-  @Output() coverSize = new EventEmitter<number>();
+  @Output() changeSort = new EventEmitter<string>();
+  @Output() changeRows = new EventEmitter<number>();
+  @Output() changeCoverSize = new EventEmitter<number>();
   @Output() comicSelected = new EventEmitter<Comic>();
   @Output() open = new EventEmitter<Comic>();
   @Output() delete = new EventEmitter<Comic>();
@@ -49,15 +50,15 @@ export class LibraryCoversComponent implements OnInit {
   }
 
   set_sort_order(sort_order: string): void {
-    this.sortOrder.next(sort_order);
+    this.changeSort.next(sort_order);
   }
 
   set_rows(rows: number): void {
-    this.rows.next(rows);
+    this.changeRows.next(rows);
   }
 
   set_cover_size(cover_size: number): void {
-    this.coverSize.next(cover_size);
+    this.changeCoverSize.next(cover_size);
   }
 
   get_cover_url(comic: Comic): string {

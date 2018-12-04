@@ -2,10 +2,10 @@
   #comicCoverView
   filterBy='series'
   [value]='library.comics'
-  [rows]='library_display.rows'
+  [rows]='rows'
   paginator='true'
   paginatorPosition='both'
-  [sortField]='library_display.sort'
+  [sortField]='sort_by'
   emptyMessage='No comics found.'> <p-header>
 <div class='ui-helper-clearfix'>
   <div class='ui-g'>
@@ -13,14 +13,14 @@
       Sort by:
       <p-dropdown
         [options]='sort_options'
-        [(ngModel)]='library_display.sort'
+        [(ngModel)]='sort_by'
         (onChange)='set_sort_order($event.value)'></p-dropdown>
     </div>
     <div class='ui-g-1 ui-md-1'>
       Show:
       <p-dropdown
         [options]='rows_options'
-        [(ngModel)]='library_display.rows'
+        [(ngModel)]='rows'
         (onChange)='set_rows($event.value)'></p-dropdown>
     </div>
     <div class='ui-g-3 ui-md-3'>
@@ -32,9 +32,9 @@
         (keyup)='comicCoverView.filter($event.target.value)'>
     </div>
     <div class='ui-g-6 ui-md-6'>
-      Cover size: {{ library_display.cover_size }}px
+      Cover size: {{ cover_size }}px
       <p-slider
-        [(ngModel)]='library_display.cover_size'
+        [(ngModel)]='cover_size'
         [min]='200'
         [max]='640'
         [animate]='true'
@@ -154,7 +154,7 @@
   <p-card> <img
     [src]='get_cover_url(comic)'
     width='auto'
-    [style.height]='"" + library_display.cover_size + "px"'> <p-footer>
+    [style.height]='"" + cover_size + "px"'> <p-footer>
   <button
     pButton
     type='button'

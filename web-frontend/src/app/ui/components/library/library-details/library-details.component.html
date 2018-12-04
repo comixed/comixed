@@ -3,9 +3,9 @@
   [value]='library.comics'
   paginator='true'
   paginatorPosition='both'
-  [rows]='library_display.rows'
+  [rows]='rows'
   [globalFilterFields]='["series"]'
-  [sortField]='library_display.sort'
+  [sortField]='sort_by'
   (onSort)='set_sort_order($event.field)'> <ng-template
   pTemplate='caption'>
 <div class='ui-g'>
@@ -13,14 +13,14 @@
     Sort by:
     <p-dropdown
       [options]='sort_options'
-      [(ngModel)]='library_display.sort'
+      [(ngModel)]='sort_by'
       (onChange)='set_sort_order($event.value)'></p-dropdown>
   </div>
   <div class='ui-g-1 ui-md-1'>
     Show:
     <p-dropdown
       [options]='rows_options'
-      [(ngModel)]='library_display.rows'
+      [(ngModel)]='rows'
       (onChange)='set_rows($event.value)'></p-dropdown>
   </div>
   <div class='ui-g-3 ui-md-3'>
