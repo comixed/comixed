@@ -63,7 +63,6 @@ import { ComicCreditsComponent } from './ui/components/comic/comic-credits/comic
 import { ComicPagesComponent } from './ui/components/comic/comic-pages/comic-pages.component';
 import { MainPageComponent } from './ui/pages/main-page/main-page.component';
 import { LoginComponent } from './ui/components/login/login.component';
-import { AccountComponent } from './account/account.component';
 import { AlertService } from './services/alert.service';
 import { UserService } from './services/user.service';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
@@ -98,7 +97,6 @@ import { TokenStorage } from './storage/token.storage';
     AppComponent,
     MainPageComponent,
     LoginComponent,
-    AccountComponent,
     MenubarComponent,
     ComicDetailsComponent,
     ComicReaderComponent,
