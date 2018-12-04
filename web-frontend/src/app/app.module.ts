@@ -92,6 +92,7 @@ import { PageHashViewComponent } from './ui/views/library/page-hash-view/page-ha
 import { VolumeListComponent } from './ui/components/scraping/volume-list/volume-list.component';
 import { TokenStorage } from './storage/token.storage';
 import { AccountPageComponent } from './ui/pages/account/account-page/account-page.component';
+import { AccountPreferencesComponent } from './ui/components/account/account-preferences/account-preferences.component';
 
 @NgModule({
   declarations: [
@@ -120,6 +121,7 @@ import { AccountPageComponent } from './ui/pages/account/account-page/account-pa
     PageHashViewComponent,
     VolumeListComponent,
     AccountPageComponent,
+    AccountPreferencesComponent,
   ],
   imports: [
     BrowserModule,
