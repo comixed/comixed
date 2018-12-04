@@ -83,12 +83,14 @@ public class ComicVineScraperController
     public List<ComicVolume> queryForVolumes(@RequestParam("api_key") String apiKey,
                                              @RequestParam("series_name") String seriesName,
                                              @RequestParam("volume") String volume,
-                                             @RequestParam("issue_number") String issueNumber) throws WebRequestException,
-                                                                                               ComicVineAdaptorException
+                                             @RequestParam("issue_number") String issueNumber,
+                                             @RequestParam("skip_cache") boolean skipCache) throws WebRequestException,
+                                                                                            ComicVineAdaptorException
     {
-        this.logger.debug("Preparing to retrieve issues for the given series: {}", seriesName);
+        this.logger.debug("Preparing to retrieve issues for the given series: {} skipCache={}", seriesName,
+                          skipCache ? "yes" : "no");
 
-        List<ComicVolume> result = this.queryForVolumesAdaptor.execute(apiKey, seriesName, false);
+        List<ComicVolume> result = this.queryForVolumesAdaptor.execute(apiKey, seriesName, skipCache);
 
         this.logger.debug("Returning {} volumes", result.size());
 
@@ -99,7 +101,8 @@ public class ComicVineScraperController
     @JsonView(ComicDetails.class)
     public Comic scrapeAndSaveComicDetails(@RequestParam("api_key") String apiKey,
                                            @RequestParam("comic_id") long comicId,
-                                           @RequestParam("issue_id") String issueId) throws ComicVineAdaptorException
+                                           @RequestParam("issue_id") String issueId,
+                                           @RequestParam("skip_cache") boolean skipCache) throws ComicVineAdaptorException
     {
         this.logger.debug("Preparing to retrieve details for comic: id={} issue={}", comicId, issueId);
 
@@ -108,11 +111,11 @@ public class ComicVineScraperController
         if (result != null)
         {
             this.logger.debug("Fetching details for comic");
-            String volumeId = this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, result, false);
+            String volumeId = this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, result, skipCache);
             this.logger.debug("Fetching details for volume");
-            String publisherId = this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, result, false);
+            String publisherId = this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, result, skipCache);
             this.logger.debug("Fetching publisher details");
-            this.queryForPublisherDetailsAdaptor.execute(apiKey, publisherId, result, false);
+            this.queryForPublisherDetailsAdaptor.execute(apiKey, publisherId, result, skipCache);
             this.logger.debug("Updating details for comic in database");
             result = this.comicRepository.save(result);
         }
