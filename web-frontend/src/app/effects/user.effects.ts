@@ -52,6 +52,7 @@ export class UserEffects {
     .map(action => action.payload)
     .switchMap(action =>
       this.user_service.login(action.email, action.password)
+        .do(data => this.token_storage.save_token(data.token))
         .map(data => new UserActions.UserSetAuthToken({
           token: data.token,
         })));

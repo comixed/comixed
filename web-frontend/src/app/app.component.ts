@@ -31,7 +31,6 @@ import { UserService } from './services/user.service';
 import { ComicService } from './services/comic.service';
 import { AlertService } from './services/alert.service';
 import { MenubarComponent } from './ui/components/menubar/menubar.component';
-import { TokenStorage } from './storage/token.storage';
 
 @Component({
   selector: 'app-root',
@@ -61,7 +60,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private alert_service: AlertService,
     private router: Router,
     private store: Store<AppState>,
-    private token_storage: TokenStorage,
   ) {
     this.user$ = store.select('user');
     this.library$ = store.select('library');
@@ -80,7 +78,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!this.user.authenticated && this.library && this.library.comics && this.library.comics.length) {
           this.store.dispatch(new LibraryActions.LibraryReset());
         } else if (this.user.token && !this.user.email && !this.user.fetching) {
-          this.token_storage.save_token(this.user.token);
           this.store.dispatch(new UserActions.UserAuthCheck());
           this.store.dispatch(new LibraryActions.LibraryReset());
           this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({ last_comic_date: '0' }));
