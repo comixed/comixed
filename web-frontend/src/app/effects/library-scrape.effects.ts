@@ -52,25 +52,9 @@ export class LibraryScrapeEffects {
         action.issue_number,
         action.skip_cache,
       )
+        .do((volumes: Array<Volume>) => this.alert_service.show_info_message(`Retrieved ${volumes.length} volumes...`))
         .map((volumes: Array<Volume>) => new LibraryScrapingActions.LibraryScrapingFoundVolumes(volumes))
     );
-
-  /* TODO fix this
-  @Effect()
-  library_scraping_save_api_key$: Observable<Action> = this.actions$
-    .ofType<LibraryScrapingActions.LibraryScrapingSaveApiKey>(LibraryScrapingActions.LIBRARY_SCRAPING_SAVE_API_KEY)
-    .map(action => action.payload)
-    .switchMap(action =>
-      this.user_service.set_user_preference('comic_vine_api_key', action.api_key)
-        .map(() => new LibraryScrapingActions.LibraryScrapingSetup({
-          api_key: action.api_key,
-          comic: action.comic,
-          series: action.comic.series,
-          volume: action.comic.volume,
-          issue_number: action.comic.issue_number,
-        }))
-    );
-   */
 
   @Effect()
   library_scraping_save_local_changes$: Observable<Action> = this.actions$
