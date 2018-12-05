@@ -182,6 +182,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   set_sort_order(sort_order: string): void {
+    this.sort_by = sort_order;
     this.store.dispatch(new UserActions.UserSetPreference({
       name: LIBRARY_SORT,
       value: sort_order,
