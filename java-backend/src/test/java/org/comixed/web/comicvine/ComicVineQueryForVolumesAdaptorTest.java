@@ -163,6 +163,7 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.when(queryRepository.findBySeriesName(Mockito.anyString())).thenReturn(queryEntries);
         Mockito.when(queryEntries.size()).thenReturn(1);
         Mockito.when(queryEntries.get(Mockito.anyInt())).thenReturn(queryEntry);
+        Mockito.when(queryEntry.getAgeInDays()).thenReturn(ComicVineVolumeQueryCacheEntry.CACHE_TTL - 1);
         Mockito.when(queryEntry.getContent()).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
 
@@ -172,7 +173,8 @@ public class ComicVineQueryForVolumesAdaptorTest
 
         Mockito.verify(queryRepository, Mockito.times(1)).findBySeriesName(TEST_VOLUME_NAME);
         Mockito.verify(queryEntries, Mockito.atLeast(1)).size();
-        Mockito.verify(queryEntries, Mockito.times(1)).get(0);
+        Mockito.verify(queryEntries, Mockito.times(2)).get(0);
+        Mockito.verify(queryEntry, Mockito.times(1)).getAgeInDays();
         Mockito.verify(queryEntry, Mockito.times(1)).getContent();
         Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
     }
@@ -198,6 +200,45 @@ public class ComicVineQueryForVolumesAdaptorTest
         assertEquals(TEST_RESPONSE_CONTENT_TEXT, queryEntryCaptor.getValue().getContent());
 
         Mockito.verify(queryRepository, Mockito.times(1)).findBySeriesName(TEST_VOLUME_NAME);
+        Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
+        Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
+        Mockito.verify(webRequest, Mockito.times(1)).setSeriesName(TEST_VOLUME_NAME);
+        Mockito.verify(webRequest, Mockito.never()).setPage(1);
+        Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
+        Mockito.verify(queryRepository, Mockito.times(1)).delete(queryEntries);
+        Mockito.verify(queryRepository, Mockito.times(1)).save(queryEntryCaptor.getValue());
+        Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testExecuteEntryInDatabaseExpired() throws ComicVineAdaptorException, WebRequestException
+    {
+        Mockito.when(queryRepository.findBySeriesName(Mockito.anyString())).thenReturn(queryEntries);
+        Mockito.when(queryEntries.isEmpty()).thenReturn(false);
+        Mockito.when(queryEntries.size()).thenReturn(1);
+        Mockito.when(queryEntries.get(Mockito.anyInt())).thenReturn(queryEntry);
+        Mockito.when(queryEntry.getAgeInDays()).thenReturn(ComicVineVolumeQueryCacheEntry.CACHE_TTL);
+        Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
+        Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
+        Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
+        Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
+        Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
+        Mockito.doNothing().when(queryRepository).delete(Mockito.anyCollection());
+        Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
+        Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
+
+        List<ComicVolume> result = adaptor.execute(TEST_API_KEY, TEST_VOLUME_NAME, false);
+
+        assertSame(comicVolumeList.getValue(), result);
+        assertEquals(TEST_VOLUME_NAME, queryEntryCaptor.getValue().getSeriesName());
+        assertEquals(TEST_RESPONSE_CONTENT_TEXT, queryEntryCaptor.getValue().getContent());
+
+        Mockito.verify(queryRepository, Mockito.times(1)).findBySeriesName(TEST_VOLUME_NAME);
+        Mockito.verify(queryEntries, Mockito.atLeast(2)).isEmpty();
+        Mockito.verify(queryEntries, Mockito.atLeast(1)).size();
+        Mockito.verify(queryEntries, Mockito.times(1)).get(0);
+        Mockito.verify(queryEntry, Mockito.atLeast(1)).getAgeInDays();
         Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
         Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
         Mockito.verify(webRequest, Mockito.times(1)).setSeriesName(TEST_VOLUME_NAME);

@@ -38,7 +38,7 @@
         [min]='200'
         [max]='640'
         [animate]='true'
-        (onChange)='setCoverSize.next($event.value)'
+        (onChange)='changeCoverSize.next($event.value)'
         (onSlideEnd)='saveCoverSize.next($event.value)'></p-slider>
     </div>
     <div

@@ -60,8 +60,26 @@ public class ComicVineQueryForVolumesAdaptor
         boolean done = false;
         int page = 0;
         List<ComicVineVolumeQueryCacheEntry> entries = this.queryRepository.findBySeriesName(name);
+        boolean entriesExpired = false;
+        long aging = 0;
 
-        if (skipCache || entries == null || entries.isEmpty())
+        if (!skipCache && (entries != null) && !entries.isEmpty())
+        {
+            for (int index = 0;
+                 index < entries.size();
+                 index++)
+            {
+                aging = entries.get(index).getAgeInDays();
+                entriesExpired = (entriesExpired || (aging >= ComicVineVolumeQueryCacheEntry.CACHE_TTL));
+            }
+        }
+
+        if (entriesExpired)
+        {
+            logger.debug("Volume query is expired ({} days old);. Skipping...", aging);
+        }
+
+        if (skipCache || (entries == null) || entries.isEmpty() || entriesExpired)
         {
             while (!done)
             {

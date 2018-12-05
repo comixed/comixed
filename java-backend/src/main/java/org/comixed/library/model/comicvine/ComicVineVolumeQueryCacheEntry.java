@@ -19,6 +19,8 @@
 
 package org.comixed.library.model.comicvine;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -39,6 +42,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table(name = "comic_vine_volume_query_cache")
 public class ComicVineVolumeQueryCacheEntry
 {
+    // max age in days
+    public static final long CACHE_TTL = 7L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
@@ -49,6 +55,9 @@ public class ComicVineVolumeQueryCacheEntry
 
     @Column(name = "index")
     private int index;
+
+    @Column(name = "created")
+    private Date created = new Date();
 
     @Column(name = "content")
     @Lob
@@ -61,6 +70,11 @@ public class ComicVineVolumeQueryCacheEntry
     public String getContent()
     {
         return this.content;
+    }
+
+    public Date getCreated()
+    {
+        return this.created;
     }
 
     public Long getId()
@@ -91,5 +105,15 @@ public class ComicVineVolumeQueryCacheEntry
     public void setSeriesName(String seriesName)
     {
         this.seriesName = seriesName;
+    }
+
+    @Transient
+    public long getAgeInDays()
+    {
+        long age = System.currentTimeMillis() - this.created.getTime();
+
+        age = age / (1000 * 60 * 60 * 24);
+
+        return age;
     }
 }
