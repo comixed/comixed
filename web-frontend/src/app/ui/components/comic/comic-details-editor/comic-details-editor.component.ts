@@ -79,7 +79,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         label: 'Fetch', icon: 'fa fa-search', command: () => this.fetch_candidates(false)
       },
       {
-        label: 'Fetch (Skip Cache)', icon: 'fa fa-ban', command: () => this.fetch_candidates(true)
+        label: 'Fetch (Skip Cache)', icon: 'fa fa-cloud', command: () => this.fetch_candidates(true)
       },
     ];
   }
