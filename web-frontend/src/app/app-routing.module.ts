@@ -19,7 +19,7 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
+import { AdminGuard } from './admin.guard';
 import { MainPageComponent } from './ui/pages/main-page/main-page.component';
 import { AccountPageComponent } from './ui/pages/account/account-page/account-page.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
@@ -30,10 +30,10 @@ import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/dupl
 const routes: Routes = [
   { path: 'home', component: MainPageComponent },
   { path: 'account', component: AccountPageComponent },
-  { path: 'duplicates', component: DuplicatesPageComponent },
+  { path: 'duplicates', component: DuplicatesPageComponent, canActivate: [AdminGuard] },
   { path: 'comics', component: LibraryPageComponent },
   { path: 'comics/:id', component: ComicDetailsComponent },
-  { path: 'import', component: ImportPageComponent },
+  { path: 'import', component: ImportPageComponent, canActivate: [AdminGuard] },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' },
 ];
