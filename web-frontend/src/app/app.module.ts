@@ -75,6 +75,7 @@ import { SelectedComicsComponent } from './ui/components/import/selected-comics/
 import { FileDetailsCoverComponent } from './ui/components/file-details/file-details-cover/file-details-cover.component';
 import { StoreModule } from '@ngrx/store';
 import { userReducer } from './reducers/user.reducer';
+import { importingReducer } from './reducers/importing.reducer';
 import { libraryReducer } from './reducers/library.reducer';
 import { libraryDisplayReducer } from './reducers/library-display.reducer';
 import { libraryScrapingReducer } from './reducers/library-scraping.reducer';
@@ -84,6 +85,7 @@ import { LibraryDetailsComponent } from './ui/components/library/library-details
 import { IssueDetailsComponent } from './ui/components/library/issue-details/issue-details.component';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
+import { ImportingEffects } from './effects/importing.effects';
 import { LibraryEffects } from './effects/library.effects';
 import { LibraryScrapeEffects } from './effects/library-scrape.effects';
 import { DuplicatesEffects } from './effects/duplicates.effects';
@@ -171,6 +173,7 @@ import { UserDetailsComponent } from './ui/components/account/user-details/user-
 
     StoreModule.forRoot({
       user: userReducer,
+      importing: importingReducer,
       library: libraryReducer,
       library_display: libraryDisplayReducer,
       library_scraping: libraryScrapingReducer,
@@ -178,6 +181,7 @@ import { UserDetailsComponent } from './ui/components/account/user-details/user-
     }),
     EffectsModule.forRoot([
       UserEffects,
+      ImportingEffects,
       LibraryEffects,
       LibraryScrapeEffects,
       DuplicatesEffects,

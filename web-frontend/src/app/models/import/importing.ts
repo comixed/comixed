@@ -17,18 +17,13 @@
  * org.comixed;
  */
 
-import { User } from './models/user/user';
-import { Importing } from './models/import/importing';
-import { Library } from './models/library';
-import { LibraryDisplay } from './models/library-display';
-import { LibraryScrape } from './models/library-scrape';
-import { Duplicates } from './models/duplicates';
+import { ComicFile } from './comic-file';
 
-export interface AppState {
-  readonly user: User;
-  readonly importing: Importing;
-  readonly library: Library;
-  readonly library_display: LibraryDisplay;
-  readonly library_scraping: LibraryScrape;
-  readonly duplicates: Duplicates;
+export interface Importing {
+  busy: boolean;
+  importing: boolean;
+  pending: number;
+  updating_status: boolean;
+  directory: string;
+  files: Array<ComicFile>;
 }
