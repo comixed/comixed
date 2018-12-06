@@ -104,6 +104,7 @@ import { LibraryScrapingSelectionComponent } from './ui/components/library/libra
 import { LibraryScrapingViewComponent } from './ui/views/library/library-scraping-view/library-scraping-view.component';
 import { ComicListComponent } from './ui/components/library/comic-list/comic-list.component';
 import { AdminGuard } from './admin.guard';
+import { ReaderGuard } from './reader.guard';
 
 @NgModule({
   declarations: [
@@ -213,6 +214,7 @@ import { AdminGuard } from './admin.guard';
     ConfirmationService,
     TokenStorage,
     AdminGuard,
+    ReaderGuard,
   ],
   bootstrap: [AppComponent]
 })
