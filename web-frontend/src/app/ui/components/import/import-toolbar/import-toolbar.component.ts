@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
@@ -27,14 +27,13 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./import-toolbar.component.css']
 })
 export class ImportToolbarComponent implements OnInit {
+  @Input() directory: string;
   @Output() directorySelected = new EventEmitter<string>();
   @Output() showSelections = new EventEmitter<boolean>();
   @Output() selectAll = new EventEmitter<boolean>();
   @Output() import = new EventEmitter<boolean>();
 
   select_options: MenuItem[];
-
-  directory: string;
 
   constructor() {
     this.select_options = [

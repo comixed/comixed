@@ -23,6 +23,7 @@
     <div class='ui-g'>
       <div class='ui-g-12 ui-sm-12'>
         <app-import-toolbar
+          [directory]='directory'
           (directorySelected)='retrieve_files($event)'
           (showSelections)='show_selections()'
           (selectAll)='set_select_all($event)'

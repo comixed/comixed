@@ -35,6 +35,7 @@ import {
   IMPORT_SORT,
   IMPORT_ROWS,
   IMPORT_COVER_SIZE,
+  IMPORT_LAST_DIRECTORY,
 } from '../../../../models/user/preferences.constants';
 
 const ROWS_PARAMETER = 'rows';
@@ -63,6 +64,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   protected selected_file_detail: ComicFile;
   protected selected_files: Array<ComicFile> = [];
   protected show_selected_files = false;
+  protected directory = '';
 
   protected plural = false;
   protected waiting_on_imports = false;
@@ -124,6 +126,9 @@ export class ImportPageComponent implements OnInit, OnDestroy {
         this.sort_by = this.get_parameter(IMPORT_SORT) || this.sort_by;
         this.rows = parseInt(this.get_parameter(IMPORT_ROWS) || `${this.rows}`, 10);
         this.cover_size = parseInt(this.get_parameter(IMPORT_COVER_SIZE) || `${this.cover_size}`, 10);
+        this.directory = (this.user.preferences.find((preference: Preference) => {
+          return preference.name === IMPORT_LAST_DIRECTORY;
+        }) || { value: '' }).value;
       });
     this.busy = true;
     setInterval(() => {
@@ -182,6 +187,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   retrieve_files(directory: string): void {
+    this.store.dispatch(new UserActions.UserSetPreference({ name: IMPORT_LAST_DIRECTORY, value: directory }));
     const that = this;
     this.busy = true;
     this.selected_file_detail = null;
