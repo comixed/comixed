@@ -207,7 +207,7 @@ public class FileControllerTest
     }
 
     @Test
-    public void testGetImportStatus() throws NoSuchAlgorithmException
+    public void testGetImportStatus() throws NoSuchAlgorithmException, InterruptedException
     {
         int expected = SecureRandom.getInstanceStrong().nextInt(21275);
         Mockito.when(worker.getCountFor(AddComicWorkerTask.class)).thenReturn(expected);

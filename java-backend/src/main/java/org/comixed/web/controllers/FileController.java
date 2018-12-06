@@ -160,11 +160,31 @@ public class FileController
 
     @RequestMapping(value = "/import/status",
                     method = RequestMethod.GET)
-    public int getImportStatus()
+    public int getImportStatus() throws InterruptedException
     {
         long started = System.currentTimeMillis();
         this.logger.debug("Received import status request [{}]", ++this.requestId);
-        int result = this.worker.getCountFor(AddComicWorkerTask.class);
+        boolean done = false;
+        int result = 0;
+
+        while (!done)
+        {
+            result = this.worker.getCountFor(AddComicWorkerTask.class);
+
+            if (result == 0)
+            {
+                Thread.sleep(1000);
+                if ((System.currentTimeMillis() - started) > 60000)
+                {
+                    done = true;
+                }
+            }
+            else
+            {
+                done = true;
+            }
+        }
+
         this.logger.debug("Responding to import status request [{}] in {}ms (BTW, there are {} imports pending)",
                           this.requestId, (System.currentTimeMillis() - started), result);
 
