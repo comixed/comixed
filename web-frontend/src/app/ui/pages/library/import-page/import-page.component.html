@@ -1,6 +1,6 @@
 <!--  main import content area -->
 <div
-  *ngIf='pending_imports > 0'
+  *ngIf='importing.importing'
   class='container-fluid w-100'>
   <h2 class='text-center'>{{get_import_title()}}</h2>
   <div *ngIf='delete_blocked_pages'>
@@ -10,7 +10,7 @@
   </div>
 </div>
 <div
-  *ngIf='pending_imports === 0'
+  *ngIf='!importing.importing'
   class='ui-g'>
   <app-selected-comics
     [selected_files]='selected_files'
@@ -23,7 +23,7 @@
     <div class='ui-g'>
       <div class='ui-g-12 ui-sm-12'>
         <app-import-toolbar
-          [directory]='directory'
+          [directory]='importing.directory'
           (directorySelected)='retrieve_files($event)'
           (showSelections)='show_selections()'
           (selectAll)='set_select_all($event)'
@@ -37,13 +37,13 @@
       <div class='ui-g-12 ui-sm-12'>
         <p-dataView
           #importComics
-          [value]='file_details'
+          [value]='importing.files'
           [sortField]='sort_by'
           [filterBy]='"filename"'
           [rows]='rows'
           [paginator]='true'
           [paginatorPosition]='"both"'
-          [loading]='busy'
+          [loading]='importing.busy'
           alwaysShowPaginator='true'> <p-header>
         <div class='ui-helper-clearfix'>
           <div class='ui-g'>

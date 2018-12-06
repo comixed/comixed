@@ -47,6 +47,7 @@ export function importingReducer(
         ...state,
         pending: action.payload.count,
         updating_status: false,
+        importing: action.payload.count > 0,
       };
 
     case ImportingActions.IMPORTING_SET_DIRECTORY:
