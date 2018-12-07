@@ -24,8 +24,9 @@
       (currentPage)='set_current_page($event)'></app-comic-reader></p-tabPanel> <p-tabPanel
       header='Credits'> <app-comic-credits [comic]='comic'></app-comic-credits></p-tabPanel>
     <p-tabPanel header='Pages'> <app-comic-pages
-      [comic]='comic'></app-comic-pages></p-tabPanel> <p-tabPanel header='ComicVine'>
-    <app-comic-details-editor
+      [comic]='comic'></app-comic-pages></p-tabPanel> <p-tabPanel
+      *ngIf='user.is_admin'
+      header='ComicVine'> <app-comic-details-editor
       [comic]='comic'
       (update)='load_comic_details()'></app-comic-details-editor></p-tabPanel> </p-tabView>
   </div>

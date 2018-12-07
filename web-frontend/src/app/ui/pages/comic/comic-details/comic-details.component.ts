@@ -17,13 +17,16 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { User } from '../../../../models/user/user';
+import { Role } from '../../../../models/user/role';
+import { Preference } from '../../../../models/user/preference';
 import { Library } from '../../../../models/library';
 import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
@@ -37,7 +40,7 @@ export const CURRENT_PAGE_PARAMETER = 'page';
   templateUrl: './comic-details.component.html',
   styleUrls: ['./comic-details.component.css']
 })
-export class ComicDetailsComponent implements OnInit {
+export class ComicDetailsComponent implements OnInit, OnDestroy {
   readonly TAB_PARAMETER = 'tab';
 
   private library$: Observable<Library>;
@@ -51,6 +54,10 @@ export class ComicDetailsComponent implements OnInit {
   protected page_size: number;
   protected current_page: number;
 
+  user$: Observable<User>;
+  user_subscription: Subscription;
+  user: User;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -61,6 +68,10 @@ export class ComicDetailsComponent implements OnInit {
     this.library$ = store.select('library');
     this.activatedRoute.params.subscribe(params => {
       this.comic_id = +params['id'];
+    });
+    this.user$ = store.select('user');
+    activatedRoute.queryParams.subscribe(params => {
+      this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
     });
   }
 
@@ -75,11 +86,40 @@ export class ComicDetailsComponent implements OnInit {
           }) || null;
         }
       });
+    this.user_subscription = this.user$.subscribe(
+      (user: User) => {
+        this.user = user;
+      });
+    this.activatedRoute.params.subscribe(params => {
+      const id = +params['id'];
+      this.comic_service.load_comic_from_remote(id).subscribe(
+        (comic: Comic) => {
+          this.alert_service.show_busy_message('');
+          if (comic) {
+            this.comic = comic;
+          } else {
+            this.alert_service.show_error_message(`No such comic: id=${id}`, null);
+            this.router.navigateByUrl('/');
+          }
+        },
+        error => {
+          this.alert_service.show_error_message('Error while retrieving comic...', error);
+          this.alert_service.show_busy_message('');
+        },
+        () => {
+          this.load_comic_details();
+        });
+    });
     this.activatedRoute.queryParams.subscribe(params => {
       this.set_page_size(parseInt(this.load_parameter(params[PAGE_SIZE_PARAMETER], '100'), 10));
       this.set_current_page(parseInt(this.load_parameter(params[CURRENT_PAGE_PARAMETER], '0'), 10));
       this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
     });
+  }
+
+  ngOnDestroy() {
+    this.library_subscription.unsubscribe();
+    this.user_subscription.unsubscribe();
   }
 
   set_page_size(page_size: number): void {
