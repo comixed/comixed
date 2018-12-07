@@ -144,7 +144,7 @@ public class UserControllerTest
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
         Mockito.doNothing().when(authentication).setAuthenticated(Mockito.anyBoolean());
 
-        controller.updateUsername(authentication, TEST_EMAIL);
+        controller.updateEmail(authentication, TEST_EMAIL);
 
         Mockito.verify(authentication, Mockito.atLeast(1)).getName();
         Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
@@ -159,7 +159,7 @@ public class UserControllerTest
         Mockito.doNothing().when(user).setEmail(Mockito.anyString());
         Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
 
-        controller.updateUsername(authentication, TEST_EMAIL);
+        controller.updateEmail(authentication, TEST_EMAIL);
 
         Mockito.verify(authentication, Mockito.atLeast(1)).getName();
         Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);

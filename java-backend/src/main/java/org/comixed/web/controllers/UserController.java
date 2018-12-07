@@ -143,9 +143,9 @@ public class UserController
         this.userRepository.save(user);
     }
 
-    @RequestMapping(value = "/user/username",
+    @RequestMapping(value = "/user/email",
                     method = RequestMethod.POST)
-    public void updateUsername(Authentication authentication, @RequestParam("username") String username)
+    public void updateEmail(Authentication authentication, @RequestParam("username") String username)
     {
         this.logger.debug("Updating username for: email={}", authentication.getName());
         ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
