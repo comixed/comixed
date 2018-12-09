@@ -32,6 +32,7 @@ import { UserService } from '../../../../services/user.service';
   styleUrls: ['./comic-pages.component.css']
 })
 export class ComicPagesComponent implements OnInit {
+  @Input() is_admin: boolean;
   @Input() comic: Comic;
   @Input() image_size: number;
 

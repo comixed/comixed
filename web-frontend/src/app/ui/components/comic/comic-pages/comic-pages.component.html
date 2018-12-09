@@ -42,7 +42,7 @@
         </i>
       </div>
       <div
-        *ngIf='page_type_options?.length'
+        *ngIf='is_admin && page_type_options?.length'
         class='ui-g-12 ui-sm-12'>
         <p-dropdown
           [options]='page_type_options'
@@ -51,6 +51,7 @@
       </div>
       <div class='ui-g-12 ui-sm-12'>
         <p-toggleButton
+          *ngIf='is_admin'
           [(ngModel)]='page.blocked'
           onLabel='Blocked'
           onIcon='pi pi-check'
@@ -67,7 +68,9 @@
   [src]='get_url_for_page(page)'
   [style.height]='"" + image_size + "px"'
   [style.width]='"auto"'> <p-footer>
-<div class='ui-g'>
+<div
+  *ngIf='is_admin'
+  class='ui-g'>
   <div
     *ngIf='page_type_options?.length'
     class='ui-g-12 ui-sm-12'>
