@@ -27,6 +27,7 @@ export interface User {
   busy: boolean;
   email: string;
   authenticated: boolean;
+  is_admin: boolean;
   first_login_date: number;
   last_login_date: number;
   roles: Role[];

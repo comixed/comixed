@@ -28,6 +28,7 @@ const initial_state: User = {
   authenticating: false,
   busy: false,
   authenticated: false,
+  is_admin: false,
   email: null,
   roles: [],
   preferences: [],
@@ -45,6 +46,7 @@ export function userReducer(
         ...state,
         fetching: true,
         authenticating: false,
+        is_admin: false,
       };
 
     case UserActions.USER_SET_AUTH_TOKEN:
@@ -58,11 +60,19 @@ export function userReducer(
 
     case UserActions.USER_LOADED: {
       const user = action.payload.user;
+      let is_admin = false;
+
+      if (user) {
+        is_admin = user.roles.findIndex((pref: Preference) => {
+          return pref.name === 'ADMIN';
+        }) !== -1;
+      }
       return {
         ...state,
         fetching: false,
         authenticating: false,
         authenticated: user ? true : false,
+        is_admin: is_admin,
         email: user ? user.email : null,
         roles: user ? user.roles : [],
         preferences: user ? user.preferences : [],
@@ -94,6 +104,7 @@ export function userReducer(
       return {
         ...state,
         authenticated: false,
+        is_admin: false,
         token: null,
         busy: false,
         email: null,
