@@ -99,6 +99,7 @@ import { AccountPageComponent } from './ui/pages/account/account-page/account-pa
 import { AccountPreferencesComponent } from './ui/components/account/account-preferences/account-preferences.component';
 import { UserDetailsComponent } from './ui/components/account/user-details/user-details.component';
 import { MultipleComicScrapingComponent } from './ui/components/scraping/multiple-comic-scraping/multiple-comic-scraping.component';
+import { LibraryScrapingToolbarComponent } from './ui/components/library/library-scraping-toolbar/library-scraping-toolbar.component';
 import { LibraryScrapingSelectionComponent } from './ui/components/library/library-scraping-selection/library-scraping-selection.component';
 import { LibraryScrapingViewComponent } from './ui/views/library/library-scraping-view/library-scraping-view.component';
 import { ComicListComponent } from './ui/components/library/comic-list/comic-list.component';
@@ -133,6 +134,7 @@ import { ComicListComponent } from './ui/components/library/comic-list/comic-lis
     AccountPreferencesComponent,
     UserDetailsComponent,
     MultipleComicScrapingComponent,
+    LibraryScrapingToolbarComponent,
     LibraryScrapingSelectionComponent,
     LibraryScrapingViewComponent,
     ComicListComponent,
