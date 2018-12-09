@@ -23,7 +23,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { AppState } from '../../../../app.state';
 import * as LibraryActions from '../../../../actions/library.actions';
-import * as LibraryScrapingActions from '../../../../actions/library-scraping.actions';
+import * as LibraryScrapingActions from '../../../../actions/single-comic-scraping.actions';
 import * as UserActions from '../../../../actions/user.actions';
 import { AlertService } from '../../../../services/alert.service';
 import { UserService } from '../../../../services/user.service';
@@ -31,7 +31,7 @@ import { ComicService } from '../../../../services/comic.service';
 import { Comic } from '../../../../models/comics/comic';
 import { Volume } from '../../../../models/comics/volume';
 import { Issue } from '../../../../models/scraping/issue';
-import { LibraryScrape } from '../../../../models/library-scrape';
+import { SingleComicScraping } from '../../../../models/scraping/single-comic-scraping';
 import { User } from '../../../../models/user/user';
 import { Preference } from '../../../../models/user/preference';
 import { COMICVINE_API_KEY } from '../../../../models/user/preferences.constants';
@@ -52,9 +52,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   user_subscription: Subscription;
   user: User;
 
-  library_scrape$: Observable<LibraryScrape>;
-  library_scrape_subscription: Subscription;
-  library_scrape: LibraryScrape;
+  single_comic_scraping$: Observable<SingleComicScraping>;
+  single_comic_scraping_subscription: Subscription;
+  single_comic_scraping: SingleComicScraping;
 
   protected volume_selection_banner: string;
   private date_formatter = Intl.DateTimeFormat('en-us', { month: 'short', year: 'numeric' });
@@ -72,7 +72,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
   ) {
     this.user$ = store.select('user');
-    this.library_scrape$ = store.select('library_scraping');
+    this.single_comic_scraping$ = store.select('single_comic_scraping');
 
     this.fetch_options = [
       {
@@ -95,16 +95,16 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
         this.api_key = api_key ? api_key.value : '';
       });
-    this.library_scrape_subscription = this.library_scrape$.subscribe(
-      (library_scrape: LibraryScrape) => {
-        this.library_scrape = library_scrape;
+    this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
+      (library_scrape: SingleComicScraping) => {
+        this.single_comic_scraping = library_scrape;
 
-        this.series = this.library_scrape.series;
-        this.volume = this.library_scrape.volume;
-        this.issue_number = this.library_scrape.issue_number;
+        this.series = this.single_comic_scraping.series;
+        this.volume = this.single_comic_scraping.volume;
+        this.issue_number = this.single_comic_scraping.issue_number;
       });
 
-    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetup({
+    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetup({
       api_key: this.api_key,
       comic: this.comic,
       series: this.comic.series,
@@ -114,12 +114,12 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.library_scrape_subscription.unsubscribe();
+    this.single_comic_scraping_subscription.unsubscribe();
   }
 
   fetch_candidates(skip_cache: boolean): void {
     this.skip_cache = skip_cache;
-    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingFetchVolumes({
+    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingFetchVolumes({
       api_key: this.api_key,
       series: this.series,
       volume: this.volume,
@@ -130,38 +130,38 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   select_volume(volume: Volume): void {
     if (volume) {
-      this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetCurrentVolume({
+      this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetCurrentVolume({
         api_key: this.api_key,
         volume: volume,
         issue_number: this.issue_number,
         skip_cache: this.skip_cache,
       }));
     } else {
-      this.store.dispatch(new LibraryScrapingActions.LibraryScrapingClearCurrentVolume());
+      this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingClearCurrentVolume());
     }
   }
 
   select_issue(): void {
-    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingScrapeMetadata({
+    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingScrapeMetadata({
       api_key: this.api_key,
-      comic: this.library_scrape.comic,
-      issue_id: this.library_scrape.current_issue.id,
+      comic: this.single_comic_scraping.comic,
+      issue_id: this.single_comic_scraping.current_issue.id,
       skip_cache: this.skip_cache,
     }));
   }
 
   cancel_selection(): void {
-    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSetup({
-      api_key: this.library_scrape.api_key,
-      comic: this.library_scrape.comic,
-      series: this.library_scrape.series,
-      volume: this.library_scrape.volume,
-      issue_number: this.library_scrape.issue_number,
+    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetup({
+      api_key: this.single_comic_scraping.api_key,
+      comic: this.single_comic_scraping.comic,
+      series: this.single_comic_scraping.series,
+      volume: this.single_comic_scraping.volume,
+      issue_number: this.single_comic_scraping.issue_number,
     }));
   }
 
   save_changes(): void {
-    this.store.dispatch(new LibraryScrapingActions.LibraryScrapingSaveLocalChanges({
+    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSaveLocalChanges({
       api_key: this.api_key,
       comic: this.comic,
       series: this.series,
@@ -171,10 +171,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   reset_changes(): void {
-    this.api_key = this.library_scrape.api_key;
-    this.series = this.library_scrape.comic.series;
-    this.volume = this.library_scrape.comic.volume;
-    this.issue_number = this.library_scrape.comic.issue_number;
+    this.api_key = this.single_comic_scraping.api_key;
+    this.series = this.single_comic_scraping.comic.series;
+    this.volume = this.single_comic_scraping.comic.volume;
+    this.issue_number = this.single_comic_scraping.comic.issue_number;
   }
 
   save_api_key(): void {

@@ -23,7 +23,7 @@ import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
-import * as LibraryScrapingActions from '../actions/library-scraping.actions';
+import * as ScrapingActions from '../actions/single-comic-scraping.actions';
 import { ComicService } from '../services/comic.service';
 import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
@@ -31,7 +31,7 @@ import { Volume } from '../models/comics/volume';
 import { Issue } from '../models/scraping/issue';
 
 @Injectable()
-export class LibraryScrapeEffects {
+export class SingleComicScrapingEffects {
 
   constructor(
     private actions$: Actions,
@@ -41,8 +41,8 @@ export class LibraryScrapeEffects {
   ) { }
 
   @Effect()
-  library_scraping_fetch_volumes$: Observable<Action> = this.actions$
-    .ofType<LibraryScrapingActions.LibraryScrapingFetchVolumes>(LibraryScrapingActions.LIBRARY_SCRAPING_FETCH_VOLUMES)
+  single_comic_scraping_fetch_volumes$: Observable<Action> = this.actions$
+    .ofType<ScrapingActions.SingleComicScrapingFetchVolumes>(ScrapingActions.SINGLE_COMIC_SCRAPING_FETCH_VOLUMES)
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.fetch_candidates_for(
@@ -53,12 +53,12 @@ export class LibraryScrapeEffects {
         action.skip_cache,
       )
         .do((volumes: Array<Volume>) => this.alert_service.show_info_message(`Retrieved ${volumes.length} volumes...`))
-        .map((volumes: Array<Volume>) => new LibraryScrapingActions.LibraryScrapingFoundVolumes(volumes))
+        .map((volumes: Array<Volume>) => new ScrapingActions.SingleComicScrapingFoundVolumes(volumes))
     );
 
   @Effect()
-  library_scraping_save_local_changes$: Observable<Action> = this.actions$
-    .ofType<LibraryScrapingActions.LibraryScrapingSaveLocalChanges>(LibraryScrapingActions.LIBRARY_SCRAPING_SAVE_LOCAL_CHANGES)
+  single_comic_scraping_save_local_changes$: Observable<Action> = this.actions$
+    .ofType<ScrapingActions.SingleComicScrapingSaveLocalChanges>(ScrapingActions.SINGLE_COMIC_SCRAPING_SAVE_LOCAL_CHANGES)
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.save_changes_to_comic(
@@ -67,7 +67,7 @@ export class LibraryScrapeEffects {
         action.volume,
         action.issue_number,
       )
-        .map(() => new LibraryScrapingActions.LibraryScrapingSetup({
+        .map(() => new ScrapingActions.SingleComicScrapingSetup({
           api_key: action.api_key,
           comic: action.comic,
           series: action.series,
@@ -76,8 +76,8 @@ export class LibraryScrapeEffects {
         })));
 
   @Effect()
-  library_scraping_set_current_volume$: Observable<Action> = this.actions$
-    .ofType<LibraryScrapingActions.LibraryScrapingSetCurrentVolume>(LibraryScrapingActions.LIBRARY_SCRAPING_SET_CURRENT_VOLUME)
+  single_comic_scraping_set_current_volume$: Observable<Action> = this.actions$
+    .ofType<ScrapingActions.SingleComicScrapingSetCurrentVolume>(ScrapingActions.SINGLE_COMIC_SCRAPING_SET_CURRENT_VOLUME)
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.scrape_comic_details_for(
@@ -86,15 +86,15 @@ export class LibraryScrapeEffects {
         action.issue_number,
         action.skip_cache,
       )
-        .map((issue: Issue) => new LibraryScrapingActions.LibraryScrapingFoundIssue({
+        .map((issue: Issue) => new ScrapingActions.SingleComicScrapingFoundIssue({
           issue: issue,
           volume_id: action.volume.id,
         })
         ));
 
   @Effect()
-  library_scraping_fetch_issues$: Observable<Action> = this.actions$
-    .ofType<LibraryScrapingActions.LibraryScrapingFetchIssue>(LibraryScrapingActions.LIBRARY_SCRAPING_FETCH_ISSUES)
+  single_comic_scraping_fetch_issues$: Observable<Action> = this.actions$
+    .ofType<ScrapingActions.SingleComicScrapingFetchIssue>(ScrapingActions.SINGLE_COMIC_SCRAPING_FETCH_ISSUES)
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.scrape_comic_details_for(
@@ -103,15 +103,15 @@ export class LibraryScrapeEffects {
         action.issue_number,
         action.skip_cache,
       )
-        .map((issue: Issue) => new LibraryScrapingActions.LibraryScrapingFoundIssue({
+        .map((issue: Issue) => new ScrapingActions.SingleComicScrapingFoundIssue({
           issue: issue,
           volume_id: action.volume_id,
         }))
     );
 
   @Effect()
-  library_scraping_scrape_metadata$: Observable<Action> = this.actions$
-    .ofType<LibraryScrapingActions.LibraryScrapingScrapeMetadata>(LibraryScrapingActions.LIBRARY_SCRAPING_SCRAPE_METADATA)
+  single_comic_scraping_scrape_metadata$: Observable<Action> = this.actions$
+    .ofType<ScrapingActions.SingleComicScrapingScrapeMetadata>(ScrapingActions.SINGLE_COMIC_SCRAPING_SCRAPE_METADATA)
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.scrape_and_save_comic_details(
@@ -120,11 +120,5 @@ export class LibraryScrapeEffects {
         action.issue_id,
         action.skip_cache,
       )
-        .map(() => new LibraryScrapingActions.LibraryScrapingSetup({
-          api_key: action.api_key,
-          comic: action.comic,
-          series: action.comic.series,
-          volume: action.comic.volume,
-          issue_number: action.comic.issue_number,
-        })));
+        .map(() => new ScrapingActions.SingleComicScrapingMetadataScraped()));
 }

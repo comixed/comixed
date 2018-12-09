@@ -78,7 +78,7 @@ import { userReducer } from './reducers/user.reducer';
 import { importingReducer } from './reducers/importing.reducer';
 import { libraryReducer } from './reducers/library.reducer';
 import { libraryDisplayReducer } from './reducers/library-display.reducer';
-import { libraryScrapingReducer } from './reducers/library-scraping.reducer';
+import { singleComicScrapingReducer } from './reducers/single-comic-scraping.reducer';
 import { duplicatesReducer } from './reducers/duplicates.reducer';
 import { LibraryCoversComponent } from './ui/components/library/library-covers/library-covers.component';
 import { LibraryDetailsComponent } from './ui/components/library/library-details/library-details.component';
@@ -87,7 +87,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
 import { ImportingEffects } from './effects/importing.effects';
 import { LibraryEffects } from './effects/library.effects';
-import { LibraryScrapeEffects } from './effects/library-scrape.effects';
+import { SingleComicScrapingEffects } from './effects/single-comic-scraping.effects';
 import { DuplicatesEffects } from './effects/duplicates.effects';
 import { DuplicatePagesViewComponent } from './ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
 import { PageHashViewComponent } from './ui/views/library/page-hash-view/page-hash-view.component';
@@ -176,14 +176,14 @@ import { UserDetailsComponent } from './ui/components/account/user-details/user-
       importing: importingReducer,
       library: libraryReducer,
       library_display: libraryDisplayReducer,
-      library_scraping: libraryScrapingReducer,
+      single_comic_scraping: singleComicScrapingReducer,
       duplicates: duplicatesReducer,
     }),
     EffectsModule.forRoot([
       UserEffects,
       ImportingEffects,
       LibraryEffects,
-      LibraryScrapeEffects,
+      SingleComicScrapingEffects,
       DuplicatesEffects,
     ]),
   ],

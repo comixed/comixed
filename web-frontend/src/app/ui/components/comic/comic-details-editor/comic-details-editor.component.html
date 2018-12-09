@@ -1,8 +1,8 @@
-<p-blockUI [blocked]='library_scrape.busy'> <p-progressBar
+<p-blockUI [blocked]='single_comic_scraping.busy'> <p-progressBar
   mode="indeterminate"
   [style]="{'height': '6px'}"></p-progressBar> </p-blockUI>
 <div
-  *ngIf='library_scrape && !library_scrape.volumes.length'
+  *ngIf='single_comic_scraping && !single_comic_scraping.volumes.length'
   class='ui-g'>
   <div class='ui-g-2 ui-sm-2'>
     <label for='api_key'><b>ComicVine API Key:</b> </label>
@@ -71,15 +71,15 @@
   </div>
 </div>
 <div
-  *ngIf='library_scrape && library_scrape.volumes?.length'
+  *ngIf='single_comic_scraping && single_comic_scraping.volumes?.length'
   class='ui-g'>
   <div class='ui-g-12'>
     <app-volume-list
-      [api_key]='library_scrape.api_key'
-      [comic]='library_scrape.comic'
-      [volumes]='library_scrape.volumes'
-      [current_volume]='library_scrape.current_volume'
-      [current_issue]='library_scrape.current_issue'
+      [api_key]='single_comic_scraping.api_key'
+      [comic]='single_comic_scraping.comic'
+      [volumes]='single_comic_scraping.volumes'
+      [current_volume]='single_comic_scraping.current_volume'
+      [current_issue]='single_comic_scraping.current_issue'
       (selectVolume)='select_volume($event)'
       (selectIssue)='select_issue()'
       (cancelSelection)='cancel_selection()'></app-volume-list>

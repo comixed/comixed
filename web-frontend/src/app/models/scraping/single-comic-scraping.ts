@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { Comic } from './comics/comic';
-import { Volume } from './comics/volume';
-import { Issue } from './scraping/issue';
+import { Comic } from '../comics/comic';
+import { Volume } from '../comics/volume';
+import { Issue } from './issue';
 
-export interface LibraryScrape {
+export interface SingleComicScraping {
   busy: boolean;
   api_key: string;
   comic: Comic;

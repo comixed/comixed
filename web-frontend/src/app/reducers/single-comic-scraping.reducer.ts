@@ -18,11 +18,11 @@
  */
 
 import { Action } from '@ngrx/store';
-import { LibraryScrape } from '../models/library-scrape';
+import { SingleComicScraping } from '../models/scraping/single-comic-scraping';
 import { Issue } from '../models/scraping/issue';
-import * as LibraryScrapingActions from '../actions/library-scraping.actions';
+import * as ScrapingActions from '../actions/single-comic-scraping.actions';
 
-const initial_state: LibraryScrape = {
+const initial_state: SingleComicScraping = {
   busy: false,
   api_key: '',
   comic: null,
@@ -34,12 +34,12 @@ const initial_state: LibraryScrape = {
   current_issue: null,
 };
 
-export function libraryScrapingReducer(
-  state: LibraryScrape = initial_state,
-  action: LibraryScrapingActions.Actions) {
+export function singleComicScrapingReducer(
+  state: SingleComicScraping = initial_state,
+  action: ScrapingActions.Actions) {
 
   switch (action.type) {
-    case LibraryScrapingActions.LIBRARY_SCRAPING_SETUP: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_SETUP: {
       return {
         ...state,
         api_key: action.payload.api_key,
@@ -54,7 +54,7 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_SAVE_API_KEY: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_SAVE_API_KEY: {
       return {
         ...state,
         api_key: action.payload.api_key,
@@ -63,7 +63,7 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_SAVE_LOCAL_CHANGES: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_SAVE_LOCAL_CHANGES: {
       return {
         ...state,
         busy: true,
@@ -73,7 +73,7 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_FETCH_VOLUMES: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_FETCH_VOLUMES: {
       return {
         ...state,
         volumes: [],
@@ -85,7 +85,7 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_FOUND_VOLUMES: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_FOUND_VOLUMES: {
       return {
         ...state,
         volumes: action.payload,
@@ -93,7 +93,7 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_SET_CURRENT_VOLUME: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_SET_CURRENT_VOLUME: {
       return {
         ...state,
         current_volume: action.payload,
@@ -102,7 +102,7 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_CLEAR_CURRENT_VOLUME: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_CLEAR_CURRENT_VOLUME: {
       return {
         ...state,
         current_volume: null,
@@ -110,7 +110,7 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_FETCH_ISSUES: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_FETCH_ISSUES: {
       return {
         ...state,
         api_key: action.payload.api_key,
@@ -120,7 +120,7 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_FOUND_ISSUE: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_FOUND_ISSUE: {
       return {
         ...state,
         current_issue: action.payload.issue,
@@ -128,12 +128,18 @@ export function libraryScrapingReducer(
       };
     }
 
-    case LibraryScrapingActions.LIBRARY_SCRAPING_SCRAPE_METADATA: {
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_SCRAPE_METADATA: {
       return {
         ...state,
         busy: true,
       };
     }
+
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_METADATA_SCRAPED:
+      return {
+        ...state,
+        busy: false,
+      };
 
     default:
       return state;

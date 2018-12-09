@@ -21,7 +21,7 @@ import { User } from './models/user/user';
 import { Importing } from './models/import/importing';
 import { Library } from './models/library';
 import { LibraryDisplay } from './models/library-display';
-import { LibraryScrape } from './models/library-scrape';
+import { SingleComicScraping } from './models/scraping/single-comic-scraping';
 import { Duplicates } from './models/duplicates';
 
 export interface AppState {
@@ -29,6 +29,6 @@ export interface AppState {
   readonly importing: Importing;
   readonly library: Library;
   readonly library_display: LibraryDisplay;
-  readonly library_scraping: LibraryScrape;
+  readonly single_comic_scraping: SingleComicScraping;
   readonly duplicates: Duplicates;
 }
