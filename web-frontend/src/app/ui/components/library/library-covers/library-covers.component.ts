@@ -29,6 +29,7 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./library-covers.component.css']
 })
 export class LibraryCoversComponent implements OnInit {
+  @Input() is_admin: boolean;
   @Input() library: Library;
   @Input() rows: number;
   @Input() sort_by: string;

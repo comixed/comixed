@@ -5,6 +5,7 @@
   [disabled]='!library'
   header='Covers'> <app-library-covers
   *ngIf='library'
+  [is_admin]='user.is_admin'
   [library]='library'
   [rows]='rows'
   [sort_by]='sort_by'
@@ -21,6 +22,7 @@
   [disabled]='!library'
   header='Details'> <app-library-details
   *ngIf='library'
+  [is_admin]='user.is_admin'
   [library]='library'
   [rows]='rows'
   [sort_by]='sort_by'

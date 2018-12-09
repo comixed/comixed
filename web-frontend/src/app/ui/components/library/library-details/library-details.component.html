@@ -72,6 +72,7 @@
       icon='fa fa-search'
       (click)='set_selected_comic($event, comic)'></button>
     <button
+      *ngIf='is_admin'
       pButton
       type='button'
       icon='fa fa-trash'

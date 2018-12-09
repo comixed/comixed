@@ -137,6 +137,7 @@
           label='Open Comic'
           (click)='open_comic(comic)'></button>
         <button
+          *ngIf='is_admin'
           pButton
           type='button'
           icon='fa fa-trash'
@@ -165,6 +166,7 @@
     icon='fa fa-book'
     (click)='open_comic(comic)'></button>
   <button
+    *ngIf='is_admin'
     pButton
     type='button'
     icon='fa fa-trash'

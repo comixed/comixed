@@ -30,6 +30,7 @@ import { ComicService } from '../../../../services/comic.service';
   styleUrls: ['./library-details.component.css']
 })
 export class LibraryDetailsComponent implements OnInit {
+  @Input() is_admin: boolean;
   @Input() library: Library;
   @Input() rows: number;
   @Input() sort_by: string;
