@@ -122,6 +122,17 @@
           </div>
           <div class='ui-g-12'>{{ comic.format.name }}</div>
           <div class='ui-g-12'>
+            <p-inplace
+              *ngIf='is_admin'
+              closable='closable'> <span pInplaceDisplay>{{
+              comic.format.name }}</span> <span pInplaceContent> <p-dropdown
+                [options]='formats'
+                [(ngModel)]='comic.format'
+                (onChange)='set_comic_format(comic, $event.value)'></p-dropdown>
+            </span></p-inplace>
+            <span *ngIf='!is_admin'>{{ comic.format.name }}</span>
+          </div>
+          <div class='ui-g-12'>
             <b>Scan Type: </b>
           </div>
           <div class='ui-g-12'>

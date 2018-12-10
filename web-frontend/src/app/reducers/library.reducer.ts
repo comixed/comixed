@@ -26,6 +26,7 @@ const initial_state: Library = {
   busy: false,
   last_comic_date: '0',
   scan_types: [],
+  formats: [],
   comics: [],
 };
 
@@ -65,6 +66,41 @@ export function libraryReducer(
         ...state,
         busy: false,
         comics: cx,
+      };
+    }
+
+    case LibraryActions.LIBRARY_GET_FORMATS:
+      return {
+        ...state,
+        busy: true,
+      };
+    
+    case LibraryActions.LIBRARY_SET_FORMATS:
+      return {
+        ...state,
+        busy: false,
+        formats: action.payload.formats,
+      };
+
+    case LibraryActions.LIBRARY_SET_FORMAT:
+      return {
+        ...state,
+        busy: true,
+      };
+
+    case LibraryActions.LIBRARY_FORMAT_SET: {
+      const cx = state.comics;
+
+      cx.forEach((comic: Comic) => {
+        if (comic.id === action.payload.comic.id) {
+          comic.format = action.payload.format;
+        }
+      });
+
+      return {
+        ...state,
+        busy: false,
+        cmics: cx,
       };
     }
 

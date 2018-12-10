@@ -92,6 +92,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!this.library.busy) {
           if (this.library.scan_types.length === 0) {
             this.store.dispatch(new LibraryActions.LibraryGetScanTypes());
+          } else if (this.library.formats.length === 0) {
+            this.store.dispatch(new LibraryActions.LibraryGetFormats());
           } else {
             this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
               last_comic_date: this.library.last_comic_date,

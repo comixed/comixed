@@ -100,4 +100,11 @@ export class LibraryCoversComponent implements OnInit {
       scan_type: scan_type,
     }));
   }
+
+  set_comic_format(comic: Comic, format: ComicFormat): void {
+    this.store.dispatch(new LibraryActions.LibrarySetFormat({
+      comic: comic,
+      format: format,
+    }));
+  }
 }

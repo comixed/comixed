@@ -19,10 +19,12 @@
 
 import { Comic } from './comics/comic';
 import { ScanType } from './comics/scan-type';
+import { ComicFormat } from './comics/comic-format';
 
 export interface Library {
   busy: boolean;
   last_comic_date: string;
   scan_types: Array<ScanType>;
+  formats: Array<ComicFormat>;
   comics: Array<Comic>;
 }

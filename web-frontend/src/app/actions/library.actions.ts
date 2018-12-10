@@ -22,11 +22,16 @@ import { Action } from '@ngrx/store';
 import { Library } from '../models/library';
 import { Comic } from '../models/comics/comic';
 import { ScanType } from '../models/comics/scan-type';
+import { ComicFormat } from '../models/comics/comic-format';
 
 export const LIBRARY_GET_SCAN_TYPES = '[LIBRARY] Fetch the scan types';
 export const LIBRARY_SET_SCAN_TYPES = '[LIBRARY] Set the scan types';
 export const LIBRARY_SET_SCAN_TYPE = '[LIBRARY] Set the scan type for a comic';
 export const LIBRARY_SCAN_TYPE_SET = '[LIBRARY] The scan type is set';
+export const LIBRARY_GET_FORMATS = '[LIBRARY] Fetch the comic formats';
+export const LIBRARY_SET_FORMATS = '[LIBRARY] Set the comic formats';
+export const LIBRARY_SET_FORMAT = '[LIBRARY] Set the format for a comic';
+export const LIBRARY_FORMAT_SET = '[LIBRARY] The format is set';
 export const LIBRARY_FETCH_LIBRARY_CHANGES = '[LIBRARY] Fetch changes to the library';
 export const LIBRARY_MERGE_NEW_COMICS = '[LIBRARY] Merge newly retrieved comics';
 export const LIBRARY_UPDATE_COMIC = '[LIBRARY] Update a single comic';
@@ -54,6 +59,47 @@ export class LibrarySetScanType implements Action {
   constructor(public payload: {
     comic: Comic,
     scan_type: ScanType,
+  }) { }
+}
+
+export class LibraryScanTypeSet implements Action {
+  readonly type = LIBRARY_SCAN_TYPE_SET;
+
+  constructor(public payload: {
+    comic: Comic,
+    scan_type: ScanType,
+  }) { }
+}
+
+export class LibraryGetFormats implements Action {
+  readonly type = LIBRARY_GET_FORMATS;
+
+  constructor() { }
+}
+
+export class LibrarySetFormats implements Action {
+  readonly type = LIBRARY_SET_FORMATS;
+
+  constructor(public payload: {
+    formats: Array<ComicFormat>,
+  }) { }
+}
+
+export class LibrarySetFormat implements Action {
+  readonly type = LIBRARY_SET_FORMAT;
+
+  constructor(public payload: {
+    comic: Comic,
+    format: ComicFormat,
+  }) { }
+}
+
+export class LibraryFormatSet implements Action {
+  readonly type = LIBRARY_FORMAT_SET;
+
+  constructor(public payload: {
+    comic: Comic,
+    format: ComicFormat,
   }) { }
 }
 
@@ -106,6 +152,10 @@ export type Actions =
   LibrarySetScanTypes |
   LibrarySetScanType |
   LibraryScanTypeSet |
+  LibraryGetFormats |
+  LibrarySetFormats |
+  LibrarySetFormat |
+  LibraryFormatSet |
   LibraryFetchLibraryChanges |
   LibraryMergeNewComics |
   LibraryUpdateComic |
