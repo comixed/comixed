@@ -23,6 +23,7 @@ import { AppState } from '../../../../app.state';
 import * as LibraryActions from '../../../../actions/library.actions';
 import { Comic } from '../../../../models/comics/comic';
 import { ScanType } from '../../../../models/comics/scan-type';
+import { ComicFormat } from '../../../../models/comics/comic-format';
 import { Library } from '../../../../models/library';
 import { ComicService } from '../../../../services/comic.service';
 import { SelectItem } from 'primeng/api';
@@ -49,6 +50,7 @@ export class LibraryCoversComponent implements OnInit {
   @Output() delete = new EventEmitter<Comic>();
 
   public scan_types: Array<SelectItem>;
+  public formats: Array<SelectItem>;
 
   constructor(
     private comic_service: ComicService,
@@ -61,6 +63,13 @@ export class LibraryCoversComponent implements OnInit {
       this.scan_types.push({
         label: scan_type.name,
         value: scan_type,
+      });
+    });
+    this.formats = [];
+    this.library.formats.forEach((format: ComicFormat) => {
+      this.formats.push({
+        label: format.name,
+        value: format,
       });
     });
   }

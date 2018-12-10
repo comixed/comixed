@@ -24,6 +24,7 @@ import * as LibraryActions from '../../../../actions/library.actions';
 import { Library } from '../../../../models/library';
 import { Comic } from '../../../../models/comics/comic';
 import { ScanType } from '../../../../models/comics/scan-type';
+import { ComicFormat } from '../../../../models/comics/comic-format';
 import { SelectItem } from 'primeng/api';
 
 @Component({
@@ -37,6 +38,7 @@ export class ComicOverviewComponent implements OnInit {
   @Input() library: Library;
 
   public scan_types: Array<SelectItem>;
+  public formats: Array<SelectItem>;
 
   constructor(
     private store: Store<AppState>,
@@ -50,12 +52,26 @@ export class ComicOverviewComponent implements OnInit {
         value: scan_type,
       });
     });
+    this.formats = [];
+    this.library.formats.forEach((format: ComicFormat) => {
+      this.formats.push({
+        label: format.name,
+        value: format,
+      });
+    });
   }
 
   set_scan_type(comic: Comic, scan_type: ScanType): void {
     this.store.dispatch(new LibraryActions.LibrarySetScanType({
       comic: comic,
       scan_type: scan_type,
+    }));
+  }
+
+  set_comic_format(comic: Comic, format: ComicFormat): void {
+    this.store.dispatch(new LibraryActions.LibrarySetFormat({
+      comic: comic,
+      format: format,
     }));
   }
 }
