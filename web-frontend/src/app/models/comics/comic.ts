@@ -26,6 +26,7 @@ export interface Comic {
   filename: string;
   base_filename: string;
   publisher: string;
+  imprint: string;
   series: string;
   volume: string;
   issue_number: string;
