@@ -115,12 +115,16 @@ public class Page
 
     @Column(name = "width",
             updatable = true)
-    @JsonIgnore
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private Integer width = -1;
 
     @Column(name = "height",
             updatable = true)
-    @JsonIgnore
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
     private Integer height = -1;
 
     @Transient
@@ -165,6 +169,7 @@ public class Page
         this.content = content;
         this.hash = this.createHash(content);
         this.pageType = pageType;
+        this.getImageMetrics();
     }
 
     private String createHash(byte[] bytes)
@@ -308,16 +313,9 @@ public class Page
     {
         try
         {
-            if (!this.comic.isMissing())
-            {
-                BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(this.getContent()));
-                this.width = bimage.getWidth();
-                this.height = bimage.getHeight();
-            }
-            else
-            {
-                this.width = this.height = 0;
-            }
+            BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(this.getContent()));
+            this.width = bimage.getWidth();
+            this.height = bimage.getHeight();
         }
         catch (IOException e)
         {
