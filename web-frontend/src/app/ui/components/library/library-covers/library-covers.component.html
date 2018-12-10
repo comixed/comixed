@@ -117,50 +117,54 @@
           <div class='ui-g-12'>
             <b>Scan Type: </b>
           </div>
-          <p-inplace *ngIf='is_admin'> <span pInplaceDisplay>{{
-            comic.scan_type?.name || 'Unknown' }}</span> <span pInplaceContent>
-            <p-dropdown
-              closable='closable'
-              [options]='scan_types'
-              [(ngModel)]='comic.scan_type'
-              (onChange)='set_scan_type(comic, $event.value)'></p-dropdown>
-          </span> </p-inplace>
-          <div
-            *ngIf='comic.scan_type'
-            class='ui-g-12'>{{ comic.scan_type.name }}</div>
+          <div class='ui-g-12'>
+            <p-inplace
+              *ngIf='is_admin'
+              closable='closable'> <span pInplaceDisplay>{{
+              comic.scan_type?.name || 'Unknown' }}</span> <span
+              pInplaceContent> <p-dropdown
+                [options]='scan_types'
+                [(ngModel)]='comic.scan_type'
+                (onChange)='set_scan_type(comic, $event.value)'></p-dropdown>
+            </span> </p-inplace>
+            <span
+              *ngIf='!is_admin'
+              class='ui-g-12'>{{ comic.scan_type.name ||
+              'Unknown' }}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class='ui-g-12 ui-sm-12'>
-      <p-panel
-        *ngIf='comic.description'
-        header='Description'
-        [toggleable]='true'
-        [collapsed]='true'
-        [style.width]='"100%"'>
-      <div [innerHTML]='comic.description'></div>
-      </p-panel>
-    </div>
-    <div class='ui-g-12 ui-sm-12'>
-      <button
-        pButton
-        type='button'
-        icon='fa fa-search'
-        (click)='set_selected_comic($event, comic)'
-        label='Details'></button>
-      <button
-        pButton
-        type='button'
-        icon='fa fa-book'
-        label='Open Comic'
-        (click)='open_comic(comic)'></button>
-      <button
-        *ngIf='is_admin'
-        pButton
-        type='button'
-        icon='fa fa-trash'
-        (click)='delete_comic(comic)'
-        label='Delete'></button>
+      <div class='ui-g-12 ui-sm-12'>
+        <p-panel
+          *ngIf='comic.description'
+          header='Description'
+          [toggleable]='true'
+          [collapsed]='true'
+          [style.width]='"100%"'>
+        <div [innerHTML]='comic.description'></div>
+        </p-panel>
+      </div>
+      <div class='ui-g-12 ui-sm-12'>
+        <button
+          pButton
+          type='button'
+          icon='fa fa-search'
+          (click)='set_selected_comic($event, comic)'
+          label='Details'></button>
+        <button
+          pButton
+          type='button'
+          icon='fa fa-book'
+          label='Open Comic'
+          (click)='open_comic(comic)'></button>
+        <button
+          *ngIf='is_admin'
+          pButton
+          type='button'
+          icon='fa fa-trash'
+          (click)='delete_comic(comic)'
+          label='Delete'></button>
+      </div>
     </div>
   </div>
 </div>

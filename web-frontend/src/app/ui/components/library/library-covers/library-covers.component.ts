@@ -48,12 +48,21 @@ export class LibraryCoversComponent implements OnInit {
   @Output() open = new EventEmitter<Comic>();
   @Output() delete = new EventEmitter<Comic>();
 
+  public scan_types: Array<SelectItem>;
+
   constructor(
     private comic_service: ComicService,
     private store: Store<AppState>,
   ) { }
 
   ngOnInit() {
+    this.scan_types = [];
+    this.library.scan_types.forEach((scan_type: ScanType) => {
+      this.scan_types.push({
+        label: scan_type.name,
+        value: scan_type,
+      });
+    });
   }
 
   set_sort_order(sort_order: string): void {

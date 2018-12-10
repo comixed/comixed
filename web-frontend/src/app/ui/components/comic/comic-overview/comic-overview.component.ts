@@ -17,13 +17,14 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-} from '@angular/core';
-
+import { Component, OnInit, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import * as LibraryActions from '../../../../actions/library.actions';
+import { Library } from '../../../../models/library';
 import { Comic } from '../../../../models/comics/comic';
+import { ScanType } from '../../../../models/comics/scan-type';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-comic-overview',
@@ -31,10 +32,30 @@ import { Comic } from '../../../../models/comics/comic';
   styleUrls: ['./comic-overview.component.css']
 })
 export class ComicOverviewComponent implements OnInit {
+  @Input() is_admin: boolean;
   @Input() comic: Comic;
+  @Input() library: Library;
 
-  constructor() { }
+  public scan_types: Array<SelectItem>;
+
+  constructor(
+    private store: Store<AppState>,
+  ) { }
 
   ngOnInit() {
+    this.scan_types = [];
+    this.library.scan_types.forEach((scan_type: ScanType) => {
+      this.scan_types.push({
+        label: scan_type.name,
+        value: scan_type,
+      });
+    });
+  }
+
+  set_scan_type(comic: Comic, scan_type: ScanType): void {
+    this.store.dispatch(new LibraryActions.LibrarySetScanType({
+      comic: comic,
+      scan_type: scan_type,
+    }));
   }
 }

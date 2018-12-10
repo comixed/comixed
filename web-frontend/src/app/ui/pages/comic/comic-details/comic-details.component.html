@@ -14,9 +14,11 @@
       [activeIndex]='current_tab'
       (onChange)='set_current_tab($event.index)'> <p-tabPanel
       header='Overview'> <app-comic-overview
-      [comic]='comic'></app-comic-overview></p-tabPanel> <p-tabPanel header='Story'>
-    <app-comic-story [comic]='comic'></app-comic-story></p-tabPanel> <p-tabPanel
-      header='Reader'> <app-comic-reader
+      [is_admin]='user.is_admin'
+      [comic]='comic'
+      [library]='library'></app-comic-overview></p-tabPanel> <p-tabPanel
+      header='Story'> <app-comic-story [comic]='comic'></app-comic-story></p-tabPanel>
+    <p-tabPanel header='Reader'> <app-comic-reader
       [comic]='comic'
       [page_size]='page_size'
       (pageSize)='set_page_size($event)'
