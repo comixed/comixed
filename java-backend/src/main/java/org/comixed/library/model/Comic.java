@@ -40,6 +40,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -235,6 +236,14 @@ public class Comic
     @JsonProperty("credits")
     @JsonView(View.ComicList.class)
     private Set<Credit> credits = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "scan_type_id")
+    @JsonProperty("scan_type")
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
+    private ScanType scanType;
 
     @Transient
     @JsonIgnore
@@ -708,6 +717,11 @@ public class Comic
         return this.publisher;
     }
 
+    protected ScanType getScanType()
+    {
+        return this.scanType;
+    }
+
     /**
      * Returns the series for the comic.
      *
@@ -1024,6 +1038,11 @@ public class Comic
     {
         this.logger.debug("Setting publisher=" + publisher);
         this.publisher = publisher;
+    }
+
+    public void setScanType(ScanType scanType)
+    {
+        this.scanType = scanType;
     }
 
     /**
