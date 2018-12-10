@@ -47,6 +47,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { PasswordModule } from 'primeng/password';
 import { PickListModule } from 'primeng/picklist';
+import { InplaceModule } from 'primeng/inplace';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -169,6 +170,7 @@ import { ReaderGuard } from './reader.guard';
     BlockUIModule,
     ConfirmDialogModule,
     PasswordModule,
+    InplaceModule,
     PickListModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
