@@ -20,6 +20,7 @@
 import { Page } from './page';
 import { ComicCredit } from './comic-credit';
 import { ScanType } from './scan-type';
+import { ComicFormat } from './comic-format';
 
 export interface Comic {
   id: number;
@@ -52,4 +53,5 @@ export interface Comic {
   deleted_page_count: number;
   credits: ComicCredit[];
   scan_type: ScanType;
+  format: ComicFormat;
 }
