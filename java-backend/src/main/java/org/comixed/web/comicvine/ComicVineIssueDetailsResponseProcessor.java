@@ -46,6 +46,7 @@ public class ComicVineIssueDetailsResponseProcessor
         JsonNode results = jsonNode.get("results");
 
         comic.setComicVineId(results.get("id").asText());
+        comic.setComicVineURL(results.get("api_detail_url").asText());
         comic.setDescription(results.get("description").asText());
         comic.setSeries(results.get("volume").get("name").asText());
         comic.setIssueNumber(results.get("issue_number").asText());
