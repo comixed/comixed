@@ -27,9 +27,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.ScanType;
 import org.comixed.library.model.View;
 import org.comixed.library.model.View.ComicDetails;
 import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.ScanTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,9 @@ public class ComicController
 
     @Autowired
     private ComicRepository comicRepository;
+
+    @Autowired
+    private ScanTypeRepository scanTypeRepository;
 
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.DELETE)
@@ -144,13 +149,13 @@ public class ComicController
         {
             result = this.comicRepository.findByDateAddedGreaterThan(latestDate);
 
-            if (result.size() == 0 && System.currentTimeMillis() <= returnBy)
+            if ((result.size() == 0) && (System.currentTimeMillis() <= returnBy))
             {
                 Thread.sleep(1000);
             }
             else
             {
-                logger.debug("Timeout reached. Returning no new comics...", timeout);
+                this.logger.debug("Timeout reached. Returning no new comics...", timeout);
                 done = true;
             }
         }
@@ -186,6 +191,14 @@ public class ComicController
     public long getCount()
     {
         return this.comicRepository.count();
+    }
+
+    @RequestMapping(value = "/scan_types",
+                    method = RequestMethod.GET)
+    public Iterable<ScanType> getScanTypes()
+    {
+        this.logger.debug("Fetching all scan types");
+        return this.scanTypeRepository.findAll();
     }
 
     @RequestMapping(value = "/{id}",
