@@ -21,3 +21,5 @@ INSERT INTO scan_types (id, name)
 
 ALTER TABLE comics add scan_type_id bigint;
 ALTER TABLE comics add constraint comics_scan_types foreign key (scan_type_id) references scan_types;
+
+ALTER TABLE comics add imprint varchar(255);

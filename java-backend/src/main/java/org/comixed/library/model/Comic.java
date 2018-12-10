@@ -118,6 +118,11 @@ public class Comic
     @JsonView(View.ComicList.class)
     private String publisher;
 
+    @Column(name = "imprint")
+    @JsonProperty
+    @JsonView(View.ComicList.class)
+    private String imprint;
+
     @Column(name = "series")
     @JsonProperty
     @JsonView(
@@ -1091,5 +1096,11 @@ public class Comic
     {
         this.logger.debug("Setting volume=" + volume);
         this.volume = volume;
+    }
+
+    public void setImprint(String imprint)
+    {
+        this.logger.debug("Setting imprint={}", imprint);
+        this.imprint = imprint;
     }
 }
