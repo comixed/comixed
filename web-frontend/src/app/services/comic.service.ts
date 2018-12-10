@@ -30,6 +30,7 @@ import { Comic } from '../models/comics/comic';
 import { Page } from '../models/comics/page';
 import { PageType } from '../models/comics/page-type';
 import { ComicFile } from '../models/import/comic-file';
+import { ScanType } from '../models/comics/scan-type';
 
 @Injectable()
 export class ComicService {
@@ -40,6 +41,16 @@ export class ComicService {
     private alert_service: AlertService,
     private user_service: UserService,
   ) { }
+
+  fetch_scan_types(): Observable<any> {
+    return this.http.get(`${this.api_url}/comics/scan_types`);
+  }
+
+  set_scan_type(comic: Comic, scan_type: ScanType): Observable<any> {
+    const params = new HttpParams().set('scan_type_id', `${scan_type.id}`);
+
+    return this.http.put(`${this.api_url}/comics/${comic.id}/scan_type`, params);
+  }
 
   fetch_remote_library_state(latest_comic_update: string): Observable<any> {
     return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}?timeout=60000`);

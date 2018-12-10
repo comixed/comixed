@@ -87,11 +87,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.library_subscription = this.library$.subscribe(
       (library: Library) => {
         this.library = library;
-        // if we're not fetching comics now then fire off a call
+
+        // if we're not busy, then get the scan types, formats or updates as needed
         if (!this.library.busy) {
-          this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
-            last_comic_date: this.library.last_comic_date,
-          }));
+          if (this.library.scan_types.length === 0) {
+            this.store.dispatch(new LibraryActions.LibraryGetScanTypes());
+          } else {
+            this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
+              last_comic_date: this.library.last_comic_date,
+            }));
+          }
         }
       });
     this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({ last_comic_date: '0' }));

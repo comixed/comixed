@@ -117,6 +117,14 @@
           <div class='ui-g-12'>
             <b>Scan Type: </b>
           </div>
+          <p-inplace *ngIf='is_admin'> <span pInplaceDisplay>{{
+            comic.scan_type?.name || 'Unknown' }}</span> <span pInplaceContent>
+            <p-dropdown
+              closable='closable'
+              [options]='scan_types'
+              [(ngModel)]='comic.scan_type'
+              (onChange)='set_scan_type(comic, $event.value)'></p-dropdown>
+          </span> </p-inplace>
           <div
             *ngIf='comic.scan_type'
             class='ui-g-12'>{{ comic.scan_type.name }}</div>

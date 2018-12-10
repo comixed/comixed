@@ -18,9 +18,11 @@
  */
 
 import { Comic } from './comics/comic';
+import { ScanType } from './comics/scan-type';
 
 export interface Library {
   busy: boolean;
   last_comic_date: string;
+  scan_types: Array<ScanType>;
   comics: Array<Comic>;
 }

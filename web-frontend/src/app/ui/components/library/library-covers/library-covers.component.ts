@@ -18,7 +18,11 @@
  */
 
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import * as LibraryActions from '../../../../actions/library.actions';
 import { Comic } from '../../../../models/comics/comic';
+import { ScanType } from '../../../../models/comics/scan-type';
 import { Library } from '../../../../models/library';
 import { ComicService } from '../../../../services/comic.service';
 import { SelectItem } from 'primeng/api';
@@ -46,6 +50,7 @@ export class LibraryCoversComponent implements OnInit {
 
   constructor(
     private comic_service: ComicService,
+    private store: Store<AppState>,
   ) { }
 
   ngOnInit() {
@@ -78,5 +83,12 @@ export class LibraryCoversComponent implements OnInit {
 
   delete_comic(comic: Comic): void {
     this.delete.next(comic);
+  }
+
+  set_scan_type(comic: Comic, scan_type: ScanType): void {
+    this.store.dispatch(new LibraryActions.LibrarySetScanType({
+      comic: comic,
+      scan_type: scan_type,
+    }));
   }
 }

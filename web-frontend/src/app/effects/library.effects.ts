@@ -26,6 +26,7 @@ import 'rxjs/add/operator/switchMap';
 import * as LibraryActions from '../actions/library.actions';
 import { ComicService } from '../services/comic.service';
 import { Comic } from '../models/comics/comic';
+import { ScanType } from '../models/comics/scan-type';
 
 @Injectable()
 export class LibraryEffects {
@@ -35,6 +36,23 @@ export class LibraryEffects {
   ) { }
 
   @Effect()
+  library_get_scan_types$: Observable<Action> = this.actions$
+    .ofType<LibraryActions.LibraryGetScanTypes>(LibraryActions.LIBRARY_GET_SCAN_TYPES)
+    .switchMap(action =>
+      this.comic_service.fetch_scan_types()
+        .map((scan_types: Array<ScanType>) => new LibraryActions.LibrarySetScanTypes({ scan_types: scan_types })));
+
+  @Effect()
+  library_set_scan_type$: Observable<Action> = this.actions$
+    .ofType<LibraryActions.LibrarySetScanType>(LibraryActions.LIBRARY_SET_SCAN_TYPE)
+    .map(action => action.payload)
+    .switchMap(action =>
+      this.comic_service.set_scan_type(action.comic, action.scan_type)
+        .map(() => new LibraryActions.LibraryScanTypeSet({
+          comic: action.comic,
+          scan_type: action.scan_type,
+        })));
+
   library_start_updating$: Observable<Action> = this.actions$
     .ofType<LibraryActions.LibraryFetchLibraryChanges>(LibraryActions.LIBRARY_FETCH_LIBRARY_CHANGES)
     .map(action => action.payload)

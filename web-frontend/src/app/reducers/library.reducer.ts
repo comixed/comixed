@@ -25,6 +25,7 @@ import * as LibraryActions from '../actions/library.actions';
 const initial_state: Library = {
   busy: false,
   last_comic_date: '0',
+  scan_types: [],
   comics: [],
 };
 
@@ -33,6 +34,40 @@ export function libraryReducer(
   action: LibraryActions.Actions,
 ) {
   switch (action.type) {
+    case LibraryActions.LIBRARY_GET_SCAN_TYPES:
+      return {
+        ...state,
+        busy: true,
+      };
+
+    case LibraryActions.LIBRARY_SET_SCAN_TYPES:
+      return {
+        ...state,
+        busy: false,
+        scan_types: action.payload.scan_types,
+      };
+
+    case LibraryActions.LIBRARY_SET_SCAN_TYPE:
+      return {
+        ...state,
+        busy: true,
+      };
+
+    case LibraryActions.LIBRARY_SCAN_TYPE_SET: {
+      const cx = state.comics;
+
+      cx.forEach((comic: Comic) => {
+        if (comic.id === action.payload.comic.id) {
+          comic.scan_type = action.payload.scan_type;
+        }
+      });
+      return {
+        ...state,
+        busy: false,
+        comics: cx,
+      };
+    }
+
     case LibraryActions.LIBRARY_FETCH_LIBRARY_CHANGES:
       return {
         ...state,
