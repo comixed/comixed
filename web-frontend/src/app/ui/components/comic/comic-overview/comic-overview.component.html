@@ -41,17 +41,25 @@
     </div>
     <div class='ui-g-12'>{{ comic.page_count }}</div>
   </div>
-  <div
-    *ngIf='comic.comic_vine_url'
-    class='ui-g-4'>
+  <div class='ui-g-4'>
     <div class='ui-g-12'>
       <b>ComicVine Details: </b>
     </div>
-    <div class='ui-g-12'>
+    <div
+      *ngIf='comic.comic_vine_url'
+      class='ui-g-12'>
       The details can be found here: <a
         target='_comicvine'
         [href]='"http://comicvine.gamespot.com/issue/4000-" + comic.comic_vine_id'>{{
         comic.comic_vine_id }}</a>
     </div>
+  </div>
+  <div class='ui-g-4'>
+    <div class='ui-g-12'>
+      <b>Scan Type: </b>
+    </div>
+    <div
+      *ngIf='comic.scan_type'
+      class='ui-g-12'>{{ comic.scan_type.name }}</div>
   </div>
 </div>

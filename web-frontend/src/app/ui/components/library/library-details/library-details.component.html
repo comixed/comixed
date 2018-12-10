@@ -45,6 +45,7 @@
   <th [pSortableColumn]='"added_date"'><p-sortIcon
       [field]='"added_date"'></p-sortIcon>Date Added</th>
   <th></th>
+  <th></th>
 </tr>
 </ng-template> <ng-template
   pTemplate='body'
@@ -60,6 +61,18 @@
   <td>{{ comic.page_count || 0}}</td>
   <td>{{ comic.cover_date | date }}</td>
   <td>{{ comic.added_date | date }}</td>
+  <td>
+    <div class='ui-g'>
+      <div
+        *ngIf='comic.scan_type'
+        class='ui-g-12'>
+        <strong>Scan Type</strong>
+      </div>
+      <div
+        *ngIf='comic.scan_type'
+        class='ui-g-12'>{{ comic.scan_type.name }}</div>
+    </div>
+  </td>
   <td>
     <button
       pButton
