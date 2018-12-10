@@ -17,38 +17,7 @@
  * org.comixed;
  */
 
-import { Page } from './page';
-import { ComicCredit } from './comic-credit';
-import { ScanType } from './scan-type';
-
-export interface Comic {
+export interface ScanType {
   id: number;
-  filename: string;
-  base_filename: string;
-  publisher: string;
-  series: string;
-  volume: string;
-  issue_number: string;
-  title: string;
-  story_arcs: string[];
-  description: string;
-  notes: string;
-  summary: string;
-  missing: boolean;
-  archive_type: string;
-  comic_vine_id: string;
-  comic_vine_url: string;
-  added_date: string;
-  cover_date: string;
-  year_published: number;
-  last_read_date: string;
-  page_count: number;
-  characters: string[];
-  teams: string[];
-  locations: string[];
-  pages: Page[];
-  blocked_page_count: number;
-  deleted_page_count: number;
-  credits: ComicCredit[];
-  scan_type: ScanType;
+  name: string;
 }
