@@ -1,65 +1,59 @@
 <div class='ui-g'>
   <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>Series: </b>
-    </div>
-    <div class='ui-g-12'>{{ comic.series || 'Unknown'}}</div>
-  </div>
-  <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>Volume: </b>
-    </div>
-    <div class='ui-g-12'>{{ comic.volume || 'Unknown'}}</div>
-  </div>
-  <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>Issue number: </b>
-    </div>
-    <div class='ui-g-12'>{{ comic.issue_number || 'Unknown'}}</div>
-  </div>
-  <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>Title: </b>
-    </div>
-    <div class='ui-g-12'>{{ comic.title || 'Unknown'}}</div>
-  </div>
-  <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>Publisher: </b>
-    </div>
-    <div class='ui-g-12'>{{ comic.publisher || 'Unknown'}}</div>
-  </div>
-  <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>Added to the library: </b>
-    </div>
-    <div class='ui-g-12'>{{ comic.added_date | date }}</div>
-  </div>
-  <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>Pages: </b>
-    </div>
-    <div class='ui-g-12'>{{ comic.page_count }}</div>
-  </div>
-  <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>ComicVine Details: </b>
-    </div>
-    <div
-      *ngIf='comic.comic_vine_url'
-      class='ui-g-12'>
-      The details can be found here: <a
-        target='_comicvine'
-        [href]='"http://comicvine.gamespot.com/issue/4000-" + comic.comic_vine_id'>{{
-        comic.comic_vine_id }}</a>
+    <div class='ui-g'>
+      <div class='ui-g-12'>
+        <b>Publisher: </b>
+      </div>
+      <div class='ui-g-12'>{{ comic.publisher || 'Unknown'}}</div>
+      <div class='ui-g-12'>
+        <b>Series: </b>
+      </div>
+      <div class='ui-g-12'>{{ comic.series || 'Unknown'}}</div>
+      <div class='ui-g-12'>
+        <b>Volume: </b>
+      </div>
+      <div class='ui-g-12'>{{ comic.volume || 'Unknown'}}</div>
+      <div class='ui-g-12'>
+        <b>Issue number: </b>
+      </div>
+      <div class='ui-g-12'>{{ comic.issue_number || 'Unknown'}}</div>
     </div>
   </div>
   <div class='ui-g-4'>
-    <div class='ui-g-12'>
-      <b>Scan Type: </b>
+    <div class='ui-g'>
+      <div class='ui-g-12'>
+        <b>Title: </b>
+      </div>
+      <div class='ui-g-12'>{{ comic.title || 'Unknown'}}</div>
+      <div class='ui-g-12'>
+        <b>Added to the library: </b>
+      </div>
+      <div class='ui-g-12'>{{ comic.added_date | date }}</div>
+      <div class='ui-g-12'>
+        <b>Pages: </b>
+      </div>
+      <div class='ui-g-12'>{{ comic.page_count }}</div>
+      <div
+        *ngIf='comic.comic_vine_url'
+        class='ui-g-12'>
+        <b>ComicVine Details: </b>
+      </div>
+      <div class='ui-g-12'>
+        The details can be found here: <a
+          target='_comicvine'
+          [href]='"http://comicvine.gamespot.com/issue/4000-" + comic.comic_vine_id'>{{
+          comic.comic_vine_id }}</a>
+      </div>
     </div>
-    <div
-      *ngIf='comic.scan_type'
-      class='ui-g-12'>{{ comic.scan_type.name }}</div>
+  </div>
+  <div class='ui-g-4'>
+    <div class='ui-g'>
+      <div class='ui-g-12'>
+        <b>Scan Type: </b>
+      </div>
+      <div
+        *ngIf='comic.scan_type'
+        class='ui-g-12'>{{ comic.scan_type.name }}</div>
+    </div>
   </div>
 </div>
