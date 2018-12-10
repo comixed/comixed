@@ -250,6 +250,14 @@ public class Comic
      View.PageList.class})
     private ScanType scanType;
 
+    @ManyToOne
+    @JoinColumn(name = "format_id")
+    @JsonProperty("format")
+    @JsonView(
+    {View.ComicList.class,
+     View.PageList.class})
+    private ComicFormat format;
+
     @Transient
     @JsonIgnore
     File backingFile;
@@ -578,6 +586,11 @@ public class Comic
     public String getFilenameWithoutExtension()
     {
         return FilenameUtils.removeExtension(this.filename);
+    }
+
+    public ComicFormat getFormat()
+    {
+        return this.format;
     }
 
     /**
@@ -990,6 +1003,17 @@ public class Comic
         this.filename = filename;
     }
 
+    public void setFormat(ComicFormat format)
+    {
+        this.format = format;
+    }
+
+    public void setImprint(String imprint)
+    {
+        this.logger.debug("Setting imprint={}", imprint);
+        this.imprint = imprint;
+    }
+
     /**
      * Sets the issue number for the comic.
      *
@@ -1096,11 +1120,5 @@ public class Comic
     {
         this.logger.debug("Setting volume=" + volume);
         this.volume = volume;
-    }
-
-    public void setImprint(String imprint)
-    {
-        this.logger.debug("Setting imprint={}", imprint);
-        this.imprint = imprint;
     }
 }
