@@ -68,6 +68,10 @@
   <td>{{ comic.added_date | date }}</td>
   <td>
     <div class='ui-g'>
+      <div class='ui-g-12'>
+        <b>Format</b>
+      </div>
+      <div class='ui-g-12'>{{ comic.format.name }}</div>
       <div
         *ngIf='comic.scan_type'
         class='ui-g-12'>
