@@ -35,6 +35,8 @@
 </ng-template> <ng-template pTemplate='header'>
 <tr>
   <th>Cover</th>
+  <th [pSortableColumn]='"publisher"'><p-sortIcon
+      [field]='"publisher"'></p-sortIcon>Publisher</th>
   <th [pSortableColumn]='"series"'><p-sortIcon [field]='"series"'></p-sortIcon>Series</th>
   <th [pSortableColumn]='"volume"'><p-sortIcon [field]='"volume"'></p-sortIcon>Volume</th>
   <th [pSortableColumn]='"issue_number"'><p-sortIcon
@@ -55,6 +57,9 @@
     [style.height]='"auto"'
     [style.width]='"100%"'
     [src]='get_cover_url(comic)'>
+  <td>{{ comic.imprint || comic.publisher || 'Unknown'}}<span
+    *ngIf='comic.imprint'> ({{ comic.publisher }})</span>
+  </td>
   <td>{{ comic.series }}</td>
   <td>{{ comic.volume }}</td>
   <td>{{ comic.issue_number }}</td>

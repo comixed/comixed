@@ -69,7 +69,10 @@
           <div class='ui-g-12'>
             <b>Publisher: </b>
           </div>
-          <div class='ui-g-12'>{{ comic.publisher || 'Unknown'}}</div>
+          <div class='ui-g-12'>
+            {{ comic.imprint || comic.publisher || 'Unknown'}}<span
+              *ngIf='comic.imprint'> ({{ comic.publisher }})</span>
+          </div>
           <div class='ui-g-12'>
             <b>Series: </b>
           </div>

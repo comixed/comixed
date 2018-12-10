@@ -121,6 +121,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.library_display$ = store.select('library_display');
     this.scraping$ = store.select('multiple_comic_scraping');
     this.sort_options = [
+      { label: 'Publisher', value: 'publisher' },
       { label: 'Series', value: 'series' },
       { label: 'Volume', value: 'volume', },
       { label: 'Issue #', value: 'issue_number', },
