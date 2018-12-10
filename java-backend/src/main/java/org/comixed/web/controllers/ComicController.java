@@ -27,9 +27,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.ComicFormat;
 import org.comixed.library.model.ScanType;
 import org.comixed.library.model.View;
 import org.comixed.library.model.View.ComicDetails;
+import org.comixed.repositories.ComicFormatRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.ScanTypeRepository;
 import org.slf4j.Logger;
@@ -57,6 +59,9 @@ public class ComicController
 
     @Autowired
     private ScanTypeRepository scanTypeRepository;
+
+    @Autowired
+    private ComicFormatRepository comicFormatRepository;
 
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.DELETE)
@@ -128,6 +133,14 @@ public class ComicController
         }
 
         return comic;
+    }
+
+    @RequestMapping(value = "/formats",
+                    method = RequestMethod.GET)
+    public Iterable<ComicFormat> getComicFormats()
+    {
+        this.logger.debug("Fetching all comic format types");
+        return this.comicFormatRepository.findAll();
     }
 
     @RequestMapping(value = "/since/{timestamp}",
