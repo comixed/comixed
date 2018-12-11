@@ -341,7 +341,7 @@ public class ComicRepositoryTest
     public void testPagesCanBeAdded()
     {
         int count = comic.getPageCount() + 1;
-        Page page = new Page("src/test/example.jpg", new byte[1024], pageTypeRepository.getDefaultPageType());
+        Page page = new Page("src/test/example.jpg", new byte[0], pageTypeRepository.getDefaultPageType());
         comic.addPage(0, page);
         repository.save(comic);
 
