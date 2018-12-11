@@ -83,5 +83,29 @@
           class='ui-g-12'>{{ comic.scan_type.name || 'Unknown' }}</span>
       </div>
     </div>
+    <div class='ui-g-12'>
+      <b>Sort Name</b>
+    </div>
+    <div class='ui-g-12'>
+      <p-inplace
+        *ngIf='is_admin'
+        closable='closable'
+        (onActivate)='copy_sort_name(comic)'> <span
+        pInplaceDisplay>{{ comic.sort_name || '' }}</span> <span
+        pInplaceContent> <input
+        type='text'
+        pInputText
+        placeholder='Sort Name'
+        [(ngModel)]='sort_name'>
+        <button
+          type='button'
+          pButton
+          icon='pi pi-check'
+          (click)='save_sort_name(comic)'></button>
+      </span> </p-inplace>
+      <span
+        *ngIf='!is_admin'
+        class='ui-g-12'>{{ comic.scan_type.name || 'Unknown' }}</span>
+    </div>
   </div>
 </div>

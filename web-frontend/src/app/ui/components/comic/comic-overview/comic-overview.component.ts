@@ -39,6 +39,7 @@ export class ComicOverviewComponent implements OnInit {
 
   public scan_types: Array<SelectItem>;
   public formats: Array<SelectItem>;
+  public sort_name: string;
 
   constructor(
     private store: Store<AppState>,
@@ -72,6 +73,17 @@ export class ComicOverviewComponent implements OnInit {
     this.store.dispatch(new LibraryActions.LibrarySetFormat({
       comic: comic,
       format: format,
+    }));
+  }
+
+  copy_sort_name(comic: Comic): void {
+    this.sort_name = comic.sort_name || '';
+  }
+
+  save_sort_name(comic: Comic): void {
+    this.store.dispatch(new LibraryActions.LibrarySetSortName({
+      comic: comic,
+      sort_name: this.sort_name,
     }));
   }
 }
