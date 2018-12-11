@@ -256,6 +256,26 @@ public class ComicController
         }
     }
 
+    @RequestMapping(value = "/{id}/sort_name",
+                    method = RequestMethod.PUT)
+    public void setSortName(@PathVariable("id") long comicId, @RequestParam("sort_name") String sortName)
+    {
+        this.logger.debug("Setting sort name: comicId={} sortName={}", comicId, sortName);
+
+        Comic comic = this.comicRepository.findOne(comicId);
+
+        if (comic != null)
+        {
+            comic.setSortName(sortName);
+            this.logger.debug("Saving update to comic");
+            this.comicRepository.save(comic);
+        }
+        else
+        {
+            this.logger.debug("No such comic found");
+        }
+    }
+
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.PUT)
     public void updateComic(@PathVariable("id") long id,
