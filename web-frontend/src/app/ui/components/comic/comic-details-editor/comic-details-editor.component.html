@@ -8,17 +8,21 @@
     <label for='api_key'><b>ComicVine API Key:</b> </label>
   </div>
   <div class='ui-g-10 ui-sm-6'>
-    <input
+    <p-inplace closable='closable'> <span
+      pInplaceDisplay
+      pTooltip='Click to edit...'>{{ api_key || 'Click To Set
+      API' }}</span> <span pInplaceContent> <input
       id='api_key'
       type='text'
       [(ngModel)]='api_key'
       pInputText>
-    <button
-      pButton
-      type='button'
-      label='Save Key'
-      [disabled]='!is_api_key_valid()'
-      (click)='save_api_key()'></button>
+      <button
+        pButton
+        type='button'
+        icon='pi pi-check'
+        [disabled]='!is_api_key_valid()'
+        (click)='save_api_key()'></button>
+    </span> </p-inplace>
   </div>
   <div class='ui-g-2 ui-sm-2'>
     <label for='series'><b>Series:</b> </label>
