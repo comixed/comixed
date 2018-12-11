@@ -214,6 +214,27 @@ public class ComicController
         return this.scanTypeRepository.findAll();
     }
 
+    @RequestMapping(value = "/{id}/scan_type",
+                    method = RequestMethod.PUT)
+    public void setScanType(@PathVariable("id") long comicId, @RequestParam("scan_type_id") long scanTypeId)
+    {
+        this.logger.debug("Setting scan type: comicId={} scanTypeId={}", comicId, scanTypeId);
+
+        Comic comic = this.comicRepository.findOne(comicId);
+        ScanType scanType = this.scanTypeRepository.findOne(scanTypeId);
+
+        if (comic != null)
+        {
+            comic.setScanType(scanType);
+            this.logger.debug("Saving update to comic");
+            this.comicRepository.save(comic);
+        }
+        else
+        {
+            this.logger.debug("No such comic found");
+        }
+    }
+
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.PUT)
     public void updateComic(@PathVariable("id") long id,
