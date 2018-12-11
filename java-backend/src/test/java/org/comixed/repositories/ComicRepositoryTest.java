@@ -21,6 +21,7 @@ package org.comixed.repositories;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Calendar;
@@ -28,7 +29,9 @@ import java.util.Date;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.ComicFormat;
 import org.comixed.library.model.Page;
+import org.comixed.library.model.ScanType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,12 +63,19 @@ public class ComicRepositoryTest
     private static final long TEST_COMIC = 1000L;
     private static final long TEST_COMIC_WITH_BLOCKED_PAGES = 1001L;
     private static final Long TEST_COMIC_WITH_DELETED_PAGES = 1002L;
+    private static final String TEST_IMPRINT = "This is an imprint";
 
     @Autowired
     private ComicRepository repository;
 
     @Autowired
     private PageTypeRepository pageTypeRepository;
+
+    @Autowired
+    private ScanTypeRepository scanTypeRepository;
+
+    @Autowired
+    private ComicFormatRepository comicFormatRepository;
 
     private Comic comic;
 
@@ -365,5 +375,72 @@ public class ComicRepositoryTest
         Comic result = repository.findOne(TEST_COMIC_WITH_DELETED_PAGES);
 
         assertEquals(3, result.getDeletedPageCount());
+    }
+
+    @Test
+    public void testComicReturnWithTheirScanType()
+    {
+        Comic result = repository.findOne(TEST_COMIC);
+
+        assertNotNull(result.getScanType());
+        assertEquals(1, result.getScanType().getId());
+    }
+
+    @Test
+    public void testComicScanTypeCanBeChanged()
+    {
+        ScanType scanType = scanTypeRepository.findOne(2L);
+
+        Comic record = repository.findOne(TEST_COMIC);
+        record.setScanType(scanType);
+
+        repository.save(record);
+
+        Comic result = repository.findOne(TEST_COMIC);
+        assertEquals(scanType.getId(), result.getScanType().getId());
+    }
+
+    @Test
+    public void testComicReturnWithTheirFormat()
+    {
+        Comic result = repository.findOne(TEST_COMIC);
+
+        assertNotNull(result.getFormat());
+        assertEquals(1L, result.getFormat().getId());
+    }
+
+    @Test
+    public void testComicFormatCanBeChanged()
+    {
+        ComicFormat format = comicFormatRepository.findOne(2L);
+
+        Comic record = repository.findOne(TEST_COMIC);
+        record.setFormat(format);
+
+        repository.save(record);
+
+        Comic result = repository.findOne(TEST_COMIC);
+        assertEquals(format.getId(), result.getFormat().getId());
+    }
+
+    @Test
+    public void testComicsReturnWithTheirImprint()
+    {
+        Comic result = repository.findOne(TEST_COMIC);
+
+        assertNotNull(result.getImprint());
+        assertEquals("Marvel Digital", result.getImprint());
+    }
+
+    @Test
+    public void testComicsImprintCanBeChanged()
+    {
+        Comic record = repository.findOne(TEST_COMIC);
+        record.setImprint(TEST_IMPRINT);
+
+        repository.save(record);
+
+        Comic result = repository.findOne(TEST_COMIC);
+        assertEquals(TEST_IMPRINT, result.getImprint());
     }
 }

@@ -1,71 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <dataset>
-
-  <comics ID="1000" FILENAME="C:/users/mcpierce/Documents/comics/example.cbz"
+  <scan_types id="1" name="digital"/>
+  <scan_types id="2" name="print"/>
+  <scan_types id="3" name="print_c2c"/>
+  <scan_types id="4" name="fiche"/>
+  <scan_types id="5" name="hybrid"/>
+  <scan_types id="6" name="partial"/>
+  <scan_types id="7" name="scanalation"/>
+  <comic_formats id="1" name="standard"/>
+  <comic_formats id="2" name="trade-paperback"/>
+  <comic_formats id="3" name="graphic-novel"/>
+  <comic_formats id="4" name="deluxe-edition"/>
+  <comic_formats id="5" name="treasury"/>
+  <comic_formats id="6" name="digest"/>
+  <comic_formats id="7" name="preview"/>
+  <comic_formats id="8" name="promotional"/>
+  <comic_formats id="9" name="unpublished"/>
+  <comic_formats id="10" name="book"/>
+  <comic_formats id="11" name="magazine"/>
+  <comic_formats id="12" name="manga-left"/>
+  <comic_formats id="13" name="manga-right"/>
+  <comics ID="1000"
+    FILENAME="C:/users/mcpierce/Documents/comics/example.cbz"
     publisher="Marvel" series="Steve Rogers: Captain America"
-    COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00" cover_date="2017-01-31"
-    volume="2017" issue_number="512" description="This is a comic book's description"
-    summary="This is a summary" />
-
-  <comics ID="1001" FILENAME="C:/users/mcpierce/Documents/comics/example2.cbz"
+    COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00"
+    cover_date="2017-01-31" volume="2017" issue_number="512"
+    description="This is a comic book's description"
+    summary="This is a summary" scan_type_id="1" format_id="1"
+    imprint="Marvel Digital"/>
+  <comics ID="1001"
+    FILENAME="C:/users/mcpierce/Documents/comics/example2.cbz"
     publisher="Marvel" series="Steve Rogers: Captain America"
-    COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00" cover_date="2017-01-31"
-    volume="2017" issue_number="512" description="This is a comic book's description"
-    summary="This is a summary" />
-
-  <comics ID="1002" FILENAME="C:/users/mcpierce/Documents/comics/example3.cbz"
+    COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00"
+    cover_date="2017-01-31" volume="2017" issue_number="512"
+    description="This is a comic book's description"
+    summary="This is a summary" scan_type_id="2" format_id="1"/>
+  <comics ID="1002"
+    FILENAME="C:/users/mcpierce/Documents/comics/example3.cbz"
     publisher="Marvel" series="Steve Rogers: Captain America"
-    COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00" cover_date="2017-01-31"
-    volume="2017" issue_number="512" description="This is a comic book's description"
-    summary="This is a summary" />
-
-  <comics ID="1003" FILENAME="C:/users/mcpierce/Documents/comics/example4.cbz"
+    COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00"
+    cover_date="2017-01-31" volume="2017" issue_number="512"
+    description="This is a comic book's description"
+    summary="This is a summary" scan_type_id="1" format_id="1"/>
+  <comics ID="1003"
+    FILENAME="C:/users/mcpierce/Documents/comics/example4.cbz"
     publisher="Marvel" series="Steve Rogers: Captain America"
-    COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00" cover_date="2017-01-31"
-    volume="2017" issue_number="512" description="This is a comic book's description"
-    summary="This is a summary" />
-
-  <comic_story_arcs comic_id="1000" story_arc_name="Civil War II" />
-  <comic_story_arcs comic_id="1000" story_arc_name="Prelude To Civil War II" />
-
-  <comic_teams comic_id="1000" team_name="The Avengers" />
-  <comic_teams comic_id="1000" team_name="The West Coast Avengers" />
-  <comic_teams comic_id="1000" team_name="The Great Lake Avengers" />
-  <comic_teams comic_id="1000" team_name="The New Avengers" />
-  <comic_teams comic_id="1000" team_name="The Uncanny Avengers" />
-
-  <comic_characters comic_id="1000" character_name="Captain America" />
-
-  <comic_locations comic_id="1000" location_name="Wakanda" />
-  <comic_locations comic_id="1000" location_name="Genosha" />
-  <comic_locations comic_id="1000" location_name="The Savage Land" />
-
-  <pages ID="1000" comic_id="1000" filename="front_page.jpg" index="0" hash="12345" deleted="false" />
-  <pages ID="1001" comic_id="1000" filename="page1.jpg" index="1" hash="12346" deleted="false" />
-  <pages ID="1002" comic_id="1000" filename="page2.jpg" index="2" hash="12347" deleted="false" />
-  <pages ID="1003" comic_id="1000" filename="page3.jpg" index="3" hash="12348" deleted="false" />
-  <pages ID="1004" comic_id="1000" filename="back_page.jpg" index="4" hash="12349" deleted="false" />
-
-  <pages ID="2000" comic_id="1001" filename="front_page.jpg" index="0" hash="12345" deleted="false" />
-  <pages ID="2001" comic_id="1001" filename="page1.jpg" index="1" hash="12346" deleted="false" />
-  <pages ID="2002" comic_id="1001" filename="page2.jpg" index="2" hash="12347" deleted="false" />
-  <pages ID="2003" comic_id="1001" filename="back_cover.jpg" index="4" hash="23456" deleted="false" />
-
-  <pages ID="2102" comic_id="1001" filename="front_page.jpg" index="1" hash="12346" deleted="false" />
-
-  <pages ID="3000" comic_id="1002" filename="front_page.jpg" index="0" hash="12345" deleted="false" />
-  <pages ID="3001" comic_id="1002" filename="page1.jpg" index="1" hash="12346" deleted="true" />
-  <pages ID="3002" comic_id="1002" filename="page1.jpg" index="2" hash="12346" deleted="true" />
-  <pages ID="3003" comic_id="1002" filename="back_page.jpg" index="3" hash="12346" deleted="true" />
-
-  <pages comic_id="1003" filename="front_page.jpg" index="0" hash="22345" deleted="false" />
-  <pages comic_id="1003" filename="page1.jpg" index="1" hash="22346" deleted="false" />
-  <pages comic_id="1003" filename="page2.jpg" index="2" hash="22347" deleted="false" />
-  <pages comic_id="1003" filename="page3.jpg" index="3" hash="22348" deleted="false" />
-  <pages comic_id="1003" filename="back_page.jpg" index="4" hash="22349" deleted="false" />
-  
-  <blocked_page_hashes hash="12345" />
-  <blocked_page_hashes hash="23456" />
-
+    COMIC_VINE_ID="ABCDEFG" added_date="2017-06-13 15:20:00"
+    cover_date="2017-01-31" volume="2017" issue_number="512"
+    description="This is a comic book's description"
+    summary="This is a summary" scan_type_id="1" format_id="1"/>
+  <comic_story_arcs comic_id="1000"
+    story_arc_name="Civil War II"/>
+  <comic_story_arcs comic_id="1000"
+    story_arc_name="Prelude To Civil War II"/>
+  <comic_teams comic_id="1000" team_name="The Avengers"/>
+  <comic_teams comic_id="1000"
+    team_name="The West Coast Avengers"/>
+  <comic_teams comic_id="1000"
+    team_name="The Great Lake Avengers"/>
+  <comic_teams comic_id="1000" team_name="The New Avengers"/>
+  <comic_teams comic_id="1000"
+    team_name="The Uncanny Avengers"/>
+  <comic_characters comic_id="1000"
+    character_name="Captain America"/>
+  <comic_locations comic_id="1000"
+    location_name="Wakanda"/>
+  <comic_locations comic_id="1000"
+    location_name="Genosha"/>
+  <comic_locations comic_id="1000"
+    location_name="The Savage Land"/>
+  <pages ID="1000" comic_id="1000" filename="front_page.jpg"
+    index="0" hash="12345" deleted="false"/>
+  <pages ID="1001" comic_id="1000" filename="page1.jpg" index="1"
+    hash="12346" deleted="false"/>
+  <pages ID="1002" comic_id="1000" filename="page2.jpg" index="2"
+    hash="12347" deleted="false"/>
+  <pages ID="1003" comic_id="1000" filename="page3.jpg" index="3"
+    hash="12348" deleted="false"/>
+  <pages ID="1004" comic_id="1000" filename="back_page.jpg"
+    index="4" hash="12349" deleted="false"/>
+  <pages ID="2000" comic_id="1001" filename="front_page.jpg"
+    index="0" hash="12345" deleted="false"/>
+  <pages ID="2001" comic_id="1001" filename="page1.jpg" index="1"
+    hash="12346" deleted="false"/>
+  <pages ID="2002" comic_id="1001" filename="page2.jpg" index="2"
+    hash="12347" deleted="false"/>
+  <pages ID="2003" comic_id="1001" filename="back_cover.jpg"
+    index="4" hash="23456" deleted="false"/>
+  <pages ID="2102" comic_id="1001" filename="front_page.jpg"
+    index="1" hash="12346" deleted="false"/>
+  <pages ID="3000" comic_id="1002" filename="front_page.jpg"
+    index="0" hash="12345" deleted="false"/>
+  <pages ID="3001" comic_id="1002" filename="page1.jpg" index="1"
+    hash="12346" deleted="true"/>
+  <pages ID="3002" comic_id="1002" filename="page1.jpg" index="2"
+    hash="12346" deleted="true"/>
+  <pages ID="3003" comic_id="1002" filename="back_page.jpg"
+    index="3" hash="12346" deleted="true"/>
+  <pages comic_id="1003" filename="front_page.jpg" index="0"
+    hash="22345" deleted="false"/>
+  <pages comic_id="1003" filename="page1.jpg" index="1"
+    hash="22346" deleted="false"/>
+  <pages comic_id="1003" filename="page2.jpg" index="2"
+    hash="22347" deleted="false"/>
+  <pages comic_id="1003" filename="page3.jpg" index="3"
+    hash="22348" deleted="false"/>
+  <pages comic_id="1003" filename="back_page.jpg" index="4"
+    hash="22349" deleted="false"/>
+  <blocked_page_hashes hash="12345"/>
+  <blocked_page_hashes hash="23456"/>
 </dataset>

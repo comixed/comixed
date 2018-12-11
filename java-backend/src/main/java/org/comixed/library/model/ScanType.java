@@ -40,7 +40,7 @@ public class ScanType
     @JsonView(
     {View.ComicList.class,
      View.PageList.class})
-    private Long id;
+    private long id;
 
     @Column(name = "name",
             updatable = false,
@@ -50,12 +50,12 @@ public class ScanType
      View.PageList.class})
     private String name;
 
-    protected Long getId()
+    public long getId()
     {
         return this.id;
     }
 
-    protected String getName()
+    public String getName()
     {
         return this.name;
     }

@@ -603,6 +603,11 @@ public class Comic
         return this.id;
     }
 
+    public String getImprint()
+    {
+        return this.imprint;
+    }
+
     public int getIndexFor(Page page)
     {
         if (this.pages.contains(page)) return this.pages.indexOf(page);
@@ -735,7 +740,12 @@ public class Comic
         return this.publisher;
     }
 
-    protected ScanType getScanType()
+    /**
+     * Returns the scan type for the comic.
+     *
+     * @return the scan type
+     */
+    public ScanType getScanType()
     {
         return this.scanType;
     }
