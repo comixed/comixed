@@ -27,7 +27,7 @@
     cover_date="2017-01-31" volume="2017" issue_number="512"
     description="This is a comic book's description"
     summary="This is a summary" scan_type_id="1" format_id="1"
-    imprint="Marvel Digital"/>
+    imprint="Marvel Digital" sort_name="My First Comic"/>
   <comics ID="1001"
     FILENAME="C:/users/mcpierce/Documents/comics/example2.cbz"
     publisher="Marvel" series="Steve Rogers: Captain America"

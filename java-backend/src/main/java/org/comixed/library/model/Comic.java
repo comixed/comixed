@@ -172,6 +172,11 @@ public class Comic
     @JsonView(View.ComicList.class)
     private String title;
 
+    @Column(name = "sort_name")
+    @JsonProperty
+    @JsonView(View.ComicList.class)
+    private String sortName;
+
     @Column(name = "description")
     @Lob
     @JsonProperty
@@ -760,6 +765,11 @@ public class Comic
         return this.series;
     }
 
+    public String getSortName()
+    {
+        return this.sortName;
+    }
+
     /**
      * Retrieves the story arc with the given index.
      *
@@ -1094,6 +1104,11 @@ public class Comic
     {
         this.logger.debug("Setting series=" + name);
         this.series = name;
+    }
+
+    public void setSortName(String sortName)
+    {
+        this.sortName = sortName;
     }
 
     /**

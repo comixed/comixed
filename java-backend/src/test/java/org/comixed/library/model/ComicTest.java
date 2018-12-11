@@ -56,6 +56,7 @@ public class ComicTest
     private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
     private static final String TEST_BASE_FILENAME = "example.cbz";
     private static final String TEST_COMIC_VINE_URL = "http://comicvine.gamespot.com/blah/blah/blah";
+    private static final String TEST_SORT_NAME = "Sort name for comic";
 
     private Comic comic;
     private Page page;
@@ -604,5 +605,13 @@ public class ComicTest
     public void testGetIndexOfForNonownedPage()
     {
         assertEquals(-1, comic.getIndexFor(new Page()));
+    }
+
+    @Test
+    public void testHasSortName()
+    {
+        assertNull(comic.getSortName());
+        comic.setSortName(TEST_SORT_NAME);
+        assertEquals(TEST_SORT_NAME, comic.getSortName());
     }
 }

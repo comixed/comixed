@@ -59,6 +59,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
  DbUnitTestExecutionListener.class})
 public class ComicRepositoryTest
 {
+    private static final String TEST_COMIC_SORT_NAME = "My First Comic";
     private static final String TEST_COMIC_VINE_ID = "ABCDEFG";
     private static final long TEST_COMIC = 1000L;
     private static final long TEST_COMIC_WITH_BLOCKED_PAGES = 1001L;
@@ -442,5 +443,26 @@ public class ComicRepositoryTest
 
         Comic result = repository.findOne(TEST_COMIC);
         assertEquals(TEST_IMPRINT, result.getImprint());
+    }
+
+    @Test
+    public void testComicsReturnWithSortName()
+    {
+        Comic result = repository.findOne(TEST_COMIC);
+
+        assertNotNull(result.getSortName());
+        assertEquals(TEST_COMIC_SORT_NAME, result.getSortName());
+    }
+
+    @Test
+    public void testComicSortNameCanBeChanged()
+    {
+        Comic record = repository.findOne(TEST_COMIC);
+
+        record.setSortName("Farkle");
+        repository.save(record);
+
+        Comic result = repository.findOne(TEST_COMIC);
+        assertEquals("Farkle", result.getSortName());
     }
 }
