@@ -63,6 +63,12 @@ export class ComicService {
     return this.http.put(`${this.api_url}/comics/${comic.id}/format`, params);
   }
 
+  set_sort_name(comic: Comic, sort_name: string): Observable<any> {
+    const params = new HttpParams().set('sort_name', sort_name);
+
+    return this.http.put(`${this.api_url}/comics/${comic.id}/sort_name`, params);
+  }
+
   fetch_remote_library_state(latest_comic_update: string): Observable<any> {
     return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}?timeout=60000`);
   }
