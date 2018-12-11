@@ -73,6 +73,17 @@ export class LibraryEffects {
         })));
 
   @Effect()
+  library_set_sort_name$: Observable<Action> = this.actions$
+    .ofType<LibraryActions.LibrarySetSortName>(LibraryActions.LIBRARY_SET_SORT_NAME)
+    .map(action => action.payload)
+    .switchMap(action =>
+      this.comic_service.set_sort_name(action.comic, action.sort_name)
+        .map(() => new LibraryActions.LibrarySortNameSet({
+          comic: action.comic,
+          sort_name: action.sort_name,
+        })));
+
+  @Effect()
   library_start_updating$: Observable<Action> = this.actions$
     .ofType<LibraryActions.LibraryFetchLibraryChanges>(LibraryActions.LIBRARY_FETCH_LIBRARY_CHANGES)
     .map(action => action.payload)

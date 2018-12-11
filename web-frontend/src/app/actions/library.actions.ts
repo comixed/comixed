@@ -32,6 +32,8 @@ export const LIBRARY_GET_FORMATS = '[LIBRARY] Fetch the comic formats';
 export const LIBRARY_SET_FORMATS = '[LIBRARY] Set the comic formats';
 export const LIBRARY_SET_FORMAT = '[LIBRARY] Set the format for a comic';
 export const LIBRARY_FORMAT_SET = '[LIBRARY] The format is set';
+export const LIBRARY_SET_SORT_NAME = '[LIBRARY] Sets the sort name for a comic';
+export const LIBRARY_SORT_NAME_SET = '[LIBRARY] The sort name is set';
 export const LIBRARY_FETCH_LIBRARY_CHANGES = '[LIBRARY] Fetch changes to the library';
 export const LIBRARY_MERGE_NEW_COMICS = '[LIBRARY] Merge newly retrieved comics';
 export const LIBRARY_UPDATE_COMIC = '[LIBRARY] Update a single comic';
@@ -103,6 +105,24 @@ export class LibraryFormatSet implements Action {
   }) { }
 }
 
+export class LibrarySetSortName implements Action {
+  readonly type = LIBRARY_SET_SORT_NAME;
+
+  constructor(public payload: {
+    comic: Comic,
+    sort_name: string,
+  }) { }
+}
+
+export class LibrarySortNameSet implements Action {
+  readonly type = LIBRARY_SORT_NAME_SET;
+
+  constructor(public payload: {
+    comic: Comic,
+    sort_name: string,
+  }) { }
+}
+
 export class LibraryFetchLibraryChanges implements Action {
   readonly type = LIBRARY_FETCH_LIBRARY_CHANGES;
 
@@ -156,6 +176,8 @@ export type Actions =
   LibrarySetFormats |
   LibrarySetFormat |
   LibraryFormatSet |
+  LibrarySetSortName |
+  LibrarySortNameSet |
   LibraryFetchLibraryChanges |
   LibraryMergeNewComics |
   LibraryUpdateComic |

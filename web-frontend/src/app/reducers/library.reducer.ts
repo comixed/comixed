@@ -74,7 +74,7 @@ export function libraryReducer(
         ...state,
         busy: true,
       };
-    
+
     case LibraryActions.LIBRARY_SET_FORMATS:
       return {
         ...state,
@@ -101,6 +101,21 @@ export function libraryReducer(
         ...state,
         busy: false,
         cmics: cx,
+      };
+    }
+
+    case LibraryActions.LIBRARY_SET_SORT_NAME:
+      return {
+        ...state,
+        busy: true,
+      };
+
+    case LibraryActions.LIBRARY_SORT_NAME_SET: {
+      action.payload.comic.sort_name = action.payload.sort_name;
+
+      return {
+        ...state,
+        busy: false,
       };
     }
 
