@@ -74,17 +74,16 @@
   <td>
     <button
       pButton
+      pTooltip='Go to details...'
+      tooltipPosition='top'
       type='button'
       icon='fa fa-book'
       (click)='open_comic(comic)'></button>
     <button
-      pButton
-      type='button'
-      icon='fa fa-search'
-      (click)='set_selected_comic($event, comic)'></button>
-    <button
       *ngIf='is_admin'
       pButton
+      tooltipPosition='top'
+      pTooltip='Delete this comic...'
       type='button'
       icon='fa fa-trash'
       (click)='delete_comic(comic)'></button>
