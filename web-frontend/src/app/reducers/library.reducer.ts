@@ -55,17 +55,11 @@ export function libraryReducer(
       };
 
     case LibraryActions.LIBRARY_SCAN_TYPE_SET: {
-      const cx = state.comics;
+      action.payload.comic.scan_type = action.payload.scan_type;
 
-      cx.forEach((comic: Comic) => {
-        if (comic.id === action.payload.comic.id) {
-          comic.scan_type = action.payload.scan_type;
-        }
-      });
       return {
         ...state,
         busy: false,
-        comics: cx,
       };
     }
 

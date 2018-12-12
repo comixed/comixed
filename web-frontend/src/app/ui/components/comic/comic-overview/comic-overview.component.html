@@ -73,11 +73,12 @@
       <div class='ui-g-12'>
         <p-inplace
           *ngIf='is_admin'
-          closable='closable'> <span pInplaceDisplay>{{
-          comic.scan_type?.name || 'Click to set...' }}</span> <span
-          pInplaceContent> <p-dropdown
+          closable='closable'
+          (onActivate)='copy_scan_type(comic)'> <span
+          pInplaceDisplay>{{ comic.scan_type?.name || 'Click to
+          set...' }}</span> <span pInplaceContent> <p-dropdown
             [options]='scan_types'
-            [(ngModel)]='comic.scan_type'
+            [(ngModel)]='scan_type'
             (onChange)='set_scan_type(comic, $event.value)'></p-dropdown>
         </span> </p-inplace>
         <span

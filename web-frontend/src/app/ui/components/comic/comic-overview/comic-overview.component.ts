@@ -39,14 +39,18 @@ export class ComicOverviewComponent implements OnInit {
 
   public scan_types: Array<SelectItem>;
   public formats: Array<SelectItem>;
-  public sort_name: string;
+
+  protected scan_type: ScanType;
+  protected sort_name: string;
 
   constructor(
     private store: Store<AppState>,
   ) { }
 
   ngOnInit() {
-    this.scan_types = [];
+    this.format = this.comic.format;
+    this.scan_type = this.comic.scan_type;
+    this.scan_types = [{ label: 'Select one...', value: null, }];
     this.library.scan_types.forEach((scan_type: ScanType) => {
       this.scan_types.push({
         label: scan_type.name,
@@ -62,11 +66,8 @@ export class ComicOverviewComponent implements OnInit {
     });
   }
 
-  set_scan_type(comic: Comic, scan_type: ScanType): void {
-    this.store.dispatch(new LibraryActions.LibrarySetScanType({
-      comic: comic,
-      scan_type: scan_type,
-    }));
+  copy_comic_format(comic: Comic): void {
+    this.format = comic.format;
   }
 
   set_comic_format(comic: Comic, format: ComicFormat): void {
@@ -74,6 +75,18 @@ export class ComicOverviewComponent implements OnInit {
       comic: comic,
       format: format,
     }));
+
+  copy_scan_type(comic: Comic): void {
+    this.scan_type = comic.scan_type;
+  }
+
+  set_scan_type(comic: Comic, scan_type: ScanType): void {
+    if (scan_type) {
+      this.store.dispatch(new LibraryActions.LibrarySetScanType({
+        comic: comic,
+        scan_type: scan_type,
+      }));
+    }
   }
 
   copy_sort_name(comic: Comic): void {
