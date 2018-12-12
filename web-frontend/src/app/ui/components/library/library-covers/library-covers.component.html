@@ -124,7 +124,7 @@
             <p-inplace
               *ngIf='is_admin'
               closable='closable'> <span pInplaceDisplay>{{
-              comic.format.name }}</span> <span pInplaceContent> <p-dropdown
+              comic.format?.name }}</span> <span pInplaceContent> <p-dropdown
                 [options]='formats'
                 [(ngModel)]='comic.format'
                 (onChange)='set_comic_format(comic, $event.value)'></p-dropdown>
