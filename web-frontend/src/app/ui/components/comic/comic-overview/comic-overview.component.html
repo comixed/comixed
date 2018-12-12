@@ -58,12 +58,14 @@
         <p-inplace
           *ngIf='is_admin'
           closable='closable'> <span pInplaceDisplay>{{
-          comic.format.name }}</span> <span pInplaceContent> <p-dropdown
+          comic.format?.name || 'Click to set...' }}</span> <span
+          pInplaceContent> <p-dropdown
             [options]='formats'
             [(ngModel)]='comic.format'
             (onChange)='set_comic_format(comic, $event.value)'></p-dropdown>
         </span></p-inplace>
-        <span *ngIf='!is_admin'>{{ comic.format.name }}</span>
+        <span *ngIf='!is_admin'>{{ comic.format?.name ||
+          'Unknown' }}</span>
       </div>
       <div class='ui-g-12'>
         <b>Scan Type: </b>
@@ -72,15 +74,16 @@
         <p-inplace
           *ngIf='is_admin'
           closable='closable'> <span pInplaceDisplay>{{
-          comic.scan_type?.name || 'Unknown' }}</span> <span pInplaceContent>
-          <p-dropdown
+          comic.scan_type?.name || 'Click to set...' }}</span> <span
+          pInplaceContent> <p-dropdown
             [options]='scan_types'
             [(ngModel)]='comic.scan_type'
             (onChange)='set_scan_type(comic, $event.value)'></p-dropdown>
         </span> </p-inplace>
         <span
           *ngIf='!is_admin'
-          class='ui-g-12'>{{ comic.scan_type.name || 'Unknown' }}</span>
+          class='ui-g-12'>{{ comic.scan_type?.name || 'Unknown'
+          }}</span>
       </div>
     </div>
     <div class='ui-g-12'>
@@ -91,8 +94,8 @@
         *ngIf='is_admin'
         closable='closable'
         (onActivate)='copy_sort_name(comic)'> <span
-        pInplaceDisplay>{{ comic.sort_name || '' }}</span> <span
-        pInplaceContent> <input
+        pInplaceDisplay>{{ comic.sort_name || 'Click to set...'
+        }}</span> <span pInplaceContent> <input
         type='text'
         pInputText
         placeholder='Sort Name'
@@ -105,7 +108,7 @@
       </span> </p-inplace>
       <span
         *ngIf='!is_admin'
-        class='ui-g-12'>{{ comic.scan_type.name || 'Unknown' }}</span>
+        class='ui-g-12'>{{ comic.scan_type?.name || '[]' }}</span>
     </div>
   </div>
 </div>
