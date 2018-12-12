@@ -2,22 +2,22 @@
   <div class='ui-g-4'>
     <div class='ui-g'>
       <div class='ui-g-12'>
-        <b>Publisher: </b>
+        <strong>Publisher</strong>
       </div>
       <div class='ui-g-12'>
         {{ comic.imprint || comic.publisher || 'Unknown'}}<span
           *ngIf='comic.imprint'> ({{ comic.publisher }})</span>
       </div>
       <div class='ui-g-12'>
-        <b>Series: </b>
+        <strong>Series</strong>
       </div>
       <div class='ui-g-12'>{{ comic.series || 'Unknown'}}</div>
       <div class='ui-g-12'>
-        <b>Volume: </b>
+        <strong>Volume</strong>
       </div>
       <div class='ui-g-12'>{{ comic.volume || 'Unknown'}}</div>
       <div class='ui-g-12'>
-        <b>Issue number: </b>
+        <strong>Issue number</strong>
       </div>
       <div class='ui-g-12'>{{ comic.issue_number || 'Unknown'}}</div>
     </div>
@@ -25,24 +25,25 @@
   <div class='ui-g-4'>
     <div class='ui-g'>
       <div class='ui-g-12'>
-        <b>Title: </b>
+        <strong>Title</strong>
       </div>
       <div class='ui-g-12'>{{ comic.title || 'Unknown'}}</div>
       <div class='ui-g-12'>
-        <b>Added to the library: </b>
+        <strong>Added to the library</strong>
       </div>
       <div class='ui-g-12'>{{ comic.added_date | date }}</div>
       <div class='ui-g-12'>
-        <b>Pages: </b>
+        <strong>Pages</strong>
       </div>
       <div class='ui-g-12'>{{ comic.page_count }}</div>
+      <div class='ui-g-12'>
+        <strong>ComicVine Details</strong>
+      </div>
       <div
         *ngIf='comic.comic_vine_url'
         class='ui-g-12'>
-        <b>ComicVine Details: </b>
-      </div>
-      <div class='ui-g-12'>
-        The details can be found here: <a
+        The details can be found here:
+        <a
           target='_comicvine'
           [href]='"http://comicvine.gamespot.com/issue/4000-" + comic.comic_vine_id'>{{
           comic.comic_vine_id }}</a>
@@ -52,7 +53,7 @@
   <div class='ui-g-4'>
     <div class='ui-g'>
       <div class='ui-g-12'>
-        <b>Format</b>
+        <strong>Format</strong>
       </div>
       <div class='ui-g-12'>
         <p-inplace
@@ -69,7 +70,7 @@
           'Unknown' }}</span>
       </div>
       <div class='ui-g-12'>
-        <b>Scan Type: </b>
+        <strong>Scan Type</strong>
       </div>
       <div class='ui-g-12'>
         <p-inplace
@@ -89,7 +90,7 @@
       </div>
     </div>
     <div class='ui-g-12'>
-      <b>Sort Name</b>
+      <strong>Sort Name</strong>
     </div>
     <div class='ui-g-12'>
       <p-inplace
