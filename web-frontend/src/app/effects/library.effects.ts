@@ -21,10 +21,12 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import * as LibraryActions from '../actions/library.actions';
 import { ComicService } from '../services/comic.service';
+import { AlertService } from '../services/alert.service';
 import { Comic } from '../models/comics/comic';
 import { ScanType } from '../models/comics/scan-type';
 import { ComicFormat } from '../models/comics/comic-format';
@@ -34,6 +36,7 @@ export class LibraryEffects {
   constructor(
     private actions$: Actions,
     private comic_service: ComicService,
+    private alert_service: AlertService,
   ) { }
 
   @Effect()
@@ -41,6 +44,7 @@ export class LibraryEffects {
     .ofType<LibraryActions.LibraryGetScanTypes>(LibraryActions.LIBRARY_GET_SCAN_TYPES)
     .switchMap(action =>
       this.comic_service.fetch_scan_types()
+        .catch((error: Error) => of(this.alert_service.show_error_message('Error fetching scan types...', error)))
         .map((scan_types: Array<ScanType>) => new LibraryActions.LibrarySetScanTypes({ scan_types: scan_types })));
 
   @Effect()
@@ -49,6 +53,8 @@ export class LibraryEffects {
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.set_scan_type(action.comic, action.scan_type)
+        .do(() => this.alert_service.show_info_message(`Scan type set to ${action.scan_type.name}...`))
+        .catch((error: Error) => of(this.alert_service.show_error_message('Error setting scan type...', error)))
         .map(() => new LibraryActions.LibraryScanTypeSet({
           comic: action.comic,
           scan_type: action.scan_type,
@@ -59,6 +65,7 @@ export class LibraryEffects {
     .ofType<LibraryActions.LibraryGetFormats>(LibraryActions.LIBRARY_GET_FORMATS)
     .switchMap(action =>
       this.comic_service.fetch_formats()
+        .catch((error: Error) => of(this.alert_service.show_error_message('Error fetching format types...', error)))
         .map((formats: Array<ComicFormat>) => new LibraryActions.LibrarySetFormats({ formats: formats })));
 
   @Effect()
@@ -67,6 +74,8 @@ export class LibraryEffects {
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.set_format(action.comic, action.format)
+        .do(() => this.alert_service.show_info_message(`Format set to ${action.format.name}...`))
+        .catch((error: Error) => of(this.alert_service.show_error_message('Error setting format...', error)))
         .map(() => new LibraryActions.LibraryFormatSet({
           comic: action.comic,
           format: action.format,
@@ -78,6 +87,8 @@ export class LibraryEffects {
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.set_sort_name(action.comic, action.sort_name)
+        .do(() => this.alert_service.show_info_message(`Sort name set to ${action.sort_name}...`))
+        .catch((error: Error) => of(this.alert_service.show_error_message('Error setting sort name...', error)))
         .map(() => new LibraryActions.LibrarySortNameSet({
           comic: action.comic,
           sort_name: action.sort_name,
@@ -89,6 +100,7 @@ export class LibraryEffects {
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.fetch_remote_library_state(action.last_comic_date)
+        .catch((error: Error) => of(this.alert_service.show_error_message('Error getting library updates...', error)))
         .map((comics: Array<Comic>) => new LibraryActions.LibraryMergeNewComics({
           comics: comics,
         })));
@@ -99,6 +111,8 @@ export class LibraryEffects {
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.delete_comic(action.comic)
+        .do(() => this.alert_service.show_info_message(`Comic removed from library...`))
+        .catch((error: Error) => of(this.alert_service.show_error_message('Error removing comic...', error)))
         .map(() => new LibraryActions.LibraryUpdateComicsRemoveComic({
           comic: action.comic,
         }))
