@@ -164,12 +164,16 @@
       <div class='ui-g-12 ui-sm-12'>
         <button
           pButton
+          tooltipPosition='top'
+          pTooltip='Show comic details...'
           type='button'
           icon='fa fa-search'
           (click)='set_selected_comic($event, comic)'
           label='Details'></button>
         <button
           pButton
+          pTooltip='Go to details...'
+          tooltipPosition='top'
           type='button'
           icon='fa fa-book'
           label='Open Comic'
@@ -177,6 +181,8 @@
         <button
           *ngIf='is_admin'
           pButton
+          tooltipPosition='top'
+          pTooltip='Delete this comic...'
           type='button'
           icon='fa fa-trash'
           (click)='delete_comic(comic)'
@@ -195,17 +201,23 @@
     [style.height]='"" + cover_size + "px"'> <p-footer>
   <button
     pButton
+    tooltipPosition='top'
+    pTooltip='Show comic details...'
     type='button'
     icon='fa fa-search'
     (click)='set_selected_comic($event, comic)'></button>
   <button
     pButton
+    pTooltip='Go to details...'
+    tooltipPosition='top'
     type='button'
     icon='fa fa-book'
     (click)='open_comic(comic)'></button>
   <button
     *ngIf='is_admin'
     pButton
+    tooltipPosition='top'
+    pTooltip='Delete this comic...'
     type='button'
     icon='fa fa-trash'
     (click)='delete_comic(comic)'></button>
