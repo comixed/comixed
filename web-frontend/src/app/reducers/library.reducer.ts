@@ -83,18 +83,11 @@ export function libraryReducer(
       };
 
     case LibraryActions.LIBRARY_FORMAT_SET: {
-      const cx = state.comics;
-
-      cx.forEach((comic: Comic) => {
-        if (comic.id === action.payload.comic.id) {
-          comic.format = action.payload.format;
-        }
-      });
+      action.payload.comic.format = action.payload.format;
 
       return {
         ...state,
         busy: false,
-        cmics: cx,
       };
     }
 

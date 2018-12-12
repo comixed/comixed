@@ -41,6 +41,7 @@ export class ComicOverviewComponent implements OnInit {
   public formats: Array<SelectItem>;
 
   protected scan_type: ScanType;
+  protected format: ComicFormat;
   protected sort_name: string;
 
   constructor(
@@ -57,7 +58,7 @@ export class ComicOverviewComponent implements OnInit {
         value: scan_type,
       });
     });
-    this.formats = [];
+    this.formats = [{ label: 'Select one...', value: null, }];
     this.library.formats.forEach((format: ComicFormat) => {
       this.formats.push({
         label: format.name,
@@ -71,10 +72,13 @@ export class ComicOverviewComponent implements OnInit {
   }
 
   set_comic_format(comic: Comic, format: ComicFormat): void {
-    this.store.dispatch(new LibraryActions.LibrarySetFormat({
-      comic: comic,
-      format: format,
-    }));
+    if (format) {
+      this.store.dispatch(new LibraryActions.LibrarySetFormat({
+        comic: comic,
+        format: format,
+      }));
+    }
+  }
 
   copy_scan_type(comic: Comic): void {
     this.scan_type = comic.scan_type;
