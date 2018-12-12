@@ -529,6 +529,11 @@ public class Comic
         return this.coverDate;
     }
 
+    public Set<Credit> getCredits()
+    {
+        return this.credits;
+    }
+
     /**
      * Returns the date the comic was added the library.
      *

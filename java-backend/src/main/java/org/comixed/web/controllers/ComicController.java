@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import org.comixed.library.metadata.ComicDataAdaptor;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFormat;
 import org.comixed.library.model.ScanType;
@@ -63,6 +64,9 @@ public class ComicController
     @Autowired
     private ComicFormatRepository comicFormatRepository;
 
+    @Autowired
+    private ComicDataAdaptor comicDataAdaptor;
+
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.DELETE)
     public boolean deleteComic(@PathVariable("id") long id)
@@ -82,6 +86,30 @@ public class ComicController
             this.logger.debug("Comic deleted: id={}", id);
             return true;
         }
+    }
+
+    @RequestMapping(value = "/{id}/metadata",
+                    method = RequestMethod.DELETE)
+    @JsonView(ComicDetails.class)
+    public Comic deleteMetadata(@PathVariable("id") long id)
+    {
+        this.logger.debug("Updating comic: id={}", id);
+
+        Comic comic = this.comicRepository.findOne(id);
+
+        if (comic != null)
+        {
+            this.logger.debug("Clearing metadata for comic");
+            this.comicDataAdaptor.clear(comic);
+            this.logger.debug("Saving updates to comic");
+            this.comicRepository.save(comic);
+        }
+        else
+        {
+            this.logger.debug("No such comic found");
+        }
+
+        return comic;
     }
 
     @RequestMapping(value = "/{id}/download",
