@@ -247,4 +247,8 @@ export class ComicService {
         comic.issue_number = issue_number;
       });
   }
+
+  clear_metadata(comic: Comic): Observable<any> {
+    return this.http.delete(`${this.api_url}/comics/${comic.id}/metadata`);
+  }
 }

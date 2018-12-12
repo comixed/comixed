@@ -103,4 +103,10 @@ export class ComicOverviewComponent implements OnInit {
       sort_name: this.sort_name,
     }));
   }
+
+  clear_metadata(): void {
+    this.store.dispatch(new LibraryActions.LibraryClearMetadata({
+      comic: this.comic,
+    }));
+  }
 }

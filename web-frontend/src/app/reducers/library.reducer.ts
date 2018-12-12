@@ -175,6 +175,25 @@ export function libraryReducer(
         comics: [],
       };
 
+    case LibraryActions.LIBRARY_CLEAR_METADATA:
+      return {
+        ...state,
+        busy: true,
+      };
+
+    case LibraryActions.LIBRARY_METADATA_CLEARED: {
+      state.comics = state.comics.filter((comic: Comic) => {
+        return comic.id !== action.payload.comic.id;
+      });
+      state.comics.push(action.payload.comic);
+
+      return {
+        ...state,
+        busy: false,
+        comics: state.comics,
+      };
+    }
+
     default:
       return state;
   }

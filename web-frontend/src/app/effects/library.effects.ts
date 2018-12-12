@@ -117,4 +117,14 @@ export class LibraryEffects {
           comic: action.comic,
         }))
     );
+
+  @Effect()
+  library_clear_metadata$: Observable<Action> = this.actions$
+    .ofType<LibraryActions.LibraryClearMetadata>(LibraryActions.LIBRARY_CLEAR_METADATA)
+    .map(action => action.payload)
+    .switchMap(action =>
+      this.comic_service.clear_metadata(action.comic)
+        .do(() => this.alert_service.show_info_message('Metadata cleared...'))
+        .catch((error: Error) => of(this.alert_service.show_error_message('Failed to clear metadata...', error)))
+        .map((comic: Comic) => new LibraryActions.LibraryMetadataCleared({ comic: comic, })));
 }

@@ -42,8 +42,7 @@
       <div
         *ngIf='comic.comic_vine_url'
         class='ui-g-12'>
-        The details can be found here:
-        <a
+        The details can be found here: <a
           target='_comicvine'
           [href]='"http://comicvine.gamespot.com/issue/4000-" + comic.comic_vine_id'>{{
           comic.comic_vine_id }}</a>
@@ -113,5 +112,14 @@
         *ngIf='!is_admin'
         class='ui-g-12'>{{ comic.sort_name || '[...]' }}</span>
     </div>
+  </div>
+  <div class='ui-g-12'>
+    <button
+      *ngIf='is_admin'
+      type='button'
+      pButton
+      icon='pi pi-trash'
+      label='Clear Metadata'
+      (click)='clear_metadata()'></button>
   </div>
 </div>
