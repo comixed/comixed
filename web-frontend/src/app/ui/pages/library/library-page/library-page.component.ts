@@ -270,6 +270,17 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.router.navigate(['comics', `${comic.id}`]);
   }
 
+  rescan_library(): void {
+    this.confirm_service.confirm({
+      header: `Rescan Library`,
+      message: 'Are you sure? This could take a long time to complete...',
+      icon: 'fa fa-exclamation',
+      accept: () => {
+        this.store.dispatch(new LibraryActions.LibraryRescanFiles());
+      }
+    });
+  }
+
   private update_params(name: string, value: string): void {
     const queryParams: Params = Object.assign({}, this.activated_route.snapshot.queryParams);
     if (value && value.length) {

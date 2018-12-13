@@ -127,4 +127,13 @@ export class LibraryEffects {
         .do(() => this.alert_service.show_info_message('Metadata cleared...'))
         .catch((error: Error) => of(this.alert_service.show_error_message('Failed to clear metadata...', error)))
         .map((comic: Comic) => new LibraryActions.LibraryMetadataCleared({ comic: comic, })));
+
+  @Effect()
+  library_rescan_files$: Observable<Action> = this.actions$
+    .ofType<LibraryActions.LibraryRescanFiles>(LibraryActions.LIBRARY_RESCAN_FILES)
+    .switchMap(action =>
+      this.comic_service.rescan_files()
+        .do(() => this.alert_service.show_info_message('Library rescan started...'))
+        .catch((error: Error) => of(this.alert_service.show_error_message('Failed to start rescanning...', error)))
+        .map((comic: Comic) => new LibraryActions.LibraryMergeNewComics({ comics: [] })));
 }

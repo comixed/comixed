@@ -163,6 +163,12 @@ export class ComicService {
     return this.http.get(`${this.api_url}/files/import/status`);
   }
 
+  rescan_files(): Observable<any> {
+    const params = new HttpParams();
+
+    return this.http.post(`${this.api_url}/comics/rescan`, params);
+  }
+
   get_url_for_page_by_comic_index(comicId: number, index: number): string {
     return `${this.api_url}/comics/${comicId}/pages/${index}/content`;
   }

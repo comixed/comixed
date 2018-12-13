@@ -42,6 +42,7 @@ export const LIBRARY_UPDATE_COMICS_REMOVE_COMIC = '[LIBRARY] Update comics by re
 export const LIBRARY_RESET = '[LIBRARY] Reset the library settings';
 export const LIBRARY_CLEAR_METADATA = '[LIBRARY] Clear comic metadata';
 export const LIBRARY_METADATA_CLEARED = '[LIBRARY] Metadata cleared on comic';
+export const LIBRARY_RESCAN_FILES = '[LIBRARY] Rescan the whole library';
 
 export class LibraryGetScanTypes implements Action {
   readonly type = LIBRARY_GET_SCAN_TYPES;
@@ -185,6 +186,12 @@ export class LibraryMetadataCleared implements Action {
   }) { }
 }
 
+export class LibraryRescanFiles implements Action {
+  readonly type = LIBRARY_RESCAN_FILES;
+
+  constructor() { }
+}
+
 export type Actions =
   LibraryGetScanTypes |
   LibrarySetScanTypes |
@@ -203,4 +210,5 @@ export type Actions =
   LibraryUpdateComicsRemoveComic |
   LibraryReset |
   LibraryClearMetadata |
-  LibraryMetadataCleared;
+  LibraryMetadataCleared |
+  LibraryRescanFiles;
