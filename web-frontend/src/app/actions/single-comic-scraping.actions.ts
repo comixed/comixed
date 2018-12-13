@@ -137,7 +137,9 @@ export class SingleComicScrapingScrapeMetadata implements Action {
 export class SingleComicScrapingMetadataScraped implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_METADATA_SCRAPED;
 
-  constructor() { }
+  constructor(public payload: {
+    comic: Comic,
+  }) { }
 }
 
 export type Actions =

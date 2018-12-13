@@ -28,6 +28,7 @@ import { User } from '../../../../models/user/user';
 import { Role } from '../../../../models/user/role';
 import { Preference } from '../../../../models/user/preference';
 import { Library } from '../../../../models/library';
+import { SingleComicScraping } from '../../../../models/scraping/single-comic-scraping';
 import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
 import { Comic } from '../../../../models/comics/comic';
@@ -46,6 +47,10 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
   private library_subscription: Subscription;
   public library: Library;
+
+  single_comic_scraping$: Observable<SingleComicScraping>;
+  single_comic_scraping_subscription: Subscription;
+  single_comic_scraping: SingleComicScraping;
 
   private comic_id = -1;
   public comic = null;
@@ -66,6 +71,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
   ) {
     this.library$ = store.select('library');
+    this.single_comic_scraping$ = store.select('single_comic_scraping');
     this.activatedRoute.params.subscribe(params => {
       this.comic_id = +params['id'];
     });
@@ -80,11 +86,17 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       (library: Library) => {
         this.library = library;
 
-        if (this.comic === null) {
-          this.comic = library.comics.find((comic: Comic) => {
-            return comic.id === this.comic_id;
-          }) || null;
-        }
+        // if (this.comic === null) {
+        this.comic = library.comics.find((comic: Comic) => {
+          return comic.id === this.comic_id;
+        }) || null;
+        // }
+      });
+    this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
+      (library_scrape: SingleComicScraping) => {
+        this.single_comic_scraping = library_scrape;
+
+        this.comic = this.single_comic_scraping.comic;
       });
     this.user_subscription = this.user$.subscribe(
       (user: User) => {
@@ -119,6 +131,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
+    this.single_comic_scraping_subscription.unsubscribe();
     this.user_subscription.unsubscribe();
   }
 

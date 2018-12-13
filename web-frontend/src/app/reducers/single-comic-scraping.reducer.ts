@@ -139,6 +139,7 @@ export function singleComicScrapingReducer(
       return {
         ...state,
         busy: false,
+        comic: action.payload.comic,
       };
 
     default:

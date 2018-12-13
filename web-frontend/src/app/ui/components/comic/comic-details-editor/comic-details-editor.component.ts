@@ -99,7 +99,6 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
 
-        this._comic = this.single_comic_scraping.comic;
         this.series = this.single_comic_scraping.series;
         this.volume = this.single_comic_scraping.volume;
         this.issue_number = this.single_comic_scraping.issue_number;

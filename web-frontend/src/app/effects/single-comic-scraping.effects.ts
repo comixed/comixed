@@ -24,9 +24,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import * as ScrapingActions from '../actions/single-comic-scraping.actions';
+import * as LibraryActions from '../actions/library.actions';
 import { ComicService } from '../services/comic.service';
 import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
+import { Comic } from '../models/comics/comic';
 import { Volume } from '../models/comics/volume';
 import { Issue } from '../models/scraping/issue';
 
@@ -120,5 +122,5 @@ export class SingleComicScrapingEffects {
         action.issue_id,
         action.skip_cache,
       )
-        .map(() => new ScrapingActions.SingleComicScrapingMetadataScraped()));
+        .map((comic: Comic) => new ScrapingActions.SingleComicScrapingMetadataScraped({ comic: comic })));
 }
