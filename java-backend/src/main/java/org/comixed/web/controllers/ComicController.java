@@ -35,8 +35,11 @@ import org.comixed.library.model.View.ComicDetails;
 import org.comixed.repositories.ComicFormatRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.ScanTypeRepository;
+import org.comixed.tasks.RescanComicWorkerTask;
+import org.comixed.tasks.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -66,6 +69,12 @@ public class ComicController
 
     @Autowired
     private ComicDataAdaptor comicDataAdaptor;
+
+    @Autowired
+    private Worker worker;
+
+    @Autowired
+    private ObjectFactory<RescanComicWorkerTask> taskFactory;
 
     @RequestMapping(value = "/{id}",
                     method = RequestMethod.DELETE)
@@ -326,6 +335,24 @@ public class ComicController
         else
         {
             this.logger.debug("No such comic found");
+        }
+    }
+
+    @RequestMapping(value = "/rescan",
+                    method = RequestMethod.POST)
+    public void rescanComics()
+    {
+        logger.debug("Rescanning comics in the library");
+
+        Iterable<Comic> comics = this.comicRepository.findAll();
+
+        for (Comic comic : comics)
+        {
+            logger.debug("Queueing comic for rescan: {}", comic.getFilename());
+            RescanComicWorkerTask task = this.taskFactory.getObject();
+
+            task.setComic(comic);
+            this.worker.addTasksToQueue(task);
         }
     }
 }
