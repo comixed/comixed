@@ -25,6 +25,7 @@ import * as LibraryActions from '../actions/library.actions';
 const initial_state: Library = {
   busy: false,
   last_comic_date: '0',
+  rescan_count: 0,
   scan_types: [],
   formats: [],
   comics: [],
@@ -117,7 +118,7 @@ export function libraryReducer(
       const comics = state.comics.concat(action.payload.comics);
       let last_comic_date = '0';
       if (comics.length > 0) {
-        last_comic_date = comics.reduce((last: Comic, current: Comic) => {
+        const last_comic = comics.reduce((last: Comic, current: Comic) => {
           const last_added_date = parseInt(last.added_date, 10);
           const curr_added_date = parseInt(current.added_date, 10);
 
@@ -126,11 +127,13 @@ export function libraryReducer(
           } else {
             return last;
           }
-        }).added_date;
+        });
+        last_comic_date = last_comic ? last_comic.added_date : '0';
       }
       return {
         ...state,
         busy: false,
+        rescan_count: action.payload.rescan_count,
         last_comic_date: last_comic_date,
         comics: comics,
       };
@@ -193,6 +196,12 @@ export function libraryReducer(
         comics: state.comics,
       };
     }
+
+    case LibraryActions.LIBRARY_RESCAN_FILES:
+      return {
+        ...state,
+        busy: true,
+      };
 
     default:
       return state;

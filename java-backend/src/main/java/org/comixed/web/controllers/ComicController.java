@@ -29,6 +29,7 @@ import java.util.List;
 import org.comixed.library.metadata.ComicDataAdaptor;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFormat;
+import org.comixed.library.model.LibraryStatus;
 import org.comixed.library.model.ScanType;
 import org.comixed.library.model.View;
 import org.comixed.library.model.View.ComicDetails;
@@ -183,15 +184,19 @@ public class ComicController
     @RequestMapping(value = "/since/{timestamp}",
                     method = RequestMethod.GET)
     @JsonView(View.ComicList.class)
-    public List<Comic> getComicsAddedSince(@PathVariable("timestamp") long timestamp,
-                                           @RequestParam(value = "timeout",
-                                                         required = false,
-                                                         defaultValue = "0") long timeout) throws InterruptedException
+    public LibraryStatus getComicsAddedSince(@PathVariable("timestamp") long timestamp,
+                                             @RequestParam(value = "timeout",
+                                                           required = false,
+                                                           defaultValue = "0") long timeout) throws InterruptedException
     {
         Date latestDate = new Date(timestamp);
         boolean done = false;
         long returnBy = System.currentTimeMillis() + timeout;
         List<Comic> result = null;
+
+        logger.debug("Getting the rescan status..");
+        int rescanCount = this.worker.getCountFor(RescanComicWorkerTask.class);
+        this.logger.debug("Rescan count is {}", rescanCount);
 
         this.logger.debug("Looking for comics added since {}: timeout={}", latestDate, timeout);
 
@@ -199,7 +204,7 @@ public class ComicController
         {
             result = this.comicRepository.findByDateAddedGreaterThan(latestDate);
 
-            if ((result.size() == 0) && (System.currentTimeMillis() <= returnBy))
+            if ((result.size() == 0) && (System.currentTimeMillis() <= returnBy) && rescanCount == 0)
             {
                 Thread.sleep(1000);
             }
@@ -212,7 +217,7 @@ public class ComicController
 
         this.logger.debug("Found {} comics", result.size());
 
-        return result;
+        return new LibraryStatus(result, rescanCount);
     }
 
     @RequestMapping(value = "/{id}/summary",
