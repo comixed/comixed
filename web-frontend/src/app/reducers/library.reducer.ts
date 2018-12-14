@@ -26,6 +26,7 @@ const initial_state: Library = {
   busy: false,
   last_comic_date: '0',
   rescan_count: 0,
+  import_count: 0,
   scan_types: [],
   formats: [],
   comics: [],
@@ -134,6 +135,7 @@ export function libraryReducer(
         ...state,
         busy: false,
         rescan_count: action.payload.rescan_count,
+        import_count: action.payload.import_count,
         last_comic_date: last_comic_date,
         comics: comics,
       };

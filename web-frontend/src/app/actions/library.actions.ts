@@ -140,6 +140,7 @@ export class LibraryMergeNewComics implements Action {
   constructor(public payload: {
     comics: Array<Comic>,
     rescan_count: number,
+    import_count: number,
   }) { }
 }
 

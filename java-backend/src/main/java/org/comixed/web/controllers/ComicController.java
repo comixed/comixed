@@ -36,6 +36,7 @@ import org.comixed.library.model.View.ComicDetails;
 import org.comixed.repositories.ComicFormatRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.ScanTypeRepository;
+import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.RescanComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.slf4j.Logger;
@@ -194,7 +195,11 @@ public class ComicController
         long returnBy = System.currentTimeMillis() + timeout;
         List<Comic> result = null;
 
-        logger.debug("Getting the rescan status..");
+        this.logger.debug("Getting pending import count...");
+        int importCount = this.worker.getCountFor(AddComicWorkerTask.class);
+        this.logger.debug("Import count is {}", importCount);
+
+        this.logger.debug("Getting the rescan status..");
         int rescanCount = this.worker.getCountFor(RescanComicWorkerTask.class);
         this.logger.debug("Rescan count is {}", rescanCount);
 
@@ -204,7 +209,7 @@ public class ComicController
         {
             result = this.comicRepository.findByDateAddedGreaterThan(latestDate);
 
-            if ((result.size() == 0) && (System.currentTimeMillis() <= returnBy) && rescanCount == 0)
+            if ((result.size() == 0) && (System.currentTimeMillis() <= returnBy) && (rescanCount == 0))
             {
                 Thread.sleep(1000);
             }
@@ -217,7 +222,7 @@ public class ComicController
 
         this.logger.debug("Found {} comics", result.size());
 
-        return new LibraryStatus(result, rescanCount);
+        return new LibraryStatus(result, rescanCount, importCount);
     }
 
     @RequestMapping(value = "/{id}/summary",
@@ -241,19 +246,30 @@ public class ComicController
         return comic;
     }
 
-    @RequestMapping(value = "/count",
-                    method = RequestMethod.GET)
-    public long getCount()
-    {
-        return this.comicRepository.count();
-    }
-
     @RequestMapping(value = "/scan_types",
                     method = RequestMethod.GET)
     public Iterable<ScanType> getScanTypes()
     {
         this.logger.debug("Fetching all scan types");
         return this.scanTypeRepository.findAll();
+    }
+
+    @RequestMapping(value = "/rescan",
+                    method = RequestMethod.POST)
+    public void rescanComics()
+    {
+        this.logger.debug("Rescanning comics in the library");
+
+        Iterable<Comic> comics = this.comicRepository.findAll();
+
+        for (Comic comic : comics)
+        {
+            this.logger.debug("Queueing comic for rescan: {}", comic.getFilename());
+            RescanComicWorkerTask task = this.taskFactory.getObject();
+
+            task.setComic(comic);
+            this.worker.addTasksToQueue(task);
+        }
     }
 
     @RequestMapping(value = "/{id}/format",
@@ -340,24 +356,6 @@ public class ComicController
         else
         {
             this.logger.debug("No such comic found");
-        }
-    }
-
-    @RequestMapping(value = "/rescan",
-                    method = RequestMethod.POST)
-    public void rescanComics()
-    {
-        logger.debug("Rescanning comics in the library");
-
-        Iterable<Comic> comics = this.comicRepository.findAll();
-
-        for (Comic comic : comics)
-        {
-            logger.debug("Queueing comic for rescan: {}", comic.getFilename());
-            RescanComicWorkerTask task = this.taskFactory.getObject();
-
-            task.setComic(comic);
-            this.worker.addTasksToQueue(task);
         }
     }
 }

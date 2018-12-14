@@ -105,6 +105,7 @@ export class LibraryEffects {
         .map((library_state: LibraryState) => new LibraryActions.LibraryMergeNewComics({
           comics: library_state.comics,
           rescan_count: library_state.rescan_count,
+          import_count: library_state.import_count,
         })));
 
   @Effect()
