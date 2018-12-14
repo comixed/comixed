@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -37,11 +37,13 @@ import { MenubarComponent } from './ui/components/menubar/menubar.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'ComiXed';
   alert_messages = [];
   comic_count = 0;
   read_count = 0;
+  import_count = 0;
+  rescan_count = 0;
 
   user$: Observable<User>;
   user_subscription: Subscription;
@@ -88,6 +90,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       (library: Library) => {
         this.library = library;
 
+        this.comic_count = library.comics.length;
+        this.read_count = 0;
+        this.import_count = library.import_count;
+        this.rescan_count = library.rescan_count;
+
         // if we're not busy, then get the scan types, formats or updates as needed
         if (!this.library.busy) {
           if (this.library.scan_types.length === 0) {
@@ -106,13 +113,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
-  }
-
-  ngAfterViewInit(): void {
-    this.store.select('library').subscribe(
-      (library: Library) => {
-        this.comic_count = library.comics.length;
-      });
   }
 
   logout(): void {
