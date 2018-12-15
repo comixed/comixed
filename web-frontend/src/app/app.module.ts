@@ -106,6 +106,7 @@ import { LibraryScrapingViewComponent } from './ui/views/library/library-scrapin
 import { ComicListComponent } from './ui/components/library/comic-list/comic-list.component';
 import { AdminGuard } from './admin.guard';
 import { ReaderGuard } from './reader.guard';
+import { ComicTitlePipe } from './pipes/comic-title.pipe';
 
 @NgModule({
   declarations: [
@@ -141,6 +142,7 @@ import { ReaderGuard } from './reader.guard';
     LibraryScrapingSelectionComponent,
     LibraryScrapingViewComponent,
     ComicListComponent,
+    ComicTitlePipe,
   ],
   imports: [
     BrowserModule,
