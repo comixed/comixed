@@ -82,6 +82,10 @@ export class AppComponent implements OnInit, OnDestroy {
         } else if (this.user.token && !this.user.email && !this.user.fetching) {
           this.store.dispatch(new UserActions.UserAuthCheck());
           this.store.dispatch(new LibraryActions.LibraryReset());
+          this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
+            last_comic_date: '0',
+            timeout: 60000,
+          }));
         }
       });
     this.store.dispatch(new UserActions.UserAuthCheck());
