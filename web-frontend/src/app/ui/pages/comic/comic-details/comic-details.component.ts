@@ -86,11 +86,11 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       (library: Library) => {
         this.library = library;
 
-        // if (this.comic === null) {
-        this.comic = library.comics.find((comic: Comic) => {
-          return comic.id === this.comic_id;
-        }) || null;
-        // }
+        if (this.comic === null) {
+          this.comic = library.comics.find((comic: Comic) => {
+            return comic.id === this.comic_id;
+          }) || null;
+        }
       });
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {

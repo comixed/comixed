@@ -201,10 +201,13 @@ export function libraryReducer(
       };
 
     case LibraryActions.LIBRARY_METADATA_CLEARED: {
-      state.comics = state.comics.filter((comic: Comic) => {
-        return comic.id !== action.payload.comic.id;
+      const index = state.comics.findIndex((comic: Comic) => {
+        return comic.id === action.payload.comic.id;
       });
-      state.comics.push(action.payload.comic);
+
+      if (index !== -1) {
+        Object.assign(state.comics[index], action.payload.comic);
+      }
 
       return {
         ...state,
