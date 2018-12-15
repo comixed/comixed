@@ -281,6 +281,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  can_rescan(): boolean {
+    return (this.library.rescan_count === 0) && (this.library.import_count === 0);
+  }
+
   private update_params(name: string, value: string): void {
     const queryParams: Params = Object.assign({}, this.activated_route.snapshot.queryParams);
     if (value && value.length) {

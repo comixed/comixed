@@ -6,7 +6,7 @@
       pButton
       type='button'
       label='Rescan Library'
-      [disabled]='library.rescan_count > 0'
+      [disabled]='!can_rescan()'
       (click)='rescan_library()'></button>
     </p-toolbar>
   </div>
