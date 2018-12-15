@@ -5,7 +5,7 @@
     <p-card> <p-header>
     <h2>{{ comic | comic_title }}</h2>
     </p-header> <img
-      src='{{ comic | comic_page_url : "COVER" }}'
+      src='{{ comic | comic_cover_url }}'
       [style.height]='"auto"'
       [style.width]='"100%"'> <p-footer></p-footer> </p-card>
   </div>

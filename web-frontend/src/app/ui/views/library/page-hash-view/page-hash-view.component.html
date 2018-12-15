@@ -28,7 +28,7 @@
       let-duplicate>
     <tr>
       <td><img
-        src='{{ duplicate.comic | comic_page_url : "COVER" }}'
+        src='{{ duplicate.comic | comic_cover_url }}'
         width='128px'
         height='auto'></td>
       <td>{{ get_label_for_comic(duplicate.comic) }}</td>
