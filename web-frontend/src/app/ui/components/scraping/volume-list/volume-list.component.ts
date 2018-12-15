@@ -41,7 +41,7 @@ export class VolumeListComponent implements OnInit {
   @Output() selectIssue = new EventEmitter<Issue>();
   @Output() cancelSelection = new EventEmitter<Issue>();
 
-  protected _volumes: Array<VolumeOptions>;
+  _volumes: Array<VolumeOptions>;
   protected volume_selection_title = '';
 
   constructor() { }
