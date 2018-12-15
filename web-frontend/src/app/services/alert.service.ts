@@ -26,9 +26,8 @@ import {
 export class AlertService {
   error_messages: EventEmitter<string> = new EventEmitter();
   info_messages: EventEmitter<string> = new EventEmitter();
-  busy_messages: EventEmitter<string> = new EventEmitter();
 
-  constructor() {}
+  constructor() { }
 
   show_info_message(message: string): void {
     this.info_messages.emit(message);
@@ -40,9 +39,5 @@ export class AlertService {
     if (error) {
       console.log('Context:', error);
     }
-  }
-
-  show_busy_message(message: string): void {
-    this.busy_messages.emit(message);
   }
 }
