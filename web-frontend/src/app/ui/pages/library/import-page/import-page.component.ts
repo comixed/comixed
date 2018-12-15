@@ -200,7 +200,8 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   get_import_title(): string {
-    return `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.importing.pending} Comic${this.plural_imports() ? 's' : ''} Remaining...`;
+    return `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.importing.pending} ` +
+      `Comic${this.plural_imports() ? 's' : ''} Remaining To Be Imported...`;
   }
 
   get_comic_selection_title(): string {
