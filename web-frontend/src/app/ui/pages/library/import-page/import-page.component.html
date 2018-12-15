@@ -1,14 +1,19 @@
-<!--  main import content area -->
 <div
   *ngIf='importing.importing'
-  class='container-fluid w-100'>
-  <h2 class='text-center'>{{get_import_title()}}</h2>
-  <div *ngIf='delete_blocked_pages'>
-    <p>
-      Blocked pages in those comics will be automatically marked as <em>deleted</em>...
-    </p>
+  class='ui-g'>
+  <div class='ui-g-12'>
+    <h2 class='text-center'>{{get_import_title()}}</h2>
+    <div *ngIf='delete_blocked_pages'>
+      <p>
+        Blocked pages in those comics will be automatically marked as <em>deleted</em>...
+      </p>
+    </div>
+    <p-progressBar
+      mode="indeterminate"
+      [style]="{'height': '6px'}"></p-progressBar>
   </div>
 </div>
+<!--  main import content area -->
 <div
   *ngIf='!importing.importing'
   class='ui-g'>
