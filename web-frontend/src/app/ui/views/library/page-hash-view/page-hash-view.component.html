@@ -31,7 +31,7 @@
         src='{{ duplicate.comic | comic_cover_url }}'
         width='128px'
         height='auto'></td>
-      <td>{{ get_label_for_comic(duplicate.comic) }}</td>
+      <td>{{ duplicate.comic | comic_title }}</td>
       <td>{{ duplicate.index }}</td>
       <td>{{ duplicate.comic.filename }}</td>
       <td>{{ duplicate.filename }}</td>

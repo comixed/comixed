@@ -238,7 +238,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   delete_comic(comic: Comic): void {
     this.confirm_service.confirm({
-      header: `Delete ${this.comic_service.get_label_for_comic(comic)}?`,
+      header: `Delete This Comic?`,
       message: 'Are you sure? This will not delete the file, only remove it from the library.',
       icon: 'fa fa-exclamation',
       accept: () => {

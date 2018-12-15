@@ -170,10 +170,6 @@ export class ComicService {
     return this.http.post(`${COMIC_SERVICE_API_URL}/comics/rescan`, params);
   }
 
-  get_label_for_comic(comic: Comic): string {
-    return `${comic.series || 'Unknown'} v${comic.volume || 'Unknown'} #${comic.issue_number || '??'}`;
-  }
-
   get_url_for_missing_page(): string {
     return '/assets/img/missing.png';
   }
