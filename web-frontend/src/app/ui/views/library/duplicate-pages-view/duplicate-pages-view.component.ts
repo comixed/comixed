@@ -24,7 +24,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
 import { SelectItem } from 'primeng/api';
-import { ComicService } from '../../../../services/comic.service';
 import { UserService } from '../../../../services/user.service';
 import { DuplicatePage } from '../../../../models/comics/duplicate-page';
 import { Duplicates } from '../../../../models/duplicates';
@@ -48,7 +47,6 @@ export class DuplicatePagesViewComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private comic_service: ComicService,
     private user_service: UserService,
     private activated_route: ActivatedRoute,
     private router: Router,
@@ -94,11 +92,6 @@ export class DuplicatePagesViewComponent implements OnInit {
   set_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
     this.update_params(this.COVER_PARAMETER, `${this.cover_size}`);
-  }
-
-  get_url_for_hash(hash: string): string {
-    const page = this.duplicates.pages_by_hash.get(hash)[0];
-    return this.comic_service.get_url_for_page_by_id(page.id);
   }
 
   all_deleted(hash: string): boolean {

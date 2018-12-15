@@ -14,7 +14,7 @@
 <div class='ui-g'>
   <div class='ui-g-2 ui-sm-6'>
     <img
-      [src]='get_url_for_page(page)'
+      src='{{ page | comic_page_url }}'
       [style.height]='"auto"'
       [style.width]='"100%"'>
   </div>
@@ -65,7 +65,7 @@
 </ng-template> <ng-template
   let-page
   pTemplate='gridItem'> <p-card> <img
-  [src]='get_url_for_page(page)'
+  src='{{ page | comic_page_url }}'
   [style.height]='"" + image_size + "px"'
   [style.width]='"auto"'> <p-footer>
 <div

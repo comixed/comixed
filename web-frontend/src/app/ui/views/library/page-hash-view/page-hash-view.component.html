@@ -1,7 +1,7 @@
 <div class='ui-g'>
   <div class='ui-g-2 ui-sm-4'>
     <p-card> <p-header> <img
-      [src]='get_image_url()'
+      src='{{ duplicates.current_duplicates[0] | comic_page_url }}'
       [style.width]='"100%"'
       [style.height]='"auto"'> </p-header> <p-footer>
     <button

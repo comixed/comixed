@@ -54,10 +54,6 @@ export class ComicPagesComponent implements OnInit {
     //    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
   }
 
-  get_url_for_page(page: Page): string {
-    return this.comic_service.get_url_for_page_by_id(page.id);
-  }
-
   set_page_type(page: Page, page_type_id: string): void {
     const new_page_type = parseInt(page_type_id, 10);
     this.comic_service.set_page_type(page, new_page_type).subscribe(

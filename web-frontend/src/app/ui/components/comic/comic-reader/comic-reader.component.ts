@@ -33,13 +33,6 @@ export class ComicReaderComponent implements OnInit {
   @Input() current_page: number;
   @Input() page_size: number;
 
-  @Output() pageSize = new EventEmitter<number>();
-  @Output() currentPage = new EventEmitter<number>();
-
-  protected pages: any[];
-  protected enable_next = true;
-  protected enable_previous = false;
-
   constructor(
     private comic_service: ComicService,
   ) { }
@@ -48,29 +41,5 @@ export class ComicReaderComponent implements OnInit {
     if (!this.current_page) {
       this.current_page = 0;
     }
-
-    this.pages = [];
-    this.comic.pages.forEach((page: Page) => {
-      this.pages.push({ source: this.comic_service.get_url_for_page_by_id(page.id), alt: page.filename, title: page.filename });
-    });
-  }
-
-  set_current_page(index: number): void {
-    this.current_page = index;
-    this.enable_previous = (this.current_page > 0);
-    this.enable_next = (this.current_page < (this.pages.length - 1));
-    this.currentPage.next(this.current_page);
-  }
-
-  go_to_next_page(): void {
-    this.set_current_page(this.current_page + 1);
-  }
-
-  go_to_previous_page(): void {
-    this.set_current_page(this.current_page - 1);
-  }
-
-  set_page_size(page_size: number): void {
-    this.pageSize.next(page_size);
   }
 }

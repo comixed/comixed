@@ -36,7 +36,7 @@
 <div class='ui-g'>
   <div class='ui-g-1 ui-sm-1'>
     <p-card> <img
-      [src]='get_url_for_hash(hash)'
+      src='{{ duplicates.pages_by_hash.get(hash)[0] | comic_page_url }}'
       [style.width]='"100%"'
       [style.height]='"auto"'> <p-footer></p-footer> </p-card>
   </div>
@@ -102,7 +102,7 @@
   <h5>Blocked: {{ is_blocked(hash) ? 'Yes' : 'No' }}</h5>
   <h5>{{ all_deleted(hash) ? 'All' : 'Some/None' }} Deleted</h5>
   </p-header> <img
-    [src]='get_url_for_hash(hash)'
+    src='{{ duplicates.pages_by_hash.get(hash)[0] | comic_page_url }}'
     [style.width]='"auto"'
     [style.height]='"" + cover_size + "px"'> <p-footer>
   <button

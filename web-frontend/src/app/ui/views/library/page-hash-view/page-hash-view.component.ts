@@ -47,10 +47,6 @@ export class PageHashViewComponent implements OnInit {
   ngOnInit() {
   }
 
-  get_image_url(): string {
-    return this.comic_service.get_url_for_page_by_id(this.duplicates.current_duplicates[0].id);
-  }
-
   get_label_for_comic(comic: Comic): string {
     return this.comic_service.get_label_for_comic(comic);
   }
