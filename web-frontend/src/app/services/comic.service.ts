@@ -178,13 +178,6 @@ export class ComicService {
     return '/assets/img/missing.png';
   }
 
-  get_url_for_page_by_id(pageId: number): string {
-    if (pageId === null || pageId === undefined) {
-      return '';
-    }
-    return `${COMIC_SERVICE_API_URL}/pages/${pageId}/content`;
-  }
-
   get_cover_url_for_file(filename: string): string {
     return `${COMIC_SERVICE_API_URL}/files/import/cover?filename=` + encodeURIComponent(filename);
   }

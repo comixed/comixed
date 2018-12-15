@@ -108,6 +108,7 @@ import { AdminGuard } from './admin.guard';
 import { ReaderGuard } from './reader.guard';
 import { ComicTitlePipe } from './pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from './pipes/comic-cover-url.pipe';
+import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
 
 @NgModule({
   declarations: [
@@ -145,6 +146,7 @@ import { ComicCoverUrlPipe } from './pipes/comic-cover-url.pipe';
     ComicListComponent,
     ComicTitlePipe,
     ComicCoverUrlPipe,
+    ComicPageUrlPipe,
   ],
   imports: [
     BrowserModule,
