@@ -40,7 +40,7 @@ import { MockUserService } from './services/mock-user.service';
 import {
   User,
   Role,
-  } from './models/user.model';
+} from './models/user.model';
 import { ComicService } from './services/comic.service';
 import { MockComicService } from './services/mock-comic.service';
 import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
@@ -217,8 +217,6 @@ describe('AppComponent', () => {
 
     it('returns true when the user has the role ADMIN', fakeAsync(() => {
       user.roles[0].name = 'ADMIN';
-
-      console.log('user=', user);
 
       spyOn(user_service, 'is_authenticated').and.returnValue(true);
       spyOn(user_service, 'get_user').and.returnValue(user);

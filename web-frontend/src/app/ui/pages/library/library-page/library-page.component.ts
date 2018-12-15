@@ -276,7 +276,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       message: 'Are you sure? This could take a long time to complete...',
       icon: 'fa fa-exclamation',
       accept: () => {
-        this.store.dispatch(new LibraryActions.LibraryRescanFiles());
+        this.store.dispatch(new LibraryActions.LibraryRescanFiles({
+          last_comic_date: this.library.last_comic_date,
+        }));
       }
     });
   }

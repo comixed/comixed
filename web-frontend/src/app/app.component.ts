@@ -104,7 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
             // if the last time we checked the library, we got either an import or a rescan count,
             // then set the timeout value to 0
             const timeout = (this.library.import_count === 0) &&
-              (this.rescan_count === 0) ? 60000 : 0;
+              (this.library.rescan_count === 0) ? 60000 : 0;
             this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
               last_comic_date: `${this.library.last_comic_date}`,
               timeout: timeout,
@@ -112,10 +112,6 @@ export class AppComponent implements OnInit, OnDestroy {
           }
         }
       });
-    this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
-      last_comic_date: '0',
-      timeout: 60000,
-    }));
   }
 
   ngOnDestroy() {

@@ -116,10 +116,7 @@ export function libraryReducer(
       };
 
     case LibraryActions.LIBRARY_MERGE_NEW_COMICS:
-      // const comics = state.comics.concat(action.payload.comics);
       const comics = state.comics;
-      let last_comic_date = '0';
-      // let last_comic_date = '0';
       if (action.payload.comics.length > 0) {
         // merge the new comics into the existing comics
         action.payload.comics.forEach((comic: Comic) => {
@@ -128,26 +125,24 @@ export function libraryReducer(
             return found.id === comic.id;
           });
           if (index !== -1) {
-            console.log(`*** Updating existing comic: id=${comics[index].id}`);
             Object.assign(comics[index], comic);
           } else {
-            console.log(`*** Adding imported comic: id=${comic.id}`);
             comics.push(comic);
           }
         });
-        // find the latest comic date
-        const last_comic = comics.reduce((last: Comic, current: Comic) => {
-          const last_added_date = parseInt(last.added_date, 10);
-          const curr_added_date = parseInt(current.added_date, 10);
-
-          if (curr_added_date > last_added_date) {
-            return current;
-          } else {
-            return last;
-          }
-        });
-        last_comic_date = last_comic ? last_comic.added_date : '0';
       }
+      // find the latest comic date
+      const last_comic = comics.reduce((last: Comic, current: Comic) => {
+        const last_added_date = parseInt(last.added_date, 10);
+        const curr_added_date = parseInt(current.added_date, 10);
+
+        if (curr_added_date >= last_added_date) {
+          return current;
+        } else {
+          return last;
+        }
+      }) || null;
+      const last_comic_date = last_comic === null ? '0' : last_comic.added_date;
       return {
         ...state,
         busy: false,
@@ -164,8 +159,6 @@ export function libraryReducer(
 
       if (index !== -1) {
         state.comics[index] = action.payload;
-      } else {
-        console.log(`*** ERROR: DID NOT FIND COMIC: id=${action.payload.id}`);
       }
 
       return {

@@ -58,7 +58,6 @@ export class XhrInterceptor implements HttpInterceptor {
       if (error instanceof HttpResponse) {
         if (error.status !== 200) {
           this.alert_service.show_error_message('Unable to complete request...', null);
-          console.log('*** Non-OK status:', error);
         }
       }
     });

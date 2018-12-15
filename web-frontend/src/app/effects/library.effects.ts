@@ -139,7 +139,7 @@ export class LibraryEffects {
         .do(() => this.alert_service.show_info_message('Library rescan started...'))
         .catch((error: Error) => of(this.alert_service.show_error_message('Failed to start rescanning...', error)))
         .map(() => new LibraryActions.LibraryFetchLibraryChanges({
-          last_comic_date: '0',
+          last_comic_date: action.payload.last_comic_date,
           timeout: 0,
         })));
 }

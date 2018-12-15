@@ -192,7 +192,9 @@ export class LibraryMetadataCleared implements Action {
 export class LibraryRescanFiles implements Action {
   readonly type = LIBRARY_RESCAN_FILES;
 
-  constructor() { }
+  constructor(public payload: {
+    last_comic_date: string,
+  }) { }
 }
 
 export type Actions =
