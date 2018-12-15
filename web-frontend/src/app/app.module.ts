@@ -107,6 +107,7 @@ import { ComicListComponent } from './ui/components/library/comic-list/comic-lis
 import { AdminGuard } from './admin.guard';
 import { ReaderGuard } from './reader.guard';
 import { ComicTitlePipe } from './pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from './pipes/comic-cover-url.pipe';
 
 @NgModule({
   declarations: [
@@ -143,6 +144,7 @@ import { ComicTitlePipe } from './pipes/comic-title.pipe';
     LibraryScrapingViewComponent,
     ComicListComponent,
     ComicTitlePipe,
+    ComicCoverUrlPipe,
   ],
   imports: [
     BrowserModule,

@@ -33,9 +33,10 @@ import { ComicFile } from '../models/import/comic-file';
 import { ScanType } from '../models/comics/scan-type';
 import { ComicFormat } from '../models/comics/comic-format';
 
+export const COMIC_SERVICE_API_URL = '/api';
+
 @Injectable()
 export class ComicService {
-  private api_url = '/api';
 
   constructor(
     private http: HttpClient,
@@ -44,45 +45,45 @@ export class ComicService {
   ) { }
 
   fetch_scan_types(): Observable<any> {
-    return this.http.get(`${this.api_url}/comics/scan_types`);
+    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/scan_types`);
   }
 
   set_scan_type(comic: Comic, scan_type: ScanType): Observable<any> {
     const params = new HttpParams().set('scan_type_id', `${scan_type.id}`);
 
-    return this.http.put(`${this.api_url}/comics/${comic.id}/scan_type`, params);
+    return this.http.put(`${COMIC_SERVICE_API_URL}/comics/${comic.id}/scan_type`, params);
   }
 
   fetch_formats(): Observable<any> {
-    return this.http.get(`${this.api_url}/comics/formats`);
+    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/formats`);
   }
 
   set_format(comic: Comic, format: ComicFormat): Observable<any> {
     const params = new HttpParams().set('format_id', `${format.id}`);
 
-    return this.http.put(`${this.api_url}/comics/${comic.id}/format`, params);
+    return this.http.put(`${COMIC_SERVICE_API_URL}/comics/${comic.id}/format`, params);
   }
 
   set_sort_name(comic: Comic, sort_name: string): Observable<any> {
     const params = new HttpParams().set('sort_name', sort_name);
 
-    return this.http.put(`${this.api_url}/comics/${comic.id}/sort_name`, params);
+    return this.http.put(`${COMIC_SERVICE_API_URL}/comics/${comic.id}/sort_name`, params);
   }
 
   fetch_remote_library_state(latest_comic_update: string, timeout: number): Observable<any> {
-    return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}?timeout=${timeout}`);
+    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/since/${latest_comic_update}?timeout=${timeout}`);
   }
 
   delete_comic(comic: Comic): Observable<any> {
-    return this.http.delete(`${this.api_url}/comics/${comic.id}`);
+    return this.http.delete(`${COMIC_SERVICE_API_URL}/comics/${comic.id}`);
   }
 
   load_comic_from_remote(id: number): Observable<any> {
-    return this.http.get(`${this.api_url}/comics/${id}`);
+    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/${id}`);
   }
 
   get_comic_summary(id: number): Observable<any> {
-    return this.http.get(`${this.api_url}/comics/${id}/summary`);
+    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/${id}/summary`);
   }
 
   get_page_types(): Observable<any> {
@@ -113,27 +114,27 @@ export class ComicService {
   }
 
   get_duplicate_pages(): Observable<any> {
-    return this.http.get(`${this.api_url}/pages/duplicates`);
+    return this.http.get(`${COMIC_SERVICE_API_URL}/pages/duplicates`);
   }
 
   mark_page_as_deleted(page: Page): Observable<any> {
-    return this.http.delete(`${this.api_url}/pages/${page.id}`);
+    return this.http.delete(`${COMIC_SERVICE_API_URL}/pages/${page.id}`);
   }
 
   mark_page_as_undeleted(page: Page): Observable<any> {
-    return this.http.post(`${this.api_url}/pages/${page.id}/undelete`, {});
+    return this.http.post(`${COMIC_SERVICE_API_URL}/pages/${page.id}/undelete`, {});
   }
 
   delete_all_pages_for_hash(hash: string): Observable<any> {
-    return this.http.delete(`${this.api_url}/pages/hash/${hash}`);
+    return this.http.delete(`${COMIC_SERVICE_API_URL}/pages/hash/${hash}`);
   }
 
   undelete_all_pages_for_hash(hash: string): Observable<any> {
-    return this.http.put(`${this.api_url}/pages/hash/${hash}`, {});
+    return this.http.put(`${COMIC_SERVICE_API_URL}/pages/hash/${hash}`, {});
   }
 
   get_files_under_directory(directory: string): Observable<any> {
-    return this.http.get(`${this.api_url}/files/contents?directory=${encodeURI(directory)}`);
+    return this.http.get(`${COMIC_SERVICE_API_URL}/files/contents?directory=${encodeURI(directory)}`);
   }
 
   set_block_page(page_hash: string, blocked: boolean): Observable<any> {
@@ -146,35 +147,31 @@ export class ComicService {
 
   block_page(page_hash: string): Observable<any> {
     const params = new HttpParams().set('hash', page_hash);
-    return this.http.post(`${this.api_url}/pages/blocked`, params);
+    return this.http.post(`${COMIC_SERVICE_API_URL}/pages/blocked`, params);
   }
 
   unblock_page(page_hash: string): Observable<any> {
-    return this.http.delete(`${this.api_url}/pages/blocked/${page_hash}`);
+    return this.http.delete(`${COMIC_SERVICE_API_URL}/pages/blocked/${page_hash}`);
   }
 
   import_files_into_library(filenames: string[], delete_blocked_pages: boolean): Observable<any> {
     filenames.forEach((filename, index, source) => source[index] = encodeURIComponent(filename));
     const params = new HttpParams().set('filenames', filenames.toString()).set('delete_blocked_pages', delete_blocked_pages.toString());
-    return this.http.post(`${this.api_url}/files/import`, params);
+    return this.http.post(`${COMIC_SERVICE_API_URL}/files/import`, params);
   }
 
   get_number_of_pending_imports(): Observable<any> {
-    return this.http.get(`${this.api_url}/files/import/status`);
+    return this.http.get(`${COMIC_SERVICE_API_URL}/files/import/status`);
   }
 
   rescan_files(): Observable<any> {
     const params = new HttpParams();
 
-    return this.http.post(`${this.api_url}/comics/rescan`, params);
+    return this.http.post(`${COMIC_SERVICE_API_URL}/comics/rescan`, params);
   }
 
   get_url_for_page_by_comic_index(comicId: number, index: number): string {
-    return `${this.api_url}/comics/${comicId}/pages/${index}/content`;
-  }
-
-  get_cover_url_for_comic(comic: Comic): string {
-    return `${this.api_url}/comics/${comic.id}/pages/0/content`;
+    return `${COMIC_SERVICE_API_URL}/comics/${comicId}/pages/${index}/content`;
   }
 
   get_label_for_comic(comic: Comic): string {
@@ -189,11 +186,11 @@ export class ComicService {
     if (pageId === null || pageId === undefined) {
       return '';
     }
-    return `${this.api_url}/pages/${pageId}/content`;
+    return `${COMIC_SERVICE_API_URL}/pages/${pageId}/content`;
   }
 
   get_cover_url_for_file(filename: string): string {
-    return `${this.api_url}/files/import/cover?filename=` + encodeURIComponent(filename);
+    return `${COMIC_SERVICE_API_URL}/files/import/cover?filename=` + encodeURIComponent(filename);
   }
 
   get_issue_label_text_for_comic(comic: Comic): string {
@@ -205,7 +202,7 @@ export class ComicService {
   }
 
   get_download_link_for_comic(comicId: number): string {
-    return `${this.api_url}/comics/${comicId}/download`;
+    return `${COMIC_SERVICE_API_URL}/comics/${comicId}/download`;
   }
 
   fetch_candidates_for(api_key: string,
@@ -218,7 +215,7 @@ export class ComicService {
       .set('issue_number', issue_number)
       .set('skip_cache', `${skip_cache}`);
 
-    return this.http.post(`${this.api_url}/scraper/query/volumes`, params);
+    return this.http.post(`${COMIC_SERVICE_API_URL}/scraper/query/volumes`, params);
   }
 
   scrape_comic_details_for(api_key: string, volume: number, issue_number: string, skip_cache: boolean): Observable<any> {
@@ -228,7 +225,7 @@ export class ComicService {
       .set('issue_number', issue_number)
       .set('skip_cache', `${skip_cache}`);
 
-    return this.http.post(`${this.api_url}/scraper/query/issue`, params);
+    return this.http.post(`${COMIC_SERVICE_API_URL}/scraper/query/issue`, params);
   }
 
   scrape_and_save_comic_details(api_key: string, comic_id: number, issue_id: number, skip_cache: boolean): Observable<any> {
@@ -238,7 +235,7 @@ export class ComicService {
       .set('issue_id', `${issue_id}`)
       .set('skip_cache', `${skip_cache}`);
 
-    return this.http.post(`${this.api_url}/scraper/save`, params);
+    return this.http.post(`${COMIC_SERVICE_API_URL}/scraper/save`, params);
   }
 
   save_changes_to_comic(comic: Comic, series: string, volume: string, issue_number: string): Observable<any> {
@@ -246,7 +243,7 @@ export class ComicService {
       .set('series', series)
       .set('volume', volume)
       .set('issue_number', issue_number);
-    return this.http.put(`${this.api_url}/comics/${comic.id}`, params)
+    return this.http.put(`${COMIC_SERVICE_API_URL}/comics/${comic.id}`, params)
       .finally(() => {
         comic.series = series;
         comic.volume = volume;
@@ -255,6 +252,6 @@ export class ComicService {
   }
 
   clear_metadata(comic: Comic): Observable<any> {
-    return this.http.delete(`${this.api_url}/comics/${comic.id}/metadata`);
+    return this.http.delete(`${COMIC_SERVICE_API_URL}/comics/${comic.id}/metadata`);
   }
 }
