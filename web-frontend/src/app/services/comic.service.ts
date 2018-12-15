@@ -69,8 +69,8 @@ export class ComicService {
     return this.http.put(`${this.api_url}/comics/${comic.id}/sort_name`, params);
   }
 
-  fetch_remote_library_state(latest_comic_update: string): Observable<any> {
-    return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}?timeout=60000`);
+  fetch_remote_library_state(latest_comic_update: string, timeout: number): Observable<any> {
+    return this.http.get(`${this.api_url}/comics/since/${latest_comic_update}?timeout=${timeout}`);
   }
 
   delete_comic(comic: Comic): Observable<any> {

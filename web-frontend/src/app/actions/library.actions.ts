@@ -131,6 +131,7 @@ export class LibraryFetchLibraryChanges implements Action {
 
   constructor(public payload: {
     last_comic_date: string,
+    timeout: number,
   }) { }
 }
 

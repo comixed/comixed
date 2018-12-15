@@ -100,7 +100,7 @@ export class LibraryEffects {
     .ofType<LibraryActions.LibraryFetchLibraryChanges>(LibraryActions.LIBRARY_FETCH_LIBRARY_CHANGES)
     .map(action => action.payload)
     .switchMap(action =>
-      this.comic_service.fetch_remote_library_state(action.last_comic_date)
+      this.comic_service.fetch_remote_library_state(action.last_comic_date, action.timeout)
         .catch((error: Error) => of(this.alert_service.show_error_message('Error getting library updates...', error)))
         .map((library_state: LibraryState) => new LibraryActions.LibraryMergeNewComics({
           comics: library_state.comics,
@@ -138,5 +138,8 @@ export class LibraryEffects {
       this.comic_service.rescan_files()
         .do(() => this.alert_service.show_info_message('Library rescan started...'))
         .catch((error: Error) => of(this.alert_service.show_error_message('Failed to start rescanning...', error)))
-        .map(() => new LibraryActions.LibraryFetchLibraryChanges({ last_comic_date: '0' })));
+        .map(() => new LibraryActions.LibraryFetchLibraryChanges({
+          last_comic_date: '0',
+          timeout: 0,
+        })));
 }
