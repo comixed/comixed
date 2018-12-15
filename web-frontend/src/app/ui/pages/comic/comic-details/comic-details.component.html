@@ -3,7 +3,7 @@
   class='ui-g'>
   <div class='ui-g-3 ui-sm-6'>
     <p-card> <p-header>
-    <h2>{{ title }}</h2>
+    <h2>{{ comic | comic_title }}</h2>
     </p-header> <img
       [src]='get_cover_url()'
       [style.height]='"auto"'
@@ -30,7 +30,6 @@
       [comic]='comic'></app-comic-pages></p-tabPanel> <p-tabPanel
       *ngIf='user.is_admin'
       header='ComicVine'> <app-comic-details-editor
-      [comic]='comic'
-      (update)='load_comic_details()'></app-comic-details-editor></p-tabPanel> </p-tabView>
+      [comic]='comic'></app-comic-details-editor></p-tabPanel> </p-tabView>
   </div>
 </div>

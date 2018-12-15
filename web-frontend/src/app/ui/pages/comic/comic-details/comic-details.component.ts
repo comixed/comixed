@@ -55,7 +55,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   private comic_id = -1;
   public comic = null;
   protected current_tab: number;
-  protected title: string;
   protected page_size: number;
   protected current_page: number;
 
@@ -115,9 +114,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
         },
         error => {
           this.alert_service.show_error_message('Error while retrieving comic...', error);
-        },
-        () => {
-          this.load_comic_details();
         });
     });
     this.activatedRoute.queryParams.subscribe(params => {
@@ -167,12 +163,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       return parseInt(value, 10);
     }
     return defvalue;
-  }
-
-  load_comic_details(): void {
-    this.title = `${this.comic.series || 'Unknown'} ` +
-      `(v${this.comic.volume || this.comic.volume || '????'}) ` +
-      `#${this.comic.issue_number || '??'}`;
   }
 }
 
