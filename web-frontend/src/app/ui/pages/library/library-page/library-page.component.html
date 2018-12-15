@@ -28,7 +28,6 @@
   (changeRows)='set_rows($event)'
   (changeCoverSize)='set_cover_size($event)'
   (saveCoverSize)='save_cover_size($event)'
-  (comicSelected)='set_selected_comic($event)'
   (open)='open_comic($event)'
   (delete)='delete_comic($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
   [disabled]='!library'
@@ -45,21 +44,9 @@
   (changeRows)='set_rows($event)'
   (changeCoverSize)='set_cover_size($event)'
   (saveCoverSize)='save_cover_size($event)'
-  (comicSelected)='set_selected_comic($event)'
   (delete)='delete_comic($event)'></app-library-details></p-tabPanel> <p-tabPanel
   *ngIf='user.is_admin'
   (open)='open_comic($event)'
   [disabled]='!library'
   header='Scraping'> <app-library-scraping-view>
 </app-library-scraping-view></p-tabPanel></p-tabView>
-<!-- details dialog -->
-<p-dialog
-  *ngIf='selected_comic'
-  [header]='get_comic_title(selected_comic)'
-  [(visible)]='show_dialog'
-  [responsive]='true'
-  [modal]='true'
-  [blockScroll]='true'
-  [resizable]='false'
-  (onAfterHide)='hide_dialog()'> <app-issue-details
-  [comic]='selected_comic'></app-issue-details> </p-dialog>

@@ -57,7 +57,29 @@
       [src]='get_cover_url(comic)'
       width='auto'
       [style.width]='"100%"'
-      [style.height]='"auto"'> </p-card>
+      [style.height]='"auto"'> <p-footer>
+    <div class='ui-g'>
+      <div class='ui-g-12'>
+        <button
+          pButton
+          pTooltip='Go to the comic page...'
+          tooltipPosition='top'
+          type='button'
+          icon='fa fa-book'
+          label='Open'
+          (click)='open_comic(comic)'></button>
+        <button
+          *ngIf='is_admin'
+          pButton
+          tooltipPosition='top'
+          pTooltip='Remove this comic from the library...'
+          type='button'
+          icon='fa fa-trash'
+          (click)='delete_comic(comic)'
+          label='Remove'></button>
+      </div>
+    </div>
+    </p-footer> </p-card>
   </div>
   <div class='ui-g-10 ui-md-10'>
     <div class='ui-g'>
@@ -67,22 +89,26 @@
       <div class='ui-g-4'>
         <div class='ui-g'>
           <div class='ui-g-12'>
-            <b>Publisher: </b>
+            <strong>Publisher</strong>
           </div>
           <div class='ui-g-12'>
             {{ comic.imprint || comic.publisher || 'Unknown'}}<span
               *ngIf='comic.imprint'> ({{ comic.publisher }})</span>
           </div>
           <div class='ui-g-12'>
-            <b>Series: </b>
+            <strong>Series</strong>
           </div>
           <div class='ui-g-12'>{{ comic.series || 'Unknown'}}</div>
           <div class='ui-g-12'>
-            <b>Volume: </b>
+            <strong>Volume</strong>
           </div>
           <div class='ui-g-12'>{{ comic.volume || 'Unknown'}}</div>
           <div class='ui-g-12'>
-            <b>Issue number: </b>
+            <strong>Cover Date</strong>
+          </div>
+          <div class='ui-g-12'>{{ comic.cover_date | date }}</div>
+          <div class='ui-g-12'>
+            <strong>Issue number</strong>
           </div>
           <div class='ui-g-12'>{{ comic.issue_number ||
             'Unknown'}}</div>
@@ -91,23 +117,23 @@
       <div class='ui-g-4'>
         <div class='ui-g'>
           <div class='ui-g-12'>
-            <b>Title: </b>
+            <strong>Title</strong>
           </div>
           <div class='ui-g-12'>{{ comic.title || 'Unknown'}}</div>
           <div class='ui-g-12'>
-            <b>Added to the library: </b>
+            <strong>Added to the library</strong>
           </div>
           <div class='ui-g-12'>{{ comic.added_date | date }}</div>
           <div class='ui-g-12'>
-            <b>Pages: </b>
+            <strong>Pages</strong>
           </div>
           <div class='ui-g-12'>{{ comic.page_count }}</div>
+          <div class='ui-g-12'>
+            <strong>ComicVine Details</strong>
+          </div>
           <div
             *ngIf='comic.comic_vine_url'
             class='ui-g-12'>
-            <b>ComicVine Details: </b>
-          </div>
-          <div class='ui-g-12'>
             The details can be found here: <a
               target='_comicvine'
               [href]='"http://comicvine.gamespot.com/issue/4000-" + comic.comic_vine_id'>{{
@@ -118,57 +144,20 @@
       <div class='ui-g-4'>
         <div class='ui-g'>
           <div class='ui-g-12'>
-            <b>Format</b>
+            <strong>Format</strong>
           </div>
           <div class='ui-g-12'>{{ comic.format?.name || 'Unknown'
             }}</div>
           <div class='ui-g-12'>
-            <b>Scan Type: </b>
+            <strong>Scan Type</strong>
           </div>
           <div class='ui-g-12'>{{ comic.scan_type?.name ||
             'Unknown' }}</div>
         </div>
-      </div>
-      <div class='ui-g-12'>
-        <b>Sort Name</b>
-      </div>
-      <div class='ui-g-12'>{{ comic.sort_name || '[...]' }}</div>
-      <div class='ui-g-12 ui-sm-12'>
-        <p-panel
-          *ngIf='comic.description'
-          header='Description'
-          [toggleable]='true'
-          [collapsed]='true'
-          [style.width]='"100%"'>
-        <div [innerHTML]='comic.description'></div>
-        </p-panel>
-      </div>
-      <div class='ui-g-12 ui-sm-12'>
-        <button
-          pButton
-          tooltipPosition='top'
-          pTooltip='Show comic details...'
-          type='button'
-          icon='fa fa-search'
-          (click)='set_selected_comic($event, comic)'
-          label='Details'></button>
-        <button
-          pButton
-          pTooltip='Go to details...'
-          tooltipPosition='top'
-          type='button'
-          icon='fa fa-book'
-          label='Open Comic'
-          (click)='open_comic(comic)'></button>
-        <button
-          *ngIf='is_admin'
-          pButton
-          tooltipPosition='top'
-          pTooltip='Delete this comic...'
-          type='button'
-          icon='fa fa-trash'
-          (click)='delete_comic(comic)'
-          label='Delete'></button>
+        <div class='ui-g-12'>
+          <strong>Sort Name</strong>
+        </div>
+        <div class='ui-g-12'>{{ comic.sort_name || '[...]' }}</div>
       </div>
     </div>
   </div>
@@ -183,14 +172,7 @@
     [style.height]='"" + cover_size + "px"'> <p-footer>
   <button
     pButton
-    tooltipPosition='top'
-    pTooltip='Show comic details...'
-    type='button'
-    icon='fa fa-search'
-    (click)='set_selected_comic($event, comic)'></button>
-  <button
-    pButton
-    pTooltip='Go to details...'
+    pTooltip='Go to the comic page...'
     tooltipPosition='top'
     type='button'
     icon='fa fa-book'
@@ -199,7 +181,7 @@
     *ngIf='is_admin'
     pButton
     tooltipPosition='top'
-    pTooltip='Delete this comic...'
+    pTooltip='Remove this comic from the library...'
     type='button'
     icon='fa fa-trash'
     (click)='delete_comic(comic)'></button>

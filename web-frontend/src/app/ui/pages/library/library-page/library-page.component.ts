@@ -75,8 +75,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   library_display: LibraryDisplay;
 
   comics: Array<Comic>;
-  selected_comic: Comic;
-  protected show_dialog = false;
 
   rows_options: Array<SelectItem>;
   rows: number;
@@ -190,15 +188,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.user_subscription.unsubscribe();
     this.library_subscription.unsubscribe();
-  }
-
-  set_selected_comic(comic: Comic): void {
-    this.selected_comic = comic;
-    this.show_dialog = true;
-  }
-
-  hide_dialog(): void {
-    this.show_dialog = false;
   }
 
   get_download_link(comic: Comic): string {
