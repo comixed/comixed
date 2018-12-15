@@ -28,7 +28,7 @@
       let-duplicate>
     <tr>
       <td><img
-        [src]='get_cover_url(duplicate.comic)'
+        src='{{ duplicate.comic | comic_page_url : "COVER" }}'
         width='128px'
         height='auto'></td>
       <td>{{ get_label_for_comic(duplicate.comic) }}</td>
@@ -46,7 +46,8 @@
           pButton
           icon='fa fa-trash'
           label='Undelete'
-          (click)='undelete_page(duplicate)'></button></tr>
+          (click)='undelete_page(duplicate)'></button>
+    </tr>
     </ng-template> </p-table>
   </div>
 </div>

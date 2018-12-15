@@ -9,7 +9,7 @@
 <div class='ui-g'>
   <div class='ui-g-3'>
     <img
-      [src]='get_cover_url(comic)'
+      src='{{ comic | comic_page_url : "COVER" }}'
       [style.width]='"100%"'
       [style.height]='"auto"'>
   </div>

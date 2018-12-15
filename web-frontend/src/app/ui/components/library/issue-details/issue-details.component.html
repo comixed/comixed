@@ -3,7 +3,7 @@
   *ngIf='comic'>
   <div class='ui-g-2 ui-sm-2'>
     <img
-      [src]='get_cover_url(comic)'
+      src='{{ comic | comic_page_url : "COVER" }}'
       [style.height]='"auto"'
       [style.width]='"100%"'>
   </div>

@@ -19,7 +19,6 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Comic } from '../../../../models/comics/comic';
-import { ComicService } from '../../../../services/comic.service';
 
 @Component({
   selector: 'app-issue-details',
@@ -29,14 +28,8 @@ import { ComicService } from '../../../../services/comic.service';
 export class IssueDetailsComponent implements OnInit {
   @Input() comic: Comic;
 
-  constructor(
-    private comic_service: ComicService,
-  ) { }
+  constructor() { }
 
   ngOnInit() {
-  }
-
-  get_cover_url(comic: Comic): string {
-    return this.comic_service.get_cover_url_for_comic(comic);
   }
 }

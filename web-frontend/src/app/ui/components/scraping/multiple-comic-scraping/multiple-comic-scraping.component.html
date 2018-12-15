@@ -7,7 +7,7 @@
         <p-card> <p-header>
         <h3>{{ multi_scraping.current_comic.base_filename }}</h3>
         </p-header> <img
-          [src]='get_cover_url(multi_scraping.current_comic)'
+          src='{{ multi_scraping.current_comic | comic_page_url : "COVER" }}'
           [style.width]='"100%"'
           [style.height]='"auto"'> </p-card>
       </div>

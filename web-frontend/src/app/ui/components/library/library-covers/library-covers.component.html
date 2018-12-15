@@ -54,7 +54,7 @@
 <div class='ui-g'>
   <div class='ui-g-2 ui-md-2'>
     <p-card> <img
-      [src]='get_cover_url(comic)'
+      src='{{ comic | comic_page_url : "COVER" }}'
       width='auto'
       [style.width]='"100%"'
       [style.height]='"auto"'> <p-footer>
@@ -167,7 +167,7 @@
   pTemplate='gridItem'>
 <div>
   <p-card> <img
-    [src]='get_cover_url(comic)'
+    src='{{ comic | comic_page_url : "COVER" }}'
     width='auto'
     [style.height]='"" + cover_size + "px"'> <p-footer>
   <button

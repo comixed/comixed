@@ -26,7 +26,6 @@ import { AppState } from '../../../../app.state';
 import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
 import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
 import { Comic } from '../../../../models/comics/comic';
-import { ComicService } from '../../../../services/comic.service';
 import { UserService } from '../../../../services/user.service';
 
 @Component({
@@ -44,7 +43,6 @@ export class LibraryScrapingSelectionComponent implements OnInit, OnDestroy {
   available_comics = [];
 
   constructor(
-    private comic_service: ComicService,
     private user_service: UserService,
     private store: Store<AppState>,
   ) {
@@ -71,9 +69,5 @@ export class LibraryScrapingSelectionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.scraping_subscription.unsubscribe();
-  }
-
-  get_cover_url(comic: Comic): string {
-    return this.comic_service.get_cover_url_for_comic(comic);
   }
 }

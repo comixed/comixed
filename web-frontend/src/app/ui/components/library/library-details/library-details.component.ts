@@ -64,10 +64,6 @@ export class LibraryDetailsComponent implements OnInit {
     this.changeCoverSize.next(cover_size);
   }
 
-  get_cover_url(comic: Comic): string {
-    return this.comic_service.get_cover_url_for_comic(comic);
-  }
-
   get_download_link(comic: Comic): string {
     return this.comic_service.get_download_link_for_comic(comic.id);
   }

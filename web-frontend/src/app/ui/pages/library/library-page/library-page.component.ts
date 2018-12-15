@@ -194,10 +194,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     return this.comic_service.get_download_link_for_comic(comic.id);
   }
 
-  get_cover_url(comic: Comic): string {
-    return this.comic_service.get_cover_url_for_comic(comic);
-  }
-
   set_current_tab(current_tab: number): void {
     this.store.dispatch(new UserActions.UserSetPreference({
       name: LIBRARY_CURRENT_TAB,

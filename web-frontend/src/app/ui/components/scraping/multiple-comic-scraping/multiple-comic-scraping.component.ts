@@ -26,7 +26,6 @@ import * as MultiScrapingActions from '../../../../actions/multiple-comics-scrap
 import * as SingleScrapingActions from '../../../../actions/single-comic-scraping.actions';
 import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
 import { Comic } from '../../../../models/comics/comic';
-import { ComicService } from '../../../../services/comic.service';
 
 @Component({
   selector: 'app-multiple-comic-scraping',
@@ -40,7 +39,6 @@ export class MultipleComicScrapingComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    private comic_service: ComicService,
   ) {
     this.multi_scraping$ = store.select('multiple_comic_scraping');
   }
@@ -54,10 +52,6 @@ export class MultipleComicScrapingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.multi_scraping_subscription.unsubscribe();
-  }
-
-  get_cover_url(comic: Comic): string {
-    return this.comic_service.get_cover_url_for_comic(comic);
   }
 
   comic_scraped(comic: Comic): void {

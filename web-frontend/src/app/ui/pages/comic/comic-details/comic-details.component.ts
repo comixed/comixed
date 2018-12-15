@@ -139,10 +139,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     this.update_params(CURRENT_PAGE_PARAMETER, `${this.current_page}`);
   }
 
-  get_cover_url(): string {
-    return this.comic_service.get_cover_url_for_comic(this.comic);
-  }
-
   set_current_tab(current_tab: number): void {
     this.current_tab = current_tab;
     this.update_params(this.TAB_PARAMETER, `${this.current_tab}`);
