@@ -20,7 +20,6 @@
 import { Component, OnInit, Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { ComicService } from '../../../../services/comic.service';
 import { ComicFile } from '../../../../models/import/comic-file';
 
 @Component({
@@ -39,9 +38,7 @@ export class SelectedComicsComponent implements OnInit {
   protected rows_options: Array<SelectItem>;
   rows = 10;
 
-  constructor(
-    private comic_service: ComicService,
-  ) {
+  constructor() {
     this.rows_options = [
       { label: '10 comics', value: 10 },
       { label: '25 comics', value: 25 },
@@ -56,10 +53,6 @@ export class SelectedComicsComponent implements OnInit {
 
   hide_panel(): void {
     this.close.next(true);
-  }
-
-  get_cover_url(file: ComicFile): string {
-    return this.comic_service.get_cover_url_for_file(file.filename);
   }
 
   set_selected(file: ComicFile, selected: boolean): void {

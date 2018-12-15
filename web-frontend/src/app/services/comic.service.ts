@@ -174,10 +174,6 @@ export class ComicService {
     return '/assets/img/missing.png';
   }
 
-  get_cover_url_for_file(filename: string): string {
-    return `${COMIC_SERVICE_API_URL}/files/import/cover?filename=` + encodeURIComponent(filename);
-  }
-
   get_issue_label_text_for_comic(comic: Comic): string {
     return `${comic.series || 'Unknown Series'} #${comic.issue_number || '??'} (v.${comic.volume || '????'})`;
   }
