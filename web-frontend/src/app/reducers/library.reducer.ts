@@ -162,7 +162,7 @@ export function libraryReducer(
       });
 
       if (index !== -1) {
-        state.comics[index] = action.payload;
+        Object.assign(state.comics[index], action.payload);
       }
 
       return {
