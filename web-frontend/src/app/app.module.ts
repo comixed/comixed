@@ -109,6 +109,7 @@ import { ReaderGuard } from './reader.guard';
 import { ComicTitlePipe } from './pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from './pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
+import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
 
 @NgModule({
   declarations: [
@@ -147,6 +148,7 @@ import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
     ComicTitlePipe,
     ComicCoverUrlPipe,
     ComicPageUrlPipe,
+    ComicFileCoverUrlPipe,
   ],
   imports: [
     BrowserModule,
