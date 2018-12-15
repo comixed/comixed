@@ -132,16 +132,20 @@ export function libraryReducer(
         });
       }
       // find the latest comic date
-      const last_comic = comics.reduce((last: Comic, current: Comic) => {
-        const last_added_date = parseInt(last.added_date, 10);
-        const curr_added_date = parseInt(current.added_date, 10);
+      let last_comic = null;
 
-        if (curr_added_date >= last_added_date) {
-          return current;
-        } else {
-          return last;
-        }
-      }) || null;
+      if (comics.length > 0) {
+        last_comic = comics.reduce((last: Comic, current: Comic) => {
+          const last_added_date = parseInt(last.added_date, 10);
+          const curr_added_date = parseInt(current.added_date, 10);
+
+          if (curr_added_date >= last_added_date) {
+            return current;
+          } else {
+            return last;
+          }
+        }) || null;
+      }
       const last_comic_date = last_comic === null ? '0' : last_comic.added_date;
       return {
         ...state,
