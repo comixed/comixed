@@ -17,6 +17,10 @@
       </div>
       <div class='ui-g-12'>{{ comic.volume || 'Unknown'}}</div>
       <div class='ui-g-12'>
+        <strong>Cover Date</strong>
+      </div>
+      <div class='ui-g-12'>{{ comic.cover_date | date }}</div>
+      <div class='ui-g-12'>
         <strong>Issue number</strong>
       </div>
       <div class='ui-g-12'>{{ comic.issue_number || 'Unknown'}}</div>
