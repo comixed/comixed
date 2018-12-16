@@ -22,6 +22,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
+import * as LibraryActions from '../../../../actions/library.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { User } from '../../../../models/user/user';
@@ -85,17 +86,20 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       (library: Library) => {
         this.library = library;
 
-        if (this.comic === null) {
+        if (this.comic === null || this.library.metadata_cleared) {
           this.comic = library.comics.find((comic: Comic) => {
             return comic.id === this.comic_id;
           }) || null;
+          this.store.dispatch(new LibraryActions.LibraryClearMetadataFlag());
         }
       });
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
 
-        this.comic = this.single_comic_scraping.comic;
+        if (this.single_comic_scraping.comic) {
+          this.comic = this.single_comic_scraping.comic;
+        }
       });
     this.user_subscription = this.user$.subscribe(
       (user: User) => {

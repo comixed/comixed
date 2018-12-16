@@ -30,6 +30,7 @@ const initial_state: Library = {
   scan_types: [],
   formats: [],
   comics: [],
+  metadata_cleared: false,
 };
 
 export function libraryReducer(
@@ -206,6 +207,9 @@ export function libraryReducer(
       });
 
       if (index !== -1) {
+        Object.keys(state.comics[index]).forEach((key: string) => {
+          delete state.comics[index][key];
+        });
         Object.assign(state.comics[index], action.payload.comic);
       }
 
@@ -213,8 +217,15 @@ export function libraryReducer(
         ...state,
         busy: false,
         comics: state.comics,
+        metadata_cleared: true,
       };
     }
+
+    case LibraryActions.LIBRARY_CLEAR_METADATA_FLAG:
+      return {
+        ...state,
+        metadata_cleared: false,
+      };
 
     case LibraryActions.LIBRARY_RESCAN_FILES:
       return {
