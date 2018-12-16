@@ -1,29 +1,27 @@
-<p-toolbar>
-<div class='ui-toolbar-group-left'>
-  <input
-    id='directory'
-    type='text'
-    [(ngModel)]='directory'
-    placeholder='Path to comics...'>
-  <button
-    pButton
-    label='Find Comics'
-    icon='fa fa-search'
-    (click)='directory_selected()'></button>
-  <p-splitButton
-    [model]='select_options'
-    label='Select'
-    icon='fa fa-plus'
-    styleClass='ui-button-secondary'></p-splitButton>
-  <button
-    pButton
-    icon='fa fa-eye'
-    label='View Selections'
-    (click)='show_selections()'></button>
-  <button
-    pButton
-    icon='fa fa-upload'
-    label='Import'
-    (click)='start_importing()'></button>
-</div>
+<p-toolbar> <input
+  id='directory'
+  type='text'
+  [style.width]='"50%"'
+  [(ngModel)]='directory'
+  placeholder='Path to comics...'>
+<button
+  pButton
+  label='Find Comics'
+  icon='fa fa-search'
+  (click)='directory_selected()'></button>
+<p-splitButton
+  [model]='select_options'
+  label='Select'
+  icon='fa fa-plus'
+  styleClass='ui-button-secondary'></p-splitButton>
+<button
+  pButton
+  icon='fa fa-eye'
+  label='View Selections'
+  (click)='show_selections()'></button>
+<button
+  pButton
+  icon='fa fa-upload'
+  label='Import'
+  (click)='start_importing()'></button>
 </p-toolbar>
