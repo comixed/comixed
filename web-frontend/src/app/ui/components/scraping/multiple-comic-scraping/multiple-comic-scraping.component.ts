@@ -54,9 +54,9 @@ export class MultipleComicScrapingComponent implements OnInit, OnDestroy {
     this.multi_scraping_subscription.unsubscribe();
   }
 
-  comic_scraped(comic: Comic): void {
+  comic_scraped(): void {
     this.store.dispatch(new MultiScrapingActions.MultipleComicsScrapingComicScraped({
-      comic: comic,
+      comic: this.multi_scraping.current_comic,
     }));
   }
 }
