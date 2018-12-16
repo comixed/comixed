@@ -78,10 +78,6 @@ export class ComicService {
     return this.http.delete(`${COMIC_SERVICE_API_URL}/comics/${comic.id}`);
   }
 
-  load_comic_from_remote(id: number): Observable<any> {
-    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/${id}`);
-  }
-
   get_comic_summary(id: number): Observable<any> {
     return this.http.get(`${COMIC_SERVICE_API_URL}/comics/${id}/summary`);
   }

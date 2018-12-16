@@ -102,19 +102,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
         this.user = user;
       });
     this.activatedRoute.params.subscribe(params => {
-      const id = +params['id'];
-      this.comic_service.load_comic_from_remote(id).subscribe(
-        (comic: Comic) => {
-          if (comic) {
-            this.comic = comic;
-          } else {
-            this.alert_service.show_error_message(`No such comic: id=${id}`, null);
-            this.router.navigateByUrl('/');
-          }
-        },
-        error => {
-          this.alert_service.show_error_message('Error while retrieving comic...', error);
-        });
+      this.comic_id = +params['id'];
     });
     this.activatedRoute.queryParams.subscribe(params => {
       this.set_page_size(parseInt(this.load_parameter(params[PAGE_SIZE_PARAMETER], '100'), 10));
