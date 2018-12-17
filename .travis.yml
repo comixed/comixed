@@ -15,26 +15,26 @@ before_install:
 
 script: (cd java-backend && mvn clean test package -DskipTests=true)
 
-before_deploy:
-    - cd java-backend
-    - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
-    - export TRAVIS_TAG=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')-$(date +%Y%m%d%H%M%S)
-    - cd ..
-    - export BUILD_ARTIFACT=$(find . -name comixed-app-*.jar)
+#before_deploy:
+#    - cd java-backend
+#    - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+#    - export TRAVIS_TAG=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')-$(date +%Y%m%d%H%M%S)
+#    - cd ..
+#    - export BUILD_ARTIFACT=$(find . -name comixed-app-*.jar)
 #    - git config --local user.name "Darryl L. Pierce"
 #    - git config --local user.email "mcpierce@gmail.com"
 #    - git tag $TAG_NAME
 
-deploy:
-    provider: releases
-    api_key: $GITHUB_AUTH_TOKEN
-    file_glob: true
-    file: ${BUILD_ARTIFACT}
-    skip_cleanup: true
-    keep-history: true
-    overwrite: true
-    on:
-        branch: develop
+#deploy:
+#    provider: releases
+#    api_key: $GITHUB_AUTH_TOKEN
+#    file_glob: true
+#    file: ${BUILD_ARTIFACT}
+#    skip_cleanup: true
+#    keep-history: true
+#    overwrite: true
+#    on:
+#        branch: develop
 
 #cache:
 #    directories:
