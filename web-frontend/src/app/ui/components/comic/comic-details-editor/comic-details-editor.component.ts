@@ -58,7 +58,6 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   protected volume_selection_banner: string;
   private date_formatter = Intl.DateTimeFormat('en-us', { month: 'short', year: 'numeric' });
 
-  protected _comic: Comic;
   protected api_key;
   protected series;
   protected volume;
@@ -151,7 +150,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       issue_id: this.single_comic_scraping.current_issue.id,
       skip_cache: this.skip_cache,
     }));
-    this.update.next(this._comic);
+    this.update.next(this.single_comic_scraping.comic);
   }
 
   cancel_selection(): void {
@@ -162,13 +161,13 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       volume: this.single_comic_scraping.volume,
       issue_number: this.single_comic_scraping.issue_number,
     }));
-    this.update.next(this._comic);
+    this.update.next(this.single_comic_scraping.comic);
   }
 
   save_changes(): void {
     this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSaveLocalChanges({
       api_key: this.api_key,
-      comic: this._comic,
+      comic: this.single_comic_scraping.comic,
       series: this.series,
       volume: this.volume,
       issue_number: this.issue_number,
