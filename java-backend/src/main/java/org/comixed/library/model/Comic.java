@@ -173,7 +173,7 @@ public class Comic
     private String title;
 
     @Column(name = "sort_name")
-    @JsonProperty
+    @JsonProperty("sort_name")
     @JsonView(View.ComicList.class)
     private String sortName;
 
