@@ -86,7 +86,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       (library: Library) => {
         this.library = library;
 
-        if (this.comic === null || this.library.metadata_cleared) {
+        if (this.comic === null || this.library.metadata_changed) {
           this.comic = library.comics.find((comic: Comic) => {
             return comic.id === this.comic_id;
           }) || null;

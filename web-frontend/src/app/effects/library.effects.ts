@@ -129,7 +129,7 @@ export class LibraryEffects {
       this.comic_service.clear_metadata(action.comic)
         .do(() => this.alert_service.show_info_message('Metadata cleared...'))
         .catch((error: Error) => of(this.alert_service.show_error_message('Failed to clear metadata...', error)))
-        .map((comic: Comic) => new LibraryActions.LibraryMetadataCleared({ comic: comic, })));
+        .map((comic: Comic) => new LibraryActions.LibraryMetadataChanged({ comic: comic, })));
 
   @Effect()
   library_rescan_files$: Observable<Action> = this.actions$

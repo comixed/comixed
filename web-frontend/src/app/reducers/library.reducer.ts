@@ -30,7 +30,7 @@ const initial_state: Library = {
   scan_types: [],
   formats: [],
   comics: [],
-  metadata_cleared: false,
+  metadata_changed: false,
 };
 
 export function libraryReducer(
@@ -201,7 +201,7 @@ export function libraryReducer(
         busy: true,
       };
 
-    case LibraryActions.LIBRARY_METADATA_CLEARED: {
+    case LibraryActions.LIBRARY_METADATA_CHANGED: {
       const index = state.comics.findIndex((comic: Comic) => {
         return comic.id === action.payload.comic.id;
       });

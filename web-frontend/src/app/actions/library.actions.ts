@@ -41,7 +41,7 @@ export const LIBRARY_REMOVE_COMIC = '[LIBRARY] Remove comic';
 export const LIBRARY_UPDATE_COMICS_REMOVE_COMIC = '[LIBRARY] Update comics by removing a comic';
 export const LIBRARY_RESET = '[LIBRARY] Reset the library settings';
 export const LIBRARY_CLEAR_METADATA = '[LIBRARY] Clear comic metadata';
-export const LIBRARY_METADATA_CLEARED = '[LIBRARY] Metadata cleared on comic';
+export const LIBRARY_METADATA_CHANGED = '[LIBRARY] Metadata cleared on comic';
 export const LIBRARY_CLEAR_METADATA_FLAG = '[LIBRARY] Clear metadata flag';
 export const LIBRARY_RESCAN_FILES = '[LIBRARY] Rescan the whole library';
 
@@ -182,8 +182,8 @@ export class LibraryClearMetadata implements Action {
   }) { }
 }
 
-export class LibraryMetadataCleared implements Action {
-  readonly type = LIBRARY_METADATA_CLEARED;
+export class LibraryMetadataChanged implements Action {
+  readonly type = LIBRARY_METADATA_CHANGED;
 
   constructor(public payload: {
     comic: Comic,
@@ -222,6 +222,6 @@ export type Actions =
   LibraryUpdateComicsRemoveComic |
   LibraryReset |
   LibraryClearMetadata |
-  LibraryMetadataCleared |
+  LibraryMetadataChanged |
   LibraryClearMetadataFlag |
   LibraryRescanFiles;
