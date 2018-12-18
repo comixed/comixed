@@ -63,6 +63,7 @@ export function libraryReducer(
       return {
         ...state,
         busy: false,
+        metadata_changed: true,
       };
     }
 
@@ -91,6 +92,7 @@ export function libraryReducer(
       return {
         ...state,
         busy: false,
+        metadata_changed: true,
       };
     }
 
@@ -106,6 +108,7 @@ export function libraryReducer(
       return {
         ...state,
         busy: false,
+        metadata_changed: true,
       };
     }
 
@@ -217,14 +220,14 @@ export function libraryReducer(
         ...state,
         busy: false,
         comics: state.comics,
-        metadata_cleared: true,
+        metadata_changed: true,
       };
     }
 
     case LibraryActions.LIBRARY_CLEAR_METADATA_FLAG:
       return {
         ...state,
-        metadata_cleared: false,
+        metadata_changed: false,
       };
 
     case LibraryActions.LIBRARY_RESCAN_FILES:
