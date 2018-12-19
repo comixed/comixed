@@ -18,6 +18,7 @@
  */
 
 import { Comic } from './comics/comic';
+import { LastReadDate } from './comics/last-read-date';
 import { ScanType } from './comics/scan-type';
 import { ComicFormat } from './comics/comic-format';
 
@@ -29,4 +30,5 @@ export interface Library {
   scan_types: Array<ScanType>;
   formats: Array<ComicFormat>;
   comics: Array<Comic>;
+  last_read_dates: Array<LastReadDate>;
 }
