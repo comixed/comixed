@@ -125,7 +125,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       { label: 'Issue #', value: 'issue_number', },
       { label: 'Date Added', value: 'added_date' },
       { label: 'Cover Date', value: 'cover_date' },
-      { label: 'Last Read', value: 'last_read_date' },
     ];
     this.group_options = [
       { label: 'None', value: 'none' },
