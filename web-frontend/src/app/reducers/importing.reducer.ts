@@ -25,7 +25,7 @@ import { ComicFile } from '../models/import/comic-file';
 const initial_state: Importing = {
   busy: false,
   importing: false,
-  pending: 0,
+  selected_count: 0,
   updating_status: false,
   directory: '',
   files: [],
@@ -62,21 +62,31 @@ export function importingReducer(
         files: action.payload.files,
       };
 
-    case ImportingActions.IMPORTING_SELECT_FILES:
+    case ImportingActions.IMPORTING_SELECT_FILES: {
       action.payload.files.forEach((file: ComicFile) => {
         file.selected = true;
       });
+      const selected_count = state.files.filter((file: ComicFile) => {
+        return file.selected;
+      }).length;
       return {
         ...state,
+        selected_count: selected_count,
       };
+    }
 
-    case ImportingActions.IMPORTING_UNSELECT_FILES:
+    case ImportingActions.IMPORTING_UNSELECT_FILES: {
       action.payload.files.forEach((file: ComicFile) => {
         file.selected = false;
       });
+      const selected_count = state.files.filter((file: ComicFile) => {
+        return file.selected;
+      }).length;
       return {
         ...state,
+        selected_count: selected_count,
       };
+    }
 
     case ImportingActions.IMPORTING_IMPORT_FILES:
       return {

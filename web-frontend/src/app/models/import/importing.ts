@@ -22,7 +22,7 @@ import { ComicFile } from './comic-file';
 export interface Importing {
   busy: boolean;
   importing: boolean;
-  pending: number;
+  selected_count: number;
   updating_status: boolean;
   directory: string;
   files: Array<ComicFile>;

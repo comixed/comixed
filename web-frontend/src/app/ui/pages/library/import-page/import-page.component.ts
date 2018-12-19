@@ -26,6 +26,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as UserActions from '../../../../actions/user.actions';
 import { Importing } from '../../../../models/import/importing';
+import { Library } from '../../../../models/library';
 import * as ImportingActions from '../../../../actions/importing.actions';
 import { SelectItem } from 'primeng/api';
 import { ComicFile } from '../../../../models/import/comic-file';
@@ -62,14 +63,14 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
   protected cover_size: number;
 
-  protected selected_file_detail: ComicFile;
-  protected selected_files: Array<ComicFile> = [];
-  protected show_selected_files = false;
-
   protected plural = false;
   protected any_selected = false;
   protected show_selections_only = false;
   protected delete_blocked_pages = false;
+
+  library$: Observable<Library>;
+  library_subscription: Subscription;
+  library: Library;
 
   importing$: Observable<Importing>;
   importing_subscription: Subscription;
@@ -86,9 +87,9 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private store: Store<AppState>,
   ) {
+    this.library$ = store.select('library');
     this.user$ = store.select('user');
     this.importing$ = store.select('importing');
-    this.selected_file_detail = null;
     activatedRoute.queryParams.subscribe(params => {
       this.sort_by = params[SORT_PARAMETER] || 'filename';
       this.rows = parseInt(params[ROWS_PARAMETER] || '10', 10);
@@ -119,6 +120,10 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.library_subscription = this.library$.subscribe(
+      (library: Library) => {
+        this.library = library;
+      });
     this.user_subscription = this.user$.subscribe(
       (user: User) => {
         this.user = user;
@@ -142,6 +147,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.library_subscription.unsubscribe();
     this.user_subscription.unsubscribe();
     this.importing_subscription.unsubscribe();
   }
@@ -196,11 +202,11 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   plural_imports(): boolean {
-    return (this.importing.pending !== 1);
+    return (this.library.import_count !== 1);
   }
 
   get_import_title(): string {
-    return `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.importing.pending} ` +
+    return `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.library.import_count} ` +
       `Comic${this.plural_imports() ? 's' : ''} Remaining To Be Imported...`;
   }
 
@@ -208,7 +214,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     if (this.importing.files.length === 0) {
       return 'No Comics Are Loaded';
     } else {
-      return `Selected ${this.selected_files.length} Of ${this.importing.files.length} Comics...`;
+      return `Selected ${this.importing.selected_count} Of ${this.importing.files.length} Comics...`;
     }
   }
 
@@ -232,14 +238,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     } else {
       this.select_comics(files);
     }
-  }
-
-  show_selections(): void {
-    this.show_selected_files = true;
-  }
-
-  hide_selections(): void {
-    this.show_selected_files = false;
   }
 
   private select_comics(files: Array<ComicFile>): void {
