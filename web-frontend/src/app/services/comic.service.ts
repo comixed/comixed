@@ -156,10 +156,6 @@ export class ComicService {
     return this.http.post(`${COMIC_SERVICE_API_URL}/files/import`, params);
   }
 
-  get_number_of_pending_imports(): Observable<any> {
-    return this.http.get(`${COMIC_SERVICE_API_URL}/files/import/status`);
-  }
-
   rescan_files(): Observable<any> {
     const params = new HttpParams();
 

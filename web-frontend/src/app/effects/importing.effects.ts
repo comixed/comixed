@@ -38,13 +38,6 @@ export class ImportingEffects {
   ) { }
 
   @Effect()
-  importing_get_pending_imports$: Observable<Action> = this.actions$
-    .ofType<ImportingActions.ImportingGetPendingImports>(ImportingActions.IMPORTING_GET_PENDING_IMPORTS)
-    .switchMap(action =>
-      this.comic_service.get_number_of_pending_imports()
-        .map((count: number) => new ImportingActions.ImportingSetPendingImports({ count: count })));
-
-  @Effect()
   importing_fetch_files$: Observable<Action> = this.actions$
     .ofType<ImportingActions.ImportingFetchFiles>(ImportingActions.IMPORTING_FETCH_FILES)
     .map(action => action.payload)

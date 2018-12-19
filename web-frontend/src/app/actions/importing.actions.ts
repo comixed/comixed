@@ -24,7 +24,6 @@ import { ComicFile } from '../models/import/comic-file';
 
 export const IMPORTING_GET_PENDING_IMPORTS = '[IMPORTING] Get the number of pending imports';
 export const IMPORTING_SET_DIRECTORY = '[IMPORTING] Set the directory';
-export const IMPORTING_SET_PENDING_IMPORTS = '[IMPORTING] Set pending import count';
 export const IMPORTING_FETCH_FILES = '[IMPORTING] Fetch files in the specified directory';
 export const IMPORTING_FILES_FETCHED = '[IMPORTING] Files fetched from server';
 export const IMPORTING_SELECT_FILES = '[IMPORTING] Add files to selection list';
@@ -42,14 +41,6 @@ export class ImportingSetDirectory implements Action {
 
   constructor(public payload: {
     directory: string,
-  }) { }
-}
-
-export class ImportingSetPendingImports implements Action {
-  readonly type = IMPORTING_SET_PENDING_IMPORTS;
-
-  constructor(public payload: {
-    count: number,
   }) { }
 }
 
@@ -95,7 +86,6 @@ export class ImportingImportFiles implements Action {
 
 export type Actions =
   ImportingGetPendingImports |
-  ImportingSetPendingImports |
   ImportingSetDirectory |
   ImportingFetchFiles |
   ImportingFilesFetched |
