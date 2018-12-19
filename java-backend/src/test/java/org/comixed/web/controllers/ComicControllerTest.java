@@ -28,13 +28,18 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.List;
 
+import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.LibraryStatus;
+import org.comixed.library.model.user.LastReadDate;
+import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.LastReadDatesRepository;
 import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.RescanComicWorkerTask;
 import org.comixed.tasks.Worker;
@@ -62,12 +67,17 @@ public class ComicControllerTest
     private static final String TEST_ISSUE_NUMBER = "52";
     private static final int TEST_RESCAN_COUNT = 729;
     private static final int TEST_IMPORT_COUNT = 217;
+    private static final long TEST_USER_ID = 129;
+    private static final String TEST_EMAIL_ADDRESS = "user@testing";
 
     @InjectMocks
     private ComicController controller;
 
     @Mock
     private ComicRepository comicRepository;
+
+    @Mock
+    private LastReadDatesRepository lastReadRepository;
 
     @Mock
     private Worker worker;
@@ -78,20 +88,41 @@ public class ComicControllerTest
     @Mock
     private Comic comic;
 
+    @Mock
+    private Principal principal;
+
+    @Mock
+    private ComiXedUserRepository userRepository;
+
+    @Mock
+    private ComiXedUser user;
+
+    @Mock
+    private List<LastReadDate> lastReadList;
+
     @Test
     public void testGetComicsAddedSince() throws ParseException, InterruptedException
     {
         Mockito.when(comicRepository.findByDateAddedGreaterThan(Mockito.any(Date.class))).thenReturn(comicList);
+        Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+        Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
+        Mockito.when(lastReadRepository.findAllForUser(Mockito.anyLong())).thenReturn(lastReadList);
         Mockito.when(worker.getCountFor(RescanComicWorkerTask.class)).thenReturn(TEST_RESCAN_COUNT);
         Mockito.when(worker.getCountFor(AddComicWorkerTask.class)).thenReturn(TEST_IMPORT_COUNT);
 
-        LibraryStatus result = controller.getComicsAddedSince(0L, 0L);
+        LibraryStatus result = controller.getComicsAddedSince(principal, 0L, 0L);
 
         assertSame(comicList, result.getComics());
+        assertEquals(lastReadList, result.getLastReadDates());
         assertEquals(TEST_RESCAN_COUNT, result.getRescanCount());
         assertEquals(TEST_IMPORT_COUNT, result.getImportCount());
 
         Mockito.verify(comicRepository, Mockito.atLeast(1)).findByDateAddedGreaterThan(new Date(0L));
+        Mockito.verify(principal, Mockito.atLeast(1)).getName();
+        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL_ADDRESS);
+        Mockito.verify(user, Mockito.times(1)).getId();
+        Mockito.verify(lastReadRepository, Mockito.atLeast(1)).findAllForUser(TEST_USER_ID);
         Mockito.verify(worker, Mockito.times(1)).getCountFor(RescanComicWorkerTask.class);
         Mockito.verify(worker, Mockito.times(1)).getCountFor(AddComicWorkerTask.class);
     }
@@ -100,16 +131,25 @@ public class ComicControllerTest
     public void testGetComicsAddedSinceWithTimeout() throws ParseException, InterruptedException
     {
         Mockito.when(comicRepository.findByDateAddedGreaterThan(Mockito.any(Date.class))).thenReturn(comicList);
+        Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+        Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
+        Mockito.when(lastReadRepository.findAllForUser(Mockito.anyLong())).thenReturn(lastReadList);
         Mockito.when(worker.getCountFor(Mockito.any())).thenReturn(TEST_RESCAN_COUNT);
         Mockito.when(worker.getCountFor(AddComicWorkerTask.class)).thenReturn(TEST_IMPORT_COUNT);
 
-        LibraryStatus result = controller.getComicsAddedSince(0L, 250L);
+        LibraryStatus result = controller.getComicsAddedSince(principal, 0L, 250L);
 
         assertSame(comicList, result.getComics());
+        assertEquals(lastReadList, result.getLastReadDates());
         assertEquals(TEST_RESCAN_COUNT, result.getRescanCount());
         assertEquals(TEST_IMPORT_COUNT, result.getImportCount());
 
         Mockito.verify(comicRepository, Mockito.atLeast(1)).findByDateAddedGreaterThan(new Date(0L));
+        Mockito.verify(principal, Mockito.atLeast(1)).getName();
+        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL_ADDRESS);
+        Mockito.verify(user, Mockito.times(1)).getId();
+        Mockito.verify(lastReadRepository, Mockito.atLeast(1)).findAllForUser(TEST_USER_ID);
         Mockito.verify(worker, Mockito.times(1)).getCountFor(RescanComicWorkerTask.class);
         Mockito.verify(worker, Mockito.times(1)).getCountFor(AddComicWorkerTask.class);
     }

@@ -21,6 +21,8 @@ package org.comixed.library.model;
 
 import java.util.List;
 
+import org.comixed.library.model.user.LastReadDate;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -38,9 +40,14 @@ public class LibraryStatus
     @JsonView(View.ComicList.class)
     private int importCount;
 
-    public LibraryStatus(List<Comic> comics, int rescanCount, int importCount)
+    @JsonProperty("last_read_dates")
+    @JsonView(View.ComicList.class)
+    private List<LastReadDate> lastReadDates;
+
+    public LibraryStatus(List<Comic> comics, List<LastReadDate> lastReadDates, int rescanCount, int importCount)
     {
         this.comics = comics;
+        this.lastReadDates = lastReadDates;
         this.rescanCount = rescanCount;
         this.importCount = importCount;
     }
@@ -58,5 +65,10 @@ public class LibraryStatus
     public int getRescanCount()
     {
         return this.rescanCount;
+    }
+
+    public List<LastReadDate> getLastReadDates()
+    {
+        return lastReadDates;
     }
 }

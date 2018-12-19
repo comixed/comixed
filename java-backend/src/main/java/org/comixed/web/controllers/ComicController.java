@@ -23,18 +23,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
 import org.comixed.library.metadata.ComicDataAdaptor;
+import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.ComicFormat;
 import org.comixed.library.model.LibraryStatus;
 import org.comixed.library.model.ScanType;
 import org.comixed.library.model.View;
 import org.comixed.library.model.View.ComicDetails;
+import org.comixed.library.model.user.LastReadDate;
+import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicFormatRepository;
 import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.LastReadDatesRepository;
 import org.comixed.repositories.ScanTypeRepository;
 import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.RescanComicWorkerTask;
@@ -78,6 +83,12 @@ public class ComicController
 
     @Autowired
     private ComicRepository comicRepository;
+
+    @Autowired
+    private ComiXedUserRepository userRepository;
+
+    @Autowired
+    private LastReadDatesRepository lastReadRepository;
 
     @Autowired
     private ScanTypeRepository scanTypeRepository;
@@ -203,15 +214,19 @@ public class ComicController
     @RequestMapping(value = "/since/{timestamp}",
                     method = RequestMethod.GET)
     @JsonView(View.ComicList.class)
-    public LibraryStatus getComicsAddedSince(@PathVariable("timestamp") long timestamp,
+    public LibraryStatus getComicsAddedSince(Principal principal,
+                                             @PathVariable("timestamp") long timestamp,
                                              @RequestParam(value = "timeout",
                                                            required = false,
                                                            defaultValue = "0") long timeout) throws InterruptedException
     {
+        logger.debug("Loading user: {}", principal.getName());
+        ComiXedUser user = userRepository.findByEmail(principal.getName());
+
         Date latestDate = new Date(timestamp);
         boolean done = false;
         long returnBy = System.currentTimeMillis() + timeout;
-        List<Comic> result = null;
+        List<Comic> comics = null;
 
         int importCount = 0;
         int rescanCount = 0;
@@ -228,10 +243,9 @@ public class ComicController
             rescanCount = this.worker.getCountFor(RescanComicWorkerTask.class);
             this.logger.debug("Rescan count is {}", rescanCount);
 
-            result = this.comicRepository.findByDateAddedGreaterThan(latestDate);
+            comics = this.comicRepository.findByDateAddedGreaterThan(latestDate);
 
-            if ((result.size() == 0) && (System.currentTimeMillis() <= returnBy) && (rescanCount == 0)
-                && (importCount == 0))
+            if ((comics.size() == 0) && (System.currentTimeMillis() <= returnBy) && (rescanCount == 0))
             {
                 synchronized (STATUS_SEMAPHORE)
                 {
@@ -244,9 +258,12 @@ public class ComicController
             }
         }
 
-        this.logger.debug("Found {} comics", result.size());
+        this.logger.debug("Found {} comics", comics.size());
 
-        return new LibraryStatus(result, rescanCount, importCount);
+        logger.debug("Getting last read dates");
+        List<LastReadDate> lastReadDates = lastReadRepository.findAllForUser(user.getId());
+
+        return new LibraryStatus(comics, lastReadDates, rescanCount, importCount);
     }
 
     @RequestMapping(value = "/{id}/summary",
