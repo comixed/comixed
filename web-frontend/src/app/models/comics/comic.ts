@@ -44,7 +44,6 @@ export interface Comic {
   added_date: string;
   cover_date: string;
   year_published: number;
-  last_read_date: string;
   page_count: number;
   characters: string[];
   teams: string[];
