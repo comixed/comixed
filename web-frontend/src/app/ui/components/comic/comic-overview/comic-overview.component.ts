@@ -23,6 +23,7 @@ import { AppState } from '../../../../app.state';
 import * as LibraryActions from '../../../../actions/library.actions';
 import { Library } from '../../../../models/library';
 import { Comic } from '../../../../models/comics/comic';
+import { LastReadDate } from '../../../../models/comics/last-read-date';
 import { ScanType } from '../../../../models/comics/scan-type';
 import { ComicFormat } from '../../../../models/comics/comic-format';
 import { SelectItem } from 'primeng/api';
@@ -108,5 +109,13 @@ export class ComicOverviewComponent implements OnInit {
     this.store.dispatch(new LibraryActions.LibraryClearMetadata({
       comic: this.comic,
     }));
+  }
+
+  get_last_read_date(comic: Comic): string {
+    const result = this.library.last_read_dates.find((entry: LastReadDate) => {
+      return entry.comic_id === comic.id;
+    });
+
+    return result ? result.last_read_date : null;
   }
 }

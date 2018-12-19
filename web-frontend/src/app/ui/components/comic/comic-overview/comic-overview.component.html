@@ -37,6 +37,11 @@
       </div>
       <div class='ui-g-12'>{{ comic.added_date | date }}</div>
       <div class='ui-g-12'>
+        <strong>Last read</strong>
+      </div>
+      <div class='ui-g-12'>{{ (get_last_read_date(comic) | date)
+        || 'Never' }}</div>
+      <div class='ui-g-12'>
         <strong>Pages</strong>
       </div>
       <div class='ui-g-12'>{{ comic.page_count }}</div>

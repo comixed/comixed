@@ -30,6 +30,7 @@ const initial_state: Library = {
   scan_types: [],
   formats: [],
   comics: [],
+  last_read_dates: [],
 };
 
 export function libraryReducer(
