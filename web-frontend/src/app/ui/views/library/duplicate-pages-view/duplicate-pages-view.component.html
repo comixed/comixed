@@ -66,7 +66,7 @@
           *ngIf='any_pages_deleted(hash)'
           pButton
           type='button'
-          icon='fa fa-trash'
+          icon='pi pi-times-circle'
           label='Undelete All'
           (click)='undelete_all_pages(hash)'></button>
         <button
@@ -115,7 +115,7 @@
     *ngIf='any_pages_deleted(hash)'
     pButton
     type='button'
-    icon='fa fa-trash'
+    icon='pi pi-times-circle'
     (click)='undelete_all_pages(hash)'></button>
   <button
     *ngIf='is_blocked(hash)'
