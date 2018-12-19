@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.comixed.library.adaptors.ArchiveType;
 import org.junit.Before;
 import org.junit.Test;
@@ -224,20 +223,6 @@ public class ComicTest
     public void testDateAddedCannotBeNull()
     {
         this.comic.setDateAdded(null);
-    }
-
-    @Test
-    public void testDateLastRead()
-    {
-        this.comic.setLastReadDate(TEST_DATE);
-        assertEquals(TEST_DATE, this.comic.getLastReadDate());
-    }
-
-    @Test
-    public void testDateLastReadCanBeNull()
-    {
-        this.comic.setLastReadDate(null);
-        assertNull(this.comic.getLastReadDate());
     }
 
     @Test

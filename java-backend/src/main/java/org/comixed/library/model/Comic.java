@@ -146,13 +146,6 @@ public class Comic
     @JsonView(View.ComicList.class)
     private Date coverDate;
 
-    @Column(name = "last_read_date",
-            nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonProperty("last_read_date")
-    @JsonView(View.ComicList.class)
-    private Date lastReadDate;
-
     @Column(name = "volume")
     @JsonProperty
     @JsonView(
@@ -636,16 +629,6 @@ public class Comic
     }
 
     /**
-     * Returns the date the comic was lsat read.
-     *
-     * @return the last read date
-     */
-    public Date getLastReadDate()
-    {
-        return this.lastReadDate;
-    }
-
-    /**
      * Returns the location referenced at the given index.
      *
      * @param index
@@ -1057,18 +1040,6 @@ public class Comic
             }
         }
         this.issueNumber = issueNumber;
-    }
-
-    /**
-     * Sets the date the comic was last read.
-     *
-     * @param date
-     *            the last read date
-     */
-    public void setLastReadDate(Date date)
-    {
-        this.logger.debug("Setting last read date=" + this.formatDate(date));
-        this.lastReadDate = date;
     }
 
     /**
