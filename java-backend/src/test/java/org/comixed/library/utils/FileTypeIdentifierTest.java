@@ -47,7 +47,7 @@ public class FileTypeIdentifierTest
     @Test
     public void testIdentifyZipFile() throws FileNotFoundException
     {
-        String result = fileTypeIdentifier.typeFor(new BufferedInputStream(new FileInputStream(TEST_CBZ_FILE)));
+        String result = fileTypeIdentifier.subtypeFor(new BufferedInputStream(new FileInputStream(TEST_CBZ_FILE)));
 
         assertNotNull(result);
         assertEquals("zip", result);
@@ -56,7 +56,7 @@ public class FileTypeIdentifierTest
     @Test
     public void testIdentifyRarFile() throws FileNotFoundException
     {
-        String result = fileTypeIdentifier.typeFor(new BufferedInputStream(new FileInputStream(TEST_CBR_FILE)));
+        String result = fileTypeIdentifier.subtypeFor(new BufferedInputStream(new FileInputStream(TEST_CBR_FILE)));
 
         assertNotNull(result);
         assertEquals("x-rar-compressed", result);

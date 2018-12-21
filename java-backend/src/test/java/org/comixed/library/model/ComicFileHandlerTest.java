@@ -74,12 +74,12 @@ public class ComicFileHandlerTest
     public void testLoadComicUnknownType() throws ComicFileHandlerException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
-        Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(null);
+        Mockito.when(identifier.subtypeFor(Mockito.any(InputStream.class))).thenReturn(null);
 
         handler.loadComic(comic);
 
         Mockito.verify(comic, Mockito.times(1)).getFilename();
-        Mockito.verify(identifier, Mockito.times(1)).typeFor(input.capture());
+        Mockito.verify(identifier, Mockito.times(1)).subtypeFor(input.capture());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ComicFileHandlerTest
     public void testLoadComicNoDefinedArchiveAdaptor() throws ComicFileHandlerException, ArchiveAdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
-        Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
+        Mockito.when(identifier.subtypeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
         Mockito.when(archiveAdaptors.get(Mockito.anyString())).thenReturn(null);
 
         try
@@ -106,7 +106,7 @@ public class ComicFileHandlerTest
         finally
         {
             Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-            Mockito.verify(identifier, Mockito.times(1)).typeFor(input.capture());
+            Mockito.verify(identifier, Mockito.times(1)).subtypeFor(input.capture());
             Mockito.verify(archiveAdaptors, Mockito.times(1)).get(TEST_COMIC_FILE_TYPE);
         }
     }
@@ -115,7 +115,7 @@ public class ComicFileHandlerTest
     public void testLoadComicArchiveAdaptorException() throws ComicFileHandlerException, ArchiveAdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
-        Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
+        Mockito.when(identifier.subtypeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
         Mockito.when(archiveAdaptors.get(Mockito.anyString())).thenReturn(archiveAdaptor);
         Mockito.doThrow(ArchiveAdaptorException.class).when(archiveAdaptor).loadComic(Mockito.any(Comic.class));
 
@@ -126,7 +126,7 @@ public class ComicFileHandlerTest
         finally
         {
             Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-            Mockito.verify(identifier, Mockito.times(1)).typeFor(input.capture());
+            Mockito.verify(identifier, Mockito.times(1)).subtypeFor(input.capture());
             Mockito.verify(archiveAdaptors, Mockito.times(1)).get(TEST_COMIC_FILE_TYPE);
             Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
         }
@@ -136,14 +136,14 @@ public class ComicFileHandlerTest
     public void testLoadComic() throws ComicFileHandlerException, ArchiveAdaptorException
     {
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
-        Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
+        Mockito.when(identifier.subtypeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
         Mockito.when(archiveAdaptors.get(Mockito.anyString())).thenReturn(archiveAdaptor);
         Mockito.doNothing().when(archiveAdaptor).loadComic(Mockito.any(Comic.class));
 
         handler.loadComic(comic);
 
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-        Mockito.verify(identifier, Mockito.times(1)).typeFor(input.capture());
+        Mockito.verify(identifier, Mockito.times(1)).subtypeFor(input.capture());
         Mockito.verify(archiveAdaptors, Mockito.times(1)).get(TEST_COMIC_FILE_TYPE);
         Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     }
@@ -151,23 +151,23 @@ public class ComicFileHandlerTest
     @Test
     public void testGetArchiveAdaptorForUnknownComicType() throws ComicFileHandlerException
     {
-        Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
+        Mockito.when(identifier.subtypeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
 
         assertNull(handler.getArchiveAdaptorFor(TEST_NON_ARCHIVE_FILENAME));
 
-        Mockito.verify(identifier, Mockito.times(1)).typeFor(Mockito.any(InputStream.class));
+        Mockito.verify(identifier, Mockito.times(1)).subtypeFor(Mockito.any(InputStream.class));
     }
 
     @Test
     public void testGetArchiveAdaptorFor() throws ComicFileHandlerException
     {
 
-        Mockito.when(identifier.typeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
+        Mockito.when(identifier.subtypeFor(Mockito.any(InputStream.class))).thenReturn(TEST_COMIC_FILE_TYPE);
         Mockito.when(archiveAdaptors.get(Mockito.anyString())).thenReturn(archiveAdaptor);
 
         assertSame(archiveAdaptor, handler.getArchiveAdaptorFor(TEST_NON_ARCHIVE_FILENAME));
 
-        Mockito.verify(identifier, Mockito.times(1)).typeFor(Mockito.any(InputStream.class));
+        Mockito.verify(identifier, Mockito.times(1)).subtypeFor(Mockito.any(InputStream.class));
         Mockito.verify(archiveAdaptors, Mockito.times(1)).get(TEST_COMIC_FILE_TYPE);
     }
 }

@@ -162,7 +162,7 @@ public class ComicFileHandler implements
         try
         {
             InputStream input = new BufferedInputStream(new FileInputStream(filename));
-            archiveType = this.fileTypeIdentifier.typeFor(input);
+            archiveType = this.fileTypeIdentifier.subtypeFor(input);
         }
         catch (FileNotFoundException error)
         {
@@ -206,7 +206,7 @@ public class ComicFileHandler implements
         try
         {
             InputStream input = new BufferedInputStream(new FileInputStream(comic.getFilename()));
-            archiveType = this.fileTypeIdentifier.typeFor(input);
+            archiveType = this.fileTypeIdentifier.subtypeFor(input);
         }
         catch (FileNotFoundException error)
         {

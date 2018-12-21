@@ -259,7 +259,7 @@ public class PageControllerTest
         Mockito.when(comic.getPageCount()).thenReturn(TEST_PAGE_INDEX + 1);
         Mockito.when(comic.getPage(Mockito.anyInt())).thenReturn(page);
         Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
-        Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
+        Mockito.when(fileTypeIdentifier.subtypeFor(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
 
         ResponseEntity<byte[]> result = pageController.getImageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
 
@@ -270,7 +270,7 @@ public class PageControllerTest
         Mockito.verify(comic, Mockito.atLeast(1)).getPageCount();
         Mockito.verify(comic, Mockito.times(1)).getPage(TEST_PAGE_INDEX);
         Mockito.verify(page, Mockito.times(1)).getContent();
-        Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStream.getValue());
+        Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStream.getValue());
     }
 
     @Test
@@ -336,7 +336,7 @@ public class PageControllerTest
     {
         Mockito.when(pageRepository.findOne(Mockito.anyLong())).thenReturn(page);
         Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
-        Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
+        Mockito.when(fileTypeIdentifier.subtypeFor(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
 
         ResponseEntity<byte[]> result = pageController.getPageContent(TEST_PAGE_ID);
 
@@ -346,7 +346,7 @@ public class PageControllerTest
 
         Mockito.verify(pageRepository, Mockito.times(1)).findOne(TEST_PAGE_ID);
         Mockito.verify(page, Mockito.times(1)).getContent();
-        Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStream.getValue());
+        Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStream.getValue());
     }
 
     @Test

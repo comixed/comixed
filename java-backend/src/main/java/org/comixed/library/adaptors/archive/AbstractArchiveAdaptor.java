@@ -169,7 +169,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
 
     protected EntryLoader getLoaderForContent(byte[] content)
     {
-        String type = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content));
+        String type = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
 
         this.logger.debug("Content type: " + type);
 
@@ -374,7 +374,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
         for (String entry : entries)
         {
             byte[] content = this.loadSingleFileInternal(archiveRef, entry);
-            String contentType = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content));
+            String contentType = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
 
             if (contentType != null && FileTypeIdentifier.IMAGE_TYPES.contains(contentType))
             {

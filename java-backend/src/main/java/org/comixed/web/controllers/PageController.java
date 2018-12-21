@@ -233,7 +233,7 @@ public class PageController
     private ResponseEntity<byte[]> getResponseEntityForPage(Page page)
     {
         byte[] content = page.getContent();
-        String type = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content));
+        String type = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
         return ResponseEntity.ok().contentLength(content.length)
                              .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
                              .contentType(MediaType.valueOf(type)).body(content);
