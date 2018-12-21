@@ -19,8 +19,11 @@
 
 package org.comixed.web.controllers;
 
+import java.security.Principal;
 import java.text.ParseException;
 
+import org.comixed.library.model.ComiXedUser;
+import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.web.opds.OPDSAcquisitionFeed;
 import org.comixed.web.opds.OPDSFeed;
@@ -36,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * <code>OPDSController</code> provides the web interface for accessing the OPDS
  * feeds.
- * 
+ *
  * @author Giao Phan
  * @author Darryl L. Pierce
  *
@@ -50,21 +53,72 @@ public class OPDSController
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
+    private ComiXedUserRepository userRepository;
+
+    @Autowired
     private ComicRepository comicRepository;
 
     @RequestMapping(value = "/all",
                     method = RequestMethod.GET)
     @CrossOrigin
-    public OPDSFeed all() throws ParseException
+    public OPDSFeed getAllComics(Principal principal) throws ParseException
     {
-        return new OPDSAcquisitionFeed("/api/opds/all", this.comicRepository.findAll());
+        OPDSFeed result = null;
+
+        if (principal != null)
+        {
+            ComiXedUser user = this.userRepository.findByEmail(principal.getName());
+            this.logger.debug("Getting all comics for {}", user.getEmail());
+            result = new OPDSAcquisitionFeed("/api/opds/all", "All Comics", this.comicRepository.findAll());
+        }
+        else
+        {
+            this.logger.debug("Nope, not logged in...");
+        }
+
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @CrossOrigin
-    public OPDSFeed get() throws ParseException
+    public OPDSFeed getNavigationFeed(Principal principal) throws ParseException
     {
-        OPDSFeed feed = new OPDSNavigationFeed();
-        return feed;
+        OPDSFeed result = null;
+
+        if (principal != null)
+        {
+            ComiXedUser user = this.userRepository.findByEmail(principal.getName());
+            this.logger.debug("Fetching OPDS navigation feed for {}", user.getEmail());
+
+            result = new OPDSNavigationFeed();
+        }
+        else
+        {
+            this.logger.debug("User not logged in...");
+        }
+
+        return result;
+    }
+
+    @RequestMapping(value = "/unread",
+                    method = RequestMethod.GET)
+    public OPDSFeed getUnread(Principal principal)
+    {
+        OPDSFeed result = null;
+
+        if (principal != null)
+        {
+            ComiXedUser user = this.userRepository.findByEmail(principal.getName());
+            this.logger.debug("Fetching unread comics feed for {}", user.getEmail());
+
+            result = new OPDSAcquisitionFeed("/api/opds/unread", "Unread Comics",
+                                             this.comicRepository.findAllUnreadByUser(user.getId()));
+        }
+        else
+        {
+            this.logger.debug("User not logged in...");
+        }
+
+        return result;
     }
 }

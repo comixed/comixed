@@ -46,12 +46,12 @@ public class OPDSAcquisitionFeed implements
     private List<OPDSEntry> entries;
     private List<OPDSLink> links;
 
-    public OPDSAcquisitionFeed(String selfUrl, Iterable<Comic> comics)
+    public OPDSAcquisitionFeed(String selfUrl, String title, Iterable<Comic> comics)
     {
         this.id = "urn:uuid:" + UUID.randomUUID();
         this.entries = StreamSupport.stream(comics.spliterator(), true).map(comic -> new OPDSEntry(comic))
                                     .collect(Collectors.toList());
-        this.title = this.title;
+        this.title = title;
         this.updated = ZonedDateTime.now().withFixedOffsetZone();
         this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=acquisition", "self",
                                                 selfUrl),
