@@ -54,15 +54,7 @@ public class FileTypeIdentifier
     @Autowired
     private Metadata metadata;
 
-    /**
-     * Returns the MIME type for the supplied input stream.
-     *
-     * @param input
-     *            the input stream, which must support
-     *            {@link InputStream#mark(int)} and {@link InputStream#reset()}
-     * @return the MIME type
-     */
-    public String subtypeFor(InputStream input)
+    private MediaType getMimeType(InputStream input)
     {
         this.logger.debug("Attempting to detect mime type for stream");
         MediaType result = null;
@@ -79,7 +71,37 @@ public class FileTypeIdentifier
         }
 
         this.logger.debug("result=" + result);
+
+        return result;
+    }
+
+    /**
+     * Returns the MIME subtype for the supplied input stream.
+     *
+     * @param input
+     *            the input stream, which must support
+     *            {@link InputStream#mark(int)} and {@link InputStream#reset()}
+     * @return the MIME subtype
+     */
+    public String subtypeFor(InputStream input)
+    {
+        MediaType result = this.getMimeType(input);
+
         return result != null ? result.getSubtype() : null;
     }
 
+    /**
+     * Returns the MIME type for the supplied input stream.
+     *
+     * @param input
+     *            the input stream, which must support
+     *            {@link InputStream#mark(int)} and {@link InputStream#reset()}
+     * @return the MIME type
+     */
+    public String typeFor(InputStream input)
+    {
+        MediaType result = this.getMimeType(input);
+
+        return result != null ? result.getType() : null;
+    }
 }
