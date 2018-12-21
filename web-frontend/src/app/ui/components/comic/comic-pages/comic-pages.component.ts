@@ -25,6 +25,9 @@ import { PageType } from '../../../../models/comics/page-type';
 import { AlertService } from '../../../../services/alert.service';
 import { ComicService } from '../../../../services/comic.service';
 import { UserService } from '../../../../services/user.service';
+import * as LibraryActions from '../../../../actions/library.actions';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
 
 @Component({
   selector: 'app-comic-pages',
@@ -42,6 +45,7 @@ export class ComicPagesComponent implements OnInit {
     private alert_service: AlertService,
     private comic_service: ComicService,
     private user_service: UserService,
+    private store: Store<AppState>,
   ) { }
 
   ngOnInit() {
@@ -66,15 +70,18 @@ export class ComicPagesComponent implements OnInit {
       });
   }
 
-  set_blocked_state(page: Page, blocked: boolean): void {
-    this.comic_service.set_block_page(page.hash, blocked).subscribe(
-      () => {
-        page.blocked = blocked;
-        this.alert_service.show_info_message(`${blocked ? 'Blocked' : 'Unblocked'} all pages with this hash...`);
-      },
-      (error: Error) => {
-        this.alert_service.show_error_message('Failed to change blocked state...', error);
-      });
+  set_page_blocked(page: Page): void {
+    this.store.dispatch(new LibraryActions.LibrarySetBlockedPageState({
+      page: page,
+      blocked_state: true,
+    }));
+  }
+
+  set_page_unblocked(page: Page): void {
+    this.store.dispatch(new LibraryActions.LibrarySetBlockedPageState({
+      page: page,
+      blocked_state: false,
+    }));
   }
 }
 

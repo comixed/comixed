@@ -36,12 +36,6 @@
         </i>
       </div>
       <div
-        *ngIf='page.blocked'
-        class='ui-g-12 ui-sm-12'>
-        <i>This page is <b>blocked</b>.
-        </i>
-      </div>
-      <div
         *ngIf='is_admin && page_type_options?.length'
         class='ui-g-12 ui-sm-12'>
         <p-dropdown
@@ -50,14 +44,26 @@
           (onChange)='set_page_type(page, $event.value)'></p-dropdown>
       </div>
       <div class='ui-g-12 ui-sm-12'>
-        <p-toggleButton
-          *ngIf='is_admin'
-          [(ngModel)]='page.blocked'
-          onLabel='Blocked'
-          onIcon='pi pi-check'
-          offLabel='Not Blocked'
-          offIcon='pi pi-times'
-          (onChange)='set_blocked_state(page, $event.value)'></p-toggleButton>
+        <button
+          *ngIf='page.blocked'
+          pButton
+          type='button'
+          label='Blocked'
+          icon='pi pi-check'
+          (click)='set_page_unblocked(page)'></button>
+        <button
+          *ngIf='!page.blocked'
+          pButton
+          type='button'
+          label='Not Blocked'
+          icon='pi pi-times'
+          (click)='set_page_blocked(page)'></button>
+      </div>
+      <div
+        *ngIf='page.blocked'
+        class='ui-g-12 ui-sm-12'>
+        <i>This page is <b>blocked</b>.
+        </i>
       </div>
     </div>
   </div>
@@ -80,13 +86,20 @@
       (onChange)='set_page_type(page, $event.value)'></p-dropdown>
   </div>
   <div class='ui-g-12 ui-sm-12'>
-    <p-toggleButton
-      [(ngModel)]='page.blocked'
-      onLabel='Blocked'
-      onIcon='pi pi-check'
-      offLabel='Not Blocked'
-      offIcon='pi pi-times'
-      (onChange)='set_blocked_state(page, $event.value)'></p-toggleButton>
+    <button
+      *ngIf='page.blocked'
+      pButton
+      type='button'
+      label='Blocked'
+      icon='pi pi-check'
+      (click)='set_page_unblocked(page)'></button>
+    <button
+      *ngIf='!page.blocked'
+      pButton
+      type='button'
+      label='Not Blocked'
+      icon='pi pi-times'
+      (click)='set_page_blocked(page)'></button>
   </div>
 </div>
 </p-footer></p-card></ng-template></p-dataView>
