@@ -236,6 +236,21 @@ export function libraryReducer(
         busy: true,
       };
 
+    case LibraryActions.LIBRARY_SET_BLOCKED_PAGE_STATE:
+      return {
+        ...state,
+        busy: true,
+      };
+
+    case LibraryActions.LIBRARY_BLOCKED_PAGE_STATE_SET: {
+      action.payload.page.blocked = action.payload.blocked_state;
+
+      return {
+        ...state,
+        busy: false,
+      };
+    }
+
     default:
       return state;
   }

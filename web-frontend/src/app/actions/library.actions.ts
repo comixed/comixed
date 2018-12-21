@@ -21,6 +21,7 @@ import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Library } from '../models/library';
 import { Comic } from '../models/comics/comic';
+import { Page } from '../models/comics/page';
 import { ScanType } from '../models/comics/scan-type';
 import { ComicFormat } from '../models/comics/comic-format';
 
@@ -44,6 +45,8 @@ export const LIBRARY_CLEAR_METADATA = '[LIBRARY] Clear comic metadata';
 export const LIBRARY_METADATA_CHANGED = '[LIBRARY] Metadata cleared on comic';
 export const LIBRARY_CLEAR_METADATA_FLAG = '[LIBRARY] Clear metadata flag';
 export const LIBRARY_RESCAN_FILES = '[LIBRARY] Rescan the whole library';
+export const LIBRARY_SET_BLOCKED_PAGE_STATE = '[LIBRARY] Set blocked page state';
+export const LIBRARY_BLOCKED_PAGE_STATE_SET = '[LIBRARY] Blocked page state is set';
 
 export class LibraryGetScanTypes implements Action {
   readonly type = LIBRARY_GET_SCAN_TYPES;
@@ -204,6 +207,24 @@ export class LibraryRescanFiles implements Action {
   }) { }
 }
 
+export class LibrarySetBlockedPageState implements Action {
+  readonly type = LIBRARY_SET_BLOCKED_PAGE_STATE;
+
+  constructor(public payload: {
+    page: Page,
+    blocked_state: boolean,
+  }) { }
+}
+
+export class LibraryBlockedStateFlagSet implements Action {
+  readonly type = LIBRARY_BLOCKED_PAGE_STATE_SET;
+
+  constructor(public payload: {
+    page: Page,
+    blocked_state: boolean,
+  }) { }
+}
+
 export type Actions =
   LibraryGetScanTypes |
   LibrarySetScanTypes |
@@ -224,4 +245,6 @@ export type Actions =
   LibraryClearMetadata |
   LibraryMetadataChanged |
   LibraryClearMetadataFlag |
-  LibraryRescanFiles;
+  LibraryRescanFiles |
+  LibrarySetBlockedPageState |
+  LibraryBlockedStateFlagSet;

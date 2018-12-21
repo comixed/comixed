@@ -142,4 +142,16 @@ export class LibraryEffects {
           last_comic_date: action.payload.last_comic_date,
           timeout: 0,
         })));
+
+  @Effect()
+  library_set_page_blocked_state$: Observable<Action> = this.actions$
+    .ofType<LibraryActions.LibrarySetBlockedPageState>(LibraryActions.LIBRARY_SET_BLOCKED_PAGE_STATE)
+    .map(action => action.payload)
+    .switchMap(action =>
+      this.comic_service.set_block_page(action.page.hash, action.blocked_state)
+        .catch((error: Error) => of(this.alert_service.show_error_message('Failed to set blocked state...', error)))
+        .map(() => new LibraryActions.LibraryBlockedStateFlagSet({
+          page: action.page,
+          blocked_state: action.blocked_state,
+        })));
 }
