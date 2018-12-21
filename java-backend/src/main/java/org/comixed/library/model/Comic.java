@@ -41,6 +41,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -74,6 +76,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
 @Table(name = "comics")
+@NamedQueries(
+{@NamedQuery(name = "Comic.findAllUnreadByUser",
+             query = "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)")})
 public class Comic
 {
     @Transient

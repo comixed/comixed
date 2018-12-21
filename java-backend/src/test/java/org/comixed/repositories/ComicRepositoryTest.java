@@ -20,12 +20,14 @@
 package org.comixed.repositories;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.comixed.library.model.Comic;
@@ -65,6 +67,7 @@ public class ComicRepositoryTest
     private static final long TEST_COMIC_WITH_BLOCKED_PAGES = 1001L;
     private static final Long TEST_COMIC_WITH_DELETED_PAGES = 1002L;
     private static final String TEST_IMPRINT = "This is an imprint";
+    private static final Long TEST_USER_ID = 1000L;
 
     @Autowired
     private ComicRepository repository;
@@ -439,5 +442,15 @@ public class ComicRepositoryTest
 
         Comic result = repository.findOne(TEST_COMIC);
         assertEquals("Farkle", result.getSortName());
+    }
+
+    @Test
+    public void testFindAllUnreadByUser()
+    {
+        List<Comic> result = repository.findAllUnreadByUser(TEST_USER_ID);
+
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(3, result.size());
     }
 }
