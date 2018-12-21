@@ -27,6 +27,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import org.comixed.library.model.BlockedPageHash;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
 import org.comixed.library.model.PageType;
+import org.comixed.library.utils.FileTypeIdentifier;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.PageRepository;
@@ -47,7 +49,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -68,6 +69,7 @@ public class PageControllerTest
     private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
     private static final int TEST_DELETED_PAGE_COUNT = 17;
     private static final String TEST_PAGE_HASH = "12345";
+    private static final String TEST_PAGE_CONTENT_TYPE = "application/image";
 
     @InjectMocks
     private PageController pageController;
@@ -104,6 +106,12 @@ public class PageControllerTest
 
     @Mock
     private List<PageType> pageTypes;
+
+    @Mock
+    private FileTypeIdentifier fileTypeIdentifier;
+
+    @Captor
+    private ArgumentCaptor<InputStream> inputStream;
 
     @Test
     public void testSetPageTypeForNonexistentPage()
@@ -223,7 +231,7 @@ public class PageControllerTest
     {
         Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(null);
 
-        byte[] result = pageController.getImageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
+        ResponseEntity<byte[]> result = pageController.getImageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
 
         assertNull(result);
 
@@ -236,7 +244,7 @@ public class PageControllerTest
         Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
         Mockito.when(comic.getPageCount()).thenReturn(TEST_PAGE_INDEX - 1);
 
-        byte[] result = pageController.getImageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
+        ResponseEntity<byte[]> result = pageController.getImageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
 
         assertNull(result);
 
@@ -251,16 +259,18 @@ public class PageControllerTest
         Mockito.when(comic.getPageCount()).thenReturn(TEST_PAGE_INDEX + 1);
         Mockito.when(comic.getPage(Mockito.anyInt())).thenReturn(page);
         Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
+        Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
 
-        byte[] result = pageController.getImageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
+        ResponseEntity<byte[]> result = pageController.getImageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
 
         assertNotNull(result);
-        assertSame(TEST_PAGE_CONTENT, result);
+        assertSame(TEST_PAGE_CONTENT, result.getBody());
 
         Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
         Mockito.verify(comic, Mockito.atLeast(1)).getPageCount();
         Mockito.verify(comic, Mockito.times(1)).getPage(TEST_PAGE_INDEX);
         Mockito.verify(page, Mockito.times(1)).getContent();
+        Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStream.getValue());
     }
 
     @Test
@@ -326,15 +336,17 @@ public class PageControllerTest
     {
         Mockito.when(pageRepository.findOne(Mockito.anyLong())).thenReturn(page);
         Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
+        Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
 
-        ResponseEntity<InputStreamResource> result = pageController.getPageContent(TEST_PAGE_ID);
+        ResponseEntity<byte[]> result = pageController.getPageContent(TEST_PAGE_ID);
 
         assertNotNull(result);
-        assertEquals(TEST_PAGE_CONTENT.length, result.getBody().contentLength());
+        assertEquals(TEST_PAGE_CONTENT, result.getBody());
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
         Mockito.verify(pageRepository, Mockito.times(1)).findOne(TEST_PAGE_ID);
         Mockito.verify(page, Mockito.times(1)).getContent();
+        Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStream.getValue());
     }
 
     @Test

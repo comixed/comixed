@@ -28,6 +28,7 @@ import org.comixed.library.model.Page;
 import org.comixed.library.model.PageType;
 import org.comixed.library.model.View;
 import org.comixed.library.model.View.PageList;
+import org.comixed.library.utils.FileTypeIdentifier;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.PageRepository;
@@ -35,7 +36,6 @@ import org.comixed.repositories.PageTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,12 +54,18 @@ public class PageController
 
     @Autowired
     private ComicRepository comicRepository;
+
     @Autowired
     private PageRepository pageRepository;
+
     @Autowired
     private PageTypeRepository pageTypeRepository;
+
     @Autowired
     private BlockedPageHashRepository blockedPageHashRepository;
+
+    @Autowired
+    private FileTypeIdentifier fileTypeIdentifier;
 
     @RequestMapping(value = "/pages/blocked",
                     method = RequestMethod.POST)
@@ -113,18 +119,6 @@ public class PageController
         }
     }
 
-    private ResponseEntity<InputStreamResource> encodePageContent(Page page)
-    {
-        byte[] content = page.getContent();
-
-        this.logger.debug("Returning {} bytes", content.length);
-
-        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-        return ResponseEntity.ok().contentLength(content.length)
-                             .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
-                             .contentType(MediaType.parseMediaType("application/x-cbr")).body(resource);
-    }
-
     @RequestMapping(value = "/comics/{id}/pages",
                     method = RequestMethod.GET)
     @JsonView(PageList.class)
@@ -164,13 +158,14 @@ public class PageController
 
     @RequestMapping(value = "/comics/{id}/pages/{index}/content",
                     method = RequestMethod.GET)
-    public byte[] getImageInComicByIndex(@PathVariable("id") long id, @PathVariable("index") int index)
+    public ResponseEntity<byte[]> getImageInComicByIndex(@PathVariable("id") long id, @PathVariable("index") int index)
     {
         this.logger.debug("Getting the image for comic: id={} index={}", id, index);
 
         Comic comic = this.comicRepository.findOne(id);
 
-        if ((comic != null) && (index < comic.getPageCount())) return comic.getPage(index).getContent();
+        if ((comic != null)
+            && (index < comic.getPageCount())) return this.getResponseEntityForPage(comic.getPage(index));
 
         if (comic == null)
         {
@@ -186,7 +181,7 @@ public class PageController
 
     @RequestMapping(value = "/pages/{id}/content",
                     method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getPageContent(@PathVariable("id") long id)
+    public ResponseEntity<byte[]> getPageContent(@PathVariable("id") long id)
     {
         this.logger.debug("Getting page: id={}", id);
 
@@ -198,7 +193,7 @@ public class PageController
             return null;
         }
 
-        return this.encodePageContent(page);
+        return this.getResponseEntityForPage(page);
     }
 
     @RequestMapping(value = "/comics/{comic_id}/pages/{index}",
@@ -233,6 +228,15 @@ public class PageController
     {
         this.logger.debug("Returning page types");
         return this.pageTypeRepository.findAll();
+    }
+
+    private ResponseEntity<byte[]> getResponseEntityForPage(Page page)
+    {
+        byte[] content = page.getContent();
+        String type = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content));
+        return ResponseEntity.ok().contentLength(content.length)
+                             .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
+                             .contentType(MediaType.valueOf(type)).body(content);
     }
 
     @RequestMapping(value = "/pages/blocked/{hash}",
