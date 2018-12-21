@@ -81,7 +81,8 @@ public class OPDSEntry
                                                 urlPrefix + "/pages/0/content"),
                                    new OPDSLink("image/jpeg", "http://opds-spec.org/image/thumbnail",
                                                 urlPrefix + "/pages/0/content"),
-                                   new OPDSLink("application/octet-stream", "http://opds-spec.org/acquisition",
+                                   new OPDSLink(comic.getArchiveType().getMimeType(),
+                                                "http://opds-spec.org/acquisition",
                                                 urlPrefix + "/download/" + urlSafeFilename));
     }
 
