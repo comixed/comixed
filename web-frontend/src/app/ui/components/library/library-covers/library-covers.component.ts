@@ -45,8 +45,8 @@ export class LibraryCoversComponent implements OnInit {
   @Output() changeRows = new EventEmitter<number>();
   @Output() changeCoverSize = new EventEmitter<number>();
   @Output() saveCoverSize = new EventEmitter<number>();
-  @Output() open = new EventEmitter<Comic>();
-  @Output() delete = new EventEmitter<Comic>();
+  @Output() openComic = new EventEmitter<Comic>();
+  @Output() deleteComic = new EventEmitter<Comic>();
 
   public scan_types: Array<SelectItem>;
   public formats: Array<SelectItem>;
@@ -86,10 +86,10 @@ export class LibraryCoversComponent implements OnInit {
   }
 
   open_comic(comic: Comic): void {
-    this.open.next(comic);
+    this.openComic.next(comic);
   }
 
   delete_comic(comic: Comic): void {
-    this.delete.next(comic);
+    this.deleteComic.next(comic);
   }
 }

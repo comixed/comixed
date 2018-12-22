@@ -28,8 +28,8 @@
   (changeRows)='set_rows($event)'
   (changeCoverSize)='set_cover_size($event)'
   (saveCoverSize)='save_cover_size($event)'
-  (open)='open_comic($event)'
-  (delete)='delete_comic($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
+  (openComic)='open_comic($event)'
+  (deleteComic)='delete_comic($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
   [disabled]='!library'
   header='Details'> <app-library-details
   *ngIf='library'
@@ -44,9 +44,9 @@
   (changeRows)='set_rows($event)'
   (changeCoverSize)='set_cover_size($event)'
   (saveCoverSize)='save_cover_size($event)'
-  (delete)='delete_comic($event)'></app-library-details></p-tabPanel> <p-tabPanel
+  (deleteComic)='delete_comic($event)'
+  (openComic)='open_comic($event)'></app-library-details></p-tabPanel> <p-tabPanel
   *ngIf='user.is_admin'
-  (open)='open_comic($event)'
   [disabled]='!library'
   header='Scraping'> <app-library-scraping-view>
 </app-library-scraping-view></p-tabPanel></p-tabView>
