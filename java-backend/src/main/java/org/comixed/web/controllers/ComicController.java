@@ -58,6 +58,22 @@ import com.fasterxml.jackson.annotation.JsonView;
 @RequestMapping(value = "/api/comics")
 public class ComicController
 {
+    protected static final Logger classLogger = LoggerFactory.getLogger(ComicController.class);
+
+    private static final Object STATUS_SEMAPHORE = new Object();
+
+    /**
+     * Tells any pending status calls to wake up.
+     */
+    public static void stopWaitingForStatus()
+    {
+        classLogger.debug("Notifying all pending status calls to exit immediately...");
+        synchronized (STATUS_SEMAPHORE)
+        {
+            STATUS_SEMAPHORE.notifyAll();
+        }
+    }
+
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -95,6 +111,7 @@ public class ComicController
         {
             this.comicRepository.delete(comic);
             this.logger.debug("Comic deleted: id={}", id);
+            ComicController.stopWaitingForStatus();
             return true;
         }
     }
@@ -114,6 +131,7 @@ public class ComicController
             this.comicDataAdaptor.clear(comic);
             this.logger.debug("Saving updates to comic");
             this.comicRepository.save(comic);
+            ComicController.stopWaitingForStatus();
         }
         else
         {
@@ -195,27 +213,33 @@ public class ComicController
         long returnBy = System.currentTimeMillis() + timeout;
         List<Comic> result = null;
 
-        this.logger.debug("Getting pending import count...");
-        int importCount = this.worker.getCountFor(AddComicWorkerTask.class);
-        this.logger.debug("Import count is {}", importCount);
-
-        this.logger.debug("Getting the rescan status..");
-        int rescanCount = this.worker.getCountFor(RescanComicWorkerTask.class);
-        this.logger.debug("Rescan count is {}", rescanCount);
+        int importCount = 0;
+        int rescanCount = 0;
 
         this.logger.debug("Looking for comics added since {}: timeout={}", latestDate, timeout);
 
         while (!done)
         {
+            this.logger.debug("Getting pending import count...");
+            importCount = this.worker.getCountFor(AddComicWorkerTask.class);
+            this.logger.debug("Import count is {}", importCount);
+
+            this.logger.debug("Getting the rescan status..");
+            rescanCount = this.worker.getCountFor(RescanComicWorkerTask.class);
+            this.logger.debug("Rescan count is {}", rescanCount);
+
             result = this.comicRepository.findByDateAddedGreaterThan(latestDate);
 
-            if ((result.size() == 0) && (System.currentTimeMillis() <= returnBy) && (rescanCount == 0))
+            if ((result.size() == 0) && (System.currentTimeMillis() <= returnBy) && (rescanCount == 0)
+                && (importCount == 0))
             {
-                Thread.sleep(1000);
+                synchronized (STATUS_SEMAPHORE)
+                {
+                    STATUS_SEMAPHORE.wait(1000);
+                }
             }
             else
             {
-                this.logger.debug("Timeout reached. Returning no new comics...", timeout);
                 done = true;
             }
         }
@@ -259,6 +283,8 @@ public class ComicController
     public void rescanComics()
     {
         this.logger.debug("Rescanning comics in the library");
+
+        ComicController.stopWaitingForStatus();
 
         Iterable<Comic> comics = this.comicRepository.findAll();
 
@@ -357,5 +383,7 @@ public class ComicController
         {
             this.logger.debug("No such comic found");
         }
+
+        ComicController.stopWaitingForStatus();
     }
 }

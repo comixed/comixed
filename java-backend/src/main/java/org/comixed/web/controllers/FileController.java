@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.codec.StringEncoder;
 import org.comixed.library.adaptors.archive.ArchiveAdaptor;
 import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.library.model.ComicFileHandler;
@@ -198,6 +199,8 @@ public class FileController
                                  @RequestParam("delete_blocked_pages") boolean deleteBlockedPages)
     {
         this.logger.debug("Queueing {} files for import", filenames.length);
+
+        ComicController.stopWaitingForStatus();
 
         QueueComicsWorkerTask task = this.taskFactory.getObject();
         for (int index = 0;
