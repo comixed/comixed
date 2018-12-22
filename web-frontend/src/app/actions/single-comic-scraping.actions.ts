@@ -131,6 +131,7 @@ export class SingleComicScrapingScrapeMetadata implements Action {
     comic: Comic,
     issue_id: number,
     skip_cache: boolean,
+    multi_comic_mode: boolean,
   }) { }
 }
 
@@ -139,6 +140,7 @@ export class SingleComicScrapingMetadataScraped implements Action {
 
   constructor(public payload: {
     comic: Comic,
+    multi_comic_mode: boolean,
   }) { }
 }
 

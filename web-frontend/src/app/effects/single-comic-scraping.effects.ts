@@ -122,5 +122,8 @@ export class SingleComicScrapingEffects {
         action.issue_id,
         action.skip_cache,
       )
-        .map((comic: Comic) => new ScrapingActions.SingleComicScrapingMetadataScraped({ comic: comic })));
+        .map((comic: Comic) => new ScrapingActions.SingleComicScrapingMetadataScraped({
+          comic: comic,
+          multi_comic_mode: action.multi_comic_mode,
+        })));
 }

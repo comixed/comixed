@@ -20,6 +20,7 @@
     <div class='ui-g'>
       <div class='ui-g-12'>
         <app-comic-details-editor
+          [multi_comic_mode]='true'
           [comic]='multi_scraping.current_comic'
           (update)='comic_scraped()'></app-comic-details-editor>
       </div>

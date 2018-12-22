@@ -43,6 +43,7 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./comic-details-editor.component.css']
 })
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
+  @Input() multi_comic_mode = false;
   @Output() update: EventEmitter<Comic> = new EventEmitter();
 
   fetch_options: Array<MenuItem>;
@@ -149,6 +150,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       comic: this.single_comic_scraping.comic,
       issue_id: this.single_comic_scraping.current_issue.id,
       skip_cache: this.skip_cache,
+      multi_comic_mode: this.multi_comic_mode,
     }));
     this.update.next(this.single_comic_scraping.comic);
   }
