@@ -54,5 +54,5 @@ export class ImportingEffects {
     .map(action => action.payload)
     .switchMap(action =>
       this.comic_service.import_files_into_library(action.files, false)
-        .map(() => new ImportingActions.ImportingGetPendingImports()));
+        .map(() => new ImportingActions.ImportingFilesAreImporting()));
 }

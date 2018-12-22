@@ -29,6 +29,7 @@ export const IMPORTING_FILES_FETCHED = '[IMPORTING] Files fetched from server';
 export const IMPORTING_SELECT_FILES = '[IMPORTING] Add files to selection list';
 export const IMPORTING_UNSELECT_FILES = '[IMPORTING] Remove files from selection list';
 export const IMPORTING_IMPORT_FILES = '[IMPORTING] Import files';
+export const IMPORTING_FILES_ARE_IMPORTING = '[IMPORTING] Files have been queued for import';
 
 export class ImportingGetPendingImports implements Action {
   readonly type = IMPORTING_GET_PENDING_IMPORTS;
@@ -84,6 +85,12 @@ export class ImportingImportFiles implements Action {
   }) { }
 }
 
+export class ImportingFilesAreImporting implements Action {
+  readonly type = IMPORTING_FILES_ARE_IMPORTING;
+
+  constructor() { }
+}
+
 export type Actions =
   ImportingGetPendingImports |
   ImportingSetDirectory |
@@ -91,4 +98,5 @@ export type Actions =
   ImportingFilesFetched |
   ImportingSelectFiles |
   ImportingUnselectFiles |
-  ImportingImportFiles;
+  ImportingImportFiles |
+  ImportingFilesAreImporting;

@@ -94,6 +94,15 @@ export function importingReducer(
         busy: true,
       };
 
+    case ImportingActions.IMPORTING_FILES_ARE_IMPORTING:
+      return {
+        ...state,
+        busy: false,
+        importing: true,
+        selected_count: 0,
+        files: [],
+      };
+
     default:
       return state;
   }
