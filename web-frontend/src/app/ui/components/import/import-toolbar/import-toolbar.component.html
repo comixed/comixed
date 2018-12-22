@@ -23,5 +23,6 @@
   pButton
   icon='fa fa-upload'
   label='Import'
+  [disabled]='selected_count === 0'
   (click)='start_importing()'></button>
 </p-toolbar>

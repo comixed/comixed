@@ -23,6 +23,7 @@
       <div class='ui-g-12 ui-sm-12'>
         <app-import-toolbar
           [directory]='importing.directory'
+          [selected_count]='importing.selected_count'
           (directorySelected)='retrieve_files($event)'
           (selectAll)='set_select_all($event)'
           (startImporting)='import_selected_files()'></app-import-toolbar>

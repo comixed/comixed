@@ -28,6 +28,7 @@ import { MenuItem } from 'primeng/api';
 })
 export class ImportToolbarComponent implements OnInit {
   @Input() directory: string;
+  @Input() selected_count = 0;
   @Output() directorySelected = new EventEmitter<string>();
   @Output() showSelections = new EventEmitter<boolean>();
   @Output() selectAll = new EventEmitter<boolean>();
