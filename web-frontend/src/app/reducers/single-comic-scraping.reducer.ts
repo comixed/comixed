@@ -135,12 +135,13 @@ export function singleComicScrapingReducer(
       };
     }
 
-    case ScrapingActions.SINGLE_COMIC_SCRAPING_METADATA_SCRAPED:
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_METADATA_SCRAPED: {
       return {
         ...state,
         busy: false,
         comic: action.payload.multi_comic_mode ? state.comic : action.payload.comic,
       };
+    }
 
     default:
       return state;
