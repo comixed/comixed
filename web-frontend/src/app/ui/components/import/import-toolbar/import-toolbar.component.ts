@@ -31,7 +31,7 @@ export class ImportToolbarComponent implements OnInit {
   @Output() directorySelected = new EventEmitter<string>();
   @Output() showSelections = new EventEmitter<boolean>();
   @Output() selectAll = new EventEmitter<boolean>();
-  @Output() import = new EventEmitter<boolean>();
+  @Output() startImporting = new EventEmitter<boolean>();
 
   select_options: MenuItem[];
 
@@ -58,6 +58,6 @@ export class ImportToolbarComponent implements OnInit {
   }
 
   start_importing(): void {
-    this.import.next(true);
+    this.startImporting.next(true);
   }
 }

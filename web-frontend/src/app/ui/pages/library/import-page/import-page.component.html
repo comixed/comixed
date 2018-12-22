@@ -1,5 +1,5 @@
 <div
-  *ngIf='library.import_count > 0'
+  *ngIf='importing.importing'
   class='ui-g'>
   <div class='ui-g-12'>
     <h2 class='text-center'>{{get_import_title()}}</h2>
@@ -15,7 +15,7 @@
 </div>
 <!--  main import content area -->
 <div
-  *ngIf='library.import_count === 0'
+  *ngIf='!importing.importing'
   class='ui-g'>
   <!-- selection overlay -->
   <div class='ui-g-12 ui-sm-12'>
@@ -25,7 +25,7 @@
           [directory]='importing.directory'
           (directorySelected)='retrieve_files($event)'
           (selectAll)='set_select_all($event)'
-          (import)='import_selected_files()'></app-import-toolbar>
+          (startImporting)='import_selected_files()'></app-import-toolbar>
       </div>
     </div>
     <div class='ui-g'>

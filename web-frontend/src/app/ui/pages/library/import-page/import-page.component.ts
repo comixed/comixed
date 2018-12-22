@@ -206,6 +206,9 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   get_import_title(): string {
+    if (this.library.import_count === 0) {
+      return 'Preparing To Import Comics...';
+    }
     return `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.library.import_count} ` +
       `Comic${this.plural_imports() ? 's' : ''} Remaining To Be Imported...`;
   }
