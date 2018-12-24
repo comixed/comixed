@@ -2,8 +2,7 @@
 {
 	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
 	"project": {
-		"name": "comixed-web-frontend",
-		"version": "0.2.0-RC1"
+		"name": "comixed-web-frontend"
 	},
 	"apps": [
 		{
