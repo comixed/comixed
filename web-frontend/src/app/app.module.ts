@@ -79,6 +79,7 @@ import { StoreModule } from '@ngrx/store';
 import { userReducer } from './reducers/user.reducer';
 import { importingReducer } from './reducers/importing.reducer';
 import { libraryReducer } from './reducers/library.reducer';
+import { libraryFilterReducer } from './reducers/library-filter.reducer';
 import { libraryDisplayReducer } from './reducers/library-display.reducer';
 import { singleComicScrapingReducer } from './reducers/single-comic-scraping.reducer';
 import { multipleComicsScrapingReducer } from './reducers/multiple-comics-scraping.reducer';
@@ -200,6 +201,7 @@ import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
       user: userReducer,
       importing: importingReducer,
       library: libraryReducer,
+      library_filter: libraryFilterReducer,
       library_display: libraryDisplayReducer,
       single_comic_scraping: singleComicScrapingReducer,
       multiple_comic_scraping: multipleComicsScrapingReducer,
