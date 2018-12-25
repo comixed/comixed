@@ -24,7 +24,6 @@ import * as LibraryActions from '../../../../actions/library.actions';
 import { Comic } from '../../../../models/comics/comic';
 import { ScanType } from '../../../../models/comics/scan-type';
 import { ComicFormat } from '../../../../models/comics/comic-format';
-import { Library } from '../../../../models/library';
 import { ComicService } from '../../../../services/comic.service';
 import { SelectItem } from 'primeng/api';
 
@@ -35,7 +34,7 @@ import { SelectItem } from 'primeng/api';
 })
 export class LibraryCoversComponent implements OnInit {
   @Input() is_admin: boolean;
-  @Input() library: Library;
+  @Input() comics: Array<Comic>;
   @Input() rows: number;
   @Input() sort_by: string;
   @Input() cover_size: number;
