@@ -111,6 +111,7 @@ import { ComicTitlePipe } from './pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from './pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
 import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
+import { LibraryFilterComponent } from './ui/components/library/library-filter/library-filter.component';
 
 @NgModule({
   declarations: [
@@ -150,6 +151,7 @@ import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
     ComicCoverUrlPipe,
     ComicPageUrlPipe,
     ComicFileCoverUrlPipe,
+    LibraryFilterComponent,
   ],
   imports: [
     BrowserModule,
