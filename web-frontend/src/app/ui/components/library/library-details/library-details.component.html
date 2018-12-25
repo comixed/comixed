@@ -1,9 +1,9 @@
 <p-table
-  #comicDetailView
+  *ngIf='comics'
   dataKey='id'
   [autoLayout]='true'
-  [value]='library.comics'
-  [totalRecords]='library.comics.length'
+  [value]='comics'
+  [totalRecords]='comics.length'
   paginator='true'
   paginatorPosition='both'
   [rows]='rows'
@@ -28,14 +28,7 @@
       [(ngModel)]='rows'
       (onChange)='set_rows($event.value)'></p-dropdown>
   </div>
-  <div class='ui-g-3 ui-md-3'>
-    Search comic names: <input
-      type='search'
-      pInputText
-      placeholder='Search by series name'
-      [style.width]='"100%"'
-      (keyup)='comicDetailView.filterGlobal($event.target.value, "contains")'>
-  </div>
+  <div class='ui-g-3 ui-md-3'></div>
 </div>
 </ng-template> <ng-template pTemplate='header'>
 <tr>

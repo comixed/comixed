@@ -1,5 +1,5 @@
 <p-dataView
-  #comicCoverView
+  *ngIf='comics'
   filterBy='series'
   [value]='comics'
   [totalRecords]='comics.length'
@@ -23,14 +23,6 @@
         [options]='rows_options'
         [(ngModel)]='rows'
         (onChange)='set_rows($event.value)'></p-dropdown>
-    </div>
-    <div class='ui-g-3 ui-md-3'>
-      Search comic names: <input
-        type='search'
-        pInputText
-        placeholder='Search by series name'
-        [style.width]='"100%"'
-        (keyup)='comicCoverView.filter($event.target.value)'>
     </div>
     <div class='ui-g-6 ui-md-6'>
       Cover size: {{ cover_size }}px

@@ -20,7 +20,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
-import { Library } from '../../../../models/library';
 import { Comic } from '../../../../models/comics/comic';
 import { ComicService } from '../../../../services/comic.service';
 
@@ -31,7 +30,7 @@ import { ComicService } from '../../../../services/comic.service';
 })
 export class LibraryDetailsComponent implements OnInit {
   @Input() is_admin: boolean;
-  @Input() library: Library;
+  @Input() comics: Array<Comic>;
   @Input() rows: number;
   @Input() sort_by: string;
   @Input() cover_size: number;

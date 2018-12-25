@@ -47,30 +47,12 @@ export class LibraryCoversComponent implements OnInit {
   @Output() openComic = new EventEmitter<Comic>();
   @Output() deleteComic = new EventEmitter<Comic>();
 
-  public scan_types: Array<SelectItem>;
-  public formats: Array<SelectItem>;
-
   constructor(
     private comic_service: ComicService,
     private store: Store<AppState>,
   ) { }
 
-  ngOnInit() {
-    this.scan_types = [];
-    this.library.scan_types.forEach((scan_type: ScanType) => {
-      this.scan_types.push({
-        label: scan_type.name,
-        value: scan_type,
-      });
-    });
-    this.formats = [];
-    this.library.formats.forEach((format: ComicFormat) => {
-      this.formats.push({
-        label: format.name,
-        value: format,
-      });
-    });
-  }
+  ngOnInit() { }
 
   set_sort_order(sort_order: string): void {
     this.changeSort.next(sort_order);
