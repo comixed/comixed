@@ -123,7 +123,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   fetch_candidates(skip_cache: boolean): void {
     this.skip_cache = skip_cache;
     this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingFetchVolumes({
-      api_key: this.api_key,
+      api_key: this.api_key.trim(),
       series: this.series,
       volume: this.volume,
       issue_number: this.issue_number,
@@ -134,7 +134,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   select_volume(volume: Volume): void {
     if (volume) {
       this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetCurrentVolume({
-        api_key: this.api_key,
+        api_key: this.api_key.trim(),
         volume: volume,
         issue_number: this.issue_number,
         skip_cache: this.skip_cache,
@@ -146,7 +146,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   select_issue(): void {
     this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingScrapeMetadata({
-      api_key: this.api_key,
+      api_key: this.api_key.trim(),
       comic: this.single_comic_scraping.comic,
       issue_id: this.single_comic_scraping.current_issue.id,
       skip_cache: this.skip_cache,
