@@ -186,7 +186,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   save_api_key(): void {
     this.store.dispatch(new UserActions.UserSetPreference({
       name: COMICVINE_API_KEY,
-      value: this.api_key,
+      value: this.api_key.trim(),
     }));
   }
 
