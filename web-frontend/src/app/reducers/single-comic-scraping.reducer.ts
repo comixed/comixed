@@ -54,15 +54,6 @@ export function singleComicScrapingReducer(
       };
     }
 
-    case ScrapingActions.SINGLE_COMIC_SCRAPING_SAVE_API_KEY: {
-      return {
-        ...state,
-        api_key: action.payload.api_key,
-        comic: action.payload.comic,
-        busy: true,
-      };
-    }
-
     case ScrapingActions.SINGLE_COMIC_SCRAPING_SAVE_LOCAL_CHANGES: {
       return {
         ...state,
