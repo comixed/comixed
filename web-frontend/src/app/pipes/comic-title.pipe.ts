@@ -21,7 +21,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Comic } from '../models/comics/comic';
 
 @Pipe({
-  name: 'comic_title'
+  name: 'comic_title',
+  pure: false,
 })
 export class ComicTitlePipe implements PipeTransform {
 
