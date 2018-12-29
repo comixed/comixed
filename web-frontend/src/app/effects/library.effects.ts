@@ -128,6 +128,14 @@ export class LibraryEffects {
     .switchMap(action =>
       this.comic_service.clear_metadata(action.comic)
         .do(() => this.alert_service.show_info_message('Metadata cleared...'))
+        .do((comic: Comic) => {
+          // clear all existing metadata and copy the new metadata
+          for (const field of Object.keys(action.comic)) {
+            delete action.comic[field];
+          }
+
+          Object.assign(action.comic, comic);
+        })
         .catch((error: Error) => of(this.alert_service.show_error_message('Failed to clear metadata...', error)))
         .map((comic: Comic) => new LibraryActions.LibraryMetadataChanged({
           original: action.comic,

@@ -200,19 +200,12 @@ export function libraryReducer(
         busy: true,
       };
 
-    case LibraryActions.LIBRARY_METADATA_CHANGED: {
-      // clear all existing metadata and copy the new metadata
-      for (const field of Object.keys(action.payload.original)) {
-        delete action.payload.original[field];
-      }
-      Object.assign(action.payload.original, action.payload.updated);
-
+    case LibraryActions.LIBRARY_METADATA_CHANGED:
       return {
         ...state,
         busy: false,
         comics: state.comics,
       };
-    }
 
     case LibraryActions.LIBRARY_RESCAN_FILES:
       return {
