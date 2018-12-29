@@ -29,5 +29,4 @@ export interface Library {
   scan_types: Array<ScanType>;
   formats: Array<ComicFormat>;
   comics: Array<Comic>;
-  metadata_changed: boolean;
 }

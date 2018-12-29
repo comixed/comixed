@@ -30,7 +30,6 @@ const initial_state: Library = {
   scan_types: [],
   formats: [],
   comics: [],
-  metadata_changed: false,
 };
 
 export function libraryReducer(
@@ -63,7 +62,6 @@ export function libraryReducer(
       return {
         ...state,
         busy: false,
-        metadata_changed: true,
       };
     }
 
@@ -92,7 +90,6 @@ export function libraryReducer(
       return {
         ...state,
         busy: false,
-        metadata_changed: true,
       };
     }
 
@@ -108,7 +105,6 @@ export function libraryReducer(
       return {
         ...state,
         busy: false,
-        metadata_changed: true,
       };
     }
 
@@ -205,30 +201,18 @@ export function libraryReducer(
       };
 
     case LibraryActions.LIBRARY_METADATA_CHANGED: {
-      const index = state.comics.findIndex((comic: Comic) => {
-        return comic.id === action.payload.comic.id;
-      });
-
-      if (index !== -1) {
-        Object.keys(state.comics[index]).forEach((key: string) => {
-          delete state.comics[index][key];
-        });
-        Object.assign(state.comics[index], action.payload.comic);
+      // clear all existing metadata and copy the new metadata
+      for (const field of Object.keys(action.payload.original)) {
+        delete action.payload.original[field];
       }
+      Object.assign(action.payload.original, action.payload.updated);
 
       return {
         ...state,
         busy: false,
         comics: state.comics,
-        metadata_changed: true,
       };
     }
-
-    case LibraryActions.LIBRARY_CLEAR_METADATA_FLAG:
-      return {
-        ...state,
-        metadata_changed: false,
-      };
 
     case LibraryActions.LIBRARY_RESCAN_FILES:
       return {

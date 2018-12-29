@@ -43,7 +43,6 @@ export const LIBRARY_UPDATE_COMICS_REMOVE_COMIC = '[LIBRARY] Update comics by re
 export const LIBRARY_RESET = '[LIBRARY] Reset the library settings';
 export const LIBRARY_CLEAR_METADATA = '[LIBRARY] Clear comic metadata';
 export const LIBRARY_METADATA_CHANGED = '[LIBRARY] Metadata cleared on comic';
-export const LIBRARY_CLEAR_METADATA_FLAG = '[LIBRARY] Clear metadata flag';
 export const LIBRARY_RESCAN_FILES = '[LIBRARY] Rescan the whole library';
 export const LIBRARY_SET_BLOCKED_PAGE_STATE = '[LIBRARY] Set blocked page state';
 export const LIBRARY_BLOCKED_PAGE_STATE_SET = '[LIBRARY] Blocked page state is set';
@@ -189,14 +188,9 @@ export class LibraryMetadataChanged implements Action {
   readonly type = LIBRARY_METADATA_CHANGED;
 
   constructor(public payload: {
-    comic: Comic,
+    original: Comic,
+    updated: Comic,
   }) { }
-}
-
-export class LibraryClearMetadataFlag implements Action {
-  readonly type = LIBRARY_CLEAR_METADATA_FLAG;
-
-  constructor() { }
 }
 
 export class LibraryRescanFiles implements Action {
@@ -244,7 +238,6 @@ export type Actions =
   LibraryReset |
   LibraryClearMetadata |
   LibraryMetadataChanged |
-  LibraryClearMetadataFlag |
   LibraryRescanFiles |
   LibrarySetBlockedPageState |
   LibraryBlockedStateFlagSet;
