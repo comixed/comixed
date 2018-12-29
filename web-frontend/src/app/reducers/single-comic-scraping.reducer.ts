@@ -127,10 +127,11 @@ export function singleComicScrapingReducer(
     }
 
     case ScrapingActions.SINGLE_COMIC_SCRAPING_METADATA_SCRAPED: {
+      Object.assign(action.payload.original, action.payload.updated);
       return {
         ...state,
         busy: false,
-        comic: action.payload.multi_comic_mode ? state.comic : action.payload.comic,
+        comic: action.payload.updated,
       };
     }
 

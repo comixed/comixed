@@ -23,6 +23,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import * as LibraryActions from '../../../../actions/library.actions';
+import * as ScrapingActions from '../../../../actions/single-comic-scraping.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { User } from '../../../../models/user/user';
@@ -96,18 +97,11 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
-
-        if (this.single_comic_scraping.comic) {
-          this.comic = this.single_comic_scraping.comic;
-        }
       });
     this.user_subscription = this.user$.subscribe(
       (user: User) => {
         this.user = user;
       });
-    this.activatedRoute.params.subscribe(params => {
-      this.comic_id = +params['id'];
-    });
     this.activatedRoute.queryParams.subscribe(params => {
       this.set_page_size(parseInt(this.load_parameter(params[PAGE_SIZE_PARAMETER], '100'), 10));
       this.set_current_page(parseInt(this.load_parameter(params[CURRENT_PAGE_PARAMETER], '0'), 10));

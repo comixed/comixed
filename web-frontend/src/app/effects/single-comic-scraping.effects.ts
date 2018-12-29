@@ -125,7 +125,8 @@ export class SingleComicScrapingEffects {
         .do((comic: Comic) => Object.assign(action.comic, comic))
         .do(() => this.alert_service.show_info_message('Comic details scraped...'))
         .map((comic: Comic) => new ScrapingActions.SingleComicScrapingMetadataScraped({
-          comic: comic,
+          original: action.comic,
+          updated: comic,
           multi_comic_mode: action.multi_comic_mode,
         })));
 }
