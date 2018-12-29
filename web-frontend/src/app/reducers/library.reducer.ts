@@ -156,21 +156,6 @@ export function libraryReducer(
         comics: comics,
       };
 
-    case LibraryActions.LIBRARY_UPDATE_COMIC: {
-      const index = state.comics.findIndex((comic: Comic) => {
-        return comic.id === action.payload.id;
-      });
-
-      if (index !== -1) {
-        Object.assign(state.comics[index], action.payload);
-      }
-
-      return {
-        ...state,
-        comics: state.comics,
-      };
-    }
-
     case LibraryActions.LIBRARY_REMOVE_COMIC: {
       return {
         ...state,

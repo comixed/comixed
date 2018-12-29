@@ -37,7 +37,6 @@ export const LIBRARY_SET_SORT_NAME = '[LIBRARY] Sets the sort name for a comic';
 export const LIBRARY_SORT_NAME_SET = '[LIBRARY] The sort name is set';
 export const LIBRARY_FETCH_LIBRARY_CHANGES = '[LIBRARY] Fetch changes to the library';
 export const LIBRARY_MERGE_NEW_COMICS = '[LIBRARY] Merge newly retrieved comics';
-export const LIBRARY_UPDATE_COMIC = '[LIBRARY] Update a single comic';
 export const LIBRARY_REMOVE_COMIC = '[LIBRARY] Remove comic';
 export const LIBRARY_UPDATE_COMICS_REMOVE_COMIC = '[LIBRARY] Update comics by removing a comic';
 export const LIBRARY_RESET = '[LIBRARY] Reset the library settings';
@@ -148,12 +147,6 @@ export class LibraryMergeNewComics implements Action {
   }) { }
 }
 
-export class LibraryUpdateComic implements Action {
-  readonly type = LIBRARY_UPDATE_COMIC;
-
-  constructor(public payload: Comic) { }
-}
-
 export class LibraryRemoveComic implements Action {
   readonly type = LIBRARY_REMOVE_COMIC;
 
@@ -232,7 +225,6 @@ export type Actions =
   LibrarySortNameSet |
   LibraryFetchLibraryChanges |
   LibraryMergeNewComics |
-  LibraryUpdateComic |
   LibraryRemoveComic |
   LibraryUpdateComicsRemoveComic |
   LibraryReset |
