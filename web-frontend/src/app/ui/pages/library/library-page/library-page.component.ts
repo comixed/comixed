@@ -247,10 +247,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  get_comic_title(comic: Comic): string {
-    return `${comic.series || 'Unknown'} v${comic.volume || '????'} #${comic.issue_number || '??'}`;
-  }
-
   open_comic(comic: Comic): void {
     this.router.navigate(['comics', `${comic.id}`]);
   }

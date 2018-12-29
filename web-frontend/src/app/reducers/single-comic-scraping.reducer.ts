@@ -127,6 +127,11 @@ export function singleComicScrapingReducer(
     }
 
     case ScrapingActions.SINGLE_COMIC_SCRAPING_METADATA_SCRAPED: {
+      // clear all existing metadata and copy the new metadata
+      for (const field of Object.keys(action.payload.original)) {
+        delete action.payload.original[field];
+      }
+
       Object.assign(action.payload.original, action.payload.updated);
       return {
         ...state,
