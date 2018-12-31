@@ -96,6 +96,11 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
+
+        if (this.single_comic_scraping.data_scraped) {
+          this.comic = this.single_comic_scraping.comic;
+          this.store.dispatch(new ScrapingActions.SingleComicScrapingClearDataScrapedFlag());
+        }
       });
     this.user_subscription = this.user$.subscribe(
       (user: User) => {

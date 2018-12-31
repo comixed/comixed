@@ -31,4 +31,5 @@ export interface SingleComicScraping {
   volumes: Array<Volume>;
   current_volume: Volume;
   current_issue: Issue;
+  data_scraped: boolean;
 }

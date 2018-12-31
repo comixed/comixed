@@ -33,6 +33,7 @@ export const SINGLE_COMIC_SCRAPING_FETCH_ISSUES = '[LIBRARY SCRAPING] Fetch issu
 export const SINGLE_COMIC_SCRAPING_FOUND_ISSUE = '[LIBRARY SCRAPING] Found issue';
 export const SINGLE_COMIC_SCRAPING_SCRAPE_METADATA = '[LIBRARY SCRAPING] Scrape metadata';
 export const SINGLE_COMIC_SCRAPING_METADATA_SCRAPED = '[LIBRARY SCRAPING] Metadata scraped';
+export const SINGLE_COMIC_SCRAPING_CLEAR_DATA_SCRAPED_FLAG = '[LIBRARY SCRAPING] Clear the data changed flag';
 
 export class SingleComicScrapingSetup implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_SETUP;
@@ -135,6 +136,12 @@ export class SingleComicScrapingMetadataScraped implements Action {
   }) { }
 }
 
+export class SingleComicScrapingClearDataScrapedFlag implements Action {
+  readonly type = SINGLE_COMIC_SCRAPING_CLEAR_DATA_SCRAPED_FLAG;
+
+  constructor() { }
+}
+
 export type Actions =
   SingleComicScrapingSetup |
   SingleComicScrapingSaveLocalChanges |
@@ -145,4 +152,5 @@ export type Actions =
   SingleComicScrapingFetchIssue |
   SingleComicScrapingFoundIssue |
   SingleComicScrapingScrapeMetadata |
-  SingleComicScrapingMetadataScraped;
+  SingleComicScrapingMetadataScraped |
+  SingleComicScrapingClearDataScrapedFlag;

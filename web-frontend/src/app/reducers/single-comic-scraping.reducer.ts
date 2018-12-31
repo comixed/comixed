@@ -32,6 +32,7 @@ const initial_state: SingleComicScraping = {
   volumes: [],
   current_volume: null,
   current_issue: null,
+  data_scraped: false,
 };
 
 export function singleComicScrapingReducer(
@@ -51,6 +52,7 @@ export function singleComicScrapingReducer(
         current_volume: null,
         current_issue: null,
         busy: false,
+        data_scraped: false,
       };
     }
 
@@ -131,8 +133,15 @@ export function singleComicScrapingReducer(
         ...state,
         busy: false,
         comic: action.payload.updated,
+        data_scraped: true,
       };
     }
+
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_CLEAR_DATA_SCRAPED_FLAG:
+      return {
+        ...state,
+        data_scraped: false,
+      };
 
     default:
       return state;
