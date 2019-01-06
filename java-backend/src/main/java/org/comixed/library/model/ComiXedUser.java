@@ -47,14 +47,14 @@ public class ComiXedUser
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(View.UserDetails.class)
+    @JsonView(View.UserList.class)
     private Long id;
 
     @Column(name = "email",
             updatable = true,
             nullable = false,
             unique = true)
-    @JsonView(View.UserDetails.class)
+    @JsonView(View.UserList.class)
     private String email;
 
     @Transient
@@ -70,14 +70,14 @@ public class ComiXedUser
             nullable = false,
             updatable = false)
     @JsonProperty("first_login_date")
-    @JsonView(View.UserDetails.class)
+    @JsonView(View.UserList.class)
     private Date firstLoginDate = new Date();
 
     @Column(name = "last_login_date",
             nullable = false,
             updatable = true)
     @JsonProperty("last_login_date")
-    @JsonView(View.UserDetails.class)
+    @JsonView(View.UserList.class)
     private Date lastLoginDate = new Date();
 
     @ManyToMany
@@ -86,18 +86,26 @@ public class ComiXedUser
                                          referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "role_id",
                                                 referencedColumnName = "id"))
-    @JsonView(View.UserDetails.class)
+    @JsonView(View.UserList.class)
     private List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL,
                fetch = FetchType.EAGER)
-    @JsonView(View.UserDetails.class)
+    @JsonView(View.UserList.class)
     private List<Preference> preferences = new ArrayList<>();
 
     @Transient
-    @JsonView(View.UserDetails.class)
+    @JsonView(View.UserList.class)
     private boolean authenticated = false;
+
+    public void addRole(Role role)
+    {
+        if (!this.roles.contains(role))
+        {
+            this.roles.add(role);
+        }
+    }
 
     public String getEmail()
     {
@@ -195,5 +203,10 @@ public class ComiXedUser
             }
         }
         this.preferences.add(new Preference(this, name, value));
+    }
+
+    public void clearRoles()
+    {
+        this.roles.clear();
     }
 }

@@ -24,13 +24,18 @@ import java.util.List;
 
 import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.Preference;
+import org.comixed.library.model.Role;
 import org.comixed.library.model.View.UserDetails;
+import org.comixed.library.model.View.UserList;
 import org.comixed.repositories.ComiXedUserRepository;
+import org.comixed.repositories.RoleRepository;
 import org.comixed.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,14 +45,63 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 @RequestMapping(value = "/api")
-public class UserController
+public class UserController implements
+                            InitializingBean
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ComiXedUserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Autowired
     private Utils utils;
+
+    Role readerRole;
+
+    Role adminRole;
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        this.readerRole = this.roleRepository.findByName("READER");
+        this.adminRole = this.roleRepository.findByName("ADMIN");
+    }
+
+    @RequestMapping(value = "/admin/users/{id}",
+                    method = RequestMethod.DELETE)
+    public boolean deleteUser(@PathVariable("id") long userId)
+    {
+        this.logger.debug("Deleting user: id={}", userId);
+
+        ComiXedUser user = this.userRepository.findOne(userId);
+
+        if (user == null)
+        {
+            this.logger.debug("No such user");
+            return false;
+        }
+
+        this.logger.debug("Found account. Deleting {}", user.getEmail());
+        this.userRepository.delete(user);
+
+        return true;
+    }
+
+    @RequestMapping(value = "/admin/users/list",
+                    method = RequestMethod.GET)
+    @JsonView(UserList.class)
+    public List<ComiXedUser> getAllUsers()
+    {
+        this.logger.debug("Getting the list of all users");
+
+        List<ComiXedUser> result = this.userRepository.findAll();
+        this.logger.debug("Found {} users", result.size());
+
+        return result;
+    }
 
     @RequestMapping(value = "/user",
                     method = RequestMethod.GET)
@@ -100,6 +154,42 @@ public class UserController
         return user.getPreferences();
     }
 
+    @RequestMapping(value = "/admin/users",
+                    method = RequestMethod.POST)
+    public ComiXedUser saveNewUser(@RequestParam("email") String email,
+                                   @RequestParam("password") String password,
+                                   @RequestParam("is_admin") boolean isAdmin)
+    {
+        this.logger.debug("Creating new user: email={}", email);
+
+        ComiXedUser user = this.userRepository.findByEmail(email);
+
+        if (user == null)
+        {
+            user = new ComiXedUser();
+
+            this.logger.debug("Giving user reader access");
+            user.addRole(this.readerRole);
+
+            if (isAdmin)
+            {
+                this.logger.debug("Giving user admin access");
+                user.addRole(this.adminRole);
+            }
+
+            user.setEmail(email);
+            user.setPasswordHash(this.utils.createHash(password.getBytes()));
+            this.userRepository.save(user);
+        }
+        else
+        {
+            this.logger.error("Email already used: {}", email);
+            return null;
+        }
+
+        return user;
+    }
+
     @RequestMapping(value = "/user/preferences",
                     method = RequestMethod.POST)
     public void setUserPreference(Authentication authentication,
@@ -129,20 +219,6 @@ public class UserController
         this.userRepository.save(user);
     }
 
-    @RequestMapping(value = "/user/password",
-                    method = RequestMethod.POST)
-    public void updatePassword(Authentication authentication, @RequestParam("password") String password)
-    {
-        this.logger.debug("Updating password for: email={}", authentication.getName());
-        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
-
-        String hash = this.utils.createHash(password.getBytes());
-        this.logger.debug("Setting password: hash={}", hash);
-        user.setPasswordHash(hash);
-
-        this.userRepository.save(user);
-    }
-
     @RequestMapping(value = "/user/email",
                     method = RequestMethod.POST)
     public void updateEmail(Authentication authentication, @RequestParam("username") String username)
@@ -162,5 +238,56 @@ public class UserController
             this.logger.debug("User is no longer authenticated");
             authentication.setAuthenticated(false);
         }
+    }
+
+    @RequestMapping(value = "/user/password",
+                    method = RequestMethod.POST)
+    public void updatePassword(Authentication authentication, @RequestParam("password") String password)
+    {
+        this.logger.debug("Updating password for: email={}", authentication.getName());
+        ComiXedUser user = this.userRepository.findByEmail(authentication.getName());
+
+        String hash = this.utils.createHash(password.getBytes());
+        this.logger.debug("Setting password: hash={}", hash);
+        user.setPasswordHash(hash);
+
+        this.userRepository.save(user);
+    }
+
+    @RequestMapping(value = "/admin/users/{id}",
+                    method = RequestMethod.PUT)
+    public ComiXedUser updateUser(@PathVariable("id") long id,
+                                  @RequestParam("email") String email,
+                                  @RequestParam("password") String password,
+                                  @RequestParam("is_admin") boolean isAdmin)
+    {
+        this.logger.debug("Updating user: id={}");
+
+        ComiXedUser user = this.userRepository.findOne(id);
+
+        if (user == null)
+        {
+            this.logger.error("No such user: id={}", id);
+            return null;
+        }
+
+        user.setEmail(email);
+
+        if ((password != null) && !password.isEmpty())
+        {
+            this.logger.debug("Updating user's password");
+            user.setPasswordHash(this.utils.createHash(password.getBytes()));
+        }
+        user.clearRoles();
+        user.addRole(this.readerRole);
+        if (isAdmin)
+        {
+            user.addRole(this.adminRole);
+        }
+        this.logger.debug("Updating user: id={} email={} is_admin={}", id, email, isAdmin ? "Yes" : "No");
+        this.userRepository.save(user);
+
+        return user;
+
     }
 }

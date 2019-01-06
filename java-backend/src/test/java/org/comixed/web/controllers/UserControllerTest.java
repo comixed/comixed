@@ -19,14 +19,24 @@
 
 package org.comixed.web.controllers;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.comixed.library.model.ComiXedUser;
+import org.comixed.library.model.Role;
 import org.comixed.repositories.ComiXedUserRepository;
+import org.comixed.repositories.RoleRepository;
 import org.comixed.util.Utils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -44,9 +54,15 @@ public class UserControllerTest
     private static final String INVALID_EMAIL = "nosuchreader@comixed.org";
     private static final String TEST_PASSWORD = "this!is!my!password";
     private static final String TEST_PASSWORD_HASH = "0123456789ABCDEF";
+    private static final Role TEST_ROLE_READER = new Role();
+    private static final Role TEST_ROLE_ADMIN = new Role();
+    private static final long TEST_USER_ID = 717;
 
     @InjectMocks
     private UserController controller;
+
+    @Mock
+    private RoleRepository roleRepository;
 
     @Mock
     private ComiXedUserRepository userRepository;
@@ -54,11 +70,24 @@ public class UserControllerTest
     @Mock
     private ComiXedUser user;
 
+    @Captor
+    private ArgumentCaptor<ComiXedUser> userCaptor;
+
+    @Mock
+    private List<ComiXedUser> userList;
+
     @Mock
     private Authentication authentication;
 
     @Mock
     private Utils utils;
+
+    @Before
+    public void setUp()
+    {
+        this.controller.readerRole = TEST_ROLE_READER;
+        this.controller.adminRole = TEST_ROLE_ADMIN;
+    }
 
     @Test
     public void testUpdateUserSettings()
@@ -165,5 +194,95 @@ public class UserControllerTest
         Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
         Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
         Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    }
+
+    @Test
+    public void testGetAllUsers()
+    {
+        Mockito.when(userRepository.findAll()).thenReturn(userList);
+
+        List<ComiXedUser> result = controller.getAllUsers();
+
+        assertNotNull(result);
+        assertSame(userList, result);
+
+        Mockito.verify(userRepository, Mockito.times(1)).findAll();
+    }
+
+    @Test
+    public void testUpdateUserDoesNotExist()
+    {
+        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(null);
+
+        ComiXedUser result = controller.updateUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD, false);
+
+        assertNull(result);
+
+        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+    }
+
+    @Test
+    public void testUpdateUserRemoveAdmin()
+    {
+        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(user);
+        Mockito.doNothing().when(user).clearRoles();
+        Mockito.doNothing().when(user).addRole(Mockito.any(Role.class));
+        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
+
+        ComiXedUser result = controller.updateUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD, false);
+
+        assertNotNull(result);
+        assertSame(user, result);
+
+        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+        Mockito.verify(user, Mockito.times(1)).clearRoles();
+        Mockito.verify(user, Mockito.times(1)).addRole(TEST_ROLE_READER);
+        Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    }
+
+    @Test
+    public void testUpdateUserGrantAdmin()
+    {
+        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(user);
+        Mockito.doNothing().when(user).clearRoles();
+        Mockito.doNothing().when(user).addRole(Mockito.any(Role.class));
+        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
+
+        ComiXedUser result = controller.updateUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD, true);
+
+        assertNotNull(result);
+        assertSame(user, result);
+
+        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+        Mockito.verify(user, Mockito.times(1)).clearRoles();
+        Mockito.verify(user, Mockito.times(1)).addRole(TEST_ROLE_READER);
+        Mockito.verify(user, Mockito.times(1)).addRole(TEST_ROLE_ADMIN);
+        Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    }
+
+    @Test
+    public void testDeleteUserInvalidId()
+    {
+        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(null);
+
+        boolean result = controller.deleteUser(TEST_USER_ID);
+
+        assertFalse(result);
+
+        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+    }
+
+    @Test
+    public void testDeleteUser()
+    {
+        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(user);
+        Mockito.doNothing().when(userRepository).delete(Mockito.any(ComiXedUser.class));
+
+        boolean result = controller.deleteUser(TEST_USER_ID);
+
+        assertTrue(result);
+
+        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+        Mockito.verify(userRepository, Mockito.times(1)).delete(user);
     }
 }

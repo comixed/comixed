@@ -30,7 +30,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.comixed.library.model.View.UserDetails;
+import org.comixed.library.model.View.UserList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -48,7 +48,7 @@ public class Role
             updatable = true,
             nullable = false,
             unique = true)
-    @JsonView(UserDetails.class)
+    @JsonView(UserList.class)
     private String name;
 
     @ManyToMany(mappedBy = "roles")

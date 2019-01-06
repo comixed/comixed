@@ -58,10 +58,14 @@ public class View
     public interface PageList
     {}
 
+    public interface UserList
+    {};
+
     /**
      * Show full details on a user.
      *
      */
-    public interface UserDetails
-    {}
+    public interface UserDetails extends
+                                 UserList
+    {};
 }
