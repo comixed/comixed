@@ -25,6 +25,7 @@ import { LibraryDisplay } from './models/library-display';
 import { SingleComicScraping } from './models/scraping/single-comic-scraping';
 import { MultipleComicsScraping } from './models/scraping/multiple-comics-scraping';
 import { Duplicates } from './models/duplicates';
+import { UserAdmin } from './models/actions/user-admin';
 
 export interface AppState {
   readonly user: User;
@@ -35,4 +36,5 @@ export interface AppState {
   readonly single_comic_scraping: SingleComicScraping;
   readonly multiple_comic_scraping: MultipleComicsScraping;
   readonly duplicates: Duplicates;
+  readonly user_admin: UserAdmin;
 }
