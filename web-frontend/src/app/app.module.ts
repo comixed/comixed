@@ -115,6 +115,7 @@ import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
 import { LibraryFilterComponent } from './ui/components/library/library-filter/library-filter.component';
 import { LibraryFilterPipe } from './pipes/library-filter.pipe';
 import { IconbarComponent } from './ui/components/main/iconbar/iconbar.component';
+import { UsersPageComponent } from './ui/pages/admin/users-page/users-page.component';
 
 @NgModule({
   declarations: [
@@ -156,6 +157,7 @@ import { IconbarComponent } from './ui/components/main/iconbar/iconbar.component
     LibraryFilterComponent,
     LibraryFilterPipe,
     IconbarComponent,
+    UsersPageComponent,
   ],
   imports: [
     BrowserModule,
