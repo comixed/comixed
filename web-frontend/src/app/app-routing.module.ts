@@ -27,6 +27,7 @@ import { LibraryPageComponent } from './ui/pages/library/library-page/library-pa
 import { ComicDetailsComponent } from './ui/pages/comic/comic-details/comic-details.component';
 import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
 import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/duplicates-page.component';
+import { UsersPageComponent } from './ui/pages/admin/users-page/users-page.component';
 
 const routes: Routes = [
   { path: 'home', component: MainPageComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'comics', component: LibraryPageComponent, canActivate: [ReaderGuard] },
   { path: 'comics/:id', component: ComicDetailsComponent, canActivate: [ReaderGuard] },
   { path: 'import', component: ImportPageComponent, canActivate: [AdminGuard] },
+  { path: 'admin/users', component: UsersPageComponent, canActivate: [AdminGuard] },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' },
 ];
