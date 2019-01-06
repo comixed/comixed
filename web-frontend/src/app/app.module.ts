@@ -76,6 +76,7 @@ import { SelectedComicsComponent } from './ui/components/import/selected-comics/
 import { FileDetailsCoverComponent } from './ui/components/file-details/file-details-cover/file-details-cover.component';
 import { StoreModule } from '@ngrx/store';
 import { userReducer } from './reducers/user.reducer';
+import { userAdminReducer } from './reducers/user-admin.reducer';
 import { importingReducer } from './reducers/importing.reducer';
 import { libraryReducer } from './reducers/library.reducer';
 import { libraryFilterReducer } from './reducers/library-filter.reducer';
@@ -88,6 +89,7 @@ import { LibraryDetailsComponent } from './ui/components/library/library-details
 import { IssueDetailsComponent } from './ui/components/library/issue-details/issue-details.component';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
+import { UserAdminEffects } from './effects/user-admin.effects';
 import { ImportingEffects } from './effects/importing.effects';
 import { LibraryEffects } from './effects/library.effects';
 import { SingleComicScrapingEffects } from './effects/single-comic-scraping.effects';
@@ -210,6 +212,7 @@ import { IconbarComponent } from './ui/components/main/iconbar/iconbar.component
       single_comic_scraping: singleComicScrapingReducer,
       multiple_comic_scraping: multipleComicsScrapingReducer,
       duplicates: duplicatesReducer,
+      user_admin: userAdminReducer,
     }),
     EffectsModule.forRoot([
       UserEffects,
@@ -217,6 +220,7 @@ import { IconbarComponent } from './ui/components/main/iconbar/iconbar.component
       LibraryEffects,
       SingleComicScrapingEffects,
       DuplicatesEffects,
+      UserAdminEffects,
     ]),
   ],
   providers: [

@@ -45,6 +45,10 @@ export class UserService {
     return this.http.get(`${this.api_url}/user`);
   }
 
+  get_user_list(): Observable<any> {
+    return this.http.get(`${this.api_url}/admin/users/list`);
+  }
+
   set_user_preference(name: string, value: string): Observable<any> {
     const params = new HttpParams().set('name', name).set('value', value);
 
