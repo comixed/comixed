@@ -1,0 +1,44 @@
+<h2>{{ user_admin.current_user?.email || '[New User]' }}</h2>
+<div class='form-group ui-g'>
+  <div class='ui-g-4'>
+    <strong>Email Address:</strong>
+  </div>
+  <div class='ui-g-8'>
+    <input class='form-control'
+      type='text'
+      [(ngModel)]='email'
+      pInputText>
+  </div>
+  <div class='ui-g-4'>
+    <strong>Password:</strong>
+  </div>
+  <div class='ui-g-8'>
+    <input class='form-control'
+      type='password'
+      [(ngModel)]='password'
+      pInputText>
+  </div>
+  <div class='ui-g-4'>
+    <strong>Verify Password:</strong>
+  </div>
+  <div class='ui-g-8'>
+    <input type='password'
+      class='form-control'
+      [(ngModel)]='password_verify'
+      pInputText>
+  </div>
+  <div class='ui-g-12'>
+    <p-toggleButton [(ngModel)]='is_admin'
+      onLabel='Admin'
+      offLabel='Reader'
+      onIcon='fa fa-fw fa-user-secret'
+      offIcon='fa fa-fw fa-user'></p-toggleButton>
+  </div>
+  <div class='ui-g-12'>
+    <p-button [disabled]='!can_save()'
+      label='Save'
+      (onClick)='save_user()'></p-button>
+    <p-button label='Reset'
+      (onClick)='reset_user()'></p-button>
+  </div>
+</div>

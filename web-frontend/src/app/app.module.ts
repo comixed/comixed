@@ -116,6 +116,7 @@ import { LibraryFilterComponent } from './ui/components/library/library-filter/l
 import { LibraryFilterPipe } from './pipes/library-filter.pipe';
 import { IconbarComponent } from './ui/components/main/iconbar/iconbar.component';
 import { UsersPageComponent } from './ui/pages/admin/users-page/users-page.component';
+import { UserDetailsEditorComponent } from './ui/components/admin/user-details-editor/user-details-editor.component';
 
 @NgModule({
   declarations: [
@@ -158,6 +159,7 @@ import { UsersPageComponent } from './ui/pages/admin/users-page/users-page.compo
     LibraryFilterPipe,
     IconbarComponent,
     UsersPageComponent,
+    UserDetailsEditorComponent,
   ],
   imports: [
     BrowserModule,
