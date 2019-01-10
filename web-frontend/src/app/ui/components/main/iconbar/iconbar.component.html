@@ -1,0 +1,56 @@
+<p-toolbar>
+<div
+  class='ui-toolbar-group-left'
+  *ngIf='user?.email'>
+  <button
+    pButton
+    type='button'
+    icon='fa fa-home'
+    label='Home'
+    [routerLink]='["/home"]'></button>
+  <button
+    pButton
+    type='button'
+    icon='fa fa-book'
+    label='Library'
+    [routerLink]='["/comics"]'></button>
+  <button
+    pButton
+    type='button'
+    *ngIf='user?.is_admin'
+    class='ui-button-secondary'
+    icon='fa fa-upload'
+    label='Import'
+    [routerLink]='["/import"]'></button>
+  <button
+    pButton
+    type='button'
+    *ngIf='user?.is_admin'
+    class='ui-button-secondary'
+    icon='fa fa-minus'
+    label='Duplicate Pages'
+    [routerLink]='["/duplicates"]'></button>
+</div>
+<div class='ui-toolbar-group-right'>
+  <span *ngIf='user?.email'><b>User: </b><a
+    [routerLink]='["account"]'>{{ user.email }}</a></span>
+  <button
+    pButton
+    type='button'
+    *ngIf='!user.authenticated'
+    type='button'
+    icon='fa fa-sign-in'
+    label='Login'
+    class='ui-button-success'
+    (click)='do_login()'></button>
+  <button
+    pButton
+    type='button'
+    *ngIf='user.authenticated'
+    type='button'
+    icon='fa fa-sign-out'
+    label='Logout'
+    class='ui-button-danger'
+    (click)='do_logout()'></button>
+</div>
+</p-toolbar>
