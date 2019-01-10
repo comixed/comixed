@@ -67,7 +67,6 @@ import { MainPageComponent } from './ui/pages/main-page/main-page.component';
 import { LoginComponent } from './ui/components/login/login.component';
 import { AlertService } from './services/alert.service';
 import { UserService } from './services/user.service';
-import { MenubarComponent } from './ui/components/menubar/menubar.component';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
 import { NotificationsComponent } from './ui/components/notifications/notifications.component';
 import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
@@ -120,7 +119,6 @@ import { IconbarComponent } from './ui/components/main/iconbar/iconbar.component
     AppComponent,
     MainPageComponent,
     LoginComponent,
-    MenubarComponent,
     ComicDetailsComponent,
     ComicReaderComponent,
     ComicDetailsEditorComponent,
