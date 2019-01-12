@@ -20,8 +20,7 @@
 import { Component, Input, Output, OnInit, OnDestroy } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 import { AppState } from '../../../../app.state';
 import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
 import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';

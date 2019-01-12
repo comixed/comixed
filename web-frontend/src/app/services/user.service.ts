@@ -20,8 +20,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/finally';
+import { Observable } from 'rxjs';
+
 
 import { AlertService } from './alert.service';
 import { User } from '../models/user/user';

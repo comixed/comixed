@@ -1,3 +1,7 @@
+
+import {of as observableOf,  Observable } from 'rxjs';
+
+import {map, switchMap} from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -20,10 +24,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/observable/of';
+
+
+
 import * as UserActions from '../actions/user.actions';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user/user';
@@ -39,41 +42,41 @@ export class UserEffects {
 
   @Effect()
   user_auth_check$: Observable<Action> = this.actions$
-    .ofType<UserActions.UserAuthCheck>(UserActions.USER_AUTH_CHECK)
-    .switchMap(action =>
-      this.user_service.get_user()
-        .map((user: User) => new UserActions.UserLoaded({
+    .ofType<UserActions.UserAuthCheck>(UserActions.USER_AUTH_CHECK).pipe(
+    switchMap(action =>
+      this.user_service.get_user().pipe(
+        map((user: User) => new UserActions.UserLoaded({
           user: user,
-        })));
+        })))));
 
   @Effect()
   user_logging_in$: Observable<Action> = this.actions$
-    .ofType<UserActions.UserLoggingIn>(UserActions.USER_LOGGING_IN)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<UserActions.UserLoggingIn>(UserActions.USER_LOGGING_IN).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.user_service.login(action.email, action.password)
         .do(data => this.token_storage.save_token(data.token))
         .map(data => new UserActions.UserSetAuthToken({
           token: data.token,
-        })));
+        }))),);
 
   @Effect()
   user_logout$: Observable<Action> = this.actions$
-    .ofType<UserActions.UserLogout>(UserActions.USER_LOGOUT)
-    .switchMap(action =>
-      Observable.of(this.token_storage.sign_out())
-        .map(() => new UserActions.UserAuthCheck())
-    );
+    .ofType<UserActions.UserLogout>(UserActions.USER_LOGOUT).pipe(
+    switchMap(action =>
+      observableOf(this.token_storage.sign_out()).pipe(
+        map(() => new UserActions.UserAuthCheck()))
+    ));
 
   @Effect()
   user_set_preference$: Observable<Action> = this.actions$
-    .ofType<UserActions.UserSetPreference>(UserActions.USER_SET_PREFERENCE)
-    .map(action => action.payload)
-    .switchMap(action =>
-      this.user_service.set_user_preference(action.name, action.value)
-        .map(() => new UserActions.UserPreferenceSaved({
+    .ofType<UserActions.UserSetPreference>(UserActions.USER_SET_PREFERENCE).pipe(
+    map(action => action.payload),
+    switchMap(action =>
+      this.user_service.set_user_preference(action.name, action.value).pipe(
+        map(() => new UserActions.UserPreferenceSaved({
           name: action.name,
           value: action.value,
-        }))
-    );
+        })))
+    ),);
 }

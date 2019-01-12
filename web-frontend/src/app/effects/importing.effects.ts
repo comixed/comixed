@@ -1,3 +1,5 @@
+
+import {switchMap, map} from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -20,10 +22,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/catch';
 import * as ImportingActions from '../actions/importing.actions';
 import { ComicService } from '../services/comic.service';
 import { AlertService } from '../services/alert.service';
@@ -39,20 +41,20 @@ export class ImportingEffects {
 
   @Effect()
   importing_fetch_files$: Observable<Action> = this.actions$
-    .ofType<ImportingActions.ImportingFetchFiles>(ImportingActions.IMPORTING_FETCH_FILES)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<ImportingActions.ImportingFetchFiles>(ImportingActions.IMPORTING_FETCH_FILES).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.comic_service.get_files_under_directory(action.directory)
         .do((files: Array<ComicFile>) => this.alert_service.show_info_message(`Found ${files.length} files...`))
         .map((files: Array<ComicFile>) => new ImportingActions.ImportingFilesFetched({
           files: files,
-        })));
+        }))),);
 
   @Effect()
   importing_import_files$: Observable<Action> = this.actions$
-    .ofType<ImportingActions.ImportingImportFiles>(ImportingActions.IMPORTING_IMPORT_FILES)
-    .map(action => action.payload)
-    .switchMap(action =>
-      this.comic_service.import_files_into_library(action.files, false)
-        .map(() => new ImportingActions.ImportingFilesAreImporting()));
+    .ofType<ImportingActions.ImportingImportFiles>(ImportingActions.IMPORTING_IMPORT_FILES).pipe(
+    map(action => action.payload),
+    switchMap(action =>
+      this.comic_service.import_files_into_library(action.files, false).pipe(
+        map(() => new ImportingActions.ImportingFilesAreImporting()))),);
 }

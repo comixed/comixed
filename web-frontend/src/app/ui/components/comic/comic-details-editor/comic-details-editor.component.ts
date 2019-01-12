@@ -19,8 +19,7 @@
 
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 import { AppState } from '../../../../app.state';
 import * as LibraryActions from '../../../../actions/library.actions';
 import * as LibraryScrapingActions from '../../../../actions/single-comic-scraping.actions';

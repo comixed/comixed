@@ -18,12 +18,9 @@
  */
 
 import { Injectable, EventEmitter } from '@angular/core';
-
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/finally';
 import { UserService } from './user.service';
 import { AlertService } from './alert.service';
 import { Comic } from '../models/comics/comic';

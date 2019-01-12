@@ -19,8 +19,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 import { AppState } from '../../../app.state';
 import { Library } from '../../../models/library';
 

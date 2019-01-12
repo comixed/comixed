@@ -1,3 +1,5 @@
+
+import {map, switchMap} from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -20,10 +22,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
+import { Observable ,  of } from 'rxjs';
+
+
 import * as LibraryActions from '../actions/library.actions';
 import { ComicService } from '../services/comic.service';
 import { AlertService } from '../services/alert.service';
@@ -42,90 +43,90 @@ export class LibraryEffects {
 
   @Effect()
   library_get_scan_types$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibraryGetScanTypes>(LibraryActions.LIBRARY_GET_SCAN_TYPES)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibraryGetScanTypes>(LibraryActions.LIBRARY_GET_SCAN_TYPES).pipe(
+    switchMap(action =>
       this.comic_service.fetch_scan_types()
         .catch((error: Error) => of(this.alert_service.show_error_message('Error fetching scan types...', error)))
-        .map((scan_types: Array<ScanType>) => new LibraryActions.LibrarySetScanTypes({ scan_types: scan_types })));
+        .map((scan_types: Array<ScanType>) => new LibraryActions.LibrarySetScanTypes({ scan_types: scan_types }))));
 
   @Effect()
   library_set_scan_type$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibrarySetScanType>(LibraryActions.LIBRARY_SET_SCAN_TYPE)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibrarySetScanType>(LibraryActions.LIBRARY_SET_SCAN_TYPE).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.comic_service.set_scan_type(action.comic, action.scan_type)
         .do(() => this.alert_service.show_info_message(`Scan type set to ${action.scan_type.name}...`))
         .catch((error: Error) => of(this.alert_service.show_error_message('Error setting scan type...', error)))
         .map(() => new LibraryActions.LibraryScanTypeSet({
           comic: action.comic,
           scan_type: action.scan_type,
-        })));
+        }))),);
 
   @Effect()
   library_get_formats$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibraryGetFormats>(LibraryActions.LIBRARY_GET_FORMATS)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibraryGetFormats>(LibraryActions.LIBRARY_GET_FORMATS).pipe(
+    switchMap(action =>
       this.comic_service.fetch_formats()
         .catch((error: Error) => of(this.alert_service.show_error_message('Error fetching format types...', error)))
-        .map((formats: Array<ComicFormat>) => new LibraryActions.LibrarySetFormats({ formats: formats })));
+        .map((formats: Array<ComicFormat>) => new LibraryActions.LibrarySetFormats({ formats: formats }))));
 
   @Effect()
   library_set_format$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibrarySetFormat>(LibraryActions.LIBRARY_SET_FORMAT)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibrarySetFormat>(LibraryActions.LIBRARY_SET_FORMAT).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.comic_service.set_format(action.comic, action.format)
         .do(() => this.alert_service.show_info_message(`Format set to ${action.format.name}...`))
         .catch((error: Error) => of(this.alert_service.show_error_message('Error setting format...', error)))
         .map(() => new LibraryActions.LibraryFormatSet({
           comic: action.comic,
           format: action.format,
-        })));
+        }))),);
 
   @Effect()
   library_set_sort_name$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibrarySetSortName>(LibraryActions.LIBRARY_SET_SORT_NAME)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibrarySetSortName>(LibraryActions.LIBRARY_SET_SORT_NAME).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.comic_service.set_sort_name(action.comic, action.sort_name)
         .do(() => this.alert_service.show_info_message(`Sort name set to ${action.sort_name}...`))
         .catch((error: Error) => of(this.alert_service.show_error_message('Error setting sort name...', error)))
         .map(() => new LibraryActions.LibrarySortNameSet({
           comic: action.comic,
           sort_name: action.sort_name,
-        })));
+        }))),);
 
   @Effect()
   library_start_updating$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibraryFetchLibraryChanges>(LibraryActions.LIBRARY_FETCH_LIBRARY_CHANGES)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibraryFetchLibraryChanges>(LibraryActions.LIBRARY_FETCH_LIBRARY_CHANGES).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.comic_service.fetch_remote_library_state(action.last_comic_date, action.timeout)
         .catch((error: Error) => of(this.alert_service.show_error_message('Error getting library updates...', error)))
         .map((library_state: LibraryState) => new LibraryActions.LibraryMergeNewComics({
           comics: library_state.comics,
           rescan_count: library_state.rescan_count,
           import_count: library_state.import_count,
-        })));
+        }))),);
 
   @Effect()
   library_remove_comic$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibraryRemoveComic>(LibraryActions.LIBRARY_REMOVE_COMIC)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibraryRemoveComic>(LibraryActions.LIBRARY_REMOVE_COMIC).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.comic_service.delete_comic(action.comic)
         .do(() => this.alert_service.show_info_message(`Comic removed from library...`))
         .catch((error: Error) => of(this.alert_service.show_error_message('Error removing comic...', error)))
         .map(() => new LibraryActions.LibraryUpdateComicsRemoveComic({
           comic: action.comic,
         }))
-    );
+    ),);
 
   @Effect()
   library_clear_metadata$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibraryClearMetadata>(LibraryActions.LIBRARY_CLEAR_METADATA)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibraryClearMetadata>(LibraryActions.LIBRARY_CLEAR_METADATA).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.comic_service.clear_metadata(action.comic)
         .do(() => this.alert_service.show_info_message('Metadata cleared...'))
         .do((comic: Comic) => {
@@ -140,29 +141,29 @@ export class LibraryEffects {
         .map((comic: Comic) => new LibraryActions.LibraryMetadataChanged({
           original: action.comic,
           updated: comic,
-        })));
+        }))),);
 
   @Effect()
   library_rescan_files$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibraryRescanFiles>(LibraryActions.LIBRARY_RESCAN_FILES)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibraryRescanFiles>(LibraryActions.LIBRARY_RESCAN_FILES).pipe(
+    switchMap(action =>
       this.comic_service.rescan_files()
         .do(() => this.alert_service.show_info_message('Library rescan started...'))
         .catch((error: Error) => of(this.alert_service.show_error_message('Failed to start rescanning...', error)))
         .map(() => new LibraryActions.LibraryFetchLibraryChanges({
           last_comic_date: action.payload.last_comic_date,
           timeout: 0,
-        })));
+        }))));
 
   @Effect()
   library_set_page_blocked_state$: Observable<Action> = this.actions$
-    .ofType<LibraryActions.LibrarySetBlockedPageState>(LibraryActions.LIBRARY_SET_BLOCKED_PAGE_STATE)
-    .map(action => action.payload)
-    .switchMap(action =>
+    .ofType<LibraryActions.LibrarySetBlockedPageState>(LibraryActions.LIBRARY_SET_BLOCKED_PAGE_STATE).pipe(
+    map(action => action.payload),
+    switchMap(action =>
       this.comic_service.set_block_page(action.page.hash, action.blocked_state)
         .catch((error: Error) => of(this.alert_service.show_error_message('Failed to set blocked state...', error)))
         .map(() => new LibraryActions.LibraryBlockedStateFlagSet({
           page: action.page,
           blocked_state: action.blocked_state,
-        })));
+        }))),);
 }

@@ -1,3 +1,5 @@
+
+import {tap} from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -23,8 +25,8 @@ import {
   HttpErrorResponse, HttpProgressEvent, HttpResponse, HttpUserEvent,
 } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
+import { Observable } from 'rxjs';
+
 import { TokenStorage } from './storage/token.storage';
 import { AlertService } from './services/alert.service';
 
@@ -54,12 +56,12 @@ export class XhrInterceptor implements HttpInterceptor {
         headers: req.headers.set('X-Request-With', 'XMLHttpRequest')
       });
     }
-    return next.handle(authReq).do((error: any) => {
+    return next.handle(authReq).pipe(tap((error: any) => {
       if (error instanceof HttpResponse) {
         if (error.status !== 200) {
           this.alert_service.show_error_message('Unable to complete request...', null);
         }
       }
-    });
+    }));
   }
 }
