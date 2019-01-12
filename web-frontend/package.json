@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/build-angular": "^0.12.1",
     "@angular/animations": "^6.1.10",
     "@angular/common": "^6.1.10",
     "@angular/compiler": "^6.1.10",
@@ -36,9 +37,9 @@
     "primeicons": "^1.0.0",
     "primeng": "^6.1.5",
     "rxjs": "^6.3.3",
+    "rxjs-compat": "^6.0.0-rc.0",
     "tether": "^1.4.4",
-    "zone.js": "^0.8.19",
-    "rxjs-compat": "^6.0.0-rc.0"
+    "zone.js": "^0.8.19"
   },
   "devDependencies": {
     "@angular/cli": "^6.1.0",
