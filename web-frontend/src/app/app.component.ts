@@ -30,7 +30,6 @@ import * as UserActions from './actions/user.actions';
 import { UserService } from './services/user.service';
 import { ComicService } from './services/comic.service';
 import { AlertService } from './services/alert.service';
-import { MenubarComponent } from './ui/components/menubar/menubar.component';
 
 @Component({
   selector: 'app-root',
