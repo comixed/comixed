@@ -2,6 +2,19 @@
 
 The front-end code is delivered by the Java backend when the user connects with their browser. So there's no need to run the server separately.
 
+## Development
+
+In order to work on the front end, you'll need the following prerequisites installed:
+
+1. Node.js - Installation instructions can be found [here](https://nodejs.org/en/download/).
+1. The Angular CLI. After installing Node.js, simple do: ```$ npm install --global @angular/cli@7.0.0```
+
+Once you have them installed, you can then install the project dependencies:
+```
+$ cd web-frontend
+$ npm install
+```
+
 ## Running The Proxy Separately
 
 If you're doing frontend development, you can run the Angular code in it's own separate process:
