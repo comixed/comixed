@@ -191,13 +191,14 @@
                   <arg value="/c"/>
                   <arg value="ng"/>
                   <arg value="build"/>
+                  <arg value="--prod"/>
                 </exec>
                 <exec
                   executable="/bin/sh"
                   osfamily="unix"
                   dir="${project.basedir}/../web-frontend">
                   <arg value="-c"/>
-                  <arg value="ng build"/>
+                  <arg value="ng build --prod"/>
                 </exec>
               </tasks>
             </configuration>
