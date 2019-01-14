@@ -56,7 +56,7 @@ export function duplicatesReducer(
       const hashes = [];
       const pages_by_hash = new Map<string, Array<DuplicatePage>>();
 
-      action.payload.forEach((dupe: DuplicatePage) => {
+      action.payload.duplicate_pages.forEach((dupe: DuplicatePage) => {
         if (!hashes.includes(dupe.hash)) {
           hashes.push(dupe.hash);
           pages_by_hash.set(dupe.hash, []);
@@ -67,7 +67,7 @@ export function duplicatesReducer(
       return {
         ...state,
         busy: false,
-        pages: action.payload,
+        pages: action.payload.duplicate_pages,
         hashes: hashes,
         pages_by_hash: pages_by_hash,
         pages_deleted: 0,
@@ -151,8 +151,8 @@ export function duplicatesReducer(
     case DuplicatesActions.DUPLICATE_PAGES_SHOW_COMICS_WITH_HASH: {
       return {
         ...state,
-        current_hash: action.payload,
-        current_duplicates: state.pages_by_hash.get(action.payload),
+        current_hash: action.payload.hash,
+        current_duplicates: state.pages_by_hash.get(action.payload.hash),
       };
     }
 
@@ -172,7 +172,7 @@ export function duplicatesReducer(
     }
 
     case DuplicatesActions.DUPLICATE_PAGES_PAGE_DELETED: {
-      action.payload.deleted = true;
+      action.payload.page.deleted = true;
 
       return {
         ...state,
@@ -189,7 +189,7 @@ export function duplicatesReducer(
     }
 
     case DuplicatesActions.DUPLICATE_PAGES_PAGE_UNDELETED: {
-      action.payload.deleted = false;
+      action.payload.page.deleted = false;
 
       return {
         ...state,

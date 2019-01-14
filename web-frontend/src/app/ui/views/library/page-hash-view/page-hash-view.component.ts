@@ -53,10 +53,14 @@ export class PageHashViewComponent implements OnInit {
   }
 
   delete_page(page: Page): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesDeletePage(page));
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesDeletePage({
+      page: page,
+    }));
   }
 
   undelete_page(page: Page): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesUndeletePage(page));
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesUndeletePage({
+      page: page,
+    }));
   }
 }

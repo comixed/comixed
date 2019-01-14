@@ -60,7 +60,9 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
           this.alert_service.show_info_message(`${this.duplicates.pages_undeleted} page(s) unmarked...`);
         }
         if (this.duplicates.current_hash && !this.duplicates.current_duplicates && this.duplicates.pages.length > 0) {
-          this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash(this.duplicates.current_hash));
+          this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash({
+            hash: this.duplicates.current_hash,
+          }));
         }
       });
     this.activated_route.queryParams.subscribe(params => {

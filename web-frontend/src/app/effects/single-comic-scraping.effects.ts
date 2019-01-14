@@ -1,5 +1,3 @@
-
-import {map, switchMap} from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -20,11 +18,10 @@ import {map, switchMap} from 'rxjs/operators';
  */
 
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs';
-
-
+import { map, switchMap, tap } from 'rxjs/operators';
 import * as ScrapingActions from '../actions/single-comic-scraping.actions';
 import * as LibraryActions from '../actions/library.actions';
 import { ComicService } from '../services/comic.service';
@@ -45,96 +42,91 @@ export class SingleComicScrapingEffects {
   ) { }
 
   @Effect()
-  single_comic_scraping_fetch_volumes$: Observable<Action> = this.actions$
-    .ofType<ScrapingActions.SingleComicScrapingFetchVolumes>(ScrapingActions.SINGLE_COMIC_SCRAPING_FETCH_VOLUMES).pipe(
-    map(action => action.payload),
-    switchMap(action =>
-      this.comic_service.fetch_candidates_for(
-        action.api_key,
-        action.series,
-        action.volume,
-        action.issue_number,
-        action.skip_cache,
-      )
-        .do((volumes: Array<Volume>) => this.alert_service.show_info_message(`Retrieved ${volumes.length} volumes...`))
-        .map((volumes: Array<Volume>) => new ScrapingActions.SingleComicScrapingFoundVolumes(volumes))
-    ),);
+  single_comic_scraping_fetch_volumes$: Observable<Action> = this.actions$.pipe(
+    ofType(ScrapingActions.SINGLE_COMIC_SCRAPING_FETCH_VOLUMES),
+    map((action: ScrapingActions.SingleComicScrapingFetchVolumes) => action.payload),
+    switchMap(action => this.comic_service.fetch_candidates_for(
+      action.api_key,
+      action.series,
+      action.volume,
+      action.issue_number,
+      action.skip_cache,
+    ).pipe(
+      tap((volumes: Array<Volume>) => this.alert_service.show_info_message(`Retrieved ${volumes.length} volumes...`)),
+      map((volumes: Array<Volume>) => new ScrapingActions.SingleComicScrapingFoundVolumes(volumes))
+    )));
 
   @Effect()
-  single_comic_scraping_save_local_changes$: Observable<Action> = this.actions$
-    .ofType<ScrapingActions.SingleComicScrapingSaveLocalChanges>(ScrapingActions.SINGLE_COMIC_SCRAPING_SAVE_LOCAL_CHANGES).pipe(
-    map(action => action.payload),
-    switchMap(action =>
-      this.comic_service.save_changes_to_comic(
-        action.comic,
-        action.series,
-        action.volume,
-        action.issue_number,
-      ).pipe(
-        map(() => new ScrapingActions.SingleComicScrapingSetup({
-          api_key: action.api_key,
-          comic: action.comic,
-          series: action.series,
-          volume: action.volume,
-          issue_number: action.issue_number,
-        })))),);
+  single_comic_scraping_save_local_changes$: Observable<Action> = this.actions$.pipe(
+    ofType(ScrapingActions.SINGLE_COMIC_SCRAPING_SAVE_LOCAL_CHANGES),
+    map((action: ScrapingActions.SingleComicScrapingSaveLocalChanges) => action.payload),
+    switchMap(action => this.comic_service.save_changes_to_comic(
+      action.comic,
+      action.series,
+      action.volume,
+      action.issue_number,
+    ).pipe(
+      map(() => new ScrapingActions.SingleComicScrapingSetup({
+        api_key: action.api_key,
+        comic: action.comic,
+        series: action.series,
+        volume: action.volume,
+        issue_number: action.issue_number,
+      })))));
 
   @Effect()
-  single_comic_scraping_set_current_volume$: Observable<Action> = this.actions$
-    .ofType<ScrapingActions.SingleComicScrapingSetCurrentVolume>(ScrapingActions.SINGLE_COMIC_SCRAPING_SET_CURRENT_VOLUME).pipe(
-    map(action => action.payload),
-    switchMap(action =>
-      this.comic_service.scrape_comic_details_for(
-        action.api_key,
-        action.volume.id,
-        action.issue_number,
-        action.skip_cache,
-      ).pipe(
-        map((issue: Issue) => new ScrapingActions.SingleComicScrapingFoundIssue({
-          issue: issue,
-          volume_id: action.volume.id,
-        })
-        ))),);
+  single_comic_scraping_set_current_volume$: Observable<Action> = this.actions$.pipe(
+    ofType(ScrapingActions.SINGLE_COMIC_SCRAPING_SET_CURRENT_VOLUME),
+    map((action: ScrapingActions.SingleComicScrapingSetCurrentVolume) => action.payload),
+    switchMap(action => this.comic_service.scrape_comic_details_for(
+      action.api_key,
+      action.volume.id,
+      action.issue_number,
+      action.skip_cache,
+    ).pipe(
+      map((issue: Issue) => new ScrapingActions.SingleComicScrapingFoundIssue({
+        issue: issue,
+        volume_id: action.volume.id,
+      })
+    ))));
 
   @Effect()
-  single_comic_scraping_fetch_issues$: Observable<Action> = this.actions$
-    .ofType<ScrapingActions.SingleComicScrapingFetchIssue>(ScrapingActions.SINGLE_COMIC_SCRAPING_FETCH_ISSUES).pipe(
-    map(action => action.payload),
-    switchMap(action =>
-      this.comic_service.scrape_comic_details_for(
-        action.api_key,
-        action.volume_id,
-        action.issue_number,
-        action.skip_cache,
-      ).pipe(
-        map((issue: Issue) => new ScrapingActions.SingleComicScrapingFoundIssue({
-          issue: issue,
-          volume_id: action.volume_id,
-        })))
-    ),);
+  single_comic_scraping_fetch_issues$: Observable<Action> = this.actions$.pipe(
+    ofType(ScrapingActions.SINGLE_COMIC_SCRAPING_FETCH_ISSUES),
+    map((action: ScrapingActions.SingleComicScrapingFetchIssue) => action.payload),
+    switchMap(action => this.comic_service.scrape_comic_details_for(
+      action.api_key,
+      action.volume_id,
+      action.issue_number,
+      action.skip_cache,
+    ).pipe(
+      map((issue: Issue) => new ScrapingActions.SingleComicScrapingFoundIssue({
+        issue: issue,
+        volume_id: action.volume_id,
+      })
+    ))));
 
   @Effect()
-  single_comic_scraping_scrape_metadata$: Observable<Action> = this.actions$
-    .ofType<ScrapingActions.SingleComicScrapingScrapeMetadata>(ScrapingActions.SINGLE_COMIC_SCRAPING_SCRAPE_METADATA).pipe(
-    map(action => action.payload),
-    switchMap(action =>
-      this.comic_service.scrape_and_save_comic_details(
-        action.api_key,
-        action.comic.id,
-        action.issue_id,
-        action.skip_cache,
-      )
-        .do((comic: Comic) => {
-          // clear all existing metadata and copy the new metadata
-          for (const field of Object.keys(action.comic)) {
-            delete action.comic[field];
-          }
-          Object.assign(action.comic, comic);
-        })
-        .do(() => this.alert_service.show_info_message('Comic details scraped...'))
-        .map((comic: Comic) => new ScrapingActions.SingleComicScrapingMetadataScraped({
-          original: action.comic,
-          updated: comic,
-          multi_comic_mode: action.multi_comic_mode,
-        }))),);
+  single_comic_scraping_scrape_metadata$: Observable<Action> = this.actions$.pipe(
+    ofType(ScrapingActions.SINGLE_COMIC_SCRAPING_SCRAPE_METADATA),
+    map((action: ScrapingActions.SingleComicScrapingScrapeMetadata) => action.payload),
+    switchMap(action => this.comic_service.scrape_and_save_comic_details(
+      action.api_key,
+      action.comic.id,
+      action.issue_id,
+      action.skip_cache,
+    ).pipe(
+      tap((comic: Comic) => {
+        // clear all existing metadata and copy the new metadata
+        for (const field of Object.keys(action.comic)) {
+          delete action.comic[field];
+        }
+        Object.assign(action.comic, comic);
+      }),
+      tap(() => this.alert_service.show_info_message('Comic details scraped...')),
+      map((comic: Comic) => new ScrapingActions.SingleComicScrapingMetadataScraped({
+        original: action.comic,
+        updated: comic,
+        multi_comic_mode: action.multi_comic_mode,
+      })))));
 }

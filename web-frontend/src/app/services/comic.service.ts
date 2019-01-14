@@ -1,3 +1,5 @@
+
+import {finalize} from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
@@ -20,7 +22,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/finally';
+
 import { UserService } from './user.service';
 import { AlertService } from './alert.service';
 import { Comic } from '../models/comics/comic';
@@ -209,12 +211,12 @@ export class ComicService {
       .set('series', series)
       .set('volume', volume)
       .set('issue_number', issue_number);
-    return this.http.put(`${COMIC_SERVICE_API_URL}/comics/${comic.id}`, params)
-      .finally(() => {
+    return this.http.put(`${COMIC_SERVICE_API_URL}/comics/${comic.id}`, params).pipe(
+      finalize(() => {
         comic.series = series;
         comic.volume = volume;
         comic.issue_number = issue_number;
-      });
+      }));
   }
 
   clear_metadata(comic: Comic): Observable<any> {

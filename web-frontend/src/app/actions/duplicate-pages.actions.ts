@@ -46,13 +46,17 @@ export class DuplicatePagesFetchPages implements Action {
 export class DuplicatePagesSetPages implements Action {
   readonly type = DUPLICATE_PAGES_SET_PAGES;
 
-  constructor(public payload: Array<DuplicatePage>) { }
+  constructor(public payload: {
+    duplicate_pages: Array<DuplicatePage>,
+  }) { }
 }
 
 export class DuplicatePagesDeleteAll implements Action {
   readonly type = DUPLICATE_PAGES_DELETE_ALL;
 
-  constructor(public payload: string) { }
+  constructor(public payload: {
+    hash: string,
+  }) { }
 }
 
 export class DuplicatePagesDeletedForHash implements Action {
@@ -67,7 +71,9 @@ export class DuplicatePagesDeletedForHash implements Action {
 export class DuplicatePagesUndeleteAll implements Action {
   readonly type = DUPLICATE_PAGES_UNDELETE_ALL;
 
-  constructor(public payload: string) { }
+  constructor(public payload: {
+    hash: string,
+  }) { }
 }
 
 export class DuplicatePagesUndeletedForHash implements Action {
@@ -82,13 +88,17 @@ export class DuplicatePagesUndeletedForHash implements Action {
 export class DuplicatePagesBlockHash implements Action {
   readonly type = DUPLICATE_PAGES_BLOCK_HASH;
 
-  constructor(public payload: string) { }
+  constructor(public payload: {
+    hash: string,
+  }) { }
 }
 
 export class DuplicatePagesUnblockHash implements Action {
   readonly type = DUPLICATE_PAGES_UNBLOCK_HASH;
 
-  constructor(public payload: string) { }
+  constructor(public payload: {
+    hash: string,
+  }) { }
 }
 
 export class DuplicatePagesBlockedHash implements Action {
@@ -103,7 +113,9 @@ export class DuplicatePagesBlockedHash implements Action {
 export class DuplicatePagesShowComicsWithHash implements Action {
   readonly type = DUPLICATE_PAGES_SHOW_COMICS_WITH_HASH;
 
-  constructor(public payload: string) { }
+  constructor(public payload: {
+    hash: string,
+  }) { }
 }
 
 export class DuplicatePagesShowAllPages implements Action {
@@ -115,25 +127,35 @@ export class DuplicatePagesShowAllPages implements Action {
 export class DuplicatePagesDeletePage implements Action {
   readonly type = DUPLICATE_PAGES_DELETE_PAGE;
 
-  constructor(public payload: Page) { }
+  constructor(public payload: {
+    page: Page,
+  }) { }
 }
 
 export class DuplicatePagesPageDeleted implements Action {
   readonly type = DUPLICATE_PAGES_PAGE_DELETED;
 
-  constructor(public payload: Page) { }
+  constructor(public payload: {
+    count: number,
+    page: Page,
+  }) { }
 }
 
 export class DuplicatePagesUndeletePage implements Action {
   readonly type = DUPLICATE_PAGES_UNDELETE_PAGE;
 
-  constructor(public payload: Page) { }
+  constructor(public payload: {
+    page: Page,
+  }) { }
 }
 
 export class DuplicatePagesPageUndeleted implements Action {
   readonly type = DUPLICATE_PAGES_PAGE_UNDELETED;
 
-  constructor(public payload: Page) { }
+  constructor(public payload: {
+    count: number,
+    page: Page,
+  }) { }
 }
 
 export type Actions =

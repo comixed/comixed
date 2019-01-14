@@ -107,11 +107,15 @@ export class DuplicatePagesViewComponent implements OnInit {
   }
 
   delete_all_pages(hash: string): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesDeleteAll(hash));
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesDeleteAll({
+      hash: hash,
+    }));
   }
 
   undelete_all_pages(hash: string): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesUndeleteAll(hash));
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesUndeleteAll({
+      hash: hash,
+    }));
   }
 
   is_blocked(hash: string): boolean {
@@ -121,15 +125,21 @@ export class DuplicatePagesViewComponent implements OnInit {
   }
 
   block_page_hash(hash: string): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesBlockHash(hash));
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesBlockHash({
+      hash: hash,
+    }));
   }
 
   unblock_page_hash(hash: string): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesUnblockHash(hash));
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesUnblockHash({
+      hash: hash,
+    }));
   }
 
   show_pages_with_hash(hash: string): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash(hash));
+    this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash({
+      hash: hash,
+    }));
     this.update_params(DUPLICATES_HASH_PARAMETER, hash);
   }
 }
