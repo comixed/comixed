@@ -21,6 +21,7 @@ import { Role } from './role';
 import { Preference } from './preference';
 
 export interface User {
+  id: number;
   fetching: boolean;
   token: string;
   authenticating: boolean;

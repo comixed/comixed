@@ -23,6 +23,7 @@ import { Preference } from '../models/user/preference';
 import * as UserActions from '../actions/user.actions';
 
 const initial_state: User = {
+  id: null,
   token: null,
   fetching: false,
   authenticating: false,
@@ -73,6 +74,7 @@ export function userReducer(
         authenticating: false,
         authenticated: user ? true : false,
         is_admin: is_admin,
+        id: user ? user.id : null,
         email: user ? user.email : null,
         roles: user ? user.roles : [],
         preferences: user ? user.preferences : [],
@@ -107,6 +109,7 @@ export function userReducer(
         is_admin: false,
         token: null,
         busy: false,
+        id: null,
         email: null,
         roles: [],
         preferences: [],

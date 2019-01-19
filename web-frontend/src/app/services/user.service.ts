@@ -17,27 +17,27 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Router } from "@angular/router";
+import { Observable } from "rxjs";
 
-
-import { AlertService } from './alert.service';
-import { User } from '../models/user/user';
+import { AlertService } from "./alert.service";
 
 @Injectable()
 export class UserService {
-  api_url = '/api';
+  api_url = "/api";
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private alert_service: AlertService,
-  ) { }
+    private alert_service: AlertService
+  ) {}
 
   login(email: string, password: string): Observable<any> {
-    const params = new HttpParams().set('email', email).set('password', password);
+    const params = new HttpParams()
+      .set("email", email)
+      .set("password", password);
     return this.http.post(`${this.api_url}/token/generate-token`, params);
   }
 
@@ -45,12 +45,34 @@ export class UserService {
     return this.http.get(`${this.api_url}/user`);
   }
 
+  save_user(
+    id: number,
+    email: string,
+    password: string,
+    is_admin: boolean
+  ): Observable<any> {
+    const params = new HttpParams()
+      .set("email", email)
+      .set("password", password)
+      .set("is_admin", `${is_admin}`);
+
+    if (id !== null) {
+      return this.http.put(`${this.api_url}/admin/users/${id}`, params);
+    } else {
+      return this.http.post(`${this.api_url}/admin/users`, params);
+    }
+  }
+
+  delete_user(id: number): Observable<any> {
+    return this.http.delete(`${this.api_url}/admin/users/${id}`);
+  }
+
   get_user_list(): Observable<any> {
     return this.http.get(`${this.api_url}/admin/users/list`);
   }
 
   set_user_preference(name: string, value: string): Observable<any> {
-    const params = new HttpParams().set('name', name).set('value', value);
+    const params = new HttpParams().set("name", name).set("value", value);
 
     return this.http.post(`${this.api_url}/user/preferences`, params);
   }
