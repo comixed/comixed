@@ -17,26 +17,27 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable ,  Subscription } from 'rxjs';
-import { AppState } from './app.state';
-import { Library } from './models/library';
-import * as LibraryActions from './actions/library.actions';
-import { User } from './models/user/user';
-import * as UserActions from './actions/user.actions';
-import { UserService } from './services/user.service';
-import { ComicService } from './services/comic.service';
-import { AlertService } from './services/alert.service';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { Observable, Subscription } from "rxjs";
+import { AppState } from "./app.state";
+import { Library } from "./models/library";
+import * as LibraryActions from "./actions/library.actions";
+import { User } from "./models/user/user";
+import * as UserActions from "./actions/user.actions";
+import { UserService } from "./services/user.service";
+import { ComicService } from "./services/comic.service";
+import { AlertService } from "./services/alert.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'ComiXed';
+  title = "ComiXed";
   alert_messages = [];
   comic_count = 0;
   read_count = 0;
@@ -54,68 +55,78 @@ export class AppComponent implements OnInit, OnDestroy {
   alert_message: string;
 
   constructor(
+    private translate_service: TranslateService,
     private user_service: UserService,
     private comic_service: ComicService,
     private alert_service: AlertService,
     private router: Router,
-    private store: Store<AppState>,
+    private store: Store<AppState>
   ) {
-    this.user$ = store.select('user');
-    this.library$ = store.select('library');
+    translate_service.setDefaultLang("en");
+    this.user$ = store.select("user");
+    this.library$ = store.select("library");
   }
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe(
-      (user: User) => {
-        this.user = user;
+    this.user_subscription = this.user$.subscribe((user: User) => {
+      this.user = user;
 
-        if (!this.user.authenticated && this.library && this.library.comics && this.library.comics.length) {
-          this.store.dispatch(new LibraryActions.LibraryReset());
-        } else if (this.user.token && !this.user.email && !this.user.fetching) {
-          this.store.dispatch(new UserActions.UserAuthCheck());
-          this.store.dispatch(new LibraryActions.LibraryReset());
-          this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
-            last_comic_date: '0',
-            timeout: 60000,
-          }));
-        }
-      });
+      if (
+        !this.user.authenticated &&
+        this.library &&
+        this.library.comics &&
+        this.library.comics.length
+      ) {
+        this.store.dispatch(new LibraryActions.LibraryReset());
+      } else if (this.user.token && !this.user.email && !this.user.fetching) {
+        this.store.dispatch(new UserActions.UserAuthCheck());
+        this.store.dispatch(new LibraryActions.LibraryReset());
+        this.store.dispatch(
+          new LibraryActions.LibraryFetchLibraryChanges({
+            last_comic_date: "0",
+            timeout: 60000
+          })
+        );
+      }
+    });
     this.store.dispatch(new UserActions.UserAuthCheck());
-    this.library_subscription = this.library$.subscribe(
-      (library: Library) => {
-        this.library = library;
+    this.library_subscription = this.library$.subscribe((library: Library) => {
+      this.library = library;
 
-        this.comic_count = library.comics.length;
-        this.read_count = 0;
-        this.import_count = library.import_count;
-        this.rescan_count = library.rescan_count;
+      this.comic_count = library.comics.length;
+      this.read_count = 0;
+      this.import_count = library.import_count;
+      this.rescan_count = library.rescan_count;
 
-        // if we're not busy, then get the scan types, formats or updates as needed
-        if (!this.library.busy) {
-          if (this.library.scan_types.length === 0) {
-            this.store.dispatch(new LibraryActions.LibraryGetScanTypes());
-          } else if (this.library.formats.length === 0) {
-            this.store.dispatch(new LibraryActions.LibraryGetFormats());
-          } else if (this.user && this.user.authenticated) {
-            // if the last time we checked the library, we got either an import or a rescan count,
-            // then set the timeout value to 0
-            const timeout = (this.library.import_count === 0) &&
-              (this.library.rescan_count === 0) ? 60000 : 0;
-            this.store.dispatch(new LibraryActions.LibraryFetchLibraryChanges({
+      // if we're not busy, then get the scan types, formats or updates as needed
+      if (!this.library.busy) {
+        if (this.library.scan_types.length === 0) {
+          this.store.dispatch(new LibraryActions.LibraryGetScanTypes());
+        } else if (this.library.formats.length === 0) {
+          this.store.dispatch(new LibraryActions.LibraryGetFormats());
+        } else if (this.user && this.user.authenticated) {
+          // if the last time we checked the library, we got either an import or a rescan count,
+          // then set the timeout value to 0
+          const timeout =
+            this.library.import_count === 0 && this.library.rescan_count === 0
+              ? 60000
+              : 0;
+          this.store.dispatch(
+            new LibraryActions.LibraryFetchLibraryChanges({
               last_comic_date: `${this.library.last_comic_date}`,
-              timeout: timeout,
-            }));
-          }
+              timeout: timeout
+            })
+          );
         }
-      });
+      }
+    });
   }
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
   }
 
-  logout(): void {
-  }
+  logout(): void {}
 
   clear_alert_message(index: number): void {
     if (this.alert_messages.length > index) {
@@ -142,7 +153,7 @@ export class AppComponent implements OnInit, OnDestroy {
   is_admin(): boolean {
     if (this.is_authenticated()) {
       for (const role of this.user.roles) {
-        if (role.name === 'ADMIN') {
+        if (role.name === "ADMIN") {
           return true;
         }
       }

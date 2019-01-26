@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { UserAdmin } from "../models/actions/user-admin";
+import {UserAdmin} from "../models/actions/user-admin";
 import * as UserAdminActions from "../actions/user-admin.actions";
-import { User } from "../models/user/user";
+import {User} from "../models/user/user";
 
 const initial_state: UserAdmin = {
   busy: false,
@@ -64,13 +64,14 @@ export function userAdminReducer(
       };
 
     case UserAdminActions.USER_ADMIN_USER_SAVED: {
-      state.users = state.users.filter((user: User) => {
+      let users = state.users.filter((user: User) => {
         return user.id !== action.payload.user.id;
       });
-      state.users.push(action.payload.user);
+      users.push(action.payload.user);
       return {
         ...state,
         busy: false,
+        users: users,
         current_user: null
       };
     }

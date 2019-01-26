@@ -1,59 +1,34 @@
 <p-confirmDialog></p-confirmDialog>
-<div class='ui-g'>
-  <div class='ui-g-12'>
+<div class="ui-g">
+  <div class="ui-g-12">
     <p-toolbar>
-    <button
-      pButton
-      type='button'
-      label='Rescan Library'
-      [disabled]='!can_rescan()'
-      (click)='rescan_library()'></button>
+      <button pButton type="button" label="{{'button.rescan-library'|translate}}" [disabled]="!can_rescan()"
+              (click)="rescan_library()"></button>
     </p-toolbar>
   </div>
 </div>
-<app-library-filter
-  *ngIf='library_filter'
-  [publisher]='library_filter.publisher'
-  [series]='library_filter.series'
-  [volume]='library_filter.volume'
-  [from_year]='library_filter.from_year'
-  [to_year]='library_filter.to_year'></app-library-filter>
-<p-tabView
-  [activeIndex]='current_tab'
-  (onChange)='set_current_tab($event.index)'> <p-tabPanel
-  [disabled]='!library'
-  header='Covers'> <app-library-covers
-  *ngIf='library'
-  [is_admin]='user.is_admin'
-  [comics]='library.comics | library_filter:library_filter'
-  [rows]='rows'
-  [sort_by]='sort_by'
-  [cover_size]='cover_size'
-  [sort_options]='sort_options'
-  [rows_options]='rows_options'
-  (changeSort)='set_sort_order($event)'
-  (changeRows)='set_rows($event)'
-  (changeCoverSize)='set_cover_size($event)'
-  (saveCoverSize)='save_cover_size($event)'
-  (openComic)='open_comic($event)'
-  (deleteComic)='delete_comic($event)'></app-library-covers> </p-tabPanel> <p-tabPanel
-  [disabled]='!library'
-  header='Details'> <app-library-details
-  *ngIf='library'
-  [is_admin]='user.is_admin'
-  [comics]='library.comics | library_filter:library_filter'
-  [rows]='rows'
-  [sort_by]='sort_by'
-  [cover_size]='cover_size'
-  [sort_options]='sort_options'
-  [rows_options]='rows_options'
-  (changeSort)='set_sort_order($event)'
-  (changeRows)='set_rows($event)'
-  (changeCoverSize)='set_cover_size($event)'
-  (saveCoverSize)='save_cover_size($event)'
-  (deleteComic)='delete_comic($event)'
-  (openComic)='open_comic($event)'></app-library-details></p-tabPanel> <p-tabPanel
-  *ngIf='user.is_admin'
-  [disabled]='!library'
-  header='Scraping'> <app-library-scraping-view>
-</app-library-scraping-view></p-tabPanel></p-tabView>
+<app-library-filter *ngIf="library_filter" [publisher]="library_filter.publisher" [series]="library_filter.series"
+                    [volume]="library_filter.volume" [from_year]="library_filter.from_year"
+                    [to_year]="library_filter.to_year"></app-library-filter>
+<p-tabView [activeIndex]="current_tab" (onChange)="set_current_tab($event.index)">
+  <p-tabPanel [disabled]="!library" header="{{'library.tab.covers'|translate}}">
+    <app-library-covers *ngIf="library" [is_admin]="user.is_admin"
+                        [comics]="library.comics|library_filter:library_filter" [rows]="rows" [sort_by]="sort_by"
+                        [cover_size]="cover_size" [sort_options]="sort_options" [rows_options]="rows_options"
+                        (changeSort)="set_sort_order($event)" (changeRows)="set_rows($event)"
+                        (changeCoverSize)="set_cover_size($event)" (saveCoverSize)="save_cover_size($event)"
+                        (openComic)="open_comic($event)" (deleteComic)="delete_comic($event)"></app-library-covers>
+  </p-tabPanel>
+  <p-tabPanel [disabled]="!library" header="{{'library.tab.details'|translate}}">
+    <app-library-details *ngIf="library" [is_admin]="user.is_admin"
+                         [comics]="library.comics|library_filter:library_filter" [rows]="rows" [sort_by]="sort_by"
+                         [cover_size]="cover_size" [sort_options]="sort_options" [rows_options]="rows_options"
+                         (changeSort)="set_sort_order($event)" (changeRows)="set_rows($event)"
+                         (changeCoverSize)="set_cover_size($event)" (saveCoverSize)="save_cover_size($event)"
+                         (deleteComic)="delete_comic($event)" (openComic)="open_comic($event)"></app-library-details>
+  </p-tabPanel>
+  <p-tabPanel *ngIf="user.is_admin" [disabled]="!library" header="{{'library.tab.scraping'|translate}}">
+    <app-library-scraping-view>
+    </app-library-scraping-view>
+  </p-tabPanel>
+</p-tabView>

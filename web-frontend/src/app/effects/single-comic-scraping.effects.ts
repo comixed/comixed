@@ -17,19 +17,19 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Action} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {map, switchMap, tap} from 'rxjs/operators';
 import * as ScrapingActions from '../actions/single-comic-scraping.actions';
-import * as LibraryActions from '../actions/library.actions';
-import { ComicService } from '../services/comic.service';
-import { AlertService } from '../services/alert.service';
-import { UserService } from '../services/user.service';
-import { Comic } from '../models/comics/comic';
-import { Volume } from '../models/comics/volume';
-import { Issue } from '../models/scraping/issue';
+import {ComicService} from '../services/comic.service';
+import {AlertService} from '../services/alert.service';
+import {UserService} from '../services/user.service';
+import {Comic} from '../models/comics/comic';
+import {Volume} from '../models/comics/volume';
+import {Issue} from '../models/scraping/issue';
+import {TranslateService} from '@ngx-translate/core';
 
 @Injectable()
 export class SingleComicScrapingEffects {
@@ -39,7 +39,9 @@ export class SingleComicScrapingEffects {
     private comic_service: ComicService,
     private alert_service: AlertService,
     private user_service: UserService,
-  ) { }
+    private translate: TranslateService,
+  ) {
+  }
 
   @Effect()
   single_comic_scraping_fetch_volumes$: Observable<Action> = this.actions$.pipe(
@@ -52,7 +54,7 @@ export class SingleComicScrapingEffects {
       action.issue_number,
       action.skip_cache,
     ).pipe(
-      tap((volumes: Array<Volume>) => this.alert_service.show_info_message(`Retrieved ${volumes.length} volumes...`)),
+      tap((volumes: Array<Volume>) => this.alert_service.show_info_message(this.translate.instant("effects.single-comic-scraping.info.retrieved-volume-count", {count: volumes.length}))),
       map((volumes: Array<Volume>) => new ScrapingActions.SingleComicScrapingFoundVolumes(volumes))
     )));
 
@@ -85,10 +87,10 @@ export class SingleComicScrapingEffects {
       action.skip_cache,
     ).pipe(
       map((issue: Issue) => new ScrapingActions.SingleComicScrapingFoundIssue({
-        issue: issue,
-        volume_id: action.volume.id,
-      })
-    ))));
+          issue: issue,
+          volume_id: action.volume.id,
+        })
+      ))));
 
   @Effect()
   single_comic_scraping_fetch_issues$: Observable<Action> = this.actions$.pipe(
@@ -101,10 +103,10 @@ export class SingleComicScrapingEffects {
       action.skip_cache,
     ).pipe(
       map((issue: Issue) => new ScrapingActions.SingleComicScrapingFoundIssue({
-        issue: issue,
-        volume_id: action.volume_id,
-      })
-    ))));
+          issue: issue,
+          volume_id: action.volume_id,
+        })
+      ))));
 
   @Effect()
   single_comic_scraping_scrape_metadata$: Observable<Action> = this.actions$.pipe(
@@ -123,7 +125,7 @@ export class SingleComicScrapingEffects {
         }
         Object.assign(action.comic, comic);
       }),
-      tap(() => this.alert_service.show_info_message('Comic details scraped...')),
+      tap(() => this.alert_service.show_info_message(this.translate.instant("effects.single-comic-scraping.info.details-scraped"))),
       map((comic: Comic) => new ScrapingActions.SingleComicScrapingMetadataScraped({
         original: action.comic,
         updated: comic,

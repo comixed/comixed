@@ -1,72 +1,38 @@
-<p-panel
-  [header]='get_header()'
-  [toggleable]='true'
-  toggler='header'
-  [collapsed]='collapsed'
-  (onAfterToggle)='set_collapsed($event.collapsed)'>
-<div class='ui-g'>
-  <div class='ui-g-4'>
-    <div class='ui-g'>
-      <div class='ui-g-4'>Publisher:</div>
-      <div class='ui-g-8'>
-        <input
-          id='publisher_filter'
-          type='text'
-          pInputText
-          [(ngModel)]='publisher'>
-      </div>
-      <div class='ui-g-4'>Series:</div>
-      <div class='ui-g-8'>
-        <input
-          id='series_filter'
-          type='text'
-          pInputText
-          [(ngModel)]='series'>
-      </div>
-      <div class='ui-g-4'>Volume:</div>
-      <div class='ui-g-8'>
-        <input
-          id='volume_filter'
-          type='text'
-          pInputText
-          [(ngModel)]='volume'>
+<p-panel [header]='get_header()' [toggleable]='true' toggler='header' [collapsed]='collapsed' (onAfterToggle)='set_collapsed($event.collapsed)'>
+  <div class='ui-g'>
+    <div class='ui-g-4'>
+      <div class='ui-g'>
+        <div class='ui-g-4'>{{"library.filter.publisher"|translate}}</div>
+        <div class='ui-g-8'>
+          <input id='publisher_filter' type='text' pInputText [(ngModel)]='publisher'>
+        </div>
+        <div class='ui-g-4'>{{"library.filter.series"|translate}}</div>
+        <div class='ui-g-8'>
+          <input id='series_filter' type='text' pInputText [(ngModel)]='series'>
+        </div>
+        <div class='ui-g-4'>{{"library.filter.volume"|translate}}</div>
+        <div class='ui-g-8'>
+          <input id='volume_filter' type='text' pInputText [(ngModel)]='volume'>
+        </div>
       </div>
     </div>
-  </div>
-  <div class='ui-g-4'>
-    <div class='ui-g'>
-      <div class='ui-g-12'>Cover Date By Year</div>
-      <div class='ui-g-4'>Earliest:</div>
-      <div class='ui-g-8'>
-        <input
-          type='number'
-          pInputText
-          [(ngModel)]='from_year'>
-      </div>
-      <div class='ui-g-4'>Latest:</div>
-      <div class='ui-g-8'>
-        <input
-          type='number'
-          pInputText
-          [(ngModel)]='to_year'>
+    <div class='ui-g-4'>
+      <div class='ui-g'>
+        <div class='ui-g-12'>{{"library.filter.cover-dates"|translate}}</div>
+        <div class='ui-g-4'>{{"library.filter.earliest-cover-date"|translate}}</div>
+        <div class='ui-g-8'>
+          <input type='number' pInputText [(ngModel)]='from_year'>
+        </div>
+        <div class='ui-g-4'>{{"library.filter.latest-cover-date"|translate}}</div>
+        <div class='ui-g-8'>
+          <input type='number' pInputText [(ngModel)]='to_year'>
+        </div>
       </div>
     </div>
+    <div class='ui-g-4'></div>
+    <div class='ui-g-12'>
+      <button pButton type='button' label='{{"button.apply"|translate}}' icon='fa fa-fw fa-filter' [disabled]='!is_filtering()' (click)='apply_filters()'></button>
+      <button pButton type='button' label='{{"button.reset"|translate}}' icon='fa fa-fw fa-undo' (click)='reset_filters()'></button>
+    </div>
   </div>
-  <div class='ui-g-4'></div>
-  <div class='ui-g-12'>
-    <button
-      pButton
-      type='button'
-      label='Apply'
-      icon='fa fa-fw fa-filter'
-      [disabled]='!is_filtering()'
-      (click)='apply_filters()'></button>
-    <button
-      pButton
-      type='button'
-      label='Reset'
-      icon='fa fa-fw fa-undo'
-      (click)='reset_filters()'></button>
-  </div>
-</div>
 </p-panel>

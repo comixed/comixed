@@ -1,53 +1,53 @@
-<div class='ui-g'>
-  <div class='ui-g-2 ui-sm-4'>
-    <p-card> <p-header> <img
-      src='{{ duplicates.current_duplicates[0] | comic_page_url }}'
-      [style.width]='"100%"'
-      [style.height]='"auto"'> </p-header> <p-footer>
-    <button
-      pButton
-      type='button'
-      label='Close'
-      icon='fa fa-close'
-      (click)='close_page_view()'></button>
-    </p-footer> </p-card>
+<div class="ui-g">
+  <div class="ui-g-2 ui-sm-4">
+    <p-card>
+      <p-header><img src="{{duplicates.current_duplicates[0]|comic_page_url}}"
+                     [style.width]="'100%'"
+                     [style.height]="'auto'"></p-header>
+      <p-footer>
+        <button pButton
+                type="button"
+                label="{{'button.close'|translate}}"
+                icon="fa fa-close"
+                (click)="close_page_view()"></button>
+      </p-footer>
+    </p-card>
   </div>
-  <div class='ui-g-10 ui-sm-8'>
-    <p-table [value]='duplicates.current_duplicates'> <ng-template
-      pTemplate='header'>
-    <tr>
-      <th></th>
-      <th>In Comic</th>
-      <th>Page #</th>
-      <th>Comic File</th>
-      <th>Image File</th>
-      <th></th>
-    </tr>
-    </ng-template> <ng-template
-      pTemplate='body'
-      let-duplicate>
-    <tr>
-      <td><img
-        src='{{ duplicate.comic | comic_cover_url }}'
-        width='128px'
-        height='auto'></td>
-      <td>{{ duplicate.comic | comic_title }}</td>
-      <td>{{ duplicate.index }}</td>
-      <td>{{ duplicate.comic.filename }}</td>
-      <td>{{ duplicate.filename }}</td>
-      <td><button
-          *ngIf='!duplicate.deleted'
-          pButton
-          icon='fa fa-trash'
-          label='Delete'
-          (click)='delete_page(duplicate)'></button>
-        <button
-          *ngIf='duplicate.deleted'
-          pButton
-          icon='fa fa-trash'
-          label='Undelete'
-          (click)='undelete_page(duplicate)'></button>
-    </tr>
-    </ng-template> </p-table>
+  <div class="ui-g-10 ui-sm-8">
+    <p-table [value]="duplicates.current_duplicates">
+      <ng-template pTemplate="header">
+        <tr>
+          <th></th>
+          <th>{{"page-hash.label.in-comic"|translate}}</th>
+          <th>{{"page-hash.label.page-number"|translate}}</th>
+          <th>{{"page-hash.label.comic-filename"|translate}}</th>
+          <th>{{"page-hash.label.image-filename"|translate}}</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body"
+                   let-duplicate>
+        <tr>
+          <td><img src="{{duplicate.comic|comic_cover_url}}"
+                   width="128px"
+                   height="auto"></td>
+          <td>{{duplicate.comic|comic_title}}</td>
+          <td>{{duplicate.index}}</td>
+          <td>{{duplicate.comic.filename}}</td>
+          <td>{{duplicate.filename}}</td>
+          <td>
+            <button *ngIf="!duplicate.deleted"
+                    pButton
+                    icon="fa fa-trash"
+                    label="{{'button.delete'|translate}}"
+                    (click)="delete_page(duplicate)"></button>
+            <button *ngIf="duplicate.deleted"
+                    pButton
+                    icon="fa fa-trash"
+                    label="{{'button.undelete'|translate}}"
+                    (click)="undelete_page(duplicate)"></button>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 </div>

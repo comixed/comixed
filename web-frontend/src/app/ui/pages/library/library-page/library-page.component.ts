@@ -17,46 +17,47 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import { Library } from '../../../../models/library';
-import * as LibraryActions from '../../../../actions/library.actions';
-import { LibraryFilter } from '../../../../models/library/library-filter';
-import * as FilterActions from '../../../../actions/library-filter.actions';
-import { LibraryDisplay } from '../../../../models/library-display';
-import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
-import * as LibraryDisplayActions from '../../../../actions/library-display.actions';
-import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
-import { Observable ,  Subscription } from 'rxjs';
-import { Comic } from '../../../../models/comics/comic';
-import * as UserActions from '../../../../actions/user.actions';
-import { User } from '../../../../models/user/user';
-import { Preference } from '../../../../models/user/preference';
-import { UserService } from '../../../../services/user.service';
-import { ComicService } from '../../../../services/comic.service';
-import { ConfirmationService } from 'primeng/api';
-import { SelectItem } from 'primeng/api';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Router } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { Library } from "../../../../models/library";
+import * as LibraryActions from "../../../../actions/library.actions";
+import { LibraryFilter } from "../../../../models/library/library-filter";
+import * as FilterActions from "../../../../actions/library-filter.actions";
+import { LibraryDisplay } from "../../../../models/library-display";
+import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
+import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
+import * as ScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
+import { Observable, Subscription } from "rxjs";
+import { Comic } from "../../../../models/comics/comic";
+import * as UserActions from "../../../../actions/user.actions";
+import { User } from "../../../../models/user/user";
+import { Preference } from "../../../../models/user/preference";
+import { UserService } from "../../../../services/user.service";
+import { ComicService } from "../../../../services/comic.service";
+import { ConfirmationService } from "primeng/api";
+import { SelectItem } from "primeng/api";
 import {
   LIBRARY_SORT,
   LIBRARY_ROWS,
   LIBRARY_COVER_SIZE,
-  LIBRARY_CURRENT_TAB,
-} from '../../../../models/user/preferences.constants';
+  LIBRARY_CURRENT_TAB
+} from "../../../../models/user/preferences.constants";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-library-page',
-  templateUrl: './library-page.component.html',
-  styleUrls: ['./library-page.component.css']
+  selector: "app-library-page",
+  templateUrl: "./library-page.component.html",
+  styleUrls: ["./library-page.component.css"]
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
-  readonly ROWS_PARAMETER = 'rows';
-  readonly SORT_PARAMETER = 'sort';
-  readonly COVER_PARAMETER = 'coversize';
-  readonly GROUP_BY_PARAMETER = 'groupby';
-  readonly TAB_PARAMETER = 'tab';
+  readonly ROWS_PARAMETER = "rows";
+  readonly SORT_PARAMETER = "sort";
+  readonly COVER_PARAMETER = "coversize";
+  readonly GROUP_BY_PARAMETER = "groupby";
+  readonly TAB_PARAMETER = "tab";
 
   private user$: Observable<User>;
   private user_subscription: Subscription;
@@ -102,69 +103,71 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private comic_service: ComicService,
     private confirm_service: ConfirmationService,
     private store: Store<AppState>,
+    private translate: TranslateService
   ) {
-    this.user$ = store.select('user');
-    this.library$ = store.select('library');
-    this.library_filter$ = store.select('library_filter');
-    this.activated_route.queryParams.subscribe(
-      (params: Params) => {
-        this.sort_by = params[this.SORT_PARAMETER] || 'series';
-        this.rows = parseInt(params[this.ROWS_PARAMETER] || '10', 10);
-        this.cover_size = parseInt(params[this.COVER_PARAMETER] || '200', 10);
-        this.current_tab = parseInt(params[this.TAB_PARAMETER] || '0', 10);
-      });
-    this.library_display$ = store.select('library_display');
-    this.scraping$ = store.select('multiple_comic_scraping');
+    this.user$ = store.select("user");
+    this.library$ = store.select("library");
+    this.library_filter$ = store.select("library_filter");
+    this.activated_route.queryParams.subscribe((params: Params) => {
+      this.sort_by = params[this.SORT_PARAMETER] || "series";
+      this.rows = parseInt(params[this.ROWS_PARAMETER] || "10", 10);
+      this.cover_size = parseInt(params[this.COVER_PARAMETER] || "200", 10);
+      this.current_tab = parseInt(params[this.TAB_PARAMETER] || "0", 10);
+    });
+    this.library_display$ = store.select("library_display");
+    this.scraping$ = store.select("multiple_comic_scraping");
     this.sort_options = [
-      { label: 'Publisher', value: 'publisher' },
-      { label: 'Series', value: 'series' },
-      { label: 'Volume', value: 'volume', },
-      { label: 'Issue #', value: 'issue_number', },
-      { label: 'Date Added', value: 'added_date' },
-      { label: 'Cover Date', value: 'cover_date' },
+      { label: "Publisher", value: "publisher" },
+      { label: "Series", value: "series" },
+      { label: "Volume", value: "volume" },
+      { label: "Issue #", value: "issue_number" },
+      { label: "Date Added", value: "added_date" },
+      { label: "Cover Date", value: "cover_date" }
     ];
     this.group_options = [
-      { label: 'None', value: 'none' },
-      { label: 'Series', value: 'series' },
-      { label: 'Publisher', value: 'publisher' },
-      { label: 'Year', value: 'year' },
+      { label: "None", value: "none" },
+      { label: "Series", value: "series" },
+      { label: "Publisher", value: "publisher" },
+      { label: "Year", value: "year" }
     ];
     this.rows_options = [
-      { label: '10 comics', value: 10 },
-      { label: '25 comics', value: 25 },
-      { label: '50 comics', value: 50 },
-      { label: '100 comics', value: 100 },
+      { label: "10 comics", value: 10 },
+      { label: "25 comics", value: 25 },
+      { label: "50 comics", value: 50 },
+      { label: "100 comics", value: 100 }
     ];
   }
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe(
-      (user: User) => {
-        this.user = user;
-      });
-    this.library_subscription = this.library$.subscribe(
-      (library: Library) => {
-        this.library = library;
-        this.comics = library.comics;
-      });
+    this.user_subscription = this.user$.subscribe((user: User) => {
+      this.user = user;
+    });
+    this.library_subscription = this.library$.subscribe((library: Library) => {
+      this.library = library;
+      this.comics = library.comics;
+    });
     this.library_filter_subscription = this.library_filter$.subscribe(
       (library_filter: LibraryFilter) => {
-
         if (!this.library_filter || library_filter.changed) {
           this.library_filter = library_filter;
         }
-      });
+      }
+    );
     this.library_display_subscription = this.library_display$.subscribe(
       (library_display: LibraryDisplay) => {
         this.library_display = library_display;
-      });
+      }
+    );
     this.scraping_subscription = this.scraping$.subscribe(
       (scraping: MultipleComicsScraping) => {
         this.scraping = scraping;
-      });
-    this.store.dispatch(new ScrapingActions.MultipleComicsScrapingSetup({
-      api_key: this.user_service.get_user_preference('api_key', ''),
-    }));
+      }
+    );
+    this.store.dispatch(
+      new ScrapingActions.MultipleComicsScrapingSetup({
+        api_key: this.user_service.get_user_preference("api_key", "")
+      })
+    );
   }
 
   ngOnDestroy() {
@@ -221,44 +224,56 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   delete_comic(comic: Comic): void {
     this.confirm_service.confirm({
-      header: `Delete This Comic?`,
-      message: 'Are you sure? This will not delete the file, only remove it from the library.',
-      icon: 'fa fa-exclamation',
+      header: this.translate.instant("library.messages.delete-comic-title"),
+      message: this.translate.instant("library.messages.delete-comic-question"),
+      icon: "fa fa-exclamation",
       accept: () => {
-        this.store.dispatch(new LibraryActions.LibraryRemoveComic({ comic: comic }));
+        this.store.dispatch(
+          new LibraryActions.LibraryRemoveComic({ comic: comic })
+        );
       }
     });
   }
 
   open_comic(comic: Comic): void {
-    this.router.navigate(['comics', `${comic.id}`]);
+    this.router.navigate(["comics", `${comic.id}`]);
   }
 
   rescan_library(): void {
     this.confirm_service.confirm({
-      header: `Rescan Library`,
-      message: 'Are you sure? This could take a long time to complete...',
-      icon: 'fa fa-exclamation',
+      header: this.translate.instant("library.messages.rescan-library-title"),
+      message: this.translate.instant(
+        "library.messages.rescan-library-message"
+      ),
+      icon: "fa fa-exclamation",
       accept: () => {
-        this.store.dispatch(new LibraryActions.LibraryRescanFiles({
-          last_comic_date: this.library.last_comic_date,
-        }));
+        this.store.dispatch(
+          new LibraryActions.LibraryRescanFiles({
+            last_comic_date: this.library.last_comic_date
+          })
+        );
       }
     });
   }
 
   can_rescan(): boolean {
-    return (this.library.rescan_count === 0) && (this.library.import_count === 0);
+    return this.library.rescan_count === 0 && this.library.import_count === 0;
   }
 
   private update_params(name: string, value: string): void {
-    const queryParams: Params = Object.assign({}, this.activated_route.snapshot.queryParams);
+    const queryParams: Params = Object.assign(
+      {},
+      this.activated_route.snapshot.queryParams
+    );
     if (value && value.length) {
       queryParams[name] = value;
     } else {
       queryParams[name] = null;
     }
-    this.router.navigate([], { relativeTo: this.activated_route, queryParams: queryParams });
+    this.router.navigate([], {
+      relativeTo: this.activated_route,
+      queryParams: queryParams
+    });
   }
 
   private load_parameter(value: string, defvalue: any): any {

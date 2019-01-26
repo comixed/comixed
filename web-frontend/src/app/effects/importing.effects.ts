@@ -17,15 +17,16 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { tap, switchMap, map } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Action} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {map, switchMap, tap} from 'rxjs/operators';
 import * as ImportingActions from '../actions/importing.actions';
-import { ComicService } from '../services/comic.service';
-import { AlertService } from '../services/alert.service';
-import { ComicFile } from '../models/import/comic-file';
+import {ComicService} from '../services/comic.service';
+import {AlertService} from '../services/alert.service';
+import {ComicFile} from '../models/import/comic-file';
+import {TranslateService} from '@ngx-translate/core';
 
 @Injectable()
 export class ImportingEffects {
@@ -33,14 +34,16 @@ export class ImportingEffects {
     private actions$: Actions,
     private comic_service: ComicService,
     private alert_service: AlertService,
-  ) { }
+    private translate: TranslateService,
+  ) {
+  }
 
   @Effect()
   importing_fetch_files$: Observable<Action> = this.actions$.pipe(
     ofType(ImportingActions.IMPORTING_FETCH_FILES),
     map((action: ImportingActions.ImportingFetchFiles) => action.payload),
     switchMap(action => this.comic_service.get_files_under_directory(action.directory).pipe(
-      tap((files: Array<ComicFile>) => this.alert_service.show_info_message(`Found ${files.length} files...`)),
+      tap((files: Array<ComicFile>) => this.alert_service.show_info_message(this.translate.instant("effects.importing.info.found_files", {file_count: files.length}))),
       map((files: Array<ComicFile>) => new ImportingActions.ImportingFilesFetched({
         files: files,
       })))));
@@ -50,5 +53,5 @@ export class ImportingEffects {
     ofType(ImportingActions.IMPORTING_IMPORT_FILES),
     map((action: ImportingActions.ImportingImportFiles) => action.payload),
     switchMap(action => this.comic_service.import_files_into_library(action.files, false).pipe(
-        map(() => new ImportingActions.ImportingFilesAreImporting()))));
+      map(() => new ImportingActions.ImportingFilesAreImporting()))));
 }

@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input, Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { Component, OnInit, Input, Output } from "@angular/core";
+import { EventEmitter } from "@angular/core";
+import { MenuItem } from "primeng/api";
 
 @Component({
-  selector: 'app-import-toolbar',
-  templateUrl: './import-toolbar.component.html',
-  styleUrls: ['./import-toolbar.component.css']
+  selector: "app-import-toolbar",
+  templateUrl: "./import-toolbar.component.html",
+  styleUrls: ["./import-toolbar.component.css"]
 })
 export class ImportToolbarComponent implements OnInit {
   @Input() directory: string;
@@ -37,14 +37,26 @@ export class ImportToolbarComponent implements OnInit {
   select_options: MenuItem[];
 
   constructor() {
+    // TODO we need to change the label values based on the runtime language of the user
     this.select_options = [
-      { label: 'All', icon: 'fas fa-folder-plus', command: () => { this.set_select_all_files(true); } },
-      { label: 'None', icon: 'fas fa-trash-alt', command: () => { this.set_select_all_files(false); } },
+      {
+        label: "All",
+        icon: "fas fa-folder-plus",
+        command: () => {
+          this.set_select_all_files(true);
+        }
+      },
+      {
+        label: "None",
+        icon: "fas fa-trash-alt",
+        command: () => {
+          this.set_select_all_files(false);
+        }
+      }
     ];
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   directory_selected(): void {
     this.directorySelected.next(this.directory);

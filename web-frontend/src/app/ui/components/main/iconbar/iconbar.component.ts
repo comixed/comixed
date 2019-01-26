@@ -17,26 +17,23 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { User } from '../../../../models/user/user';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as UserActions from '../../../../actions/user.actions';
+import { Component, Input, OnInit } from "@angular/core";
+import { User } from "../../../../models/user/user";
+import { Store } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import * as UserActions from "../../../../actions/user.actions";
 
 @Component({
-  selector: 'app-iconbar',
-  templateUrl: './iconbar.component.html',
-  styleUrls: ['./iconbar.component.css']
+  selector: "app-iconbar",
+  templateUrl: "./iconbar.component.html",
+  styleUrls: ["./iconbar.component.css"]
 })
 export class IconbarComponent implements OnInit {
   @Input() user: User;
 
-  constructor(
-    private store: Store<AppState>,
-  ) { }
+  constructor(private store: Store<AppState>) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   do_login(): void {
     this.store.dispatch(new UserActions.UserStartLogin());

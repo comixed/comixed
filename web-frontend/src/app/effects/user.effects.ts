@@ -17,15 +17,15 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
-import { tap, map, switchMap } from 'rxjs/operators';
-import { of as observableOf,  Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Action} from '@ngrx/store';
+import {map, switchMap, tap} from 'rxjs/operators';
+import {Observable, of as observableOf} from 'rxjs';
 import * as UserActions from '../actions/user.actions';
-import { UserService } from '../services/user.service';
-import { User } from '../models/user/user';
-import { TokenStorage } from '../storage/token.storage';
+import {UserService} from '../services/user.service';
+import {User} from '../models/user/user';
+import {TokenStorage} from '../storage/token.storage';
 
 @Injectable()
 export class UserEffects {
@@ -33,7 +33,8 @@ export class UserEffects {
     private actions$: Actions,
     private user_service: UserService,
     private token_storage: TokenStorage,
-  ) { }
+  ) {
+  }
 
   @Effect()
   user_auth_check$: Observable<Action> = this.actions$.pipe(

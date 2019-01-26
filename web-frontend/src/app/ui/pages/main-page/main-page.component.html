@@ -1,8 +1,7 @@
 <div>
   <div id="library_details">
     <p>
-      There {{plural ? 'are' : 'is'}} <a [routerLink]="['/comics']">{{comic_count}}
-        comic{{plural ? 's' : ''}}</a> in the library.
+      {{"main-page.library-status"|translate:{"comic_count": comic_count} }}
     </p>
   </div>
 </div>

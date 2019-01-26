@@ -17,23 +17,26 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import { Action } from "@ngrx/store";
-import { catchError, map, switchMap, tap } from "rxjs/operators";
-import { of, Observable } from "rxjs";
+import {Injectable} from "@angular/core";
+import {Actions, Effect, ofType} from "@ngrx/effects";
+import {Action} from "@ngrx/store";
+import {catchError, map, switchMap, tap} from "rxjs/operators";
+import {Observable, of} from "rxjs";
 import * as UserAdminActions from "../actions/user-admin.actions";
-import { UserService } from "../services/user.service";
-import { AlertService } from "../services/alert.service";
-import { User } from "../models/user/user";
+import {UserService} from "../services/user.service";
+import {User} from "../models/user/user";
+import {TranslateService} from '@ngx-translate/core';
+import {AlertService} from '../services/alert.service';
 
 @Injectable()
 export class UserAdminEffects {
   constructor(
     private actions$: Actions,
     private user_service: UserService,
-    private alert_service: AlertService
-  ) {}
+    private alert_service: AlertService,
+    private translate: TranslateService,
+  ) {
+  }
 
   @Effect()
   user_admin_list_users$: Observable<Action> = this.actions$.pipe(
@@ -58,24 +61,9 @@ export class UserAdminEffects {
       this.user_service
         .save_user(action.id, action.email, action.password, action.is_admin)
         .pipe(
-          tap(() =>
-            this.alert_service.show_info_message(
-              `${action.email} has been created...`
-            )
-          ),
-          catchError((error: Error) =>
-            of(
-              this.alert_service.show_error_message(
-                `Failed to create ${action.email}`,
-                error
-              )
-            )
-          ),
-          map(
-            (user: User) =>
-              new UserAdminActions.UserAdminUserSaved({
-                user: user
-              })
+          tap(() => this.alert_service.show_info_message(this.translate.instant("effects.user-admin.info.account-created", {email: account.email}))),
+          catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.user-admin.error.account-create-failed", {email: action.email}), error))),
+          map((user: User) => new UserAdminActions.UserAdminUserSaved({user: user})
           )
         )
     )
@@ -87,25 +75,9 @@ export class UserAdminEffects {
     map((action: UserAdminActions.UserAdminDeleteUser) => action.payload),
     switchMap(action =>
       this.user_service.delete_user(action.user.id).pipe(
-        tap(() =>
-          this.alert_service.show_info_message(
-            `${action.user.email} has been deleted...`
-          )
-        ),
-        catchError((error: Error) =>
-          of(
-            this.alert_service.show_error_message(
-              `Failed to delete ${action.user.email}`,
-              error
-            )
-          )
-        ),
-        map(
-          (success: boolean) =>
-            new UserAdminActions.UserAdminUserDeleted({
-              user: action.user,
-              success: success
-            })
+        tap(() => this.alert_service.show_info_message(this.translate.instant("effects.user-admin.info.account-deleted", {email: action.user.email}))),
+        catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.user-admin.error.account-delete-failed", {email: action.user.email}), error))),
+        map((success: boolean) => new UserAdminActions.UserAdminUserDeleted({user: action.user, success: success})
         )
       )
     )

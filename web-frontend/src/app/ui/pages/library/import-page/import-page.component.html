@@ -1,139 +1,126 @@
-<div
-  *ngIf='importing.importing'
-  class='ui-g'>
-  <div class='ui-g-12'>
-    <h2 class='text-center'>{{get_import_title()}}</h2>
-    <div *ngIf='delete_blocked_pages'>
-      <p>
-        Blocked pages in those comics will be automatically marked as <em>deleted</em>...
-      </p>
+<div *ngIf="importing.importing"
+     class="ui-g">
+  <div class="ui-g-12">
+    <h2 class="text-center">{{get_import_title()}}</h2>
+    <div *ngIf="delete_blocked_pages">
+      <p>{{"import-page.text.blocked-pages-notice"|translate}} </p>
     </div>
-    <p-progressBar
-      mode="indeterminate"
-      [style]="{'height': '6px'}"></p-progressBar>
+    <p-progressBar mode="indeterminate"
+                   [style.height]="'6px'"></p-progressBar>
   </div>
 </div>
 <!--  main import content area -->
-<div
-  *ngIf='!importing.importing'
-  class='ui-g'>
+<div *ngIf="!importing.importing"
+     class="ui-g">
   <!-- selection overlay -->
-  <div class='ui-g-12 ui-sm-12'>
-    <div class='ui-g'>
-      <div class='ui-g-12 ui-sm-12'>
-        <app-import-toolbar
-          [directory]='importing.directory'
-          [selected_count]='importing.selected_count'
-          (directorySelected)='retrieve_files($event)'
-          (selectAll)='set_select_all($event)'
-          (startImporting)='import_selected_files()'></app-import-toolbar>
+  <div class="ui-g-12 ui-sm-12">
+    <div class="ui-g">
+      <div class="ui-g-12 ui-sm-12">
+        <app-import-toolbar [directory]="importing.directory"
+                            [selected_count]="importing.selected_count"
+                            (directorySelected)="retrieve_files($event)"
+                            (selectAll)="set_select_all($event)"
+                            (startImporting)="import_selected_files()"></app-import-toolbar>
       </div>
     </div>
-    <div class='ui-g'>
-      <div class='ui-g-12 ui-sm-12'>
-        <h2 class='text-center'>{{get_comic_selection_title()}}</h2>
+    <div class="ui-g">
+      <div class="ui-g-12 ui-sm-12">
+        <h2 class="text-center">{{get_comic_selection_title()}}</h2>
       </div>
-      <div class='ui-g-12 ui-sm-12'>
-        <p-dataView
-          #importComics
-          [value]='importing.files'
-          [sortField]='sort_by'
-          [filterBy]='"filename"'
-          [rows]='rows'
-          [paginator]='true'
-          [paginatorPosition]='"both"'
-          [loading]='importing.busy'
-          alwaysShowPaginator='true'> <p-header>
-        <div class='ui-helper-clearfix'>
-          <div class='ui-g'>
-            <div class='ui-g-1 ui-md-1'>
-              Sort by:
-              <p-dropdown
-                [options]='sort_options'
-                [(ngModel)]='sort_by'
-                (onChange)='set_sort_by($event.value)'></p-dropdown>
-            </div>
-            <div class='ui-g-1 ui-md-1'>
-              Show:
-              <p-dropdown
-                [options]='rows_options'
-                [(ngModel)]='rows'
-                (onChange)='set_rows($event.value)'></p-dropdown>
-            </div>
-            <div class='ui-g-3 ui-md-3'>
-              Search comic names: <input
-                type='search'
-                pInputText
-                placeholder='Search by series name'
-                [style.width]='"100%"'
-                (keyup)='importComics.filter($event.target.value)'>
-            </div>
-            <div class='ui-g-3 ui-md-3'>
-              Cover size: {{ cover_size }}px
-              <p-slider
-                [(ngModel)]='cover_size'
-                [min]='200'
-                [max]='640'
-                [animate]='true'
-                (onChange)='set_cover_size($event.value)'
-                (onSlideEnd)='save_cover_size($event.value)'></p-slider>
-            </div>
-            <div
-              class='ui-g-1 ui-md-1'
-              style='text-align: right'>
-              <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
-            </div>
-          </div>
-        </div>
-        </p-header> <ng-template
-          let-file
-          pTemplate='listItem'>
-        <div class='ui-g'>
-          <div class='ui-g-2 ui-md-2'>
-            <app-file-details-cover
-              [file_details]='file'
-              [width]='"100%"'
-              [height]='"auto"'></app-file-details-cover>
-          </div>
-          <div class='ui-g-10 ui-md-10'>
-            <div class='ui-g'>
-              <div class='ui-g-2 ui-sm-2'>
-                <b>Filename:</b>
-              </div>
-              <div class='ui-g-10 ui-sm-10'>{{ file.filename }}</div>
-              <div class='ui-g-2 ui-sm-2'>
-                <b>File size:</b>
-              </div>
-              <div class='ui-g-10 ui-sm-10'>{{ file.size }} bytes</div>
-            </div>
-            <div class='ui-g'>
-              <div class='ui-g-12 ui-sm-12'>
-                <button
-                  pButton
-                  type='button'
-                  [icon]='file.selected ? "fas fa-check" : "fas fa-times"'
-                  [label]='file.selected? "Selected" : "Not Selected"'
-                  (click)='toggle_selected_state(file)'></button>
+      <div class="ui-g-12 ui-sm-12">
+        <p-dataView #importComics
+                    [value]="importing.files"
+                    [sortField]="sort_by"
+                    [filterBy]="'filename'"
+                    [rows]="rows"
+                    [paginator]="true"
+                    [paginatorPosition]="'both'"
+                    [loading]="importing.busy"
+                    alwaysShowPaginator="true">
+          <p-header>
+            <div class="ui-helper-clearfix">
+              <div class="ui-g">
+                <div class="ui-g-1 ui-md-1">
+                  Sort by:
+                  <p-dropdown [options]="sort_options"
+                              [(ngModel)]="sort_by"
+                              (onChange)="set_sort_by($event.value)"></p-dropdown>
+                </div>
+                <div class="ui-g-1 ui-md-1">
+                  Show:
+                  <p-dropdown [options]="rows_options"
+                              [(ngModel)]="rows"
+                              (onChange)="set_rows($event.value)"></p-dropdown>
+                </div>
+                <div class="ui-g-3 ui-md-3">
+                  {{"import-page.label.search-comic-names"|translate}}<input type="search"
+                                                                             pInputText
+                                                                             [placeholder]="'import-page.text.search-by-series'|translate"
+                                                                             [style.width]="'100%'"
+                                                                             (keyup)="importComics.filter($event.target.value)">
+                </div>
+                <div class="ui-g-3 ui-md-3">
+                  Cover size: {{cover_size}}px
+                  <p-slider [(ngModel)]="cover_size"
+                            [min]="200"
+                            [max]="640"
+                            [animate]="true"
+                            (onChange)="set_cover_size($event.value)"
+                            (onSlideEnd)="save_cover_size($event.value)"></p-slider>
+                </div>
+                <div class="ui-g-1 ui-md-1"
+                     style="text-align: right">
+                  <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        </ng-template> <ng-template
-          let-file
-          pTemplate='gridItem'>
-        <div>
-          <app-file-details-cover
-            [file_details]='file'
-            [width]='"auto"'
-            [height]='"" + cover_size + "px"'>Here
-          it is!</app-file-details-cover>
-          <button
-            pButton
-            type='button'
-            [icon]='file.selected ? "pi pi-check" : "pi pi-times"'
-            (click)='toggle_selected_state(file)'></button>
-        </div>
-        </ng-template> </p-dataView>
+          </p-header>
+          <ng-template let-file
+                       pTemplate="listItem">
+            <div class="ui-g">
+              <div class="ui-g-2 ui-md-2">
+                <app-file-details-cover [file_details]="file"
+                                        [width]="'100%'"
+                                        [height]="'auto'"></app-file-details-cover>
+              </div>
+              <div class="ui-g-10 ui-md-10">
+                <div class="ui-g">
+                  <div class="ui-g-2 ui-sm-2">
+                    <b>{{"import-page.label.filename"|translate}}</b>
+                  </div>
+                  <div class="ui-g-10 ui-sm-10">{{file.filename}}</div>
+                  <div class="ui-g-2 ui-sm-2">
+                    <b>{{"import-page.label.file-size"|translate}}</b>
+                  </div>
+                  <div class="ui-g-10 ui-sm-10">{{file.size}} bytes</div>
+                </div>
+                <div class="ui-g">
+                  <div class="ui-g-12 ui-sm-12">
+                    <button pButton
+                            type="button"
+                            [icon]="file.selected ? 'fas fa-check' : 'fas fa-times'"
+                            [label]="(file.selected ? 'button.selected' : 'button.not-selected')|translate"
+                            (click)="toggle_selected_state(file)"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template let-file
+                       pTemplate="gridItem">
+            <div>
+              <app-file-details-cover [file_details]="file"
+                                      [width]="'auto'"
+                                      [height]="cover_size + 'px'">Here
+                it is!
+              </app-file-details-cover>
+              <button pButton
+                      type="button"
+                      [icon]="file.selected ? 'pi pi-check': 'pi pi-times'"
+                      (click)="toggle_selected_state(file)"></button>
+            </div>
+          </ng-template>
+        </p-dataView>
       </div>
     </div>
   </div>

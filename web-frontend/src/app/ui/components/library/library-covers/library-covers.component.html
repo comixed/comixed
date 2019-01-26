@@ -1,183 +1,121 @@
-<p-dataView
-  *ngIf='comics'
-  filterBy='series'
-  [value]='comics'
-  [totalRecords]='comics.length'
-  [rows]='rows'
-  paginator='true'
-  paginatorPosition='both'
-  [sortField]='sort_by'
-  emptyMessage='No comics found.'> <p-header>
-<div class='ui-helper-clearfix'>
-  <div class='ui-g'>
-    <div class='ui-g-1 ui-md-1'>
-      Sort by:
-      <p-dropdown
-        [options]='sort_options'
-        [(ngModel)]='sort_by'
-        (onChange)='set_sort_order($event.value)'></p-dropdown>
-    </div>
-    <div class='ui-g-1 ui-md-1'>
-      Show:
-      <p-dropdown
-        [options]='rows_options'
-        [(ngModel)]='rows'
-        (onChange)='set_rows($event.value)'></p-dropdown>
-    </div>
-    <div class='ui-g-6 ui-md-6'>
-      Cover size: {{ cover_size }}px
-      <p-slider
-        [(ngModel)]='cover_size'
-        [min]='200'
-        [max]='640'
-        [animate]='true'
-        (onChange)='changeCoverSize.next($event.value)'
-        (onSlideEnd)='saveCoverSize.next($event.value)'></p-slider>
-    </div>
-    <div
-      class='ui-g-1 ui-md-1'
-      style='text-align: right'>
-      <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
-    </div>
-  </div>
-</div>
-</p-header> <ng-template
-  let-comic
-  pTemplate='listItem'>
-<div class='ui-g'>
-  <div class='ui-g-2 ui-md-2'>
-    <p-card> <img
-      src='{{ comic | comic_cover_url }}'
-      width='auto'
-      [style.width]='"100%"'
-      [style.height]='"auto"'> <p-footer>
-    <div class='ui-g'>
-      <div class='ui-g-12'>
-        <button
-          pButton
-          pTooltip='Go to the comic page...'
-          tooltipPosition='top'
-          type='button'
-          icon='fa fa-book'
-          label='Open'
-          (click)='open_comic(comic)'></button>
-        <button
-          *ngIf='is_admin'
-          pButton
-          tooltipPosition='top'
-          pTooltip='Remove this comic from the library...'
-          type='button'
-          icon='fa fa-trash'
-          (click)='delete_comic(comic)'
-          label='Remove'></button>
-      </div>
-    </div>
-    </p-footer> </p-card>
-  </div>
-  <div class='ui-g-10 ui-md-10'>
-    <div class='ui-g'>
-      <div class='ui-g-12 ui-sm-12'>
-        <h2>{{ comic.title || 'No Title' }}</h2>
-      </div>
-      <div class='ui-g-4'>
-        <div class='ui-g'>
-          <div class='ui-g-12'>
-            <strong>Publisher</strong>
-          </div>
-          <div class='ui-g-12'>
-            {{ comic.imprint || comic.publisher || 'Unknown'}}<span
-              *ngIf='comic.imprint'> ({{ comic.publisher }})</span>
-          </div>
-          <div class='ui-g-12'>
-            <strong>Series</strong>
-          </div>
-          <div class='ui-g-12'>{{ comic.series || 'Unknown'}}</div>
-          <div class='ui-g-12'>
-            <strong>Volume</strong>
-          </div>
-          <div class='ui-g-12'>{{ comic.volume || 'Unknown'}}</div>
-          <div class='ui-g-12'>
-            <strong>Cover Date</strong>
-          </div>
-          <div class='ui-g-12'>{{ comic.cover_date | date }}</div>
-          <div class='ui-g-12'>
-            <strong>Issue number</strong>
-          </div>
-          <div class='ui-g-12'>{{ comic.issue_number ||
-            'Unknown'}}</div>
+<p-dataView *ngIf='comics' filterBy='series' [value]='comics' [totalRecords]='comics.length' [rows]='rows' paginator='true' paginatorPosition='both' [sortField]='sort_by' emptyMessage='{{"messages.no-comics-found"|translate}}'>
+  <p-header>
+    <div class='ui-helper-clearfix'>
+      <div class='ui-g'>
+        <div class='ui-g-1 ui-md-1'>
+          {{"library.constraints.sort-by"|translate}}
+          <p-dropdown [options]='sort_options' [(ngModel)]='sort_by' (onChange)='set_sort_order($event.value)'></p-dropdown>
+        </div>
+        <div class='ui-g-1 ui-md-1'>
+          {{"library.constraints.rows-per-page"|translate}}
+          <p-dropdown [options]='rows_options' [(ngModel)]='rows' (onChange)='set_rows($event.value)'></p-dropdown>
+        </div>
+        <div class='ui-g-6 ui-md-6'>
+          {{"library.constraints.cover-size"|translate:{"cover_size":cover_size} }}
+          <p-slider [(ngModel)]='cover_size' [min]='200' [max]='640' [animate]='true' (onChange)='changeCoverSize.next($event.value)' (onSlideEnd)='saveCoverSize.next($event.value)'></p-slider>
+        </div>
+        <div class='ui-g-1 ui-md-1' style='text-align: right'>
+          <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
         </div>
       </div>
-      <div class='ui-g-4'>
-        <div class='ui-g'>
-          <div class='ui-g-12'>
-            <strong>Title</strong>
-          </div>
-          <div class='ui-g-12'>{{ comic.title || 'Unknown'}}</div>
-          <div class='ui-g-12'>
-            <strong>Added to the library</strong>
-          </div>
-          <div class='ui-g-12'>{{ comic.added_date | date }}</div>
-          <div class='ui-g-12'>
-            <strong>Pages</strong>
-          </div>
-          <div class='ui-g-12'>{{ comic.page_count }}</div>
-          <div class='ui-g-12'>
-            <strong>ComicVine Details</strong>
-          </div>
-          <div
-            *ngIf='comic.comic_vine_url'
-            class='ui-g-12'>
-            The details can be found here: <a
-              target='_comicvine'
-              [href]='"http://comicvine.gamespot.com/issue/4000-" + comic.comic_vine_id'>{{
-              comic.comic_vine_id }}</a>
-          </div>
-        </div>
+    </div>
+  </p-header>
+  <ng-template let-comic pTemplate='listItem'>
+    <div class='ui-g'>
+      <div class='ui-g-2 ui-md-2'>
+        <p-card> <img src='{{ comic | comic_cover_url }}' width='auto' [style.width]='"100%"' [style.height]='"auto"'>
+          <p-footer>
+            <div class='ui-g'>
+              <div class='ui-g-12'>
+                <button pButton pTooltip='Go to the comic page...' tooltipPosition='top' type='button' icon='fa fa-book' label='Open' (click)='open_comic(comic)'></button>
+                <button *ngIf='is_admin' pButton tooltipPosition='top' pTooltip='{{"library.tooltip.remove-comic"|translate}}' type='button' icon='fa fa-trash' (click)='delete_comic(comic)' label='{{"button.remove"|translate}}'></button>
+              </div>
+            </div>
+          </p-footer>
+        </p-card>
       </div>
-      <div class='ui-g-4'>
+      <div class='ui-g-10 ui-md-10'>
         <div class='ui-g'>
-          <div class='ui-g-12'>
-            <strong>Format</strong>
+          <div class='ui-g-12 ui-sm-12'>
+            <h2>{{ comic.title || "library.label.no-title"|translate }}</h2>
           </div>
-          <div class='ui-g-12'>{{ comic.format?.name || 'Unknown'
+          <div class='ui-g-4'>
+            <div class='ui-g'>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.publisher"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>
+                {{ comic.imprint || comic.publisher || "library.label.unknown"|translate}}<span *ngIf='comic.imprint'> ({{ comic.publisher }})</span>
+              </div>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.series"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.series || "library.label.unknown"|translate }}</div>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.volume"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.volume || "library.label.unknown"|translate }}</div>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.cover-date"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.cover_date | date }}</div>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.issue-number"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.issue_number ||
+            "library.label.unknown"|translate }}</div>
+            </div>
+          </div>
+          <div class='ui-g-4'>
+            <div class='ui-g'>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.title"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.title || "library.label.unknown"|translate}}</div>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.added-date"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.added_date | date }}</div>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.pages"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.page_count }}</div>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.comicvine-details"|translate}}</strong>
+              </div>
+              <div *ngIf='comic.comic_vine_url' class='ui-g-12' [innerHTML]='"library.messages.comicvine-url"|translate:{"comic_vine_id":comic.comic_vine_id}'></div>
+            </div>
+          </div>
+          <div class='ui-g-4'>
+            <div class='ui-g'>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.format"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.format?.name || "library.label.unknown"|translate
             }}</div>
-          <div class='ui-g-12'>
-            <strong>Scan Type</strong>
+              <div class='ui-g-12'>
+                <strong>{{"library.label.scan-type"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{ comic.scan_type?.name ||
+            "library.label.unknown"|translate }}</div>
+            </div>
+            <div class='ui-g-12'>
+              <strong>{{"library.label.sort-name"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>{{ comic.sort_name || '[...]' }}</div>
           </div>
-          <div class='ui-g-12'>{{ comic.scan_type?.name ||
-            'Unknown' }}</div>
         </div>
-        <div class='ui-g-12'>
-          <strong>Sort Name</strong>
-        </div>
-        <div class='ui-g-12'>{{ comic.sort_name || '[...]' }}</div>
       </div>
     </div>
-  </div>
-</div>
-</ng-template> <ng-template
-  let-comic
-  pTemplate='gridItem'>
-<div>
-  <p-card> <img
-    src='{{ comic | comic_cover_url }}'
-    width='auto'
-    [style.height]='"" + cover_size + "px"'> <p-footer>
-  <button
-    pButton
-    pTooltip='Go to the comic page...'
-    tooltipPosition='top'
-    type='button'
-    icon='fa fa-book'
-    (click)='open_comic(comic)'></button>
-  <button
-    *ngIf='is_admin'
-    pButton
-    tooltipPosition='top'
-    pTooltip='Remove this comic from the library...'
-    type='button'
-    icon='fa fa-trash'
-    (click)='delete_comic(comic)'></button>
-  </p-footer> </p-card>
-</div>
-</ng-template> </p-dataView>
+  </ng-template>
+  <ng-template let-comic pTemplate='gridItem'>
+    <div>
+      <p-card> <img src='{{ comic | comic_cover_url }}' width='auto' [style.height]='"" + cover_size + "px"'>
+        <p-footer>
+          <button pButton pTooltip='{{"library.tooltip.open-comic"|translate}}' tooltipPosition='top' type='button' icon='fa fa-book' (click)='open_comic(comic)'></button>
+          <button *ngIf='is_admin' pButton tooltipPosition='top' pTooltip='{{"library.tooltip.remove-comic"|translate}}' type='button' icon='fa fa-trash' (click)='delete_comic(comic)'></button>
+        </p-footer>
+      </p-card>
+    </div>
+  </ng-template>
+</p-dataView>
