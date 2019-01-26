@@ -1,0 +1,340 @@
+{
+  "main-page": {
+    "copyright": "Copyright &copy; {{years}}, The ComiXed Project Team",
+    "library-status": "There are {{comic_count}} comics in the library.",
+    "library-counts": "<b>Total:</b> {{comic_count}} <b>Read:</b> {{read_count}} <b>Import:</b> {{import_count}} <b>Rescan:</b> {{rescan_count}}"
+  },
+  "iconbar": {
+    "home": "Home",
+    "library": "Library",
+    "import": "Import",
+    "duplicate-pages": "Duplicate Pages",
+    "users": "Users",
+    "user-link": "Logged in as"
+  },
+  "login": {
+    "title": "Login To ComiXed",
+    "email": "Email",
+    "password": "Password"
+  },
+  "import-toolbar": {
+    "text": {
+      "directory-placeholder": "Path to comics..."
+    },
+    "button": {
+      "find": "Find Comics",
+      "select": "Select",
+      "view-selections": "View Selections",
+      "import": "Import"
+    }
+  },
+  "selected-comics": {
+    "label": {
+      "selected-comic-count": "{{file_count}} Files Selected",
+      "rows-to-show": "Show",
+      "cover": "Cover",
+      "filename": "Filename",
+      "file-size": "File Size"
+    },
+    "button": {
+      "remove": "Remove"
+    }
+  },
+  "import-page": {
+    "label": {
+      "filename": "Filename",
+      "file-size": "File Size",
+      "search-comic-names": "Search Comic Names"
+    },
+    "text": {
+      "blocked-pages-notice": "Blocked pages in those comics will be automatically marked as deleted...",
+      "search-by-series": "Search by series name..."
+    }
+  },
+  "library": {
+    "tab": {
+      "covers": "Covers",
+      "details": "Details",
+      "scraping": "Scraping"
+    },
+    "filter": {
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume",
+      "cover-dates": "Cover Date Ranges",
+      "earliest-cover-date": "Earliest",
+      "latest-cover-date": "Latest"
+    },
+    "tooltip": {
+      "remove-comic": "Remove this comic from the library...",
+      "open-comic": "Open this comic for reading..."
+    },
+    "label": {
+      "no-title": "No Title",
+      "unknown": "Unknown",
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "title": "Title",
+      "added-date": "Added to library",
+      "pages": "Pages",
+      "page-count": "# Of Pages",
+      "published": "Published",
+      "comicvine-details": "ComicVine Details",
+      "format": "Format",
+      "scan-type": "Scan Type",
+      "sort-name": "Sort Name"
+    },
+    "constraints": {
+      "sort-by": "Sort by",
+      "rows-per-page": "Show",
+      "cover-size": "Cover size: {{cover_size}}px"
+    },
+    "messages": {
+      "no-comics-found": "No comics found...",
+      "comicvine-url": "The details can be found here: <a target='_comicvine' href='http://comicvine.gamespot.com/issue/4000-{{comic_vine_id}}'>{{comic_vine_id}}</a>",
+      "no-summary": "No summary available...",
+      "no-description": "No description available...",
+      "delete-comic-title": "Delete This Comic?",
+      "delete-comic-question": "Are you sure? This will not delete the file, but only remove it from the library.",
+      "rescan-library-title": "Rescan Library?",
+      "rescan-library-message": "Are you sure? This could take a very long time to complete..."
+    },
+    "scraping": {
+      "comics-available-header": "{{available_comics}} Comics Available",
+      "comics-selected-header": "{{selected_comics}} Comics Selected",
+      "source-search-filter": "Search by series name...",
+      "target-search-filter": "Search by series name..."
+    }
+  },
+  "comic-details": {
+    "tab": {
+      "overview": "Overview",
+      "story": "Story",
+      "reader": "Reader",
+      "credits": "Credits",
+      "pages": "Pages",
+      "comicvine": "ComicVine"
+    }
+  },
+  "comic-details-editor": {
+    "label": {
+      "comicvine-api-key": "ComicVine API Key",
+      "series": "Series",
+      "volume": "Volume",
+      "issue-number": "Issue #"
+    },
+    "tooltip": {
+      "comicvine-api-key": "Click to edit..."
+    },
+    "text": {
+      "comicvine-api-key-placeholder": "Click to set the API key..."
+    }
+  },
+  "comic-overview": {
+    "label": {
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "title": "Title",
+      "added-date": "Added to library on",
+      "last-read-date": "Last read on",
+      "page-count": "# Of Pages",
+      "comicvine-details-link": "ComicVine Details Page",
+      "format": "Format",
+      "scan-type": "Scan Type",
+      "sort-name": "Sort Name"
+    },
+    "button": {
+      "clear-metadata": "Clear Metadata"
+    },
+    "text": {
+      "format-placeholder": "Click to set format...",
+      "scan-type-placeholder": "Click to set scan type...",
+      "sort-name-placeholder": "Click to set a sort name...",
+      "comicvine-details-link": "The details can be found <a href='http://comicvine.gamespot.com/issue/4000-{{comicvine_id}}'>{{comicvine_id}}</a>."
+    }
+  },
+  "comic-pages": {
+    "label": {
+      "filename": "Filename",
+      "dimensions": "Dimensions"
+    },
+    "text": {
+      "marked-for-deletion": "This page is marked for deletion.",
+      "page-is-blocked": "This page is blocked."
+    }
+  },
+  "comic-story": {
+    "label": {
+      "summary": "Summary",
+      "description": "Description",
+      "characters": "Characters",
+      "teams": "Teams",
+      "locations": "Locations"
+    },
+    "text": {
+      "no-summary": "No summary for this comic...",
+      "no-descrition": "No description for this comic..."
+    }
+  },
+  "duplicate-pages": {
+    "label": {
+      "hash": "Hash"
+    },
+    "text": {
+      "no-duplicates": "There are no duplicate pages! Yay!",
+      "cover-size": "Cover Size: {{cover_size}}px",
+      "found-in-file-count": "Found in {{file_count}} Files",
+      "instance-count": "{{file_count}} Instances"
+    }
+  },
+  "page-hash": {
+    "label": {
+      "in-comic": "In Comic",
+      "page-number": "Page #",
+      "comic-filename": "Comic Filename",
+      "image-filename": "Image Filename"
+    }
+  },
+  "admin": {
+    "users": {
+      "label": {
+        "user-details": "User Details",
+        "email": "Email",
+        "roles": "Roles",
+        "member-since": "Member Since",
+        "last-logged-on": "Last Logged On"
+      },
+      "tooltip": {
+        "delete-user": "Delete this user?"
+      },
+      "button": {
+        "new-user": "New User"
+      }
+    },
+    "user-editor": {
+      "label": {
+        "new-user": "[New User]",
+        "email-address": "Email Address",
+        "password": "Password",
+        "verify-password": "Re-enter Password"
+      },
+      "button": {
+        "admin": "Admin",
+        "reader": "Reader"
+      }
+    }
+  },
+  "account-preferences": {
+    "label": {
+      "preference-name": "Name",
+      "preference-value": "Value"
+    }
+  },
+  "user-details": {
+    "label": {
+      "email-address": "Email Address",
+      "roles": "Roles",
+      "member-since": "Member Since",
+      "last-logged-in": "Last Logged In"
+    }
+  },
+  "account-page": {
+    "label": {
+      "details": "Details",
+      "preferences": "Preferences"
+    }
+  },
+  "comic-list": {
+    "label": {
+      "series": "Series",
+      "volume": "Volume",
+      "issue-number": "Issue #"
+    },
+    "text": {
+      "no-comics-to-scrape": "No comics to scrape..."
+    }
+  },
+  "issue-details": {
+    "label": {
+      "description": "Description",
+      "credit-name": "Name",
+      "credit-role": "Role"
+    }
+  },
+  "effects": {
+    "importing": {
+      "info": {
+        "found_files": "Found {{file_count}} file(s)...",
+        "scan-type-set": "Set the scan type to {{scan_type}}...",
+        "format-type-set": "Set the format type to {{format_type}}...",
+        "sort-name-set": "Set the sort name to {{sort_name}}...",
+        "comic-removed": "Comic removed from the library...",
+        "metadata-cleared": "Metadata has been cleared...",
+        "rescan-started": "Started rescanning the library..."
+      }
+    },
+    "library": {
+      "error": {
+        "scan-type-fetch-failure": "Failed to fetch scan types...",
+        "set-scan-type-failed": "Failed to set the scan type...",
+        "format-type-fetch-failure": "Failed to fetch format types...",
+        "format-type-set-failed": "Failed to set the format type...",
+        "sort-name-set-failed": "Failed to set the sort name...",
+        "library-update-failed": "Failed to get library updates...",
+        "comic-remove-failed": "Failed to remove the comic from the library...",
+        "metadata-clear-failed": "Failed to clear the metadata...",
+        "rescan-failed-to-start": "Failed to start rescanning the library...",
+        "set-blocked-failed": "Failed to block the page..."
+      }
+    },
+    "single-comic-scraping": {
+      "info": {
+        "retrieved-volume-count": "Retrieved {{count}} volumes...",
+        "details-scraped": "Comic details scraped..."
+      }
+    },
+    "user-admin": {
+      "info": {
+        "account-created": "Created an account for {{email}}...",
+        "account-deleted": "Deleted the account for {{email}}..."
+      },
+      "error": {
+        "account-create-failed": "Failed to create an account for {{email}}...",
+        "account-delete-failed": "Failed to delete the account for {{email}}..."
+      }
+    }
+  },
+  "text": {
+    "unknown": "Unknown",
+    "comic-no-description": "This comic does not have a description"
+  },
+  "button": {
+    "block-all": "Block All",
+    "unblock-all": "Unblock All",
+    "blocked": "Blocked",
+    "not-blocked": "Not Blocked",
+    "delete": "Delete",
+    "undelete": "Undelete",
+    "delete-all": "Delete All",
+    "undelete-all": "Undelete All",
+    "login": "Login",
+    "logout": "Logout",
+    "cancel": "Cancel",
+    "close": "Close",
+    "apply": "Apply",
+    "reset": "Reset",
+    "remove": "Remove",
+    "rescan-library": "Rescan Library...",
+    "save": "Save",
+    "show-comics": "Show Comics",
+    "start-scraping": "Start Scraping...",
+    "selected": "Selected",
+    "not-selected": "Not Selected"
+  }
+}
