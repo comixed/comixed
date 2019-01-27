@@ -267,9 +267,6 @@ public class ComicVineScraperControllerTest
         Mockito.when(queryForVolumeDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyString(),
                                                           Mockito.any(Comic.class), Mockito.anyBoolean()))
                .thenReturn(TEST_PUBLISHER_ID);
-        Mockito.when(queryForVolumeDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyString(),
-                                                          Mockito.any(Comic.class), Mockito.anyBoolean()))
-               .thenReturn(TEST_PUBLISHER_ID);
         Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
 
         Comic result = controller.scrapeAndSaveComicDetails(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, false);
@@ -296,9 +293,6 @@ public class ComicVineScraperControllerTest
         Mockito.when(queryForIssueDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyLong(), Mockito.anyString(),
                                                          Mockito.any(Comic.class), Mockito.anyBoolean()))
                .thenReturn(TEST_VOLUME_ID);
-        Mockito.when(queryForVolumeDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyString(),
-                                                          Mockito.any(Comic.class), Mockito.anyBoolean()))
-               .thenReturn(TEST_PUBLISHER_ID);
         Mockito.when(queryForVolumeDetailsAdaptor.execute(Mockito.anyString(), Mockito.anyString(),
                                                           Mockito.any(Comic.class), Mockito.anyBoolean()))
                .thenReturn(TEST_PUBLISHER_ID);

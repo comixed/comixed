@@ -223,7 +223,6 @@ public class FileControllerTest
     public void testImportComicFiles()
     {
         Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
-        Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
 
         controller.importComicFiles(TEST_FILENAMES, false);
 
@@ -241,7 +240,6 @@ public class FileControllerTest
         QueueComicsWorkerTask dummyWorkerTask = new QueueComicsWorkerTask();
 
         Mockito.when(taskFactory.getObject()).thenReturn(dummyWorkerTask);
-        Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
 
         controller.importComicFiles(fileNamesEncoded, false);
 
@@ -258,7 +256,6 @@ public class FileControllerTest
     {
         Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
         Mockito.doNothing().when(queueComicsWorkerTask).setDeleteBlockedPages(true);
-        Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
 
         controller.importComicFiles(TEST_FILENAMES, true);
 

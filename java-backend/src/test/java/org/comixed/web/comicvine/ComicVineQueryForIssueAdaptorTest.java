@@ -77,7 +77,6 @@ public class ComicVineQueryForIssueAdaptorTest
         {
             Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
             Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
-            Mockito.doNothing().when(webRequest).setVolume(TEST_VOLUME);
             Mockito.verify(webRequest, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
             Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
         }
@@ -103,7 +102,6 @@ public class ComicVineQueryForIssueAdaptorTest
         {
             Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
             Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
-            Mockito.doNothing().when(webRequest).setVolume(TEST_VOLUME);
             Mockito.verify(webRequest, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
             Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
             Mockito.verify(responseProcessor, Mockito.times(1)).process(TEST_REQUEST_CONTENT);
@@ -127,7 +125,6 @@ public class ComicVineQueryForIssueAdaptorTest
 
         Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
         Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
-        Mockito.doNothing().when(webRequest).setVolume(TEST_VOLUME);
         Mockito.verify(webRequest, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
         Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
         Mockito.verify(responseProcessor, Mockito.times(1)).process(TEST_REQUEST_CONTENT);
@@ -150,7 +147,6 @@ public class ComicVineQueryForIssueAdaptorTest
 
         Mockito.verify(webRequestFactory, Mockito.times(1)).getObject();
         Mockito.verify(webRequest, Mockito.times(1)).setApiKey(TEST_API_KEY);
-        Mockito.doNothing().when(webRequest).setVolume(TEST_VOLUME);
         Mockito.verify(webRequest, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
         Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
         Mockito.verify(responseProcessor, Mockito.times(1)).process(TEST_REQUEST_CONTENT);

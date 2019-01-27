@@ -136,7 +136,6 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
         Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
-        Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
         Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
@@ -186,7 +185,6 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
         Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
-        Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
         Mockito.doNothing().when(queryRepository).deleteAll(Mockito.anyCollection());
         Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
@@ -220,7 +218,6 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.when(webRequestFactory.getObject()).thenReturn(webRequest);
         Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
-        Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
         Mockito.doNothing().when(queryRepository).deleteAll(Mockito.anyCollection());
         Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
@@ -255,7 +252,6 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.doNothing().when(webRequest).setApiKey(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
-        Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
         Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(false, true);

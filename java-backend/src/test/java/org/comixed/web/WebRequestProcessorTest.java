@@ -106,8 +106,6 @@ public class WebRequestProcessorTest
         Mockito.verify(httpClient, Mockito.times(1)).execute(httpGet.capture());
         Mockito.verify(httpResponse, Mockito.times(1)).getEntity();
         Mockito.verify(httpEntity, Mockito.times(1)).getContent();
-        PowerMockito.verifyStatic(IOUtils.class, Mockito.times(1));
-        IOUtils.toString(inputStreamCaptor.capture(), charsetCaptor.capture());
     }
 
     @Test(expected = WebRequestException.class)

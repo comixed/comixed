@@ -68,7 +68,6 @@ public class FilenameScraperAdaptorTest
         Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
         Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
         Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
-        Mockito.doNothing().when(comic).setCoverDate(Mockito.any(Date.class));
 
         try
         {

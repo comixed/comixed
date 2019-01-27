@@ -98,8 +98,6 @@ public class DeleteComicsWorkerTaskTest
         Mockito.verify(comicList, Mockito.atLeast(2)).size();
         Mockito.verify(comicList, Mockito.times(1)).get(0);
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-        PowerMockito.verifyStatic(FileUtils.class, Mockito.times(1));
-        FileUtils.forceDelete(file.capture());
         Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
     }
 
@@ -118,8 +116,6 @@ public class DeleteComicsWorkerTaskTest
         Mockito.verify(comicList, Mockito.atLeast(2)).size();
         Mockito.verify(comicList, Mockito.times(1)).get(0);
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-        PowerMockito.verifyStatic(FileUtils.class, Mockito.times(1));
-        FileUtils.forceDelete(file.capture());
         Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
     }
 }
