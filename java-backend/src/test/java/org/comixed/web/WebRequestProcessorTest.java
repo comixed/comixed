@@ -52,7 +52,6 @@ public class WebRequestProcessorTest
     private static final String TEST_CONTENT_TEXT = "This is the content";
     private static final String TEST_REQUEST_URL = "http://www.testsite.org/getdata";
     private static final long TEST_CONTENT_LENGTH = 2342L;
-    private static final byte[] TEST_CONTENT = TEST_CONTENT_TEXT.getBytes();
 
     @InjectMocks
     private WebRequestProcessor processor;
