@@ -62,7 +62,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 {@NamedQuery(name = "Page.getDuplicatePages",
              query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash"),
  @NamedQuery(name = "Page.updateDeleteOnAllWithHash",
-             query = "UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash)")})
+             query = "UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash")})
 public class Page
 {
     @Transient
