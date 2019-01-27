@@ -127,11 +127,13 @@ public class PageControllerTest
     @Test
     public void testSetPageTypeForNonexistentPage()
     {
-        Mockito.when(pageRepository.findById(TEST_PAGE_ID)).thenReturn(null);
+        Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(queryResultPage);
+        Mockito.when(queryResultPage.get()).thenReturn(null);
 
         pageController.updateTypeForPage(TEST_PAGE_ID, PAGE_TYPE_ID);
 
         Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
+        Mockito.verify(queryResultPage, Mockito.times(1)).get();
         Mockito.verify(pageTypeRepository, Mockito.never()).findById(PAGE_TYPE_ID);
         Mockito.verify(pageRepository, Mockito.never()).save(Mockito.any(Page.class));
     }
@@ -141,13 +143,15 @@ public class PageControllerTest
     {
         Mockito.when(pageRepository.findById(TEST_PAGE_ID)).thenReturn(queryResultPage);
         Mockito.when(queryResultPage.get()).thenReturn(page);
-        Mockito.when(pageTypeRepository.findById(PAGE_TYPE_ID)).thenReturn(null);
+        Mockito.when(pageTypeRepository.findById(PAGE_TYPE_ID)).thenReturn(queryResultPageType);
+        Mockito.when(queryResultPageType.get()).thenReturn(null);
 
         pageController.updateTypeForPage(TEST_PAGE_ID, PAGE_TYPE_ID);
 
         Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
         Mockito.verify(queryResultPage, Mockito.times(1)).get();
         Mockito.verify(pageTypeRepository, Mockito.times(1)).findById(PAGE_TYPE_ID);
+        Mockito.verify(queryResultPageType, Mockito.times(1)).get();
         Mockito.verify(pageRepository, Mockito.never()).save(Mockito.any(Page.class));
     }
 
@@ -246,13 +250,15 @@ public class PageControllerTest
     @Test
     public void testGetImageInComicByIndexForMissingComic()
     {
-        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(null);
 
         ResponseEntity<byte[]> result = pageController.getImageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
 
         assertNull(result);
 
         Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
     }
 
     @Test
@@ -327,11 +333,13 @@ public class PageControllerTest
     @Test
     public void testUndeletePageForNonexistentPage()
     {
-        Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(queryResultPage);
+        Mockito.when(queryResultPage.get()).thenReturn(null);
 
         assertFalse(pageController.undeletePage(TEST_PAGE_ID));
 
         Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
+        Mockito.verify(queryResultPage, Mockito.times(1)).get();
     }
 
     @Test
@@ -353,11 +361,13 @@ public class PageControllerTest
     @Test
     public void testGetPageContentForNonexistentPage()
     {
-        Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(queryResultPage);
+        Mockito.when(queryResultPage.get()).thenReturn(null);
 
         assertNull(pageController.getPageContent(TEST_PAGE_ID));
 
         Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
+        Mockito.verify(queryResultPage, Mockito.times(1)).get();
     }
 
     @Test
@@ -429,11 +439,13 @@ public class PageControllerTest
     @Test
     public void testGetAllPagesForComicWithIndexNonexistentComic()
     {
-        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(null);
 
         assertNull(pageController.getAll(TEST_COMIC_ID));
 
         Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
     }
 
     @Test

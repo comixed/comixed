@@ -216,13 +216,15 @@ public class UserControllerTest
     @Test
     public void testUpdateUserDoesNotExist()
     {
-        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(queryResultUser);
+        Mockito.when(queryResultUser.get()).thenReturn(null);
 
         ComiXedUser result = controller.updateUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD, false);
 
         assertNull(result);
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
+        Mockito.verify(queryResultUser, Mockito.times(1)).get();
     }
 
     @Test
@@ -271,13 +273,15 @@ public class UserControllerTest
     @Test
     public void testDeleteUserInvalidId()
     {
-        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(queryResultUser);
+        Mockito.when(queryResultUser.get()).thenReturn(null);
 
         boolean result = controller.deleteUser(TEST_USER_ID);
 
         assertFalse(result);
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
+        Mockito.verify(queryResultUser, Mockito.times(1)).get();
     }
 
     @Test

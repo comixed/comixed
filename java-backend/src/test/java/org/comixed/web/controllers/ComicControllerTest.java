@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.sql.Date;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,6 +87,8 @@ public class ComicControllerTest
     @Mock
     private List<Comic> comicList;
 
+    private List<Comic> emptyComicList = new ArrayList<>();
+
     @Mock
     private Optional<Comic> queryResultComic;
 
@@ -107,7 +110,6 @@ public class ComicControllerTest
     @Test
     public void testGetComicsAddedSince() throws ParseException, InterruptedException
     {
-        Mockito.when(comicRepository.findByDateAddedGreaterThan(Mockito.any(Date.class))).thenReturn(comicList);
         Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
         Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
@@ -117,7 +119,7 @@ public class ComicControllerTest
 
         LibraryStatus result = controller.getComicsAddedSince(principal, 0L, 0L);
 
-        assertSame(comicList, result.getComics());
+        assertEquals(emptyComicList, result.getComics());
         assertEquals(lastReadList, result.getLastReadDates());
         assertEquals(TEST_RESCAN_COUNT, result.getRescanCount());
         assertEquals(TEST_IMPORT_COUNT, result.getImportCount());
@@ -134,7 +136,6 @@ public class ComicControllerTest
     @Test
     public void testGetComicsAddedSinceWithTimeout() throws ParseException, InterruptedException
     {
-        Mockito.when(comicRepository.findByDateAddedGreaterThan(Mockito.any(Date.class))).thenReturn(comicList);
         Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
         Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
@@ -144,7 +145,7 @@ public class ComicControllerTest
 
         LibraryStatus result = controller.getComicsAddedSince(principal, 0L, 250L);
 
-        assertSame(comicList, result.getComics());
+        assertEquals(emptyComicList, result.getComics());
         assertEquals(lastReadList, result.getLastReadDates());
         assertEquals(TEST_RESCAN_COUNT, result.getRescanCount());
         assertEquals(TEST_IMPORT_COUNT, result.getImportCount());
@@ -161,11 +162,13 @@ public class ComicControllerTest
     @Test
     public void testDeleteComicNonexistentComic()
     {
-        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(null);
 
         assertFalse(controller.deleteComic(TEST_COMIC_ID));
 
         Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
     }
 
     @Test
@@ -262,7 +265,7 @@ public class ComicControllerTest
         Comic result = controller.getComic(TEST_COMIC_ID);
 
         assertNotNull(result);
-        assertSame(queryResultComic, result);
+        assertSame(comic, result);
 
         Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
         Mockito.verify(queryResultComic, Mockito.times(1)).get();
@@ -291,7 +294,7 @@ public class ComicControllerTest
         Comic result = controller.getComicSummary(TEST_COMIC_ID);
 
         assertNotNull(result);
-        assertSame(queryResultComic, result);
+        assertSame(comic, result);
 
         Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
         Mockito.verify(queryResultComic, Mockito.times(1)).get();
