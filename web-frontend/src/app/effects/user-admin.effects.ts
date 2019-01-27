@@ -61,7 +61,7 @@ export class UserAdminEffects {
       this.user_service
         .save_user(action.id, action.email, action.password, action.is_admin)
         .pipe(
-          tap(() => this.alert_service.show_info_message(this.translate.instant("effects.user-admin.info.account-created", {email: account.email}))),
+          tap(() => this.alert_service.show_info_message(this.translate.instant("effects.user-admin.info.account-created", {email: action.email}))),
           catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.user-admin.error.account-create-failed", {email: action.email}), error))),
           map((user: User) => new UserAdminActions.UserAdminUserSaved({user: user})
           )
