@@ -22,6 +22,7 @@ package org.comixed.web.authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -48,7 +49,7 @@ public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter
     @Autowired
     private ComiXedAuthenticationProvider authenticationProvider;
 
-    @Autowired
+    @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception
     {
         return super.authenticationManagerBean();

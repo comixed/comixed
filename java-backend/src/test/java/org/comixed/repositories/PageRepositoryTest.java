@@ -68,7 +68,7 @@ public class PageRepositoryTest
     @Test
     public void testGetPageWithBlockedHash()
     {
-        Page result = repository.findOne(BLOCKED_PAGE_ID);
+        Page result = repository.findById(BLOCKED_PAGE_ID).get();
 
         assertTrue(result.isBlocked());
     }
@@ -76,7 +76,7 @@ public class PageRepositoryTest
     @Test
     public void testGetPageWithNonBlockedHash()
     {
-        Page result = repository.findOne(UNBLOCKED_PAGE_ID);
+        Page result = repository.findById(UNBLOCKED_PAGE_ID).get();
 
         assertFalse(result.isBlocked());
     }

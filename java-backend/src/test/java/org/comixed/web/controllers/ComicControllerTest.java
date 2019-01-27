@@ -32,6 +32,7 @@ import java.security.Principal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.Comic;
@@ -48,7 +49,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -84,6 +85,9 @@ public class ComicControllerTest
 
     @Mock
     private List<Comic> comicList;
+
+    @Mock
+    private Optional<Comic> queryResultComic;
 
     @Mock
     private Comic comic;
@@ -157,63 +161,72 @@ public class ComicControllerTest
     @Test
     public void testDeleteComicNonexistentComic()
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(null);
 
         assertFalse(controller.deleteComic(TEST_COMIC_ID));
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
     }
 
     @Test
     public void testDeleteComic()
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(comic);
         Mockito.doNothing().when(comicRepository).delete(Mockito.any(Comic.class));
 
         assertTrue(controller.deleteComic(TEST_COMIC_ID));
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
         Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
     }
 
     @Test
     public void testDownloadComicForNonexistentComic() throws FileNotFoundException, IOException
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(null);
 
         assertNull(controller.downloadComic(TEST_COMIC_ID));
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
     }
 
     @Test
     public void testDownloadComicFileDoesntExist() throws FileNotFoundException, IOException
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(comic);
         Mockito.when(comic.getFilename()).thenReturn(TEST_NONEXISTENT_FILE);
 
         assertNull(controller.downloadComic(TEST_COMIC_ID));
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
     }
 
     @Test
     public void testDownloadComicFileIsDirectory() throws FileNotFoundException, IOException
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(comic);
         Mockito.when(comic.getFilename()).thenReturn(TEST_DIRECTORY);
 
         assertNull(controller.downloadComic(TEST_COMIC_ID));
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
     }
 
     @Test
     public void testDownloadComic() throws IOException
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(comic);
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILE);
 
         ResponseEntity<InputStreamResource> result = controller.downloadComic(TEST_COMIC_ID);
@@ -222,74 +235,86 @@ public class ComicControllerTest
         assertSame(HttpStatus.OK, result.getStatusCode());
         assertTrue(result.getBody().contentLength() > 0);
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
     }
 
     @Test
     public void testGetComicForNonexistentComic()
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(null);
 
         assertNull(controller.getComic(TEST_COMIC_ID));
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
     }
 
     @Test
     public void testGetComic()
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(comic);
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILE);
 
         Comic result = controller.getComic(TEST_COMIC_ID);
 
         assertNotNull(result);
-        assertSame(comic, result);
+        assertSame(queryResultComic, result);
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
     }
 
     @Test
     public void testGetComicSummaryForNonexistentComic()
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(null);
 
         assertNull(controller.getComicSummary(TEST_COMIC_ID));
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
     }
 
     @Test
     public void testGetComicSummary()
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(comic);
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILE);
 
         Comic result = controller.getComicSummary(TEST_COMIC_ID);
 
         assertNotNull(result);
-        assertSame(comic, result);
+        assertSame(queryResultComic, result);
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
     }
 
     @Test
     public void testUpdateComicBadComicId()
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(null);
 
         controller.updateComic(TEST_COMIC_ID, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
     }
 
     @Test
     public void testUpdateComic()
     {
-        Mockito.when(comicRepository.findOne(Mockito.anyLong())).thenReturn(comic);
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(queryResultComic);
+        Mockito.when(queryResultComic.get()).thenReturn(comic);
         Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
         Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
         Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
@@ -297,7 +322,8 @@ public class ComicControllerTest
 
         controller.updateComic(TEST_COMIC_ID, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
 
-        Mockito.verify(comicRepository, Mockito.times(1)).findOne(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
+        Mockito.verify(queryResultComic, Mockito.times(1)).get();
         Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
         Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
         Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);

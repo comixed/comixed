@@ -19,7 +19,8 @@
 
 package org.comixed.tasks;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <code>AbstractWorkerTask</code> provides a foundation for creating new
@@ -31,7 +32,7 @@ import org.apache.log4j.Logger;
 public abstract class AbstractWorkerTask implements
                                          WorkerTask
 {
-    protected static final Logger logger = Logger.getLogger(AbstractWorkerTask.class);
+    protected static final Logger logger = LogManager.getLogger(AbstractWorkerTask.class);
 
     public AbstractWorkerTask()
     {}

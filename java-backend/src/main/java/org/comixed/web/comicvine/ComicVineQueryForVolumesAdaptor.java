@@ -103,7 +103,7 @@ public class ComicVineQueryForVolumesAdaptor
                     // delete any existing cache
                     if ((entries != null) && !entries.isEmpty())
                     {
-                        this.queryRepository.delete(entries);
+                        this.queryRepository.deleteAll(entries);
                     }
 
                     // put the entry in the cache

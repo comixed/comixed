@@ -86,7 +86,7 @@ public class ComicRepositoryTest
     @Before
     public void setUp() throws Exception
     {
-        comic = repository.findOne(TEST_COMIC);
+        comic = repository.findById(TEST_COMIC).get();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -112,7 +112,7 @@ public class ComicRepositoryTest
         comic.setFilename(filename);
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(filename, result.getFilename());
     }
@@ -129,7 +129,7 @@ public class ComicRepositoryTest
         comic.setComicVineId(null);
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertNull(result.getComicVineId());
     }
@@ -141,7 +141,7 @@ public class ComicRepositoryTest
         comic.setComicVineId(id);
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(id, result.getComicVineId());
     }
@@ -153,7 +153,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertNotEquals(DateUtils.truncate(comic.getDateAdded(), Calendar.SECOND),
                         DateUtils.truncate(result.getDateAdded(), Calendar.SECOND));
@@ -166,7 +166,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertNull(result.getCoverDate());
     }
@@ -178,7 +178,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(DateUtils.truncate(comic.getCoverDate(), Calendar.DAY_OF_MONTH),
                      DateUtils.truncate(result.getCoverDate(), Calendar.DAY_OF_MONTH));
@@ -191,7 +191,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertNull(result.getVolume());
     }
@@ -204,7 +204,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(volume, result.getVolume());
     }
@@ -216,7 +216,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertNull(result.getIssueNumber());
     }
@@ -229,7 +229,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(issueno, result.getIssueNumber());
     }
@@ -241,7 +241,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertNull(result.getDescription());
     }
@@ -254,7 +254,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(description, result.getDescription());
     }
@@ -266,7 +266,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertNull(result.getSummary());
     }
@@ -279,7 +279,7 @@ public class ComicRepositoryTest
 
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(summary, result.getSummary());
     }
@@ -321,7 +321,7 @@ public class ComicRepositoryTest
         comic.deletePage(0);
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(count, result.getPageCount());
     }
@@ -334,7 +334,7 @@ public class ComicRepositoryTest
         comic.addPage(0, page);
         repository.save(comic);
 
-        Comic result = repository.findOne(comic.getId());
+        Comic result = repository.findById(comic.getId()).get();
 
         assertEquals(count, result.getPageCount());
         assertEquals(page, result.getPage(0));
@@ -343,7 +343,7 @@ public class ComicRepositoryTest
     @Test
     public void testComicsReturnTheirBlockedPageCount()
     {
-        Comic result = repository.findOne(TEST_COMIC_WITH_BLOCKED_PAGES);
+        Comic result = repository.findById(TEST_COMIC_WITH_BLOCKED_PAGES).get();
 
         assertEquals(2, result.getBlockedPageCount());
     }
@@ -351,7 +351,7 @@ public class ComicRepositoryTest
     @Test
     public void testComicsReturnTheirDeletedPageCount()
     {
-        Comic result = repository.findOne(TEST_COMIC_WITH_DELETED_PAGES);
+        Comic result = repository.findById(TEST_COMIC_WITH_DELETED_PAGES).get();
 
         assertEquals(3, result.getDeletedPageCount());
     }
@@ -359,7 +359,7 @@ public class ComicRepositoryTest
     @Test
     public void testComicReturnWithTheirScanType()
     {
-        Comic result = repository.findOne(TEST_COMIC);
+        Comic result = repository.findById(TEST_COMIC).get();
 
         assertNotNull(result.getScanType());
         assertEquals(1, result.getScanType().getId());
@@ -368,21 +368,21 @@ public class ComicRepositoryTest
     @Test
     public void testComicScanTypeCanBeChanged()
     {
-        ScanType scanType = scanTypeRepository.findOne(2L);
+        ScanType scanType = scanTypeRepository.findById(2L).get();
 
-        Comic record = repository.findOne(TEST_COMIC);
+        Comic record = repository.findById(TEST_COMIC).get();
         record.setScanType(scanType);
 
         repository.save(record);
 
-        Comic result = repository.findOne(TEST_COMIC);
+        Comic result = repository.findById(TEST_COMIC).get();
         assertEquals(scanType.getId(), result.getScanType().getId());
     }
 
     @Test
     public void testComicReturnWithTheirFormat()
     {
-        Comic result = repository.findOne(TEST_COMIC);
+        Comic result = repository.findById(TEST_COMIC).get();
 
         assertNotNull(result.getFormat());
         assertEquals(1L, result.getFormat().getId());
@@ -391,21 +391,21 @@ public class ComicRepositoryTest
     @Test
     public void testComicFormatCanBeChanged()
     {
-        ComicFormat format = comicFormatRepository.findOne(2L);
+        ComicFormat format = comicFormatRepository.findById(2L).get();
 
-        Comic record = repository.findOne(TEST_COMIC);
+        Comic record = repository.findById(TEST_COMIC).get();
         record.setFormat(format);
 
         repository.save(record);
 
-        Comic result = repository.findOne(TEST_COMIC);
+        Comic result = repository.findById(TEST_COMIC).get();
         assertEquals(format.getId(), result.getFormat().getId());
     }
 
     @Test
     public void testComicsReturnWithTheirImprint()
     {
-        Comic result = repository.findOne(TEST_COMIC);
+        Comic result = repository.findById(TEST_COMIC).get();
 
         assertNotNull(result.getImprint());
         assertEquals("Marvel Digital", result.getImprint());
@@ -414,19 +414,19 @@ public class ComicRepositoryTest
     @Test
     public void testComicsImprintCanBeChanged()
     {
-        Comic record = repository.findOne(TEST_COMIC);
+        Comic record = repository.findById(TEST_COMIC).get();
         record.setImprint(TEST_IMPRINT);
 
         repository.save(record);
 
-        Comic result = repository.findOne(TEST_COMIC);
+        Comic result = repository.findById(TEST_COMIC).get();
         assertEquals(TEST_IMPRINT, result.getImprint());
     }
 
     @Test
     public void testComicsReturnWithSortName()
     {
-        Comic result = repository.findOne(TEST_COMIC);
+        Comic result = repository.findById(TEST_COMIC).get();
 
         assertNotNull(result.getSortName());
         assertEquals(TEST_COMIC_SORT_NAME, result.getSortName());
@@ -435,12 +435,12 @@ public class ComicRepositoryTest
     @Test
     public void testComicSortNameCanBeChanged()
     {
-        Comic record = repository.findOne(TEST_COMIC);
+        Comic record = repository.findById(TEST_COMIC).get();
 
         record.setSortName("Farkle");
         repository.save(record);
 
-        Comic result = repository.findOne(TEST_COMIC);
+        Comic result = repository.findById(TEST_COMIC).get();
         assertEquals("Farkle", result.getSortName());
     }
 

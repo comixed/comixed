@@ -103,7 +103,7 @@ public class PageController
     {
         this.logger.debug("Marking page as deleted: id={}", id);
 
-        Page page = this.pageRepository.findOne(id);
+        Page page = this.pageRepository.findById(id).get();
 
         if (page == null)
         {
@@ -162,7 +162,7 @@ public class PageController
     {
         this.logger.debug("Getting the image for comic: id={} index={}", id, index);
 
-        Comic comic = this.comicRepository.findOne(id);
+        Comic comic = this.comicRepository.findById(id).get();
 
         if ((comic != null)
             && (index < comic.getPageCount())) return this.getResponseEntityForPage(comic.getPage(index));
@@ -185,7 +185,7 @@ public class PageController
     {
         this.logger.debug("Getting page: id={}", id);
 
-        Page page = this.pageRepository.findOne(id);
+        Page page = this.pageRepository.findById(id).get();
 
         if (page == null)
         {
@@ -202,7 +202,7 @@ public class PageController
     {
         this.logger.debug("Getting page for comic: id={} page={}", comicId, index);
 
-        Comic comic = this.comicRepository.findOne(comicId);
+        Comic comic = this.comicRepository.findById(comicId).get();
 
         if ((comic != null) && (index < comic.getPageCount())) return comic.getPage(index);
 
@@ -212,7 +212,7 @@ public class PageController
     private List<Page> getPagesForComic(long id)
     {
         this.logger.debug("Getting pages for comic: id={}", id);
-        Comic comic = this.comicRepository.findOne(id);
+        Comic comic = this.comicRepository.findById(id).get();
         if (comic == null)
         {
             this.logger.debug("No such comic found: id={}", id);
@@ -275,7 +275,7 @@ public class PageController
     {
         this.logger.debug("Marking page as undeleted: id={}", id);
 
-        Page page = this.pageRepository.findOne(id);
+        Page page = this.pageRepository.findById(id).get();
 
         if (page == null)
         {
@@ -297,7 +297,7 @@ public class PageController
     {
         this.logger.debug("Setting page type: id={} typeId={}", id, pageTypeId);
 
-        Page page = this.pageRepository.findOne(id);
+        Page page = this.pageRepository.findById(id).get();
 
         if (page == null)
         {
@@ -305,7 +305,7 @@ public class PageController
         }
         else
         {
-            PageType pageType = this.pageTypeRepository.findOne(pageTypeId);
+            PageType pageType = this.pageTypeRepository.findById(pageTypeId).get();
 
             if (pageType == null)
             {

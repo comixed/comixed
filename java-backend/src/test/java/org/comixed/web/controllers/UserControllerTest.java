@@ -26,6 +26,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.Role;
@@ -40,7 +41,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 
@@ -66,6 +67,9 @@ public class UserControllerTest
 
     @Mock
     private ComiXedUserRepository userRepository;
+
+    @Mock
+    private Optional<ComiXedUser> queryResultUser;
 
     @Mock
     private ComiXedUser user;
@@ -212,19 +216,20 @@ public class UserControllerTest
     @Test
     public void testUpdateUserDoesNotExist()
     {
-        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(null);
 
         ComiXedUser result = controller.updateUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD, false);
 
         assertNull(result);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+        Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
     }
 
     @Test
     public void testUpdateUserRemoveAdmin()
     {
-        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(user);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(queryResultUser);
+        Mockito.when(queryResultUser.get()).thenReturn(user);
         Mockito.doNothing().when(user).clearRoles();
         Mockito.doNothing().when(user).addRole(Mockito.any(Role.class));
         Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
@@ -234,7 +239,8 @@ public class UserControllerTest
         assertNotNull(result);
         assertSame(user, result);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+        Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
+        Mockito.verify(queryResultUser, Mockito.times(1)).get();
         Mockito.verify(user, Mockito.times(1)).clearRoles();
         Mockito.verify(user, Mockito.times(1)).addRole(TEST_ROLE_READER);
         Mockito.verify(userRepository, Mockito.times(1)).save(user);
@@ -243,7 +249,8 @@ public class UserControllerTest
     @Test
     public void testUpdateUserGrantAdmin()
     {
-        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(user);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(queryResultUser);
+        Mockito.when(queryResultUser.get()).thenReturn(user);
         Mockito.doNothing().when(user).clearRoles();
         Mockito.doNothing().when(user).addRole(Mockito.any(Role.class));
         Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
@@ -253,7 +260,8 @@ public class UserControllerTest
         assertNotNull(result);
         assertSame(user, result);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+        Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
+        Mockito.verify(queryResultUser, Mockito.times(1)).get();
         Mockito.verify(user, Mockito.times(1)).clearRoles();
         Mockito.verify(user, Mockito.times(1)).addRole(TEST_ROLE_READER);
         Mockito.verify(user, Mockito.times(1)).addRole(TEST_ROLE_ADMIN);
@@ -263,26 +271,28 @@ public class UserControllerTest
     @Test
     public void testDeleteUserInvalidId()
     {
-        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(null);
 
         boolean result = controller.deleteUser(TEST_USER_ID);
 
         assertFalse(result);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+        Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
     }
 
     @Test
     public void testDeleteUser()
     {
-        Mockito.when(userRepository.findOne(Mockito.anyLong())).thenReturn(user);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(queryResultUser);
+        Mockito.when(queryResultUser.get()).thenReturn(user);
         Mockito.doNothing().when(userRepository).delete(Mockito.any(ComiXedUser.class));
 
         boolean result = controller.deleteUser(TEST_USER_ID);
 
         assertTrue(result);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findOne(TEST_USER_ID);
+        Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
+        Mockito.verify(queryResultUser, Mockito.times(1)).get();
         Mockito.verify(userRepository, Mockito.times(1)).delete(user);
     }
 }

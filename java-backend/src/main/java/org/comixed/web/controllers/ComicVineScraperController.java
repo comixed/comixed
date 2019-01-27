@@ -106,7 +106,7 @@ public class ComicVineScraperController
     {
         this.logger.debug("Preparing to retrieve details for comic: id={} issue={}", comicId, issueId);
 
-        Comic result = this.comicRepository.findOne(comicId);
+        Comic result = this.comicRepository.findById(comicId).get();
 
         if (result != null)
         {

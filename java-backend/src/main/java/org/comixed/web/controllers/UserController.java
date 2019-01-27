@@ -76,7 +76,7 @@ public class UserController implements
     {
         this.logger.debug("Deleting user: id={}", userId);
 
-        ComiXedUser user = this.userRepository.findOne(userId);
+        ComiXedUser user = this.userRepository.findById(userId).get();
 
         if (user == null)
         {
@@ -263,7 +263,7 @@ public class UserController implements
     {
         this.logger.debug("Updating user: id={}");
 
-        ComiXedUser user = this.userRepository.findOne(id);
+        ComiXedUser user = this.userRepository.findById(id).get();
 
         if (user == null)
         {

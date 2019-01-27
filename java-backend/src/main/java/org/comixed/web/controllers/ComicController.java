@@ -111,7 +111,7 @@ public class ComicController
     {
         this.logger.debug("Preparing to delete comic: id={}", id);
 
-        Comic comic = this.comicRepository.findOne(id);
+        Comic comic = this.comicRepository.findById(id).get();
 
         if (comic == null)
         {
@@ -134,7 +134,7 @@ public class ComicController
     {
         this.logger.debug("Updating comic: id={}", id);
 
-        Comic comic = this.comicRepository.findOne(id);
+        Comic comic = this.comicRepository.findById(id).get();
 
         if (comic != null)
         {
@@ -159,7 +159,7 @@ public class ComicController
     {
         this.logger.debug("Attempting to download comic: id={}", id);
 
-        Comic comic = this.comicRepository.findOne(id);
+        Comic comic = this.comicRepository.findById(id).get();
 
         if (comic == null)
         {
@@ -189,7 +189,7 @@ public class ComicController
     {
         this.logger.debug("Fetching comic: id={}", id);
 
-        Comic comic = this.comicRepository.findOne(id);
+        Comic comic = this.comicRepository.findById(id).get();
 
         if (comic == null)
         {
@@ -273,7 +273,7 @@ public class ComicController
     {
         this.logger.debug("Fetching comic: id={}", id);
 
-        Comic comic = this.comicRepository.findOne(id);
+        Comic comic = this.comicRepository.findById(id).get();
 
         if (comic == null)
         {
@@ -321,8 +321,8 @@ public class ComicController
     {
         this.logger.debug("Setting format: comicId={} formatId={}", comicId, formatId);
 
-        Comic comic = this.comicRepository.findOne(comicId);
-        ComicFormat format = this.comicFormatRepository.findOne(formatId);
+        Comic comic = this.comicRepository.findById(comicId).get();
+        ComicFormat format = this.comicFormatRepository.findById(formatId).get();
 
         if (comic != null)
         {
@@ -342,8 +342,8 @@ public class ComicController
     {
         this.logger.debug("Setting scan type: comicId={} scanTypeId={}", comicId, scanTypeId);
 
-        Comic comic = this.comicRepository.findOne(comicId);
-        ScanType scanType = this.scanTypeRepository.findOne(scanTypeId);
+        Comic comic = this.comicRepository.findById(comicId).get();
+        ScanType scanType = this.scanTypeRepository.findById(scanTypeId).get();
 
         if (comic != null)
         {
@@ -363,7 +363,7 @@ public class ComicController
     {
         this.logger.debug("Setting sort name: comicId={} sortName={}", comicId, sortName);
 
-        Comic comic = this.comicRepository.findOne(comicId);
+        Comic comic = this.comicRepository.findById(comicId).get();
 
         if (comic != null)
         {
@@ -386,7 +386,7 @@ public class ComicController
     {
         this.logger.debug("Updating comic: id={}", id);
 
-        Comic comic = this.comicRepository.findOne(id);
+        Comic comic = this.comicRepository.findById(id).get();
 
         if (comic != null)
         {

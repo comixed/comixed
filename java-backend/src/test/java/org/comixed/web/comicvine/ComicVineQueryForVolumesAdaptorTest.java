@@ -38,7 +38,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -179,7 +179,6 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testExecuteEntryInDatabaseSkipCache() throws ComicVineAdaptorException, WebRequestException
     {
@@ -189,7 +188,7 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
-        Mockito.doNothing().when(queryRepository).delete(Mockito.anyCollection());
+        Mockito.doNothing().when(queryRepository).deleteAll(Mockito.anyCollection());
         Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
 
@@ -205,12 +204,11 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.verify(webRequest, Mockito.times(1)).setSeriesName(TEST_VOLUME_NAME);
         Mockito.verify(webRequest, Mockito.never()).setPage(1);
         Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
-        Mockito.verify(queryRepository, Mockito.times(1)).delete(queryEntries);
+        Mockito.verify(queryRepository, Mockito.times(1)).deleteAll(queryEntries);
         Mockito.verify(queryRepository, Mockito.times(1)).save(queryEntryCaptor.getValue());
         Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testExecuteEntryInDatabaseExpired() throws ComicVineAdaptorException, WebRequestException
     {
@@ -224,7 +222,7 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.doNothing().when(webRequest).setSeriesName(Mockito.anyString());
         Mockito.doNothing().when(webRequest).setPage(Mockito.anyInt());
         Mockito.when(webRequestProcessor.execute(Mockito.any(WebRequest.class))).thenReturn(TEST_RESPONSE_CONTENT_TEXT);
-        Mockito.doNothing().when(queryRepository).delete(Mockito.anyCollection());
+        Mockito.doNothing().when(queryRepository).deleteAll(Mockito.anyCollection());
         Mockito.when(queryRepository.save(queryEntryCaptor.capture())).thenReturn(queryEntry);
         Mockito.when(queryResult.process(comicVolumeList.capture(), Mockito.any(byte[].class))).thenReturn(true);
 
@@ -244,7 +242,7 @@ public class ComicVineQueryForVolumesAdaptorTest
         Mockito.verify(webRequest, Mockito.times(1)).setSeriesName(TEST_VOLUME_NAME);
         Mockito.verify(webRequest, Mockito.never()).setPage(1);
         Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(webRequest);
-        Mockito.verify(queryRepository, Mockito.times(1)).delete(queryEntries);
+        Mockito.verify(queryRepository, Mockito.times(1)).deleteAll(queryEntries);
         Mockito.verify(queryRepository, Mockito.times(1)).save(queryEntryCaptor.getValue());
         Mockito.verify(queryResult, Mockito.times(1)).process(comicVolumeList.getValue(), TEST_RESPONSE_CONTENT);
     }
