@@ -123,6 +123,7 @@ import { UsersPageComponent } from "./ui/pages/admin/users-page/users-page.compo
 import { UserDetailsEditorComponent } from "./ui/components/admin/user-details-editor/user-details-editor.component";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { MenubarComponent } from './ui/components/main/menubar/menubar.component';
 
 @NgModule({
   declarations: [
@@ -165,7 +166,8 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
     LibraryFilterPipe,
     IconbarComponent,
     UsersPageComponent,
-    UserDetailsEditorComponent
+    UserDetailsEditorComponent,
+    MenubarComponent
   ],
   imports: [
     BrowserModule,
