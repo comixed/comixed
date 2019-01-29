@@ -100,7 +100,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
       // if we're not busy, then get the scan types, formats or updates as needed
       if (!this.library.busy) {
-        if (this.library.scan_types.length === 0) {
+        if (!this.library.scan_types || this.library.scan_types.length === 0) {
           this.store.dispatch(new LibraryActions.LibraryGetScanTypes());
         } else if (this.library.formats.length === 0) {
           this.store.dispatch(new LibraryActions.LibraryGetFormats());
