@@ -118,12 +118,11 @@ import { ComicPageUrlPipe } from "./pipes/comic-page-url.pipe";
 import { ComicFileCoverUrlPipe } from "./pipes/comic-file-cover-url.pipe";
 import { LibraryFilterComponent } from "./ui/components/library/library-filter/library-filter.component";
 import { LibraryFilterPipe } from "./pipes/library-filter.pipe";
-import { IconbarComponent } from "./ui/components/main/iconbar/iconbar.component";
 import { UsersPageComponent } from "./ui/pages/admin/users-page/users-page.component";
 import { UserDetailsEditorComponent } from "./ui/components/admin/user-details-editor/user-details-editor.component";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { MenubarComponent } from './ui/components/main/menubar/menubar.component';
+import { MenubarComponent } from "./ui/components/main/menubar/menubar.component";
 
 @NgModule({
   declarations: [
@@ -164,7 +163,6 @@ import { MenubarComponent } from './ui/components/main/menubar/menubar.component
     ComicFileCoverUrlPipe,
     LibraryFilterComponent,
     LibraryFilterPipe,
-    IconbarComponent,
     UsersPageComponent,
     UserDetailsEditorComponent,
     MenubarComponent
