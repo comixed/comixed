@@ -1,4 +1,19 @@
 {
+  "menu": {
+    "home": {
+      "root": "Home"
+    },
+    "library": {
+      "root": "Library",
+      "comics": "Comics",
+      "import": "Import",
+      "duplicate-pages": "Duplicate Pages"
+    },
+    "admin": {
+      "root": "Admin",
+      "users": "Users"
+    }
+  },
   "main-page": {
     "copyright": "Copyright &copy; {{years}}, The ComiXed Project Team",
     "library-status": "There are {{comic_count}} comics in the library.",
