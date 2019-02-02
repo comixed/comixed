@@ -39,29 +39,22 @@ const routes: Routes = [
   {
     path: "comics",
     component: LibraryPageComponent,
-    canActivate: [ReaderGuard],
-    children: [
-      {
-        path: ":id",
-        component: ComicDetailsComponent,
-        canActivate: [ReaderGuard]
-      },
-      {
-        path: "import",
-        component: ImportPageComponent,
-        canActivate: [AdminGuard]
-      }
-    ]
+    canActivate: [ReaderGuard]
   },
   {
-    path: "pages",
-    children: [
-      {
-        path: "duplicates",
-        component: DuplicatesPageComponent,
-        canActivate: [AdminGuard]
-      }
-    ]
+    path: "comics/:id",
+    component: ComicDetailsComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: "import",
+    component: ImportPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: "pages/duplicates",
+    component: DuplicatesPageComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: "admin/users",

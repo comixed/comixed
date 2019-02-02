@@ -100,7 +100,7 @@ export class MenubarComponent implements OnInit, OnDestroy {
           {
             label: this.translate.instant("menu.library.import"),
             icon: "fa fa-fw fa-upload",
-            routerLink: ["/comics/import"],
+            routerLink: ["/import"],
             visible: this.user && this.user.is_admin
           },
           {
