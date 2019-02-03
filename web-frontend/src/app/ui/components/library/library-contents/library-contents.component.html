@@ -47,14 +47,14 @@
   </p-header>
   <ng-template let-comic
                pTemplate="listItem">
-    <app-library-contents-list-item [comic]="comic"
+    <app-comic-list-item [comic]="comic"
                                     [same_height]="same_height"
-                                    [cover_size]="cover_size"></app-library-contents-list-item>
+                                    [cover_size]="cover_size"></app-comic-list-item>
   </ng-template>
   <ng-template let-comic
                pTemplate="gridItem">
-    <app-library-contents-grid-item [comic]="comic"
+    <app-comic-grid-item [comic]="comic"
                                     [same_height]="same_height"
-                                    [cover_size]="cover_size"></app-library-contents-grid-item>
+                                    [cover_size]="cover_size"></app-comic-grid-item>
   </ng-template>
 </p-dataView>
