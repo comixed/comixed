@@ -21,11 +21,11 @@ import { Component, OnInit, Input } from "@angular/core";
 import { Comic } from "../../../../models/comics/comic";
 
 @Component({
-  selector: "app-library-contents-list-item",
-  templateUrl: "./library-contents-list-item.component.html",
-  styleUrls: ["./library-contents-list-item.component.css"]
+  selector: "app-comic-grid-item",
+  templateUrl: "./comic-grid-item.component.html",
+  styleUrls: ["./comic-grid-item.component.css"]
 })
-export class LibraryContentsListItemComponent implements OnInit {
+export class ComicGridItemComponent implements OnInit {
   @Input() comic: Comic;
   @Input() same_height: boolean;
   @Input() cover_size: number;

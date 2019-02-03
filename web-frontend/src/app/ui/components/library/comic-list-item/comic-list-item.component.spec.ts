@@ -19,20 +19,20 @@
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { LibraryContentsListItemComponent } from "./library-contents-list-item.component";
+import { ComicListItemComponent } from "./comic-list-item.component";
 
-describe("LibraryContentsListItemComponent", () => {
-  let component: LibraryContentsListItemComponent;
-  let fixture: ComponentFixture<LibraryContentsListItemComponent>;
+describe("ComicListItemComponent", () => {
+  let component: ComicListItemComponent;
+  let fixture: ComponentFixture<ComicListItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [LibraryContentsListItemComponent]
+      declarations: [ComicListItemComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LibraryContentsListItemComponent);
+    fixture = TestBed.createComponent(ComicListItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -124,6 +124,7 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { MenubarComponent } from "./ui/components/main/menubar/menubar.component";
 import { ComicListItemComponent } from "./ui/components/library/comic-list-item/comic-list-item.component";
+import { ComicGridItemComponent } from "./ui/components/library/comic-grid-item/comic-grid-item.component";
 
 @NgModule({
   declarations: [
@@ -167,7 +168,8 @@ import { ComicListItemComponent } from "./ui/components/library/comic-list-item/
     UsersPageComponent,
     UserDetailsEditorComponent,
     MenubarComponent,
-    ComicListItemComponent
+    ComicListItemComponent,
+    ComicGridItemComponent
   ],
   imports: [
     BrowserModule,
