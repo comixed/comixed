@@ -17,33 +17,33 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as LibraryActions from '../../../../actions/library.actions';
-import * as ScrapingActions from '../../../../actions/single-comic-scraping.actions';
-import { Observable ,  Subscription } from 'rxjs';
-import { User } from '../../../../models/user/user';
-import { Role } from '../../../../models/user/role';
-import { Preference } from '../../../../models/user/preference';
-import { Library } from '../../../../models/library';
-import { SingleComicScraping } from '../../../../models/scraping/single-comic-scraping';
-import { AlertService } from '../../../../services/alert.service';
-import { ComicService } from '../../../../services/comic.service';
-import { Comic } from '../../../../models/comics/comic';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ActivatedRoute, Params } from "@angular/router";
+import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import * as LibraryActions from "../../../../actions/library.actions";
+import * as ScrapingActions from "../../../../actions/single-comic-scraping.actions";
+import { Observable, Subscription } from "rxjs";
+import { User } from "../../../../models/user/user";
+import { Role } from "../../../../models/user/role";
+import { Preference } from "../../../../models/user/preference";
+import { Library } from "../../../../models/actions/library";
+import { SingleComicScraping } from "../../../../models/scraping/single-comic-scraping";
+import { AlertService } from "../../../../services/alert.service";
+import { ComicService } from "../../../../services/comic.service";
+import { Comic } from "../../../../models/comics/comic";
 
-export const PAGE_SIZE_PARAMETER = 'pagesize';
-export const CURRENT_PAGE_PARAMETER = 'page';
+export const PAGE_SIZE_PARAMETER = "pagesize";
+export const CURRENT_PAGE_PARAMETER = "page";
 
 @Component({
-  selector: 'app-comic-details',
-  templateUrl: './comic-details.component.html',
-  styleUrls: ['./comic-details.component.css']
+  selector: "app-comic-details",
+  templateUrl: "./comic-details.component.html",
+  styleUrls: ["./comic-details.component.css"]
 })
 export class ComicDetailsComponent implements OnInit, OnDestroy {
-  readonly TAB_PARAMETER = 'tab';
+  readonly TAB_PARAMETER = "tab";
 
   private library$: Observable<Library>;
   private library_subscription: Subscription;
@@ -68,46 +68,52 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     private alert_service: AlertService,
     private comic_service: ComicService,
-    private store: Store<AppState>,
+    private store: Store<AppState>
   ) {
-    this.library$ = store.select('library');
-    this.single_comic_scraping$ = store.select('single_comic_scraping');
+    this.library$ = store.select("library");
+    this.single_comic_scraping$ = store.select("single_comic_scraping");
     this.activatedRoute.params.subscribe(params => {
-      this.comic_id = +params['id'];
+      this.comic_id = +params["id"];
     });
-    this.user$ = store.select('user');
+    this.user$ = store.select("user");
     activatedRoute.queryParams.subscribe(params => {
       this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
     });
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: Library) => {
-        this.library = library;
+    this.library_subscription = this.library$.subscribe((library: Library) => {
+      this.library = library;
 
-        if (this.comic === null) {
-          this.comic = library.comics.find((comic: Comic) => {
+      if (this.comic === null) {
+        this.comic =
+          library.comics.find((comic: Comic) => {
             return comic.id === this.comic_id;
           }) || null;
-        }
-      });
+      }
+    });
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
 
         if (this.single_comic_scraping.data_scraped) {
           this.comic = this.single_comic_scraping.comic;
-          this.store.dispatch(new ScrapingActions.SingleComicScrapingClearDataScrapedFlag());
+          this.store.dispatch(
+            new ScrapingActions.SingleComicScrapingClearDataScrapedFlag()
+          );
         }
-      });
-    this.user_subscription = this.user$.subscribe(
-      (user: User) => {
-        this.user = user;
-      });
+      }
+    );
+    this.user_subscription = this.user$.subscribe((user: User) => {
+      this.user = user;
+    });
     this.activatedRoute.queryParams.subscribe(params => {
-      this.set_page_size(parseInt(this.load_parameter(params[PAGE_SIZE_PARAMETER], '100'), 10));
-      this.set_current_page(parseInt(this.load_parameter(params[CURRENT_PAGE_PARAMETER], '0'), 10));
+      this.set_page_size(
+        parseInt(this.load_parameter(params[PAGE_SIZE_PARAMETER], "100"), 10)
+      );
+      this.set_current_page(
+        parseInt(this.load_parameter(params[CURRENT_PAGE_PARAMETER], "0"), 10)
+      );
       this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
     });
   }
@@ -134,13 +140,19 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   }
 
   private update_params(name: string, value: string): void {
-    const queryParams: Params = Object.assign({}, this.activatedRoute.snapshot.queryParams);
+    const queryParams: Params = Object.assign(
+      {},
+      this.activatedRoute.snapshot.queryParams
+    );
     if (value && value.length) {
       queryParams[name] = value;
     } else {
       queryParams[name] = null;
     }
-    this.router.navigate([], { relativeTo: this.activatedRoute, queryParams: queryParams });
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: queryParams
+    });
   }
 
   private load_parameter(value: string, defvalue: any): any {
@@ -150,4 +162,3 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     return defvalue;
   }
 }
-

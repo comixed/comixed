@@ -17,19 +17,19 @@
  * org.comixed;
  */
 
-import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import * as LibraryActions from '../actions/library.actions';
-import {ComicService} from '../services/comic.service';
-import {AlertService} from '../services/alert.service';
-import {LibraryState} from '../models/library-state';
-import {Comic} from '../models/comics/comic';
-import {ScanType} from '../models/comics/scan-type';
-import {ComicFormat} from '../models/comics/comic-format';
-import {TranslateService} from '@ngx-translate/core';
+import { Injectable } from "@angular/core";
+import { Actions, Effect, ofType } from "@ngrx/effects";
+import { Action } from "@ngrx/store";
+import { Observable, of } from "rxjs";
+import { catchError, map, switchMap, tap } from "rxjs/operators";
+import * as LibraryActions from "../actions/library.actions";
+import { ComicService } from "../services/comic.service";
+import { AlertService } from "../services/alert.service";
+import { LibraryState } from "../models/library-state";
+import { Comic } from "../models/comics/comic";
+import { ScanType } from "../models/comics/scan-type";
+import { ComicFormat } from "../models/comics/comic-format";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class LibraryEffects {
@@ -37,123 +37,314 @@ export class LibraryEffects {
     private actions$: Actions,
     private comic_service: ComicService,
     private alert_service: AlertService,
-    private translate: TranslateService,
-  ) {
-  }
+    private translate: TranslateService
+  ) {}
 
   @Effect()
   library_get_scan_types$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_GET_SCAN_TYPES),
-    switchMap(action => this.comic_service.fetch_scan_types().pipe(
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.scan-type-fetch-failure"), error))),
-      map((scan_types: Array<ScanType>) => new LibraryActions.LibrarySetScanTypes({scan_types: scan_types})))));
+    switchMap(action =>
+      this.comic_service.fetch_scan_types().pipe(
+        catchError((error: Error) =>
+          of(
+            this.alert_service.show_error_message(
+              this.translate.instant(
+                "effects.library.error.scan-type-fetch-failure"
+              ),
+              error
+            )
+          )
+        ),
+        map(
+          (scan_types: Array<ScanType>) =>
+            new LibraryActions.LibrarySetScanTypes({ scan_types: scan_types })
+        )
+      )
+    )
+  );
 
   @Effect()
   library_set_scan_type$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_SET_SCAN_TYPE),
     map((action: LibraryActions.LibrarySetScanType) => action.payload),
-    switchMap(action => this.comic_service.set_scan_type(action.comic, action.scan_type).pipe(
-      tap(() => this.alert_service.show_info_message(this.translate.instant("effects.library.info.scan-type-set", {scan_type: action.scan_type.name}))),
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.set-scan-type-failed"), error))),
-      map(() => new LibraryActions.LibraryScanTypeSet({
-        comic: action.comic,
-        scan_type: action.scan_type,
-      })))));
+    switchMap(action =>
+      this.comic_service.set_scan_type(action.comic, action.scan_type).pipe(
+        tap(() =>
+          this.alert_service.show_info_message(
+            this.translate.instant("effects.library.info.scan-type-set", {
+              scan_type: action.scan_type.name
+            })
+          )
+        ),
+        catchError((error: Error) =>
+          of(
+            this.alert_service.show_error_message(
+              this.translate.instant(
+                "effects.library.error.set-scan-type-failed"
+              ),
+              error
+            )
+          )
+        ),
+        map(
+          () =>
+            new LibraryActions.LibraryScanTypeSet({
+              comic: action.comic,
+              scan_type: action.scan_type
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   library_get_formats$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_GET_FORMATS),
-    switchMap((action: LibraryActions.LibraryGetFormats) => this.comic_service.fetch_formats().pipe(
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.format-type-fetch-failure"), error))),
-      map((formats: Array<ComicFormat>) => new LibraryActions.LibrarySetFormats({formats: formats})))));
+    switchMap((action: LibraryActions.LibraryGetFormats) =>
+      this.comic_service.fetch_formats().pipe(
+        catchError((error: Error) =>
+          of(
+            this.alert_service.show_error_message(
+              this.translate.instant(
+                "effects.library.error.format-type-fetch-failure"
+              ),
+              error
+            )
+          )
+        ),
+        map(
+          (formats: Array<ComicFormat>) =>
+            new LibraryActions.LibrarySetFormats({ formats: formats })
+        )
+      )
+    )
+  );
 
   @Effect()
   library_set_format$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_SET_FORMAT),
     map((action: LibraryActions.LibrarySetFormat) => action.payload),
-    switchMap(action => this.comic_service.set_format(action.comic, action.format).pipe(
-      tap(() => this.alert_service.show_info_message(this.translate.instant("effects.library.info.set-format-type", {format_type: action.format.name}))),
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.set-format-type-failed"), error))),
-      map(() => new LibraryActions.LibraryFormatSet({
-        comic: action.comic,
-        format: action.format,
-      })))));
+    switchMap(action =>
+      this.comic_service.set_format(action.comic, action.format).pipe(
+        tap(() =>
+          this.alert_service.show_info_message(
+            this.translate.instant("effects.library.info.set-format-type", {
+              format_type: action.format.name
+            })
+          )
+        ),
+        catchError((error: Error) =>
+          of(
+            this.alert_service.show_error_message(
+              this.translate.instant(
+                "effects.library.error.set-format-type-failed"
+              ),
+              error
+            )
+          )
+        ),
+        map(
+          () =>
+            new LibraryActions.LibraryFormatSet({
+              comic: action.comic,
+              format: action.format
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   library_set_sort_name$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_SET_SORT_NAME),
     map((action: LibraryActions.LibrarySetSortName) => action.payload),
-    switchMap(action => this.comic_service.set_sort_name(action.comic, action.sort_name).pipe(
-      tap(() => this.alert_service.show_info_message(this.translate.instant("effects.library.info.set-sort-name", {sort_name: action.sort_name}))),
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.set-sort-name-failed"), error))),
-      map(() => new LibraryActions.LibrarySortNameSet({
-        comic: action.comic,
-        sort_name: action.sort_name,
-      })))));
+    switchMap(action =>
+      this.comic_service.set_sort_name(action.comic, action.sort_name).pipe(
+        tap(() =>
+          this.alert_service.show_info_message(
+            this.translate.instant("effects.library.info.set-sort-name", {
+              sort_name: action.sort_name
+            })
+          )
+        ),
+        catchError((error: Error) =>
+          of(
+            this.alert_service.show_error_message(
+              this.translate.instant(
+                "effects.library.error.set-sort-name-failed"
+              ),
+              error
+            )
+          )
+        ),
+        map(
+          () =>
+            new LibraryActions.LibrarySortNameSet({
+              comic: action.comic,
+              sort_name: action.sort_name
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   library_start_updating$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_FETCH_LIBRARY_CHANGES),
     map((action: LibraryActions.LibraryFetchLibraryChanges) => action.payload),
-    switchMap(action => this.comic_service.fetch_remote_library_state(action.last_comic_date, action.timeout).pipe(
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.library-update-failed"), error))),
-      map((library_state: LibraryState) => new LibraryActions.LibraryMergeNewComics({
-        comics: library_state.comics,
-        rescan_count: library_state.rescan_count,
-        import_count: library_state.import_count,
-      })))));
+    switchMap(action =>
+      this.comic_service
+        .fetch_remote_library_state(action.last_comic_date, action.timeout)
+        .pipe(
+          catchError((error: Error) =>
+            of(
+              this.alert_service.show_error_message(
+                this.translate.instant(
+                  "effects.library.error.library-update-failed"
+                ),
+                error
+              )
+            )
+          ),
+          map(
+            (library_state: LibraryState) =>
+              new LibraryActions.LibraryMergeNewComics({
+                library_state: library_state
+              })
+          )
+        )
+    )
+  );
 
   @Effect()
   library_remove_comic$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_REMOVE_COMIC),
     map((action: LibraryActions.LibraryRemoveComic) => action.payload),
-    switchMap(action => this.comic_service.delete_comic(action.comic).pipe(
-      tap(() => this.alert_service.show_info_message(this.translate.instant("effects.library.info.comic-removed"))),
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.comic-remove-failed"), error))),
-      map(() => new LibraryActions.LibraryUpdateComicsRemoveComic({
-        comic: action.comic,
-      })))));
+    switchMap(action =>
+      this.comic_service.delete_comic(action.comic).pipe(
+        tap(() =>
+          this.alert_service.show_info_message(
+            this.translate.instant("effects.library.info.comic-removed")
+          )
+        ),
+        catchError((error: Error) =>
+          of(
+            this.alert_service.show_error_message(
+              this.translate.instant(
+                "effects.library.error.comic-remove-failed"
+              ),
+              error
+            )
+          )
+        ),
+        map(
+          () =>
+            new LibraryActions.LibraryUpdateComicsRemoveComic({
+              comic: action.comic
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   library_clear_metadata$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_CLEAR_METADATA),
     map((action: LibraryActions.LibraryClearMetadata) => action.payload),
-    switchMap(action => this.comic_service.clear_metadata(action.comic).pipe(
-      tap(() => this.alert_service.show_info_message(this.translate.instant("effects.library.info.metadata-cleared"))),
-      tap((comic: Comic) => {
-        // clear all existing metadata and copy the new metadata
-        for (const field of Object.keys(action.comic)) {
-          delete action.comic[field];
-        }
+    switchMap(action =>
+      this.comic_service.clear_metadata(action.comic).pipe(
+        tap(() =>
+          this.alert_service.show_info_message(
+            this.translate.instant("effects.library.info.metadata-cleared")
+          )
+        ),
+        tap((comic: Comic) => {
+          // clear all existing metadata and copy the new metadata
+          for (const field of Object.keys(action.comic)) {
+            delete action.comic[field];
+          }
 
-        Object.assign(action.comic, comic);
-      }),
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.metadata-clear-failed"), error))),
-      map((comic: Comic) => new LibraryActions.LibraryMetadataChanged({
-        original: action.comic,
-        updated: comic,
-      })))));
+          Object.assign(action.comic, comic);
+        }),
+        catchError((error: Error) =>
+          of(
+            this.alert_service.show_error_message(
+              this.translate.instant(
+                "effects.library.error.metadata-clear-failed"
+              ),
+              error
+            )
+          )
+        ),
+        map(
+          (comic: Comic) =>
+            new LibraryActions.LibraryMetadataChanged({
+              original: action.comic,
+              updated: comic
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   library_rescan_files$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_RESCAN_FILES),
     map((action: LibraryActions.LibraryRescanFiles) => action.payload),
-    switchMap(action => this.comic_service.rescan_files().pipe(
-      tap(() => this.alert_service.show_info_message(this.translate.instant("effects.library.info.rescan-started"))),
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.rescan-failed-to-start"), error))),
-      map(() => new LibraryActions.LibraryFetchLibraryChanges({
-        last_comic_date: action.last_comic_date,
-        timeout: 0,
-      })))));
+    switchMap(action =>
+      this.comic_service.rescan_files().pipe(
+        tap(() =>
+          this.alert_service.show_info_message(
+            this.translate.instant("effects.library.info.rescan-started")
+          )
+        ),
+        catchError((error: Error) =>
+          of(
+            this.alert_service.show_error_message(
+              this.translate.instant(
+                "effects.library.error.rescan-failed-to-start"
+              ),
+              error
+            )
+          )
+        ),
+        map(
+          () =>
+            new LibraryActions.LibraryFetchLibraryChanges({
+              last_comic_date: action.last_comic_date,
+              timeout: 0
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   library_set_page_blocked_state$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActions.LIBRARY_SET_BLOCKED_PAGE_STATE),
     map((action: LibraryActions.LibrarySetBlockedPageState) => action.payload),
-    switchMap(action => this.comic_service.set_block_page(action.page.hash, action.blocked_state).pipe(
-      catchError((error: Error) => of(this.alert_service.show_error_message(this.translate.instant("effects.library.error.set-blocked-failed"), error))),
-      map(() => new LibraryActions.LibraryBlockedStateFlagSet({
-        page: action.page,
-        blocked_state: action.blocked_state,
-      })))));
+    switchMap(action =>
+      this.comic_service
+        .set_block_page(action.page.hash, action.blocked_state)
+        .pipe(
+          catchError((error: Error) =>
+            of(
+              this.alert_service.show_error_message(
+                this.translate.instant(
+                  "effects.library.error.set-blocked-failed"
+                ),
+                error
+              )
+            )
+          ),
+          map(
+            () =>
+              new LibraryActions.LibraryBlockedStateFlagSet({
+                page: action.page,
+                blocked_state: action.blocked_state
+              })
+          )
+        )
+    )
+  );
 }

@@ -22,7 +22,7 @@ import { Router } from "@angular/router";
 import { ActivatedRoute, Params } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
-import { Library } from "../../../../models/library";
+import { Library } from "../../../../models/actions/library";
 import * as LibraryActions from "../../../../actions/library.actions";
 import { LibraryFilter } from "../../../../models/library/library-filter";
 import * as FilterActions from "../../../../actions/library-filter.actions";
@@ -257,7 +257,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   can_rescan(): boolean {
-    return this.library.rescan_count === 0 && this.library.import_count === 0;
+    return (
+      this.library.library_state.rescan_count === 0 &&
+      this.library.library_state.import_count === 0
+    );
   }
 
   private update_params(name: string, value: string): void {

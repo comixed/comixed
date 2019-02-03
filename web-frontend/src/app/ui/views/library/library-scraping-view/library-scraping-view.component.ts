@@ -17,19 +17,19 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable ,  Subscription } from 'rxjs';
-import { AppState } from '../../../../app.state';
-import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
-import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
-import { Comic } from '../../../../models/comics/comic';
-import { Library } from '../../../../models/library';
+import { Component, Input, OnInit, OnDestroy } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { Observable, Subscription } from "rxjs";
+import { AppState } from "../../../../app.state";
+import * as ScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
+import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
+import { Comic } from "../../../../models/comics/comic";
+import { Library } from "../../../../models/actions/library";
 
 @Component({
-  selector: 'app-library-scraping-view',
-  templateUrl: './library-scraping-view.component.html',
-  styleUrls: ['./library-scraping-view.component.css']
+  selector: "app-library-scraping-view",
+  templateUrl: "./library-scraping-view.component.html",
+  styleUrls: ["./library-scraping-view.component.css"]
 })
 export class LibraryScrapingViewComponent implements OnInit, OnDestroy {
   scraping$: Observable<MultipleComicsScraping>;
@@ -42,27 +42,33 @@ export class LibraryScrapingViewComponent implements OnInit, OnDestroy {
 
   selected_comics = [];
 
-  constructor(
-    private store: Store<AppState>,
-  ) {
-    this.scraping$ = store.select('multiple_comic_scraping');
-    this.library$ = store.select('library');
+  constructor(private store: Store<AppState>) {
+    this.scraping$ = store.select("multiple_comic_scraping");
+    this.library$ = store.select("library");
   }
 
   ngOnInit() {
     this.scraping_subscription = this.scraping$.subscribe(
       (scraping: MultipleComicsScraping) => {
         this.scraping = scraping;
-      });
-    this.library_subscription = this.library$.subscribe(
-      (library: Library) => {
-        this.library = library;
+      }
+    );
+    this.library_subscription = this.library$.subscribe((library: Library) => {
+      this.library = library;
 
-        if (!this.scraping || !this.scraping.available_comics.length) {
-          this.store.dispatch(new ScrapingActions.MultipleComicsScrapingSetAvailableComics(this.library.comics));
-        }
-      });
-    this.store.dispatch(new ScrapingActions.MultipleComicsScrapingSetup({ api_key: this.scraping.api_key }));
+      if (!this.scraping || !this.scraping.available_comics.length) {
+        this.store.dispatch(
+          new ScrapingActions.MultipleComicsScrapingSetAvailableComics(
+            this.library.comics
+          )
+        );
+      }
+    });
+    this.store.dispatch(
+      new ScrapingActions.MultipleComicsScrapingSetup({
+        api_key: this.scraping.api_key
+      })
+    );
   }
 
   ngOnDestroy() {

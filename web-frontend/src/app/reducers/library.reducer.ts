@@ -17,44 +17,47 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-import { Library } from '../models/library';
-import { Comic } from '../models/comics/comic';
-import * as LibraryActions from '../actions/library.actions';
+import { Action } from "@ngrx/store";
+import { Library } from "../models/actions/library";
+import { Comic } from "../models/comics/comic";
+import * as LibraryActions from "../actions/library.actions";
 
 const initial_state: Library = {
   busy: false,
-  last_comic_date: '0',
-  rescan_count: 0,
-  import_count: 0,
+  library_state: {
+    import_count: 0,
+    rescan_count: 0,
+    comics: []
+  },
+  last_comic_date: "0",
   scan_types: [],
   formats: [],
   comics: [],
-  last_read_dates: [],
+  last_read_dates: []
 };
 
 export function libraryReducer(
   state: Library = initial_state,
-  action: LibraryActions.Actions,
+  action: LibraryActions.Actions
 ) {
   switch (action.type) {
     case LibraryActions.LIBRARY_GET_SCAN_TYPES:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case LibraryActions.LIBRARY_SET_SCAN_TYPES:
       return {
         ...state,
         busy: false,
-        scan_types: action.payload.scan_types,
+        scan_types: action.payload.scan_types
       };
 
     case LibraryActions.LIBRARY_SET_SCAN_TYPE:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case LibraryActions.LIBRARY_SCAN_TYPE_SET: {
@@ -62,27 +65,27 @@ export function libraryReducer(
 
       return {
         ...state,
-        busy: false,
+        busy: false
       };
     }
 
     case LibraryActions.LIBRARY_GET_FORMATS:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case LibraryActions.LIBRARY_SET_FORMATS:
       return {
         ...state,
         busy: false,
-        formats: action.payload.formats,
+        formats: action.payload.formats
       };
 
     case LibraryActions.LIBRARY_SET_FORMAT:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case LibraryActions.LIBRARY_FORMAT_SET: {
@@ -90,14 +93,14 @@ export function libraryReducer(
 
       return {
         ...state,
-        busy: false,
+        busy: false
       };
     }
 
     case LibraryActions.LIBRARY_SET_SORT_NAME:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case LibraryActions.LIBRARY_SORT_NAME_SET: {
@@ -105,7 +108,7 @@ export function libraryReducer(
 
       return {
         ...state,
-        busy: false,
+        busy: false
       };
     }
 
@@ -113,14 +116,14 @@ export function libraryReducer(
       return {
         ...state,
         busy: true,
-        latest_comic_update: action.payload.last_comic_date,
+        latest_comic_update: action.payload.last_comic_date
       };
 
     case LibraryActions.LIBRARY_MERGE_NEW_COMICS:
       const comics = state.comics;
-      if (action.payload.comics.length > 0) {
+      if (action.payload.library_state.comics.length > 0) {
         // merge the new comics into the existing comics
-        action.payload.comics.forEach((comic: Comic) => {
+        action.payload.library_state.comics.forEach((comic: Comic) => {
           // if we already have the comic then merge their content, otherwise add it to the library
           const index = comics.findIndex((found: Comic) => {
             return found.id === comic.id;
@@ -136,73 +139,75 @@ export function libraryReducer(
       let last_comic = null;
 
       if (comics.length > 0) {
-        last_comic = comics.reduce((last: Comic, current: Comic) => {
-          const last_added_date = parseInt(last.added_date, 10);
-          const curr_added_date = parseInt(current.added_date, 10);
+        last_comic =
+          comics.reduce((last: Comic, current: Comic) => {
+            const last_added_date = parseInt(last.added_date, 10);
+            const curr_added_date = parseInt(current.added_date, 10);
 
-          if (curr_added_date >= last_added_date) {
-            return current;
-          } else {
-            return last;
-          }
-        }) || null;
+            if (curr_added_date >= last_added_date) {
+              return current;
+            } else {
+              return last;
+            }
+          }) || null;
       }
-      const last_comic_date = last_comic === null ? '0' : last_comic.added_date;
+      const last_comic_date = last_comic === null ? "0" : last_comic.added_date;
       return {
         ...state,
         busy: false,
-        rescan_count: action.payload.rescan_count,
-        import_count: action.payload.import_count,
+        library_state: action.payload.library_state,
         last_comic_date: last_comic_date,
-        comics: comics,
+        comics: comics
       };
 
     case LibraryActions.LIBRARY_REMOVE_COMIC: {
       return {
         ...state,
-        busy: true,
+        busy: true
       };
     }
 
     case LibraryActions.LIBRARY_UPDATE_COMICS_REMOVE_COMIC: {
-      const updated_comics = state.comics.filter(comic => comic.id !== action.payload.comic.id);
+      const updated_comics = state.comics.filter(
+        comic => comic.id !== action.payload.comic.id
+      );
       return {
         ...state,
         busy: false,
-        comics: updated_comics,
+        comics: updated_comics
       };
     }
 
     case LibraryActions.LIBRARY_RESET:
       return {
         ...state,
-        last_comic_date: '0',
-        comics: [],
+        last_comic_date: "0",
+        comics: []
       };
 
     case LibraryActions.LIBRARY_CLEAR_METADATA:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case LibraryActions.LIBRARY_METADATA_CHANGED:
       return {
         ...state,
         busy: false,
-        comics: state.comics,
+        comics: state.comics
       };
 
     case LibraryActions.LIBRARY_RESCAN_FILES:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case LibraryActions.LIBRARY_SET_BLOCKED_PAGE_STATE:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case LibraryActions.LIBRARY_BLOCKED_PAGE_STATE_SET: {
@@ -210,7 +215,7 @@ export function libraryReducer(
 
       return {
         ...state,
-        busy: false,
+        busy: false
       };
     }
 

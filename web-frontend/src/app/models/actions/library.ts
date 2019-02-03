@@ -17,16 +17,16 @@
  * org.comixed;
  */
 
-import { Comic } from './comics/comic';
-import { LastReadDate } from './comics/last-read-date';
-import { ScanType } from './comics/scan-type';
-import { ComicFormat } from './comics/comic-format';
+import { Comic } from "../comics/comic";
+import { LibraryState } from "../library-state";
+import { LastReadDate } from "../comics/last-read-date";
+import { ScanType } from "../comics/scan-type";
+import { ComicFormat } from "../comics/comic-format";
 
 export interface Library {
   busy: boolean;
+  library_state: LibraryState;
   last_comic_date: string;
-  rescan_count: number;
-  import_count: number;
   scan_types: Array<ScanType>;
   formats: Array<ComicFormat>;
   comics: Array<Comic>;

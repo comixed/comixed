@@ -22,7 +22,7 @@ import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Observable, Subscription } from "rxjs";
 import { AppState } from "./app.state";
-import { Library } from "./models/library";
+import { Library } from "./models/actions/library";
 import * as LibraryActions from "./actions/library.actions";
 import { User } from "./models/user/user";
 import * as UserActions from "./actions/user.actions";
@@ -95,8 +95,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
       this.comic_count = library.comics.length;
       this.read_count = 0;
-      this.import_count = library.import_count;
-      this.rescan_count = library.rescan_count;
+      this.import_count = library.library_state.import_count;
+      this.rescan_count = library.library_state.rescan_count;
 
       // if we're not busy, then get the scan types, formats or updates as needed
       if (!this.library.busy) {
@@ -108,7 +108,8 @@ export class AppComponent implements OnInit, OnDestroy {
           // if the last time we checked the library, we got either an import or a rescan count,
           // then set the timeout value to 0
           const timeout =
-            this.library.import_count === 0 && this.library.rescan_count === 0
+            this.library.library_state.import_count === 0 &&
+            this.library.library_state.rescan_count === 0
               ? 60000
               : 0;
           this.store.dispatch(

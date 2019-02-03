@@ -17,16 +17,16 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable ,  Subscription } from 'rxjs';
-import { AppState } from '../../../app.state';
-import { Library } from '../../../models/library';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { Observable, Subscription } from "rxjs";
+import { AppState } from "../../../app.state";
+import { Library } from "../../../models/actions/library";
 
 @Component({
-  selector: 'app-main-page',
-  templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css']
+  selector: "app-main-page",
+  templateUrl: "./main-page.component.html",
+  styleUrls: ["./main-page.component.css"]
 })
 export class MainPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
@@ -36,18 +36,15 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public comic_count: number;
   public plural = false;
 
-  constructor(
-    private store: Store<AppState>,
-  ) {
-    this.library$ = store.select('library');
+  constructor(private store: Store<AppState>) {
+    this.library$ = store.select("library");
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: Library) => {
-        this.comic_count = library.comics.length;
-        this.plural = this.comic_count !== 1;
-      });
+    this.library_subscription = this.library$.subscribe((library: Library) => {
+      this.comic_count = library.comics.length;
+      this.plural = this.comic_count !== 1;
+    });
   }
 
   ngOnDestroy() {
