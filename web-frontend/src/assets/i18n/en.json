@@ -148,6 +148,30 @@
       "comicvine-api-key-placeholder": "Click to set the API key..."
     }
   },
+  "library-contents": {
+    "label": {
+      "cover-size": "Cover size: {{cover_size}}px"
+    },
+    "options": {
+      "layout": {
+        "grid-layout": "Grid View",
+        "list-layout": "List View"
+      },
+      "grouping": {
+        "by-nothing": "Don't Group",
+        "by-series": "Group By Series"
+      },
+      "rows": {
+        "10-per-page": "Show 10 Per Page",
+        "25-per-page": "Show 25 Per Page",
+        "50-per-page": "Show 50 Per Page",
+        "100-per-page": "Show 100 Per Page"
+      },
+      "cover-size": {
+        "same-height": "Use As Height"
+      }
+    }
+  },
   "comic-overview": {
     "label": {
       "publisher": "Publisher",
