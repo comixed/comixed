@@ -1,0 +1,72 @@
+<div class="ui-g">
+  <div class="ui-g-1 ui-md-1">
+    <p-card> <img src="{{comic|comic_cover_url}}"
+           width="auto"
+           [style.width]="'100%'"
+           [style.height]="'auto'">
+      <p-footer>
+        <div class="ui-g">
+          <div class="ui-g-12">
+            <button pButton
+                    pTooltip="Go to the comic page..."
+                    tooltipPosition="top"
+                    type="button"
+                    icon="fa fa-book"
+                    label="Open"
+                    (click)="open_comic(comic)"></button>
+            <button *ngIf="is_admin"
+                    pButton
+                    tooltipPosition="top"
+                    pTooltip="{{'library.tooltip.remove-comic'|translate}}"
+                    type="button"
+                    icon="fa fa-trash"
+                    (click)="delete_comic(comic)"
+                    label="{{'button.remove'|translate}}"></button>
+          </div>
+        </div>
+      </p-footer>
+    </p-card>
+  </div>
+  <div class="ui-g-11 ui-md-11">
+    <div class="ui-g">
+      <div class="ui-g-12 ui-sm-12">
+        <h2>{{comic.title||'library.label.no-title'|translate}}</h2>
+      </div>
+      <div class="ui-g-4">
+        <div class="ui-g">
+          <div class="ui-g-12">
+            <strong>{{'library.label.publisher'|translate}}</strong>
+          </div>
+          <div class="ui-g-12">
+            {{comic.imprint||comic.publisher||'library.label.unknown'|translate}}<span *ngIf="comic.imprint"> ({{comic.publisher}})</span>
+          </div>
+        </div>
+      </div>
+      <div class="ui-g-4">
+        <div class="ui-g">
+          <div class="ui-g-12">
+            <strong>{{'library.label.series'|translate}}</strong>
+          </div>
+          <div class="ui-g-12">{{comic.series||'library.label.unknown'|translate}}</div>
+        </div>
+      </div>
+      <div class="ui-g-4">
+        <div class="ui-g">
+          <div class="ui-g-12">
+            <strong>{{'library.label.volume'|translate}}</strong>
+          </div>
+          <div class="ui-g-12">{{comic.volume||'library.label.unknown'|translate}}</div>
+        </div>
+      </div>
+      <div class="ui-g-4">
+        <div class="ui-g">
+          <div class="ui-g-12">
+            <strong>{{'library.label.issue-number'|translate}}</strong>
+          </div>
+          <div class="ui-g-12">{{comic.issue_number||
+        'library.label.unknown'|translate}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
