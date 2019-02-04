@@ -88,8 +88,6 @@ import { libraryDisplayReducer } from "./reducers/library-display.reducer";
 import { singleComicScrapingReducer } from "./reducers/single-comic-scraping.reducer";
 import { multipleComicsScrapingReducer } from "./reducers/multiple-comics-scraping.reducer";
 import { duplicatesReducer } from "./reducers/duplicates.reducer";
-import { LibraryCoversComponent } from "./ui/components/library/library-covers/library-covers.component";
-import { LibraryDetailsComponent } from "./ui/components/library/library-details/library-details.component";
 import { IssueDetailsComponent } from "./ui/components/library/issue-details/issue-details.component";
 import { EffectsModule } from "@ngrx/effects";
 import { UserEffects } from "./effects/user.effects";
@@ -146,8 +144,6 @@ import { LibraryContentsComponent } from "./ui/components/library/library-conten
     ImportToolbarComponent,
     SelectedComicsComponent,
     FileDetailsCoverComponent,
-    LibraryCoversComponent,
-    LibraryDetailsComponent,
     IssueDetailsComponent,
     DuplicatePagesViewComponent,
     PageHashViewComponent,
