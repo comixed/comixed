@@ -172,6 +172,18 @@
       }
     }
   },
+  "series-page": {
+    "table": {
+      "label": {
+        "series-name": "Series Name",
+        "comic-count": "# Of Comics",
+        "latest-comic-added-date": "Latest Comic Added"
+      },
+      "value": {
+        "comic-count": "{{comic_count}} comic(s)"
+      }
+    }
+  },
   "comic-overview": {
     "label": {
       "publisher": "Publisher",
