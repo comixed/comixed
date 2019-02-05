@@ -33,6 +33,7 @@ const initial_state: Library = {
   scan_types: [],
   formats: [],
   comics: [],
+  series: [],
   last_read_dates: []
 };
 
@@ -135,6 +136,26 @@ export function libraryReducer(
           }
         });
       }
+
+      let series = [];
+      comics.forEach((comic: Comic) => {
+        let entry = series.find((entry: any) => {
+          return entry.name === comic.series;
+        });
+
+        if (entry) {
+          entry.comic_count += 1;
+          if (comic.added_date > entry.latest_comic_date) {
+            entry.latest_comic_date = comic.added_date;
+          }
+        } else {
+          series.push({
+            name: comic.series,
+            comic_count: 1,
+            latest_comic_date: comic.added_date
+          });
+        }
+      });
       // find the latest comic date
       let last_comic = null;
 
@@ -157,7 +178,8 @@ export function libraryReducer(
         busy: false,
         library_state: action.payload.library_state,
         last_comic_date: last_comic_date,
-        comics: comics
+        comics: comics,
+        series: series
       };
 
     case LibraryActions.LIBRARY_REMOVE_COMIC: {
@@ -171,10 +193,16 @@ export function libraryReducer(
       const updated_comics = state.comics.filter(
         comic => comic.id !== action.payload.comic.id
       );
+      state.series.forEach((entry: any) => {
+        if (entry.name === action.payload.comic.series) {
+          entry.comic_count -= 1;
+        }
+      });
       return {
         ...state,
         busy: false,
-        comics: updated_comics
+        comics: updated_comics,
+        series: series
       };
     }
 
@@ -182,7 +210,8 @@ export function libraryReducer(
       return {
         ...state,
         last_comic_date: "0",
-        comics: []
+        comics: [],
+        series: []
       };
 
     case LibraryActions.LIBRARY_CLEAR_METADATA:
@@ -194,8 +223,7 @@ export function libraryReducer(
     case LibraryActions.LIBRARY_METADATA_CHANGED:
       return {
         ...state,
-        busy: false,
-        comics: state.comics
+        busy: false
       };
 
     case LibraryActions.LIBRARY_RESCAN_FILES:

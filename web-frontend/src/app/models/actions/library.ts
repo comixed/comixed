@@ -30,5 +30,6 @@ export interface Library {
   scan_types: Array<ScanType>;
   formats: Array<ComicFormat>;
   comics: Array<Comic>;
+  series: Array<string>;
   last_read_dates: Array<LastReadDate>;
 }
