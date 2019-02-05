@@ -124,8 +124,9 @@ import { MenubarComponent } from "./ui/components/main/menubar/menubar.component
 import { ComicListItemComponent } from "./ui/components/library/comic-list-item/comic-list-item.component";
 import { ComicGridItemComponent } from "./ui/components/library/comic-grid-item/comic-grid-item.component";
 import { LibraryContentsComponent } from "./ui/components/library/library-contents/library-contents.component";
-import { SeriesPageComponent } from './ui/pages/library/series-page/series-page.component';
-import { SeriesDetailsPageComponent } from './ui/pages/series/series-details-page/series-details-page.component';
+import { SeriesPageComponent } from "./ui/pages/library/series-page/series-page.component";
+import { SeriesDetailsPageComponent } from "./ui/pages/series/series-details-page/series-details-page.component";
+import { ComicSeriesPipe } from "./pipes/comic-series.pipe";
 
 @NgModule({
   declarations: [
@@ -172,6 +173,7 @@ import { SeriesDetailsPageComponent } from './ui/pages/series/series-details-pag
     LibraryContentsComponent,
     SeriesPageComponent,
     SeriesDetailsPageComponent,
+    ComicSeriesPipe
   ],
   imports: [
     BrowserModule,
