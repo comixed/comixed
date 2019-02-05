@@ -185,6 +185,17 @@
       }
     }
   },
+  "series-details": {
+    "options": {
+      "sort-field": {
+        "volume": "Sort by volume",
+        "issue-number": "Sort by issue #",
+        "added-date": "Sort by date added",
+        "cover-date": "Sort by cover date",
+        "last-read-date": "Sort by last read"
+      }
+    }
+  },
   "comic-overview": {
     "label": {
       "publisher": "Publisher",

@@ -125,6 +125,7 @@ import { ComicListItemComponent } from "./ui/components/library/comic-list-item/
 import { ComicGridItemComponent } from "./ui/components/library/comic-grid-item/comic-grid-item.component";
 import { LibraryContentsComponent } from "./ui/components/library/library-contents/library-contents.component";
 import { SeriesPageComponent } from './ui/pages/library/series-page/series-page.component';
+import { SeriesDetailsPageComponent } from './ui/pages/series/series-details-page/series-details-page.component';
 
 @NgModule({
   declarations: [
@@ -169,7 +170,8 @@ import { SeriesPageComponent } from './ui/pages/library/series-page/series-page.
     ComicListItemComponent,
     ComicGridItemComponent,
     LibraryContentsComponent,
-    SeriesPageComponent
+    SeriesPageComponent,
+    SeriesDetailsPageComponent,
   ],
   imports: [
     BrowserModule,
