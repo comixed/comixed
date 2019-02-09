@@ -24,7 +24,7 @@ import { ReaderGuard } from "./reader.guard";
 import { MainPageComponent } from "./ui/pages/main-page/main-page.component";
 import { AccountPageComponent } from "./ui/pages/account/account-page/account-page.component";
 import { LibraryPageComponent } from "./ui/pages/library/library-page/library-page.component";
-import { SeriesPageComponent } from "./ui/pages/library/series-page/series-page.component";
+import { SeriesPageComponent } from "./ui/pages/series-page/series-page.component";
 import { SeriesDetailsPageComponent } from "./ui/pages/series/series-details-page/series-details-page.component";
 import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
 import { ComicDetailsComponent } from "./ui/pages/comic/comic-details/comic-details.component";
