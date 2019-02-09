@@ -27,6 +27,7 @@ import { LibraryPageComponent } from "./ui/pages/library/library-page/library-pa
 import { SeriesPageComponent } from "./ui/pages/series-page/series-page.component";
 import { SeriesDetailsPageComponent } from "./ui/pages/series-details-page/series-details-page.component";
 import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
+import { PublisherDetailsPageComponent } from "./ui/pages/publisher-details-page/publisher-details-page.component";
 import { ComicDetailsComponent } from "./ui/pages/comic/comic-details/comic-details.component";
 import { ImportPageComponent } from "./ui/pages/library/import-page/import-page.component";
 import { DuplicatesPageComponent } from "./ui/pages/library/duplicates-page/duplicates-page.component";
@@ -52,6 +53,10 @@ const routes: Routes = [
   {
     path: "publishers",
     component: PublishersPageComponent
+  },
+  {
+    path: "publishers/:name",
+    component: PublisherDetailsPageComponent
   },
   {
     path: "series",

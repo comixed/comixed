@@ -384,6 +384,9 @@
       }
     }
   },
+  "publisher-details": {
+    "title": "{{publisher_name}}"
+  },
   "text": {
     "unknown": "Unknown",
     "comic-no-description": "This comic does not have a description"
