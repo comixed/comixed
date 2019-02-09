@@ -38,10 +38,6 @@ export class SeriesDetailsPageComponent implements OnInit, OnDestroy {
   private library: Library;
   private library_subscription: Subscription;
 
-  protected layout_options: Array<SelectItem>;
-  protected sort_field_options: Array<SelectItem>;
-  protected rows_options: Array<SelectItem>;
-
   protected layout = "grid";
   protected sort_field = "volume";
   protected rows = 10;
@@ -65,97 +61,25 @@ export class SeriesDetailsPageComponent implements OnInit, OnDestroy {
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
     });
-    this.load_layout_options();
-    this.load_sort_field_options();
-    this.load_rows_options();
   }
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
   }
 
-  private load_layout_options(): void {
-    this.layout_options = [
-      {
-        label: this.translate.instant(
-          "library-contents.options.layout.grid-layout"
-        ),
-        value: "grid"
-      },
-      {
-        label: this.translate.instant(
-          "library-contents.options.layout.list-layout"
-        ),
-        value: "list"
-      }
-    ];
-  }
-
-  private load_sort_field_options(): void {
-    this.sort_field_options = [
-      {
-        label: this.translate.instant(
-          "series-details.options.sort-field.volume"
-        ),
-        value: "volume"
-      },
-      {
-        label: this.translate.instant(
-          "series-details.options.sort-field.issue-number"
-        ),
-        value: "issue_number"
-      },
-      {
-        label: this.translate.instant(
-          "series-details.options.sort-field.added-date"
-        ),
-        value: "added_date"
-      },
-      {
-        label: this.translate.instant(
-          "series-details.options.sort-field.cover-date"
-        ),
-        value: "cover_date"
-      },
-      {
-        label: this.translate.instant(
-          "series-details.options.sort-field.last-read-date"
-        ),
-        value: "last_reader_date"
-      }
-    ];
-  }
-
-  private load_rows_options(): void {
-    this.rows_options = [
-      {
-        label: this.translate.instant(
-          "library-contents.options.rows.10-per-page"
-        ),
-        value: 10
-      },
-      {
-        label: this.translate.instant(
-          "library-contents.options.rows.25-per-page"
-        ),
-        value: 25
-      },
-      {
-        label: this.translate.instant(
-          "library-contents.options.rows.50-per-page"
-        ),
-        value: 50
-      },
-      {
-        label: this.translate.instant(
-          "library-contents.options.rows.100-per-page"
-        ),
-        value: 100
-      }
-    ];
-  }
-
   set_layout(dataview: any, layout: string): void {
     dataview.changeLayout(layout);
+  }
+
+  set_sort_field(sort_field: string): void {
+    this.sort_field = sort_field;
+  }
+
+  set_rows(rows: number): void {
+    this.rows = rows;
+  }
+
+  set_cover_size(cover_size: number): void {
+    this.cover_size = cover_size;
   }
 }

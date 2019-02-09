@@ -185,9 +185,11 @@
       }
     }
   },
-  "series-details": {
+  "comic-list-toolbar": {
     "options": {
       "sort-field": {
+        "series": "Sort by series",
+        "publisher": "Sort by publisher",
         "volume": "Sort by volume",
         "issue-number": "Sort by issue #",
         "added-date": "Sort by date added",

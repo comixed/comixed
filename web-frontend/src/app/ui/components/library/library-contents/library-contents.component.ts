@@ -35,10 +35,10 @@ export class LibraryContentsComponent implements OnInit {
   @Input() comics: Array<Comic>;
   @Input() library_filter: LibraryFilter;
 
-  protected layout_options: Array<SelectItem>;
-  protected rows_options: Array<SelectItem>;
+  protected additional_sort_field_options: Array<SelectItem>;
 
   protected layout = "grid";
+  protected sort_field = "added_date";
   protected rows = 10;
   protected same_height = true;
   protected cover_size = 200;
@@ -49,57 +49,39 @@ export class LibraryContentsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.load_layout_options();
-    this.load_rows_options();
+    this.load_additional_sort_field_options();
   }
 
-  private load_layout_options(): void {
-    this.layout_options = [
+  private load_additional_sort_field_options(): void {
+    this.additional_sort_field_options = [
       {
         label: this.translate.instant(
-          "library-contents.options.layout.grid-layout"
+          "comic-list-toolbar.options.sort-field.publisher"
         ),
-        value: "grid"
+        value: "publisher"
       },
       {
         label: this.translate.instant(
-          "library-contents.options.layout.list-layout"
+          "comic-list-toolbar.options.sort-field.series"
         ),
-        value: "list"
-      }
-    ];
-  }
-
-  private load_rows_options(): void {
-    this.rows_options = [
-      {
-        label: this.translate.instant(
-          "library-contents.options.rows.10-per-page"
-        ),
-        value: 10
-      },
-      {
-        label: this.translate.instant(
-          "library-contents.options.rows.25-per-page"
-        ),
-        value: 25
-      },
-      {
-        label: this.translate.instant(
-          "library-contents.options.rows.50-per-page"
-        ),
-        value: 50
-      },
-      {
-        label: this.translate.instant(
-          "library-contents.options.rows.100-per-page"
-        ),
-        value: 100
+        value: "series"
       }
     ];
   }
 
   set_layout(dataview: any, layout: string): void {
     dataview.changeLayout(layout);
+  }
+
+  set_sort_field(sort_field: string): void {
+    this.sort_field = sort_field;
+  }
+
+  set_rows(rows: number): void {
+    this.rows = rows;
+  }
+
+  set_cover_size(cover_size: number): void {
+    this.cover_size = cover_size;
   }
 }

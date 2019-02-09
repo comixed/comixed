@@ -1,0 +1,38 @@
+<div class="ui-g">
+  <div class="ui-g-6">
+    <p-dropdown [options]="layout_options"
+                [(ngModel)]="layout"
+                (onChange)="layoutChanged.next($event.value)"></p-dropdown>
+    <p-dropdown [options]="sort_field_options"
+                [(ngModel)]="sort_field"
+                (onChange)="sortFieldChanged.next($event.value)"></p-dropdown>
+    <p-dropdown [options]="rows_options"
+                [(ngModel)]="rows"
+                (onChange)="rowsChanged.next($event.value)"></p-dropdown>
+  </div>
+  <div class="ui-g-6">
+    <div class="ui-g">
+      <div class="ui-6-4">
+        <p-checkbox [(ngModel)]="same_height"
+                    binary="true"
+                    (onChange)="sameHeight.next($event)"
+                    [label]="'library-contents.options.cover-size.same-height'|translate"></p-checkbox>
+      </div>
+      <div class="ui-g-8">
+        <p-slider [(ngModel)]="cover_size"
+                  [min]="100"
+                  [max]="400"
+                  (onChange)="coverSizeChanged.next($event.value)"></p-slider>
+        {{"library-contents.label.cover-size"|translate:{cover_size:cover_size} }}
+      </div>
+    </div>
+  </div>
+  <div class="ui-g-12">
+    <app-library-filter *ngIf="library_filter"
+                        [publisher]="library_filter.publisher"
+                        [series]="library_filter.series"
+                        [volume]="library_filter.volume"
+                        [from_year]="library_filter.from_year"
+                        [to_year]="library_filter.to_year"></app-library-filter>
+  </div>
+</div>
