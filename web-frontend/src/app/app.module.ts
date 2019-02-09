@@ -125,7 +125,7 @@ import { ComicListItemComponent } from "./ui/components/library/comic-list-item/
 import { ComicGridItemComponent } from "./ui/components/library/comic-grid-item/comic-grid-item.component";
 import { LibraryContentsComponent } from "./ui/components/library/library-contents/library-contents.component";
 import { SeriesPageComponent } from "./ui/pages/series-page/series-page.component";
-import { SeriesDetailsPageComponent } from "./ui/pages/series/series-details-page/series-details-page.component";
+import { SeriesDetailsPageComponent } from "./ui/pages/series-details-page/series-details-page.component";
 import { ComicSeriesPipe } from "./pipes/comic-series.pipe";
 import { ComicListToolbarComponent } from "./ui/components/library/comic-list-toolbar/comic-list-toolbar.component";
 import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
