@@ -47,7 +47,9 @@
           <div class="ui-g-12">
             <strong>{{'library.label.series'|translate}}</strong>
           </div>
-          <div class="ui-g-12">{{comic.series||'library.label.unknown'|translate}}</div>
+          <div class="ui-g-12"><a [routerLink]="['/series', comic.series || 'undefined']">
+              {{comic.series||'library.label.unknown'|translate}}</a>
+          </div>
         </div>
       </div>
       <div class="ui-g-4">
