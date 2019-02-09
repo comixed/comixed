@@ -1,0 +1,58 @@
+<p-table [value]="library.publishers"
+         [rows]="rows"
+         paginator="true"
+         paginatorPosition="both"
+         alwaysShowPaginator="true">
+  <ng-template pTemplate="caption">
+    <div class="ui-helper-clearfix">
+      <div class="ui-g">
+        <div class="ui-g-6">
+          <div class="ui-g">
+            <div class="ui-g-12">
+              <p-dropdown [options]="rows_options"
+                          [(ngModel)]="rows"></p-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="ui-g-6">
+          <app-library-filter *ngIf="library_filter"
+                              [publisher]="library_filter.publisher"
+                              [series]="library_filter.publisher"
+                              [volume]="library_filter.volume"
+                              [from_year]="library_filter.from_year"
+                              [to_year]="library_filter.to_year"></app-library-filter>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th [pSortableColumn]="'name'">
+        <p-sortIcon [field]="'name'"></p-sortIcon>
+        {{"publishers-page.table.label.publisher-name"|translate}}
+      </th>
+      <th [pSortableColumn]="'comic_count'">
+        <p-sortIcon [field]="'comic_count'"></p-sortIcon>
+        {{"publishers-page.table.label.comic-count"|translate}}
+      </th>
+      <th [pSortableColumn]="'latest_comic_date'">
+        <p-sortIcon [field]="'latest_comic_date'"></p-sortIcon>
+        {{"publishers-page.table.label.latest-comic-added-date"|translate}}
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body"
+               let-publisher>
+    <tr>
+      <td>
+        <a [routerLink]="['/publishers', publisher.name||'undefined']">{{publisher.name||'Undefined'}}</a>
+      </td>
+      <td>
+        {{"publishers-page.table.value.comic-count"|translate:{comic_count:publisher.comic_count} }}
+      </td>
+      <td>
+        {{publisher.latest_comic_date|date:"medium"}}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

@@ -128,6 +128,7 @@ import { SeriesPageComponent } from "./ui/pages/library/series-page/series-page.
 import { SeriesDetailsPageComponent } from "./ui/pages/series/series-details-page/series-details-page.component";
 import { ComicSeriesPipe } from "./pipes/comic-series.pipe";
 import { ComicListToolbarComponent } from "./ui/components/library/comic-list-toolbar/comic-list-toolbar.component";
+import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
 
 @NgModule({
   declarations: [
@@ -175,7 +176,8 @@ import { ComicListToolbarComponent } from "./ui/components/library/comic-list-to
     SeriesPageComponent,
     SeriesDetailsPageComponent,
     ComicSeriesPipe,
-    ComicListToolbarComponent
+    ComicListToolbarComponent,
+    PublishersPageComponent
   ],
   imports: [
     BrowserModule,
