@@ -33,6 +33,7 @@ const initial_state: Library = {
   scan_types: [],
   formats: [],
   comics: [],
+  publishers: [],
   series: [],
   last_read_dates: []
 };
@@ -137,9 +138,29 @@ export function libraryReducer(
         });
       }
 
+      let publishers = [];
       let series = [];
       comics.forEach((comic: Comic) => {
-        let entry = series.find((entry: any) => {
+        let entry;
+
+        entry = publishers.find((entry: any) => {
+          return entry.name === comic.publisher;
+        });
+
+        if (entry) {
+          entry.comic_count += 1;
+          if (comic.added_date > entry.latest_comic_date) {
+            entry.latest_comic_date = comic.added_date;
+          }
+        } else {
+          publishers.push({
+            name: comic.publisher,
+            comic_count: 1,
+            latest_comic_date: comic.added_date
+          });
+        }
+
+        entry = series.find((entry: any) => {
           return entry.name === comic.series;
         });
 
@@ -179,6 +200,7 @@ export function libraryReducer(
         library_state: action.payload.library_state,
         last_comic_date: last_comic_date,
         comics: comics,
+        publishers: publishers,
         series: series
       };
 
@@ -193,6 +215,11 @@ export function libraryReducer(
       const updated_comics = state.comics.filter(
         comic => comic.id !== action.payload.comic.id
       );
+      state.publishers.forEach((entry: any) => {
+        if (entry.name === action.payload.comic.publisher) {
+          entry.comic_count -= 1;
+        }
+      });
       state.series.forEach((entry: any) => {
         if (entry.name === action.payload.comic.series) {
           entry.comic_count -= 1;
@@ -202,6 +229,7 @@ export function libraryReducer(
         ...state,
         busy: false,
         comics: updated_comics,
+        publishers: publishers,
         series: series
       };
     }
@@ -211,6 +239,7 @@ export function libraryReducer(
         ...state,
         last_comic_date: "0",
         comics: [],
+        publishers: [],
         series: []
       };
 

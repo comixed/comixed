@@ -23,6 +23,12 @@ import { LastReadDate } from "../comics/last-read-date";
 import { ScanType } from "../comics/scan-type";
 import { ComicFormat } from "../comics/comic-format";
 
+export interface ComicGrouping {
+  name: string;
+  comic_count: number;
+  latest_comic_date: string;
+}
+
 export interface Library {
   busy: boolean;
   library_state: LibraryState;
@@ -30,6 +36,7 @@ export interface Library {
   scan_types: Array<ScanType>;
   formats: Array<ComicFormat>;
   comics: Array<Comic>;
-  series: Array<string>;
+  publishers: Array<ComicGrouping>;
+  series: Array<ComicGrouping>;
   last_read_dates: Array<LastReadDate>;
 }
