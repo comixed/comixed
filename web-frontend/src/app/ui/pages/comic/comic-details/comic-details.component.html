@@ -20,7 +20,8 @@
                             [library]="library"></app-comic-overview>
       </p-tabPanel>
       <p-tabPanel header="{{'comic-details.tab.story'|translate}}">
-        <app-comic-story [comic]="comic"></app-comic-story>
+        <app-comic-story [comic]="comic"
+                         [library]="library"></app-comic-story>
       </p-tabPanel>
       <p-tabPanel header="{{'comic-details.tab.reader'|translate}}">
         <app-comic-reader [comic]="comic"

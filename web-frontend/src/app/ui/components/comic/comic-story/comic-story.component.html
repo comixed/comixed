@@ -19,11 +19,7 @@
                     [layout]="'grid'">
           <ng-template let-character
                        pTemplate="gridItem">
-            <p-card>
-              <p-header>
-                <h4>{{ character }}</h4>
-              </p-header>
-            </p-card>
+            <app-character-card [details]="get_details_for(character)"></app-character-card>
           </ng-template>
         </p-dataView>
       </div>
