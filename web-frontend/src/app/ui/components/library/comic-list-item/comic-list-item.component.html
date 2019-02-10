@@ -37,8 +37,8 @@
           <div class="ui-g-12">
             <strong>{{'library.label.publisher'|translate}}</strong>
           </div>
-          <div class="ui-g-12">
-            {{comic.imprint||comic.publisher||'library.label.unknown'|translate}}<span *ngIf="comic.imprint"> ({{comic.publisher}})</span>
+          <div class="ui-g-12"><a [routerLink]="['/publishers', comic.publisher || 'undefined']">
+              {{comic.imprint||comic.publisher||'library.label.unknown'|translate}}<span *ngIf="comic.imprint"> ({{comic.publisher}})</span></a>
           </div>
         </div>
       </div>

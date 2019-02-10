@@ -32,7 +32,10 @@ export class ComicSeriesPipe implements PipeTransform {
     }
 
     let result = comics.filter((comic: Comic) => {
-      return comic.series === series_name;
+      return (
+        (series_name === "undefined" && !!!comic.series) ||
+        comic.series === series_name
+      );
     });
 
     return result;
