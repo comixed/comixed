@@ -334,6 +334,17 @@
       "no-comics-to-scrape": "No comics to scrape..."
     }
   },
+  "comic-list-item": {
+    "label": {
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume",
+      "issue-number": "Issue #",
+      "cover-date": "Cover Date",
+      "added-date": "Added Date",
+      "unknown": "Unknown"
+    }
+  },
   "issue-details": {
     "label": {
       "description": "Description",
