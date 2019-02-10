@@ -36,6 +36,7 @@ const initial_state: Library = {
   publishers: [],
   series: [],
   characters: [],
+  teams: [],
   last_read_dates: []
 };
 
@@ -142,6 +143,7 @@ export function libraryReducer(
       let publishers = [];
       let series = [];
       let characters = [];
+      let teams = [];
       comics.forEach((comic: Comic) => {
         let entry;
 
@@ -197,6 +199,25 @@ export function libraryReducer(
             });
           }
         });
+
+        comic.teams.forEach((team: string) => {
+          entry = teams.find((entry: ComicGrouping) => {
+            return entry.name === team;
+          });
+
+          if (entry) {
+            entry.comic_count += 1;
+            if (comic.added_date > entry.latest_comic_date) {
+              entry.latest_comic_date = comic.added_date;
+            }
+          } else {
+            teams.push({
+              name: team,
+              comic_count: 1,
+              latest_comic_date: comic.added_date
+            });
+          }
+        });
       });
       // find the latest comic date
       let last_comic = null;
@@ -223,6 +244,7 @@ export function libraryReducer(
         comics: comics,
         publishers: publishers,
         series: series,
+        teams: teams,
         characters: characters
       };
 
@@ -252,9 +274,18 @@ export function libraryReducer(
         return entry.comic_count > 0;
       });
       let characters = state.characters.filter((entry: ComicGrouping) => {
-        let found = false;
         action.payload.comic.characters.forEach((character: string) => {
           if (character === entry.name) {
+            entry.comic_count -= 1;
+          }
+        });
+
+        return entry.comic_count > 0;
+      });
+
+      let teams = state.characters.filter((entry: ComicGrouping) => {
+        action.payload.comic.teams.forEach((team: string) => {
+          if (team === entry.name) {
             entry.comic_count -= 1;
           }
         });
@@ -267,7 +298,8 @@ export function libraryReducer(
         comics: updated_comics,
         publishers: publishers,
         series: series,
-        characters: characters
+        characters: characters,
+        teams: teams
       };
     }
 
@@ -278,7 +310,8 @@ export function libraryReducer(
         comics: [],
         publishers: [],
         series: [],
-        characters: []
+        characters: [],
+        teams: []
       };
 
     case LibraryActions.LIBRARY_CLEAR_METADATA:

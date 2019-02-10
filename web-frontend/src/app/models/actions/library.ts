@@ -39,5 +39,6 @@ export interface Library {
   publishers: Array<ComicGrouping>;
   series: Array<ComicGrouping>;
   characters: Array<ComicGrouping>;
+  teams: Array<ComicGrouping>;
   last_read_dates: Array<LastReadDate>;
 }
