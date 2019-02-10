@@ -19,7 +19,7 @@
                     [layout]="'grid'">
           <ng-template let-character
                        pTemplate="gridItem">
-            <app-character-card [details]="get_details_for(character)"></app-character-card>
+            <app-character-card [details]="get_details_for(library.characters, character)"></app-character-card>
           </ng-template>
         </p-dataView>
       </div>
@@ -32,11 +32,7 @@
                     [layout]="'grid'">
           <ng-template let-team
                        pTemplate="gridItem">
-            <p-card>
-              <p-header>
-                <h4>{{ team }}</h4>
-              </p-header>
-            </p-card>
+            <app-team-card [details]="get_details_for(library.teams, team)"></app-team-card>
           </ng-template>
         </p-dataView>
       </div>

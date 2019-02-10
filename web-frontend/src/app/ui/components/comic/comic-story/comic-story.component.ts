@@ -34,8 +34,11 @@ export class ComicStoryComponent implements OnInit {
 
   ngOnInit() {}
 
-  get_details_for(character: string): ComicGrouping {
-    return this.library.characters.find((grouping: ComicGrouping) => {
+  get_details_for(
+    source: Array<ComicGrouping>,
+    character: string
+  ): ComicGrouping {
+    return source.find((grouping: ComicGrouping) => {
       return grouping.name === character;
     });
   }
