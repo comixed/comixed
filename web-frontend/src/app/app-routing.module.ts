@@ -34,6 +34,7 @@ import { ComicDetailsComponent } from "./ui/pages/comic/comic-details/comic-deta
 import { ImportPageComponent } from "./ui/pages/library/import-page/import-page.component";
 import { DuplicatesPageComponent } from "./ui/pages/library/duplicates-page/duplicates-page.component";
 import { UsersPageComponent } from "./ui/pages/admin/users-page/users-page.component";
+import { TeamsPageComponent } from "./ui/pages/teams/teams-page/teams-page.component";
 
 const routes: Routes = [
   { path: "home", component: MainPageComponent },
@@ -77,6 +78,10 @@ const routes: Routes = [
   {
     path: "characters/:name",
     component: CharacterDetailsPageComponent
+  },
+  {
+    path: "teams",
+    component: TeamsPageComponent
   },
   {
     path: "import",
