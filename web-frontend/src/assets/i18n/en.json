@@ -9,6 +9,7 @@
       "publishers": "Publishers",
       "series": "Series",
       "characters": "Characters",
+      "teams": "Teams",
       "import": "Import",
       "duplicate-pages": "Duplicate Pages"
     },
@@ -187,6 +188,18 @@
     "table": {
       "label": {
         "series-name": "Series Name",
+        "comic-count": "# Of Comics",
+        "latest-comic-added-date": "Latest Comic Added"
+      },
+      "value": {
+        "comic-count": "{{comic_count}} comic(s)"
+      }
+    }
+  },
+  "teams-page": {
+    "table": {
+      "label": {
+        "team-name": "Team Name",
         "comic-count": "# Of Comics",
         "latest-comic-added-date": "Latest Comic Added"
       },
