@@ -29,6 +29,7 @@ import { SeriesDetailsPageComponent } from "./ui/pages/series-details-page/serie
 import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
 import { PublisherDetailsPageComponent } from "./ui/pages/publisher-details-page/publisher-details-page.component";
 import { CharactersPageComponent } from "./ui/pages/characters/characters-page/characters-page.component";
+import { CharacterDetailsPageComponent } from "./ui/pages/characters/character-details-page/character-details-page.component";
 import { ComicDetailsComponent } from "./ui/pages/comic/comic-details/comic-details.component";
 import { ImportPageComponent } from "./ui/pages/library/import-page/import-page.component";
 import { DuplicatesPageComponent } from "./ui/pages/library/duplicates-page/duplicates-page.component";
@@ -72,6 +73,10 @@ const routes: Routes = [
   {
     path: "characters",
     component: CharactersPageComponent
+  },
+  {
+    path: "characters/:name",
+    component: CharacterDetailsPageComponent
   },
   {
     path: "import",
