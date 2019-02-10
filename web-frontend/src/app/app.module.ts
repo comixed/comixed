@@ -135,6 +135,7 @@ import { ComicCoverComponent } from './ui/components/comic/comic-cover/comic-cov
 import { CharactersPageComponent } from './ui/pages/characters/characters-page/characters-page.component';
 import { CharacterDetailsPageComponent } from './ui/pages/characters/character-details-page/character-details-page.component';
 import { ComicCharacterPipe } from './pipes/comic-character.pipe';
+import { CharacterCardComponent } from './ui/components/comic/character-card/character-card.component';
 
 @NgModule({
   declarations: [
@@ -189,7 +190,8 @@ import { ComicCharacterPipe } from './pipes/comic-character.pipe';
     ComicCoverComponent,
     CharactersPageComponent,
     CharacterDetailsPageComponent,
-    ComicCharacterPipe
+    ComicCharacterPipe,
+    CharacterCardComponent
   ],
   imports: [
     BrowserModule,
