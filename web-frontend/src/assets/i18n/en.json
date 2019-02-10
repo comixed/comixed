@@ -8,6 +8,7 @@
       "comics": "Comics",
       "publishers": "Publishers",
       "series": "Series",
+      "characters": "Characters",
       "import": "Import",
       "duplicate-pages": "Duplicate Pages"
     },
@@ -404,6 +405,18 @@
   },
   "publisher-details": {
     "title": "{{publisher_name}}"
+  },
+  "characters-page": {
+    "table": {
+      "label": {
+        "character-name": "Character Name",
+        "comic-count": "# Of Comics",
+        "latest-comic-added-date": "Latest Comic Added"
+      },
+      "value": {
+        "comic-count": "{{comic_count}} comic(s)"
+      }
+    }
   },
   "text": {
     "unknown": "Unknown",
