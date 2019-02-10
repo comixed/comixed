@@ -345,6 +345,12 @@
       "unknown": "Unknown"
     }
   },
+  "comic-cover": {
+    "label": {
+      "volume": "v{{volume}}",
+      "open-comic": "Open Comic"
+    }
+  },
   "issue-details": {
     "label": {
       "description": "Description",

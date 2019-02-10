@@ -131,6 +131,7 @@ import { ComicListToolbarComponent } from "./ui/components/library/comic-list-to
 import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
 import { PublisherDetailsPageComponent } from "./ui/pages/publisher-details-page/publisher-details-page.component";
 import { ComicPublisherPipe } from './pipes/comic-publisher.pipe';
+import { ComicCoverComponent } from './ui/components/comic/comic-cover/comic-cover.component';
 
 @NgModule({
   declarations: [
@@ -181,7 +182,8 @@ import { ComicPublisherPipe } from './pipes/comic-publisher.pipe';
     ComicListToolbarComponent,
     PublishersPageComponent,
     PublisherDetailsPageComponent,
-    ComicPublisherPipe
+    ComicPublisherPipe,
+    ComicCoverComponent
   ],
   imports: [
     BrowserModule,
