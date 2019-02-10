@@ -85,6 +85,5 @@ export class SeriesDetailsPageComponent implements OnInit, OnDestroy {
 
   set_same_height(same_height: boolean): void {
     this.same_height = same_height;
-;
   }
 }

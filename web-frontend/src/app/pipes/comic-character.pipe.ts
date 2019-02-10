@@ -31,7 +31,6 @@ export class ComicCharacterPipe implements PipeTransform {
 
     let result = comics.filter((comic: Comic) => {
       return comic.characters.some((character: string) => {
-        console.log(`*** comparing ${character} to ${character_name}`);
         return character === character_name;
       });
     });
