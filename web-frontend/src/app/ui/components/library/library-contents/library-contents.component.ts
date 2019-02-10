@@ -84,4 +84,8 @@ export class LibraryContentsComponent implements OnInit {
   set_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
   }
+
+  set_same_height(same_height: boolean): void {
+    this.same_height = same_height;
+  }
 }

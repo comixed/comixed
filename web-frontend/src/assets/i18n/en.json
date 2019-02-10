@@ -342,6 +342,7 @@
       "issue-number": "Issue #",
       "cover-date": "Cover Date",
       "added-date": "Added Date",
+      "no-title": "[no title]",
       "unknown": "Unknown"
     }
   },
