@@ -133,6 +133,7 @@ import { PublisherDetailsPageComponent } from "./ui/pages/publisher-details-page
 import { ComicPublisherPipe } from './pipes/comic-publisher.pipe';
 import { ComicCoverComponent } from './ui/components/comic/comic-cover/comic-cover.component';
 import { CharactersPageComponent } from './ui/pages/characters/characters-page/characters-page.component';
+import { CharacterDetailsPageComponent } from './ui/pages/characters/character-details-page/character-details-page.component';
 
 @NgModule({
   declarations: [
@@ -185,7 +186,8 @@ import { CharactersPageComponent } from './ui/pages/characters/characters-page/c
     PublisherDetailsPageComponent,
     ComicPublisherPipe,
     ComicCoverComponent,
-    CharactersPageComponent
+    CharactersPageComponent,
+    CharacterDetailsPageComponent
   ],
   imports: [
     BrowserModule,
