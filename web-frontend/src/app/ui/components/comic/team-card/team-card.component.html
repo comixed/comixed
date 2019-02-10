@@ -1,0 +1,6 @@
+<p-card>
+  <p-header>
+    <h4><a [routerLink]="['/teams', details.name]">{{details.name}}</a></h4>
+  </p-header>
+  {{"team-card.text.appearance-count"|translate:{name:details.name,comic_count:details.comic_count} }}
+</p-card>

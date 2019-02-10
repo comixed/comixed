@@ -139,6 +139,7 @@ import { CharacterCardComponent } from "./ui/components/comic/character-card/cha
 import { TeamsPageComponent } from "./ui/pages/teams/teams-page/teams-page.component";
 import { TeamDetailsPageComponent } from "./ui/pages/teams/team-details-page/team-details-page.component";
 import { ComicTeamPipe } from './pipes/comic-team.pipe';
+import { TeamCardComponent } from './ui/components/comic/team-card/team-card.component';
 
 @NgModule({
   declarations: [
@@ -197,7 +198,8 @@ import { ComicTeamPipe } from './pipes/comic-team.pipe';
     CharacterCardComponent,
     TeamsPageComponent,
     TeamDetailsPageComponent,
-    ComicTeamPipe
+    ComicTeamPipe,
+    TeamCardComponent
   ],
   imports: [
     BrowserModule,
