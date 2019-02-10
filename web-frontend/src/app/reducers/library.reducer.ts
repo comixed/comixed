@@ -18,7 +18,7 @@
  */
 
 import { Action } from "@ngrx/store";
-import { Library } from "../models/actions/library";
+import { Library, ComicGrouping } from "../models/actions/library";
 import { Comic } from "../models/comics/comic";
 import * as LibraryActions from "../actions/library.actions";
 
@@ -35,6 +35,7 @@ const initial_state: Library = {
   comics: [],
   publishers: [],
   series: [],
+  characters: [],
   last_read_dates: []
 };
 
@@ -140,10 +141,11 @@ export function libraryReducer(
 
       let publishers = [];
       let series = [];
+      let characters = [];
       comics.forEach((comic: Comic) => {
         let entry;
 
-        entry = publishers.find((entry: any) => {
+        entry = publishers.find((entry: ComicGrouping) => {
           return entry.name === comic.publisher;
         });
 
@@ -160,7 +162,7 @@ export function libraryReducer(
           });
         }
 
-        entry = series.find((entry: any) => {
+        entry = series.find((entry: ComicGrouping) => {
           return entry.name === comic.series;
         });
 
@@ -176,6 +178,25 @@ export function libraryReducer(
             latest_comic_date: comic.added_date
           });
         }
+
+        comic.characters.forEach((character: string) => {
+          entry = characters.find((entry: ComicGrouping) => {
+            return entry.name === character;
+          });
+
+          if (entry) {
+            entry.comic_count += 1;
+            if (comic.added_date > entry.latest_comic_date) {
+              entry.latest_comic_date = comic.added_date;
+            }
+          } else {
+            characters.push({
+              name: character,
+              comic_count: 1,
+              latest_comic_date: comic.added_date
+            });
+          }
+        });
       });
       // find the latest comic date
       let last_comic = null;
@@ -201,7 +222,8 @@ export function libraryReducer(
         last_comic_date: last_comic_date,
         comics: comics,
         publishers: publishers,
-        series: series
+        series: series,
+        characters: characters
       };
 
     case LibraryActions.LIBRARY_REMOVE_COMIC: {
@@ -215,22 +237,37 @@ export function libraryReducer(
       const updated_comics = state.comics.filter(
         comic => comic.id !== action.payload.comic.id
       );
-      state.publishers.forEach((entry: any) => {
+      let publishers = state.publishers.filter((entry: ComicGrouping) => {
         if (entry.name === action.payload.comic.publisher) {
           entry.comic_count -= 1;
         }
+
+        return entry.comic_count > 0;
       });
-      state.series.forEach((entry: any) => {
+      let series = state.series.filter((entry: ComicGrouping) => {
         if (entry.name === action.payload.comic.series) {
           entry.comic_count -= 1;
         }
+
+        return entry.comic_count > 0;
+      });
+      let characters = state.characters.filter((entry: ComicGrouping) => {
+        let found = false;
+        action.payload.comic.characters.forEach((character: string) => {
+          if (character === entry.name) {
+            entry.comic_count -= 1;
+          }
+        });
+
+        return entry.comic_count > 0;
       });
       return {
         ...state,
         busy: false,
         comics: updated_comics,
         publishers: publishers,
-        series: series
+        series: series,
+        characters: characters
       };
     }
 
@@ -240,7 +277,8 @@ export function libraryReducer(
         last_comic_date: "0",
         comics: [],
         publishers: [],
-        series: []
+        series: [],
+        characters: []
       };
 
     case LibraryActions.LIBRARY_CLEAR_METADATA:
