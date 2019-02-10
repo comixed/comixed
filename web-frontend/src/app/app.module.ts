@@ -130,13 +130,14 @@ import { ComicSeriesPipe } from "./pipes/comic-series.pipe";
 import { ComicListToolbarComponent } from "./ui/components/library/comic-list-toolbar/comic-list-toolbar.component";
 import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
 import { PublisherDetailsPageComponent } from "./ui/pages/publisher-details-page/publisher-details-page.component";
-import { ComicPublisherPipe } from './pipes/comic-publisher.pipe';
-import { ComicCoverComponent } from './ui/components/comic/comic-cover/comic-cover.component';
-import { CharactersPageComponent } from './ui/pages/characters/characters-page/characters-page.component';
-import { CharacterDetailsPageComponent } from './ui/pages/characters/character-details-page/character-details-page.component';
-import { ComicCharacterPipe } from './pipes/comic-character.pipe';
-import { CharacterCardComponent } from './ui/components/comic/character-card/character-card.component';
-import { TeamsPageComponent } from './ui/pages/teams/teams-page/teams-page.component';
+import { ComicPublisherPipe } from "./pipes/comic-publisher.pipe";
+import { ComicCoverComponent } from "./ui/components/comic/comic-cover/comic-cover.component";
+import { CharactersPageComponent } from "./ui/pages/characters/characters-page/characters-page.component";
+import { CharacterDetailsPageComponent } from "./ui/pages/characters/character-details-page/character-details-page.component";
+import { ComicCharacterPipe } from "./pipes/comic-character.pipe";
+import { CharacterCardComponent } from "./ui/components/comic/character-card/character-card.component";
+import { TeamsPageComponent } from "./ui/pages/teams/teams-page/teams-page.component";
+import { TeamDetailsPageComponent } from "./ui/pages/teams/team-details-page/team-details-page.component";
 
 @NgModule({
   declarations: [
@@ -193,7 +194,8 @@ import { TeamsPageComponent } from './ui/pages/teams/teams-page/teams-page.compo
     CharacterDetailsPageComponent,
     ComicCharacterPipe,
     CharacterCardComponent,
-    TeamsPageComponent
+    TeamsPageComponent,
+    TeamDetailsPageComponent
   ],
   imports: [
     BrowserModule,
