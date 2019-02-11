@@ -141,6 +141,7 @@ import { TeamDetailsPageComponent } from "./ui/pages/teams/team-details-page/tea
 import { ComicTeamPipe } from './pipes/comic-team.pipe';
 import { TeamCardComponent } from './ui/components/comic/team-card/team-card.component';
 import { LocationsPageComponent } from './ui/pages/locations/locations-page/locations-page.component';
+import { LocationDetailsPageComponent } from './ui/pages/locations/location-details-page/location-details-page.component';
 
 @NgModule({
   declarations: [
@@ -201,7 +202,8 @@ import { LocationsPageComponent } from './ui/pages/locations/locations-page/loca
     TeamDetailsPageComponent,
     ComicTeamPipe,
     TeamCardComponent,
-    LocationsPageComponent
+    LocationsPageComponent,
+    LocationDetailsPageComponent
   ],
   imports: [
     BrowserModule,
