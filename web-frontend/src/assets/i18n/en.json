@@ -10,6 +10,7 @@
       "series": "Series",
       "characters": "Characters",
       "teams": "Teams",
+      "locations": "Locations",
       "import": "Import",
       "duplicate-pages": "Duplicate Pages"
     },
@@ -423,6 +424,18 @@
     "table": {
       "label": {
         "character-name": "Character Name",
+        "comic-count": "# Of Comics",
+        "latest-comic-added-date": "Latest Comic Added"
+      },
+      "value": {
+        "comic-count": "{{comic_count}} comic(s)"
+      }
+    }
+  },
+  "locations-page": {
+    "table": {
+      "label": {
+        "location-name": "Location Name",
         "comic-count": "# Of Comics",
         "latest-comic-added-date": "Latest Comic Added"
       },
