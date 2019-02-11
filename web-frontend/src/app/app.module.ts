@@ -142,6 +142,7 @@ import { ComicTeamPipe } from './pipes/comic-team.pipe';
 import { TeamCardComponent } from './ui/components/comic/team-card/team-card.component';
 import { LocationsPageComponent } from './ui/pages/locations/locations-page/locations-page.component';
 import { LocationDetailsPageComponent } from './ui/pages/locations/location-details-page/location-details-page.component';
+import { ComicLocationPipe } from './pipes/comic-location.pipe';
 
 @NgModule({
   declarations: [
@@ -203,7 +204,8 @@ import { LocationDetailsPageComponent } from './ui/pages/locations/location-deta
     ComicTeamPipe,
     TeamCardComponent,
     LocationsPageComponent,
-    LocationDetailsPageComponent
+    LocationDetailsPageComponent,
+    ComicLocationPipe
   ],
   imports: [
     BrowserModule,
