@@ -37,6 +37,7 @@ import { UsersPageComponent } from "./ui/pages/admin/users-page/users-page.compo
 import { TeamsPageComponent } from "./ui/pages/teams/teams-page/teams-page.component";
 import { TeamDetailsPageComponent } from "./ui/pages/teams/team-details-page/team-details-page.component";
 import { LocationsPageComponent } from "./ui/pages/locations/locations-page/locations-page.component";
+import { LocationDetailsPageComponent } from "./ui/pages/locations/location-details-page/location-details-page.component";
 
 const routes: Routes = [
   { path: "home", component: MainPageComponent },
@@ -92,6 +93,10 @@ const routes: Routes = [
   {
     path: "locations",
     component: LocationsPageComponent
+  },
+  {
+    path: "locations/:name",
+    component: LocationDetailsPageComponent
   },
   {
     path: "import",
