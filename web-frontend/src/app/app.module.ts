@@ -135,15 +135,13 @@ import { ComicCoverComponent } from "./ui/components/comic/comic-cover/comic-cov
 import { CharactersPageComponent } from "./ui/pages/characters/characters-page/characters-page.component";
 import { CharacterDetailsPageComponent } from "./ui/pages/characters/character-details-page/character-details-page.component";
 import { ComicCharacterPipe } from "./pipes/comic-character.pipe";
-import { CharacterCardComponent } from "./ui/components/comic/character-card/character-card.component";
 import { TeamsPageComponent } from "./ui/pages/teams/teams-page/teams-page.component";
 import { TeamDetailsPageComponent } from "./ui/pages/teams/team-details-page/team-details-page.component";
-import { ComicTeamPipe } from './pipes/comic-team.pipe';
-import { TeamCardComponent } from './ui/components/comic/team-card/team-card.component';
-import { LocationsPageComponent } from './ui/pages/locations/locations-page/locations-page.component';
-import { LocationDetailsPageComponent } from './ui/pages/locations/location-details-page/location-details-page.component';
-import { ComicLocationPipe } from './pipes/comic-location.pipe';
-import { ComicGroupingCardComponent } from './ui/components/comic/comic-grouping-card/comic-grouping-card.component';
+import { ComicTeamPipe } from "./pipes/comic-team.pipe";
+import { LocationsPageComponent } from "./ui/pages/locations/locations-page/locations-page.component";
+import { LocationDetailsPageComponent } from "./ui/pages/locations/location-details-page/location-details-page.component";
+import { ComicLocationPipe } from "./pipes/comic-location.pipe";
+import { ComicGroupingCardComponent } from "./ui/components/comic/comic-grouping-card/comic-grouping-card.component";
 
 @NgModule({
   declarations: [
@@ -199,11 +197,9 @@ import { ComicGroupingCardComponent } from './ui/components/comic/comic-grouping
     CharactersPageComponent,
     CharacterDetailsPageComponent,
     ComicCharacterPipe,
-    CharacterCardComponent,
     TeamsPageComponent,
     TeamDetailsPageComponent,
     ComicTeamPipe,
-    TeamCardComponent,
     LocationsPageComponent,
     LocationDetailsPageComponent,
     ComicLocationPipe,

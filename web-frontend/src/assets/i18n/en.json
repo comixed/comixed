@@ -444,14 +444,9 @@
       }
     }
   },
-  "character-card": {
+  "comic-grouping-card": {
     "text": {
-      "appearance-count": "{{name}} appears in {{comic_count}} comics."
-    }
-  },
-  "team-card": {
-    "text": {
-      "appearance-count": "{{name}} appears in {{comic_count}} comics."
+      "appearance-count": "\"{{name}}\" appears in {{comic_count}} comics."
     }
   },
   "text": {

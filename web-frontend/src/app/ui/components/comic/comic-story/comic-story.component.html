@@ -19,7 +19,9 @@
                     [layout]="'grid'">
           <ng-template let-character
                        pTemplate="gridItem">
-            <app-character-card [details]="get_details_for(library.characters, character)"></app-character-card>
+            <app-comic-grouping-card [details]="get_details_for(library.characters, character)"
+                                     [parent_route]="'/characters'">
+            </app-comic-grouping-card>
           </ng-template>
         </p-dataView>
       </div>
@@ -32,7 +34,9 @@
                     [layout]="'grid'">
           <ng-template let-team
                        pTemplate="gridItem">
-            <app-team-card [details]="get_details_for(library.teams, team)"></app-team-card>
+            <app-comic-grouping-card [details]="get_details_for(library.teams, team)"
+                                     [parent_route]="'/teams'">
+            </app-comic-grouping-card>
           </ng-template>
         </p-dataView>
       </div>
@@ -45,11 +49,8 @@
                     [layout]="'grid'">
           <ng-template let-location
                        pTemplate="gridItem">
-            <p-card>
-              <p-header>
-                <h4>{{ location }}</h4>
-              </p-header>
-            </p-card>
+            <app-comic-grouping-card [details]="get_details_for(library.locations, location)"
+                                     [parent_route]="'/locations'"></app-comic-grouping-card>
           </ng-template>
         </p-dataView>
       </div>
