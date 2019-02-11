@@ -142,6 +142,7 @@ import { LocationsPageComponent } from "./ui/pages/locations/locations-page/loca
 import { LocationDetailsPageComponent } from "./ui/pages/locations/location-details-page/location-details-page.component";
 import { ComicLocationPipe } from "./pipes/comic-location.pipe";
 import { ComicGroupingCardComponent } from "./ui/components/comic/comic-grouping-card/comic-grouping-card.component";
+import { StoryArcsPageComponent } from './ui/pages/story-arcs/story-arcs-page/story-arcs-page.component';
 
 @NgModule({
   declarations: [
@@ -203,7 +204,8 @@ import { ComicGroupingCardComponent } from "./ui/components/comic/comic-grouping
     LocationsPageComponent,
     LocationDetailsPageComponent,
     ComicLocationPipe,
-    ComicGroupingCardComponent
+    ComicGroupingCardComponent,
+    StoryArcsPageComponent
   ],
   imports: [
     BrowserModule,

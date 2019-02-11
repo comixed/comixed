@@ -444,6 +444,18 @@
       }
     }
   },
+  "story-arcs-page": {
+    "table": {
+      "label": {
+        "story-arc-name": "Story Arc Name",
+        "comic-count": "# Of Comics",
+        "latest-comic-added-date": "Latest Comic Added"
+      },
+      "value": {
+        "comic-count": "{{comic_count}} comic(s)"
+      }
+    }
+  },
   "comic-grouping-card": {
     "text": {
       "appearance-count": "\"{{name}}\" appears in {{comic_count}} comics."
