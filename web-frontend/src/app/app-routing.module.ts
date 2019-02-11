@@ -39,6 +39,7 @@ import { TeamDetailsPageComponent } from "./ui/pages/teams/team-details-page/tea
 import { LocationsPageComponent } from "./ui/pages/locations/locations-page/locations-page.component";
 import { LocationDetailsPageComponent } from "./ui/pages/locations/location-details-page/location-details-page.component";
 import { StoryArcsPageComponent } from "./ui/pages/story-arcs/story-arcs-page/story-arcs-page.component";
+import { StoryArcDetailsPageComponent } from "./ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component";
 
 const routes: Routes = [
   { path: "home", component: MainPageComponent },
@@ -102,6 +103,10 @@ const routes: Routes = [
   {
     path: "stories",
     component: StoryArcsPageComponent
+  },
+  {
+    path: "stories/:name",
+    component: StoryArcDetailsPageComponent
   },
   {
     path: "import",
