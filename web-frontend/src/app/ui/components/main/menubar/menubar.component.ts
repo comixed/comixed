@@ -120,6 +120,12 @@ export class MenubarComponent implements OnInit, OnDestroy {
             routerLink: ["/teams"],
             visible: this.user && this.user.authenticated
           },
+          {
+            label: this.translate.instant("menu.library.locations"),
+            icon: "fa fa-fw fa-location-arrow",
+            routerLink: ["/locations"],
+            visible: this.user && this.user.authenticated
+          },
           { separator: true, visible: this.user && this.user.is_admin },
           {
             label: this.translate.instant("menu.library.import"),

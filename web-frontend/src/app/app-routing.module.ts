@@ -36,6 +36,7 @@ import { DuplicatesPageComponent } from "./ui/pages/library/duplicates-page/dupl
 import { UsersPageComponent } from "./ui/pages/admin/users-page/users-page.component";
 import { TeamsPageComponent } from "./ui/pages/teams/teams-page/teams-page.component";
 import { TeamDetailsPageComponent } from "./ui/pages/teams/team-details-page/team-details-page.component";
+import { LocationsPageComponent } from "./ui/pages/locations/locations-page/locations-page.component";
 
 const routes: Routes = [
   { path: "home", component: MainPageComponent },
@@ -87,6 +88,10 @@ const routes: Routes = [
   {
     path: "teams/:name",
     component: TeamDetailsPageComponent
+  },
+  {
+    path: "locations",
+    component: LocationsPageComponent
   },
   {
     path: "import",
