@@ -55,5 +55,19 @@
         </p-dataView>
       </div>
     </p-panel>
+    <p-panel header="{{'comic-story.label.stories'|translate}}"
+             [toggleable]="true"
+             [collapsed]="true">
+      <div class="ui-g">
+        <p-dataView [value]="comic.story_arcs"
+                    [layout]="'grid'">
+          <ng-template let-story
+                       pTemplate="gridItem">
+            <app-comic-grouping-card [details]="get_details_for(library.story_arcs, story)"
+                                     [parent_route]="'/stories'"></app-comic-grouping-card>
+          </ng-template>
+        </p-dataView>
+      </div>
+    </p-panel>
   </div>
 </div>

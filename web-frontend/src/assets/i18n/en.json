@@ -265,7 +265,8 @@
       "description": "Description",
       "characters": "Characters",
       "teams": "Teams",
-      "locations": "Locations"
+      "locations": "Locations",
+      "stories": "Story Arcs"
     },
     "text": {
       "no-summary": "No summary for this comic...",
