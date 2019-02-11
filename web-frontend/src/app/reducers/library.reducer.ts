@@ -37,6 +37,7 @@ const initial_state: Library = {
   series: [],
   characters: [],
   teams: [],
+  locations: [],
   last_read_dates: []
 };
 
@@ -144,6 +145,7 @@ export function libraryReducer(
       let series = [];
       let characters = [];
       let teams = [];
+      let locations = [];
       comics.forEach((comic: Comic) => {
         let entry;
 
@@ -218,6 +220,25 @@ export function libraryReducer(
             });
           }
         });
+
+        comic.locations.forEach((location: string) => {
+          entry = locations.find((entry: ComicGrouping) => {
+            return entry.name === location;
+          });
+
+          if (entry) {
+            entry.comic_count += 1;
+            if (comic.added_date > entry.latest_comic_date) {
+              entry.latest_comic_date = comic.added_date;
+            }
+          } else {
+            locations.push({
+              name: location,
+              comic_count: 1,
+              latest_comic_date: comic.added_date
+            });
+          }
+        });
       });
       // find the latest comic date
       let last_comic = null;
@@ -245,6 +266,7 @@ export function libraryReducer(
         publishers: publishers,
         series: series,
         teams: teams,
+        locations: locations,
         characters: characters
       };
 
@@ -292,6 +314,16 @@ export function libraryReducer(
 
         return entry.comic_count > 0;
       });
+
+      let locations = state.characters.filter((entry: ComicGrouping) => {
+        action.payload.comic.locations.forEach((location: string) => {
+          if (location === entry.name) {
+            entry.comic_count -= 1;
+          }
+        });
+
+        return entry.comic_count > 0;
+      });
       return {
         ...state,
         busy: false,
@@ -299,7 +331,8 @@ export function libraryReducer(
         publishers: publishers,
         series: series,
         characters: characters,
-        teams: teams
+        teams: teams,
+        locations: locations
       };
     }
 
@@ -311,7 +344,8 @@ export function libraryReducer(
         publishers: [],
         series: [],
         characters: [],
-        teams: []
+        teams: [],
+        locations: []
       };
 
     case LibraryActions.LIBRARY_CLEAR_METADATA:

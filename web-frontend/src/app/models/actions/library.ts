@@ -40,5 +40,6 @@ export interface Library {
   series: Array<ComicGrouping>;
   characters: Array<ComicGrouping>;
   teams: Array<ComicGrouping>;
+  locations: Array<ComicGrouping>;
   last_read_dates: Array<LastReadDate>;
 }
