@@ -38,6 +38,7 @@ const initial_state: Library = {
   characters: [],
   teams: [],
   locations: [],
+  story_arcs: [],
   last_read_dates: []
 };
 
@@ -146,6 +147,7 @@ export function libraryReducer(
       let characters = [];
       let teams = [];
       let locations = [];
+      let story_arcs = [];
       comics.forEach((comic: Comic) => {
         let entry;
 
@@ -239,6 +241,25 @@ export function libraryReducer(
             });
           }
         });
+
+        comic.story_arcs.forEach((story_arc: string) => {
+          entry = story_arcs.find((entry: ComicGrouping) => {
+            return entry.name === story_arc;
+          });
+
+          if (entry) {
+            entry.comic_count += 1;
+            if (comic.added_date > entry.latest_comic_date) {
+              entry.latest_comic_date = comic.added_date;
+            }
+          } else {
+            story_arcs.push({
+              name: story_arc,
+              comic_count: 1,
+              latest_comic_date: comic.added_date
+            });
+          }
+        });
       });
       // find the latest comic date
       let last_comic = null;
@@ -267,6 +288,7 @@ export function libraryReducer(
         series: series,
         teams: teams,
         locations: locations,
+        story_arcs: story_arcs,
         characters: characters
       };
 
@@ -324,6 +346,16 @@ export function libraryReducer(
 
         return entry.comic_count > 0;
       });
+
+      let story_arcs = state.story_arcs.filter((entry: ComicGrouping) => {
+        action.payload.comic.story_arcs.forEach((story_arc: string) => {
+          if (story_arc === entry.name) {
+            entry.comic_count -= 1;
+          }
+        });
+
+        return entry.comic_count > 0;
+      });
       return {
         ...state,
         busy: false,
@@ -332,7 +364,8 @@ export function libraryReducer(
         series: series,
         characters: characters,
         teams: teams,
-        locations: locations
+        locations: locations,
+        story_arcs: story_arcs
       };
     }
 
@@ -345,7 +378,8 @@ export function libraryReducer(
         series: [],
         characters: [],
         teams: [],
-        locations: []
+        locations: [],
+        story_arcs: []
       };
 
     case LibraryActions.LIBRARY_CLEAR_METADATA:
