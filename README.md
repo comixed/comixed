@@ -31,7 +31,21 @@ The following digital comic formats are supported:
 
 To start the application, launch it from the command line with:
 
-    $ java -jar comixed-app-*.jar
+```$ java -jar comixed-app-*.jar```
+
+NOTE: As this is still an actively developed project, there's always a
+chance that your local database has become corrupted. If you experience problems
+with starting the application, a good first step would be to delete your local
+database and try running the application again.
+
+The database can be found:
+
+Operating System|Location
+---|---
+**Windows** | C:\users\[your username]\.comixed
+**Linux** | /home/[your username]/.comixed
+**MacOS** | /users/[your username].comixed
+
 
 ### Interacting With The Application
 
