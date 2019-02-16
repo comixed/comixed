@@ -17,19 +17,27 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { Comic } from '../../../../models/comics/comic';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-@Component({
-  selector: 'app-comic-list',
-  templateUrl: './comic-list.component.html',
-  styleUrls: ['./comic-list.component.css']
-})
-export class ComicListComponent implements OnInit {
-  @Input() comics: Array<Comic>;
+import { ScrapingComicListComponent } from "./scraping-comic-list.component";
 
-  constructor() { }
+describe("ScrapingComicListComponent", () => {
+  let component: ScrapingComicListComponent;
+  let fixture: ComponentFixture<ScrapingComicListComponent>;
 
-  ngOnInit() {
-  }
-}
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ScrapingComicListComponent]
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ScrapingComicListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
+});
