@@ -425,6 +425,9 @@
   "publisher-details": {
     "title": "{{publisher_name}}"
   },
+  "series": {
+    "title": "Showing {{series_count}} Series"
+  },
   "characters-page": {
     "table": {
       "label": {
