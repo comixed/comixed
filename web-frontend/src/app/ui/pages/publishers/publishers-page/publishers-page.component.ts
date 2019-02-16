@@ -16,43 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
+
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Comic } from "../../../models/comics/comic";
-import { ActivatedRoute, Params } from "@angular/router";
 import { Store } from "@ngrx/store";
-import { AppState } from "../../../app.state";
+import { AppState } from "../../../../app.state";
 import { Observable, Subscription } from "rxjs";
-import * as LibraryActions from "../../../actions/library.actions";
-import { Library } from "../../../models/actions/library";
+import * as LibraryActions from "../../../../actions/library.actions";
+import { Library } from "../../../../models/actions/library";
 import { TranslateService } from "@ngx-translate/core";
 import { SelectItem } from "primeng/api";
 
 @Component({
-  selector: "app-publisher-details-page",
-  templateUrl: "./publisher-details-page.component.html",
-  styleUrls: ["./publisher-details-page.component.css"]
+  selector: "app-publishers-page",
+  templateUrl: "./publishers-page.component.html",
+  styleUrls: ["./publishers-page.component.css"]
 })
-export class PublisherDetailsPageComponent implements OnInit {
+export class PublishersPageComponent implements OnInit {
   private library$: Observable<Library>;
   private library: Library;
   private library_subscription: Subscription;
 
-  protected layout = "grid";
-  protected sort_field = "volume";
-  protected rows = 10;
-  protected same_height = true;
-  protected cover_size = 200;
-
-  publisher_name: string;
+  protected rows_options: Array<SelectItem>;
+  rows = 10;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private translate: TranslateService,
     private store: Store<AppState>
   ) {
-    this.activatedRoute.params.subscribe(params => {
-      this.publisher_name = params["name"];
-    });
     this.library$ = store.select("library");
   }
 
@@ -60,29 +50,39 @@ export class PublisherDetailsPageComponent implements OnInit {
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
     });
+    this.load_rows_options();
   }
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
   }
 
-  set_layout(dataview: any, layout: string): void {
-    dataview.changeLayout(layout);
-  }
-
-  set_sort_field(sort_field: string): void {
-    this.sort_field = sort_field;
-  }
-
-  set_rows(rows: number): void {
-    this.rows = rows;
-  }
-
-  set_cover_size(cover_size: number): void {
-    this.cover_size = cover_size;
-  }
-
-  set_same_height(same_height: boolean): void {
-    this.same_height = same_height;
+  private load_rows_options(): void {
+    this.rows_options = [
+      {
+        label: this.translate.instant(
+          "library-contents.options.rows.10-per-page"
+        ),
+        value: 10
+      },
+      {
+        label: this.translate.instant(
+          "library-contents.options.rows.25-per-page"
+        ),
+        value: 25
+      },
+      {
+        label: this.translate.instant(
+          "library-contents.options.rows.50-per-page"
+        ),
+        value: 50
+      },
+      {
+        label: this.translate.instant(
+          "library-contents.options.rows.100-per-page"
+        ),
+        value: 100
+      }
+    ];
   }
 }

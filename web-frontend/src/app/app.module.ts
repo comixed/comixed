@@ -128,8 +128,8 @@ import { SeriesPageComponent } from "./ui/pages/series-page/series-page.componen
 import { SeriesDetailsPageComponent } from "./ui/pages/series-details-page/series-details-page.component";
 import { ComicSeriesPipe } from "./pipes/comic-series.pipe";
 import { ComicListToolbarComponent } from "./ui/components/library/comic-list-toolbar/comic-list-toolbar.component";
-import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
-import { PublisherDetailsPageComponent } from "./ui/pages/publisher-details-page/publisher-details-page.component";
+import { PublishersPageComponent } from "./ui/pages/publishers/publishers-page/publishers-page.component";
+import { PublisherDetailsPageComponent } from "./ui/pages/publishers/publisher-details-page/publisher-details-page.component";
 import { ComicPublisherPipe } from "./pipes/comic-publisher.pipe";
 import { ComicCoverComponent } from "./ui/components/comic/comic-cover/comic-cover.component";
 import { CharactersPageComponent } from "./ui/pages/characters/characters-page/characters-page.component";
@@ -142,9 +142,9 @@ import { LocationsPageComponent } from "./ui/pages/locations/locations-page/loca
 import { LocationDetailsPageComponent } from "./ui/pages/locations/location-details-page/location-details-page.component";
 import { ComicLocationPipe } from "./pipes/comic-location.pipe";
 import { ComicGroupingCardComponent } from "./ui/components/comic/comic-grouping-card/comic-grouping-card.component";
-import { StoryArcsPageComponent } from './ui/pages/story-arcs/story-arcs-page/story-arcs-page.component';
-import { ComicStoriesPipe } from './pipes/comic-stories.pipe';
-import { StoryArcDetailsPageComponent } from './ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component';
+import { StoryArcsPageComponent } from "./ui/pages/story-arcs/story-arcs-page/story-arcs-page.component";
+import { ComicStoriesPipe } from "./pipes/comic-stories.pipe";
+import { StoryArcDetailsPageComponent } from "./ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component";
 
 @NgModule({
   declarations: [

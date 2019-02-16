@@ -26,8 +26,8 @@ import { AccountPageComponent } from "./ui/pages/account/account-page/account-pa
 import { LibraryPageComponent } from "./ui/pages/library/library-page/library-page.component";
 import { SeriesPageComponent } from "./ui/pages/series-page/series-page.component";
 import { SeriesDetailsPageComponent } from "./ui/pages/series-details-page/series-details-page.component";
-import { PublishersPageComponent } from "./ui/pages/publishers-page/publishers-page.component";
-import { PublisherDetailsPageComponent } from "./ui/pages/publisher-details-page/publisher-details-page.component";
+import { PublishersPageComponent } from "./ui/pages/publishers/publishers-page/publishers-page.component";
+import { PublisherDetailsPageComponent } from "./ui/pages/publishers/publisher-details-page/publisher-details-page.component";
 import { CharactersPageComponent } from "./ui/pages/characters/characters-page/characters-page.component";
 import { CharacterDetailsPageComponent } from "./ui/pages/characters/character-details-page/character-details-page.component";
 import { ComicDetailsComponent } from "./ui/pages/comic/comic-details/comic-details.component";

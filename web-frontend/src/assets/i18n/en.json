@@ -419,6 +419,9 @@
       }
     }
   },
+  "publishers": {
+    "title": "Showing {{publisher_count}} Publishers"
+  },
   "publisher-details": {
     "title": "{{publisher_name}}"
   },
