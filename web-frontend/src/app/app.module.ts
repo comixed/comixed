@@ -106,7 +106,6 @@ import { UserDetailsComponent } from "./ui/components/account/user-details/user-
 import { MultipleComicScrapingComponent } from "./ui/components/scraping/multiple-comic-scraping/multiple-comic-scraping.component";
 import { LibraryScrapingToolbarComponent } from "./ui/components/library/library-scraping-toolbar/library-scraping-toolbar.component";
 import { LibraryScrapingSelectionComponent } from "./ui/components/library/library-scraping-selection/library-scraping-selection.component";
-import { LibraryScrapingViewComponent } from "./ui/views/library/library-scraping-view/library-scraping-view.component";
 import { ScrapingComicListComponent } from "./ui/components/scraping/scraping-comic-list/scraping-comic-list.component";
 import { AdminGuard } from "./admin.guard";
 import { ReaderGuard } from "./reader.guard";
@@ -177,7 +176,6 @@ import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-
     MultipleComicScrapingComponent,
     LibraryScrapingToolbarComponent,
     LibraryScrapingSelectionComponent,
-    LibraryScrapingViewComponent,
     ScrapingComicListComponent,
     ComicTitlePipe,
     ComicCoverUrlPipe,
