@@ -36,6 +36,7 @@ export interface Library {
   scan_types: Array<ScanType>;
   formats: Array<ComicFormat>;
   comics: Array<Comic>;
+  selected_comics: Array<Comic>;
   publishers: Array<ComicGrouping>;
   series: Array<ComicGrouping>;
   characters: Array<ComicGrouping>;

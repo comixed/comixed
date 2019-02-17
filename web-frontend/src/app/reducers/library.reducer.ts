@@ -33,6 +33,7 @@ const initial_state: Library = {
   scan_types: [],
   formats: [],
   comics: [],
+  selected_comics: [],
   publishers: [],
   series: [],
   characters: [],
