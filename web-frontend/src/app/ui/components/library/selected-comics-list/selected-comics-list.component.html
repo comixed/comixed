@@ -14,6 +14,21 @@
                     paginatorPosition="top"
                     [alwaysShowPaginator]="true"
                     [rows]="rows">
+          <p-header>
+            <div class="ui-helper-clearfix">
+              <div class="ui-g">
+                <div class="ui-g-12 ui-md-4">
+
+                </div>
+                <div class="ui-g-6 ui-md-4 filter-container">
+
+                </div>
+                <div class="ui-g-6 ui-md-4">
+
+                </div>
+              </div>
+            </div>
+          </p-header>
           <ng-template let-comic
                        pTemplate="gridItem">
             <app-comic-grid-item [comic]="comic"
