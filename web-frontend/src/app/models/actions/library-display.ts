@@ -18,8 +18,9 @@
  */
 
 export interface LibraryDisplay {
-  current_tab: number;
-  sort: string;
+  layout: string;
+  sort_field: string;
   rows: number;
   cover_size: number;
+  same_height: boolean;
 }

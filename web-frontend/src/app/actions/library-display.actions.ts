@@ -17,40 +17,47 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-import { LibraryDisplay } from '../models/library-display';
+import { Action } from "@ngrx/store";
+import { LibraryDisplay } from "../models/actions/library-display";
 
-export const SET_LIBRARY_VIEW_CURRENT_TAB = '[LIBRARY VIEW] Set current tab';
-export const SET_LIBRARY_VIEW_SORT = '[LIBRARY VIEW] Set sort';
-export const SET_LIBRARY_VIEW_ROWS = '[LIBRARY VIEW] Set rows';
-export const SET_LIBRARY_VIEW_COVER_SIZE = '[LIBRARY VIEW] Set cover size';
+export const SET_LIBRARY_VIEW_LAYOUT = "[LIBRARY VIEW] Set layout";
+export class SetLibraryViewLayout implements Action {
+  readonly type = SET_LIBRARY_VIEW_LAYOUT;
 
-export class SetLibraryViewCurrentTab implements Action {
-  readonly type = SET_LIBRARY_VIEW_CURRENT_TAB;
-
-  constructor(public payload: number) { }
+  constructor(public payload: { layout: string }) {}
 }
 
+export const SET_LIBRARY_VIEW_SORT = "[LIBRARY VIEW] Set sort";
 export class SetLibraryViewSort implements Action {
   readonly type = SET_LIBRARY_VIEW_SORT;
 
-  constructor(public payload: string) { }
+  constructor(public payload: { sort: string }) {}
 }
 
+export const SET_LIBRARY_VIEW_ROWS = "[LIBRARY VIEW] Set rows";
 export class SetLibraryViewRows implements Action {
   readonly type = SET_LIBRARY_VIEW_ROWS;
 
-  constructor(public payload: number) { }
+  constructor(public payload: { rows: number }) {}
 }
 
+export const SET_LIBRARY_VIEW_COVER_SIZE = "[LIBRARY VIEW] Set cover size";
 export class SetLibraryViewCoverSize implements Action {
   readonly type = SET_LIBRARY_VIEW_COVER_SIZE;
 
-  constructor(public payload: number) { }
+  constructor(public payload: { cover_size: number }) {}
 }
 
+export const SET_LIBRARY_VIEW_USE_SAME_HEIGHT =
+  "[LIBRARY VIEW] Use same height";
+export class SetLibraryViewUseSameHeight implements Action {
+  readonly type = SET_LIBRARY_VIEW_USE_SAME_HEIGHT;
+
+  constructor(public payload: { same_height: boolean }) {}
+}
 export type Actions =
-  SetLibraryViewCurrentTab |
-  SetLibraryViewSort |
-  SetLibraryViewRows |
-  SetLibraryViewCoverSize;
+  | SetLibraryViewLayout
+  | SetLibraryViewSort
+  | SetLibraryViewRows
+  | SetLibraryViewCoverSize
+  | SetLibraryViewUseSameHeight;

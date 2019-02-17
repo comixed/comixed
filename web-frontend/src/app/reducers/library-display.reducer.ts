@@ -17,44 +17,51 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-import { LibraryDisplay } from '../models/library-display';
-import * as LibraryDisplayActions from '../actions/library-display.actions';
+import { Action } from "@ngrx/store";
+import { LibraryDisplay } from "../models/actions/library-display";
+import * as LibraryDisplayActions from "../actions/library-display.actions";
 
 const initial_state: LibraryDisplay = {
-  current_tab: 0,
-  sort: 'series',
+  layout: "grid",
+  sort_field: "added_date",
   rows: 10,
-  cover_size: 200,
+  cover_size: 225,
+  same_height: true
 };
 
 export function libraryDisplayReducer(
   state: LibraryDisplay = initial_state,
-  action: LibraryDisplayActions.Actions,
+  action: LibraryDisplayActions.Actions
 ) {
   switch (action.type) {
-    case LibraryDisplayActions.SET_LIBRARY_VIEW_CURRENT_TAB:
+    case LibraryDisplayActions.SET_LIBRARY_VIEW_LAYOUT:
       return {
         ...state,
-        current_tab: action.payload,
+        layout: action.payload.layout
       };
 
     case LibraryDisplayActions.SET_LIBRARY_VIEW_SORT:
       return {
         ...state,
-        sort: action.payload,
+        sort: action.payload.sort
       };
 
     case LibraryDisplayActions.SET_LIBRARY_VIEW_ROWS:
       return {
         ...state,
-        rows: action.payload,
+        rows: action.payload.rows
       };
 
     case LibraryDisplayActions.SET_LIBRARY_VIEW_COVER_SIZE:
       return {
         ...state,
-        cover_size: action.payload,
+        cover_size: action.payload.cover_size
+      };
+
+    case LibraryDisplayActions.SET_LIBRARY_VIEW_USE_SAME_HEIGHT:
+      return {
+        ...state,
+        same_height: action.payload.same_height
       };
 
     default:
