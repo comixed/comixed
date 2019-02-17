@@ -142,6 +142,13 @@
       "comicvine-api-key-placeholder": "Click to set the API key..."
     }
   },
+  "volume-list": {
+    "button": {
+      "back": "Back",
+      "select": "Select",
+      "cancel": "Cancel"
+    }
+  },
   "library-contents": {
     "label": {
       "cover-size": "Cover size: {{cover_size}}px"

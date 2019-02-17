@@ -1,76 +1,84 @@
 <div class='ui-g'>
   <div class='ui-g-9 ui-sm-9'>
-    <p-table
-      [value]='_volumes'
-      [paginator]='true'
-      [rows]='10'
-      [paginatorPosition]='"both"'
-      selectionMode='single'
-      [sortField]='"matchability"'
-      [(selection)]='current_volume'
-      [dataKey]='"id"'
-      (onRowSelect)='set_current_volume($event.data)'
-      (onRowUnselect)='set_current_volume(null)'> <ng-template
-      pTemplate='colgroup'>
-    <colgroup>
-      <col [style.width]='"75px"'>
-      <col [style.width]='"125px"'>
-      <col>
-      <col [style.width]='"125px"'>
-      <col>
-    </colgroup>
-    </ng-template> <ng-template pTemplate='header'>
-    <tr>
-      <th
-        [pSortableColumn]='"matchability"'
-        pResizableColumn><p-sortIcon [field]='"matchability"'></p-sortIcon></th>
-      <th
-        [pSortableColumn]='"volume.start_year"'
-        pResizableColumn><p-sortIcon [field]='"volume.start_year"'></p-sortIcon>
-        Start Year</th>
-      <th [pSortableColumn]='"volume.name"'><p-sortIcon
-          [field]='"volume.name"'></p-sortIcon> Series</th>
-      <th
-        [pSortableColumn]='"volume.issue_count"'
-        pResizableColumn><p-sortIcon [field]='"volume.issue_count"'></p-sortIcon>
-        Issues</th>
-      <th [pSortableColumn]='"volume.publisher"'><p-sortIcon
-          [field]='"volume.publisher"'></p-sortIcon> Publisher</th>
-    </tr>
-    </ng-template> <ng-template
-      pTemplate='body'
-      let-option>
-    <tr [pSelectableRow]='option.volume'>
-      <td><span
-        class='fas'
-        [class.fa-greater-than]='is_good_match(option.volume)'
-        [class.fa-greater-than-equal]='is_perfect_match(option.volume)'></span></td>
-      <td class='small-column'>{{ option.volume.start_year }}</td>
-      <td>{{ option.volume.name }}</td>
-      <td class='small-column'>{{ option.volume.issue_count }}</td>
-      <td class='medium-column'>{{ option.volume.publisher }}</td>
-    </tr>
-    </ng-template> </p-table>
+    <p-table [value]='_volumes'
+             [paginator]='true'
+             [rows]='10'
+             [paginatorPosition]='"both"'
+             selectionMode='single'
+             [sortField]='"matchability"'
+             [(selection)]='current_volume'
+             [dataKey]='"id"'
+             (onRowSelect)='set_current_volume($event.data)'
+             (onRowUnselect)='set_current_volume(null)'>
+      <ng-template pTemplate='colgroup'>
+        <colgroup>
+          <col [style.width]='"75px"'>
+          <col [style.width]='"125px"'>
+          <col>
+          <col [style.width]='"125px"'>
+          <col>
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate='header'>
+        <tr>
+          <th [pSortableColumn]='"matchability"'
+              pResizableColumn>
+            <p-sortIcon [field]='"matchability"'></p-sortIcon>
+          </th>
+          <th [pSortableColumn]='"volume.start_year"'
+              pResizableColumn>
+            <p-sortIcon [field]='"volume.start_year"'></p-sortIcon>
+            Start Year
+          </th>
+          <th [pSortableColumn]='"volume.name"'>
+            <p-sortIcon [field]='"volume.name"'></p-sortIcon> Series
+          </th>
+          <th [pSortableColumn]='"volume.issue_count"'
+              pResizableColumn>
+            <p-sortIcon [field]='"volume.issue_count"'></p-sortIcon>
+            Issues
+          </th>
+          <th [pSortableColumn]='"volume.publisher"'>
+            <p-sortIcon [field]='"volume.publisher"'></p-sortIcon> Publisher
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate='body'
+                   let-option>
+        <tr [pSelectableRow]='option.volume'>
+          <td><span class='fas'
+                  [class.fa-greater-than]='is_good_match(option.volume)'
+                  [class.fa-greater-than-equal]='is_perfect_match(option.volume)'></span></td>
+          <td class='small-column'>{{ option.volume.start_year }}</td>
+          <td>{{ option.volume.name }}</td>
+          <td class='small-column'>{{ option.volume.issue_count }}</td>
+          <td class='medium-column'>{{ option.volume.publisher }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
   <div class='ui-g-3 ui-sm-3'>
-    <p-card *ngIf='current_issue'> <p-header>
-    <h3>{{ volume_selection_title }}</h3>
-    </p-header> <img
-      [src]='get_current_issue_image_url()'
-      [style.width]='"100%"'> </p-card>
+    <p-card *ngIf='current_issue'>
+      <p-header>
+        <h3>{{ volume_selection_title }}</h3>
+      </p-header> <img [src]='get_current_issue_image_url()'
+           [style.width]='"100%"'>
+    </p-card>
     <div class='ui-g'>
       <div class='ui-g-12 ui-sm-12'>
-        <button
-          *ngIf='current_issue'
-          pButton
-          type='button'
-          label='Select'
-          (click)='select_current_issue()'></button>
-        <button
-          pButton
-          type='button'
-          label='Cancel'
-          (click)='cancel_selection()'></button>
+        <p-button type="button"
+                  icon="fa fa-fw fa-step-backward"
+                  [label]="'volume-list.button.back'|translate"
+                  (onClick)="return_to_editing()"></p-button>
+        <p-button *ngIf="current_issue"
+                  type="button"
+                  icon="fa fa-fw fa-play"
+                  [label]="'volume-list.button.select'|translate"
+                  (onClick)="select_current_issue()"></p-button>
+        <p-button type="button"
+                  icon="fa fa-fw fa-stop"
+                  [label]="'volume-list.button.cancel'|translate"
+                  (onClick)="cancel_selection()"></p-button>
       </div>
     </div>
   </div>

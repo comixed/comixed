@@ -34,9 +34,7 @@ import { Comic } from "../../../../models/comics/comic";
 export class MultipleComicScrapingComponent implements OnInit {
   @Input() multi_scraping: MultipleComicsScraping;
 
-  constructor(private store: Store<AppState>) {
-    this.multi_scraping$ = store.select("multiple_comic_scraping");
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {}
 
