@@ -17,28 +17,28 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-import { SingleComicScraping } from '../models/scraping/single-comic-scraping';
-import { Issue } from '../models/scraping/issue';
-import * as ScrapingActions from '../actions/single-comic-scraping.actions';
+import { Action } from "@ngrx/store";
+import { SingleComicScraping } from "../models/scraping/single-comic-scraping";
+import { Issue } from "../models/scraping/issue";
+import * as ScrapingActions from "../actions/single-comic-scraping.actions";
 
 const initial_state: SingleComicScraping = {
   busy: false,
-  api_key: '',
+  api_key: "",
   comic: null,
-  series: '',
-  volume: '',
-  issue_number: '',
+  series: "",
+  volume: "",
+  issue_number: "",
   volumes: [],
   current_volume: null,
   current_issue: null,
-  data_scraped: false,
+  data_scraped: false
 };
 
 export function singleComicScrapingReducer(
   state: SingleComicScraping = initial_state,
-  action: ScrapingActions.Actions) {
-
+  action: ScrapingActions.Actions
+) {
   switch (action.type) {
     case ScrapingActions.SINGLE_COMIC_SCRAPING_SETUP: {
       return {
@@ -52,7 +52,7 @@ export function singleComicScrapingReducer(
         current_volume: null,
         current_issue: null,
         busy: false,
-        data_scraped: false,
+        data_scraped: false
       };
     }
 
@@ -62,7 +62,7 @@ export function singleComicScrapingReducer(
         busy: true,
         series: action.payload.series,
         volume: action.payload.volume,
-        issue_number: action.payload.issue_number,
+        issue_number: action.payload.issue_number
       };
     }
 
@@ -74,15 +74,21 @@ export function singleComicScrapingReducer(
         series: action.payload.series,
         volume: action.payload.volume,
         issue_number: action.payload.issue_number,
-        busy: true,
+        busy: true
       };
     }
+
+    case ScrapingActions.SINGLE_COMIC_SCRAPING_RESET_VOLUMES:
+      return {
+        ...state,
+        volumes: []
+      };
 
     case ScrapingActions.SINGLE_COMIC_SCRAPING_FOUND_VOLUMES: {
       return {
         ...state,
         volumes: action.payload,
-        busy: false,
+        busy: false
       };
     }
 
@@ -91,7 +97,7 @@ export function singleComicScrapingReducer(
         ...state,
         current_volume: action.payload,
         current_issue: null,
-        busy: false,
+        busy: false
       };
     }
 
@@ -99,7 +105,7 @@ export function singleComicScrapingReducer(
       return {
         ...state,
         current_volume: null,
-        current_issue: null,
+        current_issue: null
       };
     }
 
@@ -109,7 +115,7 @@ export function singleComicScrapingReducer(
         api_key: action.payload.api_key,
         volume_id: action.payload.volume_id,
         issue_number: action.payload.issue_number,
-        busy: true,
+        busy: true
       };
     }
 
@@ -117,14 +123,14 @@ export function singleComicScrapingReducer(
       return {
         ...state,
         current_issue: action.payload.issue,
-        busy: false,
+        busy: false
       };
     }
 
     case ScrapingActions.SINGLE_COMIC_SCRAPING_SCRAPE_METADATA: {
       return {
         ...state,
-        busy: true,
+        busy: true
       };
     }
 
@@ -133,18 +139,17 @@ export function singleComicScrapingReducer(
         ...state,
         busy: false,
         comic: action.payload.updated,
-        data_scraped: true,
+        data_scraped: true
       };
     }
 
     case ScrapingActions.SINGLE_COMIC_SCRAPING_CLEAR_DATA_SCRAPED_FLAG:
       return {
         ...state,
-        data_scraped: false,
+        data_scraped: false
       };
 
     default:
       return state;
   }
 }
-
