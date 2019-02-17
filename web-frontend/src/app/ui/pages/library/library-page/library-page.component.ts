@@ -26,9 +26,7 @@ import { Library } from "../../../../models/actions/library";
 import * as LibraryActions from "../../../../actions/library.actions";
 import { LibraryFilter } from "../../../../models/library/library-filter";
 import * as FilterActions from "../../../../actions/library-filter.actions";
-import { LibraryDisplay } from "../../../../models/actions/library-display";
 import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
-import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
 import * as ScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
 import { Observable, Subscription } from "rxjs";
 import { Comic } from "../../../../models/comics/comic";
@@ -38,13 +36,6 @@ import { Preference } from "../../../../models/user/preference";
 import { UserService } from "../../../../services/user.service";
 import { ComicService } from "../../../../services/comic.service";
 import { ConfirmationService } from "primeng/api";
-import { SelectItem } from "primeng/api";
-import {
-  LIBRARY_SORT,
-  LIBRARY_ROWS,
-  LIBRARY_COVER_SIZE,
-  LIBRARY_CURRENT_TAB
-} from "../../../../models/user/preferences.constants";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
@@ -53,12 +44,6 @@ import { TranslateService } from "@ngx-translate/core";
   styleUrls: ["./library-page.component.css"]
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
-  readonly ROWS_PARAMETER = "rows";
-  readonly SORT_PARAMETER = "sort";
-  readonly COVER_PARAMETER = "coversize";
-  readonly GROUP_BY_PARAMETER = "groupby";
-  readonly TAB_PARAMETER = "tab";
-
   private user$: Observable<User>;
   private user_subscription: Subscription;
   user: User;
@@ -71,28 +56,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   private library_filter_subscription: Subscription;
   library_filter: LibraryFilter;
 
-  private library_display$: Observable<LibraryDisplay>;
-  private library_display_subscription: Subscription;
-
   scraping$: Observable<MultipleComicsScraping>;
   scraping_subscription: Subscription;
   scraping: MultipleComicsScraping;
-
-  library_display: LibraryDisplay;
-
-  comics: Array<Comic>;
-
-  rows_options: Array<SelectItem>;
-  rows: number;
-
-  sort_options: Array<SelectItem>;
-  sort_by: string;
-
-  group_options: Array<SelectItem>;
-  group_by: string;
-
-  cover_size: number;
-  current_tab: number;
 
   protected busy = false;
 
@@ -108,34 +74,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.user$ = store.select("user");
     this.library$ = store.select("library");
     this.library_filter$ = store.select("library_filter");
-    this.activated_route.queryParams.subscribe((params: Params) => {
-      this.sort_by = params[this.SORT_PARAMETER] || "series";
-      this.rows = parseInt(params[this.ROWS_PARAMETER] || "10", 10);
-      this.cover_size = parseInt(params[this.COVER_PARAMETER] || "200", 10);
-      this.current_tab = parseInt(params[this.TAB_PARAMETER] || "0", 10);
-    });
-    this.library_display$ = store.select("library_display");
     this.scraping$ = store.select("multiple_comic_scraping");
-    this.sort_options = [
-      { label: "Publisher", value: "publisher" },
-      { label: "Series", value: "series" },
-      { label: "Volume", value: "volume" },
-      { label: "Issue #", value: "issue_number" },
-      { label: "Date Added", value: "added_date" },
-      { label: "Cover Date", value: "cover_date" }
-    ];
-    this.group_options = [
-      { label: "None", value: "none" },
-      { label: "Series", value: "series" },
-      { label: "Publisher", value: "publisher" },
-      { label: "Year", value: "year" }
-    ];
-    this.rows_options = [
-      { label: "10 comics", value: 10 },
-      { label: "25 comics", value: 25 },
-      { label: "50 comics", value: 50 },
-      { label: "100 comics", value: 100 }
-    ];
   }
 
   ngOnInit() {
@@ -144,18 +83,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     });
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
-      this.comics = library.comics;
     });
     this.library_filter_subscription = this.library_filter$.subscribe(
       (library_filter: LibraryFilter) => {
         if (!this.library_filter || library_filter.changed) {
           this.library_filter = library_filter;
         }
-      }
-    );
-    this.library_display_subscription = this.library_display$.subscribe(
-      (library_display: LibraryDisplay) => {
-        this.library_display = library_display;
       }
     );
     this.scraping_subscription = this.scraping$.subscribe(
@@ -178,48 +111,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   get_download_link(comic: Comic): string {
     return this.comic_service.get_download_link_for_comic(comic.id);
-  }
-
-  set_current_tab(current_tab: number): void {
-    //    this.store.dispatch(new UserActions.UserSetPreference({
-    //      name: LIBRARY_CURRENT_TAB,
-    //      value: `${current_tab}`
-    //    }));
-    this.update_params(this.TAB_PARAMETER, `${current_tab}`);
-  }
-
-  set_sort_order(sort_order: string): void {
-    this.sort_by = sort_order;
-    //    this.store.dispatch(new UserActions.UserSetPreference({
-    //      name: LIBRARY_SORT,
-    //      value: sort_order,
-    //    }));
-    this.update_params(this.SORT_PARAMETER, sort_order);
-  }
-
-  set_group_by(group_by: string): void {
-    this.group_by = group_by;
-    this.update_params(this.GROUP_BY_PARAMETER, this.group_by);
-  }
-
-  set_rows(rows: number): void {
-    //    this.store.dispatch(new UserActions.UserSetPreference({
-    //      name: LIBRARY_ROWS,
-    //      value: `${rows}`,
-    //    }));
-    this.update_params(this.ROWS_PARAMETER, `${rows}`);
-  }
-
-  set_cover_size(cover_size: number): void {
-    this.cover_size = cover_size;
-  }
-
-  save_cover_size(cover_size: number): void {
-    //    this.store.dispatch(new UserActions.UserSetPreference({
-    //      name: LIBRARY_COVER_SIZE,
-    //      value: `${cover_size}`,
-    //    }));
-    this.update_params(this.COVER_PARAMETER, `${cover_size}`);
   }
 
   delete_comic(comic: Comic): void {
@@ -261,40 +152,5 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.library.library_state.rescan_count === 0 &&
       this.library.library_state.import_count === 0
     );
-  }
-
-  private update_params(name: string, value: string): void {
-    const queryParams: Params = Object.assign(
-      {},
-      this.activated_route.snapshot.queryParams
-    );
-    if (value && value.length) {
-      queryParams[name] = value;
-    } else {
-      queryParams[name] = null;
-    }
-    this.router.navigate([], {
-      relativeTo: this.activated_route,
-      queryParams: queryParams
-    });
-  }
-
-  private load_parameter(value: string, defvalue: any): any {
-    if (value && value.length) {
-      return parseInt(value, 10);
-    }
-    return defvalue;
-  }
-
-  private get_parameter(name: string): string {
-    const which = this.user.preferences.find((preference: Preference) => {
-      return preference.name === name;
-    });
-
-    if (which) {
-      return which.value;
-    } else {
-      return null;
-    }
   }
 }
