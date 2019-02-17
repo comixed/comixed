@@ -145,6 +145,7 @@ import { ComicGroupingCardComponent } from "./ui/components/comic/comic-grouping
 import { StoryArcsPageComponent } from "./ui/pages/story-arcs/story-arcs-page/story-arcs-page.component";
 import { ComicStoriesPipe } from "./pipes/comic-stories.pipe";
 import { StoryArcDetailsPageComponent } from "./ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component";
+import { ComicListComponent } from './ui/components/library/comic-list/comic-list.component';
 
 @NgModule({
   declarations: [
@@ -209,7 +210,8 @@ import { StoryArcDetailsPageComponent } from "./ui/pages/story-arcs/story-arc-de
     ComicGroupingCardComponent,
     StoryArcsPageComponent,
     ComicStoriesPipe,
-    StoryArcDetailsPageComponent
+    StoryArcDetailsPageComponent,
+    ComicListComponent
   ],
   imports: [
     BrowserModule,
