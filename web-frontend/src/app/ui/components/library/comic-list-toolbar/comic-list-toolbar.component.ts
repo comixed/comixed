@@ -41,6 +41,7 @@ export class ComicListToolbarComponent implements OnInit {
   @Output() rowsChanged = new EventEmitter<number>();
   @Output() sameHeight = new EventEmitter<boolean>();
   @Output() coverSizeChanged = new EventEmitter<number>();
+  @Output() showSelections = new EventEmitter<boolean>();
 
   protected layout_options: Array<SelectItem>;
   protected sort_field_options: Array<SelectItem>;

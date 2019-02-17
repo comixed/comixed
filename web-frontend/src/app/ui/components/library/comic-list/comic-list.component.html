@@ -1,3 +1,8 @@
+<app-selected-comics-list [display]='show_selections'
+                          [rows]="rows"
+                          [cover_size]="cover_size"
+                          [same_height]="same_height"
+                          (onHide)="show_selections = false"></app-selected-comics-list>
 <p-dataView #dataview
             [value]="comics"
             [sortField]="sort_field"
@@ -19,7 +24,8 @@
                               (sameHeight)="set_same_height($event)"
                               [cover_size]="cover_size"
                               (coverSizeChanged)="set_cover_size($event)"
-                              [library_filter]="library_filter"></app-comic-list-toolbar>
+                              [library_filter]="library_filter"
+                              (showSelections)="show_selections = true"></app-comic-list-toolbar>
     </div>
   </p-header>
   <ng-template let-comic

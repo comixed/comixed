@@ -209,6 +209,11 @@
         "cover-date": "Sort by cover date",
         "last-read-date": "Sort by last read"
       }
+    },
+    "button": {
+      "label": {
+        "show-selections": "Selections"
+      }
     }
   },
   "selected-comics-list": {
