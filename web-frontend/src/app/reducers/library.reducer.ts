@@ -416,6 +416,21 @@ export function libraryReducer(
       };
     }
 
+    case LibraryActions.LIBRARY_SET_SELECTED: {
+      let selected = state.selected_comics.filter((comic: Comic) => {
+        return comic.id !== action.payload.comic.id;
+      });
+
+      if (action.payload.selected) {
+        selected.unshift(action.payload.comic);
+      }
+
+      return {
+        ...state,
+        selected_comics: selected
+      };
+    }
+
     default:
       return state;
   }
