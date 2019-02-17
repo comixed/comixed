@@ -49,18 +49,6 @@
       "import": "Import"
     }
   },
-  "selected-comics": {
-    "label": {
-      "selected-comic-count": "{{file_count}} Files Selected",
-      "rows-to-show": "Show",
-      "cover": "Cover",
-      "filename": "Filename",
-      "file-size": "File Size"
-    },
-    "button": {
-      "remove": "Remove"
-    }
-  },
   "import-page": {
     "label": {
       "filename": "Filename",
@@ -222,6 +210,9 @@
         "last-read-date": "Sort by last read"
       }
     }
+  },
+  "selected-comics-list": {
+    "title": "{{comic_count}} Comics Selected"
   },
   "comic-overview": {
     "label": {

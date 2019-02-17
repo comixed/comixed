@@ -1,0 +1,27 @@
+<p-sidebar [(visible)]="display"
+           position="right"
+           [style]="{width:'50%'}"
+           [blockScroll]="true"
+           (onHide)="onHide.next(true)">
+  <h2>{{"selected-comics-list.title"|translate:{comic_count:library.selected_comics.length} }}</h2>
+  <p-scrollPanel [style]="{width:'100%',height:'100%'}">
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <p-dataView *ngIf="library"
+                    [value]="library.selected_comics"
+                    layout="grid"
+                    [paginator]="true"
+                    paginatorPosition="top"
+                    [alwaysShowPaginator]="true"
+                    [rows]="rows">
+          <ng-template let-comic
+                       pTemplate="gridItem">
+            <app-comic-grid-item [comic]="comic"
+                                 [cover_size]="cover_size"
+                                 [same_height]="same_height"></app-comic-grid-item>
+          </ng-template>
+        </p-dataView>
+      </div>
+    </div>
+  </p-scrollPanel>
+</p-sidebar>
