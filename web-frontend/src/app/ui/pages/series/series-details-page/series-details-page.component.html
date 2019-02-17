@@ -1,36 +1,5 @@
-<p-dataView #dataview
-            [sortField]="sort_field"
-            [value]="library.comics|comic_series:series_name"
-            [layout]="layout"
-            [rows]="rows"
-            [paginator]="true"
-            paginatorPosition="both"
-            alwaysShowPaginator="true">
-  <p-header>
-    <div class="ui-helper-clearfix">
-      <app-comic-list-toolbar [layout]="layout"
-                              (layoutChanged)="set_layout(dataview, $event)"
-                              [sort_field]="sort_field"
-                              [additional_sort_field_options]="additional_sort_field_options"
-                              (sortFieldChanged)="set_sort_field($event)"
-                              [rows]="rows"
-                              (rowsChanged)="set_rows($event)"
-                              [same_height]="same_height"
-                              (sameHeight)="set_same_height($event)"
-                              [cover_size]="cover_size"
-                              (coverSizeChanged)="set_cover_size($event)"></app-comic-list-toolbar>
-    </div>
-  </p-header>
-  <ng-template let-comic
-               pTemplate="listItem">
-    <app-comic-list-item [comic]="comic"
-                         [same_height]="same_height"
-                         [cover_size]="cover_size"></app-comic-list-item>
-  </ng-template>
-  <ng-template let-comic
-               pTemplate="gridItem">
-    <app-comic-grid-item [comic]="comic"
-                         [same_height]="same_height"
-                         [cover_size]="cover_size"></app-comic-grid-item>
-  </ng-template>
-</p-dataView>
+<h2>{{"series-details.title"|translate:{series_name:series_name} }}</h2>
+<app-comic-list *ngIf="library"
+                [comics]="library.comics|comic_series:series_name"
+                [selected_comics]="library.selected_comics"
+                [library_filter]="library_filter"></app-comic-list>

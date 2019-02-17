@@ -186,18 +186,6 @@
       }
     }
   },
-  "teams-page": {
-    "table": {
-      "label": {
-        "team-name": "Team Name",
-        "comic-count": "# Of Comics",
-        "latest-comic-added-date": "Latest Comic Added"
-      },
-      "value": {
-        "comic-count": "{{comic_count}} comic(s)"
-      }
-    }
-  },
   "comic-list-toolbar": {
     "options": {
       "sort-field": {
@@ -421,8 +409,11 @@
   "publisher-details": {
     "title": "{{publisher_name}}"
   },
-  "series": {
+  "series-": {
     "title": "Showing {{series_count}} Series"
+  },
+  "series-details": {
+    "title": "{{series_name}}"
   },
   "characters-page": {
     "table": {
@@ -436,6 +427,24 @@
       }
     }
   },
+  "character-details": {
+    "title": "{{character_name}}"
+  },
+  "teams-page": {
+    "table": {
+      "label": {
+        "team-name": "Team Name",
+        "comic-count": "# Of Comics",
+        "latest-comic-added-date": "Latest Comic Added"
+      },
+      "value": {
+        "comic-count": "{{comic_count}} comic(s)"
+      }
+    }
+  },
+  "team-details": {
+    "title": "{{team_name}}"
+  },
   "locations-page": {
     "table": {
       "label": {
@@ -448,6 +457,9 @@
       }
     }
   },
+  "location-details": {
+    "title": "{{location_name}}"
+  },
   "story-arcs-page": {
     "table": {
       "label": {
@@ -459,6 +471,9 @@
         "comic-count": "{{comic_count}} comic(s)"
       }
     }
+  },
+  "story-details": {
+    "title": "{{story_name}}"
   },
   "comic-grouping-card": {
     "text": {
