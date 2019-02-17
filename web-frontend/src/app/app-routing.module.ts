@@ -40,6 +40,7 @@ import { LocationsPageComponent } from "./ui/pages/locations/locations-page/loca
 import { LocationDetailsPageComponent } from "./ui/pages/locations/location-details-page/location-details-page.component";
 import { StoryArcsPageComponent } from "./ui/pages/story-arcs/story-arcs-page/story-arcs-page.component";
 import { StoryArcDetailsPageComponent } from "./ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component";
+import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component";
 
 const routes: Routes = [
   { path: "home", component: MainPageComponent },
@@ -57,6 +58,10 @@ const routes: Routes = [
     path: "comics/:id",
     component: ComicDetailsComponent,
     canActivate: [ReaderGuard]
+  },
+  {
+    path: "scraping",
+    component: MultiComicScrapingPageComponent
   },
   {
     path: "publishers",
