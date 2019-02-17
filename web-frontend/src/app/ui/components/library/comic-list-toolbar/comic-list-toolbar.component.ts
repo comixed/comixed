@@ -20,7 +20,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { SelectItem } from "primeng/api";
+import { Store } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
 import { LibraryFilter } from "../../../../models/library/library-filter";
+import { LibraryDisplay } from "../../../../models/actions/library-display";
 
 @Component({
   selector: "app-comic-list-toolbar",
@@ -28,26 +32,21 @@ import { LibraryFilter } from "../../../../models/library/library-filter";
   styleUrls: ["./comic-list-toolbar.component.css"]
 })
 export class ComicListToolbarComponent implements OnInit {
-  @Input() layout: string;
-  @Input() sort_field: string;
-  @Input() additional_sort_field_options: Array<SelectItem>;
-  @Input() rows: number;
-  @Input() cover_size: number;
-  @Input() same_height: boolean;
+  @Input() library_display: LibraryDisplay;
   @Input() library_filter: LibraryFilter;
+  @Input() additional_sort_field_options: Array<SelectItem>;
 
-  @Output() layoutChanged = new EventEmitter<string>();
-  @Output() sortFieldChanged = new EventEmitter<string>();
-  @Output() rowsChanged = new EventEmitter<number>();
-  @Output() sameHeight = new EventEmitter<boolean>();
-  @Output() coverSizeChanged = new EventEmitter<number>();
+  @Output() changeLayout = new EventEmitter<string>();
   @Output() showSelections = new EventEmitter<boolean>();
 
   protected layout_options: Array<SelectItem>;
   protected sort_field_options: Array<SelectItem>;
   protected rows_options: Array<SelectItem>;
 
-  constructor(private translate: TranslateService) {}
+  constructor(
+    private store: Store<AppState>,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
     this.load_layout_options();
@@ -140,5 +139,35 @@ export class ComicListToolbarComponent implements OnInit {
         value: 100
       }
     ];
+  }
+
+  set_sort_field(sort_field: string): void {
+    this.store.dispatch(
+      new LibraryDisplayActions.SetLibraryViewSort({
+        sort: sort_field
+      })
+    );
+  }
+
+  set_rows(rows: number): void {
+    this.store.dispatch(
+      new LibraryDisplayActions.SetLibraryViewRows({ rows: rows })
+    );
+  }
+
+  set_same_height(same_height: boolean): void {
+    this.store.dispatch(
+      new LibraryDisplayActions.SetLibraryViewUseSameHeight({
+        same_height: same_height
+      })
+    );
+  }
+
+  set_cover_size(cover_size: number): void {
+    this.store.dispatch(
+      new LibraryDisplayActions.SetLibraryViewCoverSize({
+        cover_size: cover_size
+      })
+    );
   }
 }

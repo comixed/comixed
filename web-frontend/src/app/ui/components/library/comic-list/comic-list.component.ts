@@ -17,12 +17,15 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, OnDestroy, Input } from "@angular/core";
 import { Comic } from "../../../../models/comics/comic";
 import { LibraryFilter } from "../../../../models/library/library-filter";
+import { LibraryDisplay } from "../../../../models/actions/library-display";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
+import { Observable, Subscription } from "rxjs";
 import * as LibraryActions from "../../../../actions/library.actions";
+import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
 import { TranslateService } from "@ngx-translate/core";
 import { SelectItem } from "primeng/api";
 
@@ -31,26 +34,35 @@ import { SelectItem } from "primeng/api";
   templateUrl: "./comic-list.component.html",
   styleUrls: ["./comic-list.component.css"]
 })
-export class ComicListComponent implements OnInit {
+export class ComicListComponent implements OnInit, OnDestroy {
   @Input() comics: Array<Comic>;
   @Input() selected_comics: Array<Comic> = [];
   @Input() library_filter: LibraryFilter;
 
-  protected additional_sort_field_options: Array<SelectItem>;
+  private library_display$: Observable<LibraryDisplay>;
+  private library_display_subscription: Subscription;
+  library_display: LibraryDisplay;
 
-  protected layout = "grid";
-  protected sort_field = "added_date";
-  protected rows = 10;
-  protected same_height = true;
-  protected cover_size = 200;
+  protected additional_sort_field_options: Array<SelectItem>;
 
   constructor(
     private translate: TranslateService,
     private store: Store<AppState>
-  ) {}
+  ) {
+    this.library_display$ = this.store.select("library_display");
+  }
 
   ngOnInit() {
+    this.library_display_subscription = this.library_display$.subscribe(
+      (library_display: LibraryDisplay) => {
+        this.library_display = library_display;
+      }
+    );
     this.load_additional_sort_field_options();
+  }
+
+  ngOnDestroy() {
+    this.library_display_subscription.unsubscribe();
   }
 
   private load_additional_sort_field_options(): void {
@@ -72,22 +84,9 @@ export class ComicListComponent implements OnInit {
 
   set_layout(dataview: any, layout: string): void {
     dataview.changeLayout(layout);
-  }
-
-  set_sort_field(sort_field: string): void {
-    this.sort_field = sort_field;
-  }
-
-  set_rows(rows: number): void {
-    this.rows = rows;
-  }
-
-  set_cover_size(cover_size: number): void {
-    this.cover_size = cover_size;
-  }
-
-  set_same_height(same_height: boolean): void {
-    this.same_height = same_height;
+    this.store.dispatch(
+      new LibraryDisplayActions.SetLibraryViewLayout({ layout: layout })
+    );
   }
 
   set_selected(comic: Comic, selected: boolean): void {

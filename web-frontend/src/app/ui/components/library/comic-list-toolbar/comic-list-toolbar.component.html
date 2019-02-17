@@ -1,14 +1,14 @@
 <div class="ui-g">
   <div class="ui-g-4">
     <p-dropdown [options]="layout_options"
-                [(ngModel)]="layout"
-                (onChange)="layoutChanged.next($event.value)"></p-dropdown>
+                [(ngModel)]="library_display.layout"
+                (onChange)="changeLayout.next($event.value)"></p-dropdown>
     <p-dropdown [options]="sort_field_options"
-                [(ngModel)]="sort_field"
-                (onChange)="sortFieldChanged.next($event.value)"></p-dropdown>
+                [(ngModel)]="library_display.sort_field"
+                (onChange)="set_sort_field($event.value)"></p-dropdown>
     <p-dropdown [options]="rows_options"
-                [(ngModel)]="rows"
-                (onChange)="rowsChanged.next($event.value)"></p-dropdown>
+                [(ngModel)]="library_display.rows"
+                (onChange)="set_rows($event.value)"></p-dropdown>
   </div>
   <div class="ui-g-4">
     <div class="ui-g-4">
@@ -21,17 +21,17 @@
   <div class="ui-g-4">
     <div class="ui-g">
       <div class="ui-6-4">
-        <p-checkbox [(ngModel)]="same_height"
+        <p-checkbox [(ngModel)]="library_display.same_height"
                     binary="true"
-                    (onChange)="sameHeight.next($event)"
+                    (onChange)="set_same_height($event)"
                     [label]="'library-contents.options.cover-size.same-height'|translate"></p-checkbox>
       </div>
       <div class="ui-g-8">
-        <p-slider [(ngModel)]="cover_size"
+        <p-slider [(ngModel)]="library_display.cover_size"
                   [min]="100"
                   [max]="400"
-                  (onChange)="coverSizeChanged.next($event.value)"></p-slider>
-        {{"library-contents.label.cover-size"|translate:{cover_size:cover_size} }}
+                  (onChange)="set_cover_size($event.value)"></p-slider>
+        {{"library-contents.label.cover-size"|translate:{cover_size:library_display.cover_size} }}
       </div>
     </div>
   </div>

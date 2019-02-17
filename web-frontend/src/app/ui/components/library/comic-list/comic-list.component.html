@@ -1,30 +1,22 @@
 <app-selected-comics-list [display]='show_selections'
-                          [rows]="rows"
-                          [cover_size]="cover_size"
-                          [same_height]="same_height"
+                          [rows]="library_display.rows"
+                          [cover_size]="library_display.cover_size"
+                          [same_height]="library_display.same_height"
                           (onHide)="show_selections = false"></app-selected-comics-list>
 <p-dataView #dataview
+            *ngIf="library_display"
             [value]="comics"
-            [sortField]="sort_field"
+            [sortField]="library_display.sort_field"
             [paginator]="true"
-            [rows]="rows"
+            [rows]="library_display.rows"
             paginatorPosition="both"
             [alwaysShowPaginator]="true"
-            layout="{{layout}}">
+            [layout]="library_display.layout">
   <p-header>
     <div class="ui-helper-clearfix">
-      <app-comic-list-toolbar [layout]="layout"
-                              (layoutChanged)="set_layout(dataview, $event)"
-                              [sort_field]="sort_field"
-                              [additional_sort_field_options]="additional_sort_field_options"
-                              (sortFieldChanged)="set_sort_field($event)"
-                              [rows]="rows"
-                              (rowsChanged)="set_rows($event)"
-                              [same_height]="same_height"
-                              (sameHeight)="set_same_height($event)"
-                              [cover_size]="cover_size"
-                              (coverSizeChanged)="set_cover_size($event)"
+      <app-comic-list-toolbar [library_display]="library_display"
                               [library_filter]="library_filter"
+                              (changeLayout)="set_layout(dataview, $event)"
                               (showSelections)="show_selections = true"></app-comic-list-toolbar>
     </div>
   </p-header>
@@ -32,8 +24,8 @@
                pTemplate="listItem">
     <div [class.selected-comic]="selected_comics.includes(comic)">
       <app-comic-list-item [comic]="comic"
-                           [same_height]="same_height"
-                           [cover_size]="cover_size"
+                           [same_height]="library_display.same_height"
+                           [cover_size]="library_display.cover_size"
                            (toggleSelected)="set_selected(comic, $event)"></app-comic-list-item>
     </div>
   </ng-template>
@@ -41,8 +33,8 @@
                pTemplate="gridItem">
     <div [class.selected-comic]="selected_comics.includes(comic)">
       <app-comic-grid-item [comic]="comic"
-                           [same_height]="same_height"
-                           [cover_size]="cover_size"
+                           [same_height]="library_display.same_height"
+                           [cover_size]="library_display.cover_size"
                            (toggleSelected)="set_selected(comic, $event)"></app-comic-grid-item>
     </div>
   </ng-template>
