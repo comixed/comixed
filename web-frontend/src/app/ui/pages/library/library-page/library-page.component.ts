@@ -26,7 +26,7 @@ import { Library } from "../../../../models/actions/library";
 import * as LibraryActions from "../../../../actions/library.actions";
 import { LibraryFilter } from "../../../../models/library/library-filter";
 import * as FilterActions from "../../../../actions/library-filter.actions";
-import { LibraryDisplay } from "../../../../models/library-display";
+import { LibraryDisplay } from "../../../../models/actions/library-display";
 import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
 import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
 import * as ScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
