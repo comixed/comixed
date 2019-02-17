@@ -30,6 +30,7 @@ import { Library } from "../../../../models/actions/library";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
 import { Observable, Subscription } from "rxjs";
+import * as LibraryActions from "../../../../actions/library.actions";
 
 @Component({
   selector: "app-selected-comics-list",
@@ -48,8 +49,8 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
   private library_subscription: Subscription;
   protected library: Library;
 
-  constructor(store: Store<AppState>) {
-    this.library$ = store.select("library");
+  constructor(private store: Store<AppState>) {
+    this.library$ = this.store.select("library");
   }
 
   ngOnInit() {
@@ -60,5 +61,14 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
+  }
+
+  set_selected(comic: Comic): void {
+    this.store.dispatch(
+      new LibraryActions.LibrarySetSelected({
+        comic: comic,
+        selected: false
+      })
+    );
   }
 }

@@ -33,6 +33,7 @@ import { SelectItem } from "primeng/api";
 })
 export class ComicListComponent implements OnInit {
   @Input() comics: Array<Comic>;
+  @Input() selected_comics: Array<Comic> = [];
   @Input() library_filter: LibraryFilter;
 
   protected additional_sort_field_options: Array<SelectItem>;
@@ -87,5 +88,14 @@ export class ComicListComponent implements OnInit {
 
   set_same_height(same_height: boolean): void {
     this.same_height = same_height;
+  }
+
+  set_selected(comic: Comic, selected: boolean): void {
+    this.store.dispatch(
+      new LibraryActions.LibrarySetSelected({
+        comic: comic,
+        selected: selected
+      })
+    );
   }
 }

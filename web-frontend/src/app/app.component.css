@@ -6,3 +6,8 @@
 	background-color: #eeeeee;
 	color: #212121;
 }
+
+:host ::ng-deep .selected-comic {
+  filter: opacity(50%);
+  border: 1px solid 0xff0000;
+}

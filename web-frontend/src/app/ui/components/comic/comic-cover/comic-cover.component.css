@@ -1,6 +1,7 @@
 .cover-container {
   position: relative;
   width: 100%;
+  padding: 2px;
 }
 
 .cover-image {

@@ -1,31 +1,33 @@
 <div class="cover-container">
-  <img src="{{comic|comic_cover_url}}"
-       class="cover-image"
-       [style.width]="same_height?'auto':cover_size+'px'"
-       [style.height]="same_height?cover_size+'px':'auto'">
-  <div class="cover-overlay">
-    <div class="cover-text">
-      <div class="ui-g">
-        <div *ngIf="comic.publisher"
-             class="ui-g-12">
-          <a [routerLink]="['/publishers', comic.publisher]">{{comic.publisher}}</a>
-        </div>
-        <div *ngIf="comic.series"
-             class="ui-g-12">
-          <a [routerLink]="['/series', comic.series]">{{comic.series}}</a>
-        </div>
-        <div *ngIf="comic.volume"
-             class="ui-g-12">
-          {{"comic-cover.label.volume"|translate:{volume:comic.volume} }}
-        </div>
-        <div *ngIf="comic.issue_number"
-             class="ui-g-12">
-          #{{comic.issue_number}}
-        </div>
-        <div class="ui-g-12">
-          <a [routerLink]="['/comics', comic.id]">{{"comic-cover.label.open-comic"|translate}}</a>
+  <a (click)="onClick.next(true)">
+    <img src="{{comic|comic_cover_url}}"
+         class="cover-image"
+         [style.width]="same_height?'auto':cover_size+'px'"
+         [style.height]="same_height?cover_size+'px':'auto'">
+    <div class="cover-overlay">
+      <div class="cover-text">
+        <div class="ui-g">
+          <div *ngIf="comic.publisher"
+               class="ui-g-12">
+            <a [routerLink]="['/publishers', comic.publisher]">{{comic.publisher}}</a>
+          </div>
+          <div *ngIf="comic.series"
+               class="ui-g-12">
+            <a [routerLink]="['/series', comic.series]">{{comic.series}}</a>
+          </div>
+          <div *ngIf="comic.volume"
+               class="ui-g-12">
+            {{"comic-cover.label.volume"|translate:{volume:comic.volume} }}
+          </div>
+          <div *ngIf="comic.issue_number"
+               class="ui-g-12">
+            #{{comic.issue_number}}
+          </div>
+          <div class="ui-g-12">
+            <a [routerLink]="['/comics', comic.id]">{{"comic-cover.label.open-comic"|translate}}</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </a>
 </div>

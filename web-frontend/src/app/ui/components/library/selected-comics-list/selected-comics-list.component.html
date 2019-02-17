@@ -18,7 +18,8 @@
                        pTemplate="gridItem">
             <app-comic-grid-item [comic]="comic"
                                  [cover_size]="cover_size"
-                                 [same_height]="same_height"></app-comic-grid-item>
+                                 [same_height]="same_height"
+                                 (toggleSelected)="set_selected(comic)"></app-comic-grid-item>
           </ng-template>
         </p-dataView>
       </div>

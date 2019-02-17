@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Comic } from "../../../../models/comics/comic";
 
 @Component({
@@ -30,7 +30,16 @@ export class ComicListItemComponent implements OnInit {
   @Input() same_height: boolean;
   @Input() cover_size: number;
 
+  @Output() toggleSelected = new EventEmitter<boolean>();
+
+  protected selected = false;
+
   constructor() {}
 
   ngOnInit() {}
+
+  toggle_selected(): void {
+    this.selected = !this.selected;
+    this.toggleSelected.next(this.selected);
+  }
 }

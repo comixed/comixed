@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Comic } from "../../../../models/comics/comic";
 
 @Component({
@@ -29,6 +29,8 @@ export class ComicCoverComponent implements OnInit {
   @Input() comic: Comic;
   @Input() cover_size: number;
   @Input() same_height: boolean;
+
+  @Output() onClick = new EventEmitter<boolean>();
 
   constructor() {}
 
