@@ -123,7 +123,6 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { MenubarComponent } from "./ui/components/main/menubar/menubar.component";
 import { ComicListItemComponent } from "./ui/components/library/comic-list-item/comic-list-item.component";
 import { ComicGridItemComponent } from "./ui/components/library/comic-grid-item/comic-grid-item.component";
-import { LibraryContentsComponent } from "./ui/components/library/library-contents/library-contents.component";
 import { SeriesPageComponent } from "./ui/pages/series/series-page/series-page.component";
 import { SeriesDetailsPageComponent } from "./ui/pages/series/series-details-page/series-details-page.component";
 import { ComicSeriesPipe } from "./pipes/comic-series.pipe";
@@ -145,7 +144,7 @@ import { ComicGroupingCardComponent } from "./ui/components/comic/comic-grouping
 import { StoryArcsPageComponent } from "./ui/pages/story-arcs/story-arcs-page/story-arcs-page.component";
 import { ComicStoriesPipe } from "./pipes/comic-stories.pipe";
 import { StoryArcDetailsPageComponent } from "./ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component";
-import { ComicListComponent } from './ui/components/library/comic-list/comic-list.component';
+import { ComicListComponent } from "./ui/components/library/comic-list/comic-list.component";
 
 @NgModule({
   declarations: [
@@ -189,7 +188,6 @@ import { ComicListComponent } from './ui/components/library/comic-list/comic-lis
     MenubarComponent,
     ComicListItemComponent,
     ComicGridItemComponent,
-    LibraryContentsComponent,
     SeriesPageComponent,
     SeriesDetailsPageComponent,
     ComicSeriesPipe,
