@@ -261,6 +261,13 @@ export class LibrarySetSelected implements Action {
   ) {}
 }
 
+export const LIBRARY_RESET_SELECTED = "[LIBRARY] Reset selected state";
+export class LibraryResetSelected implements Action {
+  readonly type = LIBRARY_RESET_SELECTED;
+
+  constructor() {}
+}
+
 export type Actions =
   | LibraryGetScanTypes
   | LibrarySetScanTypes
@@ -282,4 +289,5 @@ export type Actions =
   | LibraryRescanFiles
   | LibrarySetBlockedPageState
   | LibraryBlockedStateFlagSet
-  | LibrarySetSelected;
+  | LibrarySetSelected
+  | LibraryResetSelected;

@@ -211,6 +211,19 @@
       "scrape": "Scrape Comics"
     }
   },
+  "multi-comic-scraping-page": {
+    "title": {
+      "preparing-to-scrape": "Preparing To Scrape {{comic_count}} Comics",
+      "scraping": "Scraping {{comic_count}} Comics"
+    },
+    "text": {
+      "describing-the-comic-scraping-process-1": "To begin scraping the selected comics, click the start button below. The application will then process the comics one at a time, fetching the meta-details from the ComicVine website.",
+      "describing-the-comic-scraping-process-2": "For this to work, you MUST have a ComicVine API key. If you do not have one, you will need to go to the ComicVine website and apply for one."
+    },
+    "button": {
+      "start": "Start Scraping"
+    }
+  },
   "comic-overview": {
     "label": {
       "publisher": "Publisher",

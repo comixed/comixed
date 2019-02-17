@@ -431,6 +431,12 @@ export function libraryReducer(
       };
     }
 
+    case LibraryActions.LIBRARY_RESET_SELECTED:
+      return {
+        ...state,
+        selected_comics: []
+      };
+
     default:
       return state;
   }

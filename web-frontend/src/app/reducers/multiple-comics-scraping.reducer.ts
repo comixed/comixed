@@ -17,24 +17,23 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-import { MultipleComicsScraping } from '../models/scraping/multiple-comics-scraping';
-import * as ScrapingActions from '../actions/multiple-comics-scraping.actions';
-import { Comic } from '../models/comics/comic';
+import { Action } from "@ngrx/store";
+import { MultipleComicsScraping } from "../models/scraping/multiple-comics-scraping";
+import * as ScrapingActions from "../actions/multiple-comics-scraping.actions";
+import { Comic } from "../models/comics/comic";
 
 const initial_state: MultipleComicsScraping = {
   selecting: true,
   started: false,
   busy: false,
   api_key: null,
-  available_comics: [],
   selected_comics: [],
-  current_comic: null,
+  current_comic: null
 };
 
 export function multipleComicsScrapingReducer(
   state: MultipleComicsScraping = initial_state,
-  action: ScrapingActions.Actions,
+  action: ScrapingActions.Actions
 ) {
   switch (action.type) {
     case ScrapingActions.MULTIPLE_COMICS_SCRAPING_SETUP: {
@@ -44,14 +43,7 @@ export function multipleComicsScrapingReducer(
         started: false,
         busy: false,
         api_key: action.payload,
-        selected_comics: [],
-      };
-    }
-
-    case ScrapingActions.MULTIPLE_COMICS_SCRAPING_SET_AVAILABLE_COMICS: {
-      return {
-        ...state,
-        available_comics: action.payload,
+        selected_comics: []
       };
     }
 
@@ -60,8 +52,11 @@ export function multipleComicsScrapingReducer(
         ...state,
         selecting: false,
         started: true,
-        selected_comics: action.payload,
-        current_comic: action.payload.length > 0 ? action.payload[0] : null,
+        selected_comics: action.payload.selected_comics,
+        current_comic:
+          action.payload.selected_comics.length > 0
+            ? action.payload.selected_comics[0]
+            : null
       };
     }
 
@@ -73,7 +68,7 @@ export function multipleComicsScrapingReducer(
         ...state,
         busy: false,
         selected_comics: remaining_comics,
-        current_comic: remaining_comics.length > 0 ? remaining_comics[0] : null,
+        current_comic: remaining_comics.length > 0 ? remaining_comics[0] : null
       };
     }
 

@@ -25,6 +25,7 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
+import { Router } from "@angular/router";
 import { Comic } from "../../../../models/comics/comic";
 import { Library } from "../../../../models/actions/library";
 import { Store } from "@ngrx/store";
@@ -54,6 +55,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
   protected library: Library;
 
   constructor(
+    private router: Router,
     private store: Store<AppState>,
     private translate: TranslateService
   ) {
@@ -72,7 +74,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
       {
         label: this.translate.instant("selected-comics-list.button.scrape"),
         icon: "fa fa-fw fa-cloud",
-        routerLink: ["/comics/scrape"]
+        routerLink: ["/scraping"]
       }
     ];
   }

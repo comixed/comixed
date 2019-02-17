@@ -17,45 +17,34 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable ,  Subscription } from 'rxjs';
-import { AppState } from '../../../../app.state';
-import * as MultiScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
-import * as SingleScrapingActions from '../../../../actions/single-comic-scraping.actions';
-import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
-import { Comic } from '../../../../models/comics/comic';
+import { Component, Input, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { Observable, Subscription } from "rxjs";
+import { AppState } from "../../../../app.state";
+import * as MultiScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
+import * as SingleScrapingActions from "../../../../actions/single-comic-scraping.actions";
+import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
+import { Comic } from "../../../../models/comics/comic";
 
 @Component({
-  selector: 'app-multiple-comic-scraping',
-  templateUrl: './multiple-comic-scraping.component.html',
-  styleUrls: ['./multiple-comic-scraping.component.css']
+  selector: "app-multiple-comic-scraping",
+  templateUrl: "./multiple-comic-scraping.component.html",
+  styleUrls: ["./multiple-comic-scraping.component.css"]
 })
-export class MultipleComicScrapingComponent implements OnInit, OnDestroy {
-  multi_scraping$: Observable<MultipleComicsScraping>;
-  multi_scraping_subscription: Subscription;
-  multi_scraping: MultipleComicsScraping;
+export class MultipleComicScrapingComponent implements OnInit {
+  @Input() multi_scraping: MultipleComicsScraping;
 
-  constructor(
-    private store: Store<AppState>,
-  ) {
-    this.multi_scraping$ = store.select('multiple_comic_scraping');
+  constructor(private store: Store<AppState>) {
+    this.multi_scraping$ = store.select("multiple_comic_scraping");
   }
 
-  ngOnInit() {
-    this.multi_scraping_subscription = this.multi_scraping$.subscribe(
-      (multi_scraping: MultipleComicsScraping) => {
-        this.multi_scraping = multi_scraping;
-      });
-  }
-
-  ngOnDestroy() {
-    this.multi_scraping_subscription.unsubscribe();
-  }
+  ngOnInit() {}
 
   comic_scraped(): void {
-    this.store.dispatch(new MultiScrapingActions.MultipleComicsScrapingComicScraped({
-      comic: this.multi_scraping.current_comic,
-    }));
+    this.store.dispatch(
+      new MultiScrapingActions.MultipleComicsScrapingComicScraped({
+        comic: this.multi_scraping.current_comic
+      })
+    );
   }
 }

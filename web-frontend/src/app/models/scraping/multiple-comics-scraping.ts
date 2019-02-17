@@ -17,16 +17,15 @@
  * org.comixed;
  */
 
-import { Comic } from '../comics/comic';
-import { Volume } from '../comics/volume';
-import { Issue } from './issue';
+import { Comic } from "../comics/comic";
+import { Volume } from "../comics/volume";
+import { Issue } from "./issue";
 
 export interface MultipleComicsScraping {
   selecting: boolean;
   started: boolean;
   busy: boolean;
   api_key: string;
-  available_comics: Array<Comic>;
   selected_comics: Array<Comic>;
   current_comic: Comic;
 }
