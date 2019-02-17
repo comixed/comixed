@@ -31,6 +31,8 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
 import { Observable, Subscription } from "rxjs";
 import * as LibraryActions from "../../../../actions/library.actions";
+import { MenuItem } from "primeng/api";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-selected-comics-list",
@@ -45,18 +47,34 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
 
   @Output() onHide = new EventEmitter<boolean>();
 
+  protected actions: MenuItem[];
+
   private library$: Observable<Library>;
   private library_subscription: Subscription;
   protected library: Library;
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private translate: TranslateService
+  ) {
     this.library$ = this.store.select("library");
   }
 
   ngOnInit() {
+    this.load_actions();
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
     });
+  }
+
+  private load_actions(): void {
+    this.actions = [
+      {
+        label: this.translate.instant("selected-comics-list.button.scrape"),
+        icon: "fa fa-fw fa-cloud",
+        routerLink: ["/comics/scrape"]
+      }
+    ];
   }
 
   ngOnDestroy() {

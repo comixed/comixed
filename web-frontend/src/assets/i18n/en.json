@@ -205,7 +205,11 @@
     }
   },
   "selected-comics-list": {
-    "title": "{{comic_count}} Comics Selected"
+    "title": "{{comic_count}} Comics Selected",
+    "button": {
+      "actions": "Actions",
+      "scrape": "Scrape Comics"
+    }
   },
   "comic-overview": {
     "label": {

@@ -1,4 +1,5 @@
-<p-sidebar [(visible)]="display"
+<p-sidebar *ngIf="library"
+           [(visible)]="display"
            position="right"
            [style]="{width:'50%'}"
            [blockScroll]="true"
@@ -17,14 +18,10 @@
           <p-header>
             <div class="ui-helper-clearfix">
               <div class="ui-g">
-                <div class="ui-g-12 ui-md-4">
-
-                </div>
-                <div class="ui-g-6 ui-md-4 filter-container">
-
-                </div>
-                <div class="ui-g-6 ui-md-4">
-
+                <div class="ui-g-12 ui-md-12">
+                  <p-splitButton [model]="actions"
+                                 [label]="'selected-comics-list.button.actions'|translate"
+                                 icon="fa fa-fw fa-bullhorn"></p-splitButton>
                 </div>
               </div>
             </div>
