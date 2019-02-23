@@ -18,16 +18,64 @@
  */
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { RouterModule } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { libraryDisplayReducer } from "../../../../reducers/library-display.reducer";
+import { DataViewModule } from "primeng/dataview";
+import { SplitButtonModule } from "primeng/splitbutton";
+import { ScrollPanelModule } from "primeng/scrollpanel";
+import { SidebarModule } from "primeng/sidebar";
+import { SliderModule } from "primeng/slider";
+import { CheckboxModule } from "primeng/checkbox";
+import { DropdownModule } from "primeng/dropdown";
+import { PanelModule } from "primeng/panel";
+import { SelectedComicsListComponent } from "../../../components/library/selected-comics-list/selected-comics-list.component";
+import { LibraryFilterComponent } from "../../../components/library/library-filter/library-filter.component";
+import { ComicListComponent } from "../../../components/library/comic-list/comic-list.component";
+import { ComicGridItemComponent } from "../../../components/library/comic-grid-item/comic-grid-item.component";
+import { ComicListItemComponent } from "../../../components/library/comic-list-item/comic-list-item.component";
+import { ComicListToolbarComponent } from "../../../components/library/comic-list-toolbar/comic-list-toolbar.component";
+import { ComicCoverComponent } from "../../../components/comic/comic-cover/comic-cover.component";
+import { ComicStoriesPipe } from "../../../../pipes/comic-stories.pipe";
+import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
 import { StoryArcDetailsPageComponent } from "./story-arc-details-page.component";
 
 describe("StoryArcDetailsPageComponent", () => {
   let component: StoryArcDetailsPageComponent;
   let fixture: ComponentFixture<StoryArcDetailsPageComponent>;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [StoryArcDetailsPageComponent]
+      imports: [
+        RouterModule.forRoot([]),
+        FormsModule,
+        StoreModule.forRoot({ library_display: libraryDisplayReducer }),
+        TranslateModule.forRoot(),
+        DataViewModule,
+        SplitButtonModule,
+        ScrollPanelModule,
+        SidebarModule,
+        SliderModule,
+        CheckboxModule,
+        DropdownModule,
+        PanelModule
+      ],
+      declarations: [
+        StoryArcDetailsPageComponent,
+        SelectedComicsListComponent,
+        LibraryFilterComponent,
+        ComicListComponent,
+        ComicGridItemComponent,
+        ComicListItemComponent,
+        ComicListToolbarComponent,
+        ComicCoverComponent,
+        ComicStoriesPipe,
+        ComicCoverUrlPipe
+      ]
     }).compileComponents();
   }));
 
@@ -35,6 +83,7 @@ describe("StoryArcDetailsPageComponent", () => {
     fixture = TestBed.createComponent(StoryArcDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    store = TestBed.get(Store);
   });
 
   it("should create", () => {

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,31 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { Library, ComicGrouping } from "./library";
 
-import { ComicReaderComponent } from "./comic-reader.component";
+export const EXISTING_LIBRARY: Library = {
+  busy: false,
+  library_state: {
+    comics: [],
+    rescan_count: 0,
+    import_count: 0
+  },
+  last_comic_date: "0",
+  scan_types: [],
+  formats: [],
+  comics: [],
+  selected_comics: [],
+  publishers: [],
+  series: [],
+  characters: [],
+  teams: [],
+  locations: [],
+  story_arcs: [],
+  last_read_dates: []
+};
 
-xdescribe("ComicReaderComponent", () => {
-  let component: ComicReaderComponent;
-  let fixture: ComponentFixture<ComicReaderComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicReaderComponent]
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ComicReaderComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
-});
+export const DEFAULT_COMIC_GROUPING: ComicGrouping = {
+  name: "grouping name",
+  comic_count: 0,
+  latest_comic_date: "0"
+};

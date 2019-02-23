@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { ComicPageCoverPipe } from './comic-cover-url.pipe';
+import { ComicCoverUrlPipe } from "./comic-cover-url.pipe";
 
-describe('ComicCoverUrlPipe', () => {
-  it('create an instance', () => {
-    const pipe = new ComicCoverCoverPipe();
+describe("ComicCoverUrlPipe", () => {
+  it("create an instance", () => {
+    const pipe = new ComicCoverUrlPipe();
     expect(pipe).toBeTruthy();
   });
 });

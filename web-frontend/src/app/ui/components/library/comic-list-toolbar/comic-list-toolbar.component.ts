@@ -23,7 +23,7 @@ import { SelectItem } from "primeng/api";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
 import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
-import { LibraryFilter } from "../../../../models/library/library-filter";
+import { LibraryFilter } from "../../../../models/actions/library-filter";
 import { LibraryDisplay } from "../../../../models/actions/library-display";
 
 @Component({

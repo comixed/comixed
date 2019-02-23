@@ -24,7 +24,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
 import { Library } from "../../../../models/actions/library";
 import * as LibraryActions from "../../../../actions/library.actions";
-import { LibraryFilter } from "../../../../models/library/library-filter";
+import { LibraryFilter } from "../../../../models/actions/library-filter";
 import * as FilterActions from "../../../../actions/library-filter.actions";
 import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
 import * as ScrapingActions from "../../../../actions/multiple-comics-scraping.actions";

@@ -17,12 +17,12 @@
  * org.comixed;
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from '../models/comics/comic';
-import { LibraryFilter } from '../models/library/library-filter';
+import { Pipe, PipeTransform } from "@angular/core";
+import { Comic } from "../models/comics/comic";
+import { LibraryFilter } from "../models/actions/library-filter";
 
 @Pipe({
-  name: 'library_filter'
+  name: "library_filter"
 })
 export class LibraryFilterPipe implements PipeTransform {
   transform(comics: Array<Comic>, filters: LibraryFilter): any {
@@ -47,22 +47,24 @@ export class LibraryFilterPipe implements PipeTransform {
       filter.series.length ||
       filter.volume.length ||
       filter.from_year ||
-      (filter.from_year !== 0) ||
+      filter.from_year !== 0 ||
       !filter.to_year ||
-      (filter.to_year !== 0)
+      filter.to_year !== 0
     );
   }
 
   check_publisher_filter(comic: Comic, publisher: string): boolean {
-    return (comic.publisher || '').toLowerCase().includes(publisher.toLowerCase());
+    return (comic.publisher || "")
+      .toLowerCase()
+      .includes(publisher.toLowerCase());
   }
 
   check_series_filter(comic: Comic, series: string): boolean {
-    return (comic.series || '').toLowerCase().includes(series.toLowerCase());
+    return (comic.series || "").toLowerCase().includes(series.toLowerCase());
   }
 
   check_volume_filter(comic: Comic, volume: string): boolean {
-    return (comic.volume || '').startsWith(volume);
+    return (comic.volume || "").startsWith(volume);
   }
 
   check_from_year(comic: Comic, from_year: number): boolean {
@@ -70,12 +72,15 @@ export class LibraryFilterPipe implements PipeTransform {
       return true;
     }
 
-    if (!((comic.cover_date || '').length)) {
+    if (!(comic.cover_date || "").length) {
       return false;
     }
 
     const cover_date = new Date(Date.parse(comic.cover_date));
-    console.log(`*** [from] ${cover_date.getFullYear()} >= ${from_year}: ${cover_date.getFullYear() >= from_year}`);
+    console.log(
+      `*** [from] ${cover_date.getFullYear()} >= ${from_year}: ${cover_date.getFullYear() >=
+        from_year}`
+    );
     return cover_date.getFullYear() >= from_year;
   }
 
@@ -84,12 +89,15 @@ export class LibraryFilterPipe implements PipeTransform {
       return true;
     }
 
-    if (!((comic.cover_date || '').length)) {
+    if (!(comic.cover_date || "").length) {
       return false;
     }
 
     const cover_date = new Date(Date.parse(comic.cover_date));
-    console.log(`***   [to] ${cover_date.getFullYear()} <= ${to_year}: ${cover_date.getFullYear() <= to_year}`);
+    console.log(
+      `***   [to] ${cover_date.getFullYear()} <= ${to_year}: ${cover_date.getFullYear() <=
+        to_year}`
+    );
     return cover_date.getFullYear() <= to_year;
   }
 }

@@ -16,67 +16,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
-import {
-  TestBed,
-  getTestBed,
-  inject,
-} from '@angular/core/testing';
+import { TestBed, getTestBed, inject } from "@angular/core/testing";
 
-import {AlertService} from './alert.service';
+import { AlertService } from "./alert.service";
 
-describe('AlertService', () => {
+describe("AlertService", () => {
   let injector;
   let service: AlertService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        AlertService,
-      ],
+      providers: [AlertService]
     });
 
     injector = getTestBed();
     service = injector.get(AlertService);
   });
 
-  describe('#show_error_message()', () => {
-    it('sends notifications on a new error message', () => {
-      const message = 'This is an error message';
+  describe("#show_error_message()", () => {
+    it("sends notifications on a new error message", () => {
+      const message = "This is an error message";
       const error = new Error();
 
-      service.error_messages.subscribe(
-        (received: string) => {
-          expect(received).toEqual(message);
-        }
-      );
+      service.error_messages.subscribe((received: string) => {
+        expect(received).toEqual(message);
+      });
 
       service.show_error_message(message, error);
     });
   });
 
-  describe('#show_busy_message()', () => {
-    it('sends notifications on a new busy message', () => {
-      const message = 'This is a busy message';
+  describe("#show_info_message()", () => {
+    it("sends notifications on a new info message", () => {
+      const message = "This is an info message";
 
-      service.busy_messages.subscribe(
-        (received: string) => {
-          expect(received).toEqual(message);
-        }
-      );
-
-      service.show_busy_message(message);
-    });
-  });
-
-  describe('#show_info_message()', () => {
-    it('sends notifications on a new info message', () => {
-      const message = 'This is an info message';
-
-      service.info_messages.subscribe(
-        (received: string) => {
-          expect(received).toEqual(message);
-        }
-      );
+      service.info_messages.subscribe((received: string) => {
+        expect(received).toEqual(message);
+      });
 
       service.show_info_message(message);
     });

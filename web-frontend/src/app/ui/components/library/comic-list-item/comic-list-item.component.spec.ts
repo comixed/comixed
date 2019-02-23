@@ -18,7 +18,11 @@
  */
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { ComicCoverComponent } from "../../comic/comic-cover/comic-cover.component";
+import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
 import { ComicListItemComponent } from "./comic-list-item.component";
 
 describe("ComicListItemComponent", () => {
@@ -27,15 +31,21 @@ describe("ComicListItemComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicListItemComponent]
+      imports: [RouterTestingModule, TranslateModule.forRoot()],
+      declarations: [
+        ComicListItemComponent,
+        ComicCoverComponent,
+        ComicCoverUrlPipe
+      ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicListItemComponent);
     component = fixture.componentInstance;
+    component.comic = REGULAR_COMIC;
+    component.same_height = true;
+    component.cover_size = 640;
     fixture.detectChanges();
-  });
+  }));
 
   it("should create", () => {
     expect(component).toBeTruthy();

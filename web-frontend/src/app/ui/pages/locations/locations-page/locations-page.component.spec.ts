@@ -18,16 +18,37 @@
  */
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { FormsModule } from "@angular/forms";
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { ButtonModule } from "primeng/button";
+import { DropdownModule } from "primeng/dropdown";
+import { TableModule } from "primeng/table";
+import { PanelModule } from "primeng/panel";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { libraryReducer } from "../../../../reducers/library.reducer";
+import { LibraryFilterComponent } from "../../../components/library/library-filter/library-filter.component";
 import { LocationsPageComponent } from "./locations-page.component";
 
 describe("LocationsPageComponent", () => {
   let component: LocationsPageComponent;
   let fixture: ComponentFixture<LocationsPageComponent>;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [LocationsPageComponent]
+      imports: [
+        TranslateModule.forRoot(),
+        FormsModule,
+        StoreModule.forRoot({ library: libraryReducer }),
+        RouterTestingModule,
+        ButtonModule,
+        DropdownModule,
+        TableModule,
+        PanelModule
+      ],
+      declarations: [LocationsPageComponent, LibraryFilterComponent]
     }).compileComponents();
   }));
 
@@ -35,6 +56,7 @@ describe("LocationsPageComponent", () => {
     fixture = TestBed.createComponent(LocationsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    store = TestBed.get(Store);
   });
 
   it("should create", () => {

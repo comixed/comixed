@@ -20,7 +20,7 @@
 import { User } from "./models/user/user";
 import { Importing } from "./models/import/importing";
 import { Library } from "./models/actions/library";
-import { LibraryFilter } from "./models/library/library-filter";
+import { LibraryFilter } from "./models/actions/library-filter";
 import { LibraryDisplay } from "./models/actions/library-display";
 import { SingleComicScraping } from "./models/scraping/single-comic-scraping";
 import { MultipleComicsScraping } from "./models/scraping/multiple-comics-scraping";

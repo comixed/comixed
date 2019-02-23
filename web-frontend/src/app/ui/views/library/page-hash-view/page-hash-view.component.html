@@ -1,9 +1,10 @@
-<div class="ui-g">
+<div *ngIf="duplicates && duplicates.current_duplicates.length > 0"
+     class="ui-g">
   <div class="ui-g-2 ui-sm-4">
     <p-card>
       <p-header><img src="{{duplicates.current_duplicates[0]|comic_page_url}}"
-                     [style.width]="'100%'"
-                     [style.height]="'auto'"></p-header>
+             [style.width]="'100%'"
+             [style.height]="'auto'"></p-header>
       <p-footer>
         <button pButton
                 type="button"
@@ -29,8 +30,8 @@
                    let-duplicate>
         <tr>
           <td><img src="{{duplicate.comic|comic_cover_url}}"
-                   width="128px"
-                   height="auto"></td>
+                 width="128px"
+                 height="auto"></td>
           <td>{{duplicate.comic|comic_title}}</td>
           <td>{{duplicate.index}}</td>
           <td>{{duplicate.comic.filename}}</td>

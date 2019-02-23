@@ -17,31 +17,31 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
-import { LibraryFilter } from '../models/library/library-filter';
+import { Injectable } from "@angular/core";
+import { Action } from "@ngrx/store";
+import { LibraryFilter } from "../models/actions/library-filter";
 
-export const LIBRARY_FILTER_RESET = '[LIBRARY FILTER] Reset filters';
-export const LIBRARY_FILTER_SET_FILTERS = '[LIBRARY FILTER] Set the filters';
+export const LIBRARY_FILTER_RESET = "[LIBRARY FILTER] Reset filters";
+export const LIBRARY_FILTER_SET_FILTERS = "[LIBRARY FILTER] Set the filters";
 
 export class LibraryFilterReset implements Action {
   readonly type = LIBRARY_FILTER_RESET;
 
-  constructor() { }
+  constructor() {}
 }
 
 export class LibraryFilterSetFilters implements Action {
   readonly type = LIBRARY_FILTER_SET_FILTERS;
 
-  constructor(public payload: {
-    publisher: string,
-    series: string,
-    volume: string,
-    from_year: number,
-    to_year: number,
-  }) { }
+  constructor(
+    public payload: {
+      publisher: string;
+      series: string;
+      volume: string;
+      from_year: number;
+      to_year: number;
+    }
+  ) {}
 }
 
-export type Actions =
-  LibraryFilterReset |
-  LibraryFilterSetFilters;
+export type Actions = LibraryFilterReset | LibraryFilterSetFilters;

@@ -17,28 +17,78 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { singleComicScrapingReducer } from "../../../../reducers/single-comic-scraping.reducer";
+import { ButtonModule } from "primeng/button";
+import { SplitButtonModule } from "primeng/splitbutton";
+import { BlockUIModule } from "primeng/blockui";
+import { ProgressBarModule } from "primeng/progressbar";
+import { TooltipModule } from "primeng/tooltip";
+import { InplaceModule } from "primeng/inplace";
+import { TableModule } from "primeng/table";
+import { CardModule } from "primeng/card";
+import { AlertService } from "../../../../services/alert.service";
+import { AlertServiceMock } from "../../../../services/alert.service.mock";
+import { UserService } from "../../../../services/user.service";
+import { UserServiceMock } from "../../../../services/user.service.mock";
+import { ComicService } from "../../../../services/comic.service";
+import { ComicServiceMock } from "../../../../services/comic.service.mock";
+import { VolumeListComponent } from "../../scraping/volume-list/volume-list.component";
+import { ADMIN_USER, READER_USER } from "../../../../models/user/user.fixtures";
+import { ComicDetailsEditorComponent } from "./comic-details-editor.component";
 
-import { ComicDetailsEditorComponent } from './comic-details-editor.component';
-
-describe('ComicDetailsEditorComponent', () => {
+xdescribe("ComicDetailsEditorComponent", () => {
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
+  let alert_service: AlertService;
+  let user_service: UserService;
+  let comic_service: ComicService;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicDetailsEditorComponent]
-    })
-      .compileComponents();
-  }));
+      imports: [
+        RouterTestingModule,
+        FormsModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({
+          single_comic_scraping: singleComicScrapingReducer
+        }),
+        ButtonModule,
+        SplitButtonModule,
+        BlockUIModule,
+        ProgressBarModule,
+        TooltipModule,
+        InplaceModule,
+        TableModule,
+        CardModule
+      ],
+      declarations: [ComicDetailsEditorComponent, VolumeListComponent],
+      providers: [
+        { provide: AlertService, useClass: AlertServiceMock },
+        { provide: UserService, useClass: UserServiceMock },
+        { provide: ComicService, useClass: ComicServiceMock }
+      ]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicDetailsEditorComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    component.user = ADMIN_USER;
 
-  it('should create', () => {
+    fixture.detectChanges();
+
+    alert_service = TestBed.get(AlertService);
+    user_service = TestBed.get(UserService);
+    comic_service = TestBed.get(ComicService);
+    store = TestBed.get(Store);
+  }));
+
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

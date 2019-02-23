@@ -1,4 +1,5 @@
-<p-dataView [value]="comic.pages">
+<p-dataView *ngIf="comic"
+            [value]="comic.pages">
   <p-header>
     <div class="ui-helper-clearfix">
       <div class="ui-g">
@@ -65,8 +66,8 @@
   <ng-template let-page
                pTemplate="gridItem">
     <p-card><img src="{{page|comic_page_url}}"
-                 [style.height]="'' + image_size + 'px'"
-                 [style.width]="'auto'">
+           [style.height]="'' + image_size + 'px'"
+           [style.width]="'auto'">
       <p-footer>
         <div *ngIf="is_admin"
              class="ui-g">

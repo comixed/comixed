@@ -17,28 +17,37 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { DataViewModule } from "primeng/dataview";
+import { PanelModule } from "primeng/panel";
+import { CardModule } from "primeng/card";
+import { ComicGroupingCardComponent } from "../comic-grouping-card/comic-grouping-card.component";
+import { ComicStoryComponent } from "./comic-story.component";
 
-import { ComicStoryComponent } from './comic-story.component';
-
-describe('ComicStoryComponent', () => {
+describe("ComicStoryComponent", () => {
   let component: ComicStoryComponent;
   let fixture: ComponentFixture<ComicStoryComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicStoryComponent]
-    })
-      .compileComponents();
-  }));
+      imports: [
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        DataViewModule,
+        PanelModule,
+        CardModule
+      ],
+      declarations: [ComicStoryComponent, ComicGroupingCardComponent]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicStoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

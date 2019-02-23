@@ -17,28 +17,31 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { CardModule } from "primeng/card";
+import { ComicFileCoverUrlPipe } from "../../../../pipes/comic-file-cover-url.pipe";
+import { EXISTING_COMIC_FILE } from "../../../../models/import/comic-file.fixtures";
+import { FileDetailsCoverComponent } from "./file-details-cover.component";
 
-import { FileDetailsCoverComponent } from './file-details-cover.component';
-
-describe('FileDetailsCoverComponent', () => {
+describe("FileDetailsCoverComponent", () => {
   let component: FileDetailsCoverComponent;
   let fixture: ComponentFixture<FileDetailsCoverComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FileDetailsCoverComponent]
-    })
-      .compileComponents();
-  }));
+      imports: [CardModule],
+      declarations: [FileDetailsCoverComponent, ComicFileCoverUrlPipe]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(FileDetailsCoverComponent);
     component = fixture.componentInstance;
+    component.file_details = EXISTING_COMIC_FILE;
+    component.width = "480";
+    component.height = "640";
     fixture.detectChanges();
-  });
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

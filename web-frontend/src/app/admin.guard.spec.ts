@@ -17,18 +17,26 @@
  * org.comixed;
  */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, async, inject } from "@angular/core/testing";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "./app.state";
+import { userReducer } from "./reducers/user.reducer";
 
-import { RouteGuard } from './route.guard';
+import { AdminGuard } from "./admin.guard";
 
-describe('RouteGuard', () => {
+describe("AdminGuard", () => {
+  let store: Store<AppState>;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RouteGuard]
+      imports: [StoreModule.forRoot({ user: userReducer })],
+      providers: [AdminGuard]
     });
+
+    store = TestBed.get(Store);
   });
 
-  it('should ...', inject([RouteGuard], (guard: RouteGuard) => {
+  it("should ...", inject([AdminGuard], (guard: AdminGuard) => {
     expect(guard).toBeTruthy();
   }));
 });

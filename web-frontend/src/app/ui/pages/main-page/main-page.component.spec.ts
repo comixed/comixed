@@ -17,75 +17,60 @@
  * org.comixed;
  */
 
-import {
-  async,
-  ComponentFixture,
-  TestBed,
-} from '@angular/core/testing';
-import {DebugElement} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {RouterTestingModule} from "@angular/router/testing";
-import {Router} from "@angular/router";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { DebugElement } from "@angular/core";
+import { By } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
+import { Router } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../app.state";
+import { libraryReducer } from "../../../reducers/library.reducer";
+import { ComicService } from "../../../services/comic.service";
+import { ComicServiceMock } from "../../../services/comic.service.mock";
+import { AlertService } from "../../../services/alert.service";
+import { AlertServiceMock } from "../../../services/alert.service.mock";
+import { MainPageComponent } from "./main-page.component";
 
-import {ComicService} from '../services/comic.service';
-import {AlertService} from '../services/alert.service';
-
-import {MainPageComponent} from './main-page.component';
-
-describe('MainPageComponent', () => {
+describe("MainPageComponent", () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
   let debugElement: DebugElement;
-  let comic_service: ComicService;
   let alert_service: AlertService;
+  let comic_service: ComicService;
   let router: Router;
+  let store: Store<AppState>;
 
-  const routes = [
-  ];
+  const routes = [];
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes(routes),
+        FormsModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ library: libraryReducer })
       ],
-      declarations: [
-        MainPageComponent,
-      ],
+      declarations: [MainPageComponent],
       providers: [
-        AlertService,
-        ComicService,
-      ],
-    })
-      .compileComponents();
-  }));
+        { provide: AlertService, useClass: AlertServiceMock },
+        { provide: ComicService, useClass: ComicServiceMock }
+      ]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(MainPageComponent);
     component = fixture.componentInstance;
+
+    alert_service = TestBed.get(AlertService);
+    comic_service = TestBed.get(ComicService);
+    router = TestBed.get(Router);
+
     fixture.detectChanges();
+    router.initialNavigation();
+  }));
 
-    comic_service = debugElement.injector.get(ComicService);
-    alert_service = debugElement.injector.get(AlertService);
-    router = debugElement.injector.get(Router);
-  });
-
-  it('should show the current library size', () => {
-    expect(true).toBe(false);
-  });
-
-  it('should show an error when the library size call fails', () => {
-    expect(true).toBe(false);
-  });
-
-  it('should show the duplicate page count', () => {
-    expect(true).toBe(false);
-  });
-
-  it('should show an error when the dupliate page call fails', () => {
-    expect(true).toBe(false);
-  });
-
-  it('sends the user to the duplicates page', () => {
-    expect(true).toBe(false);
+  it("should create", () => {
+    expect(component).toBeTruthy();
   });
 });

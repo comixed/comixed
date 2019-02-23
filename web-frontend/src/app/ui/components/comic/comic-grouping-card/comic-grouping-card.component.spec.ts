@@ -18,7 +18,10 @@
  */
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { CardModule } from "primeng/card";
+import { DEFAULT_COMIC_GROUPING } from "../../../../models/actions/library.fixtures";
 import { ComicGroupingCardComponent } from "./comic-grouping-card.component";
 
 describe("ComicGroupingCardComponent", () => {
@@ -27,15 +30,15 @@ describe("ComicGroupingCardComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule, TranslateModule.forRoot(), CardModule],
       declarations: [ComicGroupingCardComponent]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicGroupingCardComponent);
     component = fixture.componentInstance;
+    component.details = DEFAULT_COMIC_GROUPING;
     fixture.detectChanges();
-  });
+  }));
 
   it("should create", () => {
     expect(component).toBeTruthy();

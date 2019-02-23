@@ -17,11 +17,36 @@
  * org.comixed;
  */
 
-import { ComicSeriesPipe } from "./comic-series.pipe";
+import { User } from "./user";
+import { Preference } from "./preference";
+import { ReaderRole } from "./role.fixtures";
 
-describe("ComicSeriesPipe", () => {
-  it("create an instance", () => {
-    const pipe = new ComicSeriesPipe();
-    expect(pipe).toBeTruthy();
-  });
-});
+export const ADMIN_USER: User = {
+  id: 1000,
+  fetching: false,
+  token: "abc123",
+  authenticating: false,
+  busy: false,
+  email: "comixedadmin@somedomain.com",
+  authenticated: true,
+  is_admin: true,
+  first_login_date: 0,
+  last_login_date: 0,
+  roles: [ReaderRole],
+  preferences: [{ name: "api_key", value: "1234567890" }]
+};
+
+export const READER_USER: User = {
+  id: 1001,
+  fetching: false,
+  token: "123abc",
+  authenticating: false,
+  busy: false,
+  email: "comixedreader@somedomain.com",
+  authenticated: true,
+  is_admin: false,
+  first_login_date: 0,
+  last_login_date: 0,
+  roles: [ReaderRole],
+  preferences: []
+};

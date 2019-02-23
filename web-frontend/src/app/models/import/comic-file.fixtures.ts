@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,11 @@
  * org.comixed;
  */
 
-import { User } from '../models/user/user';
+import { ComicFile } from "./comic-file";
 
-export class MockUserService {
-  is_authenticated(): boolean {
-    return false;
-  }
-
-  is_admin(): boolean {
-    return false;
-  }
-
-  get_user(): User {
-    return null;
-  }
-}
+export const EXISTING_COMIC_FILE: ComicFile = {
+  filename: "/home/comixed/Library/existing-comic-file.cbz",
+  base_filename: "existing-comic-file",
+  size: 65535,
+  selected: false
+};

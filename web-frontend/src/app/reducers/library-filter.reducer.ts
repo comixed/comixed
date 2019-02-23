@@ -17,32 +17,32 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-import { LibraryFilter } from '../models/library/library-filter';
-import * as FilterActions from '../actions/library-filter.actions';
+import { Action } from "@ngrx/store";
+import { LibraryFilter } from "../models/actions/library-filter";
+import * as FilterActions from "../actions/library-filter.actions";
 
 const initial_state: LibraryFilter = {
   changed: false,
-  publisher: '',
-  series: '',
-  volume: '',
+  publisher: "",
+  series: "",
+  volume: "",
   from_year: null,
-  to_year: null,
+  to_year: null
 };
 
 export function libraryFilterReducer(
   state: LibraryFilter = initial_state,
-  action: FilterActions.Actions,
+  action: FilterActions.Actions
 ) {
   switch (action.type) {
     case FilterActions.LIBRARY_FILTER_RESET:
       return {
         changed: true,
-        publisher: '',
-        series: '',
-        volume: '',
+        publisher: "",
+        series: "",
+        volume: "",
         from_year: null,
-        to_year: null,
+        to_year: null
       };
 
     case FilterActions.LIBRARY_FILTER_SET_FILTERS:
@@ -53,11 +53,10 @@ export function libraryFilterReducer(
         series: action.payload.series,
         volume: action.payload.volume,
         from_year: action.payload.from_year,
-        to_year: action.payload.to_year,
+        to_year: action.payload.to_year
       };
 
     default:
       return initial_state;
   }
 }
-

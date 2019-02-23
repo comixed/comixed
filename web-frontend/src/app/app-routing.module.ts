@@ -42,7 +42,7 @@ import { StoryArcsPageComponent } from "./ui/pages/story-arcs/story-arcs-page/st
 import { StoryArcDetailsPageComponent } from "./ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component";
 import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component";
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: "home", component: MainPageComponent },
   {
     path: "account",

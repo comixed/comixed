@@ -17,28 +17,60 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { libraryReducer } from "../../../../reducers/library.reducer";
+import { CardModule } from "primeng/card";
+import { DropdownModule } from "primeng/dropdown";
+import { DataViewModule } from "primeng/dataview";
+import { ButtonModule } from "primeng/button";
+import { AlertService } from "../../../../services/alert.service";
+import { AlertServiceMock } from "../../../../services/alert.service.mock";
+import { UserService } from "../../../../services/user.service";
+import { UserServiceMock } from "../../../../services/user.service.mock";
+import { ComicService } from "../../../../services/comic.service";
+import { ComicServiceMock } from "../../../../services/comic.service.mock";
+import { ComicPageUrlPipe } from "../../../../pipes/comic-page-url.pipe";
+import { ComicPagesComponent } from "./comic-pages.component";
 
-import { ComicPagesComponent } from './comic-pages.component';
-
-describe('ComicPagesComponent', () => {
+describe("ComicPagesComponent", () => {
   let component: ComicPagesComponent;
   let fixture: ComponentFixture<ComicPagesComponent>;
+  let alert_service: AlertService;
+  let user_service: UserService;
+  let comic_service: ComicService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicPagesComponent]
-    })
-      .compileComponents();
-  }));
+      imports: [
+        FormsModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ library: libraryReducer }),
+        CardModule,
+        DropdownModule,
+        DataViewModule,
+        ButtonModule
+      ],
+      declarations: [ComicPagesComponent, ComicPageUrlPipe],
+      providers: [
+        { provide: AlertService, useClass: AlertServiceMock },
+        { provide: UserService, useClass: UserServiceMock },
+        { provide: ComicService, useClass: ComicServiceMock }
+      ]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicPagesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+    alert_service = TestBed.get(AlertService);
+    user_service = TestBed.get(UserService);
+    comic_service = TestBed.get(ComicService);
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

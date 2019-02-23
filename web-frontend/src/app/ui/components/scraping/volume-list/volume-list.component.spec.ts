@@ -17,28 +17,38 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { libraryReducer } from "../../../../reducers/library.reducer";
+import { TableModule } from "primeng/table";
+import { CardModule } from "primeng/card";
+import { ButtonModule } from "primeng/button";
+import { VolumeListComponent } from "./volume-list.component";
 
-import { VolumeListComponent } from './volume-list.component';
-
-describe('VolumeListComponent', () => {
+describe("VolumeListComponent", () => {
   let component: VolumeListComponent;
   let fixture: ComponentFixture<VolumeListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ library: libraryReducer }),
+        TableModule,
+        CardModule,
+        ButtonModule
+      ],
       declarations: [VolumeListComponent]
-    })
-      .compileComponents();
-  }));
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(VolumeListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -17,19 +17,44 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { PanelModule } from "primeng/panel";
+import { TableModule } from "primeng/table";
+import { ButtonModule } from "primeng/button";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { TooltipModule } from "primeng/tooltip";
+import { ToggleButtonModule } from "primeng/togglebutton";
+import { ConfirmationService } from "primeng/api";
+import { userAdminReducer } from "../../../../reducers/user-admin.reducer";
+import { UserDetailsEditorComponent } from "../../../components/admin/user-details-editor/user-details-editor.component";
+import { UsersPageComponent } from "./users-page.component";
 
-import { UsersPageComponent } from './users-page.component';
-
-describe('UsersPageComponent', () => {
+describe("UsersPageComponent", () => {
   let component: UsersPageComponent;
   let fixture: ComponentFixture<UsersPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UsersPageComponent]
-    })
-      .compileComponents();
+      imports: [
+        FormsModule,
+        BrowserAnimationsModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ user_admin: userAdminReducer }),
+        PanelModule,
+        TableModule,
+        ButtonModule,
+        ConfirmDialogModule,
+        TooltipModule,
+        ToggleButtonModule
+      ],
+      declarations: [UsersPageComponent, UserDetailsEditorComponent],
+      providers: [ConfirmationService]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -38,7 +63,7 @@ describe('UsersPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,13 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { LibraryFilter } from "./library-filter";
 
-import { ComicReaderComponent } from "./comic-reader.component";
-
-xdescribe("ComicReaderComponent", () => {
-  let component: ComicReaderComponent;
-  let fixture: ComponentFixture<ComicReaderComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicReaderComponent]
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ComicReaderComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
-});
+export const DEFAULT_LIBRARY_FILTER: LibraryFilter = {
+  changed: false,
+  publisher: "",
+  series: "",
+  volume: "",
+  from_year: 0,
+  to_year: 0
+};

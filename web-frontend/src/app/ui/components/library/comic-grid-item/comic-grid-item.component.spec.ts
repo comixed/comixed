@@ -18,7 +18,11 @@
  */
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { ComicCoverComponent } from "../../comic/comic-cover/comic-cover.component";
+import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
 import { ComicGridItemComponent } from "./comic-grid-item.component";
 
 describe("ComicGridItemComponent", () => {
@@ -27,15 +31,22 @@ describe("ComicGridItemComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicGridItemComponent]
+      imports: [RouterTestingModule, TranslateModule.forRoot()],
+      declarations: [
+        ComicGridItemComponent,
+        ComicCoverComponent,
+        ComicCoverUrlPipe
+      ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicGridItemComponent);
     component = fixture.componentInstance;
+    component.comic = REGULAR_COMIC;
+    component.same_height = true;
+    component.cover_size = 640;
+
     fixture.detectChanges();
-  });
+  }));
 
   it("should create", () => {
     expect(component).toBeTruthy();

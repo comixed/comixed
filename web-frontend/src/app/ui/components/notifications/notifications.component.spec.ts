@@ -17,28 +17,37 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ToastModule } from "primeng/toast";
+import { MessageService } from "primeng/api";
+import { AlertService } from "../../../services/alert.service";
+import { AlertServiceMock } from "../../../services/alert.service.mock";
+import { NotificationsComponent } from "./notifications.component";
 
-import { NotificationsComponent } from './notifications.component';
-
-describe('NotificationsComponent', () => {
+describe("NotificationsComponent", () => {
   let component: NotificationsComponent;
   let fixture: ComponentFixture<NotificationsComponent>;
+  let message_service: MessageService;
+  let alert_service: AlertService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [NotificationsComponent]
-    })
-      .compileComponents();
-  }));
+      imports: [ToastModule],
+      declarations: [NotificationsComponent],
+      providers: [
+        MessageService,
+        { provide: AlertService, useClass: AlertServiceMock }
+      ]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(NotificationsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+    message_service = TestBed.get(MessageService);
+    alert_service = TestBed.get(AlertService);
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

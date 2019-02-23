@@ -18,7 +18,9 @@
  */
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { TranslateModule } from "@ngx-translate/core";
+import { DataViewModule } from "primeng/dataview";
+import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
 import { ScrapingComicListComponent } from "./scraping-comic-list.component";
 
 describe("ScrapingComicListComponent", () => {
@@ -27,15 +29,15 @@ describe("ScrapingComicListComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ScrapingComicListComponent]
+      imports: [TranslateModule.forRoot(), DataViewModule],
+      declarations: [ScrapingComicListComponent, ComicCoverUrlPipe]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ScrapingComicListComponent);
     component = fixture.componentInstance;
+    component.comics = [];
     fixture.detectChanges();
-  });
+  }));
 
   it("should create", () => {
     expect(component).toBeTruthy();

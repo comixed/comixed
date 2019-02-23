@@ -19,7 +19,7 @@
 
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
 import { Comic } from "../../../../models/comics/comic";
-import { LibraryFilter } from "../../../../models/library/library-filter";
+import { LibraryFilter } from "../../../../models/actions/library-filter";
 import { LibraryDisplay } from "../../../../models/actions/library-display";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";

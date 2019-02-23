@@ -17,28 +17,38 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+import { ToolbarModule } from "primeng/toolbar";
+import { ButtonModule } from "primeng/button";
+import { SplitButtonModule } from "primeng/splitbutton";
+import { ImportToolbarComponent } from "./import-toolbar.component";
 
-import { ImportToolbarComponent } from './import-toolbar.component';
-
-describe('ImportToolbarComponent', () => {
+describe("ImportToolbarComponent", () => {
   let component: ImportToolbarComponent;
   let fixture: ComponentFixture<ImportToolbarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        FormsModule,
+        TranslateModule.forRoot(),
+        ToolbarModule,
+        ButtonModule,
+        SplitButtonModule
+      ],
       declarations: [ImportToolbarComponent]
-    })
-      .compileComponents();
-  }));
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ImportToolbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

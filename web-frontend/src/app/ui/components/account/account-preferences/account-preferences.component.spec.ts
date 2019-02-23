@@ -17,28 +17,31 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { TableModule } from "primeng/table";
+import { READER_USER } from "../../../../models/user/user.fixtures";
+import { AccountPreferencesComponent } from "./account-preferences.component";
 
-import { AccountPreferencesComponent } from './account-preferences.component';
-
-describe('AccountPreferencesComponent', () => {
+describe("AccountPreferencesComponent", () => {
   let component: AccountPreferencesComponent;
   let fixture: ComponentFixture<AccountPreferencesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot(), TableModule],
       declarations: [AccountPreferencesComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountPreferencesComponent);
     component = fixture.componentInstance;
+    component.user = READER_USER;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

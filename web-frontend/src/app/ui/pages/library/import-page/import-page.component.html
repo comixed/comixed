@@ -54,10 +54,10 @@
                 </div>
                 <div class="ui-g-3 ui-md-3">
                   {{"import-page.label.search-comic-names"|translate}}<input type="search"
-                                                                             pInputText
-                                                                             [placeholder]="'import-page.text.search-by-series'|translate"
-                                                                             [style.width]="'100%'"
-                                                                             (keyup)="importComics.filter($event.target.value)">
+                         pInputText
+                         [placeholder]="'import-page.text.search-by-series'|translate"
+                         [style.width]="'100%'"
+                         (keyup)="importComics.filter($event.target.value)">
                 </div>
                 <div class="ui-g-3 ui-md-3">
                   Cover size: {{cover_size}}px

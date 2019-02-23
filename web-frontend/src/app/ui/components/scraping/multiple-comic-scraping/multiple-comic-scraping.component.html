@@ -1,20 +1,20 @@
-<div class='ui-g'
-     *ngIf='multi_scraping.current_comic'>
-  <div class='ui-g-3 ui-sm-6'>
+<div *ngIf="multi_scraping.current_comic"
+     class="ui-g">
+  <div class="ui-g-3 ui-sm-6">
     <p-card>
       <p-header>
         <h3>{{ multi_scraping.current_comic.base_filename }}</h3>
-      </p-header> <img src='{{ multi_scraping.current_comic | comic_cover_url }}'
-           [style.width]='"100%"'
-           [style.height]='"auto"'>
+      </p-header> <img src="{{ multi_scraping.current_comic | comic_cover_url }}"
+           [style.width]="'100%'"
+           [style.height]="'auto'">
     </p-card>
   </div>
-  <div class='ui-g-9 ui-sm-6'>
-    <div class='ui-g'>
-      <div class='ui-g-12'>
-        <app-comic-details-editor [multi_comic_mode]='true'
-                                  [comic]='multi_scraping.current_comic'
-                                  (update)='comic_scraped()'></app-comic-details-editor>
+  <div class="ui-g-9 ui-sm-6">
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <app-comic-details-editor [multi_comic_mode]="true"
+                                  [comic]="multi_scraping.current_comic"
+                                  (update)="comic_scraped()"></app-comic-details-editor>
       </div>
     </div>
   </div>

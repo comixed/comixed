@@ -17,18 +17,26 @@
  * org.comixed;
  */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, async, inject } from "@angular/core/testing";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "./app.state";
+import { userReducer } from "./reducers/user.reducer";
 
-import { ReaderGuard } from './reader.guard';
+import { ReaderGuard } from "./reader.guard";
 
-describe('ReaderGuard', () => {
+describe("ReaderGuard", () => {
+  let store: Store<AppState>;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [StoreModule.forRoot({ user: userReducer })],
       providers: [ReaderGuard]
     });
+
+    store = TestBed.get(Store);
   });
 
-  it('should ...', inject([ReaderGuard], (guard: ReaderGuard) => {
+  it("should ...", inject([ReaderGuard], (guard: ReaderGuard) => {
     expect(guard).toBeTruthy();
   }));
 });

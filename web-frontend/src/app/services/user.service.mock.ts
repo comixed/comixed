@@ -17,28 +17,13 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { User } from "../models/user/user";
+import { Observable } from "rxjs";
 
-import { LibraryScrapingSelectionComponent } from './library-scraping-selection.component';
+export class UserServiceMock {
+  preferences = new Map<string, string>();
 
-describe('LibraryScrapingSelectionComponent', () => {
-  let component: LibraryScrapingSelectionComponent;
-  let fixture: ComponentFixture<LibraryScrapingComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [LibraryScrapingComponent]
-    })
-      .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(LibraryScrapingComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  get_user_preference(name: string, defvalue: string): string {
+    return this.preferences[name];
+  }
+}

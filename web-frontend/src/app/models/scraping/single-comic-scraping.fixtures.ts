@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,18 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { SingleComicScraping } from "./single-comic-scraping";
+import { REGULAR_COMIC } from "../comics/comic.fixtures";
 
-import { ComicReaderComponent } from "./comic-reader.component";
-
-xdescribe("ComicReaderComponent", () => {
-  let component: ComicReaderComponent;
-  let fixture: ComponentFixture<ComicReaderComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicReaderComponent]
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ComicReaderComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
-});
+export const SINGLE_COMIC_SCRAPING_STATE: SingleComicScraping = {
+  busy: false,
+  api_key: "abc123",
+  comic: REGULAR_COMIC,
+  series: REGULAR_COMIC.series,
+  volume: REGULAR_COMIC.volume,
+  issue_number: REGULAR_COMIC.issue_number,
+  volumes: [],
+  current_volume: null,
+  current_issue: null,
+  data_scraped: false
+};

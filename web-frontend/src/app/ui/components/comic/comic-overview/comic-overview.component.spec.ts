@@ -17,28 +17,47 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { InplaceModule } from "primeng/inplace";
+import { DropdownModule } from "primeng/dropdown";
+import { userAdminReducer } from "../../../../reducers/user-admin.reducer";
+import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
+import { EXISTING_LIBRARY } from "../../../../models/actions/library.fixtures";
+import { ComicOverviewComponent } from "./comic-overview.component";
 
-import { ComicOverviewComponent } from './comic-overview.component';
-
-describe('ComicOverviewComponent', () => {
+describe("ComicOverviewComponent", () => {
   let component: ComicOverviewComponent;
   let fixture: ComponentFixture<ComicOverviewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ user_admin: userAdminReducer }),
+        InplaceModule,
+        DropdownModule
+      ],
       declarations: [ComicOverviewComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ComicOverviewComponent);
     component = fixture.componentInstance;
+    component.is_admin = false;
+    component.comic = REGULAR_COMIC;
+    component.library = EXISTING_LIBRARY;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

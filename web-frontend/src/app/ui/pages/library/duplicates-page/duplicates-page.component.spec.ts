@@ -17,19 +17,61 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { duplicatesReducer } from "../../../../reducers/duplicates.reducer";
+import { CardModule } from "primeng/card";
+import { DataViewModule } from "primeng/dataview";
+import { DropdownModule } from "primeng/dropdown";
+import { SliderModule } from "primeng/slider";
+import { ButtonModule } from "primeng/button";
+import { TableModule } from "primeng/table";
+import { AlertService } from "../../../../services/alert.service";
+import { AlertServiceMock } from "../../../../services/alert.service.mock";
+import { UserService } from "../../../../services/user.service";
+import { UserServiceMock } from "../../../../services/user.service.mock";
+import { DuplicatePagesViewComponent } from "../../../views/library/duplicate-pages-view/duplicate-pages-view.component";
+import { PageHashViewComponent } from "../../../views/library/page-hash-view/page-hash-view.component";
+import { ComicPageUrlPipe } from "../../../../pipes/comic-page-url.pipe";
+import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
+import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { DuplicatesPageComponent } from "./duplicates-page.component";
 
-import { DuplicatesPageComponent } from './duplicates-page.component';
-
-describe('DuplicatesPageComponent', () => {
+describe("DuplicatesPageComponent", () => {
   let component: DuplicatesPageComponent;
   let fixture: ComponentFixture<DuplicatesPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DuplicatesPageComponent]
-    })
-      .compileComponents();
+      imports: [
+        FormsModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ duplicates: duplicatesReducer }),
+        CardModule,
+        DataViewModule,
+        DropdownModule,
+        SliderModule,
+        ButtonModule,
+        TableModule
+      ],
+      declarations: [
+        DuplicatesPageComponent,
+        DuplicatePagesViewComponent,
+        PageHashViewComponent,
+        ComicPageUrlPipe,
+        ComicTitlePipe,
+        ComicCoverUrlPipe
+      ],
+      providers: [
+        { provide: AlertService, useClass: AlertServiceMock },
+        { provide: UserService, useClass: UserServiceMock }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -38,7 +80,7 @@ describe('DuplicatesPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

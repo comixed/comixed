@@ -17,27 +17,18 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { of as observableOf, Observable } from "rxjs";
+import { PageType } from "../models/comics/page-type";
 
-import { ComicReaderComponent } from "./comic-reader.component";
+export class ComicServiceMock {
+  library_comic_count = 0;
+  page_types = [];
 
-xdescribe("ComicReaderComponent", () => {
-  let component: ComicReaderComponent;
-  let fixture: ComponentFixture<ComicReaderComponent>;
+  get_library_comic_count(): Observable<any> {
+    return observableOf(this.library_comic_count);
+  }
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicReaderComponent]
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ComicReaderComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
-});
+  get_page_types(): Observable<any> {
+    return observableOf(this.page_types);
+  }
+}

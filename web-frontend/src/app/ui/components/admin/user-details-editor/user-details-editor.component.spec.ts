@@ -17,28 +17,42 @@
  * org.comixed;
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { userAdminReducer } from "../../../../reducers/user-admin.reducer";
+import { ButtonModule } from "primeng/button";
+import { ToggleButtonModule } from "primeng/togglebutton";
+import { UserDetailsEditorComponent } from "./user-details-editor.component";
 
-import {UserDetailsEditorComponent} from './user-details-editor.component';
-
-describe('UserDetailsEditorComponent', () => {
+describe("UserDetailsEditorComponent", () => {
   let component: UserDetailsEditorComponent;
   let fixture: ComponentFixture<UserDetailsEditorComponent>;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ user_admin: userAdminReducer }),
+        ButtonModule,
+        ToggleButtonModule
+      ],
       declarations: [UserDetailsEditorComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserDetailsEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    store = TestBed.get(Store);
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

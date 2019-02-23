@@ -17,28 +17,92 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { libraryReducer } from "../../../../reducers/library.reducer";
+import { TabViewModule } from "primeng/tabview";
+import { CardModule } from "primeng/card";
+import { InplaceModule } from "primeng/inplace";
+import { DropdownModule } from "primeng/dropdown";
+import { PanelModule } from "primeng/panel";
+import { DataViewModule } from "primeng/dataview";
+import { SplitButtonModule } from "primeng/splitbutton";
+import { BlockUIModule } from "primeng/blockui";
+import { ProgressBarModule } from "primeng/progressbar";
+import { TooltipModule } from "primeng/tooltip";
+import { TableModule } from "primeng/table";
+import { ComicOverviewComponent } from "../../../components/comic/comic-overview/comic-overview.component";
+import { ComicStoryComponent } from "../../../components/comic/comic-story/comic-story.component";
+import { ComicReaderComponent } from "../../../components/comic/comic-reader/comic-reader.component";
+import { ComicCreditsComponent } from "../../../components/comic/comic-credits/comic-credits.component";
+import { ComicPagesComponent } from "../../../components/comic/comic-pages/comic-pages.component";
+import { ComicDetailsEditorComponent } from "../../../components/comic/comic-details-editor/comic-details-editor.component";
+import { ComicGroupingCardComponent } from "../../../components/comic/comic-grouping-card/comic-grouping-card.component";
+import { VolumeListComponent } from "../../../components/scraping/volume-list/volume-list.component";
+import { AlertService } from "../../../../services/alert.service";
+import { AlertServiceMock } from "../../../../services/alert.service.mock";
+import { ComicService } from "../../../../services/comic.service";
+import { ComicServiceMock } from "../../../../services/comic.service.mock";
+import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
+import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { ComicPageUrlPipe } from "../../../../pipes/comic-page-url.pipe";
+import { SINGLE_COMIC_SCRAPING_STATE } from "../../../../models/scraping/single-comic-scraping.fixtures";
+import { ComicDetailsComponent } from "./comic-details.component";
 
-import { ComicDetailsComponent } from './comic-details.component';
-
-describe('ComicDetailsComponent', () => {
+xdescribe("ComicDetailsComponent", () => {
   let component: ComicDetailsComponent;
   let fixture: ComponentFixture<ComicDetailsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicDetailsComponent]
-    })
-      .compileComponents();
-  }));
+      imports: [
+        FormsModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ library: libraryReducer }),
+        TabViewModule,
+        CardModule,
+        InplaceModule,
+        DropdownModule,
+        PanelModule,
+        DataViewModule,
+        SplitButtonModule,
+        BlockUIModule,
+        ProgressBarModule,
+        TooltipModule,
+        TableModule
+      ],
+      declarations: [
+        ComicDetailsComponent,
+        ComicOverviewComponent,
+        ComicStoryComponent,
+        ComicReaderComponent,
+        ComicCreditsComponent,
+        ComicPagesComponent,
+        ComicDetailsEditorComponent,
+        ComicGroupingCardComponent,
+        VolumeListComponent,
+        ComicTitlePipe,
+        ComicCoverUrlPipe,
+        ComicPageUrlPipe
+      ],
+      providers: [
+        { provide: AlertService, useClass: AlertServiceMock },
+        { provide: ComicService, useClass: ComicServiceMock }
+      ]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicDetailsComponent);
     component = fixture.componentInstance;
+    component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
     fixture.detectChanges();
-  });
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -17,28 +17,44 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { userReducer } from "../../../../reducers/user.reducer";
+import { TabViewModule } from "primeng/tabview";
+import { TableModule } from "primeng/table";
+import { AccountPreferencesComponent } from "../../../components/account/account-preferences/account-preferences.component";
+import { UserDetailsComponent } from "../../../components/account/user-details/user-details.component";
+import { ADMIN_USER, READER_USER } from "../../../../models/user/user.fixtures";
+import { AccountPageComponent } from "./account-page.component";
 
-import { AccountPageComponent } from './account-page.component';
-
-describe('AccountPageComponent', () => {
+describe("AccountPageComponent", () => {
   let component: AccountPageComponent;
   let fixture: ComponentFixture<AccountPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AccountPageComponent]
-    })
-      .compileComponents();
-  }));
+      imports: [
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ user: userReducer }),
+        TabViewModule,
+        TableModule
+      ],
+      declarations: [
+        AccountPageComponent,
+        AccountPreferencesComponent,
+        UserDetailsComponent
+      ]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AccountPageComponent);
     component = fixture.componentInstance;
+    component.user = READER_USER;
     fixture.detectChanges();
-  });
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

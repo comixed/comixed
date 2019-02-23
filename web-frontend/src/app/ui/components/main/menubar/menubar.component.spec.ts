@@ -17,28 +17,42 @@
  * org.comixed;
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { RouterModule } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { MenubarModule } from "primeng/menubar";
+import { ButtonModule } from "primeng/button";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "../../../../app.state";
+import { userReducer } from "../../../../reducers/user.reducer";
+import { MenubarComponent } from "./menubar.component";
 
-import {MenubarComponent} from './menubar.component';
-
-describe('MenubarComponent', () => {
+describe("MenubarComponent", () => {
   let component: MenubarComponent;
   let fixture: ComponentFixture<MenubarComponent>;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        RouterModule.forRoot([]),
+        TranslateModule.forRoot(),
+        MenubarModule,
+        ButtonModule,
+        StoreModule.forRoot({ user: userReducer })
+      ],
       declarations: [MenubarComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MenubarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    store = TestBed.get(Store);
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

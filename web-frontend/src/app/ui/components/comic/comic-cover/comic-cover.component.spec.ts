@@ -16,9 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
-
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
 import { ComicCoverComponent } from "./comic-cover.component";
 
 describe("ComicCoverComponent", () => {
@@ -27,13 +29,17 @@ describe("ComicCoverComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicCoverComponent]
+      imports: [RouterTestingModule, TranslateModule.forRoot()],
+      declarations: [ComicCoverComponent, ComicCoverUrlPipe]
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ComicCoverComponent);
     component = fixture.componentInstance;
+    component.comic = REGULAR_COMIC;
+    component.cover_size = 200;
+    component.same_height = true;
     fixture.detectChanges();
   });
 

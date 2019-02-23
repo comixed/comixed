@@ -17,28 +17,31 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { TableModule } from "primeng/table";
+import { PanelModule } from "primeng/panel";
+import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
+import { IssueDetailsComponent } from "./issue-details.component";
 
-import { IssueDetailsComponent } from './issue-details.component';
-
-describe('IssueDetailsComponent', () => {
+describe("IssueDetailsComponent", () => {
   let component: IssueDetailsComponent;
   let fixture: ComponentFixture<IssueDetailsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IssueDetailsComponent]
-    })
-      .compileComponents();
-  }));
+      imports: [TranslateModule.forRoot(), TableModule, PanelModule],
+      declarations: [IssueDetailsComponent, ComicCoverUrlPipe]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(IssueDetailsComponent);
     component = fixture.componentInstance;
+    component.comic = REGULAR_COMIC;
     fixture.detectChanges();
-  });
+  }));
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
