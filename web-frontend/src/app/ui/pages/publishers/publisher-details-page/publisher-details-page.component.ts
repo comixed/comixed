@@ -34,8 +34,8 @@ import { SelectItem } from "primeng/api";
 })
 export class PublisherDetailsPageComponent implements OnInit {
   private library$: Observable<Library>;
-  private library: Library;
   private library_subscription: Subscription;
+  library: Library;
 
   protected layout = "grid";
   protected sort_field = "volume";

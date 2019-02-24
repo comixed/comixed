@@ -38,6 +38,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
   @Input() comics: Array<Comic>;
   @Input() selected_comics: Array<Comic> = [];
   @Input() library_filter: LibraryFilter;
+  @Input() show_selections: boolean;
 
   private library_display$: Observable<LibraryDisplay>;
   private library_display_subscription: Subscription;

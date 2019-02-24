@@ -35,9 +35,9 @@ import { TranslateService } from "@ngx-translate/core";
 export class MenubarComponent implements OnInit, OnDestroy {
   private user$: Observable<User>;
   private user_subscription: Subscription;
-  private user: User;
+  user: User;
 
-  protected menu_items: Array<MenuItem>;
+  menu_items: Array<MenuItem>;
 
   constructor(
     private translate: TranslateService,

@@ -39,9 +39,9 @@ export class ComicListToolbarComponent implements OnInit {
   @Output() changeLayout = new EventEmitter<string>();
   @Output() showSelections = new EventEmitter<boolean>();
 
-  protected layout_options: Array<SelectItem>;
-  protected sort_field_options: Array<SelectItem>;
-  protected rows_options: Array<SelectItem>;
+  layout_options: Array<SelectItem>;
+  sort_field_options: Array<SelectItem>;
+  rows_options: Array<SelectItem>;
 
   constructor(
     private store: Store<AppState>,

@@ -35,8 +35,8 @@ import { SelectItem } from "primeng/api";
 })
 export class SeriesDetailsPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
-  private library: Library;
   private library_subscription: Subscription;
+  library: Library;
 
   protected layout = "grid";
   protected sort_field = "volume";

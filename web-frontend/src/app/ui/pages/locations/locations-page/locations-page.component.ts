@@ -33,8 +33,8 @@ import { SelectItem } from "primeng/api";
 })
 export class LocationsPageComponent implements OnInit {
   private library$: Observable<Library>;
-  private library: Library;
   private library_subscription: Subscription;
+  library: Library;
 
   protected rows_options: Array<SelectItem>;
   rows = 10;

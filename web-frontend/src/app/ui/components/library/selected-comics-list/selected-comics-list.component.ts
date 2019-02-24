@@ -52,7 +52,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
 
   private library$: Observable<Library>;
   private library_subscription: Subscription;
-  protected library: Library;
+  library: Library;
 
   constructor(
     private router: Router,
