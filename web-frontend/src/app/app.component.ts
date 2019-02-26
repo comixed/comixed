@@ -126,39 +126,4 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
   }
-
-  logout(): void {}
-
-  clear_alert_message(index: number): void {
-    if (this.alert_messages.length > index) {
-      if (this.alert_messages[index].length > 2) {
-        // cancel the timer if clear was clicked before it fired
-        const timeout = this.alert_messages[index][2];
-        clearTimeout(timeout);
-      }
-      this.alert_messages.splice(index, 1);
-    }
-  }
-
-  clear_info_message(message: string): void {
-    const index = this.alert_messages.findIndex((alert_message: any) => {
-      return alert_message[0] === message;
-    });
-    this.clear_alert_message(index);
-  }
-
-  is_authenticated(): boolean {
-    return this.user && this.user.authenticated;
-  }
-
-  is_admin(): boolean {
-    if (this.is_authenticated()) {
-      for (const role of this.user.roles) {
-        if (role.name === "ADMIN") {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
 }
