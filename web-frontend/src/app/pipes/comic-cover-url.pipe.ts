@@ -17,17 +17,19 @@
  * org.comixed;
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
-import { COMIC_SERVICE_API_URL } from '../services/comic.service';
-import { Comic } from '../models/comics/comic';
+import { Pipe, PipeTransform } from "@angular/core";
+import { COMIC_SERVICE_API_URL } from "../services/comic.service";
+import { Comic } from "../models/comics/comic";
+
+export const MISSING_COMIC_IMAGE_URL = "/assets/img/missing-comic-file.png";
 
 @Pipe({
-  name: 'comic_cover_url'
+  name: "comic_cover_url"
 })
 export class ComicCoverUrlPipe implements PipeTransform {
   transform(comic: Comic): string {
     if (comic.missing) {
-      return `/assets/img/missing.png`;
+      return MISSING_COMIC_IMAGE_URL;
     } else {
       return `${COMIC_SERVICE_API_URL}/comics/${comic.id}/pages/0/content`;
     }

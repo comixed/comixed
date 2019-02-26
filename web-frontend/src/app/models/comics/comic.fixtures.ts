@@ -122,3 +122,37 @@ export const COMIC_1002: Comic = {
   scan_type: DEFAULT_SCAN_TYPE,
   format: DEFAULT_COMIC_FORMAT
 };
+
+export const COMIC_1003: Comic = {
+  id: 1003,
+  filename: "/home/comixed/library/filename-comic-1003.cbz",
+  base_filename: "filename-comic-1003",
+  publisher: "publisher-1002",
+  imprint: "",
+  sort_name: "",
+  series: "series-name",
+  volume: "2019",
+  issue_number: "100",
+  title: "",
+  story_arcs: [],
+  description: "",
+  notes: "",
+  summary: "",
+  missing: true,
+  archive_type: "CBZ",
+  comic_vine_id: "",
+  comic_vine_url: "",
+  added_date: "0",
+  cover_date: "0",
+  year_published: 2019,
+  page_count: 24,
+  characters: ["CHARACTER2", "CHARACTER3"],
+  teams: [],
+  locations: [],
+  pages: [],
+  blocked_page_count: 0,
+  deleted_page_count: 0,
+  credits: [],
+  scan_type: DEFAULT_SCAN_TYPE,
+  format: DEFAULT_COMIC_FORMAT
+};
