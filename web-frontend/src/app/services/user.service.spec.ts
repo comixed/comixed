@@ -26,9 +26,11 @@ import {
 import { AlertService } from "./alert.service";
 import { AlertServiceMock } from "./alert.service.mock";
 import { User } from "../models/user/user";
+import { READER_USER, ADMIN_USER } from "../models/user/user.fixtures";
 import { UserService, USER_SERVICE_API_URL } from "./user.service";
 
 describe("UserService", () => {
+  const USER_ID = 717;
   const EMAIL = "testinguser@comixedreader.org";
   const PASSWORD = "awesomesauce";
   const TOKEN = "thisisareallylongstringthatisatoken";
@@ -72,15 +74,95 @@ describe("UserService", () => {
 
       req.flush(TOKEN);
     });
-
-    xit("handles a failed login attempt", () => {});
   });
 
-  xdescribe("retrieving the current user's details", () => {});
+  describe("retrieving the current user's details", () => {
+    it("fetches the user object from the backend", () => {
+      service.get_user().subscribe((user: User) => {
+        expect(user).toBe(READER_USER);
+      });
 
-  xdescribe("creating a new user account", () => {});
+      const req = http_mock.expectOne(`${USER_SERVICE_API_URL}/user`);
+      expect(req.request.method).toEqual("GET");
 
-  xdescribe("deleting an existing user account", () => {});
+      req.flush(READER_USER);
+    });
+  });
 
-  xdescribe("getting the list of users", () => {});
+  describe("saving a user", () => {
+    it("can create a new reader user account", () => {
+      service
+        .save_user(null, EMAIL, PASSWORD, false)
+        .subscribe((user: User) => {
+          expect(user).toBe(READER_USER);
+        });
+
+      const req = http_mock.expectOne(`${USER_SERVICE_API_URL}/admin/users`);
+      expect(req.request.method).toEqual("POST");
+      expect(req.request.body.get("email")).toEqual(EMAIL);
+      expect(req.request.body.get("password")).toEqual(PASSWORD);
+      expect(req.request.body.get("is_admin")).toEqual(`${false}`);
+
+      req.flush(READER_USER);
+    });
+
+    it("can create a new admin user account", () => {
+      service.save_user(null, EMAIL, PASSWORD, true).subscribe((user: User) => {
+        expect(user).toBe(ADMIN_USER);
+      });
+
+      const req = http_mock.expectOne(`${USER_SERVICE_API_URL}/admin/users`);
+      expect(req.request.method).toEqual("POST");
+      expect(req.request.body.get("email")).toEqual(EMAIL);
+      expect(req.request.body.get("password")).toEqual(PASSWORD);
+      expect(req.request.body.get("is_admin")).toEqual(`${true}`);
+
+      req.flush(ADMIN_USER);
+    });
+
+    it("can update an existing user account", () => {
+      service
+        .save_user(USER_ID, EMAIL, PASSWORD, true)
+        .subscribe((user: User) => {
+          expect(user).toBe(ADMIN_USER);
+        });
+
+      const req = http_mock.expectOne(
+        `${USER_SERVICE_API_URL}/admin/users/${USER_ID}`
+      );
+      expect(req.request.method).toEqual("PUT");
+      expect(req.request.body.get("email")).toEqual(EMAIL);
+      expect(req.request.body.get("password")).toEqual(PASSWORD);
+      expect(req.request.body.get("is_admin")).toEqual(`${true}`);
+
+      req.flush(ADMIN_USER);
+    });
+  });
+
+  describe("deleting an existing user account", () => {
+    it("can delete with just an id", () => {
+      service.delete_user(USER_ID).subscribe((success: boolean) => {
+        expect(success).toBeTruthy();
+        true;
+      });
+
+      const req = http_mock.expectOne(
+        `${USER_SERVICE_API_URL}/admin/users/${USER_ID}`
+      );
+      expect(req.request.method).toEqual("DELETE");
+
+      req.flush(1);
+    });
+  });
+
+  it("get get a list of users", () => {
+    service.get_user_list().subscribe((users: Array<User>) => {
+      expect(users).toEqual([ADMIN_USER, READER_USER]);
+    });
+
+    const req = http_mock.expectOne(`${USER_SERVICE_API_URL}/admin/users/list`);
+    expect(req.request.method).toEqual("GET");
+
+    req.flush([ADMIN_USER, READER_USER]);
+  });
 });
