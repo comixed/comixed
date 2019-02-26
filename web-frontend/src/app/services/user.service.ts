@@ -19,30 +19,30 @@
 
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
 import { AlertService } from "./alert.service";
 
+export const USER_SERVICE_API_URL = "/api";
+
 @Injectable()
 export class UserService {
-  api_url = "/api";
+  USER_SERVICE_API_URL = "/api";
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private alert_service: AlertService
-  ) {}
+  constructor(private http: HttpClient, private alert_service: AlertService) {}
 
   login(email: string, password: string): Observable<any> {
     const params = new HttpParams()
       .set("email", email)
       .set("password", password);
-    return this.http.post(`${this.api_url}/token/generate-token`, params);
+    return this.http.post(
+      `${this.USER_SERVICE_API_URL}/token/generate-token`,
+      params
+    );
   }
 
   get_user(): Observable<any> {
-    return this.http.get(`${this.api_url}/user`);
+    return this.http.get(`${this.USER_SERVICE_API_URL}/user`);
   }
 
   save_user(
@@ -57,24 +57,30 @@ export class UserService {
       .set("is_admin", `${is_admin}`);
 
     if (id !== null) {
-      return this.http.put(`${this.api_url}/admin/users/${id}`, params);
+      return this.http.put(
+        `${this.USER_SERVICE_API_URL}/admin/users/${id}`,
+        params
+      );
     } else {
-      return this.http.post(`${this.api_url}/admin/users`, params);
+      return this.http.post(`${this.USER_SERVICE_API_URL}/admin/users`, params);
     }
   }
 
   delete_user(id: number): Observable<any> {
-    return this.http.delete(`${this.api_url}/admin/users/${id}`);
+    return this.http.delete(`${this.USER_SERVICE_API_URL}/admin/users/${id}`);
   }
 
   get_user_list(): Observable<any> {
-    return this.http.get(`${this.api_url}/admin/users/list`);
+    return this.http.get(`${this.USER_SERVICE_API_URL}/admin/users/list`);
   }
 
   set_user_preference(name: string, value: string): Observable<any> {
     const params = new HttpParams().set("name", name).set("value", value);
 
-    return this.http.post(`${this.api_url}/user/preferences`, params);
+    return this.http.post(
+      `${this.USER_SERVICE_API_URL}/user/preferences`,
+      params
+    );
   }
 
   get_user_preference(name: string, defvalue: string): string {
