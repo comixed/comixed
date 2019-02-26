@@ -18,10 +18,37 @@
  */
 
 import { ComicLocationPipe } from "./comic-location.pipe";
+import {
+  COMIC_1000,
+  COMIC_1001,
+  COMIC_1002
+} from "../models/comics/comic.fixtures";
 
 describe("ComicLocationPipe", () => {
-  it("create an instance", () => {
-    const pipe = new ComicLocationPipe();
-    expect(pipe).toBeTruthy();
+  const pipe = new ComicLocationPipe();
+  const library = [COMIC_1000, COMIC_1001, COMIC_1002];
+
+  it("returns an empty array if given a null reference", () => {
+    expect(pipe.transform(null, "")).toEqual([]);
+  });
+
+  it("returns the supplied array if the location is null", () => {
+    expect(pipe.transform(library, null)).toEqual(library);
+  });
+
+  it("return the supplied array if the location is empty", () => {
+    expect(pipe.transform(library, "")).toEqual(library);
+  });
+
+  it("returns an empty array if no comics have the given location", () => {
+    expect(pipe.transform(library, "DOESNOTEXIST")).toEqual([]);
+  });
+
+  it("returns an array of just the comics with the given location", () => {
+    expect(pipe.transform(library, "LOCATION1")).toEqual([COMIC_1000]);
+    expect(pipe.transform(library, "LOCATION2")).toEqual([
+      COMIC_1000,
+      COMIC_1002
+    ]);
   });
 });

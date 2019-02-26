@@ -29,6 +29,10 @@ export class ComicLocationPipe implements PipeTransform {
       return [];
     }
 
+    if (!!!location_name || location_name.length === 0) {
+      return comics;
+    }
+
     let result = comics.filter((comic: Comic) => {
       return comic.locations.some((location: string) => {
         return location === location_name;
