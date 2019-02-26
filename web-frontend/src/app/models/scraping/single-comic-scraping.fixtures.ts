@@ -18,15 +18,15 @@
  */
 
 import { SingleComicScraping } from "./single-comic-scraping";
-import { REGULAR_COMIC } from "../comics/comic.fixtures";
+import { COMIC_1000 } from "../comics/comic.fixtures";
 
 export const SINGLE_COMIC_SCRAPING_STATE: SingleComicScraping = {
   busy: false,
   api_key: "abc123",
-  comic: REGULAR_COMIC,
-  series: REGULAR_COMIC.series,
-  volume: REGULAR_COMIC.volume,
-  issue_number: REGULAR_COMIC.issue_number,
+  comic: COMIC_1000,
+  series: COMIC_1000.series,
+  volume: COMIC_1000.volume,
+  issue_number: COMIC_1000.issue_number,
   volumes: [],
   current_volume: null,
   current_issue: null,

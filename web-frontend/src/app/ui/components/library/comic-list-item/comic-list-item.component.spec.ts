@@ -22,7 +22,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { ComicCoverComponent } from "../../comic/comic-cover/comic-cover.component";
 import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
+import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
 import { ComicListItemComponent } from "./comic-list-item.component";
 
 describe("ComicListItemComponent", () => {
@@ -41,7 +41,7 @@ describe("ComicListItemComponent", () => {
 
     fixture = TestBed.createComponent(ComicListItemComponent);
     component = fixture.componentInstance;
-    component.comic = REGULAR_COMIC;
+    component.comic = COMIC_1000;
     component.same_height = true;
     component.cover_size = 640;
     fixture.detectChanges();

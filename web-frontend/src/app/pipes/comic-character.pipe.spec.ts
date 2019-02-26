@@ -18,10 +18,40 @@
  */
 
 import { ComicCharacterPipe } from "./comic-character.pipe";
+import {
+  COMIC_1000,
+  COMIC_1001,
+  COMIC_1002
+} from "../models/comics/comic.fixtures";
 
 describe("ComicCharacterPipe", () => {
-  it("create an instance", () => {
-    const pipe = new ComicCharacterPipe();
-    expect(pipe).toBeTruthy();
+  const pipe = new ComicCharacterPipe();
+  const library = [COMIC_1000, COMIC_1001, COMIC_1002];
+
+  it("returns an empty array if given a null reference", () => {
+    expect(pipe.transform(null, "")).toEqual([]);
+  });
+
+  it("returns the supplied array if the character is null", () => {
+    expect(pipe.transform(library, null)).toEqual(library);
+  });
+
+  it("return the supplied array if the character is empty", () => {
+    expect(pipe.transform(library, "")).toEqual(library);
+  });
+
+  it("returns an empty array if no comics have the given character", () => {
+    expect(pipe.transform(library, "DOESNOTEXIST")).toEqual([]);
+  });
+
+  it("returns an array of just the comics with the given character", () => {
+    expect(pipe.transform(library, "CHARACTER1")).toEqual([
+      COMIC_1000,
+      COMIC_1001
+    ]);
+    expect(pipe.transform(library, "CHARACTER2")).toEqual([
+      COMIC_1001,
+      COMIC_1002
+    ]);
   });
 });

@@ -20,7 +20,7 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
+import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
 import { ComicCoverComponent } from "./comic-cover.component";
 
 describe("ComicCoverComponent", () => {
@@ -37,7 +37,7 @@ describe("ComicCoverComponent", () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ComicCoverComponent);
     component = fixture.componentInstance;
-    component.comic = REGULAR_COMIC;
+    component.comic = COMIC_1000;
     component.cover_size = 200;
     component.same_height = true;
     fixture.detectChanges();

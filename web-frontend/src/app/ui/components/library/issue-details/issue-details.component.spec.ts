@@ -22,7 +22,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { TableModule } from "primeng/table";
 import { PanelModule } from "primeng/panel";
 import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
+import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
 import { IssueDetailsComponent } from "./issue-details.component";
 
 describe("IssueDetailsComponent", () => {
@@ -37,7 +37,7 @@ describe("IssueDetailsComponent", () => {
 
     fixture = TestBed.createComponent(IssueDetailsComponent);
     component = fixture.componentInstance;
-    component.comic = REGULAR_COMIC;
+    component.comic = COMIC_1000;
     fixture.detectChanges();
   }));
 

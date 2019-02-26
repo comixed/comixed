@@ -26,7 +26,7 @@ import { AppState } from "../../../../app.state";
 import { InplaceModule } from "primeng/inplace";
 import { DropdownModule } from "primeng/dropdown";
 import { userAdminReducer } from "../../../../reducers/user-admin.reducer";
-import { REGULAR_COMIC } from "../../../../models/comics/comic.fixtures";
+import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
 import { EXISTING_LIBRARY } from "../../../../models/actions/library.fixtures";
 import { ComicOverviewComponent } from "./comic-overview.component";
 
@@ -52,7 +52,7 @@ describe("ComicOverviewComponent", () => {
     fixture = TestBed.createComponent(ComicOverviewComponent);
     component = fixture.componentInstance;
     component.is_admin = false;
-    component.comic = REGULAR_COMIC;
+    component.comic = COMIC_1000;
     component.library = EXISTING_LIBRARY;
     fixture.detectChanges();
   });

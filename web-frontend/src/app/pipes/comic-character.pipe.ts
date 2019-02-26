@@ -29,6 +29,10 @@ export class ComicCharacterPipe implements PipeTransform {
       return [];
     }
 
+    if (!!!character_name || character_name.length === 0) {
+      return comics;
+    }
+
     let result = comics.filter((comic: Comic) => {
       return comic.characters.some((character: string) => {
         return character === character_name;
