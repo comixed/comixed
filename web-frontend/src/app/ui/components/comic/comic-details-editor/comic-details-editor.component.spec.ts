@@ -29,7 +29,10 @@ import { ADMIN_USER, READER_USER } from "../../../../models/user/user.fixtures";
 import { singleComicScrapingReducer } from "../../../../reducers/single-comic-scraping.reducer";
 import * as ScrapingActions from "../../../../actions/single-comic-scraping.actions";
 import { SINGLE_COMIC_SCRAPING_STATE } from "../../../../models/scraping/single-comic-scraping.fixtures";
-import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
+import {
+  COMIC_1000,
+  COMIC_1001
+} from "../../../../models/comics/comic.fixtures";
 import { ButtonModule } from "primeng/button";
 import { SplitButtonModule } from "primeng/splitbutton";
 import { BlockUIModule } from "primeng/blockui";
@@ -118,6 +121,24 @@ fdescribe("ComicDetailsEditorComponent", () => {
       expect(component.series).toEqual(COMIC_1000.series);
       expect(component.volume).toEqual(COMIC_1000.volume);
       expect(component.issue_number).toEqual(COMIC_1000.issue_number);
+    });
+  });
+
+  describe("#comic", () => {
+    beforeEach(() => {
+      component.comic = COMIC_1001;
+    });
+
+    it("sets a new value for the series", () => {
+      expect(component.series).toEqual(COMIC_1001.series);
+    });
+
+    it("sets a new value for the volume", () => {
+      expect(component.volume).toEqual(COMIC_1001.volume);
+    });
+
+    it("sets a new value for the issue number", () => {
+      expect(component.issue_number).toEqual(COMIC_1001.issue_number);
     });
   });
 });
