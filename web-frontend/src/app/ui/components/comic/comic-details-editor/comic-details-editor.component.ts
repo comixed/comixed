@@ -17,29 +17,36 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable ,  Subscription } from 'rxjs';
-import { AppState } from '../../../../app.state';
-import * as LibraryActions from '../../../../actions/library.actions';
-import * as LibraryScrapingActions from '../../../../actions/single-comic-scraping.actions';
-import * as UserActions from '../../../../actions/user.actions';
-import { AlertService } from '../../../../services/alert.service';
-import { UserService } from '../../../../services/user.service';
-import { ComicService } from '../../../../services/comic.service';
-import { Comic } from '../../../../models/comics/comic';
-import { Volume } from '../../../../models/comics/volume';
-import { Issue } from '../../../../models/scraping/issue';
-import { SingleComicScraping } from '../../../../models/scraping/single-comic-scraping';
-import { User } from '../../../../models/user/user';
-import { Preference } from '../../../../models/user/preference';
-import { COMICVINE_API_KEY } from '../../../../models/user/preferences.constants';
-import { MenuItem } from 'primeng/api';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter
+} from "@angular/core";
+import { Store } from "@ngrx/store";
+import { Observable, Subscription } from "rxjs";
+import { AppState } from "../../../../app.state";
+import * as LibraryActions from "../../../../actions/library.actions";
+import * as LibraryScrapingActions from "../../../../actions/single-comic-scraping.actions";
+import * as UserActions from "../../../../actions/user.actions";
+import { AlertService } from "../../../../services/alert.service";
+import { UserService } from "../../../../services/user.service";
+import { ComicService } from "../../../../services/comic.service";
+import { Comic } from "../../../../models/comics/comic";
+import { Volume } from "../../../../models/comics/volume";
+import { Issue } from "../../../../models/scraping/issue";
+import { SingleComicScraping } from "../../../../models/scraping/single-comic-scraping";
+import { User } from "../../../../models/user/user";
+import { Preference } from "../../../../models/user/preference";
+import { COMICVINE_API_KEY } from "../../../../models/user/preferences.constants";
+import { MenuItem } from "primeng/api";
 
 @Component({
-  selector: 'app-comic-details-editor',
-  templateUrl: './comic-details-editor.component.html',
-  styleUrls: ['./comic-details-editor.component.css']
+  selector: "app-comic-details-editor",
+  templateUrl: "./comic-details-editor.component.html",
+  styleUrls: ["./comic-details-editor.component.css"]
 })
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   @Input() multi_comic_mode = false;
@@ -56,123 +63,146 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   single_comic_scraping: SingleComicScraping;
 
   protected volume_selection_banner: string;
-  private date_formatter = Intl.DateTimeFormat('en-us', { month: 'short', year: 'numeric' });
+  private date_formatter = Intl.DateTimeFormat("en-us", {
+    month: "short",
+    year: "numeric"
+  });
 
-  protected api_key;
-  protected series;
-  protected volume;
-  protected issue_number;
-  protected skip_cache = false;
+  api_key;
+  series;
+  volume;
+  issue_number;
+  skip_cache = false;
 
   constructor(
     private alert_service: AlertService,
     private user_service: UserService,
     private comic_service: ComicService,
-    private store: Store<AppState>,
+    private store: Store<AppState>
   ) {
-    this.user$ = store.select('user');
-    this.single_comic_scraping$ = store.select('single_comic_scraping');
+    this.user$ = store.select("user");
+    this.single_comic_scraping$ = store.select("single_comic_scraping");
 
     this.fetch_options = [
       {
-        label: 'Fetch', icon: 'fa fa-search', command: () => this.fetch_candidates(false)
+        label: "Fetch",
+        icon: "fa fa-search",
+        command: () => this.fetch_candidates(false)
       },
       {
-        label: 'Fetch (Skip Cache)', icon: 'fa fa-cloud', command: () => this.fetch_candidates(true)
-      },
+        label: "Fetch (Skip Cache)",
+        icon: "fa fa-cloud",
+        command: () => this.fetch_candidates(true)
+      }
     ];
   }
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe(
-      (user: User) => {
-        this.user = user;
+    this.user_subscription = this.user$.subscribe((user: User) => {
+      this.user = user;
 
-        const api_key = this.user.preferences.find((preference: Preference) => {
-          return preference.name === COMICVINE_API_KEY;
-        });
-
-        this.api_key = api_key ? api_key.value : '';
+      const api_key = this.user.preferences.find((preference: Preference) => {
+        return preference.name === COMICVINE_API_KEY;
       });
+
+      this.api_key = api_key ? api_key.value : "";
+    });
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
 
+        this.api_key = this.single_comic_scraping.api_key;
         this.series = this.single_comic_scraping.series;
         this.volume = this.single_comic_scraping.volume;
         this.issue_number = this.single_comic_scraping.issue_number;
-      });
+      }
+    );
   }
 
   ngOnDestroy() {
+    this.user_subscription.unsubscribe();
     this.single_comic_scraping_subscription.unsubscribe();
   }
 
   @Input()
   set comic(comic: Comic) {
-    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetup({
-      api_key: this.api_key,
-      comic: comic,
-      series: comic.series,
-      volume: comic.volume,
-      issue_number: comic.issue_number,
-    }));
+    this.store.dispatch(
+      new LibraryScrapingActions.SingleComicScrapingSetup({
+        api_key: this.api_key,
+        comic: comic,
+        series: comic.series,
+        volume: comic.volume,
+        issue_number: comic.issue_number
+      })
+    );
   }
 
   fetch_candidates(skip_cache: boolean): void {
     this.skip_cache = skip_cache;
-    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingFetchVolumes({
-      api_key: this.api_key.trim(),
-      series: this.series,
-      volume: this.volume,
-      issue_number: this.issue_number,
-      skip_cache: skip_cache,
-    }));
+    this.store.dispatch(
+      new LibraryScrapingActions.SingleComicScrapingFetchVolumes({
+        api_key: this.api_key.trim(),
+        series: this.series,
+        volume: this.volume,
+        issue_number: this.issue_number,
+        skip_cache: skip_cache
+      })
+    );
   }
 
   select_volume(volume: Volume): void {
     if (volume) {
-      this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetCurrentVolume({
-        api_key: this.api_key.trim(),
-        volume: volume,
-        issue_number: this.issue_number,
-        skip_cache: this.skip_cache,
-      }));
+      this.store.dispatch(
+        new LibraryScrapingActions.SingleComicScrapingSetCurrentVolume({
+          api_key: this.api_key.trim(),
+          volume: volume,
+          issue_number: this.issue_number,
+          skip_cache: this.skip_cache
+        })
+      );
     } else {
-      this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingClearCurrentVolume());
+      this.store.dispatch(
+        new LibraryScrapingActions.SingleComicScrapingClearCurrentVolume()
+      );
     }
   }
 
   select_issue(): void {
-    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingScrapeMetadata({
-      api_key: this.api_key.trim(),
-      comic: this.single_comic_scraping.comic,
-      issue_id: this.single_comic_scraping.current_issue.id,
-      skip_cache: this.skip_cache,
-      multi_comic_mode: this.multi_comic_mode,
-    }));
+    this.store.dispatch(
+      new LibraryScrapingActions.SingleComicScrapingScrapeMetadata({
+        api_key: this.api_key.trim(),
+        comic: this.single_comic_scraping.comic,
+        issue_id: this.single_comic_scraping.current_issue.id,
+        skip_cache: this.skip_cache,
+        multi_comic_mode: this.multi_comic_mode
+      })
+    );
     this.update.next(this.single_comic_scraping.comic);
   }
 
   cancel_selection(): void {
-    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSetup({
-      api_key: this.single_comic_scraping.api_key,
-      comic: this.single_comic_scraping.comic,
-      series: this.single_comic_scraping.series,
-      volume: this.single_comic_scraping.volume,
-      issue_number: this.single_comic_scraping.issue_number,
-    }));
+    this.store.dispatch(
+      new LibraryScrapingActions.SingleComicScrapingSetup({
+        api_key: this.single_comic_scraping.api_key,
+        comic: this.single_comic_scraping.comic,
+        series: this.single_comic_scraping.series,
+        volume: this.single_comic_scraping.volume,
+        issue_number: this.single_comic_scraping.issue_number
+      })
+    );
     this.update.next(this.single_comic_scraping.comic);
   }
 
   save_changes(): void {
-    this.store.dispatch(new LibraryScrapingActions.SingleComicScrapingSaveLocalChanges({
-      api_key: this.api_key,
-      comic: this.single_comic_scraping.comic,
-      series: this.series,
-      volume: this.volume,
-      issue_number: this.issue_number,
-    }));
+    this.store.dispatch(
+      new LibraryScrapingActions.SingleComicScrapingSaveLocalChanges({
+        api_key: this.api_key,
+        comic: this.single_comic_scraping.comic,
+        series: this.series,
+        volume: this.volume,
+        issue_number: this.issue_number
+      })
+    );
   }
 
   reset_changes(): void {
@@ -183,17 +213,19 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   save_api_key(): void {
-    this.store.dispatch(new UserActions.UserSetPreference({
-      name: COMICVINE_API_KEY,
-      value: this.api_key.trim(),
-    }));
+    this.store.dispatch(
+      new UserActions.UserSetPreference({
+        name: COMICVINE_API_KEY,
+        value: this.api_key.trim()
+      })
+    );
   }
 
   is_api_key_valid(): boolean {
-    return (this.api_key || '').trim().length > 0;
+    return (this.api_key || "").trim().length > 0;
   }
 
   is_ready_to_fetch(): boolean {
-    return this.is_api_key_valid() && (this.series || '').trim().length > 0;
+    return this.is_api_key_valid() && (this.series || "").trim().length > 0;
   }
 }

@@ -23,7 +23,13 @@ import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { Store, StoreModule } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
+import { userReducer } from "../../../../reducers/user.reducer";
+import * as UserActions from "../../../../actions/user.actions";
+import { ADMIN_USER, READER_USER } from "../../../../models/user/user.fixtures";
 import { singleComicScrapingReducer } from "../../../../reducers/single-comic-scraping.reducer";
+import * as ScrapingActions from "../../../../actions/single-comic-scraping.actions";
+import { SINGLE_COMIC_SCRAPING_STATE } from "../../../../models/scraping/single-comic-scraping.fixtures";
+import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
 import { ButtonModule } from "primeng/button";
 import { SplitButtonModule } from "primeng/splitbutton";
 import { BlockUIModule } from "primeng/blockui";
@@ -39,10 +45,10 @@ import { UserServiceMock } from "../../../../services/user.service.mock";
 import { ComicService } from "../../../../services/comic.service";
 import { ComicServiceMock } from "../../../../services/comic.service.mock";
 import { VolumeListComponent } from "../../scraping/volume-list/volume-list.component";
-import { ADMIN_USER, READER_USER } from "../../../../models/user/user.fixtures";
 import { ComicDetailsEditorComponent } from "./comic-details-editor.component";
 
-xdescribe("ComicDetailsEditorComponent", () => {
+fdescribe("ComicDetailsEditorComponent", () => {
+  const COMICVINE_API_KEY = "1234567890";
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
   let alert_service: AlertService;
@@ -57,6 +63,7 @@ xdescribe("ComicDetailsEditorComponent", () => {
         FormsModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({
+          user: userReducer,
           single_comic_scraping: singleComicScrapingReducer
         }),
         ButtonModule,
@@ -78,17 +85,39 @@ xdescribe("ComicDetailsEditorComponent", () => {
 
     fixture = TestBed.createComponent(ComicDetailsEditorComponent);
     component = fixture.componentInstance;
-    component.user = ADMIN_USER;
-
-    fixture.detectChanges();
 
     alert_service = TestBed.get(AlertService);
     user_service = TestBed.get(UserService);
     comic_service = TestBed.get(ComicService);
     store = TestBed.get(Store);
+
+    spyOn(store, "dispatch").and.callThrough();
+
+    fixture.detectChanges();
   }));
 
-  it("should create", () => {
-    expect(component).toBeTruthy();
+  describe("#ngOnInit()", () => {
+    it("should subscribe to changes in the current user", () => {
+      store.dispatch(new UserActions.UserLoaded({ user: ADMIN_USER }));
+
+      expect(component.user.email).toEqual(ADMIN_USER.email);
+    });
+
+    it("should subscribe to changes in the scraping data", () => {
+      store.dispatch(
+        new ScrapingActions.SingleComicScrapingSetup({
+          api_key: COMICVINE_API_KEY,
+          comic: COMIC_1000,
+          series: COMIC_1000.series,
+          volume: COMIC_1000.volume,
+          issue_number: COMIC_1000.issue_number
+        })
+      );
+
+      expect(component.api_key).toEqual(COMICVINE_API_KEY);
+      expect(component.series).toEqual(COMIC_1000.series);
+      expect(component.volume).toEqual(COMIC_1000.volume);
+      expect(component.issue_number).toEqual(COMIC_1000.issue_number);
+    });
   });
 });
