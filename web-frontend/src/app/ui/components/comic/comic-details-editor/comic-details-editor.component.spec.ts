@@ -141,4 +141,41 @@ fdescribe("ComicDetailsEditorComponent", () => {
       expect(component.issue_number).toEqual(COMIC_1001.issue_number);
     });
   });
+
+  describe("#fetch_candidates()", () => {
+    beforeEach(() => {
+      component.api_key = COMICVINE_API_KEY;
+      component.comic = COMIC_1001;
+    });
+
+    it("sets the skip_cache to false when supplied", () => {
+      component.fetch_candidates(false);
+
+      expect(component.skip_cache).toBeFalsy();
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ScrapingActions.SingleComicScrapingFetchVolumes({
+          api_key: COMICVINE_API_KEY,
+          series: COMIC_1001.series,
+          volume: COMIC_1001.volume,
+          issue_number: COMIC_1001.issue_number,
+          skip_cache: false
+        })
+      );
+    });
+
+    it("sets the skip_cache to true when supplied", () => {
+      component.fetch_candidates(true);
+
+      expect(component.skip_cache).toBeTruthy();
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ScrapingActions.SingleComicScrapingFetchVolumes({
+          api_key: COMICVINE_API_KEY,
+          series: COMIC_1001.series,
+          volume: COMIC_1001.volume,
+          issue_number: COMIC_1001.issue_number,
+          skip_cache: true
+        })
+      );
+    });
+  });
 });
