@@ -33,6 +33,7 @@ import {
   COMIC_1000,
   COMIC_1001
 } from "../../../../models/comics/comic.fixtures";
+import { VOLUME_1000 } from "../../../../models/comics/volume.fixtures";
 import { ButtonModule } from "primeng/button";
 import { SplitButtonModule } from "primeng/splitbutton";
 import { BlockUIModule } from "primeng/blockui";
@@ -175,6 +176,32 @@ fdescribe("ComicDetailsEditorComponent", () => {
           issue_number: COMIC_1001.issue_number,
           skip_cache: true
         })
+      );
+    });
+  });
+
+  describe("#select_volume()", () => {
+    beforeEach(() => {
+      component.api_key = COMICVINE_API_KEY;
+      component.comic = COMIC_1001;
+    });
+
+    it("handles when a volume is selected", () => {
+      component.select_volume(VOLUME_1000);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ScrapingActions.SingleComicScrapingSetCurrentVolume({
+          api_key: COMICVINE_API_KEY,
+          volume: VOLUME_1000,
+          issue_number: COMIC_1001.issue_number,
+          skip_cache: component.skip_cache
+        })
+      );
+    });
+
+    it("handles when a volume is deselected", () => {
+      component.select_volume(null);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ScrapingActions.SingleComicScrapingClearCurrentVolume()
       );
     });
   });
