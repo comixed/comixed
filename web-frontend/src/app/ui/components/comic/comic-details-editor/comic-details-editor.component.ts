@@ -239,11 +239,4 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   is_api_key_valid(): boolean {
     return (this.form.controls["api_key"].value || "").trim().length > 0;
   }
-
-  is_ready_to_fetch(): boolean {
-    return (
-      this.is_api_key_valid() &&
-      (this.form.controls["series"].value || "").trim().length > 0
-    );
-  }
 }

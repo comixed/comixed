@@ -17,9 +17,11 @@
  * org.comixed;
  */
 
+import { DebugElement } from "@angular/core";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { FormsModule, ReactiveFormsModule, FormBuilder } from "@angular/forms";
+import { By } from "@angular/platform-browser";
 import { TranslateModule } from "@ngx-translate/core";
 import { Store, StoreModule } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
@@ -53,10 +55,11 @@ import { ComicServiceMock } from "../../../../services/comic.service.mock";
 import { VolumeListComponent } from "../../scraping/volume-list/volume-list.component";
 import { ComicDetailsEditorComponent } from "./comic-details-editor.component";
 
-fdescribe("ComicDetailsEditorComponent", () => {
+describe("ComicDetailsEditorComponent", () => {
   const API_KEY = "1234567890";
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
+  let fetch_button: DebugElement;
   let alert_service: AlertService;
   let user_service: UserService;
   let comic_service: ComicService;
@@ -102,6 +105,8 @@ fdescribe("ComicDetailsEditorComponent", () => {
     spyOn(store, "dispatch").and.callThrough();
 
     fixture.detectChanges();
+
+    fetch_button = fixture.debugElement.query(By.css("#fetch_volumes_button"));
   }));
 
   describe("form state", () => {
@@ -115,34 +120,40 @@ fdescribe("ComicDetailsEditorComponent", () => {
           issue_number: COMIC_1000.issue_number
         })
       );
+      expect(fetch_button).not.toBe(null);
     });
 
     it("enables the button when all fields are filled", () => {
       expect(component.form.valid).toBeTruthy();
+      expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
 
     it("disables the fetch button if the api key field is empty", () => {
       component.form.controls["api_key"].setValue("");
 
       expect(component.form.valid).toBeFalsy();
+      expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
 
     it("disables the fetch button if the series field is empty", () => {
       component.form.controls["series"].setValue("");
 
       expect(component.form.valid).toBeFalsy();
+      expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
 
     it("disables the fetch button if the volume field is empty", () => {
       component.form.controls["volume"].setValue("");
 
       expect(component.form.valid).toBeFalsy();
+      expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
 
     it("disables the fetch button if the issue number field is empty", () => {
       component.form.controls["issue_number"].setValue("");
 
       expect(component.form.valid).toBeFalsy();
+      expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
   });
 

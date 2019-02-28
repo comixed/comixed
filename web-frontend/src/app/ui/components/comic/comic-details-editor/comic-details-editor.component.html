@@ -68,10 +68,11 @@
             label="{{'button.save'|translate}}"
             icon="fa fa-save"
             (click)="save_changes()"></button>
-    <p-splitButton label="Fetch"
+    <p-splitButton id="fetch_volumes_button"
+                   label="Fetch"
                    icon="fa fa-search"
                    [model]="fetch_options"
-                   [disabled]="!is_ready_to_fetch()"></p-splitButton>
+                   [disabled]="!form.valid"></p-splitButton>
     <button pButton
             type="button"
             label="{{'button.reset'|translate}}"
