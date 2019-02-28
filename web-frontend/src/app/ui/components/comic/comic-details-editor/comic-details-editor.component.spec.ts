@@ -19,7 +19,7 @@
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule, FormBuilder } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { Store, StoreModule } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
@@ -67,6 +67,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
       imports: [
         RouterTestingModule,
         FormsModule,
+        ReactiveFormsModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({
           user: userReducer,
@@ -83,6 +84,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
       ],
       declarations: [ComicDetailsEditorComponent, VolumeListComponent],
       providers: [
+        FormBuilder,
         { provide: AlertService, useClass: AlertServiceMock },
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
@@ -102,6 +104,48 @@ fdescribe("ComicDetailsEditorComponent", () => {
     fixture.detectChanges();
   }));
 
+  describe("form state", () => {
+    beforeEach(() => {
+      store.dispatch(
+        new ScrapingActions.SingleComicScrapingSetup({
+          api_key: API_KEY,
+          comic: COMIC_1000,
+          series: COMIC_1000.series,
+          volume: COMIC_1000.volume,
+          issue_number: COMIC_1000.issue_number
+        })
+      );
+    });
+
+    it("enables the button when all fields are filled", () => {
+      expect(component.form.valid).toBeTruthy();
+    });
+
+    it("disables the fetch button if the api key field is empty", () => {
+      component.form.controls["api_key"].setValue("");
+
+      expect(component.form.valid).toBeFalsy();
+    });
+
+    it("disables the fetch button if the series field is empty", () => {
+      component.form.controls["series"].setValue("");
+
+      expect(component.form.valid).toBeFalsy();
+    });
+
+    it("disables the fetch button if the volume field is empty", () => {
+      component.form.controls["volume"].setValue("");
+
+      expect(component.form.valid).toBeFalsy();
+    });
+
+    it("disables the fetch button if the issue number field is empty", () => {
+      component.form.controls["issue_number"].setValue("");
+
+      expect(component.form.valid).toBeFalsy();
+    });
+  });
+
   describe("#ngOnInit()", () => {
     it("should subscribe to changes in the current user", () => {
       store.dispatch(new UserActions.UserLoaded({ user: ADMIN_USER }));
@@ -120,10 +164,16 @@ fdescribe("ComicDetailsEditorComponent", () => {
         })
       );
 
-      expect(component.api_key).toEqual(API_KEY);
-      expect(component.series).toEqual(COMIC_1000.series);
-      expect(component.volume).toEqual(COMIC_1000.volume);
-      expect(component.issue_number).toEqual(COMIC_1000.issue_number);
+      expect(component.form.controls["api_key"].value).toEqual(API_KEY);
+      expect(component.form.controls["series"].value).toEqual(
+        COMIC_1000.series
+      );
+      expect(component.form.controls["volume"].value).toEqual(
+        COMIC_1000.volume
+      );
+      expect(component.form.controls["issue_number"].value).toEqual(
+        COMIC_1000.issue_number
+      );
     });
   });
 
@@ -133,21 +183,27 @@ fdescribe("ComicDetailsEditorComponent", () => {
     });
 
     it("sets a new value for the series", () => {
-      expect(component.series).toEqual(COMIC_1001.series);
+      expect(component.form.controls["series"].value).toEqual(
+        COMIC_1001.series
+      );
     });
 
     it("sets a new value for the volume", () => {
-      expect(component.volume).toEqual(COMIC_1001.volume);
+      expect(component.form.controls["volume"].value).toEqual(
+        COMIC_1001.volume
+      );
     });
 
     it("sets a new value for the issue number", () => {
-      expect(component.issue_number).toEqual(COMIC_1001.issue_number);
+      expect(component.form.controls["issue_number"].value).toEqual(
+        COMIC_1001.issue_number
+      );
     });
   });
 
   describe("#fetch_candidates()", () => {
     beforeEach(() => {
-      component.api_key = API_KEY;
+      component.form.controls["api_key"].setValue(API_KEY);
       component.comic = COMIC_1001;
     });
 
@@ -184,7 +240,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#select_volume()", () => {
     beforeEach(() => {
-      component.api_key = API_KEY;
+      component.form.controls["api_key"].setValue(API_KEY);
       component.comic = COMIC_1001;
     });
 
@@ -210,7 +266,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#select_issue()", () => {
     beforeEach(() => {
-      component.api_key = API_KEY;
+      component.form.controls["api_key"].setValue(API_KEY);
       component.comic = COMIC_1000;
       component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
       component.single_comic_scraping.current_issue = ISSUE_1000;
@@ -233,7 +289,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#cancel_selection()", () => {
     beforeEach(() => {
-      component.api_key = API_KEY;
+      component.form.controls["api_key"].setValue(API_KEY);
       component.comic = COMIC_1000;
       component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
       component.single_comic_scraping.current_issue = ISSUE_1000;
@@ -256,11 +312,11 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#save_changes()", () => {
     it("saves the current states", () => {
-      component.api_key = API_KEY;
+      component.form.controls["api_key"].setValue(API_KEY);
       component.comic = COMIC_1000;
-      component.series = "Replacement Series";
-      component.volume = "1965";
-      component.issue_number = "275";
+      component.form.controls["series"].setValue("Replacement Series");
+      component.form.controls["volume"].setValue("1965");
+      component.form.controls["issue_number"].setValue("275");
 
       component.save_changes();
 
@@ -290,23 +346,29 @@ fdescribe("ComicDetailsEditorComponent", () => {
     });
 
     it("reverts all local changes", () => {
-      component.api_key = "XXXXX";
-      component.series = "XXXXX";
-      component.volume = "9999";
-      component.issue_number = "199";
+      component.form.controls["api_key"].setValue("XXXXX");
+      component.form.controls["series"].setValue("XXXXX");
+      component.form.controls["volume"].setValue("9999");
+      component.form.controls["issue_number"].setValue("199");
 
       component.reset_changes();
 
-      expect(component.api_key).toEqual(API_KEY);
-      expect(component.series).toEqual(COMIC_1000.series);
-      expect(component.volume).toEqual(COMIC_1000.volume);
-      expect(component.issue_number).toEqual(COMIC_1000.issue_number);
+      expect(component.form.controls["api_key"].value).toEqual(API_KEY);
+      expect(component.form.controls["series"].value).toEqual(
+        COMIC_1000.series
+      );
+      expect(component.form.controls["volume"].value).toEqual(
+        COMIC_1000.volume
+      );
+      expect(component.form.controls["issue_number"].value).toEqual(
+        COMIC_1000.issue_number
+      );
     });
   });
 
   describe("#save_api_key()", () => {
     it("submits the entered key", () => {
-      component.api_key = API_KEY;
+      component.form.controls["api_key"].setValue(API_KEY);
 
       component.save_api_key();
 

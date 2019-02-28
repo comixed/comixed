@@ -249,9 +249,6 @@ import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-
     FormsModule,
     ReactiveFormsModule,
     NgxPaginationModule,
-
-    FormsModule,
-    ReactiveFormsModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
       fullScreenBackdrop: true
