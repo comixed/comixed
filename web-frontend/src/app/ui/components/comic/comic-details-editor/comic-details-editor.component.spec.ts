@@ -35,6 +35,7 @@ import {
 } from "../../../../models/comics/comic.fixtures";
 import { VOLUME_1000 } from "../../../../models/comics/volume.fixtures";
 import { ISSUE_1000 } from "../../../../models/scraping/issue.fixtures";
+import { COMICVINE_API_KEY } from "../../../../models/user/preferences.constants";
 import { ButtonModule } from "primeng/button";
 import { SplitButtonModule } from "primeng/splitbutton";
 import { BlockUIModule } from "primeng/blockui";
@@ -53,7 +54,7 @@ import { VolumeListComponent } from "../../scraping/volume-list/volume-list.comp
 import { ComicDetailsEditorComponent } from "./comic-details-editor.component";
 
 fdescribe("ComicDetailsEditorComponent", () => {
-  const COMICVINE_API_KEY = "1234567890";
+  const API_KEY = "1234567890";
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
   let alert_service: AlertService;
@@ -111,7 +112,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
     it("should subscribe to changes in the scraping data", () => {
       store.dispatch(
         new ScrapingActions.SingleComicScrapingSetup({
-          api_key: COMICVINE_API_KEY,
+          api_key: API_KEY,
           comic: COMIC_1000,
           series: COMIC_1000.series,
           volume: COMIC_1000.volume,
@@ -119,7 +120,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
         })
       );
 
-      expect(component.api_key).toEqual(COMICVINE_API_KEY);
+      expect(component.api_key).toEqual(API_KEY);
       expect(component.series).toEqual(COMIC_1000.series);
       expect(component.volume).toEqual(COMIC_1000.volume);
       expect(component.issue_number).toEqual(COMIC_1000.issue_number);
@@ -146,7 +147,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#fetch_candidates()", () => {
     beforeEach(() => {
-      component.api_key = COMICVINE_API_KEY;
+      component.api_key = API_KEY;
       component.comic = COMIC_1001;
     });
 
@@ -156,7 +157,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
       expect(component.skip_cache).toBeFalsy();
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingFetchVolumes({
-          api_key: COMICVINE_API_KEY,
+          api_key: API_KEY,
           series: COMIC_1001.series,
           volume: COMIC_1001.volume,
           issue_number: COMIC_1001.issue_number,
@@ -171,7 +172,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
       expect(component.skip_cache).toBeTruthy();
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingFetchVolumes({
-          api_key: COMICVINE_API_KEY,
+          api_key: API_KEY,
           series: COMIC_1001.series,
           volume: COMIC_1001.volume,
           issue_number: COMIC_1001.issue_number,
@@ -183,7 +184,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#select_volume()", () => {
     beforeEach(() => {
-      component.api_key = COMICVINE_API_KEY;
+      component.api_key = API_KEY;
       component.comic = COMIC_1001;
     });
 
@@ -191,7 +192,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
       component.select_volume(VOLUME_1000);
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingSetCurrentVolume({
-          api_key: COMICVINE_API_KEY,
+          api_key: API_KEY,
           volume: VOLUME_1000,
           issue_number: COMIC_1001.issue_number,
           skip_cache: component.skip_cache
@@ -209,7 +210,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#select_issue()", () => {
     beforeEach(() => {
-      component.api_key = COMICVINE_API_KEY;
+      component.api_key = API_KEY;
       component.comic = COMIC_1000;
       component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
       component.single_comic_scraping.current_issue = ISSUE_1000;
@@ -220,7 +221,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingScrapeMetadata({
-          api_key: COMICVINE_API_KEY,
+          api_key: API_KEY,
           comic: COMIC_1000,
           issue_id: ISSUE_1000.id,
           skip_cache: false,
@@ -232,7 +233,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#cancel_selection()", () => {
     beforeEach(() => {
-      component.api_key = COMICVINE_API_KEY;
+      component.api_key = API_KEY;
       component.comic = COMIC_1000;
       component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
       component.single_comic_scraping.current_issue = ISSUE_1000;
@@ -243,7 +244,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingSetup({
-          api_key: COMICVINE_API_KEY,
+          api_key: API_KEY,
           comic: COMIC_1000,
           series: COMIC_1000.series,
           volume: COMIC_1000.volume,
@@ -255,7 +256,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
   describe("#save_changes()", () => {
     it("saves the current states", () => {
-      component.api_key = COMICVINE_API_KEY;
+      component.api_key = API_KEY;
       component.comic = COMIC_1000;
       component.series = "Replacement Series";
       component.volume = "1965";
@@ -265,7 +266,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingSaveLocalChanges({
-          api_key: COMICVINE_API_KEY,
+          api_key: API_KEY,
           comic: COMIC_1000,
           series: "Replacement Series",
           volume: "1965",
@@ -279,7 +280,7 @@ fdescribe("ComicDetailsEditorComponent", () => {
     beforeEach(() => {
       store.dispatch(
         new ScrapingActions.SingleComicScrapingSetup({
-          api_key: COMICVINE_API_KEY,
+          api_key: API_KEY,
           comic: COMIC_1000,
           series: COMIC_1000.series,
           volume: COMIC_1000.volume,
@@ -296,10 +297,25 @@ fdescribe("ComicDetailsEditorComponent", () => {
 
       component.reset_changes();
 
-      expect(component.api_key).toEqual(COMICVINE_API_KEY);
+      expect(component.api_key).toEqual(API_KEY);
       expect(component.series).toEqual(COMIC_1000.series);
       expect(component.volume).toEqual(COMIC_1000.volume);
       expect(component.issue_number).toEqual(COMIC_1000.issue_number);
+    });
+  });
+
+  describe("#save_api_key()", () => {
+    it("submits the entered key", () => {
+      component.api_key = API_KEY;
+
+      component.save_api_key();
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new UserActions.UserSetPreference({
+          name: COMICVINE_API_KEY,
+          value: API_KEY
+        })
+      );
     });
   });
 });
