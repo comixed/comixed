@@ -252,4 +252,26 @@ fdescribe("ComicDetailsEditorComponent", () => {
       );
     });
   });
+
+  describe("#save_changes()", () => {
+    it("saves the current states", () => {
+      component.api_key = COMICVINE_API_KEY;
+      component.comic = COMIC_1000;
+      component.series = "Replacement Series";
+      component.volume = "1965";
+      component.issue_number = "275";
+
+      component.save_changes();
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ScrapingActions.SingleComicScrapingSaveLocalChanges({
+          api_key: COMICVINE_API_KEY,
+          comic: COMIC_1000,
+          series: "Replacement Series",
+          volume: "1965",
+          issue_number: "275"
+        })
+      );
+    });
+  });
 });
