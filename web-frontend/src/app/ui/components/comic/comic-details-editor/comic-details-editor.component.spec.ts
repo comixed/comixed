@@ -229,4 +229,27 @@ fdescribe("ComicDetailsEditorComponent", () => {
       );
     });
   });
+
+  describe("#cancel_selection()", () => {
+    beforeEach(() => {
+      component.api_key = COMICVINE_API_KEY;
+      component.comic = COMIC_1000;
+      component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
+      component.single_comic_scraping.current_issue = ISSUE_1000;
+    });
+
+    it("resets the scraping setup", () => {
+      component.cancel_selection();
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ScrapingActions.SingleComicScrapingSetup({
+          api_key: COMICVINE_API_KEY,
+          comic: COMIC_1000,
+          series: COMIC_1000.series,
+          volume: COMIC_1000.volume,
+          issue_number: COMIC_1000.issue_number
+        })
+      );
+    });
+  });
 });
