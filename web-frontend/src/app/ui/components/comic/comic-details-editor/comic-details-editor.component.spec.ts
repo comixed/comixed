@@ -274,4 +274,32 @@ fdescribe("ComicDetailsEditorComponent", () => {
       );
     });
   });
+
+  describe("#reset_changes()", () => {
+    beforeEach(() => {
+      store.dispatch(
+        new ScrapingActions.SingleComicScrapingSetup({
+          api_key: COMICVINE_API_KEY,
+          comic: COMIC_1000,
+          series: COMIC_1000.series,
+          volume: COMIC_1000.volume,
+          issue_number: COMIC_1000.issue_number
+        })
+      );
+    });
+
+    it("reverts all local changes", () => {
+      component.api_key = "XXXXX";
+      component.series = "XXXXX";
+      component.volume = "9999";
+      component.issue_number = "199";
+
+      component.reset_changes();
+
+      expect(component.api_key).toEqual(COMICVINE_API_KEY);
+      expect(component.series).toEqual(COMIC_1000.series);
+      expect(component.volume).toEqual(COMIC_1000.volume);
+      expect(component.issue_number).toEqual(COMIC_1000.issue_number);
+    });
+  });
 });
