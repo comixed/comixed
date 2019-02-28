@@ -48,7 +48,7 @@ import { DEFAULT_LIBRARY_DISPLAY } from "../../../../models/actions/library-disp
 import { DEFAULT_LIBRARY_FILTER } from "../../../../models/actions/library-filter.fixtures";
 import { ComicListToolbarComponent } from "./comic-list-toolbar.component";
 
-describe("ComicListToolbarComponent", () => {
+xdescribe("ComicListToolbarComponent", () => {
   let component: ComicListToolbarComponent;
   let fixture: ComponentFixture<ComicListToolbarComponent>;
 
