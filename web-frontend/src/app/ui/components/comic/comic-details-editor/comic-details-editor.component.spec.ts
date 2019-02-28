@@ -34,6 +34,7 @@ import {
   COMIC_1001
 } from "../../../../models/comics/comic.fixtures";
 import { VOLUME_1000 } from "../../../../models/comics/volume.fixtures";
+import { ISSUE_1000 } from "../../../../models/scraping/issue.fixtures";
 import { ButtonModule } from "primeng/button";
 import { SplitButtonModule } from "primeng/splitbutton";
 import { BlockUIModule } from "primeng/blockui";
@@ -202,6 +203,29 @@ fdescribe("ComicDetailsEditorComponent", () => {
       component.select_volume(null);
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingClearCurrentVolume()
+      );
+    });
+  });
+
+  describe("#select_issue()", () => {
+    beforeEach(() => {
+      component.api_key = COMICVINE_API_KEY;
+      component.comic = COMIC_1000;
+      component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
+      component.single_comic_scraping.current_issue = ISSUE_1000;
+    });
+
+    it("notifies the store to fetch the issue's metadata", () => {
+      component.select_issue();
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ScrapingActions.SingleComicScrapingScrapeMetadata({
+          api_key: COMICVINE_API_KEY,
+          comic: COMIC_1000,
+          issue_id: ISSUE_1000.id,
+          skip_cache: false,
+          multi_comic_mode: false
+        })
       );
     });
   });
