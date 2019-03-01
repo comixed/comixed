@@ -225,12 +225,12 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   reset_changes(): void {
-    this.form.controls["api_key"].setValue(this.single_comic_scraping.api_key);
     this.form.controls["series"].setValue(this.single_comic_scraping.series);
     this.form.controls["volume"].setValue(this.single_comic_scraping.volume);
     this.form.controls["issue_number"].setValue(
       this.single_comic_scraping.comic.issue_number
     );
+    this.form.markAsPristine();
   }
 
   save_api_key(): void {

@@ -59,7 +59,12 @@ describe("ComicDetailsEditorComponent", () => {
   const API_KEY = "1234567890";
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
+  let api_key_input: DebugElement;
+  let series_input: DebugElement;
+  let volume_input: DebugElement;
+  let issue_number_input: DebugElement;
   let fetch_button: DebugElement;
+  let reset_button: DebugElement;
   let alert_service: AlertService;
   let user_service: UserService;
   let comic_service: ComicService;
@@ -106,7 +111,14 @@ describe("ComicDetailsEditorComponent", () => {
 
     fixture.detectChanges();
 
+    api_key_input = fixture.debugElement.query(By.css("#api_key_input"));
+    series_input = fixture.debugElement.query(By.css("#series_input"));
+    volume_input = fixture.debugElement.query(By.css("#volume_input"));
+    issue_number_input = fixture.debugElement.query(
+      By.css("#issue_number_input")
+    );
     fetch_button = fixture.debugElement.query(By.css("#fetch_volumes_button"));
+    reset_button = fixture.debugElement.query(By.css("#reset_comic_button"));
   }));
 
   describe("form state", () => {
@@ -155,6 +167,13 @@ describe("ComicDetailsEditorComponent", () => {
       expect(component.form.valid).toBeFalsy();
       expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
+
+    it("disables the reset button", () => {
+      expect(component.form.dirty).toBeFalsy();
+      expect(reset_button.nativeElement.disabled).toBeTruthy();
+    });
+
+    xit("enables the reset button on changes", () => {});
   });
 
   describe("#ngOnInit()", () => {
@@ -354,16 +373,19 @@ describe("ComicDetailsEditorComponent", () => {
           issue_number: COMIC_1000.issue_number
         })
       );
+      component.form.controls["series"].setValue("XXXXX");
+      series_input.nativeElement.dispatchEvent(new Event("input"), "XXXXX");
+      component.form.controls["volume"].setValue("9999");
+      volume_input.nativeElement.dispatchEvent(new Event("input"), "9999");
+      component.form.controls["issue_number"].setValue("199");
+      issue_number_input.nativeElement.dispatchEvent(new Event("input"), "199");
+
+      fixture.detectChanges;
+
+      component.reset_changes();
     });
 
     it("reverts all local changes", () => {
-      component.form.controls["api_key"].setValue("XXXXX");
-      component.form.controls["series"].setValue("XXXXX");
-      component.form.controls["volume"].setValue("9999");
-      component.form.controls["issue_number"].setValue("199");
-
-      component.reset_changes();
-
       expect(component.form.controls["api_key"].value).toEqual(API_KEY);
       expect(component.form.controls["series"].value).toEqual(
         COMIC_1000.series
@@ -374,6 +396,10 @@ describe("ComicDetailsEditorComponent", () => {
       expect(component.form.controls["issue_number"].value).toEqual(
         COMIC_1000.issue_number
       );
+    });
+
+    it("sets the form back to pristine", () => {
+      expect(component.form.dirty).toBeFalsy();
     });
   });
 

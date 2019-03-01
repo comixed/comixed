@@ -17,7 +17,7 @@
           {{'comic-details-editor.text.comicvine-api-key-placeholder'|translate}}
         </span>
         <span pInplaceContent>
-          <input id="api_key"
+          <input id="api_key_input"
                  type="text"
                  formControlName="api_key"
                  pInputText>
@@ -35,7 +35,7 @@
       </label>
     </div>
     <div class="ui-g-10 ui-sm-6">
-      <input id="series"
+      <input id="series_input"
              type="text"
              formControlName="series"
              pInputText>
@@ -46,7 +46,7 @@
       </label>
     </div>
     <div class="ui-g-10 ui-sm-6">
-      <input id="volume"
+      <input id="volume_input"
              type="text"
              formControlName="volume"
              pInputText>
@@ -57,7 +57,7 @@
       </label>
     </div>
     <div class="ui-g-10 ui-sm-6">
-      <input id="issue_number"
+      <input id="issue_number_input"
              type="text"
              formControlName="issue_number"
              pInputText>
@@ -75,9 +75,11 @@
                      [model]="fetch_options"
                      [disabled]="!form.valid"></p-splitButton>
       <button pButton
+              id="reset_comic_button"
               type="button"
               label="{{'button.reset'|translate}}"
               icon="fa fa-undo"
+              [disabled]="!form.dirty"
               (click)="reset_changes()"></button>
     </div>
   </div>
