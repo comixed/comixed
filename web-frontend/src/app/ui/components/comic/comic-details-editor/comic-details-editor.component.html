@@ -64,10 +64,12 @@
     </div>
     <div class="ui-g-12 ui-sm-12">
       <button pButton
+              id="save_data_button"
               type="button"
               pInplaceContent
               label="{{'button.save'|translate}}"
               icon="fa fa-save"
+              [disabled]="!form.dirty"
               (click)="save_changes()"></button>
       <p-splitButton id="fetch_volumes_button"
                      label="Fetch"

@@ -63,6 +63,7 @@ describe("ComicDetailsEditorComponent", () => {
   let series_input: DebugElement;
   let volume_input: DebugElement;
   let issue_number_input: DebugElement;
+  let save_button: DebugElement;
   let fetch_button: DebugElement;
   let reset_button: DebugElement;
   let alert_service: AlertService;
@@ -117,6 +118,9 @@ describe("ComicDetailsEditorComponent", () => {
     issue_number_input = fixture.debugElement.query(
       By.css("#issue_number_input")
     );
+    save_button = fetch_button = fixture.debugElement.query(
+      By.css("#save_data_button")
+    );
     fetch_button = fixture.debugElement.query(By.css("#fetch_volumes_button"));
     reset_button = fixture.debugElement.query(By.css("#reset_comic_button"));
   }));
@@ -135,36 +139,35 @@ describe("ComicDetailsEditorComponent", () => {
       expect(fetch_button).not.toBe(null);
     });
 
-    it("enables the button when all fields are filled", () => {
-      expect(component.form.valid).toBeTruthy();
+    it("enables the fetch button when all fields are filled", () => {
       expect(fetch_button.nativeElement.disabled).toBeFalsy();
+    });
+
+    it("enables the save button when all fields are filled", () => {
+      expect(component.form.valid).toBeTruthy();
     });
 
     it("disables the fetch button if the api key field is empty", () => {
       component.form.controls["api_key"].setValue("");
 
-      expect(component.form.valid).toBeFalsy();
       expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
 
     it("disables the fetch button if the series field is empty", () => {
       component.form.controls["series"].setValue("");
 
-      expect(component.form.valid).toBeFalsy();
       expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
 
     it("disables the fetch button if the volume field is empty", () => {
       component.form.controls["volume"].setValue("");
 
-      expect(component.form.valid).toBeFalsy();
       expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
 
     it("disables the fetch button if the issue number field is empty", () => {
       component.form.controls["issue_number"].setValue("");
 
-      expect(component.form.valid).toBeFalsy();
       expect(fetch_button.nativeElement.disabled).toBeFalsy();
     });
 
