@@ -2,18 +2,20 @@
   <p-progressBar mode='indeterminate'
                  [style]='{"height": "6px"}'></p-progressBar>
 </p-blockUI>
-<div *ngIf="single_comic_scraping && !single_comic_scraping.volumes.length"
-     class="ui-g">
-  <div class="ui-g-2 ui-sm-2">
-    <label for="api_key">
-      <b>{{'comic-details-editor.label.comicvine-api-key'|translate}}</b>
-    </label>
-  </div>
-  <form [formGroup]="form">
+<form [formGroup]="form">
+  <div *ngIf="single_comic_scraping && !single_comic_scraping.volumes.length"
+       class="ui-g">
+    <div class="ui-g-2 ui-sm-2">
+      <label for="api_key">
+        <b>{{'comic-details-editor.label.comicvine-api-key'|translate}}</b>
+      </label>
+    </div>
     <div class="ui-g-10 ui-sm-6">
       <p-inplace closable="closable">
         <span pInplaceDisplay
-              pTooltip="{{'comic-details-editor.tooltip.comicvine-api-key'|translate}}">{{api_key||('comic-details-editor.text.comicvine-api-key-placeholder'|translate)}}</span>
+              pTooltip="{{'comic-details-editor.tooltip.comicvine-api-key'|translate}}">
+          {{'comic-details-editor.text.comicvine-api-key-placeholder'|translate}}
+        </span>
         <span pInplaceContent>
           <input id="api_key"
                  type="text"
@@ -60,26 +62,26 @@
              formControlName="issue_number"
              pInputText>
     </div>
-  </form>
-  <div class="ui-g-12 ui-sm-12">
-    <button pButton
-            type="button"
-            pInplaceContent
-            label="{{'button.save'|translate}}"
-            icon="fa fa-save"
-            (click)="save_changes()"></button>
-    <p-splitButton id="fetch_volumes_button"
-                   label="Fetch"
-                   icon="fa fa-search"
-                   [model]="fetch_options"
-                   [disabled]="!form.valid"></p-splitButton>
-    <button pButton
-            type="button"
-            label="{{'button.reset'|translate}}"
-            icon="fa fa-undo"
-            (click)="reset_changes()"></button>
+    <div class="ui-g-12 ui-sm-12">
+      <button pButton
+              type="button"
+              pInplaceContent
+              label="{{'button.save'|translate}}"
+              icon="fa fa-save"
+              (click)="save_changes()"></button>
+      <p-splitButton id="fetch_volumes_button"
+                     label="Fetch"
+                     icon="fa fa-search"
+                     [model]="fetch_options"
+                     [disabled]="!form.valid"></p-splitButton>
+      <button pButton
+              type="button"
+              label="{{'button.reset'|translate}}"
+              icon="fa fa-undo"
+              (click)="reset_changes()"></button>
+    </div>
   </div>
-</div>
+</form>
 <div *ngIf="single_comic_scraping && single_comic_scraping.volumes?.length"
      class="ui-g">
   <div class="ui-g-12">

@@ -116,9 +116,11 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
 
-        this.form.controls["api_key"].setValue(
-          this.single_comic_scraping.api_key
-        );
+        if (this.single_comic_scraping.api_key.length) {
+          this.form.controls["api_key"].setValue(
+            this.single_comic_scraping.api_key
+          );
+        }
         this.form.controls["series"].setValue(
           this.single_comic_scraping.series
         );
@@ -148,6 +150,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         issue_number: comic.issue_number
       })
     );
+  }
+
+  get api_key(): string {
+    return this.form.controls["api_key"].value;
   }
 
   fetch_candidates(skip_cache: boolean): void {
