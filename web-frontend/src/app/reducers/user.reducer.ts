@@ -67,10 +67,9 @@ export function userReducer(
       let is_reader = false;
 
       if (user) {
-        is_admin =
-          user.roles.findIndex((pref: Preference) => {
-            return pref.name === "ADMIN";
-          }) !== -1;
+        is_admin = user.roles.some((pref: Preference) => {
+          return pref.name === "ADMIN";
+        });
         is_reader = user.roles.some((pref: Preference) => {
           return pref.name === "READER";
         });

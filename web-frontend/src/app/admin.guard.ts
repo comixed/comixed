@@ -17,34 +17,28 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from './app.state';
-import { Observable } from 'rxjs';
-import { User } from './models/user/user';
-import { Role } from './models/user/role';
+import { Injectable } from "@angular/core";
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot
+} from "@angular/router";
+import { Store } from "@ngrx/store";
+import { AppState } from "./app.state";
+import { Observable } from "rxjs";
+import { User } from "./models/user/user";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  private user: User;
-  private allowed = false;
+  user: User;
 
-  constructor(
-    private store: Store<AppState>) {
-    store.select('user').subscribe(
-      (user: User) => {
-        this.user = user;
-
-        this.allowed = this.user.roles.findIndex((role: Role) => {
-          return role.name === 'ADMIN';
-        }) !== -1;
-      });
+  constructor(private store: Store<AppState>) {
+    store.select("user").subscribe((user: User) => {
+      this.user = user;
+    });
   }
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.allowed;
+  canActivate(): Observable<boolean> | Promise<boolean> | boolean {
+    return this.user ? this.user.is_admin : false;
   }
 }

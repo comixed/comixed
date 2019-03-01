@@ -20,11 +20,14 @@
 import { TestBed, async, inject } from "@angular/core/testing";
 import { Store, StoreModule } from "@ngrx/store";
 import { AppState } from "./app.state";
+import * as UserActions from "./actions/user.actions";
 import { userReducer } from "./reducers/user.reducer";
+import { ADMIN_USER, READER_USER } from "./models/user/user.fixtures";
 
-import { AdminGuard } from "./admin.guard";
+import { AdminGuard } from "./Admin.guard";
 
 describe("AdminGuard", () => {
+  let guard: AdminGuard;
   let store: Store<AppState>;
 
   beforeEach(() => {
@@ -33,10 +36,37 @@ describe("AdminGuard", () => {
       providers: [AdminGuard]
     });
 
+    guard = TestBed.get(AdminGuard);
     store = TestBed.get(Store);
   });
 
-  it("should ...", inject([AdminGuard], (guard: AdminGuard) => {
-    expect(guard).toBeTruthy();
-  }));
+  describe("when there is no user logged in", () => {
+    beforeEach(() => {
+      store.dispatch(new UserActions.UserLoaded({ user: null }));
+    });
+
+    it("blocks access", () => {
+      expect(guard.canActivate()).toBeFalsy();
+    });
+  });
+
+  describe("when a user with the admin role is logged in", () => {
+    beforeEach(() => {
+      store.dispatch(new UserActions.UserLoaded({ user: ADMIN_USER }));
+    });
+
+    it("grants access", () => {
+      expect(guard.canActivate()).toBeTruthy();
+    });
+  });
+
+  describe("blocks users without the admin role", () => {
+    beforeEach(() => {
+      store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
+    });
+
+    it("blocks access", () => {
+      expect(guard.canActivate()).toBeFalsy();
+    });
+  });
 });
