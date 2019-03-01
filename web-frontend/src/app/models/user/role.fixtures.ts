@@ -19,6 +19,10 @@
 
 import { Role } from "./role";
 
-export const ReaderRole: Role = {
-  name: "ROLE_READER,"
+export const READER_ROLE: Role = {
+  name: "READER"
+};
+
+export const ADMIN_ROLE: Role = {
+  name: "ADMIN"
 };

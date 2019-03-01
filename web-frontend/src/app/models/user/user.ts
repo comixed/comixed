@@ -17,8 +17,8 @@
  * org.comixed;
  */
 
-import { Role } from './role';
-import { Preference } from './preference';
+import { Role } from "./role";
+import { Preference } from "./preference";
 
 export interface User {
   id: number;
@@ -29,6 +29,7 @@ export interface User {
   email: string;
   authenticated: boolean;
   is_admin: boolean;
+  is_reader: boolean;
   first_login_date: number;
   last_login_date: number;
   roles: Role[];

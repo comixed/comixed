@@ -19,7 +19,7 @@
 
 import { User } from "./user";
 import { Preference } from "./preference";
-import { ReaderRole } from "./role.fixtures";
+import { ADMIN_ROLE, READER_ROLE } from "./role.fixtures";
 
 export const ADMIN_USER: User = {
   id: 1000,
@@ -30,9 +30,10 @@ export const ADMIN_USER: User = {
   email: "comixedadmin@somedomain.com",
   authenticated: true,
   is_admin: true,
+  is_reader: true,
   first_login_date: 0,
   last_login_date: 0,
-  roles: [ReaderRole],
+  roles: [READER_ROLE, ADMIN_ROLE],
   preferences: [{ name: "api_key", value: "1234567890" }]
 };
 
@@ -45,8 +46,25 @@ export const READER_USER: User = {
   email: "comixedreader@somedomain.com",
   authenticated: true,
   is_admin: false,
+  is_reader: true,
   first_login_date: 0,
   last_login_date: 0,
-  roles: [ReaderRole],
+  roles: [READER_ROLE],
+  preferences: []
+};
+
+export const BLOCKED_USER: User = {
+  id: 1002,
+  fetching: false,
+  token: "123abc",
+  authenticating: false,
+  busy: false,
+  email: "comixedblocked@somedomain.com",
+  authenticated: true,
+  is_admin: false,
+  is_reader: false,
+  first_login_date: 0,
+  last_login_date: 0,
+  roles: [],
   preferences: []
 };

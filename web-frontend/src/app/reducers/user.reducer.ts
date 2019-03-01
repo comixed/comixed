@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-import { User } from '../models/user/user';
-import { Preference } from '../models/user/preference';
-import * as UserActions from '../actions/user.actions';
+import { Action } from "@ngrx/store";
+import { User } from "../models/user/user";
+import { Preference } from "../models/user/preference";
+import * as UserActions from "../actions/user.actions";
 
 const initial_state: User = {
   id: null,
@@ -30,16 +30,17 @@ const initial_state: User = {
   busy: false,
   authenticated: false,
   is_admin: false,
+  is_reader: false,
   email: null,
   roles: [],
   preferences: [],
   first_login_date: null,
-  last_login_date: null,
+  last_login_date: null
 };
 
 export function userReducer(
   state: User = initial_state,
-  action: UserActions.Actions,
+  action: UserActions.Actions
 ) {
   switch (action.type) {
     case UserActions.USER_AUTH_CHECK:
@@ -48,6 +49,7 @@ export function userReducer(
         fetching: true,
         authenticating: false,
         is_admin: false,
+        is_reader: false
       };
 
     case UserActions.USER_SET_AUTH_TOKEN:
@@ -56,17 +58,22 @@ export function userReducer(
         fetching: false,
         authentication: false,
         busy: false,
-        token: action.payload.token,
+        token: action.payload.token
       };
 
     case UserActions.USER_LOADED: {
       const user = action.payload.user;
       let is_admin = false;
+      let is_reader = false;
 
       if (user) {
-        is_admin = user.roles.findIndex((pref: Preference) => {
-          return pref.name === 'ADMIN';
-        }) !== -1;
+        is_admin =
+          user.roles.findIndex((pref: Preference) => {
+            return pref.name === "ADMIN";
+          }) !== -1;
+        is_reader = user.roles.some((pref: Preference) => {
+          return pref.name === "READER";
+        });
       }
       return {
         ...state,
@@ -74,32 +81,33 @@ export function userReducer(
         authenticating: false,
         authenticated: user ? true : false,
         is_admin: is_admin,
+        is_reader: is_reader,
         id: user ? user.id : null,
         email: user ? user.email : null,
         roles: user ? user.roles : [],
         preferences: user ? user.preferences : [],
         first_login_date: user ? user.first_login_date : null,
-        last_login_date: user ? user.last_login_date : null,
+        last_login_date: user ? user.last_login_date : null
       };
     }
 
     case UserActions.USER_START_LOGIN:
       return {
         ...state,
-        authenticating: true,
+        authenticating: true
       };
 
     case UserActions.USER_CANCEL_LOGIN:
       return {
         ...state,
-        authenticating: false,
+        authenticating: false
       };
 
     case UserActions.USER_LOGGING_IN:
       return {
         ...state,
         authenticated: false,
-        busy: true,
+        busy: true
       };
 
     case UserActions.USER_LOGOUT:
@@ -107,6 +115,7 @@ export function userReducer(
         ...state,
         authenticated: false,
         is_admin: false,
+        is_reader: false,
         token: null,
         busy: false,
         id: null,
@@ -114,25 +123,28 @@ export function userReducer(
         roles: [],
         preferences: [],
         first_login_date: null,
-        last_login_date: null,
+        last_login_date: null
       };
 
     case UserActions.USER_SET_PREFERENCE:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case UserActions.USER_PREFERENCE_SAVED: {
       const preferences = state.preferences.filter((preference: Preference) => {
         return preference.name !== action.payload.name;
       });
-      preferences.push({ name: action.payload.name, value: action.payload.value });
+      preferences.push({
+        name: action.payload.name,
+        value: action.payload.value
+      });
 
       return {
         ...state,
         busy: false,
-        preferences: preferences,
+        preferences: preferences
       };
     }
 
