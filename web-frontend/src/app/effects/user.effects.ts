@@ -72,8 +72,7 @@ export class UserEffects {
     ofType(UserActions.USER_LOGOUT),
     switchMap((action: UserActions.UserLogout) =>
       observableOf(this.token_storage.sign_out()).pipe(
-        map(() => new UserActions.UserAuthCheck()),
-        tap(() => this.router.navigate["/home"])
+        map(() => new UserActions.UserAuthCheck())
       )
     )
   );
