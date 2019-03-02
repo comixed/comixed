@@ -18,6 +18,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { Observable, Subscription } from "rxjs";
 import { AppState } from "../../../../app.state";
@@ -40,6 +41,7 @@ export class MenubarComponent implements OnInit, OnDestroy {
   menu_items: Array<MenuItem>;
 
   constructor(
+    private router: Router,
     private translate: TranslateService,
     private store: Store<AppState>
   ) {
@@ -67,6 +69,7 @@ export class MenubarComponent implements OnInit, OnDestroy {
 
   do_logout(): void {
     this.store.dispatch(new UserActions.UserLogout());
+    this.router.navigate(["/home"]);
   }
 
   private update_menu() {

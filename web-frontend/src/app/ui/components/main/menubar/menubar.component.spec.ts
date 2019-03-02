@@ -18,7 +18,8 @@
  */
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterModule } from "@angular/router";
+import { Router } from "@angular/router";
+import { RouterTestingModule } from "@angular/router/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { MenubarModule } from "primeng/menubar";
 import { ButtonModule } from "primeng/button";
@@ -31,11 +32,12 @@ describe("MenubarComponent", () => {
   let component: MenubarComponent;
   let fixture: ComponentFixture<MenubarComponent>;
   let store: Store<AppState>;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([]),
+        RouterTestingModule,
         TranslateModule.forRoot(),
         MenubarModule,
         ButtonModule,
@@ -48,11 +50,25 @@ describe("MenubarComponent", () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MenubarComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
     store = TestBed.get(Store);
+    router = TestBed.get(Router);
+
+    fixture.detectChanges();
   });
 
   it("should create", () => {
     expect(component).toBeTruthy();
+  });
+
+  describe("#do_logout()", () => {
+    beforeEach(() => {
+      spyOn(router, "navigate");
+
+      component.do_logout();
+    });
+
+    it("redirects the user to the main page", () => {
+      expect(router.navigate).toHaveBeenCalledWith(["/home"]);
+    });
   });
 });
