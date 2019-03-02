@@ -4,7 +4,7 @@
                   [showTransitionOptions]="'0ms'"
                   [hideTransitionOptions]="'0ms'"
                   (mouseenter)="show_overlay_panel($event, overlay, overlaytarget)"
-                  (mouseleave)="overlay.hide()">
+                  (mouseleve)="overlay.hide()">
     <p-panel styleClass="comic-cover-overlay-panel">
       <p-header>{{comic|comic_title}}</p-header>
       <p-footer>
@@ -13,7 +13,7 @@
     </p-panel>
   </p-overlayPanel>
 </div>
-<div>
+<div [class.selected-comic]="selected">
   <p-card styleClass="comic-cover-card">
     <a (click)="onClick.next(true)">
       <p-header></p-header>

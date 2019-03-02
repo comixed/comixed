@@ -22,20 +22,18 @@
   </p-header>
   <ng-template let-comic
                pTemplate="listItem">
-    <div [class.selected-comic]="selected_comics.includes(comic)">
-      <app-comic-list-item [comic]="comic"
-                           [same_height]="library_display.same_height"
-                           [cover_size]="library_display.cover_size"
-                           (toggleSelected)="set_selected(comic, $event)"></app-comic-list-item>
-    </div>
+    <app-comic-list-item [comic]="comic"
+                         [selected]="selected_comics.includes(comic)"
+                         [same_height]="library_display.same_height"
+                         [cover_size]="library_display.cover_size"
+                         (toggleSelected)="set_selected(comic, $event)"></app-comic-list-item>
   </ng-template>
   <ng-template let-comic
                pTemplate="gridItem">
-    <div [class.selected-comic]="selected_comics.includes(comic)">
-      <app-comic-grid-item [comic]="comic"
-                           [same_height]="library_display.same_height"
-                           [cover_size]="library_display.cover_size"
-                           (toggleSelected)="set_selected(comic, $event)"></app-comic-grid-item>
-    </div>
+    <app-comic-grid-item [comic]="comic"
+                         [selected]="selected_comics.includes(comic)"
+                         [same_height]="library_display.same_height"
+                         [cover_size]="library_display.cover_size"
+                         (toggleSelected)="set_selected(comic, $event)"></app-comic-grid-item>
   </ng-template>
 </p-dataView>

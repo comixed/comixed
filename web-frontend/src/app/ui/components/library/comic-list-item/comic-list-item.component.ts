@@ -29,17 +29,14 @@ export class ComicListItemComponent implements OnInit {
   @Input() comic: Comic;
   @Input() same_height: boolean;
   @Input() cover_size: number;
-
+  @Input() selected = false;
   @Output() toggleSelected = new EventEmitter<boolean>();
-
-  protected selected = false;
 
   constructor() {}
 
   ngOnInit() {}
 
   toggle_selected(): void {
-    this.selected = !this.selected;
-    this.toggleSelected.next(this.selected);
+    this.toggleSelected.next(!this.selected);
   }
 }

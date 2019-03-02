@@ -30,6 +30,7 @@ export class ComicCoverComponent implements OnInit {
   @Input() comic: Comic;
   @Input() cover_size: number;
   @Input() same_height: boolean;
+  @Input() selected = false;
 
   @Output() onClick = new EventEmitter<boolean>();
 
