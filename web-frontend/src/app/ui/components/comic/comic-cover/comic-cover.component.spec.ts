@@ -16,9 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
+
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
+import { By } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule } from "@ngx-translate/core";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { PanelModule } from "primeng/panel";
+import { CardModule } from "primeng/card";
+import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
 import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
 import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
 import { ComicCoverComponent } from "./comic-cover.component";
@@ -29,21 +36,47 @@ describe("ComicCoverComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, TranslateModule.forRoot()],
-      declarations: [ComicCoverComponent, ComicCoverUrlPipe]
+      imports: [
+        RouterTestingModule,
+        BrowserAnimationsModule,
+        OverlayPanelModule,
+        PanelModule,
+        CardModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ComicCoverComponent, ComicCoverUrlPipe, ComicTitlePipe]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicCoverComponent);
     component = fixture.componentInstance;
     component.comic = COMIC_1000;
     component.cover_size = 200;
     component.same_height = true;
+
     fixture.detectChanges();
+  }));
+
+  describe("when the comic is not selected", () => {
+    beforeEach(() => {
+      component.selected = false;
+      fixture.detectChanges();
+    });
+
+    it("does not have the selected class on the container", () => {
+      const elements = fixture.debugElement.query(By.css(".selected-comic"));
+      expect(elements).toBeFalsy();
+    });
   });
 
-  it("should create", () => {
-    expect(component).toBeTruthy();
+  describe("when the comic is selected", () => {
+    beforeEach(() => {
+      component.selected = true;
+      fixture.detectChanges();
+    });
+
+    it("does not have the selected class on the container", () => {
+      const elements = fixture.debugElement.query(By.css(".selected-comic"));
+      expect(elements).toBeTruthy();
+    });
   });
 });
