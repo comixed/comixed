@@ -1,46 +1,46 @@
-.cover-container {
-  position: relative;
-  width: 100%;
-  padding: 2px;
+:host >>> .comic-cover-card .ui-card-body {
+  margin: 0;
+  padding: 0;
 }
 
-.cover-image {
-  display: block;
+:host >>> .ui-overlaypanel-content {
+  background-color: #FFFFE0;
+  color: #000000;
 }
 
-.cover-overlay {
-  transition: .5s ease;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  opacity: 0;
-  transition: .5s ease;
+:host >>> .comic-cover-overlay-panel {
+  background-color: #FFFFE0;
+  color: #000000;
+  border: none;
 }
 
-.cover-container:hover .cover-overlay {
-  opacity: 0.8;
+:host >>> .comic-cover-overlay-panel .ui-panel-titlebar {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: #FFFFE0;
+  color: #000000;
+  border: none;
 }
 
-.cover-text {
-  background-color: #fff;
-  color: #000;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  font-size: small;
-  adding: 16px 32px;
-  white-space:  nowrap;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
+:host >>> .comic-cover-overlay-panel .ui-panel-titlebar p-header {
+  text-align: center;
+  text-transform: capitalize;
+  text-align: center;
+  background-color: #FFFFE0;
+  color: #000000;
+}
+
+:host >>> .comic-cover-overlay-panel .ui-panel {
+  background-color: #FFFFE0;
+  color: #000000;
+}
+
+:host >>> .comic-cover-overlay-panel .ui-panel-footer {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: #FFFFE0;
+  color: #000000;
+  text-align: center;
 }

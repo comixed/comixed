@@ -48,6 +48,7 @@ import { ConfirmationService } from "primeng/api";
 import { PasswordModule } from "primeng/password";
 import { PickListModule } from "primeng/picklist";
 import { InplaceModule } from "primeng/inplace";
+import { OverlayPanelModule } from "primeng/overlaypanel";
 import { AppRouting } from "./app.routing";
 import { AppComponent } from "./app.component";
 import {
@@ -240,6 +241,7 @@ import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-
     ConfirmDialogModule,
     PasswordModule,
     InplaceModule,
+    OverlayPanelModule,
     PickListModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,

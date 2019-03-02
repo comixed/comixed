@@ -19,6 +19,7 @@
 
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Comic } from "../../../../models/comics/comic";
+import { OverlayPanel } from "primeng/overlaypanel";
 
 @Component({
   selector: "app-comic-cover",
@@ -35,4 +36,8 @@ export class ComicCoverComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  show_overlay_panel(event: any, panel: OverlayPanel, target: any) {
+    panel.show(event, target);
+  }
 }
