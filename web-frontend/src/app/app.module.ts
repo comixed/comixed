@@ -48,7 +48,7 @@ import { ConfirmationService } from "primeng/api";
 import { PasswordModule } from "primeng/password";
 import { PickListModule } from "primeng/picklist";
 import { InplaceModule } from "primeng/inplace";
-import { AppRoutingModule } from "./app-routing.module";
+import { AppRouting } from "./app.routing";
 import { AppComponent } from "./app.component";
 import {
   HttpClient,
@@ -214,7 +214,7 @@ import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
+    AppRouting,
     HttpClientModule,
     MenubarModule,
     SidebarModule,

@@ -62,15 +62,18 @@ export const routes: Routes = [
   },
   {
     path: "scraping",
-    component: MultiComicScrapingPageComponent
+    component: MultiComicScrapingPageComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: "publishers",
-    component: PublishersPageComponent
+    component: PublishersPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "publishers/:name",
-    component: PublisherDetailsPageComponent
+    component: PublisherDetailsPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "series",
@@ -84,35 +87,43 @@ export const routes: Routes = [
   },
   {
     path: "characters",
-    component: CharactersPageComponent
+    component: CharactersPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "characters/:name",
-    component: CharacterDetailsPageComponent
+    component: CharacterDetailsPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "teams",
-    component: TeamsPageComponent
+    component: TeamsPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "teams/:name",
-    component: TeamDetailsPageComponent
+    component: TeamDetailsPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "locations",
-    component: LocationsPageComponent
+    component: LocationsPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "locations/:name",
-    component: LocationDetailsPageComponent
+    component: LocationDetailsPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "stories",
-    component: StoryArcsPageComponent
+    component: StoryArcsPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "stories/:name",
-    component: StoryArcDetailsPageComponent
+    component: StoryArcDetailsPageComponent,
+    canActivate: [ReaderGuard]
   },
   {
     path: "import",
@@ -137,4 +148,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRouting {}
