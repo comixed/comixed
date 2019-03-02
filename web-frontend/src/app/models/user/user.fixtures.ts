@@ -22,6 +22,7 @@ import { Preference } from "./preference";
 import { ADMIN_ROLE, READER_ROLE } from "./role.fixtures";
 
 export const ADMIN_USER: User = {
+  initialized: true,
   id: 1000,
   fetching: false,
   token: "abc123",
@@ -38,6 +39,7 @@ export const ADMIN_USER: User = {
 };
 
 export const READER_USER: User = {
+  initialized: true,
   id: 1001,
   fetching: false,
   token: "123abc",
@@ -54,6 +56,7 @@ export const READER_USER: User = {
 };
 
 export const BLOCKED_USER: User = {
+  initialized: true,
   id: 1002,
   fetching: false,
   token: "123abc",

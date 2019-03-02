@@ -23,6 +23,7 @@ import { Preference } from "../models/user/preference";
 import * as UserActions from "../actions/user.actions";
 
 const initial_state: User = {
+  initialized: false,
   id: null,
   token: null,
   fetching: false,
@@ -55,6 +56,7 @@ export function userReducer(
     case UserActions.USER_SET_AUTH_TOKEN:
       return {
         ...state,
+        initialized: true,
         fetching: false,
         authentication: false,
         busy: false,
@@ -76,6 +78,7 @@ export function userReducer(
       }
       return {
         ...state,
+        initialized: true,
         fetching: false,
         authenticating: false,
         authenticated: user ? true : false,

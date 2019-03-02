@@ -1,3 +1,4 @@
+2;
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
