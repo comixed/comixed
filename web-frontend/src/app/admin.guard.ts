@@ -23,22 +23,45 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot
 } from "@angular/router";
-import { Store } from "@ngrx/store";
+import { Router } from "@angular/router";
+import { Store, Action } from "@ngrx/store";
 import { AppState } from "./app.state";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import * as UserActions from "./actions/user.actions";
+import { filter } from "rxjs/operators";
 import { User } from "./models/user/user";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
   user: User;
+  admin_subject = new Subject<boolean>();
 
-  constructor(private store: Store<AppState>) {
+  constructor(private router: Router, private store: Store<AppState>) {
     store.select("user").subscribe((user: User) => {
       this.user = user;
+
+      if (
+        this.user.initialized &&
+        !this.user.authenticating &&
+        !this.user.fetching
+      ) {
+        this.admin_subject.next(this.user.is_admin);
+      }
     });
   }
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
-    return this.user ? this.user.is_admin : false;
+    // if the user auth check hasn't completed, return a promise
+    if (this.user.initialized) {
+      if (this.user.authenticated) {
+        return this.user.is_admin;
+      } else {
+        this.router.navigate(["/home"]);
+        return false;
+      }
+    } else {
+      this.store.dispatch(new UserActions.UserAuthCheck());
+      return this.admin_subject;
+    }
   }
 }

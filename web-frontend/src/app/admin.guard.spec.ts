@@ -18,35 +18,48 @@
  */
 
 import { TestBed, async, inject } from "@angular/core/testing";
+import { Router } from "@angular/router";
+import { RouterTestingModule } from "@angular/router/testing";
 import { Store, StoreModule } from "@ngrx/store";
 import { AppState } from "./app.state";
 import * as UserActions from "./actions/user.actions";
 import { userReducer } from "./reducers/user.reducer";
 import { ADMIN_USER, READER_USER } from "./models/user/user.fixtures";
 
-import { AdminGuard } from "./Admin.guard";
+import { AdminGuard } from "./admin.guard";
 
 describe("AdminGuard", () => {
   let guard: AdminGuard;
   let store: Store<AppState>;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot({ user: userReducer })],
+      imports: [
+        RouterTestingModule,
+        StoreModule.forRoot({ user: userReducer })
+      ],
       providers: [AdminGuard]
     });
 
     guard = TestBed.get(AdminGuard);
     store = TestBed.get(Store);
+    router = TestBed.get(Router);
   });
 
   describe("when there is no user logged in", () => {
     beforeEach(() => {
       store.dispatch(new UserActions.UserLoaded({ user: null }));
+      spyOn(router, "navigate");
     });
 
     it("blocks access", () => {
       expect(guard.canActivate()).toBeFalsy();
+    });
+
+    it("redirects the user to the home page", () => {
+      guard.canActivate();
+      expect(router.navigate).toHaveBeenCalledWith(["/home"]);
     });
   });
 
