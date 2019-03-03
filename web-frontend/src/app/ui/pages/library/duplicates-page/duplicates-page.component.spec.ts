@@ -30,8 +30,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { SliderModule } from "primeng/slider";
 import { ButtonModule } from "primeng/button";
 import { TableModule } from "primeng/table";
-import { AlertService } from "../../../../services/alert.service";
-import { AlertServiceMock } from "../../../../services/alert.service.mock";
+import { MessageService } from "primeng/api";
 import { UserService } from "../../../../services/user.service";
 import { UserServiceMock } from "../../../../services/user.service.mock";
 import { DuplicatePagesViewComponent } from "../../../views/library/duplicate-pages-view/duplicate-pages-view.component";
@@ -68,7 +67,7 @@ describe("DuplicatesPageComponent", () => {
         ComicCoverUrlPipe
       ],
       providers: [
-        { provide: AlertService, useClass: AlertServiceMock },
+        MessageService,
         { provide: UserService, useClass: UserServiceMock }
       ]
     }).compileComponents();

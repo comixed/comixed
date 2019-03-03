@@ -17,35 +17,36 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable ,  Subscription } from 'rxjs';
-import { AppState } from '../../../../app.state';
-import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
-import { AlertService } from '../../../../services/alert.service';
-import { Duplicates } from '../../../../models/duplicates';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Router } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { Observable, Subscription } from "rxjs";
+import { AppState } from "../../../../app.state";
+import * as DuplicatesActions from "../../../../actions/duplicate-pages.actions";
+import { MessageService } from "primeng/api";
+import { Duplicates } from "../../../../models/duplicates";
 
-export const DUPLICATES_HASH_PARAMETER = 'hash';
+export const DUPLICATES_HASH_PARAMETER = "hash";
 
 @Component({
-  selector: 'app-duplicates-page',
-  templateUrl: './duplicates-page.component.html',
-  styleUrls: ['./duplicates-page.component.css']
+  selector: "app-duplicates-page",
+  templateUrl: "./duplicates-page.component.html",
+  styleUrls: ["./duplicates-page.component.css"]
 })
 export class DuplicatesPageComponent implements OnInit, OnDestroy {
   duplicates$: Observable<Duplicates>;
-  duplicates_subscription; Subscription;
+  duplicates_subscription;
+  Subscription;
   duplicates: Duplicates;
 
   constructor(
     private activated_route: ActivatedRoute,
     private router: Router,
     private store: Store<AppState>,
-    private alert_service: AlertService,
+    private message_service: MessageService
   ) {
-    this.duplicates$ = store.select('duplicates');
+    this.duplicates$ = store.select("duplicates");
   }
 
   ngOnInit() {
@@ -54,20 +55,43 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
         this.duplicates = duplicates;
 
         if (this.duplicates.pages_deleted > 0) {
-          this.alert_service.show_info_message(`Marked ${this.duplicates.pages_deleted} page(s) for deletion...`);
+          this.message_service.add({
+            severity: "info",
+            summary: "Delete Comic",
+            detail: `Marked ${
+              this.duplicates.pages_deleted
+            } page(s) for deletion...`
+          });
         }
         if (this.duplicates.pages_undeleted) {
-          this.alert_service.show_info_message(`${this.duplicates.pages_undeleted} page(s) unmarked...`);
+          this.message_service.add({
+            severity: "info",
+            summary: "Undelete Comic",
+            detail: `Unmarked ${
+              this.duplicates.pages_undeleted
+            } page(s) for deletion...`
+          });
         }
-        if (this.duplicates.current_hash && !this.duplicates.current_duplicates && this.duplicates.pages.length > 0) {
-          this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash({
-            hash: this.duplicates.current_hash,
-          }));
+        if (
+          this.duplicates.current_hash &&
+          !this.duplicates.current_duplicates &&
+          this.duplicates.pages.length > 0
+        ) {
+          this.store.dispatch(
+            new DuplicatesActions.DuplicatePagesShowComicsWithHash({
+              hash: this.duplicates.current_hash
+            })
+          );
         }
-      });
+      }
+    );
     this.activated_route.queryParams.subscribe(params => {
       if (params[DUPLICATES_HASH_PARAMETER]) {
-        this.store.dispatch(new DuplicatesActions.DuplicatePagesShowComicsWithHash(params[DUPLICATES_HASH_PARAMETER]));
+        this.store.dispatch(
+          new DuplicatesActions.DuplicatePagesShowComicsWithHash(
+            params[DUPLICATES_HASH_PARAMETER]
+          )
+        );
       }
     });
     this.store.dispatch(new DuplicatesActions.DuplicatePagesFetchPages());
