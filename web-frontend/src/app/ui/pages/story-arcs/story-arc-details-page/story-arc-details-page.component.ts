@@ -45,6 +45,8 @@ export class StoryArcDetailsPageComponent implements OnInit {
   protected cover_size = 200;
 
   story_name: string;
+  comics: Array<Comic> = [];
+  selected_comics: Array<Comic> = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -60,6 +62,9 @@ export class StoryArcDetailsPageComponent implements OnInit {
   ngOnInit() {
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
+
+      this.comics = [].concat(this.library.comics);
+      this.selected_comics = [].concat(this.library.selected_comics);
     });
   }
 
