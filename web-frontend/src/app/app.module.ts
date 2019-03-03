@@ -73,7 +73,6 @@ import { LoginComponent } from "./ui/components/login/login.component";
 import { AlertService } from "./services/alert.service";
 import { UserService } from "./services/user.service";
 import { LibraryPageComponent } from "./ui/pages/library/library-page/library-page.component";
-import { NotificationsComponent } from "./ui/components/notifications/notifications.component";
 import { ImportPageComponent } from "./ui/pages/library/import-page/import-page.component";
 import { DuplicatesPageComponent } from "./ui/pages/library/duplicates-page/duplicates-page.component";
 import { ImportToolbarComponent } from "./ui/components/import/import-toolbar/import-toolbar.component";
@@ -160,7 +159,6 @@ import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-
     ComicCreditsComponent,
     ComicPagesComponent,
     LibraryPageComponent,
-    NotificationsComponent,
     ImportPageComponent,
     DuplicatesPageComponent,
     ImportToolbarComponent,

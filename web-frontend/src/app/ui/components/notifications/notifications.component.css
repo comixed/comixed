@@ -1,9 +1,0 @@
-:host ::ng-deep .ui-toast-message-info {
-	background-color: #ff0;
-	color: #000;
-}
-
-:host ::ng-deep .ui-toast-message-error {
-	background-color: #f00;
-	color: #000;
-}
