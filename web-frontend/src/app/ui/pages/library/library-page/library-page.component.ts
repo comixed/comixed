@@ -19,7 +19,6 @@
 
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
-import { ActivatedRoute, Params } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
 import { Library } from "../../../../models/actions/library";
@@ -63,7 +62,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   protected busy = false;
 
   constructor(
-    private activated_route: ActivatedRoute,
     private router: Router,
     private user_service: UserService,
     private comic_service: ComicService,

@@ -43,7 +43,7 @@ export function libraryDisplayReducer(
     case LibraryDisplayActions.SET_LIBRARY_VIEW_SORT:
       return {
         ...state,
-        sort: action.payload.sort
+        sort_field: action.payload.sort_field
       };
 
     case LibraryDisplayActions.SET_LIBRARY_VIEW_ROWS:

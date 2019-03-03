@@ -18,13 +18,21 @@
  */
 
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Router, ActivatedRoute, Params } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { SelectItem } from "primeng/api";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
-import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
+import * as DisplayActions from "../../../../actions/library-display.actions";
 import { LibraryFilter } from "../../../../models/actions/library-filter";
-import { LibraryDisplay } from "../../../../models/actions/library-display";
+import {
+  LibraryDisplay,
+  LAYOUT,
+  SORT,
+  ROWS,
+  COVER_SIZE,
+  SAME_HEIGHT
+} from "../../../../models/actions/library-display";
 
 @Component({
   selector: "app-comic-list-toolbar",
@@ -45,13 +53,47 @@ export class ComicListToolbarComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private activated_route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.load_layout_options();
     this.load_sort_field_options();
     this.load_rows_options();
+    this.activated_route.queryParams.subscribe((params: Params) => {
+      if (params.layout) {
+        this.store.dispatch(
+          new DisplayActions.SetLibraryViewLayout({ layout: params.layout })
+        );
+      }
+      if (params.sort) {
+        this.store.dispatch(
+          new DisplayActions.SetLibraryViewSort({ sort_field: params.sort })
+        );
+      }
+      if (params.rows) {
+        this.store.dispatch(
+          new DisplayActions.SetLibraryViewRows({
+            rows: parseInt(params.rows, 10)
+          })
+        );
+      }
+      if (params.cover_size) {
+        this.store.dispatch(
+          new DisplayActions.SetLibraryViewCoverSize({
+            cover_size: parseInt(params.cover_size, 10)
+          })
+        );
+      }
+      if (params.same_height) {
+        this.store.dispatch(
+          new DisplayActions.SetLibraryViewUseSameHeight({
+            same_height: parseInt(params.same_height, 10) === 0 ? false : true
+          })
+        );
+      }
+    });
   }
 
   private load_layout_options(): void {
@@ -143,21 +185,19 @@ export class ComicListToolbarComponent implements OnInit {
 
   set_sort_field(sort_field: string): void {
     this.store.dispatch(
-      new LibraryDisplayActions.SetLibraryViewSort({
-        sort: sort_field
+      new DisplayActions.SetLibraryViewSort({
+        sort_field: sort_field
       })
     );
   }
 
   set_rows(rows: number): void {
-    this.store.dispatch(
-      new LibraryDisplayActions.SetLibraryViewRows({ rows: rows })
-    );
+    this.store.dispatch(new DisplayActions.SetLibraryViewRows({ rows: rows }));
   }
 
   set_same_height(same_height: boolean): void {
     this.store.dispatch(
-      new LibraryDisplayActions.SetLibraryViewUseSameHeight({
+      new DisplayActions.SetLibraryViewUseSameHeight({
         same_height: same_height
       })
     );
@@ -165,7 +205,7 @@ export class ComicListToolbarComponent implements OnInit {
 
   set_cover_size(cover_size: number): void {
     this.store.dispatch(
-      new LibraryDisplayActions.SetLibraryViewCoverSize({
+      new DisplayActions.SetLibraryViewCoverSize({
         cover_size: cover_size
       })
     );

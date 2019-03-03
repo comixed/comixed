@@ -31,7 +31,7 @@ export const SET_LIBRARY_VIEW_SORT = "[LIBRARY VIEW] Set sort";
 export class SetLibraryViewSort implements Action {
   readonly type = SET_LIBRARY_VIEW_SORT;
 
-  constructor(public payload: { sort: string }) {}
+  constructor(public payload: { sort_field: string }) {}
 }
 
 export const SET_LIBRARY_VIEW_ROWS = "[LIBRARY VIEW] Set rows";

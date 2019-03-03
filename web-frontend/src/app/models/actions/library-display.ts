@@ -17,6 +17,12 @@
  * org.comixed;
  */
 
+export const LAYOUT = "layout";
+export const SORT = "sort";
+export const ROWS = "rows";
+export const COVER_SIZE = "cover_size";
+export const SAME_HEIGHT = "same_height";
+
 export interface LibraryDisplay {
   layout: string;
   sort_field: string;
