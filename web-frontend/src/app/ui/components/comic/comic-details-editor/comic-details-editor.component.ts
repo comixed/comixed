@@ -32,7 +32,6 @@ import { AppState } from "../../../../app.state";
 import * as LibraryActions from "../../../../actions/library.actions";
 import * as LibraryScrapingActions from "../../../../actions/single-comic-scraping.actions";
 import * as UserActions from "../../../../actions/user.actions";
-import { AlertService } from "../../../../services/alert.service";
 import { UserService } from "../../../../services/user.service";
 import { ComicService } from "../../../../services/comic.service";
 import { Comic } from "../../../../models/comics/comic";
@@ -73,7 +72,6 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   constructor(
-    private alert_service: AlertService,
     private user_service: UserService,
     private comic_service: ComicService,
     private store: Store<AppState>,

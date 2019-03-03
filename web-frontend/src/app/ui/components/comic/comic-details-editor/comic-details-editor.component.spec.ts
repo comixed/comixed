@@ -46,8 +46,6 @@ import { TooltipModule } from "primeng/tooltip";
 import { InplaceModule } from "primeng/inplace";
 import { TableModule } from "primeng/table";
 import { CardModule } from "primeng/card";
-import { AlertService } from "../../../../services/alert.service";
-import { AlertServiceMock } from "../../../../services/alert.service.mock";
 import { UserService } from "../../../../services/user.service";
 import { UserServiceMock } from "../../../../services/user.service.mock";
 import { ComicService } from "../../../../services/comic.service";
@@ -66,7 +64,6 @@ describe("ComicDetailsEditorComponent", () => {
   let save_button: DebugElement;
   let fetch_button: DebugElement;
   let reset_button: DebugElement;
-  let alert_service: AlertService;
   let user_service: UserService;
   let comic_service: ComicService;
   let store: Store<AppState>;
@@ -94,7 +91,6 @@ describe("ComicDetailsEditorComponent", () => {
       declarations: [ComicDetailsEditorComponent, VolumeListComponent],
       providers: [
         FormBuilder,
-        { provide: AlertService, useClass: AlertServiceMock },
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
       ]
@@ -103,7 +99,6 @@ describe("ComicDetailsEditorComponent", () => {
     fixture = TestBed.createComponent(ComicDetailsEditorComponent);
     component = fixture.componentInstance;
 
-    alert_service = TestBed.get(AlertService);
     user_service = TestBed.get(UserService);
     comic_service = TestBed.get(ComicService);
     store = TestBed.get(Store);
