@@ -70,7 +70,6 @@ import { ComicCreditsComponent } from "./ui/components/comic/comic-credits/comic
 import { ComicPagesComponent } from "./ui/components/comic/comic-pages/comic-pages.component";
 import { MainPageComponent } from "./ui/pages/main-page/main-page.component";
 import { LoginComponent } from "./ui/components/login/login.component";
-import { AlertService } from "./services/alert.service";
 import { UserService } from "./services/user.service";
 import { LibraryPageComponent } from "./ui/pages/library/library-page/library-page.component";
 import { ImportPageComponent } from "./ui/pages/library/import-page/import-page.component";
@@ -282,7 +281,6 @@ import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-
     })
   ],
   providers: [
-    AlertService,
     UserService,
     ComicService,
     MessageService,

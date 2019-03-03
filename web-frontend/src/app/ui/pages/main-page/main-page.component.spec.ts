@@ -29,15 +29,12 @@ import { AppState } from "../../../app.state";
 import { libraryReducer } from "../../../reducers/library.reducer";
 import { ComicService } from "../../../services/comic.service";
 import { ComicServiceMock } from "../../../services/comic.service.mock";
-import { AlertService } from "../../../services/alert.service";
-import { AlertServiceMock } from "../../../services/alert.service.mock";
 import { MainPageComponent } from "./main-page.component";
 
 describe("MainPageComponent", () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
   let debugElement: DebugElement;
-  let alert_service: AlertService;
   let comic_service: ComicService;
   let router: Router;
   let store: Store<AppState>;
@@ -53,16 +50,12 @@ describe("MainPageComponent", () => {
         StoreModule.forRoot({ library: libraryReducer })
       ],
       declarations: [MainPageComponent],
-      providers: [
-        { provide: AlertService, useClass: AlertServiceMock },
-        { provide: ComicService, useClass: ComicServiceMock }
-      ]
+      providers: [{ provide: ComicService, useClass: ComicServiceMock }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MainPageComponent);
     component = fixture.componentInstance;
 
-    alert_service = TestBed.get(AlertService);
     comic_service = TestBed.get(ComicService);
     router = TestBed.get(Router);
 
