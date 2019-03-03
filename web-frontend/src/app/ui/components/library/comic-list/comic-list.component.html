@@ -11,7 +11,9 @@
             [rows]="library_display.rows"
             paginatorPosition="both"
             [alwaysShowPaginator]="true"
-            [layout]="library_display.layout">
+            [layout]="library_display.layout"
+            [first]="index_of_first"
+            (onPage)="set_index_of_first($event.first)">
   <p-header>
     <div class="ui-helper-clearfix">
       <app-comic-list-toolbar [library_display]="library_display"

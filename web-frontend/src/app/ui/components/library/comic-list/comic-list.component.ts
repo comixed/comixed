@@ -18,6 +18,7 @@
  */
 
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import { Router, ActivatedRoute, Params } from "@angular/router";
 import { Comic } from "../../../../models/comics/comic";
 import { LibraryFilter } from "../../../../models/actions/library-filter";
 import { LibraryDisplay } from "../../../../models/actions/library-display";
@@ -28,6 +29,8 @@ import * as LibraryActions from "../../../../actions/library.actions";
 import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
 import { TranslateService } from "@ngx-translate/core";
 import { SelectItem } from "primeng/api";
+
+const FIRST = "first";
 
 @Component({
   selector: "app-comic-list",
@@ -46,9 +49,13 @@ export class ComicListComponent implements OnInit, OnDestroy {
 
   protected additional_sort_field_options: Array<SelectItem>;
 
+  index_of_first = 0;
+
   constructor(
     private translate: TranslateService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private activated_route: ActivatedRoute,
+    private router: Router
   ) {
     this.library_display$ = this.store.select("library_display");
   }
@@ -60,6 +67,11 @@ export class ComicListComponent implements OnInit, OnDestroy {
       }
     );
     this.load_additional_sort_field_options();
+    this.activated_route.queryParams.subscribe((params: Params) => {
+      if (params.first) {
+        this.index_of_first = parseInt(params.first, 10);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -97,5 +109,22 @@ export class ComicListComponent implements OnInit, OnDestroy {
         selected: selected
       })
     );
+  }
+
+  set_index_of_first(index: number): void {
+    this.index_of_first;
+    this.update_query_parameters(FIRST, `${index}`);
+  }
+
+  private update_query_parameters(name: string, value: string): void {
+    const queryParams: Params = Object.assign(
+      {},
+      this.activated_route.snapshot.queryParams
+    );
+    queryParams[name] = value;
+    this.router.navigate([], {
+      relativeTo: this.activated_route,
+      queryParams: queryParams
+    });
   }
 }
