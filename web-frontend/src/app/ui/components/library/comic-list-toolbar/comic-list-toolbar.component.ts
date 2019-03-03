@@ -54,7 +54,8 @@ export class ComicListToolbarComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private translate: TranslateService,
-    private activated_route: ActivatedRoute
+    private activated_route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -189,10 +190,12 @@ export class ComicListToolbarComponent implements OnInit {
         sort_field: sort_field
       })
     );
+    this.update_query_parameters(SORT, sort_field);
   }
 
   set_rows(rows: number): void {
     this.store.dispatch(new DisplayActions.SetLibraryViewRows({ rows: rows }));
+    this.update_query_parameters(ROWS, `${rows}`);
   }
 
   set_same_height(same_height: boolean): void {
@@ -201,6 +204,7 @@ export class ComicListToolbarComponent implements OnInit {
         same_height: same_height
       })
     );
+    this.update_query_parameters(SAME_HEIGHT, same_height ? "1" : "0");
   }
 
   set_cover_size(cover_size: number): void {
@@ -209,5 +213,18 @@ export class ComicListToolbarComponent implements OnInit {
         cover_size: cover_size
       })
     );
+    this.update_query_parameters(COVER_SIZE, `${cover_size}`);
+  }
+
+  private update_query_parameters(name: string, value: string): void {
+    const queryParams: Params = Object.assign(
+      {},
+      this.activated_route.snapshot.queryParams
+    );
+    queryParams[name] = value;
+    this.router.navigate([], {
+      relativeTo: this.activated_route,
+      queryParams: queryParams
+    });
   }
 }
