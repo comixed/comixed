@@ -19,7 +19,7 @@
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Store, StoreModule } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
 import { libraryReducer } from "../../../../reducers/library.reducer";
@@ -27,8 +27,8 @@ import { CardModule } from "primeng/card";
 import { DropdownModule } from "primeng/dropdown";
 import { DataViewModule } from "primeng/dataview";
 import { ButtonModule } from "primeng/button";
-import { AlertService } from "../../../../services/alert.service";
-import { AlertServiceMock } from "../../../../services/alert.service.mock";
+import { MessagesModule } from "primeng/messages";
+import { MessageService } from "primeng/components/common/messageservice";
 import { UserService } from "../../../../services/user.service";
 import { UserServiceMock } from "../../../../services/user.service.mock";
 import { ComicService } from "../../../../services/comic.service";
@@ -39,7 +39,6 @@ import { ComicPagesComponent } from "./comic-pages.component";
 describe("ComicPagesComponent", () => {
   let component: ComicPagesComponent;
   let fixture: ComponentFixture<ComicPagesComponent>;
-  let alert_service: AlertService;
   let user_service: UserService;
   let comic_service: ComicService;
 
@@ -52,11 +51,13 @@ describe("ComicPagesComponent", () => {
         CardModule,
         DropdownModule,
         DataViewModule,
-        ButtonModule
+        ButtonModule,
+        MessagesModule
       ],
       declarations: [ComicPagesComponent, ComicPageUrlPipe],
       providers: [
-        { provide: AlertService, useClass: AlertServiceMock },
+        TranslateService,
+        MessageService,
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
       ]
@@ -65,7 +66,6 @@ describe("ComicPagesComponent", () => {
     fixture = TestBed.createComponent(ComicPagesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    alert_service = TestBed.get(AlertService);
     user_service = TestBed.get(UserService);
     comic_service = TestBed.get(ComicService);
   }));

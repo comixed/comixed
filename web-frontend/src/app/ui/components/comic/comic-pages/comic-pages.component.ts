@@ -17,22 +17,23 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from '@angular/core';
-import { SelectItem } from 'primeng/api';
-import { Comic } from '../../../../models/comics/comic';
-import { Page } from '../../../../models/comics/page';
-import { PageType } from '../../../../models/comics/page-type';
-import { AlertService } from '../../../../services/alert.service';
-import { ComicService } from '../../../../services/comic.service';
-import { UserService } from '../../../../services/user.service';
-import * as LibraryActions from '../../../../actions/library.actions';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { Component, OnInit, Input } from "@angular/core";
+import { SelectItem } from "primeng/api";
+import { Comic } from "../../../../models/comics/comic";
+import { Page } from "../../../../models/comics/page";
+import { PageType } from "../../../../models/comics/page-type";
+import * as LibraryActions from "../../../../actions/library.actions";
+import { Store } from "@ngrx/store";
+import { TranslateService } from "@ngx-translate/core";
+import { ComicService } from "../../../../services/comic.service";
+import { UserService } from "../../../../services/user.service";
+import { MessageService } from "primeng/components/common/messageservice";
+import { AppState } from "../../../../app.state";
 
 @Component({
-  selector: 'app-comic-pages',
-  templateUrl: './comic-pages.component.html',
-  styleUrls: ['./comic-pages.component.css']
+  selector: "app-comic-pages",
+  templateUrl: "./comic-pages.component.html",
+  styleUrls: ["./comic-pages.component.css"]
 })
 export class ComicPagesComponent implements OnInit {
   @Input() is_admin: boolean;
@@ -42,16 +43,20 @@ export class ComicPagesComponent implements OnInit {
   protected page_type_options: Array<SelectItem> = [];
 
   constructor(
-    private alert_service: AlertService,
+    private translate_service: TranslateService,
     private comic_service: ComicService,
     private user_service: UserService,
     private store: Store<AppState>,
-  ) { }
+    private message_service: MessageService
+  ) {}
 
   ngOnInit() {
     this.comic_service.get_page_types().subscribe((page_types: PageType[]) => {
       page_types.forEach((page_type: PageType) => {
-        this.page_type_options.push({ label: page_type.name, value: page_type.id });
+        this.page_type_options.push({
+          label: page_type.name,
+          value: page_type.id
+        });
       });
     });
     // TODO fix the preference here
@@ -63,25 +68,37 @@ export class ComicPagesComponent implements OnInit {
     this.comic_service.set_page_type(page, new_page_type).subscribe(
       () => {
         page.page_type.id = new_page_type;
-        this.alert_service.show_info_message('Page type changed...');
+        this.message_service.add({
+          severity: "info",
+          summary: "Page Type",
+          detail: "Page type changed..."
+        });
       },
       (error: Error) => {
-        this.alert_service.show_error_message('Failed to change page type...', error);
-      });
+        this.message_service.add({
+          severity: "error",
+          summary: "Page Type",
+          detail: "Failed to change the page type..."
+        });
+      }
+    );
   }
 
   set_page_blocked(page: Page): void {
-    this.store.dispatch(new LibraryActions.LibrarySetBlockedPageState({
-      page: page,
-      blocked_state: true,
-    }));
+    this.store.dispatch(
+      new LibraryActions.LibrarySetBlockedPageState({
+        page: page,
+        blocked_state: true
+      })
+    );
   }
 
   set_page_unblocked(page: Page): void {
-    this.store.dispatch(new LibraryActions.LibrarySetBlockedPageState({
-      page: page,
-      blocked_state: false,
-    }));
+    this.store.dispatch(
+      new LibraryActions.LibrarySetBlockedPageState({
+        page: page,
+        blocked_state: false
+      })
+    );
   }
 }
-
