@@ -18,12 +18,13 @@
  */
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { Store, StoreModule } from "@ngrx/store";
 import { AppState } from "../../../../app.state";
 import { libraryReducer } from "../../../../reducers/library.reducer";
+import { singleComicScrapingReducer } from "../../../../reducers/single-comic-scraping.reducer";
 import { TabViewModule } from "primeng/tabview";
 import { CardModule } from "primeng/card";
 import { InplaceModule } from "primeng/inplace";
@@ -43,8 +44,6 @@ import { ComicPagesComponent } from "../../../components/comic/comic-pages/comic
 import { ComicDetailsEditorComponent } from "../../../components/comic/comic-details-editor/comic-details-editor.component";
 import { ComicGroupingCardComponent } from "../../../components/comic/comic-grouping-card/comic-grouping-card.component";
 import { VolumeListComponent } from "../../../components/scraping/volume-list/volume-list.component";
-import { AlertService } from "../../../../services/alert.service";
-import { AlertServiceMock } from "../../../../services/alert.service.mock";
 import { ComicService } from "../../../../services/comic.service";
 import { ComicServiceMock } from "../../../../services/comic.service.mock";
 import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
@@ -53,7 +52,7 @@ import { ComicPageUrlPipe } from "../../../../pipes/comic-page-url.pipe";
 import { SINGLE_COMIC_SCRAPING_STATE } from "../../../../models/scraping/single-comic-scraping.fixtures";
 import { ComicDetailsComponent } from "./comic-details.component";
 
-xdescribe("ComicDetailsComponent", () => {
+describe("ComicDetailsComponent", () => {
   let component: ComicDetailsComponent;
   let fixture: ComponentFixture<ComicDetailsComponent>;
 
@@ -61,9 +60,13 @@ xdescribe("ComicDetailsComponent", () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
+        ReactiveFormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot({
+          library: libraryReducer,
+          single_comic_scraping: singleComicScrapingReducer
+        }),
         TabViewModule,
         CardModule,
         InplaceModule,
@@ -90,10 +93,7 @@ xdescribe("ComicDetailsComponent", () => {
         ComicCoverUrlPipe,
         ComicPageUrlPipe
       ],
-      providers: [
-        { provide: AlertService, useClass: AlertServiceMock },
-        { provide: ComicService, useClass: ComicServiceMock }
-      ]
+      providers: [{ provide: ComicService, useClass: ComicServiceMock }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicDetailsComponent);

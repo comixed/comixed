@@ -30,7 +30,6 @@ import { Role } from "../../../../models/user/role";
 import { Preference } from "../../../../models/user/preference";
 import { Library } from "../../../../models/actions/library";
 import { SingleComicScraping } from "../../../../models/scraping/single-comic-scraping";
-import { AlertService } from "../../../../services/alert.service";
 import { ComicService } from "../../../../services/comic.service";
 import { Comic } from "../../../../models/comics/comic";
 
@@ -66,7 +65,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private alert_service: AlertService,
     private comic_service: ComicService,
     private store: Store<AppState>
   ) {
