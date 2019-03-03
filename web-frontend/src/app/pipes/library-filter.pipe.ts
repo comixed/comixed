@@ -46,14 +46,12 @@ export class LibraryFilterPipe implements PipeTransform {
   }
 
   not_filtering(filter: LibraryFilter): boolean {
-    return !(
-      filter.publisher.length ||
-      filter.series.length ||
-      filter.volume.length ||
-      filter.from_year ||
-      filter.from_year !== 0 ||
-      !filter.to_year ||
-      filter.to_year !== 0
+    return (
+      filter.publisher.length === 0 &&
+      filter.series.length === 0 &&
+      filter.volume.length === 0 &&
+      !filter.from_year &&
+      !filter.to_year
     );
   }
 

@@ -18,6 +18,7 @@
  */
 
 import { LibraryFilterPipe } from "./library-filter.pipe";
+import { LibraryFilter } from "../models/actions/library-filter";
 import { Comic } from "../models/comics/comic";
 import {
   COMIC_1000,
@@ -170,6 +171,50 @@ fdescribe("LibraryFilterPipe", () => {
       result.forEach((comic: Comic) =>
         expect(comic.series).toEqual(COMIC_1000.series)
       );
+    });
+  });
+
+  describe("#not_filtering()", () => {
+    let filter: LibraryFilter;
+
+    beforeEach(() => {
+      filter = {
+        changed: false,
+        publisher: "",
+        series: "",
+        volume: "",
+        from_year: null,
+        to_year: null
+      };
+    });
+
+    it("returns true if no filters are set", () => {
+      expect(pipe.not_filtering(filter)).toBeTruthy();
+    });
+
+    it("returns false if a publisher is set", () => {
+      filter.publisher = "Some value";
+      expect(pipe.not_filtering(filter)).toBeFalsy();
+    });
+
+    it("returns false if a series is set", () => {
+      filter.series = "Some value";
+      expect(pipe.not_filtering(filter)).toBeFalsy();
+    });
+
+    it("returns false if a volume is set", () => {
+      filter.volume = "Some value";
+      expect(pipe.not_filtering(filter)).toBeFalsy();
+    });
+
+    it("returns false if a from year is set", () => {
+      filter.from_year = 1980;
+      expect(pipe.not_filtering(filter)).toBeFalsy();
+    });
+
+    it("returns false if a to year is set", () => {
+      filter.to_year = 2019;
+      expect(pipe.not_filtering(filter)).toBeFalsy();
     });
   });
 });
