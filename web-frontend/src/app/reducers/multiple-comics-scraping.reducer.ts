@@ -42,7 +42,7 @@ export function multipleComicsScrapingReducer(
         selecting: true,
         started: false,
         busy: false,
-        api_key: action.payload,
+        api_key: action.payload.api_key,
         selected_comics: []
       };
     }
