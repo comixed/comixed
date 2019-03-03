@@ -38,8 +38,6 @@ import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
 import { ComicFileCoverUrlPipe } from "../../../../pipes/comic-file-cover-url.pipe";
 import { ComicService } from "../../../../services/comic.service";
 import { ComicServiceMock } from "../../../../services/comic.service.mock";
-import { AlertService } from "../../../../services/alert.service";
-import { AlertServiceMock } from "../../../../services/alert.service.mock";
 import { IMPORTING_STATE } from "../../../../models/import/importing.fixtures";
 import { READER_USER } from "../../../../models/user/user.fixtures";
 import { ImportPageComponent } from "./import-page.component";
@@ -71,10 +69,7 @@ xdescribe("ImportPageComponent", () => {
         ComicCoverUrlPipe,
         ComicFileCoverUrlPipe
       ],
-      providers: [
-        { provide: ComicService, useClass: ComicServiceMock },
-        { provide: AlertService, useClass: AlertServiceMock }
-      ]
+      providers: [{ provide: ComicService, useClass: ComicServiceMock }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportPageComponent);

@@ -32,7 +32,6 @@ import { ComicFile } from "../../../../models/import/comic-file";
 import { User } from "../../../../models/user/user";
 import { Preference } from "../../../../models/user/preference";
 import { ComicService } from "../../../../services/comic.service";
-import { AlertService } from "../../../../services/alert.service";
 import {
   IMPORT_SORT,
   IMPORT_ROWS,
@@ -81,7 +80,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private comic_service: ComicService,
-    private alert_service: AlertService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private store: Store<AppState>
