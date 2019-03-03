@@ -23,7 +23,6 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { UserService } from "./user.service";
-import { AlertService } from "./alert.service";
 import { Comic } from "../models/comics/comic";
 import { Page } from "../models/comics/page";
 import { PageType } from "../models/comics/page-type";
@@ -35,11 +34,7 @@ export const COMIC_SERVICE_API_URL = "/api";
 
 @Injectable()
 export class ComicService {
-  constructor(
-    private http: HttpClient,
-    private alert_service: AlertService,
-    private user_service: UserService
-  ) {}
+  constructor(private http: HttpClient, private user_service: UserService) {}
 
   fetch_scan_types(): Observable<any> {
     return this.http.get(`${COMIC_SERVICE_API_URL}/comics/scan_types`);

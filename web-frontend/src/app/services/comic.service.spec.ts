@@ -19,15 +19,12 @@
 
 import { TestBed, inject } from "@angular/core/testing";
 import { HttpClientModule } from "@angular/common/http";
-import { AlertService } from "./alert.service";
-import { AlertServiceMock } from "./alert.service.mock";
 import { UserService } from "./user.service";
 import { UserServiceMock } from "./user.service.mock";
 import { ComicService } from "./comic.service";
 
 describe("ComicService", () => {
   let server: ComicService;
-  let alert_service: AlertService;
   let user_service: UserService;
 
   beforeEach(() => {
@@ -35,13 +32,11 @@ describe("ComicService", () => {
       imports: [HttpClientModule],
       providers: [
         ComicService,
-        { provide: AlertService, useClass: AlertServiceMock },
         { provide: UserService, userClass: UserServiceMock }
       ]
     });
 
     server = TestBed.get(ComicService);
-    alert_service = TestBed.get(AlertService);
     user_service = TestBed.get(UserService);
   });
 
