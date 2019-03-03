@@ -26,7 +26,11 @@ import { LibraryFilter } from "../models/actions/library-filter";
 })
 export class LibraryFilterPipe implements PipeTransform {
   transform(comics: Array<Comic>, filters: LibraryFilter): any {
-    if (!filters || !comics || this.not_filtering(filters)) {
+    if (!comics) {
+      return [];
+    }
+
+    if (!filters) {
       return comics;
     }
 
@@ -77,10 +81,6 @@ export class LibraryFilterPipe implements PipeTransform {
     }
 
     const cover_date = new Date(Date.parse(comic.cover_date));
-    console.log(
-      `*** [from] ${cover_date.getFullYear()} >= ${from_year}: ${cover_date.getFullYear() >=
-        from_year}`
-    );
     return cover_date.getFullYear() >= from_year;
   }
 
@@ -94,10 +94,6 @@ export class LibraryFilterPipe implements PipeTransform {
     }
 
     const cover_date = new Date(Date.parse(comic.cover_date));
-    console.log(
-      `***   [to] ${cover_date.getFullYear()} <= ${to_year}: ${cover_date.getFullYear() <=
-        to_year}`
-    );
     return cover_date.getFullYear() <= to_year;
   }
 }

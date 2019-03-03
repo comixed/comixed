@@ -140,7 +140,7 @@ describe("LibraryPageComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  fdescribe("#ngOnInit()", () => {
+  describe("#ngOnInit()", () => {
     it("should subscribe to user updates", () => {
       store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
       expect(component.user.email).toEqual(READER_USER.email);
