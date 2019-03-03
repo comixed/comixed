@@ -59,7 +59,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   scraping_subscription: Subscription;
   scraping: MultipleComicsScraping;
 
-  protected busy = false;
+  comics: Array<Comic> = [];
+  selected_comics: Array<Comic> = [];
 
   constructor(
     private router: Router,
@@ -81,6 +82,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     });
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
+
+      this.comics = [].concat(this.library.comics);
+      this.selected_comics = [].concat(this.library.selected_comics);
     });
     this.library_filter_subscription = this.library_filter$.subscribe(
       (library_filter: LibraryFilter) => {
