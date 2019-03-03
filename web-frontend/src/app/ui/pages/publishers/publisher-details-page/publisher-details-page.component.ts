@@ -44,6 +44,8 @@ export class PublisherDetailsPageComponent implements OnInit {
   protected cover_size = 200;
 
   publisher_name: string;
+  comics: Array<Comic> = [];
+  selected_comics: Array<Comic> = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -59,6 +61,9 @@ export class PublisherDetailsPageComponent implements OnInit {
   ngOnInit() {
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
+
+      this.comics = [].concat(this.library.comics);
+      this.selected_comics = [].concat(this.library.selected_comics);
     });
   }
 
