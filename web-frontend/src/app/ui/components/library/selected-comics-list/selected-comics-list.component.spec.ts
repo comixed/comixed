@@ -28,9 +28,13 @@ import { SidebarModule } from "primeng/sidebar";
 import { ScrollPanelModule } from "primeng/scrollpanel";
 import { DataViewModule } from "primeng/dataview";
 import { SplitButtonModule } from "primeng/splitbutton";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { PanelModule } from "primeng/panel";
+import { CardModule } from "primeng/card";
 import { ComicGridItemComponent } from "../comic-grid-item/comic-grid-item.component";
 import { ComicCoverComponent } from "../../comic/comic-cover/comic-cover.component";
 import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
 import { SelectedComicsListComponent } from "./selected-comics-list.component";
 
 describe("SelectedComicsListComponent", () => {
@@ -47,13 +51,17 @@ describe("SelectedComicsListComponent", () => {
         SidebarModule,
         ScrollPanelModule,
         DataViewModule,
-        SplitButtonModule
+        SplitButtonModule,
+        OverlayPanelModule,
+        PanelModule,
+        CardModule
       ],
       declarations: [
         SelectedComicsListComponent,
         ComicGridItemComponent,
         ComicCoverComponent,
-        ComicCoverUrlPipe
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ]
     }).compileComponents();
   }));

@@ -19,9 +19,14 @@
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule } from "@ngx-translate/core";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { PanelModule } from "primeng/panel";
+import { CardModule } from "primeng/card";
 import { ComicCoverComponent } from "../../comic/comic-cover/comic-cover.component";
 import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
 import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
 import { ComicGridItemComponent } from "./comic-grid-item.component";
 
@@ -31,11 +36,19 @@ describe("ComicGridItemComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, TranslateModule.forRoot()],
+      imports: [
+        RouterTestingModule,
+        BrowserAnimationsModule,
+        TranslateModule.forRoot(),
+        OverlayPanelModule,
+        PanelModule,
+        CardModule
+      ],
       declarations: [
         ComicGridItemComponent,
         ComicCoverComponent,
-        ComicCoverUrlPipe
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ]
     }).compileComponents();
 

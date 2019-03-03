@@ -32,6 +32,8 @@ import { SliderModule } from "primeng/slider";
 import { CheckboxModule } from "primeng/checkbox";
 import { DropdownModule } from "primeng/dropdown";
 import { PanelModule } from "primeng/panel";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { CardModule } from "primeng/card";
 import { SelectedComicsListComponent } from "../../../components/library/selected-comics-list/selected-comics-list.component";
 import { LibraryFilterComponent } from "../../../components/library/library-filter/library-filter.component";
 import { ComicListComponent } from "../../../components/library/comic-list/comic-list.component";
@@ -41,6 +43,7 @@ import { ComicListToolbarComponent } from "../../../components/library/comic-lis
 import { ComicCoverComponent } from "../../../components/comic/comic-cover/comic-cover.component";
 import { ComicSeriesPipe } from "../../../../pipes/comic-series.pipe";
 import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
+import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
 import { SeriesDetailsPageComponent } from "./series-details-page.component";
 
 describe("SeriesDetailsPageComponent", () => {
@@ -62,7 +65,9 @@ describe("SeriesDetailsPageComponent", () => {
         SliderModule,
         CheckboxModule,
         DropdownModule,
-        PanelModule
+        PanelModule,
+        OverlayPanelModule,
+        CardModule
       ],
       declarations: [
         SeriesDetailsPageComponent,
@@ -74,7 +79,8 @@ describe("SeriesDetailsPageComponent", () => {
         ComicListToolbarComponent,
         ComicCoverComponent,
         ComicSeriesPipe,
-        ComicCoverUrlPipe
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ]
     }).compileComponents();
   }));
