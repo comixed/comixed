@@ -34,15 +34,29 @@ export class LibraryFilterPipe implements PipeTransform {
       return comics;
     }
 
-    return comics.filter((comic: Comic) => {
-      return (
-        this.check_publisher_filter(comic, filters.publisher) &&
-        this.check_series_filter(comic, filters.series) &&
-        this.check_volume_filter(comic, filters.volume) &&
-        this.check_from_year(comic, filters.from_year) &&
-        this.check_to_year(comic, filters.to_year)
-      );
+    let result = comics.filter((comic: Comic) => {
+      let result = true;
+
+      if (filters.publisher.length > 0) {
+        result = result && this.check_publisher(comic, filters.publisher);
+      }
+      if (filters.series.length > 0) {
+        result = result && this.check_series(comic, filters.series);
+      }
+      if (filters.volume.length > 0) {
+        result = result && this.check_volume(comic, filters.volume);
+      }
+      if (!!filters.from_year) {
+        result = result && this.check_from_year(comic, filters.from_year);
+      }
+      if (!!filters.to_year) {
+        result = result && this.check_to_year(comic, filters.to_year);
+      }
+
+      return result;
     });
+
+    return result;
   }
 
   not_filtering(filter: LibraryFilter): boolean {
@@ -55,17 +69,17 @@ export class LibraryFilterPipe implements PipeTransform {
     );
   }
 
-  check_publisher_filter(comic: Comic, publisher: string): boolean {
+  check_publisher(comic: Comic, publisher: string): boolean {
     return (comic.publisher || "")
       .toLowerCase()
       .includes(publisher.toLowerCase());
   }
 
-  check_series_filter(comic: Comic, series: string): boolean {
+  check_series(comic: Comic, series: string): boolean {
     return (comic.series || "").toLowerCase().includes(series.toLowerCase());
   }
 
-  check_volume_filter(comic: Comic, volume: string): boolean {
+  check_volume(comic: Comic, volume: string): boolean {
     return (comic.volume || "").startsWith(volume);
   }
 
