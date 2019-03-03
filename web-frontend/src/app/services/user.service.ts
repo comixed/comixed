@@ -21,15 +21,13 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { AlertService } from "./alert.service";
-
 export const USER_SERVICE_API_URL = "/api";
 
 @Injectable()
 export class UserService {
   USER_SERVICE_API_URL = "/api";
 
-  constructor(private http: HttpClient, private alert_service: AlertService) {}
+  constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
     const params = new HttpParams()

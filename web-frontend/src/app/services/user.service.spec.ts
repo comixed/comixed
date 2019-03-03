@@ -23,8 +23,6 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from "@angular/common/http/testing";
-import { AlertService } from "./alert.service";
-import { AlertServiceMock } from "./alert.service.mock";
 import { User } from "../models/user/user";
 import { READER_USER, ADMIN_USER } from "../models/user/user.fixtures";
 import { UserService, USER_SERVICE_API_URL } from "./user.service";
@@ -37,22 +35,17 @@ describe("UserService", () => {
 
   let service: UserService;
   let http_mock: HttpTestingController;
-  let alert_service: AlertService;
 
   const routes = [];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        UserService,
-        { provide: AlertService, useClass: AlertServiceMock }
-      ]
+      providers: [UserService]
     });
 
     service = TestBed.get(UserService);
     http_mock = TestBed.get(HttpTestingController);
-    alert_service = TestBed.get(AlertService);
   });
 
   afterEach(() => {
