@@ -17,18 +17,14 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { Observable, Subscription } from "rxjs";
 import { AppState } from "./app.state";
+import * as UserActions from "./actions/user.actions";
 import { Library } from "./models/actions/library";
 import * as LibraryActions from "./actions/library.actions";
 import { User } from "./models/user/user";
-import * as UserActions from "./actions/user.actions";
-import { UserService } from "./services/user.service";
-import { ComicService } from "./services/comic.service";
-import { AlertService } from "./services/alert.service";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
@@ -36,13 +32,8 @@ import { TranslateService } from "@ngx-translate/core";
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   title = "ComiXed";
-  alert_messages = [];
-  comic_count = 0;
-  read_count = 0;
-  import_count = 0;
-  rescan_count = 0;
 
   user$: Observable<User>;
   user_subscription: Subscription;
@@ -52,14 +43,8 @@ export class AppComponent implements OnInit, OnDestroy {
   library_subscription: Subscription;
   library: Library;
 
-  alert_message: string;
-
   constructor(
     private translate_service: TranslateService,
-    private user_service: UserService,
-    private comic_service: ComicService,
-    private alert_service: AlertService,
-    private router: Router,
     private store: Store<AppState>
   ) {
     translate_service.setDefaultLang("en");
@@ -93,11 +78,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
 
-      this.comic_count = library.comics.length;
-      this.read_count = 0;
-      this.import_count = library.library_state.import_count;
-      this.rescan_count = library.library_state.rescan_count;
-
       // if we're not busy, then get the scan types, formats or updates as needed
       if (!this.library.busy) {
         if (!this.library.scan_types || this.library.scan_types.length === 0) {
@@ -121,9 +101,5 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
-
-  ngOnDestroy() {
-    this.library_subscription.unsubscribe();
   }
 }

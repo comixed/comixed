@@ -17,62 +17,101 @@
  * org.comixed;
  */
 
-import {
-  ComponentFixture,
-  TestBed,
-  async,
-  fakeAsync,
-  tick
-} from "@angular/core/testing";
-import { DebugElement } from "@angular/core";
-import { By } from "@angular/platform-browser";
-
-import { HttpClientModule } from "@angular/common/http";
+import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { Router } from "@angular/router";
-
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Observable } from "rxjs/Observable";
-import "rxjs/add/observable/of";
-
-import { AlertService } from "./services/alert.service";
-import { UserService } from "./services/user.service";
-import { UserServiceMock } from "./services/user.service.mock";
-import { User } from "./models/user/user";
-import { Role } from "./models/user/role";
-import { ComicService } from "./services/comic.service";
-import { ComicServiceMock } from "./services/comic.service.mock";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { MessageService } from "primeng/api";
+import { MenubarModule } from "primeng/menubar";
+import { ButtonModule } from "primeng/button";
+import { ToastModule } from "primeng/toast";
+import { DialogModule } from "primeng/dialog";
+import { Store, StoreModule } from "@ngrx/store";
+import { AppState } from "./app.state";
+import * as UserActions from "./actions/user.actions";
+import { userReducer } from "./reducers/user.reducer";
+import { READER_USER } from "./models/user/user.fixtures";
+import * as LibraryActions from "./actions/library.actions";
+import { libraryReducer } from "./reducers/library.reducer";
+import {
+  COMIC_1000,
+  COMIC_1001,
+  COMIC_1002
+} from "./models/comics/comic.fixtures";
 import { LoadingModule } from "ngx-loading";
-
+import { MenubarComponent } from "./ui/components/main/menubar/menubar.component";
+import { LoginComponent } from "./ui/components/login/login.component";
 import { AppComponent } from "./app.component";
 
 describe("AppComponent", () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let user_service: UserService;
-  let alert_service: AlertService;
-  let comic_service: ComicService;
-  let router: Router;
+  let translate_service: TranslateService;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientModule, LoadingModule],
-      declarations: [AppComponent],
-      providers: [
-        AlertService,
-        { provide: UserService, useClass: UserServiceMock },
-        { provide: ComicService, useClass: ComicServiceMock }
-      ]
+      imports: [
+        RouterTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MenubarModule,
+        ButtonModule,
+        ToastModule,
+        DialogModule,
+        LoadingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({ user: userReducer, library: libraryReducer })
+      ],
+      declarations: [AppComponent, MenubarComponent, LoginComponent],
+      providers: [TranslateService, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
-
-    user_service = TestBed.get(UserService);
-    alert_service = TestBed.get(AlertService);
-    comic_service = TestBed.get(ComicService);
-    router = TestBed.get(Router);
+    translate_service = TestBed.get(TranslateService);
+    store = TestBed.get(Store);
+    spyOn(store, "dispatch").and.callThrough();
 
     fixture.detectChanges();
-    router.initialNavigation();
   }));
+
+  describe("on startup", () => {
+    it("loads english as the default language", () => {
+      expect(translate_service.getDefaultLang()).toBe("en");
+    });
+  });
+
+  describe("#ngOnInit()", () => {
+    it("subscribes to user updates", () => {
+      store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
+      expect(component.user.email).toEqual(READER_USER.email);
+    });
+
+    it("performs a user check", () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new UserActions.UserAuthCheck()
+      );
+    });
+
+    it("subscribes to library updates", () => {
+      store.dispatch(
+        new LibraryActions.LibraryMergeNewComics({
+          library_state: {
+            comics: [COMIC_1000, COMIC_1001, COMIC_1002],
+            rescan_count: 70,
+            import_count: 43
+          }
+        })
+      );
+      expect(component.library.comics).toEqual([
+        COMIC_1000,
+        COMIC_1001,
+        COMIC_1002
+      ]);
+      expect(component.library.library_state.rescan_count).toEqual(70);
+      expect(component.library.library_state.import_count).toEqual(43);
+    });
+  });
 });

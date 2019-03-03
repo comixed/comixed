@@ -27,7 +27,7 @@ import {
   COMIC_1003
 } from "../models/comics/comic.fixtures";
 
-fdescribe("LibraryFilterPipe", () => {
+describe("LibraryFilterPipe", () => {
   let pipe: LibraryFilterPipe;
   let filter: LibraryFilter;
   const comics = [COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003];
