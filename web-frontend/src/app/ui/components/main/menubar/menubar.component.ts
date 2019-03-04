@@ -100,40 +100,56 @@ export class MenubarComponent implements OnInit, OnDestroy {
             visible: this.user && this.user.authenticated
           },
           {
-            label: this.translate.instant("menu.library.publishers"),
-            icon: "fa fa-fw fa-book",
-            routerLink: ["/publishers"],
-            visible: this.user && this.user.authenticated
-          },
-          {
-            label: this.translate.instant("menu.library.series"),
-            icon: "fa fa-fw fa-book",
-            routerLink: ["/series"],
-            visible: this.user && this.user.authenticated
-          },
-          {
-            label: this.translate.instant("menu.library.characters"),
-            icon: "fa fa-fw fa-user",
-            routerLink: ["/characters"],
-            visible: this.user && this.user.authenticated
-          },
-          {
-            label: this.translate.instant("menu.library.teams"),
-            icon: "fa fa-fw fa-user",
-            routerLink: ["/teams"],
-            visible: this.user && this.user.authenticated
-          },
-          {
-            label: this.translate.instant("menu.library.locations"),
-            icon: "fa fa-fw fa-globe",
-            routerLink: ["/locations"],
-            visible: this.user && this.user.authenticated
-          },
-          {
-            label: this.translate.instant("menu.library.story-arcs"),
-            icon: "fa fa-fw fa-empire",
-            routerLink: ["/stories"],
-            visible: this.user && this.user.authenticated
+            label: this.translate.instant("menu.library.collections.label"),
+            icon: "fa fa-fw fa-list",
+            items: [
+              {
+                label: this.translate.instant(
+                  "menu.library.collections.publishers"
+                ),
+                icon: "fa fa-fw fa-book",
+                routerLink: ["/publishers"],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  "menu.library.collections.series"
+                ),
+                icon: "fa fa-fw fa-book",
+                routerLink: ["/series"],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  "menu.library.collections.characters"
+                ),
+                icon: "fa fa-fw fa-user",
+                routerLink: ["/characters"],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant("menu.library.collections.teams"),
+                icon: "fa fa-fw fa-user",
+                routerLink: ["/teams"],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  "menu.library.collections.locations"
+                ),
+                icon: "fa fa-fw fa-globe",
+                routerLink: ["/locations"],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  "menu.library.collections.story-arcs"
+                ),
+                icon: "fa fa-fw fa-empire",
+                routerLink: ["/stories"],
+                visible: this.user && this.user.authenticated
+              }
+            ]
           },
           { separator: true, visible: this.user && this.user.is_admin },
           {

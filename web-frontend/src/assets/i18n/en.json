@@ -6,14 +6,17 @@
     "library": {
       "root": "Library",
       "comics": "Comics",
-      "publishers": "Publishers",
-      "series": "Series",
-      "characters": "Characters",
-      "teams": "Teams",
-      "locations": "Locations",
-      "story-arcs": "Story Arcs",
       "import": "Import",
-      "duplicate-pages": "Duplicate Pages"
+      "duplicate-pages": "Duplicate Pages",
+      "collections": {
+        "label": "Collections",
+        "publishers": "Publishers",
+        "series": "Series",
+        "characters": "Characters",
+        "teams": "Teams",
+        "locations": "Locations",
+        "story-arcs": "Story Arcs"
+      }
     },
     "admin": {
       "root": "Admin",
