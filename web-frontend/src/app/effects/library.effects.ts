@@ -139,7 +139,7 @@ export class LibraryEffects {
             severity: "info",
             summary: "Format Type",
             detail: this.translate.instant(
-              "effects.library.info.set-format-type",
+              "effects.library.info.format-type-set",
               {
                 format_type: action.format.name
               }
@@ -179,7 +179,7 @@ export class LibraryEffects {
             severity: "info",
             summary: "Sort Name",
             detail: this.translate.instant(
-              "effects.library.info.set-sort-name",
+              "effects.library.info.sort-name-set",
               {
                 sort_name: action.sort_name
               }

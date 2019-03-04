@@ -387,16 +387,18 @@
   "effects": {
     "importing": {
       "info": {
-        "found_files": "Found {{file_count}} file(s)...",
-        "scan-type-set": "Set the scan type to {{scan_type}}...",
-        "format-type-set": "Set the format type to {{format_type}}...",
-        "sort-name-set": "Set the sort name to {{sort_name}}...",
-        "comic-removed": "Comic removed from the library...",
-        "metadata-cleared": "Metadata has been cleared...",
-        "rescan-started": "Started rescanning the library..."
+        "found_files": "Found {{file_count}} file(s)..."
       }
     },
     "library": {
+      "info": {
+        "format-type-set": "Set the format type to {{format_type}}...",
+        "scan-type-set": "Set the scan type to {{scan_type}}...",
+        "sort-name-set": "Set the sort name to {{sort_name}}...",
+        "metadata-cleared": "Metadata has been cleared...",
+        "comic-removed": "Comic removed from the library...",
+        "rescan-started": "Started rescanning the library..."
+      },
       "error": {
         "scan-type-fetch-failure": "Failed to fetch scan types...",
         "set-scan-type-failed": "Failed to set the scan type...",
