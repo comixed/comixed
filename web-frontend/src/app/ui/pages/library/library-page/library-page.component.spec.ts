@@ -19,7 +19,6 @@
 
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
-import { ActivatedRoute, Params } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule } from "@ngx-translate/core";
@@ -121,7 +120,6 @@ describe("LibraryPageComponent", () => {
         ComicTitlePipe
       ],
       providers: [
-        ActivatedRoute,
         ConfirmationService,
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
@@ -141,6 +139,10 @@ describe("LibraryPageComponent", () => {
   });
 
   describe("#ngOnInit()", () => {
+    beforeEach(() => {
+      store.dispatch(new LibraryActions.LibraryReset());
+    });
+
     it("should subscribe to user updates", () => {
       store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
       expect(component.user.email).toEqual(READER_USER.email);
