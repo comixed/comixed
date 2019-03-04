@@ -23,8 +23,8 @@ import { Action } from "@ngrx/store";
 import { Observable, of } from "rxjs";
 import { catchError, map, switchMap, tap } from "rxjs/operators";
 import * as LibraryActions from "../actions/library.actions";
+import { MessageService } from "primeng/api";
 import { ComicService } from "../services/comic.service";
-import { AlertService } from "../services/alert.service";
 import { LibraryState } from "../models/library-state";
 import { Comic } from "../models/comics/comic";
 import { ScanType } from "../models/comics/scan-type";
@@ -35,8 +35,8 @@ import { TranslateService } from "@ngx-translate/core";
 export class LibraryEffects {
   constructor(
     private actions$: Actions,
+    private message_service: MessageService,
     private comic_service: ComicService,
-    private alert_service: AlertService,
     private translate: TranslateService
   ) {}
 
@@ -47,12 +47,13 @@ export class LibraryEffects {
       this.comic_service.fetch_scan_types().pipe(
         catchError((error: Error) =>
           of(
-            this.alert_service.show_error_message(
-              this.translate.instant(
+            this.message_service.add({
+              severity: "error",
+              summary: "Scan Type",
+              detail: this.translate.instant(
                 "effects.library.error.scan-type-fetch-failure"
-              ),
-              error
-            )
+              )
+            })
           )
         ),
         map(
@@ -70,20 +71,26 @@ export class LibraryEffects {
     switchMap(action =>
       this.comic_service.set_scan_type(action.comic, action.scan_type).pipe(
         tap(() =>
-          this.alert_service.show_info_message(
-            this.translate.instant("effects.library.info.scan-type-set", {
-              scan_type: action.scan_type.name
-            })
-          )
+          this.message_service.add({
+            severity: "info",
+            summary: "Scan Type",
+            detail: this.translate.instant(
+              "effects.library.info.scan-type-set",
+              {
+                scan_type: action.scan_type.name
+              }
+            )
+          })
         ),
         catchError((error: Error) =>
           of(
-            this.alert_service.show_error_message(
-              this.translate.instant(
+            this.message_service.add({
+              severity: "error",
+              summary: "Scan Type",
+              detail: this.translate.instant(
                 "effects.library.error.set-scan-type-failed"
-              ),
-              error
-            )
+              )
+            })
           )
         ),
         map(
@@ -104,12 +111,13 @@ export class LibraryEffects {
       this.comic_service.fetch_formats().pipe(
         catchError((error: Error) =>
           of(
-            this.alert_service.show_error_message(
-              this.translate.instant(
+            this.message_service.add({
+              severity: "error",
+              summary: "Format Type",
+              detail: this.translate.instant(
                 "effects.library.error.format-type-fetch-failure"
-              ),
-              error
-            )
+              )
+            })
           )
         ),
         map(
@@ -127,20 +135,26 @@ export class LibraryEffects {
     switchMap(action =>
       this.comic_service.set_format(action.comic, action.format).pipe(
         tap(() =>
-          this.alert_service.show_info_message(
-            this.translate.instant("effects.library.info.set-format-type", {
-              format_type: action.format.name
-            })
-          )
+          this.message_service.add({
+            severity: "info",
+            summary: "Format Type",
+            detail: this.translate.instant(
+              "effects.library.info.set-format-type",
+              {
+                format_type: action.format.name
+              }
+            )
+          })
         ),
         catchError((error: Error) =>
           of(
-            this.alert_service.show_error_message(
-              this.translate.instant(
+            this.message_service.add({
+              severity: "error",
+              summary: "Format Type",
+              detail: this.translate.instant(
                 "effects.library.error.set-format-type-failed"
-              ),
-              error
-            )
+              )
+            })
           )
         ),
         map(
@@ -161,20 +175,26 @@ export class LibraryEffects {
     switchMap(action =>
       this.comic_service.set_sort_name(action.comic, action.sort_name).pipe(
         tap(() =>
-          this.alert_service.show_info_message(
-            this.translate.instant("effects.library.info.set-sort-name", {
-              sort_name: action.sort_name
-            })
-          )
+          this.message_service.add({
+            severity: "info",
+            summary: "Sort Name",
+            detail: this.translate.instant(
+              "effects.library.info.set-sort-name",
+              {
+                sort_name: action.sort_name
+              }
+            )
+          })
         ),
         catchError((error: Error) =>
           of(
-            this.alert_service.show_error_message(
-              this.translate.instant(
+            this.message_service.add({
+              severity: "error",
+              summary: "Sort Name",
+              detail: this.translate.instant(
                 "effects.library.error.set-sort-name-failed"
-              ),
-              error
-            )
+              )
+            })
           )
         ),
         map(
@@ -198,12 +218,13 @@ export class LibraryEffects {
         .pipe(
           catchError((error: Error) =>
             of(
-              this.alert_service.show_error_message(
-                this.translate.instant(
+              this.message_service.add({
+                severity: "error",
+                summary: "Update Library",
+                detail: this.translate.instant(
                   "effects.library.error.library-update-failed"
-                ),
-                error
-              )
+                )
+              })
             )
           ),
           map(
@@ -223,18 +244,21 @@ export class LibraryEffects {
     switchMap(action =>
       this.comic_service.delete_comic(action.comic).pipe(
         tap(() =>
-          this.alert_service.show_info_message(
-            this.translate.instant("effects.library.info.comic-removed")
-          )
+          this.message_service.add({
+            severity: "info",
+            summary: "Delete Comic",
+            detail: this.translate.instant("effects.library.info.comic-removed")
+          })
         ),
         catchError((error: Error) =>
           of(
-            this.alert_service.show_error_message(
-              this.translate.instant(
+            this.message_service.add({
+              severity: "error",
+              summary: "Delete Comic",
+              detail: this.translate.instant(
                 "effects.library.error.comic-remove-failed"
-              ),
-              error
-            )
+              )
+            })
           )
         ),
         map(
@@ -254,9 +278,13 @@ export class LibraryEffects {
     switchMap(action =>
       this.comic_service.clear_metadata(action.comic).pipe(
         tap(() =>
-          this.alert_service.show_info_message(
-            this.translate.instant("effects.library.info.metadata-cleared")
-          )
+          this.message_service.add({
+            severity: "info",
+            summary: "Clear Metadata",
+            detail: this.translate.instant(
+              "effects.library.info.metadata-cleared"
+            )
+          })
         ),
         tap((comic: Comic) => {
           // clear all existing metadata and copy the new metadata
@@ -268,12 +296,13 @@ export class LibraryEffects {
         }),
         catchError((error: Error) =>
           of(
-            this.alert_service.show_error_message(
-              this.translate.instant(
+            this.message_service.add({
+              severity: "error",
+              summary: "Clear Metadata",
+              detail: this.translate.instant(
                 "effects.library.error.metadata-clear-failed"
-              ),
-              error
-            )
+              )
+            })
           )
         ),
         map(
@@ -294,18 +323,23 @@ export class LibraryEffects {
     switchMap(action =>
       this.comic_service.rescan_files().pipe(
         tap(() =>
-          this.alert_service.show_info_message(
-            this.translate.instant("effects.library.info.rescan-started")
-          )
+          this.message_service.add({
+            severity: "info",
+            summary: "Rescan Library",
+            detail: this.translate.instant(
+              "effects.library.info.rescan-started"
+            )
+          })
         ),
         catchError((error: Error) =>
           of(
-            this.alert_service.show_error_message(
-              this.translate.instant(
+            this.message_service.add({
+              severity: "error",
+              summary: "Rescan Library",
+              detail: this.translate.instant(
                 "effects.library.error.rescan-failed-to-start"
-              ),
-              error
-            )
+              )
+            })
           )
         ),
         map(
@@ -329,12 +363,13 @@ export class LibraryEffects {
         .pipe(
           catchError((error: Error) =>
             of(
-              this.alert_service.show_error_message(
-                this.translate.instant(
+              this.message_service.add({
+                severity: "error",
+                summary: "Block Page",
+                detail: this.translate.instant(
                   "effects.library.error.set-blocked-failed"
-                ),
-                error
-              )
+                )
+              })
             )
           ),
           map(

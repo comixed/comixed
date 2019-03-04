@@ -1,5 +1,4 @@
-
-import {tap} from 'rxjs/operators';
+import { tap } from "rxjs/operators";
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -19,49 +18,67 @@ import {tap} from 'rxjs/operators';
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import {
-  HttpInterceptor, HttpHandler, HttpRequest, HttpSentEvent, HttpHeaderResponse,
-  HttpErrorResponse, HttpProgressEvent, HttpResponse, HttpUserEvent,
-} from '@angular/common/http';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+  HttpSentEvent,
+  HttpHeaderResponse,
+  HttpErrorResponse,
+  HttpProgressEvent,
+  HttpResponse,
+  HttpUserEvent
+} from "@angular/common/http";
+import { Router } from "@angular/router";
+import { Observable } from "rxjs";
+import { TokenStorage } from "./storage/token.storage";
+import { MessageService } from "primeng/api";
 
-import { TokenStorage } from './storage/token.storage';
-import { AlertService } from './services/alert.service';
-
-export const TOKEN_HEADER_KEY = 'Authorization';
+export const TOKEN_HEADER_KEY = "Authorization";
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
   constructor(
     private token_storage: TokenStorage,
     private router: Router,
-    private alert_service: AlertService,
-  ) { }
+    private message_service: MessageService
+  ) {}
 
   intercept(
     req: HttpRequest<any>,
-    next: HttpHandler,
-  ): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
+    next: HttpHandler
+  ): Observable<
+    | HttpSentEvent
+    | HttpHeaderResponse
+    | HttpProgressEvent
+    | HttpResponse<any>
+    | HttpUserEvent<any>
+  > {
     let authReq = req;
     if (this.token_storage.get_token() !== null) {
       authReq = req.clone({
         headers: req.headers
           .set(TOKEN_HEADER_KEY, `Bearer ${this.token_storage.get_token()}`)
-          .set('X-Request-With', 'XMLHttpRequest'),
+          .set("X-Request-With", "XMLHttpRequest")
       });
     } else {
       authReq = req.clone({
-        headers: req.headers.set('X-Request-With', 'XMLHttpRequest')
+        headers: req.headers.set("X-Request-With", "XMLHttpRequest")
       });
     }
-    return next.handle(authReq).pipe(tap((error: any) => {
-      if (error instanceof HttpResponse) {
-        if (error.status !== 200) {
-          this.alert_service.show_error_message('Unable to complete request...', null);
+    return next.handle(authReq).pipe(
+      tap((error: any) => {
+        if (error instanceof HttpResponse) {
+          if (error.status !== 200) {
+            this.message_service.add({
+              severity: "error",
+              summary: "Server Error",
+              detail: "Unable to complete the last request..."
+            });
+          }
         }
-      }
-    }));
+      })
+    );
   }
 }
