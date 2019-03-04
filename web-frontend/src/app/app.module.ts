@@ -49,6 +49,7 @@ import { PasswordModule } from "primeng/password";
 import { PickListModule } from "primeng/picklist";
 import { InplaceModule } from "primeng/inplace";
 import { OverlayPanelModule } from "primeng/overlaypanel";
+import { ChartModule } from "primeng/chart";
 import { AppRouting } from "./app.routing";
 import { AppComponent } from "./app.component";
 import {
@@ -239,6 +240,7 @@ import { MultiComicScrapingPageComponent } from "./ui/pages/library/multi-comic-
     PasswordModule,
     InplaceModule,
     OverlayPanelModule,
+    ChartModule,
     PickListModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
