@@ -11,3 +11,13 @@
   filter: opacity(50%);
   border: 1px solid 0xff0000;
 }
+
+:host >>> .cx-alerts .ui-toast-message-info {
+	background-color: #FFFF00;
+	color: #000000;
+}
+
+:host >>> .cx-alerts .ui-toast-message-error {
+	background-color: #B22222;
+	color: #000000;
+}
