@@ -50,7 +50,7 @@ const COLOR_PALLETTE = [
 export class MainPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
   private library_subscription: Subscription;
-  private library: Library;
+  library: Library;
 
   public comic_count: number;
   public plural = false;
