@@ -137,5 +137,6 @@
     <module>comixed-tasks</module>
     <module>comixed-rest-api</module>
     <module>comixed-frontend</module>
+    <module>comixed-app</module>
   </modules>
 </project>
