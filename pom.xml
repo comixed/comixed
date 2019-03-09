@@ -134,5 +134,6 @@
   <modules>
     <module>comixed-library</module>
     <module>comixed-tasks</module>
+    <module>comixed-rest-api</module>
   </modules>
 </project>
