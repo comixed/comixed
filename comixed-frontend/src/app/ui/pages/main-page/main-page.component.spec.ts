@@ -31,8 +31,8 @@ import * as LibraryActions from '../../../actions/library.actions';
 import { ComicService } from '../../../services/comic.service';
 import { ComicServiceMock } from '../../../services/comic.service.mock';
 import { MainPageComponent } from './main-page.component';
-import { ChartModule } from "primeng/chart";
-import { DropdownModule } from "primeng/primeng";
+import { ChartModule } from 'primeng/chart';
+import { DropdownModule } from 'primeng/primeng';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
