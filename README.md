@@ -27,13 +27,51 @@ The following digital comic formats are supported:
  * CBR (RAR)
  * CB7 (7ZIP)
 
+## Building The Application
+
+The foloowing sections will describe how to setup your location environment and
+also how to build the project.
+
+### Prerequisites
+
+The application depends on the following pieces:
+ * [Java Development Kit](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html): Minimum of JDK 8.
+ * [NodeJS](https://nodejs.org/en/download/): Minimum of v10.15.3.
+ * [Maven](https://maven.apache.org/download.cgi): Maven v3.
+
+### Setting Up Your Build Environment
+
+Once you've installed the requirements, you need to setup your environment:
+
+1. Install [yarn](https://yarnpkg.com/en/): ```npm install -g yarn```
+1. Install [Angular](https://angular.io/): ```npm install -g angular@7.2.0```
+
+### Running The Build
+
+The application is composed of several modules:
+ * **comixed-library**: the domain model, persistence layer and archive adaptors,
+ * **comixed-tasks**: the set of worker tasks that run in the backend server
+ * **comixed-rest-api**: the web layer and REST API processors,
+ * **comixed-frontend**: the Angular frontend, and
+ * **comixed-app**: the application, which pulls the previous pieces together in a working application.
+
+To build all of them then execute the following from the project's root directory:
+
+```mvn clean package```
+
+If the build is successful, then you will have a file in the **comixed-app/target** directory named something like **comixed-\*.jar**.
+This is the final application artifact and what you will now be able to run.
+
+If, however, you saw any errors, you'll need to go back and verify that you've properly setup your
+environment.
+
 ## Running The Application
 
-To start the application, launch it from the command line with:
+To start the application from the project root, launch it from the command line with:
 
-```$ java -jar comixed-app-*.jar```
+```$ java -jar comixed-app/target/comixed-*.jar```
 
-NOTE: As this is still an actively developed project, there's always a
+**NOTE:** As this is still an actively developed project, there's always a
 chance that your local database has become corrupted. If you experience problems
 with starting the application, a good first step would be to delete your local
 database and try running the application again.
@@ -46,25 +84,39 @@ Operating System|Location
 **Linux** | /home/[your username]/.comixed
 **MacOS** | /users/[your username].comixed
 
-
 ### Interacting With The Application
 
-To connect to the web application, point a browser to *http://localhost:7171/home*.
+To connect to the web application, point a browser to *http://localhost:7171/*.
 
 You can then log into the application with one of two default accounts:
 
 1. **Administrator** username=comixedadmin@localhost password=comixedadmin
 1. **Reader** username=comixedreader@localhost password=comixedreader
 
+### Developing The Front End
+
+If you are working on changes to the frontend, you can launch an instance of the Angular server
+separately from the backend.
+ 
+You can launch the backend by moving to the **comixed-app** module and launching it using the
+commandline:
+
+```
+mvn spring-boot:run -DskipTests
+```
+Then, in the **comixed-frontend** subdirectory, launch it using the commandline:
+
+```
+$ yarn start
+```
+
+You can nowconnect to the web application from your browser using *http://localhost:4200/*. And,
+as your make changes to the Angular code, this frontend will update automatically.
+
 ## Contributing
 
-Please see the [wiki page](../../wiki/Developer-Setup) page for getting your
-environment up and running.
-
-This project uses [Git Flow](http://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
-when developing code. When working on a feature or fixing a bug, please write
-and test your code against the *develop* branch. Then, when it is completed,
-please send a [pull request](http://help.github.com/articles/creating-a-pull-request/)
+When working on a feature or fixing a bug, please write and test your code against the *develop*
+branch. Then, when it is completed, please send a [pull request](http://help.github.com/articles/creating-a-pull-request/)
 to have the code imported.
 
 All code should come with unit tests.
@@ -72,7 +124,7 @@ All code should come with unit tests.
 If the code is in good shape, then it will be included.
 
 If the code needs some fixes or changes, the developers will provide feedback
-asking for those changes. Then please resubmit your changes.
+asking for those changes. Please apply them and resubmit your changes.
 
 And, if this is your first addition to the project, please add your name to
 the [CONTRIBUTORS.md](./CONTRIBUTORS.md) file with your pull request.
