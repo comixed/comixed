@@ -59,7 +59,7 @@ To build all of them then execute the following from the project's root director
 
 ```mvn clean package```
 
-If the build is successful, then you will have a file in the **comixed-app/target** directory named something like **comixed-\*.jar**.
+If the build is successful, then you will have a file in the **comixed-app/target** directory named something like **comixed-app-\*.jar**.
 This is the final application artifact and what you will now be able to run.
 
 If, however, you saw any errors, you'll need to go back and verify that you've properly setup your
@@ -69,7 +69,7 @@ environment.
 
 To start the application from the project root, launch it from the command line with:
 
-```$ java -jar comixed-app/target/comixed-*.jar```
+```$ java -jar comixed-app/target/comixed-app-*.jar```
 
 **NOTE:** As this is still an actively developed project, there's always a
 chance that your local database has become corrupted. If you experience problems
