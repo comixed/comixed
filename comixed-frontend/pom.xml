@@ -54,18 +54,16 @@
               <arguments>install</arguments>
             </configuration>
           </execution>
-          <!--
           <execution>
             <id>Yarn lint</id>
             <goals>
               <goal>yarn</goal>
             </goals>
-            <phase>test</phase>
+            <phase>process-sources</phase>
             <configuration>
               <arguments>lint</arguments>
             </configuration>
           </execution>
-          -->
           <execution>
             <id>Build the frontend code</id>
             <goals>
