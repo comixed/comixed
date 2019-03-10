@@ -6,15 +6,19 @@
   <parent>
     <groupId>org.comixed</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.4.0</version>
+    <version>0.3.9-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixed</groupId>
   <artifactId>comixed-app</artifactId>
-  <version>${comixed.version}</version>
+  <version>0.3.9-SNAPSHOT</version>
   <name>comixed-app</name>
   <url>${comixed.url}</url>
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.comixed</groupId>
       <artifactId>comixed-library</artifactId>
