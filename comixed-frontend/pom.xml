@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.comixed</groupId>
+    <artifactId>comixed</artifactId>
+    <version>0.4.0</version>
+    <relativePath>..</relativePath>
+  </parent>
+  <groupId>org.comixed</groupId>
+  <artifactId>comixed-frontend</artifactId>
+  <version>${comixed.version}</version>
+  <name>comixed-frontend</name>
+  <url>${comixed.url}</url>
+  <dependencies>
+  </dependencies>
+  <build>
+    <resources>
+      <resource>
+        <directory>target/dist</directory>
+        <targetPath>static</targetPath>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.7.5</version>
+        <executions>
+          <execution>
+            <id>Install node and yarn</id>
+            <goals>
+              <goal>install-node-and-yarn</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <nodeVersion>v10.15.3</nodeVersion>
+              <yarnVersion>v1.13.0</yarnVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Install yarn dependencies</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+          <!--
+          <execution>
+            <id>Yarn lint</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <phase>test</phase>
+            <configuration>
+              <arguments>lint</arguments>
+            </configuration>
+          </execution>
+          -->
+          <execution>
+            <id>Build the frontend code</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <phase>prepare-package</phase>
+            <configuration>
+              <arguments>build</arguments>
+            </configuration>
+          </execution>
+          <!--
+          <execution>
+            <id>Angular tests</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <phase>compile</phase>
+            <configuration>
+              <yarnInheritsProxyConfigFromMaven>false</yarnInheritsProxyConfigFromMaven>
+              <arguments>run test</arguments>
+            </configuration>
+          </execution>
+          -->
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
