@@ -24,6 +24,18 @@ Before you submit your code for a pull request, please be sure to clean up and f
 
 Included in the repository are Eclipse files for (formatting)[docs/eclipse formatter.xml] and (cleaning up)[docs/eclipse cleanup.xml] your code automatically. If you use Eclipse then please import these configuration files and use them.
 
+All code contributions should pass the following checks.
+
+### Lint Checks
+
+To ensure your Angular code meets project requirements, please run the lint checks in the **comixed-frontend** module:
+
+```
+$ cd comixed-frontend
+$ yarn lint
+```
+
+There should be no errors reported.
 
 ## Pull Request Process
 
