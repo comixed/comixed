@@ -14,8 +14,8 @@ script: (mvn clean test package)
 
 before_deploy:
     - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+    - export BUILD_VERSION=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
     - export TRAVIS_TAG=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')-$(date +%Y%m%d%H%M%S)
-    - export BUILD_ARTIFACT=$(find . -name comixed-app-*.jar)
 ###################################
 # NOT GOING TO TAG THINGS FOR NOW #
 ###################################
@@ -27,7 +27,12 @@ deploy:
     provider: releases
     api_key: $GITHUB_AUTH_TOKEN
     file_glob: true
-    file: ${BUILD_ARTIFACT}
+    file:
+        - "$(find . -name comixed-library-${BUILD_VERSION}-*.jar)"
+        - "$(find . -name comixed-tasks-${BUILD_VERSION}-*.jar)"
+        - "$(find . -name comixed-rest-api-${BUILD_VERSION}-*.jar)"
+        - "$(find . -name comixed-frontend-${BUILD_VERSION}-*.jar)"
+        - "$(find . -name comixed-${BUILD_VERSION}-*.jar)"
     skip_cleanup: true
     keep-history: true
     overwrite: true
