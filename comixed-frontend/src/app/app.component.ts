@@ -17,23 +17,24 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { Observable, Subscription } from "rxjs";
-import { AppState } from "./app.state";
-import * as UserActions from "./actions/user.actions";
-import { Library } from "./models/actions/library";
-import * as LibraryActions from "./actions/library.actions";
-import { User } from "./models/user/user";
-import { TranslateService } from "@ngx-translate/core";
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { AppState } from './app.state';
+import * as UserActions from './actions/user.actions';
+import { Library } from './models/actions/library';
+import * as LibraryActions from './actions/library.actions';
+import { User } from './models/user/user';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = "ComiXed";
+  title = 'ComiXed';
 
   user$: Observable<User>;
   user_subscription: Subscription;
@@ -47,9 +48,9 @@ export class AppComponent implements OnInit {
     private translate_service: TranslateService,
     private store: Store<AppState>
   ) {
-    translate_service.setDefaultLang("en");
-    this.user$ = store.select("user");
-    this.library$ = store.select("library");
+    translate_service.setDefaultLang('en');
+    this.user$ = store.select('user');
+    this.library$ = store.select('library');
   }
 
   ngOnInit() {
@@ -68,7 +69,7 @@ export class AppComponent implements OnInit {
         this.store.dispatch(new LibraryActions.LibraryReset());
         this.store.dispatch(
           new LibraryActions.LibraryFetchLibraryChanges({
-            last_comic_date: "0",
+            last_comic_date: '0',
             timeout: 60000
           })
         );

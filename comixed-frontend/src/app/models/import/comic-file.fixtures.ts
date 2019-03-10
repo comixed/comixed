@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { ComicFile } from "./comic-file";
+import { ComicFile } from './comic-file';
 
 export const EXISTING_COMIC_FILE: ComicFile = {
-  filename: "/home/comixed/Library/existing-comic-file.cbz",
-  base_filename: "existing-comic-file",
+  filename: '/home/comixed/Library/existing-comic-file.cbz',
+  base_filename: 'existing-comic-file',
   size: 65535,
   selected: false
 };

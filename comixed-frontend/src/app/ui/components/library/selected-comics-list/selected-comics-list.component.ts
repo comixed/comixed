@@ -24,29 +24,30 @@ import {
   Input,
   Output,
   EventEmitter
-} from "@angular/core";
-import { Router } from "@angular/router";
-import { Comic } from "../../../../models/comics/comic";
-import { Library } from "../../../../models/actions/library";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { Observable, Subscription } from "rxjs";
-import * as LibraryActions from "../../../../actions/library.actions";
-import { MenuItem } from "primeng/api";
-import { TranslateService } from "@ngx-translate/core";
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { Comic } from '../../../../models/comics/comic';
+import { Library } from '../../../../models/actions/library';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import * as LibraryActions from '../../../../actions/library.actions';
+import { MenuItem } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: "app-selected-comics-list",
-  templateUrl: "./selected-comics-list.component.html",
-  styleUrls: ["./selected-comics-list.component.css"]
+  selector: 'app-selected-comics-list',
+  templateUrl: './selected-comics-list.component.html',
+  styleUrls: ['./selected-comics-list.component.css']
 })
 export class SelectedComicsListComponent implements OnInit, OnDestroy {
-  @Input() display: boolean = false;
+  @Input() display = false;
   @Input() rows: number;
   @Input() cover_size: number;
   @Input() same_height: boolean;
 
-  @Output() onHide = new EventEmitter<boolean>();
+  @Output() hide = new EventEmitter<boolean>();
 
   protected actions: MenuItem[];
 
@@ -59,7 +60,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private translate: TranslateService
   ) {
-    this.library$ = this.store.select("library");
+    this.library$ = this.store.select('library');
   }
 
   ngOnInit() {
@@ -72,9 +73,9 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
   private load_actions(): void {
     this.actions = [
       {
-        label: this.translate.instant("selected-comics-list.button.scrape"),
-        icon: "fa fa-fw fa-cloud",
-        routerLink: ["/scraping"]
+        label: this.translate.instant('selected-comics-list.button.scrape'),
+        icon: 'fa fa-fw fa-cloud',
+        routerLink: ['/scraping']
       }
     ];
   }

@@ -17,30 +17,31 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { Library } from "../../../../models/actions/library";
-import * as LibraryActions from "../../../../actions/library.actions";
-import { LibraryFilter } from "../../../../models/actions/library-filter";
-import * as FilterActions from "../../../../actions/library-filter.actions";
-import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
-import * as ScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
-import { Observable, Subscription } from "rxjs";
-import { Comic } from "../../../../models/comics/comic";
-import * as UserActions from "../../../../actions/user.actions";
-import { User } from "../../../../models/user/user";
-import { Preference } from "../../../../models/user/preference";
-import { UserService } from "../../../../services/user.service";
-import { ComicService } from "../../../../services/comic.service";
-import { ConfirmationService } from "primeng/api";
-import { TranslateService } from "@ngx-translate/core";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Library } from '../../../../models/actions/library';
+import * as LibraryActions from '../../../../actions/library.actions';
+import { LibraryFilter } from '../../../../models/actions/library-filter';
+import * as FilterActions from '../../../../actions/library-filter.actions';
+import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
+import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { Comic } from '../../../../models/comics/comic';
+import * as UserActions from '../../../../actions/user.actions';
+import { User } from '../../../../models/user/user';
+import { Preference } from '../../../../models/user/preference';
+import { UserService } from '../../../../services/user.service';
+import { ComicService } from '../../../../services/comic.service';
+import { ConfirmationService } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: "app-library-page",
-  templateUrl: "./library-page.component.html",
-  styleUrls: ["./library-page.component.css"]
+  selector: 'app-library-page',
+  templateUrl: './library-page.component.html',
+  styleUrls: ['./library-page.component.css']
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
   private user$: Observable<User>;
@@ -70,10 +71,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private translate: TranslateService
   ) {
-    this.user$ = store.select("user");
-    this.library$ = store.select("library");
-    this.library_filter$ = store.select("library_filter");
-    this.scraping$ = store.select("multiple_comic_scraping");
+    this.user$ = store.select('user');
+    this.library$ = store.select('library');
+    this.library_filter$ = store.select('library_filter');
+    this.scraping$ = store.select('multiple_comic_scraping');
   }
 
   ngOnInit() {
@@ -100,7 +101,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
     this.store.dispatch(
       new ScrapingActions.MultipleComicsScrapingSetup({
-        api_key: this.user_service.get_user_preference("api_key", "")
+        api_key: this.user_service.get_user_preference('api_key', '')
       })
     );
   }
@@ -117,9 +118,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   delete_comic(comic: Comic): void {
     this.confirm_service.confirm({
-      header: this.translate.instant("library.messages.delete-comic-title"),
-      message: this.translate.instant("library.messages.delete-comic-question"),
-      icon: "fa fa-exclamation",
+      header: this.translate.instant('library.messages.delete-comic-title'),
+      message: this.translate.instant('library.messages.delete-comic-question'),
+      icon: 'fa fa-exclamation',
       accept: () => {
         this.store.dispatch(
           new LibraryActions.LibraryRemoveComic({ comic: comic })
@@ -129,16 +130,16 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   open_comic(comic: Comic): void {
-    this.router.navigate(["comics", `${comic.id}`]);
+    this.router.navigate(['comics', `${comic.id}`]);
   }
 
   rescan_library(): void {
     this.confirm_service.confirm({
-      header: this.translate.instant("library.messages.rescan-library-title"),
+      header: this.translate.instant('library.messages.rescan-library-title'),
       message: this.translate.instant(
-        "library.messages.rescan-library-message"
+        'library.messages.rescan-library-message'
       ),
-      icon: "fa fa-exclamation",
+      icon: 'fa fa-exclamation',
       accept: () => {
         this.store.dispatch(
           new LibraryActions.LibraryRescanFiles({

@@ -17,17 +17,17 @@
  * org.comixed;
  */
 
-import { LibraryFilterPipe } from "./library-filter.pipe";
-import { LibraryFilter } from "../models/actions/library-filter";
-import { Comic } from "../models/comics/comic";
+import { LibraryFilterPipe } from './library-filter.pipe';
+import { LibraryFilter } from '../models/actions/library-filter';
+import { Comic } from '../models/comics/comic';
 import {
   COMIC_1000,
   COMIC_1001,
   COMIC_1002,
   COMIC_1003
-} from "../models/comics/comic.fixtures";
+} from '../models/comics/comic.fixtures';
 
-describe("LibraryFilterPipe", () => {
+describe('LibraryFilterPipe', () => {
   let pipe: LibraryFilterPipe;
   let filter: LibraryFilter;
   const comics = [COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003];
@@ -36,46 +36,46 @@ describe("LibraryFilterPipe", () => {
     pipe = new LibraryFilterPipe();
     filter = {
       changed: false,
-      publisher: "",
-      series: "",
-      volume: "",
+      publisher: '',
+      series: '',
+      volume: '',
       from_year: null,
       to_year: null
     };
   });
 
-  it("create an instance", () => {
+  it('create an instance', () => {
     expect(pipe).toBeTruthy();
   });
 
-  describe("#transform()", () => {
-    it("returns an empty array if there are no comics", () => {
+  describe('#transform()', () => {
+    it('returns an empty array if there are no comics', () => {
       expect(pipe.transform(null, null)).toEqual([]);
     });
 
-    it("returns those comics if there is no filter provided", () => {
+    it('returns those comics if there is no filter provided', () => {
       expect(pipe.transform(comics, null)).toEqual(comics);
     });
 
-    it("returns those comics if the filters are all empty", () => {
+    it('returns those comics if the filters are all empty', () => {
       expect(
         pipe.transform(comics, {
           changed: false,
-          publisher: "",
-          series: "",
-          volume: "",
+          publisher: '',
+          series: '',
+          volume: '',
           from_year: null,
           to_year: null
         })
       ).toEqual(comics);
     });
 
-    it("returns only comics for the publisher if entered", () => {
+    it('returns only comics for the publisher if entered', () => {
       const result = pipe.transform(comics, {
         changed: false,
         publisher: COMIC_1000.publisher,
-        series: "",
-        volume: "",
+        series: '',
+        volume: '',
         from_year: null,
         to_year: null
       });
@@ -86,12 +86,12 @@ describe("LibraryFilterPipe", () => {
       );
     });
 
-    it("returns only those comics for the series if entered", () => {
+    it('returns only those comics for the series if entered', () => {
       const result = pipe.transform(comics, {
         changed: false,
-        publisher: "",
+        publisher: '',
         series: COMIC_1000.series,
-        volume: "",
+        volume: '',
         from_year: null,
         to_year: null
       });
@@ -102,11 +102,11 @@ describe("LibraryFilterPipe", () => {
       );
     });
 
-    it("returns only those comics for the volume if entered", () => {
+    it('returns only those comics for the volume if entered', () => {
       const result = pipe.transform(comics, {
         changed: false,
-        publisher: "",
-        series: "",
+        publisher: '',
+        series: '',
         volume: COMIC_1000.volume,
         from_year: null,
         to_year: null
@@ -118,13 +118,13 @@ describe("LibraryFilterPipe", () => {
       );
     });
 
-    it("returns only those comics published on or after the given start year", () => {
+    it('returns only those comics published on or after the given start year', () => {
       const filter_date = new Date(Date.parse(COMIC_1000.cover_date));
       const result = pipe.transform(comics, {
         changed: false,
-        publisher: "",
-        series: "",
-        volume: "",
+        publisher: '',
+        series: '',
+        volume: '',
         from_year: filter_date.getFullYear(),
         to_year: null
       });
@@ -138,13 +138,13 @@ describe("LibraryFilterPipe", () => {
       });
     });
 
-    it("returns only those comics published before on or the given end year", () => {
+    it('returns only those comics published before on or the given end year', () => {
       const filter_date = new Date(Date.parse(COMIC_1000.cover_date));
       const result = pipe.transform(comics, {
         changed: false,
-        publisher: "",
-        series: "",
-        volume: "",
+        publisher: '',
+        series: '',
+        volume: '',
         from_year: null,
         to_year: filter_date.getFullYear()
       });
@@ -158,21 +158,21 @@ describe("LibraryFilterPipe", () => {
       });
     });
 
-    it("returns an empty array if no comics match the filters", () => {
+    it('returns an empty array if no comics match the filters', () => {
       const result = pipe.transform(comics, {
         changed: false,
         publisher: COMIC_1000.publisher
-          .split("")
+          .split('')
           .reverse()
-          .join(""),
+          .join(''),
         series: COMIC_1000.series
-          .split("")
+          .split('')
           .reverse()
-          .join(""),
+          .join(''),
         volume: COMIC_1000.volume
-          .split("")
+          .split('')
           .reverse()
-          .join(""),
+          .join(''),
         from_year: null,
         to_year: null
       });
@@ -183,135 +183,133 @@ describe("LibraryFilterPipe", () => {
     });
   });
 
-  describe("#not_filtering()", () => {
-    let filter: LibraryFilter;
-
+  describe('#not_filtering()', () => {
     beforeEach(() => {
       filter = {
         changed: false,
-        publisher: "",
-        series: "",
-        volume: "",
+        publisher: '',
+        series: '',
+        volume: '',
         from_year: null,
         to_year: null
       };
     });
 
-    it("returns true if no filters are set", () => {
+    it('returns true if no filters are set', () => {
       expect(pipe.not_filtering(filter)).toBeTruthy();
     });
 
-    it("returns false if a publisher is set", () => {
-      filter.publisher = "Some value";
+    it('returns false if a publisher is set', () => {
+      filter.publisher = 'Some value';
       expect(pipe.not_filtering(filter)).toBeFalsy();
     });
 
-    it("returns false if a series is set", () => {
-      filter.series = "Some value";
+    it('returns false if a series is set', () => {
+      filter.series = 'Some value';
       expect(pipe.not_filtering(filter)).toBeFalsy();
     });
 
-    it("returns false if a volume is set", () => {
-      filter.volume = "Some value";
+    it('returns false if a volume is set', () => {
+      filter.volume = 'Some value';
       expect(pipe.not_filtering(filter)).toBeFalsy();
     });
 
-    it("returns false if a from year is set", () => {
+    it('returns false if a from year is set', () => {
       filter.from_year = 1980;
       expect(pipe.not_filtering(filter)).toBeFalsy();
     });
 
-    it("returns false if a to year is set", () => {
+    it('returns false if a to year is set', () => {
       filter.to_year = 2019;
       expect(pipe.not_filtering(filter)).toBeFalsy();
     });
   });
 
-  describe("check_publisher()", () => {
-    it("returns false when the publisher doesn't match", () => {
+  describe('check_publisher()', () => {
+    it('returns false when the publisher doesn\'t match', () => {
       expect(
         pipe.check_publisher(
           COMIC_1000,
           COMIC_1000.publisher
-            .split("")
+            .split('')
             .reverse()
-            .join("")
+            .join('')
         )
       ).toBeFalsy();
     });
 
-    it("returns true when the publisher filter is not set", () => {
-      expect(pipe.check_publisher(COMIC_1000, "")).toBeTruthy();
+    it('returns true when the publisher filter is not set', () => {
+      expect(pipe.check_publisher(COMIC_1000, '')).toBeTruthy();
     });
 
-    it("returns true when the publisher matches the filter", () => {
+    it('returns true when the publisher matches the filter', () => {
       expect(
         pipe.check_publisher(COMIC_1000, COMIC_1000.publisher)
       ).toBeTruthy();
     });
   });
 
-  describe("check_series()", () => {
-    it("returns false when the series doesn't match", () => {
+  describe('check_series()', () => {
+    it('returns false when the series doesn\'t match', () => {
       expect(
         pipe.check_series(
           COMIC_1000,
           COMIC_1000.series
-            .split("")
+            .split('')
             .reverse()
-            .join("")
+            .join('')
         )
       ).toBeFalsy();
     });
 
-    it("returns true when the series filter is not set", () => {
-      expect(pipe.check_series(COMIC_1000, "")).toBeTruthy();
+    it('returns true when the series filter is not set', () => {
+      expect(pipe.check_series(COMIC_1000, '')).toBeTruthy();
     });
 
-    it("returns true when the series matches the filter", () => {
+    it('returns true when the series matches the filter', () => {
       expect(pipe.check_series(COMIC_1000, COMIC_1000.series)).toBeTruthy();
     });
   });
 
-  describe("check_volume()", () => {
-    it("returns false when the volume doesn't match", () => {
+  describe('check_volume()', () => {
+    it('returns false when the volume doesn\'t match', () => {
       expect(
         pipe.check_volume(
           COMIC_1000,
           COMIC_1000.volume
-            .split("")
+            .split('')
             .reverse()
-            .join("")
+            .join('')
         )
       ).toBeFalsy();
     });
 
-    it("returns true when the volume filter is not set", () => {
-      expect(pipe.check_volume(COMIC_1000, "")).toBeTruthy();
+    it('returns true when the volume filter is not set', () => {
+      expect(pipe.check_volume(COMIC_1000, '')).toBeTruthy();
     });
 
-    it("returns true when the volume matches the filter", () => {
+    it('returns true when the volume matches the filter', () => {
       expect(pipe.check_volume(COMIC_1000, COMIC_1000.volume)).toBeTruthy();
     });
   });
 
-  describe("check_from_year()", () => {
-    it("returns false when the cover year is out of range", () => {
+  describe('check_from_year()', () => {
+    it('returns false when the cover year is out of range', () => {
       expect(pipe.check_from_year(COMIC_1000, 2999)).toBeFalsy();
     });
 
-    it("returns true when the from year is not set", () => {
+    it('returns true when the from year is not set', () => {
       expect(pipe.check_from_year(COMIC_1000, null)).toBeTruthy();
     });
 
-    it("returns true when the cover year is on the edge of the range", () => {
+    it('returns true when the cover year is on the edge of the range', () => {
       const cover_date = new Date(Date.parse(COMIC_1000.cover_date));
       expect(
         pipe.check_from_year(COMIC_1000, cover_date.getFullYear())
       ).toBeTruthy();
     });
 
-    it("returns true when the cover year is in range", () => {
+    it('returns true when the cover year is in range', () => {
       const cover_date = new Date(Date.parse(COMIC_1000.cover_date));
       expect(
         pipe.check_from_year(COMIC_1000, cover_date.getFullYear() + 1)
@@ -319,23 +317,23 @@ describe("LibraryFilterPipe", () => {
     });
   });
 
-  describe("check_to_year()", () => {
-    it("returns false when the cover year is out of range", () => {
+  describe('check_to_year()', () => {
+    it('returns false when the cover year is out of range', () => {
       expect(pipe.check_to_year(COMIC_1000, 1899)).toBeFalsy();
     });
 
-    it("returns true when the to year is not set", () => {
+    it('returns true when the to year is not set', () => {
       expect(pipe.check_to_year(COMIC_1000, null)).toBeTruthy();
     });
 
-    it("returns true when the cover year is on the edge of the range", () => {
+    it('returns true when the cover year is on the edge of the range', () => {
       const cover_date = new Date(Date.parse(COMIC_1000.cover_date));
       expect(
         pipe.check_to_year(COMIC_1000, cover_date.getFullYear())
       ).toBeTruthy();
     });
 
-    it("returns true when the cover year is in range", () => {
+    it('returns true when the cover year is in range', () => {
       const cover_date = new Date(Date.parse(COMIC_1000.cover_date));
       expect(
         pipe.check_to_year(COMIC_1000, cover_date.getFullYear() - 1)

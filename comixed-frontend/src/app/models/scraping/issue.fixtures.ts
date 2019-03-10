@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-import { Issue } from "./issue";
+import { Issue } from './issue';
 
 export const ISSUE_1000: Issue = {
   id: 1000,
-  cover_date: "0",
-  cover_url: "http://comixed.org/issues/1000",
+  cover_date: '0',
+  cover_url: 'http://comixed.org/issues/1000',
   issue_number: 1000,
-  name: "Issue1000",
-  volume_name: "2009",
+  name: 'Issue1000',
+  volume_name: '2009',
   volume_id: 1000
 };

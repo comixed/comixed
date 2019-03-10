@@ -17,19 +17,20 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot
-} from "@angular/router";
-import { Router } from "@angular/router";
-import { Store, Action } from "@ngrx/store";
-import { AppState } from "./app.state";
-import { Observable, Subject } from "rxjs";
-import * as UserActions from "./actions/user.actions";
-import { filter } from "rxjs/operators";
-import { User } from "./models/user/user";
+} from '@angular/router';
+import { Router } from '@angular/router';
+import { Store, Action } from '@ngrx/store';
+import { AppState } from './app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import * as UserActions from './actions/user.actions';
+import { filter } from 'rxjs/operators';
+import { User } from './models/user/user';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
@@ -37,7 +38,7 @@ export class AdminGuard implements CanActivate {
   admin_subject = new Subject<boolean>();
 
   constructor(private router: Router, private store: Store<AppState>) {
-    store.select("user").subscribe((user: User) => {
+    store.select('user').subscribe((user: User) => {
       this.user = user;
 
       if (
@@ -56,7 +57,7 @@ export class AdminGuard implements CanActivate {
       if (this.user.authenticated) {
         return this.user.is_admin;
       } else {
-        this.router.navigate(["/home"]);
+        this.router.navigate(['/home']);
         return false;
       }
     } else {

@@ -17,12 +17,12 @@
  * org.comixed;
  */
 
-import { SingleComicScraping } from "./single-comic-scraping";
-import { COMIC_1000 } from "../comics/comic.fixtures";
+import { SingleComicScraping } from './single-comic-scraping';
+import { COMIC_1000 } from '../comics/comic.fixtures';
 
 export const SINGLE_COMIC_SCRAPING_STATE: SingleComicScraping = {
   busy: false,
-  api_key: "abc123",
+  api_key: 'abc123',
   comic: COMIC_1000,
   series: COMIC_1000.series,
   volume: COMIC_1000.volume,

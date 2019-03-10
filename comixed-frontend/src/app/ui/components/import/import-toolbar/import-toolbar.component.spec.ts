@@ -17,16 +17,16 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
-import { ToolbarModule } from "primeng/toolbar";
-import { ButtonModule } from "primeng/button";
-import { SplitButtonModule } from "primeng/splitbutton";
-import { ImportToolbarComponent } from "./import-toolbar.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ButtonModule } from 'primeng/button';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { ImportToolbarComponent } from './import-toolbar.component';
 
-describe("ImportToolbarComponent", () => {
+describe('ImportToolbarComponent', () => {
   let component: ImportToolbarComponent;
   let fixture: ComponentFixture<ImportToolbarComponent>;
 
@@ -48,7 +48,7 @@ describe("ImportToolbarComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

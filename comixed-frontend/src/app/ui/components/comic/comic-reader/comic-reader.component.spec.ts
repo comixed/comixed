@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ComicReaderComponent } from "./comic-reader.component";
+import { ComicReaderComponent } from './comic-reader.component';
 
-xdescribe("ComicReaderComponent", () => {
+xdescribe('ComicReaderComponent', () => {
   let component: ComicReaderComponent;
   let fixture: ComponentFixture<ComicReaderComponent>;
 
@@ -37,7 +37,7 @@ xdescribe("ComicReaderComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

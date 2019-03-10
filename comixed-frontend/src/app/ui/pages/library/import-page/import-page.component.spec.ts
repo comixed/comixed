@@ -17,32 +17,32 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { RouterTestingModule } from "@angular/router/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { DataViewModule } from "primeng/dataview";
-import { SliderModule } from "primeng/slider";
-import { ButtonModule } from "primeng/button";
-import { DropdownModule } from "primeng/dropdown";
-import { ProgressBarModule } from "primeng/progressbar";
-import { CardModule } from "primeng/card";
-import { SplitButtonModule } from "primeng/splitbutton";
-import { ToolbarModule } from "primeng/toolbar";
-import { FileDetailsCoverComponent } from "../../../components/file-details/file-details-cover/file-details-cover.component";
-import { ImportToolbarComponent } from "../../../components/import/import-toolbar/import-toolbar.component";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { ComicFileCoverUrlPipe } from "../../../../pipes/comic-file-cover-url.pipe";
-import { ComicService } from "../../../../services/comic.service";
-import { ComicServiceMock } from "../../../../services/comic.service.mock";
-import { IMPORTING_STATE } from "../../../../models/import/importing.fixtures";
-import { READER_USER } from "../../../../models/user/user.fixtures";
-import { ImportPageComponent } from "./import-page.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { DataViewModule } from 'primeng/dataview';
+import { SliderModule } from 'primeng/slider';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { CardModule } from 'primeng/card';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { ToolbarModule } from 'primeng/toolbar';
+import { FileDetailsCoverComponent } from '../../../components/file-details/file-details-cover/file-details-cover.component';
+import { ImportToolbarComponent } from '../../../components/import/import-toolbar/import-toolbar.component';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { ComicFileCoverUrlPipe } from '../../../../pipes/comic-file-cover-url.pipe';
+import { ComicService } from '../../../../services/comic.service';
+import { ComicServiceMock } from '../../../../services/comic.service.mock';
+import { IMPORTING_STATE } from '../../../../models/import/importing.fixtures';
+import { READER_USER } from '../../../../models/user/user.fixtures';
+import { ImportPageComponent } from './import-page.component';
 
-xdescribe("ImportPageComponent", () => {
+xdescribe('ImportPageComponent', () => {
   let component: ImportPageComponent;
   let fixture: ComponentFixture<ImportPageComponent>;
 
@@ -80,7 +80,7 @@ xdescribe("ImportPageComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

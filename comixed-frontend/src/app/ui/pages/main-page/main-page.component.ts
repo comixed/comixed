@@ -17,35 +17,36 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { Observable, Subscription } from "rxjs";
-import { AppState } from "../../../app.state";
-import { Library, ComicGrouping } from "../../../models/actions/library";
-import { SelectItem } from "primeng/api";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { AppState } from '../../../app.state';
+import { Library, ComicGrouping } from '../../../models/actions/library';
+import { SelectItem } from 'primeng/api';
 
 const COLOR_PALLETTE = [
-  "#C0C0C0",
-  "#808080",
-  "#000000",
-  "#FF0000",
-  "#800000",
-  "#FFFF00",
-  "#808000",
-  "#00FF00",
-  "#008000",
-  "#00FFFF",
-  "#008080",
-  "#0000FF",
-  "#000080",
-  "#FF00FF",
-  "#800080"
+  '#C0C0C0',
+  '#808080',
+  '#000000',
+  '#FF0000',
+  '#800000',
+  '#FFFF00',
+  '#808000',
+  '#00FF00',
+  '#008000',
+  '#00FFFF',
+  '#008080',
+  '#0000FF',
+  '#000080',
+  '#FF00FF',
+  '#800080'
 ];
 
 @Component({
-  selector: "app-main-page",
-  templateUrl: "./main-page.component.html",
-  styleUrls: ["./main-page.component.css"]
+  selector: 'app-main-page',
+  templateUrl: './main-page.component.html',
+  styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
@@ -58,24 +59,24 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public library_data: any;
   public options: any;
   public data_options: Array<SelectItem> = [
-    { label: "Publishers", value: "publishers" },
-    { label: "Series", value: "series" },
-    { label: "Characters", value: "characters" },
-    { label: "Teams", value: "teams" },
-    { label: "Locations", value: "locations" }
+    { label: 'Publishers', value: 'publishers' },
+    { label: 'Series', value: 'series' },
+    { label: 'Characters', value: 'characters' },
+    { label: 'Teams', value: 'teams' },
+    { label: 'Locations', value: 'locations' }
   ];
-  public data_to_show = "publishers";
+  public data_to_show = 'publishers';
 
   constructor(private store: Store<AppState>) {
-    this.library$ = store.select("library");
+    this.library$ = store.select('library');
     this.options = {
       title: {
         display: true,
-        text: "",
+        text: '',
         fontSize: 16
       },
       legend: {
-        position: "bottom"
+        position: 'bottom'
       }
     };
   }
@@ -109,48 +110,48 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   build_data(): void {
-    let names = [];
-    let counts = [];
+    const names = [];
+    const counts = [];
 
     switch (this.data_to_show) {
-      case "publishers":
+      case 'publishers':
         this.sort(this.library.publishers).forEach(publisher => {
           names.push(publisher.name);
           counts.push(publisher.comic_count);
         });
-        this.options.title.text = "Data For Most Common Publishers";
+        this.options.title.text = 'Data For Most Common Publishers';
         break;
 
-      case "series":
+      case 'series':
         this.sort(this.library.series).forEach(series => {
           names.push(series.name);
           counts.push(series.comic_count);
         });
-        this.options.title.text = "Data For Most Common Series";
+        this.options.title.text = 'Data For Most Common Series';
         break;
 
-      case "characters":
+      case 'characters':
         this.sort(this.library.characters).forEach(character => {
           names.push(character.name);
           counts.push(character.comic_count);
         });
-        this.options.title.text = "Data For Most Common Characters";
+        this.options.title.text = 'Data For Most Common Characters';
         break;
 
-      case "teams":
+      case 'teams':
         this.sort(this.library.teams).forEach(team => {
           names.push(team.name);
           counts.push(team.comic_count);
         });
-        this.options.title.text = "Data For Most Common Teams";
+        this.options.title.text = 'Data For Most Common Teams';
         break;
 
-      case "locations":
+      case 'locations':
         this.sort(this.library.locations).forEach(location => {
           names.push(location.name);
           counts.push(location.comic_count);
         });
-        this.options.title.text = "Data For Most Common Locations";
+        this.options.title.text = 'Data For Most Common Locations';
         break;
     }
 

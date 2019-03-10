@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { CardModule } from "primeng/card";
-import { DEFAULT_COMIC_GROUPING } from "../../../../models/actions/library.fixtures";
-import { ComicGroupingCardComponent } from "./comic-grouping-card.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { CardModule } from 'primeng/card';
+import { DEFAULT_COMIC_GROUPING } from '../../../../models/actions/library.fixtures';
+import { ComicGroupingCardComponent } from './comic-grouping-card.component';
 
-describe("ComicGroupingCardComponent", () => {
+describe('ComicGroupingCardComponent', () => {
   let component: ComicGroupingCardComponent;
   let fixture: ComponentFixture<ComicGroupingCardComponent>;
 
@@ -40,7 +40,7 @@ describe("ComicGroupingCardComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

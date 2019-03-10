@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Action } from "@ngrx/store";
-import { Comic } from "../models/comics/comic";
-import { Volume } from "../models/comics/volume";
-import { Issue } from "../models/scraping/issue";
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { Comic } from '../models/comics/comic';
+import { Volume } from '../models/comics/volume';
+import { Issue } from '../models/scraping/issue';
 
 export const MULTIPLE_COMICS_SCRAPING_SETUP =
-  "[MULTIPLE COMICS SCRAPING] Setup";
+  '[MULTIPLE COMICS SCRAPING] Setup';
 export class MultipleComicsScrapingSetup implements Action {
   readonly type = MULTIPLE_COMICS_SCRAPING_SETUP;
 
@@ -36,7 +36,7 @@ export class MultipleComicsScrapingSetup implements Action {
 }
 
 export const MULTIPLE_COMICS_SCRAPING_START =
-  "[MULTIPLE COMICS SCRAPING] Start scraping";
+  '[MULTIPLE COMICS SCRAPING] Start scraping';
 export class MultipleComicsScrapingStart implements Action {
   readonly type = MULTIPLE_COMICS_SCRAPING_START;
 
@@ -44,7 +44,7 @@ export class MultipleComicsScrapingStart implements Action {
 }
 
 export const MULTIPLE_COMICS_SCRAPING_COMIC_SCRAPED =
-  "[MULTIPLE COMICS SCRAPING] Comic scraped";
+  '[MULTIPLE COMICS SCRAPING] Comic scraped';
 export class MultipleComicsScrapingComicScraped implements Action {
   readonly type = MULTIPLE_COMICS_SCRAPING_COMIC_SCRAPED;
 

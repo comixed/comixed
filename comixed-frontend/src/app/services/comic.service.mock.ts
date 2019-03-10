@@ -17,18 +17,19 @@
  * org.comixed;
  */
 
-import { of as observableOf, Observable } from "rxjs";
-import { PageType } from "../models/comics/page-type";
+import {  Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import { PageType } from '../models/comics/page-type';
 
 export class ComicServiceMock {
   library_comic_count = 0;
   page_types = [];
 
   get_library_comic_count(): Observable<any> {
-    return observableOf(this.library_comic_count);
+    return of(this.library_comic_count);
   }
 
   get_page_types(): Observable<any> {
-    return observableOf(this.page_types);
+    return of(this.page_types);
   }
 }

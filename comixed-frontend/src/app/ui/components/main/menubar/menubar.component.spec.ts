@@ -17,18 +17,18 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { Router } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { MenubarModule } from "primeng/menubar";
-import { ButtonModule } from "primeng/button";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { userReducer } from "../../../../reducers/user.reducer";
-import { MenubarComponent } from "./menubar.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { MenubarModule } from 'primeng/menubar';
+import { ButtonModule } from 'primeng/button';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { userReducer } from '../../../../reducers/user.reducer';
+import { MenubarComponent } from './menubar.component';
 
-describe("MenubarComponent", () => {
+describe('MenubarComponent', () => {
   let component: MenubarComponent;
   let fixture: ComponentFixture<MenubarComponent>;
   let store: Store<AppState>;
@@ -56,19 +56,19 @@ describe("MenubarComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe("#do_logout()", () => {
+  describe('#do_logout()', () => {
     beforeEach(() => {
-      spyOn(router, "navigate");
+      spyOn(router, 'navigate');
 
       component.do_logout();
     });
 
-    it("redirects the user to the main page", () => {
-      expect(router.navigate).toHaveBeenCalledWith(["/home"]);
+    it('redirects the user to the main page', () => {
+      expect(router.navigate).toHaveBeenCalledWith(['/home']);
     });
   });
 });

@@ -17,40 +17,41 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
-import { ActivatedRoute, Params } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { Observable, Subscription } from "rxjs";
-import * as UserActions from "../../../../actions/user.actions";
-import { Importing } from "../../../../models/import/importing";
-import { Library } from "../../../../models/actions/library";
-import * as ImportingActions from "../../../../actions/importing.actions";
-import { SelectItem } from "primeng/api";
-import { ComicFile } from "../../../../models/import/comic-file";
-import { User } from "../../../../models/user/user";
-import { Preference } from "../../../../models/user/preference";
-import { ComicService } from "../../../../services/comic.service";
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import * as UserActions from '../../../../actions/user.actions';
+import { Importing } from '../../../../models/import/importing';
+import { Library } from '../../../../models/actions/library';
+import * as ImportingActions from '../../../../actions/importing.actions';
+import { SelectItem } from 'primeng/api';
+import { ComicFile } from '../../../../models/import/comic-file';
+import { User } from '../../../../models/user/user';
+import { Preference } from '../../../../models/user/preference';
+import { ComicService } from '../../../../services/comic.service';
 import {
   IMPORT_SORT,
   IMPORT_ROWS,
   IMPORT_COVER_SIZE,
   IMPORT_LAST_DIRECTORY
-} from "../../../../models/user/preferences.constants";
+} from '../../../../models/user/preferences.constants';
 
-const ROWS_PARAMETER = "rows";
-const SORT_PARAMETER = "sort";
-const COVER_PARAMETER = "coversize";
+const ROWS_PARAMETER = 'rows';
+const SORT_PARAMETER = 'sort';
+const COVER_PARAMETER = 'coversize';
 
-const COVER_SIZE_PREFERENCE = "cover_size";
-const SORT_PREFERENCE = "import_sort";
-const ROWS_PREFERENCE = "import_rows";
+const COVER_SIZE_PREFERENCE = 'cover_size';
+const SORT_PREFERENCE = 'import_sort';
+const ROWS_PREFERENCE = 'import_rows';
 
 @Component({
-  selector: "app-import-page",
-  templateUrl: "./import-page.component.html",
-  styleUrls: ["./import-page.component.css"]
+  selector: 'app-import-page',
+  templateUrl: './import-page.component.html',
+  styleUrls: ['./import-page.component.css']
 })
 export class ImportPageComponent implements OnInit, OnDestroy {
   protected sort_options: Array<SelectItem>;
@@ -84,23 +85,23 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private store: Store<AppState>
   ) {
-    this.library$ = store.select("library");
-    this.user$ = store.select("user");
-    this.importing$ = store.select("importing");
+    this.library$ = store.select('library');
+    this.user$ = store.select('user');
+    this.importing$ = store.select('importing');
     activatedRoute.queryParams.subscribe(params => {
-      this.sort_by = params[SORT_PARAMETER] || "filename";
-      this.rows = parseInt(params[ROWS_PARAMETER] || "10", 10);
-      this.cover_size = parseInt(params[COVER_PARAMETER] || "200", 10);
+      this.sort_by = params[SORT_PARAMETER] || 'filename';
+      this.rows = parseInt(params[ROWS_PARAMETER] || '10', 10);
+      this.cover_size = parseInt(params[COVER_PARAMETER] || '200', 10);
     });
     this.sort_options = [
-      { label: "Filename", value: "filename" },
-      { label: "Size", value: "size" }
+      { label: 'Filename', value: 'filename' },
+      { label: 'Size', value: 'size' }
     ];
     this.rows_options = [
-      { label: "10 comics", value: 10 },
-      { label: "25 comics", value: 25 },
-      { label: "50 comics", value: 50 },
-      { label: "100 comics", value: 100 }
+      { label: '10 comics', value: 10 },
+      { label: '25 comics', value: 25 },
+      { label: '50 comics', value: 50 },
+      { label: '100 comics', value: 100 }
     ];
   }
 
@@ -135,7 +136,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
       const directory = (
         this.user.preferences.find((preference: Preference) => {
           return preference.name === IMPORT_LAST_DIRECTORY;
-        }) || { value: "" }
+        }) || { value: '' }
       ).value;
       this.store.dispatch(
         new ImportingActions.ImportingSetDirectory({ directory: directory })
@@ -232,19 +233,19 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
   get_import_title(): string {
     if (this.library.library_state.import_count === 0) {
-      return "Preparing To Import Comics...";
+      return 'Preparing To Import Comics...';
     }
     return (
-      `There ${this.plural_imports() ? "Are" : "Is"} ${
+      `There ${this.plural_imports() ? 'Are' : 'Is'} ${
         this.library.library_state.import_count
       } ` +
-      `Comic${this.plural_imports() ? "s" : ""} Remaining To Be Imported...`
+      `Comic${this.plural_imports() ? 's' : ''} Remaining To Be Imported...`
     );
   }
 
   get_comic_selection_title(): string {
     if (this.importing.files.length === 0) {
-      return "No Comics Are Loaded";
+      return 'No Comics Are Loaded';
     } else {
       return `Selected ${this.importing.selected_count} Of ${
         this.importing.files.length

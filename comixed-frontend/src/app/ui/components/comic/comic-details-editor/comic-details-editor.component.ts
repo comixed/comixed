@@ -24,29 +24,30 @@ import {
   Input,
   Output,
   EventEmitter
-} from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Store } from "@ngrx/store";
-import { Observable, Subscription } from "rxjs";
-import { AppState } from "../../../../app.state";
-import * as LibraryActions from "../../../../actions/library.actions";
-import * as LibraryScrapingActions from "../../../../actions/single-comic-scraping.actions";
-import * as UserActions from "../../../../actions/user.actions";
-import { UserService } from "../../../../services/user.service";
-import { ComicService } from "../../../../services/comic.service";
-import { Comic } from "../../../../models/comics/comic";
-import { Volume } from "../../../../models/comics/volume";
-import { Issue } from "../../../../models/scraping/issue";
-import { SingleComicScraping } from "../../../../models/scraping/single-comic-scraping";
-import { User } from "../../../../models/user/user";
-import { Preference } from "../../../../models/user/preference";
-import { COMICVINE_API_KEY } from "../../../../models/user/preferences.constants";
-import { MenuItem } from "primeng/api";
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { AppState } from '../../../../app.state';
+import * as LibraryActions from '../../../../actions/library.actions';
+import * as LibraryScrapingActions from '../../../../actions/single-comic-scraping.actions';
+import * as UserActions from '../../../../actions/user.actions';
+import { UserService } from '../../../../services/user.service';
+import { ComicService } from '../../../../services/comic.service';
+import { Comic } from '../../../../models/comics/comic';
+import { Volume } from '../../../../models/comics/volume';
+import { Issue } from '../../../../models/scraping/issue';
+import { SingleComicScraping } from '../../../../models/scraping/single-comic-scraping';
+import { User } from '../../../../models/user/user';
+import { Preference } from '../../../../models/user/preference';
+import { COMICVINE_API_KEY } from '../../../../models/user/preferences.constants';
+import { MenuItem } from 'primeng/api';
 
 @Component({
-  selector: "app-comic-details-editor",
-  templateUrl: "./comic-details-editor.component.html",
-  styleUrls: ["./comic-details-editor.component.css"]
+  selector: 'app-comic-details-editor',
+  templateUrl: './comic-details-editor.component.html',
+  styleUrls: ['./comic-details-editor.component.css']
 })
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   @Input() multi_comic_mode = false;
@@ -63,9 +64,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   single_comic_scraping: SingleComicScraping;
 
   protected volume_selection_banner: string;
-  private date_formatter = Intl.DateTimeFormat("en-us", {
-    month: "short",
-    year: "numeric"
+  private date_formatter = Intl.DateTimeFormat('en-us', {
+    month: 'short',
+    year: 'numeric'
   });
 
   skip_cache = false;
@@ -77,26 +78,26 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private form_builder: FormBuilder
   ) {
-    this.user$ = store.select("user");
-    this.single_comic_scraping$ = store.select("single_comic_scraping");
+    this.user$ = store.select('user');
+    this.single_comic_scraping$ = store.select('single_comic_scraping');
 
     this.fetch_options = [
       {
-        label: "Fetch",
-        icon: "fa fa-search",
+        label: 'Fetch',
+        icon: 'fa fa-search',
         command: () => this.fetch_candidates(false)
       },
       {
-        label: "Fetch (Skip Cache)",
-        icon: "fa fa-cloud",
+        label: 'Fetch (Skip Cache)',
+        icon: 'fa fa-cloud',
         command: () => this.fetch_candidates(true)
       }
     ];
     this.form = this.form_builder.group({
-      api_key: ["", [Validators.required]],
-      series: ["", [Validators.required]],
-      volume: ["", [Validators.required]],
-      issue_number: ["", [Validators.required]]
+      api_key: ['', [Validators.required]],
+      series: ['', [Validators.required]],
+      volume: ['', [Validators.required]],
+      issue_number: ['', [Validators.required]]
     });
   }
 
@@ -108,24 +109,24 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         return preference.name === COMICVINE_API_KEY;
       });
 
-      this.form.controls["api_key"].setValue(api_key ? api_key.value : "");
+      this.form.controls['api_key'].setValue(api_key ? api_key.value : '');
     });
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
 
         if (this.single_comic_scraping.api_key.length) {
-          this.form.controls["api_key"].setValue(
+          this.form.controls['api_key'].setValue(
             this.single_comic_scraping.api_key
           );
         }
-        this.form.controls["series"].setValue(
+        this.form.controls['series'].setValue(
           this.single_comic_scraping.series
         );
-        this.form.controls["volume"].setValue(
+        this.form.controls['volume'].setValue(
           this.single_comic_scraping.volume
         );
-        this.form.controls["issue_number"].setValue(
+        this.form.controls['issue_number'].setValue(
           this.single_comic_scraping.issue_number
         );
       }
@@ -141,7 +142,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   set comic(comic: Comic) {
     this.store.dispatch(
       new LibraryScrapingActions.SingleComicScrapingSetup({
-        api_key: this.form.controls["api_key"].value,
+        api_key: this.form.controls['api_key'].value,
         comic: comic,
         series: comic.series,
         volume: comic.volume,
@@ -151,17 +152,17 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   get api_key(): string {
-    return this.form.controls["api_key"].value;
+    return this.form.controls['api_key'].value;
   }
 
   fetch_candidates(skip_cache: boolean): void {
     this.skip_cache = skip_cache;
     this.store.dispatch(
       new LibraryScrapingActions.SingleComicScrapingFetchVolumes({
-        api_key: this.form.controls["api_key"].value,
-        series: this.form.controls["series"].value,
-        volume: this.form.controls["volume"].value,
-        issue_number: this.form.controls["issue_number"].value,
+        api_key: this.form.controls['api_key'].value,
+        series: this.form.controls['series'].value,
+        volume: this.form.controls['volume'].value,
+        issue_number: this.form.controls['issue_number'].value,
         skip_cache: skip_cache
       })
     );
@@ -171,9 +172,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     if (volume) {
       this.store.dispatch(
         new LibraryScrapingActions.SingleComicScrapingSetCurrentVolume({
-          api_key: this.form.controls["api_key"].value,
+          api_key: this.form.controls['api_key'].value,
           volume: volume,
-          issue_number: this.form.controls["issue_number"].value,
+          issue_number: this.form.controls['issue_number'].value,
           skip_cache: this.skip_cache
         })
       );
@@ -187,7 +188,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   select_issue(): void {
     this.store.dispatch(
       new LibraryScrapingActions.SingleComicScrapingScrapeMetadata({
-        api_key: this.form.controls["api_key"].value,
+        api_key: this.form.controls['api_key'].value,
         comic: this.single_comic_scraping.comic,
         issue_id: this.single_comic_scraping.current_issue.id,
         skip_cache: this.skip_cache,
@@ -200,11 +201,11 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   cancel_selection(): void {
     this.store.dispatch(
       new LibraryScrapingActions.SingleComicScrapingSetup({
-        api_key: this.form.controls["api_key"].value,
+        api_key: this.form.controls['api_key'].value,
         comic: this.comic,
-        series: this.form.controls["series"].value,
-        volume: this.form.controls["volume"].value,
-        issue_number: this.form.controls["issue_number"].value
+        series: this.form.controls['series'].value,
+        volume: this.form.controls['volume'].value,
+        issue_number: this.form.controls['issue_number'].value
       })
     );
     this.update.next(this.single_comic_scraping.comic);
@@ -213,19 +214,19 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   save_changes(): void {
     this.store.dispatch(
       new LibraryScrapingActions.SingleComicScrapingSaveLocalChanges({
-        api_key: this.form.controls["api_key"].value,
+        api_key: this.form.controls['api_key'].value,
         comic: this.single_comic_scraping.comic,
-        series: this.form.controls["series"].value,
-        volume: this.form.controls["volume"].value,
-        issue_number: this.form.controls["issue_number"].value
+        series: this.form.controls['series'].value,
+        volume: this.form.controls['volume'].value,
+        issue_number: this.form.controls['issue_number'].value
       })
     );
   }
 
   reset_changes(): void {
-    this.form.controls["series"].setValue(this.single_comic_scraping.series);
-    this.form.controls["volume"].setValue(this.single_comic_scraping.volume);
-    this.form.controls["issue_number"].setValue(
+    this.form.controls['series'].setValue(this.single_comic_scraping.series);
+    this.form.controls['volume'].setValue(this.single_comic_scraping.volume);
+    this.form.controls['issue_number'].setValue(
       this.single_comic_scraping.comic.issue_number
     );
     this.form.markAsPristine();
@@ -235,12 +236,12 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       new UserActions.UserSetPreference({
         name: COMICVINE_API_KEY,
-        value: this.form.controls["api_key"].value.trim()
+        value: this.form.controls['api_key'].value.trim()
       })
     );
   }
 
   is_api_key_valid(): boolean {
-    return (this.form.controls["api_key"].value || "").trim().length > 0;
+    return (this.form.controls['api_key'].value || '').trim().length > 0;
   }
 }

@@ -17,20 +17,21 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { Observable, Subscription } from "rxjs";
-import * as LibraryActions from "../../../../actions/library.actions";
-import * as ScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
-import { Library } from "../../../../models/actions/library";
-import { LibraryDisplay } from "../../../../models/actions/library-display";
-import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import * as LibraryActions from '../../../../actions/library.actions';
+import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
+import { Library } from '../../../../models/actions/library';
+import { LibraryDisplay } from '../../../../models/actions/library-display';
+import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
 
 @Component({
-  selector: "app-multi-comic-scraping-page",
-  templateUrl: "./multi-comic-scraping-page.component.html",
-  styleUrls: ["./multi-comic-scraping-page.component.css"]
+  selector: 'app-multi-comic-scraping-page',
+  templateUrl: './multi-comic-scraping-page.component.html',
+  styleUrls: ['./multi-comic-scraping-page.component.css']
 })
 export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
@@ -46,9 +47,9 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
   scraping: MultipleComicsScraping;
 
   constructor(private store: Store<AppState>) {
-    this.library$ = this.store.select("library");
-    this.library_display$ = this.store.select("library_display");
-    this.scraping$ = this.store.select("multiple_comic_scraping");
+    this.library$ = this.store.select('library');
+    this.library_display$ = this.store.select('library_display');
+    this.scraping$ = this.store.select('multiple_comic_scraping');
   }
 
   ngOnInit() {

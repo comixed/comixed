@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { ScanType } from "./scan-type";
+import { ScanType } from './scan-type';
 
 export const DEFAULT_SCAN_TYPE: ScanType = {
   id: 1,
-  name: "Default Scan Type"
+  name: 'Default Scan Type'
 };

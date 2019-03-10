@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import { Action } from "@ngrx/store";
-import { User } from "../models/user/user";
-import { Preference } from "../models/user/preference";
-import * as UserActions from "../actions/user.actions";
+import { Action } from '@ngrx/store';
+import { User } from '../models/user/user';
+import { Preference } from '../models/user/preference';
+import * as UserActions from '../actions/user.actions';
 
 const initial_state: User = {
   initialized: false,
@@ -70,10 +70,10 @@ export function userReducer(
 
       if (user) {
         is_admin = user.roles.some((pref: Preference) => {
-          return pref.name === "ADMIN";
+          return pref.name === 'ADMIN';
         });
         is_reader = user.roles.some((pref: Preference) => {
-          return pref.name === "READER";
+          return pref.name === 'READER';
         });
       }
       return {

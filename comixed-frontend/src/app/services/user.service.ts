@@ -17,22 +17,22 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
-export const USER_SERVICE_API_URL = "/api";
+export const USER_SERVICE_API_URL = '/api';
 
 @Injectable()
 export class UserService {
-  USER_SERVICE_API_URL = "/api";
+  USER_SERVICE_API_URL = '/api';
 
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
     const params = new HttpParams()
-      .set("email", email)
-      .set("password", password);
+      .set('email', email)
+      .set('password', password);
     return this.http.post(
       `${this.USER_SERVICE_API_URL}/token/generate-token`,
       params
@@ -50,9 +50,9 @@ export class UserService {
     is_admin: boolean
   ): Observable<any> {
     const params = new HttpParams()
-      .set("email", email)
-      .set("password", password)
-      .set("is_admin", `${is_admin}`);
+      .set('email', email)
+      .set('password', password)
+      .set('is_admin', `${is_admin}`);
 
     if (id !== null) {
       return this.http.put(
@@ -73,7 +73,7 @@ export class UserService {
   }
 
   set_user_preference(name: string, value: string): Observable<any> {
-    const params = new HttpParams().set("name", name).set("value", value);
+    const params = new HttpParams().set('name', name).set('value', value);
 
     return this.http.post(
       `${this.USER_SERVICE_API_URL}/user/preferences`,

@@ -17,8 +17,8 @@
  * org.comixed;
  */
 
-import { User } from "../models/user/user";
-import { Observable } from "rxjs";
+import { User } from '../models/user/user';
+import { Observable } from 'rxjs/Observable';
 
 export class UserServiceMock {
   preferences = new Map<string, string>();

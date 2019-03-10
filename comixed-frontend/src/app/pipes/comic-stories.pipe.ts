@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Pipe, PipeTransform } from "@angular/core";
-import { Comic } from "../models/comics/comic";
-import { TranslateService } from "@ngx-translate/core";
-import { SelectItem } from "primeng/api";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Comic } from '../models/comics/comic';
+import { TranslateService } from '@ngx-translate/core';
+import { SelectItem } from 'primeng/api';
 
 @Pipe({
-  name: "comic_story"
+  name: 'comic_story'
 })
 export class ComicStoriesPipe implements PipeTransform {
   transform(comics: Array<Comic>, story_name: string): Array<Comic> {
@@ -31,7 +31,7 @@ export class ComicStoriesPipe implements PipeTransform {
       return [];
     }
 
-    let result = comics.filter((comic: Comic) => {
+    const result = comics.filter((comic: Comic) => {
       return comic.story_arcs.some((story: string) => {
         return story === story_name;
       });

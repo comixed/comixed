@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import { ComicPublisherPipe } from "./comic-publisher.pipe";
+import { ComicPublisherPipe } from './comic-publisher.pipe';
 
-describe("ComicPublisherPipe", () => {
-  it("create an instance", () => {
+describe('ComicPublisherPipe', () => {
+  it('create an instance', () => {
     const pipe = new ComicPublisherPipe();
     expect(pipe).toBeTruthy();
   });

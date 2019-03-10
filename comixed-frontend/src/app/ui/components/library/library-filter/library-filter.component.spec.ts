@@ -17,18 +17,18 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { PanelModule } from "primeng/panel";
-import { ButtonModule } from "primeng/button";
-import { LibraryFilterComponent } from "./library-filter.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { PanelModule } from 'primeng/panel';
+import { ButtonModule } from 'primeng/button';
+import { LibraryFilterComponent } from './library-filter.component';
 
-describe("LibraryFilterComponent", () => {
+describe('LibraryFilterComponent', () => {
   let component: LibraryFilterComponent;
   let fixture: ComponentFixture<LibraryFilterComponent>;
   let store: Store<AppState>;
@@ -52,7 +52,7 @@ describe("LibraryFilterComponent", () => {
     store = TestBed.get(Store);
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

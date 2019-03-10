@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Router, ActivatedRoute, Params } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
-import { SelectItem } from "primeng/api";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import * as DisplayActions from "../../../../actions/library-display.actions";
-import { LibraryFilter } from "../../../../models/actions/library-filter";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { SelectItem } from 'primeng/api';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import * as DisplayActions from '../../../../actions/library-display.actions';
+import { LibraryFilter } from '../../../../models/actions/library-filter';
 import {
   LibraryDisplay,
   LAYOUT,
@@ -32,12 +32,12 @@ import {
   ROWS,
   COVER_SIZE,
   SAME_HEIGHT
-} from "../../../../models/actions/library-display";
+} from '../../../../models/actions/library-display';
 
 @Component({
-  selector: "app-comic-list-toolbar",
-  templateUrl: "./comic-list-toolbar.component.html",
-  styleUrls: ["./comic-list-toolbar.component.css"]
+  selector: 'app-comic-list-toolbar',
+  templateUrl: './comic-list-toolbar.component.html',
+  styleUrls: ['./comic-list-toolbar.component.css']
 })
 export class ComicListToolbarComponent implements OnInit {
   @Input() library_display: LibraryDisplay;
@@ -101,15 +101,15 @@ export class ComicListToolbarComponent implements OnInit {
     this.layout_options = [
       {
         label: this.translate.instant(
-          "library-contents.options.layout.grid-layout"
+          'library-contents.options.layout.grid-layout'
         ),
-        value: "grid"
+        value: 'grid'
       },
       {
         label: this.translate.instant(
-          "library-contents.options.layout.list-layout"
+          'library-contents.options.layout.list-layout'
         ),
-        value: "list"
+        value: 'list'
       }
     ];
   }
@@ -124,33 +124,33 @@ export class ComicListToolbarComponent implements OnInit {
     this.sort_field_options = this.sort_field_options.concat(
       {
         label: this.translate.instant(
-          "comic-list-toolbar.options.sort-field.volume"
+          'comic-list-toolbar.options.sort-field.volume'
         ),
-        value: "volume"
+        value: 'volume'
       },
       {
         label: this.translate.instant(
-          "comic-list-toolbar.options.sort-field.issue-number"
+          'comic-list-toolbar.options.sort-field.issue-number'
         ),
-        value: "issue_number"
+        value: 'issue_number'
       },
       {
         label: this.translate.instant(
-          "comic-list-toolbar.options.sort-field.added-date"
+          'comic-list-toolbar.options.sort-field.added-date'
         ),
-        value: "added_date"
+        value: 'added_date'
       },
       {
         label: this.translate.instant(
-          "comic-list-toolbar.options.sort-field.cover-date"
+          'comic-list-toolbar.options.sort-field.cover-date'
         ),
-        value: "cover_date"
+        value: 'cover_date'
       },
       {
         label: this.translate.instant(
-          "comic-list-toolbar.options.sort-field.last-read-date"
+          'comic-list-toolbar.options.sort-field.last-read-date'
         ),
-        value: "last_read_date"
+        value: 'last_read_date'
       }
     );
   }
@@ -159,25 +159,25 @@ export class ComicListToolbarComponent implements OnInit {
     this.rows_options = [
       {
         label: this.translate.instant(
-          "library-contents.options.rows.10-per-page"
+          'library-contents.options.rows.10-per-page'
         ),
         value: 10
       },
       {
         label: this.translate.instant(
-          "library-contents.options.rows.25-per-page"
+          'library-contents.options.rows.25-per-page'
         ),
         value: 25
       },
       {
         label: this.translate.instant(
-          "library-contents.options.rows.50-per-page"
+          'library-contents.options.rows.50-per-page'
         ),
         value: 50
       },
       {
         label: this.translate.instant(
-          "library-contents.options.rows.100-per-page"
+          'library-contents.options.rows.100-per-page'
         ),
         value: 100
       }
@@ -204,7 +204,7 @@ export class ComicListToolbarComponent implements OnInit {
         same_height: same_height
       })
     );
-    this.update_query_parameters(SAME_HEIGHT, same_height ? "1" : "0");
+    this.update_query_parameters(SAME_HEIGHT, same_height ? '1' : '0');
   }
 
   set_cover_size(cover_size: number): void {

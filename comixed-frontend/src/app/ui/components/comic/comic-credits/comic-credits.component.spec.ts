@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { CardModule } from "primeng/card";
-import { DataViewModule } from "primeng/dataview";
-import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
-import { ComicCreditsComponent } from "./comic-credits.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CardModule } from 'primeng/card';
+import { DataViewModule } from 'primeng/dataview';
+import { COMIC_1000 } from '../../../../models/comics/comic.fixtures';
+import { ComicCreditsComponent } from './comic-credits.component';
 
-describe("ComicCreditsComponent", () => {
+describe('ComicCreditsComponent', () => {
   let component: ComicCreditsComponent;
   let fixture: ComponentFixture<ComicCreditsComponent>;
 
@@ -41,7 +41,7 @@ describe("ComicCreditsComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

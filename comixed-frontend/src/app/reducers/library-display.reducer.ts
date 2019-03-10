@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Action } from "@ngrx/store";
-import { LibraryDisplay } from "../models/actions/library-display";
-import * as LibraryDisplayActions from "../actions/library-display.actions";
+import { Action } from '@ngrx/store';
+import { LibraryDisplay } from '../models/actions/library-display';
+import * as LibraryDisplayActions from '../actions/library-display.actions';
 
 const initial_state: LibraryDisplay = {
-  layout: "grid",
-  sort_field: "added_date",
+  layout: 'grid',
+  sort_field: 'added_date',
   rows: 10,
   cover_size: 225,
   same_height: true

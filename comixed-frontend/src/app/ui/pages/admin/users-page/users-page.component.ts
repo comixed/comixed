@@ -17,21 +17,21 @@
  * org.comixed;
  */
 
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import * as UserAdminActions from "../../../../actions/user-admin.actions";
-import { Observable } from "rxjs/Observable";
-import { Subscription } from "rxjs/Subscription";
-import { UserAdmin } from "../../../../models/actions/user-admin";
-import { User } from "../../../../models/user/user";
-import { Role } from "../../../../models/user/role";
-import { ConfirmationService } from "primeng/api";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import * as UserAdminActions from '../../../../actions/user-admin.actions';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { UserAdmin } from '../../../../models/actions/user-admin';
+import { User } from '../../../../models/user/user';
+import { Role } from '../../../../models/user/role';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
-  selector: "app-users-page",
-  templateUrl: "./users-page.component.html",
-  styleUrls: ["./users-page.component.css"]
+  selector: 'app-users-page',
+  templateUrl: './users-page.component.html',
+  styleUrls: ['./users-page.component.css']
 })
 export class UsersPageComponent implements OnInit, OnDestroy {
   private user_admin$: Observable<UserAdmin>;
@@ -42,7 +42,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private confirm_service: ConfirmationService
   ) {
-    this.user_admin$ = store.select("user_admin");
+    this.user_admin$ = store.select('user_admin');
   }
 
   ngOnInit() {
@@ -70,8 +70,8 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   delete_user(user: User): void {
     this.confirm_service.confirm({
       header: `Delete ${user.email}?`,
-      message: "Are you sure you want to delete this user's account?",
-      icon: "fa fa-exclamation",
+      message: 'Are you sure you want to delete this user\'s account?',
+      icon: 'fa fa-exclamation',
       accept: () => {
         this.store.dispatch(
           new UserAdminActions.UserAdminDeleteUser({ user: user })

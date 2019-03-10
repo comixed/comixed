@@ -17,19 +17,19 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import { Action } from "@ngrx/store";
-import { Observable } from "rxjs";
-import { map, switchMap, tap } from "rxjs/operators";
-import * as ScrapingActions from "../actions/single-comic-scraping.actions";
-import { ComicService } from "../services/comic.service";
-import { MessageService } from "primeng/api";
-import { UserService } from "../services/user.service";
-import { Comic } from "../models/comics/comic";
-import { Volume } from "../models/comics/volume";
-import { Issue } from "../models/scraping/issue";
-import { TranslateService } from "@ngx-translate/core";
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { map, switchMap, tap } from 'rxjs/operators';
+import * as ScrapingActions from '../actions/single-comic-scraping.actions';
+import { ComicService } from '../services/comic.service';
+import { MessageService } from 'primeng/api';
+import { UserService } from '../services/user.service';
+import { Comic } from '../models/comics/comic';
+import { Volume } from '../models/comics/volume';
+import { Issue } from '../models/scraping/issue';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class SingleComicScrapingEffects {
@@ -60,10 +60,10 @@ export class SingleComicScrapingEffects {
         .pipe(
           tap((volumes: Array<Volume>) =>
             this.message_service.add({
-              severity: "info",
-              summary: "Fetch Volumes",
+              severity: 'info',
+              summary: 'Fetch Volumes',
               detail: this.translate.instant(
-                "effects.single-comic-scraping.info.retrieved-volume-count",
+                'effects.single-comic-scraping.info.retrieved-volume-count',
                 { count: volumes.length }
               )
             })
@@ -190,10 +190,10 @@ export class SingleComicScrapingEffects {
           }),
           tap(() =>
             this.message_service.add({
-              severity: "info",
-              summary: "Scrape Comic",
+              severity: 'info',
+              summary: 'Scrape Comic',
               detail: this.translate.instant(
-                "effects.single-comic-scraping.info.details-scraped"
+                'effects.single-comic-scraping.info.details-scraped'
               )
             })
           ),

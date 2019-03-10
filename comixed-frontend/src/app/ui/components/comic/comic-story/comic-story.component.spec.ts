@@ -17,16 +17,16 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { DataViewModule } from "primeng/dataview";
-import { PanelModule } from "primeng/panel";
-import { CardModule } from "primeng/card";
-import { ComicGroupingCardComponent } from "../comic-grouping-card/comic-grouping-card.component";
-import { ComicStoryComponent } from "./comic-story.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { DataViewModule } from 'primeng/dataview';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
+import { ComicGroupingCardComponent } from '../comic-grouping-card/comic-grouping-card.component';
+import { ComicStoryComponent } from './comic-story.component';
 
-describe("ComicStoryComponent", () => {
+describe('ComicStoryComponent', () => {
   let component: ComicStoryComponent;
   let fixture: ComponentFixture<ComicStoryComponent>;
 
@@ -47,7 +47,7 @@ describe("ComicStoryComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

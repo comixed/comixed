@@ -15,7 +15,7 @@
 </div>
 <div [class.selected-comic]="selected">
   <p-card styleClass="comic-cover-card">
-    <a (click)="onClick.next(true)">
+    <a (click)="click.next(true)">
       <p-header></p-header>
       <img src="{{comic|comic_cover_url}}"
            [style.width]="same_height?'auto':cover_size+'px'"

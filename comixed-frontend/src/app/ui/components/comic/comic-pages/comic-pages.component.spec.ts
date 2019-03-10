@@ -17,26 +17,26 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { CardModule } from "primeng/card";
-import { DropdownModule } from "primeng/dropdown";
-import { DataViewModule } from "primeng/dataview";
-import { ButtonModule } from "primeng/button";
-import { MessagesModule } from "primeng/messages";
-import { MessageService } from "primeng/components/common/messageservice";
-import { UserService } from "../../../../services/user.service";
-import { UserServiceMock } from "../../../../services/user.service.mock";
-import { ComicService } from "../../../../services/comic.service";
-import { ComicServiceMock } from "../../../../services/comic.service.mock";
-import { ComicPageUrlPipe } from "../../../../pipes/comic-page-url.pipe";
-import { ComicPagesComponent } from "./comic-pages.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { CardModule } from 'primeng/card';
+import { DropdownModule } from 'primeng/dropdown';
+import { DataViewModule } from 'primeng/dataview';
+import { ButtonModule } from 'primeng/button';
+import { MessagesModule } from 'primeng/messages';
+import { MessageService } from 'primeng/components/common/messageservice';
+import { UserService } from '../../../../services/user.service';
+import { UserServiceMock } from '../../../../services/user.service.mock';
+import { ComicService } from '../../../../services/comic.service';
+import { ComicServiceMock } from '../../../../services/comic.service.mock';
+import { ComicPageUrlPipe } from '../../../../pipes/comic-page-url.pipe';
+import { ComicPagesComponent } from './comic-pages.component';
 
-describe("ComicPagesComponent", () => {
+describe('ComicPagesComponent', () => {
   let component: ComicPagesComponent;
   let fixture: ComponentFixture<ComicPagesComponent>;
   let user_service: UserService;
@@ -70,7 +70,7 @@ describe("ComicPagesComponent", () => {
     comic_service = TestBed.get(ComicService);
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

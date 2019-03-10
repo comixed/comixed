@@ -17,18 +17,18 @@
  * org.comixed;
  */
 
-import { Action } from "@ngrx/store";
-import { SingleComicScraping } from "../models/scraping/single-comic-scraping";
-import { Issue } from "../models/scraping/issue";
-import * as ScrapingActions from "../actions/single-comic-scraping.actions";
+import { Action } from '@ngrx/store';
+import { SingleComicScraping } from '../models/scraping/single-comic-scraping';
+import { Issue } from '../models/scraping/issue';
+import * as ScrapingActions from '../actions/single-comic-scraping.actions';
 
 const initial_state: SingleComicScraping = {
   busy: false,
-  api_key: "",
+  api_key: '',
   comic: null,
-  series: "",
-  volume: "",
-  issue_number: "",
+  series: '',
+  volume: '',
+  issue_number: '',
   volumes: [],
   current_volume: null,
   current_issue: null,

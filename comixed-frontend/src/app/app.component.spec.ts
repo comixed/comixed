@@ -17,34 +17,34 @@
  * org.comixed;
  */
 
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { Observable } from "rxjs/Observable";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { MessageService } from "primeng/api";
-import { MenubarModule } from "primeng/menubar";
-import { ButtonModule } from "primeng/button";
-import { ToastModule } from "primeng/toast";
-import { DialogModule } from "primeng/dialog";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "./app.state";
-import * as UserActions from "./actions/user.actions";
-import { userReducer } from "./reducers/user.reducer";
-import { READER_USER } from "./models/user/user.fixtures";
-import * as LibraryActions from "./actions/library.actions";
-import { libraryReducer } from "./reducers/library.reducer";
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MessageService } from 'primeng/api';
+import { MenubarModule } from 'primeng/menubar';
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from './app.state';
+import * as UserActions from './actions/user.actions';
+import { userReducer } from './reducers/user.reducer';
+import { READER_USER } from './models/user/user.fixtures';
+import * as LibraryActions from './actions/library.actions';
+import { libraryReducer } from './reducers/library.reducer';
 import {
   COMIC_1000,
   COMIC_1001,
   COMIC_1002
-} from "./models/comics/comic.fixtures";
-import { LoadingModule } from "ngx-loading";
-import { MenubarComponent } from "./ui/components/main/menubar/menubar.component";
-import { LoginComponent } from "./ui/components/login/login.component";
-import { AppComponent } from "./app.component";
+} from './models/comics/comic.fixtures';
+import { LoadingModule } from 'ngx-loading';
+import { MenubarComponent } from './ui/components/main/menubar/menubar.component';
+import { LoginComponent } from './ui/components/login/login.component';
+import { AppComponent } from './app.component';
 
-describe("AppComponent", () => {
+describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let translate_service: TranslateService;
@@ -72,30 +72,30 @@ describe("AppComponent", () => {
     component = fixture.componentInstance;
     translate_service = TestBed.get(TranslateService);
     store = TestBed.get(Store);
-    spyOn(store, "dispatch").and.callThrough();
+    spyOn(store, 'dispatch').and.callThrough();
 
     fixture.detectChanges();
   }));
 
-  describe("on startup", () => {
-    it("loads english as the default language", () => {
-      expect(translate_service.getDefaultLang()).toBe("en");
+  describe('on startup', () => {
+    it('loads english as the default language', () => {
+      expect(translate_service.getDefaultLang()).toBe('en');
     });
   });
 
-  describe("#ngOnInit()", () => {
-    it("subscribes to user updates", () => {
+  describe('#ngOnInit()', () => {
+    it('subscribes to user updates', () => {
       store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
       expect(component.user.email).toEqual(READER_USER.email);
     });
 
-    it("performs a user check", () => {
+    it('performs a user check', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new UserActions.UserAuthCheck()
       );
     });
 
-    it("subscribes to library updates", () => {
+    it('subscribes to library updates', () => {
       store.dispatch(
         new LibraryActions.LibraryMergeNewComics({
           library_state: {

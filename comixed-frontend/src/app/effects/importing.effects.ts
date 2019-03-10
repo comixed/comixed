@@ -17,16 +17,16 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import { Action } from "@ngrx/store";
-import { Observable } from "rxjs";
-import { map, switchMap, tap } from "rxjs/operators";
-import * as ImportingActions from "../actions/importing.actions";
-import { MessageService } from "primeng/api";
-import { ComicService } from "../services/comic.service";
-import { ComicFile } from "../models/import/comic-file";
-import { TranslateService } from "@ngx-translate/core";
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { map, switchMap, tap } from 'rxjs/operators';
+import * as ImportingActions from '../actions/importing.actions';
+import { MessageService } from 'primeng/api';
+import { ComicService } from '../services/comic.service';
+import { ComicFile } from '../models/import/comic-file';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ImportingEffects {
@@ -45,10 +45,10 @@ export class ImportingEffects {
       this.comic_service.get_files_under_directory(action.directory).pipe(
         tap((files: Array<ComicFile>) =>
           this.message_service.add({
-            severity: "info",
-            summary: "Find Files",
+            severity: 'info',
+            summary: 'Find Files',
             detail: this.translate.instant(
-              "effects.importing.info.found_files",
+              'effects.importing.info.found_files',
               { file_count: files.length }
             )
           })

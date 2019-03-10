@@ -17,18 +17,19 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit, OnDestroy } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { Observable, Subscription } from "rxjs";
-import { AppState } from "../../../../app.state";
-import * as ScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
-import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
-import { Comic } from "../../../../models/comics/comic";
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { AppState } from '../../../../app.state';
+import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
+import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
+import { Comic } from '../../../../models/comics/comic';
 
 @Component({
-  selector: "app-library-scraping-toolbar",
-  templateUrl: "./library-scraping-toolbar.component.html",
-  styleUrls: ["./library-scraping-toolbar.component.css"]
+  selector: 'app-library-scraping-toolbar',
+  templateUrl: './library-scraping-toolbar.component.html',
+  styleUrls: ['./library-scraping-toolbar.component.css']
 })
 export class LibraryScrapingToolbarComponent implements OnInit, OnDestroy {
   @Input() selected_comics: Array<Comic>;
@@ -38,7 +39,7 @@ export class LibraryScrapingToolbarComponent implements OnInit, OnDestroy {
   scraping: MultipleComicsScraping;
 
   constructor(private store: Store<AppState>) {
-    this.scraping$ = store.select("multiple_comic_scraping");
+    this.scraping$ = store.select('multiple_comic_scraping');
   }
 
   ngOnInit() {

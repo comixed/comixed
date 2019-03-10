@@ -17,18 +17,18 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Action } from "@ngrx/store";
-import { User } from "../models/user/user";
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { User } from '../models/user/user';
 
-export const USER_AUTH_CHECK = "[USER] Check if the user is already logged in.";
+export const USER_AUTH_CHECK = '[USER] Check if the user is already logged in.';
 export class UserAuthCheck implements Action {
   readonly type = USER_AUTH_CHECK;
 
   constructor() {}
 }
 
-export const USER_LOADED = "[USER] Retrieved the remote user";
+export const USER_LOADED = '[USER] Retrieved the remote user';
 export class UserLoaded implements Action {
   readonly type = USER_LOADED;
 
@@ -39,21 +39,21 @@ export class UserLoaded implements Action {
   ) {}
 }
 
-export const USER_START_LOGIN = "[USER] Start the login process";
+export const USER_START_LOGIN = '[USER] Start the login process';
 export class UserStartLogin implements Action {
   readonly type = USER_START_LOGIN;
 
   constructor() {}
 }
 
-export const USER_CANCEL_LOGIN = "[USER] Cancel the login process";
+export const USER_CANCEL_LOGIN = '[USER] Cancel the login process';
 export class UserCancelLogin implements Action {
   readonly type = USER_CANCEL_LOGIN;
 
   constructor() {}
 }
 
-export const USER_LOGGING_IN = "[USER] Performing the actual login process";
+export const USER_LOGGING_IN = '[USER] Performing the actual login process';
 export class UserLoggingIn implements Action {
   readonly type = USER_LOGGING_IN;
 
@@ -65,7 +65,7 @@ export class UserLoggingIn implements Action {
   ) {}
 }
 
-export const USER_SET_AUTH_TOKEN = "[USER] Save the auth token";
+export const USER_SET_AUTH_TOKEN = '[USER] Save the auth token';
 export class UserSetAuthToken implements Action {
   readonly type = USER_SET_AUTH_TOKEN;
 
@@ -76,14 +76,14 @@ export class UserSetAuthToken implements Action {
   ) {}
 }
 
-export const USER_LOGOUT = "[USER] Logout";
+export const USER_LOGOUT = '[USER] Logout';
 export class UserLogout implements Action {
   readonly type = USER_LOGOUT;
 
   constructor() {}
 }
 
-export const USER_SET_PREFERENCE = "[USER] Saves the given user preference";
+export const USER_SET_PREFERENCE = '[USER] Saves the given user preference';
 export class UserSetPreference implements Action {
   readonly type = USER_SET_PREFERENCE;
 
@@ -95,7 +95,7 @@ export class UserSetPreference implements Action {
   ) {}
 }
 
-export const USER_PREFERENCE_SAVED = "[USER] The user preference was saved";
+export const USER_PREFERENCE_SAVED = '[USER] The user preference was saved';
 export class UserPreferenceSaved implements Action {
   readonly type = USER_PREFERENCE_SAVED;
 

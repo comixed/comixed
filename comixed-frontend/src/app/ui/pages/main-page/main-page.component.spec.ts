@@ -17,27 +17,25 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { DebugElement } from "@angular/core";
-import { By } from "@angular/platform-browser";
-import { RouterTestingModule } from "@angular/router/testing";
-import { Router } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../app.state";
-import { libraryReducer } from "../../../reducers/library.reducer";
-import { ComicService } from "../../../services/comic.service";
-import { ComicServiceMock } from "../../../services/comic.service.mock";
-import { MainPageComponent } from "./main-page.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../app.state';
+import { libraryReducer } from '../../../reducers/library.reducer';
+import { ComicService } from '../../../services/comic.service';
+import { ComicServiceMock } from '../../../services/comic.service.mock';
+import { MainPageComponent } from './main-page.component';
 
-describe("MainPageComponent", () => {
+describe('MainPageComponent', () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
-  let debugElement: DebugElement;
   let comic_service: ComicService;
   let router: Router;
-  let store: Store<AppState>;
 
   const routes = [];
 
@@ -63,7 +61,7 @@ describe("MainPageComponent", () => {
     router.initialNavigation();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

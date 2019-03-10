@@ -17,16 +17,16 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { ToolbarModule } from "primeng/toolbar";
-import { ButtonModule } from "primeng/button";
-import { multipleComicsScrapingReducer } from "../../../../reducers/multiple-comics-scraping.reducer";
-import { LibraryScrapingToolbarComponent } from "./library-scraping-toolbar.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ButtonModule } from 'primeng/button';
+import { multipleComicsScrapingReducer } from '../../../../reducers/multiple-comics-scraping.reducer';
+import { LibraryScrapingToolbarComponent } from './library-scraping-toolbar.component';
 
-describe("LibraryScrapingToolbarComponent", () => {
+describe('LibraryScrapingToolbarComponent', () => {
   let component: LibraryScrapingToolbarComponent;
   let fixture: ComponentFixture<LibraryScrapingToolbarComponent>;
 
@@ -49,7 +49,7 @@ describe("LibraryScrapingToolbarComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

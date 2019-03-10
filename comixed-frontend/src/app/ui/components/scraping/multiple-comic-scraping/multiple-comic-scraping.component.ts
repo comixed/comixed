@@ -17,19 +17,20 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { Observable, Subscription } from "rxjs";
-import { AppState } from "../../../../app.state";
-import * as MultiScrapingActions from "../../../../actions/multiple-comics-scraping.actions";
-import * as SingleScrapingActions from "../../../../actions/single-comic-scraping.actions";
-import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
-import { Comic } from "../../../../models/comics/comic";
+import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { AppState } from '../../../../app.state';
+import * as MultiScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
+import * as SingleScrapingActions from '../../../../actions/single-comic-scraping.actions';
+import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
+import { Comic } from '../../../../models/comics/comic';
 
 @Component({
-  selector: "app-multiple-comic-scraping",
-  templateUrl: "./multiple-comic-scraping.component.html",
-  styleUrls: ["./multiple-comic-scraping.component.css"]
+  selector: 'app-multiple-comic-scraping',
+  templateUrl: './multiple-comic-scraping.component.html',
+  styleUrls: ['./multiple-comic-scraping.component.css']
 })
 export class MultipleComicScrapingComponent implements OnInit {
   @Input() multi_scraping: MultipleComicsScraping;

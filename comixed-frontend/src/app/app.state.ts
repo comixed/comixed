@@ -17,15 +17,15 @@
  * org.comixed;
  */
 
-import { User } from "./models/user/user";
-import { Importing } from "./models/import/importing";
-import { Library } from "./models/actions/library";
-import { LibraryFilter } from "./models/actions/library-filter";
-import { LibraryDisplay } from "./models/actions/library-display";
-import { SingleComicScraping } from "./models/scraping/single-comic-scraping";
-import { MultipleComicsScraping } from "./models/scraping/multiple-comics-scraping";
-import { Duplicates } from "./models/duplicates";
-import { UserAdmin } from "./models/actions/user-admin";
+import { User } from './models/user/user';
+import { Importing } from './models/import/importing';
+import { Library } from './models/actions/library';
+import { LibraryFilter } from './models/actions/library-filter';
+import { LibraryDisplay } from './models/actions/library-display';
+import { SingleComicScraping } from './models/scraping/single-comic-scraping';
+import { MultipleComicsScraping } from './models/scraping/multiple-comics-scraping';
+import { Duplicates } from './models/duplicates';
+import { UserAdmin } from './models/actions/user-admin';
 
 export interface AppState {
   readonly user: User;

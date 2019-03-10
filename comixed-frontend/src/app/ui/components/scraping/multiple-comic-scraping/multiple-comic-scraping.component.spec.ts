@@ -17,17 +17,17 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { CardModule } from "primeng/card";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { ComicDetailsEditorComponent } from "../../comic/comic-details-editor/comic-details-editor.component";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { MultipleComicsScraping } from "../../../../models/scraping/multiple-comics-scraping";
-import { MultipleComicScrapingComponent } from "./multiple-comic-scraping.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CardModule } from 'primeng/card';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { ComicDetailsEditorComponent } from '../../comic/comic-details-editor/comic-details-editor.component';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
+import { MultipleComicScrapingComponent } from './multiple-comic-scraping.component';
 
-xdescribe("MultipleComicScrapingComponent", () => {
+xdescribe('MultipleComicScrapingComponent', () => {
   let component: MultipleComicScrapingComponent;
   let fixture: ComponentFixture<MultipleComicScrapingComponent>;
   let store: Store<AppState>;
@@ -51,7 +51,7 @@ xdescribe("MultipleComicScrapingComponent", () => {
       selecting: false,
       started: false,
       busy: false,
-      api_key: "",
+      api_key: '',
       selected_comics: [],
       current_comic: null
     };
@@ -59,7 +59,7 @@ xdescribe("MultipleComicScrapingComponent", () => {
     store = TestBed.get(Store);
   });
 
-  it("should create", async(() => {
+  it('should create', async(() => {
     expect(component).toBeTruthy();
   }));
 });

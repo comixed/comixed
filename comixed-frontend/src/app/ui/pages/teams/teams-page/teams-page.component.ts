@@ -17,21 +17,22 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { Observable, Subscription } from "rxjs";
-import * as LibraryActions from "../../../../actions/library.actions";
-import { Library } from "../../../../models/actions/library";
-import { TranslateService } from "@ngx-translate/core";
-import { SelectItem } from "primeng/api";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import * as LibraryActions from '../../../../actions/library.actions';
+import { Library } from '../../../../models/actions/library';
+import { TranslateService } from '@ngx-translate/core';
+import { SelectItem } from 'primeng/api';
 
 @Component({
-  selector: "app-teams-page",
-  templateUrl: "./teams-page.component.html",
-  styleUrls: ["./teams-page.component.css"]
+  selector: 'app-teams-page',
+  templateUrl: './teams-page.component.html',
+  styleUrls: ['./teams-page.component.css']
 })
-export class TeamsPageComponent implements OnInit {
+export class TeamsPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
   private library_subscription: Subscription;
   library: Library;
@@ -43,7 +44,7 @@ export class TeamsPageComponent implements OnInit {
     private translate: TranslateService,
     private store: Store<AppState>
   ) {
-    this.library$ = store.select("library");
+    this.library$ = store.select('library');
   }
 
   ngOnInit() {
@@ -61,25 +62,25 @@ export class TeamsPageComponent implements OnInit {
     this.rows_options = [
       {
         label: this.translate.instant(
-          "library-contents.options.rows.10-per-page"
+          'library-contents.options.rows.10-per-page'
         ),
         value: 10
       },
       {
         label: this.translate.instant(
-          "library-contents.options.rows.25-per-page"
+          'library-contents.options.rows.25-per-page'
         ),
         value: 25
       },
       {
         label: this.translate.instant(
-          "library-contents.options.rows.50-per-page"
+          'library-contents.options.rows.50-per-page'
         ),
         value: 50
       },
       {
         label: this.translate.instant(
-          "library-contents.options.rows.100-per-page"
+          'library-contents.options.rows.100-per-page'
         ),
         value: 100
       }

@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from "@angular/core";
-import { ComicGrouping } from "../../../../models/actions/library";
+import { Component, OnInit, Input } from '@angular/core';
+import { ComicGrouping } from '../../../../models/actions/library';
 
 @Component({
-  selector: "app-comic-grouping-card",
-  templateUrl: "./comic-grouping-card.component.html",
-  styleUrls: ["./comic-grouping-card.component.css"]
+  selector: 'app-comic-grouping-card',
+  templateUrl: './comic-grouping-card.component.html',
+  styleUrls: ['./comic-grouping-card.component.css']
 })
 export class ComicGroupingCardComponent implements OnInit {
   @Input() details: ComicGrouping;

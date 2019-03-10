@@ -17,20 +17,20 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { TranslateModule } from "@ngx-translate/core";
-import { SidebarModule } from "primeng/sidebar";
-import { TableModule } from "primeng/table";
-import { ButtonModule } from "primeng/button";
-import { DropdownModule } from "primeng/dropdown";
-import { CardModule } from "primeng/card";
-import { FileDetailsCoverComponent } from "../../file-details/file-details-cover/file-details-cover.component";
-import { ComicFileCoverUrlPipe } from "../../../../pipes/comic-file-cover-url.pipe";
-import { SelectedComicsComponent } from "./selected-comics.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
+import { SidebarModule } from 'primeng/sidebar';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { CardModule } from 'primeng/card';
+import { FileDetailsCoverComponent } from '../../file-details/file-details-cover/file-details-cover.component';
+import { ComicFileCoverUrlPipe } from '../../../../pipes/comic-file-cover-url.pipe';
+import { SelectedComicsComponent } from './selected-comics.component';
 
-describe("SelectedComicsComponent", () => {
+describe('SelectedComicsComponent', () => {
   let component: SelectedComicsComponent;
   let fixture: ComponentFixture<SelectedComicsComponent>;
 
@@ -57,12 +57,12 @@ describe("SelectedComicsComponent", () => {
     component = fixture.componentInstance;
     component.selected_files = [];
     component.show_selected_files = false;
-    component.cover_width = "480";
-    component.cover_height = "640";
+    component.cover_width = '480';
+    component.cover_height = '640';
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

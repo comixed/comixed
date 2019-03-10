@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import {User} from "../user/user";
+import {User} from '../user/user';
 
 export interface UserAdmin {
   busy: boolean;

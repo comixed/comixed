@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Comic } from "../../../../models/comics/comic";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Comic } from '../../../../models/comics/comic';
 
 @Component({
-  selector: "app-comic-grid-item",
-  templateUrl: "./comic-grid-item.component.html",
-  styleUrls: ["./comic-grid-item.component.css"]
+  selector: 'app-comic-grid-item',
+  templateUrl: './comic-grid-item.component.html',
+  styleUrls: ['./comic-grid-item.component.css']
 })
 export class ComicGridItemComponent implements OnInit {
   @Input() comic: Comic;

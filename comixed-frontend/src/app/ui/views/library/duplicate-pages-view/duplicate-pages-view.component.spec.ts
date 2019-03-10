@@ -17,25 +17,25 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
-import { CardModule } from "primeng/card";
-import { ButtonModule } from "primeng/button";
-import { SliderModule } from "primeng/slider";
-import { DropdownModule } from "primeng/dropdown";
-import { DataViewModule } from "primeng/dataview";
-import { ComicPageUrlPipe } from "../../../../pipes/comic-page-url.pipe";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { UserService } from "../../../../services/user.service";
-import { UserServiceMock } from "../../../../services/user.service.mock";
-import { DuplicatePage } from "../../../../models/comics/duplicate-page";
-import { DuplicatePagesViewComponent } from "./duplicate-pages-view.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { SliderModule } from 'primeng/slider';
+import { DropdownModule } from 'primeng/dropdown';
+import { DataViewModule } from 'primeng/dataview';
+import { ComicPageUrlPipe } from '../../../../pipes/comic-page-url.pipe';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { UserService } from '../../../../services/user.service';
+import { UserServiceMock } from '../../../../services/user.service.mock';
+import { DuplicatePage } from '../../../../models/comics/duplicate-page';
+import { DuplicatePagesViewComponent } from './duplicate-pages-view.component';
 
-describe("DuplicatePagesViewComponent", () => {
+describe('DuplicatePagesViewComponent', () => {
   let component: DuplicatePagesViewComponent;
   let fixture: ComponentFixture<DuplicatePagesViewComponent>;
   let store: Store<AppState>;
@@ -67,9 +67,9 @@ describe("DuplicatePagesViewComponent", () => {
       pages: [],
       hashes: [],
       pages_by_hash: new Map<string, Array<DuplicatePage>>(),
-      current_hash: "",
+      current_hash: '',
       current_duplicates: [],
-      last_hash: "",
+      last_hash: '',
       pages_deleted: 0,
       pages_undeleted: 0
     };
@@ -77,7 +77,7 @@ describe("DuplicatePagesViewComponent", () => {
     store = TestBed.get(Store);
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

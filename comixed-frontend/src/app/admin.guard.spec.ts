@@ -17,18 +17,18 @@
  * org.comixed;
  */
 
-import { TestBed, async, inject } from "@angular/core/testing";
-import { Router } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "./app.state";
-import * as UserActions from "./actions/user.actions";
-import { userReducer } from "./reducers/user.reducer";
-import { ADMIN_USER, READER_USER } from "./models/user/user.fixtures";
+import { TestBed, async, inject } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from './app.state';
+import * as UserActions from './actions/user.actions';
+import { userReducer } from './reducers/user.reducer';
+import { ADMIN_USER, READER_USER } from './models/user/user.fixtures';
 
-import { AdminGuard } from "./admin.guard";
+import { AdminGuard } from './admin.guard';
 
-describe("AdminGuard", () => {
+describe('AdminGuard', () => {
   let guard: AdminGuard;
   let store: Store<AppState>;
   let router: Router;
@@ -47,38 +47,38 @@ describe("AdminGuard", () => {
     router = TestBed.get(Router);
   });
 
-  describe("when there is no user logged in", () => {
+  describe('when there is no user logged in', () => {
     beforeEach(() => {
       store.dispatch(new UserActions.UserLoaded({ user: null }));
-      spyOn(router, "navigate");
+      spyOn(router, 'navigate');
     });
 
-    it("blocks access", () => {
+    it('blocks access', () => {
       expect(guard.canActivate()).toBeFalsy();
     });
 
-    it("redirects the user to the home page", () => {
+    it('redirects the user to the home page', () => {
       guard.canActivate();
-      expect(router.navigate).toHaveBeenCalledWith(["/home"]);
+      expect(router.navigate).toHaveBeenCalledWith(['/home']);
     });
   });
 
-  describe("when a user with the admin role is logged in", () => {
+  describe('when a user with the admin role is logged in', () => {
     beforeEach(() => {
       store.dispatch(new UserActions.UserLoaded({ user: ADMIN_USER }));
     });
 
-    it("grants access", () => {
+    it('grants access', () => {
       expect(guard.canActivate()).toBeTruthy();
     });
   });
 
-  describe("blocks users without the admin role", () => {
+  describe('blocks users without the admin role', () => {
     beforeEach(() => {
       store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
     });
 
-    it("blocks access", () => {
+    it('blocks access', () => {
       expect(guard.canActivate()).toBeFalsy();
     });
   });

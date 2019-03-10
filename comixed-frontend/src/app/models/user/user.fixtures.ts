@@ -17,35 +17,35 @@
  * org.comixed;
  */
 
-import { User } from "./user";
-import { Preference } from "./preference";
-import { ADMIN_ROLE, READER_ROLE } from "./role.fixtures";
+import { User } from './user';
+import { Preference } from './preference';
+import { ADMIN_ROLE, READER_ROLE } from './role.fixtures';
 
 export const ADMIN_USER: User = {
   initialized: true,
   id: 1000,
   fetching: false,
-  token: "abc123",
+  token: 'abc123',
   authenticating: false,
   busy: false,
-  email: "comixedadmin@somedomain.com",
+  email: 'comixedadmin@somedomain.com',
   authenticated: true,
   is_admin: true,
   is_reader: true,
   first_login_date: 0,
   last_login_date: 0,
   roles: [READER_ROLE, ADMIN_ROLE],
-  preferences: [{ name: "api_key", value: "1234567890" }]
+  preferences: [{ name: 'api_key', value: '1234567890' }]
 };
 
 export const READER_USER: User = {
   initialized: true,
   id: 1001,
   fetching: false,
-  token: "123abc",
+  token: '123abc',
   authenticating: false,
   busy: false,
-  email: "comixedreader@somedomain.com",
+  email: 'comixedreader@somedomain.com',
   authenticated: true,
   is_admin: false,
   is_reader: true,
@@ -59,10 +59,10 @@ export const BLOCKED_USER: User = {
   initialized: true,
   id: 1002,
   fetching: false,
-  token: "123abc",
+  token: '123abc',
   authenticating: false,
   busy: false,
-  email: "comixedblocked@somedomain.com",
+  email: 'comixedblocked@somedomain.com',
   authenticated: true,
   is_admin: false,
   is_reader: false,

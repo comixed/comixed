@@ -17,12 +17,12 @@
  * org.comixed;
  */
 
-import { Role } from "./role";
+import { Role } from './role';
 
 export const READER_ROLE: Role = {
-  name: "READER"
+  name: 'READER'
 };
 
 export const ADMIN_ROLE: Role = {
-  name: "ADMIN"
+  name: 'ADMIN'
 };

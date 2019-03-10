@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { DataViewModule } from "primeng/dataview";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { ScrapingComicListComponent } from "./scraping-comic-list.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { DataViewModule } from 'primeng/dataview';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { ScrapingComicListComponent } from './scraping-comic-list.component';
 
-describe("ScrapingComicListComponent", () => {
+describe('ScrapingComicListComponent', () => {
   let component: ScrapingComicListComponent;
   let fixture: ComponentFixture<ScrapingComicListComponent>;
 
@@ -39,7 +39,7 @@ describe("ScrapingComicListComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

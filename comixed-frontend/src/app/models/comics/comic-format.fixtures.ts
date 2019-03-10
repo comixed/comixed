@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { ComicFormat } from "./comic-format";
+import { ComicFormat } from './comic-format';
 
 export const DEFAULT_COMIC_FORMAT: ComicFormat = {
   id: 1,
-  name: "Default Comic Format"
+  name: 'Default Comic Format'
 };

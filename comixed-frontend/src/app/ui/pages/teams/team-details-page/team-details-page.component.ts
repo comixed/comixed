@@ -17,29 +17,30 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit, OnDestroy } from "@angular/core";
-import { Comic } from "../../../../models/comics/comic";
-import { ActivatedRoute, Params } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { Observable, Subscription } from "rxjs";
-import * as LibraryActions from "../../../../actions/library.actions";
-import { Library } from "../../../../models/actions/library";
-import { TranslateService } from "@ngx-translate/core";
-import { SelectItem } from "primeng/api";
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Comic } from '../../../../models/comics/comic';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import * as LibraryActions from '../../../../actions/library.actions';
+import { Library } from '../../../../models/actions/library';
+import { TranslateService } from '@ngx-translate/core';
+import { SelectItem } from 'primeng/api';
 
 @Component({
-  selector: "app-team-details-page",
-  templateUrl: "./team-details-page.component.html",
-  styleUrls: ["./team-details-page.component.css"]
+  selector: 'app-team-details-page',
+  templateUrl: './team-details-page.component.html',
+  styleUrls: ['./team-details-page.component.css']
 })
-export class TeamDetailsPageComponent implements OnInit {
+export class TeamDetailsPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
   private library_subscription: Subscription;
   library: Library;
 
-  protected layout = "grid";
-  protected sort_field = "volume";
+  protected layout = 'grid';
+  protected sort_field = 'volume';
   protected rows = 10;
   protected same_height = true;
   protected cover_size = 200;
@@ -54,9 +55,9 @@ export class TeamDetailsPageComponent implements OnInit {
     private store: Store<AppState>
   ) {
     this.activatedRoute.params.subscribe(params => {
-      this.team_name = params["name"];
+      this.team_name = params['name'];
     });
-    this.library$ = store.select("library");
+    this.library$ = store.select('library');
   }
 
   ngOnInit() {

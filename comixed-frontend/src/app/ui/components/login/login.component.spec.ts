@@ -17,18 +17,18 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { FormsModule, FormBuilder } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../app.state";
-import { userReducer } from "../../../reducers/user.reducer";
-import { DialogModule } from "primeng/dialog";
-import { ButtonModule } from "primeng/button";
-import { LoginComponent } from "./login.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule, FormBuilder } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../app.state';
+import { userReducer } from '../../../reducers/user.reducer';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { LoginComponent } from './login.component';
 
-describe("LoginComponent", () => {
+describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
@@ -51,7 +51,7 @@ describe("LoginComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

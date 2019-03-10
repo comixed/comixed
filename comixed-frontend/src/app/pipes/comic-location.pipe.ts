@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { Pipe, PipeTransform } from "@angular/core";
-import { Comic } from "../models/comics/comic";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Comic } from '../models/comics/comic';
 
 @Pipe({
-  name: "comic_location"
+  name: 'comic_location'
 })
 export class ComicLocationPipe implements PipeTransform {
   transform(comics: Array<Comic>, location_name: string): Array<Comic> {
@@ -33,7 +33,7 @@ export class ComicLocationPipe implements PipeTransform {
       return comics;
     }
 
-    let result = comics.filter((comic: Comic) => {
+    const result = comics.filter((comic: Comic) => {
       return comic.locations.some((location: string) => {
         return location === location_name;
       });

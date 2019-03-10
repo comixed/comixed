@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import { Action } from "@ngrx/store";
-import { Library, ComicGrouping } from "../models/actions/library";
-import { Comic } from "../models/comics/comic";
-import * as LibraryActions from "../actions/library.actions";
+import { Action } from '@ngrx/store';
+import { Library, ComicGrouping } from '../models/actions/library';
+import { Comic } from '../models/comics/comic';
+import * as LibraryActions from '../actions/library.actions';
 
 const initial_state: Library = {
   busy: false,
@@ -29,7 +29,7 @@ const initial_state: Library = {
     rescan_count: 0,
     comics: []
   },
-  last_comic_date: "0",
+  last_comic_date: '0',
   scan_types: [],
   formats: [],
   comics: [],
@@ -143,17 +143,17 @@ export function libraryReducer(
         });
       }
 
-      let publishers = [];
-      let series = [];
-      let characters = [];
-      let teams = [];
-      let locations = [];
-      let story_arcs = [];
+      const publishers = [];
+      const series = [];
+      const characters = [];
+      const teams = [];
+      const locations = [];
+      const story_arcs = [];
       comics.forEach((comic: Comic) => {
-        let entry;
+        let entry: ComicGrouping = null;
 
-        entry = publishers.find((entry: ComicGrouping) => {
-          return entry.name === comic.publisher;
+        entry = publishers.find((grouping: ComicGrouping) => {
+          return grouping.name === comic.publisher;
         });
 
         if (entry) {
@@ -169,8 +169,8 @@ export function libraryReducer(
           });
         }
 
-        entry = series.find((entry: ComicGrouping) => {
-          return entry.name === comic.series;
+        entry = series.find((grouping: ComicGrouping) => {
+          return grouping.name === comic.series;
         });
 
         if (entry) {
@@ -187,8 +187,8 @@ export function libraryReducer(
         }
 
         comic.characters.forEach((character: string) => {
-          entry = characters.find((entry: ComicGrouping) => {
-            return entry.name === character;
+          entry = characters.find((grouping: ComicGrouping) => {
+            return grouping.name === character;
           });
 
           if (entry) {
@@ -206,8 +206,8 @@ export function libraryReducer(
         });
 
         comic.teams.forEach((team: string) => {
-          entry = teams.find((entry: ComicGrouping) => {
-            return entry.name === team;
+          entry = teams.find((grouping: ComicGrouping) => {
+            return grouping.name === team;
           });
 
           if (entry) {
@@ -225,8 +225,8 @@ export function libraryReducer(
         });
 
         comic.locations.forEach((location: string) => {
-          entry = locations.find((entry: ComicGrouping) => {
-            return entry.name === location;
+          entry = locations.find((grouping: ComicGrouping) => {
+            return grouping.name === location;
           });
 
           if (entry) {
@@ -244,8 +244,8 @@ export function libraryReducer(
         });
 
         comic.story_arcs.forEach((story_arc: string) => {
-          entry = story_arcs.find((entry: ComicGrouping) => {
-            return entry.name === story_arc;
+          entry = story_arcs.find((grouping: ComicGrouping) => {
+            return grouping.name === story_arc;
           });
 
           if (entry) {
@@ -278,7 +278,7 @@ export function libraryReducer(
             }
           }) || null;
       }
-      const last_comic_date = last_comic === null ? "0" : last_comic.added_date;
+      const last_comic_date = last_comic === null ? '0' : last_comic.added_date;
       return {
         ...state,
         busy: false,
@@ -304,76 +304,76 @@ export function libraryReducer(
       const updated_comics = state.comics.filter(
         comic => comic.id !== action.payload.comic.id
       );
-      let publishers = state.publishers.filter((entry: ComicGrouping) => {
-        if (entry.name === action.payload.comic.publisher) {
-          entry.comic_count -= 1;
+      const publisher_list = state.publishers.filter((grouping: ComicGrouping) => {
+        if (grouping.name === action.payload.comic.publisher) {
+          grouping.comic_count -= 1;
         }
 
-        return entry.comic_count > 0;
+        return grouping.comic_count > 0;
       });
-      let series = state.series.filter((entry: ComicGrouping) => {
-        if (entry.name === action.payload.comic.series) {
-          entry.comic_count -= 1;
+      const series_list = state.series.filter((grouping: ComicGrouping) => {
+        if (grouping.name === action.payload.comic.series) {
+          grouping.comic_count -= 1;
         }
 
-        return entry.comic_count > 0;
+        return grouping.comic_count > 0;
       });
-      let characters = state.characters.filter((entry: ComicGrouping) => {
+      const character_list = state.characters.filter((grouping: ComicGrouping) => {
         action.payload.comic.characters.forEach((character: string) => {
-          if (character === entry.name) {
-            entry.comic_count -= 1;
+          if (character === grouping.name) {
+            grouping.comic_count -= 1;
           }
         });
 
-        return entry.comic_count > 0;
+        return grouping.comic_count > 0;
       });
 
-      let teams = state.characters.filter((entry: ComicGrouping) => {
+      const team_list = state.characters.filter((grouping: ComicGrouping) => {
         action.payload.comic.teams.forEach((team: string) => {
-          if (team === entry.name) {
-            entry.comic_count -= 1;
+          if (team === grouping.name) {
+            grouping.comic_count -= 1;
           }
         });
 
-        return entry.comic_count > 0;
+        return grouping.comic_count > 0;
       });
 
-      let locations = state.characters.filter((entry: ComicGrouping) => {
+      const location_list = state.characters.filter((grouping: ComicGrouping) => {
         action.payload.comic.locations.forEach((location: string) => {
-          if (location === entry.name) {
-            entry.comic_count -= 1;
+          if (location === grouping.name) {
+            grouping.comic_count -= 1;
           }
         });
 
-        return entry.comic_count > 0;
+        return grouping.comic_count > 0;
       });
 
-      let story_arcs = state.story_arcs.filter((entry: ComicGrouping) => {
+      const story_arc_list = state.story_arcs.filter((grouping: ComicGrouping) => {
         action.payload.comic.story_arcs.forEach((story_arc: string) => {
-          if (story_arc === entry.name) {
-            entry.comic_count -= 1;
+          if (story_arc === grouping.name) {
+            grouping.comic_count -= 1;
           }
         });
 
-        return entry.comic_count > 0;
+        return grouping.comic_count > 0;
       });
       return {
         ...state,
         busy: false,
         comics: updated_comics,
-        publishers: publishers,
-        series: series,
-        characters: characters,
-        teams: teams,
-        locations: locations,
-        story_arcs: story_arcs
+        publishers: publisher_list,
+        series: series_list,
+        characters: character_list,
+        teams: team_list,
+        locations: location_list,
+        story_arcs: story_arc_list
       };
     }
 
     case LibraryActions.LIBRARY_RESET:
       return {
         ...state,
-        last_comic_date: "0",
+        last_comic_date: '0',
         comics: [],
         publishers: [],
         series: [],
@@ -417,7 +417,7 @@ export function libraryReducer(
     }
 
     case LibraryActions.LIBRARY_SET_SELECTED: {
-      let selected = state.selected_comics.filter((comic: Comic) => {
+      const selected = state.selected_comics.filter((comic: Comic) => {
         return comic.id !== action.payload.comic.id;
       });
 

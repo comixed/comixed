@@ -17,107 +17,112 @@
  * org.comixed;
  */
 
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { UserAdmin } from "../../../../models/actions/user-admin";
-import * as UserAdminActions from "../../../../actions/user-admin.actions";
-import { Observable, Subscription } from "rxjs";
-import { Role } from "../../../../models/user/role";
+import {
+    Component,
+    OnDestroy,
+    OnInit
+} from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { UserAdmin } from '../../../../models/actions/user-admin';
+import * as UserAdminActions from '../../../../actions/user-admin.actions';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { Role } from '../../../../models/user/role';
 
 @Component({
-  selector: "app-user-details-editor",
-  templateUrl: "./user-details-editor.component.html",
-  styleUrls: ["./user-details-editor.component.css"]
+    selector: 'app-user-details-editor',
+    templateUrl: './user-details-editor.component.html',
+    styleUrls: ['./user-details-editor.component.css']
 })
 export class UserDetailsEditorComponent implements OnInit, OnDestroy {
-  private user_admin$: Observable<UserAdmin>;
-  private user_admin_subscription: Subscription;
-  public user_admin: UserAdmin;
+    private user_admin$: Observable<UserAdmin>;
+    private user_admin_subscription: Subscription;
+    public user_admin: UserAdmin;
 
-  public email: string;
-  public password: string;
-  public password_verify: string;
-  public is_admin: boolean;
+    public email: string;
+    public password: string;
+    public password_verify: string;
+    public is_admin: boolean;
 
-  constructor(private store: Store<AppState>) {
-    this.user_admin$ = store.select("user_admin");
-    this.email = "";
-    this.password = "";
-    this.password_verify = "";
-    this.is_admin = false;
-  }
-
-  ngOnInit() {
-    this.user_admin_subscription = this.user_admin$.subscribe(
-      (user_admin: UserAdmin) => {
-        this.user_admin = user_admin;
-        this.reset_user();
-      }
-    );
-  }
-
-  ngOnDestroy() {
-    this.user_admin_subscription.unsubscribe();
-  }
-
-  save_user(): void {
-    const id =
-      !!this.user_admin.current_user && !!this.user_admin.current_user.id
-        ? this.user_admin.current_user.id
-        : null;
-
-    this.store.dispatch(
-      new UserAdminActions.UserAdminSaveUser({
-        id: id,
-        email: this.email,
-        password: this.password,
-        is_admin: this.is_admin
-      })
-    );
-  }
-
-  reset_user(): void {
-    if (this.user_admin.current_user !== null) {
-      this.email = this.user_admin.current_user.email;
-    } else {
-      this.email = "";
-    }
-    this.password = "";
-    this.password_verify = "";
-    this.is_admin = this.has_admin_role();
-  }
-
-  can_save(): boolean {
-    if (!this.email || this.email.length === 0) {
-      return false;
-    }
-    if (!!this.user_admin.current_user.id) {
-      if (this.password === this.password_verify) {
-        return true;
-      }
-    } else {
-      if (
-        this.password !== null &&
-        this.password.length > 0 &&
-        this.password === this.password_verify
-      ) {
-        return true;
-      }
+    constructor(private store: Store<AppState>) {
+        this.user_admin$ = store.select('user_admin');
+        this.email = '';
+        this.password = '';
+        this.password_verify = '';
+        this.is_admin = false;
     }
 
-    return false;
-  }
-
-  private has_admin_role(): boolean {
-    if (this.user_admin.current_user && this.user_admin.current_user.roles) {
-      return (
-        this.user_admin.current_user.roles.findIndex((role: Role) => {
-          return role.name === "ADMIN";
-        }) != -1
-      );
+    ngOnInit() {
+        this.user_admin_subscription = this.user_admin$.subscribe(
+            (user_admin: UserAdmin) => {
+                this.user_admin = user_admin;
+                this.reset_user();
+            }
+        );
     }
 
-    return false;
-  }
+    ngOnDestroy() {
+        this.user_admin_subscription.unsubscribe();
+    }
+
+    save_user(): void {
+        const id =
+            !!this.user_admin.current_user && !!this.user_admin.current_user.id
+                ? this.user_admin.current_user.id
+                : null;
+
+        this.store.dispatch(
+            new UserAdminActions.UserAdminSaveUser({
+                id: id,
+                email: this.email,
+                password: this.password,
+                is_admin: this.is_admin
+            })
+        );
+    }
+
+    reset_user(): void {
+        if (this.user_admin.current_user !== null) {
+            this.email = this.user_admin.current_user.email;
+        } else {
+            this.email = '';
+        }
+        this.password = '';
+        this.password_verify = '';
+        this.is_admin = this.has_admin_role();
+    }
+
+    can_save(): boolean {
+        if (!this.email || this.email.length === 0) {
+            return false;
+        }
+        if (!!this.user_admin.current_user.id) {
+            if (this.password === this.password_verify) {
+                return true;
+            }
+        } else {
+            if (
+                this.password !== null &&
+                this.password.length > 0 &&
+                this.password === this.password_verify
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private has_admin_role(): boolean {
+        if (this.user_admin.current_user && this.user_admin.current_user.roles) {
+            const index = this.user_admin.current_user.roles.findIndex((role: Role) => {
+                return role.name === 'ADMIN';
+            });
+
+            return (index !== -1);
+        }
+
+        return false;
+    }
 }

@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { LibraryDisplay } from "./library-display";
+import { LibraryDisplay } from './library-display';
 
 export const DEFAULT_LIBRARY_DISPLAY: LibraryDisplay = {
-  layout: "grid",
-  sort_field: "series",
+  layout: 'grid',
+  sort_field: 'series',
   rows: 10,
   cover_size: 640,
   same_height: true

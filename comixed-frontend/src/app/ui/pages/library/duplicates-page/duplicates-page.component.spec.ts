@@ -17,30 +17,30 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { RouterTestingModule } from "@angular/router/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { duplicatesReducer } from "../../../../reducers/duplicates.reducer";
-import { CardModule } from "primeng/card";
-import { DataViewModule } from "primeng/dataview";
-import { DropdownModule } from "primeng/dropdown";
-import { SliderModule } from "primeng/slider";
-import { ButtonModule } from "primeng/button";
-import { TableModule } from "primeng/table";
-import { MessageService } from "primeng/api";
-import { UserService } from "../../../../services/user.service";
-import { UserServiceMock } from "../../../../services/user.service.mock";
-import { DuplicatePagesViewComponent } from "../../../views/library/duplicate-pages-view/duplicate-pages-view.component";
-import { PageHashViewComponent } from "../../../views/library/page-hash-view/page-hash-view.component";
-import { ComicPageUrlPipe } from "../../../../pipes/comic-page-url.pipe";
-import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { DuplicatesPageComponent } from "./duplicates-page.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { duplicatesReducer } from '../../../../reducers/duplicates.reducer';
+import { CardModule } from 'primeng/card';
+import { DataViewModule } from 'primeng/dataview';
+import { DropdownModule } from 'primeng/dropdown';
+import { SliderModule } from 'primeng/slider';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { MessageService } from 'primeng/api';
+import { UserService } from '../../../../services/user.service';
+import { UserServiceMock } from '../../../../services/user.service.mock';
+import { DuplicatePagesViewComponent } from '../../../views/library/duplicate-pages-view/duplicate-pages-view.component';
+import { PageHashViewComponent } from '../../../views/library/page-hash-view/page-hash-view.component';
+import { ComicPageUrlPipe } from '../../../../pipes/comic-page-url.pipe';
+import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { DuplicatesPageComponent } from './duplicates-page.component';
 
-describe("DuplicatesPageComponent", () => {
+describe('DuplicatesPageComponent', () => {
   let component: DuplicatesPageComponent;
   let fixture: ComponentFixture<DuplicatesPageComponent>;
 
@@ -79,7 +79,7 @@ describe("DuplicatesPageComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

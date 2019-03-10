@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { READER_USER } from "../../../../models/user/user.fixtures";
-import { UserDetailsComponent } from "./user-details.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { READER_USER } from '../../../../models/user/user.fixtures';
+import { UserDetailsComponent } from './user-details.component';
 
-describe("UserDetailsComponent", () => {
+describe('UserDetailsComponent', () => {
   let component: UserDetailsComponent;
   let fixture: ComponentFixture<UserDetailsComponent>;
 
@@ -39,7 +39,7 @@ describe("UserDetailsComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

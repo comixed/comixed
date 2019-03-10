@@ -17,27 +17,27 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { RouterTestingModule } from "@angular/router/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { SidebarModule } from "primeng/sidebar";
-import { ScrollPanelModule } from "primeng/scrollpanel";
-import { DataViewModule } from "primeng/dataview";
-import { SplitButtonModule } from "primeng/splitbutton";
-import { OverlayPanelModule } from "primeng/overlaypanel";
-import { PanelModule } from "primeng/panel";
-import { CardModule } from "primeng/card";
-import { ComicGridItemComponent } from "../comic-grid-item/comic-grid-item.component";
-import { ComicCoverComponent } from "../../comic/comic-cover/comic-cover.component";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
-import { SelectedComicsListComponent } from "./selected-comics-list.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { SidebarModule } from 'primeng/sidebar';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { DataViewModule } from 'primeng/dataview';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
+import { ComicGridItemComponent } from '../comic-grid-item/comic-grid-item.component';
+import { ComicCoverComponent } from '../../comic/comic-cover/comic-cover.component';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
+import { SelectedComicsListComponent } from './selected-comics-list.component';
 
-describe("SelectedComicsListComponent", () => {
+describe('SelectedComicsListComponent', () => {
   let component: SelectedComicsListComponent;
   let fixture: ComponentFixture<SelectedComicsListComponent>;
 
@@ -72,7 +72,7 @@ describe("SelectedComicsListComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

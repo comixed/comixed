@@ -17,22 +17,22 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterModule } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
-import { ButtonModule } from "primeng/button";
-import { TableModule } from "primeng/table";
-import { CardModule } from "primeng/card";
-import { ComicPageUrlPipe } from "../../../../pipes/comic-page-url.pipe";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { DuplicatePage } from "../../../../models/comics/duplicate-page";
-import { PageHashViewComponent } from "./page-hash-view.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { CardModule } from 'primeng/card';
+import { ComicPageUrlPipe } from '../../../../pipes/comic-page-url.pipe';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { DuplicatePage } from '../../../../models/comics/duplicate-page';
+import { PageHashViewComponent } from './page-hash-view.component';
 
-describe("PageHashViewComponent", () => {
+describe('PageHashViewComponent', () => {
   let component: PageHashViewComponent;
   let fixture: ComponentFixture<PageHashViewComponent>;
   let store: Store<AppState>;
@@ -64,9 +64,9 @@ describe("PageHashViewComponent", () => {
       pages: [],
       hashes: [],
       pages_by_hash: new Map<string, Array<DuplicatePage>>(),
-      current_hash: "",
+      current_hash: '',
       current_duplicates: [],
-      last_hash: "",
+      last_hash: '',
       pages_deleted: 0,
       pages_undeleted: 0
     };
@@ -74,7 +74,7 @@ describe("PageHashViewComponent", () => {
     store = TestBed.get(Store);
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

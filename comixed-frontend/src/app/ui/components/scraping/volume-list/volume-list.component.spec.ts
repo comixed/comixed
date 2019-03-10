@@ -17,17 +17,17 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { TableModule } from "primeng/table";
-import { CardModule } from "primeng/card";
-import { ButtonModule } from "primeng/button";
-import { VolumeListComponent } from "./volume-list.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { TableModule } from 'primeng/table';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { VolumeListComponent } from './volume-list.component';
 
-describe("VolumeListComponent", () => {
+describe('VolumeListComponent', () => {
   let component: VolumeListComponent;
   let fixture: ComponentFixture<VolumeListComponent>;
 
@@ -48,7 +48,7 @@ describe("VolumeListComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

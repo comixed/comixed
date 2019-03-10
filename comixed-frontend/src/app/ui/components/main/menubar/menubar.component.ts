@@ -17,21 +17,22 @@
  * org.comixed;
  */
 
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { MenuItem } from "primeng/api";
-import { Observable, Subscription } from "rxjs";
-import { AppState } from "../../../../app.state";
-import { User } from "../../../../models/user/user";
-import { Store } from "@ngrx/store";
-import * as UserActions from "../../../../actions/user.actions";
-import * as lodash from "lodash";
-import { TranslateService } from "@ngx-translate/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { AppState } from '../../../../app.state';
+import { User } from '../../../../models/user/user';
+import { Store } from '@ngrx/store';
+import * as UserActions from '../../../../actions/user.actions';
+import * as lodash from 'lodash';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: "app-menubar",
-  templateUrl: "./menubar.component.html",
-  styleUrls: ["./menubar.component.css"]
+  selector: 'app-menubar',
+  templateUrl: './menubar.component.html',
+  styleUrls: ['./menubar.component.css']
 })
 export class MenubarComponent implements OnInit, OnDestroy {
   private user$: Observable<User>;
@@ -45,7 +46,7 @@ export class MenubarComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private store: Store<AppState>
   ) {
-    this.user$ = store.select("user");
+    this.user$ = store.select('user');
   }
 
   ngOnInit() {
@@ -69,15 +70,15 @@ export class MenubarComponent implements OnInit, OnDestroy {
 
   do_logout(): void {
     this.store.dispatch(new UserActions.UserLogout());
-    this.router.navigate(["/home"]);
+    this.router.navigate(['/home']);
   }
 
   private update_menu() {
     this.menu_items = [
       {
-        label: this.translate.instant("menu.home.root"),
-        icon: "fa fa-fw fa-home",
-        routerLink: ["/"]
+        label: this.translate.instant('menu.home.root'),
+        icon: 'fa fa-fw fa-home',
+        routerLink: ['/']
       }
     ];
     this.menu_items = this.menu_items.concat(this.add_comics_menu());
@@ -89,79 +90,79 @@ export class MenubarComponent implements OnInit, OnDestroy {
   private add_comics_menu(): Array<MenuItem> {
     return [
       {
-        label: this.translate.instant("menu.library.root"),
-        icon: "fa fa-fw fa-book",
+        label: this.translate.instant('menu.library.root'),
+        icon: 'fa fa-fw fa-book',
         visible: this.user && this.user.authenticated,
         items: [
           {
-            label: this.translate.instant("menu.library.comics"),
-            icon: "fa fa-fw fa-book",
-            routerLink: ["/comics"],
+            label: this.translate.instant('menu.library.comics'),
+            icon: 'fa fa-fw fa-book',
+            routerLink: ['/comics'],
             visible: this.user && this.user.authenticated
           },
           {
-            label: this.translate.instant("menu.library.collections.label"),
-            icon: "fa fa-fw fa-list",
+            label: this.translate.instant('menu.library.collections.label'),
+            icon: 'fa fa-fw fa-list',
             items: [
               {
                 label: this.translate.instant(
-                  "menu.library.collections.publishers"
+                  'menu.library.collections.publishers'
                 ),
-                icon: "fa fa-fw fa-book",
-                routerLink: ["/publishers"],
+                icon: 'fa fa-fw fa-book',
+                routerLink: ['/publishers'],
                 visible: this.user && this.user.authenticated
               },
               {
                 label: this.translate.instant(
-                  "menu.library.collections.series"
+                  'menu.library.collections.series'
                 ),
-                icon: "fa fa-fw fa-book",
-                routerLink: ["/series"],
+                icon: 'fa fa-fw fa-book',
+                routerLink: ['/series'],
                 visible: this.user && this.user.authenticated
               },
               {
                 label: this.translate.instant(
-                  "menu.library.collections.characters"
+                  'menu.library.collections.characters'
                 ),
-                icon: "fa fa-fw fa-user",
-                routerLink: ["/characters"],
+                icon: 'fa fa-fw fa-user',
+                routerLink: ['/characters'],
                 visible: this.user && this.user.authenticated
               },
               {
-                label: this.translate.instant("menu.library.collections.teams"),
-                icon: "fa fa-fw fa-user",
-                routerLink: ["/teams"],
-                visible: this.user && this.user.authenticated
-              },
-              {
-                label: this.translate.instant(
-                  "menu.library.collections.locations"
-                ),
-                icon: "fa fa-fw fa-globe",
-                routerLink: ["/locations"],
+                label: this.translate.instant('menu.library.collections.teams'),
+                icon: 'fa fa-fw fa-user',
+                routerLink: ['/teams'],
                 visible: this.user && this.user.authenticated
               },
               {
                 label: this.translate.instant(
-                  "menu.library.collections.story-arcs"
+                  'menu.library.collections.locations'
                 ),
-                icon: "fa fa-fw fa-empire",
-                routerLink: ["/stories"],
+                icon: 'fa fa-fw fa-globe',
+                routerLink: ['/locations'],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  'menu.library.collections.story-arcs'
+                ),
+                icon: 'fa fa-fw fa-empire',
+                routerLink: ['/stories'],
                 visible: this.user && this.user.authenticated
               }
             ]
           },
           { separator: true, visible: this.user && this.user.is_admin },
           {
-            label: this.translate.instant("menu.library.import"),
-            icon: "fa fa-fw fa-upload",
-            routerLink: ["/import"],
+            label: this.translate.instant('menu.library.import'),
+            icon: 'fa fa-fw fa-upload',
+            routerLink: ['/import'],
             visible: this.user && this.user.is_admin
           },
           {
-            label: this.translate.instant("menu.library.duplicate-pages"),
-            icon: "fa fa-fw fa-minus",
-            routerLink: ["/pages/duplicates"],
+            label: this.translate.instant('menu.library.duplicate-pages'),
+            icon: 'fa fa-fw fa-minus',
+            routerLink: ['/pages/duplicates'],
             visible: this.user && this.user.is_admin
           }
         ]
@@ -172,15 +173,15 @@ export class MenubarComponent implements OnInit, OnDestroy {
   private add_admin_menu(): Array<MenuItem> {
     return [
       {
-        label: this.translate.instant("menu.admin.root"),
-        icon: "fa fa-fw fa-user-times",
+        label: this.translate.instant('menu.admin.root'),
+        icon: 'fa fa-fw fa-user-times',
         visible: this.user && this.user.is_admin,
         items: [
           {
-            label: this.translate.instant("menu.admin.users"),
-            icon: "fa fa-fw fa-users",
+            label: this.translate.instant('menu.admin.users'),
+            icon: 'fa fa-fw fa-users',
             visible: this.user && this.user.is_admin,
-            routerLink: ["/admin/users"]
+            routerLink: ['/admin/users']
           }
         ]
       }

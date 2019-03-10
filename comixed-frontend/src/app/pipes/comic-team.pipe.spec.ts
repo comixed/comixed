@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import { ComicTeamPipe } from "./comic-team.pipe";
+import { ComicTeamPipe } from './comic-team.pipe';
 
-describe("ComicTeamPipe", () => {
-  it("create an instance", () => {
+describe('ComicTeamPipe', () => {
+  it('create an instance', () => {
     const pipe = new ComicTeamPipe();
     expect(pipe).toBeTruthy();
   });

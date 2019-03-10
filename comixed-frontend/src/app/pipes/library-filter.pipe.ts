@@ -17,12 +17,12 @@
  * org.comixed;
  */
 
-import { Pipe, PipeTransform } from "@angular/core";
-import { Comic } from "../models/comics/comic";
-import { LibraryFilter } from "../models/actions/library-filter";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Comic } from '../models/comics/comic';
+import { LibraryFilter } from '../models/actions/library-filter';
 
 @Pipe({
-  name: "library_filter"
+  name: 'library_filter'
 })
 export class LibraryFilterPipe implements PipeTransform {
   transform(comics: Array<Comic>, filters: LibraryFilter): any {
@@ -34,7 +34,7 @@ export class LibraryFilterPipe implements PipeTransform {
       return comics;
     }
 
-    let result = comics.filter((comic: Comic) => {
+    return comics.filter((comic: Comic) => {
       let result = true;
 
       if (filters.publisher.length > 0) {
@@ -55,8 +55,6 @@ export class LibraryFilterPipe implements PipeTransform {
 
       return result;
     });
-
-    return result;
   }
 
   not_filtering(filter: LibraryFilter): boolean {
@@ -70,17 +68,17 @@ export class LibraryFilterPipe implements PipeTransform {
   }
 
   check_publisher(comic: Comic, publisher: string): boolean {
-    return (comic.publisher || "")
+    return (comic.publisher || '')
       .toLowerCase()
       .includes(publisher.toLowerCase());
   }
 
   check_series(comic: Comic, series: string): boolean {
-    return (comic.series || "").toLowerCase().includes(series.toLowerCase());
+    return (comic.series || '').toLowerCase().includes(series.toLowerCase());
   }
 
   check_volume(comic: Comic, volume: string): boolean {
-    return (comic.volume || "").startsWith(volume);
+    return (comic.volume || '').startsWith(volume);
   }
 
   check_from_year(comic: Comic, from_year: number): boolean {
@@ -88,7 +86,7 @@ export class LibraryFilterPipe implements PipeTransform {
       return true;
     }
 
-    if (!(comic.cover_date || "").length) {
+    if (!(comic.cover_date || '').length) {
       return false;
     }
 
@@ -101,7 +99,7 @@ export class LibraryFilterPipe implements PipeTransform {
       return true;
     }
 
-    if (!(comic.cover_date || "").length) {
+    if (!(comic.cover_date || '').length) {
       return false;
     }
 

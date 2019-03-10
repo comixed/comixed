@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { LibraryFilter } from "./library-filter";
+import { LibraryFilter } from './library-filter';
 
 export const DEFAULT_LIBRARY_FILTER: LibraryFilter = {
   changed: false,
-  publisher: "",
-  series: "",
-  volume: "",
+  publisher: '',
+  series: '',
+  volume: '',
   from_year: 0,
   to_year: 0
 };

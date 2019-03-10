@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Importing } from "./importing";
+import { Importing } from './importing';
 
 export const IMPORTING_STATE: Importing = {
   busy: false,
   importing: false,
   selected_count: 0,
   updating_status: false,
-  directory: "",
+  directory: '',
   files: []
 };

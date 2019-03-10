@@ -17,16 +17,17 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import { Action } from "@ngrx/store";
-import { catchError, map, switchMap, tap } from "rxjs/operators";
-import { Observable, of } from "rxjs";
-import * as UserAdminActions from "../actions/user-admin.actions";
-import { MessageService } from "primeng/api";
-import { UserService } from "../services/user.service";
-import { User } from "../models/user/user";
-import { TranslateService } from "@ngx-translate/core";
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import * as UserAdminActions from '../actions/user-admin.actions';
+import { MessageService } from 'primeng/api';
+import { UserService } from '../services/user.service';
+import { User } from '../models/user/user';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class UserAdminEffects {
@@ -62,10 +63,10 @@ export class UserAdminEffects {
         .pipe(
           tap(() =>
             this.message_service.add({
-              severity: "info",
-              summary: "Create Account",
+              severity: 'info',
+              summary: 'Create Account',
               detail: this.translate.instant(
-                "effects.user-admin.info.account-created",
+                'effects.user-admin.info.account-created',
                 { email: action.email }
               )
             })
@@ -73,10 +74,10 @@ export class UserAdminEffects {
           catchError((error: Error) =>
             of(
               this.message_service.add({
-                severity: "error",
-                summary: "Create Account",
+                severity: 'error',
+                summary: 'Create Account',
                 detail: this.translate.instant(
-                  "effects.user-admin.error.account-create-failed",
+                  'effects.user-admin.error.account-create-failed',
                   { email: action.email }
                 )
               })
@@ -98,10 +99,10 @@ export class UserAdminEffects {
       this.user_service.delete_user(action.user.id).pipe(
         tap(() =>
           this.message_service.add({
-            severity: "info",
-            summary: "Delete Account",
+            severity: 'info',
+            summary: 'Delete Account',
             detail: this.translate.instant(
-              "effects.user-admin.info.account-deleted",
+              'effects.user-admin.info.account-deleted',
               {
                 email: action.user.email
               }
@@ -111,10 +112,10 @@ export class UserAdminEffects {
         catchError((error: Error) =>
           of(
             this.message_service.add({
-              severity: "error",
-              summary: "Delete Account",
+              severity: 'error',
+              summary: 'Delete Account',
               detail: this.translate.instant(
-                "effects.user-admin.error.account-delete-failed",
+                'effects.user-admin.error.account-delete-failed',
                 { email: action.user.email }
               )
             })

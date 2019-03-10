@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { TableModule } from "primeng/table";
-import { READER_USER } from "../../../../models/user/user.fixtures";
-import { AccountPreferencesComponent } from "./account-preferences.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { TableModule } from 'primeng/table';
+import { READER_USER } from '../../../../models/user/user.fixtures';
+import { AccountPreferencesComponent } from './account-preferences.component';
 
-describe("AccountPreferencesComponent", () => {
+describe('AccountPreferencesComponent', () => {
   let component: AccountPreferencesComponent;
   let fixture: ComponentFixture<AccountPreferencesComponent>;
 
@@ -41,7 +41,7 @@ describe("AccountPreferencesComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

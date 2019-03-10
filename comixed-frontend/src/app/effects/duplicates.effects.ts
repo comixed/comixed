@@ -20,7 +20,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { map, switchMap } from 'rxjs/operators';
 import * as DuplicatesActions from '../actions/duplicate-pages.actions';
 import { ComicService } from '../services/comic.service';

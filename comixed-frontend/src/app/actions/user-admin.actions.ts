@@ -17,18 +17,18 @@
  * org.comixed;
  */
 
-import { Action } from "@ngrx/store";
-import { User } from "../models/user/user";
+import { Action } from '@ngrx/store';
+import { User } from '../models/user/user';
 
-export const USER_ADMIN_LIST_USERS = "[USER ADMIN] Get a list of all users";
+export const USER_ADMIN_LIST_USERS = '[USER ADMIN] Get a list of all users';
 export const USER_ADMIN_USERS_RECEIVED =
-  "[USER ADMIN] Received list of all users";
-export const USER_ADMIN_CREATE_USER = "[USER ADMIN] Create a new user";
-export const USER_ADMIN_EDIT_USER = "[USER ADMIN] Begin editing user";
-export const USER_ADMIN_SAVE_USER = "[USER ADMIN] Save the user";
-export const USER_ADMIN_USER_SAVED = "[USER ADMIN] User saved";
-export const USER_ADMIN_DELETE_USER = "[USER ADMIN] Delete user";
-export const USER_ADMIN_USER_DELETED = "[USER ADMIN] User deleted";
+  '[USER ADMIN] Received list of all users';
+export const USER_ADMIN_CREATE_USER = '[USER ADMIN] Create a new user';
+export const USER_ADMIN_EDIT_USER = '[USER ADMIN] Begin editing user';
+export const USER_ADMIN_SAVE_USER = '[USER ADMIN] Save the user';
+export const USER_ADMIN_USER_SAVED = '[USER ADMIN] User saved';
+export const USER_ADMIN_DELETE_USER = '[USER ADMIN] Delete user';
+export const USER_ADMIN_USER_DELETED = '[USER ADMIN] User deleted';
 
 export class UserAdminListUsers implements Action {
   readonly type = USER_ADMIN_LIST_USERS;

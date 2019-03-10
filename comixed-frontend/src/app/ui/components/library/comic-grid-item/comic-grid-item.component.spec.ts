@@ -17,20 +17,20 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { TranslateModule } from "@ngx-translate/core";
-import { OverlayPanelModule } from "primeng/overlaypanel";
-import { PanelModule } from "primeng/panel";
-import { CardModule } from "primeng/card";
-import { ComicCoverComponent } from "../../comic/comic-cover/comic-cover.component";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
-import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
-import { ComicGridItemComponent } from "./comic-grid-item.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
+import { ComicCoverComponent } from '../../comic/comic-cover/comic-cover.component';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
+import { COMIC_1000 } from '../../../../models/comics/comic.fixtures';
+import { ComicGridItemComponent } from './comic-grid-item.component';
 
-describe("ComicGridItemComponent", () => {
+describe('ComicGridItemComponent', () => {
   let component: ComicGridItemComponent;
   let fixture: ComponentFixture<ComicGridItemComponent>;
 
@@ -61,7 +61,7 @@ describe("ComicGridItemComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

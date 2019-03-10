@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Comic } from "../../../../models/comics/comic";
-import { OverlayPanel } from "primeng/overlaypanel";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Comic } from '../../../../models/comics/comic';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
-  selector: "app-comic-cover",
-  templateUrl: "./comic-cover.component.html",
-  styleUrls: ["./comic-cover.component.css"]
+  selector: 'app-comic-cover',
+  templateUrl: './comic-cover.component.html',
+  styleUrls: ['./comic-cover.component.css']
 })
 export class ComicCoverComponent implements OnInit {
   @Input() comic: Comic;
@@ -32,7 +32,7 @@ export class ComicCoverComponent implements OnInit {
   @Input() same_height: boolean;
   @Input() selected = false;
 
-  @Output() onClick = new EventEmitter<boolean>();
+  @Output() click = new EventEmitter<boolean>();
 
   constructor() {}
 

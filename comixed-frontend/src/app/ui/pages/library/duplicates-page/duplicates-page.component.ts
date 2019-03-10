@@ -17,22 +17,23 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
-import { ActivatedRoute, Params } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { Observable, Subscription } from "rxjs";
-import { AppState } from "../../../../app.state";
-import * as DuplicatesActions from "../../../../actions/duplicate-pages.actions";
-import { MessageService } from "primeng/api";
-import { Duplicates } from "../../../../models/duplicates";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { AppState } from '../../../../app.state';
+import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
+import { MessageService } from 'primeng/api';
+import { Duplicates } from '../../../../models/duplicates';
 
-export const DUPLICATES_HASH_PARAMETER = "hash";
+export const DUPLICATES_HASH_PARAMETER = 'hash';
 
 @Component({
-  selector: "app-duplicates-page",
-  templateUrl: "./duplicates-page.component.html",
-  styleUrls: ["./duplicates-page.component.css"]
+  selector: 'app-duplicates-page',
+  templateUrl: './duplicates-page.component.html',
+  styleUrls: ['./duplicates-page.component.css']
 })
 export class DuplicatesPageComponent implements OnInit, OnDestroy {
   duplicates$: Observable<Duplicates>;
@@ -46,7 +47,7 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private message_service: MessageService
   ) {
-    this.duplicates$ = store.select("duplicates");
+    this.duplicates$ = store.select('duplicates');
   }
 
   ngOnInit() {
@@ -56,8 +57,8 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
 
         if (this.duplicates.pages_deleted > 0) {
           this.message_service.add({
-            severity: "info",
-            summary: "Delete Comic",
+            severity: 'info',
+            summary: 'Delete Comic',
             detail: `Marked ${
               this.duplicates.pages_deleted
             } page(s) for deletion...`
@@ -65,8 +66,8 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
         }
         if (this.duplicates.pages_undeleted) {
           this.message_service.add({
-            severity: "info",
-            summary: "Undelete Comic",
+            severity: 'info',
+            summary: 'Undelete Comic',
             detail: `Unmarked ${
               this.duplicates.pages_undeleted
             } page(s) for deletion...`

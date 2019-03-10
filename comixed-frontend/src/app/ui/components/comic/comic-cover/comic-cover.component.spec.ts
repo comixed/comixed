@@ -17,20 +17,20 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { TranslateModule } from "@ngx-translate/core";
-import { OverlayPanelModule } from "primeng/overlaypanel";
-import { PanelModule } from "primeng/panel";
-import { CardModule } from "primeng/card";
-import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
-import { ComicCoverComponent } from "./comic-cover.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
+import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { COMIC_1000 } from '../../../../models/comics/comic.fixtures';
+import { ComicCoverComponent } from './comic-cover.component';
 
-describe("ComicCoverComponent", () => {
+describe('ComicCoverComponent', () => {
   let component: ComicCoverComponent;
   let fixture: ComponentFixture<ComicCoverComponent>;
 
@@ -56,26 +56,26 @@ describe("ComicCoverComponent", () => {
     fixture.detectChanges();
   }));
 
-  describe("when the comic is not selected", () => {
+  describe('when the comic is not selected', () => {
     beforeEach(() => {
       component.selected = false;
       fixture.detectChanges();
     });
 
-    it("does not have the selected class on the container", () => {
-      const elements = fixture.debugElement.query(By.css(".selected-comic"));
+    it('does not have the selected class on the container', () => {
+      const elements = fixture.debugElement.query(By.css('.selected-comic'));
       expect(elements).toBeFalsy();
     });
   });
 
-  describe("when the comic is selected", () => {
+  describe('when the comic is selected', () => {
     beforeEach(() => {
       component.selected = true;
       fixture.detectChanges();
     });
 
-    it("does not have the selected class on the container", () => {
-      const elements = fixture.debugElement.query(By.css(".selected-comic"));
+    it('does not have the selected class on the container', () => {
+      const elements = fixture.debugElement.query(By.css('.selected-comic'));
       expect(elements).toBeTruthy();
     });
   });

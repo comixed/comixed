@@ -17,8 +17,8 @@
  * org.comixed;
  */
 
-import { Role } from "./role";
-import { Preference } from "./preference";
+import { Role } from './role';
+import { Preference } from './preference';
 
 export interface User {
   initialized: boolean;

@@ -17,38 +17,38 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryDisplayReducer } from "../../../../reducers/library-display.reducer";
-import { ScrollPanelModule } from "primeng/scrollpanel";
-import { ButtonModule } from "primeng/button";
-import { SliderModule } from "primeng/slider";
-import { CheckboxModule } from "primeng/checkbox";
-import { DropdownModule } from "primeng/dropdown";
-import { CardModule } from "primeng/card";
-import { DataViewModule } from "primeng/dataview";
-import { PanelModule } from "primeng/panel";
-import { SplitButtonModule } from "primeng/splitbutton";
-import { InplaceModule } from "primeng/inplace";
-import { ProgressBarModule } from "primeng/progressbar";
-import { BlockUIModule } from "primeng/blockui";
-import { TooltipModule } from "primeng/tooltip";
-import { TableModule } from "primeng/table";
-import { MultipleComicScrapingComponent } from "../../scraping/multiple-comic-scraping/multiple-comic-scraping.component";
-import { ScrapingComicListComponent } from "../../scraping/scraping-comic-list/scraping-comic-list.component";
-import { LibraryFilterComponent } from "../library-filter/library-filter.component";
-import { ComicDetailsEditorComponent } from "../../comic/comic-details-editor/comic-details-editor.component";
-import { VolumeListComponent } from "../../scraping/volume-list/volume-list.component";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { DEFAULT_LIBRARY_DISPLAY } from "../../../../models/actions/library-display.fixtures";
-import { DEFAULT_LIBRARY_FILTER } from "../../../../models/actions/library-filter.fixtures";
-import { ComicListToolbarComponent } from "./comic-list-toolbar.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryDisplayReducer } from '../../../../reducers/library-display.reducer';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { ButtonModule } from 'primeng/button';
+import { SliderModule } from 'primeng/slider';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { CardModule } from 'primeng/card';
+import { DataViewModule } from 'primeng/dataview';
+import { PanelModule } from 'primeng/panel';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { InplaceModule } from 'primeng/inplace';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { BlockUIModule } from 'primeng/blockui';
+import { TooltipModule } from 'primeng/tooltip';
+import { TableModule } from 'primeng/table';
+import { MultipleComicScrapingComponent } from '../../scraping/multiple-comic-scraping/multiple-comic-scraping.component';
+import { ScrapingComicListComponent } from '../../scraping/scraping-comic-list/scraping-comic-list.component';
+import { LibraryFilterComponent } from '../library-filter/library-filter.component';
+import { ComicDetailsEditorComponent } from '../../comic/comic-details-editor/comic-details-editor.component';
+import { VolumeListComponent } from '../../scraping/volume-list/volume-list.component';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/actions/library-display.fixtures';
+import { DEFAULT_LIBRARY_FILTER } from '../../../../models/actions/library-filter.fixtures';
+import { ComicListToolbarComponent } from './comic-list-toolbar.component';
 
-xdescribe("ComicListToolbarComponent", () => {
+xdescribe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;
   let fixture: ComponentFixture<ComicListToolbarComponent>;
 
@@ -92,7 +92,7 @@ xdescribe("ComicListToolbarComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

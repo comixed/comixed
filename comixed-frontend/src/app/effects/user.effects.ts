@@ -17,15 +17,16 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import { Action } from "@ngrx/store";
-import { map, switchMap, tap } from "rxjs/operators";
-import { Observable, of as observableOf } from "rxjs";
-import * as UserActions from "../actions/user.actions";
-import { UserService } from "../services/user.service";
-import { User } from "../models/user/user";
-import { TokenStorage } from "../storage/token.storage";
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import * as UserActions from '../actions/user.actions';
+import { UserService } from '../services/user.service';
+import { User } from '../models/user/user';
+import { TokenStorage } from '../storage/token.storage';
 
 @Injectable()
 export class UserEffects {
@@ -71,7 +72,7 @@ export class UserEffects {
   user_logout$: Observable<Action> = this.actions$.pipe(
     ofType(UserActions.USER_LOGOUT),
     switchMap((action: UserActions.UserLogout) =>
-      observableOf(this.token_storage.sign_out()).pipe(
+      of(this.token_storage.sign_out()).pipe(
         map(() => new UserActions.UserAuthCheck())
       )
     )

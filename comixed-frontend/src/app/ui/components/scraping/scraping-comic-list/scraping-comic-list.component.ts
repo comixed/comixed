@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from "@angular/core";
-import { Comic } from "../../../../models/comics/comic";
+import { Component, Input, OnInit } from '@angular/core';
+import { Comic } from '../../../../models/comics/comic';
 
 @Component({
-  selector: "app-scraping-comic-list",
-  templateUrl: "./scraping-comic-list.component.html",
-  styleUrls: ["./scraping-comic-list.component.css"]
+  selector: 'app-scraping-comic-list',
+  templateUrl: './scraping-comic-list.component.html',
+  styleUrls: ['./scraping-comic-list.component.css']
 })
 export class ScrapingComicListComponent implements OnInit {
   @Input() comics: Array<Comic>;

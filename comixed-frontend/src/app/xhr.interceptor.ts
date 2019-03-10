@@ -1,4 +1,4 @@
-import { tap } from "rxjs/operators";
+import { tap } from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -18,7 +18,7 @@ import { tap } from "rxjs/operators";
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
   HttpHandler,
@@ -29,13 +29,13 @@ import {
   HttpProgressEvent,
   HttpResponse,
   HttpUserEvent
-} from "@angular/common/http";
-import { Router } from "@angular/router";
-import { Observable } from "rxjs";
-import { TokenStorage } from "./storage/token.storage";
-import { MessageService } from "primeng/api";
+} from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { TokenStorage } from './storage/token.storage';
+import { MessageService } from 'primeng/api';
 
-export const TOKEN_HEADER_KEY = "Authorization";
+export const TOKEN_HEADER_KEY = 'Authorization';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -60,11 +60,11 @@ export class XhrInterceptor implements HttpInterceptor {
       authReq = req.clone({
         headers: req.headers
           .set(TOKEN_HEADER_KEY, `Bearer ${this.token_storage.get_token()}`)
-          .set("X-Request-With", "XMLHttpRequest")
+          .set('X-Request-With', 'XMLHttpRequest')
       });
     } else {
       authReq = req.clone({
-        headers: req.headers.set("X-Request-With", "XMLHttpRequest")
+        headers: req.headers.set('X-Request-With', 'XMLHttpRequest')
       });
     }
     return next.handle(authReq).pipe(
@@ -72,9 +72,9 @@ export class XhrInterceptor implements HttpInterceptor {
         if (error instanceof HttpResponse) {
           if (error.status !== 200) {
             this.message_service.add({
-              severity: "error",
-              summary: "Server Error",
-              detail: "Unable to complete the last request..."
+              severity: 'error',
+              summary: 'Server Error',
+              detail: 'Unable to complete the last request...'
             });
           }
         }

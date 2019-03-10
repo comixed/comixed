@@ -1,4 +1,4 @@
-import { finalize } from "rxjs/operators";
+import { finalize } from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
@@ -18,19 +18,19 @@ import { finalize } from "rxjs/operators";
  * org.comixed;
  */
 
-import { Injectable, EventEmitter } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Injectable, EventEmitter } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
-import { UserService } from "./user.service";
-import { Comic } from "../models/comics/comic";
-import { Page } from "../models/comics/page";
-import { PageType } from "../models/comics/page-type";
-import { ComicFile } from "../models/import/comic-file";
-import { ScanType } from "../models/comics/scan-type";
-import { ComicFormat } from "../models/comics/comic-format";
+import { UserService } from './user.service';
+import { Comic } from '../models/comics/comic';
+import { Page } from '../models/comics/page';
+import { PageType } from '../models/comics/page-type';
+import { ComicFile } from '../models/import/comic-file';
+import { ScanType } from '../models/comics/scan-type';
+import { ComicFormat } from '../models/comics/comic-format';
 
-export const COMIC_SERVICE_API_URL = "/api";
+export const COMIC_SERVICE_API_URL = '/api';
 
 @Injectable()
 export class ComicService {
@@ -41,7 +41,7 @@ export class ComicService {
   }
 
   set_scan_type(comic: Comic, scan_type: ScanType): Observable<any> {
-    const params = new HttpParams().set("scan_type_id", `${scan_type.id}`);
+    const params = new HttpParams().set('scan_type_id', `${scan_type.id}`);
 
     return this.http.put(
       `${COMIC_SERVICE_API_URL}/comics/${comic.id}/scan_type`,
@@ -54,7 +54,7 @@ export class ComicService {
   }
 
   set_format(comic: Comic, format: ComicFormat): Observable<any> {
-    const params = new HttpParams().set("format_id", `${format.id}`);
+    const params = new HttpParams().set('format_id', `${format.id}`);
 
     return this.http.put(
       `${COMIC_SERVICE_API_URL}/comics/${comic.id}/format`,
@@ -63,7 +63,7 @@ export class ComicService {
   }
 
   set_sort_name(comic: Comic, sort_name: string): Observable<any> {
-    const params = new HttpParams().set("sort_name", sort_name);
+    const params = new HttpParams().set('sort_name', sort_name);
 
     return this.http.put(
       `${COMIC_SERVICE_API_URL}/comics/${comic.id}/sort_name`,
@@ -93,36 +93,36 @@ export class ComicService {
   }
 
   set_page_type(page: Page, page_type_id: number): Observable<any> {
-    const params = new HttpParams().set("type_id", `${page_type_id}`);
+    const params = new HttpParams().set('type_id', `${page_type_id}`);
     return this.http.put(`/api/pages/${page.id}/type`, params);
   }
 
   get_display_name_for_page_type(page_type: PageType): string {
     switch (page_type.name) {
-      case "front-cover":
-        return "Front Cover";
-      case "inner-cover":
-        return "Inner Cover";
-      case "back-cover":
-        return "Back Cover";
-      case "roundup":
-        return "Roundup";
-      case "story":
-        return "Story";
-      case "advertisement":
-        return "Advertisement";
-      case "editorial":
-        return "Editorial";
-      case "letters":
-        return "Letters";
-      case "preview":
-        return "Preview";
-      case "other":
-        return "Other";
-      case "filtered":
-        return "Filtered";
+      case 'front-cover':
+        return 'Front Cover';
+      case 'inner-cover':
+        return 'Inner Cover';
+      case 'back-cover':
+        return 'Back Cover';
+      case 'roundup':
+        return 'Roundup';
+      case 'story':
+        return 'Story';
+      case 'advertisement':
+        return 'Advertisement';
+      case 'editorial':
+        return 'Editorial';
+      case 'letters':
+        return 'Letters';
+      case 'preview':
+        return 'Preview';
+      case 'other':
+        return 'Other';
+      case 'filtered':
+        return 'Filtered';
       default:
-        return "Unknown (" + page_type + ")";
+        return 'Unknown (' + page_type + ')';
     }
   }
 
@@ -166,7 +166,7 @@ export class ComicService {
   }
 
   block_page(page_hash: string): Observable<any> {
-    const params = new HttpParams().set("hash", page_hash);
+    const params = new HttpParams().set('hash', page_hash);
     return this.http.post(`${COMIC_SERVICE_API_URL}/pages/blocked`, params);
   }
 
@@ -185,8 +185,8 @@ export class ComicService {
         (source[index] = encodeURIComponent(filename))
     );
     const params = new HttpParams()
-      .set("filenames", filenames.toString())
-      .set("delete_blocked_pages", delete_blocked_pages.toString());
+      .set('filenames', filenames.toString())
+      .set('delete_blocked_pages', delete_blocked_pages.toString());
     return this.http.post(`${COMIC_SERVICE_API_URL}/files/import`, params);
   }
 
@@ -197,12 +197,12 @@ export class ComicService {
   }
 
   get_issue_label_text_for_comic(comic: Comic): string {
-    return `${comic.series || "Unknown Series"} #${comic.issue_number ||
-      "??"} (v.${comic.volume || "????"})`;
+    return `${comic.series || 'Unknown Series'} #${comic.issue_number ||
+      '??'} (v.${comic.volume || '????'})`;
   }
 
   get_issue_content_label_for_comic(comic: Comic): string {
-    return `${comic.title || "[no title defined]"}`;
+    return `${comic.title || '[no title defined]'}`;
   }
 
   get_download_link_for_comic(comicId: number): string {
@@ -217,11 +217,11 @@ export class ComicService {
     skip_cache: boolean
   ): Observable<any> {
     const params = new HttpParams()
-      .set("api_key", api_key)
-      .set("series_name", series_name)
-      .set("volume", volume)
-      .set("issue_number", issue_number)
-      .set("skip_cache", `${skip_cache}`);
+      .set('api_key', api_key)
+      .set('series_name', series_name)
+      .set('volume', volume)
+      .set('issue_number', issue_number)
+      .set('skip_cache', `${skip_cache}`);
 
     return this.http.post(
       `${COMIC_SERVICE_API_URL}/scraper/query/volumes`,
@@ -236,10 +236,10 @@ export class ComicService {
     skip_cache: boolean
   ): Observable<any> {
     const params = new HttpParams()
-      .set("api_key", api_key)
-      .set("volume", `${volume}`)
-      .set("issue_number", issue_number)
-      .set("skip_cache", `${skip_cache}`);
+      .set('api_key', api_key)
+      .set('volume', `${volume}`)
+      .set('issue_number', issue_number)
+      .set('skip_cache', `${skip_cache}`);
 
     return this.http.post(
       `${COMIC_SERVICE_API_URL}/scraper/query/issue`,
@@ -254,10 +254,10 @@ export class ComicService {
     skip_cache: boolean
   ): Observable<any> {
     const params = new HttpParams()
-      .set("api_key", api_key)
-      .set("comic_id", `${comic_id}`)
-      .set("issue_id", `${issue_id}`)
-      .set("skip_cache", `${skip_cache}`);
+      .set('api_key', api_key)
+      .set('comic_id', `${comic_id}`)
+      .set('issue_id', `${issue_id}`)
+      .set('skip_cache', `${skip_cache}`);
 
     return this.http.post(`${COMIC_SERVICE_API_URL}/scraper/save`, params);
   }
@@ -269,9 +269,9 @@ export class ComicService {
     issue_number: string
   ): Observable<any> {
     const params = new HttpParams()
-      .set("series", series)
-      .set("volume", volume)
-      .set("issue_number", issue_number);
+      .set('series', series)
+      .set('volume', volume)
+      .set('issue_number', issue_number);
     return this.http
       .put(`${COMIC_SERVICE_API_URL}/comics/${comic.id}`, params)
       .pipe(

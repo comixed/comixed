@@ -17,21 +17,21 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { RouterTestingModule } from "@angular/router/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { ButtonModule } from "primeng/button";
-import { DropdownModule } from "primeng/dropdown";
-import { TableModule } from "primeng/table";
-import { PanelModule } from "primeng/panel";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { LibraryFilterComponent } from "../../../components/library/library-filter/library-filter.component";
-import { StoryArcsPageComponent } from "./story-arcs-page.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
+import { PanelModule } from 'primeng/panel';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { LibraryFilterComponent } from '../../../components/library/library-filter/library-filter.component';
+import { StoryArcsPageComponent } from './story-arcs-page.component';
 
-describe("StoryArcsPageComponent", () => {
+describe('StoryArcsPageComponent', () => {
   let component: StoryArcsPageComponent;
   let fixture: ComponentFixture<StoryArcsPageComponent>;
   let store: Store<AppState>;
@@ -59,7 +59,7 @@ describe("StoryArcsPageComponent", () => {
     store = TestBed.get(Store);
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

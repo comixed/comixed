@@ -17,23 +17,23 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from "@angular/core";
-import { SelectItem } from "primeng/api";
-import { Comic } from "../../../../models/comics/comic";
-import { Page } from "../../../../models/comics/page";
-import { PageType } from "../../../../models/comics/page-type";
-import * as LibraryActions from "../../../../actions/library.actions";
-import { Store } from "@ngrx/store";
-import { TranslateService } from "@ngx-translate/core";
-import { ComicService } from "../../../../services/comic.service";
-import { UserService } from "../../../../services/user.service";
-import { MessageService } from "primeng/components/common/messageservice";
-import { AppState } from "../../../../app.state";
+import { Component, OnInit, Input } from '@angular/core';
+import { SelectItem } from 'primeng/api';
+import { Comic } from '../../../../models/comics/comic';
+import { Page } from '../../../../models/comics/page';
+import { PageType } from '../../../../models/comics/page-type';
+import * as LibraryActions from '../../../../actions/library.actions';
+import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { ComicService } from '../../../../services/comic.service';
+import { UserService } from '../../../../services/user.service';
+import { MessageService } from 'primeng/components/common/messageservice';
+import { AppState } from '../../../../app.state';
 
 @Component({
-  selector: "app-comic-pages",
-  templateUrl: "./comic-pages.component.html",
-  styleUrls: ["./comic-pages.component.css"]
+  selector: 'app-comic-pages',
+  templateUrl: './comic-pages.component.html',
+  styleUrls: ['./comic-pages.component.css']
 })
 export class ComicPagesComponent implements OnInit {
   @Input() is_admin: boolean;
@@ -69,16 +69,16 @@ export class ComicPagesComponent implements OnInit {
       () => {
         page.page_type.id = new_page_type;
         this.message_service.add({
-          severity: "info",
-          summary: "Page Type",
-          detail: "Page type changed..."
+          severity: 'info',
+          summary: 'Page Type',
+          detail: 'Page type changed...'
         });
       },
       (error: Error) => {
         this.message_service.add({
-          severity: "error",
-          summary: "Page Type",
-          detail: "Failed to change the page type..."
+          severity: 'error',
+          summary: 'Page Type',
+          detail: 'Failed to change the page type...'
         });
       }
     );

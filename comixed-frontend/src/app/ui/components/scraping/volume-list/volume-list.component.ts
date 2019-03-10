@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
-import { Comic } from "../../../../models/comics/comic";
-import { Volume } from "../../../../models/comics/volume";
-import { Issue } from "../../../../models/scraping/issue";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import * as ScrapingActions from "../../../../actions/single-comic-scraping.actions";
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Comic } from '../../../../models/comics/comic';
+import { Volume } from '../../../../models/comics/volume';
+import { Issue } from '../../../../models/scraping/issue';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import * as ScrapingActions from '../../../../actions/single-comic-scraping.actions';
 
 interface VolumeOptions {
   volume: Volume;
@@ -31,9 +31,9 @@ interface VolumeOptions {
 }
 
 @Component({
-  selector: "app-volume-list",
-  templateUrl: "./volume-list.component.html",
-  styleUrls: ["./volume-list.component.css"]
+  selector: 'app-volume-list',
+  templateUrl: './volume-list.component.html',
+  styleUrls: ['./volume-list.component.css']
 })
 export class VolumeListComponent implements OnInit {
   @Input() api_key: string;
@@ -45,7 +45,7 @@ export class VolumeListComponent implements OnInit {
   @Output() cancelSelection = new EventEmitter<Issue>();
 
   _volumes: Array<VolumeOptions>;
-  protected volume_selection_title = "";
+  protected volume_selection_title = '';
 
   constructor(private store: Store<AppState>) {}
 
@@ -58,10 +58,10 @@ export class VolumeListComponent implements OnInit {
       this._volumes.push({
         volume: volume,
         matchability: this.is_good_match(volume)
-          ? "1"
+          ? '1'
           : this.is_perfect_match(volume)
-          ? "0"
-          : "2"
+          ? '0'
+          : '2'
       });
     });
   }
@@ -96,7 +96,7 @@ export class VolumeListComponent implements OnInit {
 
   get_current_issue_image_url(): string {
     if (this.current_issue === null) {
-      return "";
+      return '';
     }
     return `${this.current_issue.cover_url}?api_key=${this.api_key.trim()}`;
   }

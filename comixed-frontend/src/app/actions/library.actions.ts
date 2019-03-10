@@ -17,23 +17,23 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Action } from "@ngrx/store";
-import { Library } from "../models/actions/library";
-import { Comic } from "../models/comics/comic";
-import { Page } from "../models/comics/page";
-import { ScanType } from "../models/comics/scan-type";
-import { ComicFormat } from "../models/comics/comic-format";
-import { LibraryState } from "../models/library-state";
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { Library } from '../models/actions/library';
+import { Comic } from '../models/comics/comic';
+import { Page } from '../models/comics/page';
+import { ScanType } from '../models/comics/scan-type';
+import { ComicFormat } from '../models/comics/comic-format';
+import { LibraryState } from '../models/library-state';
 
-export const LIBRARY_GET_SCAN_TYPES = "[LIBRARY] Fetch the scan types";
+export const LIBRARY_GET_SCAN_TYPES = '[LIBRARY] Fetch the scan types';
 export class LibraryGetScanTypes implements Action {
   readonly type = LIBRARY_GET_SCAN_TYPES;
 
   constructor() {}
 }
 
-export const LIBRARY_SET_SCAN_TYPES = "[LIBRARY] Set the scan types";
+export const LIBRARY_SET_SCAN_TYPES = '[LIBRARY] Set the scan types';
 export class LibrarySetScanTypes implements Action {
   readonly type = LIBRARY_SET_SCAN_TYPES;
 
@@ -44,7 +44,7 @@ export class LibrarySetScanTypes implements Action {
   ) {}
 }
 
-export const LIBRARY_SET_SCAN_TYPE = "[LIBRARY] Set the scan type for a comic";
+export const LIBRARY_SET_SCAN_TYPE = '[LIBRARY] Set the scan type for a comic';
 export class LibrarySetScanType implements Action {
   readonly type = LIBRARY_SET_SCAN_TYPE;
 
@@ -56,7 +56,7 @@ export class LibrarySetScanType implements Action {
   ) {}
 }
 
-export const LIBRARY_SCAN_TYPE_SET = "[LIBRARY] The scan type is set";
+export const LIBRARY_SCAN_TYPE_SET = '[LIBRARY] The scan type is set';
 export class LibraryScanTypeSet implements Action {
   readonly type = LIBRARY_SCAN_TYPE_SET;
 
@@ -68,14 +68,14 @@ export class LibraryScanTypeSet implements Action {
   ) {}
 }
 
-export const LIBRARY_GET_FORMATS = "[LIBRARY] Fetch the comic formats";
+export const LIBRARY_GET_FORMATS = '[LIBRARY] Fetch the comic formats';
 export class LibraryGetFormats implements Action {
   readonly type = LIBRARY_GET_FORMATS;
 
   constructor() {}
 }
 
-export const LIBRARY_SET_FORMATS = "[LIBRARY] Set the comic formats";
+export const LIBRARY_SET_FORMATS = '[LIBRARY] Set the comic formats';
 export class LibrarySetFormats implements Action {
   readonly type = LIBRARY_SET_FORMATS;
 
@@ -86,7 +86,7 @@ export class LibrarySetFormats implements Action {
   ) {}
 }
 
-export const LIBRARY_SET_FORMAT = "[LIBRARY] Set the format for a comic";
+export const LIBRARY_SET_FORMAT = '[LIBRARY] Set the format for a comic';
 export class LibrarySetFormat implements Action {
   readonly type = LIBRARY_SET_FORMAT;
 
@@ -98,7 +98,7 @@ export class LibrarySetFormat implements Action {
   ) {}
 }
 
-export const LIBRARY_FORMAT_SET = "[LIBRARY] The format is set";
+export const LIBRARY_FORMAT_SET = '[LIBRARY] The format is set';
 export class LibraryFormatSet implements Action {
   readonly type = LIBRARY_FORMAT_SET;
 
@@ -110,7 +110,7 @@ export class LibraryFormatSet implements Action {
   ) {}
 }
 
-export const LIBRARY_SET_SORT_NAME = "[LIBRARY] Sets the sort name for a comic";
+export const LIBRARY_SET_SORT_NAME = '[LIBRARY] Sets the sort name for a comic';
 export class LibrarySetSortName implements Action {
   readonly type = LIBRARY_SET_SORT_NAME;
 
@@ -122,7 +122,7 @@ export class LibrarySetSortName implements Action {
   ) {}
 }
 
-export const LIBRARY_SORT_NAME_SET = "[LIBRARY] The sort name is set";
+export const LIBRARY_SORT_NAME_SET = '[LIBRARY] The sort name is set';
 export class LibrarySortNameSet implements Action {
   readonly type = LIBRARY_SORT_NAME_SET;
 
@@ -135,7 +135,7 @@ export class LibrarySortNameSet implements Action {
 }
 
 export const LIBRARY_FETCH_LIBRARY_CHANGES =
-  "[LIBRARY] Fetch changes to the library";
+  '[LIBRARY] Fetch changes to the library';
 export class LibraryFetchLibraryChanges implements Action {
   readonly type = LIBRARY_FETCH_LIBRARY_CHANGES;
 
@@ -148,7 +148,7 @@ export class LibraryFetchLibraryChanges implements Action {
 }
 
 export const LIBRARY_MERGE_NEW_COMICS =
-  "[LIBRARY] Merge newly retrieved comics";
+  '[LIBRARY] Merge newly retrieved comics';
 export class LibraryMergeNewComics implements Action {
   readonly type = LIBRARY_MERGE_NEW_COMICS;
 
@@ -159,7 +159,7 @@ export class LibraryMergeNewComics implements Action {
   ) {}
 }
 
-export const LIBRARY_REMOVE_COMIC = "[LIBRARY] Remove comic";
+export const LIBRARY_REMOVE_COMIC = '[LIBRARY] Remove comic';
 export class LibraryRemoveComic implements Action {
   readonly type = LIBRARY_REMOVE_COMIC;
 
@@ -171,7 +171,7 @@ export class LibraryRemoveComic implements Action {
 }
 
 export const LIBRARY_UPDATE_COMICS_REMOVE_COMIC =
-  "[LIBRARY] Update comics by removing a comic";
+  '[LIBRARY] Update comics by removing a comic';
 export class LibraryUpdateComicsRemoveComic implements Action {
   readonly type = LIBRARY_UPDATE_COMICS_REMOVE_COMIC;
 
@@ -182,14 +182,14 @@ export class LibraryUpdateComicsRemoveComic implements Action {
   ) {}
 }
 
-export const LIBRARY_RESET = "[LIBRARY] Reset the library settings";
+export const LIBRARY_RESET = '[LIBRARY] Reset the library settings';
 export class LibraryReset implements Action {
   readonly type = LIBRARY_RESET;
 
   constructor() {}
 }
 
-export const LIBRARY_CLEAR_METADATA = "[LIBRARY] Clear comic metadata";
+export const LIBRARY_CLEAR_METADATA = '[LIBRARY] Clear comic metadata';
 export class LibraryClearMetadata implements Action {
   readonly type = LIBRARY_CLEAR_METADATA;
 
@@ -200,7 +200,7 @@ export class LibraryClearMetadata implements Action {
   ) {}
 }
 
-export const LIBRARY_METADATA_CHANGED = "[LIBRARY] Metadata cleared on comic";
+export const LIBRARY_METADATA_CHANGED = '[LIBRARY] Metadata cleared on comic';
 export class LibraryMetadataChanged implements Action {
   readonly type = LIBRARY_METADATA_CHANGED;
 
@@ -212,7 +212,7 @@ export class LibraryMetadataChanged implements Action {
   ) {}
 }
 
-export const LIBRARY_RESCAN_FILES = "[LIBRARY] Rescan the whole library";
+export const LIBRARY_RESCAN_FILES = '[LIBRARY] Rescan the whole library';
 export class LibraryRescanFiles implements Action {
   readonly type = LIBRARY_RESCAN_FILES;
 
@@ -224,7 +224,7 @@ export class LibraryRescanFiles implements Action {
 }
 
 export const LIBRARY_SET_BLOCKED_PAGE_STATE =
-  "[LIBRARY] Set blocked page state";
+  '[LIBRARY] Set blocked page state';
 export class LibrarySetBlockedPageState implements Action {
   readonly type = LIBRARY_SET_BLOCKED_PAGE_STATE;
 
@@ -237,7 +237,7 @@ export class LibrarySetBlockedPageState implements Action {
 }
 
 export const LIBRARY_BLOCKED_PAGE_STATE_SET =
-  "[LIBRARY] Blocked page state is set";
+  '[LIBRARY] Blocked page state is set';
 export class LibraryBlockedStateFlagSet implements Action {
   readonly type = LIBRARY_BLOCKED_PAGE_STATE_SET;
 
@@ -249,7 +249,7 @@ export class LibraryBlockedStateFlagSet implements Action {
   ) {}
 }
 
-export const LIBRARY_SET_SELECTED = "[LIBRARY] Set selected state";
+export const LIBRARY_SET_SELECTED = '[LIBRARY] Set selected state';
 export class LibrarySetSelected implements Action {
   readonly type = LIBRARY_SET_SELECTED;
 
@@ -261,7 +261,7 @@ export class LibrarySetSelected implements Action {
   ) {}
 }
 
-export const LIBRARY_RESET_SELECTED = "[LIBRARY] Reset selected state";
+export const LIBRARY_RESET_SELECTED = '[LIBRARY] Reset selected state';
 export class LibraryResetSelected implements Action {
   readonly type = LIBRARY_RESET_SELECTED;
 

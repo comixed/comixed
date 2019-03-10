@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { TestBed, inject } from "@angular/core/testing";
-import { HttpClientModule } from "@angular/common/http";
-import { UserService } from "./user.service";
-import { UserServiceMock } from "./user.service.mock";
-import { ComicService } from "./comic.service";
+import { TestBed, inject } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
+import { UserService } from './user.service';
+import { UserServiceMock } from './user.service.mock';
+import { ComicService } from './comic.service';
 
-describe("ComicService", () => {
+describe('ComicService', () => {
   let server: ComicService;
   let user_service: UserService;
 
@@ -40,7 +40,7 @@ describe("ComicService", () => {
     user_service = TestBed.get(UserService);
   });
 
-  it("should be created", inject([ComicService], (service: ComicService) => {
+  it('should be created', inject([ComicService], (service: ComicService) => {
     expect(service).toBeTruthy();
   }));
 });

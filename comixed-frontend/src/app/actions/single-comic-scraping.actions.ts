@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Injectable } from "@angular/core";
-import { Action } from "@ngrx/store";
-import { Comic } from "../models/comics/comic";
-import { Volume } from "../models/comics/volume";
-import { Issue } from "../models/scraping/issue";
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { Comic } from '../models/comics/comic';
+import { Volume } from '../models/comics/volume';
+import { Issue } from '../models/scraping/issue';
 
-export const SINGLE_COMIC_SCRAPING_SETUP = "[LIBRARY SCRAPING] Setup scraping";
+export const SINGLE_COMIC_SCRAPING_SETUP = '[LIBRARY SCRAPING] Setup scraping';
 export class SingleComicScrapingSetup implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_SETUP;
 
@@ -39,7 +39,7 @@ export class SingleComicScrapingSetup implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_SAVE_LOCAL_CHANGES =
-  "[LIBRARY SCRAPING] Save local changes";
+  '[LIBRARY SCRAPING] Save local changes';
 export class SingleComicScrapingSaveLocalChanges implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_SAVE_LOCAL_CHANGES;
 
@@ -55,7 +55,7 @@ export class SingleComicScrapingSaveLocalChanges implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_FETCH_VOLUMES =
-  "[LIBRARY SCRAPING] Fetch volumes";
+  '[LIBRARY SCRAPING] Fetch volumes';
 export class SingleComicScrapingFetchVolumes implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_FETCH_VOLUMES;
 
@@ -71,7 +71,7 @@ export class SingleComicScrapingFetchVolumes implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_RESET_VOLUMES =
-  "[LIBRARY SCRAPING] Reset volumes";
+  '[LIBRARY SCRAPING] Reset volumes';
 export class SingleComicScrapingResetVolumes implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_RESET_VOLUMES;
 
@@ -79,7 +79,7 @@ export class SingleComicScrapingResetVolumes implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_FOUND_VOLUMES =
-  "[LIBRARY SCRAPING] Found volumes";
+  '[LIBRARY SCRAPING] Found volumes';
 export class SingleComicScrapingFoundVolumes implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_FOUND_VOLUMES;
 
@@ -87,7 +87,7 @@ export class SingleComicScrapingFoundVolumes implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_SET_CURRENT_VOLUME =
-  "[LIBRARY SCRAPING] Set current volume";
+  '[LIBRARY SCRAPING] Set current volume';
 export class SingleComicScrapingSetCurrentVolume implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_SET_CURRENT_VOLUME;
 
@@ -102,7 +102,7 @@ export class SingleComicScrapingSetCurrentVolume implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_CLEAR_CURRENT_VOLUME =
-  "[LIBRARY SCRAPING] Clear current volume";
+  '[LIBRARY SCRAPING] Clear current volume';
 export class SingleComicScrapingClearCurrentVolume implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_CLEAR_CURRENT_VOLUME;
 
@@ -110,7 +110,7 @@ export class SingleComicScrapingClearCurrentVolume implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_FETCH_ISSUES =
-  "[LIBRARY SCRAPING] Fetch issues";
+  '[LIBRARY SCRAPING] Fetch issues';
 export class SingleComicScrapingFetchIssue implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_FETCH_ISSUES;
 
@@ -125,7 +125,7 @@ export class SingleComicScrapingFetchIssue implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_FOUND_ISSUE =
-  "[LIBRARY SCRAPING] Found issue";
+  '[LIBRARY SCRAPING] Found issue';
 export class SingleComicScrapingFoundIssue implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_FOUND_ISSUE;
 
@@ -138,7 +138,7 @@ export class SingleComicScrapingFoundIssue implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_SCRAPE_METADATA =
-  "[LIBRARY SCRAPING] Scrape metadata";
+  '[LIBRARY SCRAPING] Scrape metadata';
 export class SingleComicScrapingScrapeMetadata implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_SCRAPE_METADATA;
 
@@ -154,7 +154,7 @@ export class SingleComicScrapingScrapeMetadata implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_METADATA_SCRAPED =
-  "[LIBRARY SCRAPING] Metadata scraped";
+  '[LIBRARY SCRAPING] Metadata scraped';
 export class SingleComicScrapingMetadataScraped implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_METADATA_SCRAPED;
 
@@ -168,7 +168,7 @@ export class SingleComicScrapingMetadataScraped implements Action {
 }
 
 export const SINGLE_COMIC_SCRAPING_CLEAR_DATA_SCRAPED_FLAG =
-  "[LIBRARY SCRAPING] Clear the data changed flag";
+  '[LIBRARY SCRAPING] Clear the data changed flag';
 export class SingleComicScrapingClearDataScrapedFlag implements Action {
   readonly type = SINGLE_COMIC_SCRAPING_CLEAR_DATA_SCRAPED_FLAG;
 

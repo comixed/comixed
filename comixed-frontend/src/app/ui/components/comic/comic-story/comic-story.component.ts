@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from "@angular/core";
-import { Comic } from "../../../../models/comics/comic";
-import { Library, ComicGrouping } from "../../../../models/actions/library";
+import { Component, OnInit, Input } from '@angular/core';
+import { Comic } from '../../../../models/comics/comic';
+import { Library, ComicGrouping } from '../../../../models/actions/library';
 
 @Component({
-  selector: "app-comic-story",
-  templateUrl: "./comic-story.component.html",
-  styleUrls: ["./comic-story.component.css"]
+  selector: 'app-comic-story',
+  templateUrl: './comic-story.component.html',
+  styleUrls: ['./comic-story.component.css']
 })
 export class ComicStoryComponent implements OnInit {
   @Input() comic: Comic;

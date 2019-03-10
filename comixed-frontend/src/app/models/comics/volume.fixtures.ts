@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { Volume } from "./volume";
+import { Volume } from './volume';
 
 export const VOLUME_1000: Volume = {
   id: 1000,
-  name: "2019",
+  name: '2019',
   issue_count: 23,
-  image_url: "http://comixed.org/volumes/1000",
-  start_year: "2017",
-  publisher: "ComiXed Publications"
+  image_url: 'http://comixed.org/volumes/1000',
+  start_year: '2017',
+  publisher: 'ComiXed Publications'
 };

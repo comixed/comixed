@@ -20,18 +20,18 @@
 import {
   ComicCoverUrlPipe,
   MISSING_COMIC_IMAGE_URL
-} from "./comic-cover-url.pipe";
-import { COMIC_SERVICE_API_URL } from "../services/comic.service";
-import { COMIC_1000, COMIC_1003 } from "../models/comics/comic.fixtures";
+} from './comic-cover-url.pipe';
+import { COMIC_SERVICE_API_URL } from '../services/comic.service';
+import { COMIC_1000, COMIC_1003 } from '../models/comics/comic.fixtures';
 
-describe("ComicCoverUrlPipe", () => {
+describe('ComicCoverUrlPipe', () => {
   const pipe = new ComicCoverUrlPipe();
 
-  it("returns the missing page URL if the comic is missing", () => {
+  it('returns the missing page URL if the comic is missing', () => {
     expect(pipe.transform(COMIC_1003)).toEqual(MISSING_COMIC_IMAGE_URL);
   });
 
-  it("returns the URL for the comic's cover image", () => {
+  it('returns the URL for the comic\'s cover image', () => {
     expect(pipe.transform(COMIC_1000)).toEqual(
       `${COMIC_SERVICE_API_URL}/comics/${COMIC_1000.id}/pages/0/content`
     );

@@ -17,32 +17,32 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryReducer } from "../../../../reducers/library.reducer";
-import { libraryDisplayReducer } from "../../../../reducers/library-display.reducer";
-import { multipleComicsScrapingReducer } from "../../../../reducers/multiple-comics-scraping.reducer";
-import { ScrollPanelModule } from "primeng/scrollpanel";
-import { ButtonModule } from "primeng/button";
-import { DataViewModule } from "primeng/dataview";
-import { CardModule } from "primeng/card";
-import { BlockUIModule } from "primeng/blockui";
-import { TooltipModule } from "primeng/tooltip";
-import { ProgressBarModule } from "primeng/progressbar";
-import { InplaceModule } from "primeng/inplace";
-import { SplitButtonModule } from "primeng/splitbutton";
-import { TableModule } from "primeng/table";
-import { ScrapingComicListComponent } from "../../../components/scraping/scraping-comic-list/scraping-comic-list.component";
-import { MultipleComicScrapingComponent } from "../../../components/scraping/multiple-comic-scraping/multiple-comic-scraping.component";
-import { ComicDetailsEditorComponent } from "../../../components/comic/comic-details-editor/comic-details-editor.component";
-import { VolumeListComponent } from "../../../components/scraping/volume-list/volume-list.component";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { MultiComicScrapingPageComponent } from "./multi-comic-scraping-page.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryReducer } from '../../../../reducers/library.reducer';
+import { libraryDisplayReducer } from '../../../../reducers/library-display.reducer';
+import { multipleComicsScrapingReducer } from '../../../../reducers/multiple-comics-scraping.reducer';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { ButtonModule } from 'primeng/button';
+import { DataViewModule } from 'primeng/dataview';
+import { CardModule } from 'primeng/card';
+import { BlockUIModule } from 'primeng/blockui';
+import { TooltipModule } from 'primeng/tooltip';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { InplaceModule } from 'primeng/inplace';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TableModule } from 'primeng/table';
+import { ScrapingComicListComponent } from '../../../components/scraping/scraping-comic-list/scraping-comic-list.component';
+import { MultipleComicScrapingComponent } from '../../../components/scraping/multiple-comic-scraping/multiple-comic-scraping.component';
+import { ComicDetailsEditorComponent } from '../../../components/comic/comic-details-editor/comic-details-editor.component';
+import { VolumeListComponent } from '../../../components/scraping/volume-list/volume-list.component';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { MultiComicScrapingPageComponent } from './multi-comic-scraping-page.component';
 
-xdescribe("MultiComicScrapingPageComponent", () => {
+xdescribe('MultiComicScrapingPageComponent', () => {
   let component: MultiComicScrapingPageComponent;
   let fixture: ComponentFixture<MultiComicScrapingPageComponent>;
 
@@ -82,7 +82,7 @@ xdescribe("MultiComicScrapingPageComponent", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

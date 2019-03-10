@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import { Action } from "@ngrx/store";
-import { MultipleComicsScraping } from "../models/scraping/multiple-comics-scraping";
-import * as ScrapingActions from "../actions/multiple-comics-scraping.actions";
-import { Comic } from "../models/comics/comic";
+import { Action } from '@ngrx/store';
+import { MultipleComicsScraping } from '../models/scraping/multiple-comics-scraping';
+import * as ScrapingActions from '../actions/multiple-comics-scraping.actions';
+import { Comic } from '../models/comics/comic';
 
 const initial_state: MultipleComicsScraping = {
   selecting: true,

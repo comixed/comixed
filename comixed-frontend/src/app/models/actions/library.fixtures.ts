@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Library, ComicGrouping } from "./library";
+import { Library, ComicGrouping } from './library';
 
 export const EXISTING_LIBRARY: Library = {
   busy: false,
@@ -26,7 +26,7 @@ export const EXISTING_LIBRARY: Library = {
     rescan_count: 0,
     import_count: 0
   },
-  last_comic_date: "0",
+  last_comic_date: '0',
   scan_types: [],
   formats: [],
   comics: [],
@@ -41,7 +41,7 @@ export const EXISTING_LIBRARY: Library = {
 };
 
 export const DEFAULT_COMIC_GROUPING: ComicGrouping = {
-  name: "grouping name",
+  name: 'grouping name',
   comic_count: 0,
-  latest_comic_date: "0"
+  latest_comic_date: '0'
 };

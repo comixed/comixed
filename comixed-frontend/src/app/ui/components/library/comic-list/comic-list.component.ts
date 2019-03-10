@@ -17,25 +17,26 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { Router, ActivatedRoute, Params } from "@angular/router";
-import { Comic } from "../../../../models/comics/comic";
-import { LibraryFilter } from "../../../../models/actions/library-filter";
-import { LibraryDisplay } from "../../../../models/actions/library-display";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { Observable, Subscription } from "rxjs";
-import * as LibraryActions from "../../../../actions/library.actions";
-import * as LibraryDisplayActions from "../../../../actions/library-display.actions";
-import { TranslateService } from "@ngx-translate/core";
-import { SelectItem } from "primeng/api";
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Comic } from '../../../../models/comics/comic';
+import { LibraryFilter } from '../../../../models/actions/library-filter';
+import { LibraryDisplay } from '../../../../models/actions/library-display';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import * as LibraryActions from '../../../../actions/library.actions';
+import * as LibraryDisplayActions from '../../../../actions/library-display.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { SelectItem } from 'primeng/api';
 
-const FIRST = "first";
+const FIRST = 'first';
 
 @Component({
-  selector: "app-comic-list",
-  templateUrl: "./comic-list.component.html",
-  styleUrls: ["./comic-list.component.css"]
+  selector: 'app-comic-list',
+  templateUrl: './comic-list.component.html',
+  styleUrls: ['./comic-list.component.css']
 })
 export class ComicListComponent implements OnInit, OnDestroy {
   @Input() comics: Array<Comic>;
@@ -57,7 +58,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     private activated_route: ActivatedRoute,
     private router: Router
   ) {
-    this.library_display$ = this.store.select("library_display");
+    this.library_display$ = this.store.select('library_display');
   }
 
   ngOnInit() {
@@ -82,15 +83,15 @@ export class ComicListComponent implements OnInit, OnDestroy {
     this.additional_sort_field_options = [
       {
         label: this.translate.instant(
-          "comic-list-toolbar.options.sort-field.publisher"
+          'comic-list-toolbar.options.sort-field.publisher'
         ),
-        value: "publisher"
+        value: 'publisher'
       },
       {
         label: this.translate.instant(
-          "comic-list-toolbar.options.sort-field.series"
+          'comic-list-toolbar.options.sort-field.series'
         ),
-        value: "series"
+        value: 'series'
       }
     ];
   }
@@ -112,7 +113,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
   }
 
   set_index_of_first(index: number): void {
-    this.index_of_first;
+    this.index_of_first = index;
     this.update_query_parameters(FIRST, `${index}`);
   }
 

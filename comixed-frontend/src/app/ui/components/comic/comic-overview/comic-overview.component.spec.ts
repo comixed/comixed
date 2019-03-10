@@ -17,20 +17,20 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { RouterTestingModule } from "@angular/router/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { InplaceModule } from "primeng/inplace";
-import { DropdownModule } from "primeng/dropdown";
-import { userAdminReducer } from "../../../../reducers/user-admin.reducer";
-import { COMIC_1000 } from "../../../../models/comics/comic.fixtures";
-import { EXISTING_LIBRARY } from "../../../../models/actions/library.fixtures";
-import { ComicOverviewComponent } from "./comic-overview.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { InplaceModule } from 'primeng/inplace';
+import { DropdownModule } from 'primeng/dropdown';
+import { userAdminReducer } from '../../../../reducers/user-admin.reducer';
+import { COMIC_1000 } from '../../../../models/comics/comic.fixtures';
+import { EXISTING_LIBRARY } from '../../../../models/actions/library.fixtures';
+import { ComicOverviewComponent } from './comic-overview.component';
 
-describe("ComicOverviewComponent", () => {
+describe('ComicOverviewComponent', () => {
   let component: ComicOverviewComponent;
   let fixture: ComponentFixture<ComicOverviewComponent>;
 
@@ -57,7 +57,7 @@ describe("ComicOverviewComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

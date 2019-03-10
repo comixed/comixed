@@ -17,34 +17,34 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
-import { AppState } from "../../../../app.state";
-import { libraryDisplayReducer } from "../../../../reducers/library-display.reducer";
-import { DataViewModule } from "primeng/dataview";
-import { SidebarModule } from "primeng/sidebar";
-import { SplitButtonModule } from "primeng/splitbutton";
-import { ScrollPanelModule } from "primeng/scrollpanel";
-import { SliderModule } from "primeng/slider";
-import { CheckboxModule } from "primeng/checkbox";
-import { DropdownModule } from "primeng/dropdown";
-import { PanelModule } from "primeng/panel";
-import { OverlayPanelModule } from "primeng/overlaypanel";
-import { CardModule } from "primeng/card";
-import { SelectedComicsListComponent } from "../selected-comics-list/selected-comics-list.component";
-import { ComicListItemComponent } from "../comic-list-item/comic-list-item.component";
-import { ComicGridItemComponent } from "../comic-grid-item/comic-grid-item.component";
-import { ComicListToolbarComponent } from "../comic-list-toolbar/comic-list-toolbar.component";
-import { ComicCoverComponent } from "../../comic/comic-cover/comic-cover.component";
-import { LibraryFilterComponent } from "../library-filter/library-filter.component";
-import { ComicCoverUrlPipe } from "../../../../pipes/comic-cover-url.pipe";
-import { ComicTitlePipe } from "../../../../pipes/comic-title.pipe";
-import { ComicListComponent } from "./comic-list.component";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from '../../../../app.state';
+import { libraryDisplayReducer } from '../../../../reducers/library-display.reducer';
+import { DataViewModule } from 'primeng/dataview';
+import { SidebarModule } from 'primeng/sidebar';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { SliderModule } from 'primeng/slider';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { PanelModule } from 'primeng/panel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { CardModule } from 'primeng/card';
+import { SelectedComicsListComponent } from '../selected-comics-list/selected-comics-list.component';
+import { ComicListItemComponent } from '../comic-list-item/comic-list-item.component';
+import { ComicGridItemComponent } from '../comic-grid-item/comic-grid-item.component';
+import { ComicListToolbarComponent } from '../comic-list-toolbar/comic-list-toolbar.component';
+import { ComicCoverComponent } from '../../comic/comic-cover/comic-cover.component';
+import { LibraryFilterComponent } from '../library-filter/library-filter.component';
+import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
+import { ComicListComponent } from './comic-list.component';
 
-describe("ComicListComponent", () => {
+describe('ComicListComponent', () => {
   let component: ComicListComponent;
   let fixture: ComponentFixture<ComicListComponent>;
   let store: Store<AppState>;
@@ -86,7 +86,7 @@ describe("ComicListComponent", () => {
     store = TestBed.get(Store);
   }));
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });
