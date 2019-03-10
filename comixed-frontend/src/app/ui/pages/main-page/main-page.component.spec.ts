@@ -27,15 +27,19 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from '../../../app.state';
 import { libraryReducer } from '../../../reducers/library.reducer';
+import * as LibraryActions from '../../../actions/library.actions';
 import { ComicService } from '../../../services/comic.service';
 import { ComicServiceMock } from '../../../services/comic.service.mock';
 import { MainPageComponent } from './main-page.component';
+import { ChartModule } from "primeng/chart";
+import { DropdownModule } from "primeng/primeng";
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
   let comic_service: ComicService;
   let router: Router;
+  let store: Store<AppState>;
 
   const routes = [];
 
@@ -45,7 +49,9 @@ describe('MainPageComponent', () => {
         RouterTestingModule.withRoutes(routes),
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library: libraryReducer })
+        StoreModule.forRoot({ library: libraryReducer }),
+        ChartModule,
+        DropdownModule
       ],
       declarations: [MainPageComponent],
       providers: [{ provide: ComicService, useClass: ComicServiceMock }]
@@ -53,12 +59,12 @@ describe('MainPageComponent', () => {
 
     fixture = TestBed.createComponent(MainPageComponent);
     component = fixture.componentInstance;
-
     comic_service = TestBed.get(ComicService);
     router = TestBed.get(Router);
+    store = TestBed.get(Store);
+    store.dispatch(new LibraryActions.LibraryReset());
 
     fixture.detectChanges();
-    router.initialNavigation();
   }));
 
   it('should create', () => {

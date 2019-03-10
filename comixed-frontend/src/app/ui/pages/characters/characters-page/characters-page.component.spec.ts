@@ -28,6 +28,7 @@ import { PanelModule } from 'primeng/panel';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import { libraryReducer } from '../../../../reducers/library.reducer';
+import * as LibraryActions from '../../../../actions/library.actions';
 import { LibraryFilterComponent } from '../../../components/library/library-filter/library-filter.component';
 import { CharactersPageComponent } from './characters-page.component';
 
@@ -48,16 +49,17 @@ describe('CharactersPageComponent', () => {
         TableModule,
         PanelModule
       ],
-      declarations: [CharactersPageComponent, LibraryFilterComponent]
+      declarations: [CharactersPageComponent,
+        LibraryFilterComponent]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(CharactersPageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
     store = TestBed.get(Store);
-  });
+    store.dispatch(new LibraryActions.LibraryReset());
+
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
