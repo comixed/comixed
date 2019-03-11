@@ -46,7 +46,7 @@ import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
 import { StoryArcDetailsPageComponent } from './story-arc-details-page.component';
 
-describe('StoryArcDetailsPageComponent', () => {
+xdescribe('StoryArcDetailsPageComponent', () => {
   let component: StoryArcDetailsPageComponent;
   let fixture: ComponentFixture<StoryArcDetailsPageComponent>;
   let store: Store<AppState>;
