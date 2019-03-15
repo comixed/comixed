@@ -73,11 +73,8 @@ import { MainPageComponent } from './ui/pages/main-page/main-page.component';
 import { LoginComponent } from './ui/components/login/login.component';
 import { UserService } from './services/user.service';
 import { LibraryPageComponent } from './ui/pages/library/library-page/library-page.component';
-import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
+import { ImportPageComponent } from './ui/pages/import-page/import-page.component';
 import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/duplicates-page.component';
-import { ImportToolbarComponent } from './ui/components/import/import-toolbar/import-toolbar.component';
-import { SelectedComicsComponent } from './ui/components/import/selected-comics/selected-comics.component';
-import { FileDetailsCoverComponent } from './ui/components/file-details/file-details-cover/file-details-cover.component';
 import { StoreModule } from '@ngrx/store';
 import { userReducer } from './reducers/user.reducer';
 import { userAdminReducer } from './reducers/user-admin.reducer';
@@ -165,9 +162,6 @@ import { ComicFileListComponent } from './ui/components/import/comic-file-list/c
     LibraryPageComponent,
     ImportPageComponent,
     DuplicatesPageComponent,
-    ImportToolbarComponent,
-    SelectedComicsComponent,
-    FileDetailsCoverComponent,
     IssueDetailsComponent,
     DuplicatePagesViewComponent,
     PageHashViewComponent,

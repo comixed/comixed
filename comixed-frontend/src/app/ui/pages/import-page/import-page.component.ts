@@ -21,24 +21,25 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { AppState } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import * as UserActions from '../../../../actions/user.actions';
-import { Importing } from '../../../../models/import/importing';
-import { Library } from '../../../../models/actions/library';
-import * as ImportingActions from '../../../../actions/importing.actions';
+import * as UserActions from '../../../actions/user.actions';
+import { Importing } from '../../../models/import/importing';
+import { Library } from '../../../models/actions/library';
+import * as ImportingActions from '../../../actions/importing.actions';
 import { SelectItem } from 'primeng/api';
-import { ComicFile } from '../../../../models/import/comic-file';
-import { User } from '../../../../models/user/user';
-import { Preference } from '../../../../models/user/preference';
-import { ComicService } from '../../../../services/comic.service';
+import { ComicFile } from '../../../models/import/comic-file';
+import { User } from '../../../models/user/user';
+import { Preference } from '../../../models/user/preference';
+import { ComicService } from '../../../services/comic.service';
 import {
   IMPORT_SORT,
   IMPORT_ROWS,
   IMPORT_COVER_SIZE,
   IMPORT_LAST_DIRECTORY
-} from '../../../../models/user/preferences.constants';
+} from '../../../models/user/preferences.constants';
+import { LibraryDisplay } from '../../../models/actions/library-display';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';
@@ -54,30 +55,32 @@ const ROWS_PREFERENCE = 'import_rows';
   styleUrls: ['./import-page.component.css']
 })
 export class ImportPageComponent implements OnInit, OnDestroy {
-  protected sort_options: Array<SelectItem>;
-  protected sort_by: string;
-
-  protected rows_options: Array<SelectItem>;
-  protected rows: number;
-
-  protected cover_size: number;
-
-  protected plural = false;
-  protected any_selected = false;
-  protected show_selections_only = false;
-  protected delete_blocked_pages = false;
-
   library$: Observable<Library>;
   library_subscription: Subscription;
   library: Library;
+
+  library_display$: Observable<LibraryDisplay>;
+  library_display_subscription: Subscription;
+  library_display: LibraryDisplay;
 
   importing$: Observable<Importing>;
   importing_subscription: Subscription;
   importing: Importing;
 
+  comic_files: Array<ComicFile> = [];
+  selected_comic_files: Array<ComicFile> = [];
   user$: Observable<User>;
   user_subscription: Subscription;
   user: User;
+  protected sort_options: Array<SelectItem>;
+  protected sort_by: string;
+  protected rows_options: Array<SelectItem>;
+  protected rows: number;
+  protected cover_size: number;
+  protected plural = false;
+  protected any_selected = false;
+  protected show_selections_only = false;
+  protected delete_blocked_pages = false;
 
   constructor(
     private comic_service: ComicService,
@@ -86,6 +89,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     private store: Store<AppState>
   ) {
     this.library$ = store.select('library');
+    this.library_display$ = store.select('library_display');
     this.user$ = store.select('user');
     this.importing$ = store.select('importing');
     activatedRoute.queryParams.subscribe(params => {
@@ -105,22 +109,15 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     ];
   }
 
-  private get_parameter(name: string): string {
-    const which = this.user.preferences.find((preference: Preference) => {
-      return preference.name === name;
-    });
-
-    if (which) {
-      return which.value;
-    } else {
-      return null;
-    }
-  }
-
   ngOnInit() {
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
     });
+    this.library_display_subscription = this.library_display$.subscribe(
+      (library_display: LibraryDisplay) => {
+        this.library_display = library_display;
+      }
+    );
     this.user_subscription = this.user$.subscribe((user: User) => {
       this.user = user;
 
@@ -145,6 +142,11 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     this.importing_subscription = this.importing$.subscribe(
       (importing: Importing) => {
         this.importing = importing;
+
+        this.comic_files = [].concat(importing.files);
+        this.selected_comic_files = [].concat(importing.files.filter((comic_file: ComicFile) => {
+          return comic_file.selected;
+        }));
 
         if (!this.importing.updating_status) {
           this.store.dispatch(
@@ -238,7 +240,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     return (
       `There ${this.plural_imports() ? 'Are' : 'Is'} ${
         this.library.library_state.import_count
-      } ` +
+        } ` +
       `Comic${this.plural_imports() ? 's' : ''} Remaining To Be Imported...`
     );
   }
@@ -249,7 +251,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     } else {
       return `Selected ${this.importing.selected_count} Of ${
         this.importing.files.length
-      } Comics...`;
+        } Comics...`;
     }
   }
 
@@ -272,6 +274,18 @@ export class ImportPageComponent implements OnInit, OnDestroy {
       this.unselect_comics(files);
     } else {
       this.select_comics(files);
+    }
+  }
+
+  private get_parameter(name: string): string {
+    const which = this.user.preferences.find((preference: Preference) => {
+      return preference.name === name;
+    });
+
+    if (which) {
+      return which.value;
+    } else {
+      return null;
     }
   }
 

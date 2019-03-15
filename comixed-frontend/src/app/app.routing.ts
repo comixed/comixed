@@ -31,7 +31,7 @@ import { PublisherDetailsPageComponent } from './ui/pages/publishers/publisher-d
 import { CharactersPageComponent } from './ui/pages/characters/characters-page/characters-page.component';
 import { CharacterDetailsPageComponent } from './ui/pages/characters/character-details-page/character-details-page.component';
 import { ComicDetailsComponent } from './ui/pages/comic/comic-details/comic-details.component';
-import { ImportPageComponent } from './ui/pages/library/import-page/import-page.component';
+import { ImportPageComponent } from './ui/pages/import-page/import-page.component';
 import { DuplicatesPageComponent } from './ui/pages/library/duplicates-page/duplicates-page.component';
 import { UsersPageComponent } from './ui/pages/admin/users-page/users-page.component';
 import { TeamsPageComponent } from './ui/pages/teams/teams-page/teams-page.component';
