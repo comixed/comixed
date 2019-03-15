@@ -41,6 +41,19 @@
     "email": "Email",
     "password": "Password"
   },
+  "comic-file-list-toolbar": {
+    "options": {
+      "sort-field": {
+        "filename": "Sort by filename",
+        "size": "Sort by file size"
+      }
+    }
+  },
+  "selected-comic-files-list": {
+    "button": {
+      "import": "Import Comics"
+    }
+  },
   "import-toolbar": {
     "text": {
       "directory-placeholder": "Path to comics..."

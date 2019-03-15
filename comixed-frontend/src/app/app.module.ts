@@ -145,6 +145,7 @@ import { StoryArcDetailsPageComponent } from './ui/pages/story-arcs/story-arc-de
 import { ComicListComponent } from './ui/components/library/comic-list/comic-list.component';
 import { SelectedComicsListComponent } from './ui/components/library/selected-comics-list/selected-comics-list.component';
 import { MultiComicScrapingPageComponent } from './ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component';
+import { ComicFileListToolbarComponent } from './ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -208,7 +209,8 @@ import { MultiComicScrapingPageComponent } from './ui/pages/library/multi-comic-
     StoryArcDetailsPageComponent,
     ComicListComponent,
     SelectedComicsListComponent,
-    MultiComicScrapingPageComponent
+    MultiComicScrapingPageComponent,
+    ComicFileListToolbarComponent
   ],
   imports: [
     BrowserModule,
