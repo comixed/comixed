@@ -147,6 +147,7 @@ import { SelectedComicsListComponent } from './ui/components/library/selected-co
 import { MultiComicScrapingPageComponent } from './ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component';
 import { ComicFileListToolbarComponent } from './ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileGridItemComponent } from './ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
+import { SelectedComicFileListComponent } from './ui/components/import/selected-comic-file-list/selected-comic-file-list.component';
 
 @NgModule({
   declarations: [
@@ -212,7 +213,8 @@ import { ComicFileGridItemComponent } from './ui/components/import/comic-file-gr
     SelectedComicsListComponent,
     MultiComicScrapingPageComponent,
     ComicFileListToolbarComponent,
-    ComicFileGridItemComponent
+    ComicFileGridItemComponent,
+    SelectedComicFileListComponent
   ],
   imports: [
     BrowserModule,

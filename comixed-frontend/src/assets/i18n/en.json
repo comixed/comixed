@@ -54,6 +54,11 @@
       "import": "Import Comics"
     }
   },
+  "selected-comic-files-list": {
+    "button": {
+      "import": "Import Comics"
+    }
+  },
   "import-toolbar": {
     "text": {
       "directory-placeholder": "Path to comics..."
