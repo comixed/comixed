@@ -26,6 +26,7 @@ export const SAME_HEIGHT = 'same_height';
 export interface LibraryDisplay {
   layout: string;
   sort_field: string;
+  comic_file_sort_field: string;
   rows: number;
   cover_size: number;
   same_height: boolean;

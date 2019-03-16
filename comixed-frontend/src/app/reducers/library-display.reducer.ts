@@ -24,6 +24,7 @@ import * as LibraryDisplayActions from '../actions/library-display.actions';
 const initial_state: LibraryDisplay = {
   layout: 'grid',
   sort_field: 'added_date',
+  comic_file_sort_field: 'filename',
   rows: 10,
   cover_size: 225,
   same_height: true
@@ -44,6 +45,12 @@ export function libraryDisplayReducer(
       return {
         ...state,
         sort_field: action.payload.sort_field
+      };
+
+    case LibraryDisplayActions.SET_LIBRARY_VIEW_COMIC_FILE_SORT:
+      return {
+        ...state,
+        comic_file_sort_field: action.payload.comic_file_sort_field
       };
 
     case LibraryDisplayActions.SET_LIBRARY_VIEW_ROWS:

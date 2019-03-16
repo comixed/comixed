@@ -21,6 +21,7 @@ import { Action } from '@ngrx/store';
 import { LibraryDisplay } from '../models/actions/library-display';
 
 export const SET_LIBRARY_VIEW_LAYOUT = '[LIBRARY VIEW] Set layout';
+
 export class SetLibraryViewLayout implements Action {
   readonly type = SET_LIBRARY_VIEW_LAYOUT;
 
@@ -28,13 +29,23 @@ export class SetLibraryViewLayout implements Action {
 }
 
 export const SET_LIBRARY_VIEW_SORT = '[LIBRARY VIEW] Set sort';
+
 export class SetLibraryViewSort implements Action {
   readonly type = SET_LIBRARY_VIEW_SORT;
 
   constructor(public payload: { sort_field: string }) {}
 }
 
+export const SET_LIBRARY_VIEW_COMIC_FILE_SORT = '[LIBRARY VIEW] Set comic file sort';
+
+export class SetLibraryComicFileViewSort implements Action {
+  readonly type = SET_LIBRARY_VIEW_COMIC_FILE_SORT;
+
+  constructor(public payload: { comic_file_sort_field: string }) {}
+}
+
 export const SET_LIBRARY_VIEW_ROWS = '[LIBRARY VIEW] Set rows';
+
 export class SetLibraryViewRows implements Action {
   readonly type = SET_LIBRARY_VIEW_ROWS;
 
@@ -42,6 +53,7 @@ export class SetLibraryViewRows implements Action {
 }
 
 export const SET_LIBRARY_VIEW_COVER_SIZE = '[LIBRARY VIEW] Set cover size';
+
 export class SetLibraryViewCoverSize implements Action {
   readonly type = SET_LIBRARY_VIEW_COVER_SIZE;
 
@@ -49,15 +61,18 @@ export class SetLibraryViewCoverSize implements Action {
 }
 
 export const SET_LIBRARY_VIEW_USE_SAME_HEIGHT =
-  '[LIBRARY VIEW] Use same height';
+    '[LIBRARY VIEW] Use same height';
+
 export class SetLibraryViewUseSameHeight implements Action {
   readonly type = SET_LIBRARY_VIEW_USE_SAME_HEIGHT;
 
   constructor(public payload: { same_height: boolean }) {}
 }
+
 export type Actions =
-  | SetLibraryViewLayout
-  | SetLibraryViewSort
-  | SetLibraryViewRows
-  | SetLibraryViewCoverSize
-  | SetLibraryViewUseSameHeight;
+    | SetLibraryViewLayout
+    | SetLibraryViewSort
+    | SetLibraryComicFileViewSort
+    | SetLibraryViewRows
+    | SetLibraryViewCoverSize
+    | SetLibraryViewUseSameHeight;
