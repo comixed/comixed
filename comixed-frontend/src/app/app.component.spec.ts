@@ -17,12 +17,11 @@
  * org.comixed;
  */
 
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
@@ -34,15 +33,12 @@ import { userReducer } from './reducers/user.reducer';
 import { READER_USER } from './models/user/user.fixtures';
 import * as LibraryActions from './actions/library.actions';
 import { libraryReducer } from './reducers/library.reducer';
-import {
-  COMIC_1000,
-  COMIC_1001,
-  COMIC_1002
-} from './models/comics/comic.fixtures';
+import { COMIC_1000, COMIC_1001, COMIC_1002 } from './models/comics/comic.fixtures';
 import { LoadingModule } from 'ngx-loading';
 import { MenubarComponent } from './ui/components/main/menubar/menubar.component';
 import { LoginComponent } from './ui/components/login/login.component';
 import { AppComponent } from './app.component';
+import { ConfirmDialogModule } from 'primeng/primeng';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -60,12 +56,21 @@ describe('AppComponent', () => {
         ButtonModule,
         ToastModule,
         DialogModule,
+        ConfirmDialogModule,
         LoadingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({ user: userReducer, library: libraryReducer })
       ],
-      declarations: [AppComponent, MenubarComponent, LoginComponent],
-      providers: [TranslateService, MessageService]
+      declarations: [
+        AppComponent,
+        MenubarComponent,
+        LoginComponent
+      ],
+      providers: [
+        TranslateService,
+        MessageService,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -99,7 +104,11 @@ describe('AppComponent', () => {
       store.dispatch(
         new LibraryActions.LibraryMergeNewComics({
           library_state: {
-            comics: [COMIC_1000, COMIC_1001, COMIC_1002],
+            comics: [
+              COMIC_1000,
+              COMIC_1001,
+              COMIC_1002
+            ],
             rescan_count: 70,
             import_count: 43
           }

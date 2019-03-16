@@ -12,8 +12,6 @@
   <app-user-details-editor></app-user-details-editor>
 </p-panel>
 
-<p-confirmDialog></p-confirmDialog>
-
 <p-table *ngIf="user_admin"
          [loading]="!user_admin||user_admin.busy"
          [value]="user_admin.users"
