@@ -1,28 +1,31 @@
 <div #overlaytarget
-     class="overlay-container">
-  <p-overlayPanel #overlay
-                  [showTransitionOptions]="'0ms'"
-                  [hideTransitionOptions]="'0ms'"
-                  (mouseenter)="show_overlay_panel($event, overlay, overlaytarget)"
-                  (mouseleve)="overlay.hide()">
-    <p-panel styleClass="comic-cover-overlay-panel">
-      <p-header>{{comic|comic_title}}</p-header>
-      <p-footer>
-        <a [routerLink]="['/comics', comic.id]">{{"comic-cover.label.open-comic"|translate}}</a>
-      </p-footer>
-    </p-panel>
-  </p-overlayPanel>
+     class='overlay-container'
+>
+    <p-overlayPanel #overlay
+                    [showTransitionOptions]='"0ms"'
+                    [hideTransitionOptions]='"0ms"'
+                    (mouseenter)='show_overlay_panel($event, overlay, overlaytarget)'
+                    (mouseleave)='overlay.hide()'
+    >
+        <p-panel styleClass='comic-cover-overlay-panel'>
+            <p-header>{{title}}</p-header>
+            <p-footer *ngIf="comic">
+                <a [routerLink]='["/comics", comic.id]'>{{'comic-cover.label.open-comic'|translate}}</a>
+            </p-footer>
+        </p-panel>
+    </p-overlayPanel>
 </div>
-<div [class.selected-comic]="selected">
-  <p-card styleClass="comic-cover-card">
-    <a (click)="click.next(true)">
-      <p-header></p-header>
-      <img src="{{comic|comic_cover_url}}"
-           [style.width]="same_height?'auto':cover_size+'px'"
-           [style.height]="same_height?cover_size+'px':'auto'"
-           (mouseenter)="show_overlay_panel($event, overlay, overlaytarget)"
-           (mouseleave)="overlay.hide()">
-      <p-footer></p-footer>
-    </a>
-  </p-card>
+<div [class.selected-comic]='used_selected_class && selected'>
+    <p-card styleClass='comic-cover-card'
+            (onClick)='click.next(true)'
+    >
+        <p-header></p-header>
+        <img [src]='cover_url'
+             [style.width]='same_height?"auto":cover_size+"px"'
+             [style.height]='same_height?cover_size+"px":"auto"'
+             (mouseenter)='show_overlay_panel($event, overlay, overlaytarget)'
+             (mouseleave)='overlay.hide()'
+        >
+        <p-footer></p-footer>
+    </p-card>
 </div>

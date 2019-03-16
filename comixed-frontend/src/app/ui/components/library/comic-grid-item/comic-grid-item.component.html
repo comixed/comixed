@@ -1,8 +1,11 @@
 <div>
-  <app-comic-cover [comic]="comic"
-                   [selected]="selected"
-                   [cover_size]="cover_size"
-                   [same_height]="same_height"
-                   (click)="toggle_selected()"></app-comic-cover>
+    <app-comic-cover [comic]='comic'
+                     [cover_url]='comic|comic_cover_url'
+                     [title]='comic|comic_title'
+                     [selected]='selected'
+                     [cover_size]='cover_size'
+                     [same_height]='same_height'
+                     (click)='toggle_selected()'
+    ></app-comic-cover>
 
 </div>

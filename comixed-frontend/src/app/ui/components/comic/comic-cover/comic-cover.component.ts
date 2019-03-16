@@ -27,10 +27,13 @@ import { OverlayPanel } from 'primeng/overlaypanel';
   styleUrls: ['./comic-cover.component.css']
 })
 export class ComicCoverComponent implements OnInit {
+  @Input() cover_url: string;
+  @Input() title: string;
   @Input() comic: Comic;
   @Input() cover_size: number;
   @Input() same_height: boolean;
   @Input() selected = false;
+  @Input() used_selected_class = true;
 
   @Output() click = new EventEmitter<boolean>();
 
