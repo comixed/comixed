@@ -1,0 +1,12 @@
+<script src="comic-file-grid-item.component.ts"></script>
+<div [id]='"comic-file-"+comic_file.id'>
+    <app-comic-cover [id]="'comic-file-cover-'+comic_file.id"
+                     [cover_url]="comic_file|comic_file_cover_url"
+                     [title]="comic_file.base_filename"
+                     [cover_size]="cover_size"
+                     [same_height]="same_height"
+                     [selected]="comic_file.selected"
+                     [used_selected_class]="use_selected_class"
+                     (click)="toggle_selected(!comic_file.selected)"
+    ></app-comic-cover>
+</div>
