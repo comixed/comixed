@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class FileDetails
 {
+    private static int COUNT = 0;
+
+    private int id = ++COUNT;
     private String filename;
     private String baseFilename;
     private long size;
@@ -36,6 +39,8 @@ public class FileDetails
         this.filename = filename.replaceAll("\\\\", "/");
         this.size = size;
     }
+
+    public int getId() { return id; }
 
     public String getFilename()
     {

@@ -18,6 +18,7 @@
  */
 
 export interface ComicFile {
+  id: number;
   filename: string;
   base_filename: string;
   size: number;

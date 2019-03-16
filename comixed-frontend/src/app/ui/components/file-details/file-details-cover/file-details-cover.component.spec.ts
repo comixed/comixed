@@ -20,7 +20,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardModule } from 'primeng/card';
 import { ComicFileCoverUrlPipe } from '../../../../pipes/comic-file-cover-url.pipe';
-import { EXISTING_COMIC_FILE } from '../../../../models/import/comic-file.fixtures';
+import { EXISTING_COMIC_FILE_1 } from '../../../../models/import/comic-file.fixtures';
 import { FileDetailsCoverComponent } from './file-details-cover.component';
 
 describe('FileDetailsCoverComponent', () => {
@@ -35,7 +35,7 @@ describe('FileDetailsCoverComponent', () => {
 
     fixture = TestBed.createComponent(FileDetailsCoverComponent);
     component = fixture.componentInstance;
-    component.file_details = EXISTING_COMIC_FILE;
+    component.file_details = EXISTING_COMIC_FILE_1;
     component.width = '480';
     component.height = '640';
     fixture.detectChanges();

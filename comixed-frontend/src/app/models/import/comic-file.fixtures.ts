@@ -19,9 +19,34 @@
 
 import { ComicFile } from './comic-file';
 
-export const EXISTING_COMIC_FILE: ComicFile = {
+export const EXISTING_COMIC_FILE_1: ComicFile = {
+  id: 1,
   filename: '/home/comixed/Library/existing-comic-file.cbz',
   base_filename: 'existing-comic-file',
   size: 65535,
+  selected: false
+};
+
+export const EXISTING_COMIC_FILE_2: ComicFile = {
+  id: 2,
+  filename: '/home/comixed/Library/another-comic-file.cbz',
+  base_filename: 'another-comic-file',
+  size: 32767,
+  selected: false
+};
+
+export const EXISTING_COMIC_FILE_3: ComicFile = {
+  id: 3,
+  filename: '/home/comixed/Library/this-comic-file.cbz',
+  base_filename: 'this-comic-file',
+  size: 46787,
+  selected: false
+};
+
+export const EXISTING_COMIC_FILE_4: ComicFile = {
+  id: 4,
+  filename: '/home/comixed/Library/that-comic-file.cbz',
+  base_filename: 'that-comic-file',
+  size: 56213,
   selected: false
 };
