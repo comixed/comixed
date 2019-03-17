@@ -19,7 +19,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
@@ -47,8 +47,9 @@ import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
 import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/actions/library-display.fixtures';
 import { DEFAULT_LIBRARY_FILTER } from '../../../../models/actions/library-filter.fixtures';
 import { ComicListToolbarComponent } from './comic-list-toolbar.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
-xdescribe('ComicListToolbarComponent', () => {
+describe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;
   let fixture: ComponentFixture<ComicListToolbarComponent>;
 
@@ -57,6 +58,8 @@ xdescribe('ComicListToolbarComponent', () => {
       imports: [
         BrowserAnimationsModule,
         FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({ library_display: libraryDisplayReducer }),
         ScrollPanelModule,

@@ -18,7 +18,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
@@ -42,7 +42,7 @@ import { VolumeListComponent } from '../../../components/scraping/volume-list/vo
 import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
 import { MultiComicScrapingPageComponent } from './multi-comic-scraping-page.component';
 
-xdescribe('MultiComicScrapingPageComponent', () => {
+describe('MultiComicScrapingPageComponent', () => {
   let component: MultiComicScrapingPageComponent;
   let fixture: ComponentFixture<MultiComicScrapingPageComponent>;
 
@@ -50,6 +50,7 @@ xdescribe('MultiComicScrapingPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
+        ReactiveFormsModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({
           library: libraryReducer,

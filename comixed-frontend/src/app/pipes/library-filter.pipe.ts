@@ -82,7 +82,7 @@ export class LibraryFilterPipe implements PipeTransform {
   }
 
   check_from_year(comic: Comic, from_year: number): boolean {
-    if (!from_year) {
+        if (!from_year) {
       return true;
     }
 
@@ -91,7 +91,9 @@ export class LibraryFilterPipe implements PipeTransform {
     }
 
     const cover_date = new Date(Date.parse(comic.cover_date));
-    return cover_date.getFullYear() >= from_year;
+    const comic_year = cover_date.getFullYear();
+
+    return comic_year >= from_year;
   }
 
   check_to_year(comic: Comic, to_year: number): boolean {

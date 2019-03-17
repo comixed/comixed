@@ -46,7 +46,7 @@ import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
 import { PublisherDetailsPageComponent } from './publisher-details-page.component';
 
-xdescribe('PublisherDetailsPageComponent', () => {
+describe('PublisherDetailsPageComponent', () => {
   let component: PublisherDetailsPageComponent;
   let fixture: ComponentFixture<PublisherDetailsPageComponent>;
   let store: Store<AppState>;

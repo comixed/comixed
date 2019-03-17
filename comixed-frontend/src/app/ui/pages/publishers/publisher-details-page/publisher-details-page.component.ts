@@ -63,8 +63,10 @@ export class PublisherDetailsPageComponent implements OnInit, OnDestroy {
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
 
-      this.comics = [].concat(this.library.comics);
-      this.selected_comics = [].concat(this.library.selected_comics);
+      if (this.library) {
+        this.comics = [].concat(this.library.comics);
+        this.selected_comics = [].concat(this.library.selected_comics);
+      }
     });
   }
 

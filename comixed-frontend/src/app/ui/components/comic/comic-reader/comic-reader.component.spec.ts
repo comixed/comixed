@@ -20,22 +20,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComicReaderComponent } from './comic-reader.component';
+import { ComicService } from '../../../../services/comic.service';
+import { ComicServiceMock } from '../../../../services/comic.service.mock';
 
-xdescribe('ComicReaderComponent', () => {
+describe('ComicReaderComponent', () => {
   let component: ComicReaderComponent;
   let fixture: ComponentFixture<ComicReaderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicReaderComponent]
+      declarations: [ComicReaderComponent],
+      providers: [{ provide: ComicService, useClass: ComicServiceMock }]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicReaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

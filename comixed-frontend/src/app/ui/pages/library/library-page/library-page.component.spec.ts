@@ -178,14 +178,14 @@ describe('LibraryPageComponent', () => {
       expect(component.scraping.api_key).toEqual('1234567890');
     });
 
-    xit('loads the layout from the URL', () => {});
+    xit('loads the layout from the URL');
 
-    xit('loads the sort from the URL', () => {});
+    xit('loads the sort from the URL');
 
-    xit('loads the rows from the URL', () => {});
+    xit('loads the rows from the URL');
 
-    xit('loads the cover size from the URL', () => {});
+    xit('loads the cover size from the URL');
 
-    xit('loads the same height value from the URL', () => {});
+    xit('loads the same height value from the URL');
   });
 });

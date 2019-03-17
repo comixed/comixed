@@ -312,7 +312,7 @@ describe('LibraryFilterPipe', () => {
     it('returns true when the cover year is in range', () => {
       const cover_date = new Date(Date.parse(COMIC_1000.cover_date));
       expect(
-        pipe.check_from_year(COMIC_1000, cover_date.getFullYear() + 1)
+        pipe.check_from_year(COMIC_1000, cover_date.getFullYear() - 1)
       ).toBeTruthy();
     });
   });
@@ -336,7 +336,7 @@ describe('LibraryFilterPipe', () => {
     it('returns true when the cover year is in range', () => {
       const cover_date = new Date(Date.parse(COMIC_1000.cover_date));
       expect(
-        pipe.check_to_year(COMIC_1000, cover_date.getFullYear() - 1)
+        pipe.check_to_year(COMIC_1000, cover_date.getFullYear() + 1)
       ).toBeTruthy();
     });
   });

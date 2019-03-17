@@ -26,25 +26,41 @@ import { ComicDetailsEditorComponent } from '../../comic/comic-details-editor/co
 import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
 import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
 import { MultipleComicScrapingComponent } from './multiple-comic-scraping.component';
+import { BlockUIModule } from 'primeng/blockui';
+import { InplaceModule, ProgressBarModule, SplitButtonModule, TooltipModule } from 'primeng/primeng';
+import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { VolumeListComponent } from '../volume-list/volume-list.component';
+import { TableModule } from 'primeng/table';
 
-xdescribe('MultipleComicScrapingComponent', () => {
+describe('MultipleComicScrapingComponent', () => {
   let component: MultipleComicScrapingComponent;
   let fixture: ComponentFixture<MultipleComicScrapingComponent>;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [CardModule],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        CardModule,
+        BlockUIModule,
+        ProgressBarModule,
+        InplaceModule,
+        TooltipModule,
+        SplitButtonModule,
+        TableModule
+      ],
       declarations: [
         MultipleComicScrapingComponent,
-        StoreModule.forRoot({ library: libraryReducer }),
+        ComicDetailsEditorComponent,
         ComicCoverUrlPipe,
-        ComicDetailsEditorComponent
+        VolumeListComponent
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(MultipleComicScrapingComponent);
     component = fixture.componentInstance;
     component.multi_scraping = {
@@ -57,7 +73,7 @@ xdescribe('MultipleComicScrapingComponent', () => {
     };
     fixture.detectChanges();
     store = TestBed.get(Store);
-  });
+  }));
 
   it('should create', async(() => {
     expect(component).toBeTruthy();

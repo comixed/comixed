@@ -171,7 +171,7 @@ describe('ComicDetailsEditorComponent', () => {
       expect(reset_button.nativeElement.disabled).toBeTruthy();
     });
 
-    xit('enables the reset button on changes', () => {});
+    xit('enables the reset button on changes');
   });
 
   describe('#ngOnInit()', () => {
