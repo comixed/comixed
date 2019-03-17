@@ -24,7 +24,6 @@ import { ComicFile } from '../models/import/comic-file';
 
 const initial_state: Importing = {
   busy: false,
-  importing: false,
   selected_count: 0,
   updating_status: false,
   directory: '',
@@ -98,7 +97,6 @@ export function importingReducer(
       return {
         ...state,
         busy: false,
-        importing: true,
         selected_count: 0,
         files: [],
       };

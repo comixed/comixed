@@ -21,7 +21,6 @@ import { ComicFile } from './comic-file';
 
 export interface Importing {
   busy: boolean;
-  importing: boolean;
   selected_count: number;
   updating_status: boolean;
   directory: string;
