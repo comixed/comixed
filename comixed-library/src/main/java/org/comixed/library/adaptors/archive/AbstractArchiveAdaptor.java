@@ -53,17 +53,18 @@ import org.springframework.stereotype.Component;
  * <code>AbstractArchiveAdaptor</code> provides a foundation for creating new
  * instances of {@link ArchiveAdaptor}.
  *
- * @author Darryl L. Pierce
  * @param <I>
- *            the archive iterator type
+ *         the archive iterator type
+ *
+ * @author Darryl L. Pierce
  */
 @Component
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "comic.entry",
-                         ignoreUnknownFields = false)
+        ignoreUnknownFields = false)
 public abstract class AbstractArchiveAdaptor<I> implements
-                                            ArchiveAdaptor,
-                                            InitializingBean
+                                                ArchiveAdaptor,
+                                                InitializingBean
 {
     public static class EntryLoaderForType
     {
@@ -103,7 +104,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
 
     protected List<EntryLoaderForType> loaders = new ArrayList<>();
     protected Map<String,
-                  EntryLoader> entryLoaders = new HashMap<>();
+            EntryLoader> entryLoaders = new HashMap<>();
     private String defaultExtension;
 
     public AbstractArchiveAdaptor(String defaultExtension)
@@ -122,14 +123,12 @@ public abstract class AbstractArchiveAdaptor<I> implements
             {
                 if (this.context.containsBean(entry.bean))
                 {
-                    this.entryLoaders.put(entry.type, (EntryLoader )this.context.getBean(entry.bean));
-                }
-                else
+                    this.entryLoaders.put(entry.type, (EntryLoader) this.context.getBean(entry.bean));
+                } else
                 {
                     this.logger.debug("No such entry adaptor bean: " + entry.bean);
                 }
-            }
-            else
+            } else
             {
                 if ((entry.type == null) || entry.type.isEmpty())
                 {
@@ -147,9 +146,10 @@ public abstract class AbstractArchiveAdaptor<I> implements
      * Closes the specified archive file.
      *
      * @param archiveReference
-     *            the archive reference
+     *         the archive reference
+     *
      * @throws ArchiveAdaptorException
-     *             if an error occurs
+     *         if an error occurs
      */
     abstract protected void closeArchive(I archiveReference) throws ArchiveAdaptorException;
 
@@ -157,7 +157,8 @@ public abstract class AbstractArchiveAdaptor<I> implements
      * Returns the list of filenames from the archive.
      *
      * @param archiveReference
-     *            the archive reference
+     *         the archive reference
+     *
      * @return the list of filenames
      */
     abstract protected List<String> getEntryFilenames(I archiveReference);
@@ -205,8 +206,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
 
                 this.processContent(comic, entryFilename, content);
             }
-        }
-        finally
+        } finally
         {
             // clean up
             if (archiveReference != null)
@@ -220,7 +220,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
     protected byte[] loadContent(String filename, long size, InputStream input) throws IOException
     {
         this.logger.debug("Loading entry: name=" + filename + " size=" + size);
-        byte[] content = new byte[(int )size];
+        byte[] content = new byte[(int) size];
 
         IOUtils.readFully(input, content);
 
@@ -250,12 +250,14 @@ public abstract class AbstractArchiveAdaptor<I> implements
      * Loads the content for a single entry in the specified archive.
      *
      * @param archiveReference
-     *            the archive
+     *         the archive
      * @param entryName
-     *            the entry filename
+     *         the entry filename
+     *
      * @return the content of the entry
+     *
      * @throws ArchiveAdaptorException
-     *             if an error occurs
+     *         if an error occurs
      */
     abstract protected byte[] loadSingleFileInternal(I archiveReference,
                                                      String entryName) throws ArchiveAdaptorException;
@@ -264,10 +266,12 @@ public abstract class AbstractArchiveAdaptor<I> implements
      * Opens the archive, returning an archive reference object.
      *
      * @param comicFile
-     *            the comic file
+     *         the comic file
+     *
      * @return the archive reference object
+     *
      * @throws ArchiveAdaptorException
-     *             if an error occurs
+     *         if an error occurs
      */
     abstract protected I openArchive(File comicFile) throws ArchiveAdaptorException;
 
@@ -280,13 +284,11 @@ public abstract class AbstractArchiveAdaptor<I> implements
             {
                 this.logger.debug("Loading content: filename={} length={}", filename, content.length);
                 loader.loadContent(comic, filename, content);
-            }
-            catch (EntryLoaderException error)
+            } catch (EntryLoaderException error)
             {
                 this.logger.error("Error loading content", error);
             }
-        }
-        else
+        } else
         {
             this.logger.debug("No registered adaptor for type");
         }
@@ -300,9 +302,9 @@ public abstract class AbstractArchiveAdaptor<I> implements
         String tempFilename;
         try
         {
-            tempFilename = File.createTempFile(source.getFilenameWithoutExtension() + "-temporary", "tmp").getAbsolutePath();
-        }
-        catch (IOException error)
+            tempFilename = File.createTempFile(source.getFilenameWithoutExtension() + "-temporary", "tmp")
+                    .getAbsolutePath();
+        } catch (IOException error)
         {
             throw new ArchiveAdaptorException("unable to write comic", error);
         }
@@ -316,8 +318,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
         {
             this.logger.debug("Copying " + tempFilename + " to " + filename + ".");
             FileUtils.copyFile(file1, file2);
-        }
-        catch (IOException error)
+        } catch (IOException error)
         {
             throw new ArchiveAdaptorException("Unable to copy file", error);
         }
@@ -329,8 +330,7 @@ public abstract class AbstractArchiveAdaptor<I> implements
         try
         {
             this.comicFileHandler.loadComic(result);
-        }
-        catch (ComicFileHandlerException error)
+        } catch (ComicFileHandlerException error)
         {
             throw new ArchiveAdaptorException("Error loading new comic", error);
         }
@@ -342,13 +342,14 @@ public abstract class AbstractArchiveAdaptor<I> implements
      * Performs the underlying creation of the new comic.
      *
      * @param source
-     *            the source comic
+     *         the source comic
      * @param filename
-     *            the new filename
+     *         the new filename
      * @param renamePages
-     *            rename pages
+     *         rename pages
+     *
      * @throws ArchiveException
-     *             if an error occurs
+     *         if an error occurs
      */
     abstract void saveComicInternal(Comic source, String filename, boolean renamePages) throws ArchiveAdaptorException;
 
@@ -386,5 +387,11 @@ public abstract class AbstractArchiveAdaptor<I> implements
         this.closeArchive(archiveRef);
 
         return result;
+    }
+
+    @Override
+    public byte[] encodeFileToStream(Map<String, byte[]> entries) throws ArchiveAdaptorException
+    {
+        throw new RuntimeException("Not supported");
     }
 }

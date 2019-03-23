@@ -21,12 +21,13 @@ package org.comixed.library.adaptors.archive;
 
 import org.comixed.library.model.Comic;
 
+import java.util.Map;
+
 /**
  * <code>ArchiveAdaptor</code> defines a type which handles loading from and
  * saving to an archive file.
  *
  * @author Darryl L. Pierce
- *
  */
 public interface ArchiveAdaptor
 {
@@ -34,10 +35,12 @@ public interface ArchiveAdaptor
      * Retrieves the filename for the first image file in the comic archive.
      *
      * @param filename
-     *            the comic filename
+     *         the comic filename
+     *
      * @return the image filename
+     *
      * @throws ArchiveAdaptorException
-     *             if an error occurs
+     *         if an error occurs
      */
     String getFirstImageFileName(String filename) throws ArchiveAdaptorException;
 
@@ -45,9 +48,10 @@ public interface ArchiveAdaptor
      * Loads the entire comic's contents from disk.
      *
      * @param comic
-     *            the comic
+     *         the comic
+     *
      * @throws ArchiveAdaptorException
-     *             if an error occurs
+     *         if an error occurs
      */
     void loadComic(Comic comic) throws ArchiveAdaptorException;
 
@@ -55,12 +59,14 @@ public interface ArchiveAdaptor
      * Loads a single file from the archive file.
      *
      * @param comic
-     *            the comic
+     *         the comic
      * @param entryName
-     *            the entry name
+     *         the entry name
+     *
      * @return the content of the entry
+     *
      * @throws ArchiveAdaptorException
-     *             if an error occurs
+     *         if an error occurs
      */
     byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException;
 
@@ -68,10 +74,12 @@ public interface ArchiveAdaptor
      * Loads a single file from the specified archive.
      *
      * @param filename
-     *            the archive name
+     *         the archive name
      * @param entryName
-     *            the entry name
+     *         the entry name
+     *
      * @return the content
+     *
      * @throws ArchiveAdaptorException
      */
     byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException;
@@ -87,12 +95,29 @@ public interface ArchiveAdaptor
      * comic.
      *
      * @param comic
-     *            the comic
+     *         the comic
      * @param renamePages
-     *            true rename pages
+     *         true rename pages
+     *
      * @return the new comic
+     *
      * @throws ArchiveAdaptorException
-     *             if an error occurs
+     *         if an error occurs
      */
     Comic saveComic(Comic comic, boolean renamePages) throws ArchiveAdaptorException;
+
+    /**
+     * Encodes the provided comics into an encoded stream of data.
+     *
+     * The provided map names the files with the key and the contents of the file as the value.
+     *
+     * @param entries
+     *         the map of file entries
+     *
+     * @return the encoded stream
+     *
+     * @throws ArchiveAdaptorException
+     *         if an error occurs
+     */
+    byte[] encodeFileToStream(Map<String, byte[]> entries) throws ArchiveAdaptorException;
 }

@@ -19,13 +19,6 @@
 
 package org.comixed.library.adaptors.archive;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -35,12 +28,20 @@ import org.comixed.library.model.Comic;
 import org.comixed.library.model.Page;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+
 /**
  * <code>ZipArchiveAdaptor</code> provides a concrete implementation of
  * {@link ArchiveAdaptor} for ZIP files.
  *
  * @author Darryl L. Pierce
- *
  */
 @Component
 public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile>
@@ -48,6 +49,78 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile>
     public ZipArchiveAdaptor()
     {
         super("cbz");
+    }
+
+    @Override
+    protected void closeArchive(ZipFile archiveReference) throws ArchiveAdaptorException
+    {
+        try
+        {
+            archiveReference.close();
+        } catch (IOException error)
+        {
+            throw new ArchiveAdaptorException("Failure closing archive", error);
+        }
+    }
+
+    @Override
+    protected List<String> getEntryFilenames(ZipFile archiveReference)
+    {
+        Enumeration<ZipArchiveEntry> entries = archiveReference.getEntries();
+        List<String> entryNames = new ArrayList<>();
+
+        while (entries.hasMoreElements())
+        {
+            entryNames.add(entries.nextElement()
+                    .getName());
+        }
+
+        return entryNames;
+    }
+
+    @Override
+    protected byte[] loadSingleFileInternal(ZipFile archiveReference,
+                                            String entryFilename) throws ArchiveAdaptorException
+    {
+        boolean done = false;
+        Enumeration<ZipArchiveEntry> entries = archiveReference.getEntries();
+        byte[] result = null;
+
+        while (!done && entries.hasMoreElements())
+        {
+            ZipArchiveEntry entry = entries.nextElement();
+
+            try
+            {
+                // load the element's content
+                byte[] content = this.loadContent(entryFilename, entry.getSize(),
+                        archiveReference.getInputStream(entry));
+
+                if (entry.getName()
+                        .equals(entryFilename))
+                {
+                    result = content;
+                    done = true;
+                }
+            } catch (IOException error)
+            {
+                throw new ArchiveAdaptorException("Error loading archive entry: " + entryFilename, error);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    protected ZipFile openArchive(File comicFile) throws ArchiveAdaptorException
+    {
+        try
+        {
+            return new ZipFile(comicFile);
+        } catch (IOException error)
+        {
+            throw new ArchiveAdaptorException("Unable to open comic file: " + comicFile.getAbsolutePath(), error);
+        }
     }
 
     @Override
@@ -60,8 +133,8 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile>
         {
             ZipArchiveEntry entry;
 
-            zoutput = (ZipArchiveOutputStream )new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP,
-                                                                                                    new FileOutputStream(filename));
+            zoutput = (ZipArchiveOutputStream) new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP,
+                    new FileOutputStream(filename));
 
             logger.debug("Adding the ComicInfo.xml entry");
             entry = new ZipArchiveEntry("ComicInfo.xml");
@@ -92,84 +165,48 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile>
 
             zoutput.finish();
             zoutput.close();
-        }
-        catch (IOException
-               | ArchiveException error)
+        } catch (IOException
+                | ArchiveException error)
         {
             throw new ArchiveAdaptorException("error creating comic archive", error);
         }
     }
 
     @Override
-    protected void closeArchive(ZipFile archiveReference) throws ArchiveAdaptorException
+    public byte[] encodeFileToStream(Map<String, byte[]> content) throws ArchiveAdaptorException
     {
+        this.logger.debug("Encoding {} files", content.size());
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+
         try
         {
-            archiveReference.close();
-        }
-        catch (IOException error)
-        {
-            throw new ArchiveAdaptorException("Failure closing archive", error);
-        }
-    }
+            ZipArchiveOutputStream zoutput = (ZipArchiveOutputStream) new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, result);
+            ZipArchiveEntry zipEntry = null;
 
-    @Override
-    protected List<String> getEntryFilenames(ZipFile archiveReference)
-    {
-        Enumeration<ZipArchiveEntry> entries = archiveReference.getEntries();
-        List<String> entryNames = new ArrayList<>();
-
-        while (entries.hasMoreElements())
-        {
-            entryNames.add(entries.nextElement().getName());
-        }
-
-        return entryNames;
-    }
-
-    @Override
-    protected byte[] loadSingleFileInternal(ZipFile archiveReference,
-                                            String entryFilename) throws ArchiveAdaptorException
-    {
-        boolean done = false;
-        Enumeration<ZipArchiveEntry> entries = archiveReference.getEntries();
-        byte[] result = null;
-
-        while (!done && entries.hasMoreElements())
-        {
-            ZipArchiveEntry entry = entries.nextElement();
-
-            try
+            for (String filename : content.keySet())
             {
-                // load the element's content
-                byte[] content = this.loadContent(entryFilename, entry.getSize(),
-                                                  archiveReference.getInputStream(entry));
+                this.logger.debug("Adding entry: {}", filename);
 
-                if (entry.getName().equals(entryFilename))
-                {
-                    result = content;
-                    done = true;
-                }
+                byte[] entryData = content.get(filename);
+                zipEntry = new ZipArchiveEntry(filename);
+
+                this.logger.debug("Encoding {} bytes", entryData.length);
+                zipEntry.setSize(entryData.length);
+                zoutput.putArchiveEntry(zipEntry);
+                zoutput.write(entryData);
+                zoutput.closeArchiveEntry();
             }
-            catch (IOException error)
-            {
-                throw new ArchiveAdaptorException("Error loading archive entry: " + entryFilename, error);
-            }
+
+            zoutput.finish();
+            zoutput.close();
+        } catch (IOException | ArchiveException error)
+        {
+            throw new ArchiveAdaptorException("failed to encode files", error);
         }
 
-        return result;
-    }
+        this.logger.debug("Encoding to {} bytes", result.size());
 
-    @Override
-    protected ZipFile openArchive(File comicFile) throws ArchiveAdaptorException
-    {
-        try
-        {
-            return new ZipFile(comicFile);
-        }
-        catch (IOException error)
-        {
-            throw new ArchiveAdaptorException("Unable to open comic file: " + comicFile.getAbsolutePath(), error);
-        }
+        return result.toByteArray();
     }
 }
