@@ -1,0 +1,12 @@
+<p-panel header='{{"backup-page.header.download-backup"|translate}}'
+>
+    <p>{{'backup-page.text.download-backup'|translate}}</p>
+    <button pButton
+            fileSaver
+            type='button'
+            label='{{"button.download"|translate}}'
+            [method]='"GET"'
+            [url]='"/api/admin/data/export"'
+            [fileName]='"comixed_backup.zip"'
+    ></button>
+</p-panel>

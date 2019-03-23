@@ -198,7 +198,7 @@ export class ComicService {
 
   get_issue_label_text_for_comic(comic: Comic): string {
     return `${comic.series || 'Unknown Series'} #${comic.issue_number ||
-      '??'} (v.${comic.volume || '????'})`;
+    '??'} (v.${comic.volume || '????'})`;
   }
 
   get_issue_content_label_for_comic(comic: Comic): string {
@@ -287,5 +287,9 @@ export class ComicService {
     return this.http.delete(
       `${COMIC_SERVICE_API_URL}/comics/${comic.id}/metadata`
     );
+  }
+
+  download_backup(): Observable<any> {
+    return this.http.get(`${COMIC_SERVICE_API_URL}/admin/data/export`);
   }
 }

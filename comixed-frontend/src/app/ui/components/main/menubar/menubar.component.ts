@@ -182,6 +182,13 @@ export class MenubarComponent implements OnInit, OnDestroy {
             icon: 'fa fa-fw fa-users',
             visible: this.user && this.user.is_admin,
             routerLink: ['/admin/users']
+          },
+          { separator: true, visible: this.user && this.user.is_admin },
+          {
+            label: this.translate.instant('menu.admin.backup'),
+            icon: 'fa fa-fw fa-cloud-download',
+            visible: this.user && this.user.is_admin,
+            routerLink: ['/admin/backup']
           }
         ]
       }

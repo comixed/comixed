@@ -147,6 +147,7 @@ import { ComicFileGridItemComponent } from './ui/components/import/comic-file-gr
 import { SelectedComicFileListComponent } from './ui/components/import/selected-comic-file-list/selected-comic-file-list.component';
 import { ComicFileListComponent } from './ui/components/import/comic-file-list/comic-file-list.component';
 import { FileSaverModule } from 'ngx-filesaver';
+import { BackupPageComponent } from './ui/pages/admin/backup-page/backup-page.component';
 
 @NgModule({
   declarations: [
@@ -211,7 +212,8 @@ import { FileSaverModule } from 'ngx-filesaver';
     ComicFileListToolbarComponent,
     ComicFileGridItemComponent,
     SelectedComicFileListComponent,
-    ComicFileListComponent
+    ComicFileListComponent,
+    BackupPageComponent
   ],
   imports: [
     BrowserModule,

@@ -20,7 +20,8 @@
     },
     "admin": {
       "root": "Admin",
-      "users": "Users"
+      "users": "Users",
+      "backup": "Backup Database..."
     }
   },
   "main-page": {
@@ -527,6 +528,14 @@
       "appearance-count": "\"{{name}}\" appears in {{comic_count}} comics."
     }
   },
+  "backup-page": {
+    "header": {
+      "download-backup": "Download Backup"
+    },
+    "text": {
+      "download-backup": "To download a backup of the current database, simply click the button below."
+    }
+  },
   "text": {
     "unknown": "Unknown",
     "comic-no-description": "This comic does not have a description"
@@ -539,6 +548,7 @@
     "delete": "Delete",
     "undelete": "Undelete",
     "delete-all": "Delete All",
+    "download": "Download",
     "undelete-all": "Undelete All",
     "login": "Login",
     "logout": "Logout",
