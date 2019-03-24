@@ -77,14 +77,14 @@
         <div class='cx-button-box-vertical'>
             <button type='button'
                     pButton
-                    class='cx-selection-button'
+                    class='cx-selection-button ui-button-secondary'
                     icon='fa fa-fw fa-step-backward'
                     [label]='"volume-list.button.back"|translate'
                     (click)='return_to_editing()'
             ></button>
             <button type='button'
                     pButton
-                    class='cx-selection-button'
+                    class='cx-selection-button ui-button-danger'
                     icon='fa fa-fw fa-stop'
                     [label]='"volume-list.button.cancel"|translate'
                     (click)='cancel_selection()'
@@ -92,7 +92,7 @@
             <button *ngIf='current_issue'
                     pButton
                     type='button'
-                    class='cx-selection-button'
+                    class='cx-selection-button ui-button-success'
                     icon='fa fa-fw fa-play'
                     [label]='"volume-list.button.select"|translate'
                     (click)='select_current_issue()'
