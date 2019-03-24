@@ -48,15 +48,19 @@ describe('StoryArcsPageComponent', () => {
         TableModule,
         PanelModule
       ],
-      declarations: [StoryArcsPageComponent, LibraryFilterComponent]
+      declarations: [
+        StoryArcsPageComponent,
+        LibraryFilterComponent
+      ]
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StoryArcsPageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
     store = TestBed.get(Store);
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {
