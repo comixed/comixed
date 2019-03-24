@@ -48,7 +48,7 @@
             <goals>
               <goal>yarn</goal>
             </goals>
-            <phase>process-resources</phase>
+            <phase>initialize</phase>
             <configuration>
               <arguments>install</arguments>
             </configuration>
