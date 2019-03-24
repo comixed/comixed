@@ -181,10 +181,10 @@
         "list-layout": "List View"
       },
       "rows": {
-        "10-per-page": "Show 10 Rows",
-        "25-per-page": "Show 25 Rows",
-        "50-per-page": "Show 50 Rows",
-        "100-per-page": "Show 100 Rows"
+        "10-per-page": "Show 10 Comics",
+        "25-per-page": "Show 25 Comics",
+        "50-per-page": "Show 50 Comics",
+        "100-per-page": "Show 100 Comics"
       },
       "cover-size": {
         "same-height": "Use As Height"
