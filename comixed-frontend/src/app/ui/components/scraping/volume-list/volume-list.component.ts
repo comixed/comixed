@@ -68,10 +68,14 @@ export class VolumeListComponent implements OnInit {
 
   set_current_volume(volume: Volume): void {
     this.selectVolume.next(volume);
-    this.load_current_issue_details();
+    if (this.current_issue) {
+      this.volume_selection_title = `${this.current_issue.volume_name} #${
+        this.current_issue.issue_number
+        }`;
+    }
   }
 
-  is_good_match(volume: Volume): boolean {
+  private is_good_match(volume: Volume): boolean {
     if (!this.is_perfect_match(volume)) {
       return this.comic.volume === volume.start_year;
     }
@@ -79,19 +83,11 @@ export class VolumeListComponent implements OnInit {
     return false;
   }
 
-  is_perfect_match(volume: Volume): boolean {
+  private is_perfect_match(volume: Volume): boolean {
     return (
       this.comic.volume === volume.start_year &&
       this.comic.series === volume.name
     );
-  }
-
-  load_current_issue_details(): void {
-    if (this.current_issue) {
-      this.volume_selection_title = `${this.current_issue.volume_name} #${
-        this.current_issue.issue_number
-      }`;
-    }
   }
 
   get_current_issue_image_url(): string {

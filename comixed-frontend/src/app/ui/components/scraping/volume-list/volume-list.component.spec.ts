@@ -27,7 +27,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { VolumeListComponent } from './volume-list.component';
 
-describe('VolumeListComponent', () => {
+fdescribe('VolumeListComponent', () => {
   let component: VolumeListComponent;
   let fixture: ComponentFixture<VolumeListComponent>;
 
@@ -50,5 +50,26 @@ describe('VolumeListComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when setting volumes', () => {
+    xit('finds the best candidates');
+  });
+
+  describe('#set_current_volume()', () => {
+    xit('notifies components of the current volume');
+    xit('loads the details for the volume');
+  });
+
+  describe('#return_to_editing()', () => {
+    xit('resets the current list of volumes');
+  });
+
+  describe('#select_current_issue()', () => {
+    xit('notifies of the selection');
+  });
+
+  describe('#cancel_selection()', () => {
+    xit('notifies of the cancellation');
   });
 });
