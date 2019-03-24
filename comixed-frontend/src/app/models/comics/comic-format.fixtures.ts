@@ -19,7 +19,19 @@
 
 import { ComicFormat } from './comic-format';
 
-export const DEFAULT_COMIC_FORMAT: ComicFormat = {
+export const DEFAULT_COMIC_FORMAT_1: ComicFormat = {
   id: 1,
   name: 'Default Comic Format'
 };
+
+export const DEFAULT_COMIC_FORMAT_2: ComicFormat = {
+  id: 2,
+  name: 'Not The Default Comic Format'
+};
+
+
+export const DEFAULT_COMIC_FORMAT_3: ComicFormat = {
+  id: 3,
+  name: 'The Least Popular Comic Format'
+};
+

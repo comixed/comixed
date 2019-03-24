@@ -41,9 +41,9 @@ export class ComicOverviewComponent implements OnInit {
   public scan_types: Array<SelectItem>;
   public formats: Array<SelectItem>;
 
-  protected scan_type: ScanType;
-  protected format: ComicFormat;
-  protected sort_name: string;
+  public scan_type: ScanType;
+  public format: ComicFormat;
+  public sort_name: string;
 
   constructor(private store: Store<AppState>) {}
 

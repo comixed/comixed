@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,12 @@
  * org.comixed;
  */
 
-import { ScanType } from './scan-type';
+import { COMIC_1000 } from './comic.fixtures';
+import { READER_USER } from '../user/user.fixtures';
 
-export const FIRST_SCAN_TYPE: ScanType = {
+export const COMIC_1000_LAST_READ_DATE = {
   id: 1,
-  name: 'First Scan Type'
-};
-
-export const SECOND_SCAN_TYPE: ScanType = {
-  id: 1,
-  name: 'Second Scan Type'
-};
-
-export const THIRD_SCAN_TYPE: ScanType = {
-  id: 1,
-  name: 'Third Scan Type'
-};
-
-export const FOURTH_SCAN_TYPE: ScanType = {
-  id: 1,
-  name: 'Fourth Scan Type'
+  comic_id: COMIC_1000.id,
+  user_id: READER_USER.id,
+  last_read_date: '65535'
 };

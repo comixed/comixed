@@ -18,8 +18,8 @@
  */
 
 import { Comic } from './comic';
-import { DEFAULT_SCAN_TYPE } from './scan-type.fixtures';
-import { DEFAULT_COMIC_FORMAT } from './comic-format.fixtures';
+import { FIRST_SCAN_TYPE } from './scan-type.fixtures';
+import { DEFAULT_COMIC_FORMAT_1 } from './comic-format.fixtures';
 
 export const COMIC_1000: Comic = {
   id: 1000,
@@ -27,7 +27,7 @@ export const COMIC_1000: Comic = {
   base_filename: 'filename-comic-1000',
   publisher: 'publisher-1000',
   imprint: '',
-  sort_name: '',
+  sort_name: 'My Own Sort Name',
   series: 'series-name',
   volume: '2019',
   issue_number: '100',
@@ -51,8 +51,8 @@ export const COMIC_1000: Comic = {
   blocked_page_count: 0,
   deleted_page_count: 0,
   credits: [],
-  scan_type: DEFAULT_SCAN_TYPE,
-  format: DEFAULT_COMIC_FORMAT
+  scan_type: FIRST_SCAN_TYPE,
+  format: DEFAULT_COMIC_FORMAT_1
 };
 
 export const COMIC_1001: Comic = {
@@ -85,8 +85,8 @@ export const COMIC_1001: Comic = {
   blocked_page_count: 0,
   deleted_page_count: 0,
   credits: [],
-  scan_type: DEFAULT_SCAN_TYPE,
-  format: DEFAULT_COMIC_FORMAT
+  scan_type: FIRST_SCAN_TYPE,
+  format: DEFAULT_COMIC_FORMAT_1
 };
 
 export const COMIC_1002: Comic = {
@@ -119,8 +119,8 @@ export const COMIC_1002: Comic = {
   blocked_page_count: 0,
   deleted_page_count: 0,
   credits: [],
-  scan_type: DEFAULT_SCAN_TYPE,
-  format: DEFAULT_COMIC_FORMAT
+  scan_type: FIRST_SCAN_TYPE,
+  format: DEFAULT_COMIC_FORMAT_1
 };
 
 export const COMIC_1003: Comic = {
@@ -153,6 +153,6 @@ export const COMIC_1003: Comic = {
   blocked_page_count: 0,
   deleted_page_count: 0,
   credits: [],
-  scan_type: DEFAULT_SCAN_TYPE,
-  format: DEFAULT_COMIC_FORMAT
+  scan_type: FIRST_SCAN_TYPE,
+  format: DEFAULT_COMIC_FORMAT_1
 };
