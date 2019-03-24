@@ -24,48 +24,55 @@ package org.comixed.library.model;
  * included in JSON responses sent to the front end.
  *
  * @author Darryl L. Pierce
- *
  */
 public class View
 {
     /**
      * Show full details on a single comic.
-     *
      */
     public interface ComicDetails extends
                                   ComicList
-    {}
+    {
+    }
 
     /**
      * Show minimal details for more than one comic.
-     *
      */
     public interface ComicList
-    {}
+    {
+    }
 
     /**
      * Show full details on a single page.
-     *
      */
     public interface PageDetails extends
                                  PageList
-    {}
+    {
+    }
 
     /**
      * Show minimal information for more than one page.
-     *
      */
     public interface PageList
-    {}
+    {
+    }
 
     public interface UserList
-    {};
+    {
+    }
 
     /**
      * Show full details on a user.
-     *
      */
     public interface UserDetails extends
                                  UserList
-    {};
+    {
+    }
+
+    /**
+     * Used when doing a database backup.
+     */
+    public interface DatabaseBackup
+    {
+    }
 }

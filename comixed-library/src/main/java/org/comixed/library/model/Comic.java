@@ -70,15 +70,14 @@ import com.fasterxml.jackson.annotation.JsonView;
  * <code>Comic</code> represents a single digital comic issue.
  *
  * @author Darryl L. Pierce
- *
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
 @Table(name = "comics")
 @NamedQueries(
-{@NamedQuery(name = "Comic.findAllUnreadByUser",
-             query = "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)")})
+        {@NamedQuery(name = "Comic.findAllUnreadByUser",
+                query = "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)")})
 public class Comic
 {
     @Transient
@@ -89,13 +88,15 @@ public class Comic
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private Long id;
 
     @Enumerated(EnumType.STRING)
     @JsonProperty("archive_type")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     ArchiveType archiveType;
 
     @Column(name = "filename",
@@ -104,35 +105,41 @@ public class Comic
             length = 1024)
     @JsonProperty
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private String filename;
 
     @Column(name = "comic_vine_id")
     @JsonProperty("comic_vine_id")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String comicVineId;
 
     @Column(name = "comic_vine_url")
     @JsonProperty("comic_vine_url")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String comicVineURL;
 
     @Column(name = "publisher")
     @JsonProperty
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String publisher;
 
     @Column(name = "imprint")
     @JsonProperty
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String imprint;
 
     @Column(name = "series")
     @JsonProperty
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private String series;
 
     @Column(name = "added_date",
@@ -140,7 +147,8 @@ public class Comic
             nullable = false)
     @JsonProperty("added_date")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded = new Date();
 
@@ -148,117 +156,132 @@ public class Comic
             nullable = true)
     @Temporal(TemporalType.DATE)
     @JsonProperty("cover_date")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private Date coverDate;
 
     @Column(name = "volume")
     @JsonProperty
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private String volume;
 
     @Column(name = "issue_number")
     @JsonProperty("issue_number")
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private String issueNumber;
 
     @Column(name = "title")
     @JsonProperty
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String title;
 
     @Column(name = "sort_name")
     @JsonProperty("sort_name")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String sortName;
 
     @Column(name = "description")
     @Lob
     @JsonProperty
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String description;
 
     @Column(name = "notes")
     @Lob
     @JsonProperty
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String notes;
 
     @Column(name = "summary")
     @Lob
     @JsonProperty
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private String summary;
 
     @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "comic_story_arcs",
-                     joinColumns = @JoinColumn(name = "comic_id"))
+            joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "story_arc_name")
     @JsonProperty("story_arcs")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     List<String> storyArcs = new ArrayList<>();
 
     @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "comic_teams",
-                     joinColumns = @JoinColumn(name = "comic_id"))
+            joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "team_name")
     @JsonProperty("teams")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private List<String> teams = new ArrayList<>();
 
     @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "comic_characters",
-                     joinColumns = @JoinColumn(name = "comic_id"))
+            joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "character_name")
     @JsonProperty("characters")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private List<String> characters = new ArrayList<>();
 
     @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "comic_locations",
-                     joinColumns = @JoinColumn(name = "comic_id"))
+            joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "location_name")
     @JsonProperty("locations")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private List<String> locations = new ArrayList<>();
 
     @OneToMany(mappedBy = "comic",
-               cascade = CascadeType.ALL,
-               fetch = FetchType.EAGER,
-               orphanRemoval = true)
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true)
     @OrderColumn(name = "index")
     @JsonView(View.ComicList.class)
     List<Page> pages = new ArrayList<>();
 
     @OneToMany(mappedBy = "comic",
-               cascade = CascadeType.ALL,
-               fetch = FetchType.EAGER,
-               orphanRemoval = true)
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true)
     @JsonProperty("credits")
-    @JsonView(View.ComicList.class)
+    @JsonView({View.ComicList.class,
+            View.DatabaseBackup.class})
     private Set<Credit> credits = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "scan_type_id")
     @JsonProperty("scan_type")
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private ScanType scanType;
 
     @ManyToOne
     @JoinColumn(name = "format_id")
     @JsonProperty("format")
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private ComicFormat format;
 
     @Transient
@@ -274,7 +297,7 @@ public class Comic
      * Adds a character to the comic.
      *
      * @param character
-     *            the character
+     *         the character
      */
     public void addCharacter(String character)
     {
@@ -300,7 +323,7 @@ public class Comic
      * Adds a new location reference to the comic.
      *
      * @param location
-     *            the location
+     *         the location
      */
     public void addLocation(String location)
     {
@@ -317,10 +340,9 @@ public class Comic
      * Adds a new offset to the comic.
      *
      * @param index
-     *            the index
-     *
+     *         the index
      * @param offset
-     *            the offset
+     *         the offset
      */
     public void addPage(int index, Page page)
     {
@@ -333,7 +355,7 @@ public class Comic
      * Adds a story arc to the comic.
      *
      * @param series
-     *            the story arc series
+     *         the story arc series
      */
     public void addStoryArc(String name)
     {
@@ -350,7 +372,7 @@ public class Comic
      * Adds the given team to the comic.
      *
      * @param team
-     *            the team
+     *         the team
      */
     public void addTeam(String team)
     {
@@ -411,7 +433,7 @@ public class Comic
      * Deletes a offset from the comic.
      *
      * @param index
-     *            the offset index
+     *         the offset index
      */
     public void deletePage(int index)
     {
@@ -421,7 +443,8 @@ public class Comic
 
     private String formatDate(Date date)
     {
-        return date != null ? DateFormat.getDateInstance().format(date) : "[NULL]";
+        return date != null ? DateFormat.getDateInstance()
+                .format(date) : "[NULL]";
     }
 
     public ArchiveType getArchiveType()
@@ -455,7 +478,8 @@ public class Comic
      * Returns the character reference at the given index.
      *
      * @param index
-     *            the index
+     *         the index
+     *
      * @return the character reference
      */
     public String getCharacter(int index)
@@ -637,7 +661,8 @@ public class Comic
      * Returns the location referenced at the given index.
      *
      * @param index
-     *            the index
+     *         the index
+     *
      * @return the location reference
      */
     public String getLocation(int index)
@@ -680,7 +705,8 @@ public class Comic
      * Returns the offset at the given index.
      *
      * @param index
-     *            the offset index
+     *         the offset index
+     *
      * @return the offset
      */
     public Page getPage(int index)
@@ -715,6 +741,7 @@ public class Comic
      * Returns the offset for the given filename.
      *
      * @param filename
+     *
      * @return the {@link Page} or null
      */
     public Page getPageWithFilename(String filename)
@@ -722,7 +749,8 @@ public class Comic
         if (this.pages.isEmpty()) return null;
         for (Page page : this.pages)
         {
-            if (page.getFilename().equals(filename)) return page;
+            if (page.getFilename()
+                    .equals(filename)) return page;
         }
 
         return null;
@@ -767,7 +795,8 @@ public class Comic
      * Retrieves the story arc with the given index.
      *
      * @param index
-     *            the index
+     *         the index
+     *
      * @return the story arc series
      */
     public String getStoryArc(int index)
@@ -812,6 +841,7 @@ public class Comic
      * Returns the team at the given index.
      *
      * @param index
+     *
      * @return
      */
     public String getTeam(int index)
@@ -892,7 +922,8 @@ public class Comic
      * Returns whether a offset with the given filename is present.
      *
      * @param filename
-     *            the filename
+     *         the filename
+     *
      * @return true if such a offset exists
      */
     public boolean hasPageWithFilename(String filename)
@@ -946,7 +977,7 @@ public class Comic
      * Sets the ComicVine.com unique ID for this comic.
      *
      * @param id
-     *            the id
+     *         the id
      */
     public void setComicVineId(String id)
     {
@@ -958,7 +989,7 @@ public class Comic
      * Sets the ComicVine URL for the comic.
      *
      * @param urlL
-     *            the url
+     *         the url
      */
     public void setComicVineURL(String urlL)
     {
@@ -971,7 +1002,7 @@ public class Comic
      * A null cover date is allowed.
      *
      * @param date
-     *            the cover date
+     *         the cover date
      */
     public void setCoverDate(Date date)
     {
@@ -983,7 +1014,7 @@ public class Comic
      * Sets the date the comic was added to the library.
      *
      * @param date
-     *            the date
+     *         the date
      */
     public void setDateAdded(Date date)
     {
@@ -996,7 +1027,7 @@ public class Comic
      * Sets a description for the comic.
      *
      * @param description
-     *            the description
+     *         the description
      */
     public void setDescription(String description)
     {
@@ -1008,7 +1039,7 @@ public class Comic
      * Sets the filename for the comic.
      *
      * @param filename
-     *            the filename
+     *         the filename
      */
     public void setFilename(String filename)
     {
@@ -1031,7 +1062,7 @@ public class Comic
      * Sets the issue number for the comic.
      *
      * @param issueNumber
-     *            the issue number
+     *         the issue number
      */
     public void setIssueNumber(String issueNumber)
     {
@@ -1051,7 +1082,7 @@ public class Comic
      * Sets the notes for the issue.
      *
      * @param notes
-     *            the notes
+     *         the notes
      */
     public void setNotes(String notes)
     {
@@ -1079,7 +1110,7 @@ public class Comic
      * Sets the series of the comic series.
      *
      * @param series
-     *            the series
+     *         the series
      */
     public void setSeries(String name)
     {
@@ -1096,7 +1127,7 @@ public class Comic
      * Sets the summary for the comic.
      *
      * @param summary
-     *            the summary
+     *         the summary
      */
     public void setSummary(String summary)
     {
@@ -1108,7 +1139,7 @@ public class Comic
      * Sets the title for the issue.
      *
      * @param title
-     *            the title
+     *         the title
      */
     public void setTitle(String title)
     {
@@ -1120,7 +1151,7 @@ public class Comic
      * Sets the comic's volume.
      *
      * @param volume
-     *            the volume
+     *         the volume
      */
     public void setVolume(String volume)
     {

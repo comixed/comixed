@@ -54,15 +54,14 @@ import com.fasterxml.jackson.annotation.JsonView;
  * <code>Page</code> represents a single offset from a comic.
  *
  * @author Darryl L. Pierce
- *
  */
 @Entity
 @Table(name = "pages")
 @NamedQueries(
-{@NamedQuery(name = "Page.getDuplicatePages",
-             query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash"),
- @NamedQuery(name = "Page.updateDeleteOnAllWithHash",
-             query = "UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash")})
+        {@NamedQuery(name = "Page.getDuplicatePages",
+                query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash"),
+                @NamedQuery(name = "Page.updateDeleteOnAllWithHash",
+                        query = "UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash")})
 public class Page
 {
     @Transient
@@ -72,8 +71,9 @@ public class Page
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private Long id;
 
     @ManyToOne
@@ -85,46 +85,52 @@ public class Page
     @JoinColumn(name = "type_id")
     @JsonProperty("page_type")
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private PageType pageType;
 
     @Column(name = "filename",
             updatable = true,
             nullable = false)
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private String filename;
 
     @Column(name = "hash",
             updatable = true,
             nullable = false)
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private String hash;
 
     @Column(name = "deleted",
             updatable = true,
             nullable = false)
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private boolean deleted = false;
 
     @Column(name = "width",
             updatable = true)
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private Integer width = -1;
 
     @Column(name = "height",
             updatable = true)
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private Integer height = -1;
 
     @Transient
@@ -138,29 +144,31 @@ public class Page
     @Transient
     @JsonIgnore
     protected Map<String,
-                  Image> imageCache = new WeakHashMap<>();
+            Image> imageCache = new WeakHashMap<>();
 
     @Formula("(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class,
+                    View.DatabaseBackup.class})
     private boolean blocked;
 
     /**
      * Default constructor.
      */
     public Page()
-    {}
+    {
+    }
 
     /**
      * Creates a new instance with the given filename and image content.
      *
      * @param filename
-     *            the filename
+     *         the filename
      * @param content
-     *            the content
+     *         the content
      * @param pageType
-     *            the offset type
+     *         the offset type
      */
     public Page(String filename, byte[] content, PageType pageType)
     {
@@ -181,9 +189,9 @@ public class Page
         {
             md = MessageDigest.getInstance("MD5");
             md.update(bytes);
-            result = new BigInteger(1, md.digest()).toString(16).toUpperCase();
-        }
-        catch (NoSuchAlgorithmException error)
+            result = new BigInteger(1, md.digest()).toString(16)
+                    .toUpperCase();
+        } catch (NoSuchAlgorithmException error)
         {
             this.logger.error("Failed to generate hash", error);
         }
@@ -197,17 +205,15 @@ public class Page
         if (this == obj) return true;
         if (obj == null) return false;
         if (this.getClass() != obj.getClass()) return false;
-        Page other = (Page )obj;
+        Page other = (Page) obj;
         if (this.filename == null)
         {
             if (other.filename != null) return false;
-        }
-        else if (!this.filename.equals(other.filename)) return false;
+        } else if (!this.filename.equals(other.filename)) return false;
         if (this.hash == null)
         {
             if (other.hash != null) return false;
-        }
-        else if (!this.hash.equals(other.hash)) return false;
+        } else if (!this.hash.equals(other.hash)) return false;
         return true;
     }
 
@@ -243,13 +249,13 @@ public class Page
             {
                 if (this.comic.archiveType != null)
                 {
-                    this.content = this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
+                    this.content = this.comic.archiveType.getArchiveAdaptor()
+                            .loadSingleFile(this.comic, this.filename);
                 }
-            }
-            catch (ArchiveAdaptorException error)
+            } catch (ArchiveAdaptorException error)
             {
                 this.logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(),
-                                 error);
+                        error);
             }
         }
         return this.content;
@@ -300,8 +306,7 @@ public class Page
                 this.icon = ImageIO.read(new ByteArrayInputStream(this.getContent()));
                 this.width = this.icon.getWidth(null);
                 this.height = this.icon.getHeight(null);
-            }
-            catch (IOException error)
+            } catch (IOException error)
             {
                 this.logger.error("Failed to load image from " + this.comic.getFilename(), error);
             }
@@ -319,8 +324,7 @@ public class Page
                 this.width = bimage.getWidth();
                 this.height = bimage.getHeight();
             }
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -334,8 +338,8 @@ public class Page
      */
     @Transient
     @JsonView(
-    {View.ComicList.class,
-     View.PageList.class})
+            {View.ComicList.class,
+                    View.PageList.class})
     @JsonProperty(value = "index")
     public int getIndex()
     {
@@ -356,7 +360,6 @@ public class Page
      * Returns the width of the image.
      *
      * @return the image width
-     *
      */
     public int getWidth()
     {
@@ -397,7 +400,7 @@ public class Page
      * Sets the deleted flag for the offset.
      *
      * @param deleted
-     *            true if the offset is to be deleted
+     *         true if the offset is to be deleted
      */
     public void markDeleted(boolean deleted)
     {
@@ -414,7 +417,7 @@ public class Page
      * Sets the content for the offset. Also updates the hash.
      *
      * @param content
-     *            the content
+     *         the content
      */
     public void setContent(byte[] content)
     {
@@ -426,7 +429,7 @@ public class Page
      * Sets a new filename for the offset.
      *
      * @param filename
-     *            the new filename
+     *         the new filename
      */
     public void setFilename(String filename)
     {
@@ -438,7 +441,7 @@ public class Page
      * Sets the offset type for the offset.
      *
      * @param pageType
-     *            the offset type
+     *         the offset type
      */
     public void setPageType(PageType pageType)
     {
