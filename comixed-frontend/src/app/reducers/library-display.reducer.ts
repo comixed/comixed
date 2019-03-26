@@ -20,6 +20,8 @@
 import { Action } from '@ngrx/store';
 import { LibraryDisplay } from '../models/actions/library-display';
 import * as LibraryDisplayActions from '../actions/library-display.actions';
+import * as UserActions from '../actions/user.actions';
+import { Preference } from '../models/user/preference';
 
 const initial_state: LibraryDisplay = {
   layout: 'grid',
@@ -70,6 +72,38 @@ export function libraryDisplayReducer(
         ...state,
         same_height: action.payload.same_height
       };
+
+    case LibraryDisplayActions.LIBRARY_VIEW_LOAD_USER_OPTIONS: {
+      const user = action.payload.user;
+      let layout = initial_state.layout;
+      let sort = initial_state.sort_field;
+      let rows = initial_state.rows;
+      let cover_size = initial_state.cover_size;
+      let same_height = initial_state.same_height;
+
+      user.preferences.forEach((pref: Preference) => {
+        if (pref.name === 'library_display_layout') {
+          layout = pref.value;
+        } else if (pref.name === 'library_display_sort_field') {
+          sort = pref.value;
+        } else if (pref.name === 'library_display_rows') {
+          rows = parseInt(pref.value, 10);
+        } else if (pref.name === 'library_display_cover_size') {
+          cover_size = parseInt(pref.value, 10);
+        } else if (pref.name === 'library_display_same_height') {
+          same_height = parseInt(pref.value, 10) !== 0;
+        }
+      });
+
+      return {
+        ...state,
+        layout: layout,
+        sort_field: sort,
+        rows: rows,
+        cover_size: cover_size,
+        same_height: same_height
+      };
+    }
 
     default:
       return state;

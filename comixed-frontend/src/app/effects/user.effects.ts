@@ -20,10 +20,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { flatMap, map, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import * as UserActions from '../actions/user.actions';
+import * as DisplayActions from '../actions/library-display.actions';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user/user';
 import { TokenStorage } from '../storage/token.storage';
@@ -41,18 +42,24 @@ export class UserEffects {
     ofType(UserActions.USER_AUTH_CHECK),
     switchMap((action: UserActions.UserAuthCheck) =>
       this.user_service.get_user().pipe(
-        map(
-          (user: User) =>
-            new UserActions.UserLoaded({
-              user: user
-            })
+        flatMap(
+          (user: User) => {
+            return [
+              new DisplayActions.LibraryViewLoadUserOptions({ user: user }),
+              new UserActions.UserLoaded({
+                user: user
+              })
+            ];
+          }
         )
       )
     )
   );
 
   @Effect()
-  user_logging_in$: Observable<Action> = this.actions$.pipe(
+  user_logging_in$
+    :
+    Observable<Action> = this.actions$.pipe(
     ofType(UserActions.USER_LOGGING_IN),
     map((action: UserActions.UserLoggingIn) => action.payload),
     switchMap(action =>
@@ -69,7 +76,9 @@ export class UserEffects {
   );
 
   @Effect()
-  user_logout$: Observable<Action> = this.actions$.pipe(
+  user_logout$
+    :
+    Observable<Action> = this.actions$.pipe(
     ofType(UserActions.USER_LOGOUT),
     switchMap((action: UserActions.UserLogout) =>
       of(this.token_storage.sign_out()).pipe(
@@ -79,7 +88,9 @@ export class UserEffects {
   );
 
   @Effect()
-  user_set_preference$: Observable<Action> = this.actions$.pipe(
+  user_set_preference$
+    :
+    Observable<Action> = this.actions$.pipe(
     ofType(UserActions.USER_SET_PREFERENCE),
     map((action: UserActions.UserSetPreference) => action.payload),
     switchMap(action =>
