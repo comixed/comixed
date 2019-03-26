@@ -81,19 +81,21 @@ export function libraryDisplayReducer(
       let cover_size = initial_state.cover_size;
       let same_height = initial_state.same_height;
 
-      user.preferences.forEach((pref: Preference) => {
-        if (pref.name === 'library_display_layout') {
-          layout = pref.value;
-        } else if (pref.name === 'library_display_sort_field') {
-          sort = pref.value;
-        } else if (pref.name === 'library_display_rows') {
-          rows = parseInt(pref.value, 10);
-        } else if (pref.name === 'library_display_cover_size') {
-          cover_size = parseInt(pref.value, 10);
-        } else if (pref.name === 'library_display_same_height') {
-          same_height = parseInt(pref.value, 10) !== 0;
-        }
-      });
+      if (user) {
+        user.preferences.forEach((pref: Preference) => {
+          if (pref.name === 'library_display_layout') {
+            layout = pref.value;
+          } else if (pref.name === 'library_display_sort_field') {
+            sort = pref.value;
+          } else if (pref.name === 'library_display_rows') {
+            rows = parseInt(pref.value, 10);
+          } else if (pref.name === 'library_display_cover_size') {
+            cover_size = parseInt(pref.value, 10);
+          } else if (pref.name === 'library_display_same_height') {
+            same_height = parseInt(pref.value, 10) !== 0;
+          }
+        });
+      }
 
       return {
         ...state,
