@@ -18,7 +18,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard } from './admin.guard';
 import { ReaderGuard } from './reader.guard';
 import { MainPageComponent } from './ui/pages/main-page/main-page.component';
@@ -41,7 +41,7 @@ import { LocationDetailsPageComponent } from './ui/pages/locations/location-deta
 import { StoryArcsPageComponent } from './ui/pages/story-arcs/story-arcs-page/story-arcs-page.component';
 import { StoryArcDetailsPageComponent } from './ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component';
 import { MultiComicScrapingPageComponent } from './ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component';
-import { BackupPageComponent } from './ui/pages/admin/backup-page/backup-page.component';
+import { LibraryAdminPageComponent } from './ui/pages/admin/library-admin-page/library-admin-page.component';
 
 export const routes: Routes = [
   { path: 'home', component: MainPageComponent },
@@ -141,8 +141,8 @@ export const routes: Routes = [
     canActivate: [AdminGuard]
   },
   {
-    path: 'admin/backup',
-    component: BackupPageComponent,
+    path: 'admin/library',
+    component: LibraryAdminPageComponent,
     canActivate: [AdminGuard]
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
