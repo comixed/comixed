@@ -33,6 +33,7 @@ import {
   COVER_SIZE,
   SAME_HEIGHT
 } from '../../../../models/actions/library-display';
+import * as UserActions from '../../../../actions/user.actions';
 
 @Component({
   selector: 'app-comic-list-toolbar',
@@ -185,34 +186,35 @@ export class ComicListToolbarComponent implements OnInit {
   }
 
   set_sort_field(sort_field: string): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewSort({
-        sort_field: sort_field
-      })
-    );
+    this.store.dispatch(new DisplayActions.SetLibraryViewSort({ sort_field: sort_field }));
+    this.store.dispatch(new UserActions.UserSetPreference({ name: 'library_display_sort_field', value: sort_field }));
     this.update_query_parameters(SORT, sort_field);
   }
 
   set_rows(rows: number): void {
     this.store.dispatch(new DisplayActions.SetLibraryViewRows({ rows: rows }));
+    this.store.dispatch(new UserActions.UserSetPreference({ name: 'library_display_rows', value: `${rows}` }));
     this.update_query_parameters(ROWS, `${rows}`);
   }
 
   set_same_height(same_height: boolean): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewUseSameHeight({
-        same_height: same_height
-      })
-    );
+    this.store.dispatch(new DisplayActions.SetLibraryViewUseSameHeight({ same_height: same_height }));
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: 'library_display_same_height',
+      value: same_height ? '1' : '0'
+    }));
     this.update_query_parameters(SAME_HEIGHT, same_height ? '1' : '0');
   }
 
   set_cover_size(cover_size: number): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewCoverSize({
-        cover_size: cover_size
-      })
-    );
+    this.store.dispatch(new DisplayActions.SetLibraryViewCoverSize({ cover_size: cover_size }));
+  }
+
+  save_cover_size(cover_size: number): void {
+    this.store.dispatch(new UserActions.UserSetPreference({
+      name: 'library_display_cover_size',
+      value: `${cover_size}`
+    }));
     this.update_query_parameters(COVER_SIZE, `${cover_size}`);
   }
 

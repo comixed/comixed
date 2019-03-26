@@ -28,6 +28,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from '../../../../actions/library.actions';
 import * as LibraryDisplayActions from '../../../../actions/library-display.actions';
+import * as UserActions from '../../../../actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 
@@ -98,9 +99,8 @@ export class ComicListComponent implements OnInit, OnDestroy {
 
   set_layout(dataview: any, layout: string): void {
     dataview.changeLayout(layout);
-    this.store.dispatch(
-      new LibraryDisplayActions.SetLibraryViewLayout({ layout: layout })
-    );
+    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewLayout({ layout: layout }));
+    this.store.dispatch(new UserActions.UserSetPreference({ name: 'library_display_layout', value: layout }));
   }
 
   set_selected(comic: Comic, selected: boolean): void {
