@@ -1,14 +1,3 @@
-<div class="ui-g">
-  <div class="ui-g-12">
-    <p-toolbar>
-      <button pButton
-              type="button"
-              label="{{'button.rescan-library'|translate}}"
-              [disabled]="!can_rescan()"
-              (click)="rescan_library()"></button>
-    </p-toolbar>
-  </div>
-</div>
 <app-comic-list *ngIf="library"
                 [comics]="comics|library_filter:library_filter"
                 [selected_comics]="selected_comics"

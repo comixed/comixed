@@ -29,23 +29,14 @@ import * as UserActions from '../../../../actions/user.actions';
 import { READER_USER } from '../../../../models/user/user.fixtures';
 import { libraryReducer } from '../../../../reducers/library.reducer';
 import * as LibraryActions from '../../../../actions/library.actions';
-import {
-  COMIC_1000,
-  COMIC_1001,
-  COMIC_1002,
-  COMIC_1003
-} from '../../../../models/comics/comic.fixtures';
+import { COMIC_1000, COMIC_1003 } from '../../../../models/comics/comic.fixtures';
 import { libraryFilterReducer } from '../../../../reducers/library-filter.reducer';
 import * as FilterActions from '../../../../actions/library-filter.actions';
 import { DEFAULT_LIBRARY_FILTER } from '../../../../models/actions/library-filter.fixtures';
 import { multipleComicsScrapingReducer } from '../../../../reducers/multiple-comics-scraping.reducer';
 import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
 import { libraryDisplayReducer } from '../../../../reducers/library-display.reducer';
-import * as DisplayActions from '../../../../actions/library-display.actions';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/actions/library-display.fixtures';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ButtonModule } from 'primeng/button';
-import { ToolbarModule } from 'primeng/toolbar';
 import { DataViewModule } from 'primeng/dataview';
 import { SliderModule } from 'primeng/slider';
 import { ConfirmationService } from 'primeng/api';
@@ -93,8 +84,6 @@ describe('LibraryPageComponent', () => {
           library_display: libraryDisplayReducer
         }),
         ConfirmDialogModule,
-        ButtonModule,
-        ToolbarModule,
         DataViewModule,
         SliderModule,
         CheckboxModule,
@@ -152,13 +141,19 @@ describe('LibraryPageComponent', () => {
       store.dispatch(
         new LibraryActions.LibraryMergeNewComics({
           library_state: {
-            comics: [COMIC_1000, COMIC_1003],
+            comics: [
+              COMIC_1000,
+              COMIC_1003
+            ],
             rescan_count: 3,
             import_count: 7
           }
         })
       );
-      expect(component.library.comics).toEqual([COMIC_1000, COMIC_1003]);
+      expect(component.library.comics).toEqual([
+        COMIC_1000,
+        COMIC_1003
+      ]);
     });
 
     it('should subscribe to library filter updates', () => {
