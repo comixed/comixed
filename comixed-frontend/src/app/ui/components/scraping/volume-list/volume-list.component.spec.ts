@@ -27,7 +27,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { VolumeListComponent } from './volume-list.component';
 
-fdescribe('VolumeListComponent', () => {
+describe('VolumeListComponent', () => {
   let component: VolumeListComponent;
   let fixture: ComponentFixture<VolumeListComponent>;
 
