@@ -83,6 +83,9 @@
       "search-by-series": "Search by series name..."
     }
   },
+  "comic-file-list": {
+    "header": "There Are {{selected_count}} Files Selected"
+  },
   "library": {
     "tab": {
       "covers": "Covers",

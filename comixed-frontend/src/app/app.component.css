@@ -1,3 +1,8 @@
+:host >>> h2 {
+    text-align: center;
+    text-transform: uppercase;
+}
+
 :host >>> #comixed-footer {
     position: fixed;
     bottom: 0px;
