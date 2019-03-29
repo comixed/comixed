@@ -62,7 +62,8 @@
   },
   "import-toolbar": {
     "text": {
-      "directory-placeholder": "Path to comics..."
+      "directory-placeholder": "Path to comics...",
+      "filter-placeholder": "Enter filename text..."
     },
     "button": {
       "find": "Find Comics",

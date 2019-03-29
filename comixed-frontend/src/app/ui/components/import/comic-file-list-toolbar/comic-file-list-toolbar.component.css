@@ -1,0 +1,7 @@
+:host ::ng-deep .cx-layout-dropdown {
+    width: 100% !important;
+}
+
+:host ::ng-deep .cx-filter-comic-filenames {
+    width: 100%;
+}

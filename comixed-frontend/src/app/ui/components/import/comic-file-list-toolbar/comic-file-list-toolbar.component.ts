@@ -43,6 +43,7 @@ export class ComicFileListToolbarComponent implements OnInit {
 
   @Output() changeLayout = new EventEmitter<string>();
   @Output() showSelections = new EventEmitter<boolean>();
+  @Output() filterText = new EventEmitter<string>();
 
   layout_options: Array<SelectItem>;
   sort_field_options: Array<SelectItem>;

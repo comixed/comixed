@@ -3,7 +3,9 @@
                               [library_display]='library_display'
                               (hide)="show_selections = false"
 ></app-selected-comic-file-list>
-<p-dataView id='comic-file-list-view'
+<p-dataView #comicFileList
+            filterBy='filename'
+            id='comic-file-list-view'
             [value]='comic_files'
             [sortField]='library_display.comic_file_sort_field'
             [paginator]='true'
@@ -12,24 +14,25 @@
             [alwaysShowPaginator]='true'
             [layout]='"grid"'
 >
-    <p-header>
-        <div class="ui-helper-clearfix">
-            <app-comic-file-list-toolbar [directory]='directory'
-                                         [library_display]='library_display'
-                                         [busy]='busy'
-                                         [comic_files]='comic_files'
-                                         [selected_comic_count]='(selected_comic_files||[]).length'
-                                         (showSelections)='show_selections = true'
-            ></app-comic-file-list-toolbar>
-        </div>
-    </p-header>
-    <ng-template let-file
-                 pTemplate='gridItem'
-    >
-        <app-comic-file-grid-item [comic_file]='file'
-                                  [cover_size]='library_display.cover_size'
-                                  [same_height]='library_display.same_height'
-                                  [use_selected_class]='true'
-        ></app-comic-file-grid-item>
-    </ng-template>
+  <p-header>
+    <div class="ui-helper-clearfix">
+      <app-comic-file-list-toolbar [directory]='directory'
+                                   [library_display]='library_display'
+                                   [busy]='busy'
+                                   [comic_files]='comic_files'
+                                   [selected_comic_count]='(selected_comic_files||[]).length'
+                                   (showSelections)='show_selections = true'
+                                   (filterText)='comicFileList.filter($event)'
+      ></app-comic-file-list-toolbar>
+    </div>
+  </p-header>
+  <ng-template let-file
+               pTemplate='gridItem'
+  >
+    <app-comic-file-grid-item [comic_file]='file'
+                              [cover_size]='library_display.cover_size'
+                              [same_height]='library_display.same_height'
+                              [use_selected_class]='true'
+    ></app-comic-file-grid-item>
+  </ng-template>
 </p-dataView>
