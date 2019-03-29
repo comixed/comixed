@@ -20,6 +20,7 @@
 package org.comixed.web.opds;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +36,6 @@ import org.comixed.model.opds.OPDSLink;
  *
  * @author Giao Phan
  * @author Darryl L. Pierce
- *
  */
 public class OPDSAcquisitionFeed implements
                                  OPDSFeed
@@ -49,14 +49,22 @@ public class OPDSAcquisitionFeed implements
     public OPDSAcquisitionFeed(String selfUrl, String title, Iterable<Comic> comics)
     {
         this.id = "urn:uuid:" + UUID.randomUUID();
-        this.entries = StreamSupport.stream(comics.spliterator(), true).map(comic -> new OPDSEntry(comic))
-                                    .collect(Collectors.toList());
+//        this.entries = StreamSupport.stream(comics.spliterator(), true).map(comic -> new OPDSEntry(comic))
+//                                    .collect(Collectors.toList());
+        this.entries = new ArrayList<>();
+        int count = 0;
+        for (Comic comic : comics)
+        {
+            if (!comic.isMissing())
+                this.entries.add(new OPDSEntry(comic));
+        }
         this.title = title;
-        this.updated = ZonedDateTime.now().withFixedOffsetZone();
+        this.updated = ZonedDateTime.now()
+                .withFixedOffsetZone();
         this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=acquisition", "self",
-                                                selfUrl),
-                                   new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
-                                                "/api/opds?mediaType=atom"));
+                        selfUrl),
+                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
+                        "/api/opds?mediaType=atom"));
     }
 
     @Override

@@ -42,12 +42,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Giao Phan
  * @author Darryl L. Pierce
- *
  */
 @RestController
-@RequestMapping(value = "/api/opds",
-                produces =
-                {"application/atom+xml"})
+@RequestMapping(produces =
+        {"application/atom+xml"})
 public class OPDSController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -58,67 +56,47 @@ public class OPDSController
     @Autowired
     private ComicRepository comicRepository;
 
-    @RequestMapping(value = "/all",
-                    method = RequestMethod.GET)
+    @RequestMapping(value = "/opds/all",
+            method = RequestMethod.GET)
     @CrossOrigin
     public OPDSFeed getAllComics(Principal principal) throws ParseException
     {
-        OPDSFeed result = null;
+//        OPDSFeed result = null;
+//
+//        if (principal != null)
+//        {
+//            ComiXedUser user = this.userRepository.findByEmail(principal.getName());
+//            this.logger.debug("Getting all comics for {}", user.getEmail());
+//            result = new OPDSAcquisitionFeed("/opds/all", "All Comics", this.comicRepository.findAll());
+//        } else
+//        {
+//            this.logger.debug("Nope, not logged in...");
+//        }
+//
+//        return result;
 
-        if (principal != null)
-        {
-            ComiXedUser user = this.userRepository.findByEmail(principal.getName());
-            this.logger.debug("Getting all comics for {}", user.getEmail());
-            result = new OPDSAcquisitionFeed("/api/opds/all", "All Comics", this.comicRepository.findAll());
-        }
-        else
-        {
-            this.logger.debug("Nope, not logged in...");
-        }
-
-        return result;
+        return new OPDSAcquisitionFeed("/opds/all", "All Comics", this.comicRepository.findAll());
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/opds", method = RequestMethod.GET)
     @CrossOrigin
     public OPDSFeed getNavigationFeed(Principal principal) throws ParseException
     {
-        OPDSFeed result = null;
+//        OPDSFeed result = null;
+//
+//        if (principal != null)
+//        {
+//            ComiXedUser user = this.userRepository.findByEmail(principal.getName());
+//            this.logger.debug("Fetching OPDS navigation feed for {}", user.getEmail());
+//
+//            result = new OPDSNavigationFeed();
+//        } else
+//        {
+//            this.logger.debug("User not logged in...");
+//        }
+//
+//        return result;
 
-        if (principal != null)
-        {
-            ComiXedUser user = this.userRepository.findByEmail(principal.getName());
-            this.logger.debug("Fetching OPDS navigation feed for {}", user.getEmail());
-
-            result = new OPDSNavigationFeed();
-        }
-        else
-        {
-            this.logger.debug("User not logged in...");
-        }
-
-        return result;
-    }
-
-    @RequestMapping(value = "/unread",
-                    method = RequestMethod.GET)
-    public OPDSFeed getUnread(Principal principal)
-    {
-        OPDSFeed result = null;
-
-        if (principal != null)
-        {
-            ComiXedUser user = this.userRepository.findByEmail(principal.getName());
-            this.logger.debug("Fetching unread comics feed for {}", user.getEmail());
-
-            result = new OPDSAcquisitionFeed("/api/opds/unread", "Unread Comics",
-                                             this.comicRepository.findAllUnreadByUser(user.getId()));
-        }
-        else
-        {
-            this.logger.debug("User not logged in...");
-        }
-
-        return result;
+        return new OPDSNavigationFeed();
     }
 }

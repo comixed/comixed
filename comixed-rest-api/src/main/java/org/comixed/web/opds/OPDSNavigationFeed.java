@@ -33,7 +33,6 @@ import org.comixed.model.opds.OPDSLink;
  *
  * @author Giao Phan
  * @author Darryl L. Pierce
- *
  */
 public class OPDSNavigationFeed implements
                                 OPDSFeed
@@ -48,21 +47,18 @@ public class OPDSNavigationFeed implements
     {
         this.id = "urn:uuid:" + UUID.randomUUID();
         this.title = "ComiXed catalog";
-        this.updated = ZonedDateTime.now().withFixedOffsetZone();
+        this.updated = ZonedDateTime.now()
+                .withFixedOffsetZone();
         this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
-                                                "/api/opds"),
-                                   new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
-                                                "/api/opds"));
+                        "/opds"),
+                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
+                        "/opds"));
 
         List<String> noAuthor = Arrays.asList("None");
         this.entries = Arrays.asList(new OPDSEntry("All comics", "All comics as a flat list", noAuthor,
-                                                   Arrays.asList(new OPDSLink("application/atom+xml;profile=opds-catalog;kind=acquisition",
-                                                                              "subsection",
-                                                                              "/api/opds/all?mediaType=atom"))),
-                                     new OPDSEntry("Unread comics", "All unread comics sorted by recency", noAuthor,
-                                                   Arrays.asList(new OPDSLink("application/atom+xml;profile=opds-catalog;kind=acquisition",
-                                                                              "http://opds-spec.org/sort/new",
-                                                                              "/api/opds/unread?mediaType=atom"))));
+                Arrays.asList(new OPDSLink("application/atom+xml;profile=opds-catalog;kind=acquisition",
+                        "subsection",
+                        "/opds/all?mediaType=atom"))));
 
     }
 

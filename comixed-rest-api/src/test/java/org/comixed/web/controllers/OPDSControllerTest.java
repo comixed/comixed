@@ -115,33 +115,4 @@ public class OPDSControllerTest
         Mockito.verify(user, Mockito.atLeast(1)).getEmail();
         Mockito.verify(comicRepository, Mockito.times(1)).findAll();
     }
-
-    @Test
-    public void testGetUnreadNotAuthenticated() throws ParseException
-    {
-        OPDSFeed result = controller.getUnread(null);
-
-        assertNull(result);
-    }
-
-    @Test
-    public void testGetUnread() throws ParseException
-    {
-        Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
-        Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
-        Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
-        Mockito.when(comicRepository.findAllUnreadByUser(TEST_USER_ID)).thenReturn(comicList);
-
-        OPDSFeed result = controller.getUnread(principal);
-
-        assertNotNull(result);
-        assertEquals(comicList, result.getEntries());
-
-        Mockito.verify(principal, Mockito.times(1)).getName();
-        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-        Mockito.verify(user, Mockito.atLeast(1)).getEmail();
-        Mockito.verify(user, Mockito.times(1)).getId();
-        Mockito.verify(comicRepository, Mockito.times(1)).findAllUnreadByUser(TEST_USER_ID);
-    }
 }
