@@ -52,6 +52,8 @@ import { ComicService } from '../../../../services/comic.service';
 import { ComicServiceMock } from '../../../../services/comic.service.mock';
 import { VolumeListComponent } from '../../scraping/volume-list/volume-list.component';
 import { ComicDetailsEditorComponent } from './comic-details-editor.component';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/primeng';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = '1234567890';
@@ -66,6 +68,7 @@ describe('ComicDetailsEditorComponent', () => {
   let reset_button: DebugElement;
   let user_service: UserService;
   let comic_service: ComicService;
+  let confirmation_service: ConfirmationService;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
@@ -86,11 +89,16 @@ describe('ComicDetailsEditorComponent', () => {
         TooltipModule,
         InplaceModule,
         TableModule,
-        CardModule
+        CardModule,
+        ConfirmDialogModule
       ],
-      declarations: [ComicDetailsEditorComponent, VolumeListComponent],
+      declarations: [
+        ComicDetailsEditorComponent,
+        VolumeListComponent
+      ],
       providers: [
         FormBuilder,
+        ConfirmationService,
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
       ]
@@ -101,9 +109,11 @@ describe('ComicDetailsEditorComponent', () => {
 
     user_service = TestBed.get(UserService);
     comic_service = TestBed.get(ComicService);
+    confirmation_service = TestBed.get(ConfirmationService);
     store = TestBed.get(Store);
 
     spyOn(store, 'dispatch').and.callThrough();
+    spyOn(confirmation_service, 'confirm');
 
     fixture.detectChanges();
 
@@ -323,18 +333,28 @@ describe('ComicDetailsEditorComponent', () => {
       component.single_comic_scraping.current_issue = ISSUE_1000;
     });
 
-    it('resets the scraping setup', () => {
+    it('prompts the user to confirm the cancellation', () => {
       component.cancel_selection();
+      fixture.detectChanges();
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new ScrapingActions.SingleComicScrapingSetup({
-          api_key: API_KEY,
-          comic: COMIC_1000,
-          series: COMIC_1000.series,
-          volume: COMIC_1000.volume,
-          issue_number: COMIC_1000.issue_number
-        })
-      );
+      expect(confirmation_service.confirm).toHaveBeenCalled();
+    });
+
+    describe('if the user confirms the cancellation', () => {
+      it('resets the scraping setup', () => {
+        component.cancel_selection();
+        fixture.detectChanges();
+
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new ScrapingActions.SingleComicScrapingSetup({
+            api_key: API_KEY,
+            comic: COMIC_1000,
+            series: COMIC_1000.series,
+            volume: COMIC_1000.volume,
+            issue_number: COMIC_1000.issue_number
+          })
+        );
+      });
     });
   });
 

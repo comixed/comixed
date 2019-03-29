@@ -42,7 +42,8 @@ import { SingleComicScraping } from '../../../../models/scraping/single-comic-sc
 import { User } from '../../../../models/user/user';
 import { Preference } from '../../../../models/user/preference';
 import { COMICVINE_API_KEY } from '../../../../models/user/preferences.constants';
-import { MenuItem } from 'primeng/api';
+import { Confirmation, ConfirmationService, MenuItem } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -75,6 +76,8 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   constructor(
     private user_service: UserService,
     private comic_service: ComicService,
+    private confirmation_service: ConfirmationService,
+    private translate: TranslateService,
     private store: Store<AppState>,
     private form_builder: FormBuilder
   ) {
@@ -94,10 +97,22 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       }
     ];
     this.form = this.form_builder.group({
-      api_key: ['', [Validators.required]],
-      series: ['', [Validators.required]],
-      volume: ['', [Validators.required]],
-      issue_number: ['', [Validators.required]]
+      api_key: [
+        '',
+        [Validators.required]
+      ],
+      series: [
+        '',
+        [Validators.required]
+      ],
+      volume: [
+        '',
+        [Validators.required]
+      ],
+      issue_number: [
+        '',
+        [Validators.required]
+      ]
     });
   }
 
@@ -199,16 +214,23 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   cancel_selection(): void {
-    this.store.dispatch(
-      new LibraryScrapingActions.SingleComicScrapingSetup({
-        api_key: this.form.controls['api_key'].value,
-        comic: this.comic,
-        series: this.form.controls['series'].value,
-        volume: this.form.controls['volume'].value,
-        issue_number: this.form.controls['issue_number'].value
-      })
-    );
-    this.update.next(this.single_comic_scraping.comic);
+    this.confirmation_service.confirm({
+      header: this.translate.instant('comic-details-editor.cancel.header'),
+      message: this.translate.instant('comic-details-editor.cancel.message'),
+      icon: 'fa fa-exclamation',
+      accept: () => {
+        this.store.dispatch(
+          new LibraryScrapingActions.SingleComicScrapingSetup({
+            api_key: this.form.controls['api_key'].value,
+            comic: this.comic,
+            series: this.form.controls['series'].value,
+            volume: this.form.controls['volume'].value,
+            issue_number: this.form.controls['issue_number'].value
+          })
+        );
+        this.update.next(this.single_comic_scraping.comic);
+      }
+    });
   }
 
   save_changes(): void {

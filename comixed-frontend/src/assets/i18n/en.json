@@ -166,6 +166,10 @@
     },
     "text": {
       "comicvine-api-key-placeholder": "Click to change the API key..."
+    },
+    "cancel": {
+      "header": "Skip This Comic",
+      "message": "Skip scraping this comic and go to the next comic? Are you sure?"
     }
   },
   "volume-list": {
