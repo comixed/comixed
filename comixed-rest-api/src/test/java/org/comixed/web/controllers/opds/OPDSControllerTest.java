@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-package org.comixed.web.controllers;
+package org.comixed.web.controllers.opds;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,6 +32,7 @@ import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.Comic;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
+import org.comixed.web.opds.OPDSController;
 import org.comixed.web.opds.OPDSFeed;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,53 +67,23 @@ public class OPDSControllerTest
     private List<Comic> comicList = new ArrayList<>();
 
     @Test
-    public void testGetNavigationFeedNotAuthenticated() throws ParseException
-    {
-        OPDSFeed result = controller.getNavigationFeed(null);
-
-        assertNull(result);
-    }
-
-    @Test
     public void testGetNavigationFeed() throws ParseException
     {
-        Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
-        Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
-
-        OPDSFeed result = controller.getNavigationFeed(principal);
+        OPDSFeed result = controller.getNavigationFeed();
 
         assertNotNull(result);
-
-        Mockito.verify(principal, Mockito.times(1)).getName();
-        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-        Mockito.verify(user, Mockito.atLeast(1)).getEmail();
-    }
-
-    @Test
-    public void testGetAllComicsNotAuthenticated() throws ParseException
-    {
-        OPDSFeed result = controller.getAllComics(null);
-
-        assertNull(result);
     }
 
     @Test
     public void testGetAllComics() throws ParseException
     {
-        Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
-        Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
         Mockito.when(comicRepository.findAll()).thenReturn(comicList);
 
-        OPDSFeed result = controller.getAllComics(principal);
+        OPDSFeed result = controller.getAllComics();
 
         assertNotNull(result);
         assertEquals(comicList, result.getEntries());
 
-        Mockito.verify(principal, Mockito.times(1)).getName();
-        Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-        Mockito.verify(user, Mockito.atLeast(1)).getEmail();
         Mockito.verify(comicRepository, Mockito.times(1)).findAll();
     }
 }

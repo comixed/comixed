@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 @Component
 public class OPDSRequestInterceptor extends HandlerInterceptorAdapter
@@ -25,9 +26,24 @@ public class OPDSRequestInterceptor extends HandlerInterceptorAdapter
         String requestRoute = request.getRequestURI()
                 .substring(request.getContextPath()
                         .length());
-        logger.debug("Intercepted request: {}", requestRoute);
-        logger.debug("Method: {}", request.getMethod());
-        logger.debug("Remote system: {}@{}:{}", request.getRemoteUser(), request.getRemoteHost(), request.getRemotePort());
+        this.logger.debug("Intercepted request: {}", requestRoute);
+        this.logger.debug("Method: {}", request.getMethod());
+        this.logger.debug("Remote system: {}:{}", request.getRemoteHost(), request.getRemotePort());
+        Enumeration<String> names;
+
+        names = request.getHeaderNames();
+        while (names.hasMoreElements())
+        {
+            String headerName = names.nextElement();
+            this.logger.debug("Header[{}]={}", headerName, request.getHeader(headerName));
+        }
+
+        names = request.getAttributeNames();
+        while (names.hasMoreElements())
+        {
+            String attrName = names.nextElement();
+            this.logger.debug("Attribute[{}]={}", attrName, request.getAttribute(attrName));
+        }
 
         return true;
     }

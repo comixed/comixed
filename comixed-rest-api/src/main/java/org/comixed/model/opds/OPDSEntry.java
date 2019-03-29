@@ -25,6 +25,9 @@ import org.comixed.library.model.Credit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -79,20 +82,39 @@ public class OPDSEntry
 
         // FIXME: Is there some sort of router interface we can
         // use to build urls
-        String urlPrefix = "/api/comics/" + comic.getId();
+        String urlPrefix = "/opds/feed/comics/" + comic.getId();
 
         if (!comic.isMissing())
         {
             this.logger.debug("Added comic to feed: {}", comic.getFilename());
+
+            String coverUrl = urlPrefix + "/pages/0/cover";
+            String thumbnailUrl = urlPrefix + "/pages/0/thumbnail";
+            String comicUrl = "";
+
+            try
+            {
+                comicUrl = urlPrefix + "/download/"
+                        + URLEncoder.encode(comic.getBaseFilename(), StandardCharsets.UTF_8.toString());
+            } catch (UnsupportedEncodingException error)
+            {
+                this.logger.error("error encoding comic filename", error);
+                comicUrl = urlPrefix + "/download/" + comic.getBaseFilename();
+            }
+
+            this.logger.debug("coverUrl: {}", coverUrl);
+            this.logger.debug("thumbnailUrl: {}", thumbnailUrl);
+            this.logger.debug("comicUrl: {}", comicUrl);
+
             // TODO need to get the correct mime types for the cover and thumbnail images
             this.links = Arrays.asList(new OPDSLink("image/jpeg", "http://opds-spec.org/image",
-                            urlPrefix + "/pages/0/content"),
+                            coverUrl),
                     new OPDSLink("image/jpeg", "http://opds-spec.org/image/thumbnail",
-                            urlPrefix + "/pages/0/content"),
+                            thumbnailUrl),
                     new OPDSLink(comic.getArchiveType()
                             .getMimeType(),
                             "http://opds-spec.org/acquisition",
-                            urlPrefix + "/download/" + comic.getBaseFilename()));
+                            comicUrl));
         } else
         {
             this.logger.debug("Comic file missing: {}", comic.getFilename());
