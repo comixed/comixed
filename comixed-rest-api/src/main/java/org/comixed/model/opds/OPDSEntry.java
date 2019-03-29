@@ -19,8 +19,6 @@
 
 package org.comixed.model.opds;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -30,17 +28,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.Credit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <code>OPDSEntry</code> represents a single entry within an OPDS feed.
  *
  * @author Giao Phan
  * @author Darryl L. Pierce
- *
  */
 public class OPDSEntry
 {
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public String id;
     public String title;
     public ZonedDateTime updated;
@@ -50,46 +53,50 @@ public class OPDSEntry
 
     public OPDSEntry(Comic comic)
     {
-        this.id = comic.getId().toString();
-        if (comic.getCoverDate() != null)
-        {
-            this.updated = this._convertDate(comic.getCoverDate());
-        }
-        else
-        {
-            this.updated = this._convertDate(comic.getDateAdded());
-        }
-        this.title = comic.getSeries() + " " + comic.getVolume() + " " + comic.getIssueNumber();
-        this.content = comic.getTitle() + " " + comic.getSummary();
-        // TODO: we should add authors to comics
+        this.id = comic.getId()
+                .toString();
+        this.updated = this.convertDateToZondedDateTime(comic.getDateAdded());
+
+        this.title = StringUtils.isNotEmpty(comic.getTitle()) ? comic.getTitle() : comic.getBaseFilename();
+        this.content = StringUtils.isNotEmpty(comic.getSummary()) ? comic.getSummary() : "";
+
         this.authors = new ArrayList<>();
+        for (Credit credit : comic.getCredits())
+        {
+            if (StringUtils.equals(credit.getRole()
+                    .toUpperCase(), "WRITER"))
+            {
+                this.logger.debug("Adding author: {}", credit.getName());
+                this.authors.add(credit.getName());
+            }
+        }
 
         // FIXME: Is there some sort of router interface we can
         // use to build urls
         String urlPrefix = "/api/comics/" + comic.getId();
-        String urlSafeFilename;
-        try
-        {
-            urlSafeFilename = URLEncoder.encode(comic.getFilename(), StandardCharsets.UTF_8.toString());
-        }
-        catch (java.io.UnsupportedEncodingException ex)
-        {
-            urlSafeFilename = comic.getFilename();
-        }
 
-        this.links = Arrays.asList(new OPDSLink("image/jpeg", "http://opds-spec.org/image",
-                                                urlPrefix + "/pages/0/content"),
-                                   new OPDSLink("image/jpeg", "http://opds-spec.org/image/thumbnail",
-                                                urlPrefix + "/pages/0/content"),
-                                   new OPDSLink(comic.getArchiveType().getMimeType(),
-                                                "http://opds-spec.org/acquisition",
-                                                urlPrefix + "/download/" + urlSafeFilename));
+        if (!comic.isMissing())
+        {
+            this.logger.debug("Added comic to feed: {}", comic.getFilename());
+            this.links = Arrays.asList(new OPDSLink("image/jpeg", "http://opds-spec.org/image",
+                            urlPrefix + "/pages/0/content"),
+                    new OPDSLink("image/jpeg", "http://opds-spec.org/image/thumbnail",
+                            urlPrefix + "/pages/0/content"),
+                    new OPDSLink(comic.getArchiveType()
+                            .getMimeType(),
+                            "http://opds-spec.org/acquisition",
+                            urlPrefix + "/download/?filename=" + comic.getFilename()));
+        } else
+        {
+            this.logger.debug("Comic file missing: {}", comic.getFilename());
+        }
     }
 
     public OPDSEntry(String title, String content, List<String> authors, List<OPDSLink> links)
     {
         this.id = "urn:uuid:" + UUID.randomUUID();
-        this.updated = ZonedDateTime.now().withFixedOffsetZone();
+        this.updated = ZonedDateTime.now()
+                .withFixedOffsetZone();
 
         this.title = title;
         this.content = content;
@@ -97,11 +104,13 @@ public class OPDSEntry
         this.links = links;
     }
 
-    private ZonedDateTime _convertDate(Date date)
+    private ZonedDateTime convertDateToZondedDateTime(Date date)
     {
-        // Yep, this is a bunch of ugly because Date is actually a java.sql.Date
-        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate()
-                      .atStartOfDay(ZoneId.systemDefault()).withFixedOffsetZone();
+        return Instant.ofEpochMilli(date.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .atStartOfDay(ZoneId.systemDefault())
+                .withFixedOffsetZone();
     }
 
     public List<String> getAuthors()
