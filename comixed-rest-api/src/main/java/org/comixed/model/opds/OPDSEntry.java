@@ -19,20 +19,16 @@
 
 package org.comixed.model.opds;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
 import org.codehaus.plexus.util.StringUtils;
 import org.comixed.library.model.Comic;
 import org.comixed.library.model.Credit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 /**
  * <code>OPDSEntry</code> represents a single entry within an OPDS feed.
@@ -57,8 +53,18 @@ public class OPDSEntry
                 .toString();
         this.updated = this.convertDateToZondedDateTime(comic.getDateAdded());
 
-        this.title = StringUtils.isNotEmpty(comic.getTitle()) ? comic.getTitle() : comic.getBaseFilename();
-        this.content = StringUtils.isNotEmpty(comic.getSummary()) ? comic.getSummary() : "";
+        this.title = comic.getBaseFilename();
+        StringBuilder content = new StringBuilder("");
+        if (StringUtils.isNotEmpty(comic.getTitle()))
+        {
+            content.append(comic.getTitle());
+            content.append("<br />");
+        }
+        if (StringUtils.isNotEmpty(comic.getSummary()))
+        {
+            content.append(comic.getSummary());
+        }
+        this.content = content.toString();
 
         this.authors = new ArrayList<>();
         for (Credit credit : comic.getCredits())
@@ -78,6 +84,7 @@ public class OPDSEntry
         if (!comic.isMissing())
         {
             this.logger.debug("Added comic to feed: {}", comic.getFilename());
+            // TODO need to get the correct mime types for the cover and thumbnail images
             this.links = Arrays.asList(new OPDSLink("image/jpeg", "http://opds-spec.org/image",
                             urlPrefix + "/pages/0/content"),
                     new OPDSLink("image/jpeg", "http://opds-spec.org/image/thumbnail",
@@ -85,7 +92,7 @@ public class OPDSEntry
                     new OPDSLink(comic.getArchiveType()
                             .getMimeType(),
                             "http://opds-spec.org/acquisition",
-                            urlPrefix + "/download/?filename=" + comic.getFilename()));
+                            urlPrefix + "/download/" + comic.getBaseFilename()));
         } else
         {
             this.logger.debug("Comic file missing: {}", comic.getFilename());
