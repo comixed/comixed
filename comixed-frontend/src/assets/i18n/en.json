@@ -173,6 +173,12 @@
     }
   },
   "volume-list": {
+    "columns": {
+      "start-year": "Start Year",
+      "series": "Series",
+      "issues": "Issues",
+      "publisher": "Publisher"
+    },
     "button": {
       "back": "Back",
       "select": "Select",

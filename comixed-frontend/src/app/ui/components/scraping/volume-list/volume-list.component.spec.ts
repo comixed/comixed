@@ -26,6 +26,7 @@ import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { VolumeListComponent } from './volume-list.component';
+import { TooltipModule } from 'primeng/primeng';
 
 describe('VolumeListComponent', () => {
   let component: VolumeListComponent;
@@ -38,7 +39,8 @@ describe('VolumeListComponent', () => {
         StoreModule.forRoot({ library: libraryReducer }),
         TableModule,
         CardModule,
-        ButtonModule
+        ButtonModule,
+        TooltipModule
       ],
       declarations: [VolumeListComponent]
     }).compileComponents();

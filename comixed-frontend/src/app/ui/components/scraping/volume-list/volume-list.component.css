@@ -1,0 +1,5 @@
+:host >>> .cx-volume-column {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
