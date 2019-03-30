@@ -113,6 +113,28 @@ $ yarn start
 You can nowconnect to the web application from your browser using *http://localhost:4200/*. And,
 as your make changes to the Angular code, this frontend will update automatically.
 
+## Reading Comics Remotely
+
+You can read comics from your library using any comic reader that supports the [OPDS](https://opds.io/),
+such as [Chunky Reader](http://chunkyreader.com/).
+
+To allow your reader to access the library, you will need either the hostname or IP address for the computer
+running ComiXed. So, for example, if that computers IP address is **192.168.1.29** then you would tell the
+reader:
+
+    Hostname: http://192.168.1.29:7171/opds
+    Username: [the username for your login]
+    Password: [the password for your login]
+
+Please note that some readers (such as Chunky) assume the **/opds** portion of the URL. SO if your reader
+does not see a reading list, try removing **/opds** from the URL.
+
+Then your reader should see, at least, a reading list named **All Comics**. This list will allow you to read
+all comics in your library.
+
+Future work will allow for different reading lists to be presented via OPDS. Please stay tuned for those
+changes to arrive.
+
 ## Contributing
 
 When working on a feature or fixing a bug, please write and test your code against the *develop*
