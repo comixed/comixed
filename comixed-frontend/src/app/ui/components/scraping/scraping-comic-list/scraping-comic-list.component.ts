@@ -26,9 +26,27 @@ import { Comic } from '../../../../models/comics/comic';
   styleUrls: ['./scraping-comic-list.component.css']
 })
 export class ScrapingComicListComponent implements OnInit {
-  @Input() comics: Array<Comic>;
+  private _comics: Array<Comic>;
 
   constructor() {}
 
   ngOnInit() {}
+
+  @Input()
+  set comics(comics: Array<Comic>) {
+    this._comics = comics.sort((left: Comic, right: Comic) => {
+      if (left.base_filename < right.base_filename) {
+        return -1;
+      }
+      if (left.base_filename > right.base_filename) {
+        return 1;
+      }
+
+      return 0;
+    });
+  }
+
+  get comics(): Array<Comic> {
+    return this._comics;
+  }
 }
