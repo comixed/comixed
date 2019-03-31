@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -60,6 +61,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @EnableConfigurationProperties
+@PropertySource("classpath:entryloaders.properties")
 @ConfigurationProperties(prefix = "comic.entry",
         ignoreUnknownFields = false)
 public abstract class AbstractArchiveAdaptor<I> implements
