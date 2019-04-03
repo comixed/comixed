@@ -21,7 +21,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Comic } from '../../../../models/comics/comic';
 import { LibraryFilter } from '../../../../models/actions/library-filter';
-import { LibraryDisplay } from '../../../../models/actions/library-display';
+import { LibraryDisplay } from '../../../../models/state/library-display';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import { Observable } from 'rxjs/Observable';

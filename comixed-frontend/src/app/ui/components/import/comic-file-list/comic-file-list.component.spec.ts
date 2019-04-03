@@ -51,7 +51,7 @@ import {
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppState } from '../../../../app.state';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/actions/library-display.fixtures';
+import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/state/library-display.fixtures';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
 

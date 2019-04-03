@@ -25,7 +25,7 @@ import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from '../../../../actions/library.actions';
 import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
 import { Library } from '../../../../models/actions/library';
-import { LibraryDisplay } from '../../../../models/actions/library-display';
+import { LibraryDisplay } from '../../../../models/state/library-display';
 import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
 
 @Component({

@@ -22,7 +22,7 @@ import { Importing } from '../../../../models/import/importing';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 import * as ImportActions from '../../../../actions/importing.actions';
-import { COVER_SIZE, LibraryDisplay, ROWS, SAME_HEIGHT, SORT } from '../../../../models/actions/library-display';
+import { COVER_SIZE, LibraryDisplay, ROWS, SAME_HEIGHT, SORT } from '../../../../models/state/library-display';
 import * as DisplayActions from '../../../../actions/library-display.actions';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';

@@ -37,7 +37,7 @@ import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Importing } from '../../../../models/import/importing';
 import { ComicFile } from '../../../../models/import/comic-file';
-import { LibraryDisplay } from '../../../../models/actions/library-display';
+import { LibraryDisplay } from '../../../../models/state/library-display';
 
 @Component({
   selector: 'app-selected-comic-file-list',

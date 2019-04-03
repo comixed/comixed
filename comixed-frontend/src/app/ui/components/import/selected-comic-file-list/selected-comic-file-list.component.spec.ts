@@ -44,7 +44,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/actions/library-display.fixtures';
+import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/state/library-display.fixtures';
 import { ComicFile } from '../../../../models/import/comic-file';
 
 describe('SelectedComicFileListComponent', () => {

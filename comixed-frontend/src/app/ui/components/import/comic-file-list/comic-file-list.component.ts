@@ -19,7 +19,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { ComicFile } from '../../../../models/import/comic-file';
-import { LibraryDisplay } from '../../../../models/actions/library-display';
+import { LibraryDisplay } from '../../../../models/state/library-display';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../app.state';
 

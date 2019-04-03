@@ -44,7 +44,7 @@ import { LibraryFilterComponent } from '../library-filter/library-filter.compone
 import { ComicDetailsEditorComponent } from '../../comic/comic-details-editor/comic-details-editor.component';
 import { VolumeListComponent } from '../../scraping/volume-list/volume-list.component';
 import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/actions/library-display.fixtures';
+import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/state/library-display.fixtures';
 import { DEFAULT_LIBRARY_FILTER } from '../../../../models/actions/library-filter.fixtures';
 import { ComicListToolbarComponent } from './comic-list-toolbar.component';
 import { RouterTestingModule } from '@angular/router/testing';

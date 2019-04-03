@@ -54,7 +54,7 @@ import {
   ScrollPanelModule,
   SidebarModule
 } from 'primeng/primeng';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../models/actions/library-display.fixtures';
+import { DEFAULT_LIBRARY_DISPLAY } from '../../../models/state/library-display.fixtures';
 import { EXISTING_LIBRARY } from '../../../models/actions/library.fixtures';
 import { libraryDisplayReducer } from '../../../reducers/library-display.reducer';
 import { importingReducer } from '../../../reducers/importing.reducer';

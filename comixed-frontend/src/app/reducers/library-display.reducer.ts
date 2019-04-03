@@ -18,12 +18,12 @@
  */
 
 import { Action } from '@ngrx/store';
-import { LibraryDisplay } from '../models/actions/library-display';
+import { LibraryDisplay } from '../models/state/library-display';
 import * as LibraryDisplayActions from '../actions/library-display.actions';
 import * as UserActions from '../actions/user.actions';
 import { Preference } from '../models/user/preference';
 
-const initial_state: LibraryDisplay = {
+export const initial_state: LibraryDisplay = {
   layout: 'grid',
   sort_field: 'added_date',
   comic_file_sort_field: 'filename',
@@ -77,6 +77,7 @@ export function libraryDisplayReducer(
       const user = action.payload.user;
       let layout = initial_state.layout;
       let sort = initial_state.sort_field;
+      let comic_file_sort = initial_state.comic_file_sort_field;
       let rows = initial_state.rows;
       let cover_size = initial_state.cover_size;
       let same_height = initial_state.same_height;
@@ -87,6 +88,8 @@ export function libraryDisplayReducer(
             layout = pref.value;
           } else if (pref.name === 'library_display_sort_field') {
             sort = pref.value;
+          } else if (pref.name === 'library_display_comic_file_sort_field') {
+            comic_file_sort = pref.value;
           } else if (pref.name === 'library_display_rows') {
             rows = parseInt(pref.value, 10);
           } else if (pref.name === 'library_display_cover_size') {
@@ -101,6 +104,7 @@ export function libraryDisplayReducer(
         ...state,
         layout: layout,
         sort_field: sort,
+        comic_file_sort_field: comic_file_sort,
         rows: rows,
         cover_size: cover_size,
         same_height: same_height

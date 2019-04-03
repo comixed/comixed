@@ -36,7 +36,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/actions/library-display.fixtures';
+import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/state/library-display.fixtures';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 

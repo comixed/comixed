@@ -39,7 +39,7 @@ import {
   IMPORT_COVER_SIZE,
   IMPORT_LAST_DIRECTORY
 } from '../../../models/user/preferences.constants';
-import { LibraryDisplay } from '../../../models/actions/library-display';
+import { LibraryDisplay } from '../../../models/state/library-display';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';

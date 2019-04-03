@@ -32,7 +32,7 @@ import {
   ROWS,
   COVER_SIZE,
   SAME_HEIGHT
-} from '../../../../models/actions/library-display';
+} from '../../../../models/state/library-display';
 import * as UserActions from '../../../../actions/user.actions';
 
 @Component({
