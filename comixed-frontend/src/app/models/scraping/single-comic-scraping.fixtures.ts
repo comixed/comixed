@@ -18,7 +18,7 @@
  */
 
 import { SingleComicScraping } from './single-comic-scraping';
-import { COMIC_1000 } from '../comics/comic.fixtures';
+import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 
 export const SINGLE_COMIC_SCRAPING_STATE: SingleComicScraping = {
   busy: false,

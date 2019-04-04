@@ -18,14 +18,14 @@
  */
 
 import { LibraryFilterPipe } from './library-filter.pipe';
-import { LibraryFilter } from '../models/actions/library-filter';
-import { Comic } from '../models/comics/comic';
+import { LibraryFilter } from 'app/models/actions/library-filter';
+import { Comic } from 'app/models/comics/comic';
 import {
   COMIC_1000,
   COMIC_1001,
   COMIC_1002,
   COMIC_1003
-} from '../models/comics/comic.fixtures';
+} from 'app/models/comics/comic.fixtures';
 
 describe('LibraryFilterPipe', () => {
   let pipe: LibraryFilterPipe;

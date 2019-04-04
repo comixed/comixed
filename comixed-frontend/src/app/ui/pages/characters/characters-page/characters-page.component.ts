@@ -19,11 +19,11 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import * as LibraryActions from '../../../../actions/library.actions';
-import { Library } from '../../../../models/actions/library';
+import * as LibraryActions from 'app/actions/library.actions';
+import { Library } from 'app/models/actions/library';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 

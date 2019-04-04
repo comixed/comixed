@@ -22,9 +22,9 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as DisplayActions from '../../../../actions/library-display.actions';
-import { LibraryFilter } from '../../../../models/actions/library-filter';
+import { AppState } from 'app/app.state';
+import * as DisplayActions from 'app/actions/library-display.actions';
+import { LibraryFilter } from 'app/models/actions/library-filter';
 import {
   LibraryDisplay,
   LAYOUT,
@@ -32,8 +32,8 @@ import {
   ROWS,
   COVER_SIZE,
   SAME_HEIGHT
-} from '../../../../models/state/library-display';
-import * as UserActions from '../../../../actions/user.actions';
+} from 'app/models/state/library-display';
+import * as UserActions from 'app/actions/user.actions';
 
 @Component({
   selector: 'app-comic-list-toolbar',

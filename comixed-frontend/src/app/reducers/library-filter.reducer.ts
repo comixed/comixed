@@ -18,8 +18,8 @@
  */
 
 import { Action } from '@ngrx/store';
-import { LibraryFilter } from '../models/actions/library-filter';
-import * as FilterActions from '../actions/library-filter.actions';
+import { LibraryFilter } from 'app/models/actions/library-filter';
+import * as FilterActions from 'app/actions/library-filter.actions';
 
 const initial_state: LibraryFilter = {
   changed: false,

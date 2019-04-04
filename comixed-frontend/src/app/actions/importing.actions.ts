@@ -19,8 +19,8 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Importing } from '../models/import/importing';
-import { ComicFile } from '../models/import/comic-file';
+import { Importing } from 'app/models/import/importing';
+import { ComicFile } from 'app/models/import/comic-file';
 
 export const IMPORTING_GET_PENDING_IMPORTS = '[IMPORTING] Get the number of pending imports';
 export class ImportingGetPendingImports implements Action {

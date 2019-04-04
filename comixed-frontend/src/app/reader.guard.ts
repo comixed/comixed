@@ -25,12 +25,12 @@ import {
 } from '@angular/router';
 import { Router } from '@angular/router';
 import { Store, Action } from '@ngrx/store';
-import { AppState } from './app.state';
+import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import * as UserActions from './actions/user.actions';
+import * as UserActions from 'app/actions/user.actions';
 import { filter } from 'rxjs/operators';
-import { User } from './models/user/user';
+import { User } from 'app/models/user/user';
 
 @Injectable()
 export class ReaderGuard implements CanActivate {

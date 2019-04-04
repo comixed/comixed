@@ -18,9 +18,9 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Importing } from '../models/import/importing';
-import * as ImportingActions from '../actions/importing.actions';
-import { ComicFile } from '../models/import/comic-file';
+import { Importing } from 'app/models/import/importing';
+import * as ImportingActions from 'app/actions/importing.actions';
+import { ComicFile } from 'app/models/import/comic-file';
 
 const initial_state: Importing = {
   busy: false,

@@ -21,8 +21,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
-import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
-import { COMIC_1000 } from '../../../../models/comics/comic.fixtures';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { IssueDetailsComponent } from './issue-details.component';
 
 describe('IssueDetailsComponent', () => {

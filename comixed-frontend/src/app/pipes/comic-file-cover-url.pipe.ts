@@ -18,8 +18,8 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { ComicFile } from '../models/import/comic-file';
-import { COMIC_SERVICE_API_URL } from '../services/comic.service';
+import { ComicFile } from 'app/models/import/comic-file';
+import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
 
 @Pipe({
   name: 'comic_file_cover_url'

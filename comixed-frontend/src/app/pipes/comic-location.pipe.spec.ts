@@ -22,7 +22,7 @@ import {
   COMIC_1000,
   COMIC_1001,
   COMIC_1002
-} from '../models/comics/comic.fixtures';
+} from 'app/models/comics/comic.fixtures';
 
 describe('ComicLocationPipe', () => {
   const pipe = new ComicLocationPipe();

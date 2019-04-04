@@ -23,13 +23,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
-import { ComicPageUrlPipe } from '../../../../pipes/comic-page-url.pipe';
-import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
+import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import { libraryReducer } from '../../../../reducers/library.reducer';
-import { DuplicatePage } from '../../../../models/comics/duplicate-page';
+import { AppState } from 'app/app.state';
+import { libraryReducer } from 'app/reducers/library.reducer';
+import { DuplicatePage } from 'app/models/comics/duplicate-page';
 import { PageHashViewComponent } from './page-hash-view.component';
 
 describe('PageHashViewComponent', () => {

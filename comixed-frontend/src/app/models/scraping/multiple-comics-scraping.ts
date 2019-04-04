@@ -17,8 +17,8 @@
  * org.comixed;
  */
 
-import { Comic } from '../comics/comic';
-import { Volume } from '../comics/volume';
+import { Comic } from 'app/models/comics/comic';
+import { Volume } from 'app/models/comics/volume';
 import { Issue } from './issue';
 
 export interface MultipleComicsScraping {

@@ -18,8 +18,8 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from '../models/comics/comic';
-import { LibraryFilter } from '../models/actions/library-filter';
+import { Comic } from 'app/models/comics/comic';
+import { LibraryFilter } from 'app/models/actions/library-filter';
 
 @Pipe({
   name: 'library_filter'

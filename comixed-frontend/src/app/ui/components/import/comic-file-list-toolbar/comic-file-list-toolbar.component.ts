@@ -18,16 +18,16 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Importing } from '../../../../models/import/importing';
+import { Importing } from 'app/models/import/importing';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as ImportActions from '../../../../actions/importing.actions';
-import { COVER_SIZE, LibraryDisplay, ROWS, SAME_HEIGHT, SORT } from '../../../../models/state/library-display';
-import * as DisplayActions from '../../../../actions/library-display.actions';
+import { AppState } from 'app/app.state';
+import * as ImportActions from 'app/actions/importing.actions';
+import { COVER_SIZE, LibraryDisplay, ROWS, SAME_HEIGHT, SORT } from 'app/models/state/library-display';
+import * as DisplayActions from 'app/actions/library-display.actions';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { ComicFile } from '../../../../models/import/comic-file';
+import { ComicFile } from 'app/models/import/comic-file';
 
 @Component({
   selector: 'app-comic-file-list-toolbar',

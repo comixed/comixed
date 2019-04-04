@@ -19,9 +19,9 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Comic } from '../models/comics/comic';
-import { Volume } from '../models/comics/volume';
-import { Issue } from '../models/scraping/issue';
+import { Comic } from 'app/models/comics/comic';
+import { Volume } from 'app/models/comics/volume';
+import { Issue } from 'app/models/scraping/issue';
 
 export const SINGLE_COMIC_SCRAPING_SETUP = '[LIBRARY SCRAPING] Setup scraping';
 export class SingleComicScrapingSetup implements Action {

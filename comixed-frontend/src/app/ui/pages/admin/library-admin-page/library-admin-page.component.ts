@@ -19,11 +19,11 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Library } from '../../../../models/actions/library';
+import { Library } from 'app/models/actions/library';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { AppState } from '../../../../app.state';
-import * as LibraryActions from '../../../../actions/library.actions';
+import { AppState } from 'app/app.state';
+import * as LibraryActions from 'app/actions/library.actions';
 
 @Component({
   selector: 'app-library-admin-page',

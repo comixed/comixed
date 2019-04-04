@@ -20,9 +20,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import { importingReducer } from '../../../../reducers/importing.reducer';
-import * as ImportActions from '../../../../actions/importing.actions';
+import { AppState } from 'app/app.state';
+import { importingReducer } from 'app/reducers/importing.reducer';
+import * as ImportActions from 'app/actions/importing.actions';
 import { ComicFileListToolbarComponent } from './comic-file-list-toolbar.component';
 import { DebugElement } from '@angular/core';
 import {
@@ -36,7 +36,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/state/library-display.fixtures';
+import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 

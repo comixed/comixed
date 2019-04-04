@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { LibraryDisplay } from '../models/state/library-display';
-import { initial_state, libraryDisplayReducer } from './library-display.reducer';
-import * as DisplayActions from '../actions/library-display.actions';
-import { READER_USER } from '../models/user/user.fixtures';
-import { Preference } from '../models/user/preference';
+import { LibraryDisplay } from 'app/models/state/library-display';
+import { initial_state, libraryDisplayReducer } from 'app/reducers/library-display.reducer';
+import * as DisplayActions from 'app/actions/library-display.actions';
+import { READER_USER } from 'app/models/user/user.fixtures';
+import { Preference } from 'app/models/user/preference';
 
 describe('libraryDisplayReducer', () => {
   let state: LibraryDisplay;

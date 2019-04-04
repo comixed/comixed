@@ -18,8 +18,8 @@
  */
 
 import { Action } from '@ngrx/store';
-import { DuplicatePage } from '../models/comics/duplicate-page';
-import { Page } from '../models/comics/page';
+import { DuplicatePage } from 'app/models/comics/duplicate-page';
+import { Page } from 'app/models/comics/page';
 
 export const DUPLICATE_PAGES_FETCH_PAGES = '[DUPLICATE PAGES] Fetch list of pages';
 export const DUPLICATE_PAGES_SET_PAGES = '[DUPLICATE PAGES] Set list of pages';

@@ -18,8 +18,8 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { COMIC_SERVICE_API_URL } from '../services/comic.service';
-import { Comic } from '../models/comics/comic';
+import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
+import { Comic } from 'app/models/comics/comic';
 
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 

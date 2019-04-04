@@ -21,10 +21,10 @@ import { TestBed, async, inject } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from './app.state';
-import * as UserActions from './actions/user.actions';
-import { userReducer } from './reducers/user.reducer';
-import { READER_USER, BLOCKED_USER } from './models/user/user.fixtures';
+import { AppState } from 'app/app.state';
+import * as UserActions from 'app/actions/user.actions';
+import { userReducer } from 'app/reducers/user.reducer';
+import { READER_USER, BLOCKED_USER } from 'app/models/user/user.fixtures';
 
 import { ReaderGuard } from './reader.guard';
 

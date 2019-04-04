@@ -23,10 +23,10 @@ import { Action } from '@ngrx/store';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import * as UserAdminActions from '../actions/user-admin.actions';
+import * as UserAdminActions from 'app/actions/user-admin.actions';
 import { MessageService } from 'primeng/api';
-import { UserService } from '../services/user.service';
-import { User } from '../models/user/user';
+import { UserService } from 'app/services/user.service';
+import { User } from 'app/models/user/user';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()

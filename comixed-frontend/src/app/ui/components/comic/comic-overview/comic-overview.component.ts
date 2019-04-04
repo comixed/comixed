@@ -19,13 +19,13 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as LibraryActions from '../../../../actions/library.actions';
-import { Library } from '../../../../models/actions/library';
-import { Comic } from '../../../../models/comics/comic';
-import { LastReadDate } from '../../../../models/comics/last-read-date';
-import { ScanType } from '../../../../models/comics/scan-type';
-import { ComicFormat } from '../../../../models/comics/comic-format';
+import { AppState } from 'app/app.state';
+import * as LibraryActions from 'app/actions/library.actions';
+import { Library } from 'app/models/actions/library';
+import { Comic } from 'app/models/comics/comic';
+import { LastReadDate } from 'app/models/comics/last-read-date';
+import { ScanType } from 'app/models/comics/scan-type';
+import { ComicFormat } from 'app/models/comics/comic-format';
 import { SelectItem } from 'primeng/api';
 
 @Component({

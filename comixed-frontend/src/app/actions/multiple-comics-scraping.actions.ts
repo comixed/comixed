@@ -19,9 +19,9 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Comic } from '../models/comics/comic';
-import { Volume } from '../models/comics/volume';
-import { Issue } from '../models/scraping/issue';
+import { Comic } from 'app/models/comics/comic';
+import { Volume } from 'app/models/comics/volume';
+import { Issue } from 'app/models/scraping/issue';
 
 export const MULTIPLE_COMICS_SCRAPING_SETUP =
   '[MULTIPLE COMICS SCRAPING] Setup';

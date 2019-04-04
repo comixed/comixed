@@ -21,13 +21,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
+import { AppState } from 'app/app.state';
+import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { SelectItem } from 'primeng/api';
-import { UserService } from '../../../../services/user.service';
-import { DuplicatePage } from '../../../../models/comics/duplicate-page';
-import { Duplicates } from '../../../../models/duplicates';
-import { DUPLICATES_HASH_PARAMETER } from '../../../pages/library/duplicates-page/duplicates-page.component';
+import { UserService } from 'app/services/user.service';
+import { DuplicatePage } from 'app/models/comics/duplicate-page';
+import { Duplicates } from 'app/models/duplicates';
+import { DUPLICATES_HASH_PARAMETER } from 'app/ui/pages/library/duplicates-page/duplicates-page.component';
 
 @Component({
   selector: 'app-duplicate-pages-view',

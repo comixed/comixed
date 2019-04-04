@@ -20,10 +20,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
-import { multipleComicsScrapingReducer } from '../../../../reducers/multiple-comics-scraping.reducer';
+import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scraping.reducer';
 import { LibraryScrapingToolbarComponent } from './library-scraping-toolbar.component';
 
 describe('LibraryScrapingToolbarComponent', () => {

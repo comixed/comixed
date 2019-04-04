@@ -22,13 +22,13 @@ import { PublishersPageComponent } from './publishers-page.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { TableModule } from 'primeng/table';
 import { ButtonModule, DropdownModule, PanelModule } from 'primeng/primeng';
-import { LibraryFilterComponent } from '../../../components/library/library-filter/library-filter.component';
+import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { Store, StoreModule } from '@ngrx/store';
-import { libraryReducer } from '../../../../reducers/library.reducer';
-import { AppState } from '../../../../app.state';
-import * as LibraryActions from '../../../../actions/library.actions';
+import { libraryReducer } from 'app/reducers/library.reducer';
+import { AppState } from 'app/app.state';
+import * as LibraryActions from 'app/actions/library.actions';
 
 describe('PublishersPageComponent', () => {
   let component: PublishersPageComponent;

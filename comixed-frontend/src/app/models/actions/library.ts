@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { Comic } from '../comics/comic';
-import { LibraryState } from '../library-state';
-import { LastReadDate } from '../comics/last-read-date';
-import { ScanType } from '../comics/scan-type';
-import { ComicFormat } from '../comics/comic-format';
+import { Comic } from 'app/models/comics/comic';
+import { LastReadDate } from 'app/models/comics/last-read-date';
+import { ScanType } from 'app/models/comics/scan-type';
+import { ComicFormat } from 'app/models/comics/comic-format';
+import { LibraryState } from 'app/models/library-state';
 
 export interface ComicGrouping {
   name: string;

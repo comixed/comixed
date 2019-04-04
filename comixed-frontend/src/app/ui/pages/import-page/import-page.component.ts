@@ -21,25 +21,25 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../app.state';
+import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import * as UserActions from '../../../actions/user.actions';
-import { Importing } from '../../../models/import/importing';
-import { Library } from '../../../models/actions/library';
-import * as ImportingActions from '../../../actions/importing.actions';
+import * as UserActions from 'app/actions/user.actions';
+import { Importing } from 'app/models/import/importing';
+import { Library } from 'app/models/actions/library';
+import * as ImportingActions from 'app/actions/importing.actions';
 import { SelectItem } from 'primeng/api';
-import { ComicFile } from '../../../models/import/comic-file';
-import { User } from '../../../models/user/user';
-import { Preference } from '../../../models/user/preference';
-import { ComicService } from '../../../services/comic.service';
+import { ComicFile } from 'app/models/import/comic-file';
+import { User } from 'app/models/user/user';
+import { Preference } from 'app/models/user/preference';
+import { ComicService } from 'app/services/comic.service';
 import {
   IMPORT_SORT,
   IMPORT_ROWS,
   IMPORT_COVER_SIZE,
   IMPORT_LAST_DIRECTORY
-} from '../../../models/user/preferences.constants';
-import { LibraryDisplay } from '../../../models/state/library-display';
+} from 'app/models/user/preferences.constants';
+import { LibraryDisplay } from 'app/models/state/library-display';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';

@@ -18,10 +18,10 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { ComicFile } from '../../../../models/import/comic-file';
+import { ComicFile } from 'app/models/import/comic-file';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as ImportActions from '../../../../actions/importing.actions';
+import { AppState } from 'app/app.state';
+import * as ImportActions from 'app/actions/importing.actions';
 
 @Component({
   selector: 'app-comic-file-grid-item',

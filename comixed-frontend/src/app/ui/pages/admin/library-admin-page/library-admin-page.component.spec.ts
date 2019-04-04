@@ -19,17 +19,17 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import * as LibraryActions from '../../../../actions/library.actions';
+import * as LibraryActions from 'app/actions/library.actions';
 import { LibraryAdminPageComponent } from './library-admin-page.component';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 import { TranslateModule } from '@ngx-translate/core';
 import { FileSaverModule } from 'ngx-filesaver';
-import { libraryReducer } from '../../../../reducers/library.reducer';
+import { libraryReducer } from 'app/reducers/library.reducer';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { COMIC_1000, COMIC_1001 } from '../../../../models/comics/comic.fixtures';
+import { COMIC_1000, COMIC_1001 } from 'app/models/comics/comic.fixtures';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 

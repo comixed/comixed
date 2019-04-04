@@ -22,10 +22,10 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { map, switchMap, tap } from 'rxjs/operators';
-import * as ImportingActions from '../actions/importing.actions';
+import * as ImportingActions from 'app/actions/importing.actions';
 import { MessageService } from 'primeng/api';
-import { ComicService } from '../services/comic.service';
-import { ComicFile } from '../models/import/comic-file';
+import { ComicService } from 'app/services/comic.service';
+import { ComicFile } from 'app/models/import/comic-file';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()

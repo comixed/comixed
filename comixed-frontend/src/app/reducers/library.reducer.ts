@@ -18,9 +18,9 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Library, ComicGrouping } from '../models/actions/library';
-import { Comic } from '../models/comics/comic';
-import * as LibraryActions from '../actions/library.actions';
+import { Library, ComicGrouping } from 'app/models/actions/library';
+import { Comic } from 'app/models/comics/comic';
+import * as LibraryActions from 'app/actions/library.actions';
 
 const initial_state: Library = {
   busy: false,

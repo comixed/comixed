@@ -22,10 +22,10 @@ import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { AppState } from '../../../../app.state';
-import { User } from '../../../../models/user/user';
+import { AppState } from 'app/app.state';
+import { User } from 'app/models/user/user';
 import { Store } from '@ngrx/store';
-import * as UserActions from '../../../../actions/user.actions';
+import * as UserActions from 'app/actions/user.actions';
 import * as lodash from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 

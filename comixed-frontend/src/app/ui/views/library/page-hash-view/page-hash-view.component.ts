@@ -21,12 +21,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
-import { Duplicates } from '../../../../models/duplicates';
-import { Comic } from '../../../../models/comics/comic';
-import { Page } from '../../../../models/comics/page';
-import { DUPLICATES_HASH_PARAMETER } from '../../../pages/library/duplicates-page/duplicates-page.component';
+import { AppState } from 'app/app.state';
+import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
+import { Duplicates } from 'app/models/duplicates';
+import { Comic } from 'app/models/comics/comic';
+import { Page } from 'app/models/comics/page';
+import { DUPLICATES_HASH_PARAMETER } from 'app/ui/pages/library/duplicates-page/duplicates-page.component';
 
 @Component({
   selector: 'app-page-hash-view',

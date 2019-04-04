@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { User } from '../models/user/user';
+import { User } from 'app/models/user/user';
 import { Observable } from 'rxjs/Observable';
 
 export class UserServiceMock {

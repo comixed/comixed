@@ -32,7 +32,7 @@ import {
 } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { TokenStorage } from './storage/token.storage';
+import { TokenStorage } from 'app/storage/token.storage';
 import { MessageService } from 'primeng/api';
 
 export const TOKEN_HEADER_KEY = 'Authorization';

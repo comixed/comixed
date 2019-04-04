@@ -21,8 +21,8 @@ import {
   ComicCoverUrlPipe,
   MISSING_COMIC_IMAGE_URL
 } from './comic-cover-url.pipe';
-import { COMIC_SERVICE_API_URL } from '../services/comic.service';
-import { COMIC_1000, COMIC_1003 } from '../models/comics/comic.fixtures';
+import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
+import { COMIC_1000, COMIC_1003 } from 'app/models/comics/comic.fixtures';
 
 describe('ComicCoverUrlPipe', () => {
   const pipe = new ComicCoverUrlPipe();

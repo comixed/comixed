@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { Duplicates } from '../models/duplicates';
-import * as DuplicatesActions from '../actions/duplicate-pages.actions';
-import { DuplicatePage } from '../models/comics/duplicate-page';
+import { Duplicates } from 'app/models/duplicates';
+import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
+import { DuplicatePage } from 'app/models/comics/duplicate-page';
 
 const initial_state: Duplicates = {
   busy: false,

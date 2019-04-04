@@ -19,14 +19,14 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import * as LibraryActions from '../../../../actions/library.actions';
-import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
-import { Library } from '../../../../models/actions/library';
-import { LibraryDisplay } from '../../../../models/state/library-display';
-import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
+import * as LibraryActions from 'app/actions/library.actions';
+import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
+import { Library } from 'app/models/actions/library';
+import { LibraryDisplay } from 'app/models/state/library-display';
+import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 
 @Component({
   selector: 'app-multi-comic-scraping-page',

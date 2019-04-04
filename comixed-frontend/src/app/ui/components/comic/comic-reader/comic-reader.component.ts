@@ -19,9 +19,9 @@
 
 import { Component, OnInit, Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Comic } from '../../../../models/comics/comic';
-import { Page } from '../../../../models/comics/page';
-import { ComicService } from '../../../../services/comic.service';
+import { Comic } from 'app/models/comics/comic';
+import { Page } from 'app/models/comics/page';
+import { ComicService } from 'app/services/comic.service';
 
 @Component({
   selector: 'app-comic-reader',

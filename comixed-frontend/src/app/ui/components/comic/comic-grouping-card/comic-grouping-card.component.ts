@@ -18,7 +18,7 @@
  */
 
 import { Component, OnInit, Input } from '@angular/core';
-import { ComicGrouping } from '../../../../models/actions/library';
+import { ComicGrouping } from 'app/models/actions/library';
 
 @Component({
   selector: 'app-comic-grouping-card',

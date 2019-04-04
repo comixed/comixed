@@ -20,9 +20,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../app.state';
-import * as UserActions from '../../../actions/user.actions';
-import { User } from '../../../models/user/user';
+import { AppState } from 'app/app.state';
+import * as UserActions from 'app/actions/user.actions';
+import { User } from 'app/models/user/user';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 
 @Component({

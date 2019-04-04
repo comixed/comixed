@@ -26,13 +26,13 @@ import {
   EventEmitter
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Comic } from '../../../../models/comics/comic';
-import { Library } from '../../../../models/actions/library';
+import { Comic } from 'app/models/comics/comic';
+import { Library } from 'app/models/actions/library';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import * as LibraryActions from '../../../../actions/library.actions';
+import * as LibraryActions from 'app/actions/library.actions';
 import { MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 

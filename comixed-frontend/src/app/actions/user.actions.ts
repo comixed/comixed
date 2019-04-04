@@ -19,7 +19,7 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { User } from '../models/user/user';
+import { User } from 'app/models/user/user';
 
 export const USER_AUTH_CHECK = '[USER] Check if the user is already logged in.';
 export class UserAuthCheck implements Action {

@@ -18,7 +18,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Comic } from '../../../../models/comics/comic';
+import { Comic } from 'app/models/comics/comic';
 
 @Component({
   selector: 'app-scraping-comic-list',

@@ -20,10 +20,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataViewModule } from 'primeng/dataview';
-import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ScrapingComicListComponent } from './scraping-comic-list.component';
-import { COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003 } from '../../../../models/comics/comic.fixtures';
-import { Comic } from '../../../../models/comics/comic';
+import { COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003 } from 'app/models/comics/comic.fixtures';
+import { Comic } from 'app/models/comics/comic';
 
 describe('ScrapingComicListComponent', () => {
   let component: ScrapingComicListComponent;

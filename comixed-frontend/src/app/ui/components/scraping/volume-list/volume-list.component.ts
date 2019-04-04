@@ -18,12 +18,12 @@
  */
 
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Comic } from '../../../../models/comics/comic';
-import { Volume } from '../../../../models/comics/volume';
-import { Issue } from '../../../../models/scraping/issue';
+import { Comic } from 'app/models/comics/comic';
+import { Volume } from 'app/models/comics/volume';
+import { Issue } from 'app/models/scraping/issue';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as ScrapingActions from '../../../../actions/single-comic-scraping.actions';
+import { AppState } from 'app/app.state';
+import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 
 interface VolumeOptions {
   volume: Volume;

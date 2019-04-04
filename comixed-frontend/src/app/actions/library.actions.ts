@@ -19,12 +19,12 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Library } from '../models/actions/library';
-import { Comic } from '../models/comics/comic';
-import { Page } from '../models/comics/page';
-import { ScanType } from '../models/comics/scan-type';
-import { ComicFormat } from '../models/comics/comic-format';
-import { LibraryState } from '../models/library-state';
+import { Library } from 'app/models/actions/library';
+import { Comic } from 'app/models/comics/comic';
+import { Page } from 'app/models/comics/page';
+import { ScanType } from 'app/models/comics/scan-type';
+import { ComicFormat } from 'app/models/comics/comic-format';
+import { LibraryState } from 'app/models/library-state';
 
 export const LIBRARY_GET_SCAN_TYPES = '[LIBRARY] Fetch the scan types';
 export class LibraryGetScanTypes implements Action {

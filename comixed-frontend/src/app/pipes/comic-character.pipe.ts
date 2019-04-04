@@ -18,7 +18,7 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from '../models/comics/comic';
+import { Comic } from 'app/models/comics/comic';
 
 @Pipe({
   name: 'comic_character'

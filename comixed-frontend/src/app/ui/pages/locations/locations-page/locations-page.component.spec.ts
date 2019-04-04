@@ -26,9 +26,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import { libraryReducer } from '../../../../reducers/library.reducer';
-import { LibraryFilterComponent } from '../../../components/library/library-filter/library-filter.component';
+import { AppState } from 'app/app.state';
+import { libraryReducer } from 'app/reducers/library.reducer';
+import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { LocationsPageComponent } from './locations-page.component';
 
 describe('LocationsPageComponent', () => {

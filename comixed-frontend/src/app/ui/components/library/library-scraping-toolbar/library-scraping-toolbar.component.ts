@@ -21,10 +21,10 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { AppState } from '../../../../app.state';
-import * as ScrapingActions from '../../../../actions/multiple-comics-scraping.actions';
-import { MultipleComicsScraping } from '../../../../models/scraping/multiple-comics-scraping';
-import { Comic } from '../../../../models/comics/comic';
+import { AppState } from 'app/app.state';
+import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
+import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
+import { Comic } from 'app/models/comics/comic';
 
 @Component({
   selector: 'app-library-scraping-toolbar',

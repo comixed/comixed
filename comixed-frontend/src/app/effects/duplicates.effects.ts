@@ -22,9 +22,9 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { map, switchMap } from 'rxjs/operators';
-import * as DuplicatesActions from '../actions/duplicate-pages.actions';
-import { ComicService } from '../services/comic.service';
-import { DuplicatePage } from '../models/comics/duplicate-page';
+import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
+import { ComicService } from 'app/services/comic.service';
+import { DuplicatePage } from 'app/models/comics/duplicate-page';
 
 @Injectable()
 export class DuplicatesEffects {

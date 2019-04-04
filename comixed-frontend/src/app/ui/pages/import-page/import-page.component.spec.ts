@@ -22,8 +22,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../app.state';
-import { libraryReducer } from '../../../reducers/library.reducer';
+import { AppState } from 'app/app.state';
+import { libraryReducer } from 'app/reducers/library.reducer';
 import { DataViewModule } from 'primeng/dataview';
 import { SliderModule } from 'primeng/slider';
 import { ButtonModule } from 'primeng/button';
@@ -32,20 +32,20 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ToolbarModule } from 'primeng/toolbar';
-import { ComicCoverUrlPipe } from '../../../pipes/comic-cover-url.pipe';
-import { ComicFileCoverUrlPipe } from '../../../pipes/comic-file-cover-url.pipe';
-import { ComicService } from '../../../services/comic.service';
-import { ComicServiceMock } from '../../../services/comic.service.mock';
-import { IMPORTING_STATE } from '../../../models/import/importing.fixtures';
-import { READER_USER } from '../../../models/user/user.fixtures';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
+import { ComicService } from 'app/services/comic.service';
+import { ComicServiceMock } from 'app/services/comic.service.mock';
+import { IMPORTING_STATE } from 'app/models/import/importing.fixtures';
+import { READER_USER } from 'app/models/user/user.fixtures';
 import { ImportPageComponent } from './import-page.component';
 import { By } from '@angular/platform-browser';
-import { ComicFileListComponent } from '../../components/import/comic-file-list/comic-file-list.component';
-import { SelectedComicFileListComponent } from '../../components/import/selected-comic-file-list/selected-comic-file-list.component';
-import { ComicFileListToolbarComponent } from '../../components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
-import { ComicFile } from '../../../models/import/comic-file';
-import { ComicFileGridItemComponent } from '../../components/import/comic-file-grid-item/comic-file-grid-item.component';
-import { ComicCoverComponent } from '../../components/comic/comic-cover/comic-cover.component';
+import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
+import { SelectedComicFileListComponent } from 'app/ui/components/import/selected-comic-file-list/selected-comic-file-list.component';
+import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
+import { ComicFile } from 'app/models/import/comic-file';
+import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
+import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import {
   CheckboxModule,
   ConfirmationService,
@@ -54,15 +54,15 @@ import {
   ScrollPanelModule,
   SidebarModule
 } from 'primeng/primeng';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../models/state/library-display.fixtures';
-import { EXISTING_LIBRARY } from '../../../models/actions/library.fixtures';
-import { libraryDisplayReducer } from '../../../reducers/library-display.reducer';
-import { importingReducer } from '../../../reducers/importing.reducer';
-import { userReducer } from '../../../reducers/user.reducer';
-import * as LibraryActions from '../../../actions/library.actions';
-import * as DisplayActions from '../../../actions/library-display.actions';
-import * as ImportActions from '../../../actions/importing.actions';
-import * as UserActions from '../../../actions/user.actions';
+import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
+import { EXISTING_LIBRARY } from 'app/models/actions/library.fixtures';
+import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
+import { importingReducer } from 'app/reducers/importing.reducer';
+import { userReducer } from 'app/reducers/user.reducer';
+import * as LibraryActions from 'app/actions/library.actions';
+import * as DisplayActions from 'app/actions/library-display.actions';
+import * as ImportActions from 'app/actions/importing.actions';
+import * as UserActions from 'app/actions/user.actions';
 
 const DIRECTORY_TO_USE = '/User/comixed/Downloads';
 

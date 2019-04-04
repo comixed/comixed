@@ -18,9 +18,9 @@
  */
 
 import { Action } from '@ngrx/store';
-import { User } from '../models/user/user';
-import { Preference } from '../models/user/preference';
-import * as UserActions from '../actions/user.actions';
+import { User } from 'app/models/user/user';
+import { Preference } from 'app/models/user/preference';
+import * as UserActions from 'app/actions/user.actions';
 
 const initial_state: User = {
   initialized: false,

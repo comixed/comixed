@@ -18,8 +18,8 @@
  */
 
 import { ComicFileCoverUrlPipe } from './comic-file-cover-url.pipe';
-import { EXISTING_COMIC_FILE_1 } from '../models/import/comic-file.fixtures';
-import { COMIC_SERVICE_API_URL } from '../services/comic.service';
+import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
+import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
 
 describe('ComicFileCoverUrlPipe', () => {
   const pipe = new ComicFileCoverUrlPipe();

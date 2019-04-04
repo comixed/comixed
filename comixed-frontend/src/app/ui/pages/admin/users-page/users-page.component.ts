@@ -19,13 +19,13 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as UserAdminActions from '../../../../actions/user-admin.actions';
+import { AppState } from 'app/app.state';
+import * as UserAdminActions from 'app/actions/user-admin.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { UserAdmin } from '../../../../models/actions/user-admin';
-import { User } from '../../../../models/user/user';
-import { Role } from '../../../../models/user/role';
+import { UserAdmin } from 'app/models/actions/user-admin';
+import { User } from 'app/models/user/user';
+import { Role } from 'app/models/user/role';
 import { ConfirmationService } from 'primeng/api';
 
 @Component({

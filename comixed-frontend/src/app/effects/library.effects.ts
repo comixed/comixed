@@ -23,13 +23,13 @@ import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import * as LibraryActions from '../actions/library.actions';
+import * as LibraryActions from 'app/actions/library.actions';
 import { MessageService } from 'primeng/api';
-import { ComicService } from '../services/comic.service';
-import { LibraryState } from '../models/library-state';
-import { Comic } from '../models/comics/comic';
-import { ScanType } from '../models/comics/scan-type';
-import { ComicFormat } from '../models/comics/comic-format';
+import { ComicService } from 'app/services/comic.service';
+import { LibraryState } from 'app/models/library-state';
+import { Comic } from 'app/models/comics/comic';
+import { ScanType } from 'app/models/comics/scan-type';
+import { ComicFormat } from 'app/models/comics/comic-format';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()

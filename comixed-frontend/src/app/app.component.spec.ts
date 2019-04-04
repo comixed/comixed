@@ -27,17 +27,17 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from './app.state';
-import * as UserActions from './actions/user.actions';
-import { userReducer } from './reducers/user.reducer';
-import { READER_USER } from './models/user/user.fixtures';
-import * as LibraryActions from './actions/library.actions';
-import { libraryReducer } from './reducers/library.reducer';
-import { COMIC_1000, COMIC_1001, COMIC_1002 } from './models/comics/comic.fixtures';
+import { AppState } from 'app/app.state';
+import * as UserActions from 'app/actions/user.actions';
+import { userReducer } from 'app/reducers/user.reducer';
+import { READER_USER } from 'app/models/user/user.fixtures';
+import * as LibraryActions from 'app/actions/library.actions';
+import { libraryReducer } from 'app/reducers/library.reducer';
+import { COMIC_1000, COMIC_1001, COMIC_1002 } from 'app/models/comics/comic.fixtures';
 import { LoadingModule } from 'ngx-loading';
-import { MenubarComponent } from './ui/components/main/menubar/menubar.component';
-import { LoginComponent } from './ui/components/login/login.component';
-import { AppComponent } from './app.component';
+import { MenubarComponent } from 'app/ui/components/main/menubar/menubar.component';
+import { LoginComponent } from 'app/ui/components/login/login.component';
+import { AppComponent } from 'app/app.component';
 import { ConfirmDialogModule } from 'primeng/primeng';
 
 describe('AppComponent', () => {

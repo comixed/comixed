@@ -19,16 +19,16 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicFileGridItemComponent } from './comic-file-grid-item.component';
-import { ComicFileCoverUrlPipe } from '../../../../pipes/comic-file-cover-url.pipe';
-import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
-import { ComicCoverComponent } from '../../comic/comic-cover/comic-cover.component';
+import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { CardModule, OverlayPanelModule, PanelModule } from 'primeng/primeng';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EXISTING_COMIC_FILE_1 } from '../../../../models/import/comic-file.fixtures';
+import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
 import { By } from '@angular/platform-browser';
 
 describe('ComicFileGridItemComponent', () => {

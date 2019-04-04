@@ -18,8 +18,8 @@
  */
 
 import { Component, OnInit, Input } from '@angular/core';
-import { Comic } from '../../../../models/comics/comic';
-import { Library, ComicGrouping } from '../../../../models/actions/library';
+import { Comic } from 'app/models/comics/comic';
+import { Library, ComicGrouping } from 'app/models/actions/library';
 
 @Component({
   selector: 'app-comic-story',

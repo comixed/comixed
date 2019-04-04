@@ -18,8 +18,8 @@
  */
 
 import { Action } from '@ngrx/store';
-import { LibraryDisplay } from '../models/state/library-display';
-import { User } from '../models/user/user';
+import { LibraryDisplay } from 'app/models/state/library-display';
+import { User } from 'app/models/user/user';
 
 export const SET_LIBRARY_VIEW_LAYOUT = '[LIBRARY VIEW] Set layout';
 export class SetLibraryViewLayout implements Action {

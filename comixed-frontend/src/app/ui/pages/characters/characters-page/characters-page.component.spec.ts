@@ -26,10 +26,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import { libraryReducer } from '../../../../reducers/library.reducer';
-import * as LibraryActions from '../../../../actions/library.actions';
-import { LibraryFilterComponent } from '../../../components/library/library-filter/library-filter.component';
+import { AppState } from 'app/app.state';
+import { libraryReducer } from 'app/reducers/library.reducer';
+import * as LibraryActions from 'app/actions/library.actions';
+import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { CharactersPageComponent } from './characters-page.component';
 
 describe('CharactersPageComponent', () => {

@@ -22,28 +22,28 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as LibraryActions from '../../../../actions/library.actions';
+import { AppState } from 'app/app.state';
+import * as LibraryActions from 'app/actions/library.actions';
 import { InplaceModule } from 'primeng/inplace';
 import { DropdownModule } from 'primeng/dropdown';
-import { COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003 } from '../../../../models/comics/comic.fixtures';
-import { EXISTING_LIBRARY } from '../../../../models/actions/library.fixtures';
+import { COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003 } from 'app/models/comics/comic.fixtures';
+import { EXISTING_LIBRARY } from 'app/models/actions/library.fixtures';
 import { ComicOverviewComponent } from './comic-overview.component';
-import { libraryReducer } from '../../../../reducers/library.reducer';
+import { libraryReducer } from 'app/reducers/library.reducer';
 import {
   DEFAULT_COMIC_FORMAT_1,
   DEFAULT_COMIC_FORMAT_2,
   DEFAULT_COMIC_FORMAT_3
-} from '../../../../models/comics/comic-format.fixtures';
+} from 'app/models/comics/comic-format.fixtures';
 import { SelectItem } from 'primeng/api';
 import {
   FIRST_SCAN_TYPE,
   FOURTH_SCAN_TYPE,
   SECOND_SCAN_TYPE,
   THIRD_SCAN_TYPE
-} from '../../../../models/comics/scan-type.fixtures';
-import { EXISTING_COMIC_FILE_1 } from '../../../../models/import/comic-file.fixtures';
-import { COMIC_1000_LAST_READ_DATE } from '../../../../models/comics/last-read-date.fixtures';
+} from 'app/models/comics/scan-type.fixtures';
+import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
+import { COMIC_1000_LAST_READ_DATE } from 'app/models/comics/last-read-date.fixtures';
 
 describe('ComicOverviewComponent', () => {
   let component: ComicOverviewComponent;

@@ -21,11 +21,11 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { AppState } from './app.state';
-import * as UserActions from './actions/user.actions';
-import { Library } from './models/actions/library';
-import * as LibraryActions from './actions/library.actions';
-import { User } from './models/user/user';
+import { AppState } from 'app/app.state';
+import * as UserActions from 'app/actions/user.actions';
+import { Library } from 'app/models/actions/library';
+import * as LibraryActions from 'app/actions/library.actions';
+import { User } from 'app/models/user/user';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

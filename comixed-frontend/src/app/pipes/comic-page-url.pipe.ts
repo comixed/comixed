@@ -18,8 +18,8 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Page } from '../models/comics/page';
-import { COMIC_SERVICE_API_URL } from '../services/comic.service';
+import { Page } from 'app/models/comics/page';
+import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
 
 @Pipe({
   name: 'comic_page_url'

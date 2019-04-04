@@ -25,19 +25,19 @@ import {
   EventEmitter
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Comic } from '../../../../models/comics/comic';
-import { Library } from '../../../../models/actions/library';
+import { Comic } from 'app/models/comics/comic';
+import { Library } from 'app/models/actions/library';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import * as LibraryActions from '../../../../actions/library.actions';
-import * as ImportActions from '../../../../actions/importing.actions';
+import * as LibraryActions from 'app/actions/library.actions';
+import * as ImportActions from 'app/actions/importing.actions';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Importing } from '../../../../models/import/importing';
-import { ComicFile } from '../../../../models/import/comic-file';
-import { LibraryDisplay } from '../../../../models/state/library-display';
+import { Importing } from 'app/models/import/importing';
+import { ComicFile } from 'app/models/import/comic-file';
+import { LibraryDisplay } from 'app/models/state/library-display';
 
 @Component({
   selector: 'app-selected-comic-file-list',

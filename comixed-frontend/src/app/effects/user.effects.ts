@@ -23,11 +23,11 @@ import { Action } from '@ngrx/store';
 import { flatMap, map, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import * as UserActions from '../actions/user.actions';
-import * as DisplayActions from '../actions/library-display.actions';
-import { UserService } from '../services/user.service';
-import { User } from '../models/user/user';
-import { TokenStorage } from '../storage/token.storage';
+import * as UserActions from 'app/actions/user.actions';
+import * as DisplayActions from 'app/actions/library-display.actions';
+import { UserService } from 'app/services/user.service';
+import { User } from 'app/models/user/user';
+import { TokenStorage } from 'app/storage/token.storage';
 
 @Injectable()
 export class UserEffects {

@@ -18,9 +18,9 @@
  */
 
 import { Action } from '@ngrx/store';
-import { MultipleComicsScraping } from '../models/scraping/multiple-comics-scraping';
-import * as ScrapingActions from '../actions/multiple-comics-scraping.actions';
-import { Comic } from '../models/comics/comic';
+import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
+import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
+import { Comic } from 'app/models/comics/comic';
 
 const initial_state: MultipleComicsScraping = {
   selecting: true,

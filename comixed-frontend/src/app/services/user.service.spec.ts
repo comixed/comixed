@@ -23,8 +23,8 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { User } from '../models/user/user';
-import { READER_USER, ADMIN_USER } from '../models/user/user.fixtures';
+import { User } from 'app/models/user/user';
+import { READER_USER, ADMIN_USER } from 'app/models/user/user.fixtures';
 import { UserService, USER_SERVICE_API_URL } from './user.service';
 
 describe('UserService', () => {

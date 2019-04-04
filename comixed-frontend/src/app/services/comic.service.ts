@@ -23,12 +23,12 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { UserService } from './user.service';
-import { Comic } from '../models/comics/comic';
-import { Page } from '../models/comics/page';
-import { PageType } from '../models/comics/page-type';
-import { ComicFile } from '../models/import/comic-file';
-import { ScanType } from '../models/comics/scan-type';
-import { ComicFormat } from '../models/comics/comic-format';
+import { Comic } from 'app/models/comics/comic';
+import { Page } from 'app/models/comics/page';
+import { PageType } from 'app/models/comics/page-type';
+import { ComicFile } from 'app/models/import/comic-file';
+import { ScanType } from 'app/models/comics/scan-type';
+import { ComicFormat } from 'app/models/comics/comic-format';
 
 export const COMIC_SERVICE_API_URL = '/api';
 

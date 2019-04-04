@@ -30,22 +30,22 @@ import {
   SidebarModule,
   SplitButtonModule
 } from 'primeng/primeng';
-import { ComicFileGridItemComponent } from '../comic-file-grid-item/comic-file-grid-item.component';
-import { ComicFileCoverUrlPipe } from '../../../../pipes/comic-file-cover-url.pipe';
-import { ComicCoverComponent } from '../../comic/comic-cover/comic-cover.component';
+import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
+import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
+import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 import {
   EXISTING_COMIC_FILE_1,
   EXISTING_COMIC_FILE_2,
   EXISTING_COMIC_FILE_3, EXISTING_COMIC_FILE_4
-} from '../../../../models/import/comic-file.fixtures';
+} from 'app/models/import/comic-file.fixtures';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/state/library-display.fixtures';
-import { ComicFile } from '../../../../models/import/comic-file';
+import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
+import { ComicFile } from 'app/models/import/comic-file';
 
 describe('SelectedComicFileListComponent', () => {
   let component: SelectedComicFileListComponent;

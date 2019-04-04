@@ -20,13 +20,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import { userReducer } from '../../../../reducers/user.reducer';
+import { AppState } from 'app/app.state';
+import { userReducer } from 'app/reducers/user.reducer';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
-import { AccountPreferencesComponent } from '../../../components/account/account-preferences/account-preferences.component';
-import { UserDetailsComponent } from '../../../components/account/user-details/user-details.component';
-import { ADMIN_USER, READER_USER } from '../../../../models/user/user.fixtures';
+import { AccountPreferencesComponent } from 'app/ui/components/account/account-preferences/account-preferences.component';
+import { UserDetailsComponent } from 'app/ui/components/account/user-details/user-details.component';
+import { ADMIN_USER, READER_USER } from 'app/models/user/user.fixtures';
 import { AccountPageComponent } from './account-page.component';
 
 describe('AccountPageComponent', () => {

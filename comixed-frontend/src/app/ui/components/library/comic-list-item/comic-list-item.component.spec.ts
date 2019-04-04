@@ -24,10 +24,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
-import { ComicCoverComponent } from '../../comic/comic-cover/comic-cover.component';
-import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from '../../../../pipes/comic-title.pipe';
-import { COMIC_1000 } from '../../../../models/comics/comic.fixtures';
+import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
+import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { ComicListItemComponent } from './comic-list-item.component';
 
 describe('ComicListItemComponent', () => {

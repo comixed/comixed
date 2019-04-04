@@ -22,17 +22,17 @@ import {
   EXISTING_COMIC_FILE_1,
   EXISTING_COMIC_FILE_2,
   EXISTING_COMIC_FILE_3
-} from '../../../../models/import/comic-file.fixtures';
+} from 'app/models/import/comic-file.fixtures';
 import { DataViewModule } from 'primeng/dataview';
 import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from './comic-file-list.component';
-import { ComicFileGridItemComponent } from '../comic-file-grid-item/comic-file-grid-item.component';
-import { ComicFile } from '../../../../models/import/comic-file';
-import { SelectedComicFileListComponent } from '../selected-comic-file-list/selected-comic-file-list.component';
-import { ComicFileListToolbarComponent } from '../comic-file-list-toolbar/comic-file-list-toolbar.component';
-import { ComicFileCoverUrlPipe } from '../../../../pipes/comic-file-cover-url.pipe';
-import { ComicCoverUrlPipe } from '../../../../pipes/comic-cover-url.pipe';
-import { ComicCoverComponent } from '../../comic/comic-cover/comic-cover.component';
+import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
+import { ComicFile } from 'app/models/import/comic-file';
+import { SelectedComicFileListComponent } from 'app/ui/components/import/selected-comic-file-list/selected-comic-file-list.component';
+import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
+import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -50,8 +50,8 @@ import {
 } from 'primeng/primeng';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AppState } from '../../../../app.state';
-import { DEFAULT_LIBRARY_DISPLAY } from '../../../../models/state/library-display.fixtures';
+import { AppState } from 'app/app.state';
+import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
 

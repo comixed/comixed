@@ -20,7 +20,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
-import { COMIC_1000 } from '../../../../models/comics/comic.fixtures';
+import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { ComicCreditsComponent } from './comic-credits.component';
 
 describe('ComicCreditsComponent', () => {

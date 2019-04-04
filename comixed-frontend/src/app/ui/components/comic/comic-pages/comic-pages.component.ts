@@ -19,16 +19,16 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { Comic } from '../../../../models/comics/comic';
-import { Page } from '../../../../models/comics/page';
-import { PageType } from '../../../../models/comics/page-type';
-import * as LibraryActions from '../../../../actions/library.actions';
+import { Comic } from 'app/models/comics/comic';
+import { Page } from 'app/models/comics/page';
+import { PageType } from 'app/models/comics/page-type';
+import * as LibraryActions from 'app/actions/library.actions';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { ComicService } from '../../../../services/comic.service';
-import { UserService } from '../../../../services/user.service';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
 import { MessageService } from 'primeng/components/common/messageservice';
-import { AppState } from '../../../../app.state';
+import { AppState } from 'app/app.state';
 
 @Component({
   selector: 'app-comic-pages',

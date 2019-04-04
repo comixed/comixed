@@ -19,8 +19,8 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import * as FilterActions from '../../../../actions/library-filter.actions';
+import { AppState } from 'app/app.state';
+import * as FilterActions from 'app/actions/library-filter.actions';
 
 @Component({
   selector: 'app-library-filter',

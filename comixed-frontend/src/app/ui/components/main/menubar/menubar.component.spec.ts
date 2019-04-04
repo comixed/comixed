@@ -24,8 +24,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../../../app.state';
-import { userReducer } from '../../../../reducers/user.reducer';
+import { AppState } from 'app/app.state';
+import { userReducer } from 'app/reducers/user.reducer';
 import { MenubarComponent } from './menubar.component';
 
 describe('MenubarComponent', () => {

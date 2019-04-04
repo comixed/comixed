@@ -23,10 +23,10 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { AppState } from '../../../../app.state';
-import * as DuplicatesActions from '../../../../actions/duplicate-pages.actions';
+import { AppState } from 'app/app.state';
+import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { MessageService } from 'primeng/api';
-import { Duplicates } from '../../../../models/duplicates';
+import { Duplicates } from 'app/models/duplicates';
 
 export const DUPLICATES_HASH_PARAMETER = 'hash';
 
