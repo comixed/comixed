@@ -17,8 +17,8 @@
     ],
     "baseUrl": "src",
     "paths": {
-      "app": [
-        "@app/*"
+      "app/*": [
+        "app/*"
       ]
     }
   }
