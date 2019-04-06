@@ -27,8 +27,15 @@ import { libraryReducer } from 'app/reducers/library.reducer';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { LibraryFilterComponent } from './library-filter.component';
+import * as FilterActions from 'app/actions/library-filter.actions';
 
 describe('LibraryFilterComponent', () => {
+  const PUBLISHER = 'DC';
+  const SERIES = 'Batman';
+  const VOLUME = '1938';
+  const FROM_YEAR = 1982;
+  const TO_YEAR = 2015;
+
   let component: LibraryFilterComponent;
   let fixture: ComponentFixture<LibraryFilterComponent>;
   let store: Store<AppState>;
@@ -49,10 +56,104 @@ describe('LibraryFilterComponent', () => {
     fixture = TestBed.createComponent(LibraryFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
     store = TestBed.get(Store);
+
+    spyOn(store, 'dispatch').and.callThrough();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when applying filters', () => {
+    beforeEach(() => {
+      component.collapsed = false;
+      fixture.detectChanges();
+
+      component.publisher = PUBLISHER;
+      component.series = SERIES;
+      component.volume = VOLUME;
+      component.from_year = FROM_YEAR;
+      component.to_year = TO_YEAR;
+
+      component.apply_filters();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(new FilterActions.LibraryFilterSetFilters({
+        publisher: PUBLISHER,
+        series: SERIES,
+        volume: VOLUME,
+        from_year: FROM_YEAR,
+        to_year: TO_YEAR
+      }));
+    });
+
+    it('closes the filter panel', () => {
+      expect(component.collapsed).toBeTruthy();
+    });
+  });
+
+  describe('when resetting the filters', () => {
+    beforeEach(() => {
+      component.collapsed = false;
+      fixture.detectChanges();
+
+      component.reset_filters();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(new FilterActions.LibraryFilterReset());
+    });
+
+    it('closes the filter panel', () => {
+      expect(component.collapsed).toBeTruthy();
+    });
+  });
+
+  describe('generating the filter header', () => {
+    beforeEach(() => {
+      component.publisher = '';
+      component.series = '';
+      component.volume = '';
+      component.from_year = null;
+      component.to_year = null;
+    });
+
+    it('includes the publisher when in use', () => {
+      component.publisher = PUBLISHER;
+      expect(component.get_header()).toContain('library-filter.filters.publisher');
+    });
+
+    it('includes the series when in use', () => {
+      component.series = SERIES;
+      expect(component.get_header()).toContain('library-filter.filters.series');
+    });
+
+    it('includes the volume when in use', () => {
+      component.volume = VOLUME;
+      expect(component.get_header()).toContain('library-filter.filters.volume');
+    });
+
+    it('includes the from year when in use', () => {
+      component.from_year = FROM_YEAR;
+      expect(component.get_header()).toContain('library-filter.filters.from-year');
+    });
+
+    it('includes the to year when in use', () => {
+      component.to_year = TO_YEAR;
+      expect(component.get_header()).toContain('library-filter.filters.to-year');
+    });
+
+    it('includes the date range when both to and from year are in use', () => {
+      component.from_year = FROM_YEAR;
+      component.to_year = TO_YEAR;
+      expect(component.get_header()).toContain('library-filter.filters.between-years');
+    });
+
+    it('displays a default label when no filters are in use', () => {
+      expect(component.get_header()).toEqual('library-filter.filters.no-filters');
+    });
   });
 });
