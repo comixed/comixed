@@ -151,19 +151,6 @@ export class MenubarComponent implements OnInit, OnDestroy {
                 visible: this.user && this.user.authenticated
               }
             ]
-          },
-          { separator: true, visible: this.user && this.user.is_admin },
-          {
-            label: this.translate.instant('menu.library.import'),
-            icon: 'fa fa-fw fa-upload',
-            routerLink: ['/import'],
-            visible: this.user && this.user.is_admin
-          },
-          {
-            label: this.translate.instant('menu.library.duplicate-pages'),
-            icon: 'fa fa-fw fa-minus',
-            routerLink: ['/pages/duplicates'],
-            visible: this.user && this.user.is_admin
           }
         ]
       }
@@ -189,6 +176,18 @@ export class MenubarComponent implements OnInit, OnDestroy {
             icon: 'fa fa-fw fa-cloud-download',
             visible: this.user && this.user.is_admin,
             routerLink: ['/admin/library']
+          },
+          {
+            label: this.translate.instant('menu.library.import'),
+            icon: 'fa fa-fw fa-upload',
+            routerLink: ['/import'],
+            visible: this.user && this.user.is_admin
+          },
+          {
+            label: this.translate.instant('menu.library.duplicate-pages'),
+            icon: 'fa fa-fw fa-minus',
+            routerLink: ['/pages/duplicates'],
+            visible: this.user && this.user.is_admin
           }
         ]
       }
