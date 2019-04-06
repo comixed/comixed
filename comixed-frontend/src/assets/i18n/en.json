@@ -144,7 +144,7 @@
       "target-search-filter": "Search by series name..."
     }
   },
-  "comic-details": {
+  "comic-details-page": {
     "tab": {
       "overview": "Overview",
       "story": "Story",
@@ -152,6 +152,9 @@
       "credits": "Credits",
       "pages": "Pages",
       "comicvine": "ComicVine"
+    },
+    "text": {
+      "download-link": "Download This Comic"
     }
   },
   "comic-details-editor": {

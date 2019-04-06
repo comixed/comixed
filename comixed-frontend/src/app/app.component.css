@@ -36,3 +36,7 @@
     width: 75%;
     margin-top: 1px;
 }
+
+:host >>> .cx-container-centered-text {
+    text-align: center;
+}

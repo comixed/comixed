@@ -21,8 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { StoreModule } from '@ngrx/store';
 import { libraryReducer } from 'app/reducers/library.reducer';
 import { singleComicScrapingReducer } from 'app/reducers/single-comic-scraping.reducer';
 import { TabViewModule } from 'primeng/tabview';
@@ -51,19 +50,31 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { SINGLE_COMIC_SCRAPING_STATE } from 'app/models/scraping/single-comic-scraping.fixtures';
 import { ComicDetailsPageComponent } from './comic-details-page.component';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { ComicDownloadLinkPipe } from 'app/pipes/comic-download-link.pipe';
+import { COMIC_1000, COMIC_1003 } from 'app/models/comics/comic.fixtures';
+import { UserService } from 'app/services/user.service';
+import { UserServiceMock } from 'app/services/user.service.mock';
+import { MessageService } from 'primeng/api';
+import { userReducer } from 'app/reducers/user.reducer';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ComicDetailsPageComponent', () => {
   let component: ComicDetailsPageComponent;
   let fixture: ComponentFixture<ComicDetailsPageComponent>;
+  let download_link: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({
+          user: userReducer,
           library: libraryReducer,
           single_comic_scraping: singleComicScrapingReducer
         }),
@@ -91,18 +102,37 @@ describe('ComicDetailsPageComponent', () => {
         VolumeListComponent,
         ComicTitlePipe,
         ComicCoverUrlPipe,
-        ComicPageUrlPipe
+        ComicPageUrlPipe,
+        ComicDownloadLinkPipe
       ],
-      providers: [{ provide: ComicService, useClass: ComicServiceMock }]
+      providers: [
+        MessageService,
+        { provide: ComicService, useClass: ComicServiceMock },
+        { provide: UserService, useClass: UserServiceMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicDetailsPageComponent);
     component = fixture.componentInstance;
+    component.comic = COMIC_1000;
     component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
+
     fixture.detectChanges();
+
+    download_link = fixture.debugElement.query(By.css('#cx-download-link'));
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('download link', () => {
+    it('contains a link', () => {
+      expect(download_link).toBeTruthy();
+    });
+
+    it('the link text is accurate', () => {
+      expect(download_link.nativeElement.innerText).toEqual('comic-details-page.text.download-link');
+    });
   });
 });
