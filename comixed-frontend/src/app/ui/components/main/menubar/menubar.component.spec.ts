@@ -27,6 +27,9 @@ import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { userReducer } from 'app/reducers/user.reducer';
 import { MenubarComponent } from './menubar.component';
+import * as UserActions from 'app/actions/user.actions';
+import { ADMIN_USER, READER_USER } from 'app/models/user/user.fixtures';
+import { MenuItem } from 'primeng/api';
 
 describe('MenubarComponent', () => {
   let component: MenubarComponent;
@@ -45,19 +48,62 @@ describe('MenubarComponent', () => {
       ],
       declarations: [MenubarComponent]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(MenubarComponent);
     component = fixture.componentInstance;
     store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
     router = TestBed.get(Router);
 
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when a reader logs in', () => {
+    beforeEach(() => {
+      store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
+    });
+
+    it('loads the menu', () => {
+      expect(component.menu_items).toBeTruthy();
+    });
+
+    it('does not add the admin menu', () => {
+      expect(component.menu_items.some((item: MenuItem) => {
+        return item.label === 'menu.admin.root';
+      })).toBeFalsy();
+    });
+  });
+
+  describe('when an admin logs in', () => {
+    beforeEach(() => {
+      store.dispatch(new UserActions.UserLoaded({ user: ADMIN_USER }));
+    });
+
+    it('loads the menu', () => {
+      expect(component.menu_items).toBeTruthy();
+    });
+
+    it('adds the admin menu', () => {
+      expect(component.menu_items.some((item: MenuItem) => {
+        return item.label === 'menu.admin.root';
+      })).toBeTruthy();
+    });
+
+  });
+
+  describe('#do_login()', () => {
+    beforeEach(() => {
+      component.do_login();
+      fixture.detectChanges();
+    });
+
+    it('fires the login action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(new UserActions.UserStartLogin());
+    });
   });
 
   describe('#do_logout()', () => {
