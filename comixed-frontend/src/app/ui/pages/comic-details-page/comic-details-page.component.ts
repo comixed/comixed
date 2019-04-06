@@ -39,10 +39,10 @@ export const CURRENT_PAGE_PARAMETER = 'page';
 
 @Component({
   selector: 'app-comic-details',
-  templateUrl: './comic-details.component.html',
-  styleUrls: ['./comic-details.component.css']
+  templateUrl: './comic-details-page.component.html',
+  styleUrls: ['./comic-details-page.component.css']
 })
-export class ComicDetailsComponent implements OnInit, OnDestroy {
+export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   readonly TAB_PARAMETER = 'tab';
 
   private library$: Observable<Library>;

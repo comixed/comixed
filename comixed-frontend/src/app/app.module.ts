@@ -62,7 +62,7 @@ import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 import { XhrInterceptor } from 'app/xhr.interceptor';
 import { ComicService } from 'app/services/comic.service';
 import { MessageService } from 'primeng/api';
-import { ComicDetailsComponent } from 'app/ui/pages/comic/comic-details/comic-details.component';
+import { ComicDetailsPageComponent } from 'app/ui/pages/comic-details-page/comic-details-page.component';
 import { ComicReaderComponent } from 'app/ui/components/comic/comic-reader/comic-reader.component';
 import { ComicDetailsEditorComponent } from 'app/ui/components/comic/comic-details-editor/comic-details-editor.component';
 import { ComicOverviewComponent } from 'app/ui/components/comic/comic-overview/comic-overview.component';
@@ -154,7 +154,7 @@ import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page
     AppComponent,
     MainPageComponent,
     LoginComponent,
-    ComicDetailsComponent,
+    ComicDetailsPageComponent,
     ComicReaderComponent,
     ComicDetailsEditorComponent,
     ComicOverviewComponent,

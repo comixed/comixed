@@ -50,11 +50,11 @@ import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { SINGLE_COMIC_SCRAPING_STATE } from 'app/models/scraping/single-comic-scraping.fixtures';
-import { ComicDetailsComponent } from './comic-details.component';
+import { ComicDetailsPageComponent } from './comic-details-page.component';
 
-describe('ComicDetailsComponent', () => {
-  let component: ComicDetailsComponent;
-  let fixture: ComponentFixture<ComicDetailsComponent>;
+describe('ComicDetailsPageComponent', () => {
+  let component: ComicDetailsPageComponent;
+  let fixture: ComponentFixture<ComicDetailsPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -80,7 +80,7 @@ describe('ComicDetailsComponent', () => {
         TableModule
       ],
       declarations: [
-        ComicDetailsComponent,
+        ComicDetailsPageComponent,
         ComicOverviewComponent,
         ComicStoryComponent,
         ComicReaderComponent,
@@ -96,7 +96,7 @@ describe('ComicDetailsComponent', () => {
       providers: [{ provide: ComicService, useClass: ComicServiceMock }]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicDetailsComponent);
+    fixture = TestBed.createComponent(ComicDetailsPageComponent);
     component = fixture.componentInstance;
     component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
     fixture.detectChanges();
