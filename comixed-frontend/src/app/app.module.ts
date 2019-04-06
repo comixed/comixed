@@ -148,6 +148,7 @@ import { SelectedComicFileListComponent } from 'app/ui/components/import/selecte
 import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
 import { FileSaverModule } from 'ngx-filesaver';
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
+import { ComicDownloadLinkPipe } from './pipes/comic-download-link.pipe';
 
 @NgModule({
   declarations: [
@@ -213,7 +214,8 @@ import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page
     ComicFileGridItemComponent,
     SelectedComicFileListComponent,
     ComicFileListComponent,
-    LibraryAdminPageComponent
+    LibraryAdminPageComponent,
+    ComicDownloadLinkPipe
   ],
   imports: [
     BrowserModule,
