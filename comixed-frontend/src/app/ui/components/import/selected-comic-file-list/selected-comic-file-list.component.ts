@@ -33,6 +33,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from 'app/actions/library.actions';
 import * as ImportActions from 'app/actions/importing.actions';
+import * as DisplayActions from 'app/actions/library-display.actions';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Importing } from 'app/models/import/importing';
@@ -47,9 +48,6 @@ import { LibraryDisplay } from 'app/models/state/library-display';
 export class SelectedComicFileListComponent implements OnInit {
   @Input() selected_comic_files: Array<ComicFile>;
   @Input() library_display: LibraryDisplay;
-  @Input() display: boolean;
-
-  @Output() hide = new EventEmitter<boolean>();
 
   protected actions: MenuItem[];
 
@@ -84,5 +82,9 @@ export class SelectedComicFileListComponent implements OnInit {
         }
       }
     ];
+  }
+
+  hide_selections(): void {
+    this.store.dispatch(new DisplayActions.LibraryViewToggleSidebar({ show: false }));
   }
 }

@@ -1,9 +1,9 @@
 <p-sidebar *ngIf='selected_comic_files && selected_comic_files.length'
-           [(visible)]='display'
+           [(visible)]='library_display.show_selections'
            position='right'
            [style]='{width:"50%"}'
            [blockScroll]='true'
-           (onHide)='hide.next(true)'
+           (onHide)='hide_selections()'
 >
     <h2>{{'selected-comics-list.title'|translate:{comic_count: selected_comic_files.length} }}</h2>
     <div class="ui-g">

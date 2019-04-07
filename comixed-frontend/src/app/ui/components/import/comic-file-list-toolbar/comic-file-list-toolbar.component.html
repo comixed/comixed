@@ -55,14 +55,6 @@
                  (keyup)='filterText.next($event.target.value)'>
         </div>
         <div class='ui-g-6'>
-          <button id='selections-button'
-                  pButton
-                  type="button"
-                  icon="fa fa-fw fa-list"
-                  [label]="'comic-list-toolbar.button.label.show-selections'|translate"
-                  [disabled]='(selected_comic_count||0) === 0'
-                  (click)="showSelections.next(true)"
-          ></button>
         </div>
       </div>
     </div>
