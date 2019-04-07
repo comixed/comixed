@@ -69,7 +69,6 @@
     "button": {
       "find": "Find Comics",
       "select": "Select",
-      "view-selections": "View Selections",
       "import": "Import"
     }
   },
@@ -243,11 +242,6 @@
         "added-date": "Sort by date added",
         "cover-date": "Sort by cover date",
         "last-read-date": "Sort by last read"
-      }
-    },
-    "button": {
-      "label": {
-        "show-selections": "Selections"
       }
     }
   },
