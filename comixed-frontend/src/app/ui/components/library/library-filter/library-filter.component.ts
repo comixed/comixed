@@ -17,7 +17,11 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as FilterActions from 'app/actions/library-filter.actions';
@@ -28,7 +32,8 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './library-filter.component.html',
   styleUrls: ['./library-filter.component.css']
 })
-export class LibraryFilterComponent implements OnInit {
+export class LibraryFilterComponent
+  implements OnInit {
   @Input() publisher = '';
   @Input() series = '';
   @Input() volume = '';
@@ -70,25 +75,43 @@ export class LibraryFilterComponent implements OnInit {
     if (this.collapsed) {
       if (this.is_filtering()) {
         if (this.publisher.length) {
-          result = `${result} [${this.translate.instant("library-filter.filters.publisher", { publisher: this.publisher })}]`;
+          result = `${result} [${this.translate.instant(
+            'library-filter.filters.publisher',
+            { publisher: this.publisher }
+          )}]`;
         }
         if (this.series.length) {
-          result = `${result} [${this.translate.instant("library-filter.filters.series", { series: this.series })}]`;
+          result = `${result} [${this.translate.instant(
+            'library-filter.filters.series',
+            { series: this.series }
+          )}]`;
         }
         if (this.volume.length) {
-          result = `${result} [${this.translate.instant("library-filter.filters.volume", { volume: this.volume })}]`;
+          result = `${result} [${this.translate.instant(
+            'library-filter.filters.volume',
+            { volume: this.volume }
+          )}]`;
         }
         if (this.from_year > 0 && this.to_year > 0) {
-          result = `${result} [${this.translate.instant("library-filter.filters.between-years", {
-            from_year: this.from_year,
-            to_year: this.to_year
-          })}]`;
+          result = `${result} [${this.translate.instant(
+            'library-filter.filters.between-years',
+            {
+              from_year: this.from_year,
+              to_year: this.to_year
+            }
+          )}]`;
         } else {
           if (this.from_year > 0) {
-            result = `${result} [${this.translate.instant("library-filter.filters.from-year", { from_year: this.from_year })}]`;
+            result = `${result} [${this.translate.instant(
+              'library-filter.filters.from-year',
+              { from_year: this.from_year }
+            )}]`;
           }
           if (this.to_year > 0) {
-            result = `${result} [${this.translate.instant("library-filter.filters.to-year", { to_year: this.to_year })}]`;
+            result = `${result} [${this.translate.instant(
+              'library-filter.filters.to-year',
+              { to_year: this.to_year }
+            )}]`;
           }
         }
       } else {
@@ -104,8 +127,16 @@ export class LibraryFilterComponent implements OnInit {
       !this.publisher.length &&
       !this.series.length &&
       !this.volume.length &&
-      ((this.from_year || 0) === 0) &&
-      ((this.to_year || 0) === 0)
+      (
+        (
+          this.from_year || 0
+        ) === 0
+      ) &&
+      (
+        (
+          this.to_year || 0
+        ) === 0
+      )
     );
   }
 }

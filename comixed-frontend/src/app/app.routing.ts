@@ -18,7 +18,10 @@
  */
 
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {
+  RouterModule,
+  Routes
+} from '@angular/router';
 import { AdminGuard } from 'app/admin.guard';
 import { ReaderGuard } from 'app/reader.guard';
 import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
@@ -42,9 +45,13 @@ import { StoryArcsPageComponent } from 'app/ui/pages/story-arcs/story-arcs-page/
 import { StoryArcDetailsPageComponent } from 'app/ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component';
 import { MultiComicScrapingPageComponent } from 'app/ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component';
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
+import { MissingComicsPageComponent } from 'app/ui/pages/library/missing-comics-page/missing-comics-page.component';
 
 export const routes: Routes = [
-  { path: 'home', component: MainPageComponent },
+  {
+    path: 'home',
+    component: MainPageComponent
+  },
   {
     path: 'account',
     component: AccountPageComponent,
@@ -54,6 +61,11 @@ export const routes: Routes = [
     path: 'comics',
     component: LibraryPageComponent,
     canActivate: [ReaderGuard]
+  },
+  {
+    path: 'comics/missing',
+    component: MissingComicsPageComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: 'comics/:id',
@@ -145,8 +157,15 @@ export const routes: Routes = [
     component: LibraryAdminPageComponent,
     canActivate: [AdminGuard]
   },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home' }
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: 'home'
+  }
 ];
 
 @NgModule({

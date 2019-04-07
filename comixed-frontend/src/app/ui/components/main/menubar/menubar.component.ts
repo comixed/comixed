@@ -17,7 +17,11 @@
  * org.comixed;
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Observable } from 'rxjs/Observable';
@@ -35,7 +39,9 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './menubar.component.html',
   styleUrls: ['./menubar.component.css']
 })
-export class MenubarComponent implements OnInit, OnDestroy {
+export class MenubarComponent
+  implements OnInit,
+    OnDestroy {
   private user$: Observable<User>;
   private user_subscription: Subscription;
   user: User;
@@ -52,7 +58,10 @@ export class MenubarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user_subscription = this.user$.subscribe((user: User) => {
-      const update = !lodash.isEqual(this.user, user);
+      const update = !lodash.isEqual(
+        this.user,
+        user
+      );
 
       this.user = user;
       if (update) {
@@ -178,7 +187,10 @@ export class MenubarComponent implements OnInit, OnDestroy {
             visible: this.user && this.user.is_admin,
             routerLink: ['/admin/users']
           },
-          { separator: true, visible: this.user && this.user.is_admin },
+          {
+            separator: true,
+            visible: this.user && this.user.is_admin
+          },
           {
             label: this.translate.instant('menu.admin.library'),
             icon: 'fa fa-fw fa-cloud-download',
@@ -195,6 +207,12 @@ export class MenubarComponent implements OnInit, OnDestroy {
             label: this.translate.instant('menu.library.duplicate-pages'),
             icon: 'fa fa-fw fa-minus',
             routerLink: ['/pages/duplicates'],
+            visible: this.user && this.user.is_admin
+          },
+          {
+            label: this.translate.instant('menu.library.missing-comics'),
+            icon: 'fa fa-fw fa-question',
+            routerLink: ['/comics/missing'],
             visible: this.user && this.user.is_admin
           }
         ]
