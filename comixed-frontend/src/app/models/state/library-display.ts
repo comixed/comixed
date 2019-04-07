@@ -30,4 +30,5 @@ export interface LibraryDisplay {
   rows: number;
   cover_size: number;
   same_height: boolean;
+  show_selections: boolean;
 }

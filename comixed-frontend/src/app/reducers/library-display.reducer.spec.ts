@@ -23,7 +23,7 @@ import * as DisplayActions from 'app/actions/library-display.actions';
 import { READER_USER } from 'app/models/user/user.fixtures';
 import { Preference } from 'app/models/user/preference';
 
-describe('libraryDisplayReducer', () => {
+fdescribe('libraryDisplayReducer', () => {
   let state: LibraryDisplay;
 
   beforeEach(() => {
@@ -206,6 +206,18 @@ describe('libraryDisplayReducer', () => {
 
     it('sets using the same height', () => {
       expect(state.same_height).toEqual(initial_state.same_height);
+    });
+  });
+
+  describe('when toggling the selection sidebar', () => {
+    it('can show the sidebar', () => {
+      state = libraryDisplayReducer(state, new DisplayActions.LibraryViewToggleSidebar({ show: true }));
+      expect(state.show_selections).toBeTruthy();
+    });
+
+    it('can hide the sidebar', () => {
+      state = libraryDisplayReducer(state, new DisplayActions.LibraryViewToggleSidebar({ show: false }));
+      expect(state.show_selections).toBeFalsy();
     });
   });
 });

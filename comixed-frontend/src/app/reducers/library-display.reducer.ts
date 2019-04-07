@@ -29,7 +29,8 @@ export const initial_state: LibraryDisplay = {
   comic_file_sort_field: 'filename',
   rows: 10,
   cover_size: 225,
-  same_height: true
+  same_height: true,
+  show_selections: false
 };
 
 export function libraryDisplayReducer(
@@ -108,6 +109,13 @@ export function libraryDisplayReducer(
         rows: rows,
         cover_size: cover_size,
         same_height: same_height
+      };
+    }
+
+    case LibraryDisplayActions.LIBRARY_VIEW_TOGGLE_SIDEBAR: {
+      return {
+        ...state,
+        show_selections: action.payload.show
       };
     }
 

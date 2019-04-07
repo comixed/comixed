@@ -22,6 +22,7 @@ import { LibraryDisplay } from 'app/models/state/library-display';
 import { User } from 'app/models/user/user';
 
 export const SET_LIBRARY_VIEW_LAYOUT = '[LIBRARY VIEW] Set layout';
+
 export class SetLibraryViewLayout implements Action {
   readonly type = SET_LIBRARY_VIEW_LAYOUT;
 
@@ -29,6 +30,7 @@ export class SetLibraryViewLayout implements Action {
 }
 
 export const SET_LIBRARY_VIEW_SORT = '[LIBRARY VIEW] Set sort';
+
 export class SetLibraryViewSort implements Action {
   readonly type = SET_LIBRARY_VIEW_SORT;
 
@@ -36,6 +38,7 @@ export class SetLibraryViewSort implements Action {
 }
 
 export const SET_LIBRARY_VIEW_COMIC_FILE_SORT = '[LIBRARY VIEW] Set comic file sort';
+
 export class SetLibraryComicFileViewSort implements Action {
   readonly type = SET_LIBRARY_VIEW_COMIC_FILE_SORT;
 
@@ -43,6 +46,7 @@ export class SetLibraryComicFileViewSort implements Action {
 }
 
 export const SET_LIBRARY_VIEW_ROWS = '[LIBRARY VIEW] Set rows';
+
 export class SetLibraryViewRows implements Action {
   readonly type = SET_LIBRARY_VIEW_ROWS;
 
@@ -50,6 +54,7 @@ export class SetLibraryViewRows implements Action {
 }
 
 export const SET_LIBRARY_VIEW_COVER_SIZE = '[LIBRARY VIEW] Set cover size';
+
 export class SetLibraryViewCoverSize implements Action {
   readonly type = SET_LIBRARY_VIEW_COVER_SIZE;
 
@@ -58,6 +63,7 @@ export class SetLibraryViewCoverSize implements Action {
 
 export const SET_LIBRARY_VIEW_USE_SAME_HEIGHT =
   '[LIBRARY VIEW] Use same height';
+
 export class SetLibraryViewUseSameHeight implements Action {
   readonly type = SET_LIBRARY_VIEW_USE_SAME_HEIGHT;
 
@@ -65,10 +71,19 @@ export class SetLibraryViewUseSameHeight implements Action {
 }
 
 export const LIBRARY_VIEW_LOAD_USER_OPTIONS = '[LIBRARY VIEW] Load user options';
+
 export class LibraryViewLoadUserOptions implements Action {
   readonly type = LIBRARY_VIEW_LOAD_USER_OPTIONS;
 
   constructor(public payload: { user: User }) {}
+}
+
+export const LIBRARY_VIEW_TOGGLE_SIDEBAR = '[LIBRARY VIEW] Toggle selection sidebar.';
+
+export class LibraryViewToggleSidebar implements Action {
+  readonly type = LIBRARY_VIEW_TOGGLE_SIDEBAR;
+
+  constructor(public payload: { show: boolean }) {}
 }
 
 export type Actions =
@@ -78,5 +93,6 @@ export type Actions =
   | SetLibraryViewRows
   | SetLibraryViewCoverSize
   | SetLibraryViewUseSameHeight
-  | LibraryViewLoadUserOptions;
+  | LibraryViewLoadUserOptions
+  | LibraryViewToggleSidebar;
 
