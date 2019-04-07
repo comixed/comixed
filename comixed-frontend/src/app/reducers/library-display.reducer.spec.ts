@@ -23,7 +23,7 @@ import * as DisplayActions from 'app/actions/library-display.actions';
 import { READER_USER } from 'app/models/user/user.fixtures';
 import { Preference } from 'app/models/user/preference';
 
-fdescribe('libraryDisplayReducer', () => {
+describe('libraryDisplayReducer', () => {
   let state: LibraryDisplay;
 
   beforeEach(() => {

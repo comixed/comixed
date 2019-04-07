@@ -59,7 +59,6 @@ describe('ComicFileListComponent', () => {
   let component: ComicFileListComponent;
   let fixture: ComponentFixture<ComicFileListComponent>;
   let store: Store<AppState>;
-  let selections_button: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -106,8 +105,6 @@ describe('ComicFileListComponent', () => {
     store = TestBed.get(Store);
 
     fixture.detectChanges();
-
-    selections_button = fixture.debugElement.query((By.css('#selections-button')));
   }));
 
   describe('when no comic files are loaded', () => {
@@ -142,28 +139,6 @@ describe('ComicFileListComponent', () => {
         const comic_file_entry = fixture.debugElement.query(By.css(`#comic-file-${comic_file.id}`));
         expect(comic_file_entry).toBeTruthy();
       });
-    });
-  });
-
-  describe('when there are no comics selected for import', () => {
-    beforeEach(() => {
-      component.selected_comic_files = [];
-      fixture.detectChanges();
-    });
-
-    it('disables the selection button', () => {
-      expect(selections_button.nativeElement.disabled).toBeTruthy();
-    });
-  });
-
-  describe('when there are comics selected for import', () => {
-    beforeEach(() => {
-      component.selected_comic_files = [EXISTING_COMIC_FILE_1];
-      fixture.detectChanges();
-    });
-
-    it('enables the selection button', () => {
-      expect(selections_button.nativeElement.disabled).toBeFalsy();
     });
   });
 });

@@ -36,6 +36,8 @@ import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-c
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { SelectedComicsListComponent } from './selected-comics-list.component';
+import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
+import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
 
 describe('SelectedComicsListComponent', () => {
   let component: SelectedComicsListComponent;
@@ -47,7 +49,10 @@ describe('SelectedComicsListComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot({
+          library: libraryReducer,
+          library_display: libraryDisplayReducer
+        }),
         SidebarModule,
         ScrollPanelModule,
         DataViewModule,
@@ -69,6 +74,8 @@ describe('SelectedComicsListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SelectedComicsListComponent);
     component = fixture.componentInstance;
+    component.library_display = DEFAULT_LIBRARY_DISPLAY;
+
     fixture.detectChanges();
   });
 

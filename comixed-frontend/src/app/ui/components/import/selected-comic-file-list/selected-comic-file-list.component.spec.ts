@@ -81,7 +81,7 @@ describe('SelectedComicFileListComponent', () => {
     fixture = TestBed.createComponent(SelectedComicFileListComponent);
     component = fixture.componentInstance;
     component.library_display = DEFAULT_LIBRARY_DISPLAY;
-    component.display = true;
+    component.library_display.show_selections = true;
     component.selected_comic_files = [
       EXISTING_COMIC_FILE_1,
       EXISTING_COMIC_FILE_2,
@@ -96,7 +96,7 @@ describe('SelectedComicFileListComponent', () => {
   }));
 
   afterEach(() => {
-    component.display = false;
+    component.library_display.show_selections = false;
     fixture.detectChanges();
   });
 
