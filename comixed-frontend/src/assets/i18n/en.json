@@ -16,7 +16,8 @@
         "teams": "Teams",
         "locations": "Locations",
         "story-arcs": "Story Arcs"
-      }
+      },
+      "show-selections": "Selections..."
     },
     "admin": {
       "root": "Admin",

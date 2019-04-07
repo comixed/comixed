@@ -46,7 +46,6 @@ export class ComicListToolbarComponent implements OnInit {
   @Input() additional_sort_field_options: Array<SelectItem>;
 
   @Output() changeLayout = new EventEmitter<string>();
-  @Output() showSelections = new EventEmitter<boolean>();
 
   layout_options: Array<SelectItem>;
   sort_field_options: Array<SelectItem>;

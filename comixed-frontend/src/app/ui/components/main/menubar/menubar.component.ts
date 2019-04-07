@@ -26,6 +26,7 @@ import { AppState } from 'app/app.state';
 import { User } from 'app/models/user/user';
 import { Store } from '@ngrx/store';
 import * as UserActions from 'app/actions/user.actions';
+import * as DisplayActions from 'app/actions/library-display.actions';
 import * as lodash from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -151,6 +152,13 @@ export class MenubarComponent implements OnInit, OnDestroy {
                 visible: this.user && this.user.authenticated
               }
             ]
+          },
+          { separator: true, visible: this.user && this.user.is_admin },
+          {
+            label: this.translate.instant('menu.library.show-selections'),
+            icon: 'fa fa-fw fa-cogs',
+            visible: this.user && this.user.authenticated,
+            command: () => this.store.dispatch(new DisplayActions.LibraryViewToggleSidebar({ show: true }))
           }
         ]
       }

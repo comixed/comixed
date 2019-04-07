@@ -33,8 +33,10 @@ import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from 'app/actions/library.actions';
+import * as DisplayActions from 'app/actions/library-display.actions';
 import { MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { LibraryDisplay } from 'app/models/state/library-display';
 
 @Component({
   selector: 'app-selected-comics-list',
@@ -42,12 +44,9 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./selected-comics-list.component.css']
 })
 export class SelectedComicsListComponent implements OnInit, OnDestroy {
-  @Input() display = false;
   @Input() rows: number;
   @Input() cover_size: number;
   @Input() same_height: boolean;
-
-  @Output() hide = new EventEmitter<boolean>();
 
   protected actions: MenuItem[];
 
@@ -55,18 +54,26 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
   private library_subscription: Subscription;
   library: Library;
 
+  private library_display$: Observable<LibraryDisplay>;
+  private library_display_subscription: Subscription;
+  library_display: LibraryDisplay;
+
   constructor(
     private router: Router,
     private store: Store<AppState>,
     private translate: TranslateService
   ) {
     this.library$ = this.store.select('library');
+    this.library_display$ = this.store.select('library_display');
   }
 
   ngOnInit() {
     this.load_actions();
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
+    });
+    this.library_display_subscription = this.library_display$.subscribe((library_display: LibraryDisplay) => {
+      this.library_display = library_display;
     });
   }
 
@@ -82,6 +89,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
+    this.library_display_subscription.unsubscribe();
   }
 
   set_selected(comic: Comic): void {
@@ -91,5 +99,9 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
         selected: false
       })
     );
+  }
+
+  hide_selections(): void {
+    this.store.dispatch(new DisplayActions.LibraryViewToggleSidebar({ show: false }));
   }
 }
