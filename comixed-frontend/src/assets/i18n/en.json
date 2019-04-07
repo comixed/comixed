@@ -580,6 +580,9 @@
       "download-backup": "To download a backup of the current database, simply click the button below."
     }
   },
+  "missing-comics-page": {
+    "title": "{{comic_count}} Missing Comics"
+  },
   "text": {
     "unknown": "Unknown",
     "comic-no-description": "This comic does not have a description"

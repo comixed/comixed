@@ -1,0 +1,7 @@
+<h2>{{'missing-comics-page.title'|translate:{comic_count: (comics|missing_comics).length} }}</h2>
+<app-comic-list
+  *ngIf='library'
+  [comics]='comics|missing_comics'
+  [selected_comics]='selected_comics'
+  [library_filter]='library_filter'
+></app-comic-list>

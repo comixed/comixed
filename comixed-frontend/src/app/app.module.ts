@@ -150,6 +150,7 @@ import { FileSaverModule } from 'ngx-filesaver';
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
 import { ComicDownloadLinkPipe } from './pipes/comic-download-link.pipe';
 import { MissingComicsPipe } from './pipes/missing-comics.pipe';
+import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-page/missing-comics-page.component';
 
 @NgModule({
   declarations: [
@@ -217,7 +218,8 @@ import { MissingComicsPipe } from './pipes/missing-comics.pipe';
     ComicFileListComponent,
     LibraryAdminPageComponent,
     ComicDownloadLinkPipe,
-    MissingComicsPipe
+    MissingComicsPipe,
+    MissingComicsPageComponent
   ],
   imports: [
     BrowserModule,
