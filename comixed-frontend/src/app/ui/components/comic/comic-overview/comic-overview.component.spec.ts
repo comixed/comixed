@@ -35,20 +35,20 @@ import {
   DEFAULT_COMIC_FORMAT_2,
   DEFAULT_COMIC_FORMAT_3
 } from 'app/models/comics/comic-format.fixtures';
-import { SelectItem } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import {
   FIRST_SCAN_TYPE,
   FOURTH_SCAN_TYPE,
   SECOND_SCAN_TYPE,
   THIRD_SCAN_TYPE
 } from 'app/models/comics/scan-type.fixtures';
-import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
 import { COMIC_1000_LAST_READ_DATE } from 'app/models/comics/last-read-date.fixtures';
 
 describe('ComicOverviewComponent', () => {
   let component: ComicOverviewComponent;
   let fixture: ComponentFixture<ComicOverviewComponent>;
   let store: Store<AppState>;
+  let confirmation_service: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -60,8 +60,10 @@ describe('ComicOverviewComponent', () => {
         InplaceModule,
         DropdownModule
       ],
-      declarations: [ComicOverviewComponent]
-    }).compileComponents();
+      declarations: [ComicOverviewComponent],
+      providers: [ConfirmationService]
+    })
+      .compileComponents();
 
     fixture = TestBed.createComponent(ComicOverviewComponent);
     component = fixture.componentInstance;
@@ -74,9 +76,7 @@ describe('ComicOverviewComponent', () => {
       COMIC_1002,
       COMIC_1003
     ];
-    component.library.last_read_dates = [
-      COMIC_1000_LAST_READ_DATE
-    ];
+    component.library.last_read_dates = [COMIC_1000_LAST_READ_DATE];
     component.library.scan_types = [
       FIRST_SCAN_TYPE,
       SECOND_SCAN_TYPE,
@@ -89,47 +89,70 @@ describe('ComicOverviewComponent', () => {
       DEFAULT_COMIC_FORMAT_3
     ];
     store = TestBed.get(Store);
-
     spyOn(store, 'dispatch');
+    confirmation_service = TestBed.get(ConfirmationService);
 
     fixture.detectChanges();
   }));
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component)
+      .toBeTruthy();
   });
 
   describe('#ngOnInit()', () => {
     it('sets the format to that of the comic', () => {
-      expect(component.format).toEqual(COMIC_1000.format);
+      expect(component.format)
+        .toEqual(COMIC_1000.format);
     });
 
     it('gets the available formats from the library', () => {
-      expect(component.formats).not.toBeFalsy();
-      expect(component.formats.length).toEqual(4);
-      expect(component.formats[1].label).toEqual(DEFAULT_COMIC_FORMAT_1.name);
-      expect(component.formats[1].value).toEqual(DEFAULT_COMIC_FORMAT_1);
-      expect(component.formats[2].label).toEqual(DEFAULT_COMIC_FORMAT_2.name);
-      expect(component.formats[2].value).toEqual(DEFAULT_COMIC_FORMAT_2);
-      expect(component.formats[3].label).toEqual(DEFAULT_COMIC_FORMAT_3.name);
-      expect(component.formats[3].value).toEqual(DEFAULT_COMIC_FORMAT_3);
+      expect(component.formats)
+        .not
+        .toBeFalsy();
+      expect(component.formats.length)
+        .toEqual(4);
+      expect(component.formats[1].label)
+        .toEqual(DEFAULT_COMIC_FORMAT_1.name);
+      expect(component.formats[1].value)
+        .toEqual(DEFAULT_COMIC_FORMAT_1);
+      expect(component.formats[2].label)
+        .toEqual(DEFAULT_COMIC_FORMAT_2.name);
+      expect(component.formats[2].value)
+        .toEqual(DEFAULT_COMIC_FORMAT_2);
+      expect(component.formats[3].label)
+        .toEqual(DEFAULT_COMIC_FORMAT_3.name);
+      expect(component.formats[3].value)
+        .toEqual(DEFAULT_COMIC_FORMAT_3);
     });
 
     it('sets the scan type to that of the comic', () => {
-      expect(component.scan_type).toEqual(COMIC_1000.scan_type);
+      expect(component.scan_type)
+        .toEqual(COMIC_1000.scan_type);
     });
 
     it('gets the available scan types from the library', () => {
-      expect(component.scan_types).not.toBeFalsy();
-      expect(component.scan_types.length).toEqual(5);
-      expect(component.scan_types[1].label).toEqual(FIRST_SCAN_TYPE.name);
-      expect(component.scan_types[1].value).toEqual(FIRST_SCAN_TYPE);
-      expect(component.scan_types[2].label).toEqual(SECOND_SCAN_TYPE.name);
-      expect(component.scan_types[2].value).toEqual(SECOND_SCAN_TYPE);
-      expect(component.scan_types[3].label).toEqual(THIRD_SCAN_TYPE.name);
-      expect(component.scan_types[3].value).toEqual(THIRD_SCAN_TYPE);
-      expect(component.scan_types[4].label).toEqual(FOURTH_SCAN_TYPE.name);
-      expect(component.scan_types[4].value).toEqual(FOURTH_SCAN_TYPE);
+      expect(component.scan_types)
+        .not
+        .toBeFalsy();
+      expect(component.scan_types.length)
+        .toEqual(5);
+      expect(component.scan_types[1].label)
+        .toEqual(FIRST_SCAN_TYPE.name);
+      expect(component.scan_types[1].value)
+        .toEqual(FIRST_SCAN_TYPE);
+      expect(component.scan_types[2].label)
+        .toEqual(SECOND_SCAN_TYPE.name);
+      expect(component.scan_types[2].value)
+        .toEqual(SECOND_SCAN_TYPE);
+      expect(component.scan_types[3].label)
+        .toEqual(THIRD_SCAN_TYPE.name);
+      expect(component.scan_types[3].value)
+        .toEqual(THIRD_SCAN_TYPE);
+      expect(component.scan_types[4].label)
+        .toEqual(FOURTH_SCAN_TYPE.name);
+      expect(component.scan_types[4].value)
+        .toEqual(FOURTH_SCAN_TYPE);
     });
   });
 
@@ -140,7 +163,8 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('copies the format from a given comic', () => {
-      expect(component.format).toEqual(COMIC_1000.format);
+      expect(component.format)
+        .toEqual(COMIC_1000.format);
     });
   });
 
@@ -151,11 +175,13 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('sends a notification', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new LibraryActions.LibrarySetFormat({
-          comic: COMIC_1000,
-          format: DEFAULT_COMIC_FORMAT_3
-        })
-      );
+      expect(store.dispatch)
+        .toHaveBeenCalledWith(
+          new LibraryActions.LibrarySetFormat({
+            comic: COMIC_1000,
+            format: DEFAULT_COMIC_FORMAT_3
+          })
+        );
     });
   });
 
@@ -166,7 +192,8 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('copies the scan type from a given comic', () => {
-      expect(component.scan_type).toEqual(COMIC_1000.scan_type);
+      expect(component.scan_type)
+        .toEqual(COMIC_1000.scan_type);
     });
   });
 
@@ -177,11 +204,13 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('sends a notification', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new LibraryActions.LibrarySetScanType({
-          comic: COMIC_1000,
-          scan_type: THIRD_SCAN_TYPE
-        })
-      );
+      expect(store.dispatch)
+        .toHaveBeenCalledWith(
+          new LibraryActions.LibrarySetScanType({
+            comic: COMIC_1000,
+            scan_type: THIRD_SCAN_TYPE
+          })
+        );
     });
   });
 
@@ -192,7 +221,8 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('copies the scan type from a given comic', () => {
-      expect(component.sort_name).toEqual(COMIC_1000.sort_name);
+      expect(component.sort_name)
+        .toEqual(COMIC_1000.sort_name);
     });
   });
 
@@ -204,34 +234,56 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('sends a notification', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new LibraryActions.LibrarySetSortName({
-          comic: COMIC_1000,
-          sort_name: 'New Sort Name'
-        })
-      );
+      expect(store.dispatch)
+        .toHaveBeenCalledWith(
+          new LibraryActions.LibrarySetSortName({
+            comic: COMIC_1000,
+            sort_name: 'New Sort Name'
+          })
+        );
     });
   });
 
   describe('#clear_metadata()', () => {
-    beforeEach(() => {
+    it('sends a notification when the user confirms the action', () => {
+      spyOn(confirmation_service, 'confirm')
+        .and
+        .callFake((params: any) => {
+          params.accept();
+        });
+
       component.clear_metadata();
       fixture.detectChanges();
+
+      expect(store.dispatch)
+        .toHaveBeenCalledWith(
+          new LibraryActions.LibraryClearMetadata({
+            comic: COMIC_1000
+          })
+        );
     });
 
-    it('sends a notification', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new LibraryActions.LibraryClearMetadata({
-        comic: COMIC_1000
-      }));
+    it('does not fire an action when the user declines', () => {
+      component.clear_metadata();
+      fixture.detectChanges();
+
+      expect(store.dispatch)
+        .not
+        .toHaveBeenCalled();
     });
   });
 
   describe('#get_last_read_date()', () => {
     it('returns the last read date for the comic', () => {
-      expect(component.get_last_read_date(COMIC_1000)).toEqual(COMIC_1000_LAST_READ_DATE.last_read_date);
+      expect(component.get_last_read_date(COMIC_1000))
+        .toEqual(
+          COMIC_1000_LAST_READ_DATE.last_read_date
+        );
     });
 
     it('returns null when the comic has not been read', () => {
-      expect(component.get_last_read_date(COMIC_1003)).toBeFalsy();
+      expect(component.get_last_read_date(COMIC_1003))
+        .toBeFalsy();
     });
   });
 });

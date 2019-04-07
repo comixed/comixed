@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as LibraryActions from 'app/actions/library.actions';
@@ -26,7 +26,8 @@ import { Comic } from 'app/models/comics/comic';
 import { LastReadDate } from 'app/models/comics/last-read-date';
 import { ScanType } from 'app/models/comics/scan-type';
 import { ComicFormat } from 'app/models/comics/comic-format';
-import { SelectItem } from 'primeng/api';
+import { ConfirmationService, SelectItem } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-comic-overview',
@@ -45,19 +46,33 @@ export class ComicOverviewComponent implements OnInit {
   public format: ComicFormat;
   public sort_name: string;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>,
+    private confirm_service: ConfirmationService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
     this.format = this.comic.format;
     this.scan_type = this.comic.scan_type;
-    this.scan_types = [{ label: 'Select one...', value: null }];
+    this.scan_types = [
+      {
+        label: 'Select one...',
+        value: null
+      }
+    ];
     this.library.scan_types.forEach((scan_type: ScanType) => {
       this.scan_types.push({
         label: scan_type.name,
         value: scan_type
       });
     });
-    this.formats = [{ label: 'Select one...', value: null }];
+    this.formats = [
+      {
+        label: 'Select one...',
+        value: null
+      }
+    ];
     this.library.formats.forEach((format: ComicFormat) => {
       this.formats.push({
         label: format.name,
@@ -110,11 +125,18 @@ export class ComicOverviewComponent implements OnInit {
   }
 
   clear_metadata(): void {
-    this.store.dispatch(
-      new LibraryActions.LibraryClearMetadata({
-        comic: this.comic
-      })
-    );
+    this.confirm_service.confirm({
+      header: this.translate.instant('comic-overview.title.clear-metadata'),
+      message: this.translate.instant('comic-overview.message.clear-metadata'),
+      icon: 'fa fa-exclamation',
+      accept: () => {
+        this.store.dispatch(
+          new LibraryActions.LibraryClearMetadata({
+            comic: this.comic
+          })
+        );
+      }
+    });
   }
 
   get_last_read_date(comic: Comic): string {

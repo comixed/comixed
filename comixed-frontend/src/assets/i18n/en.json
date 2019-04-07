@@ -297,6 +297,12 @@
     "button": {
       "clear-metadata": "Clear Metadata"
     },
+    "title": {
+      "clear-metadata": "Clear Metadata For This Comic"
+    },
+    "message": {
+      "clear-metadata": "Are you sure you want to clear the metadata for this comic?"
+    },
     "text": {
       "format-placeholder": "Click to set format...",
       "scan-type-placeholder": "Click to set scan type...",
