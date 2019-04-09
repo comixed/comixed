@@ -22,43 +22,43 @@ import { Importing } from 'app/models/import/importing';
 import * as ImportingActions from 'app/actions/importing.actions';
 import { ComicFile } from 'app/models/import/comic-file';
 
-const initial_state: Importing = {
+export const initial_state: Importing = {
   busy: false,
   selected_count: 0,
   updating_status: false,
   directory: '',
-  files: [],
+  files: []
 };
 
 export function importingReducer(
   state: Importing = initial_state,
-  action: ImportingActions.Actions,
+  action: ImportingActions.Actions
 ) {
   switch (action.type) {
     case ImportingActions.IMPORTING_GET_PENDING_IMPORTS:
       return {
         ...state,
-        updating_status: true,
+        updating_status: true
       };
 
     case ImportingActions.IMPORTING_SET_DIRECTORY:
       return {
         ...state,
-        directory: action.payload.directory,
+        directory: action.payload.directory
       };
 
     case ImportingActions.IMPORTING_FETCH_FILES:
       return {
         ...state,
         directory: action.payload.directory,
-        busy: true,
+        busy: true
       };
 
     case ImportingActions.IMPORTING_FILES_FETCHED:
       return {
         ...state,
         busy: false,
-        files: action.payload.files,
+        files: action.payload.files
       };
 
     case ImportingActions.IMPORTING_SELECT_FILES: {
@@ -70,7 +70,7 @@ export function importingReducer(
       }).length;
       return {
         ...state,
-        selected_count: selected_count,
+        selected_count: selected_count
       };
     }
 
@@ -83,14 +83,14 @@ export function importingReducer(
       }).length;
       return {
         ...state,
-        selected_count: selected_count,
+        selected_count: selected_count
       };
     }
 
     case ImportingActions.IMPORTING_IMPORT_FILES:
       return {
         ...state,
-        busy: true,
+        busy: true
       };
 
     case ImportingActions.IMPORTING_FILES_ARE_IMPORTING:
@@ -98,7 +98,7 @@ export function importingReducer(
         ...state,
         busy: false,
         selected_count: 0,
-        files: [],
+        files: []
       };
 
     default:

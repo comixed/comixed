@@ -63,6 +63,7 @@ import * as LibraryActions from 'app/actions/library.actions';
 import * as DisplayActions from 'app/actions/library-display.actions';
 import * as ImportActions from 'app/actions/importing.actions';
 import * as UserActions from 'app/actions/user.actions';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const DIRECTORY_TO_USE = '/User/comixed/Downloads';
 
@@ -74,6 +75,7 @@ describe('ImportPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
@@ -111,7 +113,8 @@ describe('ImportPageComponent', () => {
         ConfirmationService,
         { provide: ComicService, useClass: ComicServiceMock }
       ]
-    }).compileComponents();
+    })
+      .compileComponents();
 
     fixture = TestBed.createComponent(ImportPageComponent);
     component = fixture.componentInstance;
@@ -124,7 +127,8 @@ describe('ImportPageComponent', () => {
   }));
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component)
+      .toBeTruthy();
   });
 
   describe('when not importing comics', () => {
@@ -142,17 +146,21 @@ describe('ImportPageComponent', () => {
     it('uses the previous directory value', () => {
       store.dispatch(new ImportActions.ImportingSetDirectory({ directory: DIRECTORY_TO_USE }));
       fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(fixture.debugElement.query(By.css('#directory-input')).nativeElement.value).toEqual(DIRECTORY_TO_USE);
-      });
+      fixture.whenStable()
+        .then(() => {
+          expect(fixture.debugElement.query(By.css('#directory-input')).nativeElement.value)
+            .toEqual(DIRECTORY_TO_USE);
+        });
     });
 
     it('does not show the progress indicator', () => {
-      expect(fixture.debugElement.query(By.css('#import-busy-indicator-container'))).toBeFalsy();
+      expect(fixture.debugElement.query(By.css('#import-busy-indicator-container')))
+        .toBeFalsy();
     });
 
     it('shows the comic file view', () => {
-      expect(fixture.debugElement.query(By.css('#comic-file-list-container'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('#comic-file-list-container')))
+        .toBeTruthy();
     });
   });
 
@@ -169,11 +177,13 @@ describe('ImportPageComponent', () => {
     });
 
     it('does not show the comic file view', () => {
-      expect(fixture.debugElement.query(By.css('#comic-file-list-container'))).toBeFalsy();
+      expect(fixture.debugElement.query(By.css('#comic-file-list-container')))
+        .toBeFalsy();
     });
 
     it('shows the progress indicator', () => {
-      expect(fixture.debugElement.query(By.css('#import-busy-indicator-container'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('#import-busy-indicator-container')))
+        .toBeTruthy();
     });
   });
 });
