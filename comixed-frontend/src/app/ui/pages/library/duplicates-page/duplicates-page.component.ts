@@ -26,7 +26,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { AppState } from 'app/app.state';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { MessageService } from 'primeng/api';
-import { Duplicates } from 'app/models/duplicates';
+import { Duplicates } from 'app/models/state/duplicates';
 
 export const DUPLICATES_HASH_PARAMETER = 'hash';
 

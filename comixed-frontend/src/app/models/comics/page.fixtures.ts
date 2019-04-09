@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,18 @@
  * org.comixed;
  */
 
-import { DuplicatePage } from './comics/duplicate-page';
+import { Page } from 'app/models/comics/page';
+import { FRONT_COVER } from 'app/models/comics/page-type.fixtures';
 
-export interface Duplicates {
-  busy: boolean;
-  pages: Array<DuplicatePage>;
-  hashes: Array<String>;
-  pages_by_hash: Map<string, Array<DuplicatePage>>;
-  current_hash: string;
-  current_duplicates: Array<DuplicatePage>;
-  last_hash: string;
-  pages_deleted: number;
-  pages_undeleted: number;
-}
+export const PAGE_1: Page = {
+  id: 1000,
+  comic_id: 1000,
+  filename: 'firstpage.png',
+  width: 1080,
+  height: 1920,
+  index: 0,
+  hash: 'abcdef1234567890',
+  deleted: false,
+  page_type: FRONT_COVER,
+  blocked: false
+};

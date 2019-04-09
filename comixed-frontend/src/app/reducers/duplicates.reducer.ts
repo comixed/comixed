@@ -17,11 +17,11 @@
  * org.comixed;
  */
 
-import { Duplicates } from 'app/models/duplicates';
+import { Duplicates } from 'app/models/state/duplicates';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { DuplicatePage } from 'app/models/comics/duplicate-page';
 
-const initial_state: Duplicates = {
+export const initial_state: Duplicates = {
   busy: false,
   pages: [],
   hashes: [],
@@ -30,7 +30,7 @@ const initial_state: Duplicates = {
   current_duplicates: null,
   last_hash: null,
   pages_deleted: 0,
-  pages_undeleted: 0,
+  pages_undeleted: 0
 };
 
 export function duplicatesReducer(
@@ -48,7 +48,7 @@ export function duplicatesReducer(
         busy: true,
         pages: [],
         pages_deleted: 0,
-        pages_undeleted: 0,
+        pages_undeleted: 0
       };
     }
 
@@ -61,7 +61,8 @@ export function duplicatesReducer(
           hashes.push(dupe.hash);
           pages_by_hash.set(dupe.hash, []);
         }
-        pages_by_hash.get(dupe.hash).push(dupe);
+        pages_by_hash.get(dupe.hash)
+          .push(dupe);
       });
 
       return {
@@ -71,7 +72,7 @@ export function duplicatesReducer(
         hashes: hashes,
         pages_by_hash: pages_by_hash,
         pages_deleted: 0,
-        pages_undeleted: 0,
+        pages_undeleted: 0
       };
     }
 
@@ -80,7 +81,7 @@ export function duplicatesReducer(
         ...state,
         busy: true,
         pages_deleted: 0,
-        pages_undeleted: 0,
+        pages_undeleted: 0
       };
     }
 
@@ -95,7 +96,7 @@ export function duplicatesReducer(
         busy: false,
         last_hash: action.payload.hash,
         pages_deleted: action.payload.count,
-        pages_undeleted: 0,
+        pages_undeleted: 0
       };
     }
 
@@ -103,7 +104,7 @@ export function duplicatesReducer(
       return {
         ...state,
         busy: true,
-        pages_undeleted: 0,
+        pages_undeleted: 0
       };
     }
 
@@ -118,21 +119,21 @@ export function duplicatesReducer(
         busy: false,
         last_hash: action.payload.hash,
         pages_undeleted: action.payload.count,
-        pages_deleted: 0,
+        pages_deleted: 0
       };
     }
 
     case DuplicatesActions.DUPLICATE_PAGES_BLOCK_HASH: {
       return {
         ...state,
-        busy: true,
+        busy: true
       };
     }
 
     case DuplicatesActions.DUPLICATE_PAGES_UNBLOCK_HASH: {
       return {
         ...state,
-        busy: true,
+        busy: true
       };
     }
 
@@ -144,7 +145,7 @@ export function duplicatesReducer(
       });
       return {
         ...state,
-        busy: false,
+        busy: false
       };
     }
 
@@ -152,7 +153,7 @@ export function duplicatesReducer(
       return {
         ...state,
         current_hash: action.payload.hash,
-        current_duplicates: state.pages_by_hash.get(action.payload.hash),
+        current_duplicates: state.pages_by_hash.get(action.payload.hash)
       };
     }
 
@@ -160,14 +161,14 @@ export function duplicatesReducer(
       return {
         ...state,
         current_hash: null,
-        current_duplicates: null,
+        current_duplicates: null
       };
     }
 
     case DuplicatesActions.DUPLICATE_PAGES_DELETE_PAGE: {
       return {
         ...state,
-        busy: true,
+        busy: true
       };
     }
 
@@ -177,14 +178,14 @@ export function duplicatesReducer(
       return {
         ...state,
         pages_deleted: 1,
-        busy: false,
+        busy: false
       };
     }
 
     case DuplicatesActions.DUPLICATE_PAGES_UNDELETE_PAGE: {
       return {
         ...state,
-        busy: true,
+        busy: true
       };
     }
 
@@ -194,7 +195,7 @@ export function duplicatesReducer(
       return {
         ...state,
         pages_undeleted: 1,
-        busy: false,
+        busy: false
       };
     }
 

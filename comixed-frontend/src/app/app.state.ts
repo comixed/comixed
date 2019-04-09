@@ -24,7 +24,7 @@ import { LibraryFilter } from 'app/models/actions/library-filter';
 import { LibraryDisplay } from 'app/models/state/library-display';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
-import { Duplicates } from 'app/models/duplicates';
+import { Duplicates } from 'app/models/state/duplicates';
 import { UserAdmin } from 'app/models/actions/user-admin';
 
 export interface AppState {
