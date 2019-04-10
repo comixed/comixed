@@ -44,7 +44,6 @@ The application depends on the following pieces:
 Once you've installed the requirements, you need to setup your environment:
 
 1. Install [yarn](https://yarnpkg.com/en/): ```npm install -g yarn```
-1. Install [Angular](https://angular.io/): ```npm install -g angular@7.2.0```
 
 ### Running The Build
 
