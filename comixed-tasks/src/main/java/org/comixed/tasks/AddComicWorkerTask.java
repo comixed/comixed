@@ -19,8 +19,6 @@
 
 package org.comixed.tasks;
 
-import java.io.File;
-
 import org.comixed.library.adaptors.AdaptorException;
 import org.comixed.library.adaptors.FilenameScraperAdaptor;
 import org.comixed.library.model.BlockedPageHash;
@@ -38,96 +36,76 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ConfigurationProperties(prefix = "comic-file.handlers")
-public class AddComicWorkerTask extends AbstractWorkerTask
-{
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class AddComicWorkerTask extends AbstractWorkerTask {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  File file;
+  @Autowired private ObjectFactory<Comic> comicFactory;
+  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ComicRepository comicRepository;
+  @Autowired private BlockedPageHashRepository blockedPageHashRepository;
+  @Autowired private FilenameScraperAdaptor filenameScraper;
+  private boolean deleteBlockedPages = false;
 
-    @Autowired
-    private ObjectFactory<Comic> comicFactory;
+  private boolean ignoreMetadata = false;
 
-    @Autowired
-    private ComicFileHandler comicFileHandler;
+  /**
+   * Sets whether blocked pages are marked as deleted.
+   *
+   * @param deleteBlockedPages the flag
+   */
+  public void setDeleteBlockedPages(boolean deleteBlockedPages) {
+    this.deleteBlockedPages = deleteBlockedPages;
+  }
 
-    @Autowired
-    private ComicRepository comicRepository;
+  /**
+   * Sets the name of the file to be added.
+   *
+   * @param file the file
+   */
+  public void setFile(File file) {
+    this.logger.debug("Setting filename: " + file.getName());
+    this.file = file;
+  }
 
-    @Autowired
-    private BlockedPageHashRepository blockedPageHashRepository;
+  public void setIgnoreMetadata(boolean ignore) {
+    this.ignoreMetadata = ignore;
+  }
 
-    @Autowired
-    private FilenameScraperAdaptor filenameScraper;
+  @Override
+  public void startTask() throws WorkerTaskException {
+    this.logger.debug("Adding file to library: " + this.file);
 
-    File file;
-
-    private boolean deleteBlockedPages;
-
-    /**
-     * Sets whether blocked pages are marked as deleted.
-     *
-     * @param deleteBlockedPages
-     *            the flag
-     */
-    public void setDeleteBlockedPages(boolean deleteBlockedPages)
-    {
-        this.deleteBlockedPages = deleteBlockedPages;
+    Comic result = this.comicRepository.findByFilename(this.file.getAbsolutePath());
+    if (result != null) {
+      this.logger.debug("Comic already imported: " + this.file.getAbsolutePath());
+      return;
     }
 
-    /**
-     * Sets the name of the file to be added.
-     *
-     * @param file
-     *            the file
-     */
-    public void setFile(File file)
-    {
-        this.logger.debug("Setting filename: " + file.getName());
-        this.file = file;
+    try {
+      result = this.comicFactory.getObject();
+      result.setFilename(this.file.getAbsolutePath());
+      this.comicFileHandler.loadComic(result, this.ignoreMetadata);
+      this.filenameScraper.execute(result);
+      if (this.deleteBlockedPages) {
+        this.logger.debug("Looking for blocked pages");
+        for (int index = 0; index < result.getPageCount(); index++) {
+          String hash = result.getPage(index).getHash();
+          BlockedPageHash blocked = this.blockedPageHashRepository.findByHash(hash);
+
+          if (blocked != null) {
+            this.logger.debug("Marking blocked offset as deleted: hash={}", hash);
+            result.getPage(index).markDeleted(true);
+          }
+        }
+      }
+      this.comicRepository.save(result);
+    } catch (ComicFileHandlerException | AdaptorException error) {
+      throw new WorkerTaskException("Failed to load comic", error);
     }
-
-    @Override
-    public void startTask() throws WorkerTaskException
-    {
-        this.logger.debug("Adding file to library: " + this.file);
-
-        Comic result = this.comicRepository.findByFilename(this.file.getAbsolutePath());
-        if (result != null)
-        {
-            this.logger.debug("Comic already imported: " + this.file.getAbsolutePath());
-            return;
-        }
-
-        try
-        {
-            result = this.comicFactory.getObject();
-            result.setFilename(this.file.getAbsolutePath());
-            this.comicFileHandler.loadComic(result);
-            this.filenameScraper.execute(result);
-            if (this.deleteBlockedPages)
-            {
-                this.logger.debug("Looking for blocked pages");
-                for (int index = 0;
-                     index < result.getPageCount();
-                     index++)
-                {
-                    String hash = result.getPage(index).getHash();
-                    BlockedPageHash blocked = this.blockedPageHashRepository.findByHash(hash);
-
-                    if (blocked != null)
-                    {
-                        this.logger.debug("Marking blocked offset as deleted: hash={}", hash);
-                        result.getPage(index).markDeleted(true);
-                    }
-                }
-            }
-            this.comicRepository.save(result);
-        }
-        catch (ComicFileHandlerException
-               | AdaptorException error)
-        {
-            throw new WorkerTaskException("Failed to load comic", error);
-        }
-    }
+  }
 }
