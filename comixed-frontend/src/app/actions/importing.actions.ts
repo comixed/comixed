@@ -17,12 +17,11 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Importing } from 'app/models/import/importing';
 import { ComicFile } from 'app/models/import/comic-file';
 
 export const IMPORTING_GET_PENDING_IMPORTS = '[IMPORTING] Get the number of pending imports';
+
 export class ImportingGetPendingImports implements Action {
   readonly type = IMPORTING_GET_PENDING_IMPORTS;
 
@@ -30,6 +29,7 @@ export class ImportingGetPendingImports implements Action {
 }
 
 export const IMPORTING_SET_DIRECTORY = '[IMPORTING] Set the directory';
+
 export class ImportingSetDirectory implements Action {
   readonly type = IMPORTING_SET_DIRECTORY;
 
@@ -39,6 +39,7 @@ export class ImportingSetDirectory implements Action {
 }
 
 export const IMPORTING_FETCH_FILES = '[IMPORTING] Fetch files in the specified directory';
+
 export class ImportingFetchFiles implements Action {
   readonly type = IMPORTING_FETCH_FILES;
 
@@ -48,6 +49,7 @@ export class ImportingFetchFiles implements Action {
 }
 
 export const IMPORTING_FILES_FETCHED = '[IMPORTING] Files fetched from server';
+
 export class ImportingFilesFetched implements Action {
   readonly type = IMPORTING_FILES_FETCHED;
 
@@ -57,6 +59,7 @@ export class ImportingFilesFetched implements Action {
 }
 
 export const IMPORTING_SELECT_FILES = '[IMPORTING] Add files to selection list';
+
 export class ImportingSelectFiles implements Action {
   readonly type = IMPORTING_SELECT_FILES;
 
@@ -66,6 +69,7 @@ export class ImportingSelectFiles implements Action {
 }
 
 export const IMPORTING_UNSELECT_FILES = '[IMPORTING] Remove files from selection list';
+
 export class ImportingUnselectFiles implements Action {
   readonly type = IMPORTING_UNSELECT_FILES;
 
@@ -75,15 +79,17 @@ export class ImportingUnselectFiles implements Action {
 }
 
 export const IMPORTING_IMPORT_FILES = '[IMPORTING] Import files';
+
 export class ImportingImportFiles implements Action {
   readonly type = IMPORTING_IMPORT_FILES;
 
   constructor(public payload: {
-    files: Array<string>,
+    files: Array<string>, ignore_metadata: boolean,
   }) { }
 }
 
 export const IMPORTING_FILES_ARE_IMPORTING = '[IMPORTING] Files have been queued for import';
+
 export class ImportingFilesAreImporting implements Action {
   readonly type = IMPORTING_FILES_ARE_IMPORTING;
 
@@ -91,11 +97,11 @@ export class ImportingFilesAreImporting implements Action {
 }
 
 export type Actions =
-  ImportingGetPendingImports |
-  ImportingSetDirectory |
-  ImportingFetchFiles |
-  ImportingFilesFetched |
-  ImportingSelectFiles |
-  ImportingUnselectFiles |
-  ImportingImportFiles |
-  ImportingFilesAreImporting;
+  ImportingGetPendingImports
+  | ImportingSetDirectory
+  | ImportingFetchFiles
+  | ImportingFilesFetched
+  | ImportingSelectFiles
+  | ImportingUnselectFiles
+  | ImportingImportFiles
+  | ImportingFilesAreImporting;

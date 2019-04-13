@@ -74,12 +74,9 @@
   },
   "selected-comic-files-list": {
     "button": {
-      "import": "Import Comics"
-    }
-  },
-  "selected-comic-files-list": {
-    "button": {
-      "import": "Import Comics"
+      "label": "Import",
+      "import": "With Metadata",
+      "import-ignore-metadata": "Ignore Metadata"
     }
   },
   "import-toolbar": {

@@ -23,7 +23,8 @@ import { SelectedComicFileListComponent } from './selected-comic-file-list.compo
 import { TranslateModule } from '@ngx-translate/core';
 import { DataViewModule } from 'primeng/dataview';
 import {
-  CardModule, ConfirmationService,
+  CardModule,
+  ConfirmationService,
   OverlayPanelModule,
   PanelModule,
   ScrollPanelModule,
@@ -39,7 +40,8 @@ import { AppState } from 'app/app.state';
 import {
   EXISTING_COMIC_FILE_1,
   EXISTING_COMIC_FILE_2,
-  EXISTING_COMIC_FILE_3, EXISTING_COMIC_FILE_4
+  EXISTING_COMIC_FILE_3,
+  EXISTING_COMIC_FILE_4
 } from 'app/models/import/comic-file.fixtures';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
@@ -75,8 +77,7 @@ describe('SelectedComicFileListComponent', () => {
         ComicFileCoverUrlPipe
       ],
       providers: [ConfirmationService]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SelectedComicFileListComponent);
     component = fixture.componentInstance;
@@ -92,7 +93,9 @@ describe('SelectedComicFileListComponent', () => {
 
     fixture.detectChanges();
 
-    comic_file_item = fixture.debugElement.query(By.css(`#comic-file-grid-item-${EXISTING_COMIC_FILE_1.id}`));
+    comic_file_item = fixture.debugElement.query(
+      By.css(`#comic-file-grid-item-${EXISTING_COMIC_FILE_1.id}`)
+    );
   }));
 
   afterEach(() => {
@@ -111,7 +114,11 @@ describe('SelectedComicFileListComponent', () => {
       EXISTING_COMIC_FILE_3,
       EXISTING_COMIC_FILE_4
     ].forEach((comic_file: ComicFile) => {
-      expect(fixture.debugElement.query(By.css(`#comic-file-grid-item-${comic_file.id}`))).toBeTruthy();
+      expect(
+        fixture.debugElement.query(
+          By.css(`#comic-file-grid-item-${comic_file.id}`)
+        )
+      ).toBeTruthy();
     });
   });
 

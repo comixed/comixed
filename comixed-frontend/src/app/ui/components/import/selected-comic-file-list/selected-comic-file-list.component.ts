@@ -17,28 +17,16 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Comic } from 'app/models/comics/comic';
-import { Library } from 'app/models/actions/library';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import * as LibraryActions from 'app/actions/library.actions';
-import * as ImportActions from 'app/actions/importing.actions';
 import * as DisplayActions from 'app/actions/library-display.actions';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Importing } from 'app/models/import/importing';
 import { ComicFile } from 'app/models/import/comic-file';
 import { LibraryDisplay } from 'app/models/state/library-display';
+import * as ImportActions from 'app/actions/importing.actions';
 
 @Component({
   selector: 'app-selected-comic-file-list',
@@ -51,12 +39,10 @@ export class SelectedComicFileListComponent implements OnInit {
 
   protected actions: MenuItem[];
 
-  constructor(
-    private router: Router,
+  constructor(private router: Router,
     private store: Store<AppState>,
     private translate: TranslateService,
-    private confirmation_service: ConfirmationService
-  ) {
+    private confirmation_service: ConfirmationService) {
     this.load_actions();
   }
 
@@ -65,23 +51,33 @@ export class SelectedComicFileListComponent implements OnInit {
   }
 
   private load_actions(): void {
-    this.actions = [
-      {
-        label: this.translate.instant('selected-comic-files-list.button.import'),
-        icon: 'fa fa-fw fa-upload',
-        command: () => {
-          this.confirmation_service.confirm({
-            message: `Are you sure you want to import ${this.selected_comic_files.length} comics?`,
-            accept: () => {
-              const filenames = this.selected_comic_files.map((comic_file: ComicFile) => {
-                return comic_file.filename;
-              });
-              this.store.dispatch(new ImportActions.ImportingImportFiles({ files: filenames }));
-            }
-          });
-        }
+    this.actions = [{
+      label: this.translate.instant('selected-comic-files-list.button.import'),
+      icon: 'fas fa-info-circle',
+      command: () => {
+        this.import_files(false);
       }
-    ];
+    },
+      {
+        label: this.translate.instant('selected-comic-files-list.button.import-ignore-metadata'),
+        icon: 'fas fa-ban',
+        command: () => {
+          this.import_files(true);
+        }
+      }];
+  }
+
+  private import_files(ignore_metadata: boolean): void {
+    this.confirmation_service.confirm({
+      message: `Are you sure you want to import ${this.selected_comic_files.length} comics?`, accept: () => {
+        const filenames = this.selected_comic_files.map((comic_file: ComicFile) => {
+          return comic_file.filename;
+        });
+        this.store.dispatch(new ImportActions.ImportingImportFiles({
+          files: filenames, ignore_metadata: ignore_metadata
+        }));
+      }
+    });
   }
 
   hide_selections(): void {

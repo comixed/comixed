@@ -10,6 +10,11 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "prettier": {
+    "singleQuote": true,
+    "useTabs": false,
+    "langs": ["js", "javascript", "typescript"]
+  },
   "private": true,
   "dependencies": {
     "@angular-devkit/build-angular": "^0.12.1",

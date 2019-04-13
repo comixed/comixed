@@ -18,18 +18,12 @@
  */
 
 import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot
-} from '@angular/router';
-import { Router } from '@angular/router';
-import { Store, Action } from '@ngrx/store';
+import { CanActivate, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { AppState } from './app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import * as UserActions from './actions/user.actions';
-import { filter } from 'rxjs/operators';
 import { User } from './models/user/user';
 
 @Injectable()
@@ -38,17 +32,14 @@ export class AdminGuard implements CanActivate {
   admin_subject = new Subject<boolean>();
 
   constructor(private router: Router, private store: Store<AppState>) {
-    store.select('user').subscribe((user: User) => {
-      this.user = user;
+    store.select('user')
+      .subscribe((user: User) => {
+        this.user = user;
 
-      if (
-        this.user.initialized &&
-        !this.user.authenticating &&
-        !this.user.fetching
-      ) {
-        this.admin_subject.next(this.user.is_admin);
-      }
-    });
+        if (this.user.initialized && !this.user.authenticating && !this.user.fetching) {
+          this.admin_subject.next(this.user.is_admin);
+        }
+      });
   }
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
