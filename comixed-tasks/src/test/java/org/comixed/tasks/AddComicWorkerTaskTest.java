@@ -129,6 +129,29 @@ public class AddComicWorkerTaskTest
     }
 
     @Test
+    public void testAddFileWithIgnoreComicInfoXml() throws WorkerTaskException,
+                                                    ComicFileHandlerException,
+                                                    AdaptorException
+    {
+        Mockito.when(comicFactory.getObject()).thenReturn(comic);
+        Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class), false);
+        Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
+        Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(Mockito.any(Comic.class));
+
+        File file = new File(TEST_CBZ_FILE);
+
+        task.setFile(file);
+        task.setIgnoreComicInfoXml(true);
+        task.startTask();
+
+        Mockito.verify(comicFactory, Mockito.times(1)).getObject();
+        Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic, false);
+        Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+        Mockito.verify(blockedPageHashRepository, Mockito.never()).findByHash(Mockito.anyString());
+        Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    }
+
+    @Test
     public void testAddFileWithNoBlockedPageButBlockedPagesToBeDeleted() throws WorkerTaskException,
                                                                          ComicFileHandlerException,
                                                                          AdaptorException
