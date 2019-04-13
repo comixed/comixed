@@ -19,18 +19,6 @@
 
 package org.comixed.web.controllers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.comixed.library.adaptors.archive.ArchiveAdaptor;
 import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.library.model.Comic;
@@ -53,214 +41,212 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class FileControllerTest
-{
-    private static final String COVER_IMAGE_FILENAME = "coverimage.png";
-    private static final String COMIC_ARCHIVE = "testcomic.cbz";
-    private static final byte[] IMAGE_CONTENT = new byte[65535];
-    private static final String TEST_FILE = "src/test/resources/example.cbz";
-    private static final String TEST_DIRECTORY = "src/test";
-    private static final String[] TEST_FILENAMES = new String[]
-    {"First.cbz",
-     "Second.cbz",
-     "Third.cbr",
-     "Fourth.cb7"};
+public class FileControllerTest {
+  private static final String COVER_IMAGE_FILENAME = "coverimage.png";
+  private static final String COMIC_ARCHIVE = "testcomic.cbz";
+  private static final byte[] IMAGE_CONTENT = new byte[65535];
+  private static final String TEST_FILE = "src/test/resources/example.cbz";
+  private static final String TEST_DIRECTORY = "src/test";
+  private static final String[] TEST_FILENAMES =
+      new String[] {"First.cbz", "Second.cbz", "Third.cbr", "Fourth.cb7"};
 
-    @InjectMocks
-    private FileController controller;
+  @InjectMocks private FileController controller;
 
-    @Mock
-    private ComicRepository comicRepository;
+  @Mock private ComicRepository comicRepository;
 
-    @Mock
-    private ComicFileHandler comicFileHandler;
+  @Mock private ComicFileHandler comicFileHandler;
 
-    @Mock
-    private ArchiveAdaptor archiveAdaptor;
+  @Mock private ArchiveAdaptor archiveAdaptor;
 
-    @Mock
-    private Worker worker;
+  @Mock private Worker worker;
 
-    @Mock
-    private ObjectFactory<QueueComicsWorkerTask> taskFactory;
+  @Mock private ObjectFactory<QueueComicsWorkerTask> taskFactory;
 
-    @Mock
-    private QueueComicsWorkerTask queueComicsWorkerTask;
+  @Mock private QueueComicsWorkerTask queueComicsWorkerTask;
 
-    @Mock
-    private Comic comic;
+  @Mock private Comic comic;
 
-    @Test
-    public void testGetImportFileCoverWithNoAdaptor() throws ComicFileHandlerException, ArchiveAdaptorException
-    {
-        Mockito.when(comicFileHandler.getArchiveAdaptorFor(COMIC_ARCHIVE)).thenReturn(null);
+  @Test
+  public void testGetImportFileCoverWithNoAdaptor()
+      throws ComicFileHandlerException, ArchiveAdaptorException {
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(COMIC_ARCHIVE)).thenReturn(null);
 
-        assertNull(controller.getImportFileCover(COMIC_ARCHIVE));
+    assertNull(controller.getImportFileCover(COMIC_ARCHIVE));
 
-        Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(COMIC_ARCHIVE);
+    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(COMIC_ARCHIVE);
+  }
+
+  @Test
+  public void testGetImportFileCoverWithNoSuchFile()
+      throws ArchiveAdaptorException, ComicFileHandlerException {
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(COMIC_ARCHIVE)).thenReturn(archiveAdaptor);
+    Mockito.when(archiveAdaptor.getFirstImageFileName(COMIC_ARCHIVE)).thenReturn(null);
+
+    assertNull(controller.getImportFileCover(COMIC_ARCHIVE));
+
+    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(COMIC_ARCHIVE);
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).getFirstImageFileName(COMIC_ARCHIVE);
+  }
+
+  @Test
+  public void testGetImportFileCover() throws ComicFileHandlerException, ArchiveAdaptorException {
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(COMIC_ARCHIVE)).thenReturn(archiveAdaptor);
+    Mockito.when(archiveAdaptor.getFirstImageFileName(COMIC_ARCHIVE))
+        .thenReturn(COVER_IMAGE_FILENAME);
+    Mockito.when(archiveAdaptor.loadSingleFile(COMIC_ARCHIVE, COVER_IMAGE_FILENAME))
+        .thenReturn(IMAGE_CONTENT);
+
+    assertEquals(IMAGE_CONTENT, controller.getImportFileCover(COMIC_ARCHIVE));
+
+    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(COMIC_ARCHIVE);
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).getFirstImageFileName(COMIC_ARCHIVE);
+    Mockito.verify(archiveAdaptor, Mockito.times(1))
+        .loadSingleFile(COMIC_ARCHIVE, COVER_IMAGE_FILENAME);
+  }
+
+  @Test
+  public void testGetAllComicsUnderWithInvalidDirectory() throws IOException, JSONException {
+    List<FileDetails> result = controller.getAllComicsUnder("src/test/resoureces/nonexistent");
+
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void testGetAllComicsUnderForAFile() throws IOException, JSONException {
+    List<FileDetails> result = controller.getAllComicsUnder(TEST_FILE);
+
+    File file = new File(TEST_FILE);
+
+    assertEquals(1, result.size());
+    assertEquals(file.getAbsolutePath().replaceAll("\\\\", "/"), result.get(0).getFilename());
+    assertEquals(FileUtils.getName(TEST_FILE), result.get(0).getBaseFilename());
+    assertEquals(file.length(), result.get(0).getSize());
+  }
+
+  @Test
+  public void testGetAllComicsUnder() throws IOException, JSONException {
+    // way too much setup
+    File contents = new File(TEST_DIRECTORY);
+    Map<String, File> expectations = new HashMap<>();
+    for (File file : contents.listFiles()) {
+      loadFiles(file, expectations);
     }
 
-    @Test
-    public void testGetImportFileCoverWithNoSuchFile() throws ArchiveAdaptorException, ComicFileHandlerException
-    {
-        Mockito.when(comicFileHandler.getArchiveAdaptorFor(COMIC_ARCHIVE)).thenReturn(archiveAdaptor);
-        Mockito.when(archiveAdaptor.getFirstImageFileName(COMIC_ARCHIVE)).thenReturn(null);
+    Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(null);
 
-        assertNull(controller.getImportFileCover(COMIC_ARCHIVE));
+    List<FileDetails> result = controller.getAllComicsUnder(TEST_DIRECTORY);
 
-        Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(COMIC_ARCHIVE);
-        Mockito.verify(archiveAdaptor, Mockito.times(1)).getFirstImageFileName(COMIC_ARCHIVE);
+    Mockito.verify(comicRepository, Mockito.times(expectations.size()))
+        .findByFilename(Mockito.anyString());
+
+    assertEquals(expectations.size(), result.size());
+    for (FileDetails entry : result) {
+      assertTrue(expectations.containsKey(entry.getFilename()));
+      assertEquals(expectations.get(entry.getFilename()).getName(), entry.getBaseFilename());
+      assertEquals(expectations.get(entry.getFilename()).length(), entry.getSize());
     }
+  }
 
-    @Test
-    public void testGetImportFileCover() throws ComicFileHandlerException, ArchiveAdaptorException
-    {
-        Mockito.when(comicFileHandler.getArchiveAdaptorFor(COMIC_ARCHIVE)).thenReturn(archiveAdaptor);
-        Mockito.when(archiveAdaptor.getFirstImageFileName(COMIC_ARCHIVE)).thenReturn(COVER_IMAGE_FILENAME);
-        Mockito.when(archiveAdaptor.loadSingleFile(COMIC_ARCHIVE, COVER_IMAGE_FILENAME)).thenReturn(IMAGE_CONTENT);
+  @Test
+  public void testGetAllComicsUnderAndAlreadyImported() throws IOException, JSONException {
+    Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(comic);
 
-        assertEquals(IMAGE_CONTENT, controller.getImportFileCover(COMIC_ARCHIVE));
+    List<FileDetails> result = controller.getAllComicsUnder(TEST_DIRECTORY);
 
-        Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(COMIC_ARCHIVE);
-        Mockito.verify(archiveAdaptor, Mockito.times(1)).getFirstImageFileName(COMIC_ARCHIVE);
-        Mockito.verify(archiveAdaptor, Mockito.times(1)).loadSingleFile(COMIC_ARCHIVE, COVER_IMAGE_FILENAME);
+    assertTrue(result.isEmpty());
+
+    Mockito.verify(comicRepository, Mockito.atLeastOnce()).findByFilename(Mockito.anyString());
+  }
+
+  private void loadFiles(File file, Map<String, File> expectations) {
+    if (file.isDirectory()) {
+      for (File nextFile : file.listFiles()) {
+        loadFiles(nextFile, expectations);
+      }
+    } else {
+      if (ComicFileUtils.isComicFile(file))
+        expectations.put(file.getAbsolutePath().replaceAll("\\\\", "/"), file);
     }
+  }
 
-    @Test
-    public void testGetAllComicsUnderWithInvalidDirectory() throws IOException, JSONException
-    {
-        List<FileDetails> result = controller.getAllComicsUnder("src/test/resoureces/nonexistent");
+  @Test
+  public void testGetImportStatus() throws NoSuchAlgorithmException, InterruptedException {
+    int expected = SecureRandom.getInstanceStrong().nextInt(21275);
+    Mockito.when(worker.getCountFor(AddComicWorkerTask.class)).thenReturn(expected);
 
-        assertTrue(result.isEmpty());
-    }
+    int result = controller.getImportStatus();
 
-    @Test
-    public void testGetAllComicsUnderForAFile() throws IOException, JSONException
-    {
-        List<FileDetails> result = controller.getAllComicsUnder(TEST_FILE);
+    assertEquals(expected, result);
 
-        File file = new File(TEST_FILE);
+    Mockito.verify(worker, Mockito.times(1)).getCountFor(AddComicWorkerTask.class);
+  }
 
-        assertEquals(1, result.size());
-        assertEquals(file.getAbsolutePath().replaceAll("\\\\", "/"), result.get(0).getFilename());
-        assertEquals(FileUtils.getName(TEST_FILE), result.get(0).getBaseFilename());
-        assertEquals(file.length(), result.get(0).getSize());
-    }
+  @Test
+  public void testImportComicFiles() throws UnsupportedEncodingException {
+    Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
 
-    @Test
-    public void testGetAllComicsUnder() throws IOException, JSONException
-    {
-        // way too much setup
-        File contents = new File(TEST_DIRECTORY);
-        Map<String,
-            File> expectations = new HashMap<>();
-        for (File file : contents.listFiles())
-        {
-            loadFiles(file, expectations);
-        }
+    controller.importComicFiles(TEST_FILENAMES, false, false);
 
-        Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.verify(taskFactory, Mockito.times(1)).getObject();
+    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(queueComicsWorkerTask);
+  }
 
-        List<FileDetails> result = controller.getAllComicsUnder(TEST_DIRECTORY);
+  @Test
+  public void testImportComicFilesEncoded() throws UnsupportedEncodingException {
+    String[] fileNamesEncoded =
+        new String[] {
+          "e%3A%2Fcomics%20%26%20manga%2C%20etc%2B%2Ffirst_%231%3B.cbr",
+          "f%3A%2Fcomics%40Home%2F~%2Fla%24t%20-%20(2000's)!.cbz"
+        };
 
-        Mockito.verify(comicRepository, Mockito.times(expectations.size())).findByFilename(Mockito.anyString());
+    QueueComicsWorkerTask dummyWorkerTask = new QueueComicsWorkerTask();
 
-        assertEquals(expectations.size(), result.size());
-        for (FileDetails entry : result)
-        {
-            assertTrue(expectations.containsKey(entry.getFilename()));
-            assertEquals(expectations.get(entry.getFilename()).getName(), entry.getBaseFilename());
-            assertEquals(expectations.get(entry.getFilename()).length(), entry.getSize());
-        }
-    }
+    Mockito.when(taskFactory.getObject()).thenReturn(dummyWorkerTask);
 
-    @Test
-    public void testGetAllComicsUnderAndAlreadyImported() throws IOException, JSONException
-    {
-        Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(comic);
+    controller.importComicFiles(fileNamesEncoded, false, false);
 
-        List<FileDetails> result = controller.getAllComicsUnder(TEST_DIRECTORY);
+    Mockito.verify(taskFactory, Mockito.times(1)).getObject();
+    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(dummyWorkerTask);
 
-        assertTrue(result.isEmpty());
+    assertEquals(2, dummyWorkerTask.filenames.size());
+    assertEquals("e:/comics & manga, etc+/first_#1;.cbr", dummyWorkerTask.filenames.get(0));
+    assertEquals("f:/comics@Home/~/la$t - (2000's)!.cbz", dummyWorkerTask.filenames.get(1));
+  }
 
-        Mockito.verify(comicRepository, Mockito.atLeastOnce()).findByFilename(Mockito.anyString());
-    }
+  @Test
+  public void testImportComicFilesDeleteBlockedPages() throws UnsupportedEncodingException {
+    Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
+    Mockito.doNothing().when(queueComicsWorkerTask).setDeleteBlockedPages(true);
 
-    private void loadFiles(File file,
-                           Map<String,
-                               File> expectations)
-    {
-        if (file.isDirectory())
-        {
-            for (File nextFile : file.listFiles())
-            {
-                loadFiles(nextFile, expectations);
-            }
-        }
-        else
-        {
-            if (ComicFileUtils.isComicFile(file)) expectations.put(file.getAbsolutePath().replaceAll("\\\\", "/"),
-                                                                   file);
-        }
-    }
+    controller.importComicFiles(TEST_FILENAMES, true, false);
 
-    @Test
-    public void testGetImportStatus() throws NoSuchAlgorithmException, InterruptedException
-    {
-        int expected = SecureRandom.getInstanceStrong().nextInt(21275);
-        Mockito.when(worker.getCountFor(AddComicWorkerTask.class)).thenReturn(expected);
+    Mockito.verify(taskFactory, Mockito.times(1)).getObject();
+    Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setDeleteBlockedPages(true);
+    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(queueComicsWorkerTask);
+  }
 
-        int result = controller.getImportStatus();
+  @Test
+  public void testImportComicFilesIgnoreComicInfoXmlFile() throws UnsupportedEncodingException {
+    Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
+    Mockito.doNothing().when(queueComicsWorkerTask).setIgnoreMetadata(true);
 
-        assertEquals(expected, result);
+    controller.importComicFiles(TEST_FILENAMES, false, true);
 
-        Mockito.verify(worker, Mockito.times(1)).getCountFor(AddComicWorkerTask.class);
-    }
-
-    @Test
-    public void testImportComicFiles()
-    {
-        Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
-
-        controller.importComicFiles(TEST_FILENAMES, false);
-
-        Mockito.verify(taskFactory, Mockito.times(1)).getObject();
-        Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(queueComicsWorkerTask);
-    }
-
-    @Test
-    public void testImportComicFilesEncoded()
-    {
-        String[] fileNamesEncoded = new String[]
-        {"e%3A%2Fcomics%20%26%20manga%2C%20etc%2B%2Ffirst_%231%3B.cbr",
-         "f%3A%2Fcomics%40Home%2F~%2Fla%24t%20-%20(2000's)!.cbz"};
-
-        QueueComicsWorkerTask dummyWorkerTask = new QueueComicsWorkerTask();
-
-        Mockito.when(taskFactory.getObject()).thenReturn(dummyWorkerTask);
-
-        controller.importComicFiles(fileNamesEncoded, false);
-
-        Mockito.verify(taskFactory, Mockito.times(1)).getObject();
-        Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(dummyWorkerTask);
-
-        assertEquals(2, dummyWorkerTask.filenames.size());
-        assertEquals("e:/comics & manga, etc+/first_#1;.cbr", dummyWorkerTask.filenames.get(0));
-        assertEquals("f:/comics@Home/~/la$t - (2000's)!.cbz", dummyWorkerTask.filenames.get(1));
-    }
-
-    @Test
-    public void testImportComicFilesDeleteBlockedPages()
-    {
-        Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
-        Mockito.doNothing().when(queueComicsWorkerTask).setDeleteBlockedPages(true);
-
-        controller.importComicFiles(TEST_FILENAMES, true);
-
-        Mockito.verify(taskFactory, Mockito.times(1)).getObject();
-        Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setDeleteBlockedPages(true);
-        Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(queueComicsWorkerTask);
-    }
+    Mockito.verify(taskFactory, Mockito.times(1)).getObject();
+    Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setIgnoreMetadata(true);
+    Mockito.verify(worker, Mockito.timeout(1)).addTasksToQueue(queueComicsWorkerTask);
+  }
 }
