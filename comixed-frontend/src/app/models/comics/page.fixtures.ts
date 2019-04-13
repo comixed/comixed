@@ -32,3 +32,16 @@ export const PAGE_1: Page = {
   page_type: FRONT_COVER,
   blocked: false
 };
+
+export const PAGE_2: Page = {
+  id: 1001,
+  comic_id: 1001,
+  filename: 'firstpage.png',
+  width: 1080,
+  height: 1920,
+  index: 0,
+  hash: 'abcdef1234567890',
+  deleted: false,
+  page_type: FRONT_COVER,
+  blocked: false
+};

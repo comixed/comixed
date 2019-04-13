@@ -1,14 +1,3 @@
-import { finalize } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-
-import { UserService } from './user.service';
-import { Comic } from 'app/models/comics/comic';
-import { Page } from 'app/models/comics/page';
-import { PageType } from 'app/models/comics/page-type';
-import { ScanType } from 'app/models/comics/scan-type';
-import { ComicFormat } from 'app/models/comics/comic-format';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
@@ -28,17 +17,37 @@ import { ComicFormat } from 'app/models/comics/comic-format';
  * org.comixed;
  */
 
+import { finalize } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+
+import { UserService } from './user.service';
+import { Comic } from 'app/models/comics/comic';
+import { Page } from 'app/models/comics/page';
+import { ScanType } from 'app/models/comics/scan-type';
+import { ComicFormat } from 'app/models/comics/comic-format';
+import {
+  GET_COMIC_METADATA_URL,
+  GET_SCRAPING_CANDIDATES_URL,
+  RESCAN_COMIC_FILES_URL
+} from 'app/services/url.constants';
+
 export const COMIC_SERVICE_API_URL = '/api';
 
 @Injectable()
 export class ComicService {
+  constructor(private http: HttpClient, private user_service: UserService) {}
+
   delete_multiple_comics(comics: Array<Comic>): Observable<any> {
     const ids = [];
     comics.forEach((comic: Comic) => ids.push(comic.id));
     const params = new HttpParams().set('comic_ids', ids.toString());
-    return this.http.post(`${COMIC_SERVICE_API_URL}/comics/multiple/delete`, params);
+    return this.http.post(
+      `${COMIC_SERVICE_API_URL}/comics/multiple/delete`,
+      params
+    );
   }
-  constructor(private http: HttpClient, private user_service: UserService) {}
 
   fetch_scan_types(): Observable<any> {
     return this.http.get(`${COMIC_SERVICE_API_URL}/comics/scan_types`);
@@ -99,35 +108,6 @@ export class ComicService {
   set_page_type(page: Page, page_type_id: number): Observable<any> {
     const params = new HttpParams().set('type_id', `${page_type_id}`);
     return this.http.put(`/api/pages/${page.id}/type`, params);
-  }
-
-  get_display_name_for_page_type(page_type: PageType): string {
-    switch (page_type.name) {
-      case 'front-cover':
-        return 'Front Cover';
-      case 'inner-cover':
-        return 'Inner Cover';
-      case 'back-cover':
-        return 'Back Cover';
-      case 'roundup':
-        return 'Roundup';
-      case 'story':
-        return 'Story';
-      case 'advertisement':
-        return 'Advertisement';
-      case 'editorial':
-        return 'Editorial';
-      case 'letters':
-        return 'Letters';
-      case 'preview':
-        return 'Preview';
-      case 'other':
-        return 'Other';
-      case 'filtered':
-        return 'Filtered';
-      default:
-        return 'Unknown (' + page_type + ')';
-    }
   }
 
   get_duplicate_pages(): Observable<any> {
@@ -199,20 +179,7 @@ export class ComicService {
   rescan_files(): Observable<any> {
     const params = new HttpParams();
 
-    return this.http.post(`${COMIC_SERVICE_API_URL}/comics/rescan`, params);
-  }
-
-  get_issue_label_text_for_comic(comic: Comic): string {
-    return `${comic.series || 'Unknown Series'} #${comic.issue_number ||
-      '??'} (v.${comic.volume || '????'})`;
-  }
-
-  get_issue_content_label_for_comic(comic: Comic): string {
-    return `${comic.title || '[no title defined]'}`;
-  }
-
-  get_download_link_for_comic(comicId: number): string {
-    return `${COMIC_SERVICE_API_URL}/comics/${comicId}/download`;
+    return this.http.post(RESCAN_COMIC_FILES_URL, params);
   }
 
   fetch_candidates_for(
@@ -229,28 +196,22 @@ export class ComicService {
       .set('issue_number', issue_number)
       .set('skip_cache', `${skip_cache}`);
 
-    return this.http.post(
-      `${COMIC_SERVICE_API_URL}/scraper/query/volumes`,
-      params
-    );
+    return this.http.post(GET_SCRAPING_CANDIDATES_URL, params);
   }
 
   scrape_comic_details_for(
     api_key: string,
-    volume: number,
+    volume: string,
     issue_number: string,
     skip_cache: boolean
   ): Observable<any> {
     const params = new HttpParams()
       .set('api_key', api_key)
-      .set('volume', `${volume}`)
+      .set('volume', volume)
       .set('issue_number', issue_number)
       .set('skip_cache', `${skip_cache}`);
 
-    return this.http.post(
-      `${COMIC_SERVICE_API_URL}/scraper/query/issue`,
-      params
-    );
+    return this.http.post(GET_COMIC_METADATA_URL, params);
   }
 
   scrape_and_save_comic_details(

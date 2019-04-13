@@ -12,12 +12,7 @@
   },
   "prettier": {
     "singleQuote": true,
-    "useTabs": false,
-    "langs": [
-      "js",
-      "javascript",
-      "typescript"
-    ]
+    "useTabs": false
   },
   "private": true,
   "dependencies": {

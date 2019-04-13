@@ -23,3 +23,13 @@ export const FRONT_COVER: PageType = {
   id: 1,
   name: 'front-cover'
 };
+
+export const STORY: PageType = {
+  id: 2,
+  name: 'story'
+};
+
+export const BACK_COVER: PageType = {
+  id: 99,
+  name: 'back-cover'
+};

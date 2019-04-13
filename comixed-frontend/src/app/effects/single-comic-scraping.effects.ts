@@ -121,7 +121,7 @@ export class SingleComicScrapingEffects {
       this.comic_service
         .scrape_comic_details_for(
           action.api_key,
-          action.volume.id,
+          `${action.volume.id}`,
           action.issue_number,
           action.skip_cache
         )
@@ -147,7 +147,7 @@ export class SingleComicScrapingEffects {
       this.comic_service
         .scrape_comic_details_for(
           action.api_key,
-          action.volume_id,
+          `${action.volume_id}`,
           action.issue_number,
           action.skip_cache
         )

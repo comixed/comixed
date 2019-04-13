@@ -112,10 +112,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.library_filter_subscription.unsubscribe();
   }
 
-  get_download_link(comic: Comic): string {
-    return this.comic_service.get_download_link_for_comic(comic.id);
-  }
-
   delete_comic(comic: Comic): void {
     this.confirm_service.confirm({
       header: this.translate.instant('library.messages.delete-comic-title'),
