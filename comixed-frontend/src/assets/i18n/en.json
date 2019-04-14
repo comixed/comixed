@@ -295,13 +295,16 @@
       "sort-name": "Sort Name"
     },
     "button": {
-      "clear-metadata": "Clear Metadata"
+      "clear-metadata": "Clear Metadata",
+      "delete-comic": "Delete Comic"
     },
     "title": {
-      "clear-metadata": "Clear Metadata For This Comic"
+      "clear-metadata": "Clear Metadata For This Comic",
+      "delete-comic": "Delete This Comic"
     },
     "message": {
-      "clear-metadata": "Are you sure you want to clear the metadata for this comic?"
+      "clear-metadata": "Are you sure you want to clear the metadata for this comic?",
+      "delete-comic": "Are you sure you want to delete this comic?<br /><br /><b>NOTE:</b> The comic file is <b>not deleted:</b> it is just <u>removed</u> from the database."
     },
     "text": {
       "format-placeholder": "Click to set format...",

@@ -5,8 +5,10 @@
         <strong>{{'comic-overview.label.publisher'|translate}}</strong>
       </div>
       <div class='ui-g-12'>
-        <a [routerLink]='["/publishers", comic.publisher||"undefined"]'>{{comic.imprint || comic.publisher || 'text.unknown'|translate}}</a><span *ngIf='comic.imprint'> ({{comic.publisher}}
-                                                                                                                                                                         )</span>
+        <a
+           [routerLink]='["/publishers", comic.publisher||"undefined"]'>{{comic.imprint || comic.publisher || 'text.unknown'|translate}}</a><span
+              *ngIf='comic.imprint'> ({{comic.publisher}}
+          )</span>
       </div>
       <div class='ui-g-12'>
         <strong>{{'comic-overview.label.series'|translate}}</strong>
@@ -81,7 +83,8 @@
         <p-inplace *ngIf='is_admin'
                    closable='closable'
                    (onActivate)='copy_scan_type(comic)'>
-          <span pInplaceDisplay>{{comic.scan_type?.name || comic.format?.name || 'comic-overview.text.scan-type-placeholder'|translate}}</span>
+          <span
+                pInplaceDisplay>{{comic.scan_type?.name || comic.format?.name || 'comic-overview.text.scan-type-placeholder'|translate}}</span>
           <span pInplaceContent>
             <p-dropdown [options]='scan_types'
                         [(ngModel)]='scan_type'
@@ -100,9 +103,9 @@
                  (onActivate)='copy_sort_name(comic)'>
         <span pInplaceDisplay>{{comic.sort_name || 'comic-overview.text.sort-name-placeholder'|translate}}</span>
         <span pInplaceContent> <input type='text'
-                                      pInputText
-                                      placeholder='{{"comic-overview.text.sort-name-placeholder"|translate}}'
-                                      [(ngModel)]='sort_name'>
+                 pInputText
+                 placeholder='{{"comic-overview.text.sort-name-placeholder"|translate}}'
+                 [(ngModel)]='sort_name'>
           <button type='button'
                   pButton
                   icon='pi pi-check'
@@ -112,12 +115,20 @@
             class='ui-g-12'>{{comic.sort_name || '[...]'}}</span>
     </div>
   </div>
-  <div class='ui-g-12'>
-    <button *ngIf='is_admin'
-            type='button'
+  <div *ngIf='is_admin'
+       class='ui-g-12 cx-container-centered-text'>
+    <button type='button'
             pButton
-            icon='pi pi-trash'
+            icon='fas fa-backspace'
+            class='ui-button-primary cx-action-button'
             label='{{"comic-overview.button.clear-metadata"|translate}}'
             (click)='clear_metadata()'></button>
+    <button id='cx-delete-comic'
+            type='button'
+            pButton
+            icon='fas fa-trash'
+            class='ui-button-danger cx-action-button'
+            [label]='"comic-overview.button.delete-comic"|translate'
+            (click)='delete_comic()'></button>
   </div>
 </div>

@@ -26,7 +26,12 @@ import { AppState } from 'app/app.state';
 import * as LibraryActions from 'app/actions/library.actions';
 import { InplaceModule } from 'primeng/inplace';
 import { DropdownModule } from 'primeng/dropdown';
-import { COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003 } from 'app/models/comics/comic.fixtures';
+import {
+  COMIC_1000,
+  COMIC_1001,
+  COMIC_1002,
+  COMIC_1003
+} from 'app/models/comics/comic.fixtures';
 import { EXISTING_LIBRARY } from 'app/models/actions/library.fixtures';
 import { ComicOverviewComponent } from './comic-overview.component';
 import { libraryReducer } from 'app/reducers/library.reducer';
@@ -43,6 +48,8 @@ import {
   THIRD_SCAN_TYPE
 } from 'app/models/comics/scan-type.fixtures';
 import { COMIC_1000_LAST_READ_DATE } from 'app/models/comics/last-read-date.fixtures';
+import { READER_USER, ADMIN_USER } from 'app/models/user/user.fixtures';
+import { By } from '@angular/platform-browser';
 
 describe('ComicOverviewComponent', () => {
   let component: ComicOverviewComponent;
@@ -62,8 +69,7 @@ describe('ComicOverviewComponent', () => {
       ],
       declarations: [ComicOverviewComponent],
       providers: [ConfirmationService]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ComicOverviewComponent);
     component = fixture.componentInstance;
@@ -96,63 +102,40 @@ describe('ComicOverviewComponent', () => {
   }));
 
   it('should create', () => {
-    expect(component)
-      .toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
   describe('#ngOnInit()', () => {
     it('sets the format to that of the comic', () => {
-      expect(component.format)
-        .toEqual(COMIC_1000.format);
+      expect(component.format).toEqual(COMIC_1000.format);
     });
 
     it('gets the available formats from the library', () => {
-      expect(component.formats)
-        .not
-        .toBeFalsy();
-      expect(component.formats.length)
-        .toEqual(4);
-      expect(component.formats[1].label)
-        .toEqual(DEFAULT_COMIC_FORMAT_1.name);
-      expect(component.formats[1].value)
-        .toEqual(DEFAULT_COMIC_FORMAT_1);
-      expect(component.formats[2].label)
-        .toEqual(DEFAULT_COMIC_FORMAT_2.name);
-      expect(component.formats[2].value)
-        .toEqual(DEFAULT_COMIC_FORMAT_2);
-      expect(component.formats[3].label)
-        .toEqual(DEFAULT_COMIC_FORMAT_3.name);
-      expect(component.formats[3].value)
-        .toEqual(DEFAULT_COMIC_FORMAT_3);
+      expect(component.formats).not.toBeFalsy();
+      expect(component.formats.length).toEqual(4);
+      expect(component.formats[1].label).toEqual(DEFAULT_COMIC_FORMAT_1.name);
+      expect(component.formats[1].value).toEqual(DEFAULT_COMIC_FORMAT_1);
+      expect(component.formats[2].label).toEqual(DEFAULT_COMIC_FORMAT_2.name);
+      expect(component.formats[2].value).toEqual(DEFAULT_COMIC_FORMAT_2);
+      expect(component.formats[3].label).toEqual(DEFAULT_COMIC_FORMAT_3.name);
+      expect(component.formats[3].value).toEqual(DEFAULT_COMIC_FORMAT_3);
     });
 
     it('sets the scan type to that of the comic', () => {
-      expect(component.scan_type)
-        .toEqual(COMIC_1000.scan_type);
+      expect(component.scan_type).toEqual(COMIC_1000.scan_type);
     });
 
     it('gets the available scan types from the library', () => {
-      expect(component.scan_types)
-        .not
-        .toBeFalsy();
-      expect(component.scan_types.length)
-        .toEqual(5);
-      expect(component.scan_types[1].label)
-        .toEqual(FIRST_SCAN_TYPE.name);
-      expect(component.scan_types[1].value)
-        .toEqual(FIRST_SCAN_TYPE);
-      expect(component.scan_types[2].label)
-        .toEqual(SECOND_SCAN_TYPE.name);
-      expect(component.scan_types[2].value)
-        .toEqual(SECOND_SCAN_TYPE);
-      expect(component.scan_types[3].label)
-        .toEqual(THIRD_SCAN_TYPE.name);
-      expect(component.scan_types[3].value)
-        .toEqual(THIRD_SCAN_TYPE);
-      expect(component.scan_types[4].label)
-        .toEqual(FOURTH_SCAN_TYPE.name);
-      expect(component.scan_types[4].value)
-        .toEqual(FOURTH_SCAN_TYPE);
+      expect(component.scan_types).not.toBeFalsy();
+      expect(component.scan_types.length).toEqual(5);
+      expect(component.scan_types[1].label).toEqual(FIRST_SCAN_TYPE.name);
+      expect(component.scan_types[1].value).toEqual(FIRST_SCAN_TYPE);
+      expect(component.scan_types[2].label).toEqual(SECOND_SCAN_TYPE.name);
+      expect(component.scan_types[2].value).toEqual(SECOND_SCAN_TYPE);
+      expect(component.scan_types[3].label).toEqual(THIRD_SCAN_TYPE.name);
+      expect(component.scan_types[3].value).toEqual(THIRD_SCAN_TYPE);
+      expect(component.scan_types[4].label).toEqual(FOURTH_SCAN_TYPE.name);
+      expect(component.scan_types[4].value).toEqual(FOURTH_SCAN_TYPE);
     });
   });
 
@@ -163,8 +146,7 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('copies the format from a given comic', () => {
-      expect(component.format)
-        .toEqual(COMIC_1000.format);
+      expect(component.format).toEqual(COMIC_1000.format);
     });
   });
 
@@ -175,13 +157,12 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('sends a notification', () => {
-      expect(store.dispatch)
-        .toHaveBeenCalledWith(
-          new LibraryActions.LibrarySetFormat({
-            comic: COMIC_1000,
-            format: DEFAULT_COMIC_FORMAT_3
-          })
-        );
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibrarySetFormat({
+          comic: COMIC_1000,
+          format: DEFAULT_COMIC_FORMAT_3
+        })
+      );
     });
   });
 
@@ -192,8 +173,7 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('copies the scan type from a given comic', () => {
-      expect(component.scan_type)
-        .toEqual(COMIC_1000.scan_type);
+      expect(component.scan_type).toEqual(COMIC_1000.scan_type);
     });
   });
 
@@ -204,13 +184,12 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('sends a notification', () => {
-      expect(store.dispatch)
-        .toHaveBeenCalledWith(
-          new LibraryActions.LibrarySetScanType({
-            comic: COMIC_1000,
-            scan_type: THIRD_SCAN_TYPE
-          })
-        );
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibrarySetScanType({
+          comic: COMIC_1000,
+          scan_type: THIRD_SCAN_TYPE
+        })
+      );
     });
   });
 
@@ -221,8 +200,7 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('copies the scan type from a given comic', () => {
-      expect(component.sort_name)
-        .toEqual(COMIC_1000.sort_name);
+      expect(component.sort_name).toEqual(COMIC_1000.sort_name);
     });
   });
 
@@ -234,56 +212,95 @@ describe('ComicOverviewComponent', () => {
     });
 
     it('sends a notification', () => {
-      expect(store.dispatch)
-        .toHaveBeenCalledWith(
-          new LibraryActions.LibrarySetSortName({
-            comic: COMIC_1000,
-            sort_name: 'New Sort Name'
-          })
-        );
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibrarySetSortName({
+          comic: COMIC_1000,
+          sort_name: 'New Sort Name'
+        })
+      );
     });
   });
 
   describe('#clear_metadata()', () => {
     it('sends a notification when the user confirms the action', () => {
-      spyOn(confirmation_service, 'confirm')
-        .and
-        .callFake((params: any) => {
-          params.accept();
-        });
+      spyOn(confirmation_service, 'confirm').and.callFake((params: any) => {
+        params.accept();
+      });
 
       component.clear_metadata();
       fixture.detectChanges();
 
-      expect(store.dispatch)
-        .toHaveBeenCalledWith(
-          new LibraryActions.LibraryClearMetadata({
-            comic: COMIC_1000
-          })
-        );
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibraryClearMetadata({
+          comic: COMIC_1000
+        })
+      );
     });
 
     it('does not fire an action when the user declines', () => {
       component.clear_metadata();
       fixture.detectChanges();
 
-      expect(store.dispatch)
-        .not
-        .toHaveBeenCalled();
+      expect(store.dispatch).not.toHaveBeenCalled();
     });
   });
 
   describe('#get_last_read_date()', () => {
     it('returns the last read date for the comic', () => {
-      expect(component.get_last_read_date(COMIC_1000))
-        .toEqual(
-          COMIC_1000_LAST_READ_DATE.last_read_date
-        );
+      expect(component.get_last_read_date(COMIC_1000)).toEqual(
+        COMIC_1000_LAST_READ_DATE.last_read_date
+      );
     });
 
     it('returns null when the comic has not been read', () => {
-      expect(component.get_last_read_date(COMIC_1003))
-        .toBeFalsy();
+      expect(component.get_last_read_date(COMIC_1003)).toBeFalsy();
+    });
+  });
+
+  describe('deleting the comic', () => {
+    it('hides the delete button for non-admins', () => {
+      component.is_admin = false;
+      fixture.detectChanges();
+      expect(
+        fixture.debugElement.query(By.css('#cx-delete-comic'))
+      ).toBeFalsy();
+    });
+
+    it('shows the delete button for admins', () => {
+      component.is_admin = true;
+      fixture.detectChanges();
+      expect(
+        fixture.debugElement.query(By.css('#cx-delete-comic'))
+      ).toBeTruthy();
+    });
+
+    describe('when clicking the delete button', () => {
+      beforeEach(() => {
+        component.is_admin = true;
+        fixture.detectChanges();
+      });
+
+      it('fires an action when the user confirms', () => {
+        spyOn(confirmation_service, 'confirm').and.callFake((params: any) => {
+          params.accept();
+        });
+
+        fixture.debugElement
+          .query(By.css('#cx-delete-comic'))
+          .triggerEventHandler('click', null);
+        expect(store.dispatch).toHaveBeenCalled();
+      });
+
+      it('does not fire an action when the user declines', () => {
+        spyOn(confirmation_service, 'confirm').and.callFake((params: any) => {
+          return;
+        });
+
+        fixture.debugElement
+          .query(By.css('#cx-delete-comic'))
+          .triggerEventHandler('click', null);
+        expect(store.dispatch).not.toHaveBeenCalled();
+      });
     });
   });
 });

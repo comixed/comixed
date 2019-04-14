@@ -146,4 +146,17 @@ export class ComicOverviewComponent implements OnInit {
 
     return result ? result.last_read_date : null;
   }
+
+  delete_comic(): void {
+    this.confirm_service.confirm({
+      header: this.translate.instant('comic-overview.title.delete-comic'),
+      message: this.translate.instant('comic-overview.message.delete-comic'),
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.store.dispatch(
+          new LibraryActions.LibraryRemoveComic({ comic: this.comic })
+        );
+      }
+    });
+  }
 }
