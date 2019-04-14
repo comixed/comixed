@@ -43,6 +43,7 @@ import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.LastReadDatesRepository;
 import org.comixed.tasks.AddComicWorkerTask;
+import org.comixed.tasks.DeleteComicsWorkerTask;
 import org.comixed.tasks.RescanComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.junit.Test;
@@ -51,6 +52,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -58,8 +60,7 @@ import org.springframework.http.ResponseEntity;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class ComicControllerTest
-{
+public class ComicControllerTest {
     private static final long TEST_COMIC_ID = 129;
     private static final String TEST_NONEXISTENT_FILE = "src/test/resources/this-file-doesnt-exist.cbz";
     private static final String TEST_DIRECTORY = "src/test/resources";
@@ -104,9 +105,17 @@ public class ComicControllerTest
     @Mock
     private List<LastReadDate> lastReadList;
 
+    @Mock
+    private ObjectFactory<DeleteComicsWorkerTask> deleteComicsTaskFactory;
+
+    @Mock
+    private DeleteComicsWorkerTask deleteComicsTask;
+
+    @Mock
+    private List<Long> comicIds;
+
     @Test
-    public void testGetComicsAddedSince() throws ParseException, InterruptedException
-    {
+    public void testGetComicsAddedSince() throws ParseException, InterruptedException {
         Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
         Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
@@ -131,8 +140,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testGetComicsAddedSinceWithTimeout() throws ParseException, InterruptedException
-    {
+    public void testGetComicsAddedSinceWithTimeout() throws ParseException, InterruptedException {
         Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
         Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
@@ -157,8 +165,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testDeleteComicNonexistentComic()
-    {
+    public void testDeleteComicNonexistentComic() {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         assertFalse(controller.deleteComic(TEST_COMIC_ID));
@@ -167,8 +174,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testDeleteComic()
-    {
+    public void testDeleteComic() {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
         Mockito.doNothing().when(comicRepository).delete(Mockito.any(Comic.class));
 
@@ -179,8 +185,20 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testDownloadComicForNonexistentComic() throws FileNotFoundException, IOException
-    {
+    public void testDeleteMultipleComics() {
+        Mockito.when(this.deleteComicsTaskFactory.getObject()).thenReturn(this.deleteComicsTask);
+        Mockito.doNothing().when(this.deleteComicsTask).setComicIds(Mockito.anyListOf(Long.class));
+        Mockito.doNothing().when(this.worker).addTasksToQueue(Mockito.any());
+
+        assertTrue(controller.deleteMultipleComics(this.comicIds));
+
+        Mockito.verify(this.deleteComicsTaskFactory, Mockito.times(1)).getObject();
+        Mockito.verify(this.deleteComicsTask, Mockito.times(1)).setComicIds(this.comicIds);
+        Mockito.verify(this.worker, Mockito.times(1)).addTasksToQueue(this.deleteComicsTask);
+    }
+
+    @Test
+    public void testDownloadComicForNonexistentComic() throws FileNotFoundException, IOException {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         assertNull(controller.downloadComic(TEST_COMIC_ID));
@@ -189,8 +207,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testDownloadComicFileDoesntExist() throws FileNotFoundException, IOException
-    {
+    public void testDownloadComicFileDoesntExist() throws FileNotFoundException, IOException {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
         Mockito.when(comic.getFilename()).thenReturn(TEST_NONEXISTENT_FILE);
 
@@ -201,8 +218,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testDownloadComicFileIsDirectory() throws FileNotFoundException, IOException
-    {
+    public void testDownloadComicFileIsDirectory() throws FileNotFoundException, IOException {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
         Mockito.when(comic.getFilename()).thenReturn(TEST_DIRECTORY);
 
@@ -213,8 +229,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testDownloadComic() throws IOException
-    {
+    public void testDownloadComic() throws IOException {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILE);
 
@@ -229,8 +244,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testGetComicForNonexistentComic()
-    {
+    public void testGetComicForNonexistentComic() {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         assertNull(controller.getComic(TEST_COMIC_ID));
@@ -239,8 +253,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testGetComic()
-    {
+    public void testGetComic() {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILE);
 
@@ -254,8 +267,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testGetComicSummaryForNonexistentComic()
-    {
+    public void testGetComicSummaryForNonexistentComic() {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         assertNull(controller.getComicSummary(TEST_COMIC_ID));
@@ -264,8 +276,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testGetComicSummary()
-    {
+    public void testGetComicSummary() {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
         Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILE);
 
@@ -279,8 +290,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testUpdateComicBadComicId()
-    {
+    public void testUpdateComicBadComicId() {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         controller.updateComic(TEST_COMIC_ID, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
@@ -289,8 +299,7 @@ public class ComicControllerTest
     }
 
     @Test
-    public void testUpdateComic()
-    {
+    public void testUpdateComic() {
         Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
         Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
         Mockito.doNothing().when(comic).setVolume(Mockito.anyString());

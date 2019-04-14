@@ -43,6 +43,7 @@ import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.LastReadDatesRepository;
 import org.comixed.repositories.ScanTypeRepository;
 import org.comixed.tasks.AddComicWorkerTask;
+import org.comixed.tasks.DeleteComicsWorkerTask;
 import org.comixed.tasks.RescanComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.slf4j.Logger;
@@ -104,10 +105,13 @@ public class ComicController
     private Worker worker;
 
     @Autowired
-    private ObjectFactory<RescanComicWorkerTask> taskFactory;
+    private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskFactory;
+
+    @Autowired
+    private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
 
     @RequestMapping(value = "/{id}",
-            method = RequestMethod.DELETE)
+                    method = RequestMethod.DELETE)
     public boolean deleteComic(@PathVariable("id") long id)
     {
         this.logger.debug("Preparing to delete comic: id={}", id);
@@ -118,7 +122,8 @@ public class ComicController
         {
             this.logger.debug("No such comic: id={}", id);
             return false;
-        } else
+        }
+        else
         {
             Comic comic = record.get();
             this.comicRepository.delete(comic);
@@ -129,7 +134,7 @@ public class ComicController
     }
 
     @RequestMapping(value = "/{id}/metadata",
-            method = RequestMethod.DELETE)
+                    method = RequestMethod.DELETE)
     @JsonView(ComicDetails.class)
     public Comic deleteMetadata(@PathVariable("id") long id)
     {
@@ -144,7 +149,8 @@ public class ComicController
             this.logger.debug("Saving updates to comic");
             this.comicRepository.save(comic);
             ComicController.stopWaitingForStatus();
-        } else
+        }
+        else
         {
             this.logger.debug("No such comic found");
         }
@@ -152,10 +158,27 @@ public class ComicController
         return comic;
     }
 
+    @RequestMapping(value = "/multiple/delete",
+                    method = RequestMethod.POST)
+    public boolean deleteMultipleComics(@RequestParam("comic_ids") List<Long> comicIds)
+    {
+        this.logger.debug("Deleting multiple comics: ids={}", comicIds.toArray());
+
+        DeleteComicsWorkerTask task = this.deleteComicsWorkerTaskFactory.getObject();
+
+        this.logger.debug("Setting comic ids");
+        task.setComicIds(comicIds);
+
+        this.logger.debug("Queueing the delete task");
+        this.worker.addTasksToQueue(task);
+
+        return true;
+    }
+
     @RequestMapping(value = "/{id}/download",
-            method = RequestMethod.GET)
+                    method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id) throws FileNotFoundException,
-            IOException
+                                                                                          IOException
     {
         this.logger.debug("Attempting to download comic: id={}", id);
 
@@ -179,12 +202,12 @@ public class ComicController
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
         return ResponseEntity.ok().contentLength(file.length())
-                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
-                .contentType(MediaType.parseMediaType("application/x-cbr")).body(resource);
+                             .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+                             .contentType(MediaType.parseMediaType("application/x-cbr")).body(resource);
     }
 
     @RequestMapping(value = "/{id}",
-            method = RequestMethod.GET)
+                    method = RequestMethod.GET)
     @JsonView(ComicDetails.class)
     public Comic getComic(@PathVariable("id") long id)
     {
@@ -205,7 +228,7 @@ public class ComicController
     }
 
     @RequestMapping(value = "/formats",
-            method = RequestMethod.GET)
+                    method = RequestMethod.GET)
     public Iterable<ComicFormat> getComicFormats()
     {
         this.logger.debug("Fetching all comic format types");
@@ -213,16 +236,16 @@ public class ComicController
     }
 
     @RequestMapping(value = "/since/{timestamp}",
-            method = RequestMethod.GET)
+                    method = RequestMethod.GET)
     @JsonView(View.ComicList.class)
     public LibraryStatus getComicsAddedSince(Principal principal,
                                              @PathVariable("timestamp") long timestamp,
                                              @RequestParam(value = "timeout",
-                                                     required = false,
-                                                     defaultValue = "0") long timeout) throws InterruptedException
+                                                           required = false,
+                                                           defaultValue = "0") long timeout) throws InterruptedException
     {
-        logger.debug("Loading user: {}", principal.getName());
-        ComiXedUser user = userRepository.findByEmail(principal.getName());
+        this.logger.debug("Loading user: {}", principal.getName());
+        ComiXedUser user = this.userRepository.findByEmail(principal.getName());
 
         Date latestDate = new Date(timestamp);
         boolean done = false;
@@ -252,7 +275,8 @@ public class ComicController
                 {
                     STATUS_SEMAPHORE.wait(1000);
                 }
-            } else
+            }
+            else
             {
                 done = true;
             }
@@ -260,14 +284,14 @@ public class ComicController
 
         this.logger.debug("Found {} comics", comics.size());
 
-        logger.debug("Getting last read dates");
-        List<LastReadDate> lastReadDates = lastReadRepository.findAllForUser(user.getId());
+        this.logger.debug("Getting last read dates");
+        List<LastReadDate> lastReadDates = this.lastReadRepository.findAllForUser(user.getId());
 
         return new LibraryStatus(comics, lastReadDates, rescanCount, importCount);
     }
 
     @RequestMapping(value = "/{id}/summary",
-            method = RequestMethod.GET)
+                    method = RequestMethod.GET)
     @JsonView(View.ComicDetails.class)
     public Comic getComicSummary(@PathVariable("id") long id)
     {
@@ -288,7 +312,7 @@ public class ComicController
     }
 
     @RequestMapping(value = "/scan_types",
-            method = RequestMethod.GET)
+                    method = RequestMethod.GET)
     public Iterable<ScanType> getScanTypes()
     {
         this.logger.debug("Fetching all scan types");
@@ -296,7 +320,7 @@ public class ComicController
     }
 
     @RequestMapping(value = "/rescan",
-            method = RequestMethod.POST)
+                    method = RequestMethod.POST)
     public void rescanComics()
     {
         this.logger.debug("Rescanning comics in the library");
@@ -308,7 +332,7 @@ public class ComicController
         for (Comic comic : comics)
         {
             this.logger.debug("Queueing comic for rescan: {}", comic.getFilename());
-            RescanComicWorkerTask task = this.taskFactory.getObject();
+            RescanComicWorkerTask task = this.rescanComicWorkerTaskFactory.getObject();
 
             task.setComic(comic);
             this.worker.addTasksToQueue(task);
@@ -316,7 +340,7 @@ public class ComicController
     }
 
     @RequestMapping(value = "/{id}/format",
-            method = RequestMethod.PUT)
+                    method = RequestMethod.PUT)
     public void setFormat(@PathVariable("id") long comicId, @RequestParam("format_id") long formatId)
     {
         this.logger.debug("Setting format: comicId={} formatId={}", comicId, formatId);
@@ -329,14 +353,15 @@ public class ComicController
             comic.setFormat(format);
             this.logger.debug("Saving update to comic");
             this.comicRepository.save(comic);
-        } else
+        }
+        else
         {
             this.logger.debug("No such comic found");
         }
     }
 
     @RequestMapping(value = "/{id}/scan_type",
-            method = RequestMethod.PUT)
+                    method = RequestMethod.PUT)
     public void setScanType(@PathVariable("id") long comicId, @RequestParam("scan_type_id") long scanTypeId)
     {
         this.logger.debug("Setting scan type: comicId={} scanTypeId={}", comicId, scanTypeId);
@@ -349,14 +374,15 @@ public class ComicController
             comic.setScanType(scanType);
             this.logger.debug("Saving update to comic");
             this.comicRepository.save(comic);
-        } else
+        }
+        else
         {
             this.logger.debug("No such comic found");
         }
     }
 
     @RequestMapping(value = "/{id}/sort_name",
-            method = RequestMethod.PUT)
+                    method = RequestMethod.PUT)
     public void setSortName(@PathVariable("id") long comicId, @RequestParam("sort_name") String sortName)
     {
         this.logger.debug("Setting sort name: comicId={} sortName={}", comicId, sortName);
@@ -368,14 +394,15 @@ public class ComicController
             comic.setSortName(sortName);
             this.logger.debug("Saving update to comic");
             this.comicRepository.save(comic);
-        } else
+        }
+        else
         {
             this.logger.debug("No such comic found");
         }
     }
 
     @RequestMapping(value = "/{id}",
-            method = RequestMethod.PUT)
+                    method = RequestMethod.PUT)
     public void updateComic(@PathVariable("id") long id,
                             @RequestParam("series") String series,
                             @RequestParam("volume") String volume,
@@ -393,7 +420,8 @@ public class ComicController
             comic.setIssueNumber(issueNumber);
             this.logger.debug("Saving updates to comic");
             this.comicRepository.save(comic);
-        } else
+        }
+        else
         {
             this.logger.debug("No such comic found");
         }

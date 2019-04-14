@@ -21,7 +21,9 @@ package org.comixed.tasks;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.comixed.library.model.Comic;
@@ -46,6 +48,8 @@ public class DeleteComicsWorkerTaskTest
 {
     private static final String TEST_FILENAME = "/Users/comixed/Comics/comic.cbz";
 
+    private static final long TEST_COMIC_ID = 23;
+
     @InjectMocks
     private DeleteComicsWorkerTask workerTask;
 
@@ -61,9 +65,16 @@ public class DeleteComicsWorkerTaskTest
     @Captor
     private ArgumentCaptor<File> file;
 
+    private List<Long> comicIds = new ArrayList<>();
+
     @Before
     public void setUp()
     {
+        comicIds.add(TEST_COMIC_ID);
+        comicIds.add(TEST_COMIC_ID);
+        comicIds.add(TEST_COMIC_ID);
+        comicIds.add(TEST_COMIC_ID);
+        comicIds.add(TEST_COMIC_ID);
         workerTask.setComics(comicList);
         workerTask.setDeleteFiles(true);
     }
@@ -99,6 +110,21 @@ public class DeleteComicsWorkerTaskTest
         Mockito.verify(comicList, Mockito.times(1)).get(0);
         Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
         Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
+    }
+
+    @Test
+    public void testStartTaskNoComicsJustIds() throws WorkerTaskException
+    {
+        Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(comic));
+        Mockito.doNothing().when(comicRepository).delete(Mockito.any());
+
+        workerTask.setComics(null);
+        workerTask.setComicIds(comicIds);
+        workerTask.setDeleteFiles(false);
+        workerTask.startTask();
+
+        Mockito.verify(comicRepository, Mockito.times(this.comicIds.size())).findById(TEST_COMIC_ID);
+        Mockito.verify(comicRepository, Mockito.times(this.comicIds.size())).delete(comic);
     }
 
     @Test

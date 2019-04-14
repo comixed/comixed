@@ -21,7 +21,9 @@ package org.comixed.tasks;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.comixed.library.model.Comic;
@@ -42,6 +44,12 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
 
     private List<Comic> comics;
     private boolean deleteFiles;
+    private List<Long> comicIds;
+
+    public void setComicIds(List<Long> comicIds)
+    {
+        this.comicIds = comicIds;
+    }
 
     public void setComics(List<Comic> comics)
     {
@@ -56,6 +64,26 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
     @Override
     public void startTask() throws WorkerTaskException
     {
+        if (this.comics == null)
+        {
+            this.logger.debug("No comics provided.");
+            if (this.comicIds == null) throw new WorkerTaskException("No comics provided for deletion");
+
+            this.comics = new ArrayList<>();
+            for (Long comicId : this.comicIds)
+            {
+                Optional<Comic> comic = this.repository.findById(comicId);
+                if (comic.isPresent())
+                {
+                    this.logger.debug("Adding comic with id={}", comicId);
+                    this.comics.add(comic.get());
+                }
+                else
+                {
+                    this.logger.debug("No such comic: id={}", comicId);
+                }
+            }
+        }
         for (int index = 0;
              index < this.comics.size();
              index++)
