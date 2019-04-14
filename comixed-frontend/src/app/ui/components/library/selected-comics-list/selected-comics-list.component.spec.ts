@@ -38,6 +38,7 @@ import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { SelectedComicsListComponent } from './selected-comics-list.component';
 import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
+import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 
 describe('SelectedComicsListComponent', () => {
   let component: SelectedComicsListComponent;
@@ -59,7 +60,8 @@ describe('SelectedComicsListComponent', () => {
         SplitButtonModule,
         OverlayPanelModule,
         PanelModule,
-        CardModule
+        CardModule,
+        ConfirmDialogModule
       ],
       declarations: [
         SelectedComicsListComponent,
@@ -67,7 +69,8 @@ describe('SelectedComicsListComponent', () => {
         ComicCoverComponent,
         ComicCoverUrlPipe,
         ComicTitlePipe
-      ]
+      ],
+      providers: [ConfirmationService]
     }).compileComponents();
   }));
 

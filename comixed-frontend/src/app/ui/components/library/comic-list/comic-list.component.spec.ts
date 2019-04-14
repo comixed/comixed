@@ -43,6 +43,7 @@ import { LibraryFilterComponent } from 'app/ui/components/library/library-filter
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicListComponent } from './comic-list.component';
+import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 
 describe('ComicListComponent', () => {
   let component: ComicListComponent;
@@ -65,7 +66,8 @@ describe('ComicListComponent', () => {
         DropdownModule,
         PanelModule,
         OverlayPanelModule,
-        CardModule
+        CardModule,
+        ConfirmDialogModule
       ],
       declarations: [
         ComicListComponent,
@@ -77,6 +79,9 @@ describe('ComicListComponent', () => {
         LibraryFilterComponent,
         ComicCoverUrlPipe,
         ComicTitlePipe
+      ],
+      providers: [
+        ConfirmationService
       ]
     }).compileComponents();
 

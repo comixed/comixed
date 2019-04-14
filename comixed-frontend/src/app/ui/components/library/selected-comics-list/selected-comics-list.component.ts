@@ -34,7 +34,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from 'app/actions/library.actions';
 import * as DisplayActions from 'app/actions/library-display.actions';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, ConfirmationService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { LibraryDisplay } from 'app/models/state/library-display';
 
@@ -61,7 +61,8 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private store: Store<AppState>,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private confirmation_service: ConfirmationService
   ) {
     this.library$ = this.store.select('library');
     this.library_display$ = this.store.select('library_display');
@@ -72,9 +73,11 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
     this.library_subscription = this.library$.subscribe((library: Library) => {
       this.library = library;
     });
-    this.library_display_subscription = this.library_display$.subscribe((library_display: LibraryDisplay) => {
-      this.library_display = library_display;
-    });
+    this.library_display_subscription = this.library_display$.subscribe(
+      (library_display: LibraryDisplay) => {
+        this.library_display = library_display;
+      }
+    );
   }
 
   private load_actions(): void {
@@ -83,6 +86,11 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
         label: this.translate.instant('selected-comics-list.button.scrape'),
         icon: 'fa fa-fw fa-cloud',
         routerLink: ['/scraping']
+      },
+      {
+        label: this.translate.instant('selected-comics-list.button.delete'),
+        icon: 'fas fa-trash',
+        command: () => this.delete_comics()
       }
     ];
   }
@@ -102,6 +110,27 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
   }
 
   hide_selections(): void {
-    this.store.dispatch(new DisplayActions.LibraryViewToggleSidebar({ show: false }));
+    this.store.dispatch(
+      new DisplayActions.LibraryViewToggleSidebar({ show: false })
+    );
+  }
+
+  delete_comics(): void {
+    this.confirmation_service.confirm({
+      header: this.translate.instant(
+        'selected-comics-list.title.delete-comics',
+        { comic_count: this.library.selected_comics.length }
+      ),
+      message: this.translate.instant(
+        'selected-comics-list.text.delete-comics'
+      ),
+      icon: 'fas fa-trash',
+      accept: () =>
+        this.store.dispatch(
+          new LibraryActions.LibraryDeleteMultipleComics({
+            comics: this.library.selected_comics
+          })
+        )
+    });
   }
 }

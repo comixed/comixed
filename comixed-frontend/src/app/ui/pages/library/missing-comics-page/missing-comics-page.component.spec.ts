@@ -53,7 +53,9 @@ import {
   ScrollPanelModule,
   SidebarModule,
   SliderModule,
-  SplitButtonModule
+  SplitButtonModule,
+  ConfirmDialogModule,
+  ConfirmationService
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
@@ -72,43 +74,43 @@ describe(
     let store: Store<AppState>;
 
     beforeEach(async(() => {
-      TestBed
-        .configureTestingModule({
-          imports: [
-            RouterTestingModule,
-            FormsModule,
-            BrowserAnimationsModule,
-            StoreModule.forRoot({
-              library: libraryReducer,
-              library_display: libraryDisplayReducer
-            }),
-            TranslateModule.forRoot(),
-            DataViewModule,
-            SidebarModule,
-            SplitButtonModule,
-            ScrollPanelModule,
-            DropdownModule,
-            CheckboxModule,
-            SliderModule,
-            PanelModule,
-            OverlayPanelModule,
-            CardModule
-          ],
-          declarations: [
-            MissingComicsPageComponent,
-            ComicListComponent,
-            SelectedComicsListComponent,
-            MissingComicsPipe,
-            ComicListToolbarComponent,
-            ComicListItemComponent,
-            ComicGridItemComponent,
-            LibraryFilterComponent,
-            ComicCoverUrlPipe,
-            ComicTitlePipe,
-            ComicCoverComponent
-          ]
-        })
-        .compileComponents();
+      TestBed.configureTestingModule({
+        imports: [
+          RouterTestingModule,
+          FormsModule,
+          BrowserAnimationsModule,
+          StoreModule.forRoot({
+            library: libraryReducer,
+            library_display: libraryDisplayReducer
+          }),
+          TranslateModule.forRoot(),
+          DataViewModule,
+          SidebarModule,
+          SplitButtonModule,
+          ScrollPanelModule,
+          DropdownModule,
+          CheckboxModule,
+          SliderModule,
+          PanelModule,
+          OverlayPanelModule,
+          CardModule,
+          ConfirmDialogModule
+        ],
+        declarations: [
+          MissingComicsPageComponent,
+          ComicListComponent,
+          SelectedComicsListComponent,
+          MissingComicsPipe,
+          ComicListToolbarComponent,
+          ComicListItemComponent,
+          ComicGridItemComponent,
+          LibraryFilterComponent,
+          ComicCoverUrlPipe,
+          ComicTitlePipe,
+          ComicCoverComponent
+        ],
+        providers: [ConfirmationService]
+      }).compileComponents();
 
       fixture = TestBed.createComponent(MissingComicsPageComponent);
       component = fixture.componentInstance;

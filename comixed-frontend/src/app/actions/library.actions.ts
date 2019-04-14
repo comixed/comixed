@@ -268,6 +268,21 @@ export class LibraryResetSelected implements Action {
   constructor() {}
 }
 
+export const LIBRARY_DELETE_MULTIPLE_COMICS =
+  '[LIBRARY] Delete multiple comics';
+export class LibraryDeleteMultipleComics implements Action {
+  readonly type = LIBRARY_DELETE_MULTIPLE_COMICS;
+
+  constructor(public payload: { comics: Array<Comic> }) {}
+}
+
+export const LIBRARY_COMICS_DELETED = '[LIBRARY] Comics deleted';
+export class LibraryComicsDeleted implements Action {
+  readonly type = LIBRARY_COMICS_DELETED;
+
+  constructor(public payload: { comics: Array<Comic> }) {}
+}
+
 export type Actions =
   | LibraryGetScanTypes
   | LibrarySetScanTypes
@@ -290,4 +305,6 @@ export type Actions =
   | LibrarySetBlockedPageState
   | LibraryBlockedStateFlagSet
   | LibrarySetSelected
-  | LibraryResetSelected;
+  | LibraryResetSelected
+  | LibraryDeleteMultipleComics
+  | LibraryComicsDeleted;

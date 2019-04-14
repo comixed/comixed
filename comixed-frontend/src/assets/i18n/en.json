@@ -192,7 +192,7 @@
       "issues": "Issues",
       "publisher": "Publisher"
     },
-    "text":{
+    "text": {
       "search-placeholder": "Search volume titles..."
     },
     "button": {
@@ -259,10 +259,17 @@
     }
   },
   "selected-comics-list": {
-    "title": "{{comic_count}} Comics Selected",
+    "header": "{{comic_count}} Comics Selected",
+    "title": {
+      "delete-comics": "Delete {{comic_count}} Comics?"
+    },
+    "text": {
+      "delete-comics": "Are you sure you want to delete these comics?"
+    },
     "button": {
       "actions": "Actions",
-      "scrape": "Scrape Comics"
+      "scrape": "Scrape Comics",
+      "delete": "Delete Comics"
     }
   },
   "multi-comic-scraping-page": {

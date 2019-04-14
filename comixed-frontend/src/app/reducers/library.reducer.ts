@@ -304,13 +304,15 @@ export function libraryReducer(
       const updated_comics = state.comics.filter(
         comic => comic.id !== action.payload.comic.id
       );
-      const publisher_list = state.publishers.filter((grouping: ComicGrouping) => {
-        if (grouping.name === action.payload.comic.publisher) {
-          grouping.comic_count -= 1;
-        }
+      const publisher_list = state.publishers.filter(
+        (grouping: ComicGrouping) => {
+          if (grouping.name === action.payload.comic.publisher) {
+            grouping.comic_count -= 1;
+          }
 
-        return grouping.comic_count > 0;
-      });
+          return grouping.comic_count > 0;
+        }
+      );
       const series_list = state.series.filter((grouping: ComicGrouping) => {
         if (grouping.name === action.payload.comic.series) {
           grouping.comic_count -= 1;
@@ -318,15 +320,17 @@ export function libraryReducer(
 
         return grouping.comic_count > 0;
       });
-      const character_list = state.characters.filter((grouping: ComicGrouping) => {
-        action.payload.comic.characters.forEach((character: string) => {
-          if (character === grouping.name) {
-            grouping.comic_count -= 1;
-          }
-        });
+      const character_list = state.characters.filter(
+        (grouping: ComicGrouping) => {
+          action.payload.comic.characters.forEach((character: string) => {
+            if (character === grouping.name) {
+              grouping.comic_count -= 1;
+            }
+          });
 
-        return grouping.comic_count > 0;
-      });
+          return grouping.comic_count > 0;
+        }
+      );
 
       const team_list = state.characters.filter((grouping: ComicGrouping) => {
         action.payload.comic.teams.forEach((team: string) => {
@@ -338,25 +342,29 @@ export function libraryReducer(
         return grouping.comic_count > 0;
       });
 
-      const location_list = state.characters.filter((grouping: ComicGrouping) => {
-        action.payload.comic.locations.forEach((location: string) => {
-          if (location === grouping.name) {
-            grouping.comic_count -= 1;
-          }
-        });
+      const location_list = state.characters.filter(
+        (grouping: ComicGrouping) => {
+          action.payload.comic.locations.forEach((location: string) => {
+            if (location === grouping.name) {
+              grouping.comic_count -= 1;
+            }
+          });
 
-        return grouping.comic_count > 0;
-      });
+          return grouping.comic_count > 0;
+        }
+      );
 
-      const story_arc_list = state.story_arcs.filter((grouping: ComicGrouping) => {
-        action.payload.comic.story_arcs.forEach((story_arc: string) => {
-          if (story_arc === grouping.name) {
-            grouping.comic_count -= 1;
-          }
-        });
+      const story_arc_list = state.story_arcs.filter(
+        (grouping: ComicGrouping) => {
+          action.payload.comic.story_arcs.forEach((story_arc: string) => {
+            if (story_arc === grouping.name) {
+              grouping.comic_count -= 1;
+            }
+          });
 
-        return grouping.comic_count > 0;
-      });
+          return grouping.comic_count > 0;
+        }
+      );
       return {
         ...state,
         busy: false,
@@ -436,6 +444,25 @@ export function libraryReducer(
         ...state,
         selected_comics: []
       };
+
+    case LibraryActions.LIBRARY_DELETE_MULTIPLE_COMICS:
+      return {
+        ...state,
+        busy: true
+      };
+
+    case LibraryActions.LIBRARY_COMICS_DELETED: {
+      const remaining_comics = state.comics.filter((comic: Comic) => {
+        return action.payload.comics.includes(comic) === false;
+      });
+
+      return {
+        ...state,
+        busy: false,
+        comics: remaining_comics,
+        selected_comics: []
+      };
+    }
 
     default:
       return state;

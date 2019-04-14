@@ -383,4 +383,20 @@ export class LibraryEffects {
         )
     )
   );
+
+  @Effect()
+  library_delete_multiple_comics$: Observable<Action> = this.actions$.pipe(
+    ofType(LibraryActions.LIBRARY_DELETE_MULTIPLE_COMICS),
+    map((action: LibraryActions.LibraryDeleteMultipleComics) => action.payload),
+    switchMap(action =>
+      this.comic_service
+        .delete_multiple_comics(action.comics)
+        .pipe(
+          map(
+            () =>
+              new LibraryActions.LibraryComicsDeleted({ comics: action.comics })
+          )
+        )
+    )
+  );
 }
