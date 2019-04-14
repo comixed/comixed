@@ -17,7 +17,7 @@
           <i class='fa fa-search'></i>
           <input type='text'
                  pInputText
-                 placeholder='Search volume title...'
+                 [placeholder]='"volume-list.text.search-placeholder"|translate'
                  (input)='dt.filterGlobal($event.target.value, "contains")'
                  style='width:auto'></div>
       </ng-template>

@@ -192,6 +192,9 @@
       "issues": "Issues",
       "publisher": "Publisher"
     },
+    "text":{
+      "search-placeholder": "Search volume titles..."
+    },
     "button": {
       "back": "Back",
       "select": "Select",
