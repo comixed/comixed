@@ -1,6 +1,7 @@
 <div class='ui-g'>
   <div class='ui-g-9 ui-sm-9'>
-    <p-table [value]='_volumes'
+    <p-table #dt
+             [value]='_volumes'
              [paginator]='true'
              [rows]='10'
              [paginatorPosition]='"both"'
@@ -8,9 +9,18 @@
              [sortField]='"matchability"'
              [(selection)]='current_volume'
              [dataKey]='"id"'
+             [globalFilterFields]='["volume.name"]'
              (onRowSelect)='set_current_volume($event.data)'
-             (onRowUnselect)='set_current_volume(null)'
-    >
+             (onRowUnselect)='set_current_volume(null)'>
+      <ng-template pTemplate='caption'>
+        <div style='text-align: right'>
+          <i class='fa fa-search'></i>
+          <input type='text'
+                 pInputText
+                 placeholder='Search volume title...'
+                 (input)='dt.filterGlobal($event.target.value, "contains")'
+                 style='width:auto'></div>
+      </ng-template>
       <ng-template pTemplate='colgroup'>
         <colgroup>
           <col [style.width]='"75px"'>
@@ -23,13 +33,11 @@
       <ng-template pTemplate='header'>
         <tr>
           <th [pSortableColumn]='"matchability"'
-              pResizableColumn
-          >
+              pResizableColumn>
             <p-sortIcon [field]='"matchability"'></p-sortIcon>
           </th>
           <th [pSortableColumn]='"volume.start_year"'
-              pResizableColumn
-          >
+              pResizableColumn>
             <p-sortIcon [field]='"volume.start_year"'></p-sortIcon>
             {{'volume-list.columns.start-year'|translate}}
           </th>
@@ -38,8 +46,7 @@
             {{'volume-list.columns.series'|translate}}
           </th>
           <th [pSortableColumn]='"volume.issue_count"'
-              pResizableColumn
-          >
+              pResizableColumn>
             <p-sortIcon [field]='"volume.issue_count"'></p-sortIcon>
             {{'volume-list.columns.issues'|translate}}
           </th>
@@ -50,13 +57,11 @@
         </tr>
       </ng-template>
       <ng-template pTemplate='body'
-                   let-option
-      >
+                   let-option>
         <tr [pSelectableRow]='option.volume'>
           <td><span class='fas'
-                    [class.fa-greater-than]='is_good_match(option.volume)'
-                    [class.fa-greater-than-equal]='is_perfect_match(option.volume)'
-          ></span></td>
+                  [class.fa-greater-than]='is_good_match(option.volume)'
+                  [class.fa-greater-than-equal]='is_perfect_match(option.volume)'></span></td>
           <td class='small-column cx-volume-column'>{{option.volume.start_year}}</td>
           <td class='cx-volume-column'><span pTooltip='{{option.volume.name}}'>{{option.volume.name}}</span></td>
           <td class='small-column cx-volume-column'>{{option.volume.issue_count}}</td>
@@ -71,8 +76,7 @@
         <h3>{{volume_selection_title}}</h3>
       </p-header>
       <img [src]='get_current_issue_image_url()'
-           [style.width]='"100%"'
-      >
+           [style.width]='"100%"'>
     </p-card>
     <div class='cx-button-box-vertical'>
       <button type='button'
@@ -80,23 +84,20 @@
               class='cx-selection-button ui-button-danger'
               icon='fa fa-fw fa-step-backward'
               [label]='"volume-list.button.back"|translate'
-              (click)='return_to_editing()'
-      ></button>
+              (click)='return_to_editing()'></button>
       <button type='button'
               pButton
               class='cx-selection-button ui-button-warning'
               icon='fa fa-fw fa-stop'
               [label]='"volume-list.button.cancel"|translate'
-              (click)='cancel_selection()'
-      ></button>
+              (click)='cancel_selection()'></button>
       <button *ngIf='current_issue'
               pButton
               type='button'
               class='cx-selection-button ui-button-primary'
               icon='fa fa-fw fa-play'
               [label]='"volume-list.button.select"|translate'
-              (click)='select_current_issue()'
-      ></button>
+              (click)='select_current_issue()'></button>
     </div>
   </div>
 </div>
