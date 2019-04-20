@@ -13,7 +13,11 @@
   "prettier": {
     "singleQuote": true,
     "useTabs": false,
-    "langs": ["js", "javascript", "typescript"]
+    "langs": [
+      "js",
+      "javascript",
+      "typescript"
+    ]
   },
   "private": true,
   "dependencies": {
@@ -73,6 +77,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-mocha-reporter": "^2.2.5",
     "karma-verbose-reporter": "^0.0.6",
+    "prettier": "^1.17.0",
     "protractor": "~5.1.2",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
