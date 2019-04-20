@@ -53,17 +53,28 @@ export class VolumeListComponent implements OnInit {
 
   @Input()
   set volumes(volumes: Array<Volume>) {
+    const exact_matches: Array<VolumeOptions> = [];
+
     this._volumes = [];
     volumes.forEach((volume: Volume) => {
-      this._volumes.push({
+      const entry = {
         volume: volume,
         matchability: this.is_good_match(volume)
           ? '1'
           : this.is_perfect_match(volume)
           ? '0'
           : '2'
-      });
+      };
+      this._volumes.push(entry);
+      if (entry.matchability === '0') {
+        exact_matches.push(entry);
+      }
     });
+
+    if (exact_matches.length === 1) {
+      this.current_volume = exact_matches[0].volume;
+      this.set_current_volume(exact_matches[0].volume);
+    }
   }
 
   set_current_volume(volume: Volume): void {
@@ -71,7 +82,7 @@ export class VolumeListComponent implements OnInit {
     if (this.current_issue) {
       this.volume_selection_title = `${this.current_issue.volume_name} #${
         this.current_issue.issue_number
-        }`;
+      }`;
     }
   }
 

@@ -21,9 +21,45 @@ import { Volume } from './volume';
 
 export const VOLUME_1000: Volume = {
   id: 1000,
-  name: '2019',
+  name: 'Not Exact Comic Title',
   issue_count: 23,
   image_url: 'http://comixed.org/volumes/1000',
-  start_year: '2017',
+  start_year: '2010',
+  publisher: 'Another ComiXed Publications'
+};
+
+export const VOLUME_1001: Volume = {
+  id: 1001,
+  name: '2018',
+  issue_count: 23,
+  image_url: 'http://comixed.org/volumes/1001',
+  start_year: '2018',
   publisher: 'ComiXed Publications'
+};
+
+export const VOLUME_1002: Volume = {
+  id: 1002,
+  name: 'Exact Comic Title',
+  issue_count: 23,
+  image_url: 'http://comixed.org/volumes/1002',
+  start_year: '2010',
+  publisher: 'Open Source Publications'
+};
+
+export const VOLUME_1003: Volume = {
+  id: 1003,
+  name: 'Exact Comic Title',
+  issue_count: 23,
+  image_url: 'http://comixed.org/volumes/1002',
+  start_year: '2010',
+  publisher: 'Free Publications'
+};
+
+export const VOLUME_1004: Volume = {
+  id: 1004,
+  name: '1983',
+  issue_count: 23,
+  image_url: 'http://comixed.org/volumes/1004',
+  start_year: '1983',
+  publisher: 'Downloadable Publications'
 };
