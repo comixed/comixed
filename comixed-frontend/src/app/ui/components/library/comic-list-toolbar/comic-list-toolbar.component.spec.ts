@@ -48,6 +48,7 @@ import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtur
 import { DEFAULT_LIBRARY_FILTER } from 'app/models/actions/library-filter.fixtures';
 import { ComicListToolbarComponent } from './comic-list-toolbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 
 describe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;
@@ -84,7 +85,8 @@ describe('ComicListToolbarComponent', () => {
         LibraryFilterComponent,
         ComicDetailsEditorComponent,
         VolumeListComponent,
-        ComicCoverUrlPipe
+        ComicCoverUrlPipe,
+        ScrapingIssueTitlePipe
       ]
     }).compileComponents();
 

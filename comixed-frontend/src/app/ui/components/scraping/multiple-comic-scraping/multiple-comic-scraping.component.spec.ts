@@ -32,6 +32,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VolumeListComponent } from 'app/ui/components/scraping/volume-list/volume-list.component';
 import { TableModule } from 'primeng/table';
+import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 
 describe('MultipleComicScrapingComponent', () => {
   let component: MultipleComicScrapingComponent;
@@ -57,7 +58,8 @@ describe('MultipleComicScrapingComponent', () => {
         MultipleComicScrapingComponent,
         ComicDetailsEditorComponent,
         ComicCoverUrlPipe,
-        VolumeListComponent
+        VolumeListComponent,
+        ScrapingIssueTitlePipe
       ]
     }).compileComponents();
 

@@ -41,6 +41,7 @@ import {
   COMIC_1003,
   COMIC_1004
 } from 'app/models/comics/comic.fixtures';
+import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 
 describe('VolumeListComponent', () => {
   const COMIC = COMIC_1002;
@@ -63,7 +64,7 @@ describe('VolumeListComponent', () => {
         ButtonModule,
         TooltipModule
       ],
-      declarations: [VolumeListComponent]
+      declarations: [VolumeListComponent, ScrapingIssueTitlePipe]
     }).compileComponents();
 
     fixture = TestBed.createComponent(VolumeListComponent);

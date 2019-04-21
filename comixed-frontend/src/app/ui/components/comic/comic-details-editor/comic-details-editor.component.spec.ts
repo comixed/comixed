@@ -54,6 +54,7 @@ import { VolumeListComponent } from 'app/ui/components/scraping/volume-list/volu
 import { ComicDetailsEditorComponent } from './comic-details-editor.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/primeng';
+import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = '1234567890';
@@ -90,11 +91,13 @@ describe('ComicDetailsEditorComponent', () => {
         InplaceModule,
         TableModule,
         CardModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+
       ],
       declarations: [
         ComicDetailsEditorComponent,
-        VolumeListComponent
+        VolumeListComponent,
+        ScrapingIssueTitlePipe
       ],
       providers: [
         FormBuilder,

@@ -59,6 +59,7 @@ import { UserServiceMock } from 'app/services/user.service.mock';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { userReducer } from 'app/reducers/user.reducer';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 
 describe('ComicDetailsPageComponent', () => {
   let component: ComicDetailsPageComponent;
@@ -103,7 +104,8 @@ describe('ComicDetailsPageComponent', () => {
         ComicTitlePipe,
         ComicCoverUrlPipe,
         ComicPageUrlPipe,
-        ComicDownloadLinkPipe
+        ComicDownloadLinkPipe,
+        ScrapingIssueTitlePipe
       ],
       providers: [
         MessageService,
@@ -111,8 +113,7 @@ describe('ComicDetailsPageComponent', () => {
         { provide: ComicService, useClass: ComicServiceMock },
         { provide: UserService, useClass: UserServiceMock }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ComicDetailsPageComponent);
     component = fixture.componentInstance;
@@ -125,19 +126,18 @@ describe('ComicDetailsPageComponent', () => {
   }));
 
   it('should create', () => {
-    expect(component)
-      .toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
   describe('download link', () => {
     it('contains a link', () => {
-      expect(download_link)
-        .toBeTruthy();
+      expect(download_link).toBeTruthy();
     });
 
     it('the link text is accurate', () => {
-      expect(download_link.nativeElement.innerText)
-        .toEqual('comic-details-page.text.download-link');
+      expect(download_link.nativeElement.innerText).toEqual(
+        'comic-details-page.text.download-link'
+      );
     });
   });
 });

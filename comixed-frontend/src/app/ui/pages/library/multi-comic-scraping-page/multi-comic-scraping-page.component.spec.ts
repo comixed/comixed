@@ -41,6 +41,7 @@ import { ComicDetailsEditorComponent } from 'app/ui/components/comic/comic-detai
 import { VolumeListComponent } from 'app/ui/components/scraping/volume-list/volume-list.component';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { MultiComicScrapingPageComponent } from './multi-comic-scraping-page.component';
+import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 
 describe('MultiComicScrapingPageComponent', () => {
   let component: MultiComicScrapingPageComponent;
@@ -74,7 +75,8 @@ describe('MultiComicScrapingPageComponent', () => {
         MultipleComicScrapingComponent,
         ComicDetailsEditorComponent,
         VolumeListComponent,
-        ComicCoverUrlPipe
+        ComicCoverUrlPipe,
+        ScrapingIssueTitlePipe
       ]
     }).compileComponents();
 
