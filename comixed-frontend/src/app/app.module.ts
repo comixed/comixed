@@ -44,7 +44,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { BlockUIModule } from 'primeng/blockui';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { PasswordModule } from 'primeng/password';
 import { PickListModule } from 'primeng/picklist';
 import { InplaceModule } from 'primeng/inplace';
@@ -52,16 +52,11 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChartModule } from 'primeng/chart';
 import { AppRouting } from 'app/app.routing';
 import { AppComponent } from 'app/app.component';
-import {
-  HttpClient,
-  HttpClientModule,
-  HTTP_INTERCEPTORS
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
+import { ANIMATION_TYPES, LoadingModule } from 'ngx-loading';
 import { XhrInterceptor } from 'app/xhr.interceptor';
 import { ComicService } from 'app/services/comic.service';
-import { MessageService } from 'primeng/api';
 import { ComicDetailsPageComponent } from 'app/ui/pages/comic-details-page/comic-details-page.component';
 import { ComicReaderComponent } from 'app/ui/components/comic/comic-reader/comic-reader.component';
 import { ComicDetailsEditorComponent } from 'app/ui/components/comic/comic-details-editor/comic-details-editor.component';
@@ -151,6 +146,7 @@ import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page
 import { ComicDownloadLinkPipe } from './pipes/comic-download-link.pipe';
 import { MissingComicsPipe } from './pipes/missing-comics.pipe';
 import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-page/missing-comics-page.component';
+import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
 
 @NgModule({
   declarations: [
@@ -219,7 +215,8 @@ import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-pa
     LibraryAdminPageComponent,
     ComicDownloadLinkPipe,
     MissingComicsPipe,
-    MissingComicsPageComponent
+    MissingComicsPageComponent,
+    ScrapingIssueTitlePipe
   ],
   imports: [
     BrowserModule,
