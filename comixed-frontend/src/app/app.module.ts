@@ -152,6 +152,8 @@ import { MissingComicsPipe } from './pipes/missing-comics.pipe';
 import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-page/missing-comics-page.component';
 import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
 import { ReadingListService } from 'app/services/reading-list.service';
+import { ReadingListEffects } from 'app/effects/reading-list.effects';
+import { readingListReducer } from 'app/reducers/reading-list.reducer';
 
 @NgModule({
   declarations: [
@@ -277,7 +279,8 @@ import { ReadingListService } from 'app/services/reading-list.service';
       single_comic_scraping: singleComicScrapingReducer,
       multiple_comic_scraping: multipleComicsScrapingReducer,
       duplicates: duplicatesReducer,
-      user_admin: userAdminReducer
+      user_admin: userAdminReducer,
+      reading_lists: readingListReducer
     }),
     EffectsModule.forRoot([
       UserEffects,
@@ -285,7 +288,8 @@ import { ReadingListService } from 'app/services/reading-list.service';
       LibraryEffects,
       SingleComicScrapingEffects,
       DuplicatesEffects,
-      UserAdminEffects
+      UserAdminEffects,
+      ReadingListEffects
     ]),
     TranslateModule.forRoot({
       loader: {
