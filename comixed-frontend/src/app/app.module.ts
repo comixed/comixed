@@ -52,7 +52,11 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChartModule } from 'primeng/chart';
 import { AppRouting } from 'app/app.routing';
 import { AppComponent } from 'app/app.component';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule
+} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ANIMATION_TYPES, LoadingModule } from 'ngx-loading';
 import { XhrInterceptor } from 'app/xhr.interceptor';
@@ -147,6 +151,7 @@ import { ComicDownloadLinkPipe } from './pipes/comic-download-link.pipe';
 import { MissingComicsPipe } from './pipes/missing-comics.pipe';
 import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-page/missing-comics-page.component';
 import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
+import { ReadingListService } from 'app/services/reading-list.service';
 
 @NgModule({
   declarations: [
@@ -294,6 +299,7 @@ import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
   providers: [
     UserService,
     ComicService,
+    ReadingListService,
     MessageService,
     [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
     ConfirmationService,

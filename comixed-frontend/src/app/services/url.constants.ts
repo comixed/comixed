@@ -20,6 +20,7 @@
 import * as _ from 'lodash';
 
 export const API_ROOT_URL = '/api';
+
 export const LIBRARY_STATE_URL =
   '${API_ROOT_URL}/comics/since/${latest}?timeout=${timeout}';
 export const COMIC_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scan_types`;
@@ -50,6 +51,10 @@ export const GET_COMIC_METADATA_URL = `${API_ROOT_URL}/scraper/query/issue`;
 export const SCRAPE_METADATA_AND_SAVE_URL = `${API_ROOT_URL}/scraper/save`;
 export const SAVE_COMIC_DETAILS_URL = '${API_ROOT_URL}/comics/${id}';
 export const CLEAR_METADATA_URL = '${API_ROOT_URL}/comics/${id}/metadata';
+
+export const GET_READING_LISTS_URL = `${API_ROOT_URL}/lists`;
+export const CREATE_READING_LIST_URL = `${API_ROOT_URL}/lists`;
+export const UPDATE_READING_LIST_URL = '${API_ROOT_URL}/lists/${id}';
 
 export function interpolate(template: string, values: any): string {
   const vals = _.merge(values, { API_ROOT_URL: API_ROOT_URL });
