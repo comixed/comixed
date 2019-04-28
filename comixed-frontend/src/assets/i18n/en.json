@@ -6,6 +6,7 @@
     "library": {
       "root": "Library",
       "comics": "Comics",
+      "reading-lists": "Reading Lists",
       "import": "Import",
       "duplicate-pages": "Duplicate Pages",
       "missing-comics": "Missing Comics",

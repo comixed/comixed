@@ -31,7 +31,9 @@ import * as lodash from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-menubar', templateUrl: './menubar.component.html', styleUrls: ['./menubar.component.css']
+  selector: 'app-menubar',
+  templateUrl: './menubar.component.html',
+  styleUrls: ['./menubar.component.css']
 })
 export class MenubarComponent implements OnInit, OnDestroy {
   private user$: Observable<User>;
@@ -40,7 +42,11 @@ export class MenubarComponent implements OnInit, OnDestroy {
 
   menu_items: Array<MenuItem>;
 
-  constructor(private router: Router, private translate: TranslateService, private store: Store<AppState>) {
+  constructor(
+    private router: Router,
+    private translate: TranslateService,
+    private store: Store<AppState>
+  ) {
     this.user$ = store.select('user');
   }
 
@@ -69,9 +75,13 @@ export class MenubarComponent implements OnInit, OnDestroy {
   }
 
   private update_menu() {
-    this.menu_items = [{
-      label: this.translate.instant('menu.home.root'), icon: 'fa fa-fw fa-home', routerLink: ['/']
-    }];
+    this.menu_items = [
+      {
+        label: this.translate.instant('menu.home.root'),
+        icon: 'fa fa-fw fa-home',
+        routerLink: ['/']
+      }
+    ];
     this.menu_items = this.menu_items.concat(this.add_comics_menu());
     if (this.user && this.user.is_admin) {
       this.menu_items = this.menu_items.concat(this.add_admin_menu());
@@ -79,104 +89,141 @@ export class MenubarComponent implements OnInit, OnDestroy {
   }
 
   private add_comics_menu(): Array<MenuItem> {
-    return [{
-      label: this.translate.instant('menu.library.root'),
-      icon: 'fa fa-fw fa-book',
-      visible: this.user && this.user.authenticated,
-      items: [{
-        label: this.translate.instant('menu.library.comics'),
-        icon: 'fas fa-book-reader',
-        routerLink: ['/comics'],
-        visible: this.user && this.user.authenticated
-      },
-        {
-          label: this.translate.instant('menu.library.collections.label'), icon: 'fas fa-bookmark', items: [{
-            label: this.translate.instant('menu.library.collections.publishers'),
-            icon: 'fas fa-newspaper',
-            routerLink: ['/publishers'],
+    return [
+      {
+        label: this.translate.instant('menu.library.root'),
+        icon: 'fa fa-fw fa-book',
+        visible: this.user && this.user.authenticated,
+        items: [
+          {
+            label: this.translate.instant('menu.library.comics'),
+            icon: 'fas fa-book-reader',
+            routerLink: ['/comics'],
             visible: this.user && this.user.authenticated
           },
-            {
-              label: this.translate.instant('menu.library.collections.series'),
-              icon: 'fa fa-fw fa-book',
-              routerLink: ['/series'],
-              visible: this.user && this.user.authenticated
-            },
-            {
-              label: this.translate.instant('menu.library.collections.characters'),
-              icon: 'fas fa-user',
-              routerLink: ['/characters'],
-              visible: this.user && this.user.authenticated
-            },
-            {
-              label: this.translate.instant('menu.library.collections.teams'),
-              icon: 'fas fa-users',
-              routerLink: ['/teams'],
-              visible: this.user && this.user.authenticated
-            },
-            {
-              label: this.translate.instant('menu.library.collections.locations'),
-              icon: 'fas fa-location-arrow',
-              routerLink: ['/locations'],
-              visible: this.user && this.user.authenticated
-            },
-            {
-              label: this.translate.instant('menu.library.collections.story-arcs'),
-              icon: 'fas fa-folder-open',
-              routerLink: ['/stories'],
-              visible: this.user && this.user.authenticated
-            }]
-        },
-        {
-          separator: true, visible: this.user && this.user.is_admin
-        },
-        {
-          label: this.translate.instant('menu.library.show-selections'),
-          icon: 'fas fa-vote-yea',
-          visible: this.user && this.user.authenticated,
-          command: () => this.store.dispatch(new DisplayActions.LibraryViewToggleSidebar({ show: true }))
-        }]
-    }];
+          {
+            separator: true,
+            visible: this.user && this.user.is_admin
+          },
+          {
+            label: this.translate.instant('menu.library.reading-lists'),
+            icon: 'fas fa-glasses',
+            routerLink: ['/lists'],
+            visible: this.user && this.user.authenticated
+          },
+          {
+            label: this.translate.instant('menu.library.collections.label'),
+            icon: 'fas fa-bookmark',
+            items: [
+              {
+                label: this.translate.instant(
+                  'menu.library.collections.publishers'
+                ),
+                icon: 'fas fa-newspaper',
+                routerLink: ['/publishers'],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  'menu.library.collections.series'
+                ),
+                icon: 'fa fa-fw fa-book',
+                routerLink: ['/series'],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  'menu.library.collections.characters'
+                ),
+                icon: 'fas fa-user',
+                routerLink: ['/characters'],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant('menu.library.collections.teams'),
+                icon: 'fas fa-users',
+                routerLink: ['/teams'],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  'menu.library.collections.locations'
+                ),
+                icon: 'fas fa-location-arrow',
+                routerLink: ['/locations'],
+                visible: this.user && this.user.authenticated
+              },
+              {
+                label: this.translate.instant(
+                  'menu.library.collections.story-arcs'
+                ),
+                icon: 'fas fa-folder-open',
+                routerLink: ['/stories'],
+                visible: this.user && this.user.authenticated
+              }
+            ]
+          },
+          {
+            separator: true,
+            visible: this.user && this.user.is_admin
+          },
+          {
+            label: this.translate.instant('menu.library.show-selections'),
+            icon: 'fas fa-vote-yea',
+            visible: this.user && this.user.authenticated,
+            command: () =>
+              this.store.dispatch(
+                new DisplayActions.LibraryViewToggleSidebar({ show: true })
+              )
+          }
+        ]
+      }
+    ];
   }
 
   private add_admin_menu(): Array<MenuItem> {
-    return [{
-      label: this.translate.instant('menu.admin.root'),
-      icon: 'fas fa-tools',
-      visible: this.user && this.user.is_admin,
-      items: [{
-        label: this.translate.instant('menu.admin.users'),
-        icon: 'fas fa-user-cog',
+    return [
+      {
+        label: this.translate.instant('menu.admin.root'),
+        icon: 'fas fa-tools',
         visible: this.user && this.user.is_admin,
-        routerLink: ['/admin/users']
-      },
-        {
-          separator: true, visible: this.user && this.user.is_admin
-        },
-        {
-          label: this.translate.instant('menu.admin.library'),
-          icon: 'fas fa-book-open',
-          visible: this.user && this.user.is_admin,
-          routerLink: ['/admin/library']
-        },
-        {
-          label: this.translate.instant('menu.library.import'),
-          icon: 'fas fa-file-import',
-          routerLink: ['/import'],
-          visible: this.user && this.user.is_admin
-        },
-        {
-          label: this.translate.instant('menu.library.duplicate-pages'),
-          icon: 'fas fa-smog',
-          routerLink: ['/pages/duplicates'],
-          visible: this.user && this.user.is_admin
-        },
-        {
-          label: this.translate.instant('menu.library.missing-comics'),
-          icon: 'fas fa-ghost',
-          routerLink: ['/comics/missing'],
-          visible: this.user && this.user.is_admin
-        }]
-    }];
+        items: [
+          {
+            label: this.translate.instant('menu.admin.users'),
+            icon: 'fas fa-user-cog',
+            visible: this.user && this.user.is_admin,
+            routerLink: ['/admin/users']
+          },
+          {
+            separator: true,
+            visible: this.user && this.user.is_admin
+          },
+          {
+            label: this.translate.instant('menu.admin.library'),
+            icon: 'fas fa-book-open',
+            visible: this.user && this.user.is_admin,
+            routerLink: ['/admin/library']
+          },
+          {
+            label: this.translate.instant('menu.library.import'),
+            icon: 'fas fa-file-import',
+            routerLink: ['/import'],
+            visible: this.user && this.user.is_admin
+          },
+          {
+            label: this.translate.instant('menu.library.duplicate-pages'),
+            icon: 'fas fa-smog',
+            routerLink: ['/pages/duplicates'],
+            visible: this.user && this.user.is_admin
+          },
+          {
+            label: this.translate.instant('menu.library.missing-comics'),
+            icon: 'fas fa-ghost',
+            routerLink: ['/comics/missing'],
+            visible: this.user && this.user.is_admin
+          }
+        ]
+      }
+    ];
   }
 }

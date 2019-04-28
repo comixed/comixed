@@ -18,10 +18,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import {
-  RouterModule,
-  Routes
-} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard } from 'app/admin.guard';
 import { ReaderGuard } from 'app/reader.guard';
 import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
@@ -47,6 +44,7 @@ import { MultiComicScrapingPageComponent } from 'app/ui/pages/library/multi-comi
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
 import { MissingComicsPageComponent } from 'app/ui/pages/library/missing-comics-page/missing-comics-page.component';
 import { ReadingListPageComponent } from 'app/ui/pages/reading-lists/reading-list-page/reading-list-page.component';
+import { ReadingListsPageComponent } from 'app/ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
 
 export const routes: Routes = [
   {

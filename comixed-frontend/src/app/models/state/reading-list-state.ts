@@ -17,9 +17,10 @@
  * org.comixed;
  */
 
-import {ReadingList} from "app/models/reading-list";
+import { ReadingList } from 'app/models/reading-list';
 
 export interface ReadingListState {
-    busy: boolean;
-    reading_lists: Array<ReadingList>
+  busy: boolean;
+  reading_lists: Array<ReadingList>;
+  current_list: ReadingList;
 }
