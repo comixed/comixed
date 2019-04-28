@@ -46,6 +46,7 @@ import { StoryArcDetailsPageComponent } from 'app/ui/pages/story-arcs/story-arc-
 import { MultiComicScrapingPageComponent } from 'app/ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component';
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
 import { MissingComicsPageComponent } from 'app/ui/pages/library/missing-comics-page/missing-comics-page.component';
+import { ReadingListPageComponent } from 'app/ui/pages/reading-lists/reading-list-page/reading-list-page.component';
 
 export const routes: Routes = [
   {
@@ -135,6 +136,16 @@ export const routes: Routes = [
   {
     path: 'stories/:name',
     component: StoryArcDetailsPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'lists/new',
+    component: ReadingListPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'lists/:id',
+    component: ReadingListPageComponent,
     canActivate: [ReaderGuard]
   },
   {
