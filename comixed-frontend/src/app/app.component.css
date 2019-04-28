@@ -45,3 +45,17 @@
 :host ::ng-deep .cx-container-centered-text {
   text-align: center;
 }
+
+:host ::ng-deep .cx-horizonal-centered {
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+:host ::ng-deep .cx-right-align-container {
+  float: right;
+}
+
+:host ::ng-deep input {
+  width: 100%;
+}

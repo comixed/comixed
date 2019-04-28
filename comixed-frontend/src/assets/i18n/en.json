@@ -627,5 +627,17 @@
     "start-scraping": "Start Scraping...",
     "selected": "Selected",
     "not-selected": "Not Selected"
+  },
+  "reading-list-page": {
+    "label": {
+      "name": "List Name",
+      "summary": "Summary"
+    },
+    "text": {
+      "name-placeholder": "Enter a unique name..."
+    },
+    "button": {
+      "save": "Save List"
+    }
   }
 }
