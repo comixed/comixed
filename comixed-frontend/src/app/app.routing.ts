@@ -149,6 +149,11 @@ export const routes: Routes = [
     canActivate: [ReaderGuard]
   },
   {
+    path: 'lists',
+    component: ReadingListsPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
     path: 'import',
     component: ImportPageComponent,
     canActivate: [AdminGuard]

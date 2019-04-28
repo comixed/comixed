@@ -155,6 +155,7 @@ import { ReadingListService } from 'app/services/reading-list.service';
 import { ReadingListEffects } from 'app/effects/reading-list.effects';
 import { readingListReducer } from 'app/reducers/reading-list.reducer';
 import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
+import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
 
 @NgModule({
   declarations: [
@@ -225,7 +226,8 @@ import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-
     MissingComicsPipe,
     MissingComicsPageComponent,
     ScrapingIssueTitlePipe,
-    ReadingListPageComponent
+    ReadingListPageComponent,
+    ReadingListsPageComponent
   ],
   imports: [
     BrowserModule,

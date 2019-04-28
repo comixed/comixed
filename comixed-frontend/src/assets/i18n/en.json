@@ -639,5 +639,18 @@
     "button": {
       "save": "Save List"
     }
+  },
+  "reading-lists-page": {
+    "title": "Reading Lists",
+    "table": {
+      "headers": {
+        "name": "Name",
+        "summary": "Summary",
+        "comic-count": "Comic Count"
+      }
+    },
+    "button": {
+      "new-reading-list": "New List"
+    }
   }
 }
