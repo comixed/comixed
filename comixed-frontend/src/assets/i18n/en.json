@@ -87,6 +87,8 @@
     },
     "button": {
       "find": "Find Comics",
+      "select-all": "Select All",
+      "deselect-all": "Deselect All",
       "select": "Select",
       "import": "Import"
     }

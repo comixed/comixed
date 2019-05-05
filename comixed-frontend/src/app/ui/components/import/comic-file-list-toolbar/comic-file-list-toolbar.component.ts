@@ -22,7 +22,13 @@ import { Importing } from 'app/models/import/importing';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as ImportActions from 'app/actions/importing.actions';
-import { COVER_SIZE, LibraryDisplay, ROWS, SAME_HEIGHT, SORT } from 'app/models/state/library-display';
+import {
+  COVER_SIZE,
+  LibraryDisplay,
+  ROWS,
+  SAME_HEIGHT,
+  SORT
+} from 'app/models/state/library-display';
 import * as DisplayActions from 'app/actions/library-display.actions';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
@@ -69,7 +75,9 @@ export class ComicFileListToolbarComponent implements OnInit {
       }
       if (params.sort) {
         this.store.dispatch(
-          new DisplayActions.SetLibraryComicFileViewSort({ comic_file_sort_field: params.sort })
+          new DisplayActions.SetLibraryComicFileViewSort({
+            comic_file_sort_field: params.sort
+          })
         );
       }
       if (params.rows) {
@@ -97,8 +105,24 @@ export class ComicFileListToolbarComponent implements OnInit {
   }
 
   find_comics(): void {
-    this.store.dispatch(new ImportActions.ImportingSetDirectory({ directory: this.directory }));
-    this.store.dispatch(new ImportActions.ImportingFetchFiles({ directory: this.directory }));
+    this.store.dispatch(
+      new ImportActions.ImportingSetDirectory({ directory: this.directory })
+    );
+    this.store.dispatch(
+      new ImportActions.ImportingFetchFiles({ directory: this.directory })
+    );
+  }
+
+  select_all_comics(): void {
+    this.store.dispatch(
+      new ImportActions.ImportingSelectFiles({ files: this.comic_files })
+    );
+  }
+
+  deselect_all_comics(): void {
+    this.store.dispatch(
+      new ImportActions.ImportingUnselectFiles({ files: this.comic_files })
+    );
   }
 
   set_sort_field(sort_field: string): void {
