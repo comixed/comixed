@@ -1,81 +1,74 @@
-<p-toolbar id='importing-toolbar'
->
-  <div class='ui-g'>
-    <div class='ui-g-10'>
-      <input id='directory-input'
-             type='text'
-             [placeholder]="'import-toolbar.text.directory-placeholder'|translate"
-             pInputText
-             [(ngModel)]='directory'
-             [disabled]='busy'
-             [style.width]="'100%'"
-      />
-    </div>
-    <div class='ui-g-2'>
-      <button id='find-comics'
-              type='button'
-              pButton
-              [label]='"import-toolbar.button.find"|translate'
-              [disabled]='busy||!directory||!directory.length'
-              (click)='find_comics()'
-      ></button>
-    </div>
-    <div class='ui-g-4'>
-      <div class='ui-g'>
-        <div class='ui-g-4'>
-          <p-dropdown [options]='layout_options'
-                      styleClass='cx-layout-dropdown'
-                      [(ngModel)]='library_display.layout'
-                      (onChange)="changeLayout.next($event.value)"
-          ></p-dropdown>
+<p-toolbar id='importing-toolbar'>
+    <div class='ui-g'>
+        <div class='ui-g-10'>
+            <input id='directory-input'
+                   type='text'
+                   [placeholder]='"import-toolbar.text.directory-placeholder"|translate'
+                   pInputText
+                   [(ngModel)]='directory'
+                   [disabled]='busy'
+                   [style.width]='"100%"'/>
+        </div>
+        <div class='ui-g-2'>
+            <button id='find-comics'
+                    type='button'
+                    pButton
+                    [label]='"import-toolbar.button.find"|translate'
+                    [disabled]='busy||!directory||!directory.length'
+                    (click)='find_comics()'></button>
         </div>
         <div class='ui-g-4'>
-          <p-dropdown [options]="sort_field_options"
-                      styleClass='cx-layout-dropdown'
-                      [(ngModel)]="library_display.comic_file_sort_field"
-                      (onChange)="set_sort_field($event.value)"
-          ></p-dropdown>
+            <div class='ui-g'>
+                <div class='ui-g-4'>
+                    <p-dropdown [options]='layout_options'
+                                styleClass='cx-layout-dropdown'
+                                [(ngModel)]='library_display.layout'
+                                (onChange)='changeLayout.next($event.value)'></p-dropdown>
+                </div>
+                <div class='ui-g-4'>
+                    <p-dropdown [options]='sort_field_options'
+                                styleClass='cx-layout-dropdown'
+                                [(ngModel)]='library_display.comic_file_sort_field'
+                                (onChange)='set_sort_field($event.value)'></p-dropdown>
+                </div>
+                <div class='ui-g-4'>
+                    <p-dropdown [options]='rows_options'
+                                styleClass='cx-layout-dropdown'
+                                [(ngModel)]='library_display.rows'
+                                (onChange)='set_rows($event.value)'></p-dropdown>
+                </div>
+            </div>
         </div>
         <div class='ui-g-4'>
-          <p-dropdown [options]="rows_options"
-                      styleClass='cx-layout-dropdown'
-                      [(ngModel)]="library_display.rows"
-                      (onChange)="set_rows($event.value)"
-          ></p-dropdown>
+            <div class='ui-g'>
+                <div class='ui-g-6'>
+                    <input type='search'
+                           pInputText
+                           class='cx-filter-comic-filenames'
+                           placeholder='{{"import-toolbar.text.filter-placeholder"|translate}}'
+                           (keyup)='filterText.next($event.target.value)'>
+                </div>
+                <div class='ui-g-6'>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class='ui-g-4'>
+            <div class='ui-g'>
+                <div class='ui-6-4'>
+                    <p-checkbox [(ngModel)]='library_display.same_height'
+                                binary='true'
+                                (onChange)='set_same_height($event)'
+                                [label]='"library-contents.options.cover-size.same-height"|translate'
+                    ></p-checkbox>
+                </div>
+                <div class='ui-g-8'>
+                    <p-slider [(ngModel)]='library_display.cover_size'
+                              [min]='100'
+                              [max]='400'
+                              (onChange)='set_cover_size($event.value)'></p-slider>
+                    {{'library-contents.label.cover-size'|translate:{cover_size: library_display.cover_size} }}
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="ui-g-4">
-      <div class='ui-g'>
-        <div class='ui-g-6'>
-          <input type='search'
-                 pInputText
-                 class='cx-filter-comic-filenames'
-                 placeholder='{{"import-toolbar.text.filter-placeholder"|translate}}'
-                 (keyup)='filterText.next($event.target.value)'>
-        </div>
-        <div class='ui-g-6'>
-        </div>
-      </div>
-    </div>
-    <div class="ui-g-4">
-      <div class="ui-g">
-        <div class="ui-6-4">
-          <p-checkbox [(ngModel)]="library_display.same_height"
-                      binary="true"
-                      (onChange)="set_same_height($event)"
-                      [label]="'library-contents.options.cover-size.same-height'|translate"
-          ></p-checkbox>
-        </div>
-        <div class="ui-g-8">
-          <p-slider [(ngModel)]="library_display.cover_size"
-                    [min]="100"
-                    [max]="400"
-                    (onChange)="set_cover_size($event.value)"
-          ></p-slider>
-          {{"library-contents.label.cover-size"|translate:{cover_size: library_display.cover_size} }}
-        </div>
-      </div>
-    </div>
-  </div>
 </p-toolbar>
