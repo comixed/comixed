@@ -20,7 +20,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { flatMap, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, flatMap, map, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import * as UserActions from 'app/actions/user.actions';
@@ -28,13 +28,17 @@ import * as DisplayActions from 'app/actions/library-display.actions';
 import { UserService } from 'app/services/user.service';
 import { User } from 'app/models/user/user';
 import { TokenStorage } from 'app/storage/token.storage';
+import { TranslateService } from '@ngx-translate/core';
+import { MessageService } from 'primeng/api';
 
 @Injectable()
 export class UserEffects {
   constructor(
     private actions$: Actions,
     private user_service: UserService,
-    private token_storage: TokenStorage
+    private token_storage: TokenStorage,
+    private translate_service: TranslateService,
+    private message_service: MessageService
   ) {}
 
   @Effect()
@@ -42,43 +46,49 @@ export class UserEffects {
     ofType(UserActions.USER_AUTH_CHECK),
     switchMap((action: UserActions.UserAuthCheck) =>
       this.user_service.get_user().pipe(
-        flatMap(
-          (user: User) => {
-            return [
-              new DisplayActions.LibraryViewLoadUserOptions({ user: user }),
-              new UserActions.UserLoaded({
-                user: user
-              })
-            ];
-          }
-        )
+        flatMap((user: User) => {
+          return [
+            new DisplayActions.LibraryViewLoadUserOptions({ user: user }),
+            new UserActions.UserLoaded({
+              user: user
+            })
+          ];
+        })
       )
     )
   );
 
   @Effect()
-  user_logging_in$
-    :
-    Observable<Action> = this.actions$.pipe(
+  user_logging_in$: Observable<Action> = this.actions$.pipe(
     ofType(UserActions.USER_LOGGING_IN),
     map((action: UserActions.UserLoggingIn) => action.payload),
     switchMap(action =>
       this.user_service.login(action.email, action.password).pipe(
         tap(data => this.token_storage.save_token(data.token)),
-        map(
-          data =>
-            new UserActions.UserSetAuthToken({
-              token: data.token
-            })
-        )
+        map(data => {
+          this.message_service.clear();
+          return new UserActions.UserSetAuthToken({ token: data.token });
+        }),
+        catchError(error => {
+          this.message_service.add({
+            severity: 'error',
+            summary: this.translate_service.instant(
+              'user-effects.login.summary.login-failure'
+            ),
+            detail: this.translate_service.instant(
+              'user-effects.login.detail.login-failure'
+            ),
+            sticky: true,
+            closable: true
+          });
+          return of(new UserActions.UserLoginFailed());
+        })
       )
     )
   );
 
   @Effect()
-  user_logout$
-    :
-    Observable<Action> = this.actions$.pipe(
+  user_logout$: Observable<Action> = this.actions$.pipe(
     ofType(UserActions.USER_LOGOUT),
     switchMap((action: UserActions.UserLogout) =>
       of(this.token_storage.sign_out()).pipe(
@@ -88,9 +98,7 @@ export class UserEffects {
   );
 
   @Effect()
-  user_set_preference$
-    :
-    Observable<Action> = this.actions$.pipe(
+  user_set_preference$: Observable<Action> = this.actions$.pipe(
     ofType(UserActions.USER_SET_PREFERENCE),
     map((action: UserActions.UserSetPreference) => action.payload),
     switchMap(action =>

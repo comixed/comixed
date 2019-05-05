@@ -653,5 +653,15 @@
     "button": {
       "new-reading-list": "New List"
     }
+  },
+  "user-effects": {
+    "login": {
+      "summary": {
+        "login-failure": "Login Failure"
+      },
+      "detail": {
+        "login-failure": "The email or password were invalid."
+      }
+    }
   }
 }

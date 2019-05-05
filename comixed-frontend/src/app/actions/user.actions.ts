@@ -76,6 +76,13 @@ export class UserSetAuthToken implements Action {
   ) {}
 }
 
+export const USER_LOGIN_FAILED = '[USER] The user login failed';
+export class UserLoginFailed implements Action {
+  readonly type = USER_LOGIN_FAILED;
+
+  constructor() {}
+}
+
 export const USER_LOGOUT = '[USER] Logout';
 export class UserLogout implements Action {
   readonly type = USER_LOGOUT;
@@ -114,6 +121,7 @@ export type Actions =
   | UserCancelLogin
   | UserLoggingIn
   | UserSetAuthToken
+  | UserLoginFailed
   | UserLogout
   | UserSetPreference
   | UserPreferenceSaved;

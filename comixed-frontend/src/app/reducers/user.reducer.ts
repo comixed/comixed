@@ -63,6 +63,16 @@ export function userReducer(
         token: action.payload.token
       };
 
+    case UserActions.USER_LOGIN_FAILED:
+      return {
+        ...state,
+        busy: false,
+        initialized: true,
+        is_admin: false,
+        is_reader: false,
+        authenticating: true
+      };
+
     case UserActions.USER_LOADED: {
       const user = action.payload.user;
       let is_admin = false;
