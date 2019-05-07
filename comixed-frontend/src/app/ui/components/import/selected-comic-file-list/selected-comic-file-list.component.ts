@@ -39,10 +39,12 @@ export class SelectedComicFileListComponent implements OnInit {
 
   protected actions: MenuItem[];
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private store: Store<AppState>,
     private translate: TranslateService,
-    private confirmation_service: ConfirmationService) {
+    private confirmation_service: ConfirmationService
+  ) {
     this.load_actions();
   }
 
@@ -51,36 +53,56 @@ export class SelectedComicFileListComponent implements OnInit {
   }
 
   private load_actions(): void {
-    this.actions = [{
-      label: this.translate.instant('selected-comic-files-list.button.import'),
-      icon: 'fas fa-info-circle',
-      command: () => {
-        this.import_files(false);
-      }
-    },
+    this.actions = [
       {
-        label: this.translate.instant('selected-comic-files-list.button.import-ignore-metadata'),
+        label: this.translate.instant(
+          'selected-comic-file-list.button.import'
+        ),
+        icon: 'fas fa-info-circle',
+        command: () => {
+          this.import_files(false);
+        }
+      },
+      {
+        label: this.translate.instant(
+          'selected-comic-file-list.button.import-ignore-metadata'
+        ),
         icon: 'fas fa-ban',
         command: () => {
           this.import_files(true);
         }
-      }];
+      }
+    ];
   }
 
   private import_files(ignore_metadata: boolean): void {
     this.confirmation_service.confirm({
-      message: `Are you sure you want to import ${this.selected_comic_files.length} comics?`, accept: () => {
-        const filenames = this.selected_comic_files.map((comic_file: ComicFile) => {
-          return comic_file.filename;
-        });
-        this.store.dispatch(new ImportActions.ImportingImportFiles({
-          files: filenames, ignore_metadata: ignore_metadata
-        }));
+      header: this.translate.instant(
+        'selected-comic-file-list.header.confirm-import'
+      ),
+      message: this.translate.instant(
+        'selected-comic-file-list.message.confirm-import',
+        { comic_count: this.selected_comic_files.length }
+      ),
+      accept: () => {
+        const filenames = this.selected_comic_files.map(
+          (comic_file: ComicFile) => {
+            return comic_file.filename;
+          }
+        );
+        this.store.dispatch(
+          new ImportActions.ImportingImportFiles({
+            files: filenames,
+            ignore_metadata: ignore_metadata
+          })
+        );
       }
     });
   }
 
   hide_selections(): void {
-    this.store.dispatch(new DisplayActions.LibraryViewToggleSidebar({ show: false }));
+    this.store.dispatch(
+      new DisplayActions.LibraryViewToggleSidebar({ show: false })
+    );
   }
 }

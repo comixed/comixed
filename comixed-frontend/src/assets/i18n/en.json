@@ -73,7 +73,13 @@
       }
     }
   },
-  "selected-comic-files-list": {
+  "selected-comic-file-list": {
+    "header": {
+      "confirm-import": "Import Comic Files"
+    },
+    "message": {
+      "confirm-import": "Are you sure you want to import {{comic_count}} comics?"
+    },
     "button": {
       "label": "Import",
       "import": "With Metadata",
