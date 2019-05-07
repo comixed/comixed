@@ -24,6 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataViewModule } from 'primeng/dataview';
 import {
   CardModule,
+  Confirmation,
   ConfirmationService,
   OverlayPanelModule,
   PanelModule,
@@ -48,12 +49,19 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { ComicFile } from 'app/models/import/comic-file';
+import * as ImportActions from 'app/actions/importing.actions';
+import {
+  COMIC_1000,
+  COMIC_1002,
+  COMIC_1004
+} from 'app/models/comics/comic.fixtures';
 
 describe('SelectedComicFileListComponent', () => {
   let component: SelectedComicFileListComponent;
   let fixture: ComponentFixture<SelectedComicFileListComponent>;
   let comic_file_item: DebugElement;
   let store: Store<AppState>;
+  let confirmation_service: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -90,6 +98,7 @@ describe('SelectedComicFileListComponent', () => {
       EXISTING_COMIC_FILE_4
     ];
     store = TestBed.get(Store);
+    confirmation_service = TestBed.get(ConfirmationService);
 
     fixture.detectChanges();
 
@@ -122,7 +131,66 @@ describe('SelectedComicFileListComponent', () => {
     });
   });
 
-  describe('when the import button is clicked', () => {
-    xit('should start the import process');
+  describe('when importing comics', () => {
+    let comic_filenames: Array<string>;
+
+    beforeEach(() => {
+      comic_filenames = [];
+      component.selected_comic_files = [
+        EXISTING_COMIC_FILE_1,
+        EXISTING_COMIC_FILE_3
+      ];
+      component.selected_comic_files.forEach((file: ComicFile) => {
+        comic_filenames.push(file.filename);
+      });
+      spyOn(store, 'dispatch');
+    });
+
+    it('confirms with the user', () => {
+      spyOn(confirmation_service, 'confirm').and.callThrough();
+      component.import_files(true);
+      expect(confirmation_service.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action and ignores metadata on confirmation ', () => {
+      spyOn(confirmation_service, 'confirm').and.callFake(
+        (confirmation: Confirmation) => {
+          confirmation.accept();
+        }
+      );
+      component.import_files(true);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ImportActions.ImportingImportFiles({
+          files: comic_filenames,
+          ignore_metadata: true
+        })
+      );
+    });
+
+    it('fires an action and includes metadata on confirmation ', () => {
+      spyOn(confirmation_service, 'confirm').and.callFake(
+        (confirmation: Confirmation) => {
+          confirmation.accept();
+        }
+      );
+      component.import_files(false);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ImportActions.ImportingImportFiles({
+          files: comic_filenames,
+          ignore_metadata: false
+        })
+      );
+    });
+
+    it('does not on decline', () => {
+      spyOn(confirmation_service, 'confirm');
+      component.import_files(false);
+      expect(store.dispatch).not.toHaveBeenCalledWith(
+        new ImportActions.ImportingImportFiles({
+          files: comic_filenames,
+          ignore_metadata: false
+        })
+      );
+    });
   });
 });

@@ -55,9 +55,7 @@ export class SelectedComicFileListComponent implements OnInit {
   private load_actions(): void {
     this.actions = [
       {
-        label: this.translate.instant(
-          'selected-comic-file-list.button.import'
-        ),
+        label: this.translate.instant('selected-comic-file-list.button.import'),
         icon: 'fas fa-info-circle',
         command: () => {
           this.import_files(false);
@@ -75,7 +73,7 @@ export class SelectedComicFileListComponent implements OnInit {
     ];
   }
 
-  private import_files(ignore_metadata: boolean): void {
+  import_files(ignore_metadata: boolean): void {
     this.confirmation_service.confirm({
       header: this.translate.instant(
         'selected-comic-file-list.header.confirm-import'
