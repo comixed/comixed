@@ -86,6 +86,9 @@ describe('ReadingListService', () => {
       expect(req.request.method).toEqual('POST');
       expect(req.request.body.get('name')).toEqual(LIST_NAME);
       expect(req.request.body.get('summary')).toEqual(LIST_SUMMARY);
+      expect(req.request.body.get('entries')).toEqual(
+        `${READING_LIST.entries}`
+      );
 
       req.flush(READING_LIST);
     });
@@ -93,9 +96,11 @@ describe('ReadingListService', () => {
 
   describe('when updating a reading list', () => {
     it('puts the data', () => {
-      service.save_reading_list(READING_LIST).subscribe((result: boolean) => {
-        expect(result).toBeTruthy();
-      });
+      service
+        .save_reading_list(READING_LIST)
+        .subscribe((result: ReadingList) => {
+          expect(result).toBeTruthy();
+        });
 
       const req = http_mock.expectOne(
         interpolate(UPDATE_READING_LIST_URL, { id: READING_LIST.id })
@@ -103,8 +108,11 @@ describe('ReadingListService', () => {
       expect(req.request.method).toEqual('PUT');
       expect(req.request.body.get('name')).toEqual(READING_LIST.name);
       expect(req.request.body.get('summary')).toEqual(READING_LIST.summary);
+      expect(req.request.body.get('entries')).toEqual(
+        `${READING_LIST.entries}`
+      );
 
-      req.flush('true');
+      req.flush(READING_LIST);
     });
   });
 });

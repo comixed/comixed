@@ -37,7 +37,8 @@ export class ReadingListService {
   save_reading_list(reading_list: ReadingList): Observable<any> {
     const params = new HttpParams()
       .set('name', reading_list.name)
-      .set('summary', reading_list.summary);
+      .set('summary', reading_list.summary)
+      .set('entries', `${reading_list.entries}`);
 
     if (reading_list.id) {
       return this.http.put(
