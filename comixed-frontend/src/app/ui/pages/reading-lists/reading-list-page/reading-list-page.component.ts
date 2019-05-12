@@ -27,6 +27,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
+import { Library } from 'app/models/actions/library';
+import * as LibraryActions from 'app/actions/library.actions';
 
 @Component({
   selector: 'app-reading-list-page',
@@ -37,6 +39,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   reading_list_state$: Observable<ReadingListState>;
   reading_list_state_subscription: Subscription;
   reading_list_state: ReadingListState;
+  entries: Array<Comic>;
 
   reading_list_form: FormGroup;
   id = -1;
@@ -114,11 +117,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
           reading_list.summary || ''
         );
         this.reading_list_form.markAsPristine();
-      } else {
-        console.log(
-          `*** didn't find ${this.id} in`,
-          this.reading_list_state.reading_lists
-        );
+        this.entries = [].concat(reading_list.entries);
       }
     }
   }
