@@ -57,7 +57,9 @@ public class ReadingListEntry {
   @JsonProperty("added_date")
   private Date added = new Date();
 
-  public ReadingListEntry() {}
+  public ReadingListEntry() {
+    this(null, null);
+  }
 
   public ReadingListEntry(Comic comic, ReadingList readingList) {
     this.comic = comic;

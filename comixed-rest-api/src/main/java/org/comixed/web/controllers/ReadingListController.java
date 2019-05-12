@@ -20,8 +20,11 @@
 package org.comixed.web.controllers;
 
 import org.comixed.library.lists.ReadingList;
+import org.comixed.library.lists.ReadingListEntry;
 import org.comixed.library.model.ComiXedUser;
+import org.comixed.library.model.Comic;
 import org.comixed.repositories.ComiXedUserRepository;
+import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.ReadingListRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +42,15 @@ public class ReadingListController {
 
   @Autowired ReadingListRepository readingListRepository;
   @Autowired private ComiXedUserRepository userRepository;
+  @Autowired private ComicRepository comicRepository;
 
   @RequestMapping(value = "/lists", method = RequestMethod.POST)
   public ReadingList createReadingList(
       Principal principal,
       @RequestParam("name") String name,
-      @RequestParam("summary") String summary)
-          throws NoSuchReadingListException, ReadingListNameException {
+      @RequestParam("summary") String summary,
+      @RequestParam("entries") List<Long> entries)
+      throws NoSuchReadingListException, ReadingListNameException {
     this.logger.debug("Preparing to create reading list: user={}", principal.getName());
     this.logger.debug("                                : name={}", name);
     this.logger.debug("                                : summary={}", summary);
@@ -62,6 +67,7 @@ public class ReadingListController {
     result.setOwner(user);
     result.setName(name);
     result.setSummary(summary);
+    this.loadComics(result, entries);
 
     this.logger.info("Creating reading list: {}", name);
     this.readingListRepository.save(result);
@@ -69,12 +75,29 @@ public class ReadingListController {
     return result;
   }
 
+  private void loadComics(ReadingList result, List<Long> entries) {
+    this.logger.debug("Loading {} entries", entries.size());
+    result.getEntries().clear();
+
+    for (Long entry : entries) {
+      Optional<Comic> comic = this.comicRepository.findById(entry);
+
+      if (comic.isPresent()) {
+        result.getEntries().add(new ReadingListEntry(comic.get(), result));
+      } else {
+        this.logger.warn("No such comic: id={}", entry);
+      }
+    }
+  }
+
   @RequestMapping(value = "/lists/{id}", method = RequestMethod.PUT)
   public ReadingList updateReadingList(
       Principal principal,
       @PathVariable("id") long id,
       @RequestParam("name") String name,
-      @RequestParam("summary") String summary) throws NoSuchReadingListException {
+      @RequestParam("summary") String summary,
+      @RequestParam("entries") List<Long> entries)
+      throws NoSuchReadingListException {
     ComiXedUser user = this.getComiXedUser(principal);
 
     this.logger.info("Updating reading list: id={} name={} summary={}", id, name, summary);
@@ -88,6 +111,7 @@ public class ReadingListController {
 
     list.setName(name);
     list.setSummary(summary);
+    this.loadComics(list, entries);
     this.logger.debug("Saving updated reading list");
     this.readingListRepository.save(list);
 

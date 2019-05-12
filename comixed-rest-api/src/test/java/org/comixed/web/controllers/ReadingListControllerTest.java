@@ -20,20 +20,20 @@
 package org.comixed.web.controllers;
 
 import org.comixed.library.lists.ReadingList;
+import org.comixed.library.lists.ReadingListEntry;
 import org.comixed.library.model.ComiXedUser;
+import org.comixed.library.model.Comic;
 import org.comixed.repositories.ComiXedUserRepository;
+import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.ReadingListRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -44,15 +44,33 @@ public class ReadingListControllerTest {
   private static final String TEST_READING_LIST_SUMMARY = "Test Reading List Description";
   private static final String TEST_USER_EMAIL = "reader@localhost.com";
   private static final long TEST_READING_LIST_ID = 78;
+  private static final List<Long> TEST_READING_LIST_ENTRIES = new ArrayList<>();
+
+  private static final Long TEST_COMIC_ID_1 = 1000L;
+  private static final Long TEST_COMIC_ID_2 = 1001L;
+  private static final Long TEST_COMIC_ID_3 = 1002L;
+  private static final Long TEST_COMIC_ID_4 = 1003L;
+  private static final Long TEST_COMIC_ID_5 = 1004L;
+
+  static {
+    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_1);
+    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_2);
+    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_3);
+    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_4);
+    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_5);
+  }
 
   @InjectMocks private ReadingListController controller;
 
   @Mock private ReadingListRepository readingListRepository;
   @Mock private ComiXedUserRepository userRepository;
+  @Mock private ComicRepository comicRepository;
   @Mock private ReadingList readingList;
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
   @Mock private List<ReadingList> readingLists;
+  @Mock private Comic comic;
+  @Captor private ArgumentCaptor<ReadingListEntry> readingListEntry;
 
   @Test(expected = ReadingListNameException.class)
   public void testCreateReadingListNameAlreadyUsed()
@@ -65,7 +83,8 @@ public class ReadingListControllerTest {
         .thenReturn(readingList);
 
     try {
-      controller.createReadingList(principal, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
+      controller.createReadingList(
+          principal, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY, TEST_READING_LIST_ENTRIES);
     } finally {
       Mockito.verify(principal, Mockito.atLeast(1)).getName();
       Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
@@ -83,21 +102,31 @@ public class ReadingListControllerTest {
             readingListRepository.findReadingListForUser(
                 Mockito.any(ComiXedUser.class), Mockito.anyString()))
         .thenReturn(null);
+    Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
     Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
         .thenReturn(readingList);
 
     ReadingList result =
-        controller.createReadingList(principal, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
+        controller.createReadingList(
+            principal,
+            TEST_READING_LIST_NAME,
+            TEST_READING_LIST_SUMMARY,
+            TEST_READING_LIST_ENTRIES);
 
     assertNotNull(result);
     assertSame(user, result.getOwner());
     assertEquals(TEST_READING_LIST_NAME, result.getName());
     assertEquals(TEST_READING_LIST_SUMMARY, result.getSummary());
+    assertEquals(TEST_READING_LIST_ENTRIES.size(), result.getEntries().size());
 
     Mockito.verify(principal, Mockito.atLeast(1)).getName();
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     Mockito.verify(readingListRepository, Mockito.times(1))
         .findReadingListForUser(user, TEST_READING_LIST_NAME);
+    for (int index = 0; index < TEST_READING_LIST_ENTRIES.size(); index++) {
+      Mockito.verify(comicRepository, Mockito.times(1))
+          .findById(TEST_READING_LIST_ENTRIES.get(index));
+    }
     Mockito.verify(readingListRepository, Mockito.times(1)).save(result);
   }
 
@@ -127,7 +156,11 @@ public class ReadingListControllerTest {
 
     try {
       controller.updateReadingList(
-          principal, TEST_READING_LIST_ID, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
+          principal,
+          TEST_READING_LIST_ID,
+          TEST_READING_LIST_NAME,
+          TEST_READING_LIST_SUMMARY,
+          TEST_READING_LIST_ENTRIES);
     } finally {
       Mockito.verify(principal, Mockito.atLeast(1)).getName();
       Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
@@ -137,26 +170,36 @@ public class ReadingListControllerTest {
 
   @Test
   public void testUpdateReadingList() throws NoSuchReadingListException {
+    Set<ReadingListEntry> entries = new HashSet<>();
+
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(readingListRepository.findById(TEST_READING_LIST_ID))
         .thenReturn(Optional.of(readingList));
     Mockito.doNothing().when(readingList).setName(Mockito.anyString());
     Mockito.doNothing().when(readingList).setSummary(Mockito.anyString());
+    Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
+    Mockito.when(readingList.getEntries()).thenReturn(entries);
     Mockito.when(readingListRepository.save(Mockito.any())).thenReturn(readingList);
 
     ReadingList result =
         controller.updateReadingList(
-            principal, TEST_READING_LIST_ID, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
+            principal,
+            TEST_READING_LIST_ID,
+            TEST_READING_LIST_NAME,
+            TEST_READING_LIST_SUMMARY,
+            TEST_READING_LIST_ENTRIES);
 
     assertNotNull(result);
     assertSame(readingList, result);
+    assertEquals(TEST_READING_LIST_ENTRIES.size(), entries.size());
 
     Mockito.verify(principal, Mockito.atLeast(1)).getName();
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
     Mockito.verify(readingList, Mockito.times(1)).setName(TEST_READING_LIST_NAME);
     Mockito.verify(readingList, Mockito.times(1)).setSummary(TEST_READING_LIST_SUMMARY);
+    Mockito.verify(readingList, Mockito.times(1 + TEST_READING_LIST_ENTRIES.size())).getEntries();
     Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
   }
 }
