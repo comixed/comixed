@@ -4,37 +4,40 @@
            [style]='{width:"50%"}'
            [blockScroll]='true'
            (onHide)='hide_selections()'>
-  <h2>{{'selected-comics-list.header'|translate:{comic_count: library.selected_comics.length} }}</h2>
-  <p-scrollPanel [style]='{width:"100%",height:"100%"}'>
-    <div class='ui-g'>
-      <div class='ui-g-12'>
-        <p-dataView *ngIf='library'
-                    [value]='library.selected_comics'
-                    layout='grid'
-                    [paginator]='true'
-                    paginatorPosition='top'
-                    [alwaysShowPaginator]='true'
-                    [rows]='rows'>
-          <p-header>
-            <div class='ui-helper-clearfix'>
-              <div class='ui-g'>
-                <div class='ui-g-12 ui-md-12'>
-                  <p-splitButton [model]='actions'
-                                 [label]='"selected-comics-list.button.actions"|translate'
-                                 icon='fa fa-fw fa-bullhorn'></p-splitButton>
-                </div>
-              </div>
+    <h2>{{'selected-comics-list.header'|translate:{comic_count: library.selected_comics.length} }}</h2>
+    <p-scrollPanel [style]='{width:"100%",height:"100%"}'>
+        <div class='ui-g'>
+            <div class='ui-g-12'>
+                <p-dataView *ngIf='library'
+                            [value]='library.selected_comics'
+                            layout='grid'
+                            [paginator]='true'
+                            paginatorPosition='top'
+                            [alwaysShowPaginator]='true'
+                            [rows]='rows'>
+                    <p-header>
+                        <div class='ui-helper-clearfix'>
+                            <div class='ui-g'>
+                                <div class='ui-g-12 ui-md-12'>
+                                    <p-splitButton [model]='actions'
+                                                   [label]='"selected-comics-list.button.actions"|translate'
+                                                   icon='fa fa-fw fa-bullhorn'></p-splitButton>
+                                    <p-splitButton [model]='reading_list_actions'
+                                                   [label]='"selected-comics-list.button.reading-list-actions"|translate'
+                                                   icon='fa fa-fw fa-list'></p-splitButton>
+                                </div>
+                            </div>
+                        </div>
+                    </p-header>
+                    <ng-template let-comic
+                                 pTemplate='gridItem'>
+                        <app-comic-grid-item [comic]='comic'
+                                             [cover_size]='cover_size'
+                                             [same_height]='same_height'
+                                             (toggleSelected)='set_selected(comic)'></app-comic-grid-item>
+                    </ng-template>
+                </p-dataView>
             </div>
-          </p-header>
-          <ng-template let-comic
-                       pTemplate='gridItem'>
-            <app-comic-grid-item [comic]='comic'
-                                 [cover_size]='cover_size'
-                                 [same_height]='same_height'
-                                 (toggleSelected)='set_selected(comic)'></app-comic-grid-item>
-          </ng-template>
-        </p-dataView>
-      </div>
-    </div>
-  </p-scrollPanel>
+        </div>
+    </p-scrollPanel>
 </p-sidebar>

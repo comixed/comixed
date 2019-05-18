@@ -63,6 +63,7 @@ import { UserServiceMock } from 'app/services/user.service.mock';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
+import { readingListReducer } from 'app/reducers/reading-list.reducer';
 
 describe('LibraryPageComponent', () => {
   let component: LibraryPageComponent;
@@ -81,7 +82,8 @@ describe('LibraryPageComponent', () => {
           library: libraryReducer,
           library_filter: libraryFilterReducer,
           multiple_comic_scraping: multipleComicsScrapingReducer,
-          library_display: libraryDisplayReducer
+          library_display: libraryDisplayReducer,
+          reading_lists: readingListReducer
         }),
         ConfirmDialogModule,
         DataViewModule,
@@ -141,19 +143,13 @@ describe('LibraryPageComponent', () => {
       store.dispatch(
         new LibraryActions.LibraryMergeNewComics({
           library_state: {
-            comics: [
-              COMIC_1000,
-              COMIC_1003
-            ],
+            comics: [COMIC_1000, COMIC_1003],
             rescan_count: 3,
             import_count: 7
           }
         })
       );
-      expect(component.library.comics).toEqual([
-        COMIC_1000,
-        COMIC_1003
-      ]);
+      expect(component.library.comics).toEqual([COMIC_1000, COMIC_1003]);
     });
 
     it('should subscribe to library filter updates', () => {

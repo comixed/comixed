@@ -27,6 +27,7 @@ import {
   UPDATE_READING_LIST_URL
 } from 'app/services/url.constants';
 import { ReadingList } from 'app/models/reading-list';
+import { ReadingListEntry } from 'app/models/reading-list-entry';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,14 @@ export class ReadingListService {
   constructor(private http: HttpClient) {}
 
   save_reading_list(reading_list: ReadingList): Observable<any> {
+    const entries = [];
+    reading_list.entries.forEach((entry: ReadingListEntry) =>
+      entries.push(entry.comic.id)
+    );
     const params = new HttpParams()
       .set('name', reading_list.name)
       .set('summary', reading_list.summary)
-      .set('entries', `${reading_list.entries}`);
+      .set('entries', `${entries}`);
 
     if (reading_list.id) {
       return this.http.put(

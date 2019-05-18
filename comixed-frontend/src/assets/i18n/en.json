@@ -278,7 +278,8 @@
     "button": {
       "actions": "Actions",
       "scrape": "Scrape Comics",
-      "delete": "Delete Comics"
+      "delete": "Delete Comics",
+      "reading-list-actions": "Add To List"
     }
   },
   "multi-comic-scraping-page": {

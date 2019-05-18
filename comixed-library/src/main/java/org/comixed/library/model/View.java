@@ -20,59 +20,32 @@
 package org.comixed.library.model;
 
 /**
- * <code>View</code> provides interfaces used to decide what details are
- * included in JSON responses sent to the front end.
+ * <code>View</code> provides interfaces used to decide what details are included in JSON responses
+ * sent to the front end.
  *
  * @author Darryl L. Pierce
  */
-public class View
-{
-    /**
-     * Show full details on a single comic.
-     */
-    public interface ComicDetails extends
-                                  ComicList
-    {
-    }
+public class View {
+  /** Show full details on a single comic. */
+  public interface ComicDetails extends ComicList {}
 
-    /**
-     * Show minimal details for more than one comic.
-     */
-    public interface ComicList
-    {
-    }
+  /** Show minimal details for more than one comic. */
+  public interface ComicList {}
 
-    /**
-     * Show full details on a single page.
-     */
-    public interface PageDetails extends
-                                 PageList
-    {
-    }
+  /** Show full details on a single page. */
+  public interface PageDetails extends PageList {}
 
-    /**
-     * Show minimal information for more than one page.
-     */
-    public interface PageList
-    {
-    }
+  /** Show minimal information for more than one page. */
+  public interface PageList {}
 
-    public interface UserList
-    {
-    }
+  public interface UserList {}
 
-    /**
-     * Show full details on a user.
-     */
-    public interface UserDetails extends
-                                 UserList
-    {
-    }
+  /** Show full details on a user. */
+  public interface UserDetails extends UserList {}
 
-    /**
-     * Used when doing a database backup.
-     */
-    public interface DatabaseBackup
-    {
-    }
+  /** Used when doing a database backup. */
+  public interface DatabaseBackup {}
+
+  /** Used when fetching a reading list. */
+  public interface ReadingList {}
 }

@@ -35,6 +35,31 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { READING_LIST_1 } from 'app/models/reading-list.fixtures';
+import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
+import { SelectedComicsListComponent } from 'app/ui/components/library/selected-comics-list/selected-comics-list.component';
+import { DataViewModule } from 'primeng/dataview';
+import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
+import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
+import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
+import {
+  CardModule,
+  CheckboxModule,
+  ConfirmationService,
+  ConfirmDialogModule,
+  DropdownModule,
+  OverlayPanelModule,
+  PanelModule,
+  ScrollPanelModule,
+  SidebarModule,
+  SliderModule,
+  SplitButtonModule
+} from 'primeng/primeng';
+import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
+import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { libraryFilterReducer } from 'app/reducers/library-filter.reducer';
+import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -51,15 +76,43 @@ describe('ReadingListPageComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ reading_lists: readingListReducer }),
-        ButtonModule
+        StoreModule.forRoot({
+          reading_lists: readingListReducer,
+          library_filter: libraryFilterReducer,
+          library_display: libraryDisplayReducer
+        }),
+        ButtonModule,
+        DataViewModule,
+        SidebarModule,
+        SplitButtonModule,
+        ScrollPanelModule,
+        DropdownModule,
+        CheckboxModule,
+        SliderModule,
+        PanelModule,
+        OverlayPanelModule,
+        CardModule,
+        ConfirmDialogModule
       ],
-      declarations: [ReadingListPageComponent],
+      declarations: [
+        ReadingListPageComponent,
+        ComicListComponent,
+        SelectedComicsListComponent,
+        ComicListToolbarComponent,
+        ComicListItemComponent,
+        ComicGridItemComponent,
+        LibraryFilterComponent,
+        ComicCoverUrlPipe,
+        ComicTitlePipe,
+        ComicCoverComponent
+      ],
       providers: [
+        ConfirmationService,
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({})
+            params: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<{}>({})
           }
         }
       ]

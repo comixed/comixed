@@ -21,7 +21,9 @@ package org.comixed.library.lists;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.library.model.ComiXedUser;
+import org.comixed.library.model.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,28 +48,34 @@ public class ReadingList {
       cascade = CascadeType.ALL,
       fetch = FetchType.EAGER,
       orphanRemoval = true)
+  @JsonView(View.ReadingList.class)
   Set<ReadingListEntry> entries = new HashSet<>();
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
+  @JsonView(View.ReadingList.class)
   private Long id;
 
   @Column(name = "name", length = 128)
   @JsonProperty("name")
+  @JsonView(View.ReadingList.class)
   private String name;
 
   @Column(name = "summary", length = 256, nullable = true)
   @JsonProperty("summary")
+  @JsonView(View.ReadingList.class)
   private String summary;
 
   @JsonProperty("owner")
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "owner_id")
+  @JsonView(View.ReadingList.class)
   private ComiXedUser owner;
 
   @Column(name = "created")
   @JsonProperty("created_date")
+  @JsonView(View.ReadingList.class)
   private Date created = new Date();
 
   public Long getId() {

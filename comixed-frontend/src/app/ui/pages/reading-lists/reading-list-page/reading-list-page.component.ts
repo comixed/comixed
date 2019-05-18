@@ -29,6 +29,8 @@ import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
 import { Library } from 'app/models/actions/library';
 import * as LibraryActions from 'app/actions/library.actions';
+import { Comic } from 'app/models/comics/comic';
+import { ReadingListEntry } from 'app/models/reading-list-entry';
 
 @Component({
   selector: 'app-reading-list-page',
@@ -117,7 +119,10 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
           reading_list.summary || ''
         );
         this.reading_list_form.markAsPristine();
-        this.entries = [].concat(reading_list.entries);
+        this.entries = [];
+        reading_list.entries.forEach((entry: ReadingListEntry) =>
+          this.entries.push(entry.comic)
+        );
       }
     }
   }

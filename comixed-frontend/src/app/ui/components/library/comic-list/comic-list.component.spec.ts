@@ -44,6 +44,7 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicListComponent } from './comic-list.component';
 import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
+import { readingListReducer } from 'app/reducers/reading-list.reducer';
 
 describe('ComicListComponent', () => {
   let component: ComicListComponent;
@@ -56,7 +57,10 @@ describe('ComicListComponent', () => {
         RouterTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library_display: libraryDisplayReducer }),
+        StoreModule.forRoot({
+          library_display: libraryDisplayReducer,
+          reading_lists: readingListReducer
+        }),
         DataViewModule,
         SidebarModule,
         SplitButtonModule,
@@ -80,9 +84,7 @@ describe('ComicListComponent', () => {
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],
-      providers: [
-        ConfirmationService
-      ]
+      providers: [ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicListComponent);

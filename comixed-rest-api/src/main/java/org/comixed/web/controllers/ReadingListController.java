@@ -19,10 +19,12 @@
 
 package org.comixed.web.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.library.lists.ReadingList;
 import org.comixed.library.lists.ReadingListEntry;
 import org.comixed.library.model.ComiXedUser;
 import org.comixed.library.model.Comic;
+import org.comixed.library.model.View;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.ReadingListRepository;
@@ -45,6 +47,7 @@ public class ReadingListController {
   @Autowired private ComicRepository comicRepository;
 
   @RequestMapping(value = "/lists", method = RequestMethod.POST)
+  @JsonView(View.ReadingList.class)
   public ReadingList createReadingList(
       Principal principal,
       @RequestParam("name") String name,
@@ -91,6 +94,7 @@ public class ReadingListController {
   }
 
   @RequestMapping(value = "/lists/{id}", method = RequestMethod.PUT)
+  @JsonView(View.ReadingList.class)
   public ReadingList updateReadingList(
       Principal principal,
       @PathVariable("id") long id,
@@ -123,6 +127,7 @@ public class ReadingListController {
   }
 
   @RequestMapping(value = "/lists", method = RequestMethod.GET)
+  @JsonView(View.ReadingList.class)
   public List<ReadingList> getReadingListsForUser(Principal principal) {
     if (principal == null) {
       return null;
