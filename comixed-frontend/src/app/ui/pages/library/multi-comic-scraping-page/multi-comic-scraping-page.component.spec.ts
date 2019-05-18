@@ -20,11 +20,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
-import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scraping.reducer';
+import { StoreModule } from '@ngrx/store';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
@@ -42,6 +38,7 @@ import { VolumeListComponent } from 'app/ui/components/scraping/volume-list/volu
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { MultiComicScrapingPageComponent } from './multi-comic-scraping-page.component';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('MultiComicScrapingPageComponent', () => {
   let component: MultiComicScrapingPageComponent;
@@ -53,11 +50,7 @@ describe('MultiComicScrapingPageComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          library: libraryReducer,
-          library_display: libraryDisplayReducer,
-          multiple_comic_scraping: multipleComicsScrapingReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         ScrollPanelModule,
         ButtonModule,
         DataViewModule,

@@ -27,9 +27,9 @@ import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { LocationsPageComponent } from './locations-page.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('LocationsPageComponent', () => {
   let component: LocationsPageComponent;
@@ -41,7 +41,7 @@ describe('LocationsPageComponent', () => {
       imports: [
         TranslateModule.forRoot(),
         FormsModule,
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         RouterTestingModule,
         ButtonModule,
         DropdownModule,

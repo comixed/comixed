@@ -25,11 +25,11 @@ import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { userReducer } from 'app/reducers/user.reducer';
 import { MenubarComponent } from './menubar.component';
 import * as UserActions from 'app/actions/user.actions';
 import { ADMIN_USER, READER_USER } from 'app/models/user/user.fixtures';
 import { MenuItem } from 'primeng/api';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('MenubarComponent', () => {
   let component: MenubarComponent;
@@ -44,7 +44,7 @@ describe('MenubarComponent', () => {
         TranslateModule.forRoot(),
         MenubarModule,
         ButtonModule,
-        StoreModule.forRoot({ user: userReducer })
+        StoreModule.forRoot(REDUCERS)
       ],
       declarations: [MenubarComponent]
     }).compileComponents();
@@ -72,9 +72,11 @@ describe('MenubarComponent', () => {
     });
 
     it('does not add the admin menu', () => {
-      expect(component.menu_items.some((item: MenuItem) => {
-        return item.label === 'menu.admin.root';
-      })).toBeFalsy();
+      expect(
+        component.menu_items.some((item: MenuItem) => {
+          return item.label === 'menu.admin.root';
+        })
+      ).toBeFalsy();
     });
   });
 
@@ -88,11 +90,12 @@ describe('MenubarComponent', () => {
     });
 
     it('adds the admin menu', () => {
-      expect(component.menu_items.some((item: MenuItem) => {
-        return item.label === 'menu.admin.root';
-      })).toBeTruthy();
+      expect(
+        component.menu_items.some((item: MenuItem) => {
+          return item.label === 'menu.admin.root';
+        })
+      ).toBeTruthy();
     });
-
   });
 
   describe('#do_login()', () => {
@@ -102,7 +105,9 @@ describe('MenubarComponent', () => {
     });
 
     it('fires the login action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new UserActions.UserStartLogin());
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new UserActions.UserStartLogin()
+      );
     });
   });
 

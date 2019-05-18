@@ -23,7 +23,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { DataViewModule } from 'primeng/dataview';
 import { SliderModule } from 'primeng/slider';
 import { ButtonModule } from 'primeng/button';
@@ -36,14 +35,12 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
-import { IMPORTING_STATE } from 'app/models/import/importing.fixtures';
 import { READER_USER } from 'app/models/user/user.fixtures';
 import { ImportPageComponent } from './import-page.component';
 import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
 import { SelectedComicFileListComponent } from 'app/ui/components/import/selected-comic-file-list/selected-comic-file-list.component';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
-import { ComicFile } from 'app/models/import/comic-file';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import {
@@ -54,16 +51,11 @@ import {
   ScrollPanelModule,
   SidebarModule
 } from 'primeng/primeng';
-import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
-import { EXISTING_LIBRARY } from 'app/models/actions/library.fixtures';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
-import { importingReducer } from 'app/reducers/importing.reducer';
-import { userReducer } from 'app/reducers/user.reducer';
 import * as LibraryActions from 'app/actions/library.actions';
-import * as DisplayActions from 'app/actions/library-display.actions';
 import * as ImportActions from 'app/actions/importing.actions';
 import * as UserActions from 'app/actions/user.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { REDUCERS } from 'app/app.reducers';
 
 const DIRECTORY_TO_USE = '/User/comixed/Downloads';
 
@@ -79,12 +71,7 @@ describe('ImportPageComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          library: libraryReducer,
-          library_display: libraryDisplayReducer,
-          importing: importingReducer,
-          user: userReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         DataViewModule,
         SliderModule,
         ButtonModule,
@@ -113,8 +100,7 @@ describe('ImportPageComponent', () => {
         ConfirmationService,
         { provide: ComicService, useClass: ComicServiceMock }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ImportPageComponent);
     component = fixture.componentInstance;
@@ -127,63 +113,73 @@ describe('ImportPageComponent', () => {
   }));
 
   it('should create', () => {
-    expect(component)
-      .toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
   describe('when not importing comics', () => {
     beforeEach(() => {
-      store.dispatch(new LibraryActions.LibraryMergeNewComics({
-        library_state: {
-          import_count: 0,
-          rescan_count: 0,
-          comics: []
-        }
-      }));
+      store.dispatch(
+        new LibraryActions.LibraryMergeNewComics({
+          library_state: {
+            import_count: 0,
+            rescan_count: 0,
+            comics: []
+          }
+        })
+      );
       fixture.detectChanges();
     });
 
     it('uses the previous directory value', () => {
-      store.dispatch(new ImportActions.ImportingSetDirectory({ directory: DIRECTORY_TO_USE }));
+      store.dispatch(
+        new ImportActions.ImportingSetDirectory({ directory: DIRECTORY_TO_USE })
+      );
       fixture.detectChanges();
-      fixture.whenStable()
-        .then(() => {
-          expect(fixture.debugElement.query(By.css('#directory-input')).nativeElement.value)
-            .toEqual(DIRECTORY_TO_USE);
-        });
+      fixture.whenStable().then(() => {
+        expect(
+          fixture.debugElement.query(By.css('#directory-input')).nativeElement
+            .value
+        ).toEqual(DIRECTORY_TO_USE);
+      });
     });
 
     it('does not show the progress indicator', () => {
-      expect(fixture.debugElement.query(By.css('#import-busy-indicator-container')))
-        .toBeFalsy();
+      expect(
+        fixture.debugElement.query(By.css('#import-busy-indicator-container'))
+      ).toBeFalsy();
     });
 
     it('shows the comic file view', () => {
-      expect(fixture.debugElement.query(By.css('#comic-file-list-container')))
-        .toBeTruthy();
+      expect(
+        fixture.debugElement.query(By.css('#comic-file-list-container'))
+      ).toBeTruthy();
     });
   });
 
   describe('when importing comics', () => {
     beforeEach(() => {
-      store.dispatch(new LibraryActions.LibraryMergeNewComics({
-        library_state: {
-          import_count: 1,
-          rescan_count: 0,
-          comics: []
-        }
-      }));
+      store.dispatch(
+        new LibraryActions.LibraryMergeNewComics({
+          library_state: {
+            import_count: 1,
+            rescan_count: 0,
+            comics: []
+          }
+        })
+      );
       fixture.detectChanges();
     });
 
     it('does not show the comic file view', () => {
-      expect(fixture.debugElement.query(By.css('#comic-file-list-container')))
-        .toBeFalsy();
+      expect(
+        fixture.debugElement.query(By.css('#comic-file-list-container'))
+      ).toBeFalsy();
     });
 
     it('shows the progress indicator', () => {
-      expect(fixture.debugElement.query(By.css('#import-busy-indicator-container')))
-        .toBeTruthy();
+      expect(
+        fixture.debugElement.query(By.css('#import-busy-indicator-container'))
+      ).toBeTruthy();
     });
   });
 });

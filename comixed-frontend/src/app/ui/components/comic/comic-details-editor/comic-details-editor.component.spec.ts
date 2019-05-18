@@ -20,21 +20,16 @@
 import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { userReducer } from 'app/reducers/user.reducer';
 import * as UserActions from 'app/actions/user.actions';
-import { ADMIN_USER, READER_USER } from 'app/models/user/user.fixtures';
-import { singleComicScrapingReducer } from 'app/reducers/single-comic-scraping.reducer';
+import { ADMIN_USER } from 'app/models/user/user.fixtures';
 import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { SINGLE_COMIC_SCRAPING_STATE } from 'app/models/scraping/single-comic-scraping.fixtures';
-import {
-  COMIC_1000,
-  COMIC_1001
-} from 'app/models/comics/comic.fixtures';
+import { COMIC_1000, COMIC_1001 } from 'app/models/comics/comic.fixtures';
 import { VOLUME_1000 } from 'app/models/comics/volume.fixtures';
 import { ISSUE_1000 } from 'app/models/scraping/issue.fixtures';
 import { COMICVINE_API_KEY } from 'app/models/user/preferences.constants';
@@ -55,6 +50,7 @@ import { ComicDetailsEditorComponent } from './comic-details-editor.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/primeng';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = '1234567890';
@@ -79,10 +75,7 @@ describe('ComicDetailsEditorComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          user: userReducer,
-          single_comic_scraping: singleComicScrapingReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         ButtonModule,
         SplitButtonModule,
         BlockUIModule,
@@ -91,8 +84,7 @@ describe('ComicDetailsEditorComponent', () => {
         InplaceModule,
         TableModule,
         CardModule,
-        ConfirmDialogModule,
-
+        ConfirmDialogModule
       ],
       declarations: [
         ComicDetailsEditorComponent,
@@ -313,7 +305,7 @@ describe('ComicDetailsEditorComponent', () => {
       component.single_comic_scraping.current_issue = ISSUE_1000;
     });
 
-    it('notifies the store to fetch the issue\'s metadata', () => {
+    it('notifies the store to fetch the issue metadata', () => {
       component.select_issue();
 
       expect(store.dispatch).toHaveBeenCalledWith(

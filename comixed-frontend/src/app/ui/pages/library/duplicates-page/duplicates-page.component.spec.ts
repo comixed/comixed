@@ -21,9 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { duplicatesReducer } from 'app/reducers/duplicates.reducer';
+import { StoreModule } from '@ngrx/store';
 import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
@@ -39,6 +37,7 @@ import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { DuplicatesPageComponent } from './duplicates-page.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('DuplicatesPageComponent', () => {
   let component: DuplicatesPageComponent;
@@ -50,7 +49,7 @@ describe('DuplicatesPageComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ duplicates: duplicatesReducer }),
+        StoreModule.forRoot(REDUCERS),
         CardModule,
         DataViewModule,
         DropdownModule,

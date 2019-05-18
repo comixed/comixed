@@ -26,12 +26,12 @@ import { PanelModule } from 'primeng/panel';
 import { AppState } from 'app/app.state';
 import { TranslateModule } from '@ngx-translate/core';
 import { FileSaverModule } from 'ngx-filesaver';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { COMIC_1000, COMIC_1001 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1001 } from 'app/models/comics/comic.fixtures';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('LibraryAdminPageComponent', () => {
   let component: LibraryAdminPageComponent;
@@ -47,13 +47,12 @@ describe('LibraryAdminPageComponent', () => {
         HttpClientTestingModule,
         TranslateModule.forRoot(),
         FileSaverModule,
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         ButtonModule,
         PanelModule
       ],
       declarations: [LibraryAdminPageComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryAdminPageComponent);
     component = fixture.componentInstance;
@@ -73,13 +72,15 @@ describe('LibraryAdminPageComponent', () => {
 
   describe('#ngOnInit()', () => {
     beforeEach(() => {
-      store.dispatch(new LibraryActions.LibraryMergeNewComics({
-        library_state: {
-          comics: [COMIC_1001],
-          rescan_count: 12,
-          import_count: 4
-        }
-      }));
+      store.dispatch(
+        new LibraryActions.LibraryMergeNewComics({
+          library_state: {
+            comics: [COMIC_1001],
+            rescan_count: 12,
+            import_count: 4
+          }
+        })
+      );
       fixture.detectChanges();
     });
 
@@ -134,7 +135,9 @@ describe('LibraryAdminPageComponent', () => {
       });
 
       it('sends a notice to start a rescan', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(new LibraryActions.LibraryRescanFiles({ last_comic_date: '0' }));
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new LibraryActions.LibraryRescanFiles({ last_comic_date: '0' })
+        );
       });
     });
   });

@@ -30,6 +30,7 @@ import { AppState } from 'app/app.state';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
 import { By } from '@angular/platform-browser';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicFileGridItemComponent', () => {
   let component: ComicFileGridItemComponent;
@@ -42,7 +43,7 @@ describe('ComicFileGridItemComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({}),
+        StoreModule.forRoot(REDUCERS),
         PanelModule,
         OverlayPanelModule,
         CardModule
@@ -53,8 +54,7 @@ describe('ComicFileGridItemComponent', () => {
         ComicFileCoverUrlPipe,
         ComicCoverUrlPipe
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileGridItemComponent);
     component = fixture.componentInstance;
@@ -69,10 +69,18 @@ describe('ComicFileGridItemComponent', () => {
   });
 
   it('should have an id based on the comic file id', () => {
-    expect(fixture.debugElement.query(By.css(`#comic-file-${component.comic_file.id}`))).toBeTruthy();
+    expect(
+      fixture.debugElement.query(
+        By.css(`#comic-file-${component.comic_file.id}`)
+      )
+    ).toBeTruthy();
   });
 
   it('should have a comic cover with an id based on the comic file id', () => {
-    expect(fixture.debugElement.query(By.css(`#comic-file-cover-${component.comic_file.id}`))).toBeTruthy();
+    expect(
+      fixture.debugElement.query(
+        By.css(`#comic-file-cover-${component.comic_file.id}`)
+      )
+    ).toBeTruthy();
   });
 });

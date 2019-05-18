@@ -23,7 +23,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
 import { DataViewModule } from 'primeng/dataview';
 import { SidebarModule } from 'primeng/sidebar';
 import { SplitButtonModule } from 'primeng/splitbutton';
@@ -43,8 +42,9 @@ import { LibraryFilterComponent } from 'app/ui/components/library/library-filter
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicListComponent } from './comic-list.component';
-import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
-import { readingListReducer } from 'app/reducers/reading-list.reducer';
+import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
+import { REDUCERS } from 'app/app.reducers';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ComicListComponent', () => {
   let component: ComicListComponent;
@@ -54,13 +54,11 @@ describe('ComicListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         RouterTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          library_display: libraryDisplayReducer,
-          reading_lists: readingListReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         DataViewModule,
         SidebarModule,
         SplitButtonModule,

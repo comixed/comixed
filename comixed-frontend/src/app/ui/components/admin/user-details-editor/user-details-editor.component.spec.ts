@@ -22,10 +22,10 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { userAdminReducer } from 'app/reducers/user-admin.reducer';
 import { ButtonModule } from 'primeng/button';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { UserDetailsEditorComponent } from './user-details-editor.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('UserDetailsEditorComponent', () => {
   let component: UserDetailsEditorComponent;
@@ -37,7 +37,7 @@ describe('UserDetailsEditorComponent', () => {
       imports: [
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ user_admin: userAdminReducer }),
+        StoreModule.forRoot(REDUCERS),
         ButtonModule,
         ToggleButtonModule
       ],

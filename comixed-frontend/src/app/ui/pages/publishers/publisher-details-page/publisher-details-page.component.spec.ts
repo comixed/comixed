@@ -23,7 +23,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
 import { DataViewModule } from 'primeng/dataview';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -45,6 +44,9 @@ import { ComicPublisherPipe } from 'app/pipes/comic-publisher.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { PublisherDetailsPageComponent } from './publisher-details-page.component';
+import { REDUCERS } from 'app/app.reducers';
+import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PublisherDetailsPageComponent', () => {
   let component: PublisherDetailsPageComponent;
@@ -54,9 +56,10 @@ describe('PublisherDetailsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         RouterModule.forRoot([]),
         FormsModule,
-        StoreModule.forRoot({ library_display: libraryDisplayReducer }),
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         DataViewModule,
         SplitButtonModule,
@@ -65,8 +68,12 @@ describe('PublisherDetailsPageComponent', () => {
         SliderModule,
         CheckboxModule,
         DropdownModule,
-        PanelModule, OverlayPanelModule, CardModule
+        PanelModule,
+        OverlayPanelModule,
+        CardModule,
+        ConfirmDialogModule
       ],
+      providers: [ConfirmationService],
       declarations: [
         PublisherDetailsPageComponent,
         SelectedComicsListComponent,
@@ -77,7 +84,8 @@ describe('PublisherDetailsPageComponent', () => {
         ComicListToolbarComponent,
         ComicCoverComponent,
         ComicPublisherPipe,
-        ComicCoverUrlPipe, ComicTitlePipe
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ]
     }).compileComponents();
   }));

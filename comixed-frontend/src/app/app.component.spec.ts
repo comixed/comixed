@@ -29,16 +29,19 @@ import { DialogModule } from 'primeng/dialog';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as UserActions from 'app/actions/user.actions';
-import { userReducer } from 'app/reducers/user.reducer';
 import { READER_USER } from 'app/models/user/user.fixtures';
 import * as LibraryActions from 'app/actions/library.actions';
-import { libraryReducer } from 'app/reducers/library.reducer';
-import { COMIC_1000, COMIC_1001, COMIC_1002 } from 'app/models/comics/comic.fixtures';
+import {
+  COMIC_1000,
+  COMIC_1001,
+  COMIC_1002
+} from 'app/models/comics/comic.fixtures';
 import { LoadingModule } from 'ngx-loading';
 import { MenubarComponent } from 'app/ui/components/main/menubar/menubar.component';
 import { LoginComponent } from 'app/ui/components/login/login.component';
 import { AppComponent } from 'app/app.component';
 import { ConfirmDialogModule } from 'primeng/primeng';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -59,18 +62,10 @@ describe('AppComponent', () => {
         ConfirmDialogModule,
         LoadingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ user: userReducer, library: libraryReducer })
+        StoreModule.forRoot(REDUCERS)
       ],
-      declarations: [
-        AppComponent,
-        MenubarComponent,
-        LoginComponent
-      ],
-      providers: [
-        TranslateService,
-        MessageService,
-        ConfirmationService
-      ]
+      declarations: [AppComponent, MenubarComponent, LoginComponent],
+      providers: [TranslateService, MessageService, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -104,11 +99,7 @@ describe('AppComponent', () => {
       store.dispatch(
         new LibraryActions.LibraryMergeNewComics({
           library_state: {
-            comics: [
-              COMIC_1000,
-              COMIC_1001,
-              COMIC_1002
-            ],
+            comics: [COMIC_1000, COMIC_1001, COMIC_1002],
             rescan_count: 70,
             import_count: 43
           }

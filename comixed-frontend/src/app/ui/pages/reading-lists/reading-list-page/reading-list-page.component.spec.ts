@@ -28,7 +28,6 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { Store, StoreModule } from '@ngrx/store';
-import { readingListReducer } from 'app/reducers/reading-list.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppState } from 'app/app.state';
 import { ActivatedRoute } from '@angular/router';
@@ -58,8 +57,8 @@ import { LibraryFilterComponent } from 'app/ui/components/library/library-filter
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
-import { libraryFilterReducer } from 'app/reducers/library-filter.reducer';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
+import { REDUCERS } from 'app/app.reducers';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -72,15 +71,12 @@ describe('ReadingListPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         RouterTestingModule,
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          reading_lists: readingListReducer,
-          library_filter: libraryFilterReducer,
-          library_display: libraryDisplayReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         ButtonModule,
         DataViewModule,
         SidebarModule,

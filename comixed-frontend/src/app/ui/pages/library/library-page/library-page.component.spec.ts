@@ -24,18 +24,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { userReducer } from 'app/reducers/user.reducer';
 import * as UserActions from 'app/actions/user.actions';
 import { READER_USER } from 'app/models/user/user.fixtures';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import * as LibraryActions from 'app/actions/library.actions';
 import { COMIC_1000, COMIC_1003 } from 'app/models/comics/comic.fixtures';
-import { libraryFilterReducer } from 'app/reducers/library-filter.reducer';
 import * as FilterActions from 'app/actions/library-filter.actions';
 import { DEFAULT_LIBRARY_FILTER } from 'app/models/actions/library-filter.fixtures';
-import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scraping.reducer';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DataViewModule } from 'primeng/dataview';
 import { SliderModule } from 'primeng/slider';
@@ -63,7 +58,7 @@ import { UserServiceMock } from 'app/services/user.service.mock';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
-import { readingListReducer } from 'app/reducers/reading-list.reducer';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('LibraryPageComponent', () => {
   let component: LibraryPageComponent;
@@ -77,14 +72,7 @@ describe('LibraryPageComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          user: userReducer,
-          library: libraryReducer,
-          library_filter: libraryFilterReducer,
-          multiple_comic_scraping: multipleComicsScrapingReducer,
-          library_display: libraryDisplayReducer,
-          reading_lists: readingListReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         ConfirmDialogModule,
         DataViewModule,
         SliderModule,

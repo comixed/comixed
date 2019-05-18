@@ -19,15 +19,14 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { userReducer } from 'app/reducers/user.reducer';
+import { StoreModule } from '@ngrx/store';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { AccountPreferencesComponent } from 'app/ui/components/account/account-preferences/account-preferences.component';
 import { UserDetailsComponent } from 'app/ui/components/account/user-details/user-details.component';
-import { ADMIN_USER, READER_USER } from 'app/models/user/user.fixtures';
+import { READER_USER } from 'app/models/user/user.fixtures';
 import { AccountPageComponent } from './account-page.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('AccountPageComponent', () => {
   let component: AccountPageComponent;
@@ -37,7 +36,7 @@ describe('AccountPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ user: userReducer }),
+        StoreModule.forRoot(REDUCERS),
         TabViewModule,
         TableModule
       ],

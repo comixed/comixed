@@ -23,7 +23,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
 import { DataViewModule } from 'primeng/dataview';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -45,6 +44,9 @@ import { ComicSeriesPipe } from 'app/pipes/comic-series.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { SeriesDetailsPageComponent } from './series-details-page.component';
+import { REDUCERS } from 'app/app.reducers';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
 
 describe('SeriesDetailsPageComponent', () => {
   let component: SeriesDetailsPageComponent;
@@ -54,9 +56,10 @@ describe('SeriesDetailsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         RouterModule.forRoot([]),
         FormsModule,
-        StoreModule.forRoot({ library_display: libraryDisplayReducer }),
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         DataViewModule,
         SplitButtonModule,
@@ -67,8 +70,10 @@ describe('SeriesDetailsPageComponent', () => {
         DropdownModule,
         PanelModule,
         OverlayPanelModule,
-        CardModule
+        CardModule,
+        ConfirmDialogModule
       ],
+      providers: [ConfirmationService],
       declarations: [
         SeriesDetailsPageComponent,
         SelectedComicsListComponent,

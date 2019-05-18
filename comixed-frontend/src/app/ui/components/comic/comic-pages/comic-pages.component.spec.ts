@@ -20,9 +20,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
+import { StoreModule } from '@ngrx/store';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 import { DataViewModule } from 'primeng/dataview';
@@ -35,6 +33,7 @@ import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { ComicPagesComponent } from './comic-pages.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicPagesComponent', () => {
   let component: ComicPagesComponent;
@@ -47,7 +46,7 @@ describe('ComicPagesComponent', () => {
       imports: [
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         CardModule,
         DropdownModule,
         DataViewModule,

@@ -23,11 +23,11 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { LibraryFilterComponent } from './library-filter.component';
 import * as FilterActions from 'app/actions/library-filter.actions';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('LibraryFilterComponent', () => {
   const PUBLISHER = 'DC';
@@ -46,7 +46,7 @@ describe('LibraryFilterComponent', () => {
         BrowserAnimationsModule,
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         PanelModule,
         ButtonModule
       ],
@@ -81,13 +81,15 @@ describe('LibraryFilterComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new FilterActions.LibraryFilterSetFilters({
-        publisher: PUBLISHER,
-        series: SERIES,
-        volume: VOLUME,
-        from_year: FROM_YEAR,
-        to_year: TO_YEAR
-      }));
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new FilterActions.LibraryFilterSetFilters({
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME,
+          from_year: FROM_YEAR,
+          to_year: TO_YEAR
+        })
+      );
     });
 
     it('closes the filter panel', () => {
@@ -104,7 +106,9 @@ describe('LibraryFilterComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new FilterActions.LibraryFilterReset());
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new FilterActions.LibraryFilterReset()
+      );
     });
 
     it('closes the filter panel', () => {
@@ -123,7 +127,9 @@ describe('LibraryFilterComponent', () => {
 
     it('includes the publisher when in use', () => {
       component.publisher = PUBLISHER;
-      expect(component.get_header()).toContain('library-filter.filters.publisher');
+      expect(component.get_header()).toContain(
+        'library-filter.filters.publisher'
+      );
     });
 
     it('includes the series when in use', () => {
@@ -138,22 +144,30 @@ describe('LibraryFilterComponent', () => {
 
     it('includes the from year when in use', () => {
       component.from_year = FROM_YEAR;
-      expect(component.get_header()).toContain('library-filter.filters.from-year');
+      expect(component.get_header()).toContain(
+        'library-filter.filters.from-year'
+      );
     });
 
     it('includes the to year when in use', () => {
       component.to_year = TO_YEAR;
-      expect(component.get_header()).toContain('library-filter.filters.to-year');
+      expect(component.get_header()).toContain(
+        'library-filter.filters.to-year'
+      );
     });
 
     it('includes the date range when both to and from year are in use', () => {
       component.from_year = FROM_YEAR;
       component.to_year = TO_YEAR;
-      expect(component.get_header()).toContain('library-filter.filters.between-years');
+      expect(component.get_header()).toContain(
+        'library-filter.filters.between-years'
+      );
     });
 
     it('displays a default label when no filters are in use', () => {
-      expect(component.get_header()).toEqual('library-filter.filters.no-filters');
+      expect(component.get_header()).toEqual(
+        'library-filter.filters.no-filters'
+      );
     });
   });
 });

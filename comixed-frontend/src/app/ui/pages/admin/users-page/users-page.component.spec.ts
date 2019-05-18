@@ -21,8 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { StoreModule } from '@ngrx/store';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -30,9 +29,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ConfirmationService } from 'primeng/api';
-import { userAdminReducer } from 'app/reducers/user-admin.reducer';
 import { UserDetailsEditorComponent } from 'app/ui/components/admin/user-details-editor/user-details-editor.component';
 import { UsersPageComponent } from './users-page.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('UsersPageComponent', () => {
   let component: UsersPageComponent;
@@ -44,7 +43,7 @@ describe('UsersPageComponent', () => {
         FormsModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ user_admin: userAdminReducer }),
+        StoreModule.forRoot(REDUCERS),
         PanelModule,
         TableModule,
         ButtonModule,

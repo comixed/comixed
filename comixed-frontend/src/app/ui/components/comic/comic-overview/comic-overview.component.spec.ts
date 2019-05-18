@@ -34,7 +34,6 @@ import {
 } from 'app/models/comics/comic.fixtures';
 import { EXISTING_LIBRARY } from 'app/models/actions/library.fixtures';
 import { ComicOverviewComponent } from './comic-overview.component';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import {
   DEFAULT_COMIC_FORMAT_1,
   DEFAULT_COMIC_FORMAT_2,
@@ -48,8 +47,8 @@ import {
   THIRD_SCAN_TYPE
 } from 'app/models/comics/scan-type.fixtures';
 import { COMIC_1000_LAST_READ_DATE } from 'app/models/comics/last-read-date.fixtures';
-import { READER_USER, ADMIN_USER } from 'app/models/user/user.fixtures';
 import { By } from '@angular/platform-browser';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicOverviewComponent', () => {
   let component: ComicOverviewComponent;
@@ -63,7 +62,7 @@ describe('ComicOverviewComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         InplaceModule,
         DropdownModule
       ],

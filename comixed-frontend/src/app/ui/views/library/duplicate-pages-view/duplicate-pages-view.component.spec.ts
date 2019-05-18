@@ -29,11 +29,11 @@ import { DataViewModule } from 'primeng/dataview';
 import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
 import { DuplicatePage } from 'app/models/comics/duplicate-page';
 import { DuplicatePagesViewComponent } from './duplicate-pages-view.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('DuplicatePagesViewComponent', () => {
   let component: DuplicatePagesViewComponent;
@@ -51,7 +51,7 @@ describe('DuplicatePagesViewComponent', () => {
         SliderModule,
         DropdownModule,
         DataViewModule,
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         RouterModule.forRoot([])
       ],
       declarations: [DuplicatePagesViewComponent, ComicPageUrlPipe],

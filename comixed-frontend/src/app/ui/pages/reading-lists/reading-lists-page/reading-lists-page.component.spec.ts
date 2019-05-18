@@ -25,8 +25,8 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
-import { readingListReducer } from 'app/reducers/reading-list.reducer';
 import { Router } from '@angular/router';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ReadingListsPageComponent', () => {
   let component: ReadingListsPageComponent;
@@ -39,7 +39,7 @@ describe('ReadingListsPageComponent', () => {
         RouterTestingModule.withRoutes([
           { path: 'lists/new', component: ReadingListsPageComponent }
         ]),
-        StoreModule.forRoot({ reading_lists: readingListReducer }),
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         ButtonModule,
         TableModule

@@ -21,7 +21,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { importingReducer } from 'app/reducers/importing.reducer';
 import * as ImportActions from 'app/actions/importing.actions';
 import { ComicFileListToolbarComponent } from './comic-file-list-toolbar.component';
 import { DebugElement } from '@angular/core';
@@ -37,6 +36,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
+import { REDUCERS } from 'app/app.reducers';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 
@@ -52,9 +52,7 @@ describe('ComicFileListToolbarComponent', () => {
       imports: [
         RouterTestingModule,
         FormsModule,
-        StoreModule.forRoot({
-          importing: importingReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         ToolbarModule,
         InputTextModule,
@@ -64,8 +62,7 @@ describe('ComicFileListToolbarComponent', () => {
         SliderModule
       ],
       declarations: [ComicFileListToolbarComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListToolbarComponent);
     component = fixture.componentInstance;
@@ -82,7 +79,9 @@ describe('ComicFileListToolbarComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(fixture.debugElement.query(By.css('#importing-toolbar'))).toBeTruthy();
+    expect(
+      fixture.debugElement.query(By.css('#importing-toolbar'))
+    ).toBeTruthy();
   });
 
   describe('when no directory is entered', () => {
@@ -112,8 +111,16 @@ describe('ComicFileListToolbarComponent', () => {
       find_comics_button.triggerEventHandler('click', null);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(store.dispatch).toHaveBeenCalledWith(new ImportActions.ImportingSetDirectory({ directory: DIRECTORY_TO_SEARCH }));
-        expect(store.dispatch).toHaveBeenCalledWith(new ImportActions.ImportingFetchFiles({ directory: DIRECTORY_TO_SEARCH }));
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new ImportActions.ImportingSetDirectory({
+            directory: DIRECTORY_TO_SEARCH
+          })
+        );
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new ImportActions.ImportingFetchFiles({
+            directory: DIRECTORY_TO_SEARCH
+          })
+        );
       });
     });
   });

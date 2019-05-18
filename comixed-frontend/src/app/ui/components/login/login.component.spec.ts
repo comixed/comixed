@@ -19,16 +19,13 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { userReducer } from 'app/reducers/user.reducer';
+import { StoreModule } from '@ngrx/store';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { LoginComponent } from './login.component';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
-import { readingListReducer } from 'app/reducers/reading-list.reducer';
+import { REDUCERS } from 'app/app.reducers';
 
 xdescribe('LoginComponent', () => {
   let component: LoginComponent;
@@ -40,10 +37,7 @@ xdescribe('LoginComponent', () => {
         RouterTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          user: userReducer,
-          reading_lists: readingListReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         DialogModule,
         ButtonModule
       ],

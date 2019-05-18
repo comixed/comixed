@@ -19,12 +19,11 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { StoreModule } from '@ngrx/store';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
-import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scraping.reducer';
 import { LibraryScrapingToolbarComponent } from './library-scraping-toolbar.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('LibraryScrapingToolbarComponent', () => {
   let component: LibraryScrapingToolbarComponent;
@@ -34,9 +33,7 @@ describe('LibraryScrapingToolbarComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          multiple_comic_scraping: multipleComicsScrapingReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         ToolbarModule,
         ButtonModule
       ],

@@ -26,9 +26,9 @@ import { LibraryFilterComponent } from 'app/ui/components/library/library-filter
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { Store, StoreModule } from '@ngrx/store';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { AppState } from 'app/app.state';
 import * as LibraryActions from 'app/actions/library.actions';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('PublishersPageComponent', () => {
   let component: PublishersPageComponent;
@@ -40,19 +40,14 @@ describe('PublishersPageComponent', () => {
       imports: [
         FormsModule,
         RouterTestingModule,
-        StoreModule.forRoot({
-          library: libraryReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         TableModule,
         DropdownModule,
         PanelModule,
         ButtonModule
       ],
-      declarations: [
-        PublishersPageComponent,
-        LibraryFilterComponent
-      ]
+      declarations: [PublishersPageComponent, LibraryFilterComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PublishersPageComponent);
@@ -68,4 +63,3 @@ describe('PublishersPageComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-

@@ -21,9 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
+import { StoreModule } from '@ngrx/store';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
@@ -49,6 +47,7 @@ import { DEFAULT_LIBRARY_FILTER } from 'app/models/actions/library-filter.fixtur
 import { ComicListToolbarComponent } from './comic-list-toolbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;
@@ -62,7 +61,7 @@ describe('ComicListToolbarComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library_display: libraryDisplayReducer }),
+        StoreModule.forRoot(REDUCERS),
         ScrollPanelModule,
         ButtonModule,
         SliderModule,

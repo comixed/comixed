@@ -21,9 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
+import { StoreModule } from '@ngrx/store';
 import { SidebarModule } from 'primeng/sidebar';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { DataViewModule } from 'primeng/dataview';
@@ -37,8 +35,8 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { SelectedComicsListComponent } from './selected-comics-list.component';
 import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
-import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('SelectedComicsListComponent', () => {
   let component: SelectedComicsListComponent;
@@ -50,10 +48,7 @@ describe('SelectedComicsListComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          library: libraryReducer,
-          library_display: libraryDisplayReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         SidebarModule,
         ScrollPanelModule,
         DataViewModule,

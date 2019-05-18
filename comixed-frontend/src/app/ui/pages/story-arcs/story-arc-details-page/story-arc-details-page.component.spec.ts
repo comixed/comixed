@@ -23,7 +23,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
 import { DataViewModule } from 'primeng/dataview';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -45,6 +44,9 @@ import { ComicStoriesPipe } from 'app/pipes/comic-stories.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { StoryArcDetailsPageComponent } from './story-arc-details-page.component';
+import { REDUCERS } from 'app/app.reducers';
+import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('StoryArcDetailsPageComponent', () => {
   let component: StoryArcDetailsPageComponent;
@@ -54,9 +56,10 @@ describe('StoryArcDetailsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         RouterModule.forRoot([]),
         FormsModule,
-        StoreModule.forRoot({ library_display: libraryDisplayReducer }),
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         DataViewModule,
         SplitButtonModule,
@@ -67,8 +70,10 @@ describe('StoryArcDetailsPageComponent', () => {
         DropdownModule,
         PanelModule,
         OverlayPanelModule,
-        CardModule
+        CardModule,
+        ConfirmDialogModule
       ],
+      providers: [ConfirmationService],
       declarations: [
         StoryArcDetailsPageComponent,
         SelectedComicsListComponent,

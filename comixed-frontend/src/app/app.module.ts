@@ -75,15 +75,6 @@ import { LibraryPageComponent } from 'app/ui/pages/library/library-page/library-
 import { ImportPageComponent } from 'app/ui/pages/import-page/import-page.component';
 import { DuplicatesPageComponent } from 'app/ui/pages/library/duplicates-page/duplicates-page.component';
 import { StoreModule } from '@ngrx/store';
-import { userReducer } from 'app/reducers/user.reducer';
-import { userAdminReducer } from 'app/reducers/user-admin.reducer';
-import { importingReducer } from 'app/reducers/importing.reducer';
-import { libraryReducer } from 'app/reducers/library.reducer';
-import { libraryFilterReducer } from 'app/reducers/library-filter.reducer';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
-import { singleComicScrapingReducer } from 'app/reducers/single-comic-scraping.reducer';
-import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scraping.reducer';
-import { duplicatesReducer } from 'app/reducers/duplicates.reducer';
 import { IssueDetailsComponent } from 'app/ui/components/library/issue-details/issue-details.component';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from 'app/effects/user.effects';
@@ -153,9 +144,9 @@ import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-pa
 import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
 import { ReadingListService } from 'app/services/reading-list.service';
 import { ReadingListEffects } from 'app/effects/reading-list.effects';
-import { readingListReducer } from 'app/reducers/reading-list.reducer';
 import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
 import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
+import { REDUCERS } from 'app/app.reducers';
 
 @NgModule({
   declarations: [
@@ -274,18 +265,7 @@ import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-list
       fullScreenBackdrop: true
     }),
 
-    StoreModule.forRoot({
-      user: userReducer,
-      importing: importingReducer,
-      library: libraryReducer,
-      library_filter: libraryFilterReducer,
-      library_display: libraryDisplayReducer,
-      single_comic_scraping: singleComicScrapingReducer,
-      multiple_comic_scraping: multipleComicsScrapingReducer,
-      duplicates: duplicatesReducer,
-      user_admin: userAdminReducer,
-      reading_lists: readingListReducer
-    }),
+    StoreModule.forRoot(REDUCERS),
     EffectsModule.forRoot([
       UserEffects,
       ImportingEffects,

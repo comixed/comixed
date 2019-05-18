@@ -22,8 +22,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
-import { libraryReducer } from 'app/reducers/library.reducer';
-import { singleComicScrapingReducer } from 'app/reducers/single-comic-scraping.reducer';
 import { TabViewModule } from 'primeng/tabview';
 import { CardModule } from 'primeng/card';
 import { InplaceModule } from 'primeng/inplace';
@@ -57,9 +55,9 @@ import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { userReducer } from 'app/reducers/user.reducer';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicDetailsPageComponent', () => {
   let component: ComicDetailsPageComponent;
@@ -74,11 +72,7 @@ describe('ComicDetailsPageComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({
-          user: userReducer,
-          library: libraryReducer,
-          single_comic_scraping: singleComicScrapingReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         TabViewModule,
         CardModule,
         InplaceModule,

@@ -38,7 +38,8 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import {
   CardModule,
-  CheckboxModule, ConfirmationService,
+  CheckboxModule,
+  ConfirmationService,
   DropdownModule,
   OverlayPanelModule,
   PanelModule,
@@ -53,7 +54,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppState } from 'app/app.state';
 import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DebugElement } from '@angular/core';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicFileListComponent', () => {
   let component: ComicFileListComponent;
@@ -67,7 +68,7 @@ describe('ComicFileListComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({}),
+        StoreModule.forRoot(REDUCERS),
         DataViewModule,
         ButtonModule,
         DropdownModule,
@@ -90,11 +91,8 @@ describe('ComicFileListComponent', () => {
         ComicFileCoverUrlPipe,
         ComicCoverUrlPipe
       ],
-      providers: [
-        ConfirmationService
-      ]
-    })
-      .compileComponents();
+      providers: [ConfirmationService]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListComponent);
     component = fixture.componentInstance;
@@ -114,7 +112,9 @@ describe('ComicFileListComponent', () => {
     });
 
     it('shows a message that no files are loaded', () => {
-      const message = fixture.debugElement.query(By.css('.ui-dataview-emptymessage'));
+      const message = fixture.debugElement.query(
+        By.css('.ui-dataview-emptymessage')
+      );
       expect(message).toBeTruthy();
     });
   });
@@ -130,13 +130,17 @@ describe('ComicFileListComponent', () => {
     });
 
     it('shows the comic file list', () => {
-      const file_list = fixture.debugElement.query(By.css('#comic-file-list-view'));
+      const file_list = fixture.debugElement.query(
+        By.css('#comic-file-list-view')
+      );
       expect(file_list).toBeTruthy();
     });
 
     it('has an entry for each comic displayed', () => {
       component.comic_files.forEach((comic_file: ComicFile) => {
-        const comic_file_entry = fixture.debugElement.query(By.css(`#comic-file-${comic_file.id}`));
+        const comic_file_entry = fixture.debugElement.query(
+          By.css(`#comic-file-${comic_file.id}`)
+        );
         expect(comic_file_entry).toBeTruthy();
       });
     });

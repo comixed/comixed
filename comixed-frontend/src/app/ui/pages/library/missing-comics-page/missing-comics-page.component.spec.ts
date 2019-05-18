@@ -21,7 +21,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MissingComicsPageComponent } from './missing-comics-page.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppState } from 'app/app.state';
 import * as LibraryActions from 'app/actions/library.actions';
@@ -37,15 +36,15 @@ import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-ite
 import {
   CardModule,
   CheckboxModule,
+  ConfirmationService,
+  ConfirmDialogModule,
   DropdownModule,
   OverlayPanelModule,
   PanelModule,
   ScrollPanelModule,
   SidebarModule,
   SliderModule,
-  SplitButtonModule,
-  ConfirmDialogModule,
-  ConfirmationService
+  SplitButtonModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
@@ -53,9 +52,8 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { libraryDisplayReducer } from 'app/reducers/library-display.reducer';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { readingListReducer } from 'app/reducers/reading-list.reducer';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -68,11 +66,7 @@ describe('MissingComicsPageComponent', () => {
         RouterTestingModule,
         FormsModule,
         BrowserAnimationsModule,
-        StoreModule.forRoot({
-          library: libraryReducer,
-          library_display: libraryDisplayReducer,
-          reading_lists: readingListReducer
-        }),
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         DataViewModule,
         SidebarModule,

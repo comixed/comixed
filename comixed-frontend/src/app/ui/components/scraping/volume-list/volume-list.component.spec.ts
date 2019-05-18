@@ -21,13 +21,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { VolumeListComponent } from './volume-list.component';
 import { TooltipModule } from 'primeng/primeng';
-import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 import {
   VOLUME_1000,
   VOLUME_1002,
@@ -35,13 +33,9 @@ import {
   VOLUME_1004
 } from 'app/models/comics/volume.fixtures';
 import { Volume } from 'app/models/comics/volume';
-import {
-  COMIC_1000,
-  COMIC_1002,
-  COMIC_1003,
-  COMIC_1004
-} from 'app/models/comics/comic.fixtures';
+import { COMIC_1002 } from 'app/models/comics/comic.fixtures';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('VolumeListComponent', () => {
   const COMIC = COMIC_1002;
@@ -58,7 +52,7 @@ describe('VolumeListComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         TableModule,
         CardModule,
         ButtonModule,

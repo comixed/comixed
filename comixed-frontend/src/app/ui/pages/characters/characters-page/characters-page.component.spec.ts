@@ -27,10 +27,10 @@ import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import * as LibraryActions from 'app/actions/library.actions';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { CharactersPageComponent } from './characters-page.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('CharactersPageComponent', () => {
   let component: CharactersPageComponent;
@@ -42,15 +42,14 @@ describe('CharactersPageComponent', () => {
       imports: [
         TranslateModule.forRoot(),
         FormsModule,
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         RouterTestingModule,
         ButtonModule,
         DropdownModule,
         TableModule,
         PanelModule
       ],
-      declarations: [CharactersPageComponent,
-        LibraryFilterComponent]
+      declarations: [CharactersPageComponent, LibraryFilterComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CharactersPageComponent);

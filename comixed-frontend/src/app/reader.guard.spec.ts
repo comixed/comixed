@@ -17,16 +17,16 @@
  * org.comixed;
  */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as UserActions from 'app/actions/user.actions';
-import { userReducer } from 'app/reducers/user.reducer';
-import { READER_USER, BLOCKED_USER } from 'app/models/user/user.fixtures';
+import { BLOCKED_USER, READER_USER } from 'app/models/user/user.fixtures';
 
 import { ReaderGuard } from './reader.guard';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ReaderGuard', () => {
   let guard: ReaderGuard;
@@ -35,10 +35,7 @@ describe('ReaderGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        StoreModule.forRoot({ user: userReducer })
-      ],
+      imports: [RouterTestingModule, StoreModule.forRoot(REDUCERS)],
       providers: [ReaderGuard]
     });
 

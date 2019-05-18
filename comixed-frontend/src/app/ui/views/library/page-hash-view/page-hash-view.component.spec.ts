@@ -28,9 +28,9 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { DuplicatePage } from 'app/models/comics/duplicate-page';
 import { PageHashViewComponent } from './page-hash-view.component';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('PageHashViewComponent', () => {
   let component: PageHashViewComponent;
@@ -44,7 +44,7 @@ describe('PageHashViewComponent', () => {
         ButtonModule,
         TableModule,
         CardModule,
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         RouterModule.forRoot([])
       ],
       declarations: [

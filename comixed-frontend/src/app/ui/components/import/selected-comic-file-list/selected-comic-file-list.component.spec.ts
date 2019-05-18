@@ -50,11 +50,7 @@ import { By } from '@angular/platform-browser';
 import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { ComicFile } from 'app/models/import/comic-file';
 import * as ImportActions from 'app/actions/importing.actions';
-import {
-  COMIC_1000,
-  COMIC_1002,
-  COMIC_1004
-} from 'app/models/comics/comic.fixtures';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('SelectedComicFileListComponent', () => {
   let component: SelectedComicFileListComponent;
@@ -68,7 +64,7 @@ describe('SelectedComicFileListComponent', () => {
       imports: [
         RouterTestingModule,
         BrowserAnimationsModule,
-        StoreModule.forRoot({}),
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         SidebarModule,
         SplitButtonModule,

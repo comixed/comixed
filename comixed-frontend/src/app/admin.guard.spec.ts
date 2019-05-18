@@ -17,16 +17,16 @@
  * org.comixed;
  */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from './app.state';
 import * as UserActions from './actions/user.actions';
-import { userReducer } from './reducers/user.reducer';
 import { ADMIN_USER, READER_USER } from './models/user/user.fixtures';
 
 import { AdminGuard } from './admin.guard';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('AdminGuard', () => {
   let guard: AdminGuard;
@@ -35,10 +35,7 @@ describe('AdminGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        StoreModule.forRoot({ user: userReducer })
-      ],
+      imports: [RouterTestingModule, StoreModule.forRoot(REDUCERS)],
       providers: [AdminGuard]
     });
 

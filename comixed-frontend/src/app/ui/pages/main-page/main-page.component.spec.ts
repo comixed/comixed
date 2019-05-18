@@ -19,20 +19,18 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import * as LibraryActions from 'app/actions/library.actions';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { MainPageComponent } from './main-page.component';
 import { ChartModule } from 'primeng/chart';
 import { DropdownModule } from 'primeng/primeng';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
@@ -49,7 +47,7 @@ describe('MainPageComponent', () => {
         RouterTestingModule.withRoutes(routes),
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot({ library: libraryReducer }),
+        StoreModule.forRoot(REDUCERS),
         ChartModule,
         DropdownModule
       ],
