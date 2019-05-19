@@ -26,7 +26,9 @@
         </div>
         <div class='ui-g-3'></div>
         <div class='ui-g-12'>
-            <app-comic-list [comics]='entries'></app-comic-list>
+            <app-comic-list [comics]='entries'
+                            [selected_comics]='selected_entries'
+                            (selectionChange)='set_selection_state($event.comic, $event.selected)'></app-comic-list>
         </div>
     </div>
 </form>

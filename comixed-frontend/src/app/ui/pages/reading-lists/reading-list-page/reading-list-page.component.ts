@@ -42,6 +42,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   reading_list_state_subscription: Subscription;
   reading_list_state: ReadingListState;
   entries: Array<Comic>;
+  selected_entries: Array<Comic>;
 
   reading_list_form: FormGroup;
   id = -1;
@@ -123,6 +124,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         reading_list.entries.forEach((entry: ReadingListEntry) =>
           this.entries.push(entry.comic)
         );
+        this.selected_entries = [];
       }
     }
   }
@@ -139,5 +141,15 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  set_selection_state(comic: Comic, selected: boolean): void {
+    if (selected) {
+      this.selected_entries.push(comic);
+    } else {
+      this.selected_entries = this.selected_entries.filter(
+        (entry: Comic) => entry.id !== comic.id
+      );
+    }
   }
 }
