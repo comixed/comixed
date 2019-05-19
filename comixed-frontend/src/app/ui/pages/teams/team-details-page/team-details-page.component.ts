@@ -94,4 +94,13 @@ export class TeamDetailsPageComponent implements OnInit, OnDestroy {
   set_same_height(same_height: boolean): void {
     this.same_height = same_height;
   }
+
+  set_selection_state(comic: Comic, selected: boolean): void {
+    this.store.dispatch(
+      new LibraryActions.LibrarySetSelected({
+        comic: comic,
+        selected: selected
+      })
+    );
+  }
 }

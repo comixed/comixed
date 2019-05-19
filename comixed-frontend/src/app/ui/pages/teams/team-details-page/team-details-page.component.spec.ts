@@ -47,8 +47,12 @@ import { TeamDetailsPageComponent } from './team-details-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import * as LibraryActions from 'app/actions/library.actions';
 
 describe('TeamDetailsPageComponent', () => {
+  const COMIC = COMIC_1000;
+
   let component: TeamDetailsPageComponent;
   let fixture: ComponentFixture<TeamDetailsPageComponent>;
   let store: Store<AppState>;
@@ -88,16 +92,28 @@ describe('TeamDetailsPageComponent', () => {
         ComicTitlePipe
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TeamDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     store = TestBed.get(Store);
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when a the selection state for a comic changes', () => {
+    beforeEach(() => {
+      spyOn(store, 'dispatch');
+      component.set_selection_state(COMIC, true);
+      fixture.detectChanges();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibrarySetSelected({ comic: COMIC, selected: true })
+      );
+    });
   });
 });
