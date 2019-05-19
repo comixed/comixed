@@ -47,8 +47,12 @@ import { StoryArcDetailsPageComponent } from './story-arc-details-page.component
 import { REDUCERS } from 'app/app.reducers';
 import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import * as LibraryActions from 'app/actions/library.actions';
 
 describe('StoryArcDetailsPageComponent', () => {
+  const COMIC = COMIC_1000;
+
   let component: StoryArcDetailsPageComponent;
   let fixture: ComponentFixture<StoryArcDetailsPageComponent>;
   let store: Store<AppState>;
@@ -99,5 +103,19 @@ describe('StoryArcDetailsPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the selection state of a comic changes', () => {
+    beforeEach(() => {
+      spyOn(store, 'dispatch');
+      component.set_selection_state(COMIC, true);
+      fixture.detectChanges();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibrarySetSelected({ comic: COMIC, selected: true })
+      );
+    });
   });
 });
