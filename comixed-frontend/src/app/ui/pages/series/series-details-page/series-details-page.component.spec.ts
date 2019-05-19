@@ -47,8 +47,12 @@ import { SeriesDetailsPageComponent } from './series-details-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
+import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import * as LibraryActions from 'app/actions/library.actions';
 
 describe('SeriesDetailsPageComponent', () => {
+  const COMIC = COMIC_1000;
+
   let component: SeriesDetailsPageComponent;
   let fixture: ComponentFixture<SeriesDetailsPageComponent>;
   let store: Store<AppState>;
@@ -99,5 +103,19 @@ describe('SeriesDetailsPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the selection state of a comic changes', () => {
+    beforeEach(() => {
+      spyOn(store, 'dispatch');
+      component.set_selection_state(COMIC, true);
+      fixture.detectChanges();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibrarySetSelected({ comic: COMIC, selected: true })
+      );
+    });
   });
 });
