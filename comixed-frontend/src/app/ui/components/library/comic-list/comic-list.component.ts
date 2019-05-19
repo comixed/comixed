@@ -17,7 +17,14 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Comic } from 'app/models/comics/comic';
 import { LibraryFilter } from 'app/models/actions/library-filter';
@@ -31,6 +38,7 @@ import * as LibraryDisplayActions from 'app/actions/library-display.actions';
 import * as UserActions from 'app/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
+import { ComicSelectionEntry } from 'app/models/ui/comic-selection-entry';
 
 const FIRST = 'first';
 
@@ -44,6 +52,8 @@ export class ComicListComponent implements OnInit, OnDestroy {
   @Input() selected_comics: Array<Comic> = [];
   @Input() library_filter: LibraryFilter;
   @Input() show_selections: boolean;
+
+  @Output() selectionChange = new EventEmitter<ComicSelectionEntry>();
 
   private library_display$: Observable<LibraryDisplay>;
   private library_display_subscription: Subscription;
@@ -99,15 +109,13 @@ export class ComicListComponent implements OnInit, OnDestroy {
 
   set_layout(dataview: any, layout: string): void {
     dataview.changeLayout(layout);
-    this.store.dispatch(new LibraryDisplayActions.SetLibraryViewLayout({ layout: layout }));
-    this.store.dispatch(new UserActions.UserSetPreference({ name: 'library_display_layout', value: layout }));
-  }
-
-  set_selected(comic: Comic, selected: boolean): void {
     this.store.dispatch(
-      new LibraryActions.LibrarySetSelected({
-        comic: comic,
-        selected: selected
+      new LibraryDisplayActions.SetLibraryViewLayout({ layout: layout })
+    );
+    this.store.dispatch(
+      new UserActions.UserSetPreference({
+        name: 'library_display_layout',
+        value: layout
       })
     );
   }
