@@ -61,6 +61,8 @@ import { LibraryPageComponent } from './library-page.component';
 import { REDUCERS } from 'app/app.reducers';
 
 describe('LibraryPageComponent', () => {
+  const COMIC = COMIC_1000;
+
   let component: LibraryPageComponent;
   let fixture: ComponentFixture<LibraryPageComponent>;
   let store: Store<AppState>;
@@ -166,5 +168,18 @@ describe('LibraryPageComponent', () => {
     xit('loads the cover size from the URL');
 
     xit('loads the same height value from the URL');
+  });
+
+  describe('when a comic selection changes', () => {
+    beforeEach(() => {
+      component.set_selected_state(COMIC, true);
+      fixture.detectChanges();
+    });
+
+    it('fires an event', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibrarySetSelected({ comic: COMIC, selected: true })
+      );
+    });
   });
 });

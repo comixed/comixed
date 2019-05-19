@@ -152,4 +152,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.library.library_state.import_count === 0
     );
   }
+
+  set_selected_state(comic: Comic, selected: boolean): void {
+    this.store.dispatch(
+      new LibraryActions.LibrarySetSelected({
+        comic: comic,
+        selected: selected
+      })
+    );
+  }
 }
