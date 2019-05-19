@@ -47,8 +47,12 @@ import { PublisherDetailsPageComponent } from './publisher-details-page.componen
 import { REDUCERS } from 'app/app.reducers';
 import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import * as LibraryActions from 'app/actions/library.actions';
 
 describe('PublisherDetailsPageComponent', () => {
+  const COMIC = COMIC_1000;
+
   let component: PublisherDetailsPageComponent;
   let fixture: ComponentFixture<PublisherDetailsPageComponent>;
   let store: Store<AppState>;
@@ -99,5 +103,19 @@ describe('PublisherDetailsPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the selection state for a comic changes', () => {
+    beforeEach(() => {
+      spyOn(store, 'dispatch');
+      component.set_selection_state(COMIC, true);
+      fixture.detectChanges();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibrarySetSelected({ comic: COMIC, selected: true })
+      );
+    });
   });
 });

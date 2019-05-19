@@ -1,5 +1,6 @@
-<h2>{{"publisher-details.title"|translate:{publisher_name:publisher_name} }}</h2>
-<app-comic-list *ngIf="library"
-                [comics]="comics|comic_publisher:publisher_name"
-                [selected_comics]="selected_comics"
-                [library_filter]="library_filter"></app-comic-list>
+<h2>{{'publisher-details.title'|translate:{publisher_name: publisher_name} }}</h2>
+<app-comic-list *ngIf='library'
+                [comics]='comics|comic_publisher:publisher_name'
+                [selected_comics]='selected_comics'
+                [library_filter]='library_filter'
+                (selectionChange)='set_selection_state($event.comic, $event.selected)'></app-comic-list>
