@@ -648,6 +648,10 @@
     },
     "button": {
       "save": "Save List"
+    },
+    "remove-comics": {
+      "header": "Remove Selected Comics",
+      "message": "Are you sure you want to remove {{comic_count}} selected comics?"
     }
   },
   "reading-lists-page": {

@@ -31,6 +31,8 @@ import { Library } from 'app/models/actions/library';
 import * as LibraryActions from 'app/actions/library.actions';
 import { Comic } from 'app/models/comics/comic';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
+import { ConfirmationService, MenuItem } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-reading-list-page',
@@ -42,7 +44,8 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   reading_list_state_subscription: Subscription;
   reading_list_state: ReadingListState;
   entries: Array<Comic>;
-  selected_entries: Array<Comic>;
+  selected_entries: Array<Comic> = [];
+  context_menu: MenuItem[] = [];
 
   reading_list_form: FormGroup;
   id = -1;
@@ -50,8 +53,10 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   constructor(
     private form_builder: FormBuilder,
     private store: Store<AppState>,
+    private translate: TranslateService,
     private activated_route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private confirm: ConfirmationService
   ) {
     this.reading_list_state$ = this.store.select('reading_lists');
     this.reading_list_form = this.form_builder.group({
@@ -64,6 +69,8 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         this.load_reading_list();
       }
     });
+    this.translate.onLangChange.subscribe(() => this.load_context_menu());
+    this.load_context_menu();
   }
 
   ngOnInit() {
@@ -151,5 +158,42 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         (entry: Comic) => entry.id !== comic.id
       );
     }
+  }
+
+  load_context_menu(): void {
+    this.context_menu = [
+      {
+        label: 'Remove comics',
+        icon: 'fa fa-fw fa-trash',
+        command: () => {
+          if (this.selected_entries.length > 0) {
+            this.remove_selected_comics();
+          }
+        }
+      }
+    ];
+  }
+
+  remove_selected_comics(): void {
+    this.confirm.confirm({
+      header: this.translate.instant('reading-list-page.remove-comics.header'),
+      message: this.translate.instant(
+        'reading-list-page.remove-comics.message',
+        { comic_count: this.selected_entries.length }
+      ),
+      accept: () => {
+        const entries = this.reading_list_state.current_list.entries.filter(
+          (entry: ReadingListEntry) => {
+            return !this.selected_entries.includes(entry.comic);
+          }
+        );
+        const reading_list = this.reading_list_state.current_list;
+        this.store.dispatch(
+          new ReadingListActions.ReadingListSave({
+            reading_list: { ...reading_list, entries: entries }
+          })
+        );
+      }
+    });
   }
 }

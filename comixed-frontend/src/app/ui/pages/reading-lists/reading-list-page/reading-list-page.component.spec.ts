@@ -45,6 +45,7 @@ import {
   CheckboxModule,
   ConfirmationService,
   ConfirmDialogModule,
+  ContextMenuModule,
   DropdownModule,
   OverlayPanelModule,
   PanelModule,
@@ -88,7 +89,8 @@ describe('ReadingListPageComponent', () => {
         PanelModule,
         OverlayPanelModule,
         CardModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        ContextMenuModule
       ],
       declarations: [
         ReadingListPageComponent,

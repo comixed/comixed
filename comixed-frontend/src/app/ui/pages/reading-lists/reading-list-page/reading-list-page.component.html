@@ -25,10 +25,13 @@
             </div>
         </div>
         <div class='ui-g-3'></div>
-        <div class='ui-g-12'>
+        <div #context_target
+             class='ui-g-12'>
             <app-comic-list [comics]='entries'
                             [selected_comics]='selected_entries'
                             (selectionChange)='set_selection_state($event.comic, $event.selected)'></app-comic-list>
         </div>
     </div>
+    <p-contextMenu [target]='context_target'
+                   [model]='context_menu'></p-contextMenu>
 </form>
