@@ -67,15 +67,13 @@ describe('SelectedComicsListComponent', () => {
       ],
       providers: [ConfirmationService]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SelectedComicsListComponent);
     component = fixture.componentInstance;
     component.library_display = DEFAULT_LIBRARY_DISPLAY;
 
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

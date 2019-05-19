@@ -41,6 +41,7 @@ import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
+import { ComicSelectionEntry } from 'app/models/ui/comic-selection-entry';
 
 @Component({
   selector: 'app-selected-comics-list',
@@ -48,16 +49,15 @@ import { ReadingListEntry } from 'app/models/reading-list-entry';
   styleUrls: ['./selected-comics-list.component.css']
 })
 export class SelectedComicsListComponent implements OnInit, OnDestroy {
+  @Input() comics: Array<Comic> = [];
   @Input() rows: number;
   @Input() cover_size: number;
   @Input() same_height: boolean;
 
+  @Output() selectionChange = new EventEmitter<ComicSelectionEntry>();
+
   protected actions: MenuItem[];
   protected reading_list_actions: MenuItem[];
-
-  private library$: Observable<Library>;
-  private library_subscription: Subscription;
-  library: Library;
 
   private library_display$: Observable<LibraryDisplay>;
   private library_display_subscription: Subscription;
@@ -73,16 +73,12 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private confirmation_service: ConfirmationService
   ) {
-    this.library$ = this.store.select('library');
     this.library_display$ = this.store.select('library_display');
     this.reading_list_state$ = this.store.select('reading_lists');
   }
 
   ngOnInit() {
     this.load_actions();
-    this.library_subscription = this.library$.subscribe((library: Library) => {
-      this.library = library;
-    });
     this.library_display_subscription = this.library_display$.subscribe(
       (library_display: LibraryDisplay) => {
         this.library_display = library_display;
@@ -110,7 +106,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
 
   add_to_reading_list(reading_list: ReadingList): void {
     const entries = reading_list.entries;
-    this.library.selected_comics.forEach((comic: Comic) => {
+    this.comics.forEach((comic: Comic) => {
       if (
         !entries.find((entry: ReadingListEntry) => entry.comic.id === comic.id)
       ) {
@@ -141,17 +137,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
     this.library_display_subscription.unsubscribe();
-  }
-
-  set_selected(comic: Comic): void {
-    this.store.dispatch(
-      new LibraryActions.LibrarySetSelected({
-        comic: comic,
-        selected: false
-      })
-    );
   }
 
   hide_selections(): void {
@@ -164,7 +150,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
     this.confirmation_service.confirm({
       header: this.translate.instant(
         'selected-comics-list.title.delete-comics',
-        { comic_count: this.library.selected_comics.length }
+        { comic_count: this.comics.length }
       ),
       message: this.translate.instant(
         'selected-comics-list.text.delete-comics'
@@ -173,7 +159,7 @@ export class SelectedComicsListComponent implements OnInit, OnDestroy {
       accept: () =>
         this.store.dispatch(
           new LibraryActions.LibraryDeleteMultipleComics({
-            comics: this.library.selected_comics
+            comics: this.comics
           })
         )
     });

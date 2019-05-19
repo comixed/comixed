@@ -1,7 +1,9 @@
-<app-selected-comics-list [rows]='library_display.rows'
+<app-selected-comics-list [comics]='selected_comics'
+                          [rows]='library_display.rows'
                           [cover_size]='library_display.cover_size'
                           [same_height]='library_display.same_height'
-                          (hide)='show_selections = false'></app-selected-comics-list>
+                          (hide)='show_selections = false'
+                          (selectionChange)='selectionChange.next($event)'></app-selected-comics-list>
 <p-dataView #dataview
             *ngIf='library_display'
             [value]='comics'
