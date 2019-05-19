@@ -147,6 +147,7 @@ import { ReadingListEffects } from 'app/effects/reading-list.effects';
 import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
 import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
 import { REDUCERS } from 'app/app.reducers';
+import { ContextMenuModule } from 'primeng/primeng';
 
 @NgModule({
   declarations: [
@@ -252,6 +253,7 @@ import { REDUCERS } from 'app/app.reducers';
     OverlayPanelModule,
     ChartModule,
     PickListModule,
+    ContextMenuModule,
     LoadingModule.forRoot({
       animationType: ANIMATION_TYPES.pulse,
       fullScreenBackdrop: true
