@@ -26,6 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import * as ImportActions from 'app/actions/importing.actions';
+import * as DisplayActions from 'app/actions/library-display.actions';
 
 @Component({
   selector: 'app-comic-file-list',
@@ -157,5 +158,11 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  change_layout(layout: string): void {
+    this.store.dispatch(
+      new DisplayActions.SetLibraryViewLayout({ layout: layout })
+    );
   }
 }

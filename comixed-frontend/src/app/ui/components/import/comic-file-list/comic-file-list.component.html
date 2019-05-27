@@ -19,7 +19,7 @@
                     [rows]='library_display.rows'
                     paginatorPosition='both'
                     [alwaysShowPaginator]='true'
-                    [layout]='"grid"'>
+                    [layout]='library_display.layout'>
             <p-header>
                 <div class="ui-helper-clearfix">
                     <app-comic-file-list-toolbar [directory]='directory'
@@ -28,6 +28,7 @@
                                                  [comic_files]='comic_files'
                                                  [selected_comic_count]='(selected_comic_files||[]).length'
                                                  (showSelections)='show_selections = true'
+                                                 (changeLayout)='comicFileList.changeLayout($event)'
                                                  (filterText)='comicFileList.filter($event)'></app-comic-file-list-toolbar>
                 </div>
             </p-header>
@@ -36,8 +37,14 @@
                 <app-comic-file-grid-item [comic_file]='file'
                                           [cover_size]='library_display.cover_size'
                                           [same_height]='library_display.same_height'
-                                          [use_selected_class]='true'
-                ></app-comic-file-grid-item>
+                                          [use_selected_class]='true'></app-comic-file-grid-item>
+            </ng-template>
+            <ng-template let-file
+                         pTemplate='listItem'>
+                <app-comic-file-list-item [comic_file]='file'
+                                          [cover_size]='library_display.cover_size'
+                                          [same_height]='library_display.same_height'
+                                          [use_selected_class]='true'></app-comic-file-list-item>
             </ng-template>
         </p-dataView>
     </div>

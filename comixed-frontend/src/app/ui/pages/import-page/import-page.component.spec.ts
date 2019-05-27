@@ -58,6 +58,7 @@ import * as UserActions from 'app/actions/user.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { UserPreferencePipe } from 'app/pipes/user-preference.pipe';
+import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 
 const DIRECTORY_TO_USE = '/User/comixed/Downloads';
 
@@ -93,6 +94,7 @@ describe('ImportPageComponent', () => {
         ImportPageComponent,
         ComicFileListComponent,
         ComicFileGridItemComponent,
+        ComicFileListItemComponent,
         ComicFileListToolbarComponent,
         SelectedComicFileListComponent,
         ComicCoverComponent,

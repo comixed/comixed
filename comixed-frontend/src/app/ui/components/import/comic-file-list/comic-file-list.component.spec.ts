@@ -56,6 +56,7 @@ import { AppState } from 'app/app.state';
 import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
+import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 
 describe('ComicFileListComponent', () => {
   let component: ComicFileListComponent;
@@ -87,6 +88,7 @@ describe('ComicFileListComponent', () => {
       declarations: [
         ComicFileListComponent,
         ComicFileGridItemComponent,
+        ComicFileListItemComponent,
         ComicFileListToolbarComponent,
         SelectedComicFileListComponent,
         ComicCoverComponent,
