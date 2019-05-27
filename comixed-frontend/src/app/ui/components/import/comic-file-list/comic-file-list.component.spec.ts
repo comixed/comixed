@@ -40,6 +40,7 @@ import {
   CardModule,
   CheckboxModule,
   ConfirmationService,
+  ContextMenuModule,
   DropdownModule,
   OverlayPanelModule,
   PanelModule,
@@ -80,7 +81,8 @@ describe('ComicFileListComponent', () => {
         ScrollPanelModule,
         OverlayPanelModule,
         PanelModule,
-        CardModule
+        CardModule,
+        ContextMenuModule
       ],
       declarations: [
         ComicFileListComponent,

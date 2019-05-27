@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { ComicFile } from './comic-file';
+import { ComicFile } from '../import/comic-file';
 
-export interface Importing {
+export interface ImportState {
   busy: boolean;
   selected_count: number;
   updating_status: boolean;

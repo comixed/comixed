@@ -18,11 +18,11 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Importing } from 'app/models/import/importing';
+import { ImportState } from 'app/models/state/import-state';
 import * as ImportingActions from 'app/actions/importing.actions';
 import { ComicFile } from 'app/models/import/comic-file';
 
-export const initial_state: Importing = {
+export const initial_state: ImportState = {
   busy: false,
   selected_count: 0,
   updating_status: false,
@@ -31,7 +31,7 @@ export const initial_state: Importing = {
 };
 
 export function importingReducer(
-  state: Importing = initial_state,
+  state: ImportState = initial_state,
   action: ImportingActions.Actions
 ) {
   switch (action.type) {

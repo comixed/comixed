@@ -1,4 +1,4 @@
-import { Importing } from 'app/models/import/importing';
+import { ImportState } from 'app/models/state/import-state';
 import {
   importingReducer,
   initial_state
@@ -11,7 +11,7 @@ import {
 
 describe('importingReducer', () => {
   const DIRECTORY = '/Users/comixed/library';
-  let state: Importing;
+  let state: ImportState;
 
   beforeEach(() => {
     state = initial_state;

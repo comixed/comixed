@@ -17,29 +17,145 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComicFile } from 'app/models/import/comic-file';
 import { LibraryDisplay } from 'app/models/state/library-display';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs/Subscription';
+import { ConfirmationService, MenuItem } from 'primeng/api';
+import * as ImportActions from 'app/actions/importing.actions';
 
 @Component({
   selector: 'app-comic-file-list',
   templateUrl: './comic-file-list.component.html',
   styleUrls: ['./comic-file-list.component.css']
 })
-export class ComicFileListComponent implements OnInit {
-  @Input() comic_files: Array<ComicFile>;
-  @Input() selected_comic_files: Array<ComicFile>;
+export class ComicFileListComponent implements OnInit, OnDestroy {
   @Input() busy: boolean;
   @Input() library_display: LibraryDisplay;
   @Input() directory: string;
 
+  _comic_files: Array<ComicFile> = [];
+  _selected_comic_files: Array<ComicFile> = [];
+
+  translate_subscription: Subscription;
+  context_menu: MenuItem[];
+
   show_selections = false;
 
   constructor(
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private translate: TranslateService,
+    private confirmation: ConfirmationService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.translate_subscription = this.translate.onLangChange.subscribe(() => {
+      this.update_context_menu();
+    });
+  }
+
+  ngOnDestroy() {
+    this.translate_subscription.unsubscribe();
+  }
+
+  @Input() set comic_files(comic_files: ComicFile[]) {
+    this._comic_files = comic_files;
+    this.update_context_menu();
+  }
+
+  get comic_files(): ComicFile[] {
+    return this._comic_files;
+  }
+
+  @Input() set selected_comic_files(selected_comic_files: ComicFile[]) {
+    this._selected_comic_files = selected_comic_files;
+    this.update_context_menu();
+  }
+
+  get selected_comic_files(): ComicFile[] {
+    return this._selected_comic_files;
+  }
+
+  update_context_menu(): void {
+    this.context_menu = [
+      {
+        label: this.translate.instant('comic-file-list.popup.select-all', {
+          comic_count: this.comic_files.length
+        }),
+        command: () =>
+          this.store.dispatch(
+            new ImportActions.ImportingSelectFiles({ files: this.comic_files })
+          ),
+        disabled:
+          !this.comic_files.length ||
+          (this.selected_comic_files &&
+            this.comic_files.length === this.selected_comic_files.length)
+      },
+      {
+        label: this.translate.instant('comic-file-list.popup.deselect-all', {
+          comic_count: this.selected_comic_files.length
+        }),
+        command: () =>
+          this.store.dispatch(
+            new ImportActions.ImportingUnselectFiles({
+              files: this.selected_comic_files
+            })
+          ),
+        visible:
+          this.selected_comic_files && this.selected_comic_files.length > 0
+      },
+      {
+        label: this.translate.instant('comic-file-list.popup.import.label', {
+          comic_count: this.selected_comic_files.length
+        }),
+        items: [
+          {
+            label: this.translate.instant(
+              'comic-file-list.popup.import.with-metadata'
+            ),
+            command: () =>
+              this.start_import('comic-file-list.import.message', true),
+            visible:
+              this.selected_comic_files && this.selected_comic_files.length > 0
+          },
+          {
+            label: this.translate.instant(
+              'comic-file-list.popup.import.without-metadata'
+            ),
+            command: () =>
+              this.start_import(
+                'comic-file-list.import.message-ignore-metadata',
+                false
+              ),
+            visible:
+              this.selected_comic_files && this.selected_comic_files.length > 0
+          }
+        ]
+      }
+    ];
+  }
+
+  start_import(message_key: string, ignore_metadata: boolean): void {
+    this.confirmation.confirm({
+      header: this.translate.instant('comic-file-list.import.header'),
+      message: this.translate.instant(message_key, {
+        comic_count: this.selected_comic_files.length
+      }),
+      accept: () => {
+        const filenames = [];
+        this.selected_comic_files.forEach((comic_file: ComicFile) =>
+          filenames.push(comic_file.filename)
+        );
+        this.store.dispatch(
+          new ImportActions.ImportingImportFiles({
+            files: filenames,
+            ignore_metadata: ignore_metadata
+          })
+        );
+      }
+    });
+  }
 }

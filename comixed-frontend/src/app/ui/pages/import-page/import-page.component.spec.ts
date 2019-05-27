@@ -46,6 +46,7 @@ import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-c
 import {
   CheckboxModule,
   ConfirmationService,
+  ContextMenuModule,
   OverlayPanelModule,
   PanelModule,
   ScrollPanelModule,
@@ -56,6 +57,7 @@ import * as ImportActions from 'app/actions/importing.actions';
 import * as UserActions from 'app/actions/user.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
+import { UserPreferencePipe } from 'app/pipes/user-preference.pipe';
 
 const DIRECTORY_TO_USE = '/User/comixed/Downloads';
 
@@ -84,7 +86,8 @@ describe('ImportPageComponent', () => {
         SidebarModule,
         ScrollPanelModule,
         OverlayPanelModule,
-        PanelModule
+        PanelModule,
+        ContextMenuModule
       ],
       declarations: [
         ImportPageComponent,
@@ -94,7 +97,8 @@ describe('ImportPageComponent', () => {
         SelectedComicFileListComponent,
         ComicCoverComponent,
         ComicCoverUrlPipe,
-        ComicFileCoverUrlPipe
+        ComicFileCoverUrlPipe,
+        UserPreferencePipe
       ],
       providers: [
         ConfirmationService,
@@ -128,19 +132,6 @@ describe('ImportPageComponent', () => {
         })
       );
       fixture.detectChanges();
-    });
-
-    it('uses the previous directory value', () => {
-      store.dispatch(
-        new ImportActions.ImportingSetDirectory({ directory: DIRECTORY_TO_USE })
-      );
-      fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(
-          fixture.debugElement.query(By.css('#directory-input')).nativeElement
-            .value
-        ).toEqual(DIRECTORY_TO_USE);
-      });
     });
 
     it('does not show the progress indicator', () => {

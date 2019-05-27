@@ -9,7 +9,7 @@ external comic database into your database.
 
 **BACK**. **UP**. **YOUR**. **DATABASE**.
 
-## Importing A ComicRack Database
+## ImportState A ComicRack Database
 
 To import the contents of a [ComicRack](http://comicrack.cyolito.com/)
 database, you will want to do the following:

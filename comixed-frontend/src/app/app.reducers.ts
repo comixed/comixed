@@ -11,7 +11,7 @@ import { readingListReducer } from 'app/reducers/reading-list.reducer';
 
 export const REDUCERS = {
   user: userReducer,
-  importing: importingReducer,
+  import_state: importingReducer,
   library: libraryReducer,
   library_filter: libraryFilterReducer,
   library_display: libraryDisplayReducer,

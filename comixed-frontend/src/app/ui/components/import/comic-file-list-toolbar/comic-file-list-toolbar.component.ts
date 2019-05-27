@@ -18,7 +18,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Importing } from 'app/models/import/importing';
+import { ImportState } from 'app/models/state/import-state';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as ImportActions from 'app/actions/importing.actions';
@@ -34,6 +34,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicFile } from 'app/models/import/comic-file';
+import * as UserActions from 'app/actions/user.actions';
 
 @Component({
   selector: 'app-comic-file-list-toolbar',
@@ -107,6 +108,12 @@ export class ComicFileListToolbarComponent implements OnInit {
   find_comics(): void {
     this.store.dispatch(
       new ImportActions.ImportingSetDirectory({ directory: this.directory })
+    );
+    this.store.dispatch(
+      new UserActions.UserSetPreference({
+        name: 'import.directory',
+        value: this.directory
+      })
     );
     this.store.dispatch(
       new ImportActions.ImportingFetchFiles({ directory: this.directory })

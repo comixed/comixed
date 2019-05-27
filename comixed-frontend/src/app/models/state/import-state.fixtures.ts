@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { Importing } from './importing';
+import { ImportState } from './import-state';
 
-export const IMPORTING_STATE: Importing = {
+export const IMPORTING_STATE: ImportState = {
   busy: false,
   selected_count: 0,
   updating_status: false,

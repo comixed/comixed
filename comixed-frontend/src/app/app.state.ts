@@ -18,7 +18,7 @@
  */
 
 import { User } from 'app/models/user/user';
-import { Importing } from 'app/models/import/importing';
+import { ImportState } from 'app/models/state/import-state';
 import { Library } from 'app/models/actions/library';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import { LibraryDisplay } from 'app/models/state/library-display';
@@ -30,7 +30,7 @@ import { ReadingListState } from 'app/models/state/reading-list-state';
 
 export interface AppState {
   readonly user: User;
-  readonly importing: Importing;
+  readonly import_state: ImportState;
   readonly library: Library;
   readonly library_filter: LibraryFilter;
   readonly library_display: LibraryDisplay;

@@ -1,15 +1,14 @@
 <div *ngIf='library.library_state.import_count > 0'
-     id='import-busy-indicator-container'
->
-    <h2>Importing {{library.library_state.import_count}} Comics</h2>
+     id='import-busy-indicator-container'>
+    <h2>ImportState {{library.library_state.import_count}} Comics</h2>
     <p-progressBar mode='indeterminate'></p-progressBar>
 </div>
-<div *ngIf='library.library_state.import_count === 0' id='comic-file-list-container'>
+<div *ngIf='library.library_state.import_count === 0'
+     id='comic-file-list-container'>
     <app-comic-file-list id='comic-file-list'
                          [library_display]='library_display'
-                         [directory]='importing?.directory'
+                         [directory]='user|user_preference:"import.directory"'
                          [comic_files]='comic_files'
                          [selected_comic_files]='selected_comic_files'
-                         [busy]='importing?.busy'
-    ></app-comic-file-list>
+                         [busy]='import_state?.busy'></app-comic-file-list>
 </div>

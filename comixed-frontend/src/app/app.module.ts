@@ -148,6 +148,7 @@ import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-
 import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { ContextMenuModule } from 'primeng/primeng';
+import { UserPreferencePipe } from './pipes/user-preference.pipe';
 
 @NgModule({
   declarations: [
@@ -219,7 +220,8 @@ import { ContextMenuModule } from 'primeng/primeng';
     MissingComicsPageComponent,
     ScrapingIssueTitlePipe,
     ReadingListPageComponent,
-    ReadingListsPageComponent
+    ReadingListsPageComponent,
+    UserPreferencePipe
   ],
   imports: [
     BrowserModule,
