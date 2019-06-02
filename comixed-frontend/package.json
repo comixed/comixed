@@ -29,6 +29,7 @@
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "@types/file-saver": "^2.0.1",
+    "axios": "0.19.0",
     "core-js": "^2.5.4",
     "file-saver": "^2.0.2",
     "ngx-filesaver": "^2.2.1",
