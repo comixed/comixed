@@ -22,7 +22,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { ReadingList } from 'app/models/reading-list';
 import { Router } from '@angular/router';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ReadingListState } from 'app/models/state/reading-list-state';

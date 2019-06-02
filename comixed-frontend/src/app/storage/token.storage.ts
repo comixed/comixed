@@ -23,8 +23,7 @@ export const TOKEN_KEY = 'AuthToken';
 
 @Injectable()
 export class TokenStorage {
-
-  constructor() { }
+  constructor() {}
 
   sign_out(): void {
     window.sessionStorage.removeItem(TOKEN_KEY);

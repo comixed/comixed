@@ -19,13 +19,13 @@
 
 import {
   Component,
-  OnInit,
-  OnDestroy,
+  EventEmitter,
   Input,
-  Output,
-  EventEmitter
+  OnDestroy,
+  OnInit,
+  Output
 } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Comic } from 'app/models/comics/comic';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import { LibraryDisplay } from 'app/models/state/library-display';
@@ -33,7 +33,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import * as LibraryActions from 'app/actions/library.actions';
 import * as LibraryDisplayActions from 'app/actions/library-display.actions';
 import * as UserActions from 'app/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';

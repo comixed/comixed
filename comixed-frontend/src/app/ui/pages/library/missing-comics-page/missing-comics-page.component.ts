@@ -17,11 +17,7 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppState } from 'app/app.state';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,9 +32,7 @@ import { LibraryDisplay } from 'app/models/state/library-display';
   templateUrl: './missing-comics-page.component.html',
   styleUrls: ['./missing-comics-page.component.css']
 })
-export class MissingComicsPageComponent
-  implements OnInit,
-    OnDestroy {
+export class MissingComicsPageComponent implements OnInit, OnDestroy {
   private library$: Observable<Library>;
   private library_subscription: Subscription;
   library: Library;
@@ -59,20 +53,19 @@ export class MissingComicsPageComponent
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: Library) => {
-        this.library = library;
+    this.library_subscription = this.library$.subscribe((library: Library) => {
+      this.library = library;
 
-        if (this.library) {
-          this.comics = [].concat(this.library.comics);
-          this.selected_comics = [].concat(this.library.selected_comics);
-        }
+      if (this.library) {
+        this.comics = [].concat(this.library.comics);
+        this.selected_comics = [].concat(this.library.selected_comics);
       }
-    );
+    });
     this.library_display_subscription = this.library_display$.subscribe(
       (library_display: LibraryDisplay) => {
         this.library_display = library_display;
-      });
+      }
+    );
   }
 
   ngOnDestroy(): void {

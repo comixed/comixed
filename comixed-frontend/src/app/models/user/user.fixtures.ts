@@ -18,7 +18,6 @@
  */
 
 import { User } from './user';
-import { Preference } from './preference';
 import { ADMIN_ROLE, READER_ROLE } from './role.fixtures';
 
 export const ADMIN_USER: User = {
@@ -34,37 +33,33 @@ export const ADMIN_USER: User = {
   is_reader: true,
   first_login_date: 0,
   last_login_date: 0,
-  roles: [
-    READER_ROLE,
-    ADMIN_ROLE
-  ],
+  roles: [READER_ROLE, ADMIN_ROLE],
   preferences: [{ name: 'api_key', value: '1234567890' }]
 };
 
 export const READER_USER: User = {
-    initialized: true,
-    id: 1001,
-    fetching: false,
-    token: '123abc',
-    authenticating: false,
-    busy: false,
-    email: 'comixedreader@somedomain.com',
-    authenticated: true,
-    is_admin: false,
-    is_reader: true,
-    first_login_date: 0,
-    last_login_date: 0,
-    roles: [READER_ROLE],
-    preferences: [
-      { name: 'library_display_layout', value: 'list' },
-      { name: 'library_display_sort_field', value: 'issue_number' },
-      { name: 'library_display_comic_file_sort_field', value: 'size' },
-      { name: 'library_display_rows', value: '50' },
-      { name: 'library_display_cover_size', value: '300' },
-      { name: 'library_display_same_height', value: '0' }
-    ]
-  }
-;
+  initialized: true,
+  id: 1001,
+  fetching: false,
+  token: '123abc',
+  authenticating: false,
+  busy: false,
+  email: 'comixedreader@somedomain.com',
+  authenticated: true,
+  is_admin: false,
+  is_reader: true,
+  first_login_date: 0,
+  last_login_date: 0,
+  roles: [READER_ROLE],
+  preferences: [
+    { name: 'library_display_layout', value: 'list' },
+    { name: 'library_display_sort_field', value: 'issue_number' },
+    { name: 'library_display_comic_file_sort_field', value: 'size' },
+    { name: 'library_display_rows', value: '50' },
+    { name: 'library_display_cover_size', value: '300' },
+    { name: 'library_display_same_height', value: '0' }
+  ]
+};
 
 export const BLOCKED_USER: User = {
   initialized: true,

@@ -17,21 +17,14 @@
  * org.comixed;
  */
 
-import {
-  Pipe,
-  PipeTransform
-} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
 
 @Pipe({
   name: 'missing_comics'
 })
-export class MissingComicsPipe
-  implements PipeTransform {
-
-  transform(
-    comics: Array<Comic>
-  ): Array<Comic> {
+export class MissingComicsPipe implements PipeTransform {
+  transform(comics: Array<Comic>): Array<Comic> {
     if (comics === null || comics.length === 0) {
       return [];
     }

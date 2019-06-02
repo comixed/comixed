@@ -36,7 +36,6 @@ import {
   COMIC_1001,
   COMIC_1002
 } from 'app/models/comics/comic.fixtures';
-import { LoadingModule } from 'ngx-loading';
 import { MenubarComponent } from 'app/ui/components/main/menubar/menubar.component';
 import { LoginComponent } from 'app/ui/components/login/login.component';
 import { AppComponent } from 'app/app.component';
@@ -60,7 +59,6 @@ describe('AppComponent', () => {
         ToastModule,
         DialogModule,
         ConfirmDialogModule,
-        LoadingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot(REDUCERS)
       ],

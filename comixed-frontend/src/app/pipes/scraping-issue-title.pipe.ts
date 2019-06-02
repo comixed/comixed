@@ -18,7 +18,6 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Volume } from 'app/models/comics/volume';
 import { Issue } from 'app/models/scraping/issue';
 
 @Pipe({

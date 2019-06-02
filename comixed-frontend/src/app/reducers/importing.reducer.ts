@@ -17,7 +17,6 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
 import { ImportState } from 'app/models/state/import-state';
 import * as ImportingActions from 'app/actions/importing.actions';
 import { ComicFile } from 'app/models/import/comic-file';

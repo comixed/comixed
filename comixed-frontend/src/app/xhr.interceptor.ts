@@ -1,4 +1,19 @@
 import { tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import {
+  HttpHandler,
+  HttpHeaderResponse,
+  HttpInterceptor,
+  HttpProgressEvent,
+  HttpRequest,
+  HttpResponse,
+  HttpSentEvent,
+  HttpUserEvent
+} from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { TokenStorage } from 'app/storage/token.storage';
+import { MessageService } from 'primeng/api';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -17,23 +32,6 @@ import { tap } from 'rxjs/operators';
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
-
-import { Injectable } from '@angular/core';
-import {
-  HttpInterceptor,
-  HttpHandler,
-  HttpRequest,
-  HttpSentEvent,
-  HttpHeaderResponse,
-  HttpErrorResponse,
-  HttpProgressEvent,
-  HttpResponse,
-  HttpUserEvent
-} from '@angular/common/http';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { TokenStorage } from 'app/storage/token.storage';
-import { MessageService } from 'primeng/api';
 
 export const TOKEN_HEADER_KEY = 'Authorization';
 

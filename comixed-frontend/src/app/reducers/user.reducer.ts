@@ -17,7 +17,6 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
 import { User } from 'app/models/user/user';
 import { Preference } from 'app/models/user/preference';
 import * as UserActions from 'app/actions/user.actions';

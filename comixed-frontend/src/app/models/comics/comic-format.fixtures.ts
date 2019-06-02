@@ -29,9 +29,7 @@ export const DEFAULT_COMIC_FORMAT_2: ComicFormat = {
   name: 'Not The Default Comic Format'
 };
 
-
 export const DEFAULT_COMIC_FORMAT_3: ComicFormat = {
   id: 3,
   name: 'The Least Popular Comic Format'
 };
-

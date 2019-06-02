@@ -61,8 +61,7 @@ export function duplicatesReducer(
           hashes.push(dupe.hash);
           pages_by_hash.set(dupe.hash, []);
         }
-        pages_by_hash.get(dupe.hash)
-          .push(dupe);
+        pages_by_hash.get(dupe.hash).push(dupe);
       });
 
       return {

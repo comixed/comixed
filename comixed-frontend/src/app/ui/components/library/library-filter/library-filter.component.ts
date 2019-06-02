@@ -17,11 +17,7 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  Input,
-  OnInit
-} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as FilterActions from 'app/actions/library-filter.actions';
@@ -32,8 +28,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './library-filter.component.html',
   styleUrls: ['./library-filter.component.css']
 })
-export class LibraryFilterComponent
-  implements OnInit {
+export class LibraryFilterComponent implements OnInit {
   @Input() publisher = '';
   @Input() series = '';
   @Input() volume = '';
@@ -44,19 +39,20 @@ export class LibraryFilterComponent
   constructor(
     private store: Store<AppState>,
     private translate: TranslateService
-  ) { }
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   apply_filters(): void {
-    this.store.dispatch(new FilterActions.LibraryFilterSetFilters({
-      publisher: this.publisher,
-      series: this.series,
-      volume: this.volume,
-      from_year: this.from_year,
-      to_year: this.to_year
-    }));
+    this.store.dispatch(
+      new FilterActions.LibraryFilterSetFilters({
+        publisher: this.publisher,
+        series: this.series,
+        volume: this.volume,
+        from_year: this.from_year,
+        to_year: this.to_year
+      })
+    );
     this.collapsed = true;
   }
 
@@ -127,16 +123,8 @@ export class LibraryFilterComponent
       !this.publisher.length &&
       !this.series.length &&
       !this.volume.length &&
-      (
-        (
-          this.from_year || 0
-        ) === 0
-      ) &&
-      (
-        (
-          this.to_year || 0
-        ) === 0
-      )
+      (this.from_year || 0) === 0 &&
+      (this.to_year || 0) === 0
     );
   }
 }

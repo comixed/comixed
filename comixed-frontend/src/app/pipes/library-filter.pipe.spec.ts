@@ -226,7 +226,7 @@ describe('LibraryFilterPipe', () => {
   });
 
   describe('check_publisher()', () => {
-    it('returns false when the publisher doesn\'t match', () => {
+    it('returns false when the publisher doesn not match', () => {
       expect(
         pipe.check_publisher(
           COMIC_1000,
@@ -250,7 +250,7 @@ describe('LibraryFilterPipe', () => {
   });
 
   describe('check_series()', () => {
-    it('returns false when the series doesn\'t match', () => {
+    it('returns false when the series does not match', () => {
       expect(
         pipe.check_series(
           COMIC_1000,
@@ -272,7 +272,7 @@ describe('LibraryFilterPipe', () => {
   });
 
   describe('check_volume()', () => {
-    it('returns false when the volume doesn\'t match', () => {
+    it('returns false when the volume does not match', () => {
       expect(
         pipe.check_volume(
           COMIC_1000,

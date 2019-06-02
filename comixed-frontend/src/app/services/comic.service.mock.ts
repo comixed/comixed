@@ -17,9 +17,8 @@
  * org.comixed;
  */
 
-import {  Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { PageType } from 'app/models/comics/page-type';
 
 export class ComicServiceMock {
   library_comic_count = 0;

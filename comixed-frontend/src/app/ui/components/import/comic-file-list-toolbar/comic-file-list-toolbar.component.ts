@@ -18,7 +18,6 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ImportState } from 'app/models/state/import-state';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as ImportActions from 'app/actions/importing.actions';

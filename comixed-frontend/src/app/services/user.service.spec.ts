@@ -17,15 +17,14 @@
  * org.comixed;
  */
 
-import { TestBed, getTestBed } from '@angular/core/testing';
-import { HttpRequest, HttpParams } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
 import { User } from 'app/models/user/user';
-import { READER_USER, ADMIN_USER } from 'app/models/user/user.fixtures';
-import { UserService, USER_SERVICE_API_URL } from './user.service';
+import { ADMIN_USER, READER_USER } from 'app/models/user/user.fixtures';
+import { USER_SERVICE_API_URL, UserService } from './user.service';
 
 describe('UserService', () => {
   const USER_ID = 717;
@@ -69,7 +68,7 @@ describe('UserService', () => {
     });
   });
 
-  describe('retrieving the current user\'s details', () => {
+  describe('retrieving the current user details', () => {
     it('fetches the user object from the backend', () => {
       service.get_user().subscribe((user: User) => {
         expect(user).toBe(READER_USER);

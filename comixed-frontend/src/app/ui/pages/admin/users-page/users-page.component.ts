@@ -25,7 +25,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import { User } from 'app/models/user/user';
-import { Role } from 'app/models/user/role';
 import { ConfirmationService } from 'primeng/api';
 
 @Component({
@@ -70,7 +69,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   delete_user(user: User): void {
     this.confirm_service.confirm({
       header: `Delete ${user.email}?`,
-      message: 'Are you sure you want to delete this user\'s account?',
+      message: 'Are you sure you want to delete this user account?',
       icon: 'fa fa-exclamation',
       accept: () => {
         this.store.dispatch(

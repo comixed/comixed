@@ -17,7 +17,6 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Comic } from 'app/models/comics/comic';
 import { Volume } from 'app/models/comics/volume';

@@ -34,19 +34,19 @@ export class ComicFileGridItemComponent implements OnInit {
   @Input() same_height: boolean;
   @Input() use_selected_class: boolean;
 
-  constructor(
-    private store: Store<AppState>
-  ) {
-  }
+  constructor(private store: Store<AppState>) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   toggle_selected(select: boolean): void {
     if (select) {
-      this.store.dispatch(new ImportActions.ImportingSelectFiles({ files: [this.comic_file] }));
+      this.store.dispatch(
+        new ImportActions.ImportingSelectFiles({ files: [this.comic_file] })
+      );
     } else {
-      this.store.dispatch(new ImportActions.ImportingUnselectFiles({ files: [this.comic_file] }));
+      this.store.dispatch(
+        new ImportActions.ImportingUnselectFiles({ files: [this.comic_file] })
+      );
     }
   }
 }

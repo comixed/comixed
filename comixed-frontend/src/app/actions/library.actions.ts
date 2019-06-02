@@ -17,9 +17,7 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Library } from 'app/models/actions/library';
 import { Comic } from 'app/models/comics/comic';
 import { Page } from 'app/models/comics/page';
 import { ScanType } from 'app/models/comics/scan-type';

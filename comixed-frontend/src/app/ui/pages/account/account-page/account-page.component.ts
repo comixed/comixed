@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
@@ -34,17 +34,14 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   private user_subscription: Subscription;
   user: User;
 
-  constructor(
-    private store: Store<AppState>,
-  ) {
+  constructor(private store: Store<AppState>) {
     this.user$ = store.select('user');
   }
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe(
-      (user: User) => {
-        this.user = user;
-      });
+    this.user_subscription = this.user$.subscribe((user: User) => {
+      this.user = user;
+    });
   }
 
   ngOnDestroy() {

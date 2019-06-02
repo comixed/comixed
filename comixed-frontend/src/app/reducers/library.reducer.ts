@@ -17,8 +17,7 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-import { Library, ComicGrouping } from 'app/models/actions/library';
+import { ComicGrouping, Library } from 'app/models/actions/library';
 import { Comic } from 'app/models/comics/comic';
 import * as LibraryActions from 'app/actions/library.actions';
 

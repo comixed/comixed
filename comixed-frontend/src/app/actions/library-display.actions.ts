@@ -18,7 +18,6 @@
  */
 
 import { Action } from '@ngrx/store';
-import { LibraryDisplay } from 'app/models/state/library-display';
 import { User } from 'app/models/user/user';
 
 export const SET_LIBRARY_VIEW_LAYOUT = '[LIBRARY VIEW] Set layout';
@@ -37,7 +36,8 @@ export class SetLibraryViewSort implements Action {
   constructor(public payload: { sort_field: string }) {}
 }
 
-export const SET_LIBRARY_VIEW_COMIC_FILE_SORT = '[LIBRARY VIEW] Set comic file sort';
+export const SET_LIBRARY_VIEW_COMIC_FILE_SORT =
+  '[LIBRARY VIEW] Set comic file sort';
 
 export class SetLibraryComicFileViewSort implements Action {
   readonly type = SET_LIBRARY_VIEW_COMIC_FILE_SORT;
@@ -70,7 +70,8 @@ export class SetLibraryViewUseSameHeight implements Action {
   constructor(public payload: { same_height: boolean }) {}
 }
 
-export const LIBRARY_VIEW_LOAD_USER_OPTIONS = '[LIBRARY VIEW] Load user options';
+export const LIBRARY_VIEW_LOAD_USER_OPTIONS =
+  '[LIBRARY VIEW] Load user options';
 
 export class LibraryViewLoadUserOptions implements Action {
   readonly type = LIBRARY_VIEW_LOAD_USER_OPTIONS;
@@ -78,7 +79,8 @@ export class LibraryViewLoadUserOptions implements Action {
   constructor(public payload: { user: User }) {}
 }
 
-export const LIBRARY_VIEW_TOGGLE_SIDEBAR = '[LIBRARY VIEW] Toggle selection sidebar.';
+export const LIBRARY_VIEW_TOGGLE_SIDEBAR =
+  '[LIBRARY VIEW] Toggle selection sidebar.';
 
 export class LibraryViewToggleSidebar implements Action {
   readonly type = LIBRARY_VIEW_TOGGLE_SIDEBAR;
@@ -95,4 +97,3 @@ export type Actions =
   | SetLibraryViewUseSameHeight
   | LibraryViewLoadUserOptions
   | LibraryViewToggleSidebar;
-

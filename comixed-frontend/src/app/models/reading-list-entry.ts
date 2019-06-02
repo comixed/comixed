@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import {Comic} from 'app/models/comics/comic';
+import { Comic } from 'app/models/comics/comic';
 
 export interface ReadingListEntry {
-    id: number;
-    comic: Comic;
+  id: number;
+  comic: Comic;
 }

@@ -22,11 +22,11 @@ import { Comic } from 'app/models/comics/comic';
 
 @Pipe({
   name: 'comic_title',
-  pure: false,
+  pure: false
 })
 export class ComicTitlePipe implements PipeTransform {
-
   transform(value: Comic, args?: any): any {
-    return `${value.series || 'Unknown'} v${value.volume || 'Unknown'} #${value.issue_number || '??'}`;
+    return `${value.series || 'Unknown'} v${value.volume ||
+      'Unknown'} #${value.issue_number || '??'}`;
   }
 }

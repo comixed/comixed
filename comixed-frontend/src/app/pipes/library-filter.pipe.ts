@@ -82,7 +82,7 @@ export class LibraryFilterPipe implements PipeTransform {
   }
 
   check_from_year(comic: Comic, from_year: number): boolean {
-        if (!from_year) {
+    if (!from_year) {
       return true;
     }
 

@@ -1,6 +1,8 @@
-<h2>{{"location-details.title"|translate:{location_name: location_name} }}</h2>
+<h2>
+  {{ 'location-details.title' | translate: { location_name: location_name } }}
+</h2>
 <app-comic-list
   *ngIf="library"
-  [comics]="comics|comic_location:location_name"
+  [comics]="comics | comic_location: location_name"
   [selected_comics]="selected_comics"
 ></app-comic-list>

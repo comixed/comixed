@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import {UserAdmin} from 'app/models/actions/user-admin';
+import { UserAdmin } from 'app/models/actions/user-admin';
 import * as UserAdminActions from 'app/actions/user-admin.actions';
-import {User} from 'app/models/user/user';
+import { User } from 'app/models/user/user';
 
 const initial_state: UserAdmin = {
   busy: false,

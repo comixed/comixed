@@ -30,10 +30,12 @@ describe('ComicDownloadLinkPipe', () => {
   });
 
   it('returns a URL for the comic provided', () => {
-    expect(pipe.transform(comic)).toEqual(`${COMIC_SERVICE_API_URL}/comics/${comic.id}/download`);
+    expect(pipe.transform(comic)).toEqual(
+      `${COMIC_SERVICE_API_URL}/comics/${comic.id}/download`
+    );
   });
 
   it('returns an empty string when the comic file is missing', () => {
-    expect(pipe.transform({...comic, missing: true})).toEqual('');
+    expect(pipe.transform({ ...comic, missing: true })).toEqual('');
   });
 });

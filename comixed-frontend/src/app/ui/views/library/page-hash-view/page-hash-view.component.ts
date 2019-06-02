@@ -18,13 +18,11 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { Duplicates } from 'app/models/state/duplicates';
-import { Comic } from 'app/models/comics/comic';
 import { Page } from 'app/models/comics/page';
 import { DUPLICATES_HASH_PARAMETER } from 'app/ui/pages/library/duplicates-page/duplicates-page.component';
 
@@ -39,28 +37,37 @@ export class PageHashViewComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private activated_route: ActivatedRoute,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   close_page_view(): void {
     this.store.dispatch(new DuplicatesActions.DuplicatePagesShowAllPages());
-    const queryParams: Params = Object.assign({}, this.activated_route.snapshot.queryParams);
+    const queryParams: Params = Object.assign(
+      {},
+      this.activated_route.snapshot.queryParams
+    );
     queryParams[DUPLICATES_HASH_PARAMETER] = null;
-    this.router.navigate([], { relativeTo: this.activated_route, queryParams: queryParams });
+    this.router.navigate([], {
+      relativeTo: this.activated_route,
+      queryParams: queryParams
+    });
   }
 
   delete_page(page: Page): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesDeletePage({
-      page: page,
-    }));
+    this.store.dispatch(
+      new DuplicatesActions.DuplicatePagesDeletePage({
+        page: page
+      })
+    );
   }
 
   undelete_page(page: Page): void {
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesUndeletePage({
-      page: page,
-    }));
+    this.store.dispatch(
+      new DuplicatesActions.DuplicatePagesUndeletePage({
+        page: page
+      })
+    );
   }
 }

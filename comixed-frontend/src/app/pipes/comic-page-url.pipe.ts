@@ -25,9 +25,7 @@ import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
   name: 'comic_page_url'
 })
 export class ComicPageUrlPipe implements PipeTransform {
-
   transform(page: Page): string {
     return `${COMIC_SERVICE_API_URL}/pages/${page.id}/content`;
   }
-
 }

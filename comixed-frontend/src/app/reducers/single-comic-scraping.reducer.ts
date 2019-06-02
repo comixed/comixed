@@ -17,9 +17,7 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
-import { Issue } from 'app/models/scraping/issue';
 import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 
 const initial_state: SingleComicScraping = {

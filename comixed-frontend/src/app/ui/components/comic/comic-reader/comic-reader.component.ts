@@ -17,10 +17,8 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input, Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
-import { Page } from 'app/models/comics/page';
 import { ComicService } from 'app/services/comic.service';
 
 @Component({
@@ -33,9 +31,7 @@ export class ComicReaderComponent implements OnInit {
   @Input() current_page: number;
   @Input() page_size: number;
 
-  constructor(
-    private comic_service: ComicService,
-  ) { }
+  constructor(private comic_service: ComicService) {}
 
   ngOnInit() {
     if (!this.current_page) {

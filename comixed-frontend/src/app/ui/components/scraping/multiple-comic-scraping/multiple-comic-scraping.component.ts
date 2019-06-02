@@ -19,13 +19,9 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { AppState } from 'app/app.state';
 import * as MultiScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import * as SingleScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
-import { Comic } from 'app/models/comics/comic';
 
 @Component({
   selector: 'app-multiple-comic-scraping',

@@ -32,14 +32,17 @@ export class AdminGuard implements CanActivate {
   admin_subject = new Subject<boolean>();
 
   constructor(private router: Router, private store: Store<AppState>) {
-    store.select('user')
-      .subscribe((user: User) => {
-        this.user = user;
+    store.select('user').subscribe((user: User) => {
+      this.user = user;
 
-        if (this.user.initialized && !this.user.authenticating && !this.user.fetching) {
-          this.admin_subject.next(this.user.is_admin);
-        }
-      });
+      if (
+        this.user.initialized &&
+        !this.user.authenticating &&
+        !this.user.fetching
+      ) {
+        this.admin_subject.next(this.user.is_admin);
+      }
+    });
   }
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {

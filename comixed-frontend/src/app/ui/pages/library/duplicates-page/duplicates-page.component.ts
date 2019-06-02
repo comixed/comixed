@@ -17,12 +17,10 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { AppState } from 'app/app.state';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { MessageService } from 'primeng/api';

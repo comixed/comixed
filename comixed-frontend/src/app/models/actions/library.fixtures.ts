@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Library, ComicGrouping } from './library';
+import { ComicGrouping, Library } from './library';
 
 export const EXISTING_LIBRARY: Library = {
   busy: false,

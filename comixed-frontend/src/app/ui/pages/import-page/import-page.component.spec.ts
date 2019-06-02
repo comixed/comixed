@@ -53,7 +53,6 @@ import {
   SidebarModule
 } from 'primeng/primeng';
 import * as LibraryActions from 'app/actions/library.actions';
-import * as ImportActions from 'app/actions/importing.actions';
 import * as UserActions from 'app/actions/user.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';

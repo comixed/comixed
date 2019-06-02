@@ -17,11 +17,7 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
 import { ComicCredit } from 'app/models/comics/comic-credit';
 
@@ -33,10 +29,9 @@ import { ComicCredit } from 'app/models/comics/comic-credit';
 export class ComicCreditsComponent implements OnInit {
   @Input() comic: Comic;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   sort_credits(): Array<ComicCredit> {
     return this.comic.credits.sort((left: ComicCredit, right: ComicCredit) => {

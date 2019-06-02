@@ -4,12 +4,12 @@
 }
 
 :host >>> .ui-overlaypanel-content {
-  background-color: #FFFFE0;
+  background-color: #ffffe0;
   color: #000000;
 }
 
 :host >>> .comic-cover-overlay-panel {
-  background-color: #FFFFE0;
+  background-color: #ffffe0;
   color: #000000;
   border: none;
 }
@@ -18,7 +18,7 @@
   padding: 0;
   margin: 0;
   border: none;
-  background-color: #FFFFE0;
+  background-color: #ffffe0;
   color: #000000;
   border: none;
 }
@@ -27,12 +27,12 @@
   text-align: center;
   text-transform: capitalize;
   text-align: center;
-  background-color: #FFFFE0;
+  background-color: #ffffe0;
   color: #000000;
 }
 
 :host >>> .comic-cover-overlay-panel .ui-panel {
-  background-color: #FFFFE0;
+  background-color: #ffffe0;
   color: #000000;
 }
 
@@ -40,7 +40,7 @@
   padding: 0;
   margin: 0;
   border: none;
-  background-color: #FFFFE0;
+  background-color: #ffffe0;
   color: #000000;
   text-align: center;
 }

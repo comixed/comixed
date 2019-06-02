@@ -18,18 +18,12 @@
  */
 
 import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot
-} from '@angular/router';
-import { Router } from '@angular/router';
-import { Store, Action } from '@ngrx/store';
+import { CanActivate, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import * as UserActions from 'app/actions/user.actions';
-import { filter } from 'rxjs/operators';
 import { User } from 'app/models/user/user';
 
 @Injectable()

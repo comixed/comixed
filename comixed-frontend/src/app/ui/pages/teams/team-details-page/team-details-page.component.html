@@ -1,6 +1,8 @@
-<h2>{{'team-details.title'|translate:{team_name: team_name} }}</h2>
-<app-comic-list *ngIf='library'
-                [comics]='comics|comic_team:team_name'
-                [selected_comics]='selected_comics'
-                [library_filter]='library_filter'
-                (selectionChange)='set_selection_state($event.comic, $event.selected)'></app-comic-list>
+<h2>{{ 'team-details.title' | translate: { team_name: team_name } }}</h2>
+<app-comic-list
+  *ngIf="library"
+  [comics]="comics | comic_team: team_name"
+  [selected_comics]="selected_comics"
+  [library_filter]="library_filter"
+  (selectionChange)="set_selection_state($event.comic, $event.selected)"
+></app-comic-list>

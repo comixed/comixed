@@ -18,7 +18,6 @@
  */
 
 import { ScrapingIssueTitlePipe } from './scraping-issue-title.pipe';
-import { VOLUME_1000 } from 'app/models/comics/volume.fixtures';
 import { ISSUE_1000 } from 'app/models/scraping/issue.fixtures';
 
 describe('ScrapingIssueTitlePipe', () => {

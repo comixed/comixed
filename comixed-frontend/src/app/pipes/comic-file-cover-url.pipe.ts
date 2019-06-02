@@ -25,9 +25,9 @@ import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
   name: 'comic_file_cover_url'
 })
 export class ComicFileCoverUrlPipe implements PipeTransform {
-
   transform(comic_file: ComicFile): string {
-    return `${COMIC_SERVICE_API_URL}/files/import/cover?filename=${encodeURIComponent(comic_file.filename)}`;
+    return `${COMIC_SERVICE_API_URL}/files/import/cover?filename=${encodeURIComponent(
+      comic_file.filename
+    )}`;
   }
-
 }

@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import {ReadingListEntry} from 'app/models/reading-list-entry';
-import {User} from 'app/models/user/user';
+import { ReadingListEntry } from 'app/models/reading-list-entry';
+import { User } from 'app/models/user/user';
 
 export interface ReadingList {
-    id: number;
-    owner: User;
-    name: string;
-    summary: string;
-    entries: Array<ReadingListEntry>;
+  id: number;
+  owner: User;
+  name: string;
+  summary: string;
+  entries: Array<ReadingListEntry>;
 }

@@ -1,44 +1,56 @@
-<h2>{{user_admin.current_user?.email || "admin.user-editor.label.new-user"|translate}}</h2>
+<h2>
+  {{
+    user_admin.current_user?.email || 'admin.user-editor.label.new-user'
+      | translate
+  }}
+</h2>
 <div class="form-group ui-g">
   <div class="ui-g-4">
-    <strong>{{"admin.user-editor.label.email-address"|translate}}</strong>
+    <strong>{{ 'admin.user-editor.label.email-address' | translate }}</strong>
   </div>
   <div class="ui-g-8">
-    <input class="form-control"
-           type="text"
-           [(ngModel)]="email"
-           pInputText>
+    <input class="form-control" type="text" [(ngModel)]="email" pInputText />
   </div>
   <div class="ui-g-4">
-    <strong>{{"admin.user-editor.label.password"|translate}}</strong>
+    <strong>{{ 'admin.user-editor.label.password' | translate }}</strong>
   </div>
   <div class="ui-g-8">
-    <input class="form-control"
-           type="password"
-           [(ngModel)]="password"
-           pInputText>
+    <input
+      class="form-control"
+      type="password"
+      [(ngModel)]="password"
+      pInputText
+    />
   </div>
   <div class="ui-g-4">
-    <strong>{{"admin.user-editor.label.verify-password"|translate}}</strong>
+    <strong>{{ 'admin.user-editor.label.verify-password' | translate }}</strong>
   </div>
   <div class="ui-g-8">
-    <input type="password"
-           class="form-control"
-           [(ngModel)]="password_verify"
-           pInputText>
+    <input
+      type="password"
+      class="form-control"
+      [(ngModel)]="password_verify"
+      pInputText
+    />
   </div>
   <div class="ui-g-12">
-    <p-toggleButton [(ngModel)]="is_admin"
-                    onLabel="{{'admin.user-editor.button.admin'|translate}}"
-                    offLabel="{{'admin.user-editor.button.reader'|translate}}"
-                    onIcon="fa fa-fw fa-user-secret"
-                    offIcon="fa fa-fw fa-user"></p-toggleButton>
+    <p-toggleButton
+      [(ngModel)]="is_admin"
+      onLabel="{{ 'admin.user-editor.button.admin' | translate }}"
+      offLabel="{{ 'admin.user-editor.button.reader' | translate }}"
+      onIcon="fa fa-fw fa-user-secret"
+      offIcon="fa fa-fw fa-user"
+    ></p-toggleButton>
   </div>
   <div class="ui-g-12">
-    <p-button [disabled]="!can_save()"
-              label="{{'button.save'|translate}}"
-              (onClick)="save_user()"></p-button>
-    <p-button label="{{'button.reset'|translate}}"
-              (onClick)="reset_user()"></p-button>
+    <p-button
+      [disabled]="!can_save()"
+      label="{{ 'button.save' | translate }}"
+      (onClick)="save_user()"
+    ></p-button>
+    <p-button
+      label="{{ 'button.reset' | translate }}"
+      (onClick)="reset_user()"
+    ></p-button>
   </div>
 </div>

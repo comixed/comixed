@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
-import { Library, ComicGrouping } from 'app/models/actions/library';
+import { ComicGrouping, Library } from 'app/models/actions/library';
 
 @Component({
   selector: 'app-comic-story',

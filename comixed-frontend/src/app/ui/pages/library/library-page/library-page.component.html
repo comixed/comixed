@@ -1,5 +1,7 @@
-<app-comic-list *ngIf='library'
-                [comics]='comics|library_filter:library_filter'
-                [selected_comics]='selected_comics'
-                [library_filter]='library_filter'
-                (selectionChange)='set_selected_state($event.comic, $event.selected)'></app-comic-list>
+<app-comic-list
+  *ngIf="library"
+  [comics]="comics | library_filter: library_filter"
+  [selected_comics]="selected_comics"
+  [library_filter]="library_filter"
+  (selectionChange)="set_selected_state($event.comic, $event.selected)"
+></app-comic-list>

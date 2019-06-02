@@ -27,8 +27,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
-import { Library } from 'app/models/actions/library';
-import * as LibraryActions from 'app/actions/library.actions';
 import { Comic } from 'app/models/comics/comic';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { ConfirmationService, MenuItem } from 'primeng/api';

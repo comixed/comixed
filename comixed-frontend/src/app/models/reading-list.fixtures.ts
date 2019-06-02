@@ -17,8 +17,6 @@
  * org.comixed;
  */
 
-import { ReadingListEntry } from 'app/models/reading-list-entry';
-import { User } from 'app/models/user/user';
 import { READER_USER } from 'app/models/user/user.fixtures';
 import { ReadingList } from 'app/models/reading-list';
 

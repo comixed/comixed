@@ -28,20 +28,22 @@ import { DuplicatePage } from 'app/models/comics/duplicate-page';
 
 @Injectable()
 export class DuplicatesEffects {
-  constructor(
-    private actions$: Actions,
-    private comic_service: ComicService,
-  ) { }
+  constructor(private actions$: Actions, private comic_service: ComicService) {}
 
   @Effect()
   duplicates_fetch_pages$: Observable<Action> = this.actions$.pipe(
     ofType(DuplicatesActions.DUPLICATE_PAGES_FETCH_PAGES),
     switchMap(action =>
       this.comic_service.get_duplicate_pages().pipe(
-        map((duplicate_pages: Array<DuplicatePage>) => new DuplicatesActions.DuplicatePagesSetPages({
-          duplicate_pages: duplicate_pages,
-        }))
-      )));
+        map(
+          (duplicate_pages: Array<DuplicatePage>) =>
+            new DuplicatesActions.DuplicatePagesSetPages({
+              duplicate_pages: duplicate_pages
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   duplicates_delete_all$: Observable<Action> = this.actions$.pipe(
@@ -49,22 +51,34 @@ export class DuplicatesEffects {
     map((action: DuplicatesActions.DuplicatePagesDeleteAll) => action.payload),
     switchMap(action =>
       this.comic_service.delete_all_pages_for_hash(action.hash).pipe(
-        map((count: number) => new DuplicatesActions.DuplicatePagesDeletedForHash({
-          count: count,
-          hash: action.hash,
-        }))))
+        map(
+          (count: number) =>
+            new DuplicatesActions.DuplicatePagesDeletedForHash({
+              count: count,
+              hash: action.hash
+            })
+        )
+      )
+    )
   );
 
   @Effect()
   duplicates_undelete_all$: Observable<Action> = this.actions$.pipe(
     ofType(DuplicatesActions.DUPLICATE_PAGES_UNDELETE_ALL),
-    map((action: DuplicatesActions.DuplicatePagesUndeleteAll) => action.payload),
+    map(
+      (action: DuplicatesActions.DuplicatePagesUndeleteAll) => action.payload
+    ),
     switchMap(action =>
       this.comic_service.undelete_all_pages_for_hash(action.hash).pipe(
-        map((count: number) => new DuplicatesActions.DuplicatePagesUndeletedForHash({
-          count: count,
-          hash: action.hash,
-        }))))
+        map(
+          (count: number) =>
+            new DuplicatesActions.DuplicatePagesUndeletedForHash({
+              count: count,
+              hash: action.hash
+            })
+        )
+      )
+    )
   );
 
   @Effect()
@@ -73,21 +87,35 @@ export class DuplicatesEffects {
     map((action: DuplicatesActions.DuplicatePagesBlockHash) => action.payload),
     switchMap(action =>
       this.comic_service.block_page(action.hash).pipe(
-        map(() => new DuplicatesActions.DuplicatePagesBlockedHash({
-          blocked: true,
-          hash: action.hash,
-        })))));
+        map(
+          () =>
+            new DuplicatesActions.DuplicatePagesBlockedHash({
+              blocked: true,
+              hash: action.hash
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   duplicates_unblock_hash$: Observable<Action> = this.actions$.pipe(
     ofType(DuplicatesActions.DUPLICATE_PAGES_UNBLOCK_HASH),
-    map((action: DuplicatesActions.DuplicatePagesUnblockHash) => action.payload),
+    map(
+      (action: DuplicatesActions.DuplicatePagesUnblockHash) => action.payload
+    ),
     switchMap(action =>
       this.comic_service.unblock_page(action.hash).pipe(
-        map(() => new DuplicatesActions.DuplicatePagesBlockedHash({
-          blocked: false,
-          hash: action.hash,
-        })))));
+        map(
+          () =>
+            new DuplicatesActions.DuplicatePagesBlockedHash({
+              blocked: false,
+              hash: action.hash
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   duplicates_delete_page$: Observable<Action> = this.actions$.pipe(
@@ -95,19 +123,33 @@ export class DuplicatesEffects {
     map((action: DuplicatesActions.DuplicatePagesDeletePage) => action.payload),
     switchMap(action =>
       this.comic_service.mark_page_as_deleted(action.page).pipe(
-        map((count: number) => new DuplicatesActions.DuplicatePagesPageDeleted({
-          count: count,
-          page: action.page,
-        })))));
+        map(
+          (count: number) =>
+            new DuplicatesActions.DuplicatePagesPageDeleted({
+              count: count,
+              page: action.page
+            })
+        )
+      )
+    )
+  );
 
   @Effect()
   duplicates_undelete_page$: Observable<Action> = this.actions$.pipe(
     ofType(DuplicatesActions.DUPLICATE_PAGES_UNDELETE_PAGE),
-    map((action: DuplicatesActions.DuplicatePagesUndeletePage) => action.payload),
+    map(
+      (action: DuplicatesActions.DuplicatePagesUndeletePage) => action.payload
+    ),
     switchMap(action =>
       this.comic_service.mark_page_as_deleted(action.page).pipe(
-        map((count: number) => new DuplicatesActions.DuplicatePagesPageUndeleted({
-          count: count,
-          page: action.page,
-        })))));
+        map(
+          (count: number) =>
+            new DuplicatesActions.DuplicatePagesPageUndeleted({
+              count: count,
+              page: action.page
+            })
+        )
+      )
+    )
+  );
 }

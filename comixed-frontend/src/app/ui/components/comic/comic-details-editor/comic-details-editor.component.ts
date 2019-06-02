@@ -19,30 +19,28 @@
 
 import {
   Component,
-  OnInit,
-  OnDestroy,
+  EventEmitter,
   Input,
-  Output,
-  EventEmitter
+  OnDestroy,
+  OnInit,
+  Output
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
 import * as LibraryScrapingActions from 'app/actions/single-comic-scraping.actions';
 import * as UserActions from 'app/actions/user.actions';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { Comic } from 'app/models/comics/comic';
 import { Volume } from 'app/models/comics/volume';
-import { Issue } from 'app/models/scraping/issue';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { User } from 'app/models/user/user';
 import { Preference } from 'app/models/user/preference';
 import { COMICVINE_API_KEY } from 'app/models/user/preferences.constants';
-import { Confirmation, ConfirmationService, MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -97,22 +95,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       }
     ];
     this.form = this.form_builder.group({
-      api_key: [
-        '',
-        [Validators.required]
-      ],
-      series: [
-        '',
-        [Validators.required]
-      ],
-      volume: [
-        '',
-        [Validators.required]
-      ],
-      issue_number: [
-        '',
-        [Validators.required]
-      ]
+      api_key: ['', [Validators.required]],
+      series: ['', [Validators.required]],
+      volume: ['', [Validators.required]],
+      issue_number: ['', [Validators.required]]
     });
   }
 

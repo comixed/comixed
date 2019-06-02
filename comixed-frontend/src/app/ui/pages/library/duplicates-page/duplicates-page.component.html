@@ -1,5 +1,7 @@
 <div *ngIf="!duplicates.current_duplicates">
-  <app-duplicate-pages-view [duplicates]="duplicates"></app-duplicate-pages-view>
+  <app-duplicate-pages-view
+    [duplicates]="duplicates"
+  ></app-duplicate-pages-view>
 </div>
 <div *ngIf="duplicates.current_duplicates">
   <app-page-hash-view [duplicates]="duplicates"></app-page-hash-view>

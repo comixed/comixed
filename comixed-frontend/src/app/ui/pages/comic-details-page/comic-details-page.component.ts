@@ -17,18 +17,14 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
 import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { User } from 'app/models/user/user';
-import { Role } from 'app/models/user/role';
-import { Preference } from 'app/models/user/preference';
 import { Library } from 'app/models/actions/library';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { ComicService } from 'app/services/comic.service';

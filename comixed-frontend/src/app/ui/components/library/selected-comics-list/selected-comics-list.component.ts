@@ -19,22 +19,21 @@
 
 import {
   Component,
-  OnInit,
-  OnDestroy,
+  EventEmitter,
   Input,
-  Output,
-  EventEmitter
+  OnDestroy,
+  OnInit,
+  Output
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Comic } from 'app/models/comics/comic';
-import { Library } from 'app/models/actions/library';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from 'app/actions/library.actions';
 import * as DisplayActions from 'app/actions/library-display.actions';
-import { MenuItem, ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { LibraryDisplay } from 'app/models/state/library-display';
 import { ReadingListState } from 'app/models/state/reading-list-state';

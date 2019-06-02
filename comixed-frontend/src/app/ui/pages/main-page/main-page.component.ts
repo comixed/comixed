@@ -17,12 +17,12 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { AppState } from 'app/app.state';
-import { Library, ComicGrouping } from 'app/models/actions/library';
+import { ComicGrouping, Library } from 'app/models/actions/library';
 import { SelectItem } from 'primeng/api';
 
 const COLOR_PALLETTE = [

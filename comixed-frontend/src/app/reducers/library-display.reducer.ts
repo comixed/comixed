@@ -17,10 +17,8 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
 import { LibraryDisplay } from 'app/models/state/library-display';
 import * as LibraryDisplayActions from 'app/actions/library-display.actions';
-import * as UserActions from 'app/actions/user.actions';
 import { Preference } from 'app/models/user/preference';
 
 export const initial_state: LibraryDisplay = {

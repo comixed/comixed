@@ -22,7 +22,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataViewModule } from 'primeng/dataview';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ScrapingComicListComponent } from './scraping-comic-list.component';
-import { COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003 } from 'app/models/comics/comic.fixtures';
+import {
+  COMIC_1000,
+  COMIC_1001,
+  COMIC_1002,
+  COMIC_1003
+} from 'app/models/comics/comic.fixtures';
 import { Comic } from 'app/models/comics/comic';
 
 describe('ScrapingComicListComponent', () => {
@@ -31,14 +36,8 @@ describe('ScrapingComicListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        TranslateModule.forRoot(),
-        DataViewModule
-      ],
-      declarations: [
-        ScrapingComicListComponent,
-        ComicCoverUrlPipe
-      ]
+      imports: [TranslateModule.forRoot(), DataViewModule],
+      declarations: [ScrapingComicListComponent, ComicCoverUrlPipe]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ScrapingComicListComponent);
@@ -53,12 +52,7 @@ describe('ScrapingComicListComponent', () => {
 
   describe('#set comics()', () => {
     beforeEach(() => {
-      component.comics = [
-        COMIC_1003,
-        COMIC_1002,
-        COMIC_1001,
-        COMIC_1000
-      ];
+      component.comics = [COMIC_1003, COMIC_1002, COMIC_1001, COMIC_1000];
     });
 
     it('sorts the comics by filename', () => {

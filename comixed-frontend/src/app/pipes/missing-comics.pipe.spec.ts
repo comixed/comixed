@@ -25,61 +25,29 @@ import {
   COMIC_1003
 } from 'app/models/comics/comic.fixtures';
 
-describe(
-  'MissingComicsPipe',
-  () => {
-    const pipe = new MissingComicsPipe();
-    const NO_MISSING_COMICS = [
-      COMIC_1000,
-      COMIC_1001,
-      COMIC_1002
-    ];
-    const WITH_MISSING_COMICS = [
-      COMIC_1000,
-      COMIC_1001,
-      COMIC_1002,
-      COMIC_1003
-    ];
-    const MISSING_COMICS = [COMIC_1003];
+describe('MissingComicsPipe', () => {
+  const pipe = new MissingComicsPipe();
+  const NO_MISSING_COMICS = [COMIC_1000, COMIC_1001, COMIC_1002];
+  const WITH_MISSING_COMICS = [COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003];
+  const MISSING_COMICS = [COMIC_1003];
 
-    it(
-      'create an instance',
-      () => {
-        expect(pipe)
-          .toBeTruthy();
-      }
-    );
+  it('create an instance', () => {
+    expect(pipe).toBeTruthy();
+  });
 
-    it(
-      'returns an empty array if no comics are given',
-      () => {
-        expect(pipe.transform(null))
-          .toEqual([]);
-      }
-    );
+  it('returns an empty array if no comics are given', () => {
+    expect(pipe.transform(null)).toEqual([]);
+  });
 
-    it(
-      'returns an empty array if an empty array is given',
-      () => {
-        expect(pipe.transform([]))
-          .toEqual([]);
-      }
-    );
+  it('returns an empty array if an empty array is given', () => {
+    expect(pipe.transform([])).toEqual([]);
+  });
 
-    it(
-      'returns an empty array if there are no missing comics',
-      () => {
-        expect(pipe.transform(NO_MISSING_COMICS))
-          .toEqual([]);
-      }
-    );
+  it('returns an empty array if there are no missing comics', () => {
+    expect(pipe.transform(NO_MISSING_COMICS)).toEqual([]);
+  });
 
-    it(
-      'returns only the missing comics when found',
-      () => {
-        expect(pipe.transform(WITH_MISSING_COMICS))
-          .toEqual(MISSING_COMICS);
-      }
-    );
-  }
-);
+  it('returns only the missing comics when found', () => {
+    expect(pipe.transform(WITH_MISSING_COMICS)).toEqual(MISSING_COMICS);
+  });
+});

@@ -21,7 +21,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { MenubarModule } from 'primeng/menubar';
 import { SidebarModule } from 'primeng/sidebar';
 import { InputTextModule } from 'primeng/inputtext';
@@ -58,7 +57,6 @@ import {
   HttpClientModule
 } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ANIMATION_TYPES, LoadingModule } from 'ngx-loading';
 import { XhrInterceptor } from 'app/xhr.interceptor';
 import { ComicService } from 'app/services/comic.service';
 import { ComicDetailsPageComponent } from 'app/ui/pages/comic-details-page/comic-details-page.component';
@@ -258,18 +256,9 @@ import { ComicFileListItemComponent } from './ui/components/import/comic-file-li
     ChartModule,
     PickListModule,
     ContextMenuModule,
-    LoadingModule.forRoot({
-      animationType: ANIMATION_TYPES.pulse,
-      fullScreenBackdrop: true
-    }),
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxPaginationModule,
-    LoadingModule.forRoot({
-      animationType: ANIMATION_TYPES.pulse,
-      fullScreenBackdrop: true
-    }),
 
     StoreModule.forRoot(REDUCERS),
     EffectsModule.forRoot([

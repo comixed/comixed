@@ -27,7 +27,7 @@ import { User } from 'app/models/user/user';
 export class UserDetailsComponent implements OnInit {
   @Input() user: User;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 }

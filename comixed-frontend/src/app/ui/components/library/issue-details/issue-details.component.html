@@ -1,35 +1,40 @@
-<div class="ui-g"
-     *ngIf="comic">
+<div class="ui-g" *ngIf="comic">
   <div class="ui-g-2 ui-sm-2">
-    <img src="{{comic|comic_cover_url}}"
-         [style.height]="'auto'"
-         [style.width]="'100%'">
+    <img
+      src="{{ comic | comic_cover_url }}"
+      [style.height]="'auto'"
+      [style.width]="'100%'"
+    />
   </div>
-  <div *ngIf="comic.description"
-       class="ui-g-10 ui-sm-10">
+  <div *ngIf="comic.description" class="ui-g-10 ui-sm-10">
     <div class="ui-g">
       <div class="ui-g-12 ui-sm-12">
-        <p-panel header="{{'issue-details.label.description'|translate}}"
-                 [toggleable]="true">
-          <div [innerHTML]="comic.description||'text.comic-no-description'|translate"></div>
+        <p-panel
+          header="{{ 'issue-details.label.description' | translate }}"
+          [toggleable]="true"
+        >
+          <div
+            [innerHTML]="
+              comic.description || 'text.comic-no-description' | translate
+            "
+          ></div>
         </p-panel>
       </div>
     </div>
-    <div *ngIf="comic.credits?.length"
-         class="ui-g-12 ui-sm-12">
+    <div *ngIf="comic.credits?.length" class="ui-g-12 ui-sm-12">
       <p-table [value]="comic.credits">
         <ng-template pTemplate="header">
           <tr>
-            <th>{{'issue-details.label.credit-name'|translate}}</th>
-            <th>{{'issue-details.label.credit-role'|translate}}</th>
+            <th>{{ 'issue-details.label.credit-name' | translate }}</th>
+            <th>{{ 'issue-details.label.credit-role' | translate }}</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body"
-                     let-credit>
+        <ng-template pTemplate="body" let-credit>
           <tr>
-            <td>{{credit.name}}</td>
-            <td>{{credit.role}}</td>
-        </ng-template>
+            <td>{{ credit.name }}</td>
+            <td>{{ credit.role }}</td>
+          </tr></ng-template
+        >
       </p-table>
     </div>
   </div>

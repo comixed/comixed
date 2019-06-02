@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ComicGrouping } from 'app/models/actions/library';
 
 @Component({

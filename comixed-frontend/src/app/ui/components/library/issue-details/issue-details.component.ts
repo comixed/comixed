@@ -28,8 +28,7 @@ import { Comic } from 'app/models/comics/comic';
 export class IssueDetailsComponent implements OnInit {
   @Input() comic: Comic;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }

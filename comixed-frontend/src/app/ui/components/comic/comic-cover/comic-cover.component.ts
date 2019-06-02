@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
 import { OverlayPanel } from 'primeng/overlaypanel';
 

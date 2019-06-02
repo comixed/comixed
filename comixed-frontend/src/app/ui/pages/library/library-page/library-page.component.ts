@@ -17,22 +17,19 @@
  * org.comixed;
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { Library } from 'app/models/actions/library';
 import * as LibraryActions from 'app/actions/library.actions';
 import { LibraryFilter } from 'app/models/actions/library-filter';
-import * as FilterActions from 'app/actions/library-filter.actions';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Comic } from 'app/models/comics/comic';
-import * as UserActions from 'app/actions/user.actions';
 import { User } from 'app/models/user/user';
-import { Preference } from 'app/models/user/preference';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { ConfirmationService } from 'primeng/api';

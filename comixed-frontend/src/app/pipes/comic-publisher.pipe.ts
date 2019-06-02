@@ -19,8 +19,6 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
-import { TranslateService } from '@ngx-translate/core';
-import { SelectItem } from 'primeng/api';
 
 @Pipe({
   name: 'comic_publisher'

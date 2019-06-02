@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
 import { Volume } from 'app/models/comics/volume';
 import { Issue } from 'app/models/scraping/issue';

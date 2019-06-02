@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
@@ -26,7 +26,6 @@ import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from 'app/actions/library.actions';
 import { Library } from 'app/models/actions/library';
 import { TranslateService } from '@ngx-translate/core';
-import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-publisher-details-page',

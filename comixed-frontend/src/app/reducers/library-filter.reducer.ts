@@ -17,7 +17,6 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import * as FilterActions from 'app/actions/library-filter.actions';
 

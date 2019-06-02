@@ -31,7 +31,7 @@ describe('ComicCoverUrlPipe', () => {
     expect(pipe.transform(COMIC_1003)).toEqual(MISSING_COMIC_IMAGE_URL);
   });
 
-  it('returns the URL for the comic\'s cover image', () => {
+  it('returns the URL for the comic cover image', () => {
     expect(pipe.transform(COMIC_1000)).toEqual(
       `${COMIC_SERVICE_API_URL}/comics/${COMIC_1000.id}/pages/0/content`
     );

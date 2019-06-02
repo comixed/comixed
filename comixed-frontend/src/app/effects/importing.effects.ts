@@ -30,25 +30,45 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ImportingEffects {
-  constructor(private actions$: Actions,
+  constructor(
+    private actions$: Actions,
     private message_service: MessageService,
     private comic_service: ComicService,
-    private translate: TranslateService) {}
+    private translate: TranslateService
+  ) {}
 
-  @Effect() importing_fetch_files$: Observable<Action> = this.actions$.pipe(ofType(ImportingActions.IMPORTING_FETCH_FILES),
+  @Effect() importing_fetch_files$: Observable<Action> = this.actions$.pipe(
+    ofType(ImportingActions.IMPORTING_FETCH_FILES),
     map((action: ImportingActions.ImportingFetchFiles) => action.payload),
-    switchMap(action => this.comic_service.get_files_under_directory(action.directory)
-      .pipe(tap((files: Array<ComicFile>) => this.message_service.add({
-        severity: 'info',
-        summary: 'Find Files',
-        detail: this.translate.instant('effects.importing.info.found_files', { file_count: files.length })
-      })), map((files: Array<ComicFile>) => new ImportingActions.ImportingFilesFetched({
-        files: files
-      })))));
+    switchMap(action =>
+      this.comic_service.get_files_under_directory(action.directory).pipe(
+        tap((files: Array<ComicFile>) =>
+          this.message_service.add({
+            severity: 'info',
+            summary: 'Find Files',
+            detail: this.translate.instant(
+              'effects.importing.info.found_files',
+              { file_count: files.length }
+            )
+          })
+        ),
+        map(
+          (files: Array<ComicFile>) =>
+            new ImportingActions.ImportingFilesFetched({
+              files: files
+            })
+        )
+      )
+    )
+  );
 
-  @Effect() importing_import_files$: Observable<Action> = this.actions$.pipe(ofType(ImportingActions.IMPORTING_IMPORT_FILES),
+  @Effect() importing_import_files$: Observable<Action> = this.actions$.pipe(
+    ofType(ImportingActions.IMPORTING_IMPORT_FILES),
     map((action: ImportingActions.ImportingImportFiles) => action.payload),
-    switchMap(action => this.comic_service
-      .import_files_into_library(action.files, false, action.ignore_metadata)
-      .pipe(map(() => new ImportingActions.ImportingFilesAreImporting()))));
+    switchMap(action =>
+      this.comic_service
+        .import_files_into_library(action.files, false, action.ignore_metadata)
+        .pipe(map(() => new ImportingActions.ImportingFilesAreImporting()))
+    )
+  );
 }

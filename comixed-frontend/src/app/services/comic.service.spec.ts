@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { UserService } from './user.service';
 import { UserServiceMock } from './user.service.mock';
 import { ComicService } from './comic.service';
@@ -28,32 +28,32 @@ import {
   THIRD_SCAN_TYPE
 } from 'app/models/comics/scan-type.fixtures';
 import {
+  ADD_BLOCKED_PAGE_HASH_URL,
+  CLEAR_METADATA_URL,
+  COMIC_DELETE_URL,
   COMIC_FORMAT_TYPES_URL,
   COMIC_SCAN_TYPES_URL,
   COMIC_SET_FORMAT_TYPE_URL,
   COMIC_SET_SCAN_TYPE_URL,
   COMIC_SET_SORT_NAME_URL,
+  COMIC_SUMMARY_URL,
+  DELETE_BLOCKED_PAGE_HASH_URL,
+  DELETE_PAGE_URL,
+  DELETE_PAGES_WITH_HASH_URL,
+  DUPLICATE_PAGES_URL,
+  GET_COMIC_FILES_URL,
+  GET_COMIC_METADATA_URL,
+  GET_SCRAPING_CANDIDATES_URL,
+  IMPORT_COMIC_FILES_URL,
   interpolate,
   LIBRARY_STATE_URL,
-  COMIC_DELETE_URL,
-  COMIC_SUMMARY_URL,
-  PAGE_TYPES_URL,
   PAGE_TYPE_URL,
-  DUPLICATE_PAGES_URL,
-  DELETE_PAGE_URL,
-  UNDELETE_PAGE_URL,
-  DELETE_PAGES_WITH_HASH_URL,
-  UNDELETE_PAGES_WITH_HASH_URL,
-  GET_COMIC_FILES_URL,
-  ADD_BLOCKED_PAGE_HASH_URL,
-  DELETE_BLOCKED_PAGE_HASH_URL,
-  IMPORT_COMIC_FILES_URL,
+  PAGE_TYPES_URL,
   RESCAN_COMIC_FILES_URL,
-  GET_SCRAPING_CANDIDATES_URL,
-  GET_COMIC_METADATA_URL,
-  SCRAPE_METADATA_AND_SAVE_URL,
   SAVE_COMIC_DETAILS_URL,
-  CLEAR_METADATA_URL
+  SCRAPE_METADATA_AND_SAVE_URL,
+  UNDELETE_PAGE_URL,
+  UNDELETE_PAGES_WITH_HASH_URL
 } from 'app/services/url.constants';
 import {
   HttpClientTestingModule,
@@ -74,13 +74,11 @@ import { LibraryState } from 'app/models/library-state';
 import { Comic } from 'app/models/comics/comic';
 import { PageType } from 'app/models/comics/page-type';
 import {
+  BACK_COVER,
   FRONT_COVER,
-  STORY,
-  BACK_COVER
+  STORY
 } from 'app/models/comics/page-type.fixtures';
 import { PAGE_1, PAGE_2 } from 'app/models/comics/page.fixtures';
-import { request } from 'http';
-import { DUPLICATE_PAGE_2 } from 'app/models/comics/duplicate-page.fixtures';
 import { ComicFile } from 'app/models/import/comic-file';
 import {
   EXISTING_COMIC_FILE_1,

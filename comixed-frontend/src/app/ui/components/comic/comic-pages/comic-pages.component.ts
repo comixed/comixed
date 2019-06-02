@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Comic } from 'app/models/comics/comic';
 import { Page } from 'app/models/comics/page';

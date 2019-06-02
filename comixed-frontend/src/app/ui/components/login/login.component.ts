@@ -22,8 +22,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as UserActions from 'app/actions/user.actions';
-import { User } from 'app/models/user/user';
-import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -39,26 +38,26 @@ export class LoginComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private router: Router,
-    private form_builder: FormBuilder,
+    private form_builder: FormBuilder
   ) {
-
     this.login_form = form_builder.group({
-      'email': ['', Validators.compose([
-        Validators.required,
-        Validators.email,
-      ])],
-      'password': ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(6),
-      ])],
+      email: ['', Validators.compose([Validators.required, Validators.email])],
+      password: [
+        '',
+        Validators.compose([Validators.required, Validators.minLength(6)])
+      ]
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   do_login(): void {
-    this.store.dispatch(new UserActions.UserLoggingIn({ email: this.email, password: this.password }));
+    this.store.dispatch(
+      new UserActions.UserLoggingIn({
+        email: this.email,
+        password: this.password
+      })
+    );
   }
 
   cancel_login(): void {
