@@ -26,7 +26,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as LibraryActions from 'app/actions/library.actions';
 import { MessageService } from 'primeng/api';
 import { ComicService } from 'app/services/comic.service';
-import { LibraryState } from 'app/models/library-state';
+import { LibraryContents } from 'app/models/library-contents';
 import { Comic } from 'app/models/comics/comic';
 import { ScanType } from 'app/models/comics/scan-type';
 import { ComicFormat } from 'app/models/comics/comic-format';
@@ -229,7 +229,7 @@ export class LibraryEffects {
             )
           ),
           map(
-            (library_state: LibraryState) =>
+            (library_state: LibraryContents) =>
               new LibraryActions.LibraryMergeNewComics({
                 library_state: library_state
               })

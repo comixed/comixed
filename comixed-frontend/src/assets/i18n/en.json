@@ -18,8 +18,7 @@
         "teams": "Teams",
         "locations": "Locations",
         "story-arcs": "Story Arcs"
-      },
-      "show-selections": "Selections..."
+      }
     },
     "admin": {
       "root": "Admin",
@@ -71,19 +70,6 @@
         "filename": "Sort by filename",
         "size": "Sort by file size"
       }
-    }
-  },
-  "selected-comic-file-list": {
-    "header": {
-      "confirm-import": "Import Comic Files"
-    },
-    "message": {
-      "confirm-import": "Are you sure you want to import {{comic_count}} comics?"
-    },
-    "button": {
-      "label": "Import",
-      "import": "With Metadata",
-      "import-ignore-metadata": "Ignore Metadata"
     }
   },
   "comic-file-list-item": {
@@ -289,21 +275,6 @@
       }
     }
   },
-  "selected-comics-list": {
-    "header": "{{comic_count}} Comics Selected",
-    "title": {
-      "delete-comics": "Delete {{comic_count}} Comics?"
-    },
-    "text": {
-      "delete-comics": "Are you sure you want to delete these comics?"
-    },
-    "button": {
-      "actions": "Actions",
-      "scrape": "Scrape Comics",
-      "delete": "Delete Comics",
-      "reading-list-actions": "Add To List"
-    }
-  },
   "multi-comic-scraping-page": {
     "title": {
       "preparing-to-scrape": "Preparing To Scrape {{comic_count}} Comics",
@@ -472,6 +443,18 @@
     },
     "text": {
       "no-comics-to-scrape": "No comics to scrape..."
+    },
+    "popup": {
+      "open-comic": "Open comic...",
+      "select-all": "Select all",
+      "deselect-all": "Deselect all",
+      "scrape-comics": "Scrape comics...",
+      "delete-comics": "Delete comics...",
+      "reading-lists": "Reading lists"
+    },
+    "delete-comics": {
+      "header": "Delete {{count}} Comics",
+      "message": "Are you sure you want to delete these comics?"
     }
   },
   "comic-list-item": {

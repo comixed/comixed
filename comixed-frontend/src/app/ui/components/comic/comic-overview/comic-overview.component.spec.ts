@@ -32,7 +32,7 @@ import {
   COMIC_1002,
   COMIC_1003
 } from 'app/models/comics/comic.fixtures';
-import { EXISTING_LIBRARY } from 'app/models/actions/library.fixtures';
+import { EXISTING_LIBRARY } from 'app/models/state/library-state.fixtures';
 import { ComicOverviewComponent } from './comic-overview.component';
 import {
   DEFAULT_COMIC_FORMAT_1,
@@ -75,7 +75,7 @@ describe('ComicOverviewComponent', () => {
     component.is_admin = false;
     component.comic = COMIC_1000;
     component.library = EXISTING_LIBRARY;
-    component.library.library_state.comics = [
+    component.library.library_contents.comics = [
       COMIC_1000,
       COMIC_1001,
       COMIC_1002,

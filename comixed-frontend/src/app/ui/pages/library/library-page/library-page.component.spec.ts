@@ -49,7 +49,6 @@ import { LibraryFilterComponent } from 'app/ui/components/library/library-filter
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
 import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
-import { SelectedComicsListComponent } from 'app/ui/components/library/selected-comics-list/selected-comics-list.component';
 import { LibraryFilterPipe } from 'app/pipes/library-filter.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
@@ -59,6 +58,7 @@ import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
 import { REDUCERS } from 'app/app.reducers';
+import { ContextMenuModule } from 'primeng/primeng';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1000;
@@ -85,7 +85,8 @@ describe('LibraryPageComponent', () => {
         SplitButtonModule,
         ScrollPanelModule,
         OverlayPanelModule,
-        CardModule
+        CardModule,
+        ContextMenuModule
       ],
       declarations: [
         LibraryPageComponent,
@@ -94,7 +95,6 @@ describe('LibraryPageComponent', () => {
         LibraryFilterComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        SelectedComicsListComponent,
         ComicCoverComponent,
         LibraryFilterPipe,
         ComicCoverUrlPipe,
@@ -168,18 +168,5 @@ describe('LibraryPageComponent', () => {
     xit('loads the cover size from the URL');
 
     xit('loads the same height value from the URL');
-  });
-
-  describe('when a comic selection changes', () => {
-    beforeEach(() => {
-      component.set_selected_state(COMIC, true);
-      fixture.detectChanges();
-    });
-
-    it('fires an event', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryActions.LibrarySetSelected({ comic: COMIC, selected: true })
-      );
-    });
   });
 });

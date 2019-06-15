@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { ComicGrouping, Library } from 'app/models/actions/library';
+import { ComicGrouping, LibraryState } from 'app/models/state/library-state';
 import { Comic } from 'app/models/comics/comic';
 import * as LibraryActions from 'app/actions/library.actions';
 
-const initial_state: Library = {
+const initial_state: LibraryState = {
   busy: false,
-  library_state: {
+  library_contents: {
     import_count: 0,
     rescan_count: 0,
     comics: []
@@ -32,7 +32,6 @@ const initial_state: Library = {
   scan_types: [],
   formats: [],
   comics: [],
-  selected_comics: [],
   publishers: [],
   series: [],
   characters: [],
@@ -43,7 +42,7 @@ const initial_state: Library = {
 };
 
 export function libraryReducer(
-  state: Library = initial_state,
+  state: LibraryState = initial_state,
   action: LibraryActions.Actions
 ) {
   switch (action.type) {
@@ -281,7 +280,7 @@ export function libraryReducer(
       return {
         ...state,
         busy: false,
-        library_state: action.payload.library_state,
+        library_contents: action.payload.library_state,
         last_comic_date: last_comic_date,
         comics: comics,
         publishers: publishers,
@@ -423,27 +422,6 @@ export function libraryReducer(
       };
     }
 
-    case LibraryActions.LIBRARY_SET_SELECTED: {
-      const selected = state.selected_comics.filter((comic: Comic) => {
-        return comic.id !== action.payload.comic.id;
-      });
-
-      if (action.payload.selected) {
-        selected.unshift(action.payload.comic);
-      }
-
-      return {
-        ...state,
-        selected_comics: selected
-      };
-    }
-
-    case LibraryActions.LIBRARY_RESET_SELECTED:
-      return {
-        ...state,
-        selected_comics: []
-      };
-
     case LibraryActions.LIBRARY_DELETE_MULTIPLE_COMICS:
       return {
         ...state,
@@ -458,8 +436,7 @@ export function libraryReducer(
       return {
         ...state,
         busy: false,
-        comics: remaining_comics,
-        selected_comics: []
+        comics: remaining_comics
       };
     }
 

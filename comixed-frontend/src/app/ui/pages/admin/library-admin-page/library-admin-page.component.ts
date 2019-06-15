@@ -19,7 +19,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Library } from 'app/models/actions/library';
+import { LibraryState } from 'app/models/state/library-state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { AppState } from 'app/app.state';
@@ -31,16 +31,16 @@ import * as LibraryActions from 'app/actions/library.actions';
   styleUrls: ['./library-admin-page.component.css']
 })
 export class LibraryAdminPageComponent implements OnInit, OnDestroy {
-  library$: Observable<Library>;
+  library$: Observable<LibraryState>;
   library_subscription: Subscription;
-  library: Library;
+  library: LibraryState;
 
   constructor(private store: Store<AppState>) {
     this.library$ = store.select('library');
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: Library) => {
+    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
       this.library = library;
     });
   }
@@ -50,7 +50,7 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   }
 
   rescan_library(): void {
-    if (this.library.library_state.rescan_count === 0) {
+    if (this.library.library_contents.rescan_count === 0) {
       this.store.dispatch(
         new LibraryActions.LibraryRescanFiles({ last_comic_date: '0' })
       );

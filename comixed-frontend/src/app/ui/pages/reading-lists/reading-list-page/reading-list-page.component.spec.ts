@@ -35,7 +35,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { READING_LIST_1 } from 'app/models/reading-list.fixtures';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
-import { SelectedComicsListComponent } from 'app/ui/components/library/selected-comics-list/selected-comics-list.component';
 import { DataViewModule } from 'primeng/dataview';
 import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
@@ -90,12 +89,12 @@ describe('ReadingListPageComponent', () => {
         OverlayPanelModule,
         CardModule,
         ConfirmDialogModule,
+        ContextMenuModule,
         ContextMenuModule
       ],
       declarations: [
         ReadingListPageComponent,
         ComicListComponent,
-        SelectedComicsListComponent,
         ComicListToolbarComponent,
         ComicListItemComponent,
         ComicGridItemComponent,

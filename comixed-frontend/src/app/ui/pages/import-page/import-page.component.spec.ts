@@ -39,7 +39,6 @@ import { READER_USER } from 'app/models/user/user.fixtures';
 import { ImportPageComponent } from './import-page.component';
 import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
-import { SelectedComicFileListComponent } from 'app/ui/components/import/selected-comic-file-list/selected-comic-file-list.component';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
@@ -95,7 +94,6 @@ describe('ImportPageComponent', () => {
         ComicFileGridItemComponent,
         ComicFileListItemComponent,
         ComicFileListToolbarComponent,
-        SelectedComicFileListComponent,
         ComicCoverComponent,
         ComicCoverUrlPipe,
         ComicFileCoverUrlPipe,

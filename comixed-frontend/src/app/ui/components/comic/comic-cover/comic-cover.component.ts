@@ -17,31 +17,54 @@
  * org.comixed;
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { Action, Store } from '@ngrx/store';
+import { AppState } from 'app/app.state';
+import * as SelectionActions from 'app/actions/selection.actions';
+import { ComicFile } from 'app/models/import/comic-file';
 
 @Component({
   selector: 'app-comic-cover',
   templateUrl: './comic-cover.component.html',
-  styleUrls: ['./comic-cover.component.css']
+  styleUrls: ['./comic-cover.component.scss']
 })
-export class ComicCoverComponent implements OnInit {
+export class ComicCoverComponent {
   @Input() cover_url: string;
   @Input() title: string;
   @Input() comic: Comic;
+  @Input() comic_file: ComicFile;
   @Input() cover_size: number;
   @Input() same_height: boolean;
   @Input() selected = false;
-  @Input() used_selected_class = true;
+  @Input() use_selected_class = true;
 
-  @Output() click = new EventEmitter<boolean>();
+  constructor(private store: Store<AppState>) {}
 
-  constructor() {}
+  toggle_selection(): void {
+    let action: Action = null;
 
-  ngOnInit() {}
-
-  show_overlay_panel(event: any, panel: OverlayPanel, target: any) {
-    panel.show(event, target);
+    if (this.selected) {
+      if (this.comic) {
+        action = new SelectionActions.SelectionRemoveComics({
+          comics: [this.comic]
+        });
+      } else {
+        action = new SelectionActions.SelectionRemoveComicFiles({
+          comic_files: [this.comic_file]
+        });
+      }
+    } else {
+      if (this.comic) {
+        action = new SelectionActions.SelectionAddComics({
+          comics: [this.comic]
+        });
+      } else {
+        action = new SelectionActions.SelectionAddComicFiles({
+          comic_files: [this.comic_file]
+        });
+      }
+    }
+    this.store.dispatch(action);
   }
 }

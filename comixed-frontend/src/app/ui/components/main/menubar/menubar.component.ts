@@ -162,19 +162,6 @@ export class MenubarComponent implements OnInit, OnDestroy {
                 visible: this.user && this.user.authenticated
               }
             ]
-          },
-          {
-            separator: true,
-            visible: this.user && this.user.is_admin
-          },
-          {
-            label: this.translate.instant('menu.library.show-selections'),
-            icon: 'fas fa-vote-yea',
-            visible: this.user && this.user.authenticated,
-            command: () =>
-              this.store.dispatch(
-                new DisplayActions.LibraryViewToggleSidebar({ show: true })
-              )
           }
         ]
       }

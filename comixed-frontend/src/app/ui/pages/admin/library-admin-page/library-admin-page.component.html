@@ -1,7 +1,7 @@
 <p-panel [header]="'library-admin-page.rescan.header' | translate">
   <div class="ui-g">
     <div
-      *ngIf="library.library_state.rescan_count !== 0"
+      *ngIf="library.library_contents.rescan_count !== 0"
       class="ui-g-12"
       [innerHTML]="'library-admin-page.rescan.already-running' | translate"
     ></div>
@@ -13,8 +13,8 @@
           pButton
           class="cx-selection-button ui-button-success"
           [disabled]="
-            library.library_state.rescan_count !== 0 ||
-            library.library_state.import_count !== 0
+            library.library_contents.rescan_count !== 0 ||
+            library.library_contents.import_count !== 0
           "
           [label]="
             'library-admin-page.rescan.buttons.rescan-library' | translate
@@ -57,8 +57,8 @@
           "
           icon="fa fa-fw fa-step-backward"
           [disabled]="
-            library.library_state.rescan_count !== 0 ||
-            library.library_state.import_count !== 0
+            library.library_contents.rescan_count !== 0 ||
+            library.library_contents.import_count !== 0
           "
           [method]="'GET'"
           [url]="'/api/admin/data/export'"

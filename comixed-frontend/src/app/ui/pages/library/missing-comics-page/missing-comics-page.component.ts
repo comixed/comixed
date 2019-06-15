@@ -21,11 +21,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppState } from 'app/app.state';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Library } from 'app/models/actions/library';
+import { LibraryState } from 'app/models/state/library-state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Comic } from 'app/models/comics/comic';
 import { LibraryDisplay } from 'app/models/state/library-display';
+import { SelectionState } from 'app/models/state/selection-state';
 
 @Component({
   selector: 'app-missing-comics-page',
@@ -33,9 +34,13 @@ import { LibraryDisplay } from 'app/models/state/library-display';
   styleUrls: ['./missing-comics-page.component.css']
 })
 export class MissingComicsPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<Library>;
-  private library_subscription: Subscription;
-  library: Library;
+  library$: Observable<LibraryState>;
+  library_subscription: Subscription;
+  library: LibraryState;
+
+  selection_state$: Observable<SelectionState>;
+  selection_state_subscription: Subscription;
+  selection_state: SelectionState;
 
   private library_display$: Observable<LibraryDisplay>;
   private library_display_subscription: Subscription;
@@ -50,20 +55,28 @@ export class MissingComicsPageComponent implements OnInit, OnDestroy {
   ) {
     this.library$ = store.select('library');
     this.library_display$ = store.select('library_display');
+    this.selection_state$ = store.select('selections');
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: Library) => {
-      this.library = library;
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
 
-      if (this.library) {
-        this.comics = [].concat(this.library.comics);
-        this.selected_comics = [].concat(this.library.selected_comics);
+        if (this.library) {
+          this.comics = [].concat(this.library.comics);
+        }
       }
-    });
+    );
     this.library_display_subscription = this.library_display$.subscribe(
       (library_display: LibraryDisplay) => {
         this.library_display = library_display;
+      }
+    );
+    this.selection_state_subscription = this.selection_state$.subscribe(
+      (selection_state: SelectionState) => {
+        this.selection_state = selection_state;
+        this.selected_comics = [].concat(this.selection_state.selected_comics);
       }
     );
   }

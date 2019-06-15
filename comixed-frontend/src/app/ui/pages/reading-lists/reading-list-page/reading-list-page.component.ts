@@ -31,6 +31,7 @@ import { Comic } from 'app/models/comics/comic';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { SelectionState } from 'app/models/state/selection-state';
 
 @Component({
   selector: 'app-reading-list-page',
@@ -41,8 +42,13 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   reading_list_state$: Observable<ReadingListState>;
   reading_list_state_subscription: Subscription;
   reading_list_state: ReadingListState;
-  entries: Array<Comic>;
-  selected_entries: Array<Comic> = [];
+
+  selection_state$: Observable<SelectionState>;
+  selection_state_subscription: Subscription;
+  selection_state: SelectionState;
+
+  entries: Comic[] = [];
+  selected_entries: Comic[] = [];
   context_menu: MenuItem[] = [];
 
   reading_list_form: FormGroup;
@@ -57,6 +63,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
     private confirm: ConfirmationService
   ) {
     this.reading_list_state$ = this.store.select('reading_lists');
+    this.selection_state$ = store.select('selections');
     this.reading_list_form = this.form_builder.group({
       name: ['', [Validators.required]],
       summary: ['']
@@ -97,10 +104,18 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
       }
     );
     this.store.dispatch(new ReadingListActions.ReadingListGetAll());
+    this.selection_state_subscription = this.selection_state$.subscribe(
+      (selection_state: SelectionState) => {
+        this.selection_state = selection_state;
+
+        this.selected_entries = [].concat(this.selection_state.selected_comics);
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this.reading_list_state_subscription.unsubscribe();
+    this.selection_state_subscription.unsubscribe();
   }
 
   private load_reading_list(): void {
@@ -146,16 +161,6 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         }
       })
     );
-  }
-
-  set_selection_state(comic: Comic, selected: boolean): void {
-    if (selected) {
-      this.selected_entries.push(comic);
-    } else {
-      this.selected_entries = this.selected_entries.filter(
-        (entry: Comic) => entry.id !== comic.id
-      );
-    }
   }
 
   load_context_menu(): void {

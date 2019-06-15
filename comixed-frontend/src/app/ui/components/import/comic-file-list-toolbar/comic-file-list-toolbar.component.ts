@@ -34,6 +34,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicFile } from 'app/models/import/comic-file';
 import * as UserActions from 'app/actions/user.actions';
+import * as SelectionActions from 'app/actions/selection.actions';
 
 @Component({
   selector: 'app-comic-file-list-toolbar',
@@ -121,13 +122,17 @@ export class ComicFileListToolbarComponent implements OnInit {
 
   select_all_comics(): void {
     this.store.dispatch(
-      new ImportActions.ImportingSelectFiles({ files: this.comic_files })
+      new SelectionActions.SelectionAddComicFiles({
+        comic_files: this.comic_files
+      })
     );
   }
 
   deselect_all_comics(): void {
     this.store.dispatch(
-      new ImportActions.ImportingUnselectFiles({ files: this.comic_files })
+      new SelectionActions.SelectionRemoveComicFiles({
+        comic_files: this.comic_files
+      })
     );
   }
 

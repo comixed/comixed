@@ -1,58 +1,44 @@
-<form [formGroup]="reading_list_form" (ngSubmit()="submit_form()">
-  <div class="ui-g">
-    <div class="ui-g-3"></div>
-    <div class="ui-g-6">
-      <div class="ui-g">
-        <div class="ui-g-12">
-          <label for="reading_list_name">{{
-            'reading-list-page.label.name' | translate
-          }}</label>
-        </div>
-        <div class="ui-g-12">
-          <input
-            pInputText
-            id="reading_list_name"
-            [placeholder]="
-              'reading-list-page.text.name-placeholder' | translate
-            "
-            formControlName="name"
-          />
-        </div>
+<form [formGroup]='reading_list_form'
+      (ngSubmit()='submit_form()'>
+    <div class='ui-g'>
+        <div class='ui-g-3'></div>
+        <div class='ui-g-6'>
+            <div class='ui-g'>
+                <div class='ui-g-12'>
+                    <label for='reading_list_name'>{{"reading-list-page.label.name" | translate}}</label>
+                </div>
+                <div class='ui-g-12'>
+                    <input pInputText
+                           id='reading_list_name'
+                           [placeholder]='"reading-list-page.text.name-placeholder" | translate'
+                           formControlName='name'/>
+                </div>
 
-        <div class="ui-g-12">
-          <label for="reading_list_summary">{{
-            'reading-list-page.label.summary' | translate
-          }}</label>
-        </div>
-        <div class="ui-g-12">
-          <input
-            pInputText
-            id="reading_list_summary"
-            formControlName="summary"
-          />
-        </div>
+                <div class='ui-g-12'>
+                    <label for='reading_list_summary'>{{"reading-list-page.label.summary" | translate}}</label>
+                </div>
+                <div class='ui-g-12'>
+                    <input pInputText
+                           id='reading_list_summary'
+                           formControlName='summary'/>
+                </div>
 
-        <div class="ui-g-12">
-          <button
-            pButton
-            [disabled]="!reading_list_form.valid || !reading_list_form.dirty"
-            [label]="'reading-list-page.button.save' | translate"
-            (click)="submit_form()"
-          ></button>
+                <div class='ui-g-12'>
+                    <button pButton
+                            [disabled]='!reading_list_form.valid || !reading_list_form.dirty'
+                            [label]='"reading-list-page.button.save" | translate'
+                            (click)='submit_form()'></button>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class='ui-g-3'></div>
+        <div #context_target
+             class='ui-g-12'>
+            <app-comic-list [comics]='entries'
+                            [selected_comics]='selected_entries'
+                            (selectionChange)='set_selection_state($event.comic, $event.selected)'></app-comic-list>
+        </div>
     </div>
-    <div class="ui-g-3"></div>
-    <div #context_target class="ui-g-12">
-      <app-comic-list
-        [comics]="entries"
-        [selected_comics]="selected_entries"
-        (selectionChange)="set_selection_state($event.comic, $event.selected)"
-      ></app-comic-list>
-    </div>
-  </div>
-  <p-contextMenu
-    [target]="context_target"
-    [model]="context_menu"
-  ></p-contextMenu>
+    <p-contextMenu [target]='context_target'
+                   [model]='context_menu'></p-contextMenu>
 </form>

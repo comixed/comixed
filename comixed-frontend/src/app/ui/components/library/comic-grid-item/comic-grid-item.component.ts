@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
 
 @Component({
@@ -25,18 +25,11 @@ import { Comic } from 'app/models/comics/comic';
   templateUrl: './comic-grid-item.component.html',
   styleUrls: ['./comic-grid-item.component.css']
 })
-export class ComicGridItemComponent implements OnInit {
+export class ComicGridItemComponent {
   @Input() comic: Comic;
   @Input() same_height: boolean;
   @Input() cover_size: number;
   @Input() selected = false;
-  @Output() toggleSelected = new EventEmitter<boolean>();
 
   constructor() {}
-
-  ngOnInit() {}
-
-  toggle_selected(): void {
-    this.toggleSelected.next(!this.selected);
-  }
 }

@@ -17,10 +17,30 @@
  * org.comixed;
  */
 
-import { Comic } from './comics/comic';
+import { ComicGrouping, LibraryState } from './library-state';
 
-export interface LibraryState {
-  comics: Array<Comic>;
-  rescan_count: number;
-  import_count: number;
-}
+export const EXISTING_LIBRARY: LibraryState = {
+  busy: false,
+  library_contents: {
+    comics: [],
+    rescan_count: 0,
+    import_count: 0
+  },
+  last_comic_date: '0',
+  scan_types: [],
+  formats: [],
+  comics: [],
+  publishers: [],
+  series: [],
+  characters: [],
+  teams: [],
+  locations: [],
+  story_arcs: [],
+  last_read_dates: []
+};
+
+export const DEFAULT_COMIC_GROUPING: ComicGrouping = {
+  name: 'grouping name',
+  comic_count: 0,
+  latest_comic_date: '0'
+};

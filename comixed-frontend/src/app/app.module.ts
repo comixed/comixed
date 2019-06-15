@@ -128,11 +128,9 @@ import { StoryArcsPageComponent } from 'app/ui/pages/story-arcs/story-arcs-page/
 import { ComicStoriesPipe } from 'app/pipes/comic-stories.pipe';
 import { StoryArcDetailsPageComponent } from 'app/ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
-import { SelectedComicsListComponent } from 'app/ui/components/library/selected-comics-list/selected-comics-list.component';
 import { MultiComicScrapingPageComponent } from 'app/ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
-import { SelectedComicFileListComponent } from 'app/ui/components/import/selected-comic-file-list/selected-comic-file-list.component';
 import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
 import { FileSaverModule } from 'ngx-filesaver';
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
@@ -207,11 +205,9 @@ import { ComicFileListItemComponent } from './ui/components/import/comic-file-li
     ComicStoriesPipe,
     StoryArcDetailsPageComponent,
     ComicListComponent,
-    SelectedComicsListComponent,
     MultiComicScrapingPageComponent,
     ComicFileListToolbarComponent,
     ComicFileGridItemComponent,
-    SelectedComicFileListComponent,
     ComicFileListComponent,
     LibraryAdminPageComponent,
     ComicDownloadLinkPipe,

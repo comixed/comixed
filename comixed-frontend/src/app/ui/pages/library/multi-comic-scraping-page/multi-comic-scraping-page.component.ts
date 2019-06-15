@@ -24,9 +24,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from 'app/actions/library.actions';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import { Library } from 'app/models/actions/library';
+import { LibraryState } from 'app/models/state/library-state';
 import { LibraryDisplay } from 'app/models/state/library-display';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
+import { SelectionState } from 'app/models/state/selection-state';
+import * as SelectionActions from 'app/actions/selection.actions';
 
 @Component({
   selector: 'app-multi-comic-scraping-page',
@@ -34,29 +36,36 @@ import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scra
   styleUrls: ['./multi-comic-scraping-page.component.css']
 })
 export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<Library>;
-  private library_subscription: Subscription;
-  library: Library;
+  library$: Observable<LibraryState>;
+  library_subscription: Subscription;
+  library: LibraryState;
 
-  private library_display$: Observable<LibraryDisplay>;
-  private llibrary_display_subscription: Subscription;
+  library_display$: Observable<LibraryDisplay>;
+  library_display_subscription: Subscription;
   library_display: LibraryDisplay;
 
-  private scraping$: Observable<MultipleComicsScraping>;
-  private scraping_subscription: Subscription;
+  scraping$: Observable<MultipleComicsScraping>;
+  scraping_subscription: Subscription;
   scraping: MultipleComicsScraping;
+
+  selection_state$: Observable<SelectionState>;
+  selection_state_subscription: Subscription;
+  selection_state: SelectionState;
 
   constructor(private store: Store<AppState>) {
     this.library$ = this.store.select('library');
     this.library_display$ = this.store.select('library_display');
     this.scraping$ = this.store.select('multiple_comic_scraping');
+    this.selection_state$ = this.store.select('selections');
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: Library) => {
-      this.library = library;
-    });
-    this.llibrary_display_subscription = this.library_display$.subscribe(
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
+      }
+    );
+    this.library_display_subscription = this.library_display$.subscribe(
       (library_display: LibraryDisplay) => {
         this.library_display = library_display;
       }
@@ -66,19 +75,26 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
         this.scraping = scraping;
       }
     );
+    this.selection_state_subscription = this.selection_state$.subscribe(
+      (selection_state: SelectionState) => {
+        this.selection_state = selection_state;
+      }
+    );
   }
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
+    this.library_display_subscription.unsubscribe();
     this.scraping_subscription.unsubscribe();
+    this.selection_state_subscription.unsubscribe();
   }
 
   start_scraping(): void {
     this.store.dispatch(
       new ScrapingActions.MultipleComicsScrapingStart({
-        selected_comics: this.library.selected_comics
+        selected_comics: this.selection_state.selected_comics
       })
     );
-    this.store.dispatch(new LibraryActions.LibraryResetSelected());
+    this.store.dispatch(new SelectionActions.SelectionReset());
   }
 }

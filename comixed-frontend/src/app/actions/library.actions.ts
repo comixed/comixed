@@ -22,7 +22,7 @@ import { Comic } from 'app/models/comics/comic';
 import { Page } from 'app/models/comics/page';
 import { ScanType } from 'app/models/comics/scan-type';
 import { ComicFormat } from 'app/models/comics/comic-format';
-import { LibraryState } from 'app/models/library-state';
+import { LibraryContents } from 'app/models/library-contents';
 
 export const LIBRARY_GET_SCAN_TYPES = '[LIBRARY] Fetch the scan types';
 export class LibraryGetScanTypes implements Action {
@@ -152,7 +152,7 @@ export class LibraryMergeNewComics implements Action {
 
   constructor(
     public payload: {
-      library_state: LibraryState;
+      library_state: LibraryContents;
     }
   ) {}
 }
@@ -247,25 +247,6 @@ export class LibraryBlockedStateFlagSet implements Action {
   ) {}
 }
 
-export const LIBRARY_SET_SELECTED = '[LIBRARY] Set selected state';
-export class LibrarySetSelected implements Action {
-  readonly type = LIBRARY_SET_SELECTED;
-
-  constructor(
-    public payload: {
-      comic: Comic;
-      selected: boolean;
-    }
-  ) {}
-}
-
-export const LIBRARY_RESET_SELECTED = '[LIBRARY] Reset selected state';
-export class LibraryResetSelected implements Action {
-  readonly type = LIBRARY_RESET_SELECTED;
-
-  constructor() {}
-}
-
 export const LIBRARY_DELETE_MULTIPLE_COMICS =
   '[LIBRARY] Delete multiple comics';
 export class LibraryDeleteMultipleComics implements Action {
@@ -302,7 +283,5 @@ export type Actions =
   | LibraryRescanFiles
   | LibrarySetBlockedPageState
   | LibraryBlockedStateFlagSet
-  | LibrarySetSelected
-  | LibraryResetSelected
   | LibraryDeleteMultipleComics
   | LibraryComicsDeleted;

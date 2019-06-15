@@ -28,7 +28,6 @@ import * as DisplayActions from 'app/actions/library-display.actions';
 import { COMIC_1000, COMIC_1002 } from 'app/models/comics/comic.fixtures';
 import { MissingComicsPipe } from 'app/pipes/missing-comics.pipe';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
-import { SelectedComicsListComponent } from 'app/ui/components/library/selected-comics-list/selected-comics-list.component';
 import { DataViewModule } from 'primeng/dataview';
 import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
@@ -38,6 +37,7 @@ import {
   CheckboxModule,
   ConfirmationService,
   ConfirmDialogModule,
+  ContextMenuModule,
   DropdownModule,
   OverlayPanelModule,
   PanelModule,
@@ -78,12 +78,12 @@ describe('MissingComicsPageComponent', () => {
         PanelModule,
         OverlayPanelModule,
         CardModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        ContextMenuModule
       ],
       declarations: [
         MissingComicsPageComponent,
         ComicListComponent,
-        SelectedComicsListComponent,
         MissingComicsPipe,
         ComicListToolbarComponent,
         ComicListItemComponent,

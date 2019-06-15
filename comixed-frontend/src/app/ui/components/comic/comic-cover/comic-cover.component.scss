@@ -1,0 +1,10 @@
+:host ::ng-deep {
+  .ui-card-body, .ui-card-footer {
+    margin: 0;
+    padding: 0;
+  }
+
+  .ui-card-content {
+    padding: 5px;
+  }
+}

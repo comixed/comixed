@@ -8,6 +8,7 @@ import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scra
 import { duplicatesReducer } from 'app/reducers/duplicates.reducer';
 import { userAdminReducer } from 'app/reducers/user-admin.reducer';
 import { readingListReducer } from 'app/reducers/reading-list.reducer';
+import { selectionReducer } from 'app/reducers/selection.reducer';
 
 export const REDUCERS = {
   user: userReducer,
@@ -19,5 +20,6 @@ export const REDUCERS = {
   multiple_comic_scraping: multipleComicsScrapingReducer,
   duplicates: duplicatesReducer,
   user_admin: userAdminReducer,
-  reading_lists: readingListReducer
+  reading_lists: readingListReducer,
+  selections: selectionReducer
 };

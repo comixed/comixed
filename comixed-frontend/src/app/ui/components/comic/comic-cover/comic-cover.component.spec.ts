@@ -29,16 +29,23 @@ import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { ComicCoverComponent } from './comic-cover.component';
+import { Store, StoreModule } from '@ngrx/store';
+import { AppState } from 'app/app.state';
+import { REDUCERS } from 'app/app.reducers';
+import * as SelectionActions from 'app/actions/selection.actions';
+import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
 
 describe('ComicCoverComponent', () => {
   let component: ComicCoverComponent;
   let fixture: ComponentFixture<ComicCoverComponent>;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
         BrowserAnimationsModule,
+        StoreModule.forRoot(REDUCERS),
         OverlayPanelModule,
         PanelModule,
         CardModule,
@@ -52,9 +59,80 @@ describe('ComicCoverComponent', () => {
     component.comic = COMIC_1000;
     component.cover_size = 200;
     component.same_height = true;
+    store = TestBed.get(Store);
 
     fixture.detectChanges();
   }));
+
+  it('creates the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('when a selected comic is clicked', () => {
+    beforeEach(() => {
+      component.selected = true;
+      spyOn(store, 'dispatch');
+      component.toggle_selection();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new SelectionActions.SelectionRemoveComics({
+          comics: [component.comic]
+        })
+      );
+    });
+  });
+
+  describe('when an unselected comic is clicked', () => {
+    beforeEach(() => {
+      component.selected = false;
+      spyOn(store, 'dispatch');
+      component.toggle_selection();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new SelectionActions.SelectionAddComics({ comics: [component.comic] })
+      );
+    });
+  });
+
+  describe('when a selected comic file is clicked', () => {
+    beforeEach(() => {
+      component.comic = null;
+      component.comic_file = EXISTING_COMIC_FILE_1;
+      component.selected = true;
+      spyOn(store, 'dispatch');
+      component.toggle_selection();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new SelectionActions.SelectionRemoveComicFiles({
+          comic_files: [EXISTING_COMIC_FILE_1]
+        })
+      );
+    });
+  });
+
+  describe('when an unselected comic file is clicked', () => {
+    beforeEach(() => {
+      component.comic = null;
+      component.comic_file = EXISTING_COMIC_FILE_1;
+      component.selected = false;
+      spyOn(store, 'dispatch');
+      component.toggle_selection();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new SelectionActions.SelectionAddComicFiles({
+          comic_files: [EXISTING_COMIC_FILE_1]
+        })
+      );
+    });
+  });
 
   describe('when the comic is not selected', () => {
     beforeEach(() => {

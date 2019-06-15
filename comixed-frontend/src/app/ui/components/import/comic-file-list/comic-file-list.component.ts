@@ -27,6 +27,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import * as ImportActions from 'app/actions/importing.actions';
 import * as DisplayActions from 'app/actions/library-display.actions';
+import * as SelectionActions from 'app/actions/selection.actions';
 
 @Component({
   selector: 'app-comic-file-list',
@@ -88,7 +89,9 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
         }),
         command: () =>
           this.store.dispatch(
-            new ImportActions.ImportingSelectFiles({ files: this.comic_files })
+            new SelectionActions.SelectionAddComicFiles({
+              comic_files: this.comic_files
+            })
           ),
         disabled:
           !this.comic_files.length ||
@@ -101,8 +104,8 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
         }),
         command: () =>
           this.store.dispatch(
-            new ImportActions.ImportingUnselectFiles({
-              files: this.selected_comic_files
+            new SelectionActions.SelectionRemoveComicFiles({
+              comic_files: this.selected_comic_files
             })
           ),
         visible:

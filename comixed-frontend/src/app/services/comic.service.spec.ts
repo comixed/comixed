@@ -70,7 +70,7 @@ import {
   DEFAULT_COMIC_FORMAT_2,
   DEFAULT_COMIC_FORMAT_3
 } from 'app/models/comics/comic-format.fixtures';
-import { LibraryState } from 'app/models/library-state';
+import { LibraryContents } from 'app/models/library-contents';
 import { Comic } from 'app/models/comics/comic';
 import { PageType } from 'app/models/comics/page-type';
 import {
@@ -204,7 +204,7 @@ describe('ComicService', () => {
 
     service
       .fetch_remote_library_state(`${latest_comic_update}`, timeout)
-      .subscribe((library_state: LibraryState) => {
+      .subscribe((library_state: LibraryContents) => {
         expect(library_state.comics).toEqual(COMICS);
         expect(library_state.import_count).toEqual(import_count);
         expect(library_state.rescan_count).toEqual(rescan_count);

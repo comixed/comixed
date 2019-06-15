@@ -36,8 +36,15 @@ import { Subscription } from 'rxjs/Subscription';
 import * as LibraryDisplayActions from 'app/actions/library-display.actions';
 import * as UserActions from 'app/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { SelectItem } from 'primeng/api';
+import { ConfirmationService, SelectItem } from 'primeng/api';
 import { ComicSelectionEntry } from 'app/models/ui/comic-selection-entry';
+import { MenuItem } from 'primeng/components/common/menuitem';
+import * as LibraryActions from 'app/actions/library.actions';
+import * as SelectionActions from 'app/actions/selection.actions';
+import { ReadingListState } from 'app/models/state/reading-list-state';
+import { ReadingList } from 'app/models/reading-list';
+import * as ReadingListActions from 'app/actions/reading-list.actions';
+import { ReadingListEntry } from 'app/models/reading-list-entry';
 
 const FIRST = 'first';
 
@@ -47,28 +54,38 @@ const FIRST = 'first';
   styleUrls: ['./comic-list.component.css']
 })
 export class ComicListComponent implements OnInit, OnDestroy {
-  @Input() comics: Array<Comic>;
-  @Input() selected_comics: Array<Comic> = [];
+  _comics: Comic[] = [];
+  _selected_comics: Comic[] = [];
+  _current_comic: Comic = null;
+
   @Input() library_filter: LibraryFilter;
   @Input() show_selections: boolean;
 
-  @Output() selectionChange = new EventEmitter<ComicSelectionEntry>();
-
-  private library_display$: Observable<LibraryDisplay>;
-  private library_display_subscription: Subscription;
+  library_display$: Observable<LibraryDisplay>;
+  library_display_subscription: Subscription;
   library_display: LibraryDisplay;
+
+  reading_list_state$: Observable<ReadingListState>;
+  reading_list_state_subscription: Subscription;
+  reading_list_state: ReadingListState;
+
+  translate_subscription: Subscription;
 
   protected additional_sort_field_options: Array<SelectItem>;
 
   index_of_first = 0;
 
+  context_menu: MenuItem[];
+
   constructor(
     private translate: TranslateService,
+    private confirm: ConfirmationService,
     private store: Store<AppState>,
     private activated_route: ActivatedRoute,
     private router: Router
   ) {
     this.library_display$ = this.store.select('library_display');
+    this.reading_list_state$ = this.store.select('reading_lists');
   }
 
   ngOnInit() {
@@ -83,10 +100,48 @@ export class ComicListComponent implements OnInit, OnDestroy {
         this.index_of_first = parseInt(params.first, 10);
       }
     });
+    this.translate_subscription = this.translate.onLangChange.subscribe(() => {
+      this.load_context_menu();
+    });
+    this.reading_list_state_subscription = this.reading_list_state$.subscribe(
+      (reading_list_state: ReadingListState) => {
+        this.reading_list_state = reading_list_state;
+      }
+    );
+    this.store.dispatch(new ReadingListActions.ReadingListGetAll());
   }
 
   ngOnDestroy() {
     this.library_display_subscription.unsubscribe();
+    this.translate_subscription.unsubscribe();
+    this.reading_list_state_subscription.unsubscribe();
+  }
+
+  @Input() set comics(comics: Comic[]) {
+    this._comics = comics;
+    this.load_context_menu();
+  }
+
+  get comics(): Comic[] {
+    return this._comics;
+  }
+
+  @Input() set selected_comics(selected_comics: Comic[]) {
+    this._selected_comics = selected_comics;
+    this.load_context_menu();
+  }
+
+  get selected_comics(): Comic[] {
+    return this._selected_comics;
+  }
+
+  @Input() set current_comic(current_comic: Comic) {
+    this._current_comic = current_comic;
+    this.load_context_menu();
+  }
+
+  get current_comic(): Comic {
+    return this._current_comic;
   }
 
   private load_additional_sort_field_options(): void {
@@ -134,5 +189,117 @@ export class ComicListComponent implements OnInit, OnDestroy {
       relativeTo: this.activated_route,
       queryParams: queryParams
     });
+  }
+
+  private load_context_menu() {
+    this.context_menu = [
+      {
+        label: this.translate.instant('comic-list.popup.open-comic'),
+        command: () => this.open_comic(this._selected_comics[0]),
+        icon: 'fas fa-book-open',
+        visible: this._selected_comics.length === 1
+      },
+      {
+        label: this.translate.instant('comic-list.popup.select-all'),
+        command: () => this.select_all(),
+        icon: 'fas fa-check-double',
+        visible: this._comics.length > 0
+      },
+      {
+        label: this.translate.instant('comic-list.popup.deselect-all'),
+        command: () => this.deselect_all(),
+        icon: 'fas fa-broom',
+        visible: this._selected_comics.length > 0
+      },
+      {
+        label: this.translate.instant('comic-list.popup.scrape-comics'),
+        command: () => this.scrape_comics(),
+        icon: 'fas fa-cloud',
+        visible: this._selected_comics.length > 0
+      },
+      {
+        label: this.translate.instant('comic-list.popup.delete-comics'),
+        command: () => this.delete_comics(),
+        icon: 'fas fa-trash',
+        visible: this._selected_comics.length > 0
+      }
+    ];
+
+    if (
+      this.reading_list_state &&
+      this.reading_list_state.reading_lists.length
+    ) {
+      this.context_menu.push({ separator: true });
+      const reading_lists = [];
+      this.reading_list_state.reading_lists.forEach(
+        (reading_list: ReadingList) => {
+          reading_lists.push({
+            label: reading_list.name,
+            icon: 'fa fa-fw fa-plus',
+            command: () => this.add_to_reading_list(reading_list)
+          });
+        }
+      );
+      this.context_menu.push({
+        label: this.translate.instant('comic-list.popup.reading-lists'),
+        items: reading_lists
+      });
+    }
+  }
+
+  open_comic(comic: Comic): void {
+    this.router.navigate(['/comics', comic.id]);
+  }
+
+  select_all(): void {
+    this.store.dispatch(
+      new SelectionActions.SelectionAddComics({
+        comics: this._comics
+      })
+    );
+  }
+
+  deselect_all(): void {
+    this.store.dispatch(
+      new SelectionActions.SelectionRemoveComics({
+        comics: this._selected_comics
+      })
+    );
+  }
+
+  scrape_comics(): void {
+    this.router.navigate(['/scraping']);
+  }
+
+  delete_comics(): void {
+    this.confirm.confirm({
+      header: this.translate.instant('comic-list.delete-comics.header', {
+        count: this._selected_comics.length
+      }),
+      message: this.translate.instant('comic-list.delete-comics.message'),
+      accept: () =>
+        this.store.dispatch(
+          new LibraryActions.LibraryDeleteMultipleComics({
+            comics: this._selected_comics
+          })
+        )
+    });
+  }
+
+  add_to_reading_list(reading_list: ReadingList): void {
+    const entries = reading_list.entries;
+    this.comics.forEach((comic: Comic) => {
+      if (
+        !entries.find((entry: ReadingListEntry) => entry.comic.id === comic.id)
+      ) {
+        entries.push({ id: null, comic: comic });
+      }
+    });
+
+    this.store.dispatch(
+      new ReadingListActions.ReadingListSave({
+        reading_list: { ...reading_list, entries: entries }
+      })
+    );
   }
 }

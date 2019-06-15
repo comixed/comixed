@@ -25,7 +25,7 @@ import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { User } from 'app/models/user/user';
-import { Library } from 'app/models/actions/library';
+import { LibraryState } from 'app/models/state/library-state';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { ComicService } from 'app/services/comic.service';
 import { Comic } from 'app/models/comics/comic';
@@ -41,9 +41,9 @@ export const CURRENT_PAGE_PARAMETER = 'page';
 export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   readonly TAB_PARAMETER = 'tab';
 
-  private library$: Observable<Library>;
+  private library$: Observable<LibraryState>;
   private library_subscription: Subscription;
-  public library: Library;
+  public library: LibraryState;
 
   single_comic_scraping$: Observable<SingleComicScraping>;
   single_comic_scraping_subscription: Subscription;
@@ -77,7 +77,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: Library) => {
+    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
       this.library = library;
 
       if (this.comic === null) {

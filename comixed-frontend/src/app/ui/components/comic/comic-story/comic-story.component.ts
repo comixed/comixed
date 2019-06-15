@@ -19,7 +19,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Comic } from 'app/models/comics/comic';
-import { ComicGrouping, Library } from 'app/models/actions/library';
+import { ComicGrouping, LibraryState } from 'app/models/state/library-state';
 
 @Component({
   selector: 'app-comic-story',
@@ -28,7 +28,7 @@ import { ComicGrouping, Library } from 'app/models/actions/library';
 })
 export class ComicStoryComponent implements OnInit {
   @Input() comic: Comic;
-  @Input() library: Library;
+  @Input() library: LibraryState;
 
   constructor() {}
 

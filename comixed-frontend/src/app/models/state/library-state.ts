@@ -21,7 +21,7 @@ import { Comic } from 'app/models/comics/comic';
 import { LastReadDate } from 'app/models/comics/last-read-date';
 import { ScanType } from 'app/models/comics/scan-type';
 import { ComicFormat } from 'app/models/comics/comic-format';
-import { LibraryState } from 'app/models/library-state';
+import { LibraryContents } from 'app/models/library-contents';
 
 export interface ComicGrouping {
   name: string;
@@ -29,14 +29,13 @@ export interface ComicGrouping {
   latest_comic_date: string;
 }
 
-export interface Library {
+export interface LibraryState {
   busy: boolean;
-  library_state: LibraryState;
+  library_contents: LibraryContents;
   last_comic_date: string;
   scan_types: Array<ScanType>;
   formats: Array<ComicFormat>;
   comics: Array<Comic>;
-  selected_comics: Array<Comic>;
   publishers: Array<ComicGrouping>;
   series: Array<ComicGrouping>;
   characters: Array<ComicGrouping>;

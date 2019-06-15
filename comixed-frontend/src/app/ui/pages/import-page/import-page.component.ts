@@ -25,7 +25,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as UserActions from 'app/actions/user.actions';
 import { ImportState } from 'app/models/state/import-state';
-import { Library } from 'app/models/actions/library';
+import { LibraryState } from 'app/models/state/library-state';
 import * as ImportingActions from 'app/actions/importing.actions';
 import { SelectItem } from 'primeng/api';
 import { ComicFile } from 'app/models/import/comic-file';
@@ -39,6 +39,7 @@ import {
   IMPORT_SORT
 } from 'app/models/user/preferences.constants';
 import { LibraryDisplay } from 'app/models/state/library-display';
+import { SelectionState } from 'app/models/state/selection-state';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';
@@ -54,9 +55,9 @@ const ROWS_PREFERENCE = 'import_rows';
   styleUrls: ['./import-page.component.css']
 })
 export class ImportPageComponent implements OnInit, OnDestroy {
-  library$: Observable<Library>;
+  library$: Observable<LibraryState>;
   library_subscription: Subscription;
-  library: Library;
+  library: LibraryState;
 
   library_display$: Observable<LibraryDisplay>;
   library_display_subscription: Subscription;
@@ -66,14 +67,18 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   import_state_subscription: Subscription;
   import_state: ImportState;
 
-  comic_files: Array<ComicFile> = [];
-  selected_comic_files: Array<ComicFile> = [];
+  selection_state$: Observable<SelectionState>;
+  selection_state_subscription: Subscription;
+  selection_state: SelectionState;
+
+  comic_files: ComicFile[] = [];
+  selected_comic_files: ComicFile[] = [];
   user$: Observable<User>;
   user_subscription: Subscription;
   user: User;
-  protected sort_options: Array<SelectItem>;
+  protected sort_options: SelectItem[];
   protected sort_by: string;
-  protected rows_options: Array<SelectItem>;
+  protected rows_options: SelectItem[];
   protected rows: number;
   protected cover_size: number;
   protected plural = false;
@@ -91,6 +96,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     this.library_display$ = store.select('library_display');
     this.user$ = store.select('user');
     this.import_state$ = store.select('import_state');
+    this.selection_state$ = store.select('selections');
     activatedRoute.queryParams.subscribe(params => {
       this.sort_by = params[SORT_PARAMETER] || 'filename';
       this.rows = parseInt(params[ROWS_PARAMETER] || '10', 10);
@@ -127,9 +133,11 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: Library) => {
-      this.library = library;
-    });
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
+      }
+    );
     this.library_display_subscription = this.library_display$.subscribe(
       (library_display: LibraryDisplay) => {
         this.library_display = library_display;
@@ -162,11 +170,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
         if (this.import_state) {
           this.comic_files = [].concat(import_state.files);
-          this.selected_comic_files = [].concat(
-            import_state.files.filter((comic_file: ComicFile) => {
-              return comic_file.selected;
-            })
-          );
 
           if (!this.import_state.updating_status) {
             this.store.dispatch(
@@ -176,12 +179,22 @@ export class ImportPageComponent implements OnInit, OnDestroy {
         }
       }
     );
+    this.selection_state_subscription = this.selection_state$.subscribe(
+      (selection_state: SelectionState) => {
+        this.selection_state = selection_state;
+
+        this.selected_comic_files = [].concat(
+          this.selection_state.selected_comic_files
+        );
+      }
+    );
   }
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
     this.user_subscription.unsubscribe();
     this.import_state_subscription.unsubscribe();
+    this.selection_state_subscription.unsubscribe();
   }
 
   set_sort_by(sort_by: string): void {
@@ -252,16 +265,16 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   plural_imports(): boolean {
-    return this.library.library_state.import_count !== 1;
+    return this.library.library_contents.import_count !== 1;
   }
 
   get_import_title(): string {
-    if (this.library.library_state.import_count === 0) {
+    if (this.library.library_contents.import_count === 0) {
       return 'Preparing To Import Comics...';
     }
     return (
       `There ${this.plural_imports() ? 'Are' : 'Is'} ${
-        this.library.library_state.import_count
+        this.library.library_contents.import_count
       } ` +
       `Comic${this.plural_imports() ? 's' : ''} Remaining To Be Imported...`
     );

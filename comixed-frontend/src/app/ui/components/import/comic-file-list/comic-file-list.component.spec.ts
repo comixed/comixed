@@ -28,7 +28,6 @@ import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from './comic-file-list.component';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
 import { ComicFile } from 'app/models/import/comic-file';
-import { SelectedComicFileListComponent } from 'app/ui/components/import/selected-comic-file-list/selected-comic-file-list.component';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
@@ -90,7 +89,6 @@ describe('ComicFileListComponent', () => {
         ComicFileGridItemComponent,
         ComicFileListItemComponent,
         ComicFileListToolbarComponent,
-        SelectedComicFileListComponent,
         ComicCoverComponent,
         ComicFileCoverUrlPipe,
         ComicCoverUrlPipe

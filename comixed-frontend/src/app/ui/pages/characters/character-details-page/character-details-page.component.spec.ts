@@ -34,7 +34,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CardModule } from 'primeng/card';
-import { SelectedComicsListComponent } from 'app/ui/components/library/selected-comics-list/selected-comics-list.component';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
 import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
@@ -46,7 +45,11 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { CharacterDetailsPageComponent } from './character-details-page.component';
 import { REDUCERS } from 'app/app.reducers';
-import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
+import {
+  ConfirmationService,
+  ConfirmDialogModule,
+  ContextMenuModule
+} from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 
@@ -75,12 +78,12 @@ describe('CharacterDetailsPageComponent', () => {
         PanelModule,
         OverlayPanelModule,
         CardModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        ContextMenuModule
       ],
       providers: [ConfirmationService],
       declarations: [
         CharacterDetailsPageComponent,
-        SelectedComicsListComponent,
         LibraryFilterComponent,
         ComicListComponent,
         ComicGridItemComponent,
@@ -104,19 +107,5 @@ describe('CharacterDetailsPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('when the selection state of a comic is changed', () => {
-    beforeEach(() => {
-      spyOn(store, 'dispatch');
-      component.set_selection_state(COMIC, true);
-      fixture.detectChanges();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryActions.LibrarySetSelected({ comic: COMIC, selected: true })
-      );
-    });
   });
 });

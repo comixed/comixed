@@ -33,7 +33,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CardModule } from 'primeng/card';
-import { SelectedComicsListComponent } from 'app/ui/components/library/selected-comics-list/selected-comics-list.component';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
 import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
@@ -46,7 +45,11 @@ import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 
 import { LocationDetailsPageComponent } from './location-details-page.component';
 import { REDUCERS } from 'app/app.reducers';
-import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
+import {
+  ConfirmationService,
+  ConfirmDialogModule,
+  ContextMenuModule
+} from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LocationDetailsPageComponent', () => {
@@ -72,12 +75,12 @@ describe('LocationDetailsPageComponent', () => {
         PanelModule,
         OverlayPanelModule,
         CardModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        ContextMenuModule
       ],
       providers: [ConfirmationService],
       declarations: [
         LocationDetailsPageComponent,
-        SelectedComicsListComponent,
         LibraryFilterComponent,
         ComicListComponent,
         ComicGridItemComponent,

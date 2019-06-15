@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ComicFile } from 'app/models/import/comic-file';
 import * as ImportActions from 'app/actions/importing.actions';
 import { Store } from '@ngrx/store';
@@ -28,25 +28,12 @@ import { AppState } from 'app/app.state';
   templateUrl: './comic-file-list-item.component.html',
   styleUrls: ['./comic-file-list-item.component.css']
 })
-export class ComicFileListItemComponent implements OnInit {
+export class ComicFileListItemComponent {
   @Input() comic_file: ComicFile;
   @Input() cover_size: number;
   @Input() same_height: boolean;
   @Input() use_selected_class: boolean;
+  @Input() selected: boolean;
 
   constructor(private store: Store<AppState>) {}
-
-  ngOnInit() {}
-
-  toggle_selected(select: boolean): void {
-    if (select) {
-      this.store.dispatch(
-        new ImportActions.ImportingSelectFiles({ files: [this.comic_file] })
-      );
-    } else {
-      this.store.dispatch(
-        new ImportActions.ImportingUnselectFiles({ files: [this.comic_file] })
-      );
-    }
-  }
 }

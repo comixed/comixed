@@ -86,14 +86,14 @@ describe('LibraryAdminPageComponent', () => {
 
     it('subscribes to library updates', () => {
       expect(component.library.comics).toEqual([COMIC_1001]);
-      expect(component.library.library_state.rescan_count).toEqual(12);
-      expect(component.library.library_state.import_count).toEqual(4);
+      expect(component.library.library_contents.rescan_count).toEqual(12);
+      expect(component.library.library_contents.import_count).toEqual(4);
     });
   });
 
   describe('when an import is in process', () => {
     beforeEach(() => {
-      component.library.library_state = {
+      component.library.library_contents = {
         import_count: 12,
         rescan_count: 0,
         comics: []
@@ -112,7 +112,7 @@ describe('LibraryAdminPageComponent', () => {
 
   describe('when not rescanning', () => {
     beforeEach(() => {
-      component.library.library_state = {
+      component.library.library_contents = {
         import_count: 0,
         rescan_count: 0,
         comics: []
@@ -144,7 +144,7 @@ describe('LibraryAdminPageComponent', () => {
 
   describe('when rescanning', () => {
     beforeEach(() => {
-      component.library.library_state.rescan_count = 3;
+      component.library.library_contents.rescan_count = 3;
       fixture.detectChanges();
     });
 

@@ -29,6 +29,8 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { ComicListItemComponent } from './comic-list-item.component';
+import { StoreModule } from '@ngrx/store';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicListItemComponent', () => {
   let component: ComicListItemComponent;
@@ -39,6 +41,7 @@ describe('ComicListItemComponent', () => {
       imports: [
         RouterTestingModule,
         BrowserAnimationsModule,
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         OverlayPanelModule,
         PanelModule,

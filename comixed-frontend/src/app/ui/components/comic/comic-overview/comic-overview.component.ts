@@ -21,7 +21,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as LibraryActions from 'app/actions/library.actions';
-import { Library } from 'app/models/actions/library';
+import { LibraryState } from 'app/models/state/library-state';
 import { Comic } from 'app/models/comics/comic';
 import { LastReadDate } from 'app/models/comics/last-read-date';
 import { ScanType } from 'app/models/comics/scan-type';
@@ -37,7 +37,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ComicOverviewComponent implements OnInit {
   @Input() is_admin: boolean;
   @Input() comic: Comic;
-  @Input() library: Library;
+  @Input() library: LibraryState;
 
   public scan_types: Array<SelectItem>;
   public formats: Array<SelectItem>;

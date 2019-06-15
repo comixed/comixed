@@ -25,8 +25,9 @@ import { AppState } from 'app/app.state';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as LibraryActions from 'app/actions/library.actions';
-import { Library } from 'app/models/actions/library';
+import { LibraryState } from 'app/models/state/library-state';
 import { TranslateService } from '@ngx-translate/core';
+import { SelectionState } from 'app/models/state/selection-state';
 
 @Component({
   selector: 'app-series-details-page',
@@ -34,9 +35,13 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./series-details-page.component.css']
 })
 export class SeriesDetailsPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<Library>;
-  private library_subscription: Subscription;
-  library: Library;
+  library$: Observable<LibraryState>;
+  library_subscription: Subscription;
+  library: LibraryState;
+
+  selection_state$: Observable<SelectionState>;
+  selection_state_subscription: Subscription;
+  selection_state: SelectionState;
 
   protected layout = 'grid';
   protected sort_field = 'volume';
@@ -55,19 +60,27 @@ export class SeriesDetailsPageComponent implements OnInit, OnDestroy {
   ) {
     this.activatedRoute.params.subscribe(params => {
       this.series_name = params['name'];
+      this.selection_state$ = store.select('selections');
     });
     this.library$ = store.select('library');
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: Library) => {
-      this.library = library;
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
 
-      if (this.library) {
-        this.comics = [].concat(this.library.comics);
-        this.selected_comics = [].concat(this.library.selected_comics);
+        if (this.library) {
+          this.comics = [].concat(this.library.comics);
+        }
       }
-    });
+    );
+    this.selection_state_subscription = this.selection_state$.subscribe(
+      (selection_state: SelectionState) => {
+        this.selection_state = selection_state;
+        this.selected_comics = [].concat(this.selection_state.selected_comics);
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -92,14 +105,5 @@ export class SeriesDetailsPageComponent implements OnInit, OnDestroy {
 
   set_same_height(same_height: boolean): void {
     this.same_height = same_height;
-  }
-
-  set_selection_state(comic: Comic, selected: boolean): void {
-    this.store.dispatch(
-      new LibraryActions.LibrarySetSelected({
-        comic: comic,
-        selected: selected
-      })
-    );
   }
 }

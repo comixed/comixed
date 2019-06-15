@@ -29,6 +29,8 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { ComicGridItemComponent } from './comic-grid-item.component';
+import { StoreModule } from '@ngrx/store';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicGridItemComponent', () => {
   let component: ComicGridItemComponent;
@@ -39,6 +41,7 @@ describe('ComicGridItemComponent', () => {
       imports: [
         RouterTestingModule,
         BrowserAnimationsModule,
+        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
         OverlayPanelModule,
         PanelModule,

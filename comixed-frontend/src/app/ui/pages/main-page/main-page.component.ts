@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { AppState } from 'app/app.state';
-import { ComicGrouping, Library } from 'app/models/actions/library';
+import { ComicGrouping, LibraryState } from 'app/models/state/library-state';
 import { SelectItem } from 'primeng/api';
 
 const COLOR_PALLETTE = [
@@ -49,9 +49,9 @@ const COLOR_PALLETTE = [
   styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<Library>;
+  private library$: Observable<LibraryState>;
   private library_subscription: Subscription;
-  library: Library;
+  library: LibraryState;
 
   public comic_count: number;
   public plural = false;
@@ -82,7 +82,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: Library) => {
+    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
       this.library = library;
       this.comic_count = library.comics.length;
       this.plural = this.comic_count !== 1;

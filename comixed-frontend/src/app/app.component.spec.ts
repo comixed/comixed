@@ -92,8 +92,10 @@ describe('AppComponent', () => {
         new UserActions.UserAuthCheck()
       );
     });
+  });
 
-    it('subscribes to library updates', () => {
+  describe('subscribes to library updates', () => {
+    beforeEach(() => {
       store.dispatch(
         new LibraryActions.LibraryMergeNewComics({
           library_state: {
@@ -103,13 +105,23 @@ describe('AppComponent', () => {
           }
         })
       );
+      fixture.detectChanges();
+    });
+
+    it('updates the comics', () => {
       expect(component.library.comics).toEqual([
         COMIC_1000,
         COMIC_1001,
         COMIC_1002
       ]);
-      expect(component.library.library_state.rescan_count).toEqual(70);
-      expect(component.library.library_state.import_count).toEqual(43);
+    });
+
+    it('updateas the rescan count', () => {
+      expect(component.library.library_contents.rescan_count).toEqual(70);
+    });
+
+    it('update the import count', () => {
+      expect(component.library.library_contents.import_count).toEqual(43);
     });
   });
 });

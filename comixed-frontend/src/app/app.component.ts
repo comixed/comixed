@@ -23,7 +23,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { AppState } from 'app/app.state';
 import * as UserActions from 'app/actions/user.actions';
-import { Library } from 'app/models/actions/library';
+import { LibraryState } from 'app/models/state/library-state';
 import * as LibraryActions from 'app/actions/library.actions';
 import { User } from 'app/models/user/user';
 import { TranslateService } from '@ngx-translate/core';
@@ -40,9 +40,9 @@ export class AppComponent implements OnInit {
   user_subscription: Subscription;
   user: User;
 
-  library$: Observable<Library>;
+  library$: Observable<LibraryState>;
   library_subscription: Subscription;
-  library: Library;
+  library: LibraryState;
 
   constructor(
     private translate_service: TranslateService,
@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
       }
     });
     this.store.dispatch(new UserActions.UserAuthCheck());
-    this.library_subscription = this.library$.subscribe((library: Library) => {
+    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
       this.library = library;
 
       // if we're not busy, then get the scan types, formats or updates as needed
@@ -89,8 +89,8 @@ export class AppComponent implements OnInit {
           // if the last time we checked the library, we got either an import or a rescan count,
           // then set the timeout value to 0
           const timeout =
-            this.library.library_state.import_count === 0 &&
-            this.library.library_state.rescan_count === 0
+            this.library.library_contents.import_count === 0 &&
+            this.library.library_contents.rescan_count === 0
               ? 60000
               : 0;
           this.store.dispatch(
