@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.comixed</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.3.9-SNAPSHOT</version>
+    <version>0.4.9</version>
     <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixed</groupId>
   <artifactId>comixed-app</artifactId>
-  <version>0.3.9-SNAPSHOT</version>
+  <version>0.4.9</version>
   <name>comixed-app</name>
   <url>${comixed.url}</url>
   <dependencies>
