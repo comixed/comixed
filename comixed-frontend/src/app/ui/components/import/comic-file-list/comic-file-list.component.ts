@@ -121,7 +121,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
               'comic-file-list.popup.import.with-metadata'
             ),
             command: () =>
-              this.start_import('comic-file-list.import.message', true),
+              this.start_import('comic-file-list.import.message', false),
             visible:
               this.selected_comic_files && this.selected_comic_files.length > 0
           },
@@ -132,7 +132,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
             command: () =>
               this.start_import(
                 'comic-file-list.import.message-ignore-metadata',
-                false
+                true
               ),
             visible:
               this.selected_comic_files && this.selected_comic_files.length > 0
