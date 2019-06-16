@@ -15,6 +15,11 @@ before_script:
 
 script: (mvn clean test package)
 
+branches:
+    only:
+        - develop
+        - /^release\/.*$/
+
 before_deploy:
     - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
     - export BUILD_VERSION=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
@@ -47,7 +52,7 @@ deploy:
     keep-history: true
     overwrite: true
     on:
-        branch: develop
+        branch: /^release\/.*$/
 
 cache:
     directories:
