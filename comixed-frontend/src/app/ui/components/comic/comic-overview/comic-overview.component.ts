@@ -32,7 +32,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-comic-overview',
   templateUrl: './comic-overview.component.html',
-  styleUrls: ['./comic-overview.component.css']
+  styleUrls: ['./comic-overview.component.scss']
 })
 export class ComicOverviewComponent implements OnInit {
   @Input() is_admin: boolean;

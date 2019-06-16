@@ -290,6 +290,7 @@
   },
   "comic-overview": {
     "label": {
+      "filename": "The filename is <strong>{{filename}}</strong> on the host machine.",
       "publisher": "Publisher",
       "series": "Series",
       "volume": "Volume",
