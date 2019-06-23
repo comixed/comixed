@@ -31,8 +31,7 @@ import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class PathReplacementTest
-{
+public class PathReplacementTest {
     private static final String TEST_SOURCE1 = "olddir";
     private static final String TEST_DESTINATION1 = "newdir";
     private static final String TEST_PATH1 = TEST_SOURCE1 + "=" + TEST_DESTINATION1;
@@ -42,60 +41,51 @@ public class PathReplacementTest
     private PathReplacement replacement;
 
     @Before
-    public void startUp()
-    {
+    public void startUp() {
         replacement = new PathReplacement(TEST_PATH1);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testCreateFailsWhenMalformed()
-    {
+    public void testCreateFailsWhenMalformed() {
         new PathReplacement("thisrulehasnoequal");
     }
 
     @Test(expected = RuntimeException.class)
-    public void testCreateWithMissingSource()
-    {
+    public void testCreateWithMissingSource() {
         new PathReplacement("=destination");
     }
 
     @Test
-    public void testCreateStripsTrailingSeparatorOnSource()
-    {
+    public void testCreateStripsTrailingSeparatorOnSource() {
         PathReplacement result = new PathReplacement(TEST_SOURCE1 + File.separator + "=" + TEST_DESTINATION1);
 
         assertEquals(TEST_SOURCE1, result.source);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testCreateWithMissingDestination()
-    {
+    public void testCreateWithMissingDestination() {
         new PathReplacement("source=");
     }
 
     @Test
-    public void testCreateStripsTrailingSeparatorOnDestination()
-    {
+    public void testCreateStripsTrailingSeparatorOnDestination() {
         PathReplacement result = new PathReplacement(TEST_SOURCE1 + "=" + TEST_DESTINATION1 + File.separator);
 
         assertEquals(TEST_DESTINATION1, result.destination);
     }
 
     @Test
-    public void testIsMatchWhenDifferent()
-    {
+    public void testIsMatchWhenDifferent() {
         assertFalse(replacement.isMatch(TEST_FILE_IN_DESTINATION));
     }
 
     @Test
-    public void testIsMatchWhenSame()
-    {
+    public void testIsMatchWhenSame() {
         assertTrue(replacement.isMatch(TEST_FILE_IN_SOURCE));
     }
 
     @Test
-    public void testGetReplacement()
-    {
+    public void testGetReplacement() {
         String result = replacement.getReplacement(TEST_FILE_IN_SOURCE);
 
         assertNotNull(result);

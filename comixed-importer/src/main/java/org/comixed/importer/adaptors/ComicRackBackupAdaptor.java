@@ -43,23 +43,17 @@ import java.util.List;
  * @author Darryl L. Pierce
  */
 @Component
-public class ComicRackBackupAdaptor
-{
+public class ComicRackBackupAdaptor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
 
     /**
      * @param filename
-     *
      * @return a list of comic files
-     *
-     * @throws ImportAdaptorException
-     *         if an error occurs
+     * @throws ImportAdaptorException if an error occurs
      */
-    public List<Comic> load(File filename) throws ImportAdaptorException
-    {
-        try
-        {
+    public List<Comic> load(File filename) throws ImportAdaptorException {
+        try {
             this.logger.debug("Opening file for reading");
             FileInputStream istream = new FileInputStream(filename);
 
@@ -71,15 +65,12 @@ public class ComicRackBackupAdaptor
 
             this.logger.debug("Returning {} comic entries", result.size());
             return result;
-        }
-        catch (IOException | XMLStreamException | ParseException error)
-        {
+        } catch (IOException | XMLStreamException | ParseException error) {
             throw new ImportAdaptorException("unable to read file", error);
         }
     }
 
-    private List<Comic> loadFromXml(InputStream istream) throws XMLStreamException, ParseException
-    {
+    private List<Comic> loadFromXml(InputStream istream) throws XMLStreamException, ParseException {
         List<Comic> result = new ArrayList<>();
         final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
 
@@ -87,16 +78,12 @@ public class ComicRackBackupAdaptor
 
         Comic comic = null;
 
-        while (xmlInputReader.hasNext())
-        {
-            if (xmlInputReader.isStartElement())
-            {
+        while (xmlInputReader.hasNext()) {
+            if (xmlInputReader.isStartElement()) {
                 String tagName = xmlInputReader.getLocalName();
 
-                switch (tagName)
-                {
-                    case "Book":
-                    {
+                switch (tagName) {
+                    case "Book": {
                         this.logger.debug("Starting new comic file");
                         comic = new Comic();
                         String filename = xmlInputReader.getAttributeValue(null, "File");
@@ -105,8 +92,7 @@ public class ComicRackBackupAdaptor
                         result.add(comic);
                     }
                     break;
-                    case "Added":
-                    {
+                    case "Added": {
                         this.logger.debug("Setting added date");
                         Date date = DateUtils.parseDate(xmlInputReader.getElementText(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
                         this.logger.debug("Added date: {}", date.toString());

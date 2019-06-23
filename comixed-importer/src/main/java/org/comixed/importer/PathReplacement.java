@@ -30,37 +30,30 @@ import java.util.StringTokenizer;
  *
  * @author Darryl L. Pierce
  */
-public class PathReplacement
-{
+public class PathReplacement {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     String source;
     String destination;
 
-    public PathReplacement(String rule)
-    {
-        if (rule.contains("="))
-        {
+    public PathReplacement(String rule) {
+        if (rule.contains("=")) {
             StringTokenizer tokens = new StringTokenizer(rule, "=");
             this.source = tokens.nextToken();
             this.destination = tokens.nextToken();
 
-            if (this.source.isEmpty())
-            {
+            if (this.source.isEmpty()) {
                 throw new RuntimeException("missing source path name");
             }
 
-            if (this.source.endsWith(File.separator))
-            {
+            if (this.source.endsWith(File.separator)) {
                 this.source = this.source.substring(0, this.source.length() - 1);
             }
-            if (this.destination.endsWith(File.separator))
-            {
+            if (this.destination.endsWith(File.separator)) {
                 this.destination = this.destination.substring(0, this.destination.length() - 1);
             }
             this.logger.debug("Created replacement rule: {} => {}", this.source, this.destination);
-        } else
-        {
+        } else {
             throw new RuntimeException("malformed path replacement rule:" + rule);
         }
     }
@@ -68,13 +61,10 @@ public class PathReplacement
     /**
      * Returns if the provided file has a directory that matches the replacement rule.
      *
-     * @param path
-     *         the comic file path
-     *
+     * @param path the comic file path
      * @return true if the path is a match
      */
-    public boolean isMatch(String path)
-    {
+    public boolean isMatch(String path) {
         this.logger.debug("Comparing: path={} source={}", path, this.source);
         boolean result = path.startsWith(this.source);
         this.logger.debug("Returning {}", result);
@@ -84,13 +74,10 @@ public class PathReplacement
     /**
      * Returns a path for the given file with the root path replaced.
      *
-     * @param file
-     *         the file path
-     *
+     * @param file the file path
      * @return the modified path
      */
-    public String getReplacement(String file)
-    {
+    public String getReplacement(String file) {
         String result = this.destination + file.substring(this.source.length());
         this.logger.debug("Replaced: {} => {}", file, this.destination);
 

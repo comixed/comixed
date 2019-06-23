@@ -19,22 +19,17 @@
 
 package org.comixed.importer;
 
-import org.comixed.importer.adaptors.ImportAdaptorException;
-
 /**
  * <code>ProcessoreException</code> is thrown when an error occurs while processing an import.
  *
  * @author Darryl L. Pierce
  */
-public class ProcessorException extends Exception
-{
-    public ProcessorException(String message)
-    {
+public class ProcessorException extends Exception {
+    public ProcessorException(String message) {
         super(message);
     }
 
-    public ProcessorException(String message, Exception cause)
-    {
+    public ProcessorException(String message, Exception cause) {
         super(message, cause);
     }
 }

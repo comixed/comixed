@@ -39,8 +39,7 @@ import java.util.List;
  * @author Darryl L. Pierce
  */
 @Component
-public class ComicFileImportAdaptor
-{
+public class ComicFileImportAdaptor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -49,38 +48,30 @@ public class ComicFileImportAdaptor
     @Autowired
     private ComicFileHandler comicFileHandler;
 
-    public void importComics(List<Comic> comics, List<PathReplacement> replacements) throws ImportAdaptorException
-    {
-        for (int index = 0; index < comics.size(); index++)
-        {
-            try
-            {
-                this.logger.debug("Importing comic: {}", comics.get(index).getFilename());
-                this.importComic(comics.get(index));
-            }
-            catch (FileNotFoundException error)
-            {
-                this.logger.error("Comic not found: skipping");
-            }
-            catch (ComicFileHandlerException error)
-            {
+    public void importComics(List<Comic> comics, List<PathReplacement> replacements) throws ImportAdaptorException {
+        for (int index = 0; index < comics.size(); index++) {
+            try {
+                this.logger.info("Importing comic: {}", comics.get(index).getFilename());
+                this.importComic(comics.get(index), replacements);
+            } catch (FileNotFoundException error) {
+                this.logger.info("Comic not found: skipping");
+            } catch (ComicFileHandlerException error) {
                 throw new ImportAdaptorException("unable to load comic file", error);
             }
         }
     }
 
-    protected void importComic(Comic comic) throws FileNotFoundException, ComicFileHandlerException
-    {
-        if (this.comicRepository.findByFilename(comic.getFilename()) != null)
-        {
+    protected void importComic(Comic comic, List<PathReplacement> replacements) throws FileNotFoundException, ComicFileHandlerException {
+        this.verifyPath(comic, replacements);
+
+        if (this.comicRepository.findByFilename(comic.getFilename()) != null) {
             this.logger.debug("Found in the library");
             return;
         }
 
         File file = new File(comic.getFilename());
-        if (!file.exists())
-        {
-            this.logger.debug("No such file: {}", comic.getFilename());
+        if (!file.exists()) {
+            this.logger.info("No such file: {}", comic.getFilename());
             throw new FileNotFoundException("no such file: " + comic.getFilename());
         }
 
@@ -91,15 +82,15 @@ public class ComicFileImportAdaptor
         this.comicRepository.save(comic);
     }
 
-    public void verifyPath(Comic comic, List<PathReplacement> pathReplacements)
-    {
-        for (PathReplacement replacement : pathReplacements)
-        {
-            if (replacement.isMatch(comic.getFilename()))
-            {
-                this.logger.debug("Replacement comic path: old={}", comic.getFilename());
-                comic.setFilename(replacement.getReplacement(comic.getFilename()));
-                this.logger.debug("                      : new={}", comic.getFilename());
+    public void verifyPath(Comic comic, List<PathReplacement> pathReplacements) {
+        this.logger.debug("Verifying path: {} replacement options", pathReplacements.size());
+        for (PathReplacement replacement : pathReplacements) {
+            if (replacement.isMatch(comic.getFilename())) {
+                String oldname = comic.getFilename();
+                String newname = replacement.getReplacement(oldname);
+
+                this.logger.debug("Replacing filename: {}={}", oldname, newname);
+                comic.setFilename(newname);
                 return;
             }
         }

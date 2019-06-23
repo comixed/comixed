@@ -37,12 +37,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class ComicFileImportAdaptorTest
-{
+public class ComicFileImportAdaptorTest {
     private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
     private static final String TEST_REPLACEMENT_FILENAME = "src/test/resources/replacement/example.cbz";
 
@@ -66,16 +65,14 @@ public class ComicFileImportAdaptorTest
     private Comic comic = new Comic();
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         comic.setFilename(TEST_COMIC_FILENAME);
         this.pathReplacements.add(this.pathReplacement);
         this.pathReplacements.add(this.unusedPathReplacement);
     }
 
     @Test
-    public void testVerifyPathNoReplacement()
-    {
+    public void testVerifyPathNoReplacement() {
         Mockito.when(pathReplacement.isMatch(Mockito.anyString()))
                 .thenReturn(false);
 
@@ -88,8 +85,7 @@ public class ComicFileImportAdaptorTest
     }
 
     @Test
-    public void testVerifyPath()
-    {
+    public void testVerifyPath() {
         Mockito.when(pathReplacement.isMatch(Mockito.anyString()))
                 .thenReturn(true);
         Mockito.when(pathReplacement.getReplacement(Mockito.anyString()))
@@ -106,39 +102,33 @@ public class ComicFileImportAdaptorTest
     }
 
     @Test
-    public void testImportComicAlreadyInDatabase() throws FileNotFoundException, ComicFileHandlerException
-    {
+    public void testImportComicAlreadyInDatabase() throws FileNotFoundException, ComicFileHandlerException {
         Mockito.when(comicRepository.findByFilename(Mockito.anyString()))
                 .thenReturn(comic);
 
-        this.adaptor.importComic(comic);
+        this.adaptor.importComic(comic, this.pathReplacements);
 
         Mockito.verify(comicRepository, Mockito.times(1))
                 .findByFilename(comic.getFilename());
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void testImportComicFileIsMissing() throws FileNotFoundException, ComicFileHandlerException
-    {
+    public void testImportComicFileIsMissing() throws FileNotFoundException, ComicFileHandlerException {
         Mockito.when(comicRepository.findByFilename(Mockito.anyString()))
                 .thenReturn(null);
 
         comic.setFilename(TEST_COMIC_FILENAME.substring(1));
 
-        try
-        {
-            this.adaptor.importComic(comic);
-        }
-        finally
-        {
+        try {
+            this.adaptor.importComic(comic, this.pathReplacements);
+        } finally {
             Mockito.verify(comicRepository, Mockito.times(1))
                     .findByFilename(comic.getFilename());
         }
     }
 
     @Test
-    public void testImportComicFile() throws ComicFileHandlerException, FileNotFoundException
-    {
+    public void testImportComicFile() throws ComicFileHandlerException, FileNotFoundException {
         Mockito.when(comicRepository.findByFilename(Mockito.anyString()))
                 .thenReturn(null);
         Mockito.doNothing()
@@ -147,7 +137,7 @@ public class ComicFileImportAdaptorTest
         Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
                 .thenReturn(comic);
 
-        this.adaptor.importComic(comic);
+        this.adaptor.importComic(comic, this.pathReplacements);
 
         Mockito.verify(comicRepository, Mockito.times(1))
                 .findByFilename(comic.getFilename());

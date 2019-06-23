@@ -25,10 +25,8 @@ import org.comixed.importer.adaptors.ImportAdaptorException;
 import org.comixed.library.model.Comic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -42,23 +40,17 @@ import java.util.List;
  */
 @Component
 @ConfigurationProperties(value = "processor.file.import")
-public class ImportFileProcessor
-{
+public class ImportFileProcessor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    protected List<PathReplacement> replacements = new ArrayList<>();
     @Autowired
     private ComicRackBackupAdaptor backupAdaptor;
-
     @Autowired
     private ComicFileImportAdaptor importAdaptor;
 
-    protected List<PathReplacement> replacements = new ArrayList<>();
-
-    public void setReplacements(List<String> replacements)
-    {
+    public void setReplacements(List<String> replacements) {
         this.logger.debug("Processing {} replacement rules", replacements.size());
-        for (String rule : replacements)
-        {
+        for (String rule : replacements) {
             this.replacements.add(new PathReplacement(rule));
         }
     }
@@ -66,38 +58,30 @@ public class ImportFileProcessor
     /**
      * Starts processing the file.
      *
-     * @throws ProcessorException
-     *         if a processing error occurs
+     * @throws ProcessorException if a processing error occurs
      */
-    public void process(String source) throws ProcessorException
-    {
+    public void process(String source) throws ProcessorException {
         this.logger.debug("Beginning import: file={}", source);
-        if (source == null)
-        {
+        if (source == null) {
             throw new ProcessorException("missing source");
         }
 
         File file = new File(source);
 
-        if (!file.exists())
-        {
+        if (!file.exists()) {
             throw new ProcessorException("file not found:" + source);
         }
-        if (!file.isFile())
-        {
+        if (!file.isFile()) {
             throw new ProcessorException("source is a directory:" + source);
         }
 
-        try
-        {
+        try {
             this.logger.debug("Loading comics from source file");
             List<Comic> comics = this.backupAdaptor.load(file);
 
             this.logger.debug("Importing {} comic(s)", comics.size());
             this.importAdaptor.importComics(comics, this.replacements);
-        }
-        catch (ImportAdaptorException error)
-        {
+        } catch (ImportAdaptorException error) {
             throw new ProcessorException("failed to load entries", error);
         }
     }

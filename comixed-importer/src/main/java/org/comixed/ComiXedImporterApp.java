@@ -29,47 +29,43 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-import java.util.List;
-
 import static java.lang.System.exit;
 
 @SpringBootApplication
 @EnableConfigurationProperties
-public class ComiXedImporterApp implements ApplicationRunner
-{
+public class ComiXedImporterApp implements ApplicationRunner {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ImportFileProcessor importFileProcessor;
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         SpringApplication app = new SpringApplication(ComiXedImporterApp.class);
         app.run(args);
     }
 
-    private void missingArgument(String name)
-    {
+    private void missingArgument(String name) {
         this.logger.info("Missing required argument: {}", name);
         exit(1);
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception
-    {
-        if (args.getSourceArgs().length == 0)
-        {
+    public void run(ApplicationArguments args) throws Exception {
+        if (args.getSourceArgs().length == 0) {
             this.logger.error("No commandline options provided. Exiting...");
             exit(1);
         }
 
-
-        if (!args.containsOption("source"))
-        {
+        if (!args.containsOption("source")) {
             this.missingArgument("source");
         }
+
         String source = args.getOptionValues("source")
                 .get(0);
+
+        if (args.containsOption("replacements")) {
+            this.importFileProcessor.setReplacements(args.getOptionValues("replacements"));
+        }
 
         this.logger.info("Source file: {}", source);
 

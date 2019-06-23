@@ -19,17 +19,13 @@
 
 package org.comixed.importer.adaptors;
 
-import java.io.FileNotFoundException;
-
 /**
  * <code>ImportAdaptorException</code> is thrown when there is an error during an import operation.
  *
  * @author Darryl L. Pierce
  */
-public class ImportAdaptorException extends Exception
-{
-    public ImportAdaptorException(String message, Exception cause)
-    {
+public class ImportAdaptorException extends Exception {
+    public ImportAdaptorException(String message, Exception cause) {
         super(message, cause);
     }
 }

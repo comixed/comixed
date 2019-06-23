@@ -50,7 +50,27 @@ that contains data to be imported. Extract this file and save it to disk.
 To import the ComicRack backup into your database, you'll use the following
 command line:
 
-````
+```
    $ comixed-importer --source=[path to ComicDB.xml]
-````
+```
 
+#### Relocated Comic Files
+
+If the comics are in a different location when you're importing them than they were on your ComicRack computer, you can pass in replacement rules to be used by the importer tool.
+
+##### Example
+
+Your ComicRack library is in **C:\Users\comiclover\Documents\comics** and you're moving your library to a Linux machine. You'll perform the following steps:
+
+1. Copy the library files, keeping the subdirectory structure intact, onto the Linux machine.
+   * For this example we'll assume you copied them into **/home/comiclover/Documents/comics**.
+1. Do the steps described above to backup your ComicRack database.
+1. Extract the **ComicDb.xml** file and place it into the home directory.
+
+Now you can import the comics using the following command line:
+
+```
+$ comixed-importer --source=/home/comiclover/ComicDb.xml --replacements="C:\\Users\\comiclover\\Documents\\comics"="/home/comiclover/Documents/comics"
+```
+
+**NOTE:** The replacement source directory **MUST** exactly match what is in the ComicDb.xml file. Any differences, and the rule won't be applied. 

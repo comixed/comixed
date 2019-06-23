@@ -33,15 +33,13 @@ import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class ComicRackBackupAdaptorTest
-{
+public class ComicRackBackupAdaptorTest {
     private static final File TEST_COMICRACK_BACKUP_FILE = new File("src/test/resources/comicrack-backup.xml");
     @InjectMocks
     private ComicRackBackupAdaptor adaptor;
 
     @Test
-    public void testLoadLoadsComics() throws ImportAdaptorException
-    {
+    public void testLoadLoadsComics() throws ImportAdaptorException {
         List<Comic> result = this.adaptor.load(TEST_COMICRACK_BACKUP_FILE);
 
         assertNotNull(result);

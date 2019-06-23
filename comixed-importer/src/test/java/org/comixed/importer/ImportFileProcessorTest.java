@@ -35,8 +35,7 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class ImportFileProcessorTest
-{
+public class ImportFileProcessorTest {
     private static final String TEST_SOURCE_FILENAME = "src/test/resources/comicrack-backup.xml";
 
     @InjectMocks
@@ -54,55 +53,44 @@ public class ImportFileProcessorTest
     private List<Comic> comicList = new ArrayList<>();
 
     @Test(expected = ProcessorException.class)
-    public void testProcessNullFile() throws ProcessorException
-    {
+    public void testProcessNullFile() throws ProcessorException {
         this.processor.process(null);
     }
 
     @Test(expected = ProcessorException.class)
-    public void testProcessFileNotFound() throws ProcessorException
-    {
+    public void testProcessFileNotFound() throws ProcessorException {
         this.processor.process(TEST_SOURCE_FILENAME.substring(1));
     }
 
     @Test(expected = ProcessorException.class)
-    public void testProcessSourceIsDirectory() throws ProcessorException
-    {
+    public void testProcessSourceIsDirectory() throws ProcessorException {
         this.processor.process("src/test/resources");
     }
 
     @Test(expected = ProcessorException.class)
-    public void testProcessComicRackAdaptorThrowsException() throws ProcessorException, ImportAdaptorException
-    {
+    public void testProcessComicRackAdaptorThrowsException() throws ProcessorException, ImportAdaptorException {
         Mockito.when(comicRackBackupAdaptor.load(Mockito.any()))
                 .thenThrow(ImportAdaptorException.class);
 
-        try
-        {
+        try {
             this.processor.process(TEST_SOURCE_FILENAME);
-        }
-        finally
-        {
+        } finally {
             Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
                     .load(fileCaptor.capture());
         }
     }
 
     @Test(expected = ProcessorException.class)
-    public void testProcessComicFileImporterThrowsException() throws ImportAdaptorException, ProcessorException
-    {
+    public void testProcessComicFileImporterThrowsException() throws ImportAdaptorException, ProcessorException {
         Mockito.when(comicRackBackupAdaptor.load(Mockito.any()))
                 .thenReturn(comicList);
         Mockito.doThrow(ImportAdaptorException.class)
                 .when(importAdaptor)
                 .importComics(Mockito.anyList(), Mockito.anyList());
 
-        try
-        {
+        try {
             this.processor.process(TEST_SOURCE_FILENAME);
-        }
-        finally
-        {
+        } finally {
             Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
                     .load(fileCaptor.capture());
             Mockito.verify(importAdaptor, Mockito.times(1))
@@ -111,8 +99,7 @@ public class ImportFileProcessorTest
     }
 
     @Test
-    public void testProcess() throws ImportAdaptorException, ProcessorException
-    {
+    public void testProcess() throws ImportAdaptorException, ProcessorException {
         Mockito.when(comicRackBackupAdaptor.load(Mockito.any()))
                 .thenReturn(comicList);
         Mockito.doNothing()
