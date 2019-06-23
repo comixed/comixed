@@ -52,7 +52,7 @@ deploy:
     keep-history: true
     overwrite: true
     on:
-        branch: /^release\/.*$/
+        branch: /release\/.*$/
 
 cache:
     directories:
