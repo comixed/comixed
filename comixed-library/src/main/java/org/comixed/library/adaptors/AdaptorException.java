@@ -21,12 +21,14 @@ package org.comixed.library.adaptors;
 
 import java.text.ParseException;
 
-public class AdaptorException extends Exception
-{
-    private static final long serialVersionUID = -1912128884052162997L;
+public class AdaptorException extends Exception {
+  private static final long serialVersionUID = -1912128884052162997L;
 
-    public AdaptorException(String message, ParseException cause)
-    {
-        super(message, cause);
-    }
+  public AdaptorException(String message, ParseException cause) {
+    super(message, cause);
+  }
+
+  public AdaptorException(String message) {
+    super(message);
+  }
 }
