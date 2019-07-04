@@ -456,6 +456,10 @@
     "delete-comics": {
       "header": "Delete {{count}} Comics",
       "message": "Are you sure you want to delete these comics?"
+    },
+    "remove-from-reading-list": {
+      "header": "Remove From Reading List",
+      "message": "Are you sure you want to remove these comics from '{{reading_list_name}}?"
     }
   },
   "comic-list-item": {

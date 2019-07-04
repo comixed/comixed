@@ -236,7 +236,14 @@ export class ComicListComponent implements OnInit, OnDestroy {
           reading_lists.push({
             label: reading_list.name,
             icon: 'fa fa-fw fa-plus',
+            visible: !this.all_in_reading_list(reading_list),
             command: () => this.add_to_reading_list(reading_list)
+          });
+          reading_lists.push({
+            label: reading_list.name,
+            icon: 'fa fa-fw fa-minus',
+            visible: this.already_in_reading_list(reading_list),
+            command: () => this.remove_from_reading_list(reading_list)
           });
         }
       );
@@ -288,7 +295,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
 
   add_to_reading_list(reading_list: ReadingList): void {
     const entries = reading_list.entries;
-    this.comics.forEach((comic: Comic) => {
+    this.selected_comics.forEach((comic: Comic) => {
       if (
         !entries.find((entry: ReadingListEntry) => entry.comic.id === comic.id)
       ) {
@@ -296,10 +303,59 @@ export class ComicListComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.save_reading_list(reading_list, entries);
+  }
+
+  remove_from_reading_list(reading_list: ReadingList): void {
+    this.confirm.confirm({
+      header: this.translate.instant(
+        'comic-list.remove-from-reading-list.header'
+      ),
+      message: this.translate.instant(
+        'comic-list.remove-from-reading-list.message',
+        { reading_list_name: reading_list.name }
+      ),
+      accept: () => {
+        const entries = reading_list.entries.filter(
+          (entry: ReadingListEntry) => {
+            return !this.selected_comics.some(
+              comic => comic.id === entry.comic.id
+            );
+          }
+        );
+        this.save_reading_list(reading_list, entries);
+      }
+    });
+  }
+
+  save_reading_list(
+    reading_list: ReadingList,
+    entries: ReadingListEntry[]
+  ): void {
     this.store.dispatch(
       new ReadingListActions.ReadingListSave({
         reading_list: { ...reading_list, entries: entries }
       })
     );
+  }
+
+  already_in_reading_list(reading_list: ReadingList): boolean {
+    const result = reading_list.entries.some((entry: ReadingListEntry) => {
+      return this.selected_comics.some((comic: Comic) => {
+        return comic.id === entry.comic.id;
+      });
+    });
+
+    return result;
+  }
+
+  all_in_reading_list(reading_list: ReadingList): boolean {
+    const result = reading_list.entries.some((entry: ReadingListEntry) => {
+      return this.selected_comics.every((comic: Comic) => {
+        return comic.id === entry.comic.id;
+      });
+    });
+
+    return result;
   }
 }

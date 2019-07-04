@@ -25,5 +25,5 @@ export interface ReadingList {
   owner: User;
   name: string;
   summary: string;
-  entries: Array<ReadingListEntry>;
+  entries: ReadingListEntry[];
 }
