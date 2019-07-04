@@ -1,6 +1,40 @@
 # ComiXed
 An application for managing digital comics.
 
+## Project Roadmap And Vision Statement
+The goals for this project are simple. It seeks to be the ultimate management tool for digital comic books.
+
+To achieve this goal, the project will:
+ * be portable:
+    * it can be hosted on the Mac, Linux or Windows, and
+    * it can be used by any web browser.
+ * manage a library of digital comic books, including:
+   * the archive format of the individual files (CBR, CBZ, CB7),
+   * converting files from one format to another between the supported types,
+   * adding and removing images that make up the pages of the comic,
+   * managing what type a page is (front cover, alternate cover, story, back cover, advertisement, etc.)
+   * blacklisting pages based on hash identifiers so that they are ignored, and
+   * deleting blacklisted.
+   * consolidating the library, including performing any or all of the following steps:
+      * moving all files into a well-defined directory structure,
+      * converting comics to a single archive type,
+      * removing files from each comic that has been blacklisted, and
+      * updating the ComicInfo.xml file within each comic with the current metadata.
+* administrators can quickly import new comics into their library.
+* scraping metadata for comics from various sources, such as [ComicVine](https://comicvine.gamespot.com/).
+* allow managed access to the contents of the library:
+   * administrative users can create/delete other users,
+   * users can create reading lists,
+   * users can manage their read state for all comics in the library, and
+   * users can read comics using an OPDS application.
+* a plugin system allows administrators to customize the features in their application:
+   * plugins can be written by third-parties to provide new and custom functionality, and
+   * administrators can easily install plugins.
+
+## What The Project Will Not Do
+ * It is not a comic reading application.
+    * For that, we recommend applications like [Chunky](http://chunkyreader.com/) or [YACReader](https://www.yacreader.com/)
+
 ## Status
  * TravisCI Build Status: [![Build Status](https://travis-ci.org/mcpierce/comixed.svg?branch=develop)](https://travis-ci.org/mcpierce/comixed)
  * You can download the latest **unsupported** release from the **Releases** tab. Every merge to the **Develop** branch triggers a new build.
