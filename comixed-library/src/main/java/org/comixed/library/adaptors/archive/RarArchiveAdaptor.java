@@ -19,120 +19,120 @@
 
 package org.comixed.library.adaptors.archive;
 
+import com.github.junrar.Archive;
+import com.github.junrar.exception.RarException;
+import com.github.junrar.impl.FileVolumeManager;
+import com.github.junrar.rarfile.FileHeader;
+import org.comixed.library.model.Comic;
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.comixed.library.model.Comic;
-import org.springframework.stereotype.Component;
-
-import com.github.junrar.Archive;
-import com.github.junrar.exception.RarException;
-import com.github.junrar.impl.FileVolumeManager;
-import com.github.junrar.rarfile.FileHeader;
-
 /**
- * <code>RarArchiveAdaptor</code> provides a concrete implementation of
- * {@link ArchiveAdaptor} for RAR files.
+ * <code>RarArchiveAdaptor</code> provides a concrete implementation of {@link ArchiveAdaptor} for
+ * RAR files.
  *
  * @author Darryl L. Pierce
- *
  */
 @Component
-public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive>
-{
-    public RarArchiveAdaptor()
-    {
-        super("cbr");
+public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
+  public RarArchiveAdaptor() {
+    super("cbr");
+  }
+
+  @Override
+  protected void closeArchive(Archive archiveReference) throws ArchiveAdaptorException {
+    try {
+      archiveReference.close();
+    } catch (IOException error) {
+      throw new ArchiveAdaptorException("Error while closing archive", error);
+    }
+  }
+
+  @Override
+  protected List<String> getEntryFilenames(Archive archiveReference) {
+    List<String> result = new ArrayList<>();
+    List<FileHeader> fileHeaders = archiveReference.getFileHeaders();
+
+    for (FileHeader fileHeader : fileHeaders) {
+      result.add(fileHeader.getFileNameString());
     }
 
-    @Override
-    protected void closeArchive(Archive archiveReference) throws ArchiveAdaptorException
-    {
-        try
-        {
-            archiveReference.close();
+    return result;
+  }
+
+  @Override
+  protected void loadAllFiles(Comic comic, Archive archiveReference)
+      throws ArchiveAdaptorException {
+    List<FileHeader> fileHeaders = archiveReference.getFileHeaders();
+
+    for (FileHeader fileHeader : fileHeaders) {
+      String filename = fileHeader.getFileNameString();
+      long fileSize = fileHeader.getFullUnpackSize();
+      byte[] content = new byte[0];
+      try {
+        content = this.loadContent(filename, fileSize, archiveReference.getInputStream(fileHeader));
+      } catch (IOException | RarException error) {
+        throw new ArchiveAdaptorException("Failed to load entry: " + filename, error);
+      }
+      this.processContent(comic, filename, content);
+    }
+  }
+
+  @Override
+  protected byte[] loadSingleFileInternal(Archive archiveReference, String entryName)
+      throws ArchiveAdaptorException {
+    byte[] result = null;
+    List<FileHeader> fileHeaders = archiveReference.getFileHeaders();
+
+    for (FileHeader fileHeader : fileHeaders) {
+      try {
+        byte[] content =
+            this.loadContent(
+                fileHeader.getFileNameString(),
+                fileHeader.getFullUnpackSize(),
+                archiveReference.getInputStream(fileHeader));
+
+        if (fileHeader.getFileNameString().equals(entryName)) {
+          result = content;
+          break;
         }
-        catch (IOException error)
-        {
-            throw new ArchiveAdaptorException("Error while closing archive", error);
-        }
+      } catch (IOException | RarException error) {
+        throw new ArchiveAdaptorException(
+            "Error loading archive content: entry=" + fileHeader.getFileNameString(), error);
+      }
     }
 
-    @Override
-    protected List<String> getEntryFilenames(Archive archiveReference)
-    {
-        List<String> result = new ArrayList<>();
-        List<FileHeader> fileHeaders = archiveReference.getFileHeaders();
+    return result;
+  }
 
-        for (FileHeader fileHeader : fileHeaders)
-        {
-            result.add(fileHeader.getFileNameString());
-        }
+  @Override
+  protected Archive openArchive(File comicFile) throws ArchiveAdaptorException {
+    Archive archive = null;
 
-        return result;
+    try {
+      archive = new Archive(new FileVolumeManager(comicFile));
+      FileHeader entry = archive.nextFileHeader();
+
+      if (entry == null) {
+        archive.close();
+        throw new ArchiveAdaptorException("Invalid or corrupt RAR file: " + comicFile.getName());
+      }
+    } catch (IOException | RarException error) {
+      throw new ArchiveAdaptorException(
+          "Unable to open archive: " + comicFile.getAbsolutePath(), error);
     }
 
-    @Override
-    protected byte[] loadSingleFileInternal(Archive archiveReference, String entryName) throws ArchiveAdaptorException
-    {
-        byte[] result = null;
-        List<FileHeader> fileHeaders = archiveReference.getFileHeaders();
+    return archive;
+  }
 
-        for (FileHeader fileHeader : fileHeaders)
-        {
-            try
-            {
-                byte[] content = this.loadContent(fileHeader.getFileNameString(), fileHeader.getFullUnpackSize(),
-                                                  archiveReference.getInputStream(fileHeader));
-
-                if (fileHeader.getFileNameString().equals(entryName))
-                {
-                    result = content;
-                    break;
-                }
-            }
-            catch (IOException
-                   | RarException error)
-            {
-                throw new ArchiveAdaptorException("Error loading archive content: entry="
-                                                  + fileHeader.getFileNameString(), error);
-            }
-        }
-
-        return result;
-    }
-
-    @Override
-    protected Archive openArchive(File comicFile) throws ArchiveAdaptorException
-    {
-        Archive archive = null;
-
-        try
-        {
-            archive = new Archive(new FileVolumeManager(comicFile));
-            FileHeader entry = archive.nextFileHeader();
-
-            if (entry == null)
-            {
-                archive.close();
-                throw new ArchiveAdaptorException("Invalid or corrupt RAR file: " + comicFile.getName());
-            }
-        }
-        catch (IOException
-               | RarException error)
-        {
-            throw new ArchiveAdaptorException("Unable to open archive: " + comicFile.getAbsolutePath(), error);
-        }
-
-        return archive;
-    }
-
-    @Override
-    void saveComicInternal(Comic source, String filename, boolean renamePages) throws ArchiveAdaptorException
-    {
-        this.logger.warn("Saving RAR comics is not supported");
-        throw new ArchiveAdaptorException("Saving CBR comics is not supported");
-    }
+  @Override
+  void saveComicInternal(Comic source, String filename, boolean renamePages)
+      throws ArchiveAdaptorException {
+    this.logger.warn("Saving RAR comics is not supported");
+    throw new ArchiveAdaptorException("Saving CBR comics is not supported");
+  }
 }

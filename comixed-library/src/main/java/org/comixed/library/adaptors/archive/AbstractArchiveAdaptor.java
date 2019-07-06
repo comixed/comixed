@@ -19,16 +19,6 @@
 
 package org.comixed.library.adaptors.archive;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
@@ -50,350 +40,292 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
 /**
- * <code>AbstractArchiveAdaptor</code> provides a foundation for creating new
- * instances of {@link ArchiveAdaptor}.
+ * <code>AbstractArchiveAdaptor</code> provides a foundation for creating new instances of {@link
+ * ArchiveAdaptor}.
  *
- * @param <I>
- *         the archive iterator type
- *
+ * @param <I> the archive iterator type
  * @author Darryl L. Pierce
  */
 @Component
 @EnableConfigurationProperties
 @PropertySource("classpath:entryloaders.properties")
-@ConfigurationProperties(prefix = "comic.entry",
-        ignoreUnknownFields = false)
-public abstract class AbstractArchiveAdaptor<I> implements
-                                                ArchiveAdaptor,
-                                                InitializingBean
-{
-    public static class EntryLoaderForType
-    {
-        private String type;
-        private String bean;
+@ConfigurationProperties(prefix = "comic.entry", ignoreUnknownFields = false)
+public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, InitializingBean {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+  @Autowired protected FileTypeIdentifier fileTypeIdentifier;
+  @Autowired protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
+  protected List<EntryLoaderForType> loaders = new ArrayList<>();
+  protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
+  @Autowired private ApplicationContext context;
+  @Autowired private ComicFileHandler comicFileHandler;
+  private String defaultExtension;
 
-        public boolean isValid()
-        {
-            return (this.type != null) && !this.type.isEmpty() && (this.bean != null) && !this.bean.isEmpty();
+  public AbstractArchiveAdaptor(String defaultExtension) {
+    super();
+    this.defaultExtension = defaultExtension;
+  }
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    this.entryLoaders.clear();
+    for (EntryLoaderForType entry : this.loaders) {
+      if (entry.isValid()) {
+        if (this.context.containsBean(entry.bean)) {
+          this.entryLoaders.put(entry.type, (EntryLoader) this.context.getBean(entry.bean));
+        } else {
+          this.logger.debug("No such entry adaptor bean: {}", entry.bean);
         }
-
-        public void setBean(String bean)
-        {
-            this.bean = bean;
+      } else {
+        if ((entry.type == null) || entry.type.isEmpty()) {
+          this.logger.debug("Missing type for entry adaptor");
         }
-
-        public void setType(String type)
-        {
-            this.type = type;
+        if ((entry.bean == null) || entry.bean.isEmpty()) {
+          this.logger.debug("Missing bean for entry adaptor");
         }
-
+      }
     }
+  }
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+  /**
+   * Closes the specified archive file.
+   *
+   * @param archiveReference the archive reference
+   * @throws ArchiveAdaptorException if an error occurs
+   */
+  protected abstract void closeArchive(I archiveReference) throws ArchiveAdaptorException;
 
-    @Autowired
-    protected FileTypeIdentifier fileTypeIdentifier;
+  /**
+   * Returns the list of filenames from the archive.
+   *
+   * @param archiveReference the archive reference
+   * @return the list of filenames
+   */
+  protected abstract List<String> getEntryFilenames(I archiveReference);
 
-    @Autowired
-    private ApplicationContext context;
+  protected String getFilenameForEntry(String filename, int index) {
+    return String.format("offset-%03d.%s", index, FileUtils.getExtension(filename));
+  }
 
-    @Autowired
-    private ComicFileHandler comicFileHandler;
+  protected EntryLoader getLoaderForContent(byte[] content) {
+    String type = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
 
-    @Autowired
-    protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
+    this.logger.debug("Content type: {}", type);
 
-    protected List<EntryLoaderForType> loaders = new ArrayList<>();
-    protected Map<String,
-            EntryLoader> entryLoaders = new HashMap<>();
-    private String defaultExtension;
+    return this.entryLoaders.get(type);
+  }
 
-    public AbstractArchiveAdaptor(String defaultExtension)
-    {
-        super();
-        this.defaultExtension = defaultExtension;
-    }
+  public List<EntryLoaderForType> getLoaders() {
+    return this.loaders;
+  }
 
-    @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        this.entryLoaders.clear();
-        for (EntryLoaderForType entry : this.loaders)
-        {
-            if (entry.isValid())
-            {
-                if (this.context.containsBean(entry.bean))
-                {
-                    this.entryLoaders.put(entry.type, (EntryLoader) this.context.getBean(entry.bean));
-                } else
-                {
-                    this.logger.debug("No such entry adaptor bean: " + entry.bean);
-                }
-            } else
-            {
-                if ((entry.type == null) || entry.type.isEmpty())
-                {
-                    this.logger.debug("Missing type for entry adaptor");
-                }
-                if ((entry.bean == null) || entry.bean.isEmpty())
-                {
-                    this.logger.debug("Missing bean for entry adaptor");
-                }
-            }
-        }
-    }
+  @Override
+  public void loadComic(Comic comic) throws ArchiveAdaptorException {
+    I archiveReference = null;
 
-    /**
-     * Closes the specified archive file.
-     *
-     * @param archiveReference
-     *         the archive reference
-     *
-     * @throws ArchiveAdaptorException
-     *         if an error occurs
-     */
-    abstract protected void closeArchive(I archiveReference) throws ArchiveAdaptorException;
+    this.logger.info("Processing archive: {}", comic.getFilename());
+    long started = System.currentTimeMillis();
 
-    /**
-     * Returns the list of filenames from the archive.
-     *
-     * @param archiveReference
-     *         the archive reference
-     *
-     * @return the list of filenames
-     */
-    abstract protected List<String> getEntryFilenames(I archiveReference);
+    try {
+      File comicFile = this.validateFile(comic);
+      archiveReference = this.openArchive(comicFile);
 
-    protected String getFilenameForEntry(String filename, int index)
-    {
-        return String.format("offset-%03d.%s", index, FileUtils.getExtension(filename));
-    }
-
-    protected EntryLoader getLoaderForContent(byte[] content)
-    {
-        String type = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
-
-        this.logger.debug("Content type: " + type);
-
-        return this.entryLoaders.get(type);
-    }
-
-    public List<EntryLoaderForType> getLoaders()
-    {
-        return this.loaders;
-    }
-
-    @Override
-    public void loadComic(Comic comic) throws ArchiveAdaptorException
-    {
-        I archiveReference = null;
-
-        this.logger.debug("Processing archive: " + comic.getFilename());
-
-        try
-        {
-            File comicFile = this.validateFile(comic);
-            archiveReference = this.openArchive(comicFile);
-
-            // get the archive entries
-            List<String> entryFilenames = this.getEntryFilenames(archiveReference);
-            Collections.sort(entryFilenames);
-            this.logger.debug("Retrieved {} filenames", entryFilenames.size());
-
-            // load the entries
-            for (String entryFilename : entryFilenames)
-            {
-                byte[] content = this.loadSingleFileInternal(archiveReference, entryFilename);
-
-                this.processContent(comic, entryFilename, content);
-            }
-        } finally
-        {
-            // clean up
-            if (archiveReference != null)
-            {
-                this.logger.debug("Closing archive: " + comic.getFilename());
-                this.closeArchive(archiveReference);
-            }
-        }
-    }
-
-    protected byte[] loadContent(String filename, long size, InputStream input) throws IOException
-    {
-        this.logger.debug("Loading entry: name=" + filename + " size=" + size);
-        byte[] content = new byte[(int) size];
-
-        IOUtils.readFully(input, content);
-
-        return content;
-    }
-
-    @Override
-    public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException
-    {
-        this.logger.debug("Loading single entry from comic: comic=" + comic.getFilename() + " entry=" + entryName);
-
-        return this.loadSingleFile(comic.getFilename(), entryName);
-    }
-
-    @Override
-    public byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException
-    {
-        this.logger.debug("Loading single entry from file: filename={} entry={}", filename, entryName);
-        I archiveReference = this.openArchive(new File(filename));
-        byte[] result = this.loadSingleFileInternal(archiveReference, entryName);
+      this.logger.debug("Loading entire comic: {}", comic.getFilename());
+      this.loadAllFiles(comic, archiveReference);
+    } finally {
+      // clean up
+      if (archiveReference != null) {
+        this.logger.debug("Closing archive: {}", comic.getFilename());
         this.closeArchive(archiveReference);
+      }
+      long duration = System.currentTimeMillis() - started;
+      this.logger.debug("Processing time: {}ms", duration);
+    }
+  }
 
-        return result;
+  /**
+   * Loads all archive entries.
+   *
+   * @param comic the comic
+   * @param archiveReference the archive
+   */
+  protected abstract void loadAllFiles(Comic comic, I archiveReference)
+      throws ArchiveAdaptorException;
+
+  protected byte[] loadContent(String filename, long size, InputStream input) throws IOException {
+    this.logger.debug("Loading entry: name={} size={}", filename, size);
+    byte[] content = new byte[(int) size];
+
+    IOUtils.readFully(input, content);
+
+    return content;
+  }
+
+  @Override
+  public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException {
+    this.logger.debug(
+        "Loading single entry from comic: comic={} entry={}", comic.getFilename(), entryName);
+
+    return this.loadSingleFile(comic.getFilename(), entryName);
+  }
+
+  @Override
+  public byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException {
+    this.logger.debug("Loading single entry from file: filename={} entry={}", filename, entryName);
+    I archiveReference = this.openArchive(new File(filename));
+    byte[] result = this.loadSingleFileInternal(archiveReference, entryName);
+    this.closeArchive(archiveReference);
+
+    return result;
+  }
+
+  /**
+   * Loads the content for a single entry in the specified archive.
+   *
+   * @param archiveReference the archive
+   * @param entryName the entry filename
+   * @return the content of the entry
+   * @throws ArchiveAdaptorException if an error occurs
+   */
+  protected abstract byte[] loadSingleFileInternal(I archiveReference, String entryName)
+      throws ArchiveAdaptorException;
+
+  /**
+   * Opens the archive, returning an archive reference object.
+   *
+   * @param comicFile the comic file
+   * @return the archive reference object
+   * @throws ArchiveAdaptorException if an error occurs
+   */
+  protected abstract I openArchive(File comicFile) throws ArchiveAdaptorException;
+
+  protected void processContent(Comic comic, String filename, byte[] content) {
+    EntryLoader loader = this.getLoaderForContent(content);
+    if (loader != null) {
+      try {
+        this.logger.debug("Loading content: filename={} length={}", filename, content.length);
+        loader.loadContent(comic, filename, content);
+      } catch (EntryLoaderException error) {
+        this.logger.error("Error loading content", error);
+      }
+    } else {
+      this.logger.debug("No registered adaptor for type");
+    }
+  }
+
+  @Override
+  public Comic saveComic(Comic source, boolean renamePages) throws ArchiveAdaptorException {
+    this.logger.debug("Saving comic: {}", source.getFilename());
+
+    String tempFilename;
+    try {
+      tempFilename =
+          File.createTempFile(source.getFilenameWithoutExtension() + "-temporary", "tmp")
+              .getAbsolutePath();
+    } catch (IOException error) {
+      throw new ArchiveAdaptorException("unable to write comic", error);
     }
 
-    /**
-     * Loads the content for a single entry in the specified archive.
-     *
-     * @param archiveReference
-     *         the archive
-     * @param entryName
-     *         the entry filename
-     *
-     * @return the content of the entry
-     *
-     * @throws ArchiveAdaptorException
-     *         if an error occurs
-     */
-    abstract protected byte[] loadSingleFileInternal(I archiveReference,
-                                                     String entryName) throws ArchiveAdaptorException;
+    this.saveComicInternal(source, tempFilename, renamePages);
 
-    /**
-     * Opens the archive, returning an archive reference object.
-     *
-     * @param comicFile
-     *         the comic file
-     *
-     * @return the archive reference object
-     *
-     * @throws ArchiveAdaptorException
-     *         if an error occurs
-     */
-    abstract protected I openArchive(File comicFile) throws ArchiveAdaptorException;
-
-    protected void processContent(Comic comic, String filename, byte[] content)
-    {
-        EntryLoader loader = this.getLoaderForContent(content);
-        if (loader != null)
-        {
-            try
-            {
-                this.logger.debug("Loading content: filename={} length={}", filename, content.length);
-                loader.loadContent(comic, filename, content);
-            } catch (EntryLoaderException error)
-            {
-                this.logger.error("Error loading content", error);
-            }
-        } else
-        {
-            this.logger.debug("No registered adaptor for type");
-        }
+    String filename =
+        ComicFileUtils.findAvailableFilename(
+            source.getFilenameWithoutExtension(), 0, this.defaultExtension);
+    File file1 = new File(tempFilename);
+    File file2 = new File(filename);
+    try {
+      this.logger.debug("Copying {} to {}", tempFilename, filename);
+      FileUtils.copyFile(file1, file2);
+    } catch (IOException error) {
+      throw new ArchiveAdaptorException("Unable to copy file", error);
     }
 
-    @Override
-    public Comic saveComic(Comic source, boolean renamePages) throws ArchiveAdaptorException
-    {
-        this.logger.debug("Saving comic: " + source.getFilename());
+    Comic result = new Comic();
 
-        String tempFilename;
-        try
-        {
-            tempFilename = File.createTempFile(source.getFilenameWithoutExtension() + "-temporary", "tmp")
-                    .getAbsolutePath();
-        } catch (IOException error)
-        {
-            throw new ArchiveAdaptorException("unable to write comic", error);
-        }
+    result.setFilename(filename);
 
-        this.saveComicInternal(source, tempFilename, renamePages);
-
-        String filename = ComicFileUtils.findAvailableFilename(source.getFilenameWithoutExtension(), 0, this.defaultExtension);
-        File file1 = new File(tempFilename);
-        File file2 = new File(filename);
-        try
-        {
-            this.logger.debug("Copying " + tempFilename + " to " + filename + ".");
-            FileUtils.copyFile(file1, file2);
-        } catch (IOException error)
-        {
-            throw new ArchiveAdaptorException("Unable to copy file", error);
-        }
-
-        Comic result = new Comic();
-
-        result.setFilename(filename);
-
-        try
-        {
-            this.comicFileHandler.loadComic(result);
-        } catch (ComicFileHandlerException error)
-        {
-            throw new ArchiveAdaptorException("Error loading new comic", error);
-        }
-
-        return result;
+    try {
+      this.comicFileHandler.loadComic(result);
+    } catch (ComicFileHandlerException error) {
+      throw new ArchiveAdaptorException("Error loading new comic", error);
     }
 
-    /**
-     * Performs the underlying creation of the new comic.
-     *
-     * @param source
-     *         the source comic
-     * @param filename
-     *         the new filename
-     * @param renamePages
-     *         rename pages
-     *
-     * @throws ArchiveException
-     *         if an error occurs
-     */
-    abstract void saveComicInternal(Comic source, String filename, boolean renamePages) throws ArchiveAdaptorException;
+    return result;
+  }
 
-    protected File validateFile(Comic comic) throws ArchiveAdaptorException
-    {
-        File file = new File(comic.getFilename());
+  /**
+   * Performs the underlying creation of the new comic.
+   *
+   * @param source the source comic
+   * @param filename the new filename
+   * @param renamePages rename pages
+   * @throws ArchiveException if an error occurs
+   */
+  abstract void saveComicInternal(Comic source, String filename, boolean renamePages)
+      throws ArchiveAdaptorException;
 
-        if (!file.exists()) throw new ArchiveAdaptorException("File not found: " + file.getAbsolutePath());
-        if (file.isDirectory()) throw new ArchiveAdaptorException("Cannot open directory: " + file.getAbsolutePath());
+  protected File validateFile(Comic comic) throws ArchiveAdaptorException {
+    File file = new File(comic.getFilename());
 
-        return file;
+    if (!file.exists())
+      throw new ArchiveAdaptorException("File not found: " + file.getAbsolutePath());
+    if (file.isDirectory())
+      throw new ArchiveAdaptorException("Cannot open directory: " + file.getAbsolutePath());
+
+    return file;
+  }
+
+  @Override
+  public String getFirstImageFileName(String filename) throws ArchiveAdaptorException {
+    I archiveRef = this.openArchive(new File(filename));
+
+    List<String> entries = this.getEntryFilenames(archiveRef);
+    Collections.sort(entries);
+    String result = null;
+
+    for (String entry : entries) {
+      byte[] content = this.loadSingleFileInternal(archiveRef, entry);
+      String contentType = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
+
+      if (contentType != null && FileTypeIdentifier.IMAGE_TYPES.contains(contentType)) {
+        result = entry;
+        break;
+      }
     }
 
-    @Override
-    public String getFirstImageFileName(String filename) throws ArchiveAdaptorException
-    {
-        I archiveRef = this.openArchive(new File(filename));
+    this.closeArchive(archiveRef);
 
-        List<String> entries = this.getEntryFilenames(archiveRef);
-        Collections.sort(entries);
-        String result = null;
+    return result;
+  }
 
-        for (String entry : entries)
-        {
-            byte[] content = this.loadSingleFileInternal(archiveRef, entry);
-            String contentType = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
+  @Override
+  public byte[] encodeFileToStream(Map<String, byte[]> entries) throws ArchiveAdaptorException {
+    throw new RuntimeException("Not supported");
+  }
 
-            if (contentType != null && FileTypeIdentifier.IMAGE_TYPES.contains(contentType))
-            {
-                result = entry;
-                break;
-            }
-        }
+  public static class EntryLoaderForType {
+    private String type;
+    private String bean;
 
-        this.closeArchive(archiveRef);
-
-        return result;
+    public boolean isValid() {
+      return (this.type != null)
+          && !this.type.isEmpty()
+          && (this.bean != null)
+          && !this.bean.isEmpty();
     }
 
-    @Override
-    public byte[] encodeFileToStream(Map<String, byte[]> entries) throws ArchiveAdaptorException
-    {
-        throw new RuntimeException("Not supported");
+    public void setBean(String bean) {
+      this.bean = bean;
     }
+
+    public void setType(String type) {
+      this.type = type;
+    }
+  }
 }
