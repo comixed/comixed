@@ -41,25 +41,15 @@ import java.io.File;
 public class AddComicWorkerTaskTest {
   private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
   private static final String PAGE_HASH = "0123456789ABCDEF";
-
   @InjectMocks private AddComicWorkerTask task;
-
   @Mock private MessageSource messageSource;
-
   @Mock private ComicFileHandler comicFileHandler;
-
   @Mock private ComicRepository comicRepository;
-
   @Mock private BlockedPageHashRepository blockedPageHashRepository;
-
   @Mock private ObjectFactory<Comic> comicFactory;
-
   @Mock private Comic comic;
-
   @Mock private Page page;
-
   @Mock private FilenameScraperAdaptor filenameScraperAdaptor;
-
   @Mock private BlockedPageHash blockedPageHash;
 
   @Test
@@ -69,6 +59,7 @@ public class AddComicWorkerTaskTest {
     Mockito.doNothing()
         .when(comicFileHandler)
         .loadComic(Mockito.any(Comic.class), Mockito.anyBoolean());
+    Mockito.doNothing().when(comic).sortPages();
     Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
     Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
         .thenReturn(Mockito.any(Comic.class));
@@ -80,6 +71,7 @@ public class AddComicWorkerTaskTest {
 
     Mockito.verify(comicFactory, Mockito.times(1)).getObject();
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic, false);
+    Mockito.verify(comic, Mockito.times(1)).sortPages();
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
     Mockito.verify(blockedPageHashRepository, Mockito.never()).findByHash(Mockito.anyString());
     Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);

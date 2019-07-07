@@ -987,4 +987,14 @@ public class Comic {
 
     return !this.backingFile.exists();
   }
+
+  public void sortPages() {
+    this.pages.sort(
+        new Comparator<Page>() {
+          @Override
+          public int compare(Page p1, Page p2) {
+            return p1.getFilename().compareTo(p2.getFilename());
+          }
+        });
+  }
 }

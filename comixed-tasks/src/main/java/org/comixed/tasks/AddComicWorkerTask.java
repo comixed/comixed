@@ -68,7 +68,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
    * @param file the file
    */
   public void setFile(File file) {
-    this.logger.debug("Setting filename: " + file.getName());
+    this.logger.debug("Setting filename: {}", file.getName());
     this.file = file;
   }
 
@@ -78,7 +78,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
 
   @Override
   public void startTask() throws WorkerTaskException {
-    this.logger.debug("Adding file to library: " + this.file);
+    this.logger.debug("Adding file to library: {}", this.file);
 
     Comic result = this.comicRepository.findByFilename(this.file.getAbsolutePath());
     if (result != null) {
@@ -103,6 +103,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
           }
         }
       }
+      result.sortPages();
       this.comicRepository.save(result);
     } catch (ComicFileHandlerException | AdaptorException error) {
       throw new WorkerTaskException("Failed to load comic", error);
