@@ -27,13 +27,28 @@ import org.apache.logging.log4j.Logger;
  * {@link WorkerTask} types.
  *
  * @author Darryl L. Pierce
- *
  */
-public abstract class AbstractWorkerTask implements
-                                         WorkerTask
-{
+public abstract class AbstractWorkerTask
+        implements WorkerTask {
     protected static final Logger logger = LogManager.getLogger(AbstractWorkerTask.class);
 
-    public AbstractWorkerTask()
-    {}
+    private String description;
+
+    public AbstractWorkerTask() {}
+
+    @Override
+    public String getDescription() {
+        if (this.description == null) {
+            this.description = this.createDescription();
+        }
+
+        return this.description;
+    }
+
+    /**
+     * Must be overridden by child classes to provide a description.
+     *
+     * @return the description
+     */
+    protected abstract String createDescription();
 }

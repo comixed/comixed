@@ -31,33 +31,45 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class RescanComicWorkerTask extends AbstractWorkerTask
-{
+public class RescanComicWorkerTask
+        extends AbstractWorkerTask {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private PageRepository pageRepository;
+    @Autowired private PageRepository pageRepository;
 
     private Comic comic;
 
-    public void setComic(Comic comic)
-    {
+    public void setComic(Comic comic) {
         this.comic = comic;
     }
 
     @Override
-    public void startTask() throws WorkerTaskException
-    {
-        this.logger.debug("Rescanning comic: id={} {}", this.comic.getId(), this.comic.getFilename());
+    public void startTask()
+            throws
+            WorkerTaskException {
+        this.logger.debug("Rescanning comic: id={} {}",
+                          this.comic.getId(),
+                          this.comic.getFilename());
 
-        for (Page page : this.comic.getPages())
-        {
-            this.logger.debug("Updating page metrics: {}", page.getFilename());
+        for (Page page : this.comic.getPages()) {
+            this.logger.debug("Updating page metrics: {}",
+                              page.getFilename());
             page.getWidth();
             page.getHeight();
 
             this.logger.debug("Saving page details");
             this.pageRepository.save(page);
         }
+    }
+
+    @Override
+    protected String createDescription() {
+        final StringBuilder result = new StringBuilder();
+
+        result.append("Rescan comic:")
+              .append(" comic=")
+              .append(this.comic.getFilename());
+
+        return result.toString();
     }
 }

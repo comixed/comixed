@@ -19,12 +19,6 @@
 
 package org.comixed.tasks;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.apache.commons.io.FileUtils;
 import org.comixed.library.model.Comic;
 import org.comixed.repositories.ComicRepository;
@@ -33,82 +27,97 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Component
-public class DeleteComicsWorkerTask extends AbstractWorkerTask implements
-                                    WorkerTask
-{
+public class DeleteComicsWorkerTask
+        extends AbstractWorkerTask
+        implements WorkerTask {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ComicRepository repository;
+    @Autowired private ComicRepository repository;
 
     private List<Comic> comics;
     private boolean deleteFiles;
     private List<Long> comicIds;
 
-    public void setComicIds(List<Long> comicIds)
-    {
+    public void setComicIds(List<Long> comicIds) {
         this.comicIds = comicIds;
     }
 
-    public void setComics(List<Comic> comics)
-    {
+    public void setComics(List<Comic> comics) {
         this.comics = comics;
     }
 
-    public void setDeleteFiles(boolean deleteFiles)
-    {
+    public void setDeleteFiles(boolean deleteFiles) {
         this.deleteFiles = deleteFiles;
     }
 
     @Override
-    public void startTask() throws WorkerTaskException
-    {
-        if (this.comics == null)
-        {
+    public void startTask()
+            throws
+            WorkerTaskException {
+        if (this.comics == null) {
             this.logger.debug("No comics provided.");
-            if (this.comicIds == null) throw new WorkerTaskException("No comics provided for deletion");
+            if (this.comicIds == null)
+                throw new WorkerTaskException("No comics provided for deletion");
 
             this.comics = new ArrayList<>();
-            for (Long comicId : this.comicIds)
-            {
+            for (Long comicId : this.comicIds) {
                 Optional<Comic> comic = this.repository.findById(comicId);
-                if (comic.isPresent())
-                {
-                    this.logger.debug("Adding comic with id={}", comicId);
+                if (comic.isPresent()) {
+                    this.logger.debug("Adding comic with id={}",
+                                      comicId);
                     this.comics.add(comic.get());
-                }
-                else
-                {
-                    this.logger.debug("No such comic: id={}", comicId);
+                } else {
+                    this.logger.debug("No such comic: id={}",
+                                      comicId);
                 }
             }
         }
         for (int index = 0;
              index < this.comics.size();
-             index++)
-        {
+             index++) {
             Comic comic = this.comics.get(index);
 
-            this.logger.debug("Deleting {} of {} comic(s)", index + 1, this.comics.size());
+            this.logger.debug("Deleting {} of {} comic(s)",
+                              index + 1,
+                              this.comics.size());
 
-            if (this.deleteFiles)
-            {
+            if (this.deleteFiles) {
                 this.logger.debug("Deleting comic file: " + comic.getFilename());
                 File file = new File(comic.getFilename());
 
-                try
-                {
+                try {
                     FileUtils.forceDelete(file);
                     this.logger.debug("Removing comic from repository: " + comic);
                 }
-                catch (IOException error)
-                {
-                    this.logger.error("Unable to delete comic: " + comic.getFilename(), error);
+                catch (IOException error) {
+                    this.logger.error("Unable to delete comic: " + comic.getFilename(),
+                                      error);
                 }
             }
 
             this.repository.delete(comic);
         }
+    }
+
+    @Override
+    protected String createDescription() {
+        final StringBuilder result = new StringBuilder();
+
+        result.append("Delete comic:")
+              .append(" comic count=")
+              .append(this.comics.size())
+              .append(" delete files=")
+              .append(this.deleteFiles
+                      ? "Yes"
+                      : "No");
+
+        return result.toString();
     }
 }

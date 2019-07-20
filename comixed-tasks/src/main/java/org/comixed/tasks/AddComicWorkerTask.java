@@ -41,72 +41,107 @@ import java.io.File;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ConfigurationProperties(prefix = "comic-file.handlers")
-public class AddComicWorkerTask extends AbstractWorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  File file;
-  @Autowired private ObjectFactory<Comic> comicFactory;
-  @Autowired private ComicFileHandler comicFileHandler;
-  @Autowired private ComicRepository comicRepository;
-  @Autowired private BlockedPageHashRepository blockedPageHashRepository;
-  @Autowired private FilenameScraperAdaptor filenameScraper;
-  private boolean deleteBlockedPages = false;
+public class AddComicWorkerTask
+        extends AbstractWorkerTask {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private boolean ignoreMetadata = false;
+    @Autowired private ObjectFactory<Comic> comicFactory;
+    @Autowired private ComicFileHandler comicFileHandler;
+    @Autowired private ComicRepository comicRepository;
+    @Autowired private BlockedPageHashRepository blockedPageHashRepository;
+    @Autowired private FilenameScraperAdaptor filenameScraper;
 
-  /**
-   * Sets whether blocked pages are marked as deleted.
-   *
-   * @param deleteBlockedPages the flag
-   */
-  public void setDeleteBlockedPages(boolean deleteBlockedPages) {
-    this.deleteBlockedPages = deleteBlockedPages;
-  }
+    private File file;
+    private boolean deleteBlockedPages = false;
+    private boolean ignoreMetadata = false;
 
-  /**
-   * Sets the name of the file to be added.
-   *
-   * @param file the file
-   */
-  public void setFile(File file) {
-    this.logger.debug("Setting filename: {}", file.getName());
-    this.file = file;
-  }
-
-  public void setIgnoreMetadata(boolean ignore) {
-    this.ignoreMetadata = ignore;
-  }
-
-  @Override
-  public void startTask() throws WorkerTaskException {
-    this.logger.debug("Adding file to library: {}", this.file);
-
-    Comic result = this.comicRepository.findByFilename(this.file.getAbsolutePath());
-    if (result != null) {
-      this.logger.debug("Comic already imported: " + this.file.getAbsolutePath());
-      return;
+    /**
+     * Sets whether blocked pages are marked as deleted.
+     *
+     * @param deleteBlockedPages
+     *         the flag
+     */
+    public void setDeleteBlockedPages(boolean deleteBlockedPages) {
+        this.deleteBlockedPages = deleteBlockedPages;
     }
 
-    try {
-      result = this.comicFactory.getObject();
-      result.setFilename(this.file.getAbsolutePath());
-      this.comicFileHandler.loadComic(result, this.ignoreMetadata);
-      this.filenameScraper.execute(result);
-      if (this.deleteBlockedPages) {
-        this.logger.debug("Looking for blocked pages");
-        for (int index = 0; index < result.getPageCount(); index++) {
-          String hash = result.getPage(index).getHash();
-          BlockedPageHash blocked = this.blockedPageHashRepository.findByHash(hash);
+    /**
+     * Sets the name of the file to be added.
+     *
+     * @param file
+     *         the file
+     */
+    public void setFile(File file) {
+        this.logger.debug("Setting filename: {}",
+                          file.getName());
+        this.file = file;
+    }
 
-          if (blocked != null) {
-            this.logger.debug("Marking blocked offset as deleted: hash={}", hash);
-            result.getPage(index).markDeleted(true);
-          }
+    public void setIgnoreMetadata(boolean ignore) {
+        this.ignoreMetadata = ignore;
+    }
+
+    @Override
+    public void startTask()
+            throws
+            WorkerTaskException {
+        this.logger.debug("Adding file to library: {}",
+                          this.file);
+
+        Comic result = this.comicRepository.findByFilename(this.file.getAbsolutePath());
+        if (result != null) {
+            this.logger.debug("Comic already imported: " + this.file.getAbsolutePath());
+            return;
         }
-      }
-      result.sortPages();
-      this.comicRepository.save(result);
-    } catch (ComicFileHandlerException | AdaptorException error) {
-      throw new WorkerTaskException("Failed to load comic", error);
+
+        try {
+            result = this.comicFactory.getObject();
+            result.setFilename(this.file.getAbsolutePath());
+            this.comicFileHandler.loadComic(result,
+                                            this.ignoreMetadata);
+            this.filenameScraper.execute(result);
+            if (this.deleteBlockedPages) {
+                this.logger.debug("Looking for blocked pages");
+                for (int index = 0;
+                     index < result.getPageCount();
+                     index++) {
+                    String hash = result.getPage(index)
+                                        .getHash();
+                    BlockedPageHash blocked = this.blockedPageHashRepository.findByHash(hash);
+
+                    if (blocked != null) {
+                        this.logger.debug("Marking blocked offset as deleted: hash={}",
+                                          hash);
+                        result.getPage(index)
+                              .markDeleted(true);
+                    }
+                }
+            }
+            result.sortPages();
+            this.comicRepository.save(result);
+        }
+        catch (ComicFileHandlerException | AdaptorException error) {
+            throw new WorkerTaskException("Failed to load comic",
+                                          error);
+        }
     }
-  }
+
+    @Override
+    protected String createDescription() {
+        final StringBuilder result = new StringBuilder();
+
+        result.append("Add comic to library:")
+              .append(" filename=")
+              .append(this.file.getAbsolutePath())
+              .append(" delete blocked pages=")
+              .append(this.deleteBlockedPages
+                      ? "Yes"
+                      : "No")
+              .append(" ignore metadata=")
+              .append(this.ignoreMetadata
+                      ? "Yes"
+                      : "No");
+
+        return result.toString();
+    }
 }

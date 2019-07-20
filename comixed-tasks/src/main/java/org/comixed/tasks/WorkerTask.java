@@ -24,16 +24,22 @@ package org.comixed.tasks;
  * {@link Worker] class.
  *
  * @author Darryl L. Pierce
- *
  */
-
-public interface WorkerTask
-{
+public interface WorkerTask {
     /**
      * Invoked when the task can begin processing.
      *
      * @throws WorkerTaskException
-     *             if an error occurs
+     *         if an error occurs
      */
-    void startTask() throws WorkerTaskException;
+    void startTask()
+            throws
+            WorkerTaskException;
+
+    /**
+     * Return a description of the task for use in status and error messages.
+     *
+     * @return the description
+     */
+    String getDescription();
 }

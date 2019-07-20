@@ -19,9 +19,6 @@
 
 package org.comixed.tasks;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.library.model.Comic;
@@ -33,105 +30,128 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * <code>MoveComicWorkerTask</code> handles moving a single comic file to a new
- * location, creating the subdirectory structure as needed, and updating the
- * database.
+ * location, creating the subdirectory structure as needed, and updating the database.
  *
  * @author Darryl L. Pierce
- *
  */
 @Component
 @Scope("prototype")
-public class MoveComicWorkerTask extends AbstractWorkerTask
-{
+public class MoveComicWorkerTask
+        extends AbstractWorkerTask {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ComicRepository comicRepository;
+    @Autowired private ComicRepository comicRepository;
 
     private Comic comic;
     private String destination;
 
-    private void addDirectory(StringBuffer result, String value)
-    {
-        result.append(File.separator);
-
-        if ((value != null) && !value.isEmpty())
-        {
-            result.append(value);
-        }
-        else
-        {
-            result.append("Unknown");
-        }
-    }
-
-    private String getRelativeDestination()
-    {
-        StringBuffer result = new StringBuffer(this.destination);
-
-        this.addDirectory(result, this.comic.getPublisher());
-        this.addDirectory(result, this.comic.getSeries());
-        this.addDirectory(result, this.comic.getVolume());
-
-        return result.toString();
-    }
-
-    public void setComic(Comic comic)
-    {
+    public void setComic(Comic comic) {
         this.comic = comic;
     }
 
-    public void setDestination(String destination)
-    {
+    public void setDestination(String destination) {
         this.destination = destination;
     }
 
     @Override
-    public void startTask() throws WorkerTaskException
-    {
+    public void startTask()
+            throws
+            WorkerTaskException {
         File sourceFile = new File(this.comic.getFilename());
-        File destFile = new File(this.getRelativeDestination(), getRelativeComicFilename());
+        File destFile = new File(this.getRelativeDestination(),
+                                 getRelativeComicFilename());
         String defaultExtension = FilenameUtils.getExtension(comic.getFilename());
-        destFile = new File(ComicFileUtils.findAvailableFilename(destFile.getAbsolutePath(), 0, defaultExtension));
+        destFile = new File(ComicFileUtils.findAvailableFilename(destFile.getAbsolutePath(),
+                                                                 0,
+                                                                 defaultExtension));
 
         // if the source and target are the same, then skip the file
-        if (destFile.equals(sourceFile))
-        {
+        if (destFile.equals(sourceFile)) {
             this.logger.debug("Source and target are the same: " + destFile.getAbsolutePath());
             return;
         }
 
         // create the directory if it doesn't exist
-        if (!destFile.getParentFile().exists())
-        {
-            this.logger.debug("Creating directory: " + destFile.getParentFile().getAbsolutePath());
-            destFile.getParentFile().mkdirs();
+        if (!destFile.getParentFile()
+                     .exists()) {
+            this.logger.debug("Creating directory: " + destFile.getParentFile()
+                                                               .getAbsolutePath());
+            destFile.getParentFile()
+                    .mkdirs();
         }
-        try
-        {
+        try {
             this.logger.debug("Moving comic: " + this.comic.getFilename() + " -> " + this.destination);
 
-            FileUtils.moveFile(sourceFile, destFile);
+            FileUtils.moveFile(sourceFile,
+                               destFile);
 
             this.logger.debug("Updating comic in database");
             this.comic.setFilename(destFile.getAbsolutePath());
-            this.comicRepository.save(this.comic);      
+            this.comicRepository.save(this.comic);
         }
-        catch (IOException error)
-        {
-            throw new WorkerTaskException("Failed to move comic", error);
+        catch (IOException error) {
+            throw new WorkerTaskException("Failed to move comic",
+                                          error);
         }
     }
 
-    private String getRelativeComicFilename()
-    {
+    private String getRelativeDestination() {
+        StringBuffer result = new StringBuffer(this.destination);
+
+        this.addDirectory(result,
+                          this.comic.getPublisher());
+        this.addDirectory(result,
+                          this.comic.getSeries());
+        this.addDirectory(result,
+                          this.comic.getVolume());
+
+        return result.toString();
+    }
+
+    private String getRelativeComicFilename() {
         StringBuffer result = new StringBuffer();
 
-        result.append(comic.getSeries() != null ? comic.getSeries() : "Unknown");
-        result.append(" v" + (comic.getVolume() != null ? comic.getVolume() : "Unknown"));
-        result.append(" #" + (comic.getIssueNumber() != null ? comic.getIssueNumber() : "0000"));
+        result.append(comic.getSeries() != null
+                      ? comic.getSeries()
+                      : "Unknown");
+        result.append(" v" + (comic.getVolume() != null
+                              ? comic.getVolume()
+                              : "Unknown"));
+        result.append(" #" + (comic.getIssueNumber() != null
+                              ? comic.getIssueNumber()
+                              : "0000"));
+
+        return result.toString();
+    }
+
+    private void addDirectory(StringBuffer result,
+                              String value) {
+        result.append(File.separator);
+
+        if ((value != null) && !value.isEmpty()) {
+            result.append(value);
+        } else {
+            result.append("Unknown");
+        }
+    }
+
+    @Override
+    protected String createDescription() {
+        final StringBuilder result = new StringBuilder();
+
+        result.append("Moving comic:")
+              .append(" comic=")
+              .append(this.comic.getBaseFilename())
+              .append(" from=")
+              .append(FileUtils.getFile(this.comic.getFilename())
+                               .getAbsolutePath())
+              .append(" to=")
+              .append(this.destination);
 
         return result.toString();
     }

@@ -33,27 +33,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class ExportComicWorkerTask extends AbstractWorkerTask
-{
+public class ExportComicWorkerTask
+        extends AbstractWorkerTask {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private Comic comic;
     private ArchiveAdaptor archiveAdaptor;
-
-    @Autowired
-    private ComicRepository comicRepository;
-
-    @Autowired
-    private ComicFileHandler comicFileHandler;
-
+    @Autowired private ComicRepository comicRepository;
+    @Autowired private ComicFileHandler comicFileHandler;
     private boolean renamePages = false;
 
-    public void setArchiveAdaptor(ArchiveAdaptor archiveAdaptor)
-    {
+    public void setArchiveAdaptor(ArchiveAdaptor archiveAdaptor) {
         this.archiveAdaptor = archiveAdaptor;
     }
 
-    public void setComic(Comic comic)
-    {
+    public void setComic(Comic comic) {
         this.comic = comic;
     }
 
@@ -61,37 +54,51 @@ public class ExportComicWorkerTask extends AbstractWorkerTask
      * If set to true then pages are renamed as the comic is exported.
      *
      * @param renamePages
-     *            the flag
+     *         the flag
      */
-    public void setRenamePages(boolean renamePages)
-    {
-        this.logger.debug("Setting renamePages={}", renamePages);
+    public void setRenamePages(boolean renamePages) {
+        this.logger.debug("Setting renamePages={}",
+                          renamePages);
         this.renamePages = renamePages;
     }
 
     @Override
-    public void startTask() throws WorkerTaskException
-    {
+    public void startTask()
+            throws
+            WorkerTaskException {
         this.logger.debug("Loading comic to be converted: " + this.comic.getFilename());
-        try
-        {
+        try {
             this.comicFileHandler.loadComic(this.comic);
         }
-        catch (ComicFileHandlerException error)
-        {
-            throw new WorkerTaskException("unable to load comic file: " + this.comic.getFilename(), error);
+        catch (ComicFileHandlerException error) {
+            throw new WorkerTaskException("unable to load comic file: " + this.comic.getFilename(),
+                                          error);
         }
         this.logger.debug("Converting comic");
 
-        try
-        {
-            Comic result = this.archiveAdaptor.saveComic(this.comic, this.renamePages);
+        try {
+            Comic result = this.archiveAdaptor.saveComic(this.comic,
+                                                         this.renamePages);
             this.comicRepository.save(result);
         }
-        catch (ArchiveAdaptorException error)
-        {
-            throw new WorkerTaskException("Unable to convert comic", error);
+        catch (ArchiveAdaptorException error) {
+            throw new WorkerTaskException("Unable to convert comic",
+                                          error);
         }
     }
 
+    @Override
+    protected String createDescription() {
+        final StringBuilder result = new StringBuilder();
+
+        result.append("Exporting comic:")
+              .append(" comic=")
+              .append(this.comic.getFilename())
+              .append(" rename pages=")
+              .append(this.renamePages
+                      ? "Yes"
+                      : "No");
+
+        return result.toString();
+    }
 }

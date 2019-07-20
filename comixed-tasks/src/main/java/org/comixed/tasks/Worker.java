@@ -19,6 +19,11 @@
 
 package org.comixed.tasks;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,49 +31,27 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
-
 /**
  * <code>Worker</code> runs in a separate worker and processes a queue of
  * worker tasks to be completed.
- *
- * When the queue is empty the work worker sits idle, but wakes up and processes
- * tasks as they are added. Tasks are executed in the order in which they are
- * added to the queue.
+ * <p>
+ * When the queue is empty the work worker sits idle, but wakes up and processes tasks as they are added. Tasks are
+ * executed in the order in which they are added to the queue.
  *
  * @author Darryl. Pierce
  */
 @Component
-public class Worker implements
-                    Runnable,
-                    InitializingBean
-{
-    public enum State
-    {
-     NOT_STARTED,
-     IDLE,
-     RUNNING,
-     STOP,
-    }
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());;
-
-    BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<>();
-
-    State state = State.NOT_STARTED;
-
-    Object semaphore = new Object();
-
+public class Worker
+        implements Runnable,
+                   InitializingBean {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public List<WorkerListener> listeners = new ArrayList<>();
+    BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<>();
+    State state = State.NOT_STARTED;
+    Object semaphore = new Object();
+    Map<Class<? extends WorkerTask>, Integer> taskCounts = new HashMap<>();
 
-    Map<Class<? extends WorkerTask>,
-        Integer> taskCounts = new HashMap<>();
-
-    public Worker()
-    {
+    public Worker() {
         super();
     }
 
@@ -76,85 +59,83 @@ public class Worker implements
      * Adds a tasks to the queue.
      *
      * @param task
-     *            the task
+     *         the task
      */
-    public void addTasksToQueue(WorkerTask task)
-    {
-        this.logger.debug("Adding task of type {} to queue", task.getClass());
-        try
-        {
+    public void addTasksToQueue(WorkerTask task) {
+        this.logger.debug("Adding task of type {} to queue",
+                          task.getClass());
+        try {
             this.queue.put(task);
 
             int count = 0;
 
-            if (this.taskCounts.containsKey(task.getClass()))
-            {
+            if (this.taskCounts.containsKey(task.getClass())) {
                 count = this.taskCounts.get(task.getClass());
             }
             count++;
-            this.taskCounts.put(task.getClass(), count);
-            this.logger.debug("There are now {} tasks of type {}", count, task.getClass());
+            this.taskCounts.put(task.getClass(),
+                                count);
+            this.logger.debug("There are now {} tasks of type {}",
+                              count,
+                              task.getClass());
 
         }
-        catch (InterruptedException error)
-        {
-            this.logger.error("Unable to queue task", error);
+        catch (InterruptedException error) {
+            this.logger.error("Unable to queue task",
+                              error);
         }
         this.logger.debug("Queue size is now " + this.queue.size());
         this.wakeUpWorker();
     }
 
-    public void addWorkerListener(WorkerListener listener)
-    {
+    private void wakeUpWorker() {
+        // if (this.state == State.IDLE)
+        {
+            logger.debug("Getting mutex lock");
+            synchronized (this.semaphore) {
+                this.logger.debug("Waking up worker thread");
+                this.semaphore.notifyAll();
+            }
+        }
+    }
+
+    public void addWorkerListener(WorkerListener listener) {
         this.logger.debug("Adding worker listener: " + listener);
         this.listeners.add(listener);
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception
-    {
+    public void afterPropertiesSet()
+            throws
+            Exception {
         this.logger.debug("Starting worker thread");
 
-        new Thread(this, "ComiXed-Worker").start();
-    }
-
-    void fireQueueChangedEvent()
-    {
-        this.logger.debug("Notifying worker listeners");
-        for (WorkerListener listener : this.listeners)
-        {
-            listener.queueChanged();
-        }
-    }
-
-    private void fireWorkerStateChangedEvent()
-    {
-        for (WorkerListener listener : this.listeners)
-        {
-            listener.workerStateChanged();
-        }
+        new Thread(this,
+                   "ComiXed-Worker").start();
     }
 
     /**
-     * Returns the number of pending tasks of the specified type are in the
-     * queue.
+     * Returns the number of pending tasks of the specified type are in the queue.
      *
      * @param taskClass
-     *            the task type
+     *         the task type
+     *
      * @return the count
      */
-    public int getCountFor(Class<? extends WorkerTask> taskClass)
-    {
-        this.logger.debug("Getting worker queue count: class={}", taskClass.getName());
+    public int getCountFor(Class<? extends WorkerTask> taskClass) {
+        this.logger.debug("Getting worker queue count: class={}",
+                          taskClass.getName());
         long started = System.currentTimeMillis();
         this.logger.debug("Waiting to get semaphore lock");
-        synchronized (this.semaphore)
-        {
-            this.logger.debug("Got the lock in {}ms", (System.currentTimeMillis() - started));
-            int result = (this.queue.isEmpty()
-                          || !this.taskCounts.containsKey(taskClass)) ? 0 : this.taskCounts.get(taskClass);
+        synchronized (this.semaphore) {
+            this.logger.debug("Got the lock in {}ms",
+                              (System.currentTimeMillis() - started));
+            int result = (this.queue.isEmpty() || !this.taskCounts.containsKey(taskClass))
+                         ? 0
+                         : this.taskCounts.get(taskClass);
 
-            this.logger.debug("There are {} instances", result);
+            this.logger.debug("There are {} instances",
+                              result);
 
             return result;
         }
@@ -165,8 +146,7 @@ public class Worker implements
      *
      * @return the state
      */
-    public State getState()
-    {
+    public State getState() {
         return this.state;
     }
 
@@ -175,83 +155,78 @@ public class Worker implements
      *
      * @return true if the queue is empty
      */
-    public boolean isQueueEmpty()
-    {
+    public boolean isQueueEmpty() {
         return this.queue.isEmpty();
     }
 
     /**
      * Returns the size of the task queue.
-     *
+     * <p>
      * The size of the task queue does not include any currently executing task.
      *
      * @return the size
      */
-    public int queueSize()
-    {
+    public int queueSize() {
         return this.queue.size();
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         this.logger.debug("Starting worker queue");
         this.state = State.RUNNING;
         this.fireWorkerStateChangedEvent();
-        while (this.state != State.STOP)
-        {
+        while (this.state != State.STOP) {
             WorkerTask currentTask = null;
 
-            synchronized (this.semaphore)
-            {
-                if (this.queue.isEmpty())
-                {
+            synchronized (this.semaphore) {
+                if (this.queue.isEmpty()) {
                     this.logger.debug("Waiting for task or notification");
-                    try
-                    {
+                    try {
                         this.state = State.IDLE;
                         this.fireWorkerStateChangedEvent();
                         this.semaphore.wait();
-                        logger.debug("Woke up: state={}", this.state.name());
+                        logger.debug("Woke up: state={}",
+                                     this.state.name());
                         // if we're in the stopped state then exit
-                        if (this.state == State.STOP)
-                        {
+                        if (this.state == State.STOP) {
                             logger.debug("We are in the stopped state. Exiting...");
                         }
                     }
-                    catch (InterruptedException cause)
-                    {
-                        this.logger.error("Worker interrupted", cause);
+                    catch (InterruptedException cause) {
+                        this.logger.error("Worker interrupted",
+                                          cause);
                     }
                 }
-                if (!this.queue.isEmpty() && (this.state != State.STOP))
-                {
+                if (!this.queue.isEmpty() && (this.state != State.STOP)) {
                     this.state = State.RUNNING;
                     currentTask = this.queue.poll();
-                    this.logger.debug("Popping task of type {}", currentTask.getClass());
+                    this.logger.debug("Popping task of type {}",
+                                      currentTask.getClass());
                     int count = this.taskCounts.get(currentTask.getClass()) - 1;
-                    this.taskCounts.put(currentTask.getClass(), count);
-                    this.logger.debug("There are now {} tasks of type {}", count, currentTask.getClass());
+                    this.taskCounts.put(currentTask.getClass(),
+                                        count);
+                    this.logger.debug("There are now {} tasks of type {}",
+                                      count,
+                                      currentTask.getClass());
                     this.fireQueueChangedEvent();
                 }
                 this.semaphore.notifyAll();
             }
 
             // if we have a task then run it
-            if (currentTask != null)
-            {
+            if (currentTask != null) {
 
-                try
-                {
+                try {
                     this.logger.debug("Starting task: " + currentTask);
                     long start = System.currentTimeMillis();
                     currentTask.startTask();
-                    this.logger.debug("Finished task: " + currentTask + " [" + (System.currentTimeMillis() - start)
-                                      + "ms]");
+                    this.logger.debug(
+                            "Finished task: " + currentTask + " [" + (System.currentTimeMillis() - start) + "ms]");
                 }
-                catch (WorkerTaskException error)
-                {
-                    this.logger.debug("Failed to complete task", error);
+                catch (WorkerTaskException | RuntimeException error) {
+                    this.logger.warn("Failed to complete task: {}",
+                                     currentTask.getDescription(),
+                                     error);
                 }
             }
         }
@@ -260,29 +235,34 @@ public class Worker implements
 
     }
 
+    private void fireWorkerStateChangedEvent() {
+        for (WorkerListener listener : this.listeners) {
+            listener.workerStateChanged();
+        }
+    }
+
+    void fireQueueChangedEvent() {
+        this.logger.debug("Notifying worker listeners");
+        for (WorkerListener listener : this.listeners) {
+            listener.queueChanged();
+        }
+    }
+
     /**
      * Signals the worker to stop processing the task queue.
-     *
-     * If a task is current being processed, the worker will wait until that
-     * task completes.
+     * <p>
+     * If a task is current being processed, the worker will wait until that task completes.
      */
-    public void stop()
-    {
+    public void stop() {
         this.logger.debug("Stopping worker thread");
         this.state = State.STOP;
         this.wakeUpWorker();
     }
 
-    private void wakeUpWorker()
-    {
-        // if (this.state == State.IDLE)
-        {
-            logger.debug("Getting mutex lock");
-            synchronized (this.semaphore)
-            {
-                this.logger.debug("Waking up worker thread");
-                this.semaphore.notifyAll();
-            }
-        }
+    public enum State {
+        NOT_STARTED,
+        IDLE,
+        RUNNING,
+        STOP,
     }
 }
