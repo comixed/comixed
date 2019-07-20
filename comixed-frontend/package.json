@@ -35,7 +35,7 @@
     "core-js": "^2.5.4",
     "file-saver": "^2.0.2",
     "jquery": "3.4.0",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "ngx-filesaver": "^2.2.1",
     "popper.js": "1.14.4",
     "primeflex": "^1.0.0-rc.1",
