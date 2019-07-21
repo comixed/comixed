@@ -21,10 +21,10 @@ package org.comixed.repositories;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import org.comixed.library.lists.ReadingList;
-import org.comixed.library.lists.ReadingListEntry;
-import org.comixed.library.model.ComiXedUser;
-import org.comixed.library.model.Comic;
+import org.comixed.model.library.ReadingList;
+import org.comixed.model.library.ReadingListEntry;
+import org.comixed.model.user.ComiXedUser;
+import org.comixed.model.library.Comic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

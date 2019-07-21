@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Function;
 
-import org.comixed.library.model.ComiXedUser;
+import org.comixed.model.user.ComiXedUser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;

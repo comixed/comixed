@@ -24,10 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -44,11 +41,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Worker
         implements Runnable,
                    InitializingBean {
+    private static final Object semaphore = new Object();
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public List<WorkerListener> listeners = new ArrayList<>();
     BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<>();
     State state = State.NOT_STARTED;
-    Object semaphore = new Object();
     Map<Class<? extends WorkerTask>, Integer> taskCounts = new HashMap<>();
 
     public Worker() {
@@ -123,19 +122,36 @@ public class Worker
      * @return the count
      */
     public int getCountFor(Class<? extends WorkerTask> taskClass) {
+        this.logger.info("Getting worker count: class={}",
+                         taskClass.getName());
         this.logger.debug("Getting worker queue count: class={}",
                           taskClass.getName());
-        long started = System.currentTimeMillis();
-        this.logger.debug("Waiting to get semaphore lock");
         synchronized (this.semaphore) {
-            this.logger.debug("Got the lock in {}ms",
-                              (System.currentTimeMillis() - started));
-            int result = (this.queue.isEmpty() || !this.taskCounts.containsKey(taskClass))
-                         ? 0
-                         : this.taskCounts.get(taskClass);
+            if (this.queue.isEmpty()) {
+                this.logger.debug("The queue is empty");
+                return 0;
+            }
 
-            this.logger.debug("There are {} instances",
-                              result);
+            if (!this.taskCounts.containsKey(taskClass)) {
+                this.logger.debug("No entries in queue for {}",
+                                  taskClass.getName());
+
+                for (Iterator<Class<? extends WorkerTask>> keyIter = this.taskCounts.keySet()
+                                                                                    .iterator();
+                     keyIter.hasNext(); ) {
+                    this.logger.debug("KEY={}",
+                                      keyIter.next());
+                }
+                return 0;
+            }
+
+            final Integer result = this.taskCounts.get(taskClass);
+
+            this.logger.debug("{} task{} found",
+                              result,
+                              result == 1
+                              ? ""
+                              : "s");
 
             return result;
         }

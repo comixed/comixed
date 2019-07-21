@@ -19,12 +19,12 @@
 
 package org.comixed.tasks;
 
-import org.comixed.library.adaptors.AdaptorException;
-import org.comixed.library.adaptors.FilenameScraperAdaptor;
-import org.comixed.library.model.BlockedPageHash;
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.ComicFileHandler;
-import org.comixed.library.model.ComicFileHandlerException;
+import org.comixed.adaptors.AdaptorException;
+import org.comixed.adaptors.FilenameScraperAdaptor;
+import org.comixed.model.library.BlockedPageHash;
+import org.comixed.model.library.Comic;
+import org.comixed.handlers.ComicFileHandler;
+import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;

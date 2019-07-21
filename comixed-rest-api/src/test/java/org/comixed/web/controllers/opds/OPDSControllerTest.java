@@ -28,8 +28,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.comixed.library.model.ComiXedUser;
-import org.comixed.library.model.Comic;
+import org.comixed.model.user.ComiXedUser;
+import org.comixed.model.library.Comic;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.web.opds.OPDSController;

@@ -22,7 +22,7 @@ package org.comixed.repositories;
 import java.util.Date;
 import java.util.List;
 
-import org.comixed.library.model.Comic;
+import org.comixed.model.library.Comic;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

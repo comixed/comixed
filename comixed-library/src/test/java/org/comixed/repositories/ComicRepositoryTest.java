@@ -30,10 +30,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.ComicFormat;
-import org.comixed.library.model.Page;
-import org.comixed.library.model.ScanType;
+import org.comixed.model.library.Comic;
+import org.comixed.model.library.ComicFormat;
+import org.comixed.model.library.Page;
+import org.comixed.model.library.ScanType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

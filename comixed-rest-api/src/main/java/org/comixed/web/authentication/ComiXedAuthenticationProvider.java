@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.comixed.library.model.ComiXedUser;
-import org.comixed.library.model.Role;
+import org.comixed.model.user.ComiXedUser;
+import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.util.Utils;
+import org.comixed.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

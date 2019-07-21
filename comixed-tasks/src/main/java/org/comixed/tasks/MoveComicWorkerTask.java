@@ -21,7 +21,7 @@ package org.comixed.tasks;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.comixed.library.model.Comic;
+import org.comixed.model.library.Comic;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.utils.ComicFileUtils;
 import org.slf4j.Logger;

@@ -20,9 +20,9 @@
 package org.comixed.importer.adaptors;
 
 import org.comixed.importer.PathReplacement;
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.ComicFileHandler;
-import org.comixed.library.model.ComicFileHandlerException;
+import org.comixed.model.library.Comic;
+import org.comixed.handlers.ComicFileHandler;
+import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

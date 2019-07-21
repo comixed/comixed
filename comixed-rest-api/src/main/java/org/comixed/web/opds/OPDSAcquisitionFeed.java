@@ -24,10 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import org.comixed.library.model.Comic;
+import org.comixed.model.library.Comic;
 import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
 

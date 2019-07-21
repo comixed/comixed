@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
-import org.comixed.library.model.Comic;
+import org.comixed.model.library.Comic;
 import org.comixed.repositories.ComicRepository;
 import org.junit.Before;
 import org.junit.Test;

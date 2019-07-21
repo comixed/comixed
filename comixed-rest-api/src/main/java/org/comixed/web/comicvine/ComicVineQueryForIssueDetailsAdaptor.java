@@ -19,8 +19,8 @@
 
 package org.comixed.web.comicvine;
 
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.comicvine.ComicVineIssue;
+import org.comixed.model.library.Comic;
+import org.comixed.model.scraping.ComicVineIssue;
 import org.comixed.repositories.ComicVineIssueRepository;
 import org.comixed.web.ComicVineIssueDetailsWebRequest;
 import org.comixed.web.WebRequestException;

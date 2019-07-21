@@ -19,27 +19,28 @@
 
 package org.comixed.repositories;
 
-import org.comixed.library.model.PageType;
+import org.comixed.model.library.PageType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
 
 /**
  * <code>PageTypeRepository</code> retrieves instances of {@link PageType} from
  * the database.
- * 
- * @author The ComiXed Project
  *
+ * @author The ComiXed Project
  */
-public interface PageTypeRepository extends
-                                    CrudRepository<PageType,
-                                                   Long>
-{
+public interface PageTypeRepository
+        extends CrudRepository<PageType, Long> {
     /**
      * Returns the default offset type.
-     * 
+     *
      * @return the default offset type
      */
     @Query("SELECT pt FROM PageType pt WHERE pt.name = 'story'")
     PageType getDefaultPageType();
 
+    @Query("SELECT pt FROM PageType pt")
+    List<PageType> findPageTypes();
 }

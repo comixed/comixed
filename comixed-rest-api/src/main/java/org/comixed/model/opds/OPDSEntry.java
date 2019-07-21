@@ -20,8 +20,8 @@
 package org.comixed.model.opds;
 
 import org.codehaus.plexus.util.StringUtils;
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.Credit;
+import org.comixed.model.library.Comic;
+import org.comixed.model.library.Credit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

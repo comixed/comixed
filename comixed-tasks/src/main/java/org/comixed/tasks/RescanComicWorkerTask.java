@@ -19,8 +19,8 @@
 
 package org.comixed.tasks;
 
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.Page;
+import org.comixed.model.library.Comic;
+import org.comixed.model.library.Page;
 import org.comixed.repositories.PageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

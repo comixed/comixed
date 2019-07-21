@@ -19,7 +19,7 @@
 
 package org.comixed.repositories;
 
-import org.comixed.library.model.ComicFormat;
+import org.comixed.model.library.ComicFormat;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

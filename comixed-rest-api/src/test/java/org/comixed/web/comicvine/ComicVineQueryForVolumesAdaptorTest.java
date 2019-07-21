@@ -24,7 +24,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.List;
 
-import org.comixed.library.model.comicvine.ComicVineVolumeQueryCacheEntry;
+import org.comixed.model.scraping.ComicVineVolumeQueryCacheEntry;
 import org.comixed.repositories.ComicVineVolumeQueryCacheRepository;
 import org.comixed.web.ComicVineQueryWebRequest;
 import org.comixed.web.WebRequest;

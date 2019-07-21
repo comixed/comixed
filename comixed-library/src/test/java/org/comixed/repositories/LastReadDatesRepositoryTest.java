@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
-import org.comixed.library.model.user.LastReadDate;
+import org.comixed.model.user.LastReadDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

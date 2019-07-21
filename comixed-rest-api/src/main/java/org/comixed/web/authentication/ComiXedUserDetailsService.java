@@ -19,8 +19,8 @@
 
 package org.comixed.web.authentication;
 
-import org.comixed.library.model.ComiXedUser;
-import org.comixed.library.model.Role;
+import org.comixed.model.user.ComiXedUser;
+import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

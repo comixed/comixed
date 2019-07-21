@@ -22,7 +22,7 @@ package org.comixed.importer;
 import org.comixed.importer.adaptors.ComicFileImportAdaptor;
 import org.comixed.importer.adaptors.ComicRackBackupAdaptor;
 import org.comixed.importer.adaptors.ImportAdaptorException;
-import org.comixed.library.model.Comic;
+import org.comixed.model.library.Comic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

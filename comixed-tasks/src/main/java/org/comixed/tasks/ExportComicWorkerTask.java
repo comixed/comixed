@@ -19,11 +19,11 @@
 
 package org.comixed.tasks;
 
-import org.comixed.library.adaptors.archive.ArchiveAdaptor;
-import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.ComicFileHandler;
-import org.comixed.library.model.ComicFileHandlerException;
+import org.comixed.adaptors.archive.ArchiveAdaptor;
+import org.comixed.adaptors.archive.ArchiveAdaptorException;
+import org.comixed.model.library.Comic;
+import org.comixed.handlers.ComicFileHandler;
+import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.repositories.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -24,8 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;
 
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.comicvine.ComicVineIssue;
+import org.comixed.model.library.Comic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

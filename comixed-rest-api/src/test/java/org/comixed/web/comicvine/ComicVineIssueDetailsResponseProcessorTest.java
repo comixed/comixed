@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;
 
-import org.comixed.library.model.Comic;
+import org.comixed.model.library.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

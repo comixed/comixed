@@ -19,9 +19,13 @@
 
 package org.comixed.tasks;
 
-import org.comixed.library.adaptors.AdaptorException;
-import org.comixed.library.adaptors.FilenameScraperAdaptor;
-import org.comixed.library.model.*;
+import org.comixed.handlers.ComicFileHandler;
+import org.comixed.handlers.ComicFileHandlerException;
+import org.comixed.adaptors.AdaptorException;
+import org.comixed.adaptors.FilenameScraperAdaptor;
+import org.comixed.model.library.BlockedPageHash;
+import org.comixed.model.library.Comic;
+import org.comixed.model.library.Page;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.junit.Test;
@@ -54,7 +58,8 @@ public class AddComicWorkerTaskTest {
 
   @Test
   public void testAddFile()
-      throws WorkerTaskException, ComicFileHandlerException, AdaptorException {
+      throws WorkerTaskException,
+             ComicFileHandlerException, AdaptorException {
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.doNothing()
         .when(comicFileHandler)

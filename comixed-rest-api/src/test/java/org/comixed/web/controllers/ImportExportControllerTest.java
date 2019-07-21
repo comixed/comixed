@@ -19,17 +19,20 @@
 
 package org.comixed.web.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.comixed.library.adaptors.archive.ArchiveAdaptorException;
-import org.comixed.library.adaptors.archive.ZipArchiveAdaptor;
-import org.comixed.library.model.*;
-import org.comixed.library.model.comicvine.ComicVineIssue;
-import org.comixed.library.model.comicvine.ComicVinePublisher;
-import org.comixed.library.model.comicvine.ComicVineVolume;
-import org.comixed.library.model.comicvine.ComicVineVolumeQueryCacheEntry;
-import org.comixed.library.model.user.LastReadDate;
+import org.comixed.views.View;
+import org.comixed.adaptors.archive.ArchiveAdaptorException;
+import org.comixed.adaptors.archive.ZipArchiveAdaptor;
+import org.comixed.model.scraping.ComicVineIssue;
+import org.comixed.model.scraping.ComicVinePublisher;
+import org.comixed.model.scraping.ComicVineVolume;
+import org.comixed.model.scraping.ComicVineVolumeQueryCacheEntry;
+import org.comixed.model.library.BlockedPageHash;
+import org.comixed.model.library.Comic;
+import org.comixed.model.library.Page;
+import org.comixed.model.user.LastReadDate;
+import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,8 +41,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.util.List;

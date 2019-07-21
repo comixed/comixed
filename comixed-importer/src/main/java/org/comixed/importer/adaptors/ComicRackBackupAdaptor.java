@@ -20,7 +20,7 @@
 package org.comixed.importer.adaptors;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.comixed.library.model.Comic;
+import org.comixed.model.library.Comic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

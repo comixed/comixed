@@ -19,14 +19,11 @@
 
 package org.comixed.web.opds;
 
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.Page;
-import org.comixed.library.utils.FileTypeIdentifier;
+import org.comixed.model.library.Comic;
+import org.comixed.model.library.Page;
+import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
-import org.comixed.web.opds.OPDSAcquisitionFeed;
-import org.comixed.web.opds.OPDSFeed;
-import org.comixed.web.opds.OPDSNavigationFeed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
 import java.io.*;
 import java.text.ParseException;
 import java.util.Optional;

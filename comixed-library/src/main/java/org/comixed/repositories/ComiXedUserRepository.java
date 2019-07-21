@@ -21,7 +21,7 @@ package org.comixed.repositories;
 
 import java.util.List;
 
-import org.comixed.library.model.ComiXedUser;
+import org.comixed.model.user.ComiXedUser;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ComiXedUserRepository extends

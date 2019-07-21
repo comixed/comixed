@@ -19,7 +19,7 @@
 
 package org.comixed.repositories;
 
-import org.comixed.library.model.ScanType;
+import org.comixed.model.library.ScanType;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

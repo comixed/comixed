@@ -19,7 +19,7 @@
 
 package org.comixed.repositories;
 
-import org.comixed.library.model.comicvine.ComicVinePublisher;
+import org.comixed.model.scraping.ComicVinePublisher;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

@@ -19,8 +19,8 @@
 
 package org.comixed.repositories;
 
-import org.comixed.library.lists.ReadingList;
-import org.comixed.library.model.ComiXedUser;
+import org.comixed.model.library.ReadingList;
+import org.comixed.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

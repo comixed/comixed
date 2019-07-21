@@ -21,8 +21,8 @@ package org.comixed.web.comicvine;
 
 import static org.junit.Assert.assertEquals;
 
-import org.comixed.library.model.Comic;
-import org.comixed.library.model.comicvine.ComicVinePublisher;
+import org.comixed.model.library.Comic;
+import org.comixed.model.scraping.ComicVinePublisher;
 import org.comixed.repositories.ComicVinePublisherRepository;
 import org.comixed.web.ComicVinePublisherDetailsWebRequest;
 import org.comixed.web.WebRequestException;

@@ -21,7 +21,7 @@ package org.comixed.repositories;
 
 import java.util.List;
 
-import org.comixed.library.model.user.LastReadDate;
+import org.comixed.model.user.LastReadDate;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
