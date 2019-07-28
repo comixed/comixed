@@ -88,15 +88,10 @@ export class AppComponent implements OnInit {
         } else if (this.user && this.user.authenticated) {
           // if the last time we checked the library, we got either an import or a rescan count,
           // then set the timeout value to 0
-          const timeout =
-            this.library.library_contents.import_count === 0 &&
-            this.library.library_contents.rescan_count === 0
-              ? 60000
-              : 0;
           this.store.dispatch(
             new LibraryActions.LibraryFetchLibraryChanges({
               last_comic_date: `${this.library.last_comic_date}`,
-              timeout: timeout
+              timeout: 60000
             })
           );
         }

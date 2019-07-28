@@ -136,7 +136,10 @@ describe('LibraryAdminPageComponent', () => {
 
       it('sends a notice to start a rescan', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          new LibraryActions.LibraryRescanFiles({ last_comic_date: '0' })
+          new LibraryActions.LibraryRescanFiles({
+            last_comic_date: '0',
+            timeout: 60000
+          })
         );
       });
     });

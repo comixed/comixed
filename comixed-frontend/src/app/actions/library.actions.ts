@@ -217,6 +217,7 @@ export class LibraryRescanFiles implements Action {
   constructor(
     public payload: {
       last_comic_date: string;
+      timeout: number;
     }
   ) {}
 }

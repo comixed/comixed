@@ -40,9 +40,11 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
-      this.library = library;
-    });
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -52,7 +54,10 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   rescan_library(): void {
     if (this.library.library_contents.rescan_count === 0) {
       this.store.dispatch(
-        new LibraryActions.LibraryRescanFiles({ last_comic_date: '0' })
+        new LibraryActions.LibraryRescanFiles({
+          last_comic_date: '0',
+          timeout: 60000
+        })
       );
     }
   }

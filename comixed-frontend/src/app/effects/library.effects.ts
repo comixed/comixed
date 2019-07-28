@@ -347,7 +347,7 @@ export class LibraryEffects {
           () =>
             new LibraryActions.LibraryFetchLibraryChanges({
               last_comic_date: action.last_comic_date,
-              timeout: 0
+              timeout: 60000
             })
         )
       )

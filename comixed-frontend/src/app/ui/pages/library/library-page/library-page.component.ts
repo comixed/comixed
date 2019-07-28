@@ -150,7 +150,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       accept: () => {
         this.store.dispatch(
           new LibraryActions.LibraryRescanFiles({
-            last_comic_date: this.library.last_comic_date
+            last_comic_date: this.library.last_comic_date,
+            timeout: 60000
           })
         );
       }
