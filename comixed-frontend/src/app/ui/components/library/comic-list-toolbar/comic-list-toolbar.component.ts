@@ -131,7 +131,7 @@ export class ComicListToolbarComponent implements OnInit {
         label: this.translate.instant(
           'comic-list-toolbar.options.sort-field.issue-number'
         ),
-        value: 'issue_number'
+        value: 'sortable_issue_number'
       },
       {
         label: this.translate.instant(

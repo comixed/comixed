@@ -32,6 +32,7 @@ export interface Comic {
   series: string;
   volume: string;
   issue_number: string;
+  sortable_issue_number: string;
   title: string;
   story_arcs: string[];
   description: string;
