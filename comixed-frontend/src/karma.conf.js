@@ -26,7 +26,7 @@ module.exports = function(config) {
       environment: 'dev'
     },
     // reporters: ['verbose', 'kjhtml', 'progress'],
-    reporters: ['verbose'],
+    reporters: ['mocha'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
