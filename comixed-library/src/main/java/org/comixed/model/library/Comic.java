@@ -710,7 +710,7 @@ public class Comic {
     }
 
     @Transient
-    @JsonProperty("sortable_isue_number")
+    @JsonProperty("sortable_issue_number")
     @JsonView(ComicList.class)
     public String getSortableIssueNumber() {
         final String result = "00000" + this.issueNumber;
