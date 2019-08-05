@@ -96,10 +96,13 @@ public class AddComicWorkerTask
 
         try {
             result = this.comicFactory.getObject();
+            this.logger.debug("Setting comic filename");
             result.setFilename(this.file.getAbsolutePath());
+            this.logger.debug("Scraping details from filename");
+            this.filenameScraper.execute(result);
+            this.logger.debug("Loading comic details");
             this.comicFileHandler.loadComic(result,
                                             this.ignoreMetadata);
-            this.filenameScraper.execute(result);
             if (this.deleteBlockedPages) {
                 this.logger.debug("Looking for blocked pages");
                 for (int index = 0;
