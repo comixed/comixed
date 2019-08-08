@@ -686,5 +686,18 @@
         "login-failure": "The email or password were invalid."
       }
     }
+  },
+  "authentication-effects": {
+    "submit-login-data": {
+      "success": {
+        "detail": "Successfully logged in!"
+      },
+      "failure": {
+        "detail": "Login failed..."
+      }
+    },
+    "logout": {
+      "detail": "Successfully logged out."
+    }
   }
 }

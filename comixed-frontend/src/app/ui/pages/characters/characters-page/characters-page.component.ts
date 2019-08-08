@@ -20,8 +20,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { LibraryState } from 'app/models/state/library-state';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
@@ -47,9 +47,11 @@ export class CharactersPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
-      this.library = library;
-    });
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
+      }
+    );
     this.load_rows_options();
   }
 

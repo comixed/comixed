@@ -19,14 +19,15 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
-import * as UserActions from 'app/actions/user.actions';
 import { LibraryState } from 'app/models/state/library-state';
 import * as LibraryActions from 'app/actions/library.actions';
-import { User } from 'app/models/user/user';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { User } from 'app/models/user';
+import { AuthenticationState } from 'app/models/state/authentication-state';
 
 @Component({
   selector: 'app-root',
@@ -36,9 +37,9 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent implements OnInit {
   title = 'ComiXed';
 
-  user$: Observable<User>;
-  user_subscription: Subscription;
   user: User;
+  show_login = false;
+  fetching_comics = false;
 
   library$: Observable<LibraryState>;
   library_subscription: Subscription;
@@ -46,56 +47,61 @@ export class AppComponent implements OnInit {
 
   constructor(
     private translate_service: TranslateService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private auth_adaptor: AuthenticationAdaptor
   ) {
     translate_service.setDefaultLang('en');
-    this.user$ = store.select('user');
     this.library$ = store.select('library');
   }
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe((user: User) => {
-      this.user = user;
+    this.auth_adaptor.auth_state$.subscribe(
+      (auth_state: AuthenticationState) => {
+        this.user = auth_state.user;
+        this.show_login = auth_state.show_login;
 
-      if (
-        !this.user.authenticated &&
-        this.library &&
-        this.library.comics &&
-        this.library.comics.length
-      ) {
-        this.store.dispatch(new LibraryActions.LibraryReset());
-      } else if (this.user.token && !this.user.email && !this.user.fetching) {
-        this.store.dispatch(new UserActions.UserAuthCheck());
-        this.store.dispatch(new LibraryActions.LibraryReset());
-        this.store.dispatch(
-          new LibraryActions.LibraryFetchLibraryChanges({
-            last_comic_date: '0',
-            timeout: 60000
-          })
-        );
-      }
-    });
-    this.store.dispatch(new UserActions.UserAuthCheck());
-    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
-      this.library = library;
-
-      // if we're not busy, then get the scan types, formats or updates as needed
-      if (!this.library.busy) {
-        if (!this.library.scan_types || this.library.scan_types.length === 0) {
-          this.store.dispatch(new LibraryActions.LibraryGetScanTypes());
-        } else if (this.library.formats.length === 0) {
-          this.store.dispatch(new LibraryActions.LibraryGetFormats());
-        } else if (this.user && this.user.authenticated) {
-          // if the last time we checked the library, we got either an import or a rescan count,
-          // then set the timeout value to 0
+        if (this.auth_adaptor.authenticated && !this.fetching_comics) {
+          this.fetching_comics = true;
           this.store.dispatch(
             new LibraryActions.LibraryFetchLibraryChanges({
-              last_comic_date: `${this.library.last_comic_date}`,
+              last_comic_date: '0',
               timeout: 60000
             })
           );
         }
+
+        if (!this.auth_adaptor.authenticated && this.fetching_comics) {
+          this.store.dispatch(new LibraryActions.LibraryReset());
+          this.fetching_comics = false;
+        }
       }
-    });
+    );
+    this.auth_adaptor.get_current_user();
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
+
+        // if we're not busy, then get the scan types, formats or updates as needed
+        if (!this.library.busy) {
+          if (
+            !this.library.scan_types ||
+            this.library.scan_types.length === 0
+          ) {
+            this.store.dispatch(new LibraryActions.LibraryGetScanTypes());
+          } else if (this.library.formats.length === 0) {
+            this.store.dispatch(new LibraryActions.LibraryGetFormats());
+          } else if (this.auth_adaptor.authenticated) {
+            // if the last time we checked the library, we got either an import or a rescan count,
+            // then set the timeout value to 0
+            this.store.dispatch(
+              new LibraryActions.LibraryFetchLibraryChanges({
+                last_comic_date: `${this.library.last_comic_date}`,
+                timeout: 60000
+              })
+            );
+          }
+        }
+      }
+    );
   }
 }

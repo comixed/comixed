@@ -20,9 +20,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import * as LibraryActions from 'app/actions/library.actions';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { LibraryState } from 'app/models/state/library-state';
 import { LibraryDisplay } from 'app/models/state/library-display';

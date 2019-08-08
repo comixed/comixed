@@ -54,6 +54,7 @@ import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-c
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -93,7 +94,7 @@ describe('MissingComicsPageComponent', () => {
         ComicTitlePipe,
         ComicCoverComponent
       ],
-      providers: [ConfirmationService]
+      providers: [AuthenticationAdaptor, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MissingComicsPageComponent);

@@ -80,9 +80,7 @@ export class VolumeListComponent implements OnInit {
   set_current_volume(volume: Volume): void {
     this.selectVolume.next(volume);
     if (this.current_issue) {
-      this.volume_selection_title = `${this.current_issue.volume_name} #${
-        this.current_issue.issue_number
-      }`;
+      this.volume_selection_title = `${this.current_issue.volume_name} #${this.current_issue.issue_number}`;
     }
   }
 

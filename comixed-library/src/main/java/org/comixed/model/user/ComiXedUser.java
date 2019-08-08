@@ -182,4 +182,8 @@ public class ComiXedUser {
     public void clearRoles() {
         this.roles.clear();
     }
+
+    public void deleteProperty(final String name) {
+        this.preferences.remove(name);
+    }
 }

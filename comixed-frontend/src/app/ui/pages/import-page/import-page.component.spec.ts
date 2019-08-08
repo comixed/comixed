@@ -35,7 +35,6 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
-import { READER_USER } from 'app/models/user/user.fixtures';
 import { ImportPageComponent } from './import-page.component';
 import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
@@ -52,13 +51,13 @@ import {
   SidebarModule
 } from 'primeng/primeng';
 import * as LibraryActions from 'app/actions/library.actions';
-import * as UserActions from 'app/actions/user.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { UserPreferencePipe } from 'app/pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
-const DIRECTORY_TO_USE = '/User/comixed/Downloads';
+const DIRECTORY_TO_USE = '/OldUser/comixed/Downloads';
 
 describe('ImportPageComponent', () => {
   let component: ImportPageComponent;
@@ -100,6 +99,7 @@ describe('ImportPageComponent', () => {
         UserPreferencePipe
       ],
       providers: [
+        AuthenticationAdaptor,
         ConfirmationService,
         { provide: ComicService, useClass: ComicServiceMock }
       ]
@@ -110,8 +110,6 @@ describe('ImportPageComponent', () => {
     store = TestBed.get(Store);
 
     store.dispatch(new LibraryActions.LibraryReset());
-    store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
-
     fixture.detectChanges();
   }));
 

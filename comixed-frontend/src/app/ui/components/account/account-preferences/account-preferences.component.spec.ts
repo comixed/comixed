@@ -20,7 +20,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { TableModule } from 'primeng/table';
-import { READER_USER } from 'app/models/user/user.fixtures';
+import { USER_READER } from 'app/models/user.fixtures';
 import { AccountPreferencesComponent } from './account-preferences.component';
 
 describe('AccountPreferencesComponent', () => {
@@ -37,7 +37,7 @@ describe('AccountPreferencesComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountPreferencesComponent);
     component = fixture.componentInstance;
-    component.user = READER_USER;
+    component.user = USER_READER;
     fixture.detectChanges();
   });
 

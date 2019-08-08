@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import { User } from 'app/models/user/user';
+import { User } from 'app/models/user';
 
 export interface UserAdmin {
   busy: boolean;
-  users: Array<User>;
+  users: User[];
   current_user: User;
 }

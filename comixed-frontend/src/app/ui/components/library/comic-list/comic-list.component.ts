@@ -17,27 +17,18 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Comic } from 'app/models/comics/comic';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import { LibraryDisplay } from 'app/models/state/library-display';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import * as LibraryDisplayActions from 'app/actions/library-display.actions';
-import * as UserActions from 'app/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem } from 'primeng/api';
-import { ComicSelectionEntry } from 'app/models/ui/comic-selection-entry';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import * as LibraryActions from 'app/actions/library.actions';
 import * as SelectionActions from 'app/actions/selection.actions';
@@ -45,6 +36,7 @@ import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 const FIRST = 'first';
 
@@ -78,6 +70,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
   context_menu: MenuItem[];
 
   constructor(
+    private auth_adaptor: AuthenticationAdaptor,
     private translate: TranslateService,
     private confirm: ConfirmationService,
     private store: Store<AppState>,
@@ -166,12 +159,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       new LibraryDisplayActions.SetLibraryViewLayout({ layout: layout })
     );
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: 'library_display_layout',
-        value: layout
-      })
-    );
+    this.auth_adaptor.set_preference('library_display_layout', layout);
   }
 
   set_index_of_first(index: number): void {

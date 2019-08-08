@@ -75,7 +75,6 @@ import { DuplicatesPageComponent } from 'app/ui/pages/library/duplicates-page/du
 import { StoreModule } from '@ngrx/store';
 import { IssueDetailsComponent } from 'app/ui/components/library/issue-details/issue-details.component';
 import { EffectsModule } from '@ngrx/effects';
-import { UserEffects } from 'app/effects/user.effects';
 import { UserAdminEffects } from 'app/effects/user-admin.effects';
 import { ImportingEffects } from 'app/effects/importing.effects';
 import { LibraryEffects } from 'app/effects/library.effects';
@@ -146,6 +145,8 @@ import { REDUCERS } from 'app/app.reducers';
 import { ContextMenuModule } from 'primeng/primeng';
 import { UserPreferencePipe } from './pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from './ui/components/import/comic-file-list-item/comic-file-list-item.component';
+import { AuthenticationEffects } from 'app/effects/authentication.effects';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 @NgModule({
   declarations: [
@@ -258,7 +259,7 @@ import { ComicFileListItemComponent } from './ui/components/import/comic-file-li
 
     StoreModule.forRoot(REDUCERS),
     EffectsModule.forRoot([
-      UserEffects,
+      AuthenticationEffects,
       ImportingEffects,
       LibraryEffects,
       SingleComicScrapingEffects,
@@ -276,6 +277,7 @@ import { ComicFileListItemComponent } from './ui/components/import/comic-file-li
     FileSaverModule
   ],
   providers: [
+    AuthenticationAdaptor,
     UserService,
     ComicService,
     ReadingListService,

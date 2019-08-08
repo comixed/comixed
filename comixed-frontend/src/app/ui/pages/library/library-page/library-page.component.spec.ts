@@ -24,8 +24,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as UserActions from 'app/actions/user.actions';
-import { READER_USER } from 'app/models/user/user.fixtures';
 import * as LibraryActions from 'app/actions/library.actions';
 import { COMIC_1000, COMIC_1003 } from 'app/models/comics/comic.fixtures';
 import * as FilterActions from 'app/actions/library-filter.actions';
@@ -59,6 +57,7 @@ import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { ContextMenuModule } from 'primeng/primeng';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1000;
@@ -101,6 +100,7 @@ describe('LibraryPageComponent', () => {
         ComicTitlePipe
       ],
       providers: [
+        AuthenticationAdaptor,
         ConfirmationService,
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
@@ -122,11 +122,6 @@ describe('LibraryPageComponent', () => {
   describe('#ngOnInit()', () => {
     beforeEach(() => {
       store.dispatch(new LibraryActions.LibraryReset());
-    });
-
-    it('should subscribe to user updates', () => {
-      store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
-      expect(component.user.email).toEqual(READER_USER.email);
     });
 
     it('should subscribe to library updates', () => {

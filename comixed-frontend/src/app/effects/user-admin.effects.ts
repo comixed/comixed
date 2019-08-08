@@ -21,13 +21,12 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable, of } from 'rxjs';
 import * as UserAdminActions from 'app/actions/user-admin.actions';
 import { MessageService } from 'primeng/api';
 import { UserService } from 'app/services/user.service';
-import { User } from 'app/models/user/user';
 import { TranslateService } from '@ngx-translate/core';
+import { User } from 'app/models/user';
 
 @Injectable()
 export class UserAdminEffects {
@@ -44,7 +43,7 @@ export class UserAdminEffects {
     switchMap(action =>
       this.user_service.get_user_list().pipe(
         map(
-          (users: Array<User>) =>
+          (users: User[]) =>
             new UserAdminActions.UserAdminUsersReceived({
               users: users
             })

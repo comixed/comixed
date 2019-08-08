@@ -20,8 +20,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LibraryState } from 'app/models/state/library-state';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
 import * as LibraryActions from 'app/actions/library.actions';
 

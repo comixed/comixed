@@ -21,25 +21,25 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import * as UserActions from 'app/actions/user.actions';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ImportState } from 'app/models/state/import-state';
 import { LibraryState } from 'app/models/state/library-state';
 import * as ImportingActions from 'app/actions/importing.actions';
 import { SelectItem } from 'primeng/api';
 import { ComicFile } from 'app/models/import/comic-file';
-import { User } from 'app/models/user/user';
-import { Preference } from 'app/models/user/preference';
 import { ComicService } from 'app/services/comic.service';
 import {
   IMPORT_COVER_SIZE,
   IMPORT_LAST_DIRECTORY,
   IMPORT_ROWS,
   IMPORT_SORT
-} from 'app/models/user/preferences.constants';
+} from 'app/models/preferences.constants';
 import { LibraryDisplay } from 'app/models/state/library-display';
 import { SelectionState } from 'app/models/state/selection-state';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { User } from 'app/models/user';
+import { AuthenticationState } from 'app/models/state/authentication-state';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';
@@ -73,9 +73,10 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
   comic_files: ComicFile[] = [];
   selected_comic_files: ComicFile[] = [];
-  user$: Observable<User>;
-  user_subscription: Subscription;
+
+  auth_state_subscription: Subscription;
   user: User;
+
   protected sort_options: SelectItem[];
   protected sort_by: string;
   protected rows_options: SelectItem[];
@@ -87,6 +88,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   protected delete_blocked_pages = false;
 
   constructor(
+    private auth_adaptor: AuthenticationAdaptor,
     private comic_service: ComicService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -94,7 +96,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   ) {
     this.library$ = store.select('library');
     this.library_display$ = store.select('library_display');
-    this.user$ = store.select('user');
     this.import_state$ = store.select('import_state');
     this.selection_state$ = store.select('selections');
     activatedRoute.queryParams.subscribe(params => {
@@ -133,6 +134,26 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.auth_state_subscription = this.auth_adaptor.auth_state$.subscribe(
+      (auth_state: AuthenticationState) => {
+        this.user = auth_state.user;
+        this.sort_by =
+          this.auth_adaptor.get_preference(IMPORT_SORT) || this.sort_by;
+        this.rows =
+          parseInt(this.auth_adaptor.get_preference(IMPORT_SORT), 10) ||
+          this.rows;
+        this.cover_size =
+          parseInt(this.auth_adaptor.get_preference(IMPORT_COVER_SIZE), 1) ||
+          this.cover_size;
+        this.store.dispatch(
+          new ImportingActions.ImportingSetDirectory({
+            directory:
+              this.auth_adaptor.get_preference(IMPORT_LAST_DIRECTORY) || ''
+          })
+        );
+      }
+    );
+
     this.library_subscription = this.library$.subscribe(
       (library: LibraryState) => {
         this.library = library;
@@ -143,27 +164,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
         this.library_display = library_display;
       }
     );
-    this.user_subscription = this.user$.subscribe((user: User) => {
-      this.user = user;
-
-      this.sort_by = this.get_parameter(IMPORT_SORT) || this.sort_by;
-      this.rows = parseInt(
-        this.get_parameter(IMPORT_ROWS) || `${this.rows}`,
-        10
-      );
-      this.cover_size = parseInt(
-        this.get_parameter(IMPORT_COVER_SIZE) || `${this.cover_size}`,
-        10
-      );
-      const directory = (
-        this.user.preferences.find((preference: Preference) => {
-          return preference.name === IMPORT_LAST_DIRECTORY;
-        }) || { value: '' }
-      ).value;
-      this.store.dispatch(
-        new ImportingActions.ImportingSetDirectory({ directory: directory })
-      );
-    });
     this.import_state_subscription = this.import_state$.subscribe(
       (import_state: ImportState) => {
         this.import_state = import_state;
@@ -191,8 +191,8 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.auth_state_subscription.unsubscribe();
     this.library_subscription.unsubscribe();
-    this.user_subscription.unsubscribe();
     this.import_state_subscription.unsubscribe();
     this.selection_state_subscription.unsubscribe();
   }
@@ -200,23 +200,13 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   set_sort_by(sort_by: string): void {
     this.sort_by = sort_by;
     this.update_params(SORT_PARAMETER, this.sort_by);
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: IMPORT_SORT,
-        value: sort_by
-      })
-    );
+    this.auth_adaptor.set_preference(IMPORT_SORT, sort_by);
   }
 
   set_rows(rows: number): void {
     this.rows = rows;
     this.update_params(ROWS_PARAMETER, `${this.rows}`);
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: IMPORT_ROWS,
-        value: `${rows}`
-      })
-    );
+    this.auth_adaptor.set_preference(IMPORT_ROWS, `${rows}`);
   }
 
   set_cover_size(cover_size: number): void {
@@ -225,21 +215,11 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
   save_cover_size(cover_size: number): void {
     this.update_params(COVER_PARAMETER, `${this.cover_size}`);
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: IMPORT_COVER_SIZE,
-        value: `${cover_size}`
-      })
-    );
+    this.auth_adaptor.set_preference(IMPORT_COVER_SIZE, `${cover_size}`);
   }
 
   retrieve_files(directory: string): void {
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: IMPORT_LAST_DIRECTORY,
-        value: directory
-      })
-    );
+    this.auth_adaptor.set_preference(IMPORT_LAST_DIRECTORY, directory);
     this.store.dispatch(
       new ImportingActions.ImportingFetchFiles({ directory: directory })
     );
@@ -284,9 +264,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     if (this.import_state.files.length === 0) {
       return 'No Comics Are Loaded';
     } else {
-      return `Selected ${this.import_state.selected_count} Of ${
-        this.import_state.files.length
-      } Comics...`;
+      return `Selected ${this.import_state.selected_count} Of ${this.import_state.files.length} Comics...`;
     }
   }
 
@@ -313,15 +291,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   private get_parameter(name: string): string {
-    const which = this.user.preferences.find((preference: Preference) => {
-      return preference.name === name;
-    });
-
-    if (which) {
-      return which.value;
-    } else {
-      return null;
-    }
+    return this.auth_adaptor.get_preference(name);
   }
 
   private select_comics(files: Array<ComicFile>): void {

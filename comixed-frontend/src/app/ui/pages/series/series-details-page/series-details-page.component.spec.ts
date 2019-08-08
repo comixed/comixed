@@ -51,6 +51,7 @@ import {
   ContextMenuModule
 } from 'primeng/primeng';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('SeriesDetailsPageComponent', () => {
   const COMIC = COMIC_1000;
@@ -80,7 +81,7 @@ describe('SeriesDetailsPageComponent', () => {
         ConfirmDialogModule,
         ContextMenuModule
       ],
-      providers: [ConfirmationService],
+      providers: [AuthenticationAdaptor, ConfirmationService],
       declarations: [
         SeriesDetailsPageComponent,
         LibraryFilterComponent,

@@ -21,8 +21,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as UserActions from 'app/actions/user.actions';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +38,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private router: Router,
-    private form_builder: FormBuilder
+    private form_builder: FormBuilder,
+    private auth_adaptor: AuthenticationAdaptor
   ) {
     this.login_form = form_builder.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
@@ -52,15 +53,10 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   do_login(): void {
-    this.store.dispatch(
-      new UserActions.UserLoggingIn({
-        email: this.email,
-        password: this.password
-      })
-    );
+    this.auth_adaptor.send_login_data(this.email, this.password);
   }
 
   cancel_login(): void {
-    this.store.dispatch(new UserActions.UserCancelLogin());
+    this.auth_adaptor.cancel_login();
   }
 }

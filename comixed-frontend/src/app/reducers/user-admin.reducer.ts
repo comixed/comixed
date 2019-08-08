@@ -19,7 +19,7 @@
 
 import { UserAdmin } from 'app/models/actions/user-admin';
 import * as UserAdminActions from 'app/actions/user-admin.actions';
-import { User } from 'app/models/user/user';
+import { User } from 'app/models/user';
 
 const initial_state: UserAdmin = {
   busy: false,
@@ -38,7 +38,7 @@ export function userAdminReducer(
         busy: true
       };
 
-    case UserAdminActions.USER_ADMIN_USERS_RECEIVED:
+    case UserAdminActions.USER_USER_ADMINS_RECEIVED:
       return {
         ...state,
         busy: false,
@@ -63,7 +63,7 @@ export function userAdminReducer(
         busy: true
       };
 
-    case UserAdminActions.USER_ADMIN_USER_SAVED: {
+    case UserAdminActions.USER_USER_ADMIN_SAVED: {
       const users = state.users.filter((user: User) => {
         return user.id !== action.payload.user.id;
       });
@@ -82,7 +82,7 @@ export function userAdminReducer(
         busy: true
       };
 
-    case UserAdminActions.USER_ADMIN_USER_DELETED: {
+    case UserAdminActions.USER_USER_ADMIN_DELETED: {
       if (action.payload.success) {
         state.users = state.users.filter((user: User) => {
           return user.id !== action.payload.user.id;

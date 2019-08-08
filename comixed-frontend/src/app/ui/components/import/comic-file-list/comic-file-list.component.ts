@@ -23,7 +23,7 @@ import { LibraryDisplay } from 'app/models/state/library-display';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import * as ImportActions from 'app/actions/importing.actions';
 import * as DisplayActions from 'app/actions/library-display.actions';

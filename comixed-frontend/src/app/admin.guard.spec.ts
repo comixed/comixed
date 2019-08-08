@@ -20,33 +20,42 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from './app.state';
-import * as UserActions from './actions/user.actions';
-import { ADMIN_USER, READER_USER } from './models/user/user.fixtures';
 
 import { AdminGuard } from './admin.guard';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { initial_state } from 'app/reducers/authentication.reducer';
+import { USER_ADMIN, USER_BLOCKED } from 'app/models/user.fixtures';
+import { StoreModule } from '@ngrx/store';
 import { REDUCERS } from 'app/app.reducers';
 
 describe('AdminGuard', () => {
   let guard: AdminGuard;
-  let store: Store<AppState>;
   let router: Router;
+  let auth_adaptor: AuthenticationAdaptor;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, StoreModule.forRoot(REDUCERS)],
-      providers: [AdminGuard]
+      imports: [
+        RouterTestingModule.withRoutes([{ path: 'home', redirectTo: '' }]),
+        StoreModule.forRoot(REDUCERS)
+      ],
+      providers: [AdminGuard, AuthenticationAdaptor]
     });
 
     guard = TestBed.get(AdminGuard);
-    store = TestBed.get(Store);
+    auth_adaptor = TestBed.get(AuthenticationAdaptor);
+    auth_adaptor.auth_state = { ...initial_state };
     router = TestBed.get(Router);
   });
 
   describe('when there is no user logged in', () => {
     beforeEach(() => {
-      store.dispatch(new UserActions.UserLoaded({ user: null }));
+      auth_adaptor.auth_state = {
+        ...auth_adaptor.auth_state,
+        initialized: true,
+        authenticated: false,
+        user: null
+      };
       spyOn(router, 'navigate');
     });
 
@@ -62,7 +71,12 @@ describe('AdminGuard', () => {
 
   describe('when a user with the admin role is logged in', () => {
     beforeEach(() => {
-      store.dispatch(new UserActions.UserLoaded({ user: ADMIN_USER }));
+      auth_adaptor.auth_state = {
+        ...auth_adaptor.auth_state,
+        initialized: true,
+        authenticated: true,
+        user: USER_ADMIN
+      };
     });
 
     it('grants access', () => {
@@ -72,7 +86,12 @@ describe('AdminGuard', () => {
 
   describe('blocks users without the admin role', () => {
     beforeEach(() => {
-      store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
+      auth_adaptor.auth_state = {
+        ...auth_adaptor.auth_state,
+        initialized: true,
+        authenticated: true,
+        user: USER_BLOCKED
+      };
     });
 
     it('blocks access', () => {

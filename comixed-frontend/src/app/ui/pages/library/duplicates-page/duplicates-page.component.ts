@@ -20,7 +20,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppState } from 'app/app.state';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { MessageService } from 'primeng/api';
@@ -57,18 +57,14 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
           this.message_service.add({
             severity: 'info',
             summary: 'Delete Comic',
-            detail: `Marked ${
-              this.duplicates.pages_deleted
-            } page(s) for deletion...`
+            detail: `Marked ${this.duplicates.pages_deleted} page(s) for deletion...`
           });
         }
         if (this.duplicates.pages_undeleted) {
           this.message_service.add({
             severity: 'info',
             summary: 'Undelete Comic',
-            detail: `Unmarked ${
-              this.duplicates.pages_undeleted
-            } page(s) for deletion...`
+            detail: `Unmarked ${this.duplicates.pages_undeleted} page(s) for deletion...`
           });
         }
         if (

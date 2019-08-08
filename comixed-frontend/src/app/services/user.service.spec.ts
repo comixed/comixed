@@ -22,9 +22,9 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { User } from 'app/models/user/user';
-import { ADMIN_USER, READER_USER } from 'app/models/user/user.fixtures';
+import { USER_ADMIN, USER_READER } from 'app/models/user.fixtures';
 import { USER_SERVICE_API_URL, UserService } from './user.service';
+import { User } from 'app/models/user';
 
 describe('UserService', () => {
   const USER_ID = 717;
@@ -71,13 +71,13 @@ describe('UserService', () => {
   describe('retrieving the current user details', () => {
     it('fetches the user object from the backend', () => {
       service.get_user().subscribe((user: User) => {
-        expect(user).toBe(READER_USER);
+        expect(user).toBe(USER_READER);
       });
 
       const req = http_mock.expectOne(`${USER_SERVICE_API_URL}/user`);
       expect(req.request.method).toEqual('GET');
 
-      req.flush(READER_USER);
+      req.flush(USER_READER);
     });
   });
 
@@ -86,7 +86,7 @@ describe('UserService', () => {
       service
         .save_user(null, EMAIL, PASSWORD, false)
         .subscribe((user: User) => {
-          expect(user).toBe(READER_USER);
+          expect(user).toBe(USER_READER);
         });
 
       const req = http_mock.expectOne(`${USER_SERVICE_API_URL}/admin/users`);
@@ -95,12 +95,12 @@ describe('UserService', () => {
       expect(req.request.body.get('password')).toEqual(PASSWORD);
       expect(req.request.body.get('is_admin')).toEqual(`${false}`);
 
-      req.flush(READER_USER);
+      req.flush(USER_READER);
     });
 
     it('can create a new admin user account', () => {
       service.save_user(null, EMAIL, PASSWORD, true).subscribe((user: User) => {
-        expect(user).toBe(ADMIN_USER);
+        expect(user).toBe(USER_ADMIN);
       });
 
       const req = http_mock.expectOne(`${USER_SERVICE_API_URL}/admin/users`);
@@ -109,14 +109,14 @@ describe('UserService', () => {
       expect(req.request.body.get('password')).toEqual(PASSWORD);
       expect(req.request.body.get('is_admin')).toEqual(`${true}`);
 
-      req.flush(ADMIN_USER);
+      req.flush(USER_ADMIN);
     });
 
     it('can update an existing user account', () => {
       service
         .save_user(USER_ID, EMAIL, PASSWORD, true)
         .subscribe((user: User) => {
-          expect(user).toBe(ADMIN_USER);
+          expect(user).toBe(USER_ADMIN);
         });
 
       const req = http_mock.expectOne(
@@ -127,7 +127,7 @@ describe('UserService', () => {
       expect(req.request.body.get('password')).toEqual(PASSWORD);
       expect(req.request.body.get('is_admin')).toEqual(`${true}`);
 
-      req.flush(ADMIN_USER);
+      req.flush(USER_ADMIN);
     });
   });
 
@@ -147,13 +147,13 @@ describe('UserService', () => {
   });
 
   it('get get a list of users', () => {
-    service.get_user_list().subscribe((users: Array<User>) => {
-      expect(users).toEqual([ADMIN_USER, READER_USER]);
+    service.get_user_list().subscribe((users: User[]) => {
+      expect(users).toEqual([USER_ADMIN, USER_READER]);
     });
 
     const req = http_mock.expectOne(`${USER_SERVICE_API_URL}/admin/users/list`);
     expect(req.request.method).toEqual('GET');
 
-    req.flush([ADMIN_USER, READER_USER]);
+    req.flush([USER_ADMIN, USER_READER]);
   });
 });

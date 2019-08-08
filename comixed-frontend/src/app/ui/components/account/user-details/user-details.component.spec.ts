@@ -18,7 +18,7 @@
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { READER_USER } from 'app/models/user/user.fixtures';
+import { USER_READER } from 'app/models/user.fixtures';
 import { UserDetailsComponent } from './user-details.component';
 
 describe('UserDetailsComponent', () => {
@@ -35,7 +35,7 @@ describe('UserDetailsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UserDetailsComponent);
     component = fixture.componentInstance;
-    component.user = READER_USER;
+    component.user = USER_READER;
     fixture.detectChanges();
   });
 

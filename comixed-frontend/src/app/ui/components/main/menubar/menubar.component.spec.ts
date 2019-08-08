@@ -26,14 +26,17 @@ import { ButtonModule } from 'primeng/button';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { MenubarComponent } from './menubar.component';
-import * as UserActions from 'app/actions/user.actions';
-import { ADMIN_USER, READER_USER } from 'app/models/user/user.fixtures';
 import { MenuItem } from 'primeng/api';
 import { REDUCERS } from 'app/app.reducers';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { initial_state } from 'app/reducers/authentication.reducer';
+import { USER_ADMIN, USER_READER } from 'app/models/user.fixtures';
+import * as AuthActions from 'app/actions/authentication.actions';
 
 describe('MenubarComponent', () => {
   let component: MenubarComponent;
   let fixture: ComponentFixture<MenubarComponent>;
+  let auth_adaptor: AuthenticationAdaptor;
   let store: Store<AppState>;
   let router: Router;
 
@@ -46,11 +49,14 @@ describe('MenubarComponent', () => {
         ButtonModule,
         StoreModule.forRoot(REDUCERS)
       ],
-      declarations: [MenubarComponent]
+      declarations: [MenubarComponent],
+      providers: [AuthenticationAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MenubarComponent);
     component = fixture.componentInstance;
+    auth_adaptor = TestBed.get(AuthenticationAdaptor);
+    auth_adaptor.auth_state = { ...initial_state };
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     router = TestBed.get(Router);
@@ -64,7 +70,7 @@ describe('MenubarComponent', () => {
 
   describe('when a reader logs in', () => {
     beforeEach(() => {
-      store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
+      store.dispatch(new AuthActions.AuthUserLoaded({ user: USER_READER }));
     });
 
     it('loads the menu', () => {
@@ -82,7 +88,7 @@ describe('MenubarComponent', () => {
 
   describe('when an admin logs in', () => {
     beforeEach(() => {
-      store.dispatch(new UserActions.UserLoaded({ user: ADMIN_USER }));
+      store.dispatch(new AuthActions.AuthUserLoaded({ user: USER_ADMIN }));
     });
 
     it('loads the menu', () => {
@@ -98,24 +104,28 @@ describe('MenubarComponent', () => {
     });
   });
 
-  describe('#do_login()', () => {
+  describe('when the user clicks the login button', () => {
     beforeEach(() => {
+      spyOn(auth_adaptor, 'start_login');
       component.do_login();
       fixture.detectChanges();
     });
 
-    it('fires the login action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new UserActions.UserStartLogin()
-      );
+    it('starts the login process', () => {
+      expect(auth_adaptor.start_login).toHaveBeenCalled();
     });
   });
 
-  describe('#do_logout()', () => {
+  describe('when the user clicks the logout button', () => {
     beforeEach(() => {
+      spyOn(auth_adaptor, 'start_logout');
       spyOn(router, 'navigate');
 
       component.do_logout();
+    });
+
+    it('starts the logout process', () => {
+      expect(auth_adaptor.start_logout).toHaveBeenCalled();
     });
 
     it('redirects the user to the main page', () => {

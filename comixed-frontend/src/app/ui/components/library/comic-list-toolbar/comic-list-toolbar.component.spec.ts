@@ -48,6 +48,7 @@ import { ComicListToolbarComponent } from './comic-list-toolbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;
@@ -86,7 +87,8 @@ describe('ComicListToolbarComponent', () => {
         VolumeListComponent,
         ComicCoverUrlPipe,
         ScrapingIssueTitlePipe
-      ]
+      ],
+      providers: [AuthenticationAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicListToolbarComponent);

@@ -31,7 +31,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppState } from 'app/app.state';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { READING_LIST_1 } from 'app/models/reading-list.fixtures';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
@@ -59,6 +59,7 @@ import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -104,6 +105,7 @@ describe('ReadingListPageComponent', () => {
         ComicCoverComponent
       ],
       providers: [
+        AuthenticationAdaptor,
         ConfirmationService,
         {
           provide: ActivatedRoute,

@@ -22,9 +22,9 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import * as UserAdminActions from 'app/actions/user-admin.actions';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { Role } from 'app/models/user/role';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { Role } from 'app/models/role';
 
 @Component({
   selector: 'app-user-details-editor',

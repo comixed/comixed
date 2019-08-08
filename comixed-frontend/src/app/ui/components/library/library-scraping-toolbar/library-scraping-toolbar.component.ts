@@ -19,8 +19,8 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';

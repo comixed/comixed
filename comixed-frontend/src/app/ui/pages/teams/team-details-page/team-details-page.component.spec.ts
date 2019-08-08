@@ -51,6 +51,7 @@ import {
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('TeamDetailsPageComponent', () => {
   const COMIC = COMIC_1000;
@@ -80,7 +81,7 @@ describe('TeamDetailsPageComponent', () => {
         ConfirmDialogModule,
         ContextMenuModule
       ],
-      providers: [ConfirmationService],
+      providers: [AuthenticationAdaptor, ConfirmationService],
       declarations: [
         TeamDetailsPageComponent,
         LibraryFilterComponent,

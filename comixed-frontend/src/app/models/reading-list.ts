@@ -18,7 +18,7 @@
  */
 
 import { ReadingListEntry } from 'app/models/reading-list-entry';
-import { User } from 'app/models/user/user';
+import { User } from 'app/models/user';
 
 export interface ReadingList {
   id: number;

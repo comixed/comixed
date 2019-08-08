@@ -32,7 +32,7 @@ import {
   SAME_HEIGHT,
   SORT
 } from 'app/models/state/library-display';
-import * as UserActions from 'app/actions/user.actions';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 @Component({
   selector: 'app-comic-list-toolbar',
@@ -51,6 +51,7 @@ export class ComicListToolbarComponent implements OnInit {
   rows_options: Array<SelectItem>;
 
   constructor(
+    private auth_adaptor: AuthenticationAdaptor,
     private store: Store<AppState>,
     private translate: TranslateService,
     private activated_route: ActivatedRoute,
@@ -187,23 +188,13 @@ export class ComicListToolbarComponent implements OnInit {
     this.store.dispatch(
       new DisplayActions.SetLibraryViewSort({ sort_field: sort_field })
     );
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: 'library_display_sort_field',
-        value: sort_field
-      })
-    );
+    this.auth_adaptor.set_preference('library_display_sort_field', sort_field);
     this.update_query_parameters(SORT, sort_field);
   }
 
   set_rows(rows: number): void {
     this.store.dispatch(new DisplayActions.SetLibraryViewRows({ rows: rows }));
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: 'library_display_rows',
-        value: `${rows}`
-      })
-    );
+    this.auth_adaptor.set_preference('library_display_rows', `${rows}`);
     this.update_query_parameters(ROWS, `${rows}`);
   }
 
@@ -213,11 +204,9 @@ export class ComicListToolbarComponent implements OnInit {
         same_height: same_height
       })
     );
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: 'library_display_same_height',
-        value: same_height ? '1' : '0'
-      })
+    this.auth_adaptor.set_preference(
+      'library_display_same_height',
+      same_height ? '1' : '0'
     );
     this.update_query_parameters(SAME_HEIGHT, same_height ? '1' : '0');
   }
@@ -229,11 +218,9 @@ export class ComicListToolbarComponent implements OnInit {
   }
 
   save_cover_size(cover_size: number): void {
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: 'library_display_cover_size',
-        value: `${cover_size}`
-      })
+    this.auth_adaptor.set_preference(
+      'library_display_cover_size',
+      `${cover_size}`
     );
     this.update_query_parameters(COVER_SIZE, `${cover_size}`);
   }

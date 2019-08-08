@@ -17,12 +17,12 @@
  * org.comixed;
  */
 
-import { READER_USER } from 'app/models/user/user.fixtures';
+import { USER_READER } from 'app/models/user.fixtures';
 import { ReadingList } from 'app/models/reading-list';
 
 export const READING_LIST_1: ReadingList = {
   id: 1000,
-  owner: READER_USER,
+  owner: USER_READER,
   name: 'My Reading List',
   summary: 'This is my first reading list',
   entries: []

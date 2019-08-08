@@ -26,15 +26,17 @@ import * as LibraryActions from 'app/actions/library.actions';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Comic } from 'app/models/comics/comic';
-import { User } from 'app/models/user/user';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectionState } from 'app/models/state/selection-state';
+import { User } from 'app/models/user';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationState } from 'app/models/state/authentication-state';
 
 @Component({
   selector: 'app-library-page',
@@ -42,38 +44,38 @@ import { SelectionState } from 'app/models/state/selection-state';
   styleUrls: ['./library-page.component.css']
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
-  private user$: Observable<User>;
-  private user_subscription: Subscription;
-  user: User;
-
   private library$: Observable<LibraryState>;
+
   private library_subscription: Subscription;
   library: LibraryState;
-
   private library_filter$: Observable<LibraryFilter>;
+
   private library_filter_subscription: Subscription;
   library_filter: LibraryFilter;
-
   scraping$: Observable<MultipleComicsScraping>;
+
   scraping_subscription: Subscription;
   scraping: MultipleComicsScraping;
-
   selection_state$: Observable<SelectionState>;
+
+  auth_state_subscription: Subscription;
+
   selection_state_subscription: Subscription;
   selection_state: SelectionState;
 
+  user: User;
   comics: Comic[] = [];
   selected_comics: Comic[] = [];
 
   constructor(
     private router: Router,
+    private auth_adaptor: AuthenticationAdaptor,
     private user_service: UserService,
     private comic_service: ComicService,
     private confirm_service: ConfirmationService,
     private store: Store<AppState>,
     private translate: TranslateService
   ) {
-    this.user$ = store.select('user');
     this.library$ = store.select('library');
     this.library_filter$ = store.select('library_filter');
     this.scraping$ = store.select('multiple_comic_scraping');
@@ -81,9 +83,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe((user: User) => {
-      this.user = user;
-    });
+    this.auth_state_subscription = this.auth_adaptor.auth_state$.subscribe(
+      (auth_state: AuthenticationState) => {
+        this.user = auth_state.user;
+      }
+    );
     this.library_subscription = this.library$.subscribe(
       (library: LibraryState) => {
         this.library = library;
@@ -118,7 +122,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.user_subscription.unsubscribe();
+    this.auth_state_subscription.unsubscribe();
     this.library_subscription.unsubscribe();
     this.library_filter_subscription.unsubscribe();
   }

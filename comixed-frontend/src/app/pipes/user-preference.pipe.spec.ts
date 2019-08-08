@@ -19,7 +19,7 @@
 
 import { UserPreferencePipe } from './user-preference.pipe';
 import { TestBed } from '@angular/core/testing';
-import { READER_USER } from 'app/models/user/user.fixtures';
+import { USER_READER } from 'app/models/user.fixtures';
 
 describe('UserPreferencePipe', () => {
   const PREFERENCE_NAME = 'user.preference';
@@ -45,7 +45,7 @@ describe('UserPreferencePipe', () => {
 
   it('returns nothing when a preference is undefined', () => {
     expect(
-      pipe.transform({ ...READER_USER, preferences: [] }, PREFERENCE_NAME)
+      pipe.transform({ ...USER_READER, preferences: [] }, PREFERENCE_NAME)
     ).toBeNull();
   });
 
@@ -53,7 +53,7 @@ describe('UserPreferencePipe', () => {
     expect(
       pipe.transform(
         {
-          ...READER_USER,
+          ...USER_READER,
           preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }]
         },
         PREFERENCE_NAME

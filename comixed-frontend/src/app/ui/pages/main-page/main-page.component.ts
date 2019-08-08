@@ -19,8 +19,8 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
 import { ComicGrouping, LibraryState } from 'app/models/state/library-state';
 import { SelectItem } from 'primeng/api';
@@ -82,13 +82,15 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
-      this.library = library;
-      this.comic_count = library.comics.length;
-      this.plural = this.comic_count !== 1;
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
+        this.comic_count = library.comics.length;
+        this.plural = this.comic_count !== 1;
 
-      this.build_data();
-    });
+        this.build_data();
+      }
+    );
   }
 
   ngOnDestroy() {

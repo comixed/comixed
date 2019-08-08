@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,7 @@
  * org.comixed;
  */
 
-import { Role } from './role';
-import { Preference } from './preference';
-
-export interface User {
-  initialized: boolean;
-  id: number;
-  fetching: boolean;
-  token: string;
-  authenticating: boolean;
-  busy: boolean;
+export interface LoginResponse {
   email: string;
-  authenticated: boolean;
-  is_admin: boolean;
-  is_reader: boolean;
-  first_login_date: number;
-  last_login_date: number;
-  roles: Role[];
-  preferences: Preference[];
+  token: string;
 }

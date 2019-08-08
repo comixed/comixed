@@ -19,14 +19,13 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 import { Action } from '@ngrx/store';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ReadingListSave } from 'app/actions/reading-list.actions';
 import { catchError, exhaustMap, map } from 'rxjs/operators';
 import { ReadingList } from 'app/models/reading-list';
 import { ReadingListService } from 'app/services/reading-list.service';
-import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class ReadingListEffects {

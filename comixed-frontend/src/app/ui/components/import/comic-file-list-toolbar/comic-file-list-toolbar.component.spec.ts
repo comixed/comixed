@@ -37,6 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { REDUCERS } from 'app/app.reducers';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 
@@ -61,7 +62,8 @@ describe('ComicFileListToolbarComponent', () => {
         CheckboxModule,
         SliderModule
       ],
-      declarations: [ComicFileListToolbarComponent]
+      declarations: [ComicFileListToolbarComponent],
+      providers: [AuthenticationAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListToolbarComponent);

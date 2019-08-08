@@ -19,7 +19,7 @@
 
 import { LibraryDisplay } from 'app/models/state/library-display';
 import * as LibraryDisplayActions from 'app/actions/library-display.actions';
-import { Preference } from 'app/models/user/preference';
+import { Preference } from 'app/models/preference';
 
 export const initial_state: LibraryDisplay = {
   layout: 'grid',

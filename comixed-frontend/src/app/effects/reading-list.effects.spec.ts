@@ -18,7 +18,7 @@
  */
 
 import { ReadingListEffects } from './reading-list.effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { READING_LIST_1 } from 'app/models/reading-list.fixtures';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { cold, hot } from 'jasmine-marbles';

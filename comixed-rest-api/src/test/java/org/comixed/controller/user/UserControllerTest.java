@@ -120,6 +120,30 @@ public class UserControllerTest {
                                 TEST_PROPERTY_VALUE);
     }
 
+    @Test
+    public void testDeleteUserProperty() {
+        Mockito.when(authentication.getName())
+               .thenReturn(TEST_EMAIL);
+        Mockito.when(userService.deleteUserProperty(Mockito.anyString(),
+                                                    Mockito.anyString()))
+               .thenReturn(user);
+
+        final ComiXedUser result = controller.deleteUserProperty(authentication,
+                                                                 TEST_PROPERTY_NAME);
+
+        assertNotNull(result);
+        assertSame(user,
+                   result);
+
+        Mockito.verify(authentication,
+                       Mockito.times(1))
+               .getName();
+        Mockito.verify(userService,
+                       Mockito.times(1))
+               .deleteUserProperty(TEST_EMAIL,
+                                   TEST_PROPERTY_NAME);
+    }
+
     @Test(expected = ComiXedUserException.class)
     public void testSetUserPropertyForInvalidUser()
             throws

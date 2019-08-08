@@ -21,6 +21,14 @@ import * as _ from 'lodash';
 
 export const API_ROOT_URL = '/api';
 
+export const GET_AUTHENTICATED_USER_URL = '${API_ROOT_URL}/user';
+export const AUTH_SUBMIT_LOGIN_DATA_URL =
+  '${API_ROOT_URL}/token/generate-token';
+export const AUTH_SET_PREFERENCE_URL =
+  '${API_ROOT_URL}/user/preferences/${name}';
+export const AUTH_DELETE_PREFERENCE_URL =
+  '${API_ROOT_URL}/user/preferences/${name}';
+
 export const LIBRARY_STATE_URL =
   '${API_ROOT_URL}/comics/since/${latest}?timeout=${timeout}';
 export const COMIC_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scan_types`;
@@ -56,7 +64,7 @@ export const GET_READING_LISTS_URL = `${API_ROOT_URL}/lists`;
 export const CREATE_READING_LIST_URL = `${API_ROOT_URL}/lists`;
 export const UPDATE_READING_LIST_URL = '${API_ROOT_URL}/lists/${id}';
 
-export function interpolate(template: string, values: any): string {
+export function interpolate(template: string, values: any = {}): string {
   const vals = _.merge(values, { API_ROOT_URL: API_ROOT_URL });
   _.templateSettings.interpolate = /\${([\s\S]+?)}/g;
   const compiled = _.template(template);

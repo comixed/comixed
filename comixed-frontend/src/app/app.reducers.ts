@@ -1,4 +1,3 @@
-import { userReducer } from 'app/reducers/user.reducer';
 import { importingReducer } from 'app/reducers/importing.reducer';
 import { libraryReducer } from 'app/reducers/library.reducer';
 import { libraryFilterReducer } from 'app/reducers/library-filter.reducer';
@@ -9,9 +8,10 @@ import { duplicatesReducer } from 'app/reducers/duplicates.reducer';
 import { userAdminReducer } from 'app/reducers/user-admin.reducer';
 import { readingListReducer } from 'app/reducers/reading-list.reducer';
 import { selectionReducer } from 'app/reducers/selection.reducer';
+import { authenticationReducer } from 'app/reducers/authentication.reducer';
 
 export const REDUCERS = {
-  user: userReducer,
+  auth_state: authenticationReducer,
   import_state: importingReducer,
   library: libraryReducer,
   library_filter: libraryFilterReducer,

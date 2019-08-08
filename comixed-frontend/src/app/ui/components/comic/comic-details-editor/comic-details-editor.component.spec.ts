@@ -25,14 +25,12 @@ import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as UserActions from 'app/actions/user.actions';
-import { ADMIN_USER } from 'app/models/user/user.fixtures';
 import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { SINGLE_COMIC_SCRAPING_STATE } from 'app/models/scraping/single-comic-scraping.fixtures';
 import { COMIC_1000, COMIC_1001 } from 'app/models/comics/comic.fixtures';
 import { VOLUME_1000 } from 'app/models/comics/volume.fixtures';
 import { ISSUE_1000 } from 'app/models/scraping/issue.fixtures';
-import { COMICVINE_API_KEY } from 'app/models/user/preferences.constants';
+import { COMICVINE_API_KEY } from 'app/models/preferences.constants';
 import { ButtonModule } from 'primeng/button';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { BlockUIModule } from 'primeng/blockui';
@@ -51,11 +49,14 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/primeng';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
+import { AuthenticationService } from 'app/services/authentication.service';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = '1234567890';
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
+  let auth_adaptor: AuthenticationAdaptor;
   let api_key_input: DebugElement;
   let series_input: DebugElement;
   let volume_input: DebugElement;
@@ -94,6 +95,8 @@ describe('ComicDetailsEditorComponent', () => {
       providers: [
         FormBuilder,
         ConfirmationService,
+        AuthenticationAdaptor,
+        AuthenticationService,
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
       ]
@@ -101,6 +104,7 @@ describe('ComicDetailsEditorComponent', () => {
 
     fixture = TestBed.createComponent(ComicDetailsEditorComponent);
     component = fixture.componentInstance;
+    auth_adaptor = TestBed.get(AuthenticationAdaptor);
 
     user_service = TestBed.get(UserService);
     comic_service = TestBed.get(ComicService);
@@ -180,12 +184,6 @@ describe('ComicDetailsEditorComponent', () => {
   });
 
   describe('#ngOnInit()', () => {
-    it('should subscribe to changes in the current user', () => {
-      store.dispatch(new UserActions.UserLoaded({ user: ADMIN_USER }));
-
-      expect(component.user.email).toEqual(ADMIN_USER.email);
-    });
-
     it('should subscribe to changes in the scraping data', () => {
       store.dispatch(
         new ScrapingActions.SingleComicScrapingSetup({
@@ -416,17 +414,17 @@ describe('ComicDetailsEditorComponent', () => {
     });
   });
 
-  describe('#save_api_key()', () => {
-    it('submits the entered key', () => {
+  describe('when saving the api key', () => {
+    beforeEach(() => {
+      spyOn(auth_adaptor, 'set_preference');
       component.form.controls['api_key'].setValue(API_KEY);
-
       component.save_api_key();
+    });
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new UserActions.UserSetPreference({
-          name: COMICVINE_API_KEY,
-          value: API_KEY
-        })
+    it('submits the entered key', () => {
+      expect(auth_adaptor.set_preference).toHaveBeenCalledWith(
+        COMICVINE_API_KEY,
+        API_KEY
       );
     });
   });

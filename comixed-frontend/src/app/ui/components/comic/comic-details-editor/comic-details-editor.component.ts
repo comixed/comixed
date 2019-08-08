@@ -27,21 +27,21 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
 import * as LibraryScrapingActions from 'app/actions/single-comic-scraping.actions';
-import * as UserActions from 'app/actions/user.actions';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { Comic } from 'app/models/comics/comic';
 import { Volume } from 'app/models/comics/volume';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
-import { User } from 'app/models/user/user';
-import { Preference } from 'app/models/user/preference';
-import { COMICVINE_API_KEY } from 'app/models/user/preferences.constants';
+import { COMICVINE_API_KEY } from 'app/models/preferences.constants';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationState } from 'app/models/state/authentication-state';
+import { User } from 'app/models/user';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -54,10 +54,6 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   fetch_options: Array<MenuItem>;
 
-  user$: Observable<User>;
-  user_subscription: Subscription;
-  user: User;
-
   single_comic_scraping$: Observable<SingleComicScraping>;
   single_comic_scraping_subscription: Subscription;
   single_comic_scraping: SingleComicScraping;
@@ -68,10 +64,13 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     year: 'numeric'
   });
 
+  user: User;
+  auth_state_subscription: Subscription;
   skip_cache = false;
   form: FormGroup;
 
   constructor(
+    private auth_adaptor: AuthenticationAdaptor,
     private user_service: UserService,
     private comic_service: ComicService,
     private confirmation_service: ConfirmationService,
@@ -79,7 +78,6 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private form_builder: FormBuilder
   ) {
-    this.user$ = store.select('user');
     this.single_comic_scraping$ = store.select('single_comic_scraping');
 
     this.fetch_options = [
@@ -103,15 +101,15 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe((user: User) => {
-      this.user = user;
-
-      const api_key = this.user.preferences.find((preference: Preference) => {
-        return preference.name === COMICVINE_API_KEY;
-      });
-
-      this.form.controls['api_key'].setValue(api_key ? api_key.value : '');
-    });
+    this.auth_state_subscription = this.auth_adaptor.auth_state$.subscribe(
+      (auth_state: AuthenticationState) => {
+        this.user = auth_state.user;
+        const api_key = this.auth_adaptor.get_preference(COMICVINE_API_KEY);
+        this.form.controls['api_key'].setValue(
+          this.api_key ? this.api_key : ''
+        );
+      }
+    );
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
@@ -135,7 +133,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.user_subscription.unsubscribe();
+    this.auth_state_subscription.unsubscribe();
     this.single_comic_scraping_subscription.unsubscribe();
   }
 
@@ -241,11 +239,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   save_api_key(): void {
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: COMICVINE_API_KEY,
-        value: this.form.controls['api_key'].value.trim()
-      })
+    this.auth_adaptor.set_preference(
+      COMICVINE_API_KEY,
+      this.form.controls['api_key'].value.trim()
     );
   }
 

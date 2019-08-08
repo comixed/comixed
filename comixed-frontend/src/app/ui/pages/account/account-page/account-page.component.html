@@ -1,8 +1,10 @@
 <p-tabView>
-  <p-tabPanel header="{{ 'account-page.label.details' | translate }}">
-    <app-user-details [user]="user"></app-user-details>
-  </p-tabPanel>
-  <p-tabPanel header="{{ 'account-page.label.preferences' | translate }}">
-    <app-account-preferences [user]="user"></app-account-preferences>
-  </p-tabPanel>
+    <p-tabPanel header='{{"account-page.label.details"|translate}}'>
+        <app-user-details *ngIf='user'
+                          [user]='user'></app-user-details>
+    </p-tabPanel>
+    <p-tabPanel header='{{"account-page.label.preferences"|translate}}'>
+        <app-account-preferences *ngIf='user'
+                                 [user]='user'></app-account-preferences>
+    </p-tabPanel>
 </p-tabView>

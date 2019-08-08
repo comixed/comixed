@@ -11,7 +11,7 @@ import {
   HttpUserEvent
 } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TokenStorage } from 'app/storage/token.storage';
 import { MessageService } from 'primeng/api';
 /*

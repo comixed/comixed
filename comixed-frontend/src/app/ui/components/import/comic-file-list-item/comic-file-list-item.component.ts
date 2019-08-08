@@ -19,7 +19,6 @@
 
 import { Component, Input } from '@angular/core';
 import { ComicFile } from 'app/models/import/comic-file';
-import * as ImportActions from 'app/actions/importing.actions';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 

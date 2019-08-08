@@ -20,33 +20,42 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as UserActions from 'app/actions/user.actions';
-import { BLOCKED_USER, READER_USER } from 'app/models/user/user.fixtures';
 
 import { ReaderGuard } from './reader.guard';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { initial_state } from 'app/reducers/authentication.reducer';
+import { USER_BLOCKED, USER_READER } from 'app/models/user.fixtures';
+import { StoreModule } from '@ngrx/store';
 import { REDUCERS } from 'app/app.reducers';
 
 describe('ReaderGuard', () => {
   let guard: ReaderGuard;
-  let store: Store<AppState>;
   let router: Router;
+  let auth_adaptor: AuthenticationAdaptor;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, StoreModule.forRoot(REDUCERS)],
-      providers: [ReaderGuard]
+      imports: [
+        RouterTestingModule.withRoutes([{ path: 'home', redirectTo: '' }]),
+        StoreModule.forRoot(REDUCERS)
+      ],
+      providers: [ReaderGuard, AuthenticationAdaptor]
     });
 
     guard = TestBed.get(ReaderGuard);
-    store = TestBed.get(Store);
+    auth_adaptor = TestBed.get(AuthenticationAdaptor);
+    auth_adaptor.auth_state = { ...initial_state };
     router = TestBed.get(Router);
   });
 
   describe('when there is no user logged in', () => {
     beforeEach(() => {
-      store.dispatch(new UserActions.UserLoaded({ user: null }));
+      auth_adaptor.auth_state = {
+        ...auth_adaptor.auth_state,
+        initialized: true,
+        authenticated: false,
+        user: null
+      };
       spyOn(router, 'navigate');
     });
 
@@ -62,7 +71,12 @@ describe('ReaderGuard', () => {
 
   describe('when a user with the reader role is logged in', () => {
     beforeEach(() => {
-      store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
+      auth_adaptor.auth_state = {
+        ...auth_adaptor.auth_state,
+        initialized: true,
+        authenticated: true,
+        user: USER_READER
+      };
     });
 
     it('grants access', () => {
@@ -72,7 +86,12 @@ describe('ReaderGuard', () => {
 
   describe('blocks users without the reader role', () => {
     beforeEach(() => {
-      store.dispatch(new UserActions.UserLoaded({ user: BLOCKED_USER }));
+      auth_adaptor.auth_state = {
+        ...auth_adaptor.auth_state,
+        initialized: true,
+        authenticated: true,
+        user: USER_BLOCKED
+      };
     });
 
     it('blocks access', () => {

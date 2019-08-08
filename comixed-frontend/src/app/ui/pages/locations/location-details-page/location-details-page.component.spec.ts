@@ -51,6 +51,7 @@ import {
   ContextMenuModule
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('LocationDetailsPageComponent', () => {
   let component: LocationDetailsPageComponent;
@@ -78,7 +79,7 @@ describe('LocationDetailsPageComponent', () => {
         ConfirmDialogModule,
         ContextMenuModule
       ],
-      providers: [ConfirmationService],
+      providers: [AuthenticationAdaptor, ConfirmationService],
       declarations: [
         LocationDetailsPageComponent,
         LibraryFilterComponent,

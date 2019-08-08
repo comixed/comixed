@@ -20,14 +20,14 @@
 package org.comixed.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import org.comixed.views.View.UserDetails;
-import org.comixed.views.View.UserList;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Preference;
 import org.comixed.model.user.Role;
 import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
 import org.comixed.utils.Utils;
+import org.comixed.views.View.UserDetails;
+import org.comixed.views.View.UserList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -180,12 +180,12 @@ public class UserController
         return user;
     }
 
-    @RequestMapping(value = "/user/preferences",
-                    method = RequestMethod.POST)
+    @RequestMapping(value = "/user/preferences/{name}",
+                    method = RequestMethod.PUT)
     public ComiXedUser setUserProperty(Authentication authentication,
-                                       @RequestParam("name")
+                                       @PathVariable("name")
                                                String name,
-                                       @RequestParam("value")
+                                       @RequestBody()
                                                String value)
             throws
             ComiXedUserException {
@@ -286,5 +286,19 @@ public class UserController
 
     void setAdminRole(final Role role) {
         this.adminRole = role;
+    }
+
+    @RequestMapping(value = "/user/preferences/{name}",
+                    method = RequestMethod.DELETE)
+    public ComiXedUser deleteUserProperty(final Authentication authentication,
+                                          @PathVariable("name")
+                                          final String propertyName) {
+
+        final String email = authentication.getName();
+        this.logger.info("Deleting user property: email={} property={}",
+                         email,
+                         propertyName);
+        return this.userService.deleteUserProperty(email,
+                                                   propertyName);
     }
 }

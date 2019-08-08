@@ -17,60 +17,56 @@
  * org.comixed;
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { AppState } from 'app/app.state';
-import { User } from 'app/models/user/user';
-import { Store } from '@ngrx/store';
-import * as UserActions from 'app/actions/user.actions';
-import * as DisplayActions from 'app/actions/library-display.actions';
-import * as lodash from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationState } from 'app/models/state/authentication-state';
+import { User } from 'app/models/user';
+import { Roles } from 'app/models/ui/roles';
 
 @Component({
   selector: 'app-menubar',
   templateUrl: './menubar.component.html',
   styleUrls: ['./menubar.component.css']
 })
-export class MenubarComponent implements OnInit, OnDestroy {
-  private user$: Observable<User>;
-  private user_subscription: Subscription;
-  user: User;
-
+export class MenubarComponent implements OnInit {
   menu_items: Array<MenuItem>;
+  user: User;
+  authenticated = false;
+  is_admin = false;
+  is_reader = false;
 
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private store: Store<AppState>
-  ) {
-    this.user$ = store.select('user');
-  }
+    private auth_adaptor: AuthenticationAdaptor
+  ) {}
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe((user: User) => {
-      const update = !lodash.isEqual(this.user, user);
-
+    this.auth_adaptor.user$.subscribe((user: User) => {
       this.user = user;
-      if (update) {
-        this.update_menu();
-      }
+      this.update_menu();
     });
-  }
-
-  ngOnDestroy() {
-    this.user_subscription.unsubscribe();
+    this.auth_adaptor.authenticated$.subscribe((authenticated: boolean) => {
+      this.authenticated = authenticated;
+      this.update_menu();
+    });
+    this.auth_adaptor.role$.subscribe((roles: Roles) => {
+      this.is_admin = roles.is_admin;
+      this.is_reader = roles.is_reader;
+      this.update_menu();
+    });
+    this.update_menu();
   }
 
   do_login(): void {
-    this.store.dispatch(new UserActions.UserStartLogin());
+    this.auth_adaptor.start_login();
   }
 
   do_logout(): void {
-    this.store.dispatch(new UserActions.UserLogout());
+    this.auth_adaptor.start_logout();
     this.router.navigate(['/home']);
   }
 
@@ -82,8 +78,10 @@ export class MenubarComponent implements OnInit, OnDestroy {
         routerLink: ['/']
       }
     ];
-    this.menu_items = this.menu_items.concat(this.add_comics_menu());
-    if (this.user && this.user.is_admin) {
+    if (this.is_reader) {
+      this.menu_items = this.menu_items.concat(this.add_comics_menu());
+    }
+    if (this.is_admin) {
       this.menu_items = this.menu_items.concat(this.add_admin_menu());
     }
   }
@@ -93,23 +91,23 @@ export class MenubarComponent implements OnInit, OnDestroy {
       {
         label: this.translate.instant('menu.library.root'),
         icon: 'fa fa-fw fa-book',
-        visible: this.user && this.user.authenticated,
+        visible: this.authenticated,
         items: [
           {
             label: this.translate.instant('menu.library.comics'),
             icon: 'fas fa-book-reader',
             routerLink: ['/comics'],
-            visible: this.user && this.user.authenticated
+            visible: this.authenticated
           },
           {
             separator: true,
-            visible: this.user && this.user.is_admin
+            visible: this.is_admin
           },
           {
             label: this.translate.instant('menu.library.reading-lists'),
             icon: 'fas fa-glasses',
             routerLink: ['/lists'],
-            visible: this.user && this.user.authenticated
+            visible: this.authenticated
           },
           {
             label: this.translate.instant('menu.library.collections.label'),
@@ -121,7 +119,7 @@ export class MenubarComponent implements OnInit, OnDestroy {
                 ),
                 icon: 'fas fa-newspaper',
                 routerLink: ['/publishers'],
-                visible: this.user && this.user.authenticated
+                visible: this.authenticated
               },
               {
                 label: this.translate.instant(
@@ -129,7 +127,7 @@ export class MenubarComponent implements OnInit, OnDestroy {
                 ),
                 icon: 'fa fa-fw fa-book',
                 routerLink: ['/series'],
-                visible: this.user && this.user.authenticated
+                visible: this.authenticated
               },
               {
                 label: this.translate.instant(
@@ -137,13 +135,13 @@ export class MenubarComponent implements OnInit, OnDestroy {
                 ),
                 icon: 'fas fa-user',
                 routerLink: ['/characters'],
-                visible: this.user && this.user.authenticated
+                visible: this.authenticated
               },
               {
                 label: this.translate.instant('menu.library.collections.teams'),
                 icon: 'fas fa-users',
                 routerLink: ['/teams'],
-                visible: this.user && this.user.authenticated
+                visible: this.authenticated
               },
               {
                 label: this.translate.instant(
@@ -151,7 +149,7 @@ export class MenubarComponent implements OnInit, OnDestroy {
                 ),
                 icon: 'fas fa-location-arrow',
                 routerLink: ['/locations'],
-                visible: this.user && this.user.authenticated
+                visible: this.authenticated
               },
               {
                 label: this.translate.instant(
@@ -159,7 +157,7 @@ export class MenubarComponent implements OnInit, OnDestroy {
                 ),
                 icon: 'fas fa-folder-open',
                 routerLink: ['/stories'],
-                visible: this.user && this.user.authenticated
+                visible: this.authenticated
               }
             ]
           }
@@ -173,41 +171,41 @@ export class MenubarComponent implements OnInit, OnDestroy {
       {
         label: this.translate.instant('menu.admin.root'),
         icon: 'fas fa-tools',
-        visible: this.user && this.user.is_admin,
+        visible: this.is_admin,
         items: [
           {
             label: this.translate.instant('menu.admin.users'),
             icon: 'fas fa-user-cog',
-            visible: this.user && this.user.is_admin,
+            visible: this.is_admin,
             routerLink: ['/admin/users']
           },
           {
             separator: true,
-            visible: this.user && this.user.is_admin
+            visible: this.is_admin
           },
           {
             label: this.translate.instant('menu.admin.library'),
             icon: 'fas fa-book-open',
-            visible: this.user && this.user.is_admin,
+            visible: this.is_admin,
             routerLink: ['/admin/library']
           },
           {
             label: this.translate.instant('menu.library.import'),
             icon: 'fas fa-file-import',
             routerLink: ['/import'],
-            visible: this.user && this.user.is_admin
+            visible: this.is_admin
           },
           {
             label: this.translate.instant('menu.library.duplicate-pages'),
             icon: 'fas fa-smog',
             routerLink: ['/pages/duplicates'],
-            visible: this.user && this.user.is_admin
+            visible: this.is_admin
           },
           {
             label: this.translate.instant('menu.library.missing-comics'),
             icon: 'fas fa-ghost',
             routerLink: ['/comics/missing'],
-            visible: this.user && this.user.is_admin
+            visible: this.is_admin
           }
         ]
       }

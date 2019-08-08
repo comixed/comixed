@@ -285,6 +285,34 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testDeleteUserProperty() {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+               .thenReturn(user);
+        Mockito.doNothing()
+               .when(user)
+               .deleteProperty(Mockito.anyString());
+        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class)))
+               .thenReturn(user);
+
+        final ComiXedUser result = service.deleteUserProperty(TEST_EMAIL,
+                                                              TEST_PROPERTY_NAME);
+
+        assertNotNull(result);
+        assertSame(user,
+                   result);
+
+        Mockito.verify(userRepository,
+                       Mockito.times(1))
+               .findByEmail(TEST_EMAIL);
+        Mockito.verify(user,
+                       Mockito.times(1))
+               .deleteProperty(TEST_PROPERTY_NAME);
+        Mockito.verify(userRepository,
+                       Mockito.times(1))
+               .save(user);
+    }
+
+    @Test
     public void testSetUserPassword()
             throws
             ComiXedUserException {

@@ -1,66 +1,53 @@
-<div *ngIf="comic" class="ui-g">
-  <div class="ui-g-3 ui-sm-6">
-    <p-card>
-      <p-header>
-        <h2>{{ comic | comic_title }}</h2>
-      </p-header>
-      <img
-        src="{{ comic | comic_cover_url }}"
-        [style.height]="'auto'"
-        [style.width]="'100%'"
-      />
-      <p-footer>
-        <div class="cx-container-centered-text">
-          <a
-            *ngIf="!comic.missing"
-            id="cx-download-link"
-            href="{{ comic | comic_download_link }}"
-            >{{ 'comic-details-page.text.download-link' | translate }}</a
-          >
-        </div>
-      </p-footer>
-    </p-card>
-  </div>
-  <div class="ui-g-9 ui-sm-6">
-    <p-tabView
-      [activeIndex]="current_tab"
-      (onChange)="set_current_tab($event.index)"
-    >
-      <p-tabPanel header="{{ 'comic-details-page.tab.overview' | translate }}">
-        <app-comic-overview
-          [is_admin]="user.is_admin"
-          [comic]="comic"
-          [library]="library"
-        ></app-comic-overview>
-      </p-tabPanel>
-      <p-tabPanel header="{{ 'comic-details-page.tab.story' | translate }}">
-        <app-comic-story [comic]="comic" [library]="library"></app-comic-story>
-      </p-tabPanel>
-      <p-tabPanel header="{{ 'comic-details-page.tab.reader' | translate }}">
-        <app-comic-reader
-          [comic]="comic"
-          [page_size]="page_size"
-          (pageSize)="set_page_size($event)"
-          [current_page]="current_page"
-          (currentPage)="set_current_page($event)"
-        ></app-comic-reader>
-      </p-tabPanel>
-      <p-tabPanel header="{{ 'comic-details-page.tab.credits' | translate }}">
-        <app-comic-credits [comic]="comic"></app-comic-credits>
-      </p-tabPanel>
-      <p-tabPanel header="{{ 'comic-details-page.tab.pages' | translate }}">
-        <app-comic-pages
-          [image_size]="page_size"
-          [is_admin]="user.is_admin"
-          [comic]="comic"
-        ></app-comic-pages>
-      </p-tabPanel>
-      <p-tabPanel
-        *ngIf="user.is_admin"
-        header="{{ 'comic-details-page.tab.comicvine' | translate }}"
-      >
-        <app-comic-details-editor [comic]="comic"></app-comic-details-editor>
-      </p-tabPanel>
-    </p-tabView>
-  </div>
+<div *ngIf='comic'
+     class='ui-g'>
+    <div class='ui-g-3 ui-sm-6'>
+        <p-card>
+            <p-header>
+                <h2>{{ comic | comic_title }}</h2>
+            </p-header>
+            <img src='{{ comic | comic_cover_url }}'
+                 [style.height]='"auto"'
+                 [style.width]='"100%"'/>
+            <p-footer>
+                <div class='cx-container-centered-text'>
+                    <a *ngIf='!comic.missing'
+                       id='cx-download-link'
+                       href='{{ comic | comic_download_link }}'>{{ "comic-details-page.text.download-link" | translate }}</a>
+                </div>
+            </p-footer>
+        </p-card>
+    </div>
+    <div class='ui-g-9 ui-sm-6'>
+        <p-tabView [activeIndex]='current_tab'
+                   (onChange)='set_current_tab($event.index)'>
+            <p-tabPanel header='{{ "comic-details-page.tab.overview" | translate }}'>
+                <app-comic-overview [is_admin]='is_admin'
+                                    [comic]='comic'
+                                    [library]='library'></app-comic-overview>
+            </p-tabPanel>
+            <p-tabPanel header='{{ "comic-details-page.tab.story" | translate }}'>
+                <app-comic-story [comic]='comic'
+                                 [library]='library'></app-comic-story>
+            </p-tabPanel>
+            <p-tabPanel header='{{ "comic-details-page.tab.reader" | translate }}'>
+                <app-comic-reader [comic]='comic'
+                                  [page_size]='page_size'
+                                  (pageSize)='set_page_size($event)'
+                                  [current_page]='current_page'
+                                  (currentPage)='set_current_page($event)'></app-comic-reader>
+            </p-tabPanel>
+            <p-tabPanel header='{{ "comic-details-page.tab.credits" | translate }}'>
+                <app-comic-credits [comic]='comic'></app-comic-credits>
+            </p-tabPanel>
+            <p-tabPanel header='{{ "comic-details-page.tab.pages" | translate }}'>
+                <app-comic-pages [image_size]='page_size'
+                                 [is_admin]='is_admin'
+                                 [comic]='comic'></app-comic-pages>
+            </p-tabPanel>
+            <p-tabPanel *ngIf='is_admin'
+                        header='{{ "comic-details-page.tab.comicvine" | translate }}'>
+                <app-comic-details-editor [comic]='comic'></app-comic-details-editor>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
 </div>

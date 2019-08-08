@@ -22,13 +22,14 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { User } from 'app/models/user/user';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { LibraryState } from 'app/models/state/library-state';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { ComicService } from 'app/services/comic.service';
 import { Comic } from 'app/models/comics/comic';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationState } from 'app/models/state/authentication-state';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -55,11 +56,11 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   protected page_size: number;
   protected current_page: number;
 
-  user$: Observable<User>;
-  user_subscription: Subscription;
-  user: User;
+  auth_subscription: Subscription;
+  is_admin = false;
 
   constructor(
+    private auth_adaptor: AuthenticationAdaptor,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private comic_service: ComicService,
@@ -70,23 +71,29 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(params => {
       this.comic_id = +params['id'];
     });
-    this.user$ = store.select('user');
     activatedRoute.queryParams.subscribe(params => {
       this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
     });
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe((library: LibraryState) => {
-      this.library = library;
-
-      if (this.comic === null) {
-        this.comic =
-          library.comics.find((comic: Comic) => {
-            return comic.id === this.comic_id;
-          }) || null;
+    this.auth_subscription = this.auth_adaptor.auth_state$.subscribe(
+      (auth_state: AuthenticationState) => {
+        this.is_admin = this.auth_adaptor.is_admin;
       }
-    });
+    );
+    this.library_subscription = this.library$.subscribe(
+      (library: LibraryState) => {
+        this.library = library;
+
+        if (this.comic === null) {
+          this.comic =
+            library.comics.find((comic: Comic) => {
+              return comic.id === this.comic_id;
+            }) || null;
+        }
+      }
+    );
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;
@@ -99,9 +106,6 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
         }
       }
     );
-    this.user_subscription = this.user$.subscribe((user: User) => {
-      this.user = user;
-    });
     this.activatedRoute.queryParams.subscribe(params => {
       this.set_page_size(
         parseInt(this.load_parameter(params[PAGE_SIZE_PARAMETER], '100'), 10)
@@ -114,9 +118,9 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.auth_subscription.unsubscribe();
     this.library_subscription.unsubscribe();
     this.single_comic_scraping_subscription.unsubscribe();
-    this.user_subscription.unsubscribe();
   }
 
   set_page_size(page_size: number): void {

@@ -24,13 +24,16 @@ import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { AccountPreferencesComponent } from 'app/ui/components/account/account-preferences/account-preferences.component';
 import { UserDetailsComponent } from 'app/ui/components/account/user-details/user-details.component';
-import { READER_USER } from 'app/models/user/user.fixtures';
+import { USER_READER } from 'app/models/user.fixtures';
 import { AccountPageComponent } from './account-page.component';
 import { REDUCERS } from 'app/app.reducers';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { initial_state } from 'app/reducers/authentication.reducer';
 
 describe('AccountPageComponent', () => {
   let component: AccountPageComponent;
   let fixture: ComponentFixture<AccountPageComponent>;
+  let auth_adaptor: AuthenticationAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -44,12 +47,15 @@ describe('AccountPageComponent', () => {
         AccountPageComponent,
         AccountPreferencesComponent,
         UserDetailsComponent
-      ]
+      ],
+      providers: [AuthenticationAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AccountPageComponent);
     component = fixture.componentInstance;
-    component.user = READER_USER;
+    auth_adaptor = TestBed.get(AuthenticationAdaptor);
+    auth_adaptor.auth_state = { ...initial_state };
+    component.user = USER_READER;
     fixture.detectChanges();
   }));
 

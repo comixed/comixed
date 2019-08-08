@@ -56,6 +56,7 @@ import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtur
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('ComicFileListComponent', () => {
   let component: ComicFileListComponent;
@@ -93,7 +94,7 @@ describe('ComicFileListComponent', () => {
         ComicFileCoverUrlPipe,
         ComicCoverUrlPipe
       ],
-      providers: [ConfirmationService]
+      providers: [AuthenticationAdaptor, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListComponent);

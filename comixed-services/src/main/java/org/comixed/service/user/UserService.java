@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -190,5 +191,16 @@ public class UserService {
         record.setEmail(newEmail);
 
         return this.userRepository.save(record);
+    }
+
+    @Transactional
+    public ComiXedUser deleteUserProperty(final String email,
+                                          final String property) {
+        this.logger.debug("Deleting user property: email={} property={}",
+                          email,
+                          property);
+        final ComiXedUser user = this.userRepository.findByEmail(email);
+        user.deleteProperty(property);
+        return this.userRepository.save(user);
     }
 }

@@ -19,43 +19,39 @@
 
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from './app.state';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import * as UserActions from './actions/user.actions';
-import { User } from './models/user/user';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationState } from 'app/models/state/authentication-state';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  user: User;
   admin_subject = new Subject<boolean>();
 
-  constructor(private router: Router, private store: Store<AppState>) {
-    store.select('user').subscribe((user: User) => {
-      this.user = user;
-
-      if (
-        this.user.initialized &&
-        !this.user.authenticating &&
-        !this.user.fetching
-      ) {
-        this.admin_subject.next(this.user.is_admin);
+  constructor(
+    private router: Router,
+    private auth_adaptor: AuthenticationAdaptor
+  ) {
+    this.auth_adaptor.auth_state$.subscribe(
+      (auth_state: AuthenticationState) => {
+        this.admin_subject.next(
+          this.auth_adaptor.authenticated && this.auth_adaptor.is_admin
+        );
       }
-    });
+    );
   }
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     // if the user auth check hasn't completed, return a promise
-    if (this.user.initialized) {
-      if (this.user.authenticated) {
-        return this.user.is_admin;
+    if (this.auth_adaptor.initialized) {
+      if (this.auth_adaptor.authenticated) {
+        return this.auth_adaptor.is_admin;
       } else {
         this.router.navigate(['/home']);
         return false;
       }
     } else {
-      this.store.dispatch(new UserActions.UserAuthCheck());
+      this.auth_adaptor.get_current_user();
       return this.admin_subject;
     }
   }

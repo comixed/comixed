@@ -26,10 +26,15 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { LoginComponent } from './login.component';
 import { REDUCERS } from 'app/app.reducers';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
-xdescribe('LoginComponent', () => {
+describe('LoginComponent', () => {
+  const EMAIL = 'comixedadmin@localhost';
+  const PASSWORD = 'abc!123';
+
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let auth_adaptor: AuthenticationAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -42,15 +47,24 @@ xdescribe('LoginComponent', () => {
         ButtonModule
       ],
       declarations: [LoginComponent],
-      providers: [FormBuilder]
+      providers: [FormBuilder, AuthenticationAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    auth_adaptor = TestBed.get(AuthenticationAdaptor);
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('user submits the login form using the auth adaptor', () => {
+    spyOn(auth_adaptor, 'send_login_data');
+    component.email = EMAIL;
+    component.password = PASSWORD;
+    component.do_login();
+    expect(auth_adaptor.send_login_data).toHaveBeenCalledWith(EMAIL, PASSWORD);
   });
 });

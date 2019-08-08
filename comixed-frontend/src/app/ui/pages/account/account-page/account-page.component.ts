@@ -18,11 +18,10 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { User } from 'app/models/user/user';
+import { Subscription } from 'rxjs';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationState } from 'app/models/state/authentication-state';
+import { User } from 'app/models/user';
 
 @Component({
   selector: 'app-account-page',
@@ -30,21 +29,20 @@ import { User } from 'app/models/user/user';
   styleUrls: ['./account-page.component.css']
 })
 export class AccountPageComponent implements OnInit, OnDestroy {
-  private user$: Observable<User>;
-  private user_subscription: Subscription;
+  auth_state_subscription: Subscription;
   user: User;
 
-  constructor(private store: Store<AppState>) {
-    this.user$ = store.select('user');
-  }
+  constructor(private auth_adaptor: AuthenticationAdaptor) {}
 
   ngOnInit() {
-    this.user_subscription = this.user$.subscribe((user: User) => {
-      this.user = user;
-    });
+    this.auth_state_subscription = this.auth_adaptor.auth_state$.subscribe(
+      (auth_state: AuthenticationState) => {
+        this.user = auth_state.user;
+      }
+    );
   }
 
   ngOnDestroy() {
-    this.user_subscription.unsubscribe();
+    this.auth_state_subscription.unsubscribe();
   }
 }

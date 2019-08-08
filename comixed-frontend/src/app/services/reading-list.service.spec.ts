@@ -24,7 +24,7 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { ReadingList } from 'app/models/reading-list';
-import { READER_USER } from 'app/models/user/user.fixtures';
+import { USER_READER } from 'app/models/user.fixtures';
 import {
   CREATE_READING_LIST_URL,
   GET_READING_LISTS_URL,
@@ -38,7 +38,7 @@ describe('ReadingListService', () => {
   const LIST_SUMMARY = 'My reading list summary';
   const READING_LIST: ReadingList = {
     id: 72,
-    owner: READER_USER,
+    owner: USER_READER,
     name: LIST_NAME,
     summary: LIST_SUMMARY,
     entries: []

@@ -17,7 +17,6 @@
  * org.comixed;
  */
 
-import { User } from 'app/models/user/user';
 import { ImportState } from 'app/models/state/import-state';
 import { LibraryState } from 'app/models/state/library-state';
 import { LibraryFilter } from 'app/models/actions/library-filter';
@@ -28,9 +27,10 @@ import { Duplicates } from 'app/models/state/duplicates';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { SelectionState } from 'app/models/state/selection-state';
+import { AuthenticationState } from 'app/models/state/authentication-state';
 
 export interface AppState {
-  readonly user: User;
+  readonly auth_state: AuthenticationState;
   readonly import_state: ImportState;
   readonly library: LibraryState;
   readonly library_filter: LibraryFilter;

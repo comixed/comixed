@@ -28,8 +28,6 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as UserActions from 'app/actions/user.actions';
-import { READER_USER } from 'app/models/user/user.fixtures';
 import * as LibraryActions from 'app/actions/library.actions';
 import {
   COMIC_1000,
@@ -41,6 +39,7 @@ import { LoginComponent } from 'app/ui/components/login/login.component';
 import { AppComponent } from 'app/app.component';
 import { ConfirmDialogModule } from 'primeng/primeng';
 import { REDUCERS } from 'app/app.reducers';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -63,7 +62,12 @@ describe('AppComponent', () => {
         StoreModule.forRoot(REDUCERS)
       ],
       declarations: [AppComponent, MenubarComponent, LoginComponent],
-      providers: [TranslateService, MessageService, ConfirmationService]
+      providers: [
+        TranslateService,
+        MessageService,
+        ConfirmationService,
+        AuthenticationAdaptor
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -78,19 +82,6 @@ describe('AppComponent', () => {
   describe('on startup', () => {
     it('loads english as the default language', () => {
       expect(translate_service.getDefaultLang()).toBe('en');
-    });
-  });
-
-  describe('#ngOnInit()', () => {
-    it('subscribes to user updates', () => {
-      store.dispatch(new UserActions.UserLoaded({ user: READER_USER }));
-      expect(component.user.email).toEqual(READER_USER.email);
-    });
-
-    it('performs a user check', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new UserActions.UserAuthCheck()
-      );
     });
   });
 

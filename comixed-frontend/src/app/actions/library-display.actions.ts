@@ -18,7 +18,7 @@
  */
 
 import { Action } from '@ngrx/store';
-import { User } from 'app/models/user/user';
+import { User } from 'app/models/user';
 
 export const SET_LIBRARY_VIEW_LAYOUT = '[LIBRARY VIEW] Set layout';
 

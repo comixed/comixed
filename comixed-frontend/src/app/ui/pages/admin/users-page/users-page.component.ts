@@ -21,11 +21,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as UserAdminActions from 'app/actions/user-admin.actions';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserAdmin } from 'app/models/actions/user-admin';
-import { User } from 'app/models/user/user';
 import { ConfirmationService } from 'primeng/api';
+import { User } from 'app/models/user';
 
 @Component({
   selector: 'app-users-page',

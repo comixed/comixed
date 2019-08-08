@@ -33,8 +33,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicFile } from 'app/models/import/comic-file';
-import * as UserActions from 'app/actions/user.actions';
 import * as SelectionActions from 'app/actions/selection.actions';
+import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 
 @Component({
   selector: 'app-comic-file-list-toolbar',
@@ -57,6 +57,7 @@ export class ComicFileListToolbarComponent implements OnInit {
   rows_options: Array<SelectItem>;
 
   constructor(
+    private auth_adaptor: AuthenticationAdaptor,
     private store: Store<AppState>,
     private translate: TranslateService,
     private activated_route: ActivatedRoute,
@@ -109,12 +110,7 @@ export class ComicFileListToolbarComponent implements OnInit {
     this.store.dispatch(
       new ImportActions.ImportingSetDirectory({ directory: this.directory })
     );
-    this.store.dispatch(
-      new UserActions.UserSetPreference({
-        name: 'import.directory',
-        value: this.directory
-      })
-    );
+    this.auth_adaptor.set_preference('import.directory', this.directory);
     this.store.dispatch(
       new ImportActions.ImportingFetchFiles({ directory: this.directory })
     );

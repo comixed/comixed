@@ -5,18 +5,16 @@ import {
 } from 'app/reducers/selection.reducer';
 import {
   COMIC_1000,
-  COMIC_1001,
   COMIC_1002,
   COMIC_1004
 } from 'app/models/comics/comic.fixtures';
 import * as SelectionActions from 'app/actions/selection.actions';
-import { Comic } from 'app/models/comics/comic';
 import {
   EXISTING_COMIC_FILE_1,
   EXISTING_COMIC_FILE_2,
-  EXISTING_COMIC_FILE_3, EXISTING_COMIC_FILE_4
+  EXISTING_COMIC_FILE_3,
+  EXISTING_COMIC_FILE_4
 } from 'app/models/import/comic-file.fixtures';
-import { ComicFile } from 'app/models/import/comic-file';
 
 describe('selectionReducer', () => {
   const COMICS = [COMIC_1000, COMIC_1002, COMIC_1004];
