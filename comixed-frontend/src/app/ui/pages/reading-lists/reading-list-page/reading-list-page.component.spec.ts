@@ -60,6 +60,7 @@ import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-c
 import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -106,6 +107,7 @@ describe('ReadingListPageComponent', () => {
       ],
       providers: [
         AuthenticationAdaptor,
+        LibraryDisplayAdaptor,
         ConfirmationService,
         {
           provide: ActivatedRoute,

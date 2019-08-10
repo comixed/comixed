@@ -21,12 +21,9 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Comic } from 'app/models/comics/comic';
 import { LibraryFilter } from 'app/models/actions/library-filter';
-import { LibraryDisplay } from 'app/models/state/library-display';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
-import * as LibraryDisplayActions from 'app/actions/library-display.actions';
+import { Observable, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { MenuItem } from 'primeng/components/common/menuitem';
@@ -37,6 +34,7 @@ import { ReadingList } from 'app/models/reading-list';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 const FIRST = 'first';
 
@@ -53,10 +51,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
   @Input() library_filter: LibraryFilter;
   @Input() show_selections: boolean;
 
-  library_display$: Observable<LibraryDisplay>;
-  library_display_subscription: Subscription;
-  library_display: LibraryDisplay;
-
   reading_list_state$: Observable<ReadingListState>;
   reading_list_state_subscription: Subscription;
   reading_list_state: ReadingListState;
@@ -66,27 +60,40 @@ export class ComicListComponent implements OnInit, OnDestroy {
   protected additional_sort_field_options: Array<SelectItem>;
 
   index_of_first = 0;
-
+  layout: string;
+  sort_field: string;
+  rows: number;
+  same_height: boolean;
+  cover_size: number;
   context_menu: MenuItem[];
 
   constructor(
     private auth_adaptor: AuthenticationAdaptor,
+    private library_display_adaptor: LibraryDisplayAdaptor,
     private translate: TranslateService,
     private confirm: ConfirmationService,
     private store: Store<AppState>,
     private activated_route: ActivatedRoute,
     private router: Router
   ) {
-    this.library_display$ = this.store.select('library_display');
     this.reading_list_state$ = this.store.select('reading_lists');
+
+    this.library_display_adaptor.layout$.subscribe(
+      layout => (this.layout = layout)
+    );
+    this.library_display_adaptor.sort_field$.subscribe(
+      sort_field => (this.sort_field = sort_field)
+    );
+    this.library_display_adaptor.rows$.subscribe(rows => (this.rows = rows));
+    this.library_display_adaptor.same_height$.subscribe(
+      same_height => (this.same_height = same_height)
+    );
+    this.library_display_adaptor.cover_size$.subscribe(
+      cover_size => (this.cover_size = cover_size)
+    );
   }
 
   ngOnInit() {
-    this.library_display_subscription = this.library_display$.subscribe(
-      (library_display: LibraryDisplay) => {
-        this.library_display = library_display;
-      }
-    );
     this.load_additional_sort_field_options();
     this.activated_route.queryParams.subscribe((params: Params) => {
       if (params.first) {
@@ -105,7 +112,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.library_display_subscription.unsubscribe();
     this.translate_subscription.unsubscribe();
     this.reading_list_state_subscription.unsubscribe();
   }
@@ -156,27 +162,12 @@ export class ComicListComponent implements OnInit, OnDestroy {
 
   set_layout(dataview: any, layout: string): void {
     dataview.changeLayout(layout);
-    this.store.dispatch(
-      new LibraryDisplayActions.SetLibraryViewLayout({ layout: layout })
-    );
-    this.auth_adaptor.set_preference('library_display_layout', layout);
+    this.library_display_adaptor.set_layout(layout);
+    this.layout = layout;
   }
 
   set_index_of_first(index: number): void {
     this.index_of_first = index;
-    this.update_query_parameters(FIRST, `${index}`);
-  }
-
-  private update_query_parameters(name: string, value: string): void {
-    const queryParams: Params = Object.assign(
-      {},
-      this.activated_route.snapshot.queryParams
-    );
-    queryParams[name] = value;
-    this.router.navigate([], {
-      relativeTo: this.activated_route,
-      queryParams: queryParams
-    });
   }
 
   private load_context_menu() {

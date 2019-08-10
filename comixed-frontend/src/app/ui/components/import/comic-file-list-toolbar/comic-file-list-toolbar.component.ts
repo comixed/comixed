@@ -21,20 +21,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as ImportActions from 'app/actions/importing.actions';
-import {
-  COVER_SIZE,
-  LibraryDisplay,
-  ROWS,
-  SAME_HEIGHT,
-  SORT
-} from 'app/models/state/library-display';
-import * as DisplayActions from 'app/actions/library-display.actions';
-import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicFile } from 'app/models/import/comic-file';
 import * as SelectionActions from 'app/actions/selection.actions';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 @Component({
   selector: 'app-comic-file-list-toolbar',
@@ -42,7 +34,6 @@ import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
   styleUrls: ['./comic-file-list-toolbar.component.css']
 })
 export class ComicFileListToolbarComponent implements OnInit {
-  @Input() library_display: LibraryDisplay;
   @Input() busy: boolean;
   @Input() directory: string;
   @Input() comic_files: Array<ComicFile> = [];
@@ -56,55 +47,29 @@ export class ComicFileListToolbarComponent implements OnInit {
   sort_field_options: Array<SelectItem>;
   rows_options: Array<SelectItem>;
 
+  layout: string;
+  sort_field: string;
+  rows: number;
+  same_height: boolean;
+  cover_size: number;
+
   constructor(
     private auth_adaptor: AuthenticationAdaptor,
+    private library_display_adaptor: LibraryDisplayAdaptor,
     private store: Store<AppState>,
-    private translate: TranslateService,
-    private activated_route: ActivatedRoute,
-    private router: Router
+    private translate: TranslateService
   ) {
     this.load_layout_options();
     this.load_sort_field_options();
     this.load_rows_options();
+    this.layout = this.library_display_adaptor.get_layout();
+    this.sort_field = this.library_display_adaptor.get_sort_field();
+    this.rows = this.library_display_adaptor.get_display_rows();
+    this.same_height = this.library_display_adaptor.get_same_height();
+    this.cover_size = this.library_display_adaptor.get_cover_size();
   }
 
-  ngOnInit() {
-    this.activated_route.queryParams.subscribe((params: Params) => {
-      if (params.layout) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewLayout({ layout: params.layout })
-        );
-      }
-      if (params.sort) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryComicFileViewSort({
-            comic_file_sort_field: params.sort
-          })
-        );
-      }
-      if (params.rows) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewRows({
-            rows: parseInt(params.rows, 10)
-          })
-        );
-      }
-      if (params.cover_size) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewCoverSize({
-            cover_size: parseInt(params.cover_size, 10)
-          })
-        );
-      }
-      if (params.same_height) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewUseSameHeight({
-            same_height: parseInt(params.same_height, 10) === 0 ? false : true
-          })
-        );
-      }
-    });
-  }
+  ngOnInit() {}
 
   find_comics(): void {
     this.store.dispatch(
@@ -133,35 +98,28 @@ export class ComicFileListToolbarComponent implements OnInit {
   }
 
   set_sort_field(sort_field: string): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryComicFileViewSort({
-        comic_file_sort_field: sort_field
-      })
-    );
-    this.update_query_parameters(SORT, sort_field);
+    this.sort_field = sort_field;
+    this.library_display_adaptor.set_sort_field(sort_field, false);
   }
 
   set_rows(rows: number): void {
-    this.store.dispatch(new DisplayActions.SetLibraryViewRows({ rows: rows }));
-    this.update_query_parameters(ROWS, `${rows}`);
+    this.rows = rows;
+    this.library_display_adaptor.set_display_rows(rows);
   }
 
   set_same_height(same_height: boolean): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewUseSameHeight({
-        same_height: same_height
-      })
-    );
-    this.update_query_parameters(SAME_HEIGHT, `${same_height ? 1 : 0}`);
+    this.same_height = same_height;
+    this.library_display_adaptor.set_same_height(same_height);
   }
 
   set_cover_size(cover_size: number): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewCoverSize({
-        cover_size: cover_size
-      })
-    );
-    this.update_query_parameters(COVER_SIZE, `${cover_size}`);
+    this.cover_size = cover_size;
+    this.library_display_adaptor.set_cover_size(cover_size, false);
+  }
+
+  save_cover_size(cover_size: number): void {
+    this.cover_size = cover_size;
+    this.library_display_adaptor.set_cover_size(cover_size);
   }
 
   private load_layout_options(): void {
@@ -225,17 +183,5 @@ export class ComicFileListToolbarComponent implements OnInit {
         value: 100
       }
     ];
-  }
-
-  private update_query_parameters(name: string, value: string): void {
-    const queryParams: Params = Object.assign(
-      {},
-      this.activated_route.snapshot.queryParams
-    );
-    queryParams[name] = value;
-    this.router.navigate([], {
-      relativeTo: this.activated_route,
-      queryParams: queryParams
-    });
   }
 }

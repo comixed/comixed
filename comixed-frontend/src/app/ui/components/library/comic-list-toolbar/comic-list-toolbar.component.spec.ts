@@ -42,13 +42,13 @@ import { LibraryFilterComponent } from 'app/ui/components/library/library-filter
 import { ComicDetailsEditorComponent } from 'app/ui/components/comic/comic-details-editor/comic-details-editor.component';
 import { VolumeListComponent } from 'app/ui/components/scraping/volume-list/volume-list.component';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { DEFAULT_LIBRARY_FILTER } from 'app/models/actions/library-filter.fixtures';
 import { ComicListToolbarComponent } from './comic-list-toolbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;
@@ -88,12 +88,11 @@ describe('ComicListToolbarComponent', () => {
         ComicCoverUrlPipe,
         ScrapingIssueTitlePipe
       ],
-      providers: [AuthenticationAdaptor]
+      providers: [AuthenticationAdaptor, LibraryDisplayAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicListToolbarComponent);
     component = fixture.componentInstance;
-    component.library_display = DEFAULT_LIBRARY_DISPLAY;
     component.library_filter = DEFAULT_LIBRARY_FILTER;
     fixture.detectChanges();
   }));

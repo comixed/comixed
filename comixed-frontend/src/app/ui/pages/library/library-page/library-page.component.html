@@ -1,4 +1,4 @@
-<app-comic-list *ngIf="library"
-                [comics]="comics | library_filter: library_filter"
-                [selected_comics]="selected_comics"
-                [library_filter]="library_filter"></app-comic-list>
+<app-comic-list *ngIf='library'
+                [comics]='comics|library_filter:library_filter'
+                [library_filter]='library_filter'
+                [selected_comics]='selected_comics'></app-comic-list>

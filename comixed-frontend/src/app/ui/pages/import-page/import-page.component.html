@@ -7,10 +7,9 @@
 <div *ngIf="library.library_contents.import_count === 0"
      id="comic-file-list-container"
 >
-    <app-comic-file-list id="comic-file-list"
-                         [library_display]="library_display"
-                         [directory]="user | user_preference: 'import.directory'"
+    <app-comic-file-list [busy]="import_state?.busy"
                          [comic_files]="comic_files"
+                         [directory]="user | user_preference: 'import.directory'"
                          [selected_comic_files]="selected_comic_files"
-                         [busy]="import_state?.busy"></app-comic-file-list>
+                         id="comic-file-list"></app-comic-file-list>
 </div>

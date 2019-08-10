@@ -23,16 +23,15 @@ import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as DisplayActions from 'app/actions/library-display.actions';
 import { LibraryFilter } from 'app/models/actions/library-filter';
-import {
-  COVER_SIZE,
-  LibraryDisplay,
-  ROWS,
-  SAME_HEIGHT,
-  SORT
-} from 'app/models/state/library-display';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import {
+  COVER_SIZE_QUERY_PARAM,
+  LibraryDisplayAdaptor,
+  ROWS_QUERY_PARAM,
+  SAME_HEIGHT_QUERY_PARAM,
+  SORT_QUERY_PARAM
+} from 'app/adaptors/library-display.adaptor';
 
 @Component({
   selector: 'app-comic-list-toolbar',
@@ -40,7 +39,6 @@ import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
   styleUrls: ['./comic-list-toolbar.component.css']
 })
 export class ComicListToolbarComponent implements OnInit {
-  @Input() library_display: LibraryDisplay;
   @Input() library_filter: LibraryFilter;
   @Input() additional_sort_field_options: Array<SelectItem>;
 
@@ -50,52 +48,39 @@ export class ComicListToolbarComponent implements OnInit {
   sort_field_options: Array<SelectItem>;
   rows_options: Array<SelectItem>;
 
+  layout: string;
+  sort_field: string;
+  rows: number;
+  same_height: boolean;
+  cover_size: number;
+
   constructor(
     private auth_adaptor: AuthenticationAdaptor,
+    private library_display_adaptor: LibraryDisplayAdaptor,
     private store: Store<AppState>,
     private translate: TranslateService,
     private activated_route: ActivatedRoute,
     private router: Router
-  ) {}
-
-  ngOnInit() {
+  ) {
     this.load_layout_options();
     this.load_sort_field_options();
     this.load_rows_options();
-    this.activated_route.queryParams.subscribe((params: Params) => {
-      if (params.layout) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewLayout({ layout: params.layout })
-        );
-      }
-      if (params.sort) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewSort({ sort_field: params.sort })
-        );
-      }
-      if (params.rows) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewRows({
-            rows: parseInt(params.rows, 10)
-          })
-        );
-      }
-      if (params.cover_size) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewCoverSize({
-            cover_size: parseInt(params.cover_size, 10)
-          })
-        );
-      }
-      if (params.same_height) {
-        this.store.dispatch(
-          new DisplayActions.SetLibraryViewUseSameHeight({
-            same_height: parseInt(params.same_height, 10) === 0 ? false : true
-          })
-        );
-      }
+    this.library_display_adaptor.layout$.subscribe(layout => {
+      this.layout = layout;
     });
+    this.library_display_adaptor.sort_field$.subscribe(
+      sort_field => (this.sort_field = sort_field)
+    );
+    this.library_display_adaptor.rows$.subscribe(rows => (this.rows = rows));
+    this.library_display_adaptor.same_height$.subscribe(
+      same_height => (this.same_height = same_height)
+    );
+    this.library_display_adaptor.cover_size$.subscribe(
+      cover_size => (this.cover_size = cover_size)
+    );
   }
+
+  ngOnInit() {}
 
   private load_layout_options(): void {
     this.layout_options = [
@@ -185,55 +170,27 @@ export class ComicListToolbarComponent implements OnInit {
   }
 
   set_sort_field(sort_field: string): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewSort({ sort_field: sort_field })
-    );
-    this.auth_adaptor.set_preference('library_display_sort_field', sort_field);
-    this.update_query_parameters(SORT, sort_field);
+    this.sort_field = sort_field;
+    this.library_display_adaptor.set_sort_field(sort_field, false);
   }
 
   set_rows(rows: number): void {
-    this.store.dispatch(new DisplayActions.SetLibraryViewRows({ rows: rows }));
-    this.auth_adaptor.set_preference('library_display_rows', `${rows}`);
-    this.update_query_parameters(ROWS, `${rows}`);
+    this.rows = rows;
+    this.library_display_adaptor.set_display_rows(rows);
   }
 
   set_same_height(same_height: boolean): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewUseSameHeight({
-        same_height: same_height
-      })
-    );
-    this.auth_adaptor.set_preference(
-      'library_display_same_height',
-      same_height ? '1' : '0'
-    );
-    this.update_query_parameters(SAME_HEIGHT, same_height ? '1' : '0');
+    this.same_height = same_height;
+    this.library_display_adaptor.set_same_height(same_height);
   }
 
   set_cover_size(cover_size: number): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewCoverSize({ cover_size: cover_size })
-    );
+    this.cover_size = cover_size;
+    this.library_display_adaptor.set_cover_size(cover_size, false);
   }
 
   save_cover_size(cover_size: number): void {
-    this.auth_adaptor.set_preference(
-      'library_display_cover_size',
-      `${cover_size}`
-    );
-    this.update_query_parameters(COVER_SIZE, `${cover_size}`);
-  }
-
-  private update_query_parameters(name: string, value: string): void {
-    const queryParams: Params = Object.assign(
-      {},
-      this.activated_route.snapshot.queryParams
-    );
-    queryParams[name] = value;
-    this.router.navigate([], {
-      relativeTo: this.activated_route,
-      queryParams: queryParams
-    });
+    this.cover_size = cover_size;
+    this.library_display_adaptor.set_cover_size(cover_size);
   }
 }

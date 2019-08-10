@@ -54,13 +54,13 @@ import {
   COMIC_1002,
   COMIC_1004
 } from 'app/models/comics/comic.fixtures';
-import * as DisplayActions from 'app/actions/library-display.actions';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Routes } from '@angular/router/src/config';
 import { BehaviorSubject } from 'rxjs';
 import * as LibraryActions from 'app/actions/library.actions';
 import * as SelectionActions from 'app/actions/selection.actions';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1000, COMIC_1002, COMIC_1004];
@@ -69,6 +69,7 @@ describe('ComicListComponent', () => {
   let component: ComicListComponent;
   let fixture: ComponentFixture<ComicListComponent>;
   let auth_adaptor: AuthenticationAdaptor;
+  let library_display_adaptor: LibraryDisplayAdaptor;
   let store: Store<AppState>;
   let translate: TranslateService;
   let router: Router;
@@ -108,6 +109,7 @@ describe('ComicListComponent', () => {
       ],
       providers: [
         AuthenticationAdaptor,
+        LibraryDisplayAdaptor,
         ConfirmationService,
         {
           provide: ActivatedRoute,
@@ -123,6 +125,7 @@ describe('ComicListComponent', () => {
     component = fixture.componentInstance;
     auth_adaptor = TestBed.get(AuthenticationAdaptor);
     spyOn(auth_adaptor, 'set_preference');
+    library_display_adaptor = TestBed.get(LibraryDisplayAdaptor);
     store = TestBed.get(Store);
     translate = TestBed.get(TranslateService);
     router = TestBed.get(Router);
@@ -193,6 +196,7 @@ describe('ComicListComponent', () => {
     beforeEach(() => {
       spyOn(store, 'dispatch');
       spyOn(dataview, 'changeLayout');
+      spyOn(library_display_adaptor, 'set_layout');
       component.set_layout(dataview, 'LIST');
     });
 
@@ -201,16 +205,7 @@ describe('ComicListComponent', () => {
     });
 
     it('updates the library view state', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new DisplayActions.SetLibraryViewLayout({ layout: 'LIST' })
-      );
-    });
-
-    it('updates the user preferences state', () => {
-      expect(auth_adaptor.set_preference).toHaveBeenCalledWith(
-        'library_display_layout',
-        'LIST'
-      );
+      expect(library_display_adaptor.set_layout).toHaveBeenCalledWith('LIST');
     });
   });
 
@@ -234,10 +229,6 @@ describe('ComicListComponent', () => {
 
     it('updates the index', () => {
       expect(component.index_of_first).toEqual(17);
-    });
-
-    it('updates the query parameters', () => {
-      expect(router.navigate).toHaveBeenCalled();
     });
   });
 

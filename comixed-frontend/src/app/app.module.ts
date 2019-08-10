@@ -147,6 +147,7 @@ import { UserPreferencePipe } from './pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from './ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationEffects } from 'app/effects/authentication.effects';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 @NgModule({
   declarations: [
@@ -278,6 +279,7 @@ import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
   ],
   providers: [
     AuthenticationAdaptor,
+    LibraryDisplayAdaptor,
     UserService,
     ComicService,
     ReadingListService,

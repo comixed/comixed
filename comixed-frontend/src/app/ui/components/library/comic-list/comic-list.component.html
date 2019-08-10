@@ -1,38 +1,36 @@
-<p-contextMenu [target]='comicListContainer'
-               [model]='context_menu'></p-contextMenu>
+<p-contextMenu [model]='context_menu'
+               [target]='comicListContainer'></p-contextMenu>
 <div #comicListContainer>
     <p-dataView #dataview
-                *ngIf='library_display'
-                [value]='comics'
-                [sortField]='library_display.sort_field'
-                [paginator]='true'
-                [rows]='library_display.rows'
-                paginatorPosition='both'
+                (onPage)='set_index_of_first($event.first)'
                 [alwaysShowPaginator]='true'
-                [layout]='library_display.layout'
                 [first]='index_of_first'
-                (onPage)='set_index_of_first($event.first)'>
+                [layout]='layout'
+                [paginator]='true'
+                [rows]='rows'
+                [sortField]='sort_field'
+                [value]='comics'
+                paginatorPosition='both'>
         <p-header>
             <div class='ui-helper-clearfix'>
-                <app-comic-list-toolbar [library_display]='library_display'
-                                        [library_filter]='library_filter'
-                                        (changeLayout)='set_layout(dataview, $event)'
-                                        (showSelections)='show_selections = true'></app-comic-list-toolbar>
+                <app-comic-list-toolbar (changeLayout)='set_layout(dataview, $event)'
+                                        (showSelections)='show_selections = true'
+                                        [library_filter]='library_filter'></app-comic-list-toolbar>
             </div>
         </p-header>
         <ng-template let-comic
                      pTemplate='listItem'>
             <app-comic-list-item [comic]='comic'
-                                 [selected]='selected_comics.includes(comic)'
-                                 [same_height]='library_display.same_height'
-                                 [cover_size]='library_display.cover_size'></app-comic-list-item>
+                                 [cover_size]='cover_size'
+                                 [same_height]='same_height'
+                                 [selected]='selected_comics.includes(comic)'></app-comic-list-item>
         </ng-template>
         <ng-template let-comic
                      pTemplate='gridItem'>
             <app-comic-grid-item [comic]='comic'
-                                 [selected]='selected_comics.includes(comic)'
-                                 [same_height]='library_display.same_height'
-                                 [cover_size]='library_display.cover_size'></app-comic-grid-item>
+                                 [cover_size]='cover_size'
+                                 [same_height]='same_height'
+                                 [selected]='selected_comics.includes(comic)'></app-comic-grid-item>
         </ng-template>
     </p-dataView>
 </div>

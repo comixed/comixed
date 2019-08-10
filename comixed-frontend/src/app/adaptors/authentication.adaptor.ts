@@ -31,19 +31,34 @@ export class AuthenticationAdaptor {
   auth_state$: Observable<AuthenticationState>;
   auth_state: AuthenticationState;
 
-  authenticated$ = new BehaviorSubject<boolean>(false);
-  user$ = new BehaviorSubject<User>(null);
-  role$ = new BehaviorSubject<Roles>({ is_admin: false, is_reader: false });
+  _authenticated$ = new BehaviorSubject<boolean>(false);
+  _user$ = new BehaviorSubject<User>(null);
+  _role$ = new BehaviorSubject<Roles>({
+    is_admin: false,
+    is_reader: false
+  });
 
   constructor(private store: Store<AppState>) {
     this.auth_state$ = this.store.select('auth_state');
 
     this.auth_state$.subscribe((auth_state: AuthenticationState) => {
       this.auth_state = auth_state;
-      this.authenticated$.next(this.auth_state.authenticated);
-      this.user$.next(this.auth_state.user);
-      this.role$.next({ is_reader: this.is_reader, is_admin: this.is_admin });
+      this._authenticated$.next(this.auth_state.authenticated);
+      this._user$.next(this.auth_state.user);
+      this._role$.next({ is_reader: this.is_reader, is_admin: this.is_admin });
     });
+  }
+
+  get authenticated$(): Observable<boolean> {
+    return this._authenticated$.asObservable();
+  }
+
+  get user$(): Observable<User> {
+    return this._user$.asObservable();
+  }
+
+  get role$(): Observable<Roles> {
+    return this._role$.asObservable();
   }
 
   get_current_user(): void {

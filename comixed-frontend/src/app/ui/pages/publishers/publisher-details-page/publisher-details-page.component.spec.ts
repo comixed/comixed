@@ -52,6 +52,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('PublisherDetailsPageComponent', () => {
   const COMIC = COMIC_1000;
@@ -81,7 +82,11 @@ describe('PublisherDetailsPageComponent', () => {
         ConfirmDialogModule,
         ContextMenuModule
       ],
-      providers: [AuthenticationAdaptor, ConfirmationService],
+      providers: [
+        AuthenticationAdaptor,
+        LibraryDisplayAdaptor,
+        ConfirmationService
+      ],
       declarations: [
         PublisherDetailsPageComponent,
         LibraryFilterComponent,

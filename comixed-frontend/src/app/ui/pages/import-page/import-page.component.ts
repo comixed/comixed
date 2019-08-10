@@ -21,8 +21,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ImportState } from 'app/models/state/import-state';
 import { LibraryState } from 'app/models/state/library-state';
 import * as ImportingActions from 'app/actions/importing.actions';
@@ -35,7 +34,6 @@ import {
   IMPORT_ROWS,
   IMPORT_SORT
 } from 'app/models/preferences.constants';
-import { LibraryDisplay } from 'app/models/state/library-display';
 import { SelectionState } from 'app/models/state/selection-state';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 import { User } from 'app/models/user';
@@ -58,10 +56,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   library$: Observable<LibraryState>;
   library_subscription: Subscription;
   library: LibraryState;
-
-  library_display$: Observable<LibraryDisplay>;
-  library_display_subscription: Subscription;
-  library_display: LibraryDisplay;
 
   import_state$: Observable<ImportState>;
   import_state_subscription: Subscription;
@@ -95,7 +89,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     private store: Store<AppState>
   ) {
     this.library$ = store.select('library');
-    this.library_display$ = store.select('library_display');
     this.import_state$ = store.select('import_state');
     this.selection_state$ = store.select('selections');
     activatedRoute.queryParams.subscribe(params => {
@@ -157,11 +150,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     this.library_subscription = this.library$.subscribe(
       (library: LibraryState) => {
         this.library = library;
-      }
-    );
-    this.library_display_subscription = this.library_display$.subscribe(
-      (library_display: LibraryDisplay) => {
-        this.library_display = library_display;
       }
     );
     this.import_state_subscription = this.import_state$.subscribe(

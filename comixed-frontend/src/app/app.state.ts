@@ -20,7 +20,6 @@
 import { ImportState } from 'app/models/state/import-state';
 import { LibraryState } from 'app/models/state/library-state';
 import { LibraryFilter } from 'app/models/actions/library-filter';
-import { LibraryDisplay } from 'app/models/state/library-display';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import { Duplicates } from 'app/models/state/duplicates';
@@ -34,7 +33,6 @@ export interface AppState {
   readonly import_state: ImportState;
   readonly library: LibraryState;
   readonly library_filter: LibraryFilter;
-  readonly library_display: LibraryDisplay;
   readonly single_comic_scraping: SingleComicScraping;
   readonly multiple_comic_scraping: MultipleComicsScraping;
   readonly duplicates: Duplicates;

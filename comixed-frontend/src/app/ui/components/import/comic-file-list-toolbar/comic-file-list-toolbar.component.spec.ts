@@ -35,9 +35,9 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 
@@ -63,12 +63,11 @@ describe('ComicFileListToolbarComponent', () => {
         SliderModule
       ],
       declarations: [ComicFileListToolbarComponent],
-      providers: [AuthenticationAdaptor]
+      providers: [AuthenticationAdaptor, LibraryDisplayAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListToolbarComponent);
     component = fixture.componentInstance;
-    component.library_display = DEFAULT_LIBRARY_DISPLAY;
     component.busy = false;
     component.directory = '';
     store = TestBed.get(Store);

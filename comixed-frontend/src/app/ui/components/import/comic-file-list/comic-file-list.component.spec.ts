@@ -52,11 +52,11 @@ import {
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppState } from 'app/app.state';
-import { DEFAULT_LIBRARY_DISPLAY } from 'app/models/state/library-display.fixtures';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('ComicFileListComponent', () => {
   let component: ComicFileListComponent;
@@ -94,7 +94,11 @@ describe('ComicFileListComponent', () => {
         ComicFileCoverUrlPipe,
         ComicCoverUrlPipe
       ],
-      providers: [AuthenticationAdaptor, ConfirmationService]
+      providers: [
+        AuthenticationAdaptor,
+        LibraryDisplayAdaptor,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListComponent);
@@ -102,7 +106,6 @@ describe('ComicFileListComponent', () => {
     component.comic_files = [];
     component.selected_comic_files = [];
     component.busy = false;
-    component.library_display = DEFAULT_LIBRARY_DISPLAY;
     store = TestBed.get(Store);
 
     fixture.detectChanges();

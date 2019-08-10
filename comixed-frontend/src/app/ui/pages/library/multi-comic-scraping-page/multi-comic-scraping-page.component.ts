@@ -20,11 +20,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { LibraryState } from 'app/models/state/library-state';
-import { LibraryDisplay } from 'app/models/state/library-display';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import { SelectionState } from 'app/models/state/selection-state';
 import * as SelectionActions from 'app/actions/selection.actions';
@@ -39,10 +37,6 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
   library_subscription: Subscription;
   library: LibraryState;
 
-  library_display$: Observable<LibraryDisplay>;
-  library_display_subscription: Subscription;
-  library_display: LibraryDisplay;
-
   scraping$: Observable<MultipleComicsScraping>;
   scraping_subscription: Subscription;
   scraping: MultipleComicsScraping;
@@ -53,7 +47,6 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>) {
     this.library$ = this.store.select('library');
-    this.library_display$ = this.store.select('library_display');
     this.scraping$ = this.store.select('multiple_comic_scraping');
     this.selection_state$ = this.store.select('selections');
   }
@@ -62,11 +55,6 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
     this.library_subscription = this.library$.subscribe(
       (library: LibraryState) => {
         this.library = library;
-      }
-    );
-    this.library_display_subscription = this.library_display$.subscribe(
-      (library_display: LibraryDisplay) => {
-        this.library_display = library_display;
       }
     );
     this.scraping_subscription = this.scraping$.subscribe(
@@ -83,7 +71,6 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.library_subscription.unsubscribe();
-    this.library_display_subscription.unsubscribe();
     this.scraping_subscription.unsubscribe();
     this.selection_state_subscription.unsubscribe();
   }

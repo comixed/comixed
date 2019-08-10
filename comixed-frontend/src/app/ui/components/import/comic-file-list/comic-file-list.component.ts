@@ -19,15 +19,14 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComicFile } from 'app/models/import/comic-file';
-import { LibraryDisplay } from 'app/models/state/library-display';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import * as ImportActions from 'app/actions/importing.actions';
-import * as DisplayActions from 'app/actions/library-display.actions';
 import * as SelectionActions from 'app/actions/selection.actions';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 @Component({
   selector: 'app-comic-file-list',
@@ -36,11 +35,16 @@ import * as SelectionActions from 'app/actions/selection.actions';
 })
 export class ComicFileListComponent implements OnInit, OnDestroy {
   @Input() busy: boolean;
-  @Input() library_display: LibraryDisplay;
   @Input() directory: string;
 
   _comic_files: Array<ComicFile> = [];
   _selected_comic_files: Array<ComicFile> = [];
+
+  layout: string;
+  sort_field: string;
+  rows: number;
+  same_height: boolean;
+  cover_size: number;
 
   translate_subscription: Subscription;
   context_menu: MenuItem[];
@@ -48,10 +52,25 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   show_selections = false;
 
   constructor(
+    private library_display_adaptor: LibraryDisplayAdaptor,
     private store: Store<AppState>,
     private translate: TranslateService,
     private confirmation: ConfirmationService
-  ) {}
+  ) {
+    this.library_display_adaptor.layout$.subscribe(
+      layout => (this.layout = layout)
+    );
+    this.library_display_adaptor.sort_field$.subscribe(
+      sort_field => (this.sort_field = sort_field)
+    );
+    this.library_display_adaptor.rows$.subscribe(rows => (this.rows = rows));
+    this.library_display_adaptor.same_height$.subscribe(
+      same_height => (this.same_height = same_height)
+    );
+    this.library_display_adaptor.cover_size$.subscribe(
+      cover_size => (this.cover_size = cover_size)
+    );
+  }
 
   ngOnInit() {
     this.translate_subscription = this.translate.onLangChange.subscribe(() => {
@@ -164,8 +183,6 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   }
 
   change_layout(layout: string): void {
-    this.store.dispatch(
-      new DisplayActions.SetLibraryViewLayout({ layout: layout })
-    );
+    this.library_display_adaptor.set_layout(layout);
   }
 }

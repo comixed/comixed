@@ -34,7 +34,7 @@ describe('authenticationReducer', () => {
   let state: AuthenticationState;
 
   beforeEach(() => {
-    state = initial_state;
+    state = { ...initial_state };
   });
 
   describe('the default state', () => {

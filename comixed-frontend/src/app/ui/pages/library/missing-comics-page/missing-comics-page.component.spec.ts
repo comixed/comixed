@@ -24,7 +24,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppState } from 'app/app.state';
 import * as LibraryActions from 'app/actions/library.actions';
-import * as DisplayActions from 'app/actions/library-display.actions';
 import { COMIC_1000, COMIC_1002 } from 'app/models/comics/comic.fixtures';
 import { MissingComicsPipe } from 'app/pipes/missing-comics.pipe';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
@@ -55,6 +54,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -94,7 +94,11 @@ describe('MissingComicsPageComponent', () => {
         ComicTitlePipe,
         ComicCoverComponent
       ],
-      providers: [AuthenticationAdaptor, ConfirmationService]
+      providers: [
+        AuthenticationAdaptor,
+        LibraryDisplayAdaptor,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MissingComicsPageComponent);
@@ -124,11 +128,5 @@ describe('MissingComicsPageComponent', () => {
     );
     fixture.detectChanges();
     expect(component.comics).toEqual(COMICS);
-  });
-
-  it('is subscribed to library display changes', () => {
-    store.dispatch(new DisplayActions.SetLibraryViewRows({ rows: 25 }));
-    fixture.detectChanges();
-    expect(component.library_display.rows).toEqual(25);
   });
 });

@@ -58,6 +58,7 @@ import { LibraryPageComponent } from './library-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { ContextMenuModule } from 'primeng/primeng';
 import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1000;
@@ -101,6 +102,7 @@ describe('LibraryPageComponent', () => {
       ],
       providers: [
         AuthenticationAdaptor,
+        LibraryDisplayAdaptor,
         ConfirmationService,
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
