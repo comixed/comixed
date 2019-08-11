@@ -37,5 +37,10 @@
       <artifactId>comixed-scrapers</artifactId>
       <version>${comixed.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.comixed</groupId>
+      <artifactId>comixed-plugins</artifactId>
+      <version>${comixed.version}</version>
+    </dependency>
   </dependencies>
 </project>
