@@ -206,6 +206,7 @@
     <module>comixed-tasks</module>
     <module>comixed-services</module>
     <module>comixed-scrapers</module>
+    <module>comixed-plugins</module>
     <module>comixed-rest-api</module>
     <module>comixed-frontend</module>
     <module>comixed-app</module>
