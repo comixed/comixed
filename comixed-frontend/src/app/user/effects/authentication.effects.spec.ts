@@ -17,20 +17,20 @@
  * org.comixed;
  */
 
-import { AuthenticationEffects } from 'app/effects/authentication.effects';
-import { AuthenticationService } from 'app/services/authentication.service';
-import { Observable, of, throwError } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { USER_READER } from 'app/models/user.fixtures';
-import * as AuthActions from 'app/actions/authentication.actions';
-import { cold, hot } from 'jasmine-marbles';
+import { Observable, of, throwError } from 'rxjs';
+import * as AuthActions from 'app/user/actions/authentication.actions';
+import { AuthenticationEffects } from './authentication.effects';
+import { AuthenticationService } from 'app/user/services/authentication.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import { TokenStorage } from 'app/storage/token.storage';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { cold, hot } from 'jasmine-marbles';
 import objectContaining = jasmine.objectContaining;
+import { USER_READER } from 'app/user';
+import { TokenService } from 'app/user/services/token.service';
 
 describe('AuthenticationEffects', () => {
   const USER = USER_READER;
@@ -43,7 +43,7 @@ describe('AuthenticationEffects', () => {
   let auth_effects: AuthenticationEffects;
   let auth_service: jasmine.SpyObj<AuthenticationService>;
   let router: Router;
-  let token_storage: TokenStorage;
+  let token_service: TokenService;
   let translate_service: TranslateService;
   let message_service: MessageService;
   let actions: Observable<any>;
@@ -71,16 +71,16 @@ describe('AuthenticationEffects', () => {
             )
           }
         },
-        TokenStorage,
+        TokenService,
         MessageService
       ]
     });
 
     auth_effects = TestBed.get(AuthenticationEffects);
     auth_service = TestBed.get(AuthenticationService);
-    token_storage = TestBed.get(TokenStorage);
-    spyOn(token_storage, 'save_token');
-    spyOn(token_storage, 'sign_out');
+    token_service = TestBed.get(TokenService);
+    spyOn(token_service, 'save_token');
+    spyOn(token_service, 'sign_out');
     translate_service = TestBed.get(TranslateService);
     message_service = TestBed.get(MessageService);
     spyOn(message_service, 'add');
@@ -88,7 +88,7 @@ describe('AuthenticationEffects', () => {
     spyOn(router, 'navigate');
   });
 
-  it('should create an instance', () => {
+  it('should be created', () => {
     expect(auth_effects).toBeTruthy();
   });
 

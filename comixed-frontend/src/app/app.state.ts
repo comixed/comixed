@@ -26,7 +26,7 @@ import { Duplicates } from 'app/models/state/duplicates';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { SelectionState } from 'app/models/state/selection-state';
-import { AuthenticationState } from 'app/models/state/authentication-state';
+import { AuthenticationState } from 'app/user';
 
 export interface AppState {
   readonly auth_state: AuthenticationState;

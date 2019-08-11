@@ -28,7 +28,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserDetailsEditorComponent } from 'app/ui/components/admin/user-details-editor/user-details-editor.component';
 import { UsersPageComponent } from './users-page.component';
 import { REDUCERS } from 'app/app.reducers';
@@ -52,7 +52,7 @@ describe('UsersPageComponent', () => {
         ToggleButtonModule
       ],
       declarations: [UsersPageComponent, UserDetailsEditorComponent],
-      providers: [ConfirmationService]
+      providers: [ConfirmationService, MessageService]
     }).compileComponents();
   }));
 

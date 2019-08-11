@@ -39,7 +39,13 @@ import { LoginComponent } from 'app/ui/components/login/login.component';
 import { AppComponent } from 'app/app.component';
 import { ConfirmDialogModule } from 'primeng/primeng';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
+import { UserModule } from 'app/user/user.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -50,7 +56,9 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserModule,
         RouterTestingModule,
+        HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
         MenubarModule,
@@ -59,14 +67,17 @@ describe('AppComponent', () => {
         DialogModule,
         ConfirmDialogModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS)
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS)
       ],
       declarations: [AppComponent, MenubarComponent, LoginComponent],
       providers: [
         TranslateService,
         MessageService,
         ConfirmationService,
-        AuthenticationAdaptor
+        AuthenticationAdaptor,
+        ComicService,
+        UserService
       ]
     }).compileComponents();
 
@@ -99,7 +110,7 @@ describe('AppComponent', () => {
       fixture.detectChanges();
     });
 
-    it('updates the comics', () => {
+    it('refreshes the comics', () => {
       expect(component.library.comics).toEqual([
         COMIC_1000,
         COMIC_1001,

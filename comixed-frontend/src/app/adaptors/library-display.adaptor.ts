@@ -18,8 +18,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { User } from 'app/models/user';
+import { AuthenticationAdaptor } from 'app/user';
+import { User } from 'app/user';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 

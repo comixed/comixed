@@ -53,7 +53,7 @@ import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-c
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('MissingComicsPageComponent', () => {

@@ -302,6 +302,21 @@
   resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-7.0.0.tgz#57ea3a42ed970b748e78292e54fe02a768027b05"
   integrity sha512-lhwt+UMDPYuxeTQ5vBw/MuKrIroHvQ6cLy0nGvNl8oPxakI2Jz/NAPuTYd+AdV/6ao9M9+kxXhQRFkAV53EEjA==
 
+"@ngrx/router-store@^8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/router-store/-/router-store-8.2.0.tgz#c379f68fb0d9cafb1432434227e1ab90e243d3a8"
+  integrity sha512-WkSeutjx44V1jKAa9N6LNVJk7seS4dpKC09OpnDNipu7ssIhEtW8QXplJ2t5VIU+JknAzWZOk5IYqhfxHjJnNA==
+
+"@ngrx/schematics@^8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/schematics/-/schematics-8.2.0.tgz#c4e57d7a198278a87e019f4a80d7d677bc0907df"
+  integrity sha512-e/S7dOwPJqv5My/LDkAp77JgEsd7No659ZtjCtRV+o2nqWF3BWmWDolIhhaxWUyu2CdXuTTtqLr0Sqgwl+iwWg==
+
+"@ngrx/store-devtools@^8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-8.2.0.tgz#32a29f20ee53da64bead63a84cf27b5d12d2d9a1"
+  integrity sha512-zNz9B641Jz8cGqaO6M7myXLkYDEUrdnLipzHuvn/dxbswxJrcaWsGUbb+5cCXCzbcoy2c8DKEHouFqPwKX86WQ==
+
 "@ngrx/store@7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-7.0.0.tgz#5472000197c2a388b09afceb2d062cb37b03d334"

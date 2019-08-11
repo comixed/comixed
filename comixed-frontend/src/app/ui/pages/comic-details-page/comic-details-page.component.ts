@@ -28,8 +28,8 @@ import { LibraryState } from 'app/models/state/library-state';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { ComicService } from 'app/services/comic.service';
 import { Comic } from 'app/models/comics/comic';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { AuthenticationState } from 'app/models/state/authentication-state';
+import { AuthenticationAdaptor } from 'app/user';
+import { AuthenticationState } from 'app/user/models/authentication-state';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -77,10 +77,8 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.auth_subscription = this.auth_adaptor.auth_state$.subscribe(
-      (auth_state: AuthenticationState) => {
-        this.is_admin = this.auth_adaptor.is_admin;
-      }
+    this.auth_subscription = this.auth_adaptor.role$.subscribe(
+      roles => (this.is_admin = roles.is_admin)
     );
     this.library_subscription = this.library$.subscribe(
       (library: LibraryState) => {

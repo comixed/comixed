@@ -26,7 +26,7 @@ import * as UserAdminActions from 'app/actions/user-admin.actions';
 import { MessageService } from 'primeng/api';
 import { UserService } from 'app/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
-import { User } from 'app/models/user';
+import { User } from 'app/user';
 
 @Injectable()
 export class UserAdminEffects {

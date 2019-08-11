@@ -18,100 +18,103 @@
  */
 
 import { Action } from '@ngrx/store';
-import { User } from 'app/models/user';
+import { User } from 'app/user';
 
-export const AUTH_CHECK_STATE = '[AUTH] Check authentication state';
+export enum AuthenticationActionTypes {
+  AUTH_CHECK_STATE = '[AUTH] Check authentication state',
+  AUTH_USER_LOADED = '[AUTH] Authentication user was loaded',
+  AUTH_NO_USER_LOADED = '[AUTH] No user was loaded',
+  AUTH_SET_TOKEN = '[AUTH] Set auth token',
+  AUTH_CLEAR_TOKEN = '[AUTH] Clear auth token',
+  AUTH_SHOW_LOGIN = '[AUTH] Show login panel',
+  AUTH_HIDE_LOGIN = '[AUTH] Hide login panel',
+  AUTH_SUBMIT_LOGIN = '[AUTH] Submit login data',
+  AUTH_LOGIN_FAILED = '[AUTH] Login failed',
+  AUTH_LOGOUT = '[AUTH] Log the user out',
+  AUTH_SET_PREFERENCE = '[AUTH] Set user preference',
+  AUTH_PREFERENCE_SET = '[AUTH] User preference set',
+  AUTH_SET_PREFERENCE_FAILED = '[AUTH] Failed to set preference'
+}
+
 export class AuthCheckState implements Action {
-  readonly type = AUTH_CHECK_STATE;
+  readonly type = AuthenticationActionTypes.AUTH_CHECK_STATE;
 
   constructor() {}
 }
 
-export const AUTH_USER_LOADED = '[AUTH] Authentication user was loaded';
 export class AuthUserLoaded implements Action {
-  readonly type = AUTH_USER_LOADED;
+  readonly type = AuthenticationActionTypes.AUTH_USER_LOADED;
 
   constructor(public payload: { user: User }) {}
 }
 
-export const AUTH_NO_USER_LOADED = '[AUTH] No user was loaded';
 export class AuthNoUserLoaded implements Action {
-  readonly type = AUTH_NO_USER_LOADED;
+  readonly type = AuthenticationActionTypes.AUTH_NO_USER_LOADED;
 
   constructor() {}
 }
 
-export const AUTH_SET_TOKEN = '[AUTH] Set auth token';
 export class AuthSetToken implements Action {
-  readonly type = AUTH_SET_TOKEN;
+  readonly type = AuthenticationActionTypes.AUTH_SET_TOKEN;
 
   constructor(public payload: { token: string }) {}
 }
 
-export const AUTH_CLEAR_TOKEN = '[AUTH] Clear auth token';
 export class AuthClearToken implements Action {
-  readonly type = AUTH_CLEAR_TOKEN;
+  readonly type = AuthenticationActionTypes.AUTH_CLEAR_TOKEN;
 
   constructor() {}
 }
 
-export const AUTH_SHOW_LOGIN = '[AUTH] Show login panel';
 export class AuthShowLogin implements Action {
-  readonly type = AUTH_SHOW_LOGIN;
+  readonly type = AuthenticationActionTypes.AUTH_SHOW_LOGIN;
 
   constructor() {}
 }
 
-export const AUTH_HIDE_LOGIN = '[AUTH] Hide login panel';
 export class AuthHideLogin implements Action {
-  readonly type = AUTH_HIDE_LOGIN;
+  readonly type = AuthenticationActionTypes.AUTH_HIDE_LOGIN;
 
   constructor() {}
 }
 
-export const AUTH_SUBMIT_LOGIN = '[AUTH] Submit login data';
 export class AuthSubmitLogin implements Action {
-  readonly type = AUTH_SUBMIT_LOGIN;
+  readonly type = AuthenticationActionTypes.AUTH_SUBMIT_LOGIN;
 
   constructor(public payload: { email: string; password: string }) {}
 }
 
-export const AUTH_LOGIN_FAILED = '[AUTH] Login failed';
 export class AuthLoginFailed implements Action {
-  readonly type = AUTH_LOGIN_FAILED;
+  readonly type = AuthenticationActionTypes.AUTH_LOGIN_FAILED;
 
   constructor() {}
 }
 
-export const AUTH_LOGOUT = '[AUTH] Log the user out';
 export class AuthLogout implements Action {
-  readonly type = AUTH_LOGOUT;
+  readonly type = AuthenticationActionTypes.AUTH_LOGOUT;
 
   constructor() {}
 }
 
-export const AUTH_SET_PREFERENCE = '[AUTH] Set user preference';
 export class AuthSetPreference implements Action {
-  readonly type = AUTH_SET_PREFERENCE;
+  readonly type = AuthenticationActionTypes.AUTH_SET_PREFERENCE;
 
   constructor(public payload: { name: string; value: string }) {}
 }
 
-export const AUTH_PREFERENCE_SET = '[AUTH] User preference set';
 export class AuthPreferenceSet implements Action {
-  readonly type = AUTH_PREFERENCE_SET;
+  readonly type = AuthenticationActionTypes.AUTH_PREFERENCE_SET;
 
   constructor(public payload: { user: User }) {}
 }
 
-export const AUTH_SET_PREFERENCE_FAILED = '[AUTH] Failed to set preference';
 export class AuthSetPreferenceFailed implements Action {
-  readonly type = AUTH_SET_PREFERENCE_FAILED;
+  readonly type = AuthenticationActionTypes.AUTH_SET_PREFERENCE_FAILED;
 
   constructor() {}
 }
 
-export type Actions =
+export type AuthenticationActions =
   | AuthCheckState
   | AuthUserLoaded
   | AuthNoUserLoaded

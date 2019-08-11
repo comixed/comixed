@@ -47,7 +47,7 @@ import { ComicListToolbarComponent } from './comic-list-toolbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('ComicListToolbarComponent', () => {

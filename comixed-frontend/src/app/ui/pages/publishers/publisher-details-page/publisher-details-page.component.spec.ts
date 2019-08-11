@@ -51,7 +51,7 @@ import {
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('PublisherDetailsPageComponent', () => {

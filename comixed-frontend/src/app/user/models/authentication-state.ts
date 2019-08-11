@@ -17,12 +17,14 @@
  * org.comixed;
  */
 
-import { Role } from './role';
+import { User } from './user';
 
-export const READER_ROLE: Role = {
-  name: 'READER'
-};
-
-export const ADMIN_ROLE: Role = {
-  name: 'ADMIN'
-};
+export declare interface AuthenticationState {
+  initialized: boolean;
+  authenticating: boolean;
+  authenticated: boolean;
+  setting_preference: boolean;
+  user: User;
+  auth_token: string;
+  show_login: boolean;
+}

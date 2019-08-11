@@ -26,7 +26,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { LoginComponent } from './login.component';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 
 describe('LoginComponent', () => {
   const EMAIL = 'comixedadmin@localhost';

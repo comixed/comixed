@@ -24,7 +24,7 @@ import { UserAdmin } from 'app/models/actions/user-admin';
 import * as UserAdminActions from 'app/actions/user-admin.actions';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { Role } from 'app/models/role';
+import { Role } from 'app/user';
 
 @Component({
   selector: 'app-user-details-editor',

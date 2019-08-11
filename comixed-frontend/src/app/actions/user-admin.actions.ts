@@ -18,7 +18,7 @@
  */
 
 import { Action } from '@ngrx/store';
-import { User } from 'app/models/user';
+import { User } from 'app/user';
 
 export const USER_ADMIN_LIST_USERS = '[USER ADMIN] Get a list of all users';
 export const USER_USER_ADMINS_RECEIVED =

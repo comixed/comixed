@@ -17,13 +17,13 @@
  * org.comixed;
  */
 
-import { USER_READER } from 'app/user/models/user.fixtures';
-import { ReadingList } from 'app/models/reading-list';
+import { Preference, Role } from 'app/user';
 
-export const READING_LIST_1: ReadingList = {
-  id: 1000,
-  owner: USER_READER,
-  name: 'My Reading List',
-  summary: 'This is my first reading list',
-  entries: []
-};
+export declare interface User {
+  id: number;
+  email: string;
+  first_login_date: number;
+  last_login_date: number;
+  roles: Role[];
+  preferences: Preference[];
+}

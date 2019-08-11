@@ -19,15 +19,13 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
 import { LibraryState } from 'app/models/state/library-state';
 import * as LibraryActions from 'app/actions/library.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { User } from 'app/models/user';
-import { AuthenticationState } from 'app/models/state/authentication-state';
+import { AuthenticationAdaptor } from 'app/user';
+import { User } from 'app/user';
 
 @Component({
   selector: 'app-root',
@@ -55,27 +53,28 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.auth_adaptor.auth_state$.subscribe(
-      (auth_state: AuthenticationState) => {
-        this.user = auth_state.user;
-        this.show_login = auth_state.show_login;
-
-        if (this.auth_adaptor.authenticated && !this.fetching_comics) {
-          this.fetching_comics = true;
-          this.store.dispatch(
-            new LibraryActions.LibraryFetchLibraryChanges({
-              last_comic_date: '0',
-              timeout: 60000
-            })
-          );
-        }
-
-        if (!this.auth_adaptor.authenticated && this.fetching_comics) {
-          this.store.dispatch(new LibraryActions.LibraryReset());
-          this.fetching_comics = false;
-        }
+    this.auth_adaptor.user$.subscribe(user => {
+      this.user = user;
+    });
+    this.auth_adaptor.authenticated$.subscribe(authenticated => {
+      if (authenticated && !this.fetching_comics) {
+        this.fetching_comics = true;
+        this.store.dispatch(
+          new LibraryActions.LibraryFetchLibraryChanges({
+            last_comic_date: '0',
+            timeout: 60000
+          })
+        );
       }
-    );
+      if (!this.auth_adaptor.authenticated && this.fetching_comics) {
+        this.store.dispatch(new LibraryActions.LibraryReset());
+        this.fetching_comics = false;
+      }
+    });
+
+    this.auth_adaptor.show_login$.subscribe(show_login => {
+      this.show_login = show_login;
+    });
     this.auth_adaptor.get_current_user();
     this.library_subscription = this.library$.subscribe(
       (library: LibraryState) => {

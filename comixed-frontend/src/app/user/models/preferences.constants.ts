@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-import { User } from 'app/models/user';
+export declare const LIBRARY_SORT = 'library.sort-by';
+export declare const LIBRARY_ROWS = 'library.rows';
+export declare const LIBRARY_COVER_SIZE = 'library.cover-size';
+export declare const LIBRARY_CURRENT_TAB = 'library.current-tab';
 
-export interface AuthenticationState {
-  initialized: boolean;
-  authenticating: boolean;
-  authenticated: boolean;
-  setting_preference: boolean;
-  user: User;
-  auth_token: string;
-  show_login: boolean;
-}
+export declare const IMPORT_SORT = 'import.sort-by';
+export declare const IMPORT_ROWS = 'import.rows';
+export declare const IMPORT_COVER_SIZE = 'import.cover-size';
+export declare const IMPORT_LAST_DIRECTORY = 'import.last-directory';
+
+export declare const COMICVINE_API_KEY = 'comicvine.api-key';

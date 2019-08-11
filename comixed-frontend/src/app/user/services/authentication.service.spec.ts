@@ -24,15 +24,15 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { User } from 'app/models/user';
-import { USER_READER } from 'app/models/user.fixtures';
+import { User } from 'app/user';
+import { USER_READER } from 'app/user/models/user.fixtures';
 import {
   AUTH_DELETE_PREFERENCE_URL,
   AUTH_SET_PREFERENCE_URL,
   AUTH_SUBMIT_LOGIN_DATA_URL,
-  GET_AUTHENTICATED_USER_URL,
-  interpolate
+  GET_AUTHENTICATED_USER_URL
 } from 'app/services/url.constants';
+import { interpolate } from 'app/app.functions';
 
 describe('AuthenticationService', () => {
   const USER = USER_READER;

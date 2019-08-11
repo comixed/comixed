@@ -12,8 +12,8 @@ import {
 } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { TokenStorage } from 'app/storage/token.storage';
 import { MessageService } from 'primeng/api';
+import { TokenService } from 'app/user';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -38,7 +38,7 @@ export const TOKEN_HEADER_KEY = 'Authorization';
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
   constructor(
-    private token_storage: TokenStorage,
+    private token_service: TokenService,
     private router: Router,
     private message_service: MessageService
   ) {}
@@ -54,10 +54,10 @@ export class XhrInterceptor implements HttpInterceptor {
     | HttpUserEvent<any>
   > {
     let authReq = req;
-    if (this.token_storage.get_token() !== null) {
+    if (this.token_service.get_token() !== null) {
       authReq = req.clone({
         headers: req.headers
-          .set(TOKEN_HEADER_KEY, `Bearer ${this.token_storage.get_token()}`)
+          .set(TOKEN_HEADER_KEY, `Bearer ${this.token_service.get_token()}`)
           .set('X-Request-With', 'XMLHttpRequest')
       });
     } else {

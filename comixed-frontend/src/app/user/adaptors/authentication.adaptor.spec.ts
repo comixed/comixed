@@ -18,13 +18,15 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { Store, StoreModule } from '@ngrx/store';
-import { REDUCERS } from 'app/app.reducers';
 import { AppState } from 'app/app.state';
-import * as AuthActions from 'app/actions/authentication.actions';
-import { USER_ADMIN, USER_READER } from 'app/models/user.fixtures';
-import { initial_state } from 'app/reducers/authentication.reducer';
+import * as AuthActions from 'app/user/actions/authentication.actions';
+import { USER_ADMIN, USER_READER } from 'app/user/models/user.fixtures';
+import {
+  reducer,
+  initial_state
+} from 'app/user/reducers/authentication.reducer';
 
 describe('AuthenticationAdaptor', () => {
   const USER = USER_ADMIN;
@@ -39,7 +41,7 @@ describe('AuthenticationAdaptor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot(REDUCERS)],
+      imports: [StoreModule.forRoot({ auth_state: reducer })],
       providers: [AuthenticationAdaptor]
     });
 
@@ -51,27 +53,9 @@ describe('AuthenticationAdaptor', () => {
     expect(auth_adaptor).toBeTruthy();
   });
 
-  describe('when checking if authentication has been initialized', () => {
-    it('returns false', () => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        initialized: false
-      };
-      expect(auth_adaptor.initialized).toBeFalsy();
-    });
-
-    it('returns true', () => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        initialized: true
-      };
-      expect(auth_adaptor.initialized).toBeTruthy();
-    });
-  });
-
   describe('when no user is logged in', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = { ...initial_state };
+      store.dispatch(new AuthActions.AuthNoUserLoaded());
     });
 
     it('returns false for the authentication check', () => {
@@ -89,11 +73,7 @@ describe('AuthenticationAdaptor', () => {
 
   describe('when a reader is logged in', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = {
-        ...initial_state,
-        authenticated: true,
-        user: USER_READER
-      };
+      store.dispatch(new AuthActions.AuthUserLoaded({ user: USER_READER }));
     });
 
     it('returns true for the authentication check', () => {
@@ -111,11 +91,7 @@ describe('AuthenticationAdaptor', () => {
 
   describe('when an administrator is logged in', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = {
-        ...initial_state,
-        authenticated: true,
-        user: USER_ADMIN
-      };
+      store.dispatch(new AuthActions.AuthUserLoaded({ user: USER_ADMIN }));
     });
 
     it('returns true for the authentication check', () => {
@@ -146,11 +122,7 @@ describe('AuthenticationAdaptor', () => {
 
   describe('when it has an auth token', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        authenticated: true,
-        auth_token: AUTH_TOKEN
-      };
+      store.dispatch(new AuthActions.AuthSetToken({ token: AUTH_TOKEN }));
     });
 
     it('returns the authentication token if set', () => {
@@ -164,11 +136,7 @@ describe('AuthenticationAdaptor', () => {
 
   describe('when it does not have an auth token', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        authenticated: false,
-        auth_token: AUTH_TOKEN
-      };
+      store.dispatch(new AuthActions.AuthClearToken());
     });
 
     it('returns null if not set', () => {
@@ -182,18 +150,12 @@ describe('AuthenticationAdaptor', () => {
 
   describe('displaying the login dialog', () => {
     it('returns false when hidden', () => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        show_login: false
-      };
+      store.dispatch(new AuthActions.AuthHideLogin());
       expect(auth_adaptor.showing_login).toBeFalsy();
     });
 
     it('returns true when shown', () => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        show_login: true
-      };
+      store.dispatch(new AuthActions.AuthShowLogin());
       expect(auth_adaptor.showing_login).toBeTruthy();
     });
   });
@@ -266,13 +228,14 @@ describe('AuthenticationAdaptor', () => {
 
   describe('when getting a user preference', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        user: {
-          ...USER_READER,
-          preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }]
-        }
-      };
+      store.dispatch(
+        new AuthActions.AuthUserLoaded({
+          user: {
+            ...USER_READER,
+            preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }]
+          }
+        })
+      );
     });
 
     it('returns the value for a known property', () => {

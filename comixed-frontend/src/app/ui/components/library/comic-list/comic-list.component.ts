@@ -33,7 +33,7 @@ import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 const FIRST = 'first';

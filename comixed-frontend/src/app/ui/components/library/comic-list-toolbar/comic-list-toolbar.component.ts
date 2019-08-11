@@ -24,7 +24,7 @@ import { SelectItem } from 'primeng/api';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { LibraryFilter } from 'app/models/actions/library-filter';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import {
   COVER_SIZE_QUERY_PARAM,
   LibraryDisplayAdaptor,
@@ -171,7 +171,7 @@ export class ComicListToolbarComponent implements OnInit {
 
   set_sort_field(sort_field: string): void {
     this.sort_field = sort_field;
-    this.library_display_adaptor.set_sort_field(sort_field, false);
+    this.library_display_adaptor.set_sort_field(sort_field);
   }
 
   set_rows(rows: number): void {

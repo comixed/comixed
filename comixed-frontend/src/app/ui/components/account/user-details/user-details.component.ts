@@ -17,7 +17,7 @@
  * org.comixed;
  */
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from 'app/models/user';
+import { User } from 'app/user';
 
 @Component({
   selector: 'app-user-details',

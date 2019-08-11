@@ -19,9 +19,9 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { AuthenticationState } from 'app/models/state/authentication-state';
-import { User } from 'app/models/user';
+import { AuthenticationAdaptor } from 'app/user';
+import { AuthenticationState } from 'app/user/models/authentication-state';
+import { User } from 'app/user';
 
 @Component({
   selector: 'app-account-page',
@@ -35,10 +35,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   constructor(private auth_adaptor: AuthenticationAdaptor) {}
 
   ngOnInit() {
-    this.auth_state_subscription = this.auth_adaptor.auth_state$.subscribe(
-      (auth_state: AuthenticationState) => {
-        this.user = auth_state.user;
-      }
+    this.auth_state_subscription = this.auth_adaptor.user$.subscribe(
+      user => (this.user = user)
     );
   }
 

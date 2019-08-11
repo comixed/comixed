@@ -23,9 +23,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   AUTH_SET_PREFERENCE_URL,
   AUTH_SUBMIT_LOGIN_DATA_URL,
-  GET_AUTHENTICATED_USER_URL,
-  interpolate
+  GET_AUTHENTICATED_USER_URL
 } from 'app/services/url.constants';
+import { interpolate } from 'app/app.functions';
 
 @Injectable({
   providedIn: 'root'

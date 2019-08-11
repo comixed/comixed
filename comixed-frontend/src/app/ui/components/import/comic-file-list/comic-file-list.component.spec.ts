@@ -55,7 +55,7 @@ import { AppState } from 'app/app.state';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('ComicFileListComponent', () => {

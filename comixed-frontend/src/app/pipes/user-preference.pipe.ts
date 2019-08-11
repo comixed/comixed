@@ -18,8 +18,8 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Preference } from 'app/models/preference';
-import { User } from 'app/models/user';
+import { Preference } from 'app/user';
+import { User } from 'app/user';
 
 @Pipe({
   name: 'user_preference'

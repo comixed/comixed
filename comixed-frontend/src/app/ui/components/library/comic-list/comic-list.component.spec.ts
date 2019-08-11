@@ -59,7 +59,7 @@ import { Routes } from '@angular/router/src/config';
 import { BehaviorSubject } from 'rxjs';
 import * as LibraryActions from 'app/actions/library.actions';
 import * as SelectionActions from 'app/actions/selection.actions';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('ComicListComponent', () => {

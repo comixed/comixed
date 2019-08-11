@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 
 @Component({
   selector: 'app-login',

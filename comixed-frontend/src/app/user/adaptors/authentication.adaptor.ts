@@ -20,37 +20,60 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as AuthActions from 'app/actions/authentication.actions';
-import { AuthenticationState } from 'app/models/state/authentication-state';
+import * as AuthActions from 'app/user/actions/authentication.actions';
+import { AuthenticationState } from 'app/user/models/authentication-state';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from 'app/models/user';
+import { User } from 'app/user';
 import { Roles } from 'app/models/ui/roles';
+import { filter } from 'rxjs/operators';
 
 @Injectable()
 export class AuthenticationAdaptor {
-  auth_state$: Observable<AuthenticationState>;
-  auth_state: AuthenticationState;
-
+  _initialized$ = new BehaviorSubject<boolean>(false);
   _authenticated$ = new BehaviorSubject<boolean>(false);
+  _auth_token$ = new BehaviorSubject<string>(null);
+  _show_login$ = new BehaviorSubject<boolean>(false);
   _user$ = new BehaviorSubject<User>(null);
   _role$ = new BehaviorSubject<Roles>({
     is_admin: false,
     is_reader: false
   });
-
   constructor(private store: Store<AppState>) {
-    this.auth_state$ = this.store.select('auth_state');
+    this.store
+      .select('auth_state')
+      .pipe(filter(state => !!state))
+      .subscribe((auth_state: AuthenticationState) => {
+        this._initialized$.next(auth_state.initialized);
+        this._authenticated$.next(auth_state.authenticated);
+        this._auth_token$.next(auth_state.auth_token);
+        this._show_login$.next(auth_state.show_login);
+        this._user$.next(auth_state.user);
+        this._role$.next({
+          is_reader:
+            this.has_role(auth_state.user, 'READER') ||
+            this.has_role(auth_state.user, 'ADMIN'),
+          is_admin: this.has_role(auth_state.user, 'ADMIN')
+        });
+      });
+  }
 
-    this.auth_state$.subscribe((auth_state: AuthenticationState) => {
-      this.auth_state = auth_state;
-      this._authenticated$.next(this.auth_state.authenticated);
-      this._user$.next(this.auth_state.user);
-      this._role$.next({ is_reader: this.is_reader, is_admin: this.is_admin });
-    });
+  private has_role(user: User, name: string): boolean {
+    if (user) {
+      return user.roles.some(role => role.name === name);
+    }
+    return false;
+  }
+
+  get initialized$(): Observable<boolean> {
+    return this._initialized$.asObservable();
   }
 
   get authenticated$(): Observable<boolean> {
     return this._authenticated$.asObservable();
+  }
+
+  get show_login$(): Observable<boolean> {
+    return this._show_login$.asObservable();
   }
 
   get user$(): Observable<User> {
@@ -65,51 +88,28 @@ export class AuthenticationAdaptor {
     this.store.dispatch(new AuthActions.AuthCheckState());
   }
 
-  get initialized(): boolean {
-    return this.auth_state && this.auth_state.initialized;
-  }
-
   get authenticated(): boolean {
-    return !!this.auth_state && this.auth_state.authenticated;
-  }
-
-  private has_role(name: string): boolean {
-    if (this.auth_state.user && this.auth_state.user.roles.length > 0) {
-      return this.auth_state.user.roles.some(role => role.name === name);
-    }
-
-    return false;
+    return this._authenticated$.getValue();
   }
 
   get is_reader(): boolean {
-    return (
-      (this.authenticated && this.has_role('READER')) || this.has_role('ADMIN')
-    );
+    return this._role$.getValue().is_reader;
   }
 
   get is_admin(): boolean {
-    return this.authenticated && this.has_role('ADMIN');
+    return this._role$.getValue().is_admin;
   }
 
   get has_auth_token(): boolean {
-    if (this.authenticated) {
-      return (
-        this.auth_state.auth_token && this.auth_state.auth_token.length > 0
-      );
-    }
-
-    return false;
+    return !!this._auth_token$.getValue();
   }
 
   get auth_token(): string {
-    if (this.authenticated) {
-      return this.auth_state.auth_token;
-    }
-    return null;
+    return this._auth_token$.getValue();
   }
 
   get showing_login(): boolean {
-    return this.auth_state.show_login;
+    return this._show_login$.getValue();
   }
 
   start_login(): void {
@@ -137,10 +137,10 @@ export class AuthenticationAdaptor {
   }
 
   get_preference(name: string): string {
-    if (this.auth_state.user) {
-      const preference = this.auth_state.user.preferences.find(
-        entry => entry.name === name
-      );
+    if (this._user$.getValue()) {
+      const preference = this._user$
+        .getValue()
+        .preferences.find(entry => entry.name === name);
 
       if (preference) {
         return preference.value;

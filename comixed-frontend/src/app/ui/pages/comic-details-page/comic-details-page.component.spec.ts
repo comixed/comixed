@@ -58,7 +58,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 
 describe('ComicDetailsPageComponent', () => {
   let component: ComicDetailsPageComponent;

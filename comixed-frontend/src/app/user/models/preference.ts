@@ -17,6 +17,7 @@
  * org.comixed;
  */
 
-export interface Role {
+export declare interface Preference {
   name: string;
+  value: string;
 }

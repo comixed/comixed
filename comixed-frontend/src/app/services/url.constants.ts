@@ -17,9 +17,7 @@
  * org.comixed;
  */
 
-import * as _ from 'lodash';
-
-export const API_ROOT_URL = '/api';
+import { API_ROOT_URL } from 'app/app.functions';
 
 export const GET_AUTHENTICATED_USER_URL = '${API_ROOT_URL}/user';
 export const AUTH_SUBMIT_LOGIN_DATA_URL =
@@ -63,12 +61,3 @@ export const CLEAR_METADATA_URL = '${API_ROOT_URL}/comics/${id}/metadata';
 export const GET_READING_LISTS_URL = `${API_ROOT_URL}/lists`;
 export const CREATE_READING_LIST_URL = `${API_ROOT_URL}/lists`;
 export const UPDATE_READING_LIST_URL = '${API_ROOT_URL}/lists/${id}';
-
-export function interpolate(template: string, values: any = {}): string {
-  const vals = _.merge(values, { API_ROOT_URL: API_ROOT_URL });
-  _.templateSettings.interpolate = /\${([\s\S]+?)}/g;
-  const compiled = _.template(template);
-  const result = compiled(values);
-
-  return result;
-}

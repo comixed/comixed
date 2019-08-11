@@ -19,24 +19,26 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { AuthenticationService } from 'app/services/authentication.service';
-import { Observable, of } from 'rxjs';
-import { Action } from '@ngrx/store';
+
+import { catchError, concatMap, map, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
+import { AuthenticationActionTypes } from '../actions/authentication.actions';
+import * as AuthenticationActions from '../actions/authentication.actions';
+import { AuthenticationService } from 'app/user/services/authentication.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import * as AuthActions from 'app/actions/authentication.actions';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { User } from 'app/models/user';
-import { LoginResponse } from 'app/models/net/login-response';
-import { TokenStorage } from 'app/storage/token.storage';
 import { Router } from '@angular/router';
+import { Action } from '@ngrx/store';
+import { LoginResponse } from 'app/models/net/login-response';
+import { TokenService } from 'app/user/services/token.service';
+import { User } from 'app/user';
 
 @Injectable()
 export class AuthenticationEffects {
   constructor(
     private actions$: Actions,
     private auth_service: AuthenticationService,
-    private token_storage: TokenStorage,
+    private token_service: TokenService,
     private translate_service: TranslateService,
     private message_service: MessageService,
     private router: Router
@@ -44,30 +46,32 @@ export class AuthenticationEffects {
 
   @Effect()
   get_authenticated_user$: Observable<Action> = this.actions$.pipe(
-    ofType(AuthActions.AUTH_CHECK_STATE),
+    ofType(AuthenticationActionTypes.AUTH_CHECK_STATE),
     switchMap(action =>
       this.auth_service.get_authenticated_user().pipe(
         map((response: User) => {
           if (!!response) {
-            return new AuthActions.AuthUserLoaded({ user: response });
+            return new AuthenticationActions.AuthUserLoaded({
+              user: response
+            });
           } else {
             this.router.navigate(['home']);
-            return new AuthActions.AuthNoUserLoaded();
+            return new AuthenticationActions.AuthNoUserLoaded();
           }
         }),
-        catchError(error => of(new AuthActions.AuthNoUserLoaded()))
+        catchError(error => of(new AuthenticationActions.AuthNoUserLoaded()))
       )
     ),
-    catchError(error => of(new AuthActions.AuthNoUserLoaded()))
+    catchError(error => of(new AuthenticationActions.AuthNoUserLoaded()))
   );
 
   @Effect()
   submit_login_data$: Observable<Action> = this.actions$.pipe(
-    ofType(AuthActions.AUTH_SUBMIT_LOGIN),
-    map((action: AuthActions.AuthSubmitLogin) => action.payload),
+    ofType(AuthenticationActionTypes.AUTH_SUBMIT_LOGIN),
+    map((action: AuthenticationActions.AuthSubmitLogin) => action.payload),
     switchMap(action =>
       this.auth_service.submit_login_data(action.email, action.password).pipe(
-        tap(data => this.token_storage.save_token(data.token)),
+        tap(data => this.token_service.save_token(data.token)),
         tap(() =>
           this.message_service.add({
             severity: 'info',
@@ -77,9 +81,9 @@ export class AuthenticationEffects {
           })
         ),
         switchMap((response: LoginResponse) => [
-          new AuthActions.AuthCheckState(),
-          new AuthActions.AuthSetToken({ token: response.token }),
-          new AuthActions.AuthHideLogin()
+          new AuthenticationActions.AuthCheckState(),
+          new AuthenticationActions.AuthSetToken({ token: response.token }),
+          new AuthenticationActions.AuthHideLogin()
         ]),
         catchError(error => {
           this.message_service.add({
@@ -88,7 +92,7 @@ export class AuthenticationEffects {
               'authentication-effects.submit-login-data.failure.detail'
             )
           });
-          return of(new AuthActions.AuthNoUserLoaded());
+          return of(new AuthenticationActions.AuthNoUserLoaded());
         })
       )
     ),
@@ -99,14 +103,14 @@ export class AuthenticationEffects {
           'authentication-effects.submit-login-data.failure.detail'
         )
       });
-      return of(new AuthActions.AuthNoUserLoaded());
+      return of(new AuthenticationActions.AuthNoUserLoaded());
     })
   );
 
   @Effect()
   logout$: Observable<Action> = this.actions$.pipe(
-    ofType(AuthActions.AUTH_LOGOUT),
-    tap(() => this.token_storage.sign_out()),
+    ofType(AuthenticationActionTypes.AUTH_LOGOUT),
+    tap(() => this.token_service.sign_out()),
     tap(() =>
       this.message_service.add({
         severity: 'info',
@@ -115,22 +119,24 @@ export class AuthenticationEffects {
         )
       })
     ),
-    map(() => new AuthActions.AuthCheckState())
+    map(() => new AuthenticationActions.AuthCheckState())
   );
 
   @Effect()
   set_preference$: Observable<Action> = this.actions$.pipe(
-    ofType(AuthActions.AUTH_SET_PREFERENCE),
-    map((action: AuthActions.AuthSetPreference) => action.payload),
+    ofType(AuthenticationActionTypes.AUTH_SET_PREFERENCE),
+    map((action: AuthenticationActions.AuthSetPreference) => action.payload),
     switchMap(action =>
       this.auth_service.set_preference(action.name, action.value).pipe(
         map(
           (response: User) =>
-            new AuthActions.AuthPreferenceSet({ user: response })
+            new AuthenticationActions.AuthPreferenceSet({ user: response })
         ),
-        catchError(error => of(new AuthActions.AuthSetPreferenceFailed()))
+        catchError(error =>
+          of(new AuthenticationActions.AuthSetPreferenceFailed())
+        )
       )
     ),
-    catchError(error => of(new AuthActions.AuthSetPreferenceFailed()))
+    catchError(error => of(new AuthenticationActions.AuthSetPreferenceFailed()))
   );
 }

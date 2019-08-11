@@ -26,12 +26,15 @@ import { ButtonModule } from 'primeng/button';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { MenubarComponent } from './menubar.component';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { initial_state } from 'app/reducers/authentication.reducer';
-import { USER_ADMIN, USER_READER } from 'app/models/user.fixtures';
-import * as AuthActions from 'app/actions/authentication.actions';
+import { AuthenticationAdaptor, USER_ADMIN, USER_READER } from 'app/user';
+import { UserModule } from 'app/user/user.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
 
 describe('MenubarComponent', () => {
   let component: MenubarComponent;
@@ -43,25 +46,30 @@ describe('MenubarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserModule,
+        HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
         MenubarModule,
         ButtonModule,
-        StoreModule.forRoot(REDUCERS)
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS)
       ],
       declarations: [MenubarComponent],
-      providers: [AuthenticationAdaptor]
+      providers: [
+        AuthenticationAdaptor,
+        MessageService,
+        ComicService,
+        UserService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MenubarComponent);
     component = fixture.componentInstance;
     auth_adaptor = TestBed.get(AuthenticationAdaptor);
-    auth_adaptor.auth_state = { ...initial_state };
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     router = TestBed.get(Router);
-
-    fixture.detectChanges();
   }));
 
   it('should create', () => {
@@ -70,7 +78,10 @@ describe('MenubarComponent', () => {
 
   describe('when a reader logs in', () => {
     beforeEach(() => {
-      store.dispatch(new AuthActions.AuthUserLoaded({ user: USER_READER }));
+      auth_adaptor._authenticated$.next(true);
+      auth_adaptor._user$.next(USER_READER);
+      auth_adaptor._role$.next({ is_admin: false, is_reader: true });
+      fixture.detectChanges();
     });
 
     it('loads the menu', () => {
@@ -88,7 +99,10 @@ describe('MenubarComponent', () => {
 
   describe('when an admin logs in', () => {
     beforeEach(() => {
-      store.dispatch(new AuthActions.AuthUserLoaded({ user: USER_ADMIN }));
+      auth_adaptor._authenticated$.next(true);
+      auth_adaptor._user$.next(USER_ADMIN);
+      auth_adaptor._role$.next({ is_admin: true, is_reader: true });
+      fixture.detectChanges();
     });
 
     it('loads the menu', () => {

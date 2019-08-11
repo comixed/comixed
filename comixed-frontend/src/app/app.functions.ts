@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,15 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
+import * as _ from 'lodash';
 
-export const TOKEN_KEY = 'AuthToken';
+export const API_ROOT_URL = '/api';
 
-@Injectable()
-export class TokenStorage {
-  constructor() {}
+export function interpolate(template: string, values: any = {}): string {
+  const vals = _.merge(values, { API_ROOT_URL: API_ROOT_URL });
+  _.templateSettings.interpolate = /\${([\s\S]+?)}/g;
+  const compiled = _.template(template);
+  const result = compiled(values);
 
-  sign_out(): void {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.clear();
-  }
-
-  save_token(token: string): void {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
-  }
-
-  get_token(): string {
-    return sessionStorage.getItem(TOKEN_KEY);
-  }
+  return result;
 }

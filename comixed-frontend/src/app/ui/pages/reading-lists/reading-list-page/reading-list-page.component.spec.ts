@@ -59,7 +59,7 @@ import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('ReadingListPageComponent', () => {

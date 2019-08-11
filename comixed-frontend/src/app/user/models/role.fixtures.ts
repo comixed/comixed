@@ -17,13 +17,12 @@
  * org.comixed;
  */
 
-import { USER_READER } from 'app/user/models/user.fixtures';
-import { ReadingList } from 'app/models/reading-list';
+import { Role } from './role';
 
-export const READING_LIST_1: ReadingList = {
-  id: 1000,
-  owner: USER_READER,
-  name: 'My Reading List',
-  summary: 'This is my first reading list',
-  entries: []
+export const ROLE_READER: Role = {
+  name: 'READER'
+};
+
+export const ROLE_ADMIN: Role = {
+  name: 'ADMIN'
 };

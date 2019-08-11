@@ -25,7 +25,6 @@ import { Observable, Subscription } from 'rxjs';
 import { ImportState } from 'app/models/state/import-state';
 import { LibraryState } from 'app/models/state/library-state';
 import * as ImportingActions from 'app/actions/importing.actions';
-import { SelectItem } from 'primeng/api';
 import { ComicFile } from 'app/models/import/comic-file';
 import { ComicService } from 'app/services/comic.service';
 import {
@@ -33,11 +32,11 @@ import {
   IMPORT_LAST_DIRECTORY,
   IMPORT_ROWS,
   IMPORT_SORT
-} from 'app/models/preferences.constants';
+} from 'app/user/models/preferences.constants';
 import { SelectionState } from 'app/models/state/selection-state';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { User } from 'app/models/user';
-import { AuthenticationState } from 'app/models/state/authentication-state';
+import { AuthenticationAdaptor } from 'app/user';
+import { User } from 'app/user';
+import { SelectItem } from 'primeng/api';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';
@@ -68,7 +67,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   comic_files: ComicFile[] = [];
   selected_comic_files: ComicFile[] = [];
 
-  auth_state_subscription: Subscription;
   user: User;
 
   protected sort_options: SelectItem[];
@@ -127,24 +125,14 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.auth_state_subscription = this.auth_adaptor.auth_state$.subscribe(
-      (auth_state: AuthenticationState) => {
-        this.user = auth_state.user;
-        this.sort_by =
-          this.auth_adaptor.get_preference(IMPORT_SORT) || this.sort_by;
-        this.rows =
-          parseInt(this.auth_adaptor.get_preference(IMPORT_SORT), 10) ||
-          this.rows;
-        this.cover_size =
-          parseInt(this.auth_adaptor.get_preference(IMPORT_COVER_SIZE), 1) ||
-          this.cover_size;
-        this.store.dispatch(
-          new ImportingActions.ImportingSetDirectory({
-            directory:
-              this.auth_adaptor.get_preference(IMPORT_LAST_DIRECTORY) || ''
-          })
-        );
-      }
+    this.auth_adaptor.user$.subscribe(user => {
+      this.user = user;
+    });
+
+    this.store.dispatch(
+      new ImportingActions.ImportingSetDirectory({
+        directory: this.auth_adaptor.get_preference(IMPORT_LAST_DIRECTORY) || ''
+      })
     );
 
     this.library_subscription = this.library$.subscribe(
@@ -179,7 +167,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.auth_state_subscription.unsubscribe();
     this.library_subscription.unsubscribe();
     this.import_state_subscription.unsubscribe();
     this.selection_state_subscription.unsubscribe();

@@ -19,40 +19,45 @@
 
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { AuthenticationState } from 'app/models/state/authentication-state';
+import { Observable, Subject } from 'rxjs';
+import { AuthenticationAdaptor } from 'app/user';
 
 @Injectable()
 export class ReaderGuard implements CanActivate {
   reader_subject = new Subject<boolean>();
+  initialized = false;
+  authenticated = false;
+  is_reader = false;
 
   constructor(
     private router: Router,
     private auth_adaptor: AuthenticationAdaptor
   ) {
-    this.auth_adaptor.auth_state$.subscribe(
-      (auth_state: AuthenticationState) => {
-        this.reader_subject.next(
-          this.auth_adaptor.authenticated && this.auth_adaptor.is_reader
-        );
+    this.auth_adaptor.initialized$.subscribe(initialized => {
+      this.initialized = initialized;
+    });
+    this.auth_adaptor.authenticated$.subscribe(authenticated => {
+      this.authenticated = authenticated;
+    });
+    this.auth_adaptor.role$.subscribe(roles => {
+      if (this.initialized) {
+        this.is_reader = roles.is_reader;
+        this.reader_subject.next(roles.is_reader);
       }
-    );
+    });
   }
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
-    // if the user auth check hasn't completed, return a promise
-    if (this.auth_adaptor.initialized) {
-      if (this.auth_adaptor.authenticated) {
-        return this.auth_adaptor.is_reader;
-      } else {
+    if (this.initialized && this.authenticated) {
+      return this.is_reader;
+    } else {
+      if (this.initialized) {
         this.router.navigate(['/home']);
         return false;
+      } else {
+        this.auth_adaptor.get_current_user();
+        return this.reader_subject.asObservable();
       }
-    } else {
-      this.auth_adaptor.get_current_user();
-      return this.reader_subject;
     }
   }
 }

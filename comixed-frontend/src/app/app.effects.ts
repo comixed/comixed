@@ -17,14 +17,18 @@
  * org.comixed;
  */
 
-export const LIBRARY_SORT = 'library.sort-by';
-export const LIBRARY_ROWS = 'library.rows';
-export const LIBRARY_COVER_SIZE = 'library.cover-size';
-export const LIBRARY_CURRENT_TAB = 'library.current-tab';
+import { ImportingEffects } from 'app/effects/importing.effects';
+import { LibraryEffects } from 'app/effects/library.effects';
+import { SingleComicScrapingEffects } from 'app/effects/single-comic-scraping.effects';
+import { DuplicatesEffects } from 'app/effects/duplicates.effects';
+import { UserAdminEffects } from 'app/effects/user-admin.effects';
+import { ReadingListEffects } from 'app/effects/reading-list.effects';
 
-export const IMPORT_SORT = 'import.sort-by';
-export const IMPORT_ROWS = 'import.rows';
-export const IMPORT_COVER_SIZE = 'import.cover-size';
-export const IMPORT_LAST_DIRECTORY = 'import.last-directory';
-
-export const COMICVINE_API_KEY = 'comicvine.api-key';
+export const EFFECTS = [
+  ImportingEffects,
+  LibraryEffects,
+  SingleComicScrapingEffects,
+  DuplicatesEffects,
+  UserAdminEffects,
+  ReadingListEffects
+];

@@ -24,11 +24,18 @@ import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { AccountPreferencesComponent } from 'app/ui/components/account/account-preferences/account-preferences.component';
 import { UserDetailsComponent } from 'app/ui/components/account/user-details/user-details.component';
-import { USER_READER } from 'app/models/user.fixtures';
+import { USER_READER } from 'app/user/models/user.fixtures';
 import { AccountPageComponent } from './account-page.component';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { initial_state } from 'app/reducers/authentication.reducer';
+import { AuthenticationAdaptor } from 'app/user';
+import { UserModule } from 'app/user/user.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MessageService } from 'primeng/api';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
 
 describe('AccountPageComponent', () => {
   let component: AccountPageComponent;
@@ -38,23 +45,31 @@ describe('AccountPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
         TabViewModule,
-        TableModule
+        TableModule,
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS)
       ],
       declarations: [
         AccountPageComponent,
         AccountPreferencesComponent,
         UserDetailsComponent
       ],
-      providers: [AuthenticationAdaptor]
+      providers: [
+        AuthenticationAdaptor,
+        MessageService,
+        ComicService,
+        UserService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AccountPageComponent);
     component = fixture.componentInstance;
     auth_adaptor = TestBed.get(AuthenticationAdaptor);
-    auth_adaptor.auth_state = { ...initial_state };
     component.user = USER_READER;
     fixture.detectChanges();
   }));

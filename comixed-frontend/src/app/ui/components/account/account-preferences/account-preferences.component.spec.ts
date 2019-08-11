@@ -20,8 +20,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { TableModule } from 'primeng/table';
-import { USER_READER } from 'app/models/user.fixtures';
 import { AccountPreferencesComponent } from './account-preferences.component';
+import { UserModule } from 'app/user/user.module';
+import { AuthenticationAdaptor, USER_READER } from 'app/user';
+import { StoreModule } from '@ngrx/store';
+import { REDUCERS } from 'app/app.reducers';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MessageService } from 'primeng/api';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
 
 describe('AccountPreferencesComponent', () => {
   let component: AccountPreferencesComponent;
@@ -29,8 +39,18 @@ describe('AccountPreferencesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), TableModule],
-      declarations: [AccountPreferencesComponent]
+      imports: [
+        UserModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        StoreModule.forRoot(REDUCERS),
+        TranslateModule.forRoot(),
+        TableModule,
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS)
+      ],
+      declarations: [AccountPreferencesComponent],
+      providers: [MessageService, ComicService, UserService]
     }).compileComponents();
   }));
 

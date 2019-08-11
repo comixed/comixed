@@ -17,15 +17,11 @@
  * org.comixed;
  */
 
-import { AuthenticationState } from 'app/models/state/authentication-state';
-import {
-  authenticationReducer,
-  initial_state
-} from 'app/reducers/authentication.reducer';
-import * as AuthActions from 'app/actions/authentication.actions';
-import { USER_ADMIN, USER_READER } from 'app/models/user.fixtures';
+import { initial_state, reducer } from './authentication.reducer';
+import { AuthenticationState, USER_ADMIN, USER_READER } from 'app/user';
+import * as AuthenticationActions from 'app/user/actions/authentication.actions';
 
-describe('authenticationReducer', () => {
+describe('Authentication Reducer', () => {
   const USER = USER_ADMIN;
   const AUTH_TOKEN = '1234567890ABCDEF';
   const PREFERENCE_NAME = 'pref.name';
@@ -37,7 +33,11 @@ describe('authenticationReducer', () => {
     state = { ...initial_state };
   });
 
-  describe('the default state', () => {
+  describe('an unknown action', () => {
+    beforeEach(() => {
+      state = reducer(state, {} as any);
+    });
+
     it('clears the initialized state', () => {
       expect(state.initialized).toBeFalsy();
     });
@@ -69,9 +69,9 @@ describe('authenticationReducer', () => {
 
   describe('when checking the authentication state', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, authenticating: false },
-        new AuthActions.AuthCheckState()
+        new AuthenticationActions.AuthCheckState()
       );
     });
 
@@ -82,9 +82,9 @@ describe('authenticationReducer', () => {
 
   describe('when the authenticated user is loaded', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, authenticating: true, show_login: true, user: null },
-        new AuthActions.AuthUserLoaded({ user: USER })
+        new AuthenticationActions.AuthUserLoaded({ user: USER })
       );
     });
 
@@ -111,9 +111,9 @@ describe('authenticationReducer', () => {
 
   describe('when no authenticated user is loaded', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, authenticating: true, authenticated: true, user: USER },
-        new AuthActions.AuthNoUserLoaded()
+        new AuthenticationActions.AuthNoUserLoaded()
       );
     });
 
@@ -136,9 +136,9 @@ describe('authenticationReducer', () => {
 
   describe('when an auth token is received', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, auth_token: null, authenticated: false },
-        new AuthActions.AuthSetToken({ token: AUTH_TOKEN })
+        new AuthenticationActions.AuthSetToken({ token: AUTH_TOKEN })
       );
     });
 
@@ -153,9 +153,9 @@ describe('authenticationReducer', () => {
 
   describe('when clearing the auth token', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, authenticated: true, auth_token: AUTH_TOKEN },
-        new AuthActions.AuthClearToken()
+        new AuthenticationActions.AuthClearToken()
       );
     });
 
@@ -170,9 +170,9 @@ describe('authenticationReducer', () => {
 
   describe('when showing the login panel', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, show_login: false },
-        new AuthActions.AuthShowLogin()
+        new AuthenticationActions.AuthShowLogin()
       );
     });
 
@@ -183,9 +183,9 @@ describe('authenticationReducer', () => {
 
   describe('when hiding the login panel', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, show_login: true },
-        new AuthActions.AuthHideLogin()
+        new AuthenticationActions.AuthHideLogin()
       );
     });
 
@@ -196,14 +196,14 @@ describe('authenticationReducer', () => {
 
   describe('when logging the user out', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         {
           ...state,
           authenticated: true,
           auth_token: AUTH_TOKEN,
           user: USER_ADMIN
         },
-        new AuthActions.AuthLogout()
+        new AuthenticationActions.AuthLogout()
       );
     });
 
@@ -222,9 +222,9 @@ describe('authenticationReducer', () => {
 
   describe('when setting a user preference', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, setting_preference: false },
-        new AuthActions.AuthSetPreference({
+        new AuthenticationActions.AuthSetPreference({
           name: PREFERENCE_NAME,
           value: PREFERENCE_VALUE
         })
@@ -244,9 +244,9 @@ describe('authenticationReducer', () => {
     };
 
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, setting_preference: true, user: OLD_USER },
-        new AuthActions.AuthPreferenceSet({ user: NEW_USER })
+        new AuthenticationActions.AuthPreferenceSet({ user: NEW_USER })
       );
     });
 
@@ -261,9 +261,9 @@ describe('authenticationReducer', () => {
 
   describe('when setting a preference fails', () => {
     beforeEach(() => {
-      state = authenticationReducer(
+      state = reducer(
         { ...state, setting_preference: true },
-        new AuthActions.AuthSetPreferenceFailed()
+        new AuthenticationActions.AuthSetPreferenceFailed()
       );
     });
 

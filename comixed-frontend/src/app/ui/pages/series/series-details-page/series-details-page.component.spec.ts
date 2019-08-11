@@ -51,7 +51,7 @@ import {
   ContextMenuModule
 } from 'primeng/primeng';
 import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 describe('SeriesDetailsPageComponent', () => {

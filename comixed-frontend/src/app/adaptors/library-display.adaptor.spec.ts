@@ -30,15 +30,15 @@ import {
   LibraryDisplayAdaptor
 } from 'app/adaptors/library-display.adaptor';
 import { TestBed } from '@angular/core/testing';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { StoreModule } from '@ngrx/store';
 import { REDUCERS } from 'app/app.reducers';
-import { USER_READER } from 'app/models/user.fixtures';
+import { USER_READER } from 'app/user/models/user.fixtures';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { generate_random_string } from '../../test/testing-utils';
 import { BehaviorSubject, of } from 'rxjs';
-import { User } from 'app/models/user';
+import { User } from 'app/user';
 
 describe('LibraryDisplayAdaptor', () => {
   const USER = { ...USER_READER };

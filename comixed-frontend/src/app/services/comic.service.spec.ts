@@ -45,7 +45,6 @@ import {
   GET_COMIC_METADATA_URL,
   GET_SCRAPING_CANDIDATES_URL,
   IMPORT_COMIC_FILES_URL,
-  interpolate,
   LIBRARY_STATE_URL,
   PAGE_TYPE_URL,
   PAGE_TYPES_URL,
@@ -92,6 +91,7 @@ import {
   VOLUME_1002,
   VOLUME_1004
 } from 'app/models/comics/volume.fixtures';
+import { interpolate } from 'app/app.functions';
 
 describe('ComicService', () => {
   const COMICS = [COMIC_1000, COMIC_1002];

@@ -24,14 +24,14 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { ReadingList } from 'app/models/reading-list';
-import { USER_READER } from 'app/models/user.fixtures';
+import { USER_READER } from 'app/user/models/user.fixtures';
 import {
   CREATE_READING_LIST_URL,
   GET_READING_LISTS_URL,
-  interpolate,
   UPDATE_READING_LIST_URL
 } from 'app/services/url.constants';
 import { READING_LIST_1 } from 'app/models/reading-list.fixtures';
+import { interpolate } from 'app/app.functions';
 
 describe('ReadingListService', () => {
   const LIST_NAME = 'My reading list';

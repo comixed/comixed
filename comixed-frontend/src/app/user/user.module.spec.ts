@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,16 @@
  * org.comixed;
  */
 
-export interface Preference {
-  name: string;
-  value: string;
-}
+import { UserModule } from 'app/user/user.module';
+import { TestBed } from '@angular/core/testing';
+import { Store } from '@ngrx/store';
+
+describe('UserModule', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [UserModule.forRoot()] });
+  });
+
+  it('should provide the Store service', () => {
+    expect(() => TestBed.get(Store)).toBeTruthy();
+  });
+});

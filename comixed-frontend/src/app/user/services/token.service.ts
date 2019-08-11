@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,25 @@
  * org.comixed;
  */
 
-import { USER_READER } from 'app/user/models/user.fixtures';
-import { ReadingList } from 'app/models/reading-list';
+import { Injectable } from '@angular/core';
 
-export const READING_LIST_1: ReadingList = {
-  id: 1000,
-  owner: USER_READER,
-  name: 'My Reading List',
-  summary: 'This is my first reading list',
-  entries: []
-};
+export const TOKEN_KEY = 'AuthToken';
+
+@Injectable()
+export class TokenService {
+  constructor() {}
+
+  sign_out(): void {
+    window.sessionStorage.removeItem(TOKEN_KEY);
+    window.sessionStorage.clear();
+  }
+
+  save_token(token: string): void {
+    window.sessionStorage.removeItem(TOKEN_KEY);
+    window.sessionStorage.setItem(TOKEN_KEY, token);
+  }
+
+  get_token(): string {
+    return sessionStorage.getItem(TOKEN_KEY);
+  }
+}

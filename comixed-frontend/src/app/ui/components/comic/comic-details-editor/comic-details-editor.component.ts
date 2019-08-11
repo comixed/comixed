@@ -36,12 +36,12 @@ import { ComicService } from 'app/services/comic.service';
 import { Comic } from 'app/models/comics/comic';
 import { Volume } from 'app/models/comics/volume';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
-import { COMICVINE_API_KEY } from 'app/models/preferences.constants';
+import { COMICVINE_API_KEY } from 'app/user/models/preferences.constants';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { AuthenticationState } from 'app/models/state/authentication-state';
-import { User } from 'app/models/user';
+import { AuthenticationAdaptor } from 'app/user';
+import { AuthenticationState } from 'app/user/models/authentication-state';
+import { User } from 'app/user';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -101,15 +101,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.auth_state_subscription = this.auth_adaptor.auth_state$.subscribe(
-      (auth_state: AuthenticationState) => {
-        this.user = auth_state.user;
-        const api_key = this.auth_adaptor.get_preference(COMICVINE_API_KEY);
-        this.form.controls['api_key'].setValue(
-          this.api_key ? this.api_key : ''
-        );
-      }
-    );
+    this.auth_state_subscription = this.auth_adaptor.user$.subscribe(() => {
+      const api_key = this.auth_adaptor.get_preference(COMICVINE_API_KEY);
+      this.form.controls['api_key'].setValue(this.api_key ? this.api_key : '');
+    });
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
         this.single_comic_scraping = library_scrape;

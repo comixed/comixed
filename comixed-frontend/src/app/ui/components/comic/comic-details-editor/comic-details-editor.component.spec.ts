@@ -30,7 +30,7 @@ import { SINGLE_COMIC_SCRAPING_STATE } from 'app/models/scraping/single-comic-sc
 import { COMIC_1000, COMIC_1001 } from 'app/models/comics/comic.fixtures';
 import { VOLUME_1000 } from 'app/models/comics/volume.fixtures';
 import { ISSUE_1000 } from 'app/models/scraping/issue.fixtures';
-import { COMICVINE_API_KEY } from 'app/models/preferences.constants';
+import { COMICVINE_API_KEY } from 'app/user/models/preferences.constants';
 import { ButtonModule } from 'primeng/button';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { BlockUIModule } from 'primeng/blockui';
@@ -49,8 +49,9 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/primeng';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationService } from 'app/services/authentication.service';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationService } from 'app/user/services/authentication.service';
+import { AuthenticationAdaptor } from 'app/user';
+import { USER_ADMIN, USER_READER } from 'app/user';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = '1234567890';
@@ -131,6 +132,7 @@ describe('ComicDetailsEditorComponent', () => {
 
   describe('form state', () => {
     beforeEach(() => {
+      auth_adaptor._user$.next(USER_ADMIN);
       store.dispatch(
         new ScrapingActions.SingleComicScrapingSetup({
           api_key: API_KEY,

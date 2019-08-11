@@ -23,11 +23,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   CREATE_READING_LIST_URL,
   GET_READING_LISTS_URL,
-  interpolate,
   UPDATE_READING_LIST_URL
 } from 'app/services/url.constants';
 import { ReadingList } from 'app/models/reading-list';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
+import { interpolate } from 'app/app.functions';
 
 @Injectable({
   providedIn: 'root'

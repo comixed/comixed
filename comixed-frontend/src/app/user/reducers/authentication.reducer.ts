@@ -17,8 +17,14 @@
  * org.comixed;
  */
 
-import { AuthenticationState } from 'app/models/state/authentication-state';
-import * as AuthActions from 'app/actions/authentication.actions';
+import {
+  AuthenticationActions,
+  AuthenticationActionTypes
+} from '../actions/authentication.actions';
+import { AuthenticationState } from 'app/user';
+import * as AuthActions from 'app/user/actions/authentication.actions';
+
+export const AUTHENTICATION_FEATURE_KEY = 'auth_state';
 
 export const initial_state: AuthenticationState = {
   initialized: false,
@@ -30,15 +36,15 @@ export const initial_state: AuthenticationState = {
   show_login: false
 };
 
-export function authenticationReducer(
-  state: AuthenticationState = initial_state,
-  action: AuthActions.Actions
-) {
+export function reducer(
+  state = initial_state,
+  action: AuthenticationActions
+): AuthenticationState {
   switch (action.type) {
-    case AuthActions.AUTH_CHECK_STATE:
+    case AuthenticationActionTypes.AUTH_CHECK_STATE:
       return { ...state, authenticating: true };
 
-    case AuthActions.AUTH_USER_LOADED:
+    case AuthenticationActionTypes.AUTH_USER_LOADED:
       return {
         ...state,
         initialized: true,
@@ -48,7 +54,7 @@ export function authenticationReducer(
         user: action.payload.user
       };
 
-    case AuthActions.AUTH_NO_USER_LOADED:
+    case AuthenticationActionTypes.AUTH_NO_USER_LOADED:
       return {
         ...state,
         initialized: true,
@@ -57,32 +63,32 @@ export function authenticationReducer(
         user: null
       };
 
-    case AuthActions.AUTH_SET_TOKEN:
+    case AuthenticationActionTypes.AUTH_SET_TOKEN:
       return {
         ...state,
         authenticated: true,
         auth_token: action.payload.token
       };
 
-    case AuthActions.AUTH_CLEAR_TOKEN:
+    case AuthenticationActionTypes.AUTH_CLEAR_TOKEN:
       return { ...state, authenticated: false, auth_token: null };
 
-    case AuthActions.AUTH_SHOW_LOGIN:
+    case AuthenticationActionTypes.AUTH_SHOW_LOGIN:
       return { ...state, show_login: true };
 
-    case AuthActions.AUTH_HIDE_LOGIN:
+    case AuthenticationActionTypes.AUTH_HIDE_LOGIN:
       return { ...state, show_login: false };
 
-    case AuthActions.AUTH_LOGOUT:
+    case AuthenticationActionTypes.AUTH_LOGOUT:
       return { ...state, authenticated: false, auth_token: null, user: null };
 
-    case AuthActions.AUTH_SET_PREFERENCE:
+    case AuthenticationActionTypes.AUTH_SET_PREFERENCE:
       return { ...state, setting_preference: true };
 
-    case AuthActions.AUTH_PREFERENCE_SET:
+    case AuthenticationActionTypes.AUTH_PREFERENCE_SET:
       return { ...state, setting_preference: false, user: action.payload.user };
 
-    case AuthActions.AUTH_SET_PREFERENCE_FAILED:
+    case AuthenticationActionTypes.AUTH_SET_PREFERENCE_FAILED:
       return { ...state, setting_preference: false };
 
     default:

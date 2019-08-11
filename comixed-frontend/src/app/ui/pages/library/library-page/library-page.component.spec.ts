@@ -32,7 +32,7 @@ import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DataViewModule } from 'primeng/dataview';
 import { SliderModule } from 'primeng/slider';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
@@ -57,8 +57,12 @@ import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { ContextMenuModule } from 'primeng/primeng';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { UserModule } from 'app/user/user.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1000;
@@ -70,11 +74,13 @@ describe('LibraryPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
         FormsModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
         ConfirmDialogModule,
         DataViewModule,
         SliderModule,
@@ -86,7 +92,9 @@ describe('LibraryPageComponent', () => {
         ScrollPanelModule,
         OverlayPanelModule,
         CardModule,
-        ContextMenuModule
+        ContextMenuModule,
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS)
       ],
       declarations: [
         LibraryPageComponent,
@@ -101,9 +109,11 @@ describe('LibraryPageComponent', () => {
         ComicTitlePipe
       ],
       providers: [
-        AuthenticationAdaptor,
         LibraryDisplayAdaptor,
         ConfirmationService,
+        MessageService,
+        ComicService,
+        UserService,
         { provide: UserService, useClass: UserServiceMock },
         { provide: ComicService, useClass: ComicServiceMock }
       ]

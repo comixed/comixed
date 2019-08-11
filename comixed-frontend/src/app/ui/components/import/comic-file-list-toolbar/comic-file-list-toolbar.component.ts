@@ -25,7 +25,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicFile } from 'app/models/import/comic-file';
 import * as SelectionActions from 'app/actions/selection.actions';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 
 @Component({

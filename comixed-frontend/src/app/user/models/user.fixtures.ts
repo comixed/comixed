@@ -17,7 +17,8 @@
  * org.comixed;
  */
 
-import { User } from 'app/models/user';
+import { ROLE_ADMIN, ROLE_READER } from './role.fixtures';
+import { User } from './user';
 
 export const USER_READER: User = {
   id: 1,
@@ -26,7 +27,7 @@ export const USER_READER: User = {
     new Date().getTime() - 31 * 24 * 60 * 60 * 1000
   ).getTime(),
   last_login_date: new Date().getTime(),
-  roles: [{ name: 'READER' }],
+  roles: [ROLE_READER],
   preferences: []
 };
 
@@ -37,7 +38,7 @@ export const USER_ADMIN: User = {
     new Date().getTime() - 31 * 24 * 60 * 60 * 1000
   ).getTime(),
   last_login_date: new Date().getTime(),
-  roles: [{ name: 'ADMIN' }],
+  roles: [ROLE_ADMIN],
   preferences: []
 };
 

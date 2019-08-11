@@ -19,7 +19,7 @@
 
 import { UserPreferencePipe } from './user-preference.pipe';
 import { TestBed } from '@angular/core/testing';
-import { USER_READER } from 'app/models/user.fixtures';
+import { USER_READER } from 'app/user/models/user.fixtures';
 
 describe('UserPreferencePipe', () => {
   const PREFERENCE_NAME = 'user.preference';

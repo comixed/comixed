@@ -83,7 +83,6 @@ import { DuplicatesEffects } from 'app/effects/duplicates.effects';
 import { DuplicatePagesViewComponent } from 'app/ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
 import { PageHashViewComponent } from 'app/ui/views/library/page-hash-view/page-hash-view.component';
 import { VolumeListComponent } from 'app/ui/components/scraping/volume-list/volume-list.component';
-import { TokenStorage } from 'app/storage/token.storage';
 import { AccountPageComponent } from 'app/ui/pages/account/account-page/account-page.component';
 import { AccountPreferencesComponent } from 'app/ui/components/account/account-preferences/account-preferences.component';
 import { UserDetailsComponent } from 'app/ui/components/account/user-details/user-details.component';
@@ -145,9 +144,9 @@ import { REDUCERS } from 'app/app.reducers';
 import { ContextMenuModule } from 'primeng/primeng';
 import { UserPreferencePipe } from './pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from './ui/components/import/comic-file-list-item/comic-file-list-item.component';
-import { AuthenticationEffects } from 'app/effects/authentication.effects';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { UserModule } from 'app/user/user.module';
+import { EFFECTS } from 'app/app.effects';
 
 @NgModule({
   declarations: [
@@ -222,6 +221,7 @@ import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
     ComicFileListItemComponent
   ],
   imports: [
+    UserModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRouting,
@@ -259,15 +259,7 @@ import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
     ReactiveFormsModule,
 
     StoreModule.forRoot(REDUCERS),
-    EffectsModule.forRoot([
-      AuthenticationEffects,
-      ImportingEffects,
-      LibraryEffects,
-      SingleComicScrapingEffects,
-      DuplicatesEffects,
-      UserAdminEffects,
-      ReadingListEffects
-    ]),
+    EffectsModule.forRoot(EFFECTS),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -278,7 +270,6 @@ import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
     FileSaverModule
   ],
   providers: [
-    AuthenticationAdaptor,
     LibraryDisplayAdaptor,
     UserService,
     ComicService,
@@ -286,7 +277,6 @@ import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
     MessageService,
     [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
     ConfirmationService,
-    TokenStorage,
     AdminGuard,
     ReaderGuard
   ],

@@ -26,17 +26,15 @@ import * as LibraryActions from 'app/actions/library.actions';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Comic } from 'app/models/comics/comic';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectionState } from 'app/models/state/selection-state';
-import { User } from 'app/models/user';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { AuthenticationState } from 'app/models/state/authentication-state';
+import { User } from 'app/user';
+import { AuthenticationAdaptor } from 'app/user';
 
 @Component({
   selector: 'app-library-page',
@@ -57,8 +55,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   scraping_subscription: Subscription;
   scraping: MultipleComicsScraping;
   selection_state$: Observable<SelectionState>;
-
-  auth_state_subscription: Subscription;
 
   selection_state_subscription: Subscription;
   selection_state: SelectionState;
@@ -83,11 +79,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.auth_state_subscription = this.auth_adaptor.auth_state$.subscribe(
-      (auth_state: AuthenticationState) => {
-        this.user = auth_state.user;
-      }
-    );
+    this.auth_adaptor.user$.subscribe(user => (this.user = user));
     this.library_subscription = this.library$.subscribe(
       (library: LibraryState) => {
         this.library = library;
@@ -122,7 +114,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.auth_state_subscription.unsubscribe();
     this.library_subscription.unsubscribe();
     this.library_filter_subscription.unsubscribe();
   }

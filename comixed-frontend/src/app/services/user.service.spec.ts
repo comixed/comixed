@@ -22,9 +22,9 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { USER_ADMIN, USER_READER } from 'app/models/user.fixtures';
+import { USER_ADMIN, USER_READER } from 'app/user/models/user.fixtures';
 import { USER_SERVICE_API_URL, UserService } from './user.service';
-import { User } from 'app/models/user';
+import { User } from 'app/user';
 
 describe('UserService', () => {
   const USER_ID = 717;

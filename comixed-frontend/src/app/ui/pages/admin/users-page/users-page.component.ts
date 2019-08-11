@@ -25,7 +25,7 @@ import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import { ConfirmationService } from 'primeng/api';
-import { User } from 'app/models/user';
+import { User } from 'app/user';
 
 @Component({
   selector: 'app-users-page',

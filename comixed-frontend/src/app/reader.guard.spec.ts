@@ -20,11 +20,9 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-
 import { ReaderGuard } from './reader.guard';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { initial_state } from 'app/reducers/authentication.reducer';
-import { USER_BLOCKED, USER_READER } from 'app/models/user.fixtures';
+import { AuthenticationAdaptor } from 'app/user';
+import { USER_ADMIN, USER_BLOCKED } from 'app/user/models/user.fixtures';
 import { StoreModule } from '@ngrx/store';
 import { REDUCERS } from 'app/app.reducers';
 
@@ -44,18 +42,13 @@ describe('ReaderGuard', () => {
 
     guard = TestBed.get(ReaderGuard);
     auth_adaptor = TestBed.get(AuthenticationAdaptor);
-    auth_adaptor.auth_state = { ...initial_state };
     router = TestBed.get(Router);
   });
 
   describe('when there is no user logged in', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        initialized: true,
-        authenticated: false,
-        user: null
-      };
+      auth_adaptor._initialized$.next(true);
+      auth_adaptor._authenticated$.next(false);
       spyOn(router, 'navigate');
     });
 
@@ -71,12 +64,9 @@ describe('ReaderGuard', () => {
 
   describe('when a user with the reader role is logged in', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        initialized: true,
-        authenticated: true,
-        user: USER_READER
-      };
+      auth_adaptor._initialized$.next(true);
+      auth_adaptor._authenticated$.next(true);
+      auth_adaptor._role$.next({ is_reader: true, is_admin: false });
     });
 
     it('grants access', () => {
@@ -86,12 +76,9 @@ describe('ReaderGuard', () => {
 
   describe('blocks users without the reader role', () => {
     beforeEach(() => {
-      auth_adaptor.auth_state = {
-        ...auth_adaptor.auth_state,
-        initialized: true,
-        authenticated: true,
-        user: USER_BLOCKED
-      };
+      auth_adaptor._initialized$.next(true);
+      auth_adaptor._authenticated$.next(true);
+      auth_adaptor._role$.next({ is_reader: false, is_admin: false });
     });
 
     it('blocks access', () => {

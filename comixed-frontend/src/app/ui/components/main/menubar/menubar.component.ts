@@ -21,9 +21,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthenticationAdaptor } from 'app/adaptors/authentication.adaptor';
-import { AuthenticationState } from 'app/models/state/authentication-state';
-import { User } from 'app/models/user';
+import { AuthenticationAdaptor } from 'app/user';
+import { AuthenticationState } from 'app/user/models/authentication-state';
+import { User } from 'app/user';
 import { Roles } from 'app/models/ui/roles';
 
 @Component({
