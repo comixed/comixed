@@ -18,13 +18,11 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { LibraryState } from 'app/models/state/library-state';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
+import { LibraryAdaptor } from 'app/library';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 @Component({
   selector: 'app-story-arcs-page',
@@ -32,31 +30,26 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./story-arcs-page.component.css']
 })
 export class StoryArcsPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<LibraryState>;
-  private library_subscription: Subscription;
-  library: LibraryState;
+  story_arcs_subscription: Subscription;
+  story_arcs: ComicCollectionEntry[];
 
   protected rows_options: Array<SelectItem>;
   rows = 10;
 
   constructor(
-    private translate: TranslateService,
-    private store: Store<AppState>
-  ) {
-    this.library$ = store.select('library');
-  }
+    private library_adaptor: LibraryAdaptor,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-      }
+    this.story_arcs_subscription = this.library_adaptor.story_arc$.subscribe(
+      story_arcs => (this.story_arcs = story_arcs)
     );
     this.load_rows_options();
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.story_arcs_subscription.unsubscribe();
   }
 
   private load_rows_options(): void {

@@ -34,6 +34,10 @@ import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { ComicPagesComponent } from './comic-pages.component';
 import { REDUCERS } from 'app/app.reducers';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { LibraryModule } from 'app/library/library.module';
 
 describe('ComicPagesComponent', () => {
   let component: ComicPagesComponent;
@@ -44,6 +48,9 @@ describe('ComicPagesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         FormsModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot(REDUCERS),

@@ -4,10 +4,10 @@ import {
   selectionReducer
 } from 'app/reducers/selection.reducer';
 import {
-  COMIC_1000,
-  COMIC_1002,
-  COMIC_1004
-} from 'app/models/comics/comic.fixtures';
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from 'app/library';
 import * as SelectionActions from 'app/actions/selection.actions';
 import {
   EXISTING_COMIC_FILE_1,
@@ -17,7 +17,7 @@ import {
 } from 'app/models/import/comic-file.fixtures';
 
 describe('selectionReducer', () => {
-  const COMICS = [COMIC_1000, COMIC_1002, COMIC_1004];
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const COMIC_FILES = [EXISTING_COMIC_FILE_1, EXISTING_COMIC_FILE_3];
 
   let state: SelectionState;

@@ -19,7 +19,7 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
@@ -27,7 +27,6 @@ import { Observable, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { MenuItem } from 'primeng/components/common/menuitem';
-import * as LibraryActions from 'app/actions/library.actions';
 import * as SelectionActions from 'app/actions/selection.actions';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
@@ -35,6 +34,7 @@ import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryAdaptor } from 'app/library';
 
 const FIRST = 'first';
 
@@ -69,6 +69,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
 
   constructor(
     private auth_adaptor: AuthenticationAdaptor,
+    private library_adaptor: LibraryAdaptor,
     private library_display_adaptor: LibraryDisplayAdaptor,
     private translate: TranslateService,
     private confirm: ConfirmationService,
@@ -264,10 +265,8 @@ export class ComicListComponent implements OnInit, OnDestroy {
       }),
       message: this.translate.instant('comic-list.delete-comics.message'),
       accept: () =>
-        this.store.dispatch(
-          new LibraryActions.LibraryDeleteMultipleComics({
-            comics: this._selected_comics
-          })
+        this.library_adaptor.delete_comics_by_id(
+          this._selected_comics.map(comic => comic.id)
         )
     });
   }

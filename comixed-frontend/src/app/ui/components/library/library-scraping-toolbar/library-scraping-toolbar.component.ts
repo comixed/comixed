@@ -24,7 +24,7 @@ import { Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 
 @Component({
   selector: 'app-library-scraping-toolbar',

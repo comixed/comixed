@@ -22,8 +22,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1 } from 'app/library';
 import { IssueDetailsComponent } from './issue-details.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IssueDetailsComponent', () => {
   let component: IssueDetailsComponent;
@@ -31,13 +32,18 @@ describe('IssueDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), TableModule, PanelModule],
+      imports: [
+        BrowserAnimationsModule,
+        TranslateModule.forRoot(),
+        TableModule,
+        PanelModule
+      ],
       declarations: [IssueDetailsComponent, ComicCoverUrlPipe]
     }).compileComponents();
 
     fixture = TestBed.createComponent(IssueDetailsComponent);
     component = fixture.componentInstance;
-    component.comic = COMIC_1000;
+    component.comic = COMIC_1;
     fixture.detectChanges();
   }));
 

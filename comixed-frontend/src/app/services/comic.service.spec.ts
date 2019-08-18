@@ -21,17 +21,12 @@ import { TestBed } from '@angular/core/testing';
 import { UserService } from './user.service';
 import { UserServiceMock } from './user.service.mock';
 import { ComicService } from './comic.service';
-import { ScanType } from 'app/models/comics/scan-type';
-import {
-  FIRST_SCAN_TYPE,
-  FOURTH_SCAN_TYPE,
-  THIRD_SCAN_TYPE
-} from 'app/models/comics/scan-type.fixtures';
+
 import {
   ADD_BLOCKED_PAGE_HASH_URL,
   CLEAR_METADATA_URL,
   COMIC_DELETE_URL,
-  COMIC_FORMAT_TYPES_URL,
+  FORMAT_TYPES_URL,
   COMIC_SCAN_TYPES_URL,
   COMIC_SET_FORMAT_TYPE_URL,
   COMIC_SET_SCAN_TYPE_URL,
@@ -58,19 +53,18 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import {
-  COMIC_1000,
-  COMIC_1001,
-  COMIC_1002
-} from 'app/models/comics/comic.fixtures';
-import { ComicFormat } from 'app/models/comics/comic-format';
-import {
-  DEFAULT_COMIC_FORMAT_1,
-  DEFAULT_COMIC_FORMAT_2,
-  DEFAULT_COMIC_FORMAT_3
-} from 'app/models/comics/comic-format.fixtures';
 import { LibraryContents } from 'app/models/library-contents';
-import { Comic } from 'app/models/comics/comic';
+import {
+  Comic,
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  ComicFormat,
+  FORMAT_1,
+  FORMAT_2,
+  FORMAT_3,
+  ScanType
+} from 'app/library';
 import { PageType } from 'app/models/comics/page-type';
 import {
   BACK_COVER,
@@ -92,16 +86,21 @@ import {
   VOLUME_1004
 } from 'app/models/comics/volume.fixtures';
 import { interpolate } from 'app/app.functions';
+import {
+  SCAN_TYPE_1,
+  SCAN_TYPE_2,
+  SCAN_TYPE_3
+} from 'app/library/models/scan-type.fixtures';
 
 describe('ComicService', () => {
-  const COMICS = [COMIC_1000, COMIC_1002];
-  const SCAN_TYPES = [FIRST_SCAN_TYPE, THIRD_SCAN_TYPE, FOURTH_SCAN_TYPE];
-  const COMIC_FORMATS = [DEFAULT_COMIC_FORMAT_1, DEFAULT_COMIC_FORMAT_3];
+  const COMICS = [COMIC_2, COMIC_3];
+  const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_2];
+  const COMIC_FORMATS = [FORMAT_1, FORMAT_3];
   const API_KEY = '0123456789abcdef';
   const SERIES_NAME = 'Super Awesome Comic Book';
   const VOLUME = '2015';
   const ISSUE_NUMBER = '717';
-  const COMIC = COMIC_1000;
+  const COMIC = COMIC_1;
   const ISSUE_ID = 49152;
 
   let service: ComicService;
@@ -127,7 +126,7 @@ describe('ComicService', () => {
   });
 
   it('fetches the scan types from the server', () => {
-    service.fetch_scan_types().subscribe((result: Array<ScanType>) => {
+    service.fetch_scan_types().subscribe((result: ScanType[]) => {
       expect(result).toEqual(SCAN_TYPES);
     });
 
@@ -138,44 +137,40 @@ describe('ComicService', () => {
   });
 
   it('sets the scan type on a comic', () => {
-    service.set_scan_type(COMIC_1000, FIRST_SCAN_TYPE).subscribe(result => {
+    service.set_scan_type(COMIC_1, SCAN_TYPE_1).subscribe(result => {
       expect(result).toBeFalsy();
     });
 
     const req = http_mock.expectOne(
-      interpolate(COMIC_SET_SCAN_TYPE_URL, { id: COMIC_1000.id })
+      interpolate(COMIC_SET_SCAN_TYPE_URL, { id: COMIC_1.id })
     );
     expect(req.request.method).toEqual('PUT');
-    expect(req.request.body.get('scan_type_id')).toEqual(
-      `${FIRST_SCAN_TYPE.id}`
-    );
+    expect(req.request.body.get('scan_type_id')).toEqual(`${SCAN_TYPE_1.id}`);
 
     req.flush(null, { status: 200, statusText: 'Success' });
   });
 
   it('fetches the formats from the server', () => {
-    service.fetch_formats().subscribe((result: Array<ComicFormat>) => {
+    service.fetch_formats().subscribe((result: ComicFormat[]) => {
       expect(result).toEqual(COMIC_FORMATS);
     });
 
-    const req = http_mock.expectOne(COMIC_FORMAT_TYPES_URL);
+    const req = http_mock.expectOne(FORMAT_TYPES_URL);
     expect(req.request.method).toEqual('GET');
 
     req.flush(COMIC_FORMATS);
   });
 
   it('sets the comic format for a comic', () => {
-    service.set_format(COMIC_1001, DEFAULT_COMIC_FORMAT_2).subscribe(result => {
+    service.set_format(COMIC_2, FORMAT_2).subscribe(result => {
       expect(result).toBeNull();
     });
 
     const req = http_mock.expectOne(
-      interpolate(COMIC_SET_FORMAT_TYPE_URL, { id: COMIC_1001.id })
+      interpolate(COMIC_SET_FORMAT_TYPE_URL, { id: COMIC_2.id })
     );
     expect(req.request.method).toEqual('PUT');
-    expect(req.request.body.get('format_id')).toEqual(
-      `${DEFAULT_COMIC_FORMAT_2.id}`
-    );
+    expect(req.request.body.get('format_id')).toEqual(`${FORMAT_2.id}`);
 
     req.flush(null, { status: 200, statusText: 'success' });
   });
@@ -183,12 +178,12 @@ describe('ComicService', () => {
   it('sets the sort name for a comic', () => {
     const SORT_NAME = 'Sortable name';
 
-    service.set_sort_name(COMIC_1002, SORT_NAME).subscribe(result => {
+    service.set_sort_name(COMIC_3, SORT_NAME).subscribe(result => {
       expect(result).toBeNull();
     });
 
     const req = http_mock.expectOne(
-      interpolate(COMIC_SET_SORT_NAME_URL, { id: COMIC_1002.id })
+      interpolate(COMIC_SET_SORT_NAME_URL, { id: COMIC_3.id })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body.get('sort_name')).toEqual(SORT_NAME);
@@ -227,12 +222,12 @@ describe('ComicService', () => {
 
   describe('when deleting comics', () => {
     it('handles successful deletion', () => {
-      service.delete_comic(COMIC_1000).subscribe((result: boolean) => {
+      service.delete_comic(COMIC_1).subscribe((result: boolean) => {
         expect(result).toBeTruthy();
       });
 
       const req = http_mock.expectOne(
-        interpolate(COMIC_DELETE_URL, { id: COMIC_1000.id })
+        interpolate(COMIC_DELETE_URL, { id: COMIC_1.id })
       );
       expect(req.request.method).toEqual('DELETE');
 
@@ -240,12 +235,12 @@ describe('ComicService', () => {
     });
 
     it('handles failed deletion', () => {
-      service.delete_comic(COMIC_1000).subscribe((result: boolean) => {
+      service.delete_comic(COMIC_1).subscribe((result: boolean) => {
         expect(result).toBeFalsy();
       });
 
       const req = http_mock.expectOne(
-        interpolate(COMIC_DELETE_URL, { id: COMIC_1000.id })
+        interpolate(COMIC_DELETE_URL, { id: COMIC_1.id })
       );
       expect(req.request.method).toEqual('DELETE');
 
@@ -254,16 +249,16 @@ describe('ComicService', () => {
   });
 
   it('fetches the comic summary', () => {
-    service.get_comic_summary(COMIC_1000.id).subscribe((result: Comic) => {
-      expect(result).toEqual(COMIC_1000);
+    service.get_comic_summary(COMIC_1.id).subscribe((result: Comic) => {
+      expect(result).toEqual(COMIC_1);
     });
 
     const req = http_mock.expectOne(
-      interpolate(COMIC_SUMMARY_URL, { id: COMIC_1000.id })
+      interpolate(COMIC_SUMMARY_URL, { id: COMIC_1.id })
     );
     expect(req.request.method).toEqual('GET');
 
-    req.flush(COMIC_1000);
+    req.flush(COMIC_1);
   });
 
   it('fetches the list of page types', () => {

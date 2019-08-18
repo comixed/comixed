@@ -24,13 +24,13 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
-import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { DuplicatePage } from 'app/models/comics/duplicate-page';
 import { PageHashViewComponent } from './page-hash-view.component';
 import { REDUCERS } from 'app/app.reducers';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 
 describe('PageHashViewComponent', () => {
   let component: PageHashViewComponent;

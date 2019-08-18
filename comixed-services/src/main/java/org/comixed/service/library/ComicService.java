@@ -31,6 +31,7 @@ import org.comixed.tasks.RescanComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,14 +51,16 @@ public class ComicService {
     @Autowired private LastReadDatesRepository lastReadDatesRepository;
     @Autowired private ComiXedUserRepository userRepository;
     @Autowired private Worker worker;
+    @Autowired private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskFactory;
 
-    public List<Comic> getComicsAddedSince(final long timestamp) {
+    public List<Comic> getComicsAddedSince(final long timestamp,
+                                           final int maxComics) {
         final Date lastUpdated = new Date(timestamp);
 
         this.logger.info("Getting comics added: last updated={}",
                          lastUpdated.toString());
 
-        return this.comicRepository.findByDateAddedGreaterThan(lastUpdated);
+        return this.comicRepository.findFirst100ByDateLastUpdatedGreaterThan(lastUpdated);
     }
 
     @Transactional
@@ -135,6 +138,7 @@ public class ComicService {
             comic.setSeries(series);
             comic.setVolume(volume);
             comic.setIssueNumber(issueNumber);
+            comic.setDateLastUpdated(new Date());
 
             this.logger.debug("Saving updated comic");
             return this.comicRepository.save(comic);
@@ -186,5 +190,24 @@ public class ComicService {
                               error);
             return null;
         }
+    }
+
+    public int rescanComics() {
+        this.logger.debug("Rescanning comics in the library");
+
+        final Iterable<Comic> comics = this.comicRepository.findAll();
+        int count = 0;
+
+        for (Comic comic : comics) {
+            count++;
+            this.logger.debug("Queueing comic for rescan: {}",
+                              comic.getFilename());
+            RescanComicWorkerTask task = this.rescanComicWorkerTaskFactory.getObject();
+
+            task.setComic(comic);
+            this.worker.addTasksToQueue(task);
+        }
+
+        return count;
     }
 }

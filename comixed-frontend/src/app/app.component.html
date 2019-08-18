@@ -3,21 +3,21 @@
          styleClass='cx-alerts'></p-toast>
 <p-confirmDialog></p-confirmDialog>
 <app-login [show_login_dialog]='show_login'></app-login>
-<div class='ui-g'
-     [style]='{top:0,bottom:0,width:"100%"}'>
+<div [style]='{top:0,bottom:0,width:"100%"}'
+     class='ui-g'>
     <div class='ui-g-12 ui-sm-12'>
         <router-outlet></router-outlet>
     </div>
-    <div id='comixed-footer'
-         class='ui-g'>
-        <div class='ui-g-3 ui-sm-6'
-             [innerHTML]='"main-page.library-counts"|translate:{
-                comic_count: library.comics.length,
+    <div class='ui-g'
+         id='comixed-footer'>
+        <div [innerHTML]='"main-page.library-counts"|translate:{
+                comic_count: comic_count,
                 read_count: 0,
-                import_count: library.library_contents.import_count,
-                rescan_count: library.library_contents.rescan_count
-              }'></div>
-        <div class='ui-g-9 ui-sm-6'
-             [innerHTML]='"main-page.copyright"|translate:{ years: "2017-2019" }'></div>
+                import_count: import_count,
+                rescan_count: rescan_count
+              }'
+             class='ui-g-3 ui-sm-6'></div>
+        <div [innerHTML]='"main-page.copyright"|translate:{ years: "2017-2019" }'
+             class='ui-g-9 ui-sm-6'></div>
     </div>
 </div>

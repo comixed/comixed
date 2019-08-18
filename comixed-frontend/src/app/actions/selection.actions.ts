@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { ComicFile } from 'app/models/import/comic-file';
 
 export const SELECTION_RESET = '[SELECTION] Reset selections';

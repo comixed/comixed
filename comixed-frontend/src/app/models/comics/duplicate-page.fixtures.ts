@@ -17,9 +17,8 @@
  * org.comixed;
  */
 
-import { FRONT_COVER } from 'app/models/comics/page-type.fixtures';
-import { COMIC_1000, COMIC_1002 } from 'app/models/comics/comic.fixtures';
 import { DuplicatePage } from 'app/models/comics/duplicate-page';
+import { COMIC_1, COMIC_2, FORMAT_1 } from 'app/library';
 
 export const DUPLICATE_PAGE_1: DuplicatePage = {
   id: 1000,
@@ -27,9 +26,9 @@ export const DUPLICATE_PAGE_1: DuplicatePage = {
   hash: 'abcdef1234567890',
   deleted: false,
   blocked: false,
-  page_type: FRONT_COVER,
+  page_type: FORMAT_1,
   index: 0,
-  comic: COMIC_1000
+  comic: COMIC_1
 };
 
 export const DUPLICATE_PAGE_2: DuplicatePage = {
@@ -38,7 +37,7 @@ export const DUPLICATE_PAGE_2: DuplicatePage = {
   hash: 'abcdef1234567890',
   deleted: false,
   blocked: false,
-  page_type: FRONT_COVER,
+  page_type: FORMAT_1,
   index: 0,
-  comic: COMIC_1002
+  comic: COMIC_2
 };

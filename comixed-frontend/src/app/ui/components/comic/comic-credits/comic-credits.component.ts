@@ -18,8 +18,8 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
-import { ComicCredit } from 'app/models/comics/comic-credit';
+import { Comic } from 'app/library';
+import { ComicCredit } from 'app/library';
 
 @Component({
   selector: 'app-comic-credits',

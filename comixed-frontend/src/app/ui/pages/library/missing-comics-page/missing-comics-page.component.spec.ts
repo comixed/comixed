@@ -20,11 +20,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MissingComicsPageComponent } from './missing-comics-page.component';
-import { Store, StoreModule } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
-import { COMIC_1000, COMIC_1002 } from 'app/models/comics/comic.fixtures';
 import { MissingComicsPipe } from 'app/pipes/missing-comics.pipe';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
 import { DataViewModule } from 'primeng/dataview';
@@ -38,6 +35,7 @@ import {
   ConfirmDialogModule,
   ContextMenuModule,
   DropdownModule,
+  MessageService,
   OverlayPanelModule,
   PanelModule,
   ScrollPanelModule,
@@ -55,15 +53,23 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { UserService } from 'app/services/user.service';
+import { ComicService } from 'app/services/comic.service';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
   let fixture: ComponentFixture<MissingComicsPageComponent>;
-  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         RouterTestingModule,
         FormsModule,
         BrowserAnimationsModule,
@@ -97,36 +103,19 @@ describe('MissingComicsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
-        ConfirmationService
+        ConfirmationService,
+        MessageService,
+        UserService,
+        ComicService
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MissingComicsPageComponent);
     component = fixture.componentInstance;
-    store = TestBed.get(Store);
-    spyOn(store, 'dispatch').and.callThrough();
-
     fixture.detectChanges();
-    store.dispatch(new LibraryActions.LibraryReset());
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('is subscribed to library changes', () => {
-    const COMICS = [COMIC_1000, COMIC_1002];
-
-    store.dispatch(
-      new LibraryActions.LibraryMergeNewComics({
-        library_state: {
-          comics: COMICS,
-          import_count: 0,
-          rescan_count: 0
-        }
-      })
-    );
-    fixture.detectChanges();
-    expect(component.comics).toEqual(COMICS);
   });
 });

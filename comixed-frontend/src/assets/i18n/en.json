@@ -699,5 +699,68 @@
     "logout": {
       "detail": "Successfully logged out."
     }
+  },
+  "library-effects": {
+    "get-scan-types": {
+      "error": {
+        "detail": "Failed to get the list of scan types."
+      }
+    },
+    "get-formats": {
+      "error": {
+        "detail": "Failed get the list of comic formats."
+      }
+    },
+    "get-updates": {
+      "error": {
+        "detail": "Getting comic updates failed."
+      }
+    },
+    "start-rescan": {
+      "success": {
+        "detail": "Library rescan started"
+      },
+      "error": {
+        "detail": "Failed to start rescanning the library."
+      }
+    },
+    "update-comic": {
+      "success": {
+        "detail": "Comic updated successfully."
+      },
+      "error": {
+        "detail": "Failed to update the comic."
+      }
+    },
+    "clear-metadata": {
+      "success": {
+        "detail": "Metadata clear successfully."
+      },
+      "error": {
+        "detail": "Failed to clear the metadata on the comic."
+      }
+    },
+    "blocked-page-hash": {
+      "success": {
+        "blocked-detail": "Blocked all pages with a hash of {hash}.",
+        "unblocked-detail": "Unblocked all pages with a hash of {hash}."
+      },
+      "error": {
+        "detail": "Failed to change page blocking."
+      }
+    },
+    "delete-multiple-comics": {
+      "success": {
+        "detail": "Marked {count} comic(s) for deletion."
+      },
+      "error": {
+        "detail": "Failed to delete multiple comics."
+      }
+    }
+  },
+  "general-message": {
+    "error": {
+      "general-service-failure": "A general system failure has occurred."
+    }
   }
 }

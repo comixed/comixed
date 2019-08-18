@@ -18,7 +18,7 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 
 export const MULTIPLE_COMICS_SCRAPING_SETUP =
   '[MULTIPLE COMICS SCRAPING] Setup';

@@ -18,7 +18,6 @@
  */
 
 import { importingReducer } from 'app/reducers/importing.reducer';
-import { libraryReducer } from 'app/reducers/library.reducer';
 import { libraryFilterReducer } from 'app/reducers/library-filter.reducer';
 import { singleComicScrapingReducer } from 'app/reducers/single-comic-scraping.reducer';
 import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scraping.reducer';
@@ -29,7 +28,6 @@ import { selectionReducer } from 'app/reducers/selection.reducer';
 
 export const REDUCERS = {
   import_state: importingReducer,
-  library: libraryReducer,
   library_filter: libraryFilterReducer,
   single_comic_scraping: singleComicScrapingReducer,
   multiple_comic_scraping: multipleComicsScrapingReducer,

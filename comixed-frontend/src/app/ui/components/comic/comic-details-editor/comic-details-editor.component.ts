@@ -33,7 +33,7 @@ import { AppState } from 'app/app.state';
 import * as LibraryScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { Volume } from 'app/models/comics/volume';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { COMICVINE_API_KEY } from 'app/user/models/preferences.constants';

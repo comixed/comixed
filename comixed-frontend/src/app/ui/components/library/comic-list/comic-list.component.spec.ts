@@ -45,30 +45,38 @@ import {
   ConfirmationService,
   ConfirmDialogModule,
   ContextMenuModule,
-  MenuItem
+  MenuItem,
+  MessageService
 } from 'primeng/primeng';
 import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  COMIC_1000,
-  COMIC_1002,
-  COMIC_1004
-} from 'app/models/comics/comic.fixtures';
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from 'app/library';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Routes } from '@angular/router/src/config';
 import { BehaviorSubject } from 'rxjs';
-import * as LibraryActions from 'app/actions/library.actions';
 import * as SelectionActions from 'app/actions/selection.actions';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { LibraryAdaptor } from 'app/library';
 
 describe('ComicListComponent', () => {
-  const COMICS = [COMIC_1000, COMIC_1002, COMIC_1004];
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const ROUTES: Routes = [{ path: 'test', component: ComicListComponent }];
 
   let component: ComicListComponent;
   let fixture: ComponentFixture<ComicListComponent>;
   let auth_adaptor: AuthenticationAdaptor;
+  let library_adaptor: LibraryAdaptor;
   let library_display_adaptor: LibraryDisplayAdaptor;
   let store: Store<AppState>;
   let translate: TranslateService;
@@ -79,6 +87,9 @@ describe('ComicListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         RouterTestingModule.withRoutes(ROUTES),
         FormsModule,
@@ -111,6 +122,9 @@ describe('ComicListComponent', () => {
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
         ConfirmationService,
+        MessageService,
+        ComicService,
+        UserService,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -125,6 +139,7 @@ describe('ComicListComponent', () => {
     component = fixture.componentInstance;
     auth_adaptor = TestBed.get(AuthenticationAdaptor);
     spyOn(auth_adaptor, 'set_preference');
+    library_adaptor = TestBed.get(LibraryAdaptor);
     library_display_adaptor = TestBed.get(LibraryDisplayAdaptor);
     store = TestBed.get(Store);
     translate = TestBed.get(TranslateService);
@@ -235,11 +250,11 @@ describe('ComicListComponent', () => {
   describe('when opening a comic', () => {
     beforeEach(() => {
       spyOn(router, 'navigate');
-      component.open_comic(COMIC_1000);
+      component.open_comic(COMIC_1);
     });
 
     it('goes to the comic details page', () => {
-      expect(router.navigate).toHaveBeenCalledWith(['/comics', COMIC_1000.id]);
+      expect(router.navigate).toHaveBeenCalledWith(['/comics', COMIC_1.id]);
     });
   });
 
@@ -293,9 +308,10 @@ describe('ComicListComponent', () => {
       spyOn(confirm, 'confirm').and.callFake((params: any) => {
         params.accept();
       });
+      spyOn(library_adaptor, 'delete_comics_by_id');
       component.delete_comics();
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryActions.LibraryDeleteMultipleComics({ comics: COMICS })
+      expect(library_adaptor.delete_comics_by_id).toHaveBeenCalledWith(
+        COMICS.map(comic => comic.id)
       );
     });
   });

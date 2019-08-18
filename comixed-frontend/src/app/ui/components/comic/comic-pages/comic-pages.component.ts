@@ -19,16 +19,16 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { Page } from 'app/models/comics/page';
 import { PageType } from 'app/models/comics/page-type';
-import * as LibraryActions from 'app/actions/library.actions';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { AppState } from 'app/app.state';
+import { LibraryAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-comic-pages',
@@ -43,6 +43,7 @@ export class ComicPagesComponent implements OnInit {
   protected page_type_options: Array<SelectItem> = [];
 
   constructor(
+    private library_adaptor: LibraryAdaptor,
     private translate_service: TranslateService,
     private comic_service: ComicService,
     private user_service: UserService,
@@ -85,20 +86,10 @@ export class ComicPagesComponent implements OnInit {
   }
 
   set_page_blocked(page: Page): void {
-    this.store.dispatch(
-      new LibraryActions.LibrarySetBlockedPageState({
-        page: page,
-        blocked_state: true
-      })
-    );
+    this.library_adaptor.block_page_hash(page.hash);
   }
 
   set_page_unblocked(page: Page): void {
-    this.store.dispatch(
-      new LibraryActions.LibrarySetBlockedPageState({
-        page: page,
-        blocked_state: false
-      })
-    );
+    this.library_adaptor.unblock_page_hash(page.hash);
   }
 }

@@ -30,6 +30,13 @@ import { AppState } from 'app/app.state';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { LocationsPageComponent } from './locations-page.component';
 import { REDUCERS } from 'app/app.reducers';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { MessageService } from 'primeng/api';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
 
 describe('LocationsPageComponent', () => {
   let component: LocationsPageComponent;
@@ -39,6 +46,9 @@ describe('LocationsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         FormsModule,
         StoreModule.forRoot(REDUCERS),
@@ -48,16 +58,15 @@ describe('LocationsPageComponent', () => {
         TableModule,
         PanelModule
       ],
-      declarations: [LocationsPageComponent, LibraryFilterComponent]
+      declarations: [LocationsPageComponent, LibraryFilterComponent],
+      providers: [MessageService, ComicService, UserService]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LocationsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     store = TestBed.get(Store);
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

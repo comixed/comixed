@@ -29,7 +29,6 @@ import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.*;
 import org.comixed.service.library.ComicService;
 import org.comixed.tasks.DeleteComicsWorkerTask;
-import org.comixed.tasks.RescanComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.comixed.views.View;
 import org.comixed.views.View.ComicDetails;
@@ -66,7 +65,6 @@ public class ComicController {
     @Autowired private ComicFormatRepository comicFormatRepository;
     @Autowired private ComicDataAdaptor comicDataAdaptor;
     @Autowired private Worker worker;
-    @Autowired private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskFactory;
     @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
 
     @RequestMapping(value = "/{id}",
@@ -207,12 +205,16 @@ public class ComicController {
                                              @RequestParam(value = "timeout",
                                                            required = false,
                                                            defaultValue = "0")
-                                                     long timeout)
+                                                     long timeout,
+                                             @RequestParam(value = "maximum",
+                                                           required = false,
+                                                           defaultValue = "100")
+                                                     int maximum)
             throws
             InterruptedException {
         final String email = principal.getName();
         final Date lastUpdated = new Date(timestamp);
-        final long latestCheck = System.currentTimeMillis() + timeout;
+        final long latestCheck = System.currentTimeMillis() + (timeout * 1000L);
         boolean done = false;
 
         this.logger.info("Getting library updates: user={} timestamp={}",
@@ -237,7 +239,8 @@ public class ComicController {
                     }
                 }
                 firstRun = false;
-                comics = this.comicService.getComicsAddedSince(timestamp);
+                comics = this.comicService.getComicsAddedSince(timestamp,
+                                                               maximum);
                 this.logger.debug("Found {} new or updated comic{}",
                                   comics.size(),
                                   comics.size() == 1
@@ -283,21 +286,17 @@ public class ComicController {
 
     @RequestMapping(value = "/rescan",
                     method = RequestMethod.POST)
-    public void rescanComics() {
-        this.logger.debug("Rescanning comics in the library");
+    public int rescanComics() {
+        this.logger.info("Beginning rescan of library");
+
+        final int result = this.comicService.rescanComics();
 
         ComicController.stopWaitingForStatus();
 
-        Iterable<Comic> comics = this.comicRepository.findAll();
+        this.logger.debug("Returning: {}",
+                          result);
 
-        for (Comic comic : comics) {
-            this.logger.debug("Queueing comic for rescan: {}",
-                              comic.getFilename());
-            RescanComicWorkerTask task = this.rescanComicWorkerTaskFactory.getObject();
-
-            task.setComic(comic);
-            this.worker.addTasksToQueue(task);
-        }
+        return result;
     }
 
     @RequestMapping(value = "/{id}/format",

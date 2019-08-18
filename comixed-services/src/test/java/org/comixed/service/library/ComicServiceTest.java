@@ -30,10 +30,9 @@ import org.comixed.tasks.RescanComicWorkerTask;
 import org.comixed.tasks.Worker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
@@ -55,6 +54,7 @@ public class ComicServiceTest {
     private static final String TEST_ISSUE_NUMBER = "237";
     private static final String TEST_EMAIL = "reader@yourdomain.com";
     private static final long TEST_USER_ID = 717L;
+    private static final int TEST_MAXIMUM_COMICS = 100;
 
     @InjectMocks private ComicService comicService;
     @Mock private ComicRepository comicRepository;
@@ -65,13 +65,17 @@ public class ComicServiceTest {
     @Mock private Worker worker;
     @Mock private ComiXedUser user;
     @Mock private List<LastReadDate> listLastReadDate;
+    @Captor private ArgumentCaptor<Date> lastUpdatedDateCaptor;
+    @Mock private ObjectFactory<RescanComicWorkerTask> rescanWorkerTaskFactory;
+    @Mock private RescanComicWorkerTask rescanWorkerTask;
 
     @Test
     public void testGetComicsAddedSince() {
-        Mockito.when(comicRepository.findByDateAddedGreaterThan(Mockito.any(Date.class)))
+        Mockito.when(comicRepository.findFirst100ByDateLastUpdatedGreaterThan(Mockito.any(Date.class)))
                .thenReturn(comicList);
 
-        final List<Comic> result = comicService.getComicsAddedSince(TEST_TIMESTAMP);
+        final List<Comic> result = comicService.getComicsAddedSince(TEST_TIMESTAMP,
+                                                                    TEST_MAXIMUM_COMICS);
 
         assertNotNull(result);
         assertSame(comicList,
@@ -79,7 +83,7 @@ public class ComicServiceTest {
 
         Mockito.verify(comicRepository,
                        Mockito.times(1))
-               .findByDateAddedGreaterThan(new Date(TEST_TIMESTAMP));
+               .findFirst100ByDateLastUpdatedGreaterThan(new Date(TEST_TIMESTAMP));
     }
 
     @Test
@@ -228,6 +232,9 @@ public class ComicServiceTest {
         Mockito.doNothing()
                .when(comic)
                .setIssueNumber(Mockito.anyString());
+        Mockito.doNothing()
+               .when(comic)
+               .setDateLastUpdated(lastUpdatedDateCaptor.capture());
         Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
                .thenReturn(comic);
 
@@ -252,6 +259,9 @@ public class ComicServiceTest {
         Mockito.verify(comic,
                        Mockito.times(1))
                .setIssueNumber(TEST_ISSUE_NUMBER);
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setDateLastUpdated(lastUpdatedDateCaptor.getValue());
         Mockito.verify(comicRepository,
                        Mockito.times(1))
                .save(comic);
@@ -324,5 +334,41 @@ public class ComicServiceTest {
         Mockito.verify(comicRepository,
                        Mockito.times(1))
                .save(comic);
+    }
+
+    @Test
+    public void testRescanComics() {
+        List<Comic> comics = new ArrayList<>();
+        comics.add(comic);
+
+        Mockito.when(comicRepository.findAll())
+               .thenReturn(comics);
+        Mockito.when(rescanWorkerTaskFactory.getObject())
+               .thenReturn(rescanWorkerTask);
+        Mockito.doNothing()
+               .when(rescanWorkerTask)
+               .setComic(Mockito.any(Comic.class));
+        Mockito.doNothing()
+               .when(worker)
+               .addTasksToQueue(Mockito.any(RescanComicWorkerTask.class));
+
+        final int result = comicService.rescanComics();
+
+        assertEquals(comics.size(),
+                     result);
+
+        Mockito.verify(comicRepository,
+                       Mockito.times(1))
+               .findAll();
+        Mockito.verify(rescanWorkerTaskFactory,
+                       Mockito.times(1))
+               .getObject();
+        Mockito.verify(rescanWorkerTask,
+                       Mockito.times(comics.size()))
+               .setComic(comic);
+        Mockito.verify(worker,
+                       Mockito.times(comics.size()))
+               .addTasksToQueue(rescanWorkerTask);
+
     }
 }

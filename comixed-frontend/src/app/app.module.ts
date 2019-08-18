@@ -75,11 +75,6 @@ import { DuplicatesPageComponent } from 'app/ui/pages/library/duplicates-page/du
 import { StoreModule } from '@ngrx/store';
 import { IssueDetailsComponent } from 'app/ui/components/library/issue-details/issue-details.component';
 import { EffectsModule } from '@ngrx/effects';
-import { UserAdminEffects } from 'app/effects/user-admin.effects';
-import { ImportingEffects } from 'app/effects/importing.effects';
-import { LibraryEffects } from 'app/effects/library.effects';
-import { SingleComicScrapingEffects } from 'app/effects/single-comic-scraping.effects';
-import { DuplicatesEffects } from 'app/effects/duplicates.effects';
 import { DuplicatePagesViewComponent } from 'app/ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
 import { PageHashViewComponent } from 'app/ui/views/library/page-hash-view/page-hash-view.component';
 import { VolumeListComponent } from 'app/ui/components/scraping/volume-list/volume-list.component';
@@ -91,8 +86,6 @@ import { LibraryScrapingToolbarComponent } from 'app/ui/components/library/libra
 import { ScrapingComicListComponent } from 'app/ui/components/scraping/scraping-comic-list/scraping-comic-list.component';
 import { AdminGuard } from 'app/admin.guard';
 import { ReaderGuard } from 'app/reader.guard';
-import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
@@ -106,24 +99,17 @@ import { ComicListItemComponent } from 'app/ui/components/library/comic-list-ite
 import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
 import { SeriesPageComponent } from 'app/ui/pages/series/series-page/series-page.component';
 import { SeriesDetailsPageComponent } from 'app/ui/pages/series/series-details-page/series-details-page.component';
-import { ComicSeriesPipe } from 'app/pipes/comic-series.pipe';
 import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
 import { PublishersPageComponent } from 'app/ui/pages/publishers/publishers-page/publishers-page.component';
 import { PublisherDetailsPageComponent } from 'app/ui/pages/publishers/publisher-details-page/publisher-details-page.component';
-import { ComicPublisherPipe } from 'app/pipes/comic-publisher.pipe';
-import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { CharactersPageComponent } from 'app/ui/pages/characters/characters-page/characters-page.component';
 import { CharacterDetailsPageComponent } from 'app/ui/pages/characters/character-details-page/character-details-page.component';
-import { ComicCharacterPipe } from 'app/pipes/comic-character.pipe';
 import { TeamsPageComponent } from 'app/ui/pages/teams/teams-page/teams-page.component';
 import { TeamDetailsPageComponent } from 'app/ui/pages/teams/team-details-page/team-details-page.component';
-import { ComicTeamPipe } from 'app/pipes/comic-team.pipe';
 import { LocationsPageComponent } from 'app/ui/pages/locations/locations-page/locations-page.component';
 import { LocationDetailsPageComponent } from 'app/ui/pages/locations/location-details-page/location-details-page.component';
-import { ComicLocationPipe } from 'app/pipes/comic-location.pipe';
 import { ComicGroupingCardComponent } from 'app/ui/components/comic/comic-grouping-card/comic-grouping-card.component';
 import { StoryArcsPageComponent } from 'app/ui/pages/story-arcs/story-arcs-page/story-arcs-page.component';
-import { ComicStoriesPipe } from 'app/pipes/comic-stories.pipe';
 import { StoryArcDetailsPageComponent } from 'app/ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
 import { MultiComicScrapingPageComponent } from 'app/ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component';
@@ -137,7 +123,6 @@ import { MissingComicsPipe } from './pipes/missing-comics.pipe';
 import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-page/missing-comics-page.component';
 import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
 import { ReadingListService } from 'app/services/reading-list.service';
-import { ReadingListEffects } from 'app/effects/reading-list.effects';
 import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
 import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
 import { REDUCERS } from 'app/app.reducers';
@@ -147,6 +132,10 @@ import { ComicFileListItemComponent } from './ui/components/import/comic-file-li
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 import { UserModule } from 'app/user/user.module';
 import { EFFECTS } from 'app/app.effects';
+import { LibraryModule } from 'app/library/library.module';
+import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
+import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 
 @NgModule({
   declarations: [
@@ -173,8 +162,6 @@ import { EFFECTS } from 'app/app.effects';
     MultipleComicScrapingComponent,
     LibraryScrapingToolbarComponent,
     ScrapingComicListComponent,
-    ComicTitlePipe,
-    ComicCoverUrlPipe,
     ComicPageUrlPipe,
     ComicFileCoverUrlPipe,
     LibraryFilterComponent,
@@ -186,24 +173,17 @@ import { EFFECTS } from 'app/app.effects';
     ComicGridItemComponent,
     SeriesPageComponent,
     SeriesDetailsPageComponent,
-    ComicSeriesPipe,
     ComicListToolbarComponent,
     PublishersPageComponent,
     PublisherDetailsPageComponent,
-    ComicPublisherPipe,
-    ComicCoverComponent,
     CharactersPageComponent,
     CharacterDetailsPageComponent,
-    ComicCharacterPipe,
     TeamsPageComponent,
     TeamDetailsPageComponent,
-    ComicTeamPipe,
     LocationsPageComponent,
     LocationDetailsPageComponent,
-    ComicLocationPipe,
     ComicGroupingCardComponent,
     StoryArcsPageComponent,
-    ComicStoriesPipe,
     StoryArcDetailsPageComponent,
     ComicListComponent,
     MultiComicScrapingPageComponent,
@@ -218,10 +198,14 @@ import { EFFECTS } from 'app/app.effects';
     ReadingListPageComponent,
     ReadingListsPageComponent,
     UserPreferencePipe,
-    ComicFileListItemComponent
+    ComicFileListItemComponent,
+    ComicCoverUrlPipe,
+    ComicTitlePipe,
+    ComicCoverComponent
   ],
   imports: [
     UserModule,
+    LibraryModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRouting,

@@ -1,68 +1,63 @@
-<p-table
-  [value]="library.story_arcs"
-  [rows]="rows"
-  paginator="true"
-  paginatorPosition="both"
-  alwaysShowPaginator="true"
->
-  <ng-template pTemplate="caption">
-    <div class="ui-helper-clearfix">
-      <div class="ui-g">
-        <div class="ui-g-6">
-          <div class="ui-g">
-            <div class="ui-g-12">
-              <p-dropdown
-                [options]="rows_options"
-                [(ngModel)]="rows"
-              ></p-dropdown>
+<p-table [rows]='rows'
+         [value]='story_arcs'
+         alwaysShowPaginator='true'
+         paginator='true'
+         paginatorPosition='both'>
+    <ng-template pTemplate='caption'>
+        <div class='ui-helper-clearfix'>
+            <div class='ui-g'>
+                <div class='ui-g-6'>
+                    <div class='ui-g'>
+                        <div class='ui-g-12'>
+                            <p-dropdown [(ngModel)]='rows'
+                                        [options]='rows_options'></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class='ui-g-6'>
+                    <app-library-filter *ngIf='library_filter'
+                                        [from_year]='library_filter.from_year'
+                                        [publisher]='library_filter.publisher'
+                                        [series]='library_filter.series'
+                                        [to_year]='library_filter.to_year'
+                                        [volume]='library_filter.volume'></app-library-filter>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="ui-g-6">
-          <app-library-filter
-            *ngIf="library_filter"
-            [publisher]="library_filter.publisher"
-            [series]="library_filter.series"
-            [volume]="library_filter.volume"
-            [from_year]="library_filter.from_year"
-            [to_year]="library_filter.to_year"
-          ></app-library-filter>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <ng-template pTemplate="header">
-    <tr>
-      <th [pSortableColumn]="'name'">
-        <p-sortIcon [field]="'name'"></p-sortIcon>
-        {{ 'story-arcs-page.table.label.story-arc-name' | translate }}
-      </th>
-      <th [pSortableColumn]="'comic_count'">
-        <p-sortIcon [field]="'comic_count'"></p-sortIcon>
-        {{ 'story-arcs-page.table.label.comic-count' | translate }}
-      </th>
-      <th [pSortableColumn]="'latest_comic_date'">
-        <p-sortIcon [field]="'latest_comic_date'"></p-sortIcon>
-        {{ 'story-arcs-page.table.label.latest-comic-added-date' | translate }}
-      </th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-story_arc>
-    <tr>
-      <td>
-        <a [routerLink]="['/stories', story_arc.name || 'undefined']">{{
-          story_arc.name || 'Undefined'
-        }}</a>
-      </td>
-      <td>
-        {{
-          'story-arcs-page.table.value.comic-count'
-            | translate: { comic_count: story_arc.comic_count }
-        }}
-      </td>
-      <td>
-        {{ story_arc.latest_comic_date | date: 'medium' }}
-      </td>
-    </tr>
-  </ng-template>
+    </ng-template>
+    <ng-template pTemplate='header'>
+        <tr>
+            <th [pSortableColumn]='"name"'>
+                <p-sortIcon [field]='"name"'></p-sortIcon>
+                {{ "story-arcs-page.table.label.story-arc-name" | translate }}
+            </th>
+            <th [pSortableColumn]='"count"'>
+                <p-sortIcon [field]='"count"'></p-sortIcon>
+                {{ "story-arcs-page.table.label.comic-count" | translate }}
+            </th>
+            <th [pSortableColumn]='"last_comic_added"'>
+                <p-sortIcon [field]='"last_comic_added"'></p-sortIcon>
+                {{ "story-arcs-page.table.label.latest-comic-added-date" | translate }}
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template let-story_arc
+                 pTemplate='body'>
+        <tr>
+            <td>
+                <a [routerLink]='["/stories", story_arc.name || "undefined"]'>{{
+                    story_arc.name || "Undefined"
+                    }}</a>
+            </td>
+            <td>
+                {{
+                "story-arcs-page.table.value.comic-count"
+                    | translate: {comic_count: story_arc.count}
+                }}
+            </td>
+            <td>
+                {{ story_arc.last_comic_added | date: "medium" }}
+            </td>
+        </tr>
+    </ng-template>
 </p-table>

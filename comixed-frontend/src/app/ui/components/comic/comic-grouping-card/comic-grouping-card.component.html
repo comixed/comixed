@@ -1,11 +1,11 @@
 <p-card *ngIf="details">
-  <p-header>
-    <h4>
-      <a [routerLink]="[parent_route, details.name]">{{ details.name }}</a>
-    </h4>
-  </p-header>
-  {{
-    'comic-grouping-card.text.appearance-count'
-      | translate: { name: details.name, comic_count: details.comic_count }
-  }}
+    <p-header>
+        <h4>
+            <a [routerLink]="[parent_route, details.name]">{{ details.name }}</a>
+        </h4>
+    </p-header>
+    {{'comic-grouping-card.text.appearance-count'| translate: {
+    name: details.name,
+    comic_count: details.count
+}  }}
 </p-card>

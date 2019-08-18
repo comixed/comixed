@@ -33,16 +33,21 @@ import {
   VOLUME_1004
 } from 'app/models/comics/volume.fixtures';
 import { Volume } from 'app/models/comics/volume';
-import { COMIC_1002 } from 'app/models/comics/comic.fixtures';
+import { COMIC_3 } from 'app/library';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
 
 describe('VolumeListComponent', () => {
-  const COMIC = COMIC_1002;
   const EXACT_MATCH = VOLUME_1002;
   const EXACT_MATCH_2 = VOLUME_1003;
   const CLOSE_MATCH = VOLUME_1000;
   const NO_MATCH = VOLUME_1004;
+  const COMIC = {
+    ...COMIC_3,
+    publisher: EXACT_MATCH.publisher,
+    series: EXACT_MATCH.name,
+    volume: EXACT_MATCH.start_year
+  };
 
   let component: VolumeListComponent;
   let fixture: ComponentFixture<VolumeListComponent>;

@@ -22,28 +22,33 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
+import { StoreModule } from '@ngrx/store';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { MainPageComponent } from './main-page.component';
 import { ChartModule } from 'primeng/chart';
-import { DropdownModule } from 'primeng/primeng';
+import { DropdownModule, MessageService } from 'primeng/primeng';
 import { REDUCERS } from 'app/app.reducers';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { UserService } from 'app/services/user.service';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
   let comic_service: ComicService;
   let router: Router;
-  let store: Store<AppState>;
 
   const routes = [];
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         RouterTestingModule.withRoutes(routes),
         FormsModule,
         TranslateModule.forRoot(),
@@ -52,15 +57,17 @@ describe('MainPageComponent', () => {
         DropdownModule
       ],
       declarations: [MainPageComponent],
-      providers: [{ provide: ComicService, useClass: ComicServiceMock }]
+      providers: [
+        MessageService,
+        UserService,
+        { provide: ComicService, useClass: ComicServiceMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MainPageComponent);
     component = fixture.componentInstance;
     comic_service = TestBed.get(ComicService);
     router = TestBed.get(Router);
-    store = TestBed.get(Store);
-    store.dispatch(new LibraryActions.LibraryReset());
 
     fixture.detectChanges();
   }));

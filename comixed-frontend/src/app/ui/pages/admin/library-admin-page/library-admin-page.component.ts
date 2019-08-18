@@ -18,12 +18,8 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { LibraryState } from 'app/models/state/library-state';
-import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
+import { LibraryAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-library-admin-page',
@@ -31,34 +27,28 @@ import * as LibraryActions from 'app/actions/library.actions';
   styleUrls: ['./library-admin-page.component.css']
 })
 export class LibraryAdminPageComponent implements OnInit, OnDestroy {
-  library$: Observable<LibraryState>;
-  library_subscription: Subscription;
-  library: LibraryState;
+  import_count_subscription: Subscription;
+  import_count = 0;
+  rescan_count_subscription: Subscription;
+  rescan_count = 0;
 
-  constructor(private store: Store<AppState>) {
-    this.library$ = store.select('library');
-  }
+  constructor(private library_adaptor: LibraryAdaptor) {}
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-      }
+    this.import_count_subscription = this.library_adaptor.pending_import$.subscribe(
+      import_count => (this.import_count = import_count)
+    );
+    this.rescan_count_subscription = this.library_adaptor.pending_rescan$.subscribe(
+      rescan_count => (this.rescan_count = rescan_count)
     );
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.import_count_subscription.unsubscribe();
+    this.rescan_count_subscription.unsubscribe();
   }
 
   rescan_library(): void {
-    if (this.library.library_contents.rescan_count === 0) {
-      this.store.dispatch(
-        new LibraryActions.LibraryRescanFiles({
-          last_comic_date: '0',
-          timeout: 60000
-        })
-      );
-    }
+    this.library_adaptor.start_rescan();
   }
 }

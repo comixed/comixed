@@ -46,6 +46,7 @@ import {
   ConfirmDialogModule,
   ContextMenuModule,
   DropdownModule,
+  MessageService,
   OverlayPanelModule,
   PanelModule,
   ScrollPanelModule,
@@ -61,6 +62,12 @@ import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -73,6 +80,9 @@ describe('ReadingListPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         RouterTestingModule,
         FormsModule,
@@ -109,6 +119,9 @@ describe('ReadingListPageComponent', () => {
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
         ConfirmationService,
+        MessageService,
+        ComicService,
+        UserService,
         {
           provide: ActivatedRoute,
           useValue: {

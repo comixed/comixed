@@ -20,11 +20,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { LibraryState } from 'app/models/state/library-state';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
+import { LibraryAdaptor } from 'app/library';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 @Component({
   selector: 'app-locations-page',
@@ -32,31 +32,27 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./locations-page.component.css']
 })
 export class LocationsPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<LibraryState>;
-  private library_subscription: Subscription;
-  library: LibraryState;
+  locations_subscription: Subscription;
+  locations: ComicCollectionEntry[];
 
   protected rows_options: Array<SelectItem>;
   rows = 10;
 
   constructor(
+    private library_adaptor: LibraryAdaptor,
     private translate: TranslateService,
     private store: Store<AppState>
-  ) {
-    this.library$ = store.select('library');
-  }
+  ) {}
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-      }
+    this.locations_subscription = this.library_adaptor.location$.subscribe(
+      locations => (this.locations = locations)
     );
     this.load_rows_options();
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.locations_subscription.unsubscribe();
   }
 
   private load_rows_options(): void {

@@ -21,10 +21,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppState } from 'app/app.state';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { LibraryState } from 'app/models/state/library-state';
 import { Observable, Subscription } from 'rxjs';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { SelectionState } from 'app/models/state/selection-state';
+import { LibraryAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-missing-comics-page',
@@ -32,10 +32,6 @@ import { SelectionState } from 'app/models/state/selection-state';
   styleUrls: ['./missing-comics-page.component.css']
 })
 export class MissingComicsPageComponent implements OnInit, OnDestroy {
-  library$: Observable<LibraryState>;
-  library_subscription: Subscription;
-  library: LibraryState;
-
   selection_state$: Observable<SelectionState>;
   selection_state_subscription: Subscription;
   selection_state: SelectionState;
@@ -43,23 +39,19 @@ export class MissingComicsPageComponent implements OnInit, OnDestroy {
   comics: Array<Comic> = [];
   selected_comics: Array<Comic> = [];
 
+  library_subscription: Subscription;
+
   constructor(
+    private library_adaptor: LibraryAdaptor,
     private store: Store<AppState>,
     private translate: TranslateService
   ) {
-    this.library$ = store.select('library');
     this.selection_state$ = store.select('selections');
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-
-        if (this.library) {
-          this.comics = [].concat(this.library.comics);
-        }
-      }
+    this.library_subscription = this.library_adaptor.comic$.subscribe(
+      comics => (this.comics = comics)
     );
     this.selection_state_subscription = this.selection_state$.subscribe(
       (selection_state: SelectionState) => {

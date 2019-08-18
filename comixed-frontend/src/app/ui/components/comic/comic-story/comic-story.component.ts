@@ -18,8 +18,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
-import { ComicGrouping, LibraryState } from 'app/models/state/library-state';
+import { Comic, ComicCollectionEntry } from 'app/library';
 
 @Component({
   selector: 'app-comic-story',
@@ -28,17 +27,20 @@ import { ComicGrouping, LibraryState } from 'app/models/state/library-state';
 })
 export class ComicStoryComponent implements OnInit {
   @Input() comic: Comic;
-  @Input() library: LibraryState;
+  @Input() characters: ComicCollectionEntry[];
+  @Input() teams: ComicCollectionEntry[];
+  @Input() locations: ComicCollectionEntry[];
+  @Input() story_arcs: ComicCollectionEntry[];
 
   constructor() {}
 
   ngOnInit() {}
 
   get_details_for(
-    source: Array<ComicGrouping>,
+    source: ComicCollectionEntry[],
     character: string
-  ): ComicGrouping {
-    return source.find((grouping: ComicGrouping) => {
+  ): ComicCollectionEntry {
+    return source.find((grouping: ComicCollectionEntry) => {
       return grouping.name === character;
     });
   }

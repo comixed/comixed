@@ -19,11 +19,11 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
-import { ComicGrouping, LibraryState } from 'app/models/state/library-state';
 import { SelectItem } from 'primeng/api';
+import { LibraryAdaptor } from 'app/library';
+import { ComicCollectionEntry } from 'app/library';
 
 const COLOR_PALLETTE = [
   '#C0C0C0',
@@ -49,12 +49,19 @@ const COLOR_PALLETTE = [
   styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<LibraryState>;
-  private library_subscription: Subscription;
-  library: LibraryState;
-
-  public comic_count: number;
-  public plural = false;
+  comics_subscription: Subscription;
+  publishers_subscription: Subscription;
+  publishers: ComicCollectionEntry[];
+  series_subscription: Subscription;
+  series: ComicCollectionEntry[];
+  characters_subscription: Subscription;
+  characters: ComicCollectionEntry[];
+  teams_subscription: Subscription;
+  teams: ComicCollectionEntry[];
+  locations_subscription: Subscription;
+  locations: ComicCollectionEntry[];
+  comic_count: number;
+  plural = false;
 
   public library_data: any;
   public options: any;
@@ -67,8 +74,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
   ];
   public data_to_show = 'publishers';
 
-  constructor(private store: Store<AppState>) {
-    this.library$ = store.select('library');
+  constructor(
+    private library_adaptor: LibraryAdaptor,
+    private store: Store<AppState>
+  ) {
     this.options = {
       title: {
         display: true,
@@ -82,33 +91,61 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-        this.comic_count = library.comics.length;
-        this.plural = this.comic_count !== 1;
-
+    this.comics_subscription = this.library_adaptor.comic$.subscribe(comics => {
+      this.comic_count = comics.length;
+      this.plural = this.comic_count !== 1;
+    });
+    this.publishers_subscription = this.library_adaptor.publisher$.subscribe(
+      publishers => {
+        this.publishers = publishers;
+        this.build_data();
+      }
+    );
+    this.series_subscription = this.library_adaptor.serie$.subscribe(series => {
+      this.series = series;
+      this.build_data();
+    });
+    this.characters_subscription = this.library_adaptor.character$.subscribe(
+      characters => {
+        this.characters = characters;
+        this.build_data();
+      }
+    );
+    this.teams_subscription = this.library_adaptor.team$.subscribe(teams => {
+      this.teams = teams;
+      this.build_data();
+    });
+    this.locations_subscription = this.library_adaptor.location$.subscribe(
+      locations => {
+        this.locations = locations;
         this.build_data();
       }
     );
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.comics_subscription.unsubscribe();
+    this.publishers_subscription.unsubscribe();
+    this.series_subscription.unsubscribe();
+    this.characters_subscription.unsubscribe();
+    this.teams_subscription.unsubscribe();
+    this.locations_subscription.unsubscribe();
   }
 
-  sort(elements: Array<ComicGrouping>): Array<ComicGrouping> {
-    return elements.sort((left: ComicGrouping, right: ComicGrouping) => {
-      if (left.comic_count < right.comic_count) {
-        return 1;
-      }
+  sort(elements: ComicCollectionEntry[]): ComicCollectionEntry[] {
+    return elements.sort(
+      (left: ComicCollectionEntry, right: ComicCollectionEntry) => {
+        if (left.count < right.count) {
+          return 1;
+        }
 
-      if (left.comic_count > right.comic_count) {
-        return -1;
-      }
+        if (left.count > right.count) {
+          return -1;
+        }
 
-      return 0;
-    });
+        return 0;
+      }
+    );
   }
 
   build_data(): void {
@@ -117,41 +154,41 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
     switch (this.data_to_show) {
       case 'publishers':
-        this.sort(this.library.publishers).forEach(publisher => {
+        this.sort(this.publishers).forEach(publisher => {
           names.push(publisher.name);
-          counts.push(publisher.comic_count);
+          counts.push(publisher.count);
         });
         this.options.title.text = 'Data For Most Common Publishers';
         break;
 
       case 'series':
-        this.sort(this.library.series).forEach(series => {
+        this.sort(this.series).forEach(series => {
           names.push(series.name);
-          counts.push(series.comic_count);
+          counts.push(series.count);
         });
         this.options.title.text = 'Data For Most Common Series';
         break;
 
       case 'characters':
-        this.sort(this.library.characters).forEach(character => {
+        this.sort(this.characters).forEach(character => {
           names.push(character.name);
-          counts.push(character.comic_count);
+          counts.push(character.count);
         });
         this.options.title.text = 'Data For Most Common Characters';
         break;
 
       case 'teams':
-        this.sort(this.library.teams).forEach(team => {
+        this.sort(this.teams).forEach(team => {
           names.push(team.name);
-          counts.push(team.comic_count);
+          counts.push(team.count);
         });
         this.options.title.text = 'Data For Most Common Teams';
         break;
 
       case 'locations':
-        this.sort(this.library.locations).forEach(location => {
+        this.sort(this.locations).forEach(location => {
           names.push(location.name);
-          counts.push(location.comic_count);
+          counts.push(location.count);
         });
         this.options.title.text = 'Data For Most Common Locations';
         break;

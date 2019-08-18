@@ -17,10 +17,10 @@
  * org.comixed;
  */
 
-import { Comic } from './comics/comic';
+import { Comic } from 'app/library';
 
 export interface LibraryContents {
-  comics: Array<Comic>;
+  comics: Comic[];
   rescan_count: number;
   import_count: number;
 }

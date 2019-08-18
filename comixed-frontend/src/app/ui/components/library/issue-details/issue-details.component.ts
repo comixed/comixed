@@ -18,7 +18,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 
 @Component({
   selector: 'app-issue-details',

@@ -17,8 +17,8 @@
  * org.comixed;
  */
 
-import { Comic } from './comic';
 import { PageType } from './page-type';
+import { Comic } from 'app/library';
 
 export interface DuplicatePage {
   id: number;

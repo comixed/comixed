@@ -21,8 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { StoreModule } from '@ngrx/store';
 import { DataViewModule } from 'primeng/dataview';
 import { SliderModule } from 'primeng/slider';
 import { ButtonModule } from 'primeng/button';
@@ -45,29 +44,38 @@ import {
   CheckboxModule,
   ConfirmationService,
   ContextMenuModule,
+  MessageService,
   OverlayPanelModule,
   PanelModule,
   ScrollPanelModule,
   SidebarModule
 } from 'primeng/primeng';
-import * as LibraryActions from 'app/actions/library.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { UserPreferencePipe } from 'app/pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { UserService } from 'app/services/user.service';
+import { LibraryAdaptor } from 'app/library';
 
 const DIRECTORY_TO_USE = '/OldUser/comixed/Downloads';
 
 describe('ImportPageComponent', () => {
   let component: ImportPageComponent;
   let fixture: ComponentFixture<ImportPageComponent>;
-  let store: Store<AppState>;
+  let library_adaptor: LibraryAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         FormsModule,
         RouterTestingModule,
@@ -103,15 +111,15 @@ describe('ImportPageComponent', () => {
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
         ConfirmationService,
+        MessageService,
+        UserService,
         { provide: ComicService, useClass: ComicServiceMock }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportPageComponent);
     component = fixture.componentInstance;
-    store = TestBed.get(Store);
-
-    store.dispatch(new LibraryActions.LibraryReset());
+    library_adaptor = TestBed.get(LibraryAdaptor);
     fixture.detectChanges();
   }));
 
@@ -121,15 +129,7 @@ describe('ImportPageComponent', () => {
 
   describe('when not importing comics', () => {
     beforeEach(() => {
-      store.dispatch(
-        new LibraryActions.LibraryMergeNewComics({
-          library_state: {
-            import_count: 0,
-            rescan_count: 0,
-            comics: []
-          }
-        })
-      );
+      library_adaptor._pending_import$.next(0);
       fixture.detectChanges();
     });
 
@@ -148,15 +148,7 @@ describe('ImportPageComponent', () => {
 
   describe('when importing comics', () => {
     beforeEach(() => {
-      store.dispatch(
-        new LibraryActions.LibraryMergeNewComics({
-          library_state: {
-            import_count: 1,
-            rescan_count: 0,
-            comics: []
-          }
-        })
-      );
+      library_adaptor._pending_import$.next(17);
       fixture.detectChanges();
     });
 

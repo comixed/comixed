@@ -22,7 +22,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { Observable, Subscription } from 'rxjs';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import { LibraryState } from 'app/models/state/library-state';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import { SelectionState } from 'app/models/state/selection-state';
 import * as SelectionActions from 'app/actions/selection.actions';
@@ -33,10 +32,6 @@ import * as SelectionActions from 'app/actions/selection.actions';
   styleUrls: ['./multi-comic-scraping-page.component.css']
 })
 export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
-  library$: Observable<LibraryState>;
-  library_subscription: Subscription;
-  library: LibraryState;
-
   scraping$: Observable<MultipleComicsScraping>;
   scraping_subscription: Subscription;
   scraping: MultipleComicsScraping;
@@ -46,17 +41,11 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
   selection_state: SelectionState;
 
   constructor(private store: Store<AppState>) {
-    this.library$ = this.store.select('library');
     this.scraping$ = this.store.select('multiple_comic_scraping');
     this.selection_state$ = this.store.select('selections');
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-      }
-    );
     this.scraping_subscription = this.scraping$.subscribe(
       (scraping: MultipleComicsScraping) => {
         this.scraping = scraping;
@@ -70,7 +59,6 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
     this.scraping_subscription.unsubscribe();
     this.selection_state_subscription.unsubscribe();
   }

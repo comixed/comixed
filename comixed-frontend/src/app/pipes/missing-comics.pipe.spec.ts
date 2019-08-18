@@ -18,18 +18,14 @@
  */
 
 import { MissingComicsPipe } from './missing-comics.pipe';
-import {
-  COMIC_1000,
-  COMIC_1001,
-  COMIC_1002,
-  COMIC_1003
-} from 'app/models/comics/comic.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from 'app/library';
 
 describe('MissingComicsPipe', () => {
   const pipe = new MissingComicsPipe();
-  const NO_MISSING_COMICS = [COMIC_1000, COMIC_1001, COMIC_1002];
-  const WITH_MISSING_COMICS = [COMIC_1000, COMIC_1001, COMIC_1002, COMIC_1003];
-  const MISSING_COMICS = [COMIC_1003];
+  const MISSING_COMIC = { ...COMIC_4, missing: true };
+  const NO_MISSING_COMICS = [COMIC_1, COMIC_2, COMIC_3];
+  const WITH_MISSING_COMICS = [COMIC_1, COMIC_2, COMIC_3, MISSING_COMIC];
+  const MISSING_COMICS = [MISSING_COMIC];
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();

@@ -18,14 +18,10 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { AppState } from 'app/app.state';
-import { LibraryState } from 'app/models/state/library-state';
-import * as LibraryActions from 'app/actions/library.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthenticationAdaptor } from 'app/user';
-import { User } from 'app/user';
+import { AuthenticationAdaptor, User } from 'app/user';
+import { LibraryAdaptor } from 'app/library';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -36,20 +32,19 @@ export class AppComponent implements OnInit {
   title = 'ComiXed';
 
   user: User;
+  authenticated = false;
   show_login = false;
-  fetching_comics = false;
-
-  library$: Observable<LibraryState>;
-  library_subscription: Subscription;
-  library: LibraryState;
+  comic_count = 0;
+  import_count = 0;
+  rescan_count = 0;
+  fetching_update_subscription: Subscription;
 
   constructor(
     private translate_service: TranslateService,
-    private store: Store<AppState>,
-    private auth_adaptor: AuthenticationAdaptor
+    private auth_adaptor: AuthenticationAdaptor,
+    private library_adaptor: LibraryAdaptor
   ) {
     translate_service.setDefaultLang('en');
-    this.library$ = store.select('library');
   }
 
   ngOnInit() {
@@ -57,50 +52,34 @@ export class AppComponent implements OnInit {
       this.user = user;
     });
     this.auth_adaptor.authenticated$.subscribe(authenticated => {
-      if (authenticated && !this.fetching_comics) {
-        this.fetching_comics = true;
-        this.store.dispatch(
-          new LibraryActions.LibraryFetchLibraryChanges({
-            last_comic_date: '0',
-            timeout: 60000
-          })
+      this.authenticated = authenticated;
+      if (this.authenticated && !this.fetching_update_subscription) {
+        this.fetching_update_subscription = this.library_adaptor._fetching_update$.subscribe(
+          fetching => {
+            if (!fetching) {
+              this.library_adaptor.get_comic_updates();
+            }
+          }
         );
-      }
-      if (!this.auth_adaptor.authenticated && this.fetching_comics) {
-        this.store.dispatch(new LibraryActions.LibraryReset());
-        this.fetching_comics = false;
+      } else if (!this.authenticated && this.fetching_update_subscription) {
+        this.fetching_update_subscription.unsubscribe();
+        this.fetching_update_subscription = null;
+        this.library_adaptor.reset_library();
       }
     });
-
     this.auth_adaptor.show_login$.subscribe(show_login => {
       this.show_login = show_login;
     });
     this.auth_adaptor.get_current_user();
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
 
-        // if we're not busy, then get the scan types, formats or updates as needed
-        if (!this.library.busy) {
-          if (
-            !this.library.scan_types ||
-            this.library.scan_types.length === 0
-          ) {
-            this.store.dispatch(new LibraryActions.LibraryGetScanTypes());
-          } else if (this.library.formats.length === 0) {
-            this.store.dispatch(new LibraryActions.LibraryGetFormats());
-          } else if (this.auth_adaptor.authenticated) {
-            // if the last time we checked the library, we got either an import or a rescan count,
-            // then set the timeout value to 0
-            this.store.dispatch(
-              new LibraryActions.LibraryFetchLibraryChanges({
-                last_comic_date: `${this.library.last_comic_date}`,
-                timeout: 60000
-              })
-            );
-          }
-        }
-      }
+    this.library_adaptor.comic$.subscribe(
+      comics => (this.comic_count = comics.length)
+    );
+    this.library_adaptor.pending_import$.subscribe(
+      imports => (this.import_count = imports)
+    );
+    this.library_adaptor.pending_rescan$.subscribe(
+      rescans => (this.rescan_count = rescans)
     );
   }
 }

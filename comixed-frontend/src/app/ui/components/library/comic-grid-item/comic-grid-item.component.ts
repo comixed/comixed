@@ -18,7 +18,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 
 @Component({
   selector: 'app-comic-grid-item',

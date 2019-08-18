@@ -23,7 +23,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { Observable, Subscription } from 'rxjs';
 import { ImportState } from 'app/models/state/import-state';
-import { LibraryState } from 'app/models/state/library-state';
 import * as ImportingActions from 'app/actions/importing.actions';
 import { ComicFile } from 'app/models/import/comic-file';
 import { ComicService } from 'app/services/comic.service';
@@ -34,9 +33,9 @@ import {
   IMPORT_SORT
 } from 'app/user/models/preferences.constants';
 import { SelectionState } from 'app/models/state/selection-state';
-import { AuthenticationAdaptor } from 'app/user';
-import { User } from 'app/user';
+import { AuthenticationAdaptor, User } from 'app/user';
 import { SelectItem } from 'primeng/api';
+import { LibraryAdaptor } from 'app/library';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';
@@ -52,9 +51,9 @@ const ROWS_PREFERENCE = 'import_rows';
   styleUrls: ['./import-page.component.css']
 })
 export class ImportPageComponent implements OnInit, OnDestroy {
-  library$: Observable<LibraryState>;
-  library_subscription: Subscription;
-  library: LibraryState;
+  import_count_subscription: Subscription;
+  import_count = 0;
+  importing = false;
 
   import_state$: Observable<ImportState>;
   import_state_subscription: Subscription;
@@ -80,13 +79,13 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   protected delete_blocked_pages = false;
 
   constructor(
+    private library_adaptor: LibraryAdaptor,
     private auth_adaptor: AuthenticationAdaptor,
     private comic_service: ComicService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private store: Store<AppState>
   ) {
-    this.library$ = store.select('library');
     this.import_state$ = store.select('import_state');
     this.selection_state$ = store.select('selections');
     activatedRoute.queryParams.subscribe(params => {
@@ -128,6 +127,12 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     this.auth_adaptor.user$.subscribe(user => {
       this.user = user;
     });
+    this.import_count_subscription = this.library_adaptor.pending_import$.subscribe(
+      import_count => {
+        this.import_count = import_count;
+        this.importing = import_count > 0;
+      }
+    );
 
     this.store.dispatch(
       new ImportingActions.ImportingSetDirectory({
@@ -135,11 +140,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-      }
-    );
     this.import_state_subscription = this.import_state$.subscribe(
       (import_state: ImportState) => {
         this.import_state = import_state;
@@ -167,7 +167,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.import_count_subscription.unsubscribe();
     this.import_state_subscription.unsubscribe();
     this.selection_state_subscription.unsubscribe();
   }
@@ -220,17 +220,15 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   plural_imports(): boolean {
-    return this.library.library_contents.import_count !== 1;
+    return this.import_count !== 1;
   }
 
   get_import_title(): string {
-    if (this.library.library_contents.import_count === 0) {
+    if (this.import_count === 0) {
       return 'Preparing To Import Comics...';
     }
     return (
-      `There ${this.plural_imports() ? 'Are' : 'Is'} ${
-        this.library.library_contents.import_count
-      } ` +
+      `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.import_count} ` +
       `Comic${this.plural_imports() ? 's' : ''} Remaining To Be Imported...`
     );
   }

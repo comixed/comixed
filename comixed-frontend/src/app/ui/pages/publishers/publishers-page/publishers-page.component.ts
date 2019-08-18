@@ -18,13 +18,11 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { LibraryState } from 'app/models/state/library-state';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { LibraryAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-publishers-page',
@@ -32,31 +30,26 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./publishers-page.component.css']
 })
 export class PublishersPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<LibraryState>;
-  private library_subscription: Subscription;
-  library: LibraryState;
+  publishers_subscription: Subscription;
+  publishers: ComicCollectionEntry[];
 
   protected rows_options: Array<SelectItem>;
   rows = 10;
 
   constructor(
-    private translate: TranslateService,
-    private store: Store<AppState>
-  ) {
-    this.library$ = store.select('library');
-  }
+    private library_adaptor: LibraryAdaptor,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-      }
+    this.publishers_subscription = this.library_adaptor.publisher$.subscribe(
+      publishers => (this.publishers = publishers)
     );
     this.load_rows_options();
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.publishers_subscription.unsubscribe();
   }
 
   private load_rows_options(): void {

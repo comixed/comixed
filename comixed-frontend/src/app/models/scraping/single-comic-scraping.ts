@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/models/comics/comic';
 import { Volume } from 'app/models/comics/volume';
 import { Issue } from './issue';
+import { Comic } from 'app/library';
 
 export interface SingleComicScraping {
   busy: boolean;

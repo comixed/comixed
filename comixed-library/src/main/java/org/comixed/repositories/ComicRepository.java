@@ -19,42 +19,45 @@
 
 package org.comixed.repositories;
 
-import java.util.Date;
-import java.util.List;
-
 import org.comixed.model.library.Comic;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
+
 @Repository
-public interface ComicRepository extends
-                                 CrudRepository<Comic,
-                                                Long>
-{
+public interface ComicRepository
+        extends CrudRepository<Comic, Long> {
     /**
      * Returns all comics not read by the specified user.
      *
      * @param userId
-     *            the user's id
+     *         the user's id
+     *
      * @return the list of comics
      */
-    List<Comic> findAllUnreadByUser(@Param("userId") long userId);
+    List<Comic> findAllUnreadByUser(
+            @Param("userId")
+                    long userId);
 
     /**
      * Finds all comics added after the specified date
      *
      * @param after
-     *            the cutoff date
+     *         the cutoff date
+     *
      * @return the list of comics
      */
-    List<Comic> findByDateAddedGreaterThan(Date after);
+    List<Comic> findFirst100ByDateLastUpdatedGreaterThan(Date after);
 
     /**
      * Finds a comic based on filename.
      *
      * @param filename
-     *            the filename
+     *         the filename
+     *
      * @return the comic
      */
     Comic findByFilename(String filename);

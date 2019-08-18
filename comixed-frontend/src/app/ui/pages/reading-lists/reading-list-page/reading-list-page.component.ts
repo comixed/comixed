@@ -27,7 +27,7 @@ import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';

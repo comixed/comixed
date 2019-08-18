@@ -18,7 +18,7 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 
 @Pipe({

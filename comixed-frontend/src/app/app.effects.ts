@@ -18,7 +18,6 @@
  */
 
 import { ImportingEffects } from 'app/effects/importing.effects';
-import { LibraryEffects } from 'app/effects/library.effects';
 import { SingleComicScrapingEffects } from 'app/effects/single-comic-scraping.effects';
 import { DuplicatesEffects } from 'app/effects/duplicates.effects';
 import { UserAdminEffects } from 'app/effects/user-admin.effects';
@@ -26,7 +25,6 @@ import { ReadingListEffects } from 'app/effects/reading-list.effects';
 
 export const EFFECTS = [
   ImportingEffects,
-  LibraryEffects,
   SingleComicScrapingEffects,
   DuplicatesEffects,
   UserAdminEffects,

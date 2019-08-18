@@ -20,11 +20,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { LibraryState } from 'app/models/state/library-state';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { LibraryAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-teams-page',
@@ -32,31 +32,27 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./teams-page.component.css']
 })
 export class TeamsPageComponent implements OnInit, OnDestroy {
-  private library$: Observable<LibraryState>;
-  private library_subscription: Subscription;
-  library: LibraryState;
+  teams_subscription: Subscription;
+  teams: ComicCollectionEntry[];
 
   protected rows_options: Array<SelectItem>;
   rows = 10;
 
   constructor(
+    private library_adaptor: LibraryAdaptor,
     private translate: TranslateService,
     private store: Store<AppState>
-  ) {
-    this.library$ = store.select('library');
-  }
+  ) {}
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-      }
+    this.teams_subscription = this.library_adaptor.team$.subscribe(
+      teams => (this.teams = teams)
     );
     this.load_rows_options();
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.teams_subscription.unsubscribe();
   }
 
   private load_rows_options(): void {

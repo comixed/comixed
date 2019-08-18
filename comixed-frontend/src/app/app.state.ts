@@ -18,7 +18,6 @@
  */
 
 import { ImportState } from 'app/models/state/import-state';
-import { LibraryState } from 'app/models/state/library-state';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
@@ -27,9 +26,11 @@ import { UserAdmin } from 'app/models/actions/user-admin';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { SelectionState } from 'app/models/state/selection-state';
 import { AuthenticationState } from 'app/user';
+import { LibraryState } from 'app/library';
 
 export interface AppState {
   readonly auth_state: AuthenticationState;
+  readonly library_state: LibraryState;
   readonly import_state: ImportState;
   readonly library: LibraryState;
   readonly library_filter: LibraryFilter;

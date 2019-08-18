@@ -27,7 +27,7 @@ import { CardModule } from 'primeng/card';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1 } from 'app/library';
 import { ComicGridItemComponent } from './comic-grid-item.component';
 import { StoreModule } from '@ngrx/store';
 import { REDUCERS } from 'app/app.reducers';
@@ -57,7 +57,7 @@ describe('ComicGridItemComponent', () => {
 
     fixture = TestBed.createComponent(ComicGridItemComponent);
     component = fixture.componentInstance;
-    component.comic = COMIC_1000;
+    component.comic = COMIC_1;
     component.same_height = true;
     component.cover_size = 640;
 

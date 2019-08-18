@@ -22,12 +22,14 @@
                    (onChange)='set_current_tab($event.index)'>
             <p-tabPanel header='{{ "comic-details-page.tab.overview" | translate }}'>
                 <app-comic-overview [is_admin]='is_admin'
-                                    [comic]='comic'
-                                    [library]='library'></app-comic-overview>
+                                    [comic]='comic'></app-comic-overview>
             </p-tabPanel>
             <p-tabPanel header='{{ "comic-details-page.tab.story" | translate }}'>
                 <app-comic-story [comic]='comic'
-                                 [library]='library'></app-comic-story>
+                                 [characters]='characters'
+                                 [teams]='teams'
+                                 [locations]='locations'
+                                 [story_arcs]='story_arcs'></app-comic-story>
             </p-tabPanel>
             <p-tabPanel header='{{ "comic-details-page.tab.reader" | translate }}'>
                 <app-comic-reader [comic]='comic'

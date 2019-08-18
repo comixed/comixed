@@ -18,7 +18,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { ComicGrouping } from 'app/models/state/library-state';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 @Component({
   selector: 'app-comic-grouping-card',
@@ -26,7 +26,7 @@ import { ComicGrouping } from 'app/models/state/library-state';
   styleUrls: ['./comic-grouping-card.component.css']
 })
 export class ComicGroupingCardComponent implements OnInit {
-  @Input() details: ComicGrouping;
+  @Input() details: ComicCollectionEntry;
   @Input() parent_route: string;
 
   constructor() {}

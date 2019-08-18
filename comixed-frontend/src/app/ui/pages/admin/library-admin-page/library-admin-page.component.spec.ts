@@ -18,31 +18,38 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import * as LibraryActions from 'app/actions/library.actions';
+import { StoreModule } from '@ngrx/store';
 import { LibraryAdminPageComponent } from './library-admin-page.component';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
-import { AppState } from 'app/app.state';
 import { TranslateModule } from '@ngx-translate/core';
 import { FileSaverModule } from 'ngx-filesaver';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { COMIC_1001 } from 'app/models/comics/comic.fixtures';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { REDUCERS } from 'app/app.reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { MessageService } from 'primeng/api';
+import { UserService } from 'app/services/user.service';
+import { ComicService } from 'app/services/comic.service';
+import { LibraryModule } from 'app/library/library.module';
+import { LibraryAdaptor } from 'app/library';
 
 describe('LibraryAdminPageComponent', () => {
   let component: LibraryAdminPageComponent;
   let fixture: ComponentFixture<LibraryAdminPageComponent>;
-  let store: Store<AppState>;
   let rescan_button: DebugElement;
   let export_button: DebugElement;
+  let library_adaptor: LibraryAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
@@ -51,14 +58,13 @@ describe('LibraryAdminPageComponent', () => {
         ButtonModule,
         PanelModule
       ],
-      declarations: [LibraryAdminPageComponent]
+      declarations: [LibraryAdminPageComponent],
+      providers: [MessageService, UserService, ComicService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryAdminPageComponent);
     component = fixture.componentInstance;
-    store = TestBed.get(Store);
-    store.dispatch(new LibraryActions.LibraryReset());
-    spyOn(store, 'dispatch').and.callThrough();
+    library_adaptor = TestBed.get(LibraryAdaptor);
 
     fixture.detectChanges();
 
@@ -70,34 +76,10 @@ describe('LibraryAdminPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('#ngOnInit()', () => {
-    beforeEach(() => {
-      store.dispatch(
-        new LibraryActions.LibraryMergeNewComics({
-          library_state: {
-            comics: [COMIC_1001],
-            rescan_count: 12,
-            import_count: 4
-          }
-        })
-      );
-      fixture.detectChanges();
-    });
-
-    it('subscribes to library updates', () => {
-      expect(component.library.comics).toEqual([COMIC_1001]);
-      expect(component.library.library_contents.rescan_count).toEqual(12);
-      expect(component.library.library_contents.import_count).toEqual(4);
-    });
-  });
-
   describe('when an import is in process', () => {
     beforeEach(() => {
-      component.library.library_contents = {
-        import_count: 12,
-        rescan_count: 0,
-        comics: []
-      };
+      component.import_count = 12;
+      component.rescan_count = 0;
       fixture.detectChanges();
     });
 
@@ -112,11 +94,8 @@ describe('LibraryAdminPageComponent', () => {
 
   describe('when not rescanning', () => {
     beforeEach(() => {
-      component.library.library_contents = {
-        import_count: 0,
-        rescan_count: 0,
-        comics: []
-      };
+      component.import_count = 0;
+      component.rescan_count = 0;
       fixture.detectChanges();
     });
 
@@ -128,26 +107,22 @@ describe('LibraryAdminPageComponent', () => {
       expect(export_button.nativeElement.disabled).toBeFalsy();
     });
 
-    describe('#rescan_library()', () => {
+    describe('and a rescan is requested', () => {
       beforeEach(() => {
+        spyOn(library_adaptor, 'start_rescan');
         component.rescan_library();
         fixture.detectChanges();
       });
 
       it('sends a notice to start a rescan', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          new LibraryActions.LibraryRescanFiles({
-            last_comic_date: '0',
-            timeout: 60000
-          })
-        );
+        expect(library_adaptor.start_rescan).toHaveBeenCalled();
       });
     });
   });
 
   describe('when rescanning', () => {
     beforeEach(() => {
-      component.library.library_contents.rescan_count = 3;
+      component.rescan_count = 3;
       fixture.detectChanges();
     });
 
@@ -157,17 +132,6 @@ describe('LibraryAdminPageComponent', () => {
 
     it('disables the export button', () => {
       expect(export_button.nativeElement.disabled).toBeTruthy();
-    });
-
-    describe('#rescan_library()', () => {
-      beforeEach(() => {
-        component.rescan_library();
-        fixture.detectChanges();
-      });
-
-      it('does not send a notice to start a rescan', () => {
-        expect(store.dispatch).not.toHaveBeenCalled();
-      });
     });
   });
 });

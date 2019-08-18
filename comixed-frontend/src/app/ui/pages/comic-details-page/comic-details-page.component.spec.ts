@@ -51,7 +51,7 @@ import { ComicDetailsPageComponent } from './comic-details-page.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComicDownloadLinkPipe } from 'app/pipes/comic-download-link.pipe';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1, LibraryAdaptor } from 'app/library';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -59,15 +59,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/user';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { UserModule } from 'app/user/user.module';
 
 describe('ComicDetailsPageComponent', () => {
   let component: ComicDetailsPageComponent;
   let fixture: ComponentFixture<ComicDetailsPageComponent>;
   let download_link: DebugElement;
+  let library_adaptor: LibraryAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserModule,
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
@@ -105,6 +115,8 @@ describe('ComicDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         MessageService,
+        UserService,
+        ComicService,
         ConfirmationService,
         { provide: ComicService, useClass: ComicServiceMock },
         { provide: UserService, useClass: UserServiceMock }
@@ -113,7 +125,8 @@ describe('ComicDetailsPageComponent', () => {
 
     fixture = TestBed.createComponent(ComicDetailsPageComponent);
     component = fixture.componentInstance;
-    component.comic = COMIC_1000;
+    library_adaptor = TestBed.get(LibraryAdaptor);
+    library_adaptor._current_comic$.next(COMIC_1);
     component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
 
     fixture.detectChanges();

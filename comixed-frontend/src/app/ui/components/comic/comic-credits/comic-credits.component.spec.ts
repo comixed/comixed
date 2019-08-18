@@ -20,7 +20,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1 } from 'app/library';
 import { ComicCreditsComponent } from './comic-credits.component';
 
 describe('ComicCreditsComponent', () => {
@@ -37,7 +37,7 @@ describe('ComicCreditsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ComicCreditsComponent);
     component = fixture.componentInstance;
-    component.comic = COMIC_1000;
+    component.comic = COMIC_1;
     fixture.detectChanges();
   });
 

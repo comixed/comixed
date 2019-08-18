@@ -39,7 +39,6 @@ import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-ite
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
 import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
-import { ComicSeriesPipe } from 'app/pipes/comic-series.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { SeriesDetailsPageComponent } from './series-details-page.component';
@@ -48,14 +47,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   ConfirmationService,
   ConfirmDialogModule,
-  ContextMenuModule
+  ContextMenuModule,
+  MessageService
 } from 'primeng/primeng';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1 } from 'app/library';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { UserService } from 'app/services/user.service';
+import { ComicService } from 'app/services/comic.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SeriesDetailsPageComponent', () => {
-  const COMIC = COMIC_1000;
+  const COMIC = COMIC_1;
 
   let component: SeriesDetailsPageComponent;
   let fixture: ComponentFixture<SeriesDetailsPageComponent>;
@@ -64,8 +71,11 @@ describe('SeriesDetailsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
-        RouterModule.forRoot([]),
+        RouterTestingModule,
         FormsModule,
         StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
@@ -85,7 +95,10 @@ describe('SeriesDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
-        ConfirmationService
+        ConfirmationService,
+        MessageService,
+        UserService,
+        ComicService
       ],
       declarations: [
         SeriesDetailsPageComponent,
@@ -95,7 +108,6 @@ describe('SeriesDetailsPageComponent', () => {
         ComicListItemComponent,
         ComicListToolbarComponent,
         ComicCoverComponent,
-        ComicSeriesPipe,
         ComicCoverUrlPipe,
         ComicTitlePipe
       ]

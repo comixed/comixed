@@ -27,7 +27,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { SINGLE_COMIC_SCRAPING_STATE } from 'app/models/scraping/single-comic-scraping.fixtures';
-import { COMIC_1000, COMIC_1001 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1, COMIC_2 } from 'app/library';
 import { VOLUME_1000 } from 'app/models/comics/volume.fixtures';
 import { ISSUE_1000 } from 'app/models/scraping/issue.fixtures';
 import { COMICVINE_API_KEY } from 'app/user/models/preferences.constants';
@@ -136,10 +136,10 @@ describe('ComicDetailsEditorComponent', () => {
       store.dispatch(
         new ScrapingActions.SingleComicScrapingSetup({
           api_key: API_KEY,
-          comic: COMIC_1000,
-          series: COMIC_1000.series,
-          volume: COMIC_1000.volume,
-          issue_number: COMIC_1000.issue_number
+          comic: COMIC_1,
+          series: COMIC_1.series,
+          volume: COMIC_1.volume,
+          issue_number: COMIC_1.issue_number
         })
       );
       expect(fetch_button).not.toBe(null);
@@ -190,46 +190,46 @@ describe('ComicDetailsEditorComponent', () => {
       store.dispatch(
         new ScrapingActions.SingleComicScrapingSetup({
           api_key: API_KEY,
-          comic: COMIC_1000,
-          series: COMIC_1000.series,
-          volume: COMIC_1000.volume,
-          issue_number: COMIC_1000.issue_number
+          comic: COMIC_1,
+          series: COMIC_1.series,
+          volume: COMIC_1.volume,
+          issue_number: COMIC_1.issue_number
         })
       );
 
       expect(component.form.controls['api_key'].value).toEqual(API_KEY);
       expect(component.form.controls['series'].value).toEqual(
-        COMIC_1000.series
+        COMIC_1.series
       );
       expect(component.form.controls['volume'].value).toEqual(
-        COMIC_1000.volume
+        COMIC_1.volume
       );
       expect(component.form.controls['issue_number'].value).toEqual(
-        COMIC_1000.issue_number
+        COMIC_1.issue_number
       );
     });
   });
 
   describe('#comic', () => {
     beforeEach(() => {
-      component.comic = COMIC_1001;
+      component.comic = COMIC_2;
     });
 
     it('sets a new value for the series', () => {
       expect(component.form.controls['series'].value).toEqual(
-        COMIC_1001.series
+        COMIC_2.series
       );
     });
 
     it('sets a new value for the volume', () => {
       expect(component.form.controls['volume'].value).toEqual(
-        COMIC_1001.volume
+        COMIC_2.volume
       );
     });
 
     it('sets a new value for the issue number', () => {
       expect(component.form.controls['issue_number'].value).toEqual(
-        COMIC_1001.issue_number
+        COMIC_2.issue_number
       );
     });
   });
@@ -237,7 +237,7 @@ describe('ComicDetailsEditorComponent', () => {
   describe('#fetch_candidates()', () => {
     beforeEach(() => {
       component.form.controls['api_key'].setValue(API_KEY);
-      component.comic = COMIC_1001;
+      component.comic = COMIC_2;
     });
 
     it('sets the skip_cache to false when supplied', () => {
@@ -247,9 +247,9 @@ describe('ComicDetailsEditorComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingFetchVolumes({
           api_key: API_KEY,
-          series: COMIC_1001.series,
-          volume: COMIC_1001.volume,
-          issue_number: COMIC_1001.issue_number,
+          series: COMIC_2.series,
+          volume: COMIC_2.volume,
+          issue_number: COMIC_2.issue_number,
           skip_cache: false
         })
       );
@@ -262,9 +262,9 @@ describe('ComicDetailsEditorComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingFetchVolumes({
           api_key: API_KEY,
-          series: COMIC_1001.series,
-          volume: COMIC_1001.volume,
-          issue_number: COMIC_1001.issue_number,
+          series: COMIC_2.series,
+          volume: COMIC_2.volume,
+          issue_number: COMIC_2.issue_number,
           skip_cache: true
         })
       );
@@ -274,7 +274,7 @@ describe('ComicDetailsEditorComponent', () => {
   describe('#select_volume()', () => {
     beforeEach(() => {
       component.form.controls['api_key'].setValue(API_KEY);
-      component.comic = COMIC_1001;
+      component.comic = COMIC_2;
     });
 
     it('handles when a volume is selected', () => {
@@ -283,7 +283,7 @@ describe('ComicDetailsEditorComponent', () => {
         new ScrapingActions.SingleComicScrapingSetCurrentVolume({
           api_key: API_KEY,
           volume: VOLUME_1000,
-          issue_number: COMIC_1001.issue_number,
+          issue_number: COMIC_2.issue_number,
           skip_cache: component.skip_cache
         })
       );
@@ -300,7 +300,7 @@ describe('ComicDetailsEditorComponent', () => {
   describe('#select_issue()', () => {
     beforeEach(() => {
       component.form.controls['api_key'].setValue(API_KEY);
-      component.comic = COMIC_1000;
+      component.comic = COMIC_1;
       component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
       component.single_comic_scraping.current_issue = ISSUE_1000;
     });
@@ -311,7 +311,7 @@ describe('ComicDetailsEditorComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingScrapeMetadata({
           api_key: API_KEY,
-          comic: COMIC_1000,
+          comic: COMIC_1,
           issue_id: ISSUE_1000.id,
           skip_cache: false,
           multi_comic_mode: false
@@ -323,7 +323,7 @@ describe('ComicDetailsEditorComponent', () => {
   describe('#cancel_selection()', () => {
     beforeEach(() => {
       component.form.controls['api_key'].setValue(API_KEY);
-      component.comic = COMIC_1000;
+      component.comic = COMIC_1;
       component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
       component.single_comic_scraping.current_issue = ISSUE_1000;
     });
@@ -343,10 +343,10 @@ describe('ComicDetailsEditorComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           new ScrapingActions.SingleComicScrapingSetup({
             api_key: API_KEY,
-            comic: COMIC_1000,
-            series: COMIC_1000.series,
-            volume: COMIC_1000.volume,
-            issue_number: COMIC_1000.issue_number
+            comic: COMIC_1,
+            series: COMIC_1.series,
+            volume: COMIC_1.volume,
+            issue_number: COMIC_1.issue_number
           })
         );
       });
@@ -356,7 +356,7 @@ describe('ComicDetailsEditorComponent', () => {
   describe('#save_changes()', () => {
     it('saves the current states', () => {
       component.form.controls['api_key'].setValue(API_KEY);
-      component.comic = COMIC_1000;
+      component.comic = COMIC_1;
       component.form.controls['series'].setValue('Replacement Series');
       component.form.controls['volume'].setValue('1965');
       component.form.controls['issue_number'].setValue('275');
@@ -366,7 +366,7 @@ describe('ComicDetailsEditorComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new ScrapingActions.SingleComicScrapingSaveLocalChanges({
           api_key: API_KEY,
-          comic: COMIC_1000,
+          comic: COMIC_1,
           series: 'Replacement Series',
           volume: '1965',
           issue_number: '275'
@@ -380,10 +380,10 @@ describe('ComicDetailsEditorComponent', () => {
       store.dispatch(
         new ScrapingActions.SingleComicScrapingSetup({
           api_key: API_KEY,
-          comic: COMIC_1000,
-          series: COMIC_1000.series,
-          volume: COMIC_1000.volume,
-          issue_number: COMIC_1000.issue_number
+          comic: COMIC_1,
+          series: COMIC_1.series,
+          volume: COMIC_1.volume,
+          issue_number: COMIC_1.issue_number
         })
       );
       component.form.controls['series'].setValue('XXXXX');
@@ -401,13 +401,13 @@ describe('ComicDetailsEditorComponent', () => {
     it('reverts all local changes', () => {
       expect(component.form.controls['api_key'].value).toEqual(API_KEY);
       expect(component.form.controls['series'].value).toEqual(
-        COMIC_1000.series
+        COMIC_1.series
       );
       expect(component.form.controls['volume'].value).toEqual(
-        COMIC_1000.volume
+        COMIC_1.volume
       );
       expect(component.form.controls['issue_number'].value).toEqual(
-        COMIC_1000.issue_number
+        COMIC_1.issue_number
       );
     });
 

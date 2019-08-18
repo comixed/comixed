@@ -19,7 +19,7 @@
 
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 
 const initial_state: MultipleComicsScraping = {
   selecting: true,

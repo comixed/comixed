@@ -23,10 +23,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { UserService } from './user.service';
-import { Comic } from 'app/models/comics/comic';
+import { Comic, ComicFormat, ScanType } from 'app/library';
 import { Page } from 'app/models/comics/page';
-import { ScanType } from 'app/models/comics/scan-type';
-import { ComicFormat } from 'app/models/comics/comic-format';
 import {
   GET_COMIC_METADATA_URL,
   GET_SCRAPING_CANDIDATES_URL,

@@ -28,12 +28,6 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
-import {
-  COMIC_1000,
-  COMIC_1001,
-  COMIC_1002
-} from 'app/models/comics/comic.fixtures';
 import { MenubarComponent } from 'app/ui/components/main/menubar/menubar.component';
 import { LoginComponent } from 'app/ui/components/login/login.component';
 import { AppComponent } from 'app/app.component';
@@ -46,10 +40,16 @@ import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
+import { LibraryModule } from 'app/library/library.module';
+import { COMIC_1, COMIC_3, COMIC_5, LibraryAdaptor } from 'app/library';
 
 describe('AppComponent', () => {
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
+  let auth_adaptor: AuthenticationAdaptor;
+  let library_adaptor: LibraryAdaptor;
   let translate_service: TranslateService;
   let store: Store<AppState>;
 
@@ -57,6 +57,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         UserModule,
+        LibraryModule,
         RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,
@@ -83,6 +84,8 @@ describe('AppComponent', () => {
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
+    auth_adaptor = TestBed.get(AuthenticationAdaptor);
+    library_adaptor = TestBed.get(LibraryAdaptor);
     translate_service = TestBed.get(TranslateService);
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
@@ -96,34 +99,40 @@ describe('AppComponent', () => {
     });
   });
 
-  describe('subscribes to library updates', () => {
+  describe('when no user is logged in', () => {
     beforeEach(() => {
-      store.dispatch(
-        new LibraryActions.LibraryMergeNewComics({
-          library_state: {
-            comics: [COMIC_1000, COMIC_1001, COMIC_1002],
-            rescan_count: 70,
-            import_count: 43
-          }
-        })
-      );
+      auth_adaptor._authenticated$.next(true);
+      library_adaptor._comic$.next(COMICS);
+      fixture.detectChanges();
+      spyOn(library_adaptor, 'get_comic_updates');
+      spyOn(library_adaptor, 'reset_library');
+      auth_adaptor._authenticated$.next(false);
       fixture.detectChanges();
     });
 
-    it('refreshes the comics', () => {
-      expect(component.library.comics).toEqual([
-        COMIC_1000,
-        COMIC_1001,
-        COMIC_1002
-      ]);
+    it('does not fetch updates', () => {
+      expect(library_adaptor.get_comic_updates).not.toHaveBeenCalled();
     });
 
-    it('updateas the rescan count', () => {
-      expect(component.library.library_contents.rescan_count).toEqual(70);
+    it('resets the library', () => {
+      expect(library_adaptor.reset_library).toHaveBeenCalled();
     });
 
-    it('update the import count', () => {
-      expect(component.library.library_contents.import_count).toEqual(43);
+    it('clears the subscription', () => {
+      expect(component.fetching_update_subscription).toBeNull();
+    });
+  });
+
+  describe('when a user is logged in', () => {
+    beforeEach(() => {
+      spyOn(library_adaptor, 'get_comic_updates');
+      auth_adaptor._authenticated$.next(true);
+      library_adaptor._comic$.next(COMICS);
+      library_adaptor._fetching_update$.next(false);
+    });
+
+    it('fetches updates when not currently fetching', () => {
+      expect(library_adaptor.get_comic_updates).toHaveBeenCalled();
     });
   });
 });

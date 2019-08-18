@@ -18,7 +18,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { Action, Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as SelectionActions from 'app/actions/selection.actions';

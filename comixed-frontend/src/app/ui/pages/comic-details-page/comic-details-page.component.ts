@@ -24,12 +24,11 @@ import { AppState } from 'app/app.state';
 import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { LibraryState } from 'app/models/state/library-state';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { ComicService } from 'app/services/comic.service';
-import { Comic } from 'app/models/comics/comic';
 import { AuthenticationAdaptor } from 'app/user';
 import { AuthenticationState } from 'app/user/models/authentication-state';
+import { Comic, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -40,18 +39,23 @@ export const CURRENT_PAGE_PARAMETER = 'page';
   styleUrls: ['./comic-details-page.component.scss']
 })
 export class ComicDetailsPageComponent implements OnInit, OnDestroy {
-  readonly TAB_PARAMETER = 'tab';
+  comic_subscription: Subscription;
+  comic: Comic;
+  characters_subscription: Subscription;
+  characters: ComicCollectionEntry[];
+  teams_subscription: Subscription;
+  teams: ComicCollectionEntry[];
+  locations_subscription: Subscription;
+  locations: ComicCollectionEntry[];
+  story_arcs_subscription: Subscription;
+  story_arcs: ComicCollectionEntry[];
 
-  private library$: Observable<LibraryState>;
-  private library_subscription: Subscription;
-  public library: LibraryState;
+  readonly TAB_PARAMETER = 'tab';
 
   single_comic_scraping$: Observable<SingleComicScraping>;
   single_comic_scraping_subscription: Subscription;
   single_comic_scraping: SingleComicScraping;
 
-  private comic_id = -1;
-  public comic = null;
   protected current_tab: number;
   protected page_size: number;
   protected current_page: number;
@@ -61,15 +65,15 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private auth_adaptor: AuthenticationAdaptor,
+    private library_adaptor: LibraryAdaptor,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private comic_service: ComicService,
     private store: Store<AppState>
   ) {
-    this.library$ = store.select('library');
     this.single_comic_scraping$ = store.select('single_comic_scraping');
     this.activatedRoute.params.subscribe(params => {
-      this.comic_id = +params['id'];
+      this.library_adaptor.get_comic_by_id(+params['id']);
     });
     activatedRoute.queryParams.subscribe(params => {
       this.current_tab = this.load_parameter(params[this.TAB_PARAMETER], 0);
@@ -80,17 +84,20 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     this.auth_subscription = this.auth_adaptor.role$.subscribe(
       roles => (this.is_admin = roles.is_admin)
     );
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-
-        if (this.comic === null) {
-          this.comic =
-            library.comics.find((comic: Comic) => {
-              return comic.id === this.comic_id;
-            }) || null;
-        }
-      }
+    this.comic_subscription = this.library_adaptor.current_comic$.subscribe(
+      comic => (this.comic = comic)
+    );
+    this.characters_subscription = this.library_adaptor.character$.subscribe(
+      characters => (this.characters = characters)
+    );
+    this.teams_subscription = this.library_adaptor.team$.subscribe(
+      teams => (this.teams = teams)
+    );
+    this.locations_subscription = this.library_adaptor.location$.subscribe(
+      locations => (this.locations = locations)
+    );
+    this.story_arcs_subscription = this.library_adaptor.story_arc$.subscribe(
+      story_arcs => (this.story_arcs = story_arcs)
     );
     this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
       (library_scrape: SingleComicScraping) => {
@@ -117,7 +124,11 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.auth_subscription.unsubscribe();
-    this.library_subscription.unsubscribe();
+    this.comic_subscription.unsubscribe();
+    this.characters_subscription.unsubscribe();
+    this.teams_subscription.unsubscribe();
+    this.locations_subscription.unsubscribe();
+    this.story_arcs_subscription.unsubscribe();
     this.single_comic_scraping_subscription.unsubscribe();
   }
 

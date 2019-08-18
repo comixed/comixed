@@ -18,15 +18,13 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { LibraryState } from 'app/models/state/library-state';
+import { Observable, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectionState } from 'app/models/state/selection-state';
+import { Comic, LibraryAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-story-arc-details-page',
@@ -34,9 +32,8 @@ import { SelectionState } from 'app/models/state/selection-state';
   styleUrls: ['./story-arc-details-page.component.css']
 })
 export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
-  library$: Observable<LibraryState>;
-  library_subscription: Subscription;
-  library: LibraryState;
+  stories_subscription: Subscription;
+  comics: Comic[];
 
   selection_state$: Observable<SelectionState>;
   selection_state_subscription: Subscription;
@@ -49,10 +46,10 @@ export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
   protected cover_size = 200;
 
   story_name: string;
-  comics: Array<Comic> = [];
   selected_comics: Array<Comic> = [];
 
   constructor(
+    private library_adaptor: LibraryAdaptor,
     private activatedRoute: ActivatedRoute,
     private translate: TranslateService,
     private store: Store<AppState>
@@ -60,18 +57,14 @@ export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(params => {
       this.story_name = params['name'];
     });
-    this.library$ = store.select('library');
     this.selection_state$ = store.select('selections');
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-
-        if (this.library) {
-          this.comics = [].concat(this.library.comics);
-        }
+    this.stories_subscription = this.library_adaptor.story_arc$.subscribe(
+      stories => {
+        const story = stories.find(entry => entry.name === this.story_name);
+        this.comics = story ? story.comics : [];
       }
     );
     this.selection_state_subscription = this.selection_state$.subscribe(
@@ -83,7 +76,7 @@ export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.stories_subscription.unsubscribe();
   }
 
   set_layout(dataview: any, layout: string): void {

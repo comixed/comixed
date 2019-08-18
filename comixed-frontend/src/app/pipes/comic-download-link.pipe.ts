@@ -18,7 +18,7 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
 
 @Pipe({

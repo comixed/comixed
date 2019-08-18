@@ -156,6 +156,17 @@ public class Comic {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded = new Date();
 
+    @Column(name = "last_updated_date",
+            updatable = true,
+            nullable = false)
+    @JsonProperty("last_updated_date")
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    @JsonView({ComicList.class,
+               DatabaseBackup.class,
+               ReadingList.class})
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateLastUpdated = new Date();
+
     @Column(name = "cover_date",
             nullable = true)
     @Temporal(TemporalType.DATE)
@@ -285,6 +296,14 @@ public class Comic {
     @JsonView({ComicList.class,
                ReadingList.class})
     private int blockedPageCount;
+
+    public Date getDateLastUpdated() {
+        return dateLastUpdated;
+    }
+
+    public void setDateLastUpdated(final Date dateLastUpdated) {
+        this.dateLastUpdated = dateLastUpdated;
+    }
 
     /**
      * Adds a character to the comic.

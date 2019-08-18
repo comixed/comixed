@@ -18,13 +18,13 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 
 @Pipe({
   name: 'missing_comics'
 })
 export class MissingComicsPipe implements PipeTransform {
-  transform(comics: Array<Comic>): Array<Comic> {
+  transform(comics: Comic[]): Comic[] {
     if (comics === null || comics.length === 0) {
       return [];
     }

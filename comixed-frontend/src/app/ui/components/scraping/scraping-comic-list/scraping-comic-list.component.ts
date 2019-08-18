@@ -18,7 +18,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 
 @Component({
   selector: 'app-scraping-comic-list',
@@ -26,14 +26,14 @@ import { Comic } from 'app/models/comics/comic';
   styleUrls: ['./scraping-comic-list.component.css']
 })
 export class ScrapingComicListComponent implements OnInit {
-  private _comics: Array<Comic>;
+  private _comics: Comic[];
 
   constructor() {}
 
   ngOnInit() {}
 
   @Input()
-  set comics(comics: Array<Comic>) {
+  set comics(comics: Comic[]) {
     this._comics = comics.sort((left: Comic, right: Comic) => {
       if (left.base_filename < right.base_filename) {
         return -1;
@@ -46,7 +46,7 @@ export class ScrapingComicListComponent implements OnInit {
     });
   }
 
-  get comics(): Array<Comic> {
+  get comics(): Comic[] {
     return this._comics;
   }
 }

@@ -18,15 +18,14 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { LibraryState } from 'app/models/state/library-state';
+import { Observable, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectionState } from 'app/models/state/selection-state';
+import { LibraryAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-character-details-page',
@@ -34,9 +33,8 @@ import { SelectionState } from 'app/models/state/selection-state';
   styleUrls: ['./character-details-page.component.css']
 })
 export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
-  library$: Observable<LibraryState>;
-  library_subscription: Subscription;
-  library: LibraryState;
+  character_subscription: Subscription;
+  comics: Comic[];
 
   selection_state$: Observable<SelectionState>;
   selection_state_subscription: Subscription;
@@ -49,10 +47,10 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
   protected cover_size = 200;
 
   character_name: string;
-  comics: Array<Comic> = [];
   selected_comics: Array<Comic> = [];
 
   constructor(
+    private library_adaptor: LibraryAdaptor,
     private activatedRoute: ActivatedRoute,
     private translate: TranslateService,
     private store: Store<AppState>
@@ -60,18 +58,16 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(params => {
       this.character_name = params['name'];
     });
-    this.library$ = store.select('library');
     this.selection_state$ = store.select('selections');
   }
 
   ngOnInit() {
-    this.library_subscription = this.library$.subscribe(
-      (library: LibraryState) => {
-        this.library = library;
-
-        if (library) {
-          this.comics = [].concat(this.library.comics);
-        }
+    this.character_subscription = this.library_adaptor.character$.subscribe(
+      characters => {
+        const result = characters.find(
+          character => character.name === this.character_name
+        );
+        this.comics = result ? result.comics : [];
       }
     );
     this.selection_state_subscription = this.selection_state$.subscribe(
@@ -83,7 +79,7 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.library_subscription.unsubscribe();
+    this.character_subscription.unsubscribe();
     this.selection_state_subscription.unsubscribe();
   }
 

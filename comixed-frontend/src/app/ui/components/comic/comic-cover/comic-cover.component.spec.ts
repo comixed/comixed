@@ -27,7 +27,7 @@ import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1 } from 'app/library';
 import { ComicCoverComponent } from './comic-cover.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
@@ -56,7 +56,7 @@ describe('ComicCoverComponent', () => {
 
     fixture = TestBed.createComponent(ComicCoverComponent);
     component = fixture.componentInstance;
-    component.comic = COMIC_1000;
+    component.comic = COMIC_1;
     component.cover_size = 200;
     component.same_height = true;
     store = TestBed.get(Store);

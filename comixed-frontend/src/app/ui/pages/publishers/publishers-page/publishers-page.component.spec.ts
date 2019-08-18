@@ -21,23 +21,42 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PublishersPageComponent } from './publishers-page.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { TableModule } from 'primeng/table';
-import { ButtonModule, DropdownModule, PanelModule } from 'primeng/primeng';
+import {
+  ButtonModule,
+  DropdownModule,
+  MessageService,
+  PanelModule
+} from 'primeng/primeng';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
+import { StoreModule } from '@ngrx/store';
 import { REDUCERS } from 'app/app.reducers';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 
 describe('PublishersPageComponent', () => {
+  const PUBLISHER = 'Cheapo Comics';
+  const COMICS = [{ ...COMIC_1, publisher: PUBLISHER }];
+  const PUBLISHERS: ComicCollectionEntry[] = [
+    { name: PUBLISHER, comics: COMICS, last_comic_added: 0, count: 1 }
+  ];
+
   let component: PublishersPageComponent;
   let fixture: ComponentFixture<PublishersPageComponent>;
-  let store: Store<AppState>;
+  let library_adaptor: LibraryAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         FormsModule,
         RouterTestingModule,
         StoreModule.forRoot(REDUCERS),
@@ -47,15 +66,14 @@ describe('PublishersPageComponent', () => {
         PanelModule,
         ButtonModule
       ],
-      declarations: [PublishersPageComponent, LibraryFilterComponent]
+      declarations: [PublishersPageComponent, LibraryFilterComponent],
+      providers: [MessageService, ComicService, UserService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PublishersPageComponent);
     component = fixture.componentInstance;
-    store = TestBed.get(Store);
-
-    store.dispatch(new LibraryActions.LibraryReset());
-
+    library_adaptor = TestBed.get(LibraryAdaptor);
+    library_adaptor._publisher$.next(PUBLISHERS);
     fixture.detectChanges();
   }));
 

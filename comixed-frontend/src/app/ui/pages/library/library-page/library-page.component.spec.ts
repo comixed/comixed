@@ -24,11 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
-import { COMIC_1000, COMIC_1003 } from 'app/models/comics/comic.fixtures';
-import * as FilterActions from 'app/actions/library-filter.actions';
-import { DEFAULT_LIBRARY_FILTER } from 'app/models/actions/library-filter.fixtures';
-import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
+import { COMIC_1 } from 'app/library';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DataViewModule } from 'primeng/dataview';
 import { SliderModule } from 'primeng/slider';
@@ -57,15 +53,15 @@ import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { ContextMenuModule } from 'primeng/primeng';
-import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
+import { LibraryModule } from 'app/library/library.module';
 
 describe('LibraryPageComponent', () => {
-  const COMIC = COMIC_1000;
+  const COMIC = COMIC_1;
 
   let component: LibraryPageComponent;
   let fixture: ComponentFixture<LibraryPageComponent>;
@@ -75,6 +71,7 @@ describe('LibraryPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         UserModule,
+        LibraryModule,
         HttpClientTestingModule,
         RouterTestingModule,
         FormsModule,
@@ -129,51 +126,5 @@ describe('LibraryPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('#ngOnInit()', () => {
-    beforeEach(() => {
-      store.dispatch(new LibraryActions.LibraryReset());
-    });
-
-    it('should subscribe to library updates', () => {
-      store.dispatch(
-        new LibraryActions.LibraryMergeNewComics({
-          library_state: {
-            comics: [COMIC_1000, COMIC_1003],
-            rescan_count: 3,
-            import_count: 7
-          }
-        })
-      );
-      expect(component.library.comics).toEqual([COMIC_1000, COMIC_1003]);
-    });
-
-    it('should subscribe to library filter updates', () => {
-      DEFAULT_LIBRARY_FILTER.publisher = 'DC';
-      store.dispatch(
-        new FilterActions.LibraryFilterSetFilters(DEFAULT_LIBRARY_FILTER)
-      );
-      expect(component.library_filter.publisher).toEqual('DC');
-    });
-
-    it('should subscribe to scraping updates', () => {
-      store.dispatch(
-        new ScrapingActions.MultipleComicsScrapingSetup({
-          api_key: '1234567890'
-        })
-      );
-      expect(component.scraping.api_key).toEqual('1234567890');
-    });
-
-    xit('loads the layout from the URL');
-
-    xit('loads the sort from the URL');
-
-    xit('loads the rows from the URL');
-
-    xit('loads the cover size from the URL');
-
-    xit('loads the same height value from the URL');
   });
 });

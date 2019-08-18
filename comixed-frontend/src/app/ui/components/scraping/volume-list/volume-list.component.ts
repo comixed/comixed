@@ -18,7 +18,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { Volume } from 'app/models/comics/volume';
 import { Issue } from 'app/models/scraping/issue';
 import { Store } from '@ngrx/store';

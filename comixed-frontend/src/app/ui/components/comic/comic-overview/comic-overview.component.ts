@@ -17,36 +17,40 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
-import { LibraryState } from 'app/models/state/library-state';
-import { Comic } from 'app/models/comics/comic';
-import { LastReadDate } from 'app/models/comics/last-read-date';
-import { ScanType } from 'app/models/comics/scan-type';
-import { ComicFormat } from 'app/models/comics/comic-format';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { LibraryAdaptor, ScanType } from 'app/library';
+import { Comic } from 'app/library';
+import { ComicFormat } from 'app/library';
+import { Subscription } from 'rxjs';
+import { LastReadDate } from 'app/library/models/last-read-date';
+import { last } from 'rxjs/operators';
 
 @Component({
   selector: 'app-comic-overview',
   templateUrl: './comic-overview.component.html',
   styleUrls: ['./comic-overview.component.scss']
 })
-export class ComicOverviewComponent implements OnInit {
+export class ComicOverviewComponent implements OnInit, OnDestroy {
   @Input() is_admin: boolean;
   @Input() comic: Comic;
-  @Input() library: LibraryState;
 
-  public scan_types: Array<SelectItem>;
-  public formats: Array<SelectItem>;
+  scan_types: Array<SelectItem>;
+  formats: Array<SelectItem>;
+  last_read_dates_subscription: Subscription;
+  last_read_dates: LastReadDate[];
 
-  public scan_type: ScanType;
-  public format: ComicFormat;
-  public sort_name: string;
+  scan_type_subscription: Subscription;
+  scan_type: ScanType;
+  format_subscription: Subscription;
+  format: ComicFormat;
+  sort_name: string;
 
   constructor(
+    private library_adaptor: LibraryAdaptor,
     private store: Store<AppState>,
     private confirm_service: ConfirmationService,
     private translate: TranslateService
@@ -61,24 +65,36 @@ export class ComicOverviewComponent implements OnInit {
         value: null
       }
     ];
-    this.library.scan_types.forEach((scan_type: ScanType) => {
-      this.scan_types.push({
-        label: scan_type.name,
-        value: scan_type
-      });
-    });
-    this.formats = [
-      {
-        label: 'Select one...',
-        value: null
+    this.scan_type_subscription = this.library_adaptor.scan_type$.subscribe(
+      scan_types => {
+        this.scan_types = [];
+        scan_types.forEach(scan_type =>
+          this.scan_types.push({ label: scan_type.name, value: scan_type })
+        );
       }
-    ];
-    this.library.formats.forEach((format: ComicFormat) => {
-      this.formats.push({
-        label: format.name,
-        value: format
-      });
-    });
+    );
+    this.format_subscription = this.library_adaptor.format$.subscribe(
+      formats => {
+        this.formats = [
+          {
+            label: 'Select one...',
+            value: null
+          }
+        ];
+        formats.forEach(format =>
+          this.formats.push({ label: format.name, value: format })
+        );
+      }
+    );
+    this.last_read_dates_subscription = this.library_adaptor.last_read_date$.subscribe(
+      last_read_dates => (this.last_read_dates = last_read_dates)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.scan_type_subscription.unsubscribe();
+    this.format_subscription.unsubscribe();
+    this.last_read_dates_subscription.unsubscribe();
   }
 
   copy_comic_format(comic: Comic): void {
@@ -87,12 +103,8 @@ export class ComicOverviewComponent implements OnInit {
 
   set_comic_format(comic: Comic, format: ComicFormat): void {
     if (format) {
-      this.store.dispatch(
-        new LibraryActions.LibrarySetFormat({
-          comic: comic,
-          format: format
-        })
-      );
+      comic.format = format;
+      this.library_adaptor.save_comic(comic);
     }
   }
 
@@ -102,12 +114,8 @@ export class ComicOverviewComponent implements OnInit {
 
   set_scan_type(comic: Comic, scan_type: ScanType): void {
     if (scan_type) {
-      this.store.dispatch(
-        new LibraryActions.LibrarySetScanType({
-          comic: comic,
-          scan_type: scan_type
-        })
-      );
+      comic.scan_type = scan_type;
+      this.library_adaptor.save_comic(comic);
     }
   }
 
@@ -116,12 +124,8 @@ export class ComicOverviewComponent implements OnInit {
   }
 
   save_sort_name(comic: Comic): void {
-    this.store.dispatch(
-      new LibraryActions.LibrarySetSortName({
-        comic: comic,
-        sort_name: this.sort_name
-      })
-    );
+    comic.sort_name = this.sort_name;
+    this.library_adaptor.save_comic(comic);
   }
 
   clear_metadata(): void {
@@ -129,22 +133,16 @@ export class ComicOverviewComponent implements OnInit {
       header: this.translate.instant('comic-overview.title.clear-metadata'),
       message: this.translate.instant('comic-overview.message.clear-metadata'),
       icon: 'fa fa-exclamation',
-      accept: () => {
-        this.store.dispatch(
-          new LibraryActions.LibraryClearMetadata({
-            comic: this.comic
-          })
-        );
-      }
+      accept: () => this.library_adaptor.clear_metadata(this.comic)
     });
   }
 
-  get_last_read_date(comic: Comic): string {
-    const result = this.library.last_read_dates.find((entry: LastReadDate) => {
-      return entry.comic_id === comic.id;
-    });
+  get_last_read_date(comic: Comic): number {
+    const last_read_date = this.last_read_dates.find(
+      last_read => last_read.comic_id === comic.id
+    );
 
-    return result ? result.last_read_date : null;
+    return last_read_date ? last_read_date.last_read_date : null;
   }
 
   delete_comic(): void {
@@ -152,11 +150,7 @@ export class ComicOverviewComponent implements OnInit {
       header: this.translate.instant('comic-overview.title.delete-comic'),
       message: this.translate.instant('comic-overview.message.delete-comic'),
       icon: 'fa fa-trash',
-      accept: () => {
-        this.store.dispatch(
-          new LibraryActions.LibraryRemoveComic({ comic: this.comic })
-        );
-      }
+      accept: () => this.library_adaptor.delete_comics_by_id([this.comic.id])
     });
   }
 }

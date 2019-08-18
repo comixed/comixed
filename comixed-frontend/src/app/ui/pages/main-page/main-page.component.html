@@ -1,31 +1,26 @@
 <div>
-  <div id="library_details">
-    <p>
-      {{ 'main-page.library-status' | translate: { comic_count: comic_count } }}
-    </p>
-    <div *ngIf="library.comics.length > 0" class="ui-g">
-      <div class="ui-g-10">
-        <p-chart
-          *ngIf="library_data"
-          type="doughnut"
-          [data]="library_data"
-          [options]="options"
-        ></p-chart>
-      </div>
-      <div class="ui-g-2">
-        <div class="ui-g">
-          <div class="ui-g-12">
-            <h3>Show Data For</h3>
-          </div>
-          <div class="ui-g-12">
-            <p-dropdown
-              [options]="data_options"
-              [(ngModel)]="data_to_show"
-              (onChange)="build_data()"
-            ></p-dropdown>
-          </div>
+    <div id='library_details'>
+        <p>{{"main-page.library-status"|translate:{comic_count: comic_count} }}</p>
+        <div *ngIf='library_data'
+             class='ui-g'>
+            <div class='ui-g-10'>
+                <p-chart *ngIf='library_data'
+                         type='doughnut'
+                         [data]='library_data'
+                         [options]='options'></p-chart>
+            </div>
+            <div class='ui-g-2'>
+                <div class='ui-g'>
+                    <div class='ui-g-12'>
+                        <h3>Show Data For</h3>
+                    </div>
+                    <div class='ui-g-12'>
+                        <p-dropdown [options]='data_options'
+                                    [(ngModel)]='data_to_show'
+                                    (onChange)='build_data()'></p-dropdown>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

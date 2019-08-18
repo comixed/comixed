@@ -22,13 +22,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataViewModule } from 'primeng/dataview';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ScrapingComicListComponent } from './scraping-comic-list.component';
-import {
-  COMIC_1000,
-  COMIC_1001,
-  COMIC_1002,
-  COMIC_1003
-} from 'app/models/comics/comic.fixtures';
-import { Comic } from 'app/models/comics/comic';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from 'app/library';
+import { Comic } from 'app/library';
 
 describe('ScrapingComicListComponent', () => {
   let component: ScrapingComicListComponent;
@@ -50,32 +45,13 @@ describe('ScrapingComicListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('#set comics()', () => {
+  describe('setting the set of comics', () => {
     beforeEach(() => {
-      component.comics = [COMIC_1003, COMIC_1002, COMIC_1001, COMIC_1000];
+      component.comics = [COMIC_4, COMIC_3, COMIC_2, COMIC_1];
     });
 
     it('sorts the comics by filename', () => {
-      component.comics.forEach((comic: Comic, index: number) => {
-        let expected: Comic;
-
-        switch (index) {
-          case 0:
-            expected = COMIC_1000;
-            break;
-          case 1:
-            expected = COMIC_1001;
-            break;
-          case 2:
-            expected = COMIC_1002;
-            break;
-          case 3:
-            expected = COMIC_1003;
-            break;
-        }
-
-        expect(comic).toBe(expected);
-      });
+      expect(component.comics).toEqual([COMIC_4, COMIC_3, COMIC_2, COMIC_1]);
     });
   });
 });

@@ -38,8 +38,6 @@ import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-l
 import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
 import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
-import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
-import { ComicTeamPipe } from 'app/pipes/comic-team.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { TeamDetailsPageComponent } from './team-details-page.component';
@@ -47,25 +45,46 @@ import { REDUCERS } from 'app/app.reducers';
 import {
   ConfirmationService,
   ConfirmDialogModule,
-  ContextMenuModule
+  ContextMenuModule,
+  MessageService
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { LibraryModule } from 'app/library/library.module';
+import { UserService } from 'app/services/user.service';
+import { ComicService } from 'app/services/comic.service';
+import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TeamDetailsPageComponent', () => {
-  const COMIC = COMIC_1000;
+  const TEAM_NAME = 'Team One';
+  const COMIC = { ...COMIC_1, teams: [TEAM_NAME] };
+  const TEAMS: ComicCollectionEntry[] = [
+    {
+      name: TEAM_NAME,
+      comics: [COMIC],
+      last_comic_added: 0,
+      count: 1
+    }
+  ];
 
   let component: TeamDetailsPageComponent;
   let fixture: ComponentFixture<TeamDetailsPageComponent>;
-  let store: Store<AppState>;
+  let library_adaptor: LibraryAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
-        RouterModule.forRoot([]),
+        RouterTestingModule,
         FormsModule,
         StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
@@ -85,7 +104,10 @@ describe('TeamDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
-        ConfirmationService
+        ConfirmationService,
+        MessageService,
+        UserService,
+        ComicService
       ],
       declarations: [
         TeamDetailsPageComponent,
@@ -95,7 +117,6 @@ describe('TeamDetailsPageComponent', () => {
         ComicListItemComponent,
         ComicListToolbarComponent,
         ComicCoverComponent,
-        ComicTeamPipe,
         ComicCoverUrlPipe,
         ComicTitlePipe
       ]
@@ -104,10 +125,26 @@ describe('TeamDetailsPageComponent', () => {
     fixture = TestBed.createComponent(TeamDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    store = TestBed.get(Store);
+    library_adaptor = TestBed.get(LibraryAdaptor);
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when a team update is received', () => {
+    it('sets the comics when the team is found', () => {
+      component.team_name = TEAM_NAME;
+      library_adaptor._team$.next(TEAMS);
+      fixture.detectChanges();
+      expect(component.comics).toEqual([COMIC]);
+    });
+
+    it('sets an empty set when the team is not found', () => {
+      component.team_name = TEAM_NAME.substr(1);
+      library_adaptor._team$.next(TEAMS);
+      fixture.detectChanges();
+      expect(component.comics).toEqual([]);
+    });
   });
 });

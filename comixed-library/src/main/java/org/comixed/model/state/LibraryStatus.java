@@ -19,26 +19,24 @@
 
 package org.comixed.model.state;
 
-import java.util.List;
-
-import org.comixed.views.View.ComicList;
-import org.comixed.model.library.Comic;
-import org.comixed.model.user.LastReadDate;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.comixed.model.library.Comic;
+import org.comixed.model.user.LastReadDate;
+import org.comixed.views.View.ComicList;
 
-public class LibraryStatus
-{
+import java.util.List;
+
+public class LibraryStatus {
     @JsonProperty("comics")
     @JsonView(ComicList.class)
     private List<Comic> comics;
 
-    @JsonProperty("rescan_count")
+    @JsonProperty("pending_rescans")
     @JsonView(ComicList.class)
     private int rescanCount;
 
-    @JsonProperty("import_count")
+    @JsonProperty("pending_imports")
     @JsonView(ComicList.class)
     private int importCount;
 
@@ -46,31 +44,29 @@ public class LibraryStatus
     @JsonView(ComicList.class)
     private List<LastReadDate> lastReadDates;
 
-    public LibraryStatus(List<Comic> comics, List<LastReadDate> lastReadDates, int rescanCount, int importCount)
-    {
+    public LibraryStatus(List<Comic> comics,
+                         List<LastReadDate> lastReadDates,
+                         int rescanCount,
+                         int importCount) {
         this.comics = comics;
         this.lastReadDates = lastReadDates;
         this.rescanCount = rescanCount;
         this.importCount = importCount;
     }
 
-    public List<Comic> getComics()
-    {
+    public List<Comic> getComics() {
         return this.comics;
     }
 
-    public int getImportCount()
-    {
+    public int getImportCount() {
         return this.importCount;
     }
 
-    public int getRescanCount()
-    {
+    public int getRescanCount() {
         return this.rescanCount;
     }
 
-    public List<LastReadDate> getLastReadDates()
-    {
+    public List<LastReadDate> getLastReadDates() {
         return lastReadDates;
     }
 }

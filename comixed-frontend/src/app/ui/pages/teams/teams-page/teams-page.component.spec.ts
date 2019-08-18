@@ -30,6 +30,13 @@ import { AppState } from 'app/app.state';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { TeamsPageComponent } from './teams-page.component';
 import { REDUCERS } from 'app/app.reducers';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { MessageService } from 'primeng/api';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
 
 describe('TeamsPageComponent', () => {
   let component: TeamsPageComponent;
@@ -39,6 +46,9 @@ describe('TeamsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         FormsModule,
         StoreModule.forRoot(REDUCERS),
@@ -48,7 +58,8 @@ describe('TeamsPageComponent', () => {
         TableModule,
         PanelModule
       ],
-      declarations: [TeamsPageComponent, LibraryFilterComponent]
+      declarations: [TeamsPageComponent, LibraryFilterComponent],
+      providers: [MessageService, ComicService, UserService]
     }).compileComponents();
   }));
 

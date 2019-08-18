@@ -18,7 +18,7 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 import { Volume } from 'app/models/comics/volume';
 import { Issue } from 'app/models/scraping/issue';
 

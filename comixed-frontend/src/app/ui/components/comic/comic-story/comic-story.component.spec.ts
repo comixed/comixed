@@ -25,6 +25,15 @@ import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { ComicGroupingCardComponent } from 'app/ui/components/comic/comic-grouping-card/comic-grouping-card.component';
 import { ComicStoryComponent } from './comic-story.component';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { MessageService } from 'primeng/api';
+import { UserService } from 'app/services/user.service';
+import { ComicService } from 'app/services/comic.service';
+import { StoreModule } from '@ngrx/store';
+import { REDUCERS } from 'app/app.reducers';
 
 describe('ComicStoryComponent', () => {
   let component: ComicStoryComponent;
@@ -33,13 +42,18 @@ describe('ComicStoryComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
+        StoreModule.forRoot(REDUCERS),
         RouterTestingModule,
         TranslateModule.forRoot(),
         DataViewModule,
         PanelModule,
         CardModule
       ],
-      declarations: [ComicStoryComponent, ComicGroupingCardComponent]
+      declarations: [ComicStoryComponent, ComicGroupingCardComponent],
+      providers: [MessageService, UserService, ComicService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicStoryComponent);

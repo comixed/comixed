@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/models/comics/comic';
+import { Comic } from 'app/library';
 
 export interface ComicSelectionEntry {
   comic: Comic;

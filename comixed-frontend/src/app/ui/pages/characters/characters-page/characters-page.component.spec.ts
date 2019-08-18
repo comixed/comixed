@@ -25,21 +25,35 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as LibraryActions from 'app/actions/library.actions';
+import { StoreModule } from '@ngrx/store';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { CharactersPageComponent } from './characters-page.component';
 import { REDUCERS } from 'app/app.reducers';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { UserService } from 'app/services/user.service';
+import { MessageService } from 'primeng/api';
+import { ComicService } from 'app/services/comic.service';
+import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 
 describe('CharactersPageComponent', () => {
+  const CHARACTER = 'Superhero Man';
+  const COMICS = [{ ...COMIC_1, characters: [CHARACTER] }];
+  const CHARACTERS: ComicCollectionEntry[] = [
+    { name: CHARACTER, comics: COMICS, last_comic_added: 0, count: 1 }
+  ];
   let component: CharactersPageComponent;
   let fixture: ComponentFixture<CharactersPageComponent>;
-  let store: Store<AppState>;
+  let library_adaptor: LibraryAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         FormsModule,
         StoreModule.forRoot(REDUCERS),
@@ -49,14 +63,15 @@ describe('CharactersPageComponent', () => {
         TableModule,
         PanelModule
       ],
-      declarations: [CharactersPageComponent, LibraryFilterComponent]
+      declarations: [CharactersPageComponent, LibraryFilterComponent],
+      providers: [MessageService, UserService, ComicService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CharactersPageComponent);
     component = fixture.componentInstance;
-    store = TestBed.get(Store);
-    store.dispatch(new LibraryActions.LibraryReset());
-
+    library_adaptor = TestBed.get(LibraryAdaptor);
+    library_adaptor._comic$.next(COMICS);
+    library_adaptor._character$.next(CHARACTERS);
     fixture.detectChanges();
   }));
 

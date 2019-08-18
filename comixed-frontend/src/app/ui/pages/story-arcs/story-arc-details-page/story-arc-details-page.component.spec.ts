@@ -21,8 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { StoreModule } from '@ngrx/store';
 import { DataViewModule } from 'primeng/dataview';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -39,7 +38,6 @@ import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-ite
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
 import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
-import { ComicStoriesPipe } from 'app/pipes/comic-stories.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { StoryArcDetailsPageComponent } from './story-arc-details-page.component';
@@ -47,25 +45,40 @@ import { REDUCERS } from 'app/app.reducers';
 import {
   ConfirmationService,
   ConfirmDialogModule,
-  ContextMenuModule
+  ContextMenuModule,
+  MessageService
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { UserService } from 'app/services/user.service';
+import { ComicService } from 'app/services/comic.service';
+import { LibraryModule } from 'app/library/library.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('StoryArcDetailsPageComponent', () => {
-  const COMIC = COMIC_1000;
+  const STORY_NAME = 'Story Name';
+  const COMIC = { ...COMIC_1, story_arcs: [STORY_NAME] };
+  const STORIES: ComicCollectionEntry[] = [
+    { name: STORY_NAME, comics: [COMIC], last_comic_added: 0, count: 1 }
+  ];
 
   let component: StoryArcDetailsPageComponent;
   let fixture: ComponentFixture<StoryArcDetailsPageComponent>;
-  let store: Store<AppState>;
+  let library_adaptor: LibraryAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
+        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
-        RouterModule.forRoot([]),
+        RouterTestingModule,
         FormsModule,
         StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
@@ -85,7 +98,10 @@ describe('StoryArcDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
-        ConfirmationService
+        ConfirmationService,
+        MessageService,
+        UserService,
+        ComicService
       ],
       declarations: [
         StoryArcDetailsPageComponent,
@@ -95,21 +111,34 @@ describe('StoryArcDetailsPageComponent', () => {
         ComicListItemComponent,
         ComicListToolbarComponent,
         ComicCoverComponent,
-        ComicStoriesPipe,
         ComicCoverUrlPipe,
         ComicTitlePipe
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(StoryArcDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    store = TestBed.get(Store);
-  });
+    library_adaptor = TestBed.get(LibraryAdaptor);
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when a story arc update is received', () => {
+    it('sets the comics when the story is found', () => {
+      component.story_name = STORY_NAME;
+      library_adaptor._story_arc$.next(STORIES);
+      fixture.detectChanges();
+      expect(component.comics).toEqual([COMIC]);
+    });
+
+    it('sets an empty set when the story is not found', () => {
+      component.story_name = STORY_NAME.substr(1);
+      library_adaptor._story_arc$.next(STORIES);
+      fixture.detectChanges();
+      expect(component.comics).toEqual([]);
+    });
   });
 });

@@ -18,12 +18,12 @@
  */
 
 import { ComicDownloadLinkPipe } from './comic-download-link.pipe';
-import { COMIC_1000 } from 'app/models/comics/comic.fixtures';
+import { COMIC_1 } from 'app/library';
 import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
 
 describe('ComicDownloadLinkPipe', () => {
   const pipe = new ComicDownloadLinkPipe();
-  const comic = COMIC_1000;
+  const comic = COMIC_1;
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();
