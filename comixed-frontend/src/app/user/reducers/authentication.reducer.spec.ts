@@ -17,9 +17,13 @@
  * org.comixed;
  */
 
-import { initial_state, reducer } from './authentication.reducer';
-import { AuthenticationState, USER_ADMIN, USER_READER } from 'app/user';
 import * as AuthenticationActions from 'app/user/actions/authentication.actions';
+import {USER_ADMIN, USER_READER} from 'app/user/models/user.fixtures';
+import {
+  AuthenticationState,
+  initial_state
+} from 'app/user/models/authentication-state';
+import { reducer } from 'app/user/reducers/authentication.reducer';
 
 describe('Authentication Reducer', () => {
   const USER = USER_ADMIN;

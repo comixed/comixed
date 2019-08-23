@@ -25,11 +25,9 @@ import { Duplicates } from 'app/models/state/duplicates';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { SelectionState } from 'app/models/state/selection-state';
-import { AuthenticationState } from 'app/user';
 import { LibraryState } from 'app/library';
 
 export interface AppState {
-  readonly auth_state: AuthenticationState;
   readonly library_state: LibraryState;
   readonly import_state: ImportState;
   readonly library: LibraryState;

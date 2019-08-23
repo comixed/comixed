@@ -33,6 +33,8 @@ import { TokenService } from 'app/user/services/token.service';
 import { metaReducers, reducers } from 'app/user/index';
 import { environment } from '../../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { AdminGuard } from 'app/user/guards/admin.guard';
+import { ReaderGuard } from 'app/user/guards/reader.guard';
 
 @NgModule({
   imports: [
@@ -47,8 +49,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       fromAuthentication.reducer
     )
   ],
-  providers: [AuthenticationAdaptor, TokenService],
-  declarations: []
+  providers: [AuthenticationAdaptor, TokenService, ReaderGuard, AdminGuard],
+  declarations: [],
+  exports: [CommonModule]
 })
 export class UserModule {
   static forRoot(): ModuleWithProviders {

@@ -21,20 +21,13 @@ import {
   AuthenticationActions,
   AuthenticationActionTypes
 } from '../actions/authentication.actions';
-import { AuthenticationState } from 'app/user';
 import * as AuthActions from 'app/user/actions/authentication.actions';
+import {
+  AuthenticationState,
+  initial_state
+} from 'app/user/models/authentication-state';
 
 export const AUTHENTICATION_FEATURE_KEY = 'auth_state';
-
-export const initial_state: AuthenticationState = {
-  initialized: false,
-  authenticating: false,
-  authenticated: false,
-  setting_preference: false,
-  user: null,
-  auth_token: null,
-  show_login: false
-};
 
 export function reducer(
   state = initial_state,

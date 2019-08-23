@@ -19,8 +19,7 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminGuard } from 'app/admin.guard';
-import { ReaderGuard } from 'app/reader.guard';
+import { AdminGuard, ReaderGuard } from 'app/user';
 import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
 import { AccountPageComponent } from 'app/ui/pages/account/account-page/account-page.component';
 import { LibraryPageComponent } from 'app/ui/pages/library/library-page/library-page.component';

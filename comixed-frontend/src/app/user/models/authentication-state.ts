@@ -28,3 +28,13 @@ export declare interface AuthenticationState {
   auth_token: string;
   show_login: boolean;
 }
+
+export const initial_state: AuthenticationState = {
+  initialized: false,
+  authenticating: false,
+  authenticated: false,
+  setting_preference: false,
+  user: null,
+  auth_token: null,
+  show_login: false
+};

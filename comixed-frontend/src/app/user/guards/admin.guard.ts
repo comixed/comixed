@@ -20,7 +20,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { AuthenticationAdaptor } from 'app/user';
+import { AuthenticationAdaptor } from 'app/user/adaptors/authentication.adaptor';
 
 @Injectable()
 export class AdminGuard implements CanActivate {

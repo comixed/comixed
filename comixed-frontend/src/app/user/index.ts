@@ -28,6 +28,12 @@ import {
   LIBRARY_ROWS,
   LIBRARY_SORT
 } from './models/preferences.constants';
+import * as fromRouter from '@ngrx/router-store';
+import * as fromAuth from './reducers/authentication.reducer';
+import { ActionReducerMap, MetaReducer } from '@ngrx/store';
+import { environment } from '../../environments/environment';
+import { Params } from '@angular/router';
+import { AuthenticationState } from './models/authentication-state';
 
 export { User } from './models/user';
 export { Role } from './models/role';
@@ -43,15 +49,10 @@ export {
   IMPORT_LAST_DIRECTORY,
   COMICVINE_API_KEY
 } from './models/preferences.constants';
-export { AuthenticationState } from './models/authentication-state';
+export { ReaderGuard } from './guards/reader.guard';
+export { AdminGuard } from './guards/admin.guard';
 export { AuthenticationAdaptor } from './adaptors/authentication.adaptor';
 export { TokenService } from './services/token.service';
-import * as fromRouter from '@ngrx/router-store';
-import * as fromAuth from './reducers/authentication.reducer';
-import { ActionReducerMap, MetaReducer } from '@ngrx/store';
-import { environment } from '../../environments/environment';
-import { Params } from '@angular/router';
-import { AuthenticationState } from './models/authentication-state';
 
 interface RouterStateUrl {
   url: string;

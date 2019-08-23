@@ -84,8 +84,6 @@ import { UserDetailsComponent } from 'app/ui/components/account/user-details/use
 import { MultipleComicScrapingComponent } from 'app/ui/components/scraping/multiple-comic-scraping/multiple-comic-scraping.component';
 import { LibraryScrapingToolbarComponent } from 'app/ui/components/library/library-scraping-toolbar/library-scraping-toolbar.component';
 import { ScrapingComicListComponent } from 'app/ui/components/scraping/scraping-comic-list/scraping-comic-list.component';
-import { AdminGuard } from 'app/admin.guard';
-import { ReaderGuard } from 'app/reader.guard';
 import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
@@ -260,9 +258,7 @@ import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-c
     ReadingListService,
     MessageService,
     [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
-    ConfirmationService,
-    AdminGuard,
-    ReaderGuard
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })
