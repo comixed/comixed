@@ -20,13 +20,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as ImportActions from 'app/actions/importing.actions';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { ComicFile } from 'app/models/import/comic-file';
-import * as SelectionActions from 'app/actions/selection.actions';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { ComicFile, ImportAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-comic-file-list-toolbar',
@@ -56,6 +54,7 @@ export class ComicFileListToolbarComponent implements OnInit {
   constructor(
     private auth_adaptor: AuthenticationAdaptor,
     private library_display_adaptor: LibraryDisplayAdaptor,
+    private import_adaptor: ImportAdaptor,
     private store: Store<AppState>,
     private translate: TranslateService
   ) {
@@ -72,29 +71,16 @@ export class ComicFileListToolbarComponent implements OnInit {
   ngOnInit() {}
 
   find_comics(): void {
-    this.store.dispatch(
-      new ImportActions.ImportingSetDirectory({ directory: this.directory })
-    );
     this.auth_adaptor.set_preference('import.directory', this.directory);
-    this.store.dispatch(
-      new ImportActions.ImportingFetchFiles({ directory: this.directory })
-    );
+    this.import_adaptor.fetch_files(this.directory);
   }
 
   select_all_comics(): void {
-    this.store.dispatch(
-      new SelectionActions.SelectionAddComicFiles({
-        comic_files: this.comic_files
-      })
-    );
+    this.import_adaptor.select_comic_files(this.comic_files);
   }
 
   deselect_all_comics(): void {
-    this.store.dispatch(
-      new SelectionActions.SelectionRemoveComicFiles({
-        comic_files: this.comic_files
-      })
-    );
+    this.import_adaptor.unselect_comic_files(this.comic_files);
   }
 
   set_sort_field(sort_field: string): void {

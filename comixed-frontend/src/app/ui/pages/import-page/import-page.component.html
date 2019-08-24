@@ -5,7 +5,7 @@
 </div>
 <div *ngIf='!importing'
      id='comic-file-list-container'>
-    <app-comic-file-list [busy]='import_state?.busy'
+    <app-comic-file-list [busy]='fetching_files'
                          [comic_files]='comic_files'
                          [directory]='user | user_preference: "import.directory"'
                          [selected_comic_files]='selected_comic_files'

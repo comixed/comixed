@@ -22,6 +22,7 @@ package org.comixed.controller.file;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
+import org.comixed.net.ImportRequestBody;
 import org.comixed.service.file.FileService;
 import org.json.JSONException;
 import org.junit.Test;
@@ -31,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -119,9 +121,12 @@ public class FileControllerTest {
                                  Mockito.anyBoolean(),
                                  Mockito.anyBoolean());
 
-        controller.importComicFiles(TEST_FILENAMES,
-                                    false,
-                                    false);
+        final int result = controller.importComicFiles(new ImportRequestBody(TEST_FILENAMES,
+                                                                             false,
+                                                                             false));
+
+        assertEquals(TEST_FILENAMES.length,
+                     result);
 
         Mockito.verify(fileService,
                        Mockito.times(1))

@@ -18,16 +18,10 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  EXISTING_COMIC_FILE_1,
-  EXISTING_COMIC_FILE_2,
-  EXISTING_COMIC_FILE_3
-} from 'app/models/import/comic-file.fixtures';
 import { DataViewModule } from 'primeng/dataview';
 import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from './comic-file-list.component';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
-import { ComicFile } from 'app/models/import/comic-file';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
@@ -41,6 +35,7 @@ import {
   ConfirmationService,
   ContextMenuModule,
   DropdownModule,
+  MessageService,
   OverlayPanelModule,
   PanelModule,
   ScrollPanelModule,
@@ -57,6 +52,18 @@ import { REDUCERS } from 'app/app.reducers';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import {
+  COMIC_FILE_1,
+  COMIC_FILE_2,
+  COMIC_FILE_3,
+  ComicFile
+} from 'app/library';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UserService } from 'app/services/user.service';
+import { ComicService } from 'app/services/comic.service';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
 
 describe('ComicFileListComponent', () => {
   let component: ComicFileListComponent;
@@ -66,11 +73,14 @@ describe('ComicFileListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
         FormsModule,
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         DataViewModule,
         ButtonModule,
         DropdownModule,
@@ -97,7 +107,10 @@ describe('ComicFileListComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
-        ConfirmationService
+        ConfirmationService,
+        ComicService,
+        UserService,
+        MessageService
       ]
     }).compileComponents();
 
@@ -127,11 +140,7 @@ describe('ComicFileListComponent', () => {
 
   describe('when displaying a list of comic files', () => {
     beforeEach(() => {
-      component.comic_files = [
-        EXISTING_COMIC_FILE_1,
-        EXISTING_COMIC_FILE_2,
-        EXISTING_COMIC_FILE_3
-      ];
+      component.comic_files = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
       fixture.detectChanges();
     });
 

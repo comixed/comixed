@@ -18,11 +18,10 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { Comic } from 'app/library';
-import { Action, Store } from '@ngrx/store';
+import { Comic, ComicFile, ImportAdaptor } from 'app/library';
+import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as SelectionActions from 'app/actions/selection.actions';
-import { ComicFile } from 'app/models/import/comic-file';
 
 @Component({
   selector: 'app-comic-cover',
@@ -39,32 +38,32 @@ export class ComicCoverComponent {
   @Input() selected = false;
   @Input() use_selected_class = true;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>,
+    private import_adaptor: ImportAdaptor
+  ) {}
 
   toggle_selection(): void {
-    let action: Action = null;
-
     if (this.selected) {
       if (this.comic) {
-        action = new SelectionActions.SelectionRemoveComics({
-          comics: [this.comic]
-        });
+        this.store.dispatch(
+          new SelectionActions.SelectionRemoveComics({
+            comics: [this.comic]
+          })
+        );
       } else {
-        action = new SelectionActions.SelectionRemoveComicFiles({
-          comic_files: [this.comic_file]
-        });
+        this.import_adaptor.unselect_comic_files([this.comic_file]);
       }
     } else {
       if (this.comic) {
-        action = new SelectionActions.SelectionAddComics({
-          comics: [this.comic]
-        });
+        this.store.dispatch(
+          new SelectionActions.SelectionAddComics({
+            comics: [this.comic]
+          })
+        );
       } else {
-        action = new SelectionActions.SelectionAddComicFiles({
-          comic_files: [this.comic_file]
-        });
+        this.import_adaptor.select_comic_files([this.comic_file]);
       }
     }
-    this.store.dispatch(action);
   }
 }

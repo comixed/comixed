@@ -18,15 +18,15 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { ComicFile } from 'app/models/import/comic-file';
-import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
+import { ComicFile } from 'app/library';
+import { COMIXED_API_ROOT } from 'app/app.constants';
 
 @Pipe({
   name: 'comic_file_cover_url'
 })
 export class ComicFileCoverUrlPipe implements PipeTransform {
   transform(comic_file: ComicFile): string {
-    return `${COMIC_SERVICE_API_URL}/files/import/cover?filename=${encodeURIComponent(
+    return `${COMIXED_API_ROOT}/files/import/cover?filename=${encodeURIComponent(
       comic_file.filename
     )}`;
   }

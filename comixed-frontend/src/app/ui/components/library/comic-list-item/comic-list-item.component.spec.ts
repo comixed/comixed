@@ -31,6 +31,13 @@ import { COMIC_1 } from 'app/library';
 import { ComicListItemComponent } from './comic-list-item.component';
 import { StoreModule } from '@ngrx/store';
 import { REDUCERS } from 'app/app.reducers';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { MessageService } from 'primeng/api';
 
 describe('ComicListItemComponent', () => {
   let component: ComicListItemComponent;
@@ -39,9 +46,12 @@ describe('ComicListItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         OverlayPanelModule,
         PanelModule,
@@ -52,7 +62,8 @@ describe('ComicListItemComponent', () => {
         ComicCoverComponent,
         ComicCoverUrlPipe,
         ComicTitlePipe
-      ]
+      ],
+      providers: [ComicService, UserService, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicListItemComponent);

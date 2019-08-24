@@ -61,7 +61,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
-import { LibraryAdaptor } from 'app/library';
+import { ImportAdaptor, LibraryAdaptor } from 'app/library';
 
 const DIRECTORY_TO_USE = '/OldUser/comixed/Downloads';
 
@@ -69,6 +69,7 @@ describe('ImportPageComponent', () => {
   let component: ImportPageComponent;
   let fixture: ComponentFixture<ImportPageComponent>;
   let library_adaptor: LibraryAdaptor;
+  let import_adaptor: ImportAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -120,6 +121,7 @@ describe('ImportPageComponent', () => {
     fixture = TestBed.createComponent(ImportPageComponent);
     component = fixture.componentInstance;
     library_adaptor = TestBed.get(LibraryAdaptor);
+    import_adaptor = TestBed.get(ImportAdaptor);
     fixture.detectChanges();
   }));
 

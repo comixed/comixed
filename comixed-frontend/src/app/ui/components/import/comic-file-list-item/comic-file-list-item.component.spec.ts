@@ -20,15 +20,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComicFileListItemComponent } from './comic-file-list-item.component';
-import { StoreModule } from '@ngrx/store';
-import { importingReducer } from 'app/reducers/importing.reducer';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardModule, OverlayPanelModule, PanelModule } from 'primeng/primeng';
+import {
+  CardModule,
+  MessageService,
+  OverlayPanelModule,
+  PanelModule
+} from 'primeng/primeng';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
+import { COMIC_FILE_1 } from 'app/library';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { StoreModule } from '@ngrx/store';
+import { REDUCERS } from 'app/app.reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
 
 describe('ComicFileListItemComponent', () => {
   let component: ComicFileListItemComponent;
@@ -37,10 +48,13 @@ describe('ComicFileListItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
         BrowserAnimationsModule,
         RouterTestingModule,
-        StoreModule.forRoot({ import_state: importingReducer }),
         TranslateModule.forRoot(),
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         OverlayPanelModule,
         PanelModule,
         CardModule
@@ -49,12 +63,13 @@ describe('ComicFileListItemComponent', () => {
         ComicFileListItemComponent,
         ComicCoverComponent,
         ComicFileCoverUrlPipe
-      ]
+      ],
+      providers: [ComicService, UserService, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListItemComponent);
     component = fixture.componentInstance;
-    component.comic_file = EXISTING_COMIC_FILE_1;
+    component.comic_file = COMIC_FILE_1;
     fixture.detectChanges();
   }));
 

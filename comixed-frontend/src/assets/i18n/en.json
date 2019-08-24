@@ -27,19 +27,19 @@
     }
   },
   "main-page": {
-    "copyright": "Copyright &copy; {{years}}, The ComiXed Project Team",
-    "library-status": "There are {{comic_count}} comics in the library.",
-    "library-counts": "<b>Total:</b> {{comic_count}} <b>Read:</b> {{read_count}} <b>Import:</b> {{import_count}} <b>Rescan:</b> {{rescan_count}}"
+    "copyright": "Copyright &copy; {years}, The ComiXed Project Team",
+    "library-status": "There are {comic_count} comics in the library.",
+    "library-counts": "<b>Total:</b> {comic_count} <b>Read:</b> {read_count} <b>Import:</b> {import_count} <b>Rescan:</b> {rescan_count}"
   },
   "library-filter": {
     "filters": {
       "no-filters": "[Showing All Comics]",
-      "publisher": "Publisher is {{publisher}}",
-      "series": "Series is {{series}}",
-      "volume": "Volume is {{volume}}",
-      "from-year": "Cover date >= {{from_year}}",
-      "to-year": "Cover date <= {{to_year}}",
-      "between-years": "Cover date between {{from_year}} and {{to_year}}"
+      "publisher": "Publisher is {publisher}",
+      "series": "Series is {series}",
+      "volume": "Volume is {volume}",
+      "from-year": "Cover date >= {from_year}",
+      "to-year": "Cover date <= {to_year}",
+      "between-years": "Cover date between {from_year} and {to_year}"
     },
     "labels": {
       "filter-prefix": "Library Filters",
@@ -103,22 +103,22 @@
     }
   },
   "comic-file-list": {
-    "header": "There Are {{selected_count}} Files Selected",
+    "header": "There Are {selected_count} Files Selected",
     "popup": {
-      "select-all": "Select {{comic_count}} comics",
-      "deselect-all": "Deselect {{comic_count}} comics",
+      "select-all": "Select {comic_count} comics",
+      "deselect-all": "Deselect {comic_count} comics",
       "import": {
-        "label": "Import {{comic_count}} Comics",
+        "label": "Import {comic_count} Comics",
         "with-metadata": "With Metadata...",
         "without-metadata": "Without Metadata..."
       },
-      "start-import": "Import {{comic_count}} comics...",
-      "start-import-ignore-metadata": "Import {{comic_count}} comics, ignore meta-data..."
+      "start-import": "Import {comic_count} comics...",
+      "start-import-ignore-metadata": "Import {comic_count} comics, ignore meta-data..."
     },
     "import": {
       "header": "Import Comic Files",
-      "message": "Import {{comic_count}} comics?",
-      "message-ignore-metadata": "Import {{comic_count}} comic(s), ignoring all included metadata??"
+      "message": "Import {comic_count} comics?",
+      "message-ignore-metadata": "Import {comic_count} comic(s), ignoring all included metadata??"
     }
   },
   "library": {
@@ -152,11 +152,11 @@
     "constraints": {
       "sort-by": "Sort by",
       "rows-per-page": "Show",
-      "cover-size": "Cover size: {{cover_size}}px"
+      "cover-size": "Cover size: {cover_size}px"
     },
     "messages": {
       "no-comics-found": "No comics found...",
-      "comicvine-url": "The details can be found here: <a target='_comicvine' href='http://comicvine.gamespot.com/issue/4000-{{comic_vine_id}}'>{{comic_vine_id}}</a>",
+      "comicvine-url": "The details can be found here: <a target='_comicvine' href='http://comicvine.gamespot.com/issue/4000-{comic_vine_id}'>{comic_vine_id}</a>",
       "no-summary": "No summary available...",
       "no-description": "No description available...",
       "delete-comic-title": "Delete This Comic?",
@@ -165,8 +165,8 @@
       "rescan-library-message": "Are you sure? This could take a very long time to complete..."
     },
     "scraping": {
-      "comics-available-header": "{{available_comics}} Comics Available",
-      "comics-selected-header": "{{selected_comics}} Comics Selected",
+      "comics-available-header": "{available_comics} Comics Available",
+      "comics-selected-header": "{selected_comics} Comics Selected",
       "source-search-filter": "Search by series name...",
       "target-search-filter": "Search by series name..."
     }
@@ -220,7 +220,7 @@
   },
   "library-contents": {
     "label": {
-      "cover-size": "Cover size: {{cover_size}}px"
+      "cover-size": "Cover size: {cover_size}px"
     },
     "options": {
       "layout": {
@@ -246,7 +246,7 @@
         "latest-comic-added-date": "Latest Comic Added"
       },
       "value": {
-        "comic-count": "{{comic_count}} comic(s)"
+        "comic-count": "{comic_count} comic(s)"
       }
     }
   },
@@ -258,7 +258,7 @@
         "latest-comic-added-date": "Latest Comic Added"
       },
       "value": {
-        "comic-count": "{{comic_count}} comic(s)"
+        "comic-count": "{comic_count} comic(s)"
       }
     }
   },
@@ -277,8 +277,8 @@
   },
   "multi-comic-scraping-page": {
     "title": {
-      "preparing-to-scrape": "Preparing To Scrape {{comic_count}} Comics",
-      "scraping": "Scraping {{comic_count}} Comics"
+      "preparing-to-scrape": "Preparing To Scrape {comic_count} Comics",
+      "scraping": "Scraping {comic_count} Comics"
     },
     "text": {
       "describing-the-comic-scraping-process-1": "To begin scraping the selected comics, click the start button below. The application will then process the comics one at a time, fetching the meta-details from the ComicVine website.",
@@ -290,7 +290,7 @@
   },
   "comic-overview": {
     "label": {
-      "filename": "The filename is <strong>{{filename}}</strong> on the host machine.",
+      "filename": "The filename is <strong>{filename}</strong> on the host machine.",
       "publisher": "Publisher",
       "series": "Series",
       "volume": "Volume",
@@ -321,7 +321,7 @@
       "format-placeholder": "Click to set format...",
       "scan-type-placeholder": "Click to set scan type...",
       "sort-name-placeholder": "Click to set a sort name...",
-      "comicvine-details-link": "The details can be found <a href='http://comicvine.gamespot.com/issue/4000-{{comicvine_id}}'>{{comicvine_id}}</a>."
+      "comicvine-details-link": "The details can be found <a href='http://comicvine.gamespot.com/issue/4000-{comicvine_id}'>{comicvine_id}</a>."
     }
   },
   "comic-pages": {
@@ -354,9 +354,9 @@
     },
     "text": {
       "no-duplicates": "There are no duplicate pages! Yay!",
-      "cover-size": "Cover Size: {{cover_size}}px",
-      "found-in-file-count": "Found in {{file_count}} Files",
-      "instance-count": "{{file_count}} Instances"
+      "cover-size": "Cover Size: {cover_size}px",
+      "found-in-file-count": "Found in {file_count} Files",
+      "instance-count": "{file_count} Instances"
     }
   },
   "page-hash": {
@@ -454,12 +454,12 @@
       "reading-lists": "Reading lists"
     },
     "delete-comics": {
-      "header": "Delete {{count}} Comics",
+      "header": "Delete {count} Comics",
       "message": "Are you sure you want to delete these comics?"
     },
     "remove-from-reading-list": {
       "header": "Remove From Reading List",
-      "message": "Are you sure you want to remove these comics from '{{reading_list_name}}?"
+      "message": "Are you sure you want to remove these comics from '{reading_list_name}?"
     }
   },
   "comic-list-item": {
@@ -476,7 +476,7 @@
   },
   "comic-cover": {
     "label": {
-      "volume": "v{{volume}}",
+      "volume": "v{volume}",
       "open-comic": "Open Comic"
     }
   },
@@ -490,14 +490,14 @@
   "effects": {
     "importing": {
       "info": {
-        "found_files": "Found {{file_count}} file(s)..."
+        "found_files": "Found {file_count} file(s)..."
       }
     },
     "library": {
       "info": {
-        "format-type-set": "Set the format type to {{format_type}}...",
-        "scan-type-set": "Set the scan type to {{scan_type}}...",
-        "sort-name-set": "Set the sort name to {{sort_name}}...",
+        "format-type-set": "Set the format type to {format_type}...",
+        "scan-type-set": "Set the scan type to {scan_type}...",
+        "sort-name-set": "Set the sort name to {sort_name}...",
         "metadata-cleared": "Metadata has been cleared...",
         "comic-removed": "Comic removed from the library...",
         "rescan-started": "Started rescanning the library..."
@@ -517,32 +517,32 @@
     },
     "single-comic-scraping": {
       "info": {
-        "retrieved-volume-count": "Retrieved {{count}} volumes...",
+        "retrieved-volume-count": "Retrieved {count} volumes...",
         "details-scraped": "Comic details scraped..."
       }
     },
     "user-admin": {
       "info": {
-        "account-created": "Created an account for {{email}}...",
-        "account-deleted": "Deleted the account for {{email}}..."
+        "account-created": "Created an account for {email}...",
+        "account-deleted": "Deleted the account for {email}..."
       },
       "error": {
-        "account-create-failed": "Failed to create an account for {{email}}...",
-        "account-delete-failed": "Failed to delete the account for {{email}}..."
+        "account-create-failed": "Failed to create an account for {email}...",
+        "account-delete-failed": "Failed to delete the account for {email}..."
       }
     }
   },
   "publishers": {
-    "title": "Showing {{publisher_count}} Publishers"
+    "title": "Showing {publisher_count} Publishers"
   },
   "publisher-details": {
-    "title": "{{publisher_name}}"
+    "title": "{publisher_name}"
   },
   "series-": {
-    "title": "Showing {{series_count}} Series"
+    "title": "Showing {series_count} Series"
   },
   "series-details": {
-    "title": "{{series_name}}"
+    "title": "{series_name}"
   },
   "characters-page": {
     "table": {
@@ -552,12 +552,12 @@
         "latest-comic-added-date": "Latest Comic Added"
       },
       "value": {
-        "comic-count": "{{comic_count}} comic(s)"
+        "comic-count": "{comic_count} comic(s)"
       }
     }
   },
   "character-details": {
-    "title": "{{character_name}}"
+    "title": "{character_name}"
   },
   "teams-page": {
     "table": {
@@ -567,12 +567,12 @@
         "latest-comic-added-date": "Latest Comic Added"
       },
       "value": {
-        "comic-count": "{{comic_count}} comic(s)"
+        "comic-count": "{comic_count} comic(s)"
       }
     }
   },
   "team-details": {
-    "title": "{{team_name}}"
+    "title": "{team_name}"
   },
   "locations-page": {
     "table": {
@@ -582,12 +582,12 @@
         "latest-comic-added-date": "Latest Comic Added"
       },
       "value": {
-        "comic-count": "{{comic_count}} comic(s)"
+        "comic-count": "{comic_count} comic(s)"
       }
     }
   },
   "location-details": {
-    "title": "{{location_name}}"
+    "title": "{location_name}"
   },
   "story-arcs-page": {
     "table": {
@@ -597,16 +597,16 @@
         "latest-comic-added-date": "Latest Comic Added"
       },
       "value": {
-        "comic-count": "{{comic_count}} comic(s)"
+        "comic-count": "{comic_count} comic(s)"
       }
     }
   },
   "story-details": {
-    "title": "{{story_name}}"
+    "title": "{story_name}"
   },
   "comic-grouping-card": {
     "text": {
-      "appearance-count": "\"{{name}}\" appears in {{comic_count}} comics."
+      "appearance-count": "\"{name}\" appears in {comic_count} comics."
     }
   },
   "backup-page": {
@@ -618,7 +618,7 @@
     }
   },
   "missing-comics-page": {
-    "title": "{{comic_count}} Missing Comics"
+    "title": "{comic_count} Missing Comics"
   },
   "text": {
     "unknown": "Unknown",
@@ -661,7 +661,7 @@
     },
     "remove-comics": {
       "header": "Remove Selected Comics",
-      "message": "Are you sure you want to remove {{comic_count}} selected comics?"
+      "message": "Are you sure you want to remove {comic_count} selected comics?"
     }
   },
   "reading-lists-page": {
@@ -755,6 +755,24 @@
       },
       "error": {
         "detail": "Failed to delete multiple comics."
+      }
+    }
+  },
+  "import-effects": {
+    "get-comic-files": {
+      "success": {
+        "detail": "Found {count, plural, =1{comic file} other{# comic files}}."
+      },
+      "error": {
+        "detail": "Failed to get comic files for import."
+      }
+    },
+    "import-comic-files": {
+      "success": {
+        "detail": "Now importing {count, plural, =1{comic file} other{# comic files}}."
+      },
+      "error": {
+        "detail": "Failed to start importing comic files."
       }
     }
   },

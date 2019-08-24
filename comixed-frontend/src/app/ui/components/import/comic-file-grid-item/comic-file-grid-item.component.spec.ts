@@ -22,15 +22,26 @@ import { ComicFileGridItemComponent } from './comic-file-grid-item.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
-import { CardModule, OverlayPanelModule, PanelModule } from 'primeng/primeng';
+import {
+  CardModule,
+  MessageService,
+  OverlayPanelModule,
+  PanelModule
+} from 'primeng/primeng';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
 import { By } from '@angular/platform-browser';
 import { REDUCERS } from 'app/app.reducers';
+import { COMIC_FILE_1, ImportAdaptor } from 'app/library';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { LibraryModule } from 'app/library/library.module';
 
 describe('ComicFileGridItemComponent', () => {
   let component: ComicFileGridItemComponent;
@@ -40,10 +51,13 @@ describe('ComicFileGridItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         PanelModule,
         OverlayPanelModule,
         CardModule
@@ -53,13 +67,14 @@ describe('ComicFileGridItemComponent', () => {
         ComicCoverComponent,
         ComicFileCoverUrlPipe,
         ComicCoverUrlPipe
-      ]
+      ],
+      providers: [ComicService, UserService, MessageService, ImportAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileGridItemComponent);
     component = fixture.componentInstance;
     store = TestBed.get(Store);
-    component.comic_file = EXISTING_COMIC_FILE_1;
+    component.comic_file = COMIC_FILE_1;
 
     fixture.detectChanges();
   }));

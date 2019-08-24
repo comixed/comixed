@@ -21,12 +21,10 @@ import { TestBed } from '@angular/core/testing';
 import { UserService } from './user.service';
 import { UserServiceMock } from './user.service.mock';
 import { ComicService } from './comic.service';
-
 import {
   ADD_BLOCKED_PAGE_HASH_URL,
   CLEAR_METADATA_URL,
   COMIC_DELETE_URL,
-  FORMAT_TYPES_URL,
   COMIC_SCAN_TYPES_URL,
   COMIC_SET_FORMAT_TYPE_URL,
   COMIC_SET_SCAN_TYPE_URL,
@@ -36,6 +34,7 @@ import {
   DELETE_PAGE_URL,
   DELETE_PAGES_WITH_HASH_URL,
   DUPLICATE_PAGES_URL,
+  FORMAT_TYPES_URL,
   GET_COMIC_FILES_URL,
   GET_COMIC_METADATA_URL,
   GET_SCRAPING_CANDIDATES_URL,
@@ -59,6 +58,10 @@ import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
+  COMIC_FILE_1,
+  COMIC_FILE_2,
+  COMIC_FILE_3,
+  ComicFile,
   ComicFormat,
   FORMAT_1,
   FORMAT_2,
@@ -72,12 +75,6 @@ import {
   STORY
 } from 'app/models/comics/page-type.fixtures';
 import { PAGE_1, PAGE_2 } from 'app/models/comics/page.fixtures';
-import { ComicFile } from 'app/models/import/comic-file';
-import {
-  EXISTING_COMIC_FILE_1,
-  EXISTING_COMIC_FILE_2,
-  EXISTING_COMIC_FILE_3
-} from 'app/models/import/comic-file.fixtures';
 import { Page } from 'app/models/comics/page';
 import { Volume } from 'app/models/comics/volume';
 import {
@@ -355,11 +352,7 @@ describe('ComicService', () => {
 
   it('returns the files under a directory', () => {
     const DIRECTORY = '/Users/comixedreader/library/comics';
-    const COMIC_FILES = [
-      EXISTING_COMIC_FILE_1,
-      EXISTING_COMIC_FILE_2,
-      EXISTING_COMIC_FILE_3
-    ];
+    const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
 
     service
       .get_files_under_directory(DIRECTORY)
@@ -404,13 +397,10 @@ describe('ComicService', () => {
 
   describe('when importing files', () => {
     it('imports the files', () => {
-      const FILENAMES = [
-        EXISTING_COMIC_FILE_1.filename,
-        EXISTING_COMIC_FILE_3.filename
-      ];
+      const FILENAMES = [COMIC_FILE_1.filename, COMIC_FILE_3.filename];
       const ENCODED = [
-        encodeURIComponent(EXISTING_COMIC_FILE_1.filename),
-        encodeURIComponent(EXISTING_COMIC_FILE_3.filename)
+        encodeURIComponent(COMIC_FILE_1.filename),
+        encodeURIComponent(COMIC_FILE_3.filename)
       ];
       service
         .import_files_into_library(FILENAMES, false, false)
@@ -427,13 +417,10 @@ describe('ComicService', () => {
     });
 
     it('can delete blocked pages', () => {
-      const FILENAMES = [
-        EXISTING_COMIC_FILE_1.filename,
-        EXISTING_COMIC_FILE_3.filename
-      ];
+      const FILENAMES = [COMIC_FILE_1.filename, COMIC_FILE_3.filename];
       const ENCODED = [
-        encodeURIComponent(EXISTING_COMIC_FILE_1.filename),
-        encodeURIComponent(EXISTING_COMIC_FILE_3.filename)
+        encodeURIComponent(COMIC_FILE_1.filename),
+        encodeURIComponent(COMIC_FILE_3.filename)
       ];
       service
         .import_files_into_library(FILENAMES, true, false)
@@ -450,13 +437,10 @@ describe('ComicService', () => {
     });
 
     it('can ignore the metadata inside the comics', () => {
-      const FILENAMES = [
-        EXISTING_COMIC_FILE_1.filename,
-        EXISTING_COMIC_FILE_3.filename
-      ];
+      const FILENAMES = [COMIC_FILE_1.filename, COMIC_FILE_3.filename];
       const ENCODED = [
-        encodeURIComponent(EXISTING_COMIC_FILE_1.filename),
-        encodeURIComponent(EXISTING_COMIC_FILE_3.filename)
+        encodeURIComponent(COMIC_FILE_1.filename),
+        encodeURIComponent(COMIC_FILE_3.filename)
       ];
       service
         .import_files_into_library(FILENAMES, false, true)

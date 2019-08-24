@@ -27,31 +27,42 @@ import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { COMIC_1 } from 'app/library';
+import { COMIC_1, COMIC_FILE_1, ImportAdaptor } from 'app/library';
 import { ComicCoverComponent } from './comic-cover.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { REDUCERS } from 'app/app.reducers';
 import * as SelectionActions from 'app/actions/selection.actions';
-import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { MessageService } from 'primeng/api';
 
 describe('ComicCoverComponent', () => {
   let component: ComicCoverComponent;
   let fixture: ComponentFixture<ComicCoverComponent>;
   let store: Store<AppState>;
+  let import_adaptor: ImportAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         OverlayPanelModule,
         PanelModule,
         CardModule,
         TranslateModule.forRoot()
       ],
-      declarations: [ComicCoverComponent, ComicCoverUrlPipe, ComicTitlePipe]
+      declarations: [ComicCoverComponent, ComicCoverUrlPipe, ComicTitlePipe],
+      providers: [ComicService, UserService, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicCoverComponent);
@@ -60,6 +71,7 @@ describe('ComicCoverComponent', () => {
     component.cover_size = 200;
     component.same_height = true;
     store = TestBed.get(Store);
+    import_adaptor = TestBed.get(ImportAdaptor);
 
     fixture.detectChanges();
   }));
@@ -101,36 +113,32 @@ describe('ComicCoverComponent', () => {
   describe('when a selected comic file is clicked', () => {
     beforeEach(() => {
       component.comic = null;
-      component.comic_file = EXISTING_COMIC_FILE_1;
+      component.comic_file = COMIC_FILE_1;
       component.selected = true;
-      spyOn(store, 'dispatch');
+      spyOn(import_adaptor, 'unselect_comic_files');
       component.toggle_selection();
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new SelectionActions.SelectionRemoveComicFiles({
-          comic_files: [EXISTING_COMIC_FILE_1]
-        })
-      );
+      expect(import_adaptor.unselect_comic_files).toHaveBeenCalledWith([
+        COMIC_FILE_1
+      ]);
     });
   });
 
   describe('when an unselected comic file is clicked', () => {
     beforeEach(() => {
       component.comic = null;
-      component.comic_file = EXISTING_COMIC_FILE_1;
+      component.comic_file = COMIC_FILE_1;
       component.selected = false;
-      spyOn(store, 'dispatch');
+      spyOn(import_adaptor, 'select_comic_files');
       component.toggle_selection();
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new SelectionActions.SelectionAddComicFiles({
-          comic_files: [EXISTING_COMIC_FILE_1]
-        })
-      );
+      expect(import_adaptor.select_comic_files).toHaveBeenCalledWith([
+        COMIC_FILE_1
+      ]);
     });
   });
 

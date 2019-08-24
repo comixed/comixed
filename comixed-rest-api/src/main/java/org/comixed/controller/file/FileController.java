@@ -20,21 +20,20 @@
 package org.comixed.controller.file;
 
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
+import org.comixed.controller.library.ComicController;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
+import org.comixed.net.ImportRequestBody;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.service.file.FileService;
 import org.comixed.utils.ComicFileUtils;
-import org.comixed.controller.library.ComicController;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -134,27 +133,26 @@ public class FileController {
         return result;
     }
 
-    @RequestMapping(value = "/import",
-                    method = RequestMethod.POST)
+    @PostMapping(value = "/import",
+                 produces = "application/json",
+                 consumes = "application/json")
     @Secured("ROLE_ADMIN")
-    public void importComicFiles(
-            @RequestParam("filenames")
-                    String[] filenames,
-            @RequestParam("delete_blocked_pages")
-                    boolean deleteBlockedPages,
-            @RequestParam("ignore_metadata")
-                    boolean ignoreMetadata)
+    public int importComicFiles(
+            @RequestBody()
+                    ImportRequestBody request)
             throws
             UnsupportedEncodingException {
-        this.logger.info("Importing {} comic files",
-                         filenames.length);
+        this.logger.info("Importing {} comic files: delete blocked pages={} ignore metadata={}",
+                         request.getFilenames().length,
+                         request.isDeleteBlockedPages(),
+                         request.isIgnoreMetadata());
 
-        this.fileService.importComicFiles(filenames,
-                                          deleteBlockedPages,
-                                          ignoreMetadata);
+        this.fileService.importComicFiles(request.getFilenames(),
+                                          request.isDeleteBlockedPages(),
+                                          request.isIgnoreMetadata());
 
         this.logger.debug("Notifying waiting processes");
         ComicController.stopWaitingForStatus();
-
+        return request.getFilenames().length;
     }
 }

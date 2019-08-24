@@ -20,6 +20,29 @@
 import * as _ from 'lodash';
 import { Comic } from 'app/library/models/comic';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { ComicFile } from 'app/library/models/comic-file';
+
+export function mergeComicFiles(
+  base: ComicFile[],
+  update: ComicFile[]
+): ComicFile[] {
+  const result = base.filter(base_entry => {
+    return update.every(
+      update_entry => update_entry.filename !== base_entry.filename
+    );
+  });
+
+  return result.concat(update);
+}
+
+export function filterComicFiles(
+  base: ComicFile[],
+  removed: ComicFile[]
+): ComicFile[] {
+  return base.filter(file =>
+    removed.every(removed_file => removed_file.filename !== file.filename)
+  );
+}
 
 export function mergeComics(base: Comic[], update: Comic[]): Comic[] {
   const result = base.filter(base_entry => {

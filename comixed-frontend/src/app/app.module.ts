@@ -90,7 +90,11 @@ import { LibraryFilterComponent } from 'app/ui/components/library/library-filter
 import { LibraryFilterPipe } from 'app/pipes/library-filter.pipe';
 import { UsersPageComponent } from 'app/ui/pages/admin/users-page/users-page.component';
 import { UserDetailsEditorComponent } from 'app/ui/components/admin/user-details-editor/user-details-editor.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateCompiler,
+  TranslateLoader,
+  TranslateModule
+} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MenubarComponent } from 'app/ui/components/main/menubar/menubar.component';
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
@@ -134,6 +138,7 @@ import { LibraryModule } from 'app/library/library.module';
 import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 
 @NgModule({
   declarations: [
@@ -247,6 +252,10 @@ import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-c
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
+      },
+      compiler: {
+        provide: TranslateCompiler,
+        useClass: TranslateMessageFormatCompiler
       }
     }),
     FileSaverModule

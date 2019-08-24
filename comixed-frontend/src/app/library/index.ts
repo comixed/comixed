@@ -19,18 +19,20 @@
 
 import * as fromRouter from '@ngrx/router-store';
 import * as fromLibrary from './reducers/library.reducer';
+import * as fromImport from './reducers/import.reducer';
 import { LibraryState } from './models/library-state';
+import { ImportState } from './models/import-state';
 import { Params } from '@angular/router';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
-
-export { LibraryState } from './models/library-state';
 export { LibraryAdaptor } from './adaptors/library.adaptor';
+export { ImportAdaptor } from './adaptors/import.adaptor';
 export { Comic } from './models/comic';
 export { ScanType } from './models/scan-type';
 export { ComicFormat } from './models/comic-format';
 export { ComicCredit } from './models/comic-credit';
 export { ComicCollectionEntry } from './models/comic-collection-entry';
+export { ComicFile } from './models/comic-file';
 
 interface RouterStateUrl {
   url: string;
@@ -41,13 +43,15 @@ interface RouterStateUrl {
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   library: LibraryState;
+  import: ImportState;
 }
 
 export type State = AppState;
 
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
-  library: fromLibrary.reducer
+  library: fromLibrary.reducer,
+  import: fromImport.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
@@ -76,3 +80,9 @@ export {
   FORMAT_4,
   FORMAT_5
 } from './models/comic-format.fixtures';
+export {
+  COMIC_FILE_1,
+  COMIC_FILE_2,
+  COMIC_FILE_3,
+  COMIC_FILE_4
+} from './models/comic-file.fixtures';

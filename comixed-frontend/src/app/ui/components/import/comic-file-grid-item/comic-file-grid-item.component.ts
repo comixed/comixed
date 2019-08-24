@@ -18,9 +18,9 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { ComicFile } from 'app/models/import/comic-file';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
+import { ComicFile } from 'app/library';
 
 @Component({
   selector: 'app-comic-file-grid-item',

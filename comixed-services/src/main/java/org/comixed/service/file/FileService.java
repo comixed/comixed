@@ -191,13 +191,17 @@ public class FileService {
                          : "No");
 
         QueueComicsWorkerTask task = this.taskFactory.getObject();
+        String[] decoded = new String[filenames.length];
         for (int index = 0;
              index < filenames.length;
              index++) {
-            filenames[index] = URLDecoder.decode(filenames[index],
-                                                 StandardCharsets.UTF_8.toString());
+            decoded[index] = URLDecoder.decode(filenames[index],
+                                               StandardCharsets.UTF_8.toString());
+            this.logger.debug("Decoded filename: {} => {}",
+                              filenames[index],
+                              decoded[index]);
         }
-        task.setFilenames(Arrays.asList(filenames));
+        task.setFilenames(Arrays.asList(decoded));
         task.setDeleteBlockedPages(deleteBlockedPages);
         task.setIgnoreMetadata(ignoreMetadata);
 

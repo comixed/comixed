@@ -33,11 +33,15 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../../environments/environment';
 import { LibraryAdaptor } from './adaptors/library.adaptor';
 import { CardModule } from 'primeng/card';
+import * as fromImport from './reducers/import.reducer';
+import { ImportEffects } from './effects/import.effects';
+import { ImportAdaptor } from 'app/library/adaptors/import.adaptor';
+import { ImportService } from 'app/library/services/import.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    EffectsModule.forFeature([LibraryEffects]),
+    EffectsModule.forFeature([LibraryEffects, ImportEffects]),
     StoreDevtoolsModule.instrument({
       name: 'NgRx Testing Store DevTools',
       logOnly: environment.production
@@ -46,11 +50,11 @@ import { CardModule } from 'primeng/card';
       fromLibrary.LIBRARY_FEATURE_KEY,
       fromLibrary.reducer
     ),
-    CardModule
+    StoreModule.forFeature(fromImport.IMPORT_FEATURE_KEY, fromImport.reducer)
   ],
-  exports: [],
   declarations: [],
-  providers: [LibraryService, LibraryAdaptor]
+  providers: [LibraryService, LibraryAdaptor, ImportService, ImportAdaptor],
+  exports: [CommonModule]
 })
 export class LibraryModule {
   static forRoot(): ModuleWithProviders {

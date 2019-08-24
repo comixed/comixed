@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,26 @@
  * org.comixed;
  */
 
-import { ComicFile } from '../import/comic-file';
+import { ImportAdaptor } from 'app/library/adaptors/import.adaptor';
+import { TestBed } from '@angular/core/testing';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from 'app/library/reducers/import.reducer';
 
-export interface ImportState {
-  busy: boolean;
-  selected_count: number;
-  updating_status: boolean;
-  directory: string;
-  files: Array<ComicFile>;
-}
+describe('Import', () => {
+  let adaptor: ImportAdaptor;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [StoreModule.forRoot({ import_state: reducer })],
+      providers: [ImportAdaptor]
+    });
+
+    adaptor = TestBed.get(ImportAdaptor);
+  });
+
+  it('should create an instance', () => {
+    expect(adaptor).toBeTruthy();
+  });
+
+  it('provides updates on the set of comics files loaded', () => {});
+});

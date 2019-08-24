@@ -21,7 +21,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as ImportActions from 'app/actions/importing.actions';
 import { ComicFileListToolbarComponent } from './comic-file-list-toolbar.component';
 import { DebugElement } from '@angular/core';
 import {
@@ -29,6 +28,7 @@ import {
   CheckboxModule,
   DropdownModule,
   InputTextModule,
+  MessageService,
   SliderModule,
   ToolbarModule
 } from 'primeng/primeng';
@@ -38,6 +38,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { ImportAdaptor } from 'app/library';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 
@@ -47,13 +54,17 @@ describe('ComicFileListToolbarComponent', () => {
   let directory_input: DebugElement;
   let find_comics_button: DebugElement;
   let store: Store<AppState>;
+  let import_adaptor: ImportAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
         RouterTestingModule,
         FormsModule,
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         ToolbarModule,
         InputTextModule,
@@ -63,7 +74,13 @@ describe('ComicFileListToolbarComponent', () => {
         SliderModule
       ],
       declarations: [ComicFileListToolbarComponent],
-      providers: [AuthenticationAdaptor, LibraryDisplayAdaptor]
+      providers: [
+        AuthenticationAdaptor,
+        LibraryDisplayAdaptor,
+        ComicService,
+        UserService,
+        MessageService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListToolbarComponent);
@@ -71,6 +88,7 @@ describe('ComicFileListToolbarComponent', () => {
     component.busy = false;
     component.directory = '';
     store = TestBed.get(Store);
+    import_adaptor = TestBed.get(ImportAdaptor);
 
     fixture.detectChanges();
 
@@ -108,19 +126,12 @@ describe('ComicFileListToolbarComponent', () => {
     });
 
     it('starts finding comics when the search button is clicked', () => {
-      spyOn(store, 'dispatch').and.stub();
+      spyOn(import_adaptor, 'fetch_files');
       find_comics_button.triggerEventHandler('click', null);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          new ImportActions.ImportingSetDirectory({
-            directory: DIRECTORY_TO_SEARCH
-          })
-        );
-        expect(store.dispatch).toHaveBeenCalledWith(
-          new ImportActions.ImportingFetchFiles({
-            directory: DIRECTORY_TO_SEARCH
-          })
+        expect(import_adaptor.fetch_files).toHaveBeenCalledWith(
+          DIRECTORY_TO_SEARCH
         );
       });
     });

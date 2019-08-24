@@ -13,16 +13,24 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * along with this program. If not, see <http:/www.gnu.org/licenses/>.package
  * org.comixed;
  */
 
-import { ImportState } from './import-state';
+import { ComicFile } from 'app/library';
 
-export const IMPORTING_STATE: ImportState = {
-  busy: false,
-  selected_count: 0,
-  updating_status: false,
+export interface ImportState {
+  directory: string;
+  fetching_files: boolean;
+  comic_files: ComicFile[];
+  selected_comic_files: ComicFile[];
+  starting_import: boolean;
+}
+
+export const initial_state: ImportState = {
   directory: '',
-  files: []
+  fetching_files: false,
+  comic_files: [],
+  selected_comic_files: [],
+  starting_import: false
 };

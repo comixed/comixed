@@ -18,16 +18,16 @@
  */
 
 import { ComicFileCoverUrlPipe } from './comic-file-cover-url.pipe';
-import { EXISTING_COMIC_FILE_1 } from 'app/models/import/comic-file.fixtures';
-import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
+import { COMIC_FILE_1 } from 'app/library';
+import { COMIXED_API_ROOT } from 'app/app.constants';
 
 describe('ComicFileCoverUrlPipe', () => {
   const pipe = new ComicFileCoverUrlPipe();
 
   it('returns the url for given page', () => {
-    expect(pipe.transform(EXISTING_COMIC_FILE_1)).toEqual(
-      `${COMIC_SERVICE_API_URL}/files/import/cover?filename=${encodeURIComponent(
-        EXISTING_COMIC_FILE_1.filename
+    expect(pipe.transform(COMIC_FILE_1)).toEqual(
+      `${COMIXED_API_ROOT}/files/import/cover?filename=${encodeURIComponent(
+        COMIC_FILE_1.filename
       )}`
     );
   });

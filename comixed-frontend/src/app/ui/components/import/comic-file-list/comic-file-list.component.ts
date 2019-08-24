@@ -18,15 +18,13 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ComicFile } from 'app/models/import/comic-file';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MenuItem } from 'primeng/api';
-import * as ImportActions from 'app/actions/importing.actions';
-import * as SelectionActions from 'app/actions/selection.actions';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { ComicFile, ImportAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-comic-file-list',
@@ -53,6 +51,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
 
   constructor(
     private library_display_adaptor: LibraryDisplayAdaptor,
+    private import_adaptor: ImportAdaptor,
     private store: Store<AppState>,
     private translate: TranslateService,
     private confirmation: ConfirmationService
@@ -106,12 +105,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
         label: this.translate.instant('comic-file-list.popup.select-all', {
           comic_count: this.comic_files.length
         }),
-        command: () =>
-          this.store.dispatch(
-            new SelectionActions.SelectionAddComicFiles({
-              comic_files: this.comic_files
-            })
-          ),
+        command: () => this.import_adaptor.select_comic_files(this.comic_files),
         disabled:
           !this.comic_files.length ||
           (this.selected_comic_files &&
@@ -122,11 +116,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
           comic_count: this.selected_comic_files.length
         }),
         command: () =>
-          this.store.dispatch(
-            new SelectionActions.SelectionRemoveComicFiles({
-              comic_files: this.selected_comic_files
-            })
-          ),
+          this.import_adaptor.unselect_comic_files(this.selected_comic_files),
         visible:
           this.selected_comic_files && this.selected_comic_files.length > 0
       },
@@ -172,12 +162,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
         this.selected_comic_files.forEach((comic_file: ComicFile) =>
           filenames.push(comic_file.filename)
         );
-        this.store.dispatch(
-          new ImportActions.ImportingImportFiles({
-            files: filenames,
-            ignore_metadata: ignore_metadata
-          })
-        );
+        this.import_adaptor.start_importing(false, ignore_metadata);
       }
     });
   }
