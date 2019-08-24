@@ -19,7 +19,7 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Comic } from 'app/library';
+import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { LibraryFilter } from 'app/models/actions/library-filter';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
@@ -27,14 +27,12 @@ import { Observable, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { MenuItem } from 'primeng/components/common/menuitem';
-import * as SelectionActions from 'app/actions/selection.actions';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
-import { LibraryAdaptor } from 'app/library';
 
 const FIRST = 'first';
 
@@ -71,6 +69,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     private auth_adaptor: AuthenticationAdaptor,
     private library_adaptor: LibraryAdaptor,
     private library_display_adaptor: LibraryDisplayAdaptor,
+    private selection_adaptor: SelectionAdaptor,
     private translate: TranslateService,
     private confirm: ConfirmationService,
     private store: Store<AppState>,
@@ -239,19 +238,11 @@ export class ComicListComponent implements OnInit, OnDestroy {
   }
 
   select_all(): void {
-    this.store.dispatch(
-      new SelectionActions.SelectionAddComics({
-        comics: this._comics
-      })
-    );
+    this.selection_adaptor.select_comics(this._comics);
   }
 
   deselect_all(): void {
-    this.store.dispatch(
-      new SelectionActions.SelectionRemoveComics({
-        comics: this._selected_comics
-      })
-    );
+    this.selection_adaptor.deselect_comics(this._selected_comics);
   }
 
   scrape_comics(): void {

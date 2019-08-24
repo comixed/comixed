@@ -53,12 +53,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_1,
   COMIC_3,
-  COMIC_5
+  COMIC_5,
+  LibraryAdaptor,
+  SelectionAdaptor
 } from 'app/library';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Routes } from '@angular/router/src/config';
 import { BehaviorSubject } from 'rxjs';
-import * as SelectionActions from 'app/actions/selection.actions';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 import { LibraryModule } from 'app/library/library.module';
@@ -67,7 +68,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
-import { LibraryAdaptor } from 'app/library';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -78,7 +78,7 @@ describe('ComicListComponent', () => {
   let auth_adaptor: AuthenticationAdaptor;
   let library_adaptor: LibraryAdaptor;
   let library_display_adaptor: LibraryDisplayAdaptor;
-  let store: Store<AppState>;
+  let selection_adaptor: SelectionAdaptor;
   let translate: TranslateService;
   let router: Router;
   let activated_route: ActivatedRoute;
@@ -141,7 +141,7 @@ describe('ComicListComponent', () => {
     spyOn(auth_adaptor, 'set_preference');
     library_adaptor = TestBed.get(LibraryAdaptor);
     library_display_adaptor = TestBed.get(LibraryDisplayAdaptor);
-    store = TestBed.get(Store);
+    selection_adaptor = TestBed.get(SelectionAdaptor);
     translate = TestBed.get(TranslateService);
     router = TestBed.get(Router);
     activated_route = TestBed.get(ActivatedRoute);
@@ -209,7 +209,6 @@ describe('ComicListComponent', () => {
     const dataview = { changeLayout: (layout: any) => {} };
 
     beforeEach(() => {
-      spyOn(store, 'dispatch');
       spyOn(dataview, 'changeLayout');
       spyOn(library_display_adaptor, 'set_layout');
       component.set_layout(dataview, 'LIST');
@@ -261,28 +260,24 @@ describe('ComicListComponent', () => {
   describe('when selecting all comics', () => {
     beforeEach(() => {
       component._comics = COMICS;
-      spyOn(store, 'dispatch');
+      spyOn(selection_adaptor, 'select_comics');
       component.select_all();
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new SelectionActions.SelectionAddComics({ comics: COMICS })
-      );
+      expect(selection_adaptor.select_comics).toHaveBeenCalledWith(COMICS);
     });
   });
 
   describe('when deselecting all comics', () => {
     beforeEach(() => {
       component._selected_comics = COMICS;
-      spyOn(store, 'dispatch');
+      spyOn(selection_adaptor, 'deselect_comics');
       component.deselect_all();
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new SelectionActions.SelectionRemoveComics({ comics: COMICS })
-      );
+      expect(selection_adaptor.deselect_comics).toHaveBeenCalledWith(COMICS);
     });
   });
 
@@ -301,7 +296,6 @@ describe('ComicListComponent', () => {
   describe('when deleting the selected comics', () => {
     beforeEach(() => {
       component._selected_comics = COMICS;
-      spyOn(store, 'dispatch');
     });
 
     it('fires an action if the user approves', () => {

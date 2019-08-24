@@ -23,7 +23,6 @@ import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scra
 import { Duplicates } from 'app/models/state/duplicates';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import { ReadingListState } from 'app/models/state/reading-list-state';
-import { SelectionState } from 'app/models/state/selection-state';
 
 export interface AppState {
   readonly library_filter: LibraryFilter;
@@ -32,5 +31,5 @@ export interface AppState {
   readonly duplicates: Duplicates;
   readonly user_admin: UserAdmin;
   readonly reading_list: ReadingListState;
-  readonly selections: SelectionState;
+  z;
 }

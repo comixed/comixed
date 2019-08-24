@@ -18,7 +18,6 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
@@ -49,7 +48,7 @@ import {
   MessageService
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { COMIC_1 } from 'app/library';
+import { COMIC_1, SelectionAdaptor } from 'app/library';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 import { LibraryModule } from 'app/library/library.module';
@@ -65,6 +64,7 @@ describe('CharacterDetailsPageComponent', () => {
 
   let component: CharacterDetailsPageComponent;
   let fixture: ComponentFixture<CharacterDetailsPageComponent>;
+  let selection_adaptor: SelectionAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -110,13 +110,12 @@ describe('CharacterDetailsPageComponent', () => {
         ComicTitlePipe
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(CharacterDetailsPageComponent);
     component = fixture.componentInstance;
+    selection_adaptor = TestBed.get(SelectionAdaptor);
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

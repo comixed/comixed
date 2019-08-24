@@ -112,14 +112,12 @@ describe('PublisherDetailsPageComponent', () => {
         ComicTitlePipe
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PublisherDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     store = TestBed.get(Store);
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

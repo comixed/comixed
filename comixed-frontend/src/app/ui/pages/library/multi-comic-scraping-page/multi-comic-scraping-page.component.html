@@ -1,7 +1,7 @@
 <div *ngIf='!scraping.started'
      class='ui-g'>
     <div class='ui-g-12'>
-        <h2>{{"multi-comic-scraping-page.title.preparing-to-scrape"| translate: {comic_count: selection_state.selected_comics.length} }}</h2>
+        <h2>{{"multi-comic-scraping-page.title.preparing-to-scrape"| translate: {comic_count: selected_comics.length} }}</h2>
     </div>
     <div class='ui-g-12'>
         <div class='ui-g'>
@@ -16,7 +16,7 @@
                     </div>
                     <p-scrollPanel [style]='{ width: "100%", height: "100%" }'>
                         <div class='ui-g-12'>
-                            <app-scraping-comic-list [comics]='selection_state.selected_comics'></app-scraping-comic-list>
+                            <app-scraping-comic-list [comics]='selected_comics'></app-scraping-comic-list>
                         </div>
                     </p-scrollPanel>
                 </div>

@@ -18,10 +18,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { Comic, ComicFile, ImportAdaptor } from 'app/library';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as SelectionActions from 'app/actions/selection.actions';
+import { Comic, ComicFile, ImportAdaptor, SelectionAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-comic-cover',
@@ -39,28 +36,20 @@ export class ComicCoverComponent {
   @Input() use_selected_class = true;
 
   constructor(
-    private store: Store<AppState>,
-    private import_adaptor: ImportAdaptor
+    private import_adaptor: ImportAdaptor,
+    private selection_adaptor: SelectionAdaptor
   ) {}
 
   toggle_selection(): void {
     if (this.selected) {
       if (this.comic) {
-        this.store.dispatch(
-          new SelectionActions.SelectionRemoveComics({
-            comics: [this.comic]
-          })
-        );
+        this.selection_adaptor.deselect_comic(this.comic);
       } else {
-        this.import_adaptor.unselect_comic_files([this.comic_file]);
+        this.import_adaptor.deselect_comic_files([this.comic_file]);
       }
     } else {
       if (this.comic) {
-        this.store.dispatch(
-          new SelectionActions.SelectionAddComics({
-            comics: [this.comic]
-          })
-        );
+        this.selection_adaptor.select_comic(this.comic);
       } else {
         this.import_adaptor.select_comic_files([this.comic_file]);
       }

@@ -80,7 +80,7 @@ export class ComicFileListToolbarComponent implements OnInit {
   }
 
   deselect_all_comics(): void {
-    this.import_adaptor.unselect_comic_files(this.comic_files);
+    this.import_adaptor.deselect_comic_files(this.comic_files);
   }
 
   set_sort_field(sort_field: string): void {

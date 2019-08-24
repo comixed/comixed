@@ -111,7 +111,7 @@ export class ImportAdaptor {
     this.store.dispatch(new ImportAddComicFiles({ comic_files: comic_files }));
   }
 
-  unselect_comic_files(comic_files: ComicFile[]): void {
+  deselect_comic_files(comic_files: ComicFile[]): void {
     this.store.dispatch(
       new ImportRemoveComicFiles({ comic_files: comic_files })
     );

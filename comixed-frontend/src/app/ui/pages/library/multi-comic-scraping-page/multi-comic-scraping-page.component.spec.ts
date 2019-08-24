@@ -39,6 +39,13 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { MultiComicScrapingPageComponent } from './multi-comic-scraping-page.component';
 import { ScrapingIssueTitlePipe } from 'app/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
+import { LibraryModule } from 'app/library/library.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { MessageService } from 'primeng/api';
 
 describe('MultiComicScrapingPageComponent', () => {
   let component: MultiComicScrapingPageComponent;
@@ -47,10 +54,13 @@ describe('MultiComicScrapingPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LibraryModule,
+        HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         ScrollPanelModule,
         ButtonModule,
         DataViewModule,
@@ -70,7 +80,8 @@ describe('MultiComicScrapingPageComponent', () => {
         VolumeListComponent,
         ComicCoverUrlPipe,
         ScrapingIssueTitlePipe
-      ]
+      ],
+      providers: [ComicService, UserService, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MultiComicScrapingPageComponent);

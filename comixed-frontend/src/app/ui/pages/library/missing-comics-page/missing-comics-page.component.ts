@@ -18,13 +18,8 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AppState } from 'app/app.state';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
-import { Comic } from 'app/library';
-import { SelectionState } from 'app/models/state/selection-state';
-import { LibraryAdaptor } from 'app/library';
+import { Subscription } from 'rxjs';
+import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-missing-comics-page',
@@ -32,36 +27,27 @@ import { LibraryAdaptor } from 'app/library';
   styleUrls: ['./missing-comics-page.component.css']
 })
 export class MissingComicsPageComponent implements OnInit, OnDestroy {
-  selection_state$: Observable<SelectionState>;
-  selection_state_subscription: Subscription;
-  selection_state: SelectionState;
-
-  comics: Array<Comic> = [];
-  selected_comics: Array<Comic> = [];
-
-  library_subscription: Subscription;
+  comics_subscription: Subscription;
+  comics: Comic[] = [];
+  selected_comics_subscription: Subscription;
+  selected_comics: Comic[] = [];
 
   constructor(
     private library_adaptor: LibraryAdaptor,
-    private store: Store<AppState>,
-    private translate: TranslateService
-  ) {
-    this.selection_state$ = store.select('selections');
-  }
+    private selection_adaptor: SelectionAdaptor
+  ) {}
 
   ngOnInit() {
-    this.library_subscription = this.library_adaptor.comic$.subscribe(
+    this.comics_subscription = this.library_adaptor.comic$.subscribe(
       comics => (this.comics = comics)
     );
-    this.selection_state_subscription = this.selection_state$.subscribe(
-      (selection_state: SelectionState) => {
-        this.selection_state = selection_state;
-        this.selected_comics = [].concat(this.selection_state.selected_comics);
-      }
+    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
+      selected_comics => (this.selected_comics = selected_comics)
     );
   }
 
   ngOnDestroy(): void {
-    this.library_subscription.unsubscribe();
+    this.comics_subscription.unsubscribe();
+    this.selected_comics_subscription.unsubscribe();
   }
 }

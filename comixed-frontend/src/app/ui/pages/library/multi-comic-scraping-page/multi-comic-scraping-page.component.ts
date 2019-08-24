@@ -23,8 +23,7 @@ import { AppState } from 'app/app.state';
 import { Observable, Subscription } from 'rxjs';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
-import { SelectionState } from 'app/models/state/selection-state';
-import * as SelectionActions from 'app/actions/selection.actions';
+import { Comic, SelectionAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-multi-comic-scraping-page',
@@ -32,17 +31,18 @@ import * as SelectionActions from 'app/actions/selection.actions';
   styleUrls: ['./multi-comic-scraping-page.component.css']
 })
 export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
+  selected_comics_subscription: Subscription;
+  selected_comics: Comic[];
+
   scraping$: Observable<MultipleComicsScraping>;
   scraping_subscription: Subscription;
   scraping: MultipleComicsScraping;
 
-  selection_state$: Observable<SelectionState>;
-  selection_state_subscription: Subscription;
-  selection_state: SelectionState;
-
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private selection_adaptor: SelectionAdaptor
+  ) {
     this.scraping$ = this.store.select('multiple_comic_scraping');
-    this.selection_state$ = this.store.select('selections');
   }
 
   ngOnInit() {
@@ -51,24 +51,22 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
         this.scraping = scraping;
       }
     );
-    this.selection_state_subscription = this.selection_state$.subscribe(
-      (selection_state: SelectionState) => {
-        this.selection_state = selection_state;
-      }
+    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
+      selected_comics => (this.selected_comics = selected_comics)
     );
   }
 
   ngOnDestroy() {
     this.scraping_subscription.unsubscribe();
-    this.selection_state_subscription.unsubscribe();
+    this.selected_comics_subscription.unsubscribe();
   }
 
   start_scraping(): void {
     this.store.dispatch(
       new ScrapingActions.MultipleComicsScrapingStart({
-        selected_comics: this.selection_state.selected_comics
+        selected_comics: this.selected_comics
       })
     );
-    this.store.dispatch(new SelectionActions.SelectionReset());
+    this.selection_adaptor.deselect_all_comics();
   }
 }

@@ -37,6 +37,8 @@ import * as fromImport from './reducers/import.reducer';
 import { ImportEffects } from './effects/import.effects';
 import { ImportAdaptor } from 'app/library/adaptors/import.adaptor';
 import { ImportService } from 'app/library/services/import.service';
+import * as fromSelection from 'app/library/reducers/selection.reducer';
+import { SelectionAdaptor } from 'app/library/adaptors/selection.adaptor';
 
 @NgModule({
   imports: [
@@ -50,10 +52,20 @@ import { ImportService } from 'app/library/services/import.service';
       fromLibrary.LIBRARY_FEATURE_KEY,
       fromLibrary.reducer
     ),
-    StoreModule.forFeature(fromImport.IMPORT_FEATURE_KEY, fromImport.reducer)
+    StoreModule.forFeature(fromImport.IMPORT_FEATURE_KEY, fromImport.reducer),
+    StoreModule.forFeature(
+      fromSelection.SELECTION_FEATURE_KEY,
+      fromSelection.reducer
+    )
   ],
   declarations: [],
-  providers: [LibraryService, LibraryAdaptor, ImportService, ImportAdaptor],
+  providers: [
+    LibraryService,
+    LibraryAdaptor,
+    ImportService,
+    ImportAdaptor,
+    SelectionAdaptor
+  ],
   exports: [CommonModule]
 })
 export class LibraryModule {

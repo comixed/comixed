@@ -23,15 +23,13 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ReadingListState } from 'app/models/state/reading-list-state';
 import { ReadingList } from 'app/models/reading-list';
-import { Comic } from 'app/library';
+import { Comic, SelectionAdaptor } from 'app/library';
 import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { SelectionState } from 'app/models/state/selection-state';
 
 @Component({
   selector: 'app-reading-list-page',
@@ -39,22 +37,21 @@ import { SelectionState } from 'app/models/state/selection-state';
   styleUrls: ['./reading-list-page.component.css']
 })
 export class ReadingListPageComponent implements OnInit, OnDestroy {
+  selected_entries_subscription: Subscription;
+  selected_entries: Comic[];
+
   reading_list_state$: Observable<ReadingListState>;
   reading_list_state_subscription: Subscription;
   reading_list_state: ReadingListState;
 
-  selection_state$: Observable<SelectionState>;
-  selection_state_subscription: Subscription;
-  selection_state: SelectionState;
-
   entries: Comic[] = [];
-  selected_entries: Comic[] = [];
   context_menu: MenuItem[] = [];
 
   reading_list_form: FormGroup;
   id = -1;
 
   constructor(
+    private selection_adaptor: SelectionAdaptor,
     private form_builder: FormBuilder,
     private store: Store<AppState>,
     private translate: TranslateService,
@@ -63,7 +60,6 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
     private confirm: ConfirmationService
   ) {
     this.reading_list_state$ = this.store.select('reading_lists');
-    this.selection_state$ = store.select('selections');
     this.reading_list_form = this.form_builder.group({
       name: ['', [Validators.required]],
       summary: ['']
@@ -104,18 +100,14 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
       }
     );
     this.store.dispatch(new ReadingListActions.ReadingListGetAll());
-    this.selection_state_subscription = this.selection_state$.subscribe(
-      (selection_state: SelectionState) => {
-        this.selection_state = selection_state;
-
-        this.selected_entries = [].concat(this.selection_state.selected_comics);
-      }
+    this.selected_entries_subscription = this.selection_adaptor.comic_selection$.subscribe(
+      selected_entries => (this.selected_entries = selected_entries)
     );
   }
 
   ngOnDestroy(): void {
     this.reading_list_state_subscription.unsubscribe();
-    this.selection_state_subscription.unsubscribe();
+    this.selected_entries_subscription.unsubscribe();
   }
 
   private load_reading_list(): void {

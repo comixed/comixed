@@ -116,7 +116,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
           comic_count: this.selected_comic_files.length
         }),
         command: () =>
-          this.import_adaptor.unselect_comic_files(this.selected_comic_files),
+          this.import_adaptor.deselect_comic_files(this.selected_comic_files),
         visible:
           this.selected_comic_files && this.selected_comic_files.length > 0
       },

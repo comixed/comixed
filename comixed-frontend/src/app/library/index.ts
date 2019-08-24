@@ -20,13 +20,17 @@
 import * as fromRouter from '@ngrx/router-store';
 import * as fromLibrary from './reducers/library.reducer';
 import * as fromImport from './reducers/import.reducer';
+import * as fromSelection from './reducers/selection.reducer';
 import { LibraryState } from './models/library-state';
 import { ImportState } from './models/import-state';
 import { Params } from '@angular/router';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
+import { SelectionState } from 'app/library/models/selection-state';
+
 export { LibraryAdaptor } from './adaptors/library.adaptor';
 export { ImportAdaptor } from './adaptors/import.adaptor';
+export { SelectionAdaptor } from './adaptors/selection.adaptor';
 export { Comic } from './models/comic';
 export { ScanType } from './models/scan-type';
 export { ComicFormat } from './models/comic-format';
@@ -44,6 +48,7 @@ export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   library: LibraryState;
   import: ImportState;
+  selection: SelectionState;
 }
 
 export type State = AppState;
@@ -51,7 +56,8 @@ export type State = AppState;
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
   library: fromLibrary.reducer,
-  import: fromImport.reducer
+  import: fromImport.reducer,
+  selection: fromSelection.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

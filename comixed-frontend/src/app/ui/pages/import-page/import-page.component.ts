@@ -19,9 +19,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ComicService } from 'app/services/comic.service';
 import {
   IMPORT_COVER_SIZE,
@@ -29,7 +27,6 @@ import {
   IMPORT_ROWS,
   IMPORT_SORT
 } from 'app/user/models/preferences.constants';
-import { SelectionState } from 'app/models/state/selection-state';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { SelectItem } from 'primeng/api';
 import { ComicFile, ImportAdaptor, LibraryAdaptor } from 'app/library';
@@ -61,10 +58,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   importing_subscription: Subscription;
   importing = false;
 
-  selection_state$: Observable<SelectionState>;
-  selection_state_subscription: Subscription;
-  selection_state: SelectionState;
-
   protected sort_options: SelectItem[];
   protected sort_by: string;
   protected rows_options: SelectItem[];
@@ -81,10 +74,8 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     private import_adaptor: ImportAdaptor,
     private comic_service: ComicService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private store: Store<AppState>
+    private router: Router
   ) {
-    this.selection_state$ = store.select('selections');
     activatedRoute.queryParams.subscribe(params => {
       this.sort_by = params[SORT_PARAMETER] || 'filename';
       this.rows = parseInt(params[ROWS_PARAMETER] || '10', 10);
@@ -145,12 +136,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
     this.import_adaptor.set_directory(
       this.auth_adaptor.get_preference(IMPORT_LAST_DIRECTORY)
-    );
-
-    this.selection_state_subscription = this.selection_state$.subscribe(
-      (selection_state: SelectionState) => {
-        this.selection_state = selection_state;
-      }
     );
   }
 
@@ -253,7 +238,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   private unselect_comics(files: Array<ComicFile>): void {
-    this.import_adaptor.unselect_comic_files(files);
+    this.import_adaptor.deselect_comic_files(files);
   }
 
   private update_params(name: string, value: string): void {

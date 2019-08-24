@@ -110,14 +110,12 @@ describe('LocationDetailsPageComponent', () => {
         ComicTitlePipe
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LocationDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     store = TestBed.get(Store);
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

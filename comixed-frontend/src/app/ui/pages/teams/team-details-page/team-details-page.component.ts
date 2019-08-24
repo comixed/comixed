@@ -19,13 +19,9 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { Observable, Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-import { SelectionState } from 'app/models/state/selection-state';
+import { Subscription } from 'rxjs';
 import { Comic } from 'app/library/models/comic';
-import { LibraryAdaptor } from 'app/library';
+import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-team-details-page',
@@ -35,10 +31,8 @@ import { LibraryAdaptor } from 'app/library';
 export class TeamDetailsPageComponent implements OnInit, OnDestroy {
   teams_subscription: Subscription;
   comics: Comic[];
-
-  selection_state$: Observable<SelectionState>;
-  selection_state_subscription: Subscription;
-  selection_state: SelectionState;
+  selected_comics_subscription: Subscription;
+  selected_comics: Comic[];
 
   protected layout = 'grid';
   protected sort_field = 'volume';
@@ -47,18 +41,15 @@ export class TeamDetailsPageComponent implements OnInit, OnDestroy {
   protected cover_size = 200;
 
   team_name: string;
-  selected_comics: Array<Comic> = [];
 
   constructor(
     private library_adaptor: LibraryAdaptor,
-    private activatedRoute: ActivatedRoute,
-    private translate: TranslateService,
-    private store: Store<AppState>
+    private selection_adaptor: SelectionAdaptor,
+    private activatedRoute: ActivatedRoute
   ) {
     this.activatedRoute.params.subscribe(params => {
       this.team_name = params['name'];
     });
-    this.selection_state$ = store.select('selections');
   }
 
   ngOnInit() {
@@ -66,18 +57,14 @@ export class TeamDetailsPageComponent implements OnInit, OnDestroy {
       const team = teams.find(entry => entry.name === this.team_name);
       this.comics = team ? team.comics : [];
     });
-    this.selection_state_subscription = this.selection_state$.subscribe(
-      (selection_state: SelectionState) => {
-        this.selection_state = selection_state;
-
-        this.selected_comics = [].concat(this.selection_state.selected_comics);
-      }
+    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
+      selected_comics => (this.selected_comics = selected_comics)
     );
   }
 
   ngOnDestroy() {
     this.teams_subscription.unsubscribe();
-    this.selection_state_subscription.unsubscribe();
+    this.selected_comics_subscription.unsubscribe();
   }
 
   set_layout(dataview: any, layout: string): void {
