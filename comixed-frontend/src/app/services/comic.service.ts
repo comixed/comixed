@@ -37,68 +37,6 @@ export const COMIC_SERVICE_API_URL = '/api';
 export class ComicService {
   constructor(private http: HttpClient, private user_service: UserService) {}
 
-  delete_multiple_comics(comics: Array<Comic>): Observable<any> {
-    const ids = [];
-    comics.forEach((comic: Comic) => ids.push(comic.id));
-    const params = new HttpParams().set('comic_ids', ids.toString());
-    return this.http.post(
-      `${COMIC_SERVICE_API_URL}/comics/multiple/delete`,
-      params
-    );
-  }
-
-  fetch_scan_types(): Observable<any> {
-    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/scan_types`);
-  }
-
-  set_scan_type(comic: Comic, scan_type: ScanType): Observable<any> {
-    const params = new HttpParams().set('scan_type_id', `${scan_type.id}`);
-
-    return this.http.put(
-      `${COMIC_SERVICE_API_URL}/comics/${comic.id}/scan_type`,
-      params
-    );
-  }
-
-  fetch_formats(): Observable<any> {
-    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/formats`);
-  }
-
-  set_format(comic: Comic, format: ComicFormat): Observable<any> {
-    const params = new HttpParams().set('format_id', `${format.id}`);
-
-    return this.http.put(
-      `${COMIC_SERVICE_API_URL}/comics/${comic.id}/format`,
-      params
-    );
-  }
-
-  set_sort_name(comic: Comic, sort_name: string): Observable<any> {
-    const params = new HttpParams().set('sort_name', sort_name);
-
-    return this.http.put(
-      `${COMIC_SERVICE_API_URL}/comics/${comic.id}/sort_name`,
-      params
-    );
-  }
-
-  fetch_remote_library_state(
-    latest_comic_update: string,
-    timeout: number
-  ): Observable<any> {
-    return this.http.get(
-      `${COMIC_SERVICE_API_URL}/comics/since/${latest_comic_update}?timeout=${timeout}`
-    );
-  }
-
-  delete_comic(comic: Comic): Observable<any> {
-    return this.http.delete(`${COMIC_SERVICE_API_URL}/comics/${comic.id}`);
-  }
-
-  get_comic_summary(id: number): Observable<any> {
-    return this.http.get(`${COMIC_SERVICE_API_URL}/comics/${id}/summary`);
-  }
-
   get_page_types(): Observable<any> {
     return this.http.get(`/api/pages/types`);
   }
@@ -131,14 +69,6 @@ export class ComicService {
     return this.http.put(`${COMIC_SERVICE_API_URL}/pages/hash/${hash}`, {});
   }
 
-  get_files_under_directory(directory: string): Observable<any> {
-    return this.http.get(
-      `${COMIC_SERVICE_API_URL}/files/contents?directory=${encodeURI(
-        directory
-      )}`
-    );
-  }
-
   set_block_page(page_hash: string, blocked: boolean): Observable<any> {
     if (blocked) {
       return this.block_page(page_hash);
@@ -156,28 +86,6 @@ export class ComicService {
     return this.http.delete(
       `${COMIC_SERVICE_API_URL}/pages/blocked/${page_hash}`
     );
-  }
-
-  import_files_into_library(
-    filenames: string[],
-    delete_blocked_pages: boolean,
-    ignore_metadata: boolean
-  ): Observable<any> {
-    filenames.forEach(
-      (filename, index, source) =>
-        (source[index] = encodeURIComponent(filename))
-    );
-    const params = new HttpParams()
-      .set('filenames', filenames.toString())
-      .set('delete_blocked_pages', delete_blocked_pages.toString())
-      .set('ignore_metadata', ignore_metadata.toString());
-    return this.http.post(`${COMIC_SERVICE_API_URL}/files/import`, params);
-  }
-
-  rescan_files(): Observable<any> {
-    const params = new HttpParams();
-
-    return this.http.post(RESCAN_COMIC_FILES_URL, params);
   }
 
   fetch_candidates_for(
