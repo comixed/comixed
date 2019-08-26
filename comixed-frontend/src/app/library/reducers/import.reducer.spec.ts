@@ -162,7 +162,10 @@ describe('Import Reducer', () => {
 
   describe('when the import has started', () => {
     beforeEach(() => {
-      state = reducer({ ...state, starting_import: true }, new ImportStarted());
+      state = reducer(
+        { ...state, starting_import: true },
+        new ImportStarted({ import_comic_count: 17 })
+      );
     });
 
     it('clears the starting import flag', () => {

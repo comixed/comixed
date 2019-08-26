@@ -21,10 +21,10 @@ package org.comixed.service.file;
 
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
-import org.comixed.model.library.Comic;
 import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
+import org.comixed.model.library.Comic;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.QueueComicsWorkerTask;
@@ -176,9 +176,9 @@ public class FileService {
         return result;
     }
 
-    public void importComicFiles(final String[] filenames,
-                                 final boolean deleteBlockedPages,
-                                 final boolean ignoreMetadata)
+    public int importComicFiles(final String[] filenames,
+                                final boolean deleteBlockedPages,
+                                final boolean ignoreMetadata)
             throws
             UnsupportedEncodingException {
         this.logger.info("Preparing to import {} comic files: delete blocked pages={} ignore metadata={}",
@@ -192,11 +192,13 @@ public class FileService {
 
         QueueComicsWorkerTask task = this.taskFactory.getObject();
         String[] decoded = new String[filenames.length];
+        int result = 0;
         for (int index = 0;
              index < filenames.length;
              index++) {
             decoded[index] = URLDecoder.decode(filenames[index],
                                                StandardCharsets.UTF_8.toString());
+            result++;
             this.logger.debug("Decoded filename: {} => {}",
                               filenames[index],
                               decoded[index]);
@@ -207,5 +209,7 @@ public class FileService {
 
         this.logger.debug("Adding import task to queue");
         this.worker.addTasksToQueue(task);
+
+        return result;
     }
 }

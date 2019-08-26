@@ -23,6 +23,7 @@ import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.controller.library.ComicController;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
+import org.comixed.net.ImportComicFilesResponse;
 import org.comixed.net.ImportRequestBody;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.service.file.FileService;
@@ -31,7 +32,6 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -137,7 +137,7 @@ public class FileController {
                  produces = "application/json",
                  consumes = "application/json")
     @Secured("ROLE_ADMIN")
-    public int importComicFiles(
+    public ImportComicFilesResponse importComicFiles(
             @RequestBody()
                     ImportRequestBody request)
             throws
@@ -153,6 +153,11 @@ public class FileController {
 
         this.logger.debug("Notifying waiting processes");
         ComicController.stopWaitingForStatus();
-        return request.getFilenames().length;
+
+        final ImportComicFilesResponse response = new ImportComicFilesResponse();
+
+        response.setImportComicCount(request.getFilenames().length);
+
+        return response;
     }
 }

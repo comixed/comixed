@@ -72,7 +72,7 @@ export class ImportStart implements Action {
 export class ImportStarted implements Action {
   readonly type = ImportActionTypes.Started;
 
-  constructor() {}
+  constructor(public payload: { import_comic_count: number }) {}
 }
 
 export class ImportFailedToStart implements Action {

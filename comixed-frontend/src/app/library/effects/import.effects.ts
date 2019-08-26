@@ -36,6 +36,7 @@ import { ImportService } from 'app/library/services/import.service';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicFile } from 'app/library';
+import { ImportComicFilesResponse } from 'app/library/models/net/import-comic-files-response';
 
 @Injectable()
 export class ImportEffects {
@@ -96,15 +97,21 @@ export class ImportEffects {
           action.ignore_metadata
         )
         .pipe(
-          tap(response =>
+          tap((response: ImportComicFilesResponse) =>
             this.message_service.add({
               severity: 'info',
               detail: this.translate_service.instant(
-                'import-effects.import-comic-files.success.detail'
+                'import-effects.import-comic-files.success.detail',
+                { comic_count: response.import_comic_count }
               )
             })
           ),
-          map((response: number) => new ImportStarted()),
+          map(
+            (response: ImportComicFilesResponse) =>
+              new ImportStarted({
+                import_comic_count: response.import_comic_count
+              })
+          ),
           catchError(error => {
             this.message_service.add({
               severity: 'error',

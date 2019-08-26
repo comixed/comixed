@@ -769,7 +769,7 @@
     },
     "import-comic-files": {
       "success": {
-        "detail": "Now importing {count, plural, =1{comic file} other{# comic files}}."
+        "detail": "Now importing {comic_count, plural, =1{one comic file} other{# comic files}}."
       },
       "error": {
         "detail": "Failed to start importing comic files."

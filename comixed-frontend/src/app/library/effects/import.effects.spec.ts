@@ -41,6 +41,7 @@ import {
   ImportStart,
   ImportFailedToStart
 } from 'app/library/actions/import.actions';
+import { ImportComicFilesResponse } from 'app/library/models/net/import-comic-files-response';
 
 describe('ImportEffects', () => {
   const DIRECTORY = '/Users/comixed/Documents/comics';
@@ -132,13 +133,15 @@ describe('ImportEffects', () => {
 
   describe('when starting to import comics files', () => {
     it('fires an action on success', () => {
-      const service_response = 17;
+      const service_response = {
+        import_comic_count: 17
+      } as ImportComicFilesResponse;
       const action = new ImportStart({
         comic_files: COMIC_FILES,
         delete_blocked_pages: true,
         ignore_metadata: false
       });
-      const outcome = new ImportStarted();
+      const outcome = new ImportStarted({ import_comic_count: 17 });
 
       actions$ = hot('-a', { a: action });
       import_service.import_comic_files.and.returnValue(of(service_response));

@@ -21,10 +21,10 @@ package org.comixed.service.file;
 
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
-import org.comixed.model.library.Comic;
 import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
+import org.comixed.model.library.Comic;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.QueueComicsWorkerTask;
@@ -205,37 +205,6 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testImportComicFilesEncoded()
-            throws
-            UnsupportedEncodingException {
-        String[] fileNamesEncoded = new String[]{"e%3A%2Fcomics%20%26%20manga%2C%20etc%2B%2Ffirst_%231%3B.cbr",
-                                                 "f%3A%2Fcomics%40Home%2F~%2Fla%24t%20-%20(2000's)!.cbz"};
-
-        QueueComicsWorkerTask dummyWorkerTask = new QueueComicsWorkerTask();
-
-        Mockito.when(taskFactory.getObject())
-               .thenReturn(dummyWorkerTask);
-
-        service.importComicFiles(fileNamesEncoded,
-                                 false,
-                                 false);
-
-        Mockito.verify(taskFactory,
-                       Mockito.times(1))
-               .getObject();
-        Mockito.verify(worker,
-                       Mockito.times(1))
-               .addTasksToQueue(dummyWorkerTask);
-
-        assertEquals(2,
-                     dummyWorkerTask.filenames.size());
-        assertEquals("e:/comics & manga, etc+/first_#1;.cbr",
-                     dummyWorkerTask.filenames.get(0));
-        assertEquals("f:/comics@Home/~/la$t - (2000's)!.cbz",
-                     dummyWorkerTask.filenames.get(1));
-    }
-
-    @Test
     public void testImportComicFilesDeleteBlockedPages()
             throws
             UnsupportedEncodingException {
@@ -245,9 +214,12 @@ public class FileServiceTest {
                .when(queueComicsWorkerTask)
                .setDeleteBlockedPages(true);
 
-        service.importComicFiles(TEST_FILENAMES,
-                                 true,
-                                 false);
+        final int result = service.importComicFiles(TEST_FILENAMES,
+                                                    true,
+                                                    false);
+
+        assertEquals(TEST_FILENAMES.length,
+                     result);
 
         Mockito.verify(taskFactory,
                        Mockito.times(1))
@@ -270,9 +242,12 @@ public class FileServiceTest {
                .when(queueComicsWorkerTask)
                .setIgnoreMetadata(true);
 
-        service.importComicFiles(TEST_FILENAMES,
-                                 false,
-                                 true);
+        final int result = service.importComicFiles(TEST_FILENAMES,
+                                                    false,
+                                                    true);
+
+        assertEquals(TEST_FILENAMES.length,
+                     result);
 
         Mockito.verify(taskFactory,
                        Mockito.times(1))
@@ -292,9 +267,12 @@ public class FileServiceTest {
         Mockito.when(taskFactory.getObject())
                .thenReturn(queueComicsWorkerTask);
 
-        service.importComicFiles(TEST_FILENAMES,
-                                 false,
-                                 false);
+        final int result = service.importComicFiles(TEST_FILENAMES,
+                                                    false,
+                                                    false);
+
+        assertEquals(TEST_FILENAMES.length,
+                     result);
 
         Mockito.verify(taskFactory,
                        Mockito.times(1))
