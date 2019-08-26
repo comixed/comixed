@@ -1,6 +1,6 @@
 <div *ngIf='importing'
      id='import-busy-indicator-container'>
-    <h2>ImportState {{ import_count }} Comics</h2>
+    <h2>{{'import-page.title'|translate:{comic_count: import_count} }}</h2>
     <p-progressBar mode='indeterminate'></p-progressBar>
 </div>
 <div *ngIf='!importing'

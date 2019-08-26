@@ -92,6 +92,7 @@
     }
   },
   "import-page": {
+    "title": "Importing {comic_count, plural, =1{One Comic} other{# Comics}}...",
     "label": {
       "filename": "Filename",
       "file-size": "File Size",
