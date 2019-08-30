@@ -35,8 +35,7 @@
         <div #context_target
              class='ui-g-12'>
             <app-comic-list [comics]='entries'
-                            [selected_comics]='selected_entries'
-                            (selectionChange)='set_selection_state($event.comic, $event.selected)'></app-comic-list>
+                            [selected_comics]='selected_entries'></app-comic-list>
         </div>
     </div>
     <p-contextMenu [target]='context_target'

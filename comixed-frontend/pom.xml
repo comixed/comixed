@@ -70,7 +70,7 @@
             </goals>
             <phase>prepare-package</phase>
             <configuration>
-              <arguments>build</arguments>
+              <arguments>build --prod</arguments>
             </configuration>
           </execution>
           <execution>
