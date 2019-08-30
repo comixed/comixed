@@ -30,6 +30,8 @@ import {
 import { AuthenticationAdaptor, User } from 'app/user';
 import { SelectItem } from 'primeng/api';
 import { ComicFile, ImportAdaptor, LibraryAdaptor } from 'app/library';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';
@@ -69,6 +71,8 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   protected delete_blocked_pages = false;
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private library_adaptor: LibraryAdaptor,
     private auth_adaptor: AuthenticationAdaptor,
     private import_adaptor: ImportAdaptor,
@@ -116,7 +120,14 @@ export class ImportPageComponent implements OnInit, OnDestroy {
       this.user = user;
     });
     this.comic_files_subscription = this.import_adaptor.comic_file$.subscribe(
-      comic_files => (this.comic_files = comic_files)
+      comic_files => {
+        this.comic_files = comic_files;
+        this.title_service.setTitle(
+          this.translate_service.instant('import-page.title', {
+            count: this.comic_files.length
+          })
+        );
+      }
     );
     this.selected_comic_files_subscription = this.import_adaptor.selected_comic_file$.subscribe(
       selected_files => (this.selected_comic_files = selected_files)

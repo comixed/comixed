@@ -17,11 +17,12 @@
  * org.comixed;
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Comic, LibraryAdaptor, SelectionAdaptor} from 'app/library';
-import {ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-character-details-page',
@@ -43,10 +44,11 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
   character_name: string;
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private library_adaptor: LibraryAdaptor,
     private selection_adaptor: SelectionAdaptor,
-    private activatedRoute: ActivatedRoute,
-    private translate: TranslateService
+    private activatedRoute: ActivatedRoute
   ) {
     this.activatedRoute.params.subscribe(params => {
       this.character_name = params['name'];
@@ -60,6 +62,12 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
           character => character.name === this.character_name
         );
         this.comics = result ? result.comics : [];
+        this.title_service.setTitle(
+          this.translate_service.instant('character-details-page.title', {
+            name: this.character_name,
+            count: this.comics.length
+          })
+        );
       }
     );
     this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(

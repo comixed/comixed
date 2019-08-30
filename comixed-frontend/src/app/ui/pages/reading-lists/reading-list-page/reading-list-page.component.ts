@@ -31,6 +31,7 @@ import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 import { filter } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-reading-list-page',
@@ -50,10 +51,11 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   id = -1;
 
   constructor(
+    private title_service: Title,
     private selection_adaptor: SelectionAdaptor,
     private reading_list_adaptor: ReadingListAdaptor,
     private form_builder: FormBuilder,
-    private translate: TranslateService,
+    private translate_service: TranslateService,
     private activated_route: ActivatedRoute,
     private router: Router,
     private confirm: ConfirmationService
@@ -70,7 +72,9 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         this.reading_list_adaptor.create_reading_list();
       }
     });
-    this.translate.onLangChange.subscribe(() => this.load_context_menu());
+    this.translate_service.onLangChange.subscribe(() =>
+      this.load_context_menu()
+    );
     this.load_context_menu();
   }
 
@@ -79,6 +83,12 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
       .pipe(filter(state => !!state))
       .subscribe(reading_list => {
         this.reading_list = reading_list;
+        this.title_service.setTitle(
+          this.translate_service.instant('reading-list-page.title', {
+            name: this.reading_list.name,
+            count: (this.reading_list.entries || []).length
+          })
+        );
         if (this.id === -1 && this.reading_list.id) {
           this.router.navigate(['list', this.reading_list.id]);
         } else {
@@ -110,7 +120,12 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
 
   submit_form(): void {
     this.reading_list_adaptor.save(
-      this.reading_list,
+      {
+        id: this.id !== -1 ? this.id : undefined,
+        name: this.reading_list_form.controls['name'].value,
+        summary: this.reading_list_form.controls['summary'].value,
+        entries: []
+      } as ReadingList,
       this.reading_list.entries
     );
   }
@@ -131,16 +146,18 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
 
   remove_selected_comics(): void {
     this.confirm.confirm({
-      header: this.translate.instant('reading-list-page.remove-comics.header'),
-      message: this.translate.instant(
+      header: this.translate_service.instant(
+        'reading-list-page.remove-comics.header'
+      ),
+      message: this.translate_service.instant(
         'reading-list-page.remove-comics.message',
         { comic_count: this.selected_entries.length }
       ),
       accept: () => {
-        const entries = this.reading_list.entries.filter(
-          entry => !this.selected_entries.includes(entry.comic)
-        );
-        this.reading_list_adaptor.save(this.reading_list, entries);
+        const list_entries = this.entries.map(entry => {
+          return { id: null, comic: entry } as ReadingListEntry;
+        });
+        this.reading_list_adaptor.save(this.reading_list, list_entries);
       }
     });
   }

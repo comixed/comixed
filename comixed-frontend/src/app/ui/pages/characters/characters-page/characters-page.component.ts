@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LibraryAdaptor } from 'app/library';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-characters-page',
@@ -38,12 +39,20 @@ export class CharactersPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private library_adaptor: LibraryAdaptor,
-    private translate: TranslateService
+    private title_service: Title,
+    private translate_service: TranslateService
   ) {}
 
   ngOnInit() {
     this.characters_subscription = this.library_adaptor.character$.subscribe(
-      characters => (this.characters = characters)
+      characters => {
+        this.characters = characters;
+        this.title_service.setTitle(
+          this.translate_service.instant('characters-page.title', {
+            count: this.characters.length
+          })
+        );
+      }
     );
     this.load_rows_options();
   }
@@ -55,25 +64,25 @@ export class CharactersPageComponent implements OnInit, OnDestroy {
   private load_rows_options(): void {
     this.rows_options = [
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.10-per-page'
         ),
         value: 10
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.25-per-page'
         ),
         value: 25
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.50-per-page'
         ),
         value: 50
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.100-per-page'
         ),
         value: 100

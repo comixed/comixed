@@ -31,6 +31,7 @@ import { ComicService } from 'app/services/comic.service';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-library-page',
@@ -59,6 +60,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   scraping: MultipleComicsScraping;
 
   constructor(
+    private title_service: Title,
     private router: Router,
     private auth_adaptor: AuthenticationAdaptor,
     private library_adaptor: LibraryAdaptor,
@@ -67,7 +69,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private comic_service: ComicService,
     private confirm_service: ConfirmationService,
     private store: Store<AppState>,
-    private translate: TranslateService
+    private translate_service: TranslateService
   ) {
     this.library_filter$ = store.select('library_filter');
     this.scraping$ = store.select('multiple_comic_scraping');
@@ -77,9 +79,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.auth_subscription = this.auth_adaptor.user$.subscribe(
       user => (this.user = user)
     );
-    this.comics_subscription = this.library_adaptor.comic$.subscribe(
-      comics => (this.comics = comics)
-    );
+    this.comics_subscription = this.library_adaptor.comic$.subscribe(comics => {
+      this.comics = comics;
+      this.title_service.setTitle(
+        this.translate_service.instant('library-page.title', {
+          count: this.comics.length
+        })
+      );
+    });
     this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
       selected_comics => (this.selected_comics = selected_comics)
     );
@@ -119,8 +126,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   delete_comic(comic: Comic): void {
     this.confirm_service.confirm({
-      header: this.translate.instant('library.messages.delete-comic-title'),
-      message: this.translate.instant('library.messages.delete-comic-question'),
+      header: this.translate_service.instant(
+        'library.messages.delete-comic-title'
+      ),
+      message: this.translate_service.instant(
+        'library.messages.delete-comic-question'
+      ),
       icon: 'fa fa-exclamation',
       accept: () => this.library_adaptor.delete_comics_by_id([comic.id])
     });
@@ -132,8 +143,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   rescan_library(): void {
     this.confirm_service.confirm({
-      header: this.translate.instant('library.messages.rescan-library-title'),
-      message: this.translate.instant(
+      header: this.translate_service.instant(
+        'library.messages.rescan-library-title'
+      ),
+      message: this.translate_service.instant(
         'library.messages.rescan-library-message'
       ),
       icon: 'fa fa-exclamation',

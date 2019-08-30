@@ -21,6 +21,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-story-arc-details-page',
@@ -42,6 +44,8 @@ export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
   story_name: string;
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private library_adaptor: LibraryAdaptor,
     private selection_adaptor: SelectionAdaptor,
     private activatedRoute: ActivatedRoute
@@ -56,6 +60,12 @@ export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
       stories => {
         const story = stories.find(entry => entry.name === this.story_name);
         this.comics = story ? story.comics : [];
+        this.title_service.setTitle(
+          this.translate_service.instant('story-arc-details-page.title', {
+            name: this.story_name,
+            count: this.comics.length
+          })
+        );
       }
     );
     this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(

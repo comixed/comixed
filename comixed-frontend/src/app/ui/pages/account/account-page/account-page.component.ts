@@ -22,6 +22,9 @@ import { Subscription } from 'rxjs';
 import { AuthenticationAdaptor } from 'app/user';
 import { AuthenticationState } from 'app/user/models/authentication-state';
 import { User } from 'app/user';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-account-page',
@@ -32,12 +35,23 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   auth_state_subscription: Subscription;
   user: User;
 
-  constructor(private auth_adaptor: AuthenticationAdaptor) {}
+  constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
+    private auth_adaptor: AuthenticationAdaptor
+  ) {}
 
   ngOnInit() {
-    this.auth_state_subscription = this.auth_adaptor.user$.subscribe(
-      user => (this.user = user)
-    );
+    this.auth_state_subscription = this.auth_adaptor.user$
+      .pipe(filter(user => !!user))
+      .subscribe(user => {
+        this.user = user;
+        this.title_service.setTitle(
+          this.translate_service.instant('account-page.title', {
+            email: this.user.email
+          })
+        );
+      });
   }
 
   ngOnDestroy() {

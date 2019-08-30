@@ -25,6 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 import { LibraryAdaptor } from 'app/library';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-locations-page',
@@ -39,14 +40,21 @@ export class LocationsPageComponent implements OnInit, OnDestroy {
   rows = 10;
 
   constructor(
-    private library_adaptor: LibraryAdaptor,
-    private translate: TranslateService,
-    private store: Store<AppState>
+    private title_service: Title,
+    private translate_service: TranslateService,
+    private library_adaptor: LibraryAdaptor
   ) {}
 
   ngOnInit() {
     this.locations_subscription = this.library_adaptor.location$.subscribe(
-      locations => (this.locations = locations)
+      locations => {
+        this.locations = locations;
+        this.title_service.setTitle(
+          this.translate_service.instant('locations-page.title', {
+            count: this.locations.length
+          })
+        );
+      }
     );
     this.load_rows_options();
   }
@@ -58,25 +66,25 @@ export class LocationsPageComponent implements OnInit, OnDestroy {
   private load_rows_options(): void {
     this.rows_options = [
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.10-per-page'
         ),
         value: 10
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.25-per-page'
         ),
         value: 25
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.50-per-page'
         ),
         value: 50
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.100-per-page'
         ),
         value: 100

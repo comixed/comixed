@@ -35,6 +35,7 @@ export const IMPORT_COMIC_FILES_URL = `${COMIXED_API_ROOT}/files/import`;
 
 export const GET_READING_LISTS_URL = `${COMIXED_API_ROOT}/lists`;
 export const GET_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
+export const CREATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists`;
 export const SAVE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
 
 export const DEFAULT_COMIC_GROUPING: ComicCollectionEntry = {

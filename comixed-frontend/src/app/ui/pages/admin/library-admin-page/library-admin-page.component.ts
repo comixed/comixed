@@ -20,6 +20,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LibraryAdaptor } from 'app/library';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-library-admin-page',
@@ -32,9 +34,16 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   rescan_count_subscription: Subscription;
   rescan_count = 0;
 
-  constructor(private library_adaptor: LibraryAdaptor) {}
+  constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
+    private library_adaptor: LibraryAdaptor
+  ) {}
 
   ngOnInit() {
+    this.title_service.setTitle(
+      this.translate_service.instant('library-admin-page.title')
+    );
     this.import_count_subscription = this.library_adaptor.pending_import$.subscribe(
       import_count => (this.import_count = import_count)
     );

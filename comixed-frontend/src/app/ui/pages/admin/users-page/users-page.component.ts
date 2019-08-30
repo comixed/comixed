@@ -26,6 +26,8 @@ import { Subscription } from 'rxjs';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import { ConfirmationService } from 'primeng/api';
 import { User } from 'app/user';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users-page',
@@ -38,6 +40,8 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   public user_admin: UserAdmin;
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private store: Store<AppState>,
     private confirm_service: ConfirmationService
   ) {
@@ -45,6 +49,9 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.title_service.setTitle(
+        this.translate_service.instant('users-page.title')
+    );
     this.user_admin_subscription = this.user_admin$.subscribe(
       (user_admin: UserAdmin) => {
         this.user_admin = user_admin;

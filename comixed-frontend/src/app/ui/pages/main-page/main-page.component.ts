@@ -24,6 +24,8 @@ import { AppState } from 'app/app.state';
 import { SelectItem } from 'primeng/api';
 import { LibraryAdaptor } from 'app/library';
 import { ComicCollectionEntry } from 'app/library';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 const COLOR_PALLETTE = [
   '#C0C0C0',
@@ -75,8 +77,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public data_to_show = 'publishers';
 
   constructor(
-    private library_adaptor: LibraryAdaptor,
-    private store: Store<AppState>
+    private title_service: Title,
+    private translate_service: TranslateService,
+    private library_adaptor: LibraryAdaptor
   ) {
     this.options = {
       title: {
@@ -91,6 +94,11 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.translate_service.onLangChange.subscribe(() => {
+      this.title_service.setTitle(
+        this.translate_service.instant('main-page.title')
+      );
+    });
     this.comics_subscription = this.library_adaptor.comic$.subscribe(comics => {
       this.comic_count = comics.length;
       this.plural = this.comic_count !== 1;

@@ -21,6 +21,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { ReadingList, ReadingListAdaptor } from 'app/library';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-reading-lists-page',
@@ -32,13 +34,22 @@ export class ReadingListsPageComponent implements OnInit, OnDestroy {
   reading_lists: ReadingList[];
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private reading_list_adaptor: ReadingListAdaptor,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.reading_lists_subscription = this.reading_list_adaptor.reading_list$.subscribe(
-      reading_lists => (this.reading_lists = reading_lists)
+      reading_lists => {
+        this.reading_lists = reading_lists;
+        this.title_service.setTitle(
+          this.translate_service.instant('reading-lists-page.title', {
+            count: this.reading_lists.length
+          })
+        );
+      }
     );
     this.reading_list_adaptor.get_reading_lists();
   }

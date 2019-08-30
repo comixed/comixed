@@ -20,6 +20,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-missing-comics-page',
@@ -33,14 +35,21 @@ export class MissingComicsPageComponent implements OnInit, OnDestroy {
   selected_comics: Comic[] = [];
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private library_adaptor: LibraryAdaptor,
     private selection_adaptor: SelectionAdaptor
   ) {}
 
   ngOnInit() {
-    this.comics_subscription = this.library_adaptor.comic$.subscribe(
-      comics => (this.comics = comics)
-    );
+    this.comics_subscription = this.library_adaptor.comic$.subscribe(comics => {
+      this.comics = comics;
+      this.title_service.setTitle(
+        this.translate_service.instant('missing-comics-page.title', {
+          count: this.comics.filter(comic => comic.missing).length
+        })
+      );
+    });
     this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
       selected_comics => (this.selected_comics = selected_comics)
     );

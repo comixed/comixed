@@ -19,8 +19,9 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
+  CREATE_READING_LIST_URL,
   GET_READING_LIST_URL,
   GET_READING_LISTS_URL,
   SAVE_READING_LIST_URL
@@ -44,13 +45,23 @@ export class ReadingListService {
   }
 
   save_reading_list(reading_list: ReadingList): Observable<any> {
-    return this.http.put(
-      interpolate(SAVE_READING_LIST_URL, { id: reading_list.id }),
-      {
-        name: reading_list.name,
-        entries: reading_list.entries.map(entry => entry.comic.id),
-        summary: reading_list.summary
-      } as SaveReadingListRequest
-    );
+    const entries = (reading_list.entries || []).map(entry => entry.comic.id);
+    const encoded: SaveReadingListRequest = {
+      name: reading_list.name,
+      entries: entries,
+      summary: reading_list.summary
+    };
+    if (reading_list.id) {
+      return this.http.put(
+        interpolate(SAVE_READING_LIST_URL, { id: reading_list.id }),
+        encoded
+      );
+    } else {
+      const params = new HttpParams()
+        .set('name', reading_list.name)
+        .set('summary', reading_list.summary)
+        .set('entries', entries.toString());
+      return this.http.post(interpolate(CREATE_READING_LIST_URL), params);
+    }
   }
 }

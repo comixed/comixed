@@ -70,7 +70,10 @@ export class ReadingListAdaptor {
   save(reading_list: ReadingList, entries: ReadingListEntry[]): void {
     this.store.dispatch(
       new ReadingListSave({
-        reading_list: { ...reading_list, entries: entries }
+        reading_list: {
+          ...reading_list,
+          entries: entries
+        }
       })
     );
   }

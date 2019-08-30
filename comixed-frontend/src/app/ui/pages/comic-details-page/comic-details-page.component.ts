@@ -29,6 +29,8 @@ import { ComicService } from 'app/services/comic.service';
 import { AuthenticationAdaptor } from 'app/user';
 import { AuthenticationState } from 'app/user/models/authentication-state';
 import { Comic, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -64,6 +66,8 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   is_admin = false;
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private auth_adaptor: AuthenticationAdaptor,
     private library_adaptor: LibraryAdaptor,
     private activatedRoute: ActivatedRoute,
@@ -85,7 +89,19 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
       roles => (this.is_admin = roles.is_admin)
     );
     this.comic_subscription = this.library_adaptor.current_comic$.subscribe(
-      comic => (this.comic = comic)
+      comic => {
+        if (comic) {
+          this.comic = comic;
+          this.title_service.setTitle(
+            this.translate_service.instant('comic-details-page.title', {
+              id: this.comic.id,
+              series: this.comic.series,
+              volume: this.comic.volume,
+              issue_number: this.comic.issue_number
+            })
+          );
+        }
+      }
     );
     this.characters_subscription = this.library_adaptor.character$.subscribe(
       characters => (this.characters = characters)

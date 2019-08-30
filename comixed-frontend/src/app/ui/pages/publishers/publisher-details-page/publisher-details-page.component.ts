@@ -20,6 +20,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-publisher-details-page',
@@ -41,6 +43,8 @@ export class PublisherDetailsPageComponent implements OnInit, OnDestroy {
   publisher_name: string;
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private library_adaptor: LibraryAdaptor,
     private selection_adaptor: SelectionAdaptor,
     private activatedRoute: ActivatedRoute
@@ -57,6 +61,12 @@ export class PublisherDetailsPageComponent implements OnInit, OnDestroy {
           publisher => publisher.name === this.publisher_name
         );
         this.comics = result ? result.comics : [];
+        this.title_service.setTitle(
+          this.translate_service.instant('publisher-details-page.title', {
+            name: this.publisher_name,
+            count: this.comics.length
+          })
+        );
       }
     );
     this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(

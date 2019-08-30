@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 import { LibraryAdaptor } from 'app/library';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-story-arcs-page',
@@ -37,13 +38,21 @@ export class StoryArcsPageComponent implements OnInit, OnDestroy {
   rows = 10;
 
   constructor(
-    private library_adaptor: LibraryAdaptor,
-    private translate: TranslateService
+    private title_service: Title,
+    private translate_service: TranslateService,
+    private library_adaptor: LibraryAdaptor
   ) {}
 
   ngOnInit() {
     this.story_arcs_subscription = this.library_adaptor.story_arc$.subscribe(
-      story_arcs => (this.story_arcs = story_arcs)
+      story_arcs => {
+        this.story_arcs = story_arcs;
+        this.title_service.setTitle(
+          this.translate_service.instant('story-arcs-page.title', {
+            count: this.story_arcs.length
+          })
+        );
+      }
     );
     this.load_rows_options();
   }
@@ -55,25 +64,25 @@ export class StoryArcsPageComponent implements OnInit, OnDestroy {
   private load_rows_options(): void {
     this.rows_options = [
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.10-per-page'
         ),
         value: 10
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.25-per-page'
         ),
         value: 25
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.50-per-page'
         ),
         value: 50
       },
       {
-        label: this.translate.instant(
+        label: this.translate_service.instant(
           'library-contents.options.rows.100-per-page'
         ),
         value: 100

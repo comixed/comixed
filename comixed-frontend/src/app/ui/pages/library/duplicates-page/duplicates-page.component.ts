@@ -25,6 +25,8 @@ import { AppState } from 'app/app.state';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { MessageService } from 'primeng/api';
 import { Duplicates } from 'app/models/state/duplicates';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 export const DUPLICATES_HASH_PARAMETER = 'hash';
 
@@ -40,6 +42,8 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
   duplicates: Duplicates;
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private activated_route: ActivatedRoute,
     private router: Router,
     private store: Store<AppState>,
@@ -52,6 +56,12 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
     this.duplicates_subscription = this.duplicates$.subscribe(
       (duplicates: Duplicates) => {
         this.duplicates = duplicates;
+        this.title_service.setTitle(
+          this.translate_service.instant('duplicates-page.title', {
+            pages: this.duplicates.pages.length,
+            hashes: this.duplicates.hashes.length
+          })
+        );
 
         if (this.duplicates.pages_deleted > 0) {
           this.message_service.add({

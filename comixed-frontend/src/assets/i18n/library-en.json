@@ -100,5 +100,65 @@
         "detail": "Failed to save reading list"
       }
     }
+  },
+  "import-page": {
+    "title": "ComiXed: Import - {count, plural, =1{One File} other{# Files}} Found"
+  },
+  "library-page": {
+    "title": "ComiXed: Library - {count, plural, =1{One Comic} other{# Comics}}"
+  },
+  "reading-lists-page": {
+    "title": "ComiXed: Reading Lists - {count, plural, =1{One List} other{# Lists}}"
+  },
+  "reading-list-page": {
+    "title": "ComiXed: Reading List - {name} ({count, plural, =1{One Comic} other{# Comics}})"
+  },
+  "publishers-page": {
+    "title": "ComiXed: Publishers List ({count})"
+  },
+  "publisher-details-page": {
+    "title": "ComiXed: Publisher - {name} ({count, plural, =1{One Comic} other{# Comics}})"
+  },
+  "series-page": {
+    "title": "ComiXed: Series List ({count})"
+  },
+  "series-details-page": {
+    "title": "ComiXed: Series - {name} ({count, plural, =1{One Comic} other{# Comics}})"
+  },
+  "characters-page": {
+    "title": "ComiXed: Characters ({count})"
+  },
+  "character-details-page": {
+    "title": "ComiXed: Character - {name} ({count, plural, =1{One Comic} other{# Comics}})"
+  },
+  "teams-page": {
+    "title": "ComiXed: Teams ({count})"
+  },
+  "team-details-page": {
+    "title": "ComiXed: Team - {name} ({count, plural, =1{One Comic} other{# Comics}})"
+  },
+  "locations-page": {
+    "title": "ComiXed: Locations ({count})"
+  },
+  "location-details-page": {
+    "title": "ComiXed: Location - {name} ({count, plural, =1{One Comic} other{# Comics}})"
+  },
+  "story-arcs-page": {
+    "title": "ComiXed: Story Arcs ({count})"
+  },
+  "story-arc-details-page": {
+    "title": "ComiXed: Story Arc - {name} ({count, plural, =1{One Comic} other{# Comics}})"
+  },
+  "duplicates-page": {
+    "title": "ComiXed: Duplicate Pages - {hashes, plural, =1{One Hash} other{# Hashes}} In {pages, plural, =1{One Duplicate Page} other{# Duplicate Pages}}"
+  },
+  "missing-comics-page": {
+    "title": "ComiXed: Missing Comics - {count, plural, =1{One Comic} other{# Comics}}"
+  },
+  "comic-details-page": {
+    "title": "ComiXed: ({id}) - {series} #{issue_number} ({volume})"
+  },
+  "library-admin-page": {
+    "title": "ComiXed: Library Administration"
   }
 }

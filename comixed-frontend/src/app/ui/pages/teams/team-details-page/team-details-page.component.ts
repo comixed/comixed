@@ -22,6 +22,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Comic } from 'app/library/models/comic';
 import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-team-details-page',
@@ -43,6 +45,8 @@ export class TeamDetailsPageComponent implements OnInit, OnDestroy {
   team_name: string;
 
   constructor(
+    private title_service: Title,
+    private translate_service: TranslateService,
     private library_adaptor: LibraryAdaptor,
     private selection_adaptor: SelectionAdaptor,
     private activatedRoute: ActivatedRoute
@@ -56,6 +60,12 @@ export class TeamDetailsPageComponent implements OnInit, OnDestroy {
     this.teams_subscription = this.library_adaptor.team$.subscribe(teams => {
       const team = teams.find(entry => entry.name === this.team_name);
       this.comics = team ? team.comics : [];
+      this.title_service.setTitle(
+        this.translate_service.instant('team-details-page.title', {
+          name: this.team_name,
+          count: this.comics.length
+        })
+      );
     });
     this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
       selected_comics => (this.selected_comics = selected_comics)

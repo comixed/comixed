@@ -27,6 +27,7 @@
     }
   },
   "main-page": {
+    "title": "Home",
     "copyright": "Copyright &copy; {years}, The ComiXed Project Team",
     "library-status": "There are {comic_count} comics in the library.",
     "library-counts": "<b>Total:</b> {comic_count} <b>Read:</b> {read_count} <b>Import:</b> {import_count} <b>Rescan:</b> {rescan_count}"
@@ -432,10 +433,14 @@
     }
   },
   "account-page": {
+    "title": "ComiXed: {email}",
     "label": {
       "details": "Details",
       "preferences": "Preferences"
     }
+  },
+  "users-page": {
+    "title": "ComiXed: Manager User Accounts"
   },
   "comic-list": {
     "label": {
