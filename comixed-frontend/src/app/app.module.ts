@@ -274,7 +274,7 @@ export class AppModule {}
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/app/', suffix: '.json' },
-    { prefix: './assets/i18n/library/', suffix: '.json' }
+    { prefix: './assets/i18n/app-', suffix: '.json' },
+    { prefix: './assets/i18n/library-', suffix: '.json' }
   ]);
 }
