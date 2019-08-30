@@ -13,12 +13,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * along with this program. If not, see <http:/www.gnu.org/licenses/>.package
  * org.comixed;
  */
 
-import { USER_READER } from 'app/user/models/user.fixtures';
-import { ReadingList } from 'app/models/reading-list';
+import { USER_READER } from 'app/user';
+import { ReadingList } from 'app/library/models/reading-list/reading-list';
 
 export const READING_LIST_1: ReadingList = {
   id: 1000,

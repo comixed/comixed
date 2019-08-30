@@ -33,6 +33,10 @@ export const DELETE_MULTIPLE_COMICS_URL = `${COMIXED_API_ROOT}/comics/multiple/d
 export const GET_COMIC_FILES_URL = `${COMIXED_API_ROOT}/files/contents?directory=\${directory}`;
 export const IMPORT_COMIC_FILES_URL = `${COMIXED_API_ROOT}/files/import`;
 
+export const GET_READING_LISTS_URL = `${COMIXED_API_ROOT}/lists`;
+export const GET_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
+export const SAVE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
+
 export const DEFAULT_COMIC_GROUPING: ComicCollectionEntry = {
   name: 'grouping name',
   count: 0,

@@ -138,4 +138,26 @@ public class ReadingListService {
         this.logger.debug("Updating reading list");
         return this.readingListRepository.save(readingList.get());
     }
+
+    public ReadingList getReadingListForUser(final String email,
+                                             final long id)
+            throws
+            NoSuchReadingListException {
+        final ComiXedUser user = this.userRepository.findByEmail(email);
+        final Optional<ReadingList> readingList = this.readingListRepository.findById(id);
+
+        if (readingList.isPresent()) {
+            final ComiXedUser owner = readingList.get()
+                                                 .getOwner();
+
+            if (owner.getId() == user.getId()) {
+                return readingList.get();
+            }
+
+            throw new NoSuchReadingListException(
+                    "User is not the owner: user id=" + user.getId() + " owner id=" + owner.getId());
+        }
+
+        throw new NoSuchReadingListException("Invalid reading list: id=" + id);
+    }
 }

@@ -1,5 +1,5 @@
 target
-
+coverage
 # IntelliJ files
 .idea
 *.iml

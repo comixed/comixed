@@ -21,8 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { StoreModule } from '@ngrx/store';
 import { DataViewModule } from 'primeng/dataview';
 import { SidebarModule } from 'primeng/sidebar';
 import { SplitButtonModule } from 'primeng/splitbutton';
@@ -68,6 +67,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
+import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -79,6 +79,7 @@ describe('ComicListComponent', () => {
   let library_adaptor: LibraryAdaptor;
   let library_display_adaptor: LibraryDisplayAdaptor;
   let selection_adaptor: SelectionAdaptor;
+  let reading_list_adaptor: ReadingListAdaptor;
   let translate: TranslateService;
   let router: Router;
   let activated_route: ActivatedRoute;
@@ -141,6 +142,7 @@ describe('ComicListComponent', () => {
     spyOn(auth_adaptor, 'set_preference');
     library_adaptor = TestBed.get(LibraryAdaptor);
     library_display_adaptor = TestBed.get(LibraryDisplayAdaptor);
+    reading_list_adaptor = TestBed.get(ReadingListAdaptor);
     selection_adaptor = TestBed.get(SelectionAdaptor);
     translate = TestBed.get(TranslateService);
     router = TestBed.get(Router);

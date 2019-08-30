@@ -18,13 +18,9 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import { Router } from '@angular/router';
-import * as ReadingListActions from 'app/actions/reading-list.actions';
-import { ReadingListState } from 'app/models/state/reading-list-state';
+import { ReadingList, ReadingListAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-reading-lists-page',
@@ -32,25 +28,23 @@ import { ReadingListState } from 'app/models/state/reading-list-state';
   styleUrls: ['./reading-lists-page.component.css']
 })
 export class ReadingListsPageComponent implements OnInit, OnDestroy {
-  reading_list_state$: Observable<ReadingListState>;
-  reading_list_state_subscription: Subscription;
-  reading_list_state: ReadingListState;
+  reading_lists_subscription: Subscription;
+  reading_lists: ReadingList[];
 
-  constructor(private store: Store<AppState>, private router: Router) {
-    this.reading_list_state$ = this.store.select('reading_lists');
-  }
+  constructor(
+    private reading_list_adaptor: ReadingListAdaptor,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.reading_list_state_subscription = this.reading_list_state$.subscribe(
-      (reading_list_state: ReadingListState) => {
-        this.reading_list_state = reading_list_state;
-      }
+    this.reading_lists_subscription = this.reading_list_adaptor.reading_list$.subscribe(
+      reading_lists => (this.reading_lists = reading_lists)
     );
-    this.store.dispatch(new ReadingListActions.ReadingListGetAll());
+    this.reading_list_adaptor.get_reading_lists();
   }
 
   ngOnDestroy(): void {
-    this.reading_list_state_subscription.unsubscribe();
+    this.reading_lists_subscription.unsubscribe();
   }
 
   create_new_reading_list(): void {

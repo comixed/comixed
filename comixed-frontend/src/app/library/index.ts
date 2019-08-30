@@ -31,12 +31,15 @@ import { SelectionState } from 'app/library/models/selection-state';
 export { LibraryAdaptor } from './adaptors/library.adaptor';
 export { ImportAdaptor } from './adaptors/import.adaptor';
 export { SelectionAdaptor } from './adaptors/selection.adaptor';
+export { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
 export { Comic } from './models/comic';
 export { ScanType } from './models/scan-type';
 export { ComicFormat } from './models/comic-format';
 export { ComicCredit } from './models/comic-credit';
 export { ComicCollectionEntry } from './models/comic-collection-entry';
 export { ComicFile } from './models/comic-file';
+export { ReadingList } from './models/reading-list/reading-list';
+export { ReadingListEntry } from './models/reading-list/reading-list-entry';
 
 interface RouterStateUrl {
   url: string;

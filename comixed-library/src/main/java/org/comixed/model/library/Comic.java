@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
+import org.comixed.views.View;
 import org.comixed.views.View.ComicList;
 import org.comixed.views.View.DatabaseBackup;
 import org.comixed.views.View.PageList;
@@ -61,8 +62,7 @@ public class Comic {
     @Enumerated(EnumType.STRING)
     @JsonProperty("archive_type")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     ArchiveType archiveType;
 
     @ElementCollection
@@ -72,8 +72,7 @@ public class Comic {
     @Column(name = "story_arc_name")
     @JsonProperty("story_arcs")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     List<String> storyArcs = new ArrayList<>();
 
     @OneToMany(mappedBy = "comic",
@@ -81,8 +80,7 @@ public class Comic {
                fetch = FetchType.EAGER,
                orphanRemoval = true)
     @OrderColumn(name = "index")
-    @JsonView({ComicList.class,
-               ReadingList.class})
+    @JsonView({ComicList.class,})
     List<Page> pages = new ArrayList<>();
 
     @Transient
@@ -95,7 +93,7 @@ public class Comic {
     @JsonView({ComicList.class,
                PageList.class,
                DatabaseBackup.class,
-               ReadingList.class})
+               View.ReadingList.class})
     private Long id;
 
     @Column(name = "filename",
@@ -105,44 +103,38 @@ public class Comic {
     @JsonProperty
     @JsonView({ComicList.class,
                PageList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String filename;
 
     @Column(name = "comic_vine_id")
     @JsonProperty("comic_vine_id")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String comicVineId;
 
     @Column(name = "comic_vine_url")
     @JsonProperty("comic_vine_url")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String comicVineURL;
 
     @Column(name = "publisher")
     @JsonProperty
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String publisher;
 
     @Column(name = "imprint")
     @JsonProperty
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String imprint;
 
     @Column(name = "series")
     @JsonProperty
     @JsonView({ComicList.class,
                PageList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String series;
 
     @Column(name = "added_date",
@@ -151,8 +143,7 @@ public class Comic {
     @JsonProperty("added_date")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded = new Date();
 
@@ -162,8 +153,7 @@ public class Comic {
     @JsonProperty("last_updated_date")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateLastUpdated = new Date();
 
@@ -172,62 +162,54 @@ public class Comic {
     @Temporal(TemporalType.DATE)
     @JsonProperty("cover_date")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private Date coverDate;
 
     @Column(name = "volume")
     @JsonProperty
     @JsonView({ComicList.class,
                PageList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String volume;
 
     @Column(name = "issue_number")
     @JsonProperty("issue_number")
     @JsonView({ComicList.class,
                PageList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String issueNumber;
 
     @Column(name = "title")
     @JsonProperty
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String title;
 
     @Column(name = "sort_name")
     @JsonProperty("sort_name")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String sortName;
 
     @Column(name = "description")
     @Lob
     @JsonProperty
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String description;
 
     @Column(name = "notes")
     @Lob
     @JsonProperty
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String notes;
 
     @Column(name = "summary")
     @Lob
     @JsonProperty
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private String summary;
 
     @ElementCollection
@@ -237,8 +219,7 @@ public class Comic {
     @Column(name = "team_name")
     @JsonProperty("teams")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private List<String> teams = new ArrayList<>();
 
     @ElementCollection
@@ -248,8 +229,7 @@ public class Comic {
     @Column(name = "character_name")
     @JsonProperty("characters")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private List<String> characters = new ArrayList<>();
 
     @ElementCollection
@@ -259,8 +239,7 @@ public class Comic {
     @Column(name = "location_name")
     @JsonProperty("locations")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private List<String> locations = new ArrayList<>();
 
     @OneToMany(mappedBy = "comic",
@@ -269,8 +248,7 @@ public class Comic {
                orphanRemoval = true)
     @JsonProperty("credits")
     @JsonView({ComicList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private Set<Credit> credits = new HashSet<>();
 
     @ManyToOne
@@ -278,8 +256,7 @@ public class Comic {
     @JsonProperty("scan_type")
     @JsonView({ComicList.class,
                PageList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private ScanType scanType;
 
     @ManyToOne
@@ -287,14 +264,12 @@ public class Comic {
     @JsonProperty("format")
     @JsonView({ComicList.class,
                PageList.class,
-               DatabaseBackup.class,
-               ReadingList.class})
+               DatabaseBackup.class})
     private ComicFormat format;
 
     @Formula(value = "SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d)")
     @JsonProperty("blocked_page_count")
-    @JsonView({ComicList.class,
-               ReadingList.class})
+    @JsonView({ComicList.class})
     private int blockedPageCount;
 
     public Date getDateLastUpdated() {

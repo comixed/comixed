@@ -124,7 +124,6 @@ import { ComicDownloadLinkPipe } from './pipes/comic-download-link.pipe';
 import { MissingComicsPipe } from './pipes/missing-comics.pipe';
 import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-page/missing-comics-page.component';
 import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
-import { ReadingListService } from 'app/services/reading-list.service';
 import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
 import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
 import { REDUCERS } from 'app/app.reducers';
@@ -139,6 +138,7 @@ import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
 import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 
 @NgModule({
   declarations: [
@@ -264,7 +264,6 @@ import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-comp
     LibraryDisplayAdaptor,
     UserService,
     ComicService,
-    ReadingListService,
     MessageService,
     [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
     ConfirmationService
@@ -274,5 +273,8 @@ import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-comp
 export class AppModule {}
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new MultiTranslateHttpLoader(http, [
+    { prefix: './assets/i18n/app/', suffix: '.json' },
+    { prefix: './assets/i18n/library/', suffix: '.json' }
+  ]);
 }

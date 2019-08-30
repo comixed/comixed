@@ -19,17 +19,18 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as ReadingListActions from 'app/actions/reading-list.actions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { ReadingListState } from 'app/models/state/reading-list-state';
-import { ReadingList } from 'app/models/reading-list';
-import { Comic, SelectionAdaptor } from 'app/library';
-import { ReadingListEntry } from 'app/models/reading-list-entry';
+import { Subscription } from 'rxjs';
+import {
+  Comic,
+  ReadingList,
+  ReadingListEntry,
+  SelectionAdaptor
+} from 'app/library';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reading-list-page',
@@ -39,10 +40,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class ReadingListPageComponent implements OnInit, OnDestroy {
   selected_entries_subscription: Subscription;
   selected_entries: Comic[];
-
-  reading_list_state$: Observable<ReadingListState>;
-  reading_list_state_subscription: Subscription;
-  reading_list_state: ReadingListState;
+  reading_list_subscription: Subscription;
+  reading_list: ReadingList;
 
   entries: Comic[] = [];
   context_menu: MenuItem[] = [];
@@ -52,14 +51,13 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private selection_adaptor: SelectionAdaptor,
+    private reading_list_adaptor: ReadingListAdaptor,
     private form_builder: FormBuilder,
-    private store: Store<AppState>,
     private translate: TranslateService,
     private activated_route: ActivatedRoute,
     private router: Router,
     private confirm: ConfirmationService
   ) {
-    this.reading_list_state$ = this.store.select('reading_lists');
     this.reading_list_form = this.form_builder.group({
       name: ['', [Validators.required]],
       summary: ['']
@@ -67,7 +65,9 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
     this.activated_route.params.subscribe(params => {
       if (params['id']) {
         this.id = +params['id'];
-        this.load_reading_list();
+        this.reading_list_adaptor.get_reading_list(this.id);
+      } else {
+        this.reading_list_adaptor.create_reading_list();
       }
     });
     this.translate.onLangChange.subscribe(() => this.load_context_menu());
@@ -75,83 +75,43 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.dispatch(
-      new ReadingListActions.ReadingListSetCurrent({ reading_list: null })
-    );
-    this.reading_list_state_subscription = this.reading_list_state$.subscribe(
-      (reading_list_state: ReadingListState) => {
-        this.reading_list_state = reading_list_state;
-        if (this.reading_list_state.current_list) {
-          if (this.id === -1 && this.reading_list_state.current_list.id) {
-            this.router.navigate([
-              'lists',
-              this.reading_list_state.current_list.id
-            ]);
-          } else {
-            this.load_reading_list();
-          }
+    this.reading_list_subscription = this.reading_list_adaptor.current_list$
+      .pipe(filter(state => !!state))
+      .subscribe(reading_list => {
+        this.reading_list = reading_list;
+        if (this.id === -1 && this.reading_list.id) {
+          this.router.navigate(['list', this.reading_list.id]);
         } else {
-          if (this.id === -1) {
-            this.store.dispatch(new ReadingListActions.ReadingListCreate());
-          } else {
-            this.load_reading_list();
-          }
+          this.load_reading_list();
         }
-      }
-    );
-    this.store.dispatch(new ReadingListActions.ReadingListGetAll());
+      });
     this.selected_entries_subscription = this.selection_adaptor.comic_selection$.subscribe(
       selected_entries => (this.selected_entries = selected_entries)
     );
   }
 
   ngOnDestroy(): void {
-    this.reading_list_state_subscription.unsubscribe();
+    this.reading_list_subscription.unsubscribe();
     this.selected_entries_subscription.unsubscribe();
   }
 
   private load_reading_list(): void {
-    if (
-      this.id !== -1 &&
-      this.reading_list_state &&
-      this.reading_list_state.reading_lists
-    ) {
-      const reading_list = this.reading_list_state.reading_lists.find(
-        (entry: ReadingList) => entry.id === this.id
-      );
-      if (reading_list) {
-        if (reading_list !== this.reading_list_state.current_list) {
-          this.store.dispatch(
-            new ReadingListActions.ReadingListSetCurrent({
-              reading_list: reading_list
-            })
-          );
-        }
-        this.reading_list_form.controls['name'].setValue(reading_list.name);
-        this.reading_list_form.controls['summary'].setValue(
-          reading_list.summary || ''
-        );
-        this.reading_list_form.markAsPristine();
-        this.entries = [];
-        reading_list.entries.forEach((entry: ReadingListEntry) =>
-          this.entries.push(entry.comic)
-        );
-        this.selected_entries = [];
-      }
-    }
+    this.reading_list_form.controls['name'].setValue(this.reading_list.name);
+    this.reading_list_form.controls['summary'].setValue(
+      this.reading_list.summary || ''
+    );
+    this.reading_list_form.markAsPristine();
+    this.entries = [];
+    (this.reading_list.entries || []).forEach((entry: ReadingListEntry) =>
+      this.entries.push(entry.comic)
+    );
+    this.selected_entries = [];
   }
 
   submit_form(): void {
-    this.store.dispatch(
-      new ReadingListActions.ReadingListSave({
-        reading_list: {
-          id: this.reading_list_state.current_list.id,
-          owner: null,
-          name: this.reading_list_form.controls['name'].value,
-          summary: this.reading_list_form.controls['summary'].value,
-          entries: this.reading_list_state.current_list.entries
-        }
-      })
+    this.reading_list_adaptor.save(
+      this.reading_list,
+      this.reading_list.entries
     );
   }
 
@@ -177,17 +137,10 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         { comic_count: this.selected_entries.length }
       ),
       accept: () => {
-        const entries = this.reading_list_state.current_list.entries.filter(
-          (entry: ReadingListEntry) => {
-            return !this.selected_entries.includes(entry.comic);
-          }
+        const entries = this.reading_list.entries.filter(
+          entry => !this.selected_entries.includes(entry.comic)
         );
-        const reading_list = this.reading_list_state.current_list;
-        this.store.dispatch(
-          new ReadingListActions.ReadingListSave({
-            reading_list: { ...reading_list, entries: entries }
-          })
-        );
+        this.reading_list_adaptor.save(this.reading_list, entries);
       }
     });
   }

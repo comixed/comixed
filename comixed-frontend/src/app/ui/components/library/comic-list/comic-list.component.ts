@@ -19,20 +19,21 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import {
+  Comic,
+  LibraryAdaptor,
+  ReadingList,
+  ReadingListEntry,
+  SelectionAdaptor
+} from 'app/library';
 import { LibraryFilter } from 'app/models/actions/library-filter';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { MenuItem } from 'primeng/components/common/menuitem';
-import { ReadingListState } from 'app/models/state/reading-list-state';
-import { ReadingList } from 'app/models/reading-list';
-import * as ReadingListActions from 'app/actions/reading-list.actions';
-import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 
 const FIRST = 'first';
 
@@ -45,13 +46,11 @@ export class ComicListComponent implements OnInit, OnDestroy {
   _comics: Comic[] = [];
   _selected_comics: Comic[] = [];
   _current_comic: Comic = null;
+  reading_lists_subscription: Subscription;
+  reading_lists: ReadingList[];
 
   @Input() library_filter: LibraryFilter;
   @Input() show_selections: boolean;
-
-  reading_list_state$: Observable<ReadingListState>;
-  reading_list_state_subscription: Subscription;
-  reading_list_state: ReadingListState;
 
   translate_subscription: Subscription;
 
@@ -70,14 +69,12 @@ export class ComicListComponent implements OnInit, OnDestroy {
     private library_adaptor: LibraryAdaptor,
     private library_display_adaptor: LibraryDisplayAdaptor,
     private selection_adaptor: SelectionAdaptor,
+    private reading_list_adaptor: ReadingListAdaptor,
     private translate: TranslateService,
     private confirm: ConfirmationService,
-    private store: Store<AppState>,
     private activated_route: ActivatedRoute,
     private router: Router
   ) {
-    this.reading_list_state$ = this.store.select('reading_lists');
-
     this.library_display_adaptor.layout$.subscribe(
       layout => (this.layout = layout)
     );
@@ -103,17 +100,15 @@ export class ComicListComponent implements OnInit, OnDestroy {
     this.translate_subscription = this.translate.onLangChange.subscribe(() => {
       this.load_context_menu();
     });
-    this.reading_list_state_subscription = this.reading_list_state$.subscribe(
-      (reading_list_state: ReadingListState) => {
-        this.reading_list_state = reading_list_state;
-      }
+    this.reading_lists_subscription = this.reading_list_adaptor.reading_list$.subscribe(
+      reading_lists => (this.reading_lists = reading_lists)
     );
-    this.store.dispatch(new ReadingListActions.ReadingListGetAll());
+    this.reading_list_adaptor.get_reading_lists();
   }
 
   ngOnDestroy() {
     this.translate_subscription.unsubscribe();
-    this.reading_list_state_subscription.unsubscribe();
+    this.reading_lists_subscription.unsubscribe();
   }
 
   @Input() set comics(comics: Comic[]) {
@@ -204,28 +199,23 @@ export class ComicListComponent implements OnInit, OnDestroy {
       }
     ];
 
-    if (
-      this.reading_list_state &&
-      this.reading_list_state.reading_lists.length
-    ) {
+    if (this.reading_lists) {
       this.context_menu.push({ separator: true });
       const reading_lists = [];
-      this.reading_list_state.reading_lists.forEach(
-        (reading_list: ReadingList) => {
-          reading_lists.push({
-            label: reading_list.name,
-            icon: 'fa fa-fw fa-plus',
-            visible: !this.all_in_reading_list(reading_list),
-            command: () => this.add_to_reading_list(reading_list)
-          });
-          reading_lists.push({
-            label: reading_list.name,
-            icon: 'fa fa-fw fa-minus',
-            visible: this.already_in_reading_list(reading_list),
-            command: () => this.remove_from_reading_list(reading_list)
-          });
-        }
-      );
+      this.reading_lists.forEach((reading_list: ReadingList) => {
+        reading_lists.push({
+          label: reading_list.name,
+          icon: 'fa fa-fw fa-plus',
+          visible: !this.all_in_reading_list(reading_list),
+          command: () => this.add_to_reading_list(reading_list)
+        });
+        reading_lists.push({
+          label: reading_list.name,
+          icon: 'fa fa-fw fa-minus',
+          visible: this.already_in_reading_list(reading_list),
+          command: () => this.remove_from_reading_list(reading_list)
+        });
+      });
       this.context_menu.push({
         label: this.translate.instant('comic-list.popup.reading-lists'),
         items: reading_lists
@@ -301,11 +291,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     reading_list: ReadingList,
     entries: ReadingListEntry[]
   ): void {
-    this.store.dispatch(
-      new ReadingListActions.ReadingListSave({
-        reading_list: { ...reading_list, entries: entries }
-      })
-    );
+    this.reading_list_adaptor.save(reading_list, entries);
   }
 
   already_in_reading_list(reading_list: ReadingList): boolean {

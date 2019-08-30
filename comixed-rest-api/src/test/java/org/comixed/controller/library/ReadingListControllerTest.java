@@ -23,6 +23,7 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
+import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListNameException;
 import org.comixed.service.library.ReadingListService;
@@ -128,6 +129,58 @@ public class ReadingListControllerTest {
                .getName();
     }
 
+    @Test(expected = NoSuchReadingListException.class)
+    public void testGetReadingListForOtherUser()
+            throws
+            NoSuchReadingListException {
+        Mockito.when(principal.getName())
+               .thenReturn(TEST_USER_EMAIL);
+        Mockito.when(readingListService.getReadingListForUser(Mockito.anyString(),
+                                                              Mockito.anyLong()))
+               .thenThrow(NoSuchReadingListException.class);
+
+        try {
+            controller.getReadingList(principal,
+                                      TEST_READING_LIST_ID);
+        }
+        finally {
+            Mockito.verify(principal,
+                           Mockito.times(1))
+                   .getName();
+            Mockito.verify(readingListService,
+                           Mockito.times(1))
+                   .getReadingListForUser(TEST_USER_EMAIL,
+                                          TEST_READING_LIST_ID);
+        }
+    }
+
+    @Test
+    public void testGetReadingListForUser()
+            throws
+            NoSuchReadingListException {
+        Mockito.when(principal.getName())
+               .thenReturn(TEST_USER_EMAIL);
+        Mockito.when(readingListService.getReadingListForUser(Mockito.anyString(),
+                                                              Mockito.anyLong()))
+               .thenReturn(readingList);
+
+        final ReadingList result = controller.getReadingList(principal,
+                                                             TEST_READING_LIST_ID);
+
+        assertNotNull(result);
+        assertSame(readingList,
+                   result);
+
+        Mockito.verify(principal,
+                       Mockito.times(1))
+               .getName();
+        Mockito.verify(readingListService,
+                       Mockito.times(1))
+               .getReadingListForUser(TEST_USER_EMAIL,
+                                      TEST_READING_LIST_ID);
+
+    }
+
     @Test
     public void testUpdateReadingList()
             throws
@@ -143,11 +196,14 @@ public class ReadingListControllerTest {
                                                           Mockito.anyList()))
                .thenReturn(readingList);
 
+        final UpdateReadingListRequest request = new UpdateReadingListRequest();
+        request.setName(TEST_READING_LIST_NAME);
+        request.setSummary(TEST_READING_LIST_SUMMARY);
+        request.setEntries(TEST_READING_LIST_ENTRIES);
+
         ReadingList result = controller.updateReadingList(principal,
                                                           TEST_READING_LIST_ID,
-                                                          TEST_READING_LIST_NAME,
-                                                          TEST_READING_LIST_SUMMARY,
-                                                          TEST_READING_LIST_ENTRIES);
+                                                          request);
 
         assertNotNull(result);
         assertSame(readingList,

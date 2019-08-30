@@ -41,6 +41,7 @@
     "messageformat": "^2.3.0",
     "ngx-filesaver": "^2.2.1",
     "ngx-translate-messageformat-compiler": "^4.5.0",
+    "ngx-translate-multi-http-loader": "^3.0.0",
     "popper.js": "1.14.4",
     "primeflex": "^1.0.0-rc.1",
     "primeicons": "^1.0.0",

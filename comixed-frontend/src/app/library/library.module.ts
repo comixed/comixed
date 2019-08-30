@@ -39,11 +39,19 @@ import { ImportAdaptor } from 'app/library/adaptors/import.adaptor';
 import { ImportService } from 'app/library/services/import.service';
 import * as fromSelection from 'app/library/reducers/selection.reducer';
 import { SelectionAdaptor } from 'app/library/adaptors/selection.adaptor';
+import * as fromReadingList from './reducers/reading-list.reducer';
+import { ReadingListEffects } from './effects/reading-list.effects';
+import { ReadingListService } from 'app/library/services/reading-list.service';
+import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 
 @NgModule({
   imports: [
     CommonModule,
-    EffectsModule.forFeature([LibraryEffects, ImportEffects]),
+    EffectsModule.forFeature([
+      LibraryEffects,
+      ImportEffects,
+      ReadingListEffects
+    ]),
     StoreDevtoolsModule.instrument({
       name: 'NgRx Testing Store DevTools',
       logOnly: environment.production
@@ -56,6 +64,10 @@ import { SelectionAdaptor } from 'app/library/adaptors/selection.adaptor';
     StoreModule.forFeature(
       fromSelection.SELECTION_FEATURE_KEY,
       fromSelection.reducer
+    ),
+    StoreModule.forFeature(
+      fromReadingList.READING_LIST_FEATURE_KEY,
+      fromReadingList.reducer
     )
   ],
   declarations: [],
@@ -64,7 +76,9 @@ import { SelectionAdaptor } from 'app/library/adaptors/selection.adaptor';
     LibraryAdaptor,
     ImportService,
     ImportAdaptor,
-    SelectionAdaptor
+    SelectionAdaptor,
+    ReadingListService,
+    ReadingListAdaptor
   ],
   exports: [CommonModule]
 })

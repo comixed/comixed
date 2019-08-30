@@ -13,14 +13,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * along with this program. If not, see <http:/www.gnu.org/licenses/>.package
  * org.comixed;
  */
 
-import { ReadingList } from 'app/models/reading-list';
+import { Comic } from 'app/library';
 
-export interface ReadingListState {
-  busy: boolean;
-  reading_lists: Array<ReadingList>;
-  current_list: ReadingList;
+export interface ReadingListEntry {
+  id: number;
+  comic: Comic;
 }

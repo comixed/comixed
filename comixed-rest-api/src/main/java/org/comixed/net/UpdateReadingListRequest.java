@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,36 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/library';
+package org.comixed.net;
 
-export interface ReadingListEntry {
-  id: number;
-  comic: Comic;
+import java.util.List;
+
+public class UpdateReadingListRequest {
+    private String name;
+    private String summary;
+    private List<Long> entries;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(final String summary) {
+        this.summary = summary;
+    }
+
+    public List<Long> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(final List<Long> entries) {
+        this.entries = entries;
+    }
 }

@@ -32,8 +32,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppState } from 'app/app.state';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import * as ReadingListActions from 'app/actions/reading-list.actions';
-import { READING_LIST_1 } from 'app/models/reading-list.fixtures';
 import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
 import { DataViewModule } from 'primeng/dataview';
 import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
@@ -143,78 +141,5 @@ describe('ReadingListPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('when a reading list id is included', () => {
-    beforeEach(() => {
-      store.dispatch(
-        new ReadingListActions.ReadingListSetCurrent({ reading_list: null })
-      );
-      store.dispatch(
-        new ReadingListActions.ReadingListGotList({
-          reading_lists: [READING_LIST_1]
-        })
-      );
-      spyOn(store, 'dispatch').and.callThrough();
-      (activated_route.params as BehaviorSubject<{}>).next({
-        id: READING_LIST_1.id
-      });
-    });
-
-    it('fires an action to set the current reading list', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new ReadingListActions.ReadingListSetCurrent({
-          reading_list: READING_LIST_1
-        })
-      );
-    });
-
-    it('loads the reading list name for editing', () => {
-      expect(reading_list_name.value).toEqual(READING_LIST_1.name);
-    });
-
-    it('loads the reading list summary for editing', () => {
-      expect(reading_list_summary.value).toEqual(READING_LIST_1.summary);
-    });
-
-    it('loads a default summary if it is null', () => {
-      store.dispatch(
-        new ReadingListActions.ReadingListGotList({
-          reading_lists: [{ ...READING_LIST_1, summary: null }]
-        })
-      );
-      (activated_route.params as BehaviorSubject<{}>).next({
-        id: READING_LIST_1.id
-      });
-
-      expect(reading_list_summary.value).toEqual('');
-    });
-  });
-
-  describe('when saving the reading list', () => {
-    beforeEach(() => {
-      store.dispatch(
-        new ReadingListActions.ReadingListSetCurrent({ reading_list: null })
-      );
-      store.dispatch(
-        new ReadingListActions.ReadingListGotList({
-          reading_lists: [READING_LIST_1]
-        })
-      );
-      spyOn(store, 'dispatch').and.callThrough();
-      (activated_route.params as BehaviorSubject<{}>).next({
-        id: READING_LIST_1.id
-      });
-      fixture.detectChanges();
-      component.submit_form();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new ReadingListActions.ReadingListSave({
-          reading_list: { ...READING_LIST_1, owner: null }
-        })
-      );
-    });
   });
 });

@@ -2122,6 +2122,11 @@ deep-is@~0.1.3:
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
   integrity sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
 
+deepmerge@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.1.1.tgz#e862b4e45ea0555072bf51e7fd0d9845170ae768"
+  integrity sha512-urQxA1smbLZ2cBbXbaYObM1dJ82aJ2H57A1C/Kklfh/ZN1bgH4G/n5KWhdNfOK11W98gqZfyYj7W4frJJRwA2w==
+
 default-gateway@^2.6.0:
   version "2.7.2"
   resolved "https://registry.yarnpkg.com/default-gateway/-/default-gateway-2.7.2.tgz#b7ef339e5e024b045467af403d50348db4642d0f"
@@ -4854,6 +4859,14 @@ ngx-translate-messageformat-compiler@^4.5.0:
   resolved "https://registry.yarnpkg.com/ngx-translate-messageformat-compiler/-/ngx-translate-messageformat-compiler-4.5.0.tgz#8908de844322755e0d95ed43c1581b592cdf7f1e"
   integrity sha512-FasG50bAcF39d+tRa4QRqxtSY9N2xfPelJHSn/OpZF4uU08ioC+eERo4x9HcOXZDtZH2vrbw9GNv/Xwzg/Irbw==
   dependencies:
+    tslib "^1.9.0"
+
+ngx-translate-multi-http-loader@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-translate-multi-http-loader/-/ngx-translate-multi-http-loader-3.0.0.tgz#dcec774fe5ad8d180845a571a8f6d15b0b5bd946"
+  integrity sha512-tN9a97sdXkqGZIeQhnl14l+7+xFwqpYMTkbrW7K/1f16q3+OFC++1uPfrKs7rACQ7ZBmTJ86JB729PTUIVi3xA==
+  dependencies:
+    deepmerge "2.1.1"
     tslib "^1.9.0"
 
 nice-try@^1.0.4:

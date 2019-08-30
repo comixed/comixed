@@ -57,7 +57,3 @@ export const GET_COMIC_METADATA_URL = `${API_ROOT_URL}/scraper/query/issue`;
 export const SCRAPE_METADATA_AND_SAVE_URL = `${API_ROOT_URL}/scraper/save`;
 export const SAVE_COMIC_DETAILS_URL = '${API_ROOT_URL}/comics/${id}';
 export const CLEAR_METADATA_URL = '${API_ROOT_URL}/comics/${id}/metadata';
-
-export const GET_READING_LISTS_URL = `${API_ROOT_URL}/lists`;
-export const CREATE_READING_LIST_URL = `${API_ROOT_URL}/lists`;
-export const UPDATE_READING_LIST_URL = '${API_ROOT_URL}/lists/${id}';

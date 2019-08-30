@@ -1,0 +1,104 @@
+{
+  "library-effects": {
+    "get-scan-types": {
+      "error": {
+        "detail": "Failed to get the list of scan types."
+      }
+    },
+    "get-formats": {
+      "error": {
+        "detail": "Failed get the list of comic formats."
+      }
+    },
+    "get-updates": {
+      "error": {
+        "detail": "Getting comic updates failed."
+      }
+    },
+    "start-rescan": {
+      "success": {
+        "detail": "Library rescan started..."
+      },
+      "error": {
+        "detail": "Failed to start rescanning the library."
+      }
+    },
+    "update-comic": {
+      "success": {
+        "detail": "Comic successfully updated."
+      },
+      "error": {
+        "detail": "Failed to update the comic."
+      }
+    },
+    "clear-metadata": {
+      "success": {
+        "detail": "Metadata cleared successfully."
+      },
+      "error": {
+        "detail": "Failed to clear the metadata on the comic."
+      }
+    },
+    "blocked-page-hash": {
+      "success": {
+        "blocked-detail": "Blocked all pages with a hash of {hash}.",
+        "unblocked-detail": "Unblocked all pages with a hash of {hash}."
+      },
+      "error": {
+        "detail": "Failed to change page blocking."
+      }
+    },
+    "delete-multiple-comics": {
+      "success": {
+        "detail": "Marked {count, plural, =1{one comic} other{# comics}} for deletion."
+      },
+      "error": {
+        "detail": "Failed to delete multiple comics."
+      }
+    }
+  },
+  "import-effects": {
+    "get-comic-files": {
+      "success": {
+        "detail": "Found {count, plural, =1{comic file} other{# comic files}}."
+      },
+      "error": {
+        "detail": "Failed to get comic files for import."
+      }
+    },
+    "import-comic-files": {
+      "success": {
+        "detail": "Now importing {comic_count, plural, =1{one comic file} other{# comic files}}."
+      },
+      "error": {
+        "detail": "Failed to start importing comic files."
+      }
+    }
+  },
+  "reading-list-effects": {
+    "get-all": {
+      "success": {
+        "detail": "Retrieved {count, plural, =1{one list} other{# reading lists}}."
+      },
+      "error": {
+        "detail": "Failed to get all reading lists."
+      }
+    },
+    "get-reading-list": {
+      "success": {
+        "detail": "Loaded \"{name}\"."
+      },
+      "error": {
+        "detail": "Failed to load reading list."
+      }
+    },
+    "save": {
+      "success": {
+        "detail": "Saved reading list \"{name}\"."
+      },
+      "error": {
+        "detail": "Failed to save reading list"
+      }
+    }
+  }
+}

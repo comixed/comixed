@@ -27,6 +27,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { REDUCERS } from 'app/app.reducers';
+import { ReadingListAdaptor } from 'app/library';
+import { MessageService } from 'primeng/api';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ReadingListsPageComponent', () => {
   let component: ReadingListsPageComponent;
@@ -36,6 +39,7 @@ describe('ReadingListsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        HttpClientTestingModule,
         RouterTestingModule.withRoutes([
           { path: 'lists/new', component: ReadingListsPageComponent }
         ]),
@@ -44,7 +48,8 @@ describe('ReadingListsPageComponent', () => {
         ButtonModule,
         TableModule
       ],
-      declarations: [ReadingListsPageComponent]
+      declarations: [ReadingListsPageComponent],
+      providers: [ReadingListAdaptor, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReadingListsPageComponent);
@@ -59,13 +64,13 @@ describe('ReadingListsPageComponent', () => {
 
   describe('when destroyed', () => {
     beforeEach(() => {
-      spyOn(component.reading_list_state_subscription, 'unsubscribe');
+      spyOn(component.reading_lists_subscription, 'unsubscribe');
       component.ngOnDestroy();
     });
 
     it('unsubscribes from reading list updates', () => {
       expect(
-        component.reading_list_state_subscription.unsubscribe
+        component.reading_lists_subscription.unsubscribe
       ).toHaveBeenCalled();
     });
   });

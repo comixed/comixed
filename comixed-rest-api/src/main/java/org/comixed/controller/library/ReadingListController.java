@@ -21,6 +21,7 @@ package org.comixed.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.model.library.ReadingList;
+import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.repositories.ReadingListRepository;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListNameException;
@@ -67,21 +68,22 @@ public class ReadingListController {
                                                          entries);
     }
 
-    @RequestMapping(value = "/lists/{id}",
-                    method = RequestMethod.PUT)
+    @PutMapping(value = "/lists/{id}",
+                produces = "application/json",
+                consumes = "application/json")
     @JsonView(View.ReadingList.class)
     public ReadingList updateReadingList(Principal principal,
                                          @PathVariable("id")
                                                  long id,
-                                         @RequestParam("name")
-                                                 String name,
-                                         @RequestParam("summary")
-                                                 String summary,
-                                         @RequestParam("entries")
-                                                 List<Long> entries)
+                                         @RequestBody()
+                                                 UpdateReadingListRequest request)
             throws
             NoSuchReadingListException {
         final String email = principal.getName();
+        final String name = request.getName();
+        final String summary = request.getSummary();
+        final List<Long> entries = request.getEntries();
+
         this.logger.info("Updating reading list for user: email={} id={} name={} summary={}",
                          email,
                          id,
@@ -115,5 +117,22 @@ public class ReadingListController {
                           ? ""
                           : "s");
         return result;
+    }
+
+    @GetMapping(value = "/lists/{id}",
+                produces = "application/json")
+    @JsonView(View.ReadingList.class)
+    public ReadingList getReadingList(final Principal principal,
+                                      @PathVariable("id")
+                                      final long id)
+            throws
+            NoSuchReadingListException {
+        final String email = principal.getName();
+        this.logger.info("Getting reading list for user: email={} id={}",
+                         email,
+                         id);
+
+        return this.readingListService.getReadingListForUser(email,
+                                                             id);
     }
 }

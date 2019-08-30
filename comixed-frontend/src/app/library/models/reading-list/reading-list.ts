@@ -13,12 +13,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * along with this program. If not, see <http:/www.gnu.org/licenses/>.package
  * org.comixed;
  */
 
-import { ReadingListEntry } from 'app/models/reading-list-entry';
 import { User } from 'app/user';
+import { ReadingListEntry } from 'app/library/models/reading-list/reading-list-entry';
 
 export interface ReadingList {
   id: number;

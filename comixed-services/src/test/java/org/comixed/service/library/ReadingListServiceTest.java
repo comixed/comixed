@@ -49,6 +49,8 @@ public class ReadingListServiceTest {
     private static final Long TEST_COMIC_ID_3 = 1002L;
     private static final Long TEST_COMIC_ID_4 = 1003L;
     private static final Long TEST_COMIC_ID_5 = 1004L;
+    private static final Long TEST_USER_ID = 17L;
+    private static final Long TEST_OTHER_USER_ID = 29L;
 
     static {
         TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_1);
@@ -64,6 +66,7 @@ public class ReadingListServiceTest {
     @Mock private ComicService comicService;
     @Mock private ReadingList readingList;
     @Mock private ComiXedUser user;
+    @Mock private ComiXedUser otherUser;
     @Mock private List<ReadingList> readingLists;
     @Mock private Comic comic;
     @Captor private ArgumentCaptor<ReadingListEntry> readingListEntry;
@@ -253,5 +256,78 @@ public class ReadingListServiceTest {
         Mockito.verify(readingListRepository,
                        Mockito.times(1))
                .save(readingList);
+    }
+
+    @Test(expected = NoSuchReadingListException.class)
+    public void testGetReadingListForOtherUser()
+            throws
+            NoSuchReadingListException {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+               .thenReturn(user);
+        Mockito.when(readingListRepository.findById(TEST_READING_LIST_ID))
+               .thenReturn(Optional.of(readingList));
+        Mockito.when(readingList.getOwner())
+               .thenReturn(otherUser);
+        Mockito.when(user.getId())
+               .thenReturn(TEST_USER_ID);
+        Mockito.when(otherUser.getId())
+               .thenReturn(TEST_OTHER_USER_ID);
+
+        try {
+            readingListService.getReadingListForUser(TEST_USER_EMAIL,
+                                                     TEST_READING_LIST_ID);
+        }
+        finally {
+            Mockito.verify(userRepository,
+                           Mockito.times(1))
+                   .findByEmail(TEST_USER_EMAIL);
+            Mockito.verify(readingListRepository,
+                           Mockito.times(1))
+                   .findById(TEST_READING_LIST_ID);
+            Mockito.verify(readingList,
+                           Mockito.times(1))
+                   .getOwner();
+            Mockito.verify(otherUser,
+                           Mockito.atLeast(1))
+                   .getId();
+            Mockito.verify(user,
+                           Mockito.atLeast(1))
+                   .getId();
+        }
+    }
+
+    @Test
+    public void testGetReadingListForUser()
+            throws
+            NoSuchReadingListException {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+               .thenReturn(user);
+        Mockito.when(readingListRepository.findById(TEST_READING_LIST_ID))
+               .thenReturn(Optional.of(readingList));
+        Mockito.when(readingList.getOwner())
+               .thenReturn(user);
+        Mockito.when(user.getId())
+               .thenReturn(TEST_USER_ID);
+
+        final ReadingList result = readingListService.getReadingListForUser(TEST_USER_EMAIL,
+                                                                            TEST_READING_LIST_ID);
+
+        assertNotNull(result);
+        assertSame(readingList,
+                   result);
+
+        Mockito.verify(userRepository,
+                       Mockito.times(1))
+               .findByEmail(TEST_USER_EMAIL);
+        Mockito.verify(readingListRepository,
+                       Mockito.times(1))
+               .findById(TEST_READING_LIST_ID);
+        Mockito.verify(readingList,
+                       Mockito.times(1))
+               .getOwner();
+        Mockito.verify(user,
+                       Mockito.atLeast(2))
+               .getId();
+
     }
 }

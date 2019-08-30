@@ -22,13 +22,11 @@ import { singleComicScrapingReducer } from 'app/reducers/single-comic-scraping.r
 import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scraping.reducer';
 import { duplicatesReducer } from 'app/reducers/duplicates.reducer';
 import { userAdminReducer } from 'app/reducers/user-admin.reducer';
-import { readingListReducer } from 'app/reducers/reading-list.reducer';
 
 export const REDUCERS = {
   library_filter: libraryFilterReducer,
   single_comic_scraping: singleComicScrapingReducer,
   multiple_comic_scraping: multipleComicsScrapingReducer,
   duplicates: duplicatesReducer,
-  user_admin: userAdminReducer,
-  reading_lists: readingListReducer
+  user_admin: userAdminReducer
 };
