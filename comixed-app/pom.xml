@@ -70,6 +70,9 @@
           <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
           <injectAllReactorProjects>true</injectAllReactorProjects>
           <dateFormat>yyyyMMddHHmmss</dateFormat>
+          <generateGitPropertiesFilename>${project.build.outputDirectory}/build-details.properties
+          </generateGitPropertiesFilename>
+          <verbose>false</verbose>
         </configuration>
       </plugin>
     </plugins>

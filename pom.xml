@@ -83,31 +83,6 @@
         </executions>
       </plugin>
       -->
-      <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>get-the-git-infos</id>
-            <goals>
-              <goal>revision</goal>
-            </goals>
-            <phase>initialize</phase>
-          </execution>
-          <execution>
-            <id>validate-the-git-infos</id>
-            <goals>
-              <goal>validateRevision</goal>
-            </goals>
-            <phase>package</phase>
-          </execution>
-        </executions>
-        <configuration>
-          <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
-          <injectAllReactorProjects>true</injectAllReactorProjects>
-          <dateFormat>yyyyMMddHHmmss</dateFormat>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
   <modules>
