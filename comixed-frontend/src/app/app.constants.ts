@@ -38,6 +38,8 @@ export const GET_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
 export const CREATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists`;
 export const SAVE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
 
+export const GET_BUILD_DETAILS_URL = `${COMIXED_API_ROOT}/core/build-details`;
+
 export const DEFAULT_COMIC_GROUPING: ComicCollectionEntry = {
   name: 'grouping name',
   count: 0,

@@ -1,4 +1,29 @@
 @import '~primeicons/primeicons.css';
+@import '~colors.scss';
+
+.cx-table-details {
+  border: solid 1px $cx-detail-label-border-color;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.cx-table-details-label,
+.cx-table-details-value {
+  border: solid 1px $cx-detail-label-border-color;
+  padding: 10px;
+}
+
+.cx-table-details-label {
+  background-color: $cx-detail-label-background-color;
+  color: $cx-detail-label-text-color;
+  font-weight: bold;
+  text-align: right;
+}
+
+.cx-table-details-value {
+  background-color: $cx-detail-value-background-color;
+  color: $cx-detail-value-text-color;
+}
 
 .ui-menuitem-text {
   white-space: nowrap;

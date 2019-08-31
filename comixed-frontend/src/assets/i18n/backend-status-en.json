@@ -1,0 +1,24 @@
+{
+  "build-details-effects": {
+    "get-build-details": {
+      "error": {
+        "details": "Failed to get the build details from the service..."
+      }
+    }
+  },
+  "build-details-page": {
+    "title": "Build Details",
+    "table": {
+      "branch": "Source Branch",
+      "build-host": "Build Hostname",
+      "build-time": "Built On",
+      "build-version": "Version",
+      "commit-user": "Committer Name",
+      "commit-id": "Commit Hash",
+      "commit-message": "Commit Message",
+      "commit-time": "Time Of Last Commit",
+      "dirty": "Was The Code Checked In?",
+      "remote-origin-url": "Remote Origin"
+    }
+  }
+}

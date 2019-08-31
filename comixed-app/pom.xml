@@ -73,6 +73,7 @@
           <generateGitPropertiesFilename>${project.build.outputDirectory}/build-details.properties
           </generateGitPropertiesFilename>
           <verbose>false</verbose>
+          <prefix>build-details</prefix>
         </configuration>
       </plugin>
     </plugins>

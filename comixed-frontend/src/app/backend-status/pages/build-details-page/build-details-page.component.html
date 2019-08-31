@@ -1,0 +1,46 @@
+<h2>{{ 'build-details-page.title' | translate }}</h2>
+<table *ngIf="build_details"
+       class='cx-table-details'>
+    <tbody>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.branch' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.branch }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.build-host' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.build_host }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.build-time' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.build_time|date:'medium' }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.build-version' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.build_version }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-id' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.commit_id }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-user' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.commit_user }}&nbsp;({{ build_details.commit_email }})</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-time' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.commit_time | date: 'medium' }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-message' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.commit_message }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.dirty' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.dirty }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.remote-origin-url' | translate }}</td>
+        <td class='cx-table-details-value'>{{ build_details.remote_origin_url }}</td>
+    </tr>
+    </tbody>
+</table>

@@ -24,6 +24,10 @@
       "root": "Admin",
       "users": "Users",
       "library": "Library"
+    },
+    "help": {
+      "root": "Help",
+      "build-details": "Build Details"
     }
   },
   "main-page": {

@@ -32,7 +32,7 @@ import { Roles } from 'app/models/ui/roles';
   styleUrls: ['./menubar.component.css']
 })
 export class MenubarComponent implements OnInit {
-  menu_items: Array<MenuItem>;
+  menu_items: MenuItem[];
   user: User;
   authenticated = false;
   is_admin = false;
@@ -84,9 +84,10 @@ export class MenubarComponent implements OnInit {
     if (this.is_admin) {
       this.menu_items = this.menu_items.concat(this.add_admin_menu());
     }
+    this.menu_items = this.menu_items.concat(this.add_help_menu());
   }
 
-  private add_comics_menu(): Array<MenuItem> {
+  private add_comics_menu(): MenuItem[] {
     return [
       {
         label: this.translate.instant('menu.library.root'),
@@ -166,7 +167,7 @@ export class MenubarComponent implements OnInit {
     ];
   }
 
-  private add_admin_menu(): Array<MenuItem> {
+  private add_admin_menu(): MenuItem[] {
     return [
       {
         label: this.translate.instant('menu.admin.root'),
@@ -206,6 +207,22 @@ export class MenubarComponent implements OnInit {
             icon: 'fas fa-ghost',
             routerLink: ['/comics/missing'],
             visible: this.is_admin
+          }
+        ]
+      }
+    ];
+  }
+
+  private add_help_menu(): MenuItem[] {
+    return [
+      {
+        label: this.translate.instant('menu.help.root'),
+        icon: 'fas fa-question',
+        items: [
+          {
+            label: this.translate.instant('menu.help.build-details'),
+            icon: 'fas fa-landmark',
+            routerLink: ['/build/details']
           }
         ]
       }
