@@ -20,31 +20,54 @@
 package org.comixed.service.core;
 
 import org.comixed.model.core.BuildDetails;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.ParseException;
+import java.util.Calendar;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = DetailsService.class)
 @TestPropertySource(locations = {"classpath:/build-details.properties"})
 public class DetailsServiceTest {
-    public static final String TEST_BRANCH = "feature/issue-532";
-    public static final String TEST_BUILD_TIME = "20190831083412";
-    public static final String TEST_BUILD_VERSION = "0.4.9";
-    public static final String TEST_COMMIT_ID = "3cbdbaee42d2b6bde342fce32ecd61905d8d12d4";
-    public static final String TEST_COMMIT_TIME = "20190831083101";
+    private static final String TEST_BRANCH = "feature/issue-189";
+    private static final String TEST_BUILD_HOST = "buildmachine.local";
+    private static final Calendar TEST_BUILD_TIME = Calendar.getInstance();
+    private static final String TEST_BUILD_VERSION = "0.4.9";
+    private static final String TEST_COMMIT_ID = "3cbdbaee42d2b6bde342fce32ecd61905d8d12d4";
+    private static final Calendar TEST_COMMIT_TIME = Calendar.getInstance();
+    private static final String TEST_COMMIT_MESSAGE = "[Issue #189] Moved build metadata into build-details.properties.";
+    private static final String TEST_COMMIT_EMAIL = "mcpierce@gmail.com";
+    private static final String TEST_COMMIT_USER = "Darryl L. Pierce";
+    private static final boolean TEST_COMMIT_DIRTY = true;
+    private static final String TEST_REMOTE_ORIGIN_URL = "git@github.com:mcpierce/comixed.git";
 
-    @InjectMocks private DetailsService detailsService;
+    static {
+        TEST_BUILD_TIME.clear();
+        TEST_BUILD_TIME.set(2019,
+                            7,
+                            31,
+                            8,
+                            34,
+                            12);
+        TEST_COMMIT_TIME.clear();
+        TEST_COMMIT_TIME.set(2019,
+                             7,
+                             31,
+                             8,
+                             31,
+                             01);
+    }
 
-    // TODO need to fix this test
-    @Ignore("Production code works, not sure why the test doesn't")
+    @Autowired private DetailsService detailsService;
+
     @Test
     public void testGetDetails()
             throws
@@ -55,13 +78,25 @@ public class DetailsServiceTest {
 
         assertEquals(TEST_BRANCH,
                      result.getBranch());
-        assertEquals(TEST_BUILD_TIME,
+        assertEquals(TEST_BUILD_HOST,
+                     result.getBuildHost());
+        assertEquals(TEST_BUILD_TIME.getTime(),
                      result.getBuildTime());
         assertEquals(TEST_BUILD_VERSION,
                      result.getBuildVersion());
         assertEquals(TEST_COMMIT_ID,
                      result.getCommitId());
-        assertEquals(TEST_COMMIT_TIME,
+        assertEquals(TEST_COMMIT_TIME.getTime(),
                      result.getCommitTime());
+        assertEquals(TEST_COMMIT_MESSAGE,
+                     result.getCommitMessage());
+        assertEquals(TEST_COMMIT_EMAIL,
+                     result.getCommitEmail());
+        assertEquals(TEST_COMMIT_USER,
+                     result.getCommitUser());
+        assertEquals(TEST_COMMIT_DIRTY,
+                     result.isDirty());
+        assertEquals(TEST_REMOTE_ORIGIN_URL,
+                     result.getRemoteOriginURL());
     }
 }

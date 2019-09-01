@@ -48,7 +48,7 @@ public class DetailsService {
     @Value("${build-details.dirty}") private String dirty;
     @Value("${build-details.remote.origin.url}") private String remoteOriginURL;
 
-    public BuildDetails getBuildDetails()
+    public BuildDetails  getBuildDetails()
             throws
             ParseException {
         final BuildDetails result = new BuildDetails();
