@@ -17,7 +17,7 @@
       "commit-id": "Commit Hash",
       "commit-message": "Commit Message",
       "commit-time": "Time Of Last Commit",
-      "dirty": "Was The Code Checked In?",
+      "dirty": "Built From Uncommitted Code?",
       "remote-origin-url": "Remote Origin"
     }
   }
