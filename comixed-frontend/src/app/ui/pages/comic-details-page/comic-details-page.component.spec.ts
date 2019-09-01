@@ -21,7 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { TabViewModule } from 'primeng/tabview';
 import { CardModule } from 'primeng/card';
 import { InplaceModule } from 'primeng/inplace';
@@ -51,7 +51,7 @@ import { ComicDetailsPageComponent } from './comic-details-page.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComicDownloadLinkPipe } from 'app/pipes/comic-download-link.pipe';
-import { COMIC_1, LibraryAdaptor } from 'app/library';
+import { COMIC_1, COMIC_2, COMIC_3, LibraryAdaptor } from 'app/library';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -64,12 +64,19 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { UserModule } from 'app/user/user.module';
+import { AppState } from 'app/app.state';
+import { LibraryGotUpdates } from 'app/library/actions/library.actions';
+import { Router } from '@angular/router';
 
 describe('ComicDetailsPageComponent', () => {
+  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
+
   let component: ComicDetailsPageComponent;
   let fixture: ComponentFixture<ComicDetailsPageComponent>;
   let download_link: DebugElement;
   let library_adaptor: LibraryAdaptor;
+  let store: Store<AppState>;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -125,6 +132,16 @@ describe('ComicDetailsPageComponent', () => {
 
     fixture = TestBed.createComponent(ComicDetailsPageComponent);
     component = fixture.componentInstance;
+    store = TestBed.get(Store);
+    store.dispatch(
+      new LibraryGotUpdates({
+        comics: COMICS,
+        last_read_dates: [],
+        pending_imports: 0,
+        pending_rescans: 0
+      })
+    );
+    router = TestBed.get(Router);
     library_adaptor = TestBed.get(LibraryAdaptor);
     library_adaptor._current_comic$.next(COMIC_1);
     component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
@@ -147,6 +164,76 @@ describe('ComicDetailsPageComponent', () => {
       expect(download_link.nativeElement.innerText).toEqual(
         'comic-details-page.text.download-link'
       );
+    });
+  });
+
+  describe('when setting the series navigation buttons', () => {
+    it('enables the previous button when there is a previous issue in the series', () => {
+      spyOn(library_adaptor, 'get_previous_issue').and.returnValue(COMIC_2);
+      expect(component.disable_previous_button()).toBeFalsy();
+      expect(library_adaptor.get_previous_issue).toHaveBeenCalledWith(
+        component.comic
+      );
+    });
+
+    it('disables the previous button when there is no previous issue in the series', () => {
+      spyOn(library_adaptor, 'get_previous_issue').and.returnValue(null);
+      expect(component.disable_previous_button()).toBeTruthy();
+      expect(library_adaptor.get_previous_issue).toHaveBeenCalledWith(
+        component.comic
+      );
+    });
+
+    it('enables the previous button when there is a next issue in the series', () => {
+      spyOn(library_adaptor, 'get_next_issue').and.returnValue(COMIC_2);
+      expect(component.disable_next_button()).toBeFalsy();
+      expect(library_adaptor.get_next_issue).toHaveBeenCalledWith(
+        component.comic
+      );
+    });
+
+    it('disables the previous button when there is no next issue in the series', () => {
+      spyOn(library_adaptor, 'get_next_issue').and.returnValue(null);
+      expect(component.disable_next_button()).toBeTruthy();
+      expect(library_adaptor.get_next_issue).toHaveBeenCalledWith(
+        component.comic
+      );
+    });
+  });
+
+  describe('when loading the next comic', () => {
+    beforeEach(() => {
+      spyOn(library_adaptor, 'get_next_issue').and.returnValue(COMIC_2);
+      spyOn(router, 'navigate');
+      component.go_to_next_comic();
+    });
+
+    it('gets the previous issue', () => {
+      expect(library_adaptor.get_next_issue).toHaveBeenCalledWith(
+        component.comic
+      );
+    });
+
+    it('navigates to the previous issue', () => {
+      expect(router.navigate).toHaveBeenCalledWith(['comics', COMIC_2.id]);
+    });
+  });
+
+  describe('when loading the previous comic', () => {
+    beforeEach(() => {
+      spyOn(library_adaptor, 'get_previous_issue').and.returnValue(COMIC_2);
+      spyOn(router, 'navigate');
+      component.go_to_previous_comic();
+    });
+
+    it('gets the previous issue', () => {
+      expect(library_adaptor.get_previous_issue).toHaveBeenCalledWith(
+        component.comic
+      );
+    });
+
+    it('navigates to the previous issue', () => {
+      expect(router.navigate).toHaveBeenCalledWith(['comics', COMIC_2.id]);
     });
   });
 });

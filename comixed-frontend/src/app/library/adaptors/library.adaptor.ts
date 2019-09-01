@@ -32,7 +32,10 @@ import * as LibraryActions from '../actions/library.actions';
 import { extractField } from 'app/library/utility.functions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { ofType } from '@ngrx/effects';
-import { LibraryActionTypes } from '../actions/library.actions';
+import {
+  LibraryActionTypes,
+  LibrarySetCurrentComic
+} from '../actions/library.actions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
 @Injectable()
@@ -52,7 +55,7 @@ export class LibraryAdaptor {
   _pending_rescan$ = new BehaviorSubject<number>(0);
   _current_comic$ = new BehaviorSubject<Comic>(null);
   current_id = -1;
-  _last_update$ = new BehaviorSubject<Date>(new Date());
+  _last_updated$ = new BehaviorSubject<Date>(new Date());
 
   private library_state$: Observable<LibraryState>;
   _latest_updated_date = 0;
@@ -118,12 +121,12 @@ export class LibraryAdaptor {
             this._current_comic$.next(library_state.current_comic);
           }
         }
-        this._last_update$.next(new Date());
+        this._last_updated$.next(new Date());
       });
   }
 
-  get last_update$(): Observable<Date> {
-    return this._last_update$.asObservable();
+  get last_updated$(): Observable<Date> {
+    return this._last_updated$.asObservable();
   }
 
   get scan_type$(): Observable<ScanType[]> {
@@ -142,7 +145,7 @@ export class LibraryAdaptor {
     return this._format$.getValue();
   }
 
-  get fetch_update$(): Observable<boolean> {
+  get fetching_update$(): Observable<boolean> {
     return this._fetching_update$.asObservable();
   }
 
@@ -255,5 +258,28 @@ export class LibraryAdaptor {
   get_comic_by_id(id: number): void {
     this.current_id = id;
     this.store.dispatch(new LibraryActions.LibraryFindCurrentComic({ id: id }));
+  }
+
+  private get_comics_for_series(series: string): Comic[] {
+    return this._serie$
+      .getValue()
+      .find(entry => entry.comics[0].series === series)
+      .comics.sort((c1: Comic, c2: Comic) =>
+        (c1.issue_number || '0').localeCompare(c2.issue_number || '0')
+      );
+  }
+
+  get_previous_issue(comic: Comic): Comic {
+    const comics = this.get_comics_for_series(comic.series);
+    const index = comics.findIndex(entry => entry.id === comic.id);
+
+    return index > 0 ? comics[index - 1] : null;
+  }
+
+  get_next_issue(comic: Comic): Comic {
+    const comics = this.get_comics_for_series(comic.series);
+    const index = comics.findIndex(entry => entry.id === comic.id);
+
+    return index < comics.length ? comics[index + 1] : null;
   }
 }

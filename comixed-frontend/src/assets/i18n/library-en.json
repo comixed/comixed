@@ -156,7 +156,11 @@
     "title": "ComiXed: Missing Comics - {count, plural, =1{One Comic} other{# Comics}}"
   },
   "comic-details-page": {
-    "title": "ComiXed: ({id}) - {series} #{issue_number} ({volume})"
+    "title": "ComiXed: ({id}) - {series} #{issue_number} ({volume})",
+    "button": {
+      "prev-comic": "Last Issue",
+      "next-comic": "Next Issue"
+    }
   },
   "library-admin-page": {
     "title": "ComiXed: Library Administration"

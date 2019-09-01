@@ -14,6 +14,25 @@
                        id='cx-download-link'
                        href='{{ comic | comic_download_link }}'>{{ "comic-details-page.text.download-link" | translate }}</a>
                 </div>
+                <div class='ui-g'>
+                    <div class='ui-g-6 cx-container-centered-text'>
+                        <button pButton
+                                class='cx-action-button ui-button-info'
+                                icon='fas fa-caret-left'
+                                [label]='"comic-details-page.button.prev-comic"|translate'
+                                [disabled]='disable_previous_button()'
+                                (click)='go_to_previous_comic()'></button>
+                    </div>
+                    <div class='ui-g-6'>
+                        <button pButton
+                                class='cx-action-button ui-button-info'
+                                icon='fas fa-caret-right'
+                                iconPos='right'
+                                [label]='"comic-details-page.button.next-comic"|translate'
+                                [disabled]='disable_next_button()'
+                                (click)='go_to_next_comic()'></button>
+                    </div>
+                </div>
             </p-footer>
         </p-card>
     </div>

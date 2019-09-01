@@ -22,12 +22,10 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { ComicService } from 'app/services/comic.service';
 import { AuthenticationAdaptor } from 'app/user';
-import { AuthenticationState } from 'app/user/models/authentication-state';
 import { Comic, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
@@ -184,5 +182,25 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
       return parseInt(value, 10);
     }
     return defvalue;
+  }
+
+  disable_previous_button(): boolean {
+    return !this.library_adaptor.get_previous_issue(this.comic);
+  }
+
+  disable_next_button(): boolean {
+    return !this.library_adaptor.get_next_issue(this.comic);
+  }
+
+  go_to_next_comic(): void {
+    this.navigate_to_comic(this.library_adaptor.get_next_issue(this.comic));
+  }
+
+  private navigate_to_comic(comic: Comic): void {
+    this.router.navigate(['comics', comic.id]);
+  }
+
+  go_to_previous_comic(): void {
+    this.navigate_to_comic(this.library_adaptor.get_previous_issue(this.comic));
   }
 }
