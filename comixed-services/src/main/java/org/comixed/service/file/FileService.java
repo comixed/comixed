@@ -39,8 +39,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -191,25 +189,14 @@ public class FileService {
                          : "No");
 
         QueueComicsWorkerTask task = this.taskFactory.getObject();
-        String[] decoded = new String[filenames.length];
-        int result = 0;
-        for (int index = 0;
-             index < filenames.length;
-             index++) {
-            decoded[index] = URLDecoder.decode(filenames[index],
-                                               StandardCharsets.UTF_8.toString());
-            result++;
-            this.logger.debug("Decoded filename: {} => {}",
-                              filenames[index],
-                              decoded[index]);
-        }
-        task.setFilenames(Arrays.asList(decoded));
+        
+        task.setFilenames(Arrays.asList(filenames));
         task.setDeleteBlockedPages(deleteBlockedPages);
         task.setIgnoreMetadata(ignoreMetadata);
 
         this.logger.debug("Adding import task to queue");
         this.worker.addTasksToQueue(task);
 
-        return result;
+        return filenames.length;
     }
 }
