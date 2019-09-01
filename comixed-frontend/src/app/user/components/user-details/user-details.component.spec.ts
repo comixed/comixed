@@ -16,46 +16,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.package
  * org.comixed;
  */
-
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { TableModule } from 'primeng/table';
-import { AccountPreferencesComponent } from './account-preferences.component';
-import { UserModule } from 'app/user/user.module';
-import { AuthenticationAdaptor, USER_READER } from 'app/user';
-import { StoreModule } from '@ngrx/store';
+import { USER_READER } from 'app/user';
+import { UserDetailsComponent } from './user-details.component';
 import { REDUCERS } from 'app/app.reducers';
+import { StoreModule } from '@ngrx/store';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MessageService } from 'primeng/api';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MessageService } from 'primeng/api';
 import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 
-describe('AccountPreferencesComponent', () => {
-  let component: AccountPreferencesComponent;
-  let fixture: ComponentFixture<AccountPreferencesComponent>;
+describe('UserDetailsComponent', () => {
+  let component: UserDetailsComponent;
+  let fixture: ComponentFixture<UserDetailsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        UserModule,
         HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
-        TableModule,
         StoreModule.forRoot(REDUCERS),
         EffectsModule.forRoot(EFFECTS)
       ],
-      declarations: [AccountPreferencesComponent],
+      declarations: [UserDetailsComponent],
       providers: [MessageService, ComicService, UserService]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AccountPreferencesComponent);
+    fixture = TestBed.createComponent(UserDetailsComponent);
     component = fixture.componentInstance;
     component.user = USER_READER;
     fixture.detectChanges();

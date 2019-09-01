@@ -30,15 +30,33 @@ import { StoreModule } from '@ngrx/store';
 import * as fromAuthentication from './reducers/authentication.reducer';
 import { AuthenticationEffects } from './effects/authentication.effects';
 import { TokenService } from 'app/user/services/token.service';
-import { metaReducers, reducers } from 'app/user/index';
 import { environment } from '../../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AdminGuard } from 'app/user/guards/admin.guard';
 import { ReaderGuard } from 'app/user/guards/reader.guard';
+import { UserRoutingModule } from 'app/user/user-routing.module';
+import { AccountPageComponent } from 'app/user/pages/account-page/account-page.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { UserDetailsComponent } from 'app/user/components/user-details/user-details.component';
+import {
+  ButtonModule,
+  PanelModule,
+  TabViewModule,
+  ToggleButtonModule,
+  TooltipModule
+} from 'primeng/primeng';
+import { AccountPreferencesComponent } from 'app/user/components/account-preferences/account-preferences.component';
+import { TableModule } from 'primeng/table';
+import { UsersPageComponent } from 'app/user/pages/users-page/users-page.component';
+import { UserDetailsEditorComponent } from 'app/user/components/user-details-editor/user-details-editor.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
+    UserRoutingModule,
+    TranslateModule.forRoot(),
     EffectsModule.forFeature([AuthenticationEffects]),
     StoreDevtoolsModule.instrument({
       name: 'NgRx Testing Store DevTools',
@@ -47,11 +65,32 @@ import { ReaderGuard } from 'app/user/guards/reader.guard';
     StoreModule.forFeature(
       fromAuthentication.AUTHENTICATION_FEATURE_KEY,
       fromAuthentication.reducer
-    )
+    ),
+    TabViewModule,
+    TableModule,
+    PanelModule,
+    ButtonModule,
+    TooltipModule,
+    ToggleButtonModule
   ],
   providers: [AuthenticationAdaptor, TokenService, ReaderGuard, AdminGuard],
-  declarations: [],
-  exports: [CommonModule]
+  declarations: [
+    AccountPageComponent,
+    UsersPageComponent,
+    UserDetailsComponent,
+    UserDetailsEditorComponent,
+    AccountPreferencesComponent
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    TabViewModule,
+    TableModule,
+    PanelModule,
+    ButtonModule,
+    TooltipModule,
+    ToggleButtonModule
+  ]
 })
 export class UserModule {
   static forRoot(): ModuleWithProviders {

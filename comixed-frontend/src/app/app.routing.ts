@@ -21,7 +21,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard, ReaderGuard } from 'app/user';
 import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
-import { AccountPageComponent } from 'app/ui/pages/account/account-page/account-page.component';
 import { LibraryPageComponent } from 'app/ui/pages/library/library-page/library-page.component';
 import { SeriesPageComponent } from 'app/ui/pages/series/series-page/series-page.component';
 import { SeriesDetailsPageComponent } from 'app/ui/pages/series/series-details-page/series-details-page.component';
@@ -32,7 +31,6 @@ import { CharacterDetailsPageComponent } from 'app/ui/pages/characters/character
 import { ComicDetailsPageComponent } from 'app/ui/pages/comic-details-page/comic-details-page.component';
 import { ImportPageComponent } from 'app/ui/pages/import-page/import-page.component';
 import { DuplicatesPageComponent } from 'app/ui/pages/library/duplicates-page/duplicates-page.component';
-import { UsersPageComponent } from 'app/ui/pages/admin/users-page/users-page.component';
 import { TeamsPageComponent } from 'app/ui/pages/teams/teams-page/teams-page.component';
 import { TeamDetailsPageComponent } from 'app/ui/pages/teams/team-details-page/team-details-page.component';
 import { LocationsPageComponent } from 'app/ui/pages/locations/locations-page/locations-page.component';
@@ -49,11 +47,6 @@ export const routes: Routes = [
   {
     path: 'home',
     component: MainPageComponent
-  },
-  {
-    path: 'account',
-    component: AccountPageComponent,
-    canActivate: [ReaderGuard]
   },
   {
     path: 'comics',
@@ -158,11 +151,6 @@ export const routes: Routes = [
   {
     path: 'pages/duplicates',
     component: DuplicatesPageComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'admin/users',
-    component: UsersPageComponent,
     canActivate: [AdminGuard]
   },
   {

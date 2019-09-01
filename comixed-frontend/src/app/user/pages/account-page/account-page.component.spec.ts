@@ -22,13 +22,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
-import { AccountPreferencesComponent } from 'app/ui/components/account/account-preferences/account-preferences.component';
-import { UserDetailsComponent } from 'app/ui/components/account/user-details/user-details.component';
+import { AccountPreferencesComponent } from 'app/user/components/account-preferences/account-preferences.component';
+import { UserDetailsComponent } from 'app/user/components/user-details/user-details.component';
 import { USER_READER } from 'app/user/models/user.fixtures';
 import { AccountPageComponent } from './account-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/user';
-import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from 'primeng/api';
@@ -45,7 +44,6 @@ describe('AccountPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        UserModule,
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),

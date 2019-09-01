@@ -78,9 +78,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { DuplicatePagesViewComponent } from 'app/ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
 import { PageHashViewComponent } from 'app/ui/views/library/page-hash-view/page-hash-view.component';
 import { VolumeListComponent } from 'app/ui/components/scraping/volume-list/volume-list.component';
-import { AccountPageComponent } from 'app/ui/pages/account/account-page/account-page.component';
-import { AccountPreferencesComponent } from 'app/ui/components/account/account-preferences/account-preferences.component';
-import { UserDetailsComponent } from 'app/ui/components/account/user-details/user-details.component';
 import { MultipleComicScrapingComponent } from 'app/ui/components/scraping/multiple-comic-scraping/multiple-comic-scraping.component';
 import { LibraryScrapingToolbarComponent } from 'app/ui/components/library/library-scraping-toolbar/library-scraping-toolbar.component';
 import { ScrapingComicListComponent } from 'app/ui/components/scraping/scraping-comic-list/scraping-comic-list.component';
@@ -88,8 +85,6 @@ import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { LibraryFilterPipe } from 'app/pipes/library-filter.pipe';
-import { UsersPageComponent } from 'app/ui/pages/admin/users-page/users-page.component';
-import { UserDetailsEditorComponent } from 'app/ui/components/admin/user-details-editor/user-details-editor.component';
 import {
   TranslateCompiler,
   TranslateLoader,
@@ -159,9 +154,6 @@ import { BackendStatusModule } from 'app/backend-status/backend-status.module';
     DuplicatePagesViewComponent,
     PageHashViewComponent,
     VolumeListComponent,
-    AccountPageComponent,
-    AccountPreferencesComponent,
-    UserDetailsComponent,
     MultipleComicScrapingComponent,
     LibraryScrapingToolbarComponent,
     ScrapingComicListComponent,
@@ -169,8 +161,6 @@ import { BackendStatusModule } from 'app/backend-status/backend-status.module';
     ComicFileCoverUrlPipe,
     LibraryFilterComponent,
     LibraryFilterPipe,
-    UsersPageComponent,
-    UserDetailsEditorComponent,
     MenubarComponent,
     ComicListItemComponent,
     ComicGridItemComponent,

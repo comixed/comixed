@@ -29,7 +29,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { UserDetailsEditorComponent } from 'app/ui/components/admin/user-details-editor/user-details-editor.component';
+import { UserDetailsEditorComponent } from 'app/user/components/user-details-editor/user-details-editor.component';
 import { UsersPageComponent } from './users-page.component';
 import { REDUCERS } from 'app/app.reducers';
 
