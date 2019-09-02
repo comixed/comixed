@@ -158,7 +158,7 @@
   "comic-details-page": {
     "title": "ComiXed: ({id}) - {series} #{issue_number} ({volume})",
     "button": {
-      "prev-comic": "Last Issue",
+      "prev-comic": "Previous Issue",
       "next-comic": "Next Issue"
     }
   },
