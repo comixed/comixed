@@ -102,7 +102,8 @@
     }
   },
   "import-page": {
-    "title": "ComiXed: Import - {count, plural, =1{One File} other{# Files}} Found"
+    "importing-title": "Importing {count, plural, =1{One File} other{# Files}}...",
+    "title": "ComiXed: Import"
   },
   "library-page": {
     "title": "ComiXed: Library - {count, plural, =1{One Comic} other{# Comics}}"

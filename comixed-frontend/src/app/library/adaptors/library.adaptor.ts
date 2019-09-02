@@ -265,7 +265,9 @@ export class LibraryAdaptor {
       .getValue()
       .find(entry => entry.comics[0].series === series)
       .comics.sort((c1: Comic, c2: Comic) =>
-        (c1.issue_number || '0').localeCompare(c2.issue_number || '0')
+        (c1.sortable_issue_number || '0').localeCompare(
+          c2.sortable_issue_number || '0'
+        )
       );
   }
 
