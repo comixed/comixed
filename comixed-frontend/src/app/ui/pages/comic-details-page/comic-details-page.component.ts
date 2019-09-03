@@ -197,7 +197,12 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   private navigate_to_comic(comic: Comic): void {
-    this.router.navigate(['comics', comic.id]);
+    const queryParams: Params = Object.assign(
+      {},
+      this.activatedRoute.snapshot.queryParams
+    );
+
+    this.router.navigate(['comics', comic.id], { queryParams: queryParams });
   }
 
   go_to_previous_comic(): void {

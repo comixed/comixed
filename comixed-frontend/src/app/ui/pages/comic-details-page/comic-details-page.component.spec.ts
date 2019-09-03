@@ -67,6 +67,7 @@ import { UserModule } from 'app/user/user.module';
 import { AppState } from 'app/app.state';
 import { LibraryGotUpdates } from 'app/library/actions/library.actions';
 import { Router } from '@angular/router';
+import objectContaining = jasmine.objectContaining;
 
 describe('ComicDetailsPageComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -215,7 +216,10 @@ describe('ComicDetailsPageComponent', () => {
     });
 
     it('navigates to the previous issue', () => {
-      expect(router.navigate).toHaveBeenCalledWith(['comics', COMIC_2.id]);
+      expect(router.navigate).toHaveBeenCalledWith(
+        ['comics', COMIC_2.id],
+        objectContaining({})
+      );
     });
   });
 
@@ -233,7 +237,10 @@ describe('ComicDetailsPageComponent', () => {
     });
 
     it('navigates to the previous issue', () => {
-      expect(router.navigate).toHaveBeenCalledWith(['comics', COMIC_2.id]);
+      expect(router.navigate).toHaveBeenCalledWith(
+        ['comics', COMIC_2.id],
+        objectContaining({})
+      );
     });
   });
 });
