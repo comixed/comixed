@@ -1,0 +1,7 @@
+<p-card *ngIf='name'>
+    <p-header>
+        <h4>
+            <a [routerLink]='[parent_route, name]'>{{ name }}</a>
+        </h4>
+    </p-header>
+</p-card>

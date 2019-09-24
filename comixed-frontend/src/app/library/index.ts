@@ -32,10 +32,10 @@ export { LibraryAdaptor } from './adaptors/library.adaptor';
 export { ImportAdaptor } from './adaptors/import.adaptor';
 export { SelectionAdaptor } from './adaptors/selection.adaptor';
 export { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
-export { Comic } from './models/comic';
-export { ScanType } from './models/scan-type';
-export { ComicFormat } from './models/comic-format';
-export { ComicCredit } from './models/comic-credit';
+export { Comic } from '../comics/models/comic';
+export { ScanType } from '../comics/models/scan-type';
+export { ComicFormat } from '../comics/models/comic-format';
+export { ComicCredit } from '../comics/models/comic-credit';
 export { ComicCollectionEntry } from './models/comic-collection-entry';
 export { ComicFile } from './models/comic-file';
 export { ReadingList } from './models/reading-list/reading-list';
@@ -74,21 +74,21 @@ export {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from './models/comic.fixtures';
+} from '../comics/models/comic.fixtures';
 export {
   SCAN_TYPE_1,
   SCAN_TYPE_2,
   SCAN_TYPE_3,
   SCAN_TYPE_4,
   SCAN_TYPE_5
-} from './models/scan-type.fixtures';
+} from '../comics/models/scan-type.fixtures';
 export {
   FORMAT_1,
   FORMAT_2,
   FORMAT_3,
   FORMAT_4,
   FORMAT_5
-} from './models/comic-format.fixtures';
+} from '../comics/models/comic-format.fixtures';
 export {
   COMIC_FILE_1,
   COMIC_FILE_2,

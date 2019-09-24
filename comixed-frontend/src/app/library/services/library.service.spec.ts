@@ -25,13 +25,13 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { ScanType } from 'app/library/models/scan-type';
+import { ScanType } from 'app/comics/models/scan-type';
 import {
   SCAN_TYPE_1,
   SCAN_TYPE_3,
   SCAN_TYPE_5,
   SCAN_TYPE_7
-} from 'app/library/models/scan-type.fixtures';
+} from 'app/comics/models/scan-type.fixtures';
 import { interpolate } from 'app/app.functions';
 import {
   CLEAR_METADATA_URL,
@@ -43,14 +43,14 @@ import {
   START_RESCAN_URL,
   UPDATE_COMIC_URL
 } from 'app/app.constants';
-import { ComicFormat } from 'app/library/models/comic-format';
+import { ComicFormat } from 'app/comics/models/comic-format';
 import {
   FORMAT_1,
   FORMAT_3,
   FORMAT_5
-} from 'app/library/models/comic-format.fixtures';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/library/models/comic.fixtures';
-import { Comic } from 'app/library/models/comic';
+} from 'app/comics/models/comic-format.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
+import { Comic } from 'app/comics/models/comic';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
 import { BlockedPageResponse } from 'app/library/models/net/blocked-page-response';
 import { generate_random_string } from '../../../test/testing-utils';

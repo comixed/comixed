@@ -28,7 +28,7 @@ import { PublishersPageComponent } from 'app/ui/pages/publishers/publishers-page
 import { PublisherDetailsPageComponent } from 'app/ui/pages/publishers/publisher-details-page/publisher-details-page.component';
 import { CharactersPageComponent } from 'app/ui/pages/characters/characters-page/characters-page.component';
 import { CharacterDetailsPageComponent } from 'app/ui/pages/characters/character-details-page/character-details-page.component';
-import { ComicDetailsPageComponent } from 'app/ui/pages/comic-details-page/comic-details-page.component';
+import { ComicDetailsPageComponent } from 'app/comics/pages/comic-details-page/comic-details-page.component';
 import { ImportPageComponent } from 'app/ui/pages/import-page/import-page.component';
 import { DuplicatesPageComponent } from 'app/ui/pages/library/duplicates-page/duplicates-page.component';
 import { TeamsPageComponent } from 'app/ui/pages/teams/teams-page/teams-page.component';
@@ -57,11 +57,6 @@ export const routes: Routes = [
     path: 'comics/missing',
     component: MissingComicsPageComponent,
     canActivate: [AdminGuard]
-  },
-  {
-    path: 'comics/:id',
-    component: ComicDetailsPageComponent,
-    canActivate: [ReaderGuard]
   },
   {
     path: 'scraping',

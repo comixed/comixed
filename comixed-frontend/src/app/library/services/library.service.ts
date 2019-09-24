@@ -31,7 +31,7 @@ import {
   START_RESCAN_URL,
   UPDATE_COMIC_URL
 } from 'app/app.constants';
-import { Comic } from 'app/library/models/comic';
+import { Comic } from 'app/comics/models/comic';
 
 @Injectable({
   providedIn: 'root'

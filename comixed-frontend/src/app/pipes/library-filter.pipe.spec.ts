@@ -119,7 +119,7 @@ describe('LibraryFilterPipe', () => {
     });
 
     it('returns only those comics published on or after the given start year', () => {
-      const filter_date = new Date(Date.parse(COMIC_1.cover_date));
+      const filter_date = new Date(Date.parse(COMIC_1.coverDate));
       const result = pipe.transform(comics, {
         changed: false,
         publisher: '',
@@ -131,7 +131,7 @@ describe('LibraryFilterPipe', () => {
       expect(result).toBeTruthy();
       expect(result.length).toBeGreaterThan(0);
       result.forEach((comic: Comic) => {
-        const cover_date = new Date(Date.parse(comic.cover_date));
+        const cover_date = new Date(Date.parse(comic.coverDate));
         expect(cover_date.getFullYear()).not.toBeLessThan(
           filter_date.getFullYear()
         );
@@ -139,7 +139,7 @@ describe('LibraryFilterPipe', () => {
     });
 
     it('returns only those comics published before on or the given end year', () => {
-      const filter_date = new Date(Date.parse(COMIC_1.cover_date));
+      const filter_date = new Date(Date.parse(COMIC_1.coverDate));
       const result = pipe.transform(comics, {
         changed: false,
         publisher: '',
@@ -151,7 +151,7 @@ describe('LibraryFilterPipe', () => {
       expect(result).toBeTruthy();
       expect(result.length).toBeGreaterThan(0);
       result.forEach((comic: Comic) => {
-        const cover_date = new Date(Date.parse(comic.cover_date));
+        const cover_date = new Date(Date.parse(comic.coverDate));
         expect(cover_date.getFullYear()).not.toBeGreaterThan(
           filter_date.getFullYear()
         );
@@ -303,14 +303,14 @@ describe('LibraryFilterPipe', () => {
     });
 
     it('returns true when the cover year is on the edge of the range', () => {
-      const cover_date = new Date(Date.parse(COMIC_1.cover_date));
+      const cover_date = new Date(Date.parse(COMIC_1.coverDate));
       expect(
         pipe.check_from_year(COMIC_1, cover_date.getFullYear())
       ).toBeTruthy();
     });
 
     it('returns true when the cover year is in range', () => {
-      const cover_date = new Date(Date.parse(COMIC_1.cover_date));
+      const cover_date = new Date(Date.parse(COMIC_1.coverDate));
       expect(
         pipe.check_from_year(COMIC_1, cover_date.getFullYear() - 1)
       ).toBeTruthy();
@@ -327,14 +327,14 @@ describe('LibraryFilterPipe', () => {
     });
 
     it('returns true when the cover year is on the edge of the range', () => {
-      const cover_date = new Date(Date.parse(COMIC_1.cover_date));
+      const cover_date = new Date(Date.parse(COMIC_1.coverDate));
       expect(
         pipe.check_to_year(COMIC_1, cover_date.getFullYear())
       ).toBeTruthy();
     });
 
     it('returns true when the cover year is in range', () => {
-      const cover_date = new Date(Date.parse(COMIC_1.cover_date));
+      const cover_date = new Date(Date.parse(COMIC_1.coverDate));
       expect(
         pipe.check_to_year(COMIC_1, cover_date.getFullYear() + 1)
       ).toBeTruthy();

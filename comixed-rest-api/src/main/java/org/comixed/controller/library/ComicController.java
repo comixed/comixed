@@ -27,6 +27,7 @@ import org.comixed.model.library.ScanType;
 import org.comixed.model.state.LibraryStatus;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.*;
+import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
 import org.comixed.tasks.DeleteComicsWorkerTask;
 import org.comixed.tasks.Worker;
@@ -146,7 +147,8 @@ public class ComicController {
                     long id)
             throws
             FileNotFoundException,
-            IOException {
+            IOException,
+            ComicException {
         this.logger.info("Preparing to download comic: id={}",
                          id);
 
@@ -171,12 +173,14 @@ public class ComicController {
                              .body(new InputStreamResource(new ByteArrayInputStream(content)));
     }
 
-    @RequestMapping(value = "/{id}",
-                    method = RequestMethod.GET)
+    @GetMapping(value = "/{id}",
+                produces = "application/json")
     @JsonView(ComicDetails.class)
     public Comic getComic(
             @PathVariable("id")
-                    long id) {
+                    long id)
+            throws
+            ComicException {
         this.logger.info("Getting comic: id={}",
                          id);
 
@@ -372,27 +376,21 @@ public class ComicController {
         }
     }
 
-    @RequestMapping(value = "/{id}",
-                    method = RequestMethod.PUT)
+    @PutMapping(value = "/{id}",
+                produces = "application/json",
+                consumes = "application/json")
+    @JsonView(View.ComicDetails.class)
     public Comic updateComic(
             @PathVariable("id")
                     long id,
-            @RequestParam("series")
-                    String series,
-            @RequestParam("volume")
-                    String volume,
-            @RequestParam("issue_number")
-                    String issueNumber) {
-        this.logger.info("Updating comic: id={} series={} volume={} issue number={}",
+            @RequestBody()
+                    Comic comic) {
+        this.logger.info("Updating comic: id={}",
                          id,
-                         series,
-                         volume,
-                         issueNumber);
+                         comic);
 
         final Comic result = this.comicService.updateComic(id,
-                                                           series,
-                                                           volume,
-                                                           issueNumber);
+                                                           comic);
 
         if (result == null) {
             this.logger.error("No such comic");

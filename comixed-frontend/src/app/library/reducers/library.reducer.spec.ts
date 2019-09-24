@@ -25,7 +25,7 @@ import {
   SCAN_TYPE_3,
   SCAN_TYPE_5,
   SCAN_TYPE_7
-} from 'app/library/models/scan-type.fixtures';
+} from 'app/comics/models/scan-type.fixtures';
 import {
   LibraryActionTypes,
   LibraryGetFormats
@@ -54,14 +54,14 @@ import {
   FORMAT_1,
   FORMAT_3,
   FORMAT_5
-} from 'app/library/models/comic-format.fixtures';
+} from 'app/comics/models/comic-format.fixtures';
 import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from 'app/library/models/comic.fixtures';
+} from 'app/comics/models/comic.fixtures';
 import { generate_random_string } from '../../../test/testing-utils';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 
@@ -260,13 +260,13 @@ describe('Library Reducer', () => {
   describe('when updates are received', () => {
     const LATEST_UPDATE = new Date().getTime();
     const CURRENT_COMICS = [
-      { ...COMIC_1, last_updated_date: 0 },
-      { ...COMIC_3, last_updated_date: 0 },
-      { ...COMIC_5, last_updated_date: 0 }
+      { ...COMIC_1, lastUpdatedDate: 0 },
+      { ...COMIC_3, lastUpdatedDate: 0 },
+      { ...COMIC_5, lastUpdatedDate: 0 }
     ];
     const UPDATE_COMICS = [
-      { ...COMIC_2, last_updated_date: LATEST_UPDATE },
-      { ...COMIC_4, last_updated_date: 0 }
+      { ...COMIC_2, lastUpdatedDate: LATEST_UPDATE },
+      { ...COMIC_4, lastUpdatedDate: 0 }
     ];
     const PENDING_IMPORTS = 20;
     const PENDING_RESCANS = 21;

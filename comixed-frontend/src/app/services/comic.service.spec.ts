@@ -22,31 +22,12 @@ import { UserService } from './user.service';
 import { UserServiceMock } from './user.service.mock';
 import { ComicService } from './comic.service';
 import {
-  ADD_BLOCKED_PAGE_HASH_URL,
-  CLEAR_METADATA_URL,
-  COMIC_DELETE_URL,
-  COMIC_SCAN_TYPES_URL,
-  COMIC_SET_FORMAT_TYPE_URL,
-  COMIC_SET_SCAN_TYPE_URL,
-  COMIC_SET_SORT_NAME_URL,
-  COMIC_SUMMARY_URL,
-  DELETE_BLOCKED_PAGE_HASH_URL,
-  DELETE_PAGE_URL,
-  DELETE_PAGES_WITH_HASH_URL,
   DUPLICATE_PAGES_URL,
-  FORMAT_TYPES_URL,
-  GET_COMIC_FILES_URL,
   GET_COMIC_METADATA_URL,
   GET_SCRAPING_CANDIDATES_URL,
-  IMPORT_COMIC_FILES_URL,
-  LIBRARY_STATE_URL,
   PAGE_TYPE_URL,
   PAGE_TYPES_URL,
-  RESCAN_COMIC_FILES_URL,
-  SAVE_COMIC_DETAILS_URL,
-  SCRAPE_METADATA_AND_SAVE_URL,
-  UNDELETE_PAGE_URL,
-  UNDELETE_PAGES_WITH_HASH_URL
+  SCRAPE_METADATA_AND_SAVE_URL
 } from 'app/services/url.constants';
 import {
   HttpClientTestingModule,
@@ -57,36 +38,28 @@ import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3,
-  ComicFile,
-  ComicFormat,
   FORMAT_1,
-  FORMAT_2,
-  FORMAT_3,
-  ScanType
+  FORMAT_3
 } from 'app/library';
-import { PageType } from 'app/models/comics/page-type';
-import {
-  BACK_COVER,
-  FRONT_COVER,
-  STORY
-} from 'app/models/comics/page-type.fixtures';
-import { PAGE_1, PAGE_2 } from 'app/models/comics/page.fixtures';
-import { Page } from 'app/models/comics/page';
-import { Volume } from 'app/models/comics/volume';
+import { Volume } from 'app/comics/models/volume';
 import {
   VOLUME_1000,
   VOLUME_1002,
   VOLUME_1004
-} from 'app/models/comics/volume.fixtures';
+} from 'app/comics/models/volume.fixtures';
 import { interpolate } from 'app/app.functions';
 import {
   SCAN_TYPE_1,
   SCAN_TYPE_2,
   SCAN_TYPE_3
-} from 'app/library/models/scan-type.fixtures';
+} from 'app/comics/models/scan-type.fixtures';
+import { Page, PageType } from 'app/comics';
+import {
+  BACK_COVER,
+  FRONT_COVER,
+  STORY
+} from 'app/comics/models/page-type.fixtures';
+import { PAGE_1, PAGE_2 } from 'app/comics/models/page.fixtures';
 
 describe('ComicService', () => {
   const COMICS = [COMIC_2, COMIC_3];

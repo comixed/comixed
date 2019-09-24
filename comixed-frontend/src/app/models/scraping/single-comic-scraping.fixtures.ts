@@ -26,7 +26,7 @@ export const SINGLE_COMIC_SCRAPING_STATE: SingleComicScraping = {
   comic: COMIC_1,
   series: COMIC_1.series,
   volume: COMIC_1.volume,
-  issue_number: COMIC_1.issue_number,
+  issue_number: COMIC_1.issueNumber,
   volumes: [],
   current_volume: null,
   current_issue: null,

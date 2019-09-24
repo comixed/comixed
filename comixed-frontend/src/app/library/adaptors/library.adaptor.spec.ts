@@ -23,7 +23,7 @@ import {
   SCAN_TYPE_1,
   SCAN_TYPE_3,
   SCAN_TYPE_5
-} from 'app/library/models/scan-type.fixtures';
+} from 'app/comics/models/scan-type.fixtures';
 import { Store, StoreModule } from '@ngrx/store';
 import {
   LIBRARY_FEATURE_KEY,
@@ -35,8 +35,8 @@ import {
   FORMAT_1,
   FORMAT_3,
   FORMAT_5
-} from 'app/library/models/comic-format.fixtures';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/library/models/comic.fixtures';
+} from 'app/comics/models/comic-format.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
 import { generate_random_string } from '../../../test/testing-utils';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import {

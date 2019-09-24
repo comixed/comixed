@@ -38,10 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ComicService {
@@ -104,18 +101,57 @@ public class ComicService {
         return result;
     }
 
-    public Comic getComic(final long id) {
+    public Comic getComic(final long id)
+            throws
+            ComicException {
         this.logger.info("Getting comic: id={}",
                          id);
 
-        final Optional<Comic> result = this.comicRepository.findById(id);
+        final Optional<Comic> comicRecord = this.comicRepository.findById(id);
 
-        if (result.isPresent()) {
-            return result.get();
+        if (!comicRecord.isPresent()) {
+            throw new ComicException("no such comic: id=" + id);
         }
 
-        this.logger.error("No such comic");
-        return null;
+        final Comic comic = comicRecord.get();
+        final String series = comic.getSeries();
+
+        this.logger.debug("Getting all comics for series: {}",
+                          series);
+        final List<Comic> comics = this.comicRepository.findBySeries(series);
+        Collections.sort(comics,
+                         new ComicsComparatorByIssueNumber());
+
+        this.logger.debug("Searching {} comic{} for next and previous issues",
+                          comics.size(),
+                          comics.size() == 1
+                          ? ""
+                          : "s");
+        long previousId = -1L;
+        long nextId = -1L;
+        long currentId = comic.getId();
+        for (int index = 0;
+             index < comics.size();
+             index++) {
+            if (comics.get(index)
+                      .getId() == currentId) {
+                if (index > 0) {
+                    previousId = comics.get(index - 1)
+                                       .getId();
+                }
+                if (index < comics.size() - 1) {
+                    nextId = comics.get(index + 1)
+                                   .getId();
+                }
+                break;
+            }
+        }
+
+        comic.setNextIssueId(nextId);
+        comic.setPreviousIssueId(previousId);
+
+        this.logger.debug("Returning comic");
+        return comic;
     }
 
     public Comic getComicSummary(final long id) {
@@ -124,9 +160,7 @@ public class ComicService {
 
     @Transactional
     public Comic updateComic(final long id,
-                             final String series,
-                             final String volume,
-                             final String issueNumber) {
+                             final Comic update) {
         this.logger.info("Updating comic: id={}",
                          id);
 
@@ -134,10 +168,14 @@ public class ComicService {
 
         if (record.isPresent()) {
             final Comic comic = record.get();
+            this.logger.debug("Updating the comic fields");
 
-            comic.setSeries(series);
-            comic.setVolume(volume);
-            comic.setIssueNumber(issueNumber);
+            comic.setSeries(update.getSeries());
+            comic.setVolume(update.getVolume());
+            comic.setIssueNumber(update.getIssueNumber());
+            comic.setSortName(update.getSortName());
+            comic.setScanType(update.getScanType());
+            comic.setFormat(update.getFormat());
             comic.setDateLastUpdated(new Date());
 
             this.logger.debug("Saving updated comic");

@@ -86,11 +86,11 @@ export class LibraryFilterPipe implements PipeTransform {
       return true;
     }
 
-    if (!(comic.cover_date || '').length) {
+    if (!(comic.coverDate || '').length) {
       return false;
     }
 
-    const cover_date = new Date(Date.parse(comic.cover_date));
+    const cover_date = new Date(Date.parse(comic.coverDate));
     const comic_year = cover_date.getFullYear();
 
     return comic_year >= from_year;
@@ -101,11 +101,11 @@ export class LibraryFilterPipe implements PipeTransform {
       return true;
     }
 
-    if (!(comic.cover_date || '').length) {
+    if (!(comic.coverDate || '').length) {
       return false;
     }
 
-    const cover_date = new Date(Date.parse(comic.cover_date));
+    const cover_date = new Date(Date.parse(comic.coverDate));
     return cover_date.getFullYear() <= to_year;
   }
 }

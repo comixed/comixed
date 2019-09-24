@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { DuplicatePage } from 'app/models/comics/duplicate-page';
+import { DuplicatePage } from 'app/comics';
 
 export interface Duplicates {
   busy: boolean;

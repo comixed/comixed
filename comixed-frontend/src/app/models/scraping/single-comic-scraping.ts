@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Volume } from 'app/models/comics/volume';
+import { Volume } from 'app/comics/models/volume';
 import { Issue } from './issue';
 import { Comic } from 'app/library';
 

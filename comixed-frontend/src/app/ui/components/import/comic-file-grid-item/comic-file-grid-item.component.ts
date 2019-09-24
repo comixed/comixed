@@ -17,9 +17,7 @@
  * org.comixed;
  */
 
-import { Component, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComicFile } from 'app/library';
 
 @Component({
@@ -34,5 +32,7 @@ export class ComicFileGridItemComponent {
   @Input() use_selected_class: boolean;
   @Input() selected: boolean;
 
-  constructor(private store: Store<AppState>) {}
+  @Output() click = new EventEmitter<ComicFile>();
+
+  constructor() {}
 }

@@ -6,7 +6,7 @@
     <p-card>
       <p-header
         ><img
-          src="{{ duplicates.current_duplicates[0] | comic_page_url }}"
+          src="{{ duplicates.current_duplicates[0] | comicPageUrl }}"
           [style.width]="'100%'"
           [style.height]="'auto'"
       /></p-header>
@@ -38,13 +38,13 @@
         <tr>
           <td>
             <img
-              src="{{ duplicate.comic | comic_cover_url }}"
+              src="{{ duplicate.comic | comicCoverUrl }}"
               width="128px"
               height="auto"
             />
           </td>
 
-          <td>{{ duplicate.comic | comic_title }}</td>
+          <td>{{ duplicate.comic | comicTitle }}</td>
           <td>{{ duplicate.index }}</td>
           <td>{{ duplicate.comic.filename }}</td>
           <td>{{ duplicate.filename }}</td>

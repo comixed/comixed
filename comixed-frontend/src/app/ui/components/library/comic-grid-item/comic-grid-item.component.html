@@ -1,8 +1,9 @@
 <div>
     <app-comic-cover [comic]='comic'
-                     [cover_url]='comic|comic_cover_url'
-                     [title]='comic|comic_title'
+                     [cover_url]='comic|comicCoverUrl'
+                     [title]='comic|comicTitle'
                      [selected]='selected'
                      [cover_size]='cover_size'
-                     [same_height]='same_height'></app-comic-cover>
+                     [same_height]='same_height'
+                     (click)='click.next(comic)'></app-comic-cover>
 </div>

@@ -20,6 +20,8 @@
 package org.comixed.service.library;
 
 import org.comixed.model.library.Comic;
+import org.comixed.model.library.ComicFormat;
+import org.comixed.model.library.ScanType;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
@@ -28,6 +30,7 @@ import org.comixed.repositories.LastReadDatesRepository;
 import org.comixed.tasks.AddComicWorkerTask;
 import org.comixed.tasks.RescanComicWorkerTask;
 import org.comixed.tasks.Worker;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -46,8 +49,10 @@ import static junit.framework.TestCase.*;
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class ComicServiceTest {
+    public static final long TEST_PREVIOUS_COMIC_ID = 1112L;
+    public static final long TEST_NEXT_COMIC_ID = 11110L;
     private static final long TEST_TIMESTAMP = System.currentTimeMillis();
-    private static final long TEST_COMIC_ID = 717L;
+    private static final long TEST_COMIC_ID = 5;
     private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
     private static final String TEST_SERIES = "Series Name";
     private static final String TEST_VOLUME = "Volume Name";
@@ -55,19 +60,47 @@ public class ComicServiceTest {
     private static final String TEST_EMAIL = "reader@yourdomain.com";
     private static final long TEST_USER_ID = 717L;
     private static final int TEST_MAXIMUM_COMICS = 100;
+    private static final String TEST_PREVIOUS_ISSUE_NUMBER = "5";
+    private static final String TEST_CURRENT_ISSUE_NUMBER = "7";
+    private static final Long TEST_CURRENT_COMIC_ID = 77L;
+    private static final String TEST_NEXT_ISSUE_NUMBER = "10";
+    private static final String TEST_SORTABLE_NAME = "Sortable Name";
+    private static final ScanType TEST_SCAN_TYPE = new ScanType();
+    private static final ComicFormat TEST_COMIC_FORMAT = new ComicFormat();
 
     @InjectMocks private ComicService comicService;
     @Mock private ComicRepository comicRepository;
     @Mock private LastReadDatesRepository lastReadDatesRepository;
     @Mock private ComiXedUserRepository userRepository;
     @Mock private List<Comic> comicList;
+    @Mock private Comic comicListEntry;
     @Mock private Comic comic;
+    @Mock private Comic incomingComic;
     @Mock private Worker worker;
     @Mock private ComiXedUser user;
     @Mock private List<LastReadDate> listLastReadDate;
     @Captor private ArgumentCaptor<Date> lastUpdatedDateCaptor;
     @Mock private ObjectFactory<RescanComicWorkerTask> rescanWorkerTaskFactory;
     @Mock private RescanComicWorkerTask rescanWorkerTask;
+
+    private List<Comic> comicsBySeries = new ArrayList<>();
+    private Comic previousComic = new Comic();
+    private Comic currentComic = new Comic();
+    private Comic nextComic = new Comic();
+
+    @Before
+    public void setUp() {
+        previousComic.setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
+        previousComic.setID(TEST_PREVIOUS_COMIC_ID);
+        currentComic.setSeries(TEST_SERIES);
+        currentComic.setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
+        currentComic.setID(TEST_CURRENT_COMIC_ID);
+        nextComic.setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
+        nextComic.setID(TEST_NEXT_COMIC_ID);
+        comicsBySeries.add(nextComic);
+        comicsBySeries.add(previousComic);
+        comicsBySeries.add(currentComic);
+    }
 
     @Test
     public void testGetComicsAddedSince() {
@@ -180,32 +213,50 @@ public class ComicServiceTest {
                .getFilename();
     }
 
-    @Test
-    public void testGetComicInvalid() {
+    @Test(expected = ComicException.class)
+    public void testGetComicInvalid()
+            throws
+            ComicException {
         Mockito.when(comicRepository.findById(Mockito.anyLong()))
                .thenReturn(Optional.empty());
 
-        assertNull(comicService.getComic(TEST_COMIC_ID));
-
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .findById(TEST_COMIC_ID);
+        try {
+            comicService.getComic(TEST_COMIC_ID);
+        }
+        finally {
+            Mockito.verify(comicRepository,
+                           Mockito.times(1))
+                   .findById(TEST_COMIC_ID);
+        }
     }
 
     @Test
-    public void testGetComic() {
+    public void testGetComic()
+            throws
+            ComicException {
         Mockito.when(comicRepository.findById(Mockito.anyLong()))
-               .thenReturn(Optional.of(comic));
+               .thenReturn(Optional.of(currentComic));
+        Mockito.when(comicRepository.findBySeries(Mockito.anyString()))
+               .thenReturn(comicsBySeries);
 
         final Comic result = comicService.getComic(TEST_COMIC_ID);
 
         assertNotNull(result);
-        assertSame(comic,
+        assertSame(currentComic,
                    result);
+        assertEquals(TEST_NEXT_COMIC_ID,
+                     result.getNextIssueId()
+                           .longValue());
+        assertEquals(TEST_PREVIOUS_COMIC_ID,
+                     result.getPreviousIssueId()
+                           .longValue());
 
         Mockito.verify(comicRepository,
                        Mockito.times(1))
                .findById(TEST_COMIC_ID);
+        Mockito.verify(comicRepository,
+                       Mockito.times(1))
+               .findBySeries(TEST_SERIES);
     }
 
     @Test
@@ -214,24 +265,47 @@ public class ComicServiceTest {
                .thenReturn(Optional.empty());
 
         assertNull(comicService.updateComic(TEST_COMIC_ID,
-                                            TEST_SERIES,
-                                            TEST_VOLUME,
-                                            TEST_ISSUE_NUMBER));
+                                            comic));
+
+        Mockito.verify(comicRepository,
+                       Mockito.times(1))
+               .findById(TEST_COMIC_ID);
     }
 
     @Test
     public void testUpdateComic() {
         Mockito.when(comicRepository.findById(Mockito.anyLong()))
                .thenReturn(Optional.of(comic));
+        Mockito.when(incomingComic.getSeries())
+               .thenReturn(TEST_SERIES);
         Mockito.doNothing()
                .when(comic)
                .setSeries(Mockito.anyString());
+        Mockito.when(incomingComic.getVolume())
+               .thenReturn(TEST_VOLUME);
         Mockito.doNothing()
                .when(comic)
                .setVolume(Mockito.anyString());
+        Mockito.when(incomingComic.getIssueNumber())
+               .thenReturn(TEST_ISSUE_NUMBER);
         Mockito.doNothing()
                .when(comic)
                .setIssueNumber(Mockito.anyString());
+        Mockito.when(incomingComic.getSortName())
+               .thenReturn(TEST_SORTABLE_NAME);
+        Mockito.doNothing()
+               .when(comic)
+               .setSortName(Mockito.anyString());
+        Mockito.when(incomingComic.getScanType())
+               .thenReturn(TEST_SCAN_TYPE);
+        Mockito.doNothing()
+               .when(comic)
+               .setScanType(Mockito.any(ScanType.class));
+        Mockito.when(incomingComic.getFormat())
+               .thenReturn(TEST_COMIC_FORMAT);
+        Mockito.doNothing()
+               .when(comic)
+               .setFormat(Mockito.any(ComicFormat.class));
         Mockito.doNothing()
                .when(comic)
                .setDateLastUpdated(lastUpdatedDateCaptor.capture());
@@ -239,9 +313,7 @@ public class ComicServiceTest {
                .thenReturn(comic);
 
         final Comic result = comicService.updateComic(TEST_COMIC_ID,
-                                                      TEST_SERIES,
-                                                      TEST_VOLUME,
-                                                      TEST_ISSUE_NUMBER);
+                                                      incomingComic);
 
         assertNotNull(result);
         assertSame(comic,
@@ -250,15 +322,42 @@ public class ComicServiceTest {
         Mockito.verify(comicRepository,
                        Mockito.times(1))
                .findById(TEST_COMIC_ID);
-        Mockito.verify(comic,
+        Mockito.verify(incomingComic,
                        Mockito.times(1))
-               .setVolume(TEST_VOLUME);
+               .getSeries();
         Mockito.verify(comic,
                        Mockito.times(1))
                .setSeries(TEST_SERIES);
+        Mockito.verify(incomingComic,
+                       Mockito.times(1))
+               .getVolume();
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setVolume(TEST_VOLUME);
+        Mockito.verify(incomingComic,
+                       Mockito.times(1))
+               .getIssueNumber();
         Mockito.verify(comic,
                        Mockito.times(1))
                .setIssueNumber(TEST_ISSUE_NUMBER);
+        Mockito.verify(incomingComic,
+                       Mockito.times(1))
+               .getSortName();
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setSortName(TEST_SORTABLE_NAME);
+        Mockito.verify(incomingComic,
+                       Mockito.times(1))
+               .getScanType();
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setScanType(TEST_SCAN_TYPE);
+        Mockito.verify(incomingComic,
+                       Mockito.times(1))
+               .getFormat();
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setFormat(TEST_COMIC_FORMAT);
         Mockito.verify(comic,
                        Mockito.times(1))
                .setDateLastUpdated(lastUpdatedDateCaptor.getValue());

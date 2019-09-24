@@ -24,7 +24,7 @@ import { AppState } from 'app/app.state';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { SelectItem } from 'primeng/api';
 import { UserService } from 'app/services/user.service';
-import { DuplicatePage } from 'app/models/comics/duplicate-page';
+import { DuplicatePage } from 'app/comics';
 import { Duplicates } from 'app/models/state/duplicates';
 import { DUPLICATES_HASH_PARAMETER } from 'app/ui/pages/library/duplicates-page/duplicates-page.component';
 

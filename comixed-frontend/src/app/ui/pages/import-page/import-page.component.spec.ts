@@ -30,7 +30,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ToolbarModule } from 'primeng/toolbar';
-import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
@@ -39,7 +39,7 @@ import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
-import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import {
   CheckboxModule,
   ConfirmationService,

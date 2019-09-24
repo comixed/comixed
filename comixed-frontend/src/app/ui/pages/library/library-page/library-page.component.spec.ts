@@ -42,10 +42,10 @@ import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
 import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
-import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { LibraryFilterPipe } from 'app/pipes/library-filter.pipe';
-import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
 import { ComicService } from 'app/services/comic.service';

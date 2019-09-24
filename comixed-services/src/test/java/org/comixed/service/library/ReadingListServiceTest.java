@@ -76,7 +76,8 @@ public class ReadingListServiceTest {
     public void testCreateReadingListNameAlreadyUsed()
             throws
             NoSuchReadingListException,
-            ReadingListNameException {
+            ReadingListNameException,
+            ComicException {
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                .thenReturn(user);
         Mockito.when(readingListRepository.findReadingListForUser(Mockito.any(ComiXedUser.class),
@@ -104,7 +105,8 @@ public class ReadingListServiceTest {
     public void testCreateReadingListName()
             throws
             NoSuchReadingListException,
-            ReadingListNameException {
+            ReadingListNameException,
+            ComicException {
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                .thenReturn(user);
         Mockito.when(readingListRepository.findReadingListForUser(Mockito.any(ComiXedUser.class),
@@ -180,7 +182,8 @@ public class ReadingListServiceTest {
     @Test(expected = NoSuchReadingListException.class)
     public void testUpdateNonexistantReadingList()
             throws
-            NoSuchReadingListException {
+            NoSuchReadingListException,
+            ComicException {
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                .thenReturn(user);
         Mockito.when(readingListRepository.findById(TEST_READING_LIST_ID))
@@ -206,7 +209,8 @@ public class ReadingListServiceTest {
     @Test
     public void testUpdateReadingList()
             throws
-            NoSuchReadingListException {
+            NoSuchReadingListException,
+            ComicException {
         Set<ReadingListEntry> entries = new HashSet<>();
 
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))

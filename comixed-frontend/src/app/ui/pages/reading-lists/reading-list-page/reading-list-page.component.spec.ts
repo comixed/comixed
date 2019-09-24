@@ -53,9 +53,9 @@ import {
   SplitButtonModule
 } from 'primeng/primeng';
 import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
-import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
-import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
+import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationAdaptor } from 'app/user';

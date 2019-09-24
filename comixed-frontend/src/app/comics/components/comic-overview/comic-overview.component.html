@@ -1,0 +1,135 @@
+<div class='ui-g'>
+    <div class='ui-g-4'>
+        <div class='ui-g'>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.publisher"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>
+                <a [routerLink]='["/publishers", comic.publisher||"undefined"]'>{{comic.imprint || comic.publisher || "text.unknown"|translate}}</a>
+                <span *ngIf='comic.imprint'> ({{comic.publisher}})</span>
+            </div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.series"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>
+                <a [routerLink]='["/series", comic.series||"undefine"]'>{{comic.series || "text.unknown"|translate}}</a>
+            </div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.volume"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>
+                {{comic.volume || "text.unknown"|translate}}
+            </div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.cover-date"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>{{comic.coverDate|date}}</div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.issue-number"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>
+                {{comic.issueNumber || "text.unknown"|translate}}
+            </div>
+        </div>
+    </div>
+    <div class='ui-g-4'>
+        <div class='ui-g'>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.title"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>{{comic.title || "text.unknown"|translate}}</div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.added-date"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>{{comic.addedDate|date}}</div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.last-read-date"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>
+                {{ "Never"}}
+            </div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.page-count"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>{{comic.pageCount}}</div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.comicvine-details-link"|translate}}</strong>
+            </div>
+            <div *ngIf='comic.comicVineId'
+                 class='ui-g-12'
+                 innerHTML='{{"comic-overview.text.comicvine-details-link"|translate: { comicvine_id: comic.comicVineId } }}'></div>
+        </div>
+    </div>
+    <div class='ui-g-4'>
+        <div class='ui-g'>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.format"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>
+                <p-inplace *ngIf='is_admin'
+                           closable='closable'
+                           (onActivate)='copyComicFormat()'>
+                    <span pInplaceDisplay>{{comic.format?.name || "comic-overview.text.format-placeholder"|translate}}</span>
+                    <span pInplaceContent>
+            <p-dropdown [options]='formatOptions'
+                        [(ngModel)]='format'
+                        (onChange)='setComicFormat($event.value)'></p-dropdown> </span></p-inplace>
+                <span *ngIf='!is_admin'>{{comic.format?.name || "text.unknown"|translate}}</span>
+            </div>
+            <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.scan-type"|translate}}</strong>
+            </div>
+            <div class='ui-g-12'>
+                <p-inplace *ngIf='is_admin'
+                           closable='closable'
+                           (onActivate)='copyScanType()'>
+                    <span pInplaceDisplay>{{comic.scanType?.name || comic.format?.name || "comic-overview.text.scan-type-placeholder"|translate}}</span>
+                    <span pInplaceContent>
+            <p-dropdown [options]='scanTypeOptions'
+                        [(ngModel)]='scanType'
+                        (onChange)='setScanType($event.value)'></p-dropdown> </span></p-inplace>
+                <span *ngIf='!is_admin'
+                      class='ui-g-12'>{{comic.scanType?.name || "text.unknown"|translate}}</span>
+            </div>
+        </div>
+        <div class='ui-g-12'>
+            <strong>{{"comic-overview.label.sort-name"|translate}}</strong>
+        </div>
+        <div class='ui-g-12'>
+            <p-inplace *ngIf='is_admin'
+                       closable='closable'
+                       (onActivate)='copySortName()'>
+                <span pInplaceDisplay>{{comic.sortName || "comic-overview.text.sort-name-placeholder"|translate}}</span>
+                <span pInplaceContent>
+          <input type='text'
+                 pInputText
+                 placeholder='{{"comic-overview.text.sort-name-placeholder"|translate}}'
+                 [(ngModel)]='sortName'/>
+          <button type='button'
+                  pButton
+                  icon='pi pi-check'
+                  (click)='saveSortName()'></button> </span></p-inplace>
+            <span *ngIf='!is_admin'
+                  class='ui-g-12'>{{comic.sortName || "[...]"}}</span>
+        </div>
+    </div>
+    <div *ngIf='is_admin'
+         class='ui-g-12 cx-container-centered-text'>
+        <button type='button'
+                pButton
+                icon='fas fa-backspace'
+                class='ui-button-primary cx-action-button'
+                label='{{"comic-overview.button.clear-metadata"|translate}}'
+                (click)='clearMetadata()'></button>
+        <button id='cx-delete-comic'
+                type='button'
+                pButton
+                icon='fas fa-trash'
+                class='ui-button-danger cx-action-button'
+                [label]='"comic-overview.button.delete-comic"|translate'
+                (click)='deleteComic()'></button>
+    </div>
+    <div class='ui-g-12 cx-comic-filename-container'>
+        <div [innerHTML]='"comic-overview.label.filename"|translate:{filename: comic.filename}'></div>
+    </div>
+</div>

@@ -24,6 +24,7 @@ import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.net.UpdateReadingListRequest;
+import org.comixed.service.library.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListNameException;
 import org.comixed.service.library.ReadingListService;
@@ -79,7 +80,8 @@ public class ReadingListControllerTest {
     public void testCreateReadingList()
             throws
             NoSuchReadingListException,
-            ReadingListNameException {
+            ReadingListNameException,
+            ComicException {
         Mockito.when(principal.getName())
                .thenReturn(TEST_USER_EMAIL);
         Mockito.when(readingListService.createReadingList(Mockito.anyString(),
@@ -184,7 +186,8 @@ public class ReadingListControllerTest {
     @Test
     public void testUpdateReadingList()
             throws
-            NoSuchReadingListException {
+            NoSuchReadingListException,
+            ComicException {
         Set<ReadingListEntry> entries = new HashSet<>();
 
         Mockito.when(principal.getName())

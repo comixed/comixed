@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.views.View;
+import org.comixed.views.View.ComicDetails;
 import org.comixed.views.View.ComicList;
 import org.comixed.views.View.DatabaseBackup;
 import org.comixed.views.View.PageList;
@@ -60,7 +61,7 @@ public class Comic {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Enumerated(EnumType.STRING)
-    @JsonProperty("archive_type")
+    @JsonProperty("archiveType")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     ArchiveType archiveType;
@@ -70,7 +71,7 @@ public class Comic {
     @CollectionTable(name = "comic_story_arcs",
                      joinColumns = @JoinColumn(name = "comic_id"))
     @Column(name = "story_arc_name")
-    @JsonProperty("story_arcs")
+    @JsonProperty("storyArcs")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     List<String> storyArcs = new ArrayList<>();
@@ -80,6 +81,7 @@ public class Comic {
                fetch = FetchType.EAGER,
                orphanRemoval = true)
     @OrderColumn(name = "index")
+    @JsonProperty("pages")
     @JsonView({ComicList.class,})
     List<Page> pages = new ArrayList<>();
 
@@ -100,38 +102,38 @@ public class Comic {
             nullable = false,
             unique = true,
             length = 1024)
-    @JsonProperty
+    @JsonProperty("filename")
     @JsonView({ComicList.class,
                PageList.class,
                DatabaseBackup.class})
     private String filename;
 
     @Column(name = "comic_vine_id")
-    @JsonProperty("comic_vine_id")
+    @JsonProperty("comicVineId")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String comicVineId;
 
     @Column(name = "comic_vine_url")
-    @JsonProperty("comic_vine_url")
+    @JsonProperty("comicVineURL")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String comicVineURL;
 
     @Column(name = "publisher")
-    @JsonProperty
+    @JsonProperty("publisher")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String publisher;
 
     @Column(name = "imprint")
-    @JsonProperty
+    @JsonProperty("imprint")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String imprint;
 
     @Column(name = "series")
-    @JsonProperty
+    @JsonProperty("series")
     @JsonView({ComicList.class,
                PageList.class,
                DatabaseBackup.class})
@@ -140,7 +142,7 @@ public class Comic {
     @Column(name = "added_date",
             updatable = false,
             nullable = false)
-    @JsonProperty("added_date")
+    @JsonProperty("addedDate")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonView({ComicList.class,
                DatabaseBackup.class})
@@ -150,7 +152,7 @@ public class Comic {
     @Column(name = "last_updated_date",
             updatable = true,
             nullable = false)
-    @JsonProperty("last_updated_date")
+    @JsonProperty("lastUpdatedDate")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonView({ComicList.class,
                DatabaseBackup.class})
@@ -160,54 +162,54 @@ public class Comic {
     @Column(name = "cover_date",
             nullable = true)
     @Temporal(TemporalType.DATE)
-    @JsonProperty("cover_date")
+    @JsonProperty("coverDate")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private Date coverDate;
 
     @Column(name = "volume")
-    @JsonProperty
+    @JsonProperty("volume")
     @JsonView({ComicList.class,
                PageList.class,
                DatabaseBackup.class})
     private String volume;
 
     @Column(name = "issue_number")
-    @JsonProperty("issue_number")
+    @JsonProperty("issueNumber")
     @JsonView({ComicList.class,
                PageList.class,
                DatabaseBackup.class})
     private String issueNumber;
 
     @Column(name = "title")
-    @JsonProperty
+    @JsonProperty("title")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String title;
 
     @Column(name = "sort_name")
-    @JsonProperty("sort_name")
+    @JsonProperty("sortName")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String sortName;
 
     @Column(name = "description")
     @Lob
-    @JsonProperty
+    @JsonProperty("description")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String description;
 
     @Column(name = "notes")
     @Lob
-    @JsonProperty
+    @JsonProperty("notes")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String notes;
 
     @Column(name = "summary")
     @Lob
-    @JsonProperty
+    @JsonProperty("summary")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String summary;
@@ -253,7 +255,7 @@ public class Comic {
 
     @ManyToOne
     @JoinColumn(name = "scan_type_id")
-    @JsonProperty("scan_type")
+    @JsonProperty("scanType")
     @JsonView({ComicList.class,
                PageList.class,
                DatabaseBackup.class})
@@ -268,9 +270,19 @@ public class Comic {
     private ComicFormat format;
 
     @Formula(value = "SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d)")
-    @JsonProperty("blocked_page_count")
+    @JsonProperty("blockedPageCount")
     @JsonView({ComicList.class})
     private int blockedPageCount;
+
+    @Transient
+    @JsonProperty("nextIssueId")
+    @JsonView({ComicDetails.class})
+    private Long nextIssueId;
+
+    @Transient
+    @JsonProperty("previousIssueId")
+    @JsonView({ComicDetails.class})
+    private Long previousIssueId;
 
     public Date getDateLastUpdated() {
         return dateLastUpdated;
@@ -431,7 +443,7 @@ public class Comic {
      *
      * @return the filename
      */
-    @JsonProperty("base_filename")
+    @JsonProperty("baseFilename")
     @JsonView(ComicList.class)
     public String getBaseFilename() {
         return FilenameUtils.getName(this.filename);
@@ -605,7 +617,7 @@ public class Comic {
      * @return the deleted offset count
      */
     @Transient
-    @JsonProperty("deleted_page_count")
+    @JsonProperty("deletedPageCount")
     @JsonView(ComicList.class)
     public int getDeletedPageCount() {
         int result = 0;
@@ -704,10 +716,12 @@ public class Comic {
     }
 
     @Transient
-    @JsonProperty("sortable_issue_number")
+    @JsonProperty("sortableIssueNumber")
     @JsonView(ComicList.class)
     public String getSortableIssueNumber() {
-        final String result = "00000" + this.issueNumber;
+        final String result = "00000" + (this.issueNumber != null
+                                         ? this.issueNumber
+                                         : "");
 
         return result.substring(result.length() - 5);
     }
@@ -807,7 +821,7 @@ public class Comic {
      *
      * @return the offset count
      */
-    @JsonProperty("page_count")
+    @JsonProperty("pageCount")
     @JsonView(ComicList.class)
     public int getPageCount() {
         return this.pages.size();
@@ -1007,7 +1021,7 @@ public class Comic {
     }
 
     @Transient
-    @JsonProperty(value = "published_year")
+    @JsonProperty(value = "publishedYear")
     public int getYearPublished() {
         return this.coverDate != null
                ? this.coverDate.getYear() + 1900
@@ -1090,5 +1104,25 @@ public class Comic {
                          .compareTo(p2.getFilename());
             }
         });
+    }
+
+    public Long getNextIssueId() {
+        return nextIssueId;
+    }
+
+    public void setNextIssueId(final Long nextIssueId) {
+        this.nextIssueId = nextIssueId;
+    }
+
+    public Long getPreviousIssueId() {
+        return previousIssueId;
+    }
+
+    public void setPreviousIssueId(final Long previousIssueId) {
+        this.previousIssueId = previousIssueId;
+    }
+
+    public void setID(final long id) {
+        this.id = id;
     }
 }

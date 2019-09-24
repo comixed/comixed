@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { ComicFile } from 'app/library';
@@ -33,6 +33,8 @@ export class ComicFileListItemComponent {
   @Input() same_height: boolean;
   @Input() use_selected_class: boolean;
   @Input() selected: boolean;
+
+  @Output() click = new EventEmitter<ComicFile>();
 
   constructor(private store: Store<AppState>) {}
 }

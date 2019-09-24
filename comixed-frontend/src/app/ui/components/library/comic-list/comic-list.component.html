@@ -23,14 +23,16 @@
             <app-comic-list-item [comic]='comic'
                                  [cover_size]='cover_size'
                                  [same_height]='same_height'
-                                 [selected]='selected_comics.includes(comic)'></app-comic-list-item>
+                                 [selected]='selected_comics.includes(comic)'
+                                 (click)='toggleComicSelection(comic)'></app-comic-list-item>
         </ng-template>
         <ng-template let-comic
                      pTemplate='gridItem'>
             <app-comic-grid-item [comic]='comic'
                                  [cover_size]='cover_size'
                                  [same_height]='same_height'
-                                 [selected]='selected_comics.includes(comic)'></app-comic-grid-item>
+                                 [selected]='selected_comics.includes(comic)'
+                                 (click)='toggleComicSelection(comic)'></app-comic-grid-item>
         </ng-template>
     </p-dataView>
 </div>

@@ -17,14 +17,14 @@
  * org.comixed;
  */
 
-export declare const LIBRARY_SORT = 'library.sort-by';
-export declare const LIBRARY_ROWS = 'library.rows';
-export declare const LIBRARY_COVER_SIZE = 'library.cover-size';
-export declare const LIBRARY_CURRENT_TAB = 'library.current-tab';
+export const LIBRARY_SORT = 'library.sort-by';
+export const LIBRARY_ROWS = 'library.rows';
+export const LIBRARY_COVER_SIZE = 'library.cover-size';
+export const LIBRARY_CURRENT_TAB = 'library.current-tab';
 
-export declare const IMPORT_SORT = 'import.sort-by';
-export declare const IMPORT_ROWS = 'import.rows';
-export declare const IMPORT_COVER_SIZE = 'import.cover-size';
-export declare const IMPORT_LAST_DIRECTORY = 'import.last-directory';
+export const IMPORT_SORT = 'import.sort-by';
+export const IMPORT_ROWS = 'import.rows';
+export const IMPORT_COVER_SIZE = 'import.cover-size';
+export const IMPORT_LAST_DIRECTORY = 'import.last-directory';
 
-export declare const COMICVINE_API_KEY = 'comicvine.api-key';
+export const COMICVINE_API_KEY = 'comicvine.api-key';

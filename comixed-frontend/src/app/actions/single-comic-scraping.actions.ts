@@ -19,7 +19,7 @@
 
 import { Action } from '@ngrx/store';
 import { Comic } from 'app/library';
-import { Volume } from 'app/models/comics/volume';
+import { Volume } from 'app/comics/models/volume';
 import { Issue } from 'app/models/scraping/issue';
 
 export const SINGLE_COMIC_SCRAPING_SETUP = '[LIBRARY SCRAPING] Setup scraping';

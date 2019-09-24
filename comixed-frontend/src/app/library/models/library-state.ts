@@ -17,9 +17,9 @@
  * org.comixed;
  */
 
-import { ScanType } from 'app/library/models/scan-type';
-import { ComicFormat } from 'app/library/models/comic-format';
-import { Comic } from 'app/library/models/comic';
+import { ScanType } from 'app/comics/models/scan-type';
+import { ComicFormat } from 'app/comics/models/comic-format';
+import { Comic } from 'app/comics/models/comic';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
 export interface LibraryState {

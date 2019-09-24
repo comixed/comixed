@@ -1,0 +1,97 @@
+<p-dataView *ngIf='comic'
+            [value]='comic.pages'>
+    <p-header>
+        <div class='ui-helper-clearfix'>
+            <div class='ui-g'>
+                <div class='ui-g-6 ui-md-4'
+                     style='text-align: right'>
+                    <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+                </div>
+            </div>
+        </div>
+    </p-header>
+    <ng-template let-page
+                 pTemplate='listItem'>
+        <div class='ui-g'>
+            <div class='ui-g-2 ui-sm-6'>
+                <img src='{{ page | comicPageUrl }}'
+                     [style.height]='"auto"'
+                     [style.width]='"100%"'/>
+            </div>
+            <div class='ui-g-10 ui-sm-6'>
+                <div class='ui-g'>
+                    <div class='ui-g-2 ui-sm-6'>
+                        <b>{{ "comic-pages.label.filename" | translate }}</b>
+                    </div>
+                    <div class='ui-g-10 ui-sm-6'>{{ page.filename }}</div>
+                    <div class='ui-g-2 ui-sm-6'>
+                        <b>{{ "comic-pages.label.dimensions" | translate }}</b>
+                    </div>
+                    <div class='ui-g-10 ui-sm-6'>
+                        {{ page.width }} x {{ page.height }}
+                    </div>
+                    <div *ngIf='page.deleted'
+                         class='ui-g-12 ui-sm-12'>
+                        <i>{{ "comic-pages.text.marked-for-deletion" | translate }} </i>
+                    </div>
+                    <div *ngIf='is_admin && page_type_options?.length'
+                         class='ui-g-12 ui-sm-12'>
+                        <p-dropdown [options]='page_type_options'
+                                    [(ngModel)]='page.page_type.id'
+                                    (onChange)='setPageType(page, $event.value)'></p-dropdown>
+                    </div>
+                    <div class='ui-g-12 ui-sm-12'>
+                        <button *ngIf='page.blocked'
+                                pButton
+                                type='button'
+                                label='{{ "button.blocked" | translate }}'
+                                icon='pi pi-check'
+                                (click)='unblockPage(page)'></button>
+                        <button *ngIf='!page.blocked'
+                                pButton
+                                type='button'
+                                label='{{ "button.not-blocked" | translate }}'
+                                icon='pi pi-times'
+                                (click)='blockPage(page)'></button>
+                    </div>
+                    <div *ngIf='page.blocked'
+                         class='ui-g-12 ui-sm-12'>
+                        <i>{{ "comic-pages.text.page-is-blocked" | translate }} </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template let-page
+                 pTemplate='gridItem'>
+        <p-card><img src='{{ page | comicPageUrl }}'
+                     [style.height]='"" + image_size + "px"'
+                     [style.width]='"auto"'/>
+            <p-footer>
+                <div *ngIf='is_admin'
+                     class='ui-g'>
+                    <div *ngIf='page_type_options?.length'
+                         class='ui-g-12 ui-sm-12'>
+                        <p-dropdown [options]='page_type_options'
+                                    [(ngModel)]='page.page_type.id'
+                                    (onChange)='setPageType(page, $event.value)'></p-dropdown>
+                    </div>
+                    <div class='ui-g-12 ui-sm-12'>
+                        <button *ngIf='page.blocked'
+                                pButton
+                                type='button'
+                                label='{{ "button.blocked" | translate }}'
+                                icon='pi pi-check'
+                                (click)='unblockPage(page)'></button>
+                        <button *ngIf='!page.blocked'
+                                pButton
+                                type='button'
+                                label='{{ "button.not-blocked" | translate }}'
+                                icon='pi pi-times'
+                                (click)='blockPage(page)'></button>
+                    </div>
+                </div>
+            </p-footer>
+        </p-card>
+    </ng-template>
+</p-dataView>

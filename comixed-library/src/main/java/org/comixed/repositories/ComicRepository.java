@@ -61,4 +61,14 @@ public interface ComicRepository
      * @return the comic
      */
     Comic findByFilename(String filename);
+
+    /**
+     * Returns all comic entries for the given series name.
+     *
+     * @param series
+     *         the series name
+     *
+     * @return the list of comics
+     */
+    List<Comic> findBySeries(String series);
 }

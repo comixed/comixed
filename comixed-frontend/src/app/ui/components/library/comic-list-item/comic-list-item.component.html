@@ -5,11 +5,12 @@
                  [style.width]='same_height ? "auto":cover_size + "px"'
                  [style.height]='same_height ? cover_size + "px":"auto"'>
                 <app-comic-cover [comic]='comic'
-                                 [cover_url]='comic|comic_cover_url'
-                                 [title]='comic|comic_title'
+                                 [cover_url]='comic|comicCoverUrl'
+                                 [title]='comic|comicTitle'
                                  [selected]='selected'
                                  [cover_size]='cover_size'
-                                 [same_height]='same_height'></app-comic-cover>
+                                 [same_height]='same_height'
+                                 (click)='click.next(comic)'></app-comic-cover>
             </div>
             <div class='p-col'>
                 <div class='ui-g'>
@@ -51,7 +52,7 @@
                             <div class='ui-g-12'>
                                 <strong>{{'comic-list-item.label.issue-number'|translate}}</strong>
                             </div>
-                            <div class='ui-g-12'>{{comic.issue_number || 'comic-list-item.label.unknown'|translate}}
+                            <div class='ui-g-12'>{{comic.issueNumber || 'comic-list-item.label.unknown'|translate}}
                             </div>
                         </div>
                     </div>
@@ -60,7 +61,7 @@
                             <div class='ui-g-12'>
                                 <strong>{{'comic-list-item.label.cover-date'|translate}}</strong>
                             </div>
-                            <div class='ui-g-12'>{{comic.cover_date|date:'mediumDate'}}
+                            <div class='ui-g-12'>{{comic.coverDate|date:'mediumDate'}}
                             </div>
                         </div>
                     </div>
@@ -69,7 +70,7 @@
                             <div class='ui-g-12'>
                                 <strong>{{'comic-list-item.label.added-date'|translate}}</strong>
                             </div>
-                            <div class='ui-g-12'>{{comic.added_date|date:'medium'}}</div>
+                            <div class='ui-g-12'>{{comic.addedDate|date:'medium'}}</div>
                         </div>
                     </div>
                 </div>

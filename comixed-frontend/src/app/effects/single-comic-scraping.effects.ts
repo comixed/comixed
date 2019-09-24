@@ -27,7 +27,7 @@ import { ComicService } from 'app/services/comic.service';
 import { MessageService } from 'primeng/api';
 import { UserService } from 'app/services/user.service';
 import { Comic } from 'app/library';
-import { Volume } from 'app/models/comics/volume';
+import { Volume } from 'app/comics/models/volume';
 import { Issue } from 'app/models/scraping/issue';
 import { TranslateService } from '@ngx-translate/core';
 

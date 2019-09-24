@@ -35,10 +35,10 @@ export class ScrapingComicListComponent implements OnInit {
   @Input()
   set comics(comics: Comic[]) {
     this._comics = comics.sort((left: Comic, right: Comic) => {
-      if (left.base_filename < right.base_filename) {
+      if (left.baseFilename < right.baseFilename) {
         return -1;
       }
-      if (left.base_filename > right.base_filename) {
+      if (left.baseFilename > right.baseFilename) {
         return 1;
       }
 

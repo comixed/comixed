@@ -27,7 +27,7 @@ import {
   SCAN_TYPE_3,
   SCAN_TYPE_5,
   SCAN_TYPE_7
-} from 'app/library/models/scan-type.fixtures';
+} from 'app/comics/models/scan-type.fixtures';
 import * as LibraryActions from 'app/library/actions/library.actions';
 import { MessageService } from 'primeng/api';
 import { TranslateModule } from '@ngx-translate/core';
@@ -38,8 +38,8 @@ import {
   FORMAT_1,
   FORMAT_3,
   FORMAT_5
-} from 'app/library/models/comic-format.fixtures';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/library/models/comic.fixtures';
+} from 'app/comics/models/comic-format.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
 import { generate_random_string } from '../../../test/testing-utils';
 import { BlockedPageResponse } from 'app/library/models/net/blocked-page-response';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';

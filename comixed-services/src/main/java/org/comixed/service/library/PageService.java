@@ -74,7 +74,10 @@ public class PageService {
     }
 
     @Transactional
-    public String[] addBlockedPageHash(final String hash) {
+    public Comic addBlockedPageHash(final long pageId,
+                                    final String hash)
+            throws
+            PageException {
         this.logger.info("Adding blocked page hash: {}",
                          hash);
         BlockedPageHash existing = this.blockedPageHashRepository.findByHash(hash);
@@ -86,12 +89,21 @@ public class PageService {
             this.blockedPageHashRepository.save(existing);
         }
 
-        this.logger.debug("Returning all hashes");
-        return this.blockedPageHashRepository.getAllHashes();
+        final Optional<Page> page = this.pageRepository.findById(pageId);
+
+        if (page.isPresent()) {
+            return page.get()
+                       .getComic();
+        }
+
+        throw new PageException("no such page: id=" + pageId);
     }
 
     @Transactional
-    public String[] removeBlockedPageHash(final String hash) {
+    public Comic removeBlockedPageHash(final long pageId,
+                                       final String hash)
+            throws
+            PageException {
         this.logger.info("Removing blocked page hash: {}",
                          hash);
         final BlockedPageHash entry = this.blockedPageHashRepository.findByHash(hash);
@@ -101,8 +113,14 @@ public class PageService {
             this.blockedPageHashRepository.delete(entry);
         }
 
-        this.logger.debug("Returning all hashes");
-        return this.blockedPageHashRepository.getAllHashes();
+        final Optional<Page> page = this.pageRepository.findById(pageId);
+
+        if (page.isPresent()) {
+            return page.get()
+                       .getComic();
+        }
+
+        throw new PageException("no such page: id=" + pageId);
     }
 
     public String[] getAllBlockedPageHashes() {

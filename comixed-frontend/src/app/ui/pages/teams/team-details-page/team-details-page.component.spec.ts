@@ -38,8 +38,8 @@ import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-l
 import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
 import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
-import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { TeamDetailsPageComponent } from './team-details-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import {
@@ -57,7 +57,7 @@ import { EFFECTS } from 'app/app.effects';
 import { LibraryModule } from 'app/library/library.module';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
-import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 import { RouterTestingModule } from '@angular/router/testing';
 

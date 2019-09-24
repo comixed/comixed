@@ -24,7 +24,7 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { ComicService } from 'app/services/comic.service';
-import { DuplicatePage } from 'app/models/comics/duplicate-page';
+import { DuplicatePage } from 'app/comics';
 
 @Injectable()
 export class DuplicatesEffects {

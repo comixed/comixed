@@ -18,7 +18,7 @@
  */
 
 import * as _ from 'lodash';
-import { Comic } from 'app/library/models/comic';
+import { Comic } from 'app/comics/models/comic';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { ComicFile } from 'app/library/models/comic-file';
 
@@ -61,7 +61,7 @@ function latestDateForField(comics: Comic[], field_name: string): number {
 }
 
 export function latestUpdatedDate(comics: Comic[]): number {
-  return latestDateForField(comics, 'last_updated_date');
+  return latestDateForField(comics, 'lastUpdatedDate');
 }
 
 export function latestComicAddedDate(comics: Comic[]): number {

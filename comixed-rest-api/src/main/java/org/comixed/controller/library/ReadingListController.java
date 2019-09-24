@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.model.library.ReadingList;
 import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.repositories.ReadingListRepository;
+import org.comixed.service.library.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListNameException;
 import org.comixed.service.library.ReadingListService;
@@ -55,7 +56,8 @@ public class ReadingListController {
                                                  List<Long> entries)
             throws
             NoSuchReadingListException,
-            ReadingListNameException {
+            ReadingListNameException,
+            ComicException {
         final String email = principal.getName();
 
         this.logger.info("Creating reading list for user: email={} name={}",
@@ -78,7 +80,8 @@ public class ReadingListController {
                                          @RequestBody()
                                                  UpdateReadingListRequest request)
             throws
-            NoSuchReadingListException {
+            NoSuchReadingListException,
+            ComicException {
         final String email = principal.getName();
         final String name = request.getName();
         final String summary = request.getSummary();

@@ -18,9 +18,9 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Comic } from '../models/comic';
-import { ComicFormat } from '../models/comic-format';
-import { ScanType } from '../models/scan-type';
+import { Comic } from '../../comics/models/comic';
+import { ComicFormat } from '../../comics/models/comic-format';
+import { ScanType } from '../../comics/models/scan-type';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
 export enum LibraryActionTypes {

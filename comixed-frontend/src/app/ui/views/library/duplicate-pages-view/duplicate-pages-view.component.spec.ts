@@ -26,12 +26,12 @@ import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
 import { DropdownModule } from 'primeng/dropdown';
 import { DataViewModule } from 'primeng/dataview';
-import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
+import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
-import { DuplicatePage } from 'app/models/comics/duplicate-page';
+import { DuplicatePage } from 'app/comics';
 import { DuplicatePagesViewComponent } from './duplicate-pages-view.component';
 import { REDUCERS } from 'app/app.reducers';
 

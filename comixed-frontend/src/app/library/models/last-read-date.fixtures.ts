@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { COMIC_1 } from './comic.fixtures';
+import { COMIC_1 } from '../../comics/models/comic.fixtures';
 import { USER_READER } from 'app/user';
 
 export const COMIC_1_LAST_READ_DATE = {

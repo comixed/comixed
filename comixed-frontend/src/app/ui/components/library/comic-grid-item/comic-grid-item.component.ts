@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Comic } from 'app/library';
 
 @Component({
@@ -30,6 +30,8 @@ export class ComicGridItemComponent {
   @Input() same_height: boolean;
   @Input() cover_size: number;
   @Input() selected = false;
+
+  @Output() click = new EventEmitter<Comic>();
 
   constructor() {}
 }

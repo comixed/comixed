@@ -23,9 +23,9 @@ import org.comixed.model.library.BlockedPageHash;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
 import org.comixed.model.library.PageType;
-import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.service.library.PageException;
 import org.comixed.service.library.PageService;
+import org.comixed.utils.FileTypeIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -46,7 +46,6 @@ import static org.junit.Assert.*;
 public class PageControllerTest {
     private static final long TEST_PAGE_TYPE_ID = 717;
     private static final long TEST_PAGE_ID = 129;
-    private static final String BLOCKED_PAGE_HASH_VALUE = "0123456789abcdef";
     private static final String[] BLOCKED_HASH_LIST = {"12345",
                                                        "23456",
                                                        "34567"};
@@ -70,8 +69,6 @@ public class PageControllerTest {
 
     @Captor private ArgumentCaptor<InputStream> inputStream;
 
-    private String[] blockedPageHashList = new String[]{BLOCKED_PAGE_HASH_VALUE};
-
     @Test
     public void testSetPageType()
             throws
@@ -94,31 +91,45 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testAddBlockedPageHash() {
-        Mockito.when(pageService.addBlockedPageHash(Mockito.anyString()))
-               .thenReturn(blockedPageHashList);
+    public void testAddBlockedPageHash()
+            throws
+            PageException {
+        Mockito.when(pageService.addBlockedPageHash(Mockito.anyLong(),
+                                                    Mockito.anyString()))
+               .thenReturn(comic);
 
-        final String[] result = pageController.addBlockedPageHash(BLOCKED_PAGE_HASH_VALUE);
-
-        Mockito.verify(pageService,
-                       Mockito.times(1))
-               .addBlockedPageHash(BLOCKED_PAGE_HASH_VALUE);
-    }
-
-    @Test
-    public void testRemoveBlockedPageHash() {
-        Mockito.when(pageService.removeBlockedPageHash(Mockito.anyString()))
-               .thenReturn(blockedPageHashList);
-
-        final String[] result = pageController.removeBlockedPageHash(TEST_PAGE_HASH);
+        final Comic result = pageController.addBlockedPageHash(TEST_PAGE_ID,
+                                                               TEST_PAGE_HASH);
 
         assertNotNull(result);
-        assertSame(blockedPageHashList,
+        assertSame(comic,
                    result);
 
         Mockito.verify(pageService,
                        Mockito.times(1))
-               .removeBlockedPageHash(TEST_PAGE_HASH);
+               .addBlockedPageHash(TEST_PAGE_ID,
+                                   TEST_PAGE_HASH);
+    }
+
+    @Test
+    public void testRemoveBlockedPageHash()
+            throws
+            PageException {
+        Mockito.when(pageService.removeBlockedPageHash(Mockito.anyLong(),
+                                                       Mockito.anyString()))
+               .thenReturn(comic);
+
+        final Comic result = pageController.removeBlockedPageHash(TEST_PAGE_ID,
+                                                                  TEST_PAGE_HASH);
+
+        assertNotNull(result);
+        assertSame(comic,
+                   result);
+
+        Mockito.verify(pageService,
+                       Mockito.times(1))
+               .removeBlockedPageHash(TEST_PAGE_ID,
+                                      TEST_PAGE_HASH);
     }
 
     @Test

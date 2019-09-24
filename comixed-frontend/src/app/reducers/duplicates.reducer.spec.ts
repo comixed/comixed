@@ -26,9 +26,9 @@ import * as DupesActions from 'app/actions/duplicate-pages.actions';
 import {
   DUPLICATE_PAGE_1,
   DUPLICATE_PAGE_2
-} from 'app/models/comics/duplicate-page.fixtures';
-import { DuplicatePage } from 'app/models/comics/duplicate-page';
-import { PAGE_1 } from 'app/models/comics/page.fixtures';
+} from 'app/comics/models/duplicate-page.fixtures';
+import { DuplicatePage } from 'app/comics';
+import { PAGE_1 } from 'app/comics/models/page.fixtures';
 
 describe('duplicatesReducer', () => {
   let state: Duplicates;

@@ -34,7 +34,8 @@
                                           [cover_size]='cover_size'
                                           [same_height]='same_height'
                                           [selected]='selected_comic_files.includes(file)'
-                                          [use_selected_class]='true'></app-comic-file-grid-item>
+                                          [use_selected_class]='true'
+                                          (click)='toggleComicFileSelection(file)'></app-comic-file-grid-item>
             </ng-template>
             <ng-template let-file
                          pTemplate='listItem'>
@@ -42,7 +43,8 @@
                                           [cover_size]='cover_size'
                                           [same_height]='same_height'
                                           [selected]='selected_comic_files.includes(file)'
-                                          [use_selected_class]='true'></app-comic-file-list-item>
+                                          [use_selected_class]='true'
+                                          (click)='toggleComicFileSelection(file)'></app-comic-file-list-item>
             </ng-template>
         </p-dataView>
     </div>

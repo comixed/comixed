@@ -33,9 +33,9 @@ import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
 import { DuplicatePagesViewComponent } from 'app/ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
 import { PageHashViewComponent } from 'app/ui/views/library/page-hash-view/page-hash-view.component';
-import { ComicPageUrlPipe } from 'app/pipes/comic-page-url.pipe';
-import { ComicTitlePipe } from 'app/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
+import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
+import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { DuplicatesPageComponent } from './duplicates-page.component';
 import { REDUCERS } from 'app/app.reducers';
 

@@ -20,8 +20,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicFileGridItemComponent } from './comic-file-grid-item.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
-import { ComicCoverUrlPipe } from 'app/pipes/comic-cover-url.pipe';
-import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import {
   CardModule,
   MessageService,

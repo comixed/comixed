@@ -18,8 +18,7 @@
  */
 
 import { Action } from '@ngrx/store';
-import { DuplicatePage } from 'app/models/comics/duplicate-page';
-import { Page } from 'app/models/comics/page';
+import { DuplicatePage, Page } from 'app/comics';
 
 export const DUPLICATE_PAGES_FETCH_PAGES =
   '[DUPLICATE PAGES] Fetch list of pages';

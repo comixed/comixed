@@ -24,12 +24,12 @@ import { Observable } from 'rxjs';
 
 import { UserService } from './user.service';
 import { Comic, ComicFormat, ScanType } from 'app/library';
-import { Page } from 'app/models/comics/page';
 import {
   GET_COMIC_METADATA_URL,
   GET_SCRAPING_CANDIDATES_URL,
   RESCAN_COMIC_FILES_URL
 } from 'app/services/url.constants';
+import { Page } from 'app/comics';
 
 export const COMIC_SERVICE_API_URL = '/api';
 
@@ -151,7 +151,7 @@ export class ComicService {
         finalize(() => {
           comic.series = series;
           comic.volume = volume;
-          comic.issue_number = issue_number;
+          comic.issueNumber = issue_number;
         })
       );
   }

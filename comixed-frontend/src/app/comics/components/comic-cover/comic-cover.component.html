@@ -1,0 +1,11 @@
+<div *ngIf='cover_url'
+     [class.selected-comic]='use_selected_class && selected'>
+    <p-card [styleClass]='"comic-cover-card"'
+            (click)='clicked()'>
+        <p-header></p-header>
+        <img [src]='cover_url'
+             [style.width]='same_height ? "auto" : cover_size + "px"'
+             [style.height]='same_height ? cover_size + "px" : "auto"'/>
+        <p-footer></p-footer>
+    </p-card>
+</div>

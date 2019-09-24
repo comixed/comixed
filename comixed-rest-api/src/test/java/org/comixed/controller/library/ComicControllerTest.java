@@ -26,6 +26,7 @@ import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.LastReadDatesRepository;
+import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
 import org.comixed.tasks.DeleteComicsWorkerTask;
 import org.comixed.tasks.Worker;
@@ -41,7 +42,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.ParseException;
@@ -435,8 +435,8 @@ public class ComicControllerTest {
     @Test
     public void testDownloadComicForNonexistentComic()
             throws
-            FileNotFoundException,
-            IOException {
+            IOException,
+            ComicException {
         Mockito.when(comicService.getComic(Mockito.anyLong()))
                .thenReturn(null);
 
@@ -450,8 +450,8 @@ public class ComicControllerTest {
     @Test
     public void testDownloadComicFileDoesNotExist()
             throws
-            FileNotFoundException,
-            IOException {
+            IOException,
+            ComicException {
         Mockito.when(comicService.getComic(Mockito.anyLong()))
                .thenReturn(comic);
         Mockito.when(comicService.getComicContent(Mockito.any(Comic.class)))
@@ -470,7 +470,8 @@ public class ComicControllerTest {
     @Test
     public void testDownloadComic()
             throws
-            IOException {
+            IOException,
+            ComicException {
         Mockito.when(comicService.getComic(Mockito.anyLong()))
                .thenReturn(comic);
         Mockito.when(comicService.getComicContent(Mockito.any(Comic.class)))
@@ -509,7 +510,8 @@ public class ComicControllerTest {
     @Test
     public void testDownloadComicNonexistent()
             throws
-            IOException {
+            IOException,
+            ComicException {
         Mockito.when(comicService.getComic(Mockito.anyLong()))
                .thenReturn(null);
 
@@ -525,7 +527,8 @@ public class ComicControllerTest {
     @Test
     public void testDownloadComicFileNotFound()
             throws
-            IOException {
+            IOException,
+            ComicException {
         Mockito.when(comicService.getComic(Mockito.anyLong()))
                .thenReturn(comic);
         Mockito.when(comicService.getComicContent(Mockito.any(Comic.class)))
@@ -544,7 +547,9 @@ public class ComicControllerTest {
     }
 
     @Test
-    public void testGetComicForNonexistentComic() {
+    public void testGetComicForNonexistentComic()
+            throws
+            ComicException {
         Mockito.when(comicService.getComic(Mockito.anyLong()))
                .thenReturn(null);
 
@@ -556,7 +561,9 @@ public class ComicControllerTest {
     }
 
     @Test
-    public void testGetComic() {
+    public void testGetComic()
+            throws
+            ComicException {
         Mockito.when(comicService.getComic(Mockito.anyLong()))
                .thenReturn(comic);
 
@@ -574,15 +581,11 @@ public class ComicControllerTest {
     @Test
     public void testUpdateComic() {
         Mockito.when(comicService.updateComic(Mockito.anyLong(),
-                                              Mockito.anyString(),
-                                              Mockito.anyString(),
-                                              Mockito.anyString()))
+                                              Mockito.any(Comic.class)))
                .thenReturn(comic);
 
         final Comic result = controller.updateComic(TEST_COMIC_ID,
-                                                    TEST_SERIES,
-                                                    TEST_VOLUME,
-                                                    TEST_ISSUE_NUMBER);
+                                                    comic);
 
         assertNotNull(result);
         assertSame(comic,
@@ -591,9 +594,7 @@ public class ComicControllerTest {
         Mockito.verify(comicService,
                        Mockito.times(1))
                .updateComic(TEST_COMIC_ID,
-                            TEST_SERIES,
-                            TEST_VOLUME,
-                            TEST_ISSUE_NUMBER);
+                            comic);
     }
 
     @Test

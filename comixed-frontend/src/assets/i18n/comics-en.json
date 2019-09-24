@@ -1,0 +1,170 @@
+{
+  "comics-effects": {
+    "get-scan-types": {
+      "error": {
+        "detail": "Failed to load scan types."
+      }
+    },
+    "get-formats": {
+      "error": {
+        "detail": "Failed to load comic formats."
+      }
+    },
+    "get-page-types": {
+      "error": {
+        "detail": "Failed to load page types."
+      }
+    },
+    "get-issue": {
+      "error": {
+        "detail": "Failed to load comic id={id}."
+      }
+    },
+    "save-page": {
+      "success": {
+        "detail": "Page successfully updated."
+      },
+      "error": {
+        "detail": "Failed to save page changes."
+      }
+    },
+    "set-page-hash-blocking": {
+      "success": {
+        "detail": "Successfully {state, select, true{blocked} other{unblocked}} pages with the hash {hash}."
+      },
+      "error": {
+        "detail": "Failed to block pages with hash {hash}."
+      }
+    },
+    "save-comic": {
+      "success": {
+        "detail": "Comic successfully saved."
+      },
+      "error": {
+        "detail": "Failed to save comic."
+      }
+    },
+    "clear-metadata": {
+      "success": {
+        "detail": "Metadata successfully cleared."
+      },
+      "error": {
+        "detail": "Failed to clear the metadata."
+      }
+    },
+    "delete-comic": {
+      "success": {
+        "detail": "Deleted comic with id {id}."
+      },
+      "error": {
+        "detail": "Failed to delete comic."
+      }
+    }
+  },
+  "comic-overview": {
+    "label": {
+      "filename": "The filename is <strong>{filename}</strong> on the host machine.",
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "title": "Title",
+      "added-date": "Added to library on",
+      "last-read-date": "Last read on",
+      "page-count": "# Of Pages",
+      "comicvine-details-link": "ComicVine Details Page",
+      "format": "Format",
+      "scan-type": "Scan Type",
+      "sort-name": "Sort Name"
+    },
+    "button": {
+      "clear-metadata": "Clear Metadata",
+      "delete-comic": "Delete Comic"
+    },
+    "title": {
+      "clear-metadata": "Clear Metadata For This Comic",
+      "delete-comic": "Delete This Comic"
+    },
+    "message": {
+      "clear-metadata": "Are you sure you want to clear the metadata for this comic?",
+      "delete-comic": "Are you sure you want to delete this comic?<br /><br /><b>NOTE:</b> The comic file is <b>not deleted:</b> it is just <u>removed</u> from the database."
+    },
+    "text": {
+      "format-placeholder": "Click to set format...",
+      "scan-type-placeholder": "Click to set scan type...",
+      "sort-name-placeholder": "Click to set a sort name...",
+      "comicvine-details-link": "The details can be found <a href='http://comicvine.gamespot.com/issue/4000-{comicvine_id}'>{comicvine_id}</a>."
+    },
+    "scan-type": {
+      "option": {
+        "select-one": "Select a scan type..."
+      }
+    },
+    "format": {
+      "option": {
+        "select-one": "Select a format..."
+      }
+    }
+  },
+  "comic-story": {
+    "label": {
+      "summary": "Summary",
+      "description": "Description",
+      "characters": "Characters",
+      "teams": "Teams",
+      "locations": "Locations",
+      "stories": "Story Arcs"
+    },
+    "text": {
+      "no-summary": "No summary for this comic...",
+      "no-description": "No description for this comic..."
+    }
+  },
+  "comic-pages": {
+    "label": {
+      "filename": "Filename",
+      "dimensions": "Dimensions"
+    },
+    "text": {
+      "marked-for-deletion": "This page is marked for deletion.",
+      "page-is-blocked": "This page is blocked."
+    }
+  },
+  "comic-details-editor": {
+    "label": {
+      "comicvine-api-key": "ComicVine API Key",
+      "series": "Series",
+      "volume": "Volume",
+      "issue-number": "Issue #"
+    },
+    "tooltip": {
+      "comicvine-api-key": "Click to edit..."
+    },
+    "text": {
+      "comicvine-api-key-placeholder": "Click to change the API key..."
+    },
+    "cancel": {
+      "header": "Skip This Comic",
+      "message": "Skip scraping this comic and go to the next comic? Are you sure?"
+    }
+  },
+  "comic-details-page": {
+    "tab": {
+      "overview": "Overview",
+      "story": "Story",
+      "reader": "Reader",
+      "credits": "Credits",
+      "pages": "Pages",
+      "comicvine": "ComicVine"
+    },
+    "text": {
+      "download-link": "Download This Comic"
+    },
+    "error": {
+      "no-such-comic": {
+        "detail": "No such comic found: id={id}."
+      }
+    }
+  }
+}

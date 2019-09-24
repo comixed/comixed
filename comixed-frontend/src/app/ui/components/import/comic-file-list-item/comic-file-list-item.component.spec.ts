@@ -21,7 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComicFileListItemComponent } from './comic-file-list-item.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
-import { ComicCoverComponent } from 'app/ui/components/comic/comic-cover/comic-cover.component';
+import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   CardModule,

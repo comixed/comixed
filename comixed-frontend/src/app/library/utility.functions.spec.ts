@@ -23,7 +23,7 @@ import {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from 'app/library/models/comic.fixtures';
+} from 'app/comics/models/comic.fixtures';
 import { latestUpdatedDate, mergeComics } from './utility.functions';
 
 describe('Utility Functions', () => {
@@ -59,11 +59,11 @@ describe('Utility Functions', () => {
   describe('getting the latest updated date', () => {
     const LATEST_UPDATE = new Date().getTime();
     const COMICS = [
-      { ...COMIC_1, last_updated_date: 0 },
-      { ...COMIC_2, last_updated_date: LATEST_UPDATE },
-      { ...COMIC_3, last_updated_date: 0 },
-      { ...COMIC_4, last_updated_date: 0 },
-      { ...COMIC_5, last_updated_date: 0 }
+      { ...COMIC_1, lastUpdatedDate: 0 },
+      { ...COMIC_2, lastUpdatedDate: LATEST_UPDATE },
+      { ...COMIC_3, lastUpdatedDate: 0 },
+      { ...COMIC_4, lastUpdatedDate: 0 },
+      { ...COMIC_5, lastUpdatedDate: 0 }
     ];
 
     it('returns 0 when no comics are provided', () => {

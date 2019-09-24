@@ -17,7 +17,7 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/library/models/comic';
+import { Comic } from 'app/comics/models/comic';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
 export interface LibraryUpdateResponse {

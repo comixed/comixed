@@ -48,7 +48,8 @@ public class ReadingListService {
                                          final String summary,
                                          final List<Long> entries)
             throws
-            ReadingListNameException {
+            ReadingListNameException,
+            ComicException {
         this.logger.info("Creating reading list: email={} name={}",
                          email,
                          name);
@@ -76,7 +77,9 @@ public class ReadingListService {
     }
 
     private void loadComics(final List<Long> entries,
-                            final ReadingList readingList) {
+                            final ReadingList readingList)
+            throws
+            ComicException {
         this.logger.debug("Adding comics to list");
         readingList.getEntries()
                    .clear();
@@ -110,7 +113,8 @@ public class ReadingListService {
                                          final String summary,
                                          final List<Long> entries)
             throws
-            NoSuchReadingListException {
+            NoSuchReadingListException,
+            ComicException {
         this.logger.info("Updating reading list: owner={} id={} name={}",
                          email,
                          id,

@@ -170,4 +170,12 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   change_layout(layout: string): void {
     this.library_display_adaptor.set_layout(layout);
   }
+
+  toggleComicFileSelection(comicFile: ComicFile): void {
+    if (this.selected_comic_files.includes(comicFile)) {
+      this.import_adaptor.deselect_comic_files([comicFile]);
+    } else {
+      this.import_adaptor.select_comic_files([comicFile]);
+    }
+  }
 }

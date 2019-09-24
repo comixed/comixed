@@ -2,10 +2,10 @@
   <div class="ui-g-3 ui-sm-6">
     <p-card>
       <p-header>
-        <h3>{{ multi_scraping.current_comic.base_filename }}</h3>
+        <h3>{{ multi_scraping.current_comic.baseFilename }}</h3>
       </p-header>
       <img
-        src="{{ multi_scraping.current_comic | comic_cover_url }}"
+        src="{{ multi_scraping.current_comic | comicCoverUrl }}"
         [style.width]="'100%'"
         [style.height]="'auto'"
       />

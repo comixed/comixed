@@ -21,13 +21,13 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/library';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Comic } from 'app/library/models/comic';
+import { Comic } from 'app/comics/models/comic';
 import { LibraryState } from 'app/library/models/library-state';
 import { LIBRARY_FEATURE_KEY } from 'app/library/reducers/library.reducer';
-import { ScanType } from 'app/library/models/scan-type';
+import { ScanType } from 'app/comics/models/scan-type';
 import * as _ from 'lodash';
 import { filter } from 'rxjs/operators';
-import { ComicFormat } from 'app/library/models/comic-format';
+import { ComicFormat } from 'app/comics/models/comic-format';
 import * as LibraryActions from '../actions/library.actions';
 import { extractField } from 'app/library/utility.functions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
@@ -71,54 +71,54 @@ export class LibraryAdaptor {
           return !!state;
         })
       )
-      .subscribe((library_state: LibraryState) => {
-        this._latest_updated_date = library_state.latest_updated_date;
-        this._pending_import$.next(library_state.pending_imports);
-        this._pending_rescan$.next(library_state.pending_rescans);
+      .subscribe((libraryState: LibraryState) => {
+        this._latest_updated_date = libraryState.latest_updated_date;
+        this._pending_import$.next(libraryState.pending_imports);
+        this._pending_rescan$.next(libraryState.pending_rescans);
 
-        if (!_.isEqual(this._scan_type$.getValue(), library_state.scan_types)) {
-          this._scan_type$.next(library_state.scan_types);
+        if (!_.isEqual(this._scan_type$.getValue(), libraryState.scan_types)) {
+          this._scan_type$.next(libraryState.scan_types);
         }
-        if (!_.isEqual(this._format$.getValue(), library_state.formats)) {
-          this._format$.next(library_state.formats);
+        if (!_.isEqual(this._format$.getValue(), libraryState.formats)) {
+          this._format$.next(libraryState.formats);
         }
         if (
           !_.isEqual(
             this._last_read_date$.getValue(),
-            library_state.last_read_dates
+            libraryState.last_read_dates
           )
         ) {
-          this._last_read_date$.next(library_state.last_read_dates);
+          this._last_read_date$.next(libraryState.last_read_dates);
         }
-        this._fetching_update$.next(library_state.fetching_updates);
-        if (!_.isEqual(this._comic$.getValue(), library_state.comics)) {
-          this._comic$.next(library_state.comics);
+        this._fetching_update$.next(libraryState.fetching_updates);
+        if (!_.isEqual(this._comic$.getValue(), libraryState.comics)) {
+          this._comic$.next(libraryState.comics);
           this._publisher$.next(
-            extractField(library_state.comics, 'publisher')
+            extractField(libraryState.comics, 'publisher')
           );
-          this._serie$.next(extractField(library_state.comics, 'series'));
+          this._serie$.next(extractField(libraryState.comics, 'series'));
           this._character$.next(
-            extractField(library_state.comics, 'characters')
+            extractField(libraryState.comics, 'characters')
           );
-          this._team$.next(extractField(library_state.comics, 'teams'));
-          this._location$.next(extractField(library_state.comics, 'locations'));
+          this._team$.next(extractField(libraryState.comics, 'teams'));
+          this._location$.next(extractField(libraryState.comics, 'locations'));
           this._story_arc$.next(
-            extractField(library_state.comics, 'story_arcs')
+            extractField(libraryState.comics, 'storyArcs')
           );
           if (this.current_id !== -1) {
             this._current_comic$.next(
-              library_state.comics.find(comic => comic.id === this.current_id)
+              libraryState.comics.find(comic => comic.id === this.current_id)
             );
           }
         }
-        if (this.current_id !== -1 && library_state.current_comic) {
+        if (this.current_id !== -1 && libraryState.current_comic) {
           if (
             !_.isEqual(
               this._current_comic$.getValue(),
-              library_state.current_comic
+              libraryState.current_comic
             )
           ) {
-            this._current_comic$.next(library_state.current_comic);
+            this._current_comic$.next(libraryState.current_comic);
           }
         }
         this._last_updated$.next(new Date());
@@ -265,8 +265,8 @@ export class LibraryAdaptor {
       .getValue()
       .find(entry => entry.comics[0].series === series)
       .comics.sort((c1: Comic, c2: Comic) =>
-        (c1.sortable_issue_number || '0').localeCompare(
-          c2.sortable_issue_number || '0'
+        (c1.sortableIssueNumber || '0').localeCompare(
+          c2.sortableIssueNumber || '0'
         )
       );
   }

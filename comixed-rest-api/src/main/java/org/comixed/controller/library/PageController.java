@@ -20,13 +20,14 @@
 package org.comixed.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
 import org.comixed.model.library.PageType;
-import org.comixed.views.View;
-import org.comixed.views.View.PageList;
-import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.service.library.PageException;
 import org.comixed.service.library.PageService;
+import org.comixed.utils.FileTypeIdentifier;
+import org.comixed.views.View;
+import org.comixed.views.View.PageList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,23 +46,22 @@ public class PageController {
     @Autowired private PageService pageService;
     @Autowired private FileTypeIdentifier fileTypeIdentifier;
 
-    @RequestMapping(value = "/pages/blocked",
-                    method = RequestMethod.POST)
-    public String[] addBlockedPageHash(
-            @RequestParam("hash")
-                    String hash) {
+    @PostMapping(value = "/pages/{id}/block/{hash}",
+                 produces = "application/json",
+                 consumes = "application/json")
+    @JsonView(View.ComicDetails.class)
+    public Comic addBlockedPageHash(
+            @PathVariable("id")
+            final long pageId,
+            @PathVariable("hash")
+                    String hash)
+            throws
+            PageException {
         this.logger.info("Blocking page hash: {}",
                          hash);
 
-        final String[] result = this.pageService.addBlockedPageHash(hash);
-
-        this.logger.debug("Returning {} page hash{}",
-                          result.length,
-                          result.length == 1
-                          ? ""
-                          : "es");
-
-        return result;
+        return this.pageService.addBlockedPageHash(pageId,
+                                                   hash);
     }
 
     @RequestMapping(value = "/pages/hash/{hash}",
@@ -69,8 +69,8 @@ public class PageController {
     public int deleteAllWithHash(
             @PathVariable("hash")
                     String hash) {
-        this.logger.debug("Marking as undeleted all pages with hash={}",
-                          hash);
+        this.logger.info("Marking all pages with hash as deleted: {}",
+                         hash);
 
         int result = this.pageService.deleteAllWithHash(hash);
 
@@ -232,23 +232,21 @@ public class PageController {
         return result;
     }
 
-    @RequestMapping(value = "/pages/blocked/{hash}",
-                    method = RequestMethod.DELETE)
-    public String[] removeBlockedPageHash(
+    @DeleteMapping(value = "/pages/{id}/unblock/{hash}",
+                   produces = "application/json")
+    @JsonView(View.ComicDetails.class)
+    public Comic removeBlockedPageHash(
+            @PathVariable("id")
+            final long pageId,
             @PathVariable("hash")
-                    String hash) {
+                    String hash)
+            throws
+            PageException {
         this.logger.info("Unblocking page hash: {}",
                          hash);
 
-        final String[] result = this.pageService.removeBlockedPageHash(hash);
-
-        this.logger.debug("Returning {} page hash{}",
-                          result.length,
-                          result.length == 1
-                          ? ""
-                          : "es");
-
-        return result;
+        return this.pageService.removeBlockedPageHash(pageId,
+                                                      hash);
     }
 
     @RequestMapping(value = "/pages/hash/{hash}",
@@ -256,8 +254,8 @@ public class PageController {
     public int undeleteAllWithHash(
             @PathVariable("hash")
                     String hash) {
-        this.logger.debug("Marking as undeleted all pages with hash={}",
-                          hash);
+        this.logger.info("Marking all pages with hash as undeleted: {}",
+                         hash);
 
         int result = this.pageService.undeleteAllWithHash(hash);
 

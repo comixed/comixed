@@ -19,7 +19,7 @@
 
 import { Duplicates } from 'app/models/state/duplicates';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
-import { DuplicatePage } from 'app/models/comics/duplicate-page';
+import { DuplicatePage } from 'app/comics';
 
 export const initial_state: Duplicates = {
   busy: false,
