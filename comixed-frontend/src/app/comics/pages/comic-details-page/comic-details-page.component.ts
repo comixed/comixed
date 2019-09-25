@@ -29,8 +29,9 @@ import { Comic } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { filter } from 'rxjs/operators';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -43,6 +44,8 @@ export const CURRENT_PAGE_PARAMETER = 'page';
 export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   comicSubscription: Subscription;
   comic: Comic;
+  langChangeSubscription: Subscription;
+
   id = -1;
   characters: string[];
   teams: string[];
@@ -54,6 +57,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   single_comic_scraping$: Observable<SingleComicScraping>;
   single_comic_scraping_subscription: Subscription;
   single_comic_scraping: SingleComicScraping;
+
   authSubscription: Subscription;
   isAdmin = false;
   protected currentTab: number;
@@ -66,6 +70,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private authenticationAdaptor: AuthenticationAdaptor,
     private comicAdaptor: ComicAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private store: Store<AppState>
@@ -88,9 +93,14 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authenticationAdaptor.role$.subscribe(
       roles => (this.isAdmin = roles.is_admin)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
     this.comicSubscription = this.comicAdaptor.comic$.subscribe(comic => {
       if (comic) {
         this.comic = comic;
+        this.loadTranslations();
         this.characters = comic.characters;
         this.teams = comic.teams;
         this.locations = comic.locations;
@@ -210,5 +220,67 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     );
 
     this.router.navigate(['comics', id], { queryParams: queryParams });
+  }
+
+  private loadTranslations() {
+    this.loadComicBreadcrumbs();
+  }
+
+  private loadComicBreadcrumbs() {
+    if (!this.comic) {
+      return;
+    }
+
+    const entries: MenuItem[] = [
+      {
+        label: this.translateService.instant('breadcrumb.entry.library-page'),
+        routerLink: ['/comics']
+      }
+    ];
+
+    if (this.comic.publisher) {
+      entries.push({
+        label: this.translateService.instant(
+          'breadcrumb.entry.comic-details-page.publisher',
+          { name: this.comic.publisher }
+        ),
+        routerLink: ['/publishers', this.comic.publisher]
+      });
+    } else {
+      entries.push({ label: '?' });
+    }
+    if (this.comic.series) {
+      entries.push({
+        label: this.translateService.instant(
+          'breadcrumb.entry.comic-details-page.series',
+          { name: this.comic.series }
+        ),
+        routerLink: ['/series', this.comic.series]
+      });
+    } else {
+      entries.push({ label: '?' });
+    }
+    if (this.comic.volume) {
+      entries.push({
+        label: this.translateService.instant(
+          'breadcrumb.entry.comic-details-page.volume',
+          { volume: this.comic.volume }
+        )
+      });
+    } else {
+      entries.push({ label: '?' });
+    }
+    if (this.comic.issueNumber) {
+      entries.push({
+        label: this.translateService.instant(
+          'breadcrumb.entry.comic-details-page.issue-number',
+          { issue: this.comic.issueNumber }
+        )
+      });
+    } else {
+      entries.push({ label: '?' });
+    }
+
+    this.breadcrumbAdaptor.loadEntries(entries);
   }
 }

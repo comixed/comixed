@@ -25,6 +25,7 @@ import { User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-account-page',
@@ -32,29 +33,42 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./account-page.component.css']
 })
 export class AccountPageComponent implements OnInit, OnDestroy {
-  auth_state_subscription: Subscription;
+  authStateSubscription: Subscription;
   user: User;
+  langChangeSubscription: Subscription;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private auth_adaptor: AuthenticationAdaptor
+    private titleService: Title,
+    private translateService: TranslateService,
+    private authenticationAdaptor: AuthenticationAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {}
 
   ngOnInit() {
-    this.auth_state_subscription = this.auth_adaptor.user$
+    this.authStateSubscription = this.authenticationAdaptor.user$
       .pipe(filter(user => !!user))
       .subscribe(user => {
         this.user = user;
-        this.title_service.setTitle(
-          this.translate_service.instant('account-page.title', {
+        this.titleService.setTitle(
+          this.translateService.instant('account-page.title', {
             email: this.user.email
           })
         );
       });
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.auth_state_subscription.unsubscribe();
+    this.authStateSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      { label: this.translateService.instant('breadcrumb.entry.account-page') }
+    ]);
   }
 }

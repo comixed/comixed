@@ -107,7 +107,11 @@ import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-pa
 import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
 import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
 import { REDUCERS } from 'app/app.reducers';
-import { ContextMenuModule, TieredMenuModule } from 'primeng/primeng';
+import {
+  BreadcrumbModule,
+  ContextMenuModule,
+  TieredMenuModule
+} from 'primeng/primeng';
 import { UserPreferencePipe } from './pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from './ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
@@ -119,6 +123,7 @@ import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { BackendStatusModule } from 'app/backend-status/backend-status.module';
 import { ComicsModule } from 'app/comics/comics.module';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @NgModule({
   declarations: [
@@ -220,9 +225,11 @@ import { MainMenuComponent } from 'app/components/main-menu/main-menu.component'
         useClass: TranslateMessageFormatCompiler
       }
     }),
-    FileSaverModule
+    FileSaverModule,
+    BreadcrumbModule
   ],
   providers: [
+    BreadcrumbAdaptor,
     LibraryDisplayAdaptor,
     UserService,
     ComicService,

@@ -32,6 +32,7 @@ import { SelectItem } from 'primeng/api';
 import { ComicFile, ImportAdaptor, LibraryAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';
@@ -47,18 +48,19 @@ const ROWS_PREFERENCE = 'import_rows';
   styleUrls: ['./import-page.component.css']
 })
 export class ImportPageComponent implements OnInit, OnDestroy {
-  user_subscription: Subscription;
+  userSubscription: Subscription;
   user: User;
-  comic_files_subscription: Subscription;
-  comic_files: ComicFile[];
-  selected_comic_files_subscription: Subscription;
-  selected_comic_files: ComicFile[];
-  import_count_subscription: Subscription;
-  import_count = 0;
-  fetching_files_subscription: Subscription;
-  fetching_files = false;
-  importing_subscription: Subscription;
+  comicFilesSubscription: Subscription;
+  comicFiles: ComicFile[];
+  selectedComicFilesSubscription: Subscription;
+  selectedComicFiles: ComicFile[];
+  importCountSubscription: Subscription;
+  importCount = 0;
+  fetchingFilesSubscription: Subscription;
+  fetchingFiles = false;
+  importingSubscription: Subscription;
   importing = false;
+  langChangeSubscription: Subscription;
 
   protected sort_options: SelectItem[];
   protected sort_by: string;
@@ -71,12 +73,13 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   protected delete_blocked_pages = false;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor,
-    private auth_adaptor: AuthenticationAdaptor,
-    private import_adaptor: ImportAdaptor,
-    private comic_service: ComicService,
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private authenticationAdaptor: AuthenticationAdaptor,
+    private importAdaptor: ImportAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
+    private comicService: ComicService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {
@@ -116,58 +119,62 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.user_subscription = this.auth_adaptor.user$.subscribe(user => {
+    this.userSubscription = this.authenticationAdaptor.user$.subscribe(user => {
       this.user = user;
     });
-    this.comic_files_subscription = this.import_adaptor.comic_file$.subscribe(
+    this.comicFilesSubscription = this.importAdaptor.comic_file$.subscribe(
       comic_files => {
-        this.comic_files = comic_files;
-        this.title_service.setTitle(
-          this.translate_service.instant('import-page.title', {
-            count: this.comic_files.length
+        this.comicFiles = comic_files;
+        this.titleService.setTitle(
+          this.translateService.instant('import-page.title', {
+            count: this.comicFiles.length
           })
         );
       }
     );
-    this.selected_comic_files_subscription = this.import_adaptor.selected_comic_file$.subscribe(
-      selected_files => (this.selected_comic_files = selected_files)
+    this.selectedComicFilesSubscription = this.importAdaptor.selected_comic_file$.subscribe(
+      selected_files => (this.selectedComicFiles = selected_files)
     );
-    this.fetching_files_subscription = this.import_adaptor.fetching_files$.subscribe(
-      fetching => (this.fetching_files = fetching)
+    this.fetchingFilesSubscription = this.importAdaptor.fetching_files$.subscribe(
+      fetching => (this.fetchingFiles = fetching)
     );
-    this.importing_subscription = this.library_adaptor.pending_import$.subscribe(
+    this.importingSubscription = this.libraryAdaptor.pending_import$.subscribe(
       count => (this.importing = count > 0)
     );
-    this.import_count_subscription = this.library_adaptor.pending_import$.subscribe(
+    this.importCountSubscription = this.libraryAdaptor.pending_import$.subscribe(
       import_count => {
-        this.import_count = import_count;
+        this.importCount = import_count;
         this.importing = import_count > 0;
       }
     );
-
-    this.import_adaptor.set_directory(
-      this.auth_adaptor.get_preference(IMPORT_LAST_DIRECTORY)
+    this.importAdaptor.set_directory(
+      this.authenticationAdaptor.get_preference(IMPORT_LAST_DIRECTORY)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.user_subscription.unsubscribe();
-    this.comic_files_subscription.unsubscribe();
-    this.fetching_files_subscription.unsubscribe();
-    this.importing_subscription.unsubscribe();
-    this.import_count_subscription.unsubscribe();
+    this.userSubscription.unsubscribe();
+    this.comicFilesSubscription.unsubscribe();
+    this.fetchingFilesSubscription.unsubscribe();
+    this.importingSubscription.unsubscribe();
+    this.importCountSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   set_sort_by(sort_by: string): void {
     this.sort_by = sort_by;
     this.update_params(SORT_PARAMETER, this.sort_by);
-    this.auth_adaptor.set_preference(IMPORT_SORT, sort_by);
+    this.authenticationAdaptor.set_preference(IMPORT_SORT, sort_by);
   }
 
   set_rows(rows: number): void {
     this.rows = rows;
     this.update_params(ROWS_PARAMETER, `${this.rows}`);
-    this.auth_adaptor.set_preference(IMPORT_ROWS, `${rows}`);
+    this.authenticationAdaptor.set_preference(IMPORT_ROWS, `${rows}`);
   }
 
   set_cover_size(cover_size: number): void {
@@ -176,45 +183,48 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
   save_cover_size(cover_size: number): void {
     this.update_params(COVER_PARAMETER, `${this.cover_size}`);
-    this.auth_adaptor.set_preference(IMPORT_COVER_SIZE, `${cover_size}`);
+    this.authenticationAdaptor.set_preference(
+      IMPORT_COVER_SIZE,
+      `${cover_size}`
+    );
   }
 
   retrieve_files(directory: string): void {
-    this.auth_adaptor.set_preference(IMPORT_LAST_DIRECTORY, directory);
-    this.import_adaptor.fetch_files(directory);
+    this.authenticationAdaptor.set_preference(IMPORT_LAST_DIRECTORY, directory);
+    this.importAdaptor.fetch_files(directory);
   }
 
   set_select_all(select: boolean): void {
     if (select) {
-      this.select_comics(this.comic_files);
+      this.select_comics(this.comicFiles);
     } else {
-      this.unselect_comics(this.comic_files);
+      this.unselect_comics(this.comicFiles);
     }
   }
 
   import_selected_files(): void {
-    this.import_adaptor.start_importing(this.delete_blocked_pages, false);
+    this.importAdaptor.start_importing(this.delete_blocked_pages, false);
   }
 
   plural_imports(): boolean {
-    return this.import_count !== 1;
+    return this.importCount !== 1;
   }
 
   get_import_title(): string {
-    if (this.import_count === 0) {
+    if (this.importCount === 0) {
       return 'Preparing To Import Comics...';
     }
     return (
-      `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.import_count} ` +
+      `There ${this.plural_imports() ? 'Are' : 'Is'} ${this.importCount} ` +
       `Comic${this.plural_imports() ? 's' : ''} Remaining To Be Imported...`
     );
   }
 
   get_comic_selection_title(): string {
-    if (this.comic_files.length === 0) {
+    if (this.comicFiles.length === 0) {
       return 'No Comics Are Loaded';
     } else {
-      return `Selected ${this.selected_comic_files.length} Of ${this.comic_files.length} Comics...`;
+      return `Selected ${this.selectedComicFiles.length} Of ${this.comicFiles.length} Comics...`;
     }
   }
 
@@ -227,7 +237,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   disable_inputs(): boolean {
-    return this.comic_files.length === 0;
+    return this.comicFiles.length === 0;
   }
 
   toggle_selected_state(file: ComicFile): void {
@@ -241,15 +251,15 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   private get_parameter(name: string): string {
-    return this.auth_adaptor.get_preference(name);
+    return this.authenticationAdaptor.get_preference(name);
   }
 
   private select_comics(files: Array<ComicFile>): void {
-    this.import_adaptor.select_comic_files(files);
+    this.importAdaptor.select_comic_files(files);
   }
 
   private unselect_comics(files: Array<ComicFile>): void {
-    this.import_adaptor.deselect_comic_files(files);
+    this.importAdaptor.deselect_comic_files(files);
   }
 
   private update_params(name: string, value: string): void {
@@ -266,5 +276,16 @@ export class ImportPageComponent implements OnInit, OnDestroy {
       relativeTo: this.activatedRoute,
       queryParams: queryParams
     });
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.admin.import-page'
+        )
+      }
+    ]);
   }
 }

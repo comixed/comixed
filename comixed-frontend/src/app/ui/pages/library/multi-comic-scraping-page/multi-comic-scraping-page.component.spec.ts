@@ -46,6 +46,8 @@ import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { MessageService } from 'primeng/api';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('MultiComicScrapingPageComponent', () => {
   let component: MultiComicScrapingPageComponent;
@@ -56,6 +58,7 @@ describe('MultiComicScrapingPageComponent', () => {
       imports: [
         LibraryModule,
         HttpClientTestingModule,
+        RouterTestingModule,
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
@@ -81,7 +84,7 @@ describe('MultiComicScrapingPageComponent', () => {
         ComicCoverUrlPipe,
         ScrapingIssueTitlePipe
       ],
-      providers: [ComicService, UserService, MessageService]
+      providers: [BreadcrumbAdaptor, ComicService, UserService, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MultiComicScrapingPageComponent);

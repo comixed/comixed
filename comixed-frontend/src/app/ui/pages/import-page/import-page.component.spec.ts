@@ -62,6 +62,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
 import { ImportAdaptor, LibraryAdaptor } from 'app/library';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 const DIRECTORY_TO_USE = '/OldUser/comixed/Downloads';
 
@@ -76,6 +77,7 @@ describe('ImportPageComponent', () => {
       imports: [
         LibraryModule,
         HttpClientTestingModule,
+        RouterTestingModule,
         EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         FormsModule,
@@ -111,6 +113,7 @@ describe('ImportPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         UserService,

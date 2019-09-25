@@ -66,6 +66,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -116,6 +117,7 @@ describe('ReadingListPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         ComicService,
@@ -135,8 +137,8 @@ describe('ReadingListPageComponent', () => {
     store = TestBed.get(Store);
     activated_route = TestBed.get(ActivatedRoute);
     fixture.detectChanges();
-    reading_list_name = component.reading_list_form.controls['name'];
-    reading_list_summary = component.reading_list_form.controls['summary'];
+    reading_list_name = component.readingListForm.controls['name'];
+    reading_list_summary = component.readingListForm.controls['summary'];
   }));
 
   it('should create', () => {

@@ -60,6 +60,7 @@ import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('SeriesDetailsPageComponent', () => {
   const COMIC = COMIC_1;
@@ -95,6 +96,7 @@ describe('SeriesDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         UserService,

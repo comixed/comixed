@@ -1,58 +1,51 @@
-<p-panel [collapsed]="user_admin?.current_user === null">
-  <p-header>
-    <div class="ui-helper-clearfix">
-      <span
-        class="ui-panel-title"
-        style="font-size:16px;display:inline-block;margin-top:2px"
-        >{{ 'admin.users.label.user-details' | translate }}</span
-      >
-      <p-button
-        [style]="{ float: 'right' }"
-        label="{{ 'admin.users.button.new-user' | translate }}"
-        icon="fa fa-fw fa-user-plus"
-        (onClick)="set_new_user()"
-      ></p-button>
-    </div>
-  </p-header>
-  <app-user-details-editor></app-user-details-editor>
+<p-panel *ngIf='user_admin?.current_user'
+         [collapsed]="user_admin?.current_user === null">
+    <p-header>
+        <div class="ui-helper-clearfix">
+      <span class="ui-panel-title"
+            style="font-size:16px;display:inline-block;margin-top:2px">{{ 'admin.users.label.user-details' | translate }}</span>
+            <p-button [style]="{ float: 'right' }"
+                      label="{{ 'admin.users.button.new-user' | translate }}"
+                      icon="fa fa-fw fa-user-plus"
+                      (onClick)="set_new_user()"></p-button>
+        </div>
+    </p-header>
+    <app-user-details-editor></app-user-details-editor>
 </p-panel>
 
-<p-table
-  *ngIf="user_admin"
-  [loading]="!user_admin || user_admin.busy"
-  [value]="user_admin.users"
-  [rows]="10"
-  [autoLayout]="true"
-  [paginatorPosition]="'both'"
-  [paginator]="true"
-  selectionMode="single"
-  (onRowSelect)="set_current_user($event.data)"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th></th>
-      <th>{{ 'admin.users.label.email' | translate }}</th>
-      <th>{{ 'admin.users.label.roles' | translate }}</th>
-      <th>{{ 'admin.users.label.member-since' | translate }}</th>
-      <th>{{ 'admin.users.label.last-logged-on' | translate }}</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-user>
-    <tr [pSelectableRow]="user">
-      <td>
-        <p-button
-          icon="fa fa-fw fa-user-times"
-          pTooltip="{{ 'admin.users.tooltip.delete-user' | translate }}"
-          (onClick)="delete_user(user)"
-        ></p-button>
-      </td>
-      <td>{{ user.email }}</td>
-      <td>
-        <span *ngFor="let role of user.roles">[{{ role.name }}]</span>
-      </td>
-      <td>{{ user.first_login_date | date: 'medium' }}</td>
-      <td>{{ user.last_login_date | date: 'medium' }}</td>
-      <td></td>
-    </tr>
-  </ng-template>
+<p-table *ngIf="user_admin"
+         [loading]="!user_admin || user_admin.busy"
+         [value]="user_admin.users"
+         [rows]="10"
+         [autoLayout]="true"
+         [paginatorPosition]="'both'"
+         [paginator]="true"
+         selectionMode="single"
+         (onRowSelect)="set_current_user($event.data)">
+    <ng-template pTemplate="header">
+        <tr>
+            <th></th>
+            <th>{{ 'admin.users.label.email' | translate }}</th>
+            <th>{{ 'admin.users.label.roles' | translate }}</th>
+            <th>{{ 'admin.users.label.member-since' | translate }}</th>
+            <th>{{ 'admin.users.label.last-logged-on' | translate }}</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body"
+                 let-user>
+        <tr [pSelectableRow]="user">
+            <td>
+                <p-button icon="fa fa-fw fa-user-times"
+                          pTooltip="{{ 'admin.users.tooltip.delete-user' | translate }}"
+                          (onClick)="delete_user(user)"></p-button>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+                <span *ngFor="let role of user.roles">[{{ role.name }}]</span>
+            </td>
+            <td>{{ user.first_login_date | date: 'medium' }}</td>
+            <td>{{ user.last_login_date | date: 'medium' }}</td>
+            <td></td>
+        </tr>
+    </ng-template>
 </p-table>

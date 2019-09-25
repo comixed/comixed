@@ -24,6 +24,7 @@ import { SelectItem } from 'primeng/api';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LibraryAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-characters-page',
@@ -31,62 +32,84 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./characters-page.component.css']
 })
 export class CharactersPageComponent implements OnInit, OnDestroy {
-  characters_subscription: Subscription;
+  charactersSubscription: Subscription;
   characters: ComicCollectionEntry[];
+  langChangeSubscription: Subscription;
 
-  protected rows_options: Array<SelectItem>;
+  protected rowsOptions: Array<SelectItem>;
   rows = 10;
 
   constructor(
-    private library_adaptor: LibraryAdaptor,
-    private title_service: Title,
-    private translate_service: TranslateService
+    private titleService: Title,
+    private libraryAdaptor: LibraryAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
-    this.characters_subscription = this.library_adaptor.character$.subscribe(
+    this.charactersSubscription = this.libraryAdaptor.character$.subscribe(
       characters => {
         this.characters = characters;
-        this.title_service.setTitle(
-          this.translate_service.instant('characters-page.title', {
+        this.titleService.setTitle(
+          this.translateService.instant('characters-page.title', {
             count: this.characters.length
           })
         );
       }
     );
-    this.load_rows_options();
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
+    this.loadRowsOptions();
   }
 
   ngOnDestroy() {
-    this.characters_subscription.unsubscribe();
+    this.charactersSubscription.unsubscribe();
   }
 
-  private load_rows_options(): void {
-    this.rows_options = [
+  private loadRowsOptions(): void {
+    this.rowsOptions = [
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.10-per-page'
         ),
         value: 10
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.25-per-page'
         ),
         value: 25
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.50-per-page'
         ),
         value: 50
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.100-per-page'
         ),
         value: 100
       }
     ];
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.root'
+        )
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.characters-page'
+        ),
+        routerLink: ['/characters']
+      }
+    ]);
   }
 }

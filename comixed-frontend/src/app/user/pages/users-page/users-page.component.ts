@@ -28,6 +28,7 @@ import { ConfirmationService } from 'primeng/api';
 import { User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-users-page',
@@ -35,22 +36,29 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./users-page.component.css']
 })
 export class UsersPageComponent implements OnInit, OnDestroy {
+  private langChangeSubscription: Subscription;
+
   private user_admin$: Observable<UserAdmin>;
   private user_admin_subscription: Subscription;
   public user_admin: UserAdmin;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
+    private titleService: Title,
+    private translateService: TranslateService,
     private store: Store<AppState>,
-    private confirm_service: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {
     this.user_admin$ = store.select('user_admin');
   }
 
   ngOnInit() {
-    this.title_service.setTitle(
-        this.translate_service.instant('users-page.title')
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
+    this.titleService.setTitle(
+      this.translateService.instant('users-page.title')
     );
     this.user_admin_subscription = this.user_admin$.subscribe(
       (user_admin: UserAdmin) => {
@@ -74,7 +82,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   }
 
   delete_user(user: User): void {
-    this.confirm_service.confirm({
+    this.confirmationService.confirm({
       header: `Delete ${user.email}?`,
       message: 'Are you sure you want to delete this user account?',
       icon: 'fa fa-exclamation',
@@ -84,5 +92,16 @@ export class UsersPageComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.admin.users-admin'
+        )
+      }
+    ]);
   }
 }

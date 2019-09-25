@@ -36,6 +36,8 @@ import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { LibraryModule } from 'app/library/library.module';
 import { LibraryAdaptor } from 'app/library';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LibraryAdminPageComponent', () => {
   let component: LibraryAdminPageComponent;
@@ -49,6 +51,7 @@ describe('LibraryAdminPageComponent', () => {
       imports: [
         LibraryModule,
         HttpClientTestingModule,
+        RouterTestingModule,
         EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         HttpClientTestingModule,
@@ -59,7 +62,7 @@ describe('LibraryAdminPageComponent', () => {
         PanelModule
       ],
       declarations: [LibraryAdminPageComponent],
-      providers: [MessageService, UserService, ComicService]
+      providers: [MessageService, UserService, ComicService, BreadcrumbAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryAdminPageComponent);
@@ -78,8 +81,8 @@ describe('LibraryAdminPageComponent', () => {
 
   describe('when an import is in process', () => {
     beforeEach(() => {
-      component.import_count = 12;
-      component.rescan_count = 0;
+      component.importCount = 12;
+      component.rescanCount = 0;
       fixture.detectChanges();
     });
 
@@ -94,8 +97,8 @@ describe('LibraryAdminPageComponent', () => {
 
   describe('when not rescanning', () => {
     beforeEach(() => {
-      component.import_count = 0;
-      component.rescan_count = 0;
+      component.importCount = 0;
+      component.rescanCount = 0;
       fixture.detectChanges();
     });
 
@@ -110,7 +113,7 @@ describe('LibraryAdminPageComponent', () => {
     describe('and a rescan is requested', () => {
       beforeEach(() => {
         spyOn(library_adaptor, 'start_rescan');
-        component.rescan_library();
+        component.rescanLibrary();
         fixture.detectChanges();
       });
 
@@ -122,7 +125,7 @@ describe('LibraryAdminPageComponent', () => {
 
   describe('when rescanning', () => {
     beforeEach(() => {
-      component.rescan_count = 3;
+      component.rescanCount = 3;
       fixture.detectChanges();
     });
 

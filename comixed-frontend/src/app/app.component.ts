@@ -22,6 +22,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { LibraryAdaptor } from 'app/library';
 import { Subscription } from 'rxjs';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -32,54 +34,61 @@ export class AppComponent implements OnInit {
   title = 'ComiXed';
 
   user: User;
+
   authenticated = false;
-  show_login = false;
-  comic_count = 0;
-  import_count = 0;
-  rescan_count = 0;
-  fetching_update_subscription: Subscription;
+  showLogin = false;
+  comicCount = 0;
+  importCount = 0;
+  rescanCount = 0;
+  fetchingUpdateSubscription: Subscription;
+  breadcrumbs = [];
+  home: MenuItem = { routerLink: ['/home'] };
 
   constructor(
-    private translate_service: TranslateService,
-    private auth_adaptor: AuthenticationAdaptor,
-    private library_adaptor: LibraryAdaptor
+    private translateService: TranslateService,
+    private authenticationAdaptor: AuthenticationAdaptor,
+    private libraryAdaptor: LibraryAdaptor,
+    private breadcrumbsAdaptor: BreadcrumbAdaptor
   ) {
-    translate_service.setDefaultLang('en');
+    translateService.setDefaultLang('en');
   }
 
   ngOnInit() {
-    this.auth_adaptor.user$.subscribe(user => {
+    this.authenticationAdaptor.user$.subscribe(user => {
       this.user = user;
     });
-    this.auth_adaptor.authenticated$.subscribe(authenticated => {
+    this.authenticationAdaptor.authenticated$.subscribe(authenticated => {
       this.authenticated = authenticated;
-      if (this.authenticated && !this.fetching_update_subscription) {
-        this.fetching_update_subscription = this.library_adaptor._fetching_update$.subscribe(
+      if (this.authenticated && !this.fetchingUpdateSubscription) {
+        this.fetchingUpdateSubscription = this.libraryAdaptor._fetching_update$.subscribe(
           fetching => {
             if (!fetching) {
-              this.library_adaptor.get_comic_updates();
+              this.libraryAdaptor.get_comic_updates();
             }
           }
         );
-      } else if (!this.authenticated && this.fetching_update_subscription) {
-        this.fetching_update_subscription.unsubscribe();
-        this.fetching_update_subscription = null;
-        this.library_adaptor.reset_library();
+      } else if (!this.authenticated && this.fetchingUpdateSubscription) {
+        this.fetchingUpdateSubscription.unsubscribe();
+        this.fetchingUpdateSubscription = null;
+        this.libraryAdaptor.reset_library();
       }
     });
-    this.auth_adaptor.show_login$.subscribe(show_login => {
-      this.show_login = show_login;
+    this.authenticationAdaptor.show_login$.subscribe(show_login => {
+      this.showLogin = show_login;
     });
-    this.auth_adaptor.get_current_user();
+    this.authenticationAdaptor.get_current_user();
 
-    this.library_adaptor.comic$.subscribe(
-      comics => (this.comic_count = comics.length)
+    this.libraryAdaptor.comic$.subscribe(
+      comics => (this.comicCount = comics.length)
     );
-    this.library_adaptor.pending_import$.subscribe(
-      imports => (this.import_count = imports)
+    this.libraryAdaptor.pending_import$.subscribe(
+      imports => (this.importCount = imports)
     );
-    this.library_adaptor.pending_rescan$.subscribe(
-      rescans => (this.rescan_count = rescans)
+    this.libraryAdaptor.pending_rescan$.subscribe(
+      rescans => (this.rescanCount = rescans)
+    );
+    this.breadcrumbsAdaptor.entries$.subscribe(
+      entries => (this.breadcrumbs = entries)
     );
   }
 }

@@ -23,6 +23,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-location-details-page',
@@ -30,62 +31,69 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./location-details-page.component.css']
 })
 export class LocationDetailsPageComponent implements OnInit, OnDestroy {
-  locations_subscription: Subscription;
+  locationsSubscription: Subscription;
   comics: Comic[];
-  selected_comics_subscription: Subscription;
-  selected_comics: Comic[];
+  selectedComicsSubscription: Subscription;
+  selectedComics: Comic[];
+  langChangeSubscription: Subscription;
 
   protected layout = 'grid';
-  protected sort_field = 'volume';
+  protected sortField = 'volume';
   protected rows = 10;
-  protected same_height = true;
-  protected cover_size = 200;
+  protected sameHeight = true;
+  protected coverSize = 200;
 
-  location_name: string;
+  locationName: string;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor,
-    private selection_adaptor: SelectionAdaptor,
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private selectionAdaptor: SelectionAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute
   ) {
     this.activatedRoute.params.subscribe(params => {
-      this.location_name = params['name'];
+      this.locationName = params['name'];
     });
   }
 
   ngOnInit() {
-    this.locations_subscription = this.library_adaptor.location$.subscribe(
+    this.locationsSubscription = this.libraryAdaptor.location$.subscribe(
       locations => {
         const result = locations.find(
-          location => location.name === this.location_name
+          location => location.name === this.locationName
         );
         this.comics = result ? result.comics : [];
-        this.title_service.setTitle(
-          this.translate_service.instant('location-details-page.title', {
-            name: this.location_name,
+        this.titleService.setTitle(
+          this.translateService.instant('location-details-page.title', {
+            name: this.locationName,
             count: this.comics.length
           })
         );
       }
     );
-    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
-      selected_comics => (this.selected_comics = selected_comics)
+    this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
+      selected_comics => (this.selectedComics = selected_comics)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.locations_subscription.unsubscribe();
-    this.selected_comics_subscription.unsubscribe();
+    this.locationsSubscription.unsubscribe();
+    this.selectedComicsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
-  set_layout(dataview: any, layout: string): void {
+  setLayout(dataview: any, layout: string): void {
     dataview.changeLayout(layout);
   }
 
   set_sort_field(sort_field: string): void {
-    this.sort_field = sort_field;
+    this.sortField = sort_field;
   }
 
   set_rows(rows: number): void {
@@ -93,10 +101,32 @@ export class LocationDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   set_cover_size(cover_size: number): void {
-    this.cover_size = cover_size;
+    this.coverSize = cover_size;
   }
 
   set_same_height(same_height: boolean): void {
-    this.same_height = same_height;
+    this.sameHeight = same_height;
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.root'
+        )
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.locations-page'
+        ),
+        routerLink: ['/locations']
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.location-details-page',
+          { name: this.locationName }
+        )
+      }
+    ]);
   }
 }

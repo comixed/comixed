@@ -34,6 +34,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
@@ -47,17 +48,18 @@ describe('MainPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         LibraryModule,
-        HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
-        RouterTestingModule.withRoutes(routes),
         FormsModule,
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes(routes),
         TranslateModule.forRoot(),
+        EffectsModule.forRoot(EFFECTS),
         StoreModule.forRoot(REDUCERS),
         ChartModule,
         DropdownModule
       ],
       declarations: [MainPageComponent],
       providers: [
+        BreadcrumbAdaptor,
         MessageService,
         UserService,
         { provide: ComicService, useClass: ComicServiceMock }

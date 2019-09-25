@@ -60,6 +60,7 @@ import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('LocationDetailsPageComponent', () => {
   let component: LocationDetailsPageComponent;
@@ -70,13 +71,14 @@ describe('LocationDetailsPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         LibraryModule,
-        HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
+
         BrowserAnimationsModule,
         RouterTestingModule,
+        HttpClientTestingModule,
         FormsModule,
-        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         DataViewModule,
         SplitButtonModule,
         ScrollPanelModule,
@@ -93,6 +95,7 @@ describe('LocationDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         UserService,

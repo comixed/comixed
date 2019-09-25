@@ -614,6 +614,47 @@
       "detail": "Successfully logged out."
     }
   },
+  "breadcrumb": {
+    "entry": {
+      "library-page": "Comics",
+      "comic-details-page": {
+        "publisher": "{name}",
+        "series": "{name}",
+        "volume": "v{volume}",
+        "issue-number": "Issue #{issue}"
+      },
+      "multi-comic-scraping-page": "Scraping",
+      "reading-lists-page": "Reading Lists",
+      "collections": {
+        "root": "Collections",
+        "publishers-page": "Publishers",
+        "publisher-details-page": "{name}",
+        "series-page": "Series",
+        "series-details-page": "{name}",
+        "characters-page": "Characters",
+        "character-details-page": "{name}",
+        "teams-page": "Teams",
+        "team-details-page": "{name}",
+        "locations-page": "Locations",
+        "location-details-page": "{name}",
+        "stories-page": "Stories",
+        "story-details-page": "{name}"
+      },
+      "account-page": "Account",
+      "help": {
+        "root": "Help",
+        "build-details-page": "Build Details"
+      },
+      "admin": {
+        "root": "Admin",
+        "library-admin": "Library",
+        "users-admin": "Users",
+        "import-page": "Import Comics",
+        "duplicate-pages": "Duplicate Pages",
+        "missing-comics": "Missing Comics"
+      }
+    }
+  },
   "general-message": {
     "error": {
       "general-service-failure": "A general system failure has occurred."

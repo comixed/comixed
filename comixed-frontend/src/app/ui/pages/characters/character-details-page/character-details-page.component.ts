@@ -23,6 +23,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-character-details-page',
@@ -30,54 +31,61 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./character-details-page.component.css']
 })
 export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
-  character_subscription: Subscription;
+  characterSubscription: Subscription;
   comics: Comic[];
-  selected_comics_subscription: Subscription;
-  selected_comics: Comic[];
+  selectedComicsSubscription: Subscription;
+  selectedComics: Comic[];
+  langChangeSubscription: Subscription;
 
   protected layout = 'grid';
-  protected sort_field = 'volume';
+  protected sortField = 'volume';
   protected rows = 10;
-  protected same_height = true;
-  protected cover_size = 200;
+  protected sameHeight = true;
+  protected coverSize = 200;
 
-  character_name: string;
+  characterName: string;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor,
-    private selection_adaptor: SelectionAdaptor,
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private selectionAdaptor: SelectionAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute
   ) {
     this.activatedRoute.params.subscribe(params => {
-      this.character_name = params['name'];
+      this.characterName = params['name'];
     });
   }
 
   ngOnInit() {
-    this.character_subscription = this.library_adaptor.character$.subscribe(
+    this.characterSubscription = this.libraryAdaptor.character$.subscribe(
       characters => {
         const result = characters.find(
-          character => character.name === this.character_name
+          character => character.name === this.characterName
         );
         this.comics = result ? result.comics : [];
-        this.title_service.setTitle(
-          this.translate_service.instant('character-details-page.title', {
-            name: this.character_name,
+        this.titleService.setTitle(
+          this.translateService.instant('character-details-page.title', {
+            name: this.characterName,
             count: this.comics.length
           })
         );
       }
     );
-    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
-      selected_comics => (this.selected_comics = selected_comics)
+    this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
+      selected_comics => (this.selectedComics = selected_comics)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.character_subscription.unsubscribe();
-    this.selected_comics_subscription.unsubscribe();
+    this.characterSubscription.unsubscribe();
+    this.selectedComicsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   set_layout(dataview: any, layout: string): void {
@@ -85,7 +93,7 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   set_sort_field(sort_field: string): void {
-    this.sort_field = sort_field;
+    this.sortField = sort_field;
   }
 
   set_rows(rows: number): void {
@@ -93,10 +101,32 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   set_cover_size(cover_size: number): void {
-    this.cover_size = cover_size;
+    this.coverSize = cover_size;
   }
 
   set_same_height(same_height: boolean): void {
-    this.same_height = same_height;
+    this.sameHeight = same_height;
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.root'
+        )
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.characters-page'
+        ),
+        routerLink: ['/characters']
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.character-details-page',
+          { name: this.characterName }
+        )
+      }
+    ]);
   }
 }

@@ -1,8 +1,11 @@
+<p-breadcrumb *ngIf='authenticated'
+              [model]='breadcrumbs'
+              [home]='home'></p-breadcrumb>
 <app-main-menu></app-main-menu>
 <p-toast position='top-right'
          styleClass='cx-alerts'></p-toast>
 <p-confirmDialog></p-confirmDialog>
-<app-login [show_login_dialog]='show_login'></app-login>
+<app-login [show_login_dialog]='showLogin'></app-login>
 <div [style]='{top:0,bottom:0,width:"100%"}'
      class='ui-g'>
     <div class='ui-g-12 ui-sm-12'>
@@ -11,10 +14,10 @@
     <div class='ui-g'
          id='comixed-footer'>
         <div [innerHTML]='"main-page.library-counts"|translate:{
-                comic_count: comic_count,
+                comic_count: comicCount,
                 read_count: 0,
-                import_count: import_count,
-                rescan_count: rescan_count
+                import_count: importCount,
+                rescan_count: rescanCount
               }'
              class='ui-g-3 ui-sm-6'></div>
         <div [innerHTML]='"main-page.copyright"|translate:{ years: "2017-2019" }'

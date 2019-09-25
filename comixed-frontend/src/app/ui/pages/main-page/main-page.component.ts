@@ -26,6 +26,7 @@ import { LibraryAdaptor } from 'app/library';
 import { ComicCollectionEntry } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 const COLOR_PALLETTE = [
   '#C0C0C0',
@@ -77,9 +78,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public data_to_show = 'publishers';
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {
     this.options = {
       title: {
@@ -94,41 +96,42 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.translate_service.onLangChange.subscribe(() => {
-      this.title_service.setTitle(
-        this.translate_service.instant('main-page.title')
+    this.translateService.onLangChange.subscribe(() => {
+      this.titleService.setTitle(
+        this.translateService.instant('main-page.title')
       );
     });
-    this.comics_subscription = this.library_adaptor.comic$.subscribe(comics => {
+    this.comics_subscription = this.libraryAdaptor.comic$.subscribe(comics => {
       this.comic_count = comics.length;
       this.plural = this.comic_count !== 1;
     });
-    this.publishers_subscription = this.library_adaptor.publisher$.subscribe(
+    this.publishers_subscription = this.libraryAdaptor.publisher$.subscribe(
       publishers => {
         this.publishers = publishers;
         this.build_data();
       }
     );
-    this.series_subscription = this.library_adaptor.serie$.subscribe(series => {
+    this.series_subscription = this.libraryAdaptor.serie$.subscribe(series => {
       this.series = series;
       this.build_data();
     });
-    this.characters_subscription = this.library_adaptor.character$.subscribe(
+    this.characters_subscription = this.libraryAdaptor.character$.subscribe(
       characters => {
         this.characters = characters;
         this.build_data();
       }
     );
-    this.teams_subscription = this.library_adaptor.team$.subscribe(teams => {
+    this.teams_subscription = this.libraryAdaptor.team$.subscribe(teams => {
       this.teams = teams;
       this.build_data();
     });
-    this.locations_subscription = this.library_adaptor.location$.subscribe(
+    this.locations_subscription = this.libraryAdaptor.location$.subscribe(
       locations => {
         this.locations = locations;
         this.build_data();
       }
     );
+    this.breadcrumbAdaptor.loadEntries([]);
   }
 
   ngOnDestroy() {

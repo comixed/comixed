@@ -32,6 +32,7 @@ import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-library-page',
@@ -39,16 +40,17 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./library-page.component.css']
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
-  auth_subscription: Subscription;
+  authSubscription: Subscription;
   user: User;
-  comics_subscription: Subscription;
+  comicsSubscription: Subscription;
   comics: Comic[] = [];
-  selected_comics_subscription: Subscription;
-  selected_comics: Comic[] = [];
-  rescan_count = 0;
-  rescan_count_subscription: Subscription;
-  import_count = 0;
-  import_count_subscription: Subscription;
+  selectedComicsSubscription: Subscription;
+  selectedComics: Comic[] = [];
+  rescanCount = 0;
+  rescanCountSubscription: Subscription;
+  importCount = 0;
+  importCountSubscription: Subscription;
+  langChangeSubscription: Subscription;
 
   private library_filter$: Observable<LibraryFilter>;
 
@@ -60,41 +62,42 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   scraping: MultipleComicsScraping;
 
   constructor(
-    private title_service: Title,
+    private titleService: Title,
     private router: Router,
-    private auth_adaptor: AuthenticationAdaptor,
-    private library_adaptor: LibraryAdaptor,
-    private selection_adaptor: SelectionAdaptor,
-    private user_service: UserService,
-    private comic_service: ComicService,
-    private confirm_service: ConfirmationService,
+    private authenticationAdaptor: AuthenticationAdaptor,
+    private libraryAdaptor: LibraryAdaptor,
+    private selectionAdaptor: SelectionAdaptor,
+    private userService: UserService,
+    private comicService: ComicService,
+    private confirmationService: ConfirmationService,
     private store: Store<AppState>,
-    private translate_service: TranslateService
+    private translateService: TranslateService,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {
     this.library_filter$ = store.select('library_filter');
     this.scraping$ = store.select('multiple_comic_scraping');
   }
 
   ngOnInit() {
-    this.auth_subscription = this.auth_adaptor.user$.subscribe(
+    this.authSubscription = this.authenticationAdaptor.user$.subscribe(
       user => (this.user = user)
     );
-    this.comics_subscription = this.library_adaptor.comic$.subscribe(comics => {
+    this.comicsSubscription = this.libraryAdaptor.comic$.subscribe(comics => {
       this.comics = comics;
-      this.title_service.setTitle(
-        this.translate_service.instant('library-page.title', {
+      this.titleService.setTitle(
+        this.translateService.instant('library-page.title', {
           count: this.comics.length
         })
       );
     });
-    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
-      selected_comics => (this.selected_comics = selected_comics)
+    this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
+      selected_comics => (this.selectedComics = selected_comics)
     );
-    this.import_count_subscription = this.library_adaptor.pending_import$.subscribe(
-      import_count => (this.import_count = import_count)
+    this.importCountSubscription = this.libraryAdaptor.pending_import$.subscribe(
+      import_count => (this.importCount = import_count)
     );
-    this.rescan_count_subscription = this.library_adaptor.pending_rescan$.subscribe(
-      rescan_count => (this.rescan_count = rescan_count)
+    this.rescanCountSubscription = this.libraryAdaptor.pending_rescan$.subscribe(
+      rescan_count => (this.rescanCount = rescan_count)
     );
     this.library_filter_subscription = this.library_filter$.subscribe(
       (library_filter: LibraryFilter) => {
@@ -110,30 +113,34 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
     this.store.dispatch(
       new ScrapingActions.MultipleComicsScrapingSetup({
-        api_key: this.user_service.get_user_preference('api_key', '')
+        api_key: this.userService.get_user_preference('api_key', '')
       })
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.auth_subscription.unsubscribe();
-    this.comics_subscription.unsubscribe();
-    this.selected_comics_subscription.unsubscribe();
-    this.import_count_subscription.unsubscribe();
-    this.rescan_count_subscription.unsubscribe();
+    this.authSubscription.unsubscribe();
+    this.comicsSubscription.unsubscribe();
+    this.selectedComicsSubscription.unsubscribe();
+    this.importCountSubscription.unsubscribe();
+    this.rescanCountSubscription.unsubscribe();
     this.library_filter_subscription.unsubscribe();
   }
 
   delete_comic(comic: Comic): void {
-    this.confirm_service.confirm({
-      header: this.translate_service.instant(
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
         'library.messages.delete-comic-title'
       ),
-      message: this.translate_service.instant(
+      message: this.translateService.instant(
         'library.messages.delete-comic-question'
       ),
       icon: 'fa fa-exclamation',
-      accept: () => this.library_adaptor.delete_comics_by_id([comic.id])
+      accept: () => this.libraryAdaptor.delete_comics_by_id([comic.id])
     });
   }
 
@@ -142,19 +149,25 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   rescan_library(): void {
-    this.confirm_service.confirm({
-      header: this.translate_service.instant(
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
         'library.messages.rescan-library-title'
       ),
-      message: this.translate_service.instant(
+      message: this.translateService.instant(
         'library.messages.rescan-library-message'
       ),
       icon: 'fa fa-exclamation',
-      accept: () => this.library_adaptor.start_rescan()
+      accept: () => this.libraryAdaptor.start_rescan()
     });
   }
 
   can_rescan(): boolean {
-    return this.import_count === 0 && this.rescan_count === 0;
+    return this.importCount === 0 && this.rescanCount === 0;
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      { label: this.translateService.instant('breadcrumb.entry.library-page') }
+    ]);
   }
 }

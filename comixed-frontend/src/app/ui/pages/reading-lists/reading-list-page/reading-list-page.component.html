@@ -1,4 +1,4 @@
-<form [formGroup]='reading_list_form'
+<form [formGroup]='readingListForm'
       (ngSubmit()='submit_form()'>
     <div class='ui-g'>
         <div class='ui-g-3'></div>
@@ -25,7 +25,7 @@
 
                 <div class='ui-g-12'>
                     <button pButton
-                            [disabled]='!reading_list_form.valid || !reading_list_form.dirty'
+                            [disabled]='!readingListForm.valid || !readingListForm.dirty'
                             [label]='"reading-list-page.button.save" | translate'
                             (click)='submit_form()'></button>
                 </div>
@@ -35,9 +35,9 @@
         <div #context_target
              class='ui-g-12'>
             <app-comic-list [comics]='entries'
-                            [selected_comics]='selected_entries'></app-comic-list>
+                            [selected_comics]='selectedEntries'></app-comic-list>
         </div>
     </div>
     <p-contextMenu [target]='context_target'
-                   [model]='context_menu'></p-contextMenu>
+                   [model]='contextMenu'></p-contextMenu>
 </form>

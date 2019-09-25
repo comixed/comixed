@@ -37,6 +37,7 @@ import { UserService } from 'app/services/user.service';
 import { MessageService } from 'primeng/api';
 import { ComicService } from 'app/services/comic.service';
 import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('CharactersPageComponent', () => {
   const CHARACTER = 'Superhero Man';
@@ -64,7 +65,7 @@ describe('CharactersPageComponent', () => {
         PanelModule
       ],
       declarations: [CharactersPageComponent, LibraryFilterComponent],
-      providers: [MessageService, UserService, ComicService]
+      providers: [MessageService, UserService, ComicService, BreadcrumbAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CharactersPageComponent);

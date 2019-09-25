@@ -26,6 +26,7 @@ import { SelectItem } from 'primeng/api';
 import { LibraryAdaptor } from 'app/library';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { Title } from '@angular/platform-browser';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-locations-page',
@@ -33,62 +34,85 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./locations-page.component.css']
 })
 export class LocationsPageComponent implements OnInit, OnDestroy {
-  locations_subscription: Subscription;
+  locationsSubscription: Subscription;
   locations: ComicCollectionEntry[];
+  langChangeSubscription: Subscription;
 
-  protected rows_options: Array<SelectItem>;
+  protected rowsOptions: SelectItem[];
   rows = 10;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {}
 
   ngOnInit() {
-    this.locations_subscription = this.library_adaptor.location$.subscribe(
+    this.locationsSubscription = this.libraryAdaptor.location$.subscribe(
       locations => {
         this.locations = locations;
-        this.title_service.setTitle(
-          this.translate_service.instant('locations-page.title', {
+        this.titleService.setTitle(
+          this.translateService.instant('locations-page.title', {
             count: this.locations.length
           })
         );
       }
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
     this.load_rows_options();
   }
 
   ngOnDestroy() {
-    this.locations_subscription.unsubscribe();
+    this.locationsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   private load_rows_options(): void {
-    this.rows_options = [
+    this.rowsOptions = [
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.10-per-page'
         ),
         value: 10
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.25-per-page'
         ),
         value: 25
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.50-per-page'
         ),
         value: 50
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.100-per-page'
         ),
         value: 100
       }
     ];
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.root'
+        )
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.locations-page'
+        ),
+        routerLink: ['/locations']
+      }
+    ]);
   }
 }

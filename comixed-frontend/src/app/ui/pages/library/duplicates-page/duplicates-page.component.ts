@@ -20,13 +20,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AppState } from 'app/app.state';
 import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
 import { MessageService } from 'primeng/api';
 import { Duplicates } from 'app/models/state/duplicates';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 export const DUPLICATES_HASH_PARAMETER = 'hash';
 
@@ -37,41 +38,42 @@ export const DUPLICATES_HASH_PARAMETER = 'hash';
 })
 export class DuplicatesPageComponent implements OnInit, OnDestroy {
   duplicates$: Observable<Duplicates>;
-  duplicates_subscription;
-  Subscription;
+  duplicatesSubscription: Subscription;
   duplicates: Duplicates;
+  langChangeSubscription: Subscription;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private activated_route: ActivatedRoute,
+    private titleService: Title,
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private store: Store<AppState>,
-    private message_service: MessageService
+    private messageService: MessageService,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {
     this.duplicates$ = store.select('duplicates');
   }
 
   ngOnInit() {
-    this.duplicates_subscription = this.duplicates$.subscribe(
+    this.duplicatesSubscription = this.duplicates$.subscribe(
       (duplicates: Duplicates) => {
         this.duplicates = duplicates;
-        this.title_service.setTitle(
-          this.translate_service.instant('duplicates-page.title', {
+        this.titleService.setTitle(
+          this.translateService.instant('duplicates-page.title', {
             pages: this.duplicates.pages.length,
             hashes: this.duplicates.hashes.length
           })
         );
 
         if (this.duplicates.pages_deleted > 0) {
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
             summary: 'Delete Comic',
             detail: `Marked ${this.duplicates.pages_deleted} page(s) for deletion...`
           });
         }
         if (this.duplicates.pages_undeleted) {
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
             summary: 'Undelete Comic',
             detail: `Unmarked ${this.duplicates.pages_undeleted} page(s) for deletion...`
@@ -90,7 +92,7 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
         }
       }
     );
-    this.activated_route.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe(params => {
       if (params[DUPLICATES_HASH_PARAMETER]) {
         this.store.dispatch(
           new DuplicatesActions.DuplicatePagesShowComicsWithHash(
@@ -100,9 +102,25 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
       }
     });
     this.store.dispatch(new DuplicatesActions.DuplicatePagesFetchPages());
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.duplicates_subscription.unsubscribe();
+    this.duplicatesSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.admin.duplicate-pages'
+        )
+      }
+    ]);
   }
 }

@@ -37,6 +37,7 @@ import { EFFECTS } from 'app/app.effects';
 import { MessageService } from 'primeng/api';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('TeamsPageComponent', () => {
   let component: TeamsPageComponent;
@@ -47,19 +48,19 @@ describe('TeamsPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         LibraryModule,
-        HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
-        TranslateModule.forRoot(),
         FormsModule,
-        StoreModule.forRoot(REDUCERS),
+        HttpClientTestingModule,
         RouterTestingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         ButtonModule,
         DropdownModule,
         TableModule,
         PanelModule
       ],
       declarations: [TeamsPageComponent, LibraryFilterComponent],
-      providers: [MessageService, ComicService, UserService]
+      providers: [BreadcrumbAdaptor, MessageService, ComicService, UserService]
     }).compileComponents();
   }));
 

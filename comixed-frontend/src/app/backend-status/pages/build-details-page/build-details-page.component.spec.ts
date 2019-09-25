@@ -31,6 +31,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { BuildDetailsEffects } from 'app/backend-status/effects/build-details.effects';
 import { MessageService } from 'primeng/api';
 import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.adaptor';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('BuildDetailsPageComponent', () => {
   let component: BuildDetailsPageComponent;
@@ -40,13 +42,14 @@ describe('BuildDetailsPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
+        RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(BUILD_DETAILS_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([BuildDetailsEffects])
       ],
-      providers: [BuildDetailsAdaptor, MessageService],
+      providers: [BuildDetailsAdaptor, BreadcrumbAdaptor, MessageService],
       declarations: [BuildDetailsPageComponent]
     }).compileComponents();
 

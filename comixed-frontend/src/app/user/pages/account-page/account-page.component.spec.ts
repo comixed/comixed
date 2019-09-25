@@ -26,15 +26,19 @@ import { AccountPreferencesComponent } from 'app/user/components/account-prefere
 import { UserDetailsComponent } from 'app/user/components/user-details/user-details.component';
 import { USER_READER } from 'app/user/models/user.fixtures';
 import { AccountPageComponent } from './account-page.component';
-import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/user';
+import { AuthenticationAdaptor, TokenService } from 'app/user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from 'primeng/api';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import {
+  AUTHENTICATION_FEATURE_KEY,
+  reducer
+} from 'app/user/reducers/authentication.reducer';
+import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
 
 describe('AccountPageComponent', () => {
   let component: AccountPageComponent;
@@ -47,10 +51,12 @@ describe('AccountPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([AuthenticationEffects]),
         TabViewModule,
-        TableModule,
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS)
+        TableModule
       ],
       declarations: [
         AccountPageComponent,
@@ -59,9 +65,11 @@ describe('AccountPageComponent', () => {
       ],
       providers: [
         AuthenticationAdaptor,
+        BreadcrumbAdaptor,
         MessageService,
         ComicService,
-        UserService
+        UserService,
+        TokenService
       ]
     }).compileComponents();
 

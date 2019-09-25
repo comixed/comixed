@@ -30,7 +30,11 @@ import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { LoginComponent } from 'app/ui/components/login/login.component';
 import { AppComponent } from 'app/app.component';
-import { ConfirmDialogModule } from 'primeng/primeng';
+import {
+  BreadcrumbModule,
+  ConfirmDialogModule,
+  TieredMenuModule
+} from 'primeng/primeng';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/user';
 import { UserModule } from 'app/user/user.module';
@@ -41,7 +45,8 @@ import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { LibraryModule } from 'app/library/library.module';
 import { COMIC_1, COMIC_3, COMIC_5, LibraryAdaptor } from 'app/library';
-import { ComiXedCommonModule } from 'app/comixed-common/comixed-common.module';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 
 describe('AppComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -57,27 +62,29 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         UserModule,
-        ComiXedCommonModule,
         LibraryModule,
-        RouterTestingModule,
-        HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         MenubarModule,
         ButtonModule,
         ToastModule,
         DialogModule,
         ConfirmDialogModule,
-        TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS)
+        BreadcrumbModule,
+        TieredMenuModule
       ],
-      declarations: [AppComponent, LoginComponent],
+      declarations: [AppComponent, LoginComponent, MainMenuComponent],
       providers: [
         TranslateService,
         MessageService,
         ConfirmationService,
         AuthenticationAdaptor,
+        BreadcrumbAdaptor,
         ComicService,
         UserService
       ]
@@ -120,7 +127,7 @@ describe('AppComponent', () => {
     });
 
     it('clears the subscription', () => {
-      expect(component.fetching_update_subscription).toBeNull();
+      expect(component.fetchingUpdateSubscription).toBeNull();
     });
   });
 

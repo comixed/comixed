@@ -22,6 +22,8 @@ import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.a
 import { Subscription } from 'rxjs';
 import { BuildDetails } from 'app/backend-status/models/build-details';
 import { formatDate } from '@angular/common';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-build-details-page',
@@ -29,19 +31,40 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./build-details-page.component.css']
 })
 export class BuildDetailsPageComponent implements OnInit, OnDestroy {
-  build_details_subscription: Subscription;
-  build_details: BuildDetails;
+  buildDetailsSubscription: Subscription;
+  buildDetails: BuildDetails;
+  langChangeSubscription: Subscription;
 
-  constructor(private build_details_adaptor: BuildDetailsAdaptor) {}
+  constructor(
+    private buildDetailsAdaptor: BuildDetailsAdaptor,
+    private translateService: TranslateService,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
+  ) {}
 
   ngOnInit() {
-    this.build_details_subscription = this.build_details_adaptor.build_detail$.subscribe(
-      build_details => (this.build_details = build_details)
+    this.buildDetailsSubscription = this.buildDetailsAdaptor.build_detail$.subscribe(
+      buildDetails => (this.buildDetails = buildDetails)
     );
-    this.build_details_adaptor.get_build_details();
+    this.buildDetailsAdaptor.get_build_details();
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.build_details_subscription.unsubscribe();
+    this.buildDetailsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      { label: this.translateService.instant('breadcrumb.entry.help.root') },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.help.build-details-page'
+        )
+      }
+    ]);
   }
 }

@@ -39,6 +39,7 @@ import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('PublishersPageComponent', () => {
   const PUBLISHER = 'Cheapo Comics';
@@ -56,10 +57,10 @@ describe('PublishersPageComponent', () => {
       imports: [
         LibraryModule,
         HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
         FormsModule,
         RouterTestingModule,
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         TableModule,
         DropdownModule,
@@ -67,7 +68,7 @@ describe('PublishersPageComponent', () => {
         ButtonModule
       ],
       declarations: [PublishersPageComponent, LibraryFilterComponent],
-      providers: [MessageService, ComicService, UserService]
+      providers: [BreadcrumbAdaptor, MessageService, ComicService, UserService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PublishersPageComponent);

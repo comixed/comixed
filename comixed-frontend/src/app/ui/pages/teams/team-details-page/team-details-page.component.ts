@@ -24,6 +24,7 @@ import { Comic } from 'app/comics/models/comic';
 import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-team-details-page',
@@ -31,50 +32,57 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./team-details-page.component.css']
 })
 export class TeamDetailsPageComponent implements OnInit, OnDestroy {
-  teams_subscription: Subscription;
+  teamsSubscription: Subscription;
   comics: Comic[];
-  selected_comics_subscription: Subscription;
-  selected_comics: Comic[];
+  selectedComicsSubscription: Subscription;
+  selectedComics: Comic[];
+  langChangeSubscription: Subscription;
 
   protected layout = 'grid';
-  protected sort_field = 'volume';
+  protected sortField = 'volume';
   protected rows = 10;
-  protected same_height = true;
-  protected cover_size = 200;
+  protected sameHeight = true;
+  protected coverSize = 200;
 
-  team_name: string;
+  teamName: string;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor,
-    private selection_adaptor: SelectionAdaptor,
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private selectionAdaptor: SelectionAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute
   ) {
     this.activatedRoute.params.subscribe(params => {
-      this.team_name = params['name'];
+      this.teamName = params['name'];
     });
   }
 
   ngOnInit() {
-    this.teams_subscription = this.library_adaptor.team$.subscribe(teams => {
-      const team = teams.find(entry => entry.name === this.team_name);
+    this.teamsSubscription = this.libraryAdaptor.team$.subscribe(teams => {
+      const team = teams.find(entry => entry.name === this.teamName);
       this.comics = team ? team.comics : [];
-      this.title_service.setTitle(
-        this.translate_service.instant('team-details-page.title', {
-          name: this.team_name,
+      this.titleService.setTitle(
+        this.translateService.instant('team-details-page.title', {
+          name: this.teamName,
           count: this.comics.length
         })
       );
     });
-    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
-      selected_comics => (this.selected_comics = selected_comics)
+    this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
+      selected_comics => (this.selectedComics = selected_comics)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.teams_subscription.unsubscribe();
-    this.selected_comics_subscription.unsubscribe();
+    this.teamsSubscription.unsubscribe();
+    this.selectedComicsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   set_layout(dataview: any, layout: string): void {
@@ -82,7 +90,7 @@ export class TeamDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   set_sort_field(sort_field: string): void {
-    this.sort_field = sort_field;
+    this.sortField = sort_field;
   }
 
   set_rows(rows: number): void {
@@ -90,10 +98,32 @@ export class TeamDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   set_cover_size(cover_size: number): void {
-    this.cover_size = cover_size;
+    this.coverSize = cover_size;
   }
 
   set_same_height(same_height: boolean): void {
-    this.same_height = same_height;
+    this.sameHeight = same_height;
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.root'
+        )
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.teams-page'
+        ),
+        routerLink: ['/teams']
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.team-details-page',
+          { name: this.teamName }
+        )
+      }
+    ]);
   }
 }

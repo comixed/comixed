@@ -60,6 +60,7 @@ import { ComicService } from 'app/services/comic.service';
 import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('TeamDetailsPageComponent', () => {
   const TEAM_NAME = 'Team One';
@@ -104,6 +105,7 @@ describe('TeamDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         UserService,
@@ -134,14 +136,14 @@ describe('TeamDetailsPageComponent', () => {
 
   describe('when a team update is received', () => {
     it('sets the comics when the team is found', () => {
-      component.team_name = TEAM_NAME;
+      component.teamName = TEAM_NAME;
       library_adaptor._team$.next(TEAMS);
       fixture.detectChanges();
       expect(component.comics).toEqual([COMIC]);
     });
 
     it('sets an empty set when the team is not found', () => {
-      component.team_name = TEAM_NAME.substr(1);
+      component.teamName = TEAM_NAME.substr(1);
       library_adaptor._team$.next(TEAMS);
       fixture.detectChanges();
       expect(component.comics).toEqual([]);

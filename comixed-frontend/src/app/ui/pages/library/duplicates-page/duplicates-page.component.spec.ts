@@ -38,6 +38,11 @@ import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { DuplicatesPageComponent } from './duplicates-page.component';
 import { REDUCERS } from 'app/app.reducers';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DuplicatesPageComponent', () => {
   let component: DuplicatesPageComponent;
@@ -48,8 +53,10 @@ describe('DuplicatesPageComponent', () => {
       imports: [
         FormsModule,
         RouterTestingModule,
+        HttpClientTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         CardModule,
         DataViewModule,
         DropdownModule,
@@ -66,7 +73,9 @@ describe('DuplicatesPageComponent', () => {
         ComicCoverUrlPipe
       ],
       providers: [
+        BreadcrumbAdaptor,
         MessageService,
+        ComicService,
         { provide: UserService, useClass: UserServiceMock }
       ]
     }).compileComponents();

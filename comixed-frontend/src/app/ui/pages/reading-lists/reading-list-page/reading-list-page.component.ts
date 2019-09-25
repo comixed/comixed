@@ -32,6 +32,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-reading-list-page',
@@ -39,104 +40,112 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./reading-list-page.component.css']
 })
 export class ReadingListPageComponent implements OnInit, OnDestroy {
-  selected_entries_subscription: Subscription;
-  selected_entries: Comic[];
-  reading_list_subscription: Subscription;
-  reading_list: ReadingList;
+  selectedEntriesSubscription: Subscription;
+  selectedEntries: Comic[];
+  readingListSubscription: Subscription;
+  readingList: ReadingList;
+  langChangeSubscription: Subscription;
 
   entries: Comic[] = [];
-  context_menu: MenuItem[] = [];
+  contextMenu: MenuItem[] = [];
 
-  reading_list_form: FormGroup;
+  readingListForm: FormGroup;
   id = -1;
 
   constructor(
-    private title_service: Title,
-    private selection_adaptor: SelectionAdaptor,
-    private reading_list_adaptor: ReadingListAdaptor,
-    private form_builder: FormBuilder,
-    private translate_service: TranslateService,
-    private activated_route: ActivatedRoute,
+    private titleService: Title,
+    private selectionAdaptor: SelectionAdaptor,
+    private readingListAdaptor: ReadingListAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
+    private formBuilder: FormBuilder,
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private confirm: ConfirmationService
   ) {
-    this.reading_list_form = this.form_builder.group({
+    this.readingListForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       summary: ['']
     });
-    this.activated_route.params.subscribe(params => {
+    this.activatedRoute.params.subscribe(params => {
       if (params['id']) {
         this.id = +params['id'];
-        this.reading_list_adaptor.get_reading_list(this.id);
+        this.readingListAdaptor.get_reading_list(this.id);
       } else {
-        this.reading_list_adaptor.create_reading_list();
+        this.readingListAdaptor.create_reading_list();
       }
     });
-    this.translate_service.onLangChange.subscribe(() =>
+    this.translateService.onLangChange.subscribe(() =>
       this.load_context_menu()
     );
     this.load_context_menu();
   }
 
   ngOnInit() {
-    this.reading_list_subscription = this.reading_list_adaptor.current_list$
+    this.readingListSubscription = this.readingListAdaptor.current_list$
       .pipe(filter(state => !!state))
       .subscribe(reading_list => {
-        this.reading_list = reading_list;
-        this.title_service.setTitle(
-          this.translate_service.instant('reading-list-page.title', {
-            name: this.reading_list.name,
-            count: (this.reading_list.entries || []).length
+        this.readingList = reading_list;
+        this.loadTranslations();
+        this.titleService.setTitle(
+          this.translateService.instant('reading-list-page.title', {
+            name: this.readingList.name,
+            count: (this.readingList.entries || []).length
           })
         );
-        if (this.id === -1 && this.reading_list.id) {
-          this.router.navigate(['list', this.reading_list.id]);
+        if (this.id === -1 && this.readingList.id) {
+          this.router.navigate(['list', this.readingList.id]);
         } else {
           this.load_reading_list();
         }
       });
-    this.selected_entries_subscription = this.selection_adaptor.comic_selection$.subscribe(
-      selected_entries => (this.selected_entries = selected_entries)
+    this.selectedEntriesSubscription = this.selectionAdaptor.comic_selection$.subscribe(
+      selected_entries => (this.selectedEntries = selected_entries)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy(): void {
-    this.reading_list_subscription.unsubscribe();
-    this.selected_entries_subscription.unsubscribe();
+    this.readingListSubscription.unsubscribe();
+    this.selectedEntriesSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   private load_reading_list(): void {
-    this.reading_list_form.controls['name'].setValue(this.reading_list.name);
-    this.reading_list_form.controls['summary'].setValue(
-      this.reading_list.summary || ''
+    this.readingListForm.controls['name'].setValue(this.readingList.name);
+    this.readingListForm.controls['summary'].setValue(
+      this.readingList.summary || ''
     );
-    this.reading_list_form.markAsPristine();
+    this.readingListForm.markAsPristine();
     this.entries = [];
-    (this.reading_list.entries || []).forEach((entry: ReadingListEntry) =>
+    (this.readingList.entries || []).forEach((entry: ReadingListEntry) =>
       this.entries.push(entry.comic)
     );
-    this.selected_entries = [];
+    this.selectedEntries = [];
   }
 
   submit_form(): void {
-    this.reading_list_adaptor.save(
+    this.readingListAdaptor.save(
       {
         id: this.id !== -1 ? this.id : undefined,
-        name: this.reading_list_form.controls['name'].value,
-        summary: this.reading_list_form.controls['summary'].value,
+        name: this.readingListForm.controls['name'].value,
+        summary: this.readingListForm.controls['summary'].value,
         entries: []
       } as ReadingList,
-      this.reading_list.entries
+      this.readingList.entries
     );
   }
 
   load_context_menu(): void {
-    this.context_menu = [
+    this.contextMenu = [
       {
         label: 'Remove comics',
         icon: 'fa fa-fw fa-trash',
         command: () => {
-          if (this.selected_entries.length > 0) {
+          if (this.selectedEntries.length > 0) {
             this.remove_selected_comics();
           }
         }
@@ -146,19 +155,33 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
 
   remove_selected_comics(): void {
     this.confirm.confirm({
-      header: this.translate_service.instant(
+      header: this.translateService.instant(
         'reading-list-page.remove-comics.header'
       ),
-      message: this.translate_service.instant(
+      message: this.translateService.instant(
         'reading-list-page.remove-comics.message',
-        { comic_count: this.selected_entries.length }
+        { comic_count: this.selectedEntries.length }
       ),
       accept: () => {
         const list_entries = this.entries.map(entry => {
           return { id: null, comic: entry } as ReadingListEntry;
         });
-        this.reading_list_adaptor.save(this.reading_list, list_entries);
+        this.readingListAdaptor.save(this.readingList, list_entries);
       }
     });
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.reading-lists-page'
+        ),
+        routerLink: ['/lists']
+      },
+      {
+        label: this.readingList.name
+      }
+    ]);
   }
 }

@@ -26,6 +26,7 @@ import { SelectItem } from 'primeng/api';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LibraryAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-teams-page',
@@ -33,60 +34,83 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./teams-page.component.css']
 })
 export class TeamsPageComponent implements OnInit, OnDestroy {
-  teams_subscription: Subscription;
+  teamsSubscription: Subscription;
   teams: ComicCollectionEntry[];
+  langChangeSubscription: Subscription;
 
-  protected rows_options: Array<SelectItem>;
+  protected rowOptions: Array<SelectItem>;
   rows = 10;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {}
 
   ngOnInit() {
-    this.teams_subscription = this.library_adaptor.team$.subscribe(teams => {
+    this.teamsSubscription = this.libraryAdaptor.team$.subscribe(teams => {
       this.teams = teams;
-      this.title_service.setTitle(
-        this.translate_service.instant('teams-page.title', {
+      this.titleService.setTitle(
+        this.translateService.instant('teams-page.title', {
           count: this.teams.length
         })
       );
     });
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
     this.load_rows_options();
   }
 
   ngOnDestroy() {
-    this.teams_subscription.unsubscribe();
+    this.teamsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   private load_rows_options(): void {
-    this.rows_options = [
+    this.rowOptions = [
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.10-per-page'
         ),
         value: 10
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.25-per-page'
         ),
         value: 25
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.50-per-page'
         ),
         value: 50
       },
       {
-        label: this.translate_service.instant(
+        label: this.translateService.instant(
           'library-contents.options.rows.100-per-page'
         ),
         value: 100
       }
     ];
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.root'
+        )
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.teams-page'
+        ),
+        routerLink: ['/teams']
+      }
+    ]);
   }
 }

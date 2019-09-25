@@ -23,6 +23,7 @@ import { Router } from '@angular/router';
 import { ReadingList, ReadingListAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-reading-lists-page',
@@ -30,35 +31,52 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./reading-lists-page.component.css']
 })
 export class ReadingListsPageComponent implements OnInit, OnDestroy {
-  reading_lists_subscription: Subscription;
-  reading_lists: ReadingList[];
+  readingListsSubscription: Subscription;
+  readingLists: ReadingList[];
+  langChangeSubscription: Subscription;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private reading_list_adaptor: ReadingListAdaptor,
+    private titleService: Title,
+    private translateService: TranslateService,
+    private readingListAdaptor: ReadingListAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.reading_lists_subscription = this.reading_list_adaptor.reading_list$.subscribe(
+    this.readingListsSubscription = this.readingListAdaptor.reading_list$.subscribe(
       reading_lists => {
-        this.reading_lists = reading_lists;
-        this.title_service.setTitle(
-          this.translate_service.instant('reading-lists-page.title', {
-            count: this.reading_lists.length
+        this.readingLists = reading_lists;
+        this.titleService.setTitle(
+          this.translateService.instant('reading-lists-page.title', {
+            count: this.readingLists.length
           })
         );
       }
     );
-    this.reading_list_adaptor.get_reading_lists();
+    this.readingListAdaptor.get_reading_lists();
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy(): void {
-    this.reading_lists_subscription.unsubscribe();
+    this.readingListsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   create_new_reading_list(): void {
     this.router.navigateByUrl('/lists/new');
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.reading-lists-page'
+        )
+      }
+    ]);
   }
 }

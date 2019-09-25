@@ -1,6 +1,6 @@
 <p-panel [header]='"library-admin-page.rescan.header" | translate'>
     <div class='ui-g'>
-        <div *ngIf='rescan_count !== 0'
+        <div *ngIf='rescanCount !== 0'
              class='ui-g-12'
              [innerHTML]='"library-admin-page.rescan.already-running" | translate'></div>
         <div class='ui-g-2'>
@@ -9,10 +9,10 @@
                         type='button'
                         pButton
                         class='cx-selection-button ui-button-success'
-                        [disabled]='rescan_count !== 0 ||import_count !== 0'
+                        [disabled]='rescanCount !== 0 ||importCount !== 0'
                         [label]='"library-admin-page.rescan.buttons.rescan-library" | translate'
                         icon='fa fa-refresh'
-                        (click)='rescan_library()'></button>
+                        (click)='rescanLibrary()'></button>
             </div>
         </div>
         <div class='ui-g-10'>
@@ -38,7 +38,7 @@
                         class='cx-selection-button ui-button-success'
                         [label]='"library-admin-page.backup.buttons.export-library" | translate'
                         icon='fa fa-fw fa-step-backward'
-                        [disabled]='rescan_count !== 0 ||import_count !== 0'
+                        [disabled]='rescanCount !== 0 ||importCount !== 0'
                         [method]='"GET"'
                         [url]='"/api/admin/data/export"'
                         [fileName]='"comixed_backup.zip"'></button>

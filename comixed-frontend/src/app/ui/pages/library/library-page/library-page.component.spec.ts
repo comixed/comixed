@@ -59,6 +59,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { LibraryModule } from 'app/library/library.module';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -107,6 +108,7 @@ describe('LibraryPageComponent', () => {
       ],
       providers: [
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         ComicService,

@@ -37,6 +37,7 @@ import { EFFECTS } from 'app/app.effects';
 import { MessageService } from 'primeng/api';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('StoryArcsPageComponent', () => {
   let component: StoryArcsPageComponent;
@@ -59,7 +60,7 @@ describe('StoryArcsPageComponent', () => {
         PanelModule
       ],
       declarations: [StoryArcsPageComponent, LibraryFilterComponent],
-      providers: [MessageService, UserService, ComicService]
+      providers: [BreadcrumbAdaptor, MessageService, UserService, ComicService]
     }).compileComponents();
   }));
 

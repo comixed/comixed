@@ -24,6 +24,8 @@ import { Observable, Subscription } from 'rxjs';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import { Comic, SelectionAdaptor } from 'app/library';
+import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-multi-comic-scraping-page',
@@ -31,8 +33,9 @@ import { Comic, SelectionAdaptor } from 'app/library';
   styleUrls: ['./multi-comic-scraping-page.component.css']
 })
 export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
-  selected_comics_subscription: Subscription;
+  selectedComicsSubscription: Subscription;
   selected_comics: Comic[];
+  langChangeSubscription: Subscription;
 
   scraping$: Observable<MultipleComicsScraping>;
   scraping_subscription: Subscription;
@@ -40,7 +43,9 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    private selection_adaptor: SelectionAdaptor
+    private selectionAdaptor: SelectionAdaptor,
+    private translateService: TranslateService,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {
     this.scraping$ = this.store.select('multiple_comic_scraping');
   }
@@ -51,22 +56,37 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
         this.scraping = scraping;
       }
     );
-    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
+    this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
       selected_comics => (this.selected_comics = selected_comics)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
     this.scraping_subscription.unsubscribe();
-    this.selected_comics_subscription.unsubscribe();
+    this.selectedComicsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
-  start_scraping(): void {
+  startScraping(): void {
     this.store.dispatch(
       new ScrapingActions.MultipleComicsScrapingStart({
         selected_comics: this.selected_comics
       })
     );
-    this.selection_adaptor.deselect_all_comics();
+    this.selectionAdaptor.deselect_all_comics();
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.multi-comic-scraping-page'
+        )
+      }
+    ]);
   }
 }

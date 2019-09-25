@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-missing-comics-page',
@@ -29,34 +30,52 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./missing-comics-page.component.css']
 })
 export class MissingComicsPageComponent implements OnInit, OnDestroy {
-  comics_subscription: Subscription;
+  comicsSubscription: Subscription;
   comics: Comic[] = [];
-  selected_comics_subscription: Subscription;
-  selected_comics: Comic[] = [];
+  selectedComicsSubscription: Subscription;
+  selectedComics: Comic[] = [];
+  langChangeSubscription: Subscription;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor,
-    private selection_adaptor: SelectionAdaptor
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private selectionAdaptor: SelectionAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {}
 
   ngOnInit() {
-    this.comics_subscription = this.library_adaptor.comic$.subscribe(comics => {
+    this.comicsSubscription = this.libraryAdaptor.comic$.subscribe(comics => {
       this.comics = comics;
-      this.title_service.setTitle(
-        this.translate_service.instant('missing-comics-page.title', {
+      this.titleService.setTitle(
+        this.translateService.instant('missing-comics-page.title', {
           count: this.comics.filter(comic => comic.missing).length
         })
       );
     });
-    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
-      selected_comics => (this.selected_comics = selected_comics)
+    this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
+      selected_comics => (this.selectedComics = selected_comics)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy(): void {
-    this.comics_subscription.unsubscribe();
-    this.selected_comics_subscription.unsubscribe();
+    this.comicsSubscription.unsubscribe();
+    this.selectedComicsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.admin.missing-comics'
+        )
+      }
+    ]);
   }
 }

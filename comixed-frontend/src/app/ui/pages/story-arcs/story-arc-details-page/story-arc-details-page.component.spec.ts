@@ -59,6 +59,7 @@ import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { LibraryModule } from 'app/library/library.module';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('StoryArcDetailsPageComponent', () => {
   const STORY_NAME = 'Story Name';
@@ -98,6 +99,7 @@ describe('StoryArcDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         UserService,
@@ -128,14 +130,14 @@ describe('StoryArcDetailsPageComponent', () => {
 
   describe('when a story arc update is received', () => {
     it('sets the comics when the story is found', () => {
-      component.story_name = STORY_NAME;
+      component.storyName = STORY_NAME;
       library_adaptor._story_arc$.next(STORIES);
       fixture.detectChanges();
       expect(component.comics).toEqual([COMIC]);
     });
 
     it('sets an empty set when the story is not found', () => {
-      component.story_name = STORY_NAME.substr(1);
+      component.storyName = STORY_NAME.substr(1);
       library_adaptor._story_arc$.next(STORIES);
       fixture.detectChanges();
       expect(component.comics).toEqual([]);

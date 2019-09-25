@@ -18,7 +18,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { AuthenticationAdaptor, User } from 'app/user';
 

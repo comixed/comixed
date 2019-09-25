@@ -30,6 +30,12 @@ import { REDUCERS } from 'app/app.reducers';
 import { ReadingListAdaptor } from 'app/library';
 import { MessageService } from 'primeng/api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { EffectsModule } from '@ngrx/effects';
+import { EFFECTS } from 'app/app.effects';
+import { ComicService } from 'app/services/comic.service';
+import { UserService } from 'app/services/user.service';
+import { UserModule } from 'app/user/user.module';
 
 describe('ReadingListsPageComponent', () => {
   let component: ReadingListsPageComponent;
@@ -39,17 +45,25 @@ describe('ReadingListsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserModule,
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([
           { path: 'lists/new', component: ReadingListsPageComponent }
         ]),
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         ButtonModule,
         TableModule
       ],
       declarations: [ReadingListsPageComponent],
-      providers: [ReadingListAdaptor, MessageService]
+      providers: [
+        ReadingListAdaptor,
+        BreadcrumbAdaptor,
+        MessageService,
+        ComicService,
+        UserService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReadingListsPageComponent);
@@ -64,14 +78,12 @@ describe('ReadingListsPageComponent', () => {
 
   describe('when destroyed', () => {
     beforeEach(() => {
-      spyOn(component.reading_lists_subscription, 'unsubscribe');
+      spyOn(component.readingListsSubscription, 'unsubscribe');
       component.ngOnDestroy();
     });
 
     it('unsubscribes from reading list updates', () => {
-      expect(
-        component.reading_lists_subscription.unsubscribe
-      ).toHaveBeenCalled();
+      expect(component.readingListsSubscription.unsubscribe).toHaveBeenCalled();
     });
   });
 

@@ -59,6 +59,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
+import { Router } from '@angular/router';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -69,6 +71,7 @@ describe('MissingComicsPageComponent', () => {
       imports: [
         LibraryModule,
         HttpClientTestingModule,
+        RouterTestingModule,
         EffectsModule.forRoot(EFFECTS),
         RouterTestingModule,
         FormsModule,
@@ -103,6 +106,7 @@ describe('MissingComicsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         UserService,

@@ -60,6 +60,7 @@ import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('PublisherDetailsPageComponent', () => {
   const COMIC = COMIC_1;
@@ -72,13 +73,13 @@ describe('PublisherDetailsPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         LibraryModule,
-        HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         RouterTestingModule,
         FormsModule,
-        StoreModule.forRoot(REDUCERS),
+        HttpClientTestingModule,
         TranslateModule.forRoot(),
+        StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         DataViewModule,
         SplitButtonModule,
         ScrollPanelModule,
@@ -95,6 +96,7 @@ describe('PublisherDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         ComicService,

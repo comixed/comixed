@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 import { LibraryAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-library-admin-page',
@@ -29,35 +30,54 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./library-admin-page.component.css']
 })
 export class LibraryAdminPageComponent implements OnInit, OnDestroy {
-  import_count_subscription: Subscription;
-  import_count = 0;
-  rescan_count_subscription: Subscription;
-  rescan_count = 0;
+  importCountSubscription: Subscription;
+  importCount = 0;
+  rescanCountSubscription: Subscription;
+  rescanCount = 0;
+  langChangeSubscription: Subscription;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {}
 
   ngOnInit() {
-    this.title_service.setTitle(
-      this.translate_service.instant('library-admin-page.title')
+    this.titleService.setTitle(
+      this.translateService.instant('library-admin-page.title')
     );
-    this.import_count_subscription = this.library_adaptor.pending_import$.subscribe(
-      import_count => (this.import_count = import_count)
+    this.importCountSubscription = this.libraryAdaptor.pending_import$.subscribe(
+      import_count => (this.importCount = import_count)
     );
-    this.rescan_count_subscription = this.library_adaptor.pending_rescan$.subscribe(
-      rescan_count => (this.rescan_count = rescan_count)
+    this.rescanCountSubscription = this.libraryAdaptor.pending_rescan$.subscribe(
+      rescan_count => (this.rescanCount = rescan_count)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.import_count_subscription.unsubscribe();
-    this.rescan_count_subscription.unsubscribe();
+    this.importCountSubscription.unsubscribe();
+    this.rescanCountSubscription.unsubscribe();
   }
 
-  rescan_library(): void {
-    this.library_adaptor.start_rescan();
+  rescanLibrary(): void {
+    this.libraryAdaptor.start_rescan();
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant('breadcrumb.entry.admin.root')
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.admin.library-admin'
+        )
+      }
+    ]);
   }
 }

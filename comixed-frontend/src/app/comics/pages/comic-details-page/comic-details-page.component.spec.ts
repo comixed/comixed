@@ -58,6 +58,7 @@ import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pi
 import { AppState } from 'app/comics';
 import { ComicGotIssue } from 'app/comics/actions/comic.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('ComicDetailsPageComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -109,6 +110,7 @@ describe('ComicDetailsPageComponent', () => {
       ],
       providers: [
         ComicAdaptor,
+        BreadcrumbAdaptor,
         ComicService,
         MessageService,
         ConfirmationService

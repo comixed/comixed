@@ -37,6 +37,7 @@ import { EFFECTS } from 'app/app.effects';
 import { MessageService } from 'primeng/api';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('LocationsPageComponent', () => {
   let component: LocationsPageComponent;
@@ -47,11 +48,11 @@ describe('LocationsPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         LibraryModule,
-        HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
-        TranslateModule.forRoot(),
         FormsModule,
+        HttpClientTestingModule,
+        TranslateModule.forRoot(),
         StoreModule.forRoot(REDUCERS),
+        EffectsModule.forRoot(EFFECTS),
         RouterTestingModule,
         ButtonModule,
         DropdownModule,
@@ -59,7 +60,7 @@ describe('LocationsPageComponent', () => {
         PanelModule
       ],
       declarations: [LocationsPageComponent, LibraryFilterComponent],
-      providers: [MessageService, ComicService, UserService]
+      providers: [BreadcrumbAdaptor, MessageService, ComicService, UserService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LocationsPageComponent);

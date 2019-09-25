@@ -1,5 +1,5 @@
-<h2>{{ 'team-details.title' | translate: {team_name: team_name} }}</h2>
+<h2>{{ 'team-details.title' | translate: {team_name: teamName} }}</h2>
 <app-comic-list *ngIf='comics'
                 [comics]='comics'
-                [selected_comics]='selected_comics'
+                [selected_comics]='selectedComics'
                 [library_filter]='library_filter'></app-comic-list>

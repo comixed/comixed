@@ -23,6 +23,7 @@ import { Subscription } from 'rxjs';
 import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 @Component({
   selector: 'app-story-arc-details-page',
@@ -30,52 +31,59 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./story-arc-details-page.component.css']
 })
 export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
-  stories_subscription: Subscription;
+  storiesSubscription: Subscription;
   comics: Comic[];
-  selected_comics_subscription: Subscription;
-  selected_comics: Comic[];
+  selectedComicsSubscription: Subscription;
+  selectedComics: Comic[];
+  langChangeSubscription: Subscription;
 
   protected layout = 'grid';
-  protected sort_field = 'volume';
+  protected sortField = 'volume';
   protected rows = 10;
-  protected same_height = true;
-  protected cover_size = 200;
+  protected sameHeight = true;
+  protected coverSize = 200;
 
-  story_name: string;
+  storyName: string;
 
   constructor(
-    private title_service: Title,
-    private translate_service: TranslateService,
-    private library_adaptor: LibraryAdaptor,
-    private selection_adaptor: SelectionAdaptor,
+    private titleService: Title,
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private selectionAdaptor: SelectionAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute
   ) {
     this.activatedRoute.params.subscribe(params => {
-      this.story_name = params['name'];
+      this.storyName = params['name'];
     });
   }
 
   ngOnInit() {
-    this.stories_subscription = this.library_adaptor.story_arc$.subscribe(
+    this.storiesSubscription = this.libraryAdaptor.story_arc$.subscribe(
       stories => {
-        const story = stories.find(entry => entry.name === this.story_name);
+        const story = stories.find(entry => entry.name === this.storyName);
         this.comics = story ? story.comics : [];
-        this.title_service.setTitle(
-          this.translate_service.instant('story-arc-details-page.title', {
-            name: this.story_name,
+        this.titleService.setTitle(
+          this.translateService.instant('story-arc-details-page.title', {
+            name: this.storyName,
             count: this.comics.length
           })
         );
       }
     );
-    this.selected_comics_subscription = this.selection_adaptor.comic_selection$.subscribe(
-      selected_comics => (this.selected_comics = selected_comics)
+    this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
+      selected_comics => (this.selectedComics = selected_comics)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
-    this.stories_subscription.unsubscribe();
-    this.selected_comics_subscription.unsubscribe();
+    this.storiesSubscription.unsubscribe();
+    this.selectedComicsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   set_layout(dataview: any, layout: string): void {
@@ -83,7 +91,7 @@ export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   set_sort_field(sort_field: string): void {
-    this.sort_field = sort_field;
+    this.sortField = sort_field;
   }
 
   set_rows(rows: number): void {
@@ -91,10 +99,32 @@ export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   set_cover_size(cover_size: number): void {
-    this.cover_size = cover_size;
+    this.coverSize = cover_size;
   }
 
   set_same_height(same_height: boolean): void {
-    this.same_height = same_height;
+    this.sameHeight = same_height;
+  }
+
+  private loadTranslations() {
+    this.breadcrumbAdaptor.loadEntries([
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.root'
+        )
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.stories-page'
+        ),
+        routerLink: ['/stories']
+      },
+      {
+        label: this.translateService.instant(
+          'breadcrumb.entry.collections.story-details-page',
+          { name: this.storyName }
+        )
+      }
+    ]);
   }
 }

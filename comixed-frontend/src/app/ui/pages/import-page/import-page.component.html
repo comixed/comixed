@@ -1,13 +1,13 @@
 <div *ngIf='importing'
      id='import-busy-indicator-container'>
-    <h2>{{'import-page.importing-title'|translate:{count: import_count} }}</h2>
+    <h2>{{'import-page.importing-title'|translate:{count: importCount} }}</h2>
     <p-progressBar mode='indeterminate'></p-progressBar>
 </div>
 <div *ngIf='!importing'
      id='comic-file-list-container'>
-    <app-comic-file-list [busy]='fetching_files'
-                         [comic_files]='comic_files'
+    <app-comic-file-list [busy]='fetchingFiles'
+                         [comic_files]='comicFiles'
                          [directory]='user | user_preference: "import.directory"'
-                         [selected_comic_files]='selected_comic_files'
+                         [selected_comic_files]='selectedComicFiles'
                          id='comic-file-list'></app-comic-file-list>
 </div>

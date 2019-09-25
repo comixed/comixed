@@ -93,17 +93,17 @@ import { FormsModule } from '@angular/forms';
   ]
 })
 export class UserModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: UserModule
-    };
-  }
-
   constructor(@Optional() @SkipSelf() parentModule?: UserModule) {
     if (parentModule) {
       throw new Error(
         'UserModule is already loaded. Import it in the AppModule only'
       );
     }
+  }
+
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: UserModule
+    };
   }
 }

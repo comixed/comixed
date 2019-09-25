@@ -31,7 +31,16 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserDetailsEditorComponent } from 'app/user/components/user-details-editor/user-details-editor.component';
 import { UsersPageComponent } from './users-page.component';
-import { REDUCERS } from 'app/app.reducers';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import {
+  AUTHENTICATION_FEATURE_KEY,
+  reducer
+} from 'app/user/reducers/authentication.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TokenService } from 'app/user';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('UsersPageComponent', () => {
   let component: UsersPageComponent;
@@ -42,8 +51,13 @@ describe('UsersPageComponent', () => {
       imports: [
         FormsModule,
         BrowserAnimationsModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([AuthenticationEffects]),
         PanelModule,
         TableModule,
         ButtonModule,
@@ -52,15 +66,18 @@ describe('UsersPageComponent', () => {
         ToggleButtonModule
       ],
       declarations: [UsersPageComponent, UserDetailsEditorComponent],
-      providers: [ConfirmationService, MessageService]
+      providers: [
+        BreadcrumbAdaptor,
+        ConfirmationService,
+        MessageService,
+        TokenService
+      ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(UsersPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
