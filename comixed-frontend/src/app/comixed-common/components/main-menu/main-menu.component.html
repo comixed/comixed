@@ -1,0 +1,8 @@
+<p-tieredMenu #mainMenu
+        [popup]='true'
+        [model]='items'></p-tieredMenu>
+<button type='button'
+        pButton
+        icon='fa fa-fw fa-bars'
+        [label]='"main-menu.button.show-menu"|translate'
+        (click)='mainMenu.toggle($event)'></button>

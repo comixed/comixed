@@ -28,7 +28,6 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { MenubarComponent } from 'app/ui/components/main/menubar/menubar.component';
 import { LoginComponent } from 'app/ui/components/login/login.component';
 import { AppComponent } from 'app/app.component';
 import { ConfirmDialogModule } from 'primeng/primeng';
@@ -42,6 +41,7 @@ import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { LibraryModule } from 'app/library/library.module';
 import { COMIC_1, COMIC_3, COMIC_5, LibraryAdaptor } from 'app/library';
+import { ComiXedCommonModule } from 'app/comixed-common/comixed-common.module';
 
 describe('AppComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -57,6 +57,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         UserModule,
+        ComiXedCommonModule,
         LibraryModule,
         RouterTestingModule,
         HttpClientTestingModule,
@@ -71,7 +72,7 @@ describe('AppComponent', () => {
         StoreModule.forRoot(REDUCERS),
         EffectsModule.forRoot(EFFECTS)
       ],
-      declarations: [AppComponent, MenubarComponent, LoginComponent],
+      declarations: [AppComponent, LoginComponent],
       providers: [
         TranslateService,
         MessageService,

@@ -47,17 +47,17 @@ export class AuthenticationAdaptor {
         this._authenticated$.next(auth_state.authenticated);
         this._auth_token$.next(auth_state.auth_token);
         this._show_login$.next(auth_state.show_login);
-        this._user$.next(auth_state.user);
         this._role$.next({
           is_reader:
-            this.has_role(auth_state.user, 'READER') ||
-            this.has_role(auth_state.user, 'ADMIN'),
-          is_admin: this.has_role(auth_state.user, 'ADMIN')
+            this.hasRole(auth_state.user, 'READER') ||
+            this.hasRole(auth_state.user, 'ADMIN'),
+          is_admin: this.hasRole(auth_state.user, 'ADMIN')
         });
+        this._user$.next(auth_state.user);
       });
   }
 
-  private has_role(user: User, name: string): boolean {
+  private hasRole(user: User, name: string): boolean {
     if (user) {
       return user.roles.some(role => role.name === name);
     }

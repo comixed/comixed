@@ -80,7 +80,6 @@ import {
   TranslateLoader,
   TranslateModule
 } from '@ngx-translate/core';
-import { MenubarComponent } from 'app/ui/components/main/menubar/menubar.component';
 import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
 import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
 import { SeriesPageComponent } from 'app/ui/pages/series/series-page/series-page.component';
@@ -119,6 +118,7 @@ import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-comp
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { BackendStatusModule } from 'app/backend-status/backend-status.module';
 import { ComicsModule } from 'app/comics/comics.module';
+import { ComiXedCommonModule } from 'app/comixed-common/comixed-common.module';
 
 @NgModule({
   declarations: [
@@ -136,7 +136,6 @@ import { ComicsModule } from 'app/comics/comics.module';
     ComicFileCoverUrlPipe,
     LibraryFilterComponent,
     LibraryFilterPipe,
-    MenubarComponent,
     ComicListItemComponent,
     ComicGridItemComponent,
     SeriesPageComponent,
@@ -166,6 +165,7 @@ import { ComicsModule } from 'app/comics/comics.module';
     ComicFileListItemComponent
   ],
   imports: [
+    ComiXedCommonModule,
     UserModule,
     ComicsModule,
     LibraryModule,
@@ -235,6 +235,7 @@ export class AppModule {}
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new MultiTranslateHttpLoader(http, [
+    { prefix: './assets/i18n/common-', suffix: '.json' },
     { prefix: './assets/i18n/app-', suffix: '.json' },
     { prefix: './assets/i18n/comics-', suffix: '.json' },
     { prefix: './assets/i18n/library-', suffix: '.json' },
