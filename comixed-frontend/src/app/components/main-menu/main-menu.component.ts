@@ -17,10 +17,11 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { AuthenticationAdaptor, User } from 'app/user';
+import { TieredMenu } from 'primeng/primeng';
 
 @Component({
   selector: 'app-main-menu',
@@ -28,6 +29,9 @@ import { AuthenticationAdaptor, User } from 'app/user';
   styleUrls: ['./main-menu.component.scss']
 })
 export class MainMenuComponent implements OnInit {
+  @ViewChild(TieredMenu)
+  menu: TieredMenu;
+
   items: MenuItem[];
   private user: User;
 
@@ -35,6 +39,10 @@ export class MainMenuComponent implements OnInit {
     private translateService: TranslateService,
     private authenticationAdaptor: AuthenticationAdaptor
   ) {}
+
+  toggle(event: any): void {
+    this.menu.toggle(event);
+  }
 
   ngOnInit() {
     this.translateService.onLangChange.subscribe(() => this.loadMenuItems());

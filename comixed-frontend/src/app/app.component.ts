@@ -17,20 +17,24 @@
  * org.comixed;
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { LibraryAdaptor } from 'app/library';
 import { Subscription } from 'rxjs';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { MenuItem } from 'primeng/api';
+import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  @ViewChild(MainMenuComponent)
+  mainmenu: MainMenuComponent;
+
   title = 'ComiXed';
 
   user: User;
@@ -42,7 +46,10 @@ export class AppComponent implements OnInit {
   rescanCount = 0;
   fetchingUpdateSubscription: Subscription;
   breadcrumbs = [];
-  home: MenuItem = { routerLink: ['/home'] };
+  home = {
+    icon: 'fa fas fa-bars',
+    command: (event: any) => this.mainmenu.toggle(event)
+  } as MenuItem;
 
   constructor(
     private translateService: TranslateService,

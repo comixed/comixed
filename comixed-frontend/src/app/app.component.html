@@ -1,7 +1,6 @@
-<p-breadcrumb *ngIf='authenticated'
-              [model]='breadcrumbs'
+<app-main-menu #mainmenu></app-main-menu>
+<p-breadcrumb [model]='breadcrumbs'
               [home]='home'></p-breadcrumb>
-<app-main-menu></app-main-menu>
 <p-toast position='top-right'
          styleClass='cx-alerts'></p-toast>
 <p-confirmDialog></p-confirmDialog>
