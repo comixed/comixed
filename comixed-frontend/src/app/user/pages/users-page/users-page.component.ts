@@ -21,11 +21,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import * as UserAdminActions from 'app/actions/user-admin.actions';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserAdmin } from 'app/models/actions/user-admin';
 import { ConfirmationService } from 'primeng/api';
-import { User } from 'app/user';
+import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
@@ -33,10 +32,12 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-users-page',
   templateUrl: './users-page.component.html',
-  styleUrls: ['./users-page.component.css']
+  styleUrls: ['./users-page.component.scss']
 })
 export class UsersPageComponent implements OnInit, OnDestroy {
   private langChangeSubscription: Subscription;
+  private adminSubscription: Subscription;
+  isAdmin = false;
 
   private user_admin$: Observable<UserAdmin>;
   private user_admin_subscription: Subscription;
@@ -47,7 +48,8 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private store: Store<AppState>,
     private confirmationService: ConfirmationService,
-    private breadcrumbAdaptor: BreadcrumbAdaptor
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
+    private authenticationAdaptor: AuthenticationAdaptor
   ) {
     this.user_admin$ = store.select('user_admin');
   }
@@ -65,23 +67,32 @@ export class UsersPageComponent implements OnInit, OnDestroy {
         this.user_admin = user_admin;
       }
     );
-
     this.store.dispatch(new UserAdminActions.UserAdminListUsers());
+    this.adminSubscription = this.authenticationAdaptor.role$.subscribe(
+      roles => (this.isAdmin = roles.is_admin)
+    );
   }
 
   ngOnDestroy() {
     this.user_admin_subscription.unsubscribe();
+    this.adminSubscription.unsubscribe();
   }
 
-  set_current_user(user: User): void {
-    this.store.dispatch(new UserAdminActions.UserAdminEditUser({ user: user }));
+  setCurrentUser(user: User): void {
+    if (!!user) {
+      this.store.dispatch(
+        new UserAdminActions.UserAdminEditUser({ user: user })
+      );
+    } else {
+      this.store.dispatch(new UserAdminActions.UserAdminClearEdit());
+    }
   }
 
-  set_new_user(): void {
+  setNewUser(): void {
     this.store.dispatch(new UserAdminActions.UserAdminCreateUser());
   }
 
-  delete_user(user: User): void {
+  deleteUser(user: User): void {
     this.confirmationService.confirm({
       header: `Delete ${user.email}?`,
       message: 'Are you sure you want to delete this user account?',

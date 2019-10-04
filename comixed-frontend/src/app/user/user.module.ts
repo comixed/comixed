@@ -43,6 +43,7 @@ import {
   PanelModule,
   TabViewModule,
   ToggleButtonModule,
+  ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
 import { AccountPreferencesComponent } from 'app/user/components/account-preferences/account-preferences.component';
@@ -71,7 +72,8 @@ import { FormsModule } from '@angular/forms';
     PanelModule,
     ButtonModule,
     TooltipModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    ToolbarModule
   ],
   providers: [AuthenticationAdaptor, TokenService, ReaderGuard, AdminGuard],
   declarations: [

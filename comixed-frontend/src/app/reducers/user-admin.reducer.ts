@@ -57,6 +57,9 @@ export function userAdminReducer(
         current_user: action.payload.user
       };
 
+    case UserAdminActions.USER_ADMIN_CLEAR_EDIT:
+      return { ...state, current_user: null };
+
     case UserAdminActions.USER_ADMIN_SAVE_USER:
       return {
         ...state,

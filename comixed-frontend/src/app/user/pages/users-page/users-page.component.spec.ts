@@ -39,8 +39,9 @@ import {
 import { EffectsModule } from '@ngrx/effects';
 import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TokenService } from 'app/user';
+import { AuthenticationAdaptor, TokenService } from 'app/user';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ToolbarModule } from 'primeng/primeng';
 
 describe('UsersPageComponent', () => {
   let component: UsersPageComponent;
@@ -63,11 +64,13 @@ describe('UsersPageComponent', () => {
         ButtonModule,
         ConfirmDialogModule,
         TooltipModule,
-        ToggleButtonModule
+        ToggleButtonModule,
+        ToolbarModule
       ],
       declarations: [UsersPageComponent, UserDetailsEditorComponent],
       providers: [
         BreadcrumbAdaptor,
+        AuthenticationAdaptor,
         ConfirmationService,
         MessageService,
         TokenService

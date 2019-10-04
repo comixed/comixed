@@ -29,7 +29,7 @@ import { Role } from 'app/user';
 @Component({
   selector: 'app-user-details-editor',
   templateUrl: './user-details-editor.component.html',
-  styleUrls: ['./user-details-editor.component.css']
+  styleUrls: ['./user-details-editor.component.scss']
 })
 export class UserDetailsEditorComponent implements OnInit, OnDestroy {
   private user_admin$: Observable<UserAdmin>;

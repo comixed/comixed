@@ -24,6 +24,8 @@ export const USER_ADMIN_LIST_USERS = '[USER ADMIN] Get a list of all users';
 export const USER_USER_ADMINS_RECEIVED =
   '[USER ADMIN] Received list of all users';
 export const USER_ADMIN_CREATE_USER = '[USER ADMIN] Create a new user';
+export const USER_ADMIN_CLEAR_EDIT =
+  '[USER ADMIN] Clear user edit without saving';
 export const USER_ADMIN_EDIT_USER = '[USER ADMIN] Begin editing user';
 export const USER_ADMIN_SAVE_USER = '[USER ADMIN] Save the user';
 export const USER_USER_ADMIN_SAVED = '[USER ADMIN] User saved';
@@ -62,6 +64,12 @@ export class UserAdminEditUser implements Action {
   ) {}
 }
 
+export class UserAdminClearEdit implements Action {
+  readonly type = USER_ADMIN_CLEAR_EDIT;
+
+  constructor() {}
+}
+
 export class UserAdminSaveUser implements Action {
   readonly type = USER_ADMIN_SAVE_USER;
 
@@ -98,6 +106,7 @@ export type Actions =
   | UserAdminUsersReceived
   | UserAdminCreateUser
   | UserAdminEditUser
+  | UserAdminClearEdit
   | UserAdminSaveUser
   | UserAdminUserSaved
   | UserAdminDeleteUser
