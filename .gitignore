@@ -3,3 +3,6 @@ coverage
 # IntelliJ files
 .idea
 *.iml
+.classpath
+.project
+.settings

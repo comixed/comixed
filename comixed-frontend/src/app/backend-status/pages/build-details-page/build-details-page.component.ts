@@ -24,6 +24,7 @@ import { BuildDetails } from 'app/backend-status/models/build-details';
 import { formatDate } from '@angular/common';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-build-details-page',
@@ -36,6 +37,7 @@ export class BuildDetailsPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private titleService: Title,
     private buildDetailsAdaptor: BuildDetailsAdaptor,
     private translateService: TranslateService,
     private breadcrumbAdaptor: BreadcrumbAdaptor
@@ -66,5 +68,8 @@ export class BuildDetailsPageComponent implements OnInit, OnDestroy {
         )
       }
     ]);
+    this.titleService.setTitle(
+      this.translateService.instant('build-details-page.title')
+    );
   }
 }
