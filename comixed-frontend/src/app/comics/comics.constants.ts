@@ -26,6 +26,7 @@ export const GET_ISSUE_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const SAVE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const CLEAR_METADATA_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
 export const DELETE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/scraper/save`;
 
 export const SAVE_PAGE_URL = `${API_ROOT_URL}/pages/\${id}`;
 export const BLOCK_PAGE_HASH_URL = `${API_ROOT_URL}/pages/\${id}/block/\${hash}`;

@@ -48,7 +48,10 @@ export enum ComicActionTypes {
   ClearMetadataFailed = '[COMIC] Failed to clear the metadata from a comic',
   DeleteComic = '[COMIC] Delete a comic from the library',
   ComicDeleted = '[COMIC] Comic deleted from the library',
-  DeleteComicFailed = '[COMIC] Failed to delete comic from the library'
+  DeleteComicFailed = '[COMIC] Failed to delete comic from the library',
+  ScrapeComic = '[COMIC] Scrape a single comic',
+  ComicScraped = '[COMIC] Scraped a single comic',
+  ScrapeComicFailed = '[COMIC] Failed to scrape a single comic'
 }
 
 export class ComicGetScanTypes implements Action {
@@ -213,6 +216,31 @@ export class ComicDeleteFailed implements Action {
   constructor() {}
 }
 
+export class ComicScrape implements Action {
+  readonly type = ComicActionTypes.ScrapeComic;
+
+  constructor(
+    public payload: {
+      comic: Comic;
+      apiKey: string;
+      issueId: number;
+      skipCache: boolean;
+    }
+  ) {}
+}
+
+export class ComicScraped implements Action {
+  readonly type = ComicActionTypes.ComicScraped;
+
+  constructor(public payload: { comic: Comic }) {}
+}
+
+export class ComicScrapeFailed implements Action {
+  readonly type = ComicActionTypes.ScrapeComicFailed;
+
+  constructor() {}
+}
+
 export type ComicActions =
   | ComicGetScanTypes
   | ComicGotScanTypes
@@ -240,4 +268,7 @@ export type ComicActions =
   | ComicClearMetadataFailed
   | ComicDelete
   | ComicDeleted
-  | ComicDeleteFailed;
+  | ComicDeleteFailed
+  | ComicScrape
+  | ComicScraped
+  | ComicScrapeFailed;

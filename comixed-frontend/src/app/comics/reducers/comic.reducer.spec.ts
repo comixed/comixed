@@ -44,6 +44,9 @@ import {
   ComicSaveFailed,
   ComicSavePage,
   ComicSavePageFailed,
+  ComicScrape,
+  ComicScraped,
+  ComicScrapeFailed,
   ComicSetPageHashBlocking,
   ComicSetPageHashBlockingFailed
 } from 'app/comics/actions/comic.actions';
@@ -66,6 +69,9 @@ import {
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
 
 describe('Comic Reducer', () => {
+  const API_KEY = '0123456789ABCDEF';
+  const ISSUE_ID = 44147;
+
   let state: ComicState;
 
   beforeEach(() => {
@@ -139,6 +145,10 @@ describe('Comic Reducer', () => {
 
     it('clears the deleting comic flag', () => {
       expect(state.deletingComic).toBeFalsy();
+    });
+
+    it('clears the scraping comic flag', () => {
+      expect(state.scrapingComic).toBeFalsy();
     });
   });
 
@@ -565,6 +575,54 @@ describe('Comic Reducer', () => {
 
     it('clears the deleting comic flag', () => {
       expect(state.deletingComic).toBeFalsy();
+    });
+  });
+
+  describe('when scraping a comic', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, scrapingComic: false },
+        new ComicScrape({
+          comic: COMIC_1,
+          apiKey: API_KEY,
+          issueId: ISSUE_ID,
+          skipCache: false
+        })
+      );
+    });
+
+    it('sets the scraping comic flag', () => {
+      expect(state.scrapingComic).toBeTruthy();
+    });
+  });
+
+  describe('when a comic is successfully scrape', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, scrapingComic: true, comic: null },
+        new ComicScraped({ comic: COMIC_1 })
+      );
+    });
+
+    it('clears the scraping comic flag', () => {
+      expect(state.scrapingComic).toBeFalsy();
+    });
+
+    it('updates the current comic', () => {
+      expect(state.comic).toEqual(COMIC_1);
+    });
+  });
+
+  describe('when scraping a comic fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, scrapingComic: true },
+        new ComicScrapeFailed()
+      );
+    });
+
+    it('clears the scraping comic flag', () => {
+      expect(state.scrapingComic).toBeFalsy();
     });
   });
 });

@@ -36,6 +36,7 @@ import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, COMICVINE_API_KEY, User } from 'app/user';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -45,6 +46,8 @@ import { AuthenticationAdaptor, COMICVINE_API_KEY, User } from 'app/user';
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   @Input() multi_comic_mode = false;
   @Output() update: EventEmitter<Comic> = new EventEmitter();
+
+  private _comic: Comic;
 
   fetchOptions: MenuItem[];
 
@@ -59,6 +62,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   constructor(
     private authenticationAdaptor: AuthenticationAdaptor,
+    private comicAdaptor: ComicAdaptor,
     private confirmationService: ConfirmationService,
     private translate: TranslateService,
     private store: Store<AppState>,
@@ -124,6 +128,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   @Input()
   set comic(comic: Comic) {
+    this._comic = comic;
     this.store.dispatch(
       new LibraryScrapingActions.SingleComicScrapingSetup({
         api_key: this.form.controls['api_key'].value,
@@ -133,6 +138,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         issue_number: comic.issueNumber
       })
     );
+  }
+
+  get comic(): Comic {
+    return this._comic;
   }
 
   get api_key(): string {
@@ -170,6 +179,13 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   selectIssue(): void {
+    this.comicAdaptor.scrapeComic(
+      this.single_comic_scraping.comic,
+      this.form.controls['api_key'].value,
+      this.single_comic_scraping.current_issue.id,
+      this.skipCache
+    );
+    /*
     this.store.dispatch(
       new LibraryScrapingActions.SingleComicScrapingScrapeMetadata({
         api_key: this.form.controls['api_key'].value,
@@ -178,7 +194,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         skip_cache: this.skipCache,
         multi_comic_mode: this.multi_comic_mode
       })
-    );
+    );*/
     this.update.next(this.single_comic_scraping.comic);
   }
 

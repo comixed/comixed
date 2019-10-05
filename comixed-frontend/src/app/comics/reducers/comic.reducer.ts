@@ -39,6 +39,7 @@ export interface ComicState {
   savingComic: boolean;
   clearingMetadata: boolean;
   deletingComic: boolean;
+  scrapingComic: boolean;
 }
 
 export const initialState: ComicState = {
@@ -57,7 +58,8 @@ export const initialState: ComicState = {
   blockingPageHash: false,
   savingComic: false,
   clearingMetadata: false,
-  deletingComic: false
+  deletingComic: false,
+  scrapingComic: false
 };
 
 export function reducer(
@@ -160,6 +162,15 @@ export function reducer(
 
     case ComicActionTypes.DeleteComicFailed:
       return { ...state, deletingComic: false };
+
+    case ComicActionTypes.ScrapeComic:
+      return { ...state, scrapingComic: true };
+
+    case ComicActionTypes.ComicScraped:
+      return { ...state, scrapingComic: false, comic: action.payload.comic };
+
+    case ComicActionTypes.ScrapeComicFailed:
+      return { ...state, scrapingComic: false };
 
     default:
       return state;

@@ -59,6 +59,14 @@
       "error": {
         "detail": "Failed to delete comic."
       }
+    },
+    "scrape-comic": {
+      "success": {
+        "detail": "Comic successfully scraped."
+      },
+      "error": {
+        "detail": "Failed to scrape comic."
+      }
     }
   },
   "comic-overview": {

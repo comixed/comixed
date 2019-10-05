@@ -21,8 +21,10 @@ package org.comixed.controller.scraping;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.model.library.Comic;
-import org.comixed.repositories.ComicRepository;
-import org.comixed.views.View.ComicDetails;
+import org.comixed.net.ComicScrapeRequest;
+import org.comixed.service.library.ComicException;
+import org.comixed.service.library.ComicService;
+import org.comixed.views.View;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.*;
 import org.comixed.web.model.ComicIssue;
@@ -30,10 +32,7 @@ import org.comixed.web.model.ComicVolume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +47,7 @@ public class ComicVineScraperController {
     @Autowired private ComicVineQueryForIssueDetailsAdaptor queryForIssueDetailsAdaptor;
     @Autowired private ComicVineQueryForVolumeDetailsAdaptor queryForVolumeDetailsAdaptor;
     @Autowired private ComicVineQueryForPublisherDetailsAdaptor queryForPublisherDetailsAdaptor;
-    @Autowired private ComicRepository comicRepository;
+    @Autowired private ComicService comicService;
 
     @RequestMapping(value = "/query/issue",
                     method = RequestMethod.POST)
@@ -102,51 +101,41 @@ public class ComicVineScraperController {
         return result;
     }
 
-    @RequestMapping(value = "/save")
-    @JsonView(ComicDetails.class)
+    @PostMapping(value = "/save",
+                 produces = "application/json",
+                 consumes = "application/json")
+    @JsonView(View.ComicDetails.class)
     public Comic scrapeAndSaveComicDetails(
-            @RequestParam("api_key")
-                    String apiKey,
-            @RequestParam("comic_id")
-                    long comicId,
-            @RequestParam("issue_id")
-                    String issueId,
-            @RequestParam("skip_cache")
-                    boolean skipCache)
+            @RequestBody()
+            final ComicScrapeRequest request)
             throws
-            ComicVineAdaptorException {
-        this.logger.debug("Preparing to retrieve details for comic: id={} issue={}",
-                          comicId,
-                          issueId);
+            ComicVineAdaptorException,
+            ComicException {
+        this.logger.info("Scraping code: id={} issue id={}",
+                         request.getComicId(),
+                         request.getIssueId());
 
-        Optional<Comic> record = this.comicRepository.findById(comicId);
-
-        if (!record.isPresent()) {
-            this.logger.debug("No such comic found");
-            return null;
-        }
-
-        Comic result = record.get();
+        this.logger.debug("Loading comic");
+        Comic comic = this.comicService.getComic(request.getComicId());
 
         this.logger.debug("Fetching details for comic");
-        String volumeId = this.queryForIssueDetailsAdaptor.execute(apiKey,
-                                                                   comicId,
-                                                                   issueId,
-                                                                   result,
-                                                                   skipCache);
+        String volumeId = this.queryForIssueDetailsAdaptor.execute(request.getApiKey(),
+                                                                   request.getComicId(),
+                                                                   request.getIssueId(),
+                                                                   comic,
+                                                                   request.getSkipCache());
         this.logger.debug("Fetching details for volume");
-        String publisherId = this.queryForVolumeDetailsAdaptor.execute(apiKey,
+        String publisherId = this.queryForVolumeDetailsAdaptor.execute(request.getApiKey(),
                                                                        volumeId,
-                                                                       result,
-                                                                       skipCache);
+                                                                       comic,
+                                                                       request.getSkipCache());
         this.logger.debug("Fetching publisher details");
-        this.queryForPublisherDetailsAdaptor.execute(apiKey,
+        this.queryForPublisherDetailsAdaptor.execute(request.getApiKey(),
                                                      publisherId,
-                                                     result,
-                                                     skipCache);
-        this.logger.debug("Updating details for comic in database");
-        result = this.comicRepository.save(result);
+                                                     comic,
+                                                     request.getSkipCache());
 
-        return result;
+        this.logger.debug("Updating details for comic in database");
+        return this.comicService.save(comic);
     }
 }

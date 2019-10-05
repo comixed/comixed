@@ -41,6 +41,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = '1234567890';
@@ -74,7 +75,7 @@ describe('ComicDetailsEditorComponent', () => {
         VolumeListComponent,
         ScrapingIssueTitlePipe
       ],
-      providers: [MessageService, ConfirmationService]
+      providers: [ComicAdaptor, MessageService, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicDetailsEditorComponent);

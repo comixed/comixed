@@ -40,6 +40,7 @@ import {
   ComicGotScanTypes,
   ComicSave,
   ComicSavePage,
+  ComicScrape,
   ComicSetPageHashBlocking
 } from 'app/comics/actions/comic.actions';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
@@ -59,6 +60,10 @@ import { PAGE_1 } from 'app/comics/models/page.fixtures';
 describe('ComicAdaptor', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
   const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
+  const COMIC = COMIC_1;
+  const API_KEY = 'ABCDEF0123456789';
+  const ISSUE_ID = 44147;
+  const SKIP_CACHE = false;
 
   let adaptor: ComicAdaptor;
   let store: Store<AppState>;
@@ -178,8 +183,8 @@ describe('ComicAdaptor', () => {
   });
 
   it('provides notice when the comic changes', () => {
-    store.dispatch(new ComicGotIssue({ comic: COMIC_1 }));
-    adaptor.comic$.subscribe(result => expect(result).toEqual(COMIC_1));
+    store.dispatch(new ComicGotIssue({ comic: COMIC }));
+    adaptor.comic$.subscribe(result => expect(result).toEqual(COMIC));
   });
 
   it('can get a comic by id', () => {
@@ -214,25 +219,38 @@ describe('ComicAdaptor', () => {
 
   it('can save a comic', () => {
     spyOn(store, 'dispatch');
-    adaptor.saveComic(COMIC_1);
+    adaptor.saveComic(COMIC);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new ComicSave({ comic: COMIC_1 })
+      new ComicSave({ comic: COMIC })
     );
   });
 
   it('can clear the metadata from a comic', () => {
     spyOn(store, 'dispatch');
-    adaptor.clearMetadata(COMIC_1);
+    adaptor.clearMetadata(COMIC);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new ComicClearMetadata({ comic: COMIC_1 })
+      new ComicClearMetadata({ comic: COMIC })
     );
   });
 
   it('can delete a comic from the library', () => {
     spyOn(store, 'dispatch');
-    adaptor.deleteComic(COMIC_1);
+    adaptor.deleteComic(COMIC);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new ComicDelete({ comic: COMIC_1 })
+      new ComicDelete({ comic: COMIC })
+    );
+  });
+
+  it('fires an action when scraping a comic', () => {
+    spyOn(store, 'dispatch');
+    adaptor.scrapeComic(COMIC, API_KEY, ISSUE_ID, SKIP_CACHE);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new ComicScrape({
+        comic: COMIC,
+        apiKey: API_KEY,
+        issueId: ISSUE_ID,
+        skipCache: SKIP_CACHE
+      })
     );
   });
 });

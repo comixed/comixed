@@ -28,9 +28,11 @@ import {
   GET_ISSUE_URL,
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
-  SAVE_COMIC_URL
+  SAVE_COMIC_URL,
+  SCRAPE_COMIC_URL
 } from 'app/comics/comics.constants';
 import { Comic } from 'app/comics';
+import { ComicScrapeRequest } from 'app/comics/models/net/comic-scrape-request';
 
 @Injectable({
   providedIn: 'root'
@@ -64,5 +66,19 @@ export class ComicService {
 
   deleteComic(comic: Comic): Observable<any> {
     return this.http.delete(interpolate(DELETE_COMIC_URL, { id: comic.id }));
+  }
+
+  scrapeComic(
+    comic: Comic,
+    apiKey: string,
+    issueId: number,
+    skipCache: boolean
+  ): Observable<any> {
+    return this.http.post(interpolate(SCRAPE_COMIC_URL), {
+      comicId: comic.id,
+      apiKey: apiKey,
+      issueId: issueId,
+      skipCache: skipCache
+    } as ComicScrapeRequest);
   }
 }

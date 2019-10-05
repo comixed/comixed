@@ -42,6 +42,7 @@ import {
   ComicGetScanTypes,
   ComicSave,
   ComicSavePage,
+  ComicScrape,
   ComicSetPageHashBlocking
 } from 'app/comics/actions/comic.actions';
 
@@ -170,5 +171,21 @@ export class ComicAdaptor {
 
   deleteComic(comic: Comic): void {
     this.store.dispatch(new ComicDelete({ comic: comic }));
+  }
+
+  scrapeComic(
+    comic: Comic,
+    apiKey: string,
+    issueId: number,
+    skipCache: boolean
+  ): void {
+    this.store.dispatch(
+      new ComicScrape({
+        comic: comic,
+        apiKey: apiKey,
+        issueId: issueId,
+        skipCache: skipCache
+      })
+    );
   }
 }

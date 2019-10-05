@@ -212,6 +212,8 @@ public class ComicService {
         this.logger.info("Saving comic: filename={}",
                          comic.getFilename());
 
+        comic.setDateLastUpdated(new Date());
+
         return this.comicRepository.save(comic);
     }
 

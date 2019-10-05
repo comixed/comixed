@@ -52,6 +52,9 @@ import {
   ComicSaveFailed,
   ComicSavePage,
   ComicSavePageFailed,
+  ComicScrape,
+  ComicScraped,
+  ComicScrapeFailed,
   ComicSetPageHashBlocking,
   ComicSetPageHashBlockingFailed
 } from 'app/comics/actions/comic.actions';
@@ -73,6 +76,11 @@ import { PAGE_1 } from 'app/comics/models/page.fixtures';
 import { PageService } from 'app/comics/services/page.service';
 
 describe('ComicEffects', () => {
+  const COMIC = COMIC_1;
+  const API_KEY = 'ABCDEF0123456789';
+  const ISSUE_ID = 44147;
+  const SKIP_CACHE = false;
+
   let actions$: Observable<any>;
   let effects: ComicEffects;
   let comicService: jasmine.SpyObj<ComicService>;
@@ -94,7 +102,8 @@ describe('ComicEffects', () => {
             getPageTypes: jasmine.createSpy('ComicService.getPageTypes'),
             saveComic: jasmine.createSpy('ComicSave.saveComic'),
             clearMetadata: jasmine.createSpy('ComicService.clearMetadata'),
-            deleteComic: jasmine.createSpy('ComicService.deleteComic')
+            deleteComic: jasmine.createSpy('ComicService.deleteComic'),
+            scrapeComic: jasmine.createSpy('ComicService.scrapeComic')
           }
         },
         {
@@ -123,24 +132,24 @@ describe('ComicEffects', () => {
 
   describe('when getting the scan types', () => {
     it('fires an action on success', () => {
-      const service_response = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
+      const serviceResponse = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
       const action = new ComicGetScanTypes();
-      const outcome = new ComicGotScanTypes({ scanTypes: service_response });
+      const outcome = new ComicGotScanTypes({ scanTypes: serviceResponse });
 
       actions$ = hot('-a', { a: action });
-      comicService.getScanTypes.and.returnValue(of(service_response));
+      comicService.getScanTypes.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getScanTypes$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new ComicGetScanTypes();
       const outcome = new ComicGetScanTypesFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.getScanTypes.and.returnValue(throwError(service_response));
+      comicService.getScanTypes.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getScanTypes$).toBeObservable(expected);
@@ -166,24 +175,24 @@ describe('ComicEffects', () => {
 
   describe('when getting the formats', () => {
     it('fires an action on success', () => {
-      const service_response = [FORMAT_1, FORMAT_3, FORMAT_5];
+      const serviceResponse = [FORMAT_1, FORMAT_3, FORMAT_5];
       const action = new ComicGetFormats();
-      const outcome = new ComicGotFormats({ formats: service_response });
+      const outcome = new ComicGotFormats({ formats: serviceResponse });
 
       actions$ = hot('-a', { a: action });
-      comicService.getFormats.and.returnValue(of(service_response));
+      comicService.getFormats.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getFormats$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new ComicGetFormats();
       const outcome = new ComicGetFormatsFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.getFormats.and.returnValue(throwError(service_response));
+      comicService.getFormats.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getFormats$).toBeObservable(expected);
@@ -209,24 +218,24 @@ describe('ComicEffects', () => {
 
   describe('when getting the page types', () => {
     it('fires an action on success', () => {
-      const service_response = [FRONT_COVER, BACK_COVER];
+      const serviceResponse = [FRONT_COVER, BACK_COVER];
       const action = new ComicGetPageTypes();
-      const outcome = new ComicGotPageTypes({ pageTypes: service_response });
+      const outcome = new ComicGotPageTypes({ pageTypes: serviceResponse });
 
       actions$ = hot('-a', { a: action });
-      comicService.getPageTypes.and.returnValue(of(service_response));
+      comicService.getPageTypes.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getPageTypes$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new ComicGetPageTypes();
       const outcome = new ComicGetPageTypesFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.getPageTypes.and.returnValue(throwError(service_response));
+      comicService.getPageTypes.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getPageTypes$).toBeObservable(expected);
@@ -252,24 +261,24 @@ describe('ComicEffects', () => {
 
   describe('when getting a comic', () => {
     it('fires an action on success', () => {
-      const service_response = COMIC_1;
+      const serviceResponse = COMIC;
       const action = new ComicGetIssue({ id: 29 });
-      const outcome = new ComicGotIssue({ comic: service_response });
+      const outcome = new ComicGotIssue({ comic: serviceResponse });
 
       actions$ = hot('-a', { a: action });
-      comicService.getIssue.and.returnValue(of(service_response));
+      comicService.getIssue.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getIssue$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new ComicGetIssue({ id: 29 });
       const outcome = new ComicGetIssueFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.getIssue.and.returnValue(throwError(service_response));
+      comicService.getIssue.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getIssue$).toBeObservable(expected);
@@ -295,12 +304,12 @@ describe('ComicEffects', () => {
 
   describe('when saving a page', () => {
     it('fires an action on success', () => {
-      const service_response = COMIC_1;
+      const serviceResponse = COMIC;
       const action = new ComicSavePage({ page: PAGE_1 });
-      const outcome = new ComicPageSaved({ comic: service_response });
+      const outcome = new ComicPageSaved({ comic: serviceResponse });
 
       actions$ = hot('-a', { a: action });
-      pageService.savePage.and.returnValue(of(service_response));
+      pageService.savePage.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.savePage$).toBeObservable(expected);
@@ -310,12 +319,12 @@ describe('ComicEffects', () => {
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new ComicSavePage({ page: PAGE_1 });
       const outcome = new ComicSavePageFailed();
 
       actions$ = hot('-a', { a: action });
-      pageService.savePage.and.returnValue(throwError(service_response));
+      pageService.savePage.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.savePage$).toBeObservable(expected);
@@ -341,15 +350,15 @@ describe('ComicEffects', () => {
 
   describe('when setting the blocked state for a page hash', () => {
     it('fires an action on success', () => {
-      const service_response = COMIC_1;
+      const serviceResponse = COMIC;
       const action = new ComicSetPageHashBlocking({
         page: PAGE_1,
         state: true
       });
-      const outcome = new ComicPageHashBlockingSet({ comic: service_response });
+      const outcome = new ComicPageHashBlockingSet({ comic: serviceResponse });
 
       actions$ = hot('-a', { a: action });
-      pageService.setPageHashBlocking.and.returnValue(of(service_response));
+      pageService.setPageHashBlocking.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.setPageHashBlocking$).toBeObservable(expected);
@@ -359,7 +368,7 @@ describe('ComicEffects', () => {
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new ComicSetPageHashBlocking({
         page: PAGE_1,
         state: true
@@ -368,7 +377,7 @@ describe('ComicEffects', () => {
 
       actions$ = hot('-a', { a: action });
       pageService.setPageHashBlocking.and.returnValue(
-        throwError(service_response)
+        throwError(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
@@ -398,12 +407,12 @@ describe('ComicEffects', () => {
 
   describe('when saving a comic', () => {
     it('fires an action on success', () => {
-      const service_response = COMIC_1;
-      const action = new ComicSave({ comic: COMIC_1 });
-      const outcome = new ComicSaved({ comic: service_response });
+      const serviceResponse = COMIC;
+      const action = new ComicSave({ comic: COMIC });
+      const outcome = new ComicSaved({ comic: serviceResponse });
 
       actions$ = hot('-a', { a: action });
-      comicService.saveComic.and.returnValue(of(service_response));
+      comicService.saveComic.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.saveComic$).toBeObservable(expected);
@@ -413,12 +422,12 @@ describe('ComicEffects', () => {
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
-      const action = new ComicSave({ comic: COMIC_1 });
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ComicSave({ comic: COMIC });
       const outcome = new ComicSaveFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.saveComic.and.returnValue(throwError(service_response));
+      comicService.saveComic.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.saveComic$).toBeObservable(expected);
@@ -428,7 +437,7 @@ describe('ComicEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = new ComicSave({ comic: COMIC_1 });
+      const action = new ComicSave({ comic: COMIC });
       const outcome = new ComicSaveFailed();
 
       actions$ = hot('-a', { a: action });
@@ -444,12 +453,12 @@ describe('ComicEffects', () => {
 
   describe('when clearing the metadata for a comic', () => {
     it('fires an action on success', () => {
-      const service_response = COMIC_1;
-      const action = new ComicClearMetadata({ comic: COMIC_1 });
-      const outcome = new ComicMetadataCleared({ comic: service_response });
+      const serviceResponse = COMIC;
+      const action = new ComicClearMetadata({ comic: COMIC });
+      const outcome = new ComicMetadataCleared({ comic: serviceResponse });
 
       actions$ = hot('-a', { a: action });
-      comicService.clearMetadata.and.returnValue(of(service_response));
+      comicService.clearMetadata.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.clearMetadata$).toBeObservable(expected);
@@ -459,12 +468,12 @@ describe('ComicEffects', () => {
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
-      const action = new ComicClearMetadata({ comic: COMIC_1 });
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ComicClearMetadata({ comic: COMIC });
       const outcome = new ComicClearMetadataFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.clearMetadata.and.returnValue(throwError(service_response));
+      comicService.clearMetadata.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.clearMetadata$).toBeObservable(expected);
@@ -474,7 +483,7 @@ describe('ComicEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = new ComicClearMetadata({ comic: COMIC_1 });
+      const action = new ComicClearMetadata({ comic: COMIC });
       const outcome = new ComicClearMetadataFailed();
 
       actions$ = hot('-a', { a: action });
@@ -490,12 +499,12 @@ describe('ComicEffects', () => {
 
   describe('when deleting a comic', () => {
     it('fires an action on success', () => {
-      const service_response = new HttpResponse({});
-      const action = new ComicDelete({ comic: COMIC_1 });
+      const serviceResponse = new HttpResponse({});
+      const action = new ComicDelete({ comic: COMIC });
       const outcome = new ComicDeleted();
 
       actions$ = hot('-a', { a: action });
-      comicService.deleteComic.and.returnValue(of(service_response));
+      comicService.deleteComic.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
@@ -505,12 +514,12 @@ describe('ComicEffects', () => {
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
-      const action = new ComicDelete({ comic: COMIC_1 });
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ComicDelete({ comic: COMIC });
       const outcome = new ComicDeleteFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.deleteComic.and.returnValue(throwError(service_response));
+      comicService.deleteComic.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
@@ -520,7 +529,7 @@ describe('ComicEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = new ComicDelete({ comic: COMIC_1 });
+      const action = new ComicDelete({ comic: COMIC });
       const outcome = new ComicDeleteFailed();
 
       actions$ = hot('-a', { a: action });
@@ -528,6 +537,67 @@ describe('ComicEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('when scraping a comic', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = COMIC;
+      const action = new ComicScrape({
+        comic: COMIC,
+        apiKey: API_KEY,
+        issueId: ISSUE_ID,
+        skipCache: SKIP_CACHE
+      });
+      const outcome = new ComicScraped({ comic: COMIC });
+
+      actions$ = hot('-a', { a: action });
+      comicService.scrapeComic.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.scrapeComic$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ComicScrape({
+        comic: COMIC,
+        apiKey: API_KEY,
+        issueId: ISSUE_ID,
+        skipCache: SKIP_CACHE
+      });
+      const outcome = new ComicScrapeFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.scrapeComic.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.scrapeComic$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new ComicScrape({
+        comic: COMIC,
+        apiKey: API_KEY,
+        issueId: ISSUE_ID,
+        skipCache: SKIP_CACHE
+      });
+      const outcome = new ComicScrapeFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.scrapeComic.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.scrapeComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

@@ -39,6 +39,8 @@ import {
   ComicSaved,
   ComicSaveFailed,
   ComicSavePageFailed,
+  ComicScraped,
+  ComicScrapeFailed,
   ComicSetPageHashBlockingFailed
 } from '../actions/comic.actions';
 import { ComicService } from 'app/comics/services/comic.service';
@@ -369,6 +371,50 @@ export class ComicEffects {
         )
       });
       return of(new ComicDeleteFailed());
+    })
+  );
+
+  @Effect()
+  scrapeComic$: Observable<Action> = this.actions$.pipe(
+    ofType(ComicActionTypes.ScrapeComic),
+    map(action => action.payload),
+    switchMap(action =>
+      this.comicService
+        .scrapeComic(
+          action.comic,
+          action.apiKey,
+          action.issueId,
+          action.skipCache
+        )
+        .pipe(
+          tap((response: Comic) =>
+            this.messageService.add({
+              severity: 'info',
+              detail: this.translateService.instant(
+                'comic-effects.scrape-comic.success.detail'
+              )
+            })
+          ),
+          map((response: Comic) => new ComicScraped({ comic: response })),
+          catchError(error => {
+            this.messageService.add({
+              severity: 'error',
+              detail: this.translateService.instant(
+                'comic-effects.scrape-comic.error.detail'
+              )
+            });
+            return of(new ComicScrapeFailed());
+          })
+        )
+    ),
+    catchError(error => {
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new ComicScrapeFailed());
     })
   );
 }

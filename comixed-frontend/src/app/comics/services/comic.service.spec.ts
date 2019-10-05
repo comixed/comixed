@@ -33,7 +33,8 @@ import {
   GET_ISSUE_URL,
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
-  SAVE_COMIC_URL
+  SAVE_COMIC_URL,
+  SCRAPE_COMIC_URL
 } from 'app/comics/comics.constants';
 import {
   SCAN_TYPE_1,
@@ -47,9 +48,13 @@ import {
 } from 'app/comics/models/comic-format.fixtures';
 import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import { HttpResponse } from '@angular/common/http';
+import { ComicScrapeRequest } from 'app/comics/models/net/comic-scrape-request';
 
 describe('ComicService', () => {
   const COMIC = COMIC_1;
+  const API_KEY = 'ABCDEF0123456789';
+  const ISSUE_ID = 44147;
+  const SKIP_CACHE = false;
 
   let service: ComicService;
   let httpMock: HttpTestingController;
@@ -155,5 +160,21 @@ describe('ComicService', () => {
     req.flush(
       new HttpResponse<boolean>({ status: 200, statusText: 'SUCCESS' })
     );
+  });
+
+  it('can scrape a comic', () => {
+    service
+      .scrapeComic(COMIC, API_KEY, ISSUE_ID, SKIP_CACHE)
+      .subscribe(response => expect(response).toEqual(COMIC));
+
+    const req = httpMock.expectOne(interpolate(SCRAPE_COMIC_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      comicId: COMIC.id,
+      apiKey: API_KEY,
+      issueId: ISSUE_ID,
+      skipCache: SKIP_CACHE
+    } as ComicScrapeRequest);
+    req.flush(COMIC);
   });
 });
