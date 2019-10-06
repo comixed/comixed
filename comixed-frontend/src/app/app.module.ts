@@ -247,6 +247,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     { prefix: './assets/i18n/app-', suffix: '.json' },
     { prefix: './assets/i18n/comics-', suffix: '.json' },
     { prefix: './assets/i18n/library-', suffix: '.json' },
-    { prefix: './assets/i18n/backend-status-', suffix: '.json' }
+    { prefix: './assets/i18n/backend-status-', suffix: '.json' },
+    { prefix: './assets/i18n/user-', suffix: '.json' }
   ]);
 }

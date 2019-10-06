@@ -18,7 +18,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
@@ -33,7 +33,7 @@ import { UserDetailsEditorComponent } from 'app/user/components/user-details-edi
 import { UsersPageComponent } from './users-page.component';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import {
-  AUTHENTICATION_FEATURE_KEY,
+  authenticationFeatureKey,
   reducer
 } from 'app/user/reducers/authentication.reducer';
 import { EffectsModule } from '@ngrx/effects';
@@ -42,6 +42,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthenticationAdaptor, TokenService } from 'app/user';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToolbarModule } from 'primeng/primeng';
+import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 
 describe('UsersPageComponent', () => {
   let component: UsersPageComponent;
@@ -51,12 +52,13 @@ describe('UsersPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
+        ReactiveFormsModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
+        StoreModule.forFeature(authenticationFeatureKey, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([AuthenticationEffects]),
         PanelModule,
@@ -71,6 +73,7 @@ describe('UsersPageComponent', () => {
       providers: [
         BreadcrumbAdaptor,
         AuthenticationAdaptor,
+        UserAdminAdaptor,
         ConfirmationService,
         MessageService,
         TokenService

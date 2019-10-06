@@ -18,7 +18,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
@@ -36,6 +36,7 @@ describe('UserDetailsEditorComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
+        ReactiveFormsModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot(REDUCERS),
         ButtonModule,

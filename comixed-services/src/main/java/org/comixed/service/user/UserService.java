@@ -26,6 +26,7 @@ import org.comixed.repositories.RoleRepository;
 import org.comixed.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,12 +35,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService
+        implements InitializingBean {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired private ComiXedUserRepository userRepository;
     @Autowired private RoleRepository roleRepository;
     @Autowired private Utils utils;
+
+    private Role readerRole;
+    private Role adminRole;
 
     public ComiXedUser findByEmail(String email)
             throws
@@ -203,4 +208,46 @@ public class UserService {
         user.deleteProperty(property);
         return this.userRepository.save(user);
     }
+
+    @Transactional
+    public ComiXedUser createUser(final String email,
+                                  final String password,
+                                  final boolean isAdmin)
+            throws
+            ComiXedUserException {
+        this.logger.debug("Creating new user: email={}",
+                          email);
+
+        ComiXedUser user = this.userRepository.findByEmail(email);
+
+        if (user != null) {
+            throw new ComiXedUserException("user already exists: email=" + email);
+        }
+
+        user = new ComiXedUser();
+        user.setEmail(email);
+        user.setPasswordHash(this.utils.createHash(password.getBytes()));
+        user.addRole(this.readerRole);
+        if (isAdmin) {
+            user.addRole(this.adminRole);
+        }
+
+        this.logger.debug("Saving new user");
+
+        return this.userRepository.save(user);
+    }
+
+    @Override
+    public void afterPropertiesSet()
+            throws
+            Exception {
+        try {
+            this.readerRole = this.findRoleByName("READER");
+            this.adminRole = this.findRoleByName("ADMIN");
+        }
+        catch (ComiXedUserException error) {
+            error.printStackTrace();
+        }
+    }
 }
+

@@ -27,7 +27,7 @@ import {
   initial_state
 } from 'app/user/models/authentication-state';
 
-export const AUTHENTICATION_FEATURE_KEY = 'auth_state';
+export const authenticationFeatureKey = 'auth_state';
 
 export function reducer(
   state = initial_state,

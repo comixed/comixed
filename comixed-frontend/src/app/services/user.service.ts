@@ -64,14 +64,6 @@ export class UserService {
     }
   }
 
-  delete_user(id: number): Observable<any> {
-    return this.http.delete(`${this.USER_SERVICE_API_URL}/admin/users/${id}`);
-  }
-
-  get_user_list(): Observable<any> {
-    return this.http.get(`${this.USER_SERVICE_API_URL}/admin/users/list`);
-  }
-
   set_user_preference(name: string, value: string): Observable<any> {
     const params = new HttpParams().set('name', name).set('value', value);
 

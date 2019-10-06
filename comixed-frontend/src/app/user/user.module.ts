@@ -28,6 +28,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthenticationAdaptor } from 'app/user';
 import { StoreModule } from '@ngrx/store';
 import * as fromAuthentication from './reducers/authentication.reducer';
+import * as fromUserAdmin from './reducers/user-admin.reducer';
 import { AuthenticationEffects } from './effects/authentication.effects';
 import { TokenService } from 'app/user/services/token.service';
 import { environment } from '../../environments/environment';
@@ -50,22 +51,30 @@ import { AccountPreferencesComponent } from 'app/user/components/account-prefere
 import { TableModule } from 'primeng/table';
 import { UsersPageComponent } from 'app/user/pages/users-page/users-page.component';
 import { UserDetailsEditorComponent } from 'app/user/components/user-details-editor/user-details-editor.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserAdminEffects } from 'app/user/effects/user-admin.effects';
+import { UserAdminService } from 'app/user/services/user-admin.service';
+import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     UserRoutingModule,
     TranslateModule.forRoot(),
-    EffectsModule.forFeature([AuthenticationEffects]),
+    EffectsModule.forFeature([AuthenticationEffects, UserAdminEffects]),
     StoreDevtoolsModule.instrument({
       name: 'NgRx Testing Store DevTools',
       logOnly: environment.production
     }),
     StoreModule.forFeature(
-      fromAuthentication.AUTHENTICATION_FEATURE_KEY,
+      fromAuthentication.authenticationFeatureKey,
       fromAuthentication.reducer
+    ),
+    StoreModule.forFeature(
+      fromUserAdmin.userAdminFeatureKey,
+      fromUserAdmin.reducer
     ),
     TabViewModule,
     TableModule,
@@ -75,7 +84,14 @@ import { FormsModule } from '@angular/forms';
     ToggleButtonModule,
     ToolbarModule
   ],
-  providers: [AuthenticationAdaptor, TokenService, ReaderGuard, AdminGuard],
+  providers: [
+    AuthenticationAdaptor,
+    UserAdminAdaptor,
+    TokenService,
+    UserAdminService,
+    ReaderGuard,
+    AdminGuard
+  ],
   declarations: [
     AccountPageComponent,
     UsersPageComponent,
@@ -86,6 +102,7 @@ import { FormsModule } from '@angular/forms';
   exports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     TabViewModule,
     TableModule,
     PanelModule,

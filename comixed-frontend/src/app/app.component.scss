@@ -26,36 +26,3 @@
   background-color: #b22222;
   color: #000000;
 }
-
-:host ::ng-deep.cx-button-box-vertical {
-  width: 100%;
-  text-align: center;
-}
-
-:host ::ng-deep.cx-selection-button {
-  width: 75%;
-  margin-top: 1px;
-}
-
-:host ::ng-deep .cx-action-button {
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-:host ::ng-deep .cx-container-centered-text {
-  text-align: center;
-}
-
-:host ::ng-deep .cx-horizonal-centered {
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-:host ::ng-deep .cx-right-align-container {
-  float: right;
-}
-
-:host ::ng-deep input {
-  width: 100%;
-}

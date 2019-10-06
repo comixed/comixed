@@ -17,10 +17,9 @@
  * org.comixed;
  */
 
-import { User } from 'app/user';
+import { API_ROOT_URL } from 'app/app.functions';
 
-export interface UserAdmin {
-  busy: boolean;
-  users: User[];
-  current_user: User;
-}
+export const GET_USERS_URL = `${API_ROOT_URL}/admin/users`;
+export const SAVE_NEW_USER_URL = `${API_ROOT_URL}/admin/users`;
+export const SAVE_USER_URL = `${API_ROOT_URL}/admin/users/\${id}`;
+export const DELETE_USER_URL = `${API_ROOT_URL}/admin/users/\${id}`;

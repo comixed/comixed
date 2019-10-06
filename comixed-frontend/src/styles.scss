@@ -29,3 +29,63 @@
   white-space: nowrap;
   color: #000000;
 }
+
+.cx-container-align-center {
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+// form styles
+
+.cx-input-label {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
+
+.cx-input-field {
+  width: 100%;
+  max-width: 100%;
+}
+
+.cx-form-validation-error {
+  background-color: $cx-form-validation-error-background-color;
+  color: $cx-form-validation-error-text-color;
+  padding-left: 5px;
+  border-radius: 25px;
+}
+
+.cx-button-box-vertical {
+  width: 100%;
+  text-align: center;
+}
+
+.cx-selection-button {
+  width: 75%;
+  margin-top: 1px;
+}
+
+ .cx-action-button {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+ .cx-container-centered-text {
+  text-align: center;
+}
+
+ .cx-horizonal-centered {
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+ .cx-right-align-container {
+  float: right;
+}
+
+ input {
+  width: 100%;
+}

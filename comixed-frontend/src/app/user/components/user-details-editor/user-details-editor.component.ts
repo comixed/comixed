@@ -17,14 +17,17 @@
  * org.comixed;
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { UserAdmin } from 'app/models/actions/user-admin';
-import * as UserAdminActions from 'app/actions/user-admin.actions';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { Role } from 'app/user';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import { User } from 'app/user';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SaveUserDetails } from 'app/user/models/save-user-details';
 
 @Component({
   selector: 'app-user-details-editor',
@@ -32,95 +35,71 @@ import { Role } from 'app/user';
   styleUrls: ['./user-details-editor.component.scss']
 })
 export class UserDetailsEditorComponent implements OnInit, OnDestroy {
-  private user_admin$: Observable<UserAdmin>;
-  private user_admin_subscription: Subscription;
-  public user_admin: UserAdmin;
+  @Input() isAdmin = false;
 
-  public email: string;
-  public password: string;
-  public password_verify: string;
-  public is_admin: boolean;
+  @Output() save = new EventEmitter<SaveUserDetails>();
 
-  constructor(private store: Store<AppState>) {
-    this.user_admin$ = store.select('user_admin');
-    this.email = '';
-    this.password = '';
-    this.password_verify = '';
-    this.is_admin = false;
-  }
+  private _user: User;
+  userForm: FormGroup;
 
-  ngOnInit() {
-    this.user_admin_subscription = this.user_admin$.subscribe(
-      (user_admin: UserAdmin) => {
-        this.user_admin = user_admin;
-        this.reset_user();
+  constructor(private formBuilder: FormBuilder) {
+    this.userForm = this.formBuilder.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        passwordVerify: ['', [Validators.required, Validators.minLength(8)]],
+        isAdmin: [false]
+      },
+      {
+        validator: mustMatch('password', 'passwordVerify')
       }
     );
   }
 
-  ngOnDestroy() {
-    this.user_admin_subscription.unsubscribe();
+  ngOnInit() {}
+
+  ngOnDestroy() {}
+
+  @Input()
+  set user(user: User) {
+    this._user = user;
+    this.loadForm();
   }
 
-  save_user(): void {
-    const id =
-      !!this.user_admin.current_user && !!this.user_admin.current_user.id
-        ? this.user_admin.current_user.id
-        : null;
-
-    this.store.dispatch(
-      new UserAdminActions.UserAdminSaveUser({
-        id: id,
-        email: this.email,
-        password: this.password,
-        is_admin: this.is_admin
-      })
-    );
+  get user(): User {
+    return this._user;
   }
 
-  reset_user(): void {
-    if (this.user_admin.current_user !== null) {
-      this.email = this.user_admin.current_user.email;
+  saveUser(): void {
+    this.save.emit({
+      id: this._user.id,
+      email: this.userForm.controls['email'].value,
+      password: this.userForm.controls['password'].value,
+      isAdmin: this.userForm.controls['isAdmin'].value
+    } as SaveUserDetails);
+  }
+
+  resetUser(): void {
+    this.loadForm();
+  }
+
+  private loadForm() {
+    this.userForm.controls['email'].setValue(this._user.email);
+    this.userForm.controls['isAdmin'].setValue(this.isAdmin);
+    this.userForm.controls['password'].setValue('');
+    this.userForm.controls['passwordVerify'].setValue('');
+  }
+}
+
+export function mustMatch(controlName: string, matchingControlName: string) {
+  return (formGroup: FormGroup) => {
+    const control = formGroup.controls[controlName];
+    const matchingControl = formGroup.controls[matchingControlName];
+
+    if (control.value !== matchingControl.value) {
+      matchingControl.setErrors({ mustMatch: true });
     } else {
-      this.email = '';
+      matchingControl.setErrors(null);
     }
-    this.password = '';
-    this.password_verify = '';
-    this.is_admin = this.has_admin_role();
-  }
-
-  can_save(): boolean {
-    if (!this.email || this.email.length === 0) {
-      return false;
-    }
-    if (!!this.user_admin.current_user.id) {
-      if (this.password === this.password_verify) {
-        return true;
-      }
-    } else {
-      if (
-        this.password !== null &&
-        this.password.length > 0 &&
-        this.password === this.password_verify
-      ) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  private has_admin_role(): boolean {
-    if (this.user_admin.current_user && this.user_admin.current_user.roles) {
-      const index = this.user_admin.current_user.roles.findIndex(
-        (role: Role) => {
-          return role.name === 'ADMIN';
-        }
-      );
-
-      return index !== -1;
-    }
-
-    return false;
-  }
+  };
 }

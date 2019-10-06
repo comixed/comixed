@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@
  * org.comixed;
  */
 
-import { SingleComicScrapingEffects } from 'app/effects/single-comic-scraping.effects';
-import { DuplicatesEffects } from 'app/effects/duplicates.effects';
-
-export const EFFECTS = [SingleComicScrapingEffects, DuplicatesEffects];
+export interface SaveUserDetails {
+    id: number;
+    email: string;
+    password: string;
+    isAdmin: boolean;
+}

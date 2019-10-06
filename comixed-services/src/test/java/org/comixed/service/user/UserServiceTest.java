@@ -27,15 +27,14 @@ import org.comixed.utils.Utils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
@@ -49,11 +48,13 @@ public class UserServiceTest {
     private static final String TEST_PROPERTY_VALUE = "The value of that property";
     private static final String TEST_PASSWORD = "this.is.my.password!";
     private static final String TEST_PASSWORD_HASH = TEST_PASSWORD;
+    private static final boolean TEST_IS_ADMIN = true;
 
     @InjectMocks private UserService service;
     @Mock private ComiXedUserRepository userRepository;
     @Mock private RoleRepository roleRepository;
     @Mock private ComiXedUser user;
+    @Captor private ArgumentCaptor<ComiXedUser> userCaptor;
     @Mock private List<ComiXedUser> userList;
     @Mock private Role role;
     @Mock private Utils utils;
@@ -375,5 +376,41 @@ public class UserServiceTest {
         Mockito.verify(userRepository,
                        Mockito.times(1))
                .save(user);
+    }
+
+    @Test
+    public void testCreateUser()
+            throws
+            ComiXedUserException {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+               .thenReturn(null);
+        Mockito.when(utils.createHash(Mockito.any()))
+               .thenReturn(TEST_PASSWORD_HASH);
+        Mockito.when(userRepository.save(userCaptor.capture()))
+               .thenReturn(user);
+
+        final ComiXedUser result = service.createUser(TEST_EMAIL,
+                                                      TEST_PASSWORD,
+                                                      TEST_IS_ADMIN);
+
+        assertNotNull(result);
+        assertSame(user,
+                   result);
+        assertEquals(TEST_EMAIL,
+                     userCaptor.getValue()
+                               .getEmail());
+        assertEquals(TEST_PASSWORD_HASH,
+                     userCaptor.getValue()
+                               .getPasswordHash());
+
+        Mockito.verify(userRepository,
+                       Mockito.times(1))
+               .findByEmail(TEST_EMAIL);
+        Mockito.verify(utils,
+                       Mockito.times(1))
+               .createHash(TEST_PASSWORD.getBytes());
+        Mockito.verify(userRepository,
+                       Mockito.times(1))
+               .save(userCaptor.getValue());
     }
 }

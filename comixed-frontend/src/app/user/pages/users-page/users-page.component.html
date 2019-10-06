@@ -13,15 +13,16 @@
     </div>
 </p-toolbar>
 
-<div *ngIf='user_admin?.current_user'>
-      <span class='ui-panel-title'
-            style='font-size:16px;display:inline-block;margin-top:2px'>{{'admin.users.label.user-details'|translate}}</span>
-    <app-user-details-editor></app-user-details-editor>
+<div *ngIf='current'
+     id='user-editor-container'>
+    <app-user-details-editor *ngIf='current'
+                             [user]='current'
+                             [isAdmin]='isAdmin'
+                             (save)='saveUser($event)'></app-user-details-editor>
 </div>
 
-<p-table *ngIf='user_admin'
-         [loading]='!user_admin||user_admin.busy'
-         [value]='user_admin.users'
+<p-table [loading]='fetching'
+         [value]='users'
          [rows]='10'
          [autoLayout]='true'
          [paginatorPosition]='"both"'
@@ -46,7 +47,7 @@
                 <button pButton
                         type='button'
                         icon='fa fa-fw fa-user-times'
-                        pTooltip='{{"admin.users.tooltip.delete-user"|translate}}'
+                        pTooltip='{{(user.id === loggedInUser.id ? "users-page.text.cant-delete-yourself" : "users-page.text.delete-user")|translate}}'
                         (click)='deleteUser(user)'></button>
             </td>
             <td>{{user.email}}</td>

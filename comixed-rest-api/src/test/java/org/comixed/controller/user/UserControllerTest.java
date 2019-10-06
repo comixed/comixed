@@ -21,6 +21,7 @@ package org.comixed.controller.user;
 
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Role;
+import org.comixed.net.SaveUserRequest;
 import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
 import org.comixed.utils.Utils;
@@ -49,6 +50,7 @@ public class UserControllerTest {
     private static final Role TEST_ROLE_READER = new Role();
     private static final Role TEST_ROLE_ADMIN = new Role();
     private static final long TEST_USER_ID = 717;
+    private static final Boolean TEST_IS_ADMIN = true;
 
     @InjectMocks private UserController controller;
     @Mock private UserService userService;
@@ -319,9 +321,9 @@ public class UserControllerTest {
                .thenReturn(null);
 
         ComiXedUser result = controller.updateUser(TEST_USER_ID,
-                                                   TEST_EMAIL,
-                                                   TEST_PASSWORD,
-                                                   false);
+                                                   new SaveUserRequest(TEST_EMAIL,
+                                                                       TEST_PASSWORD,
+                                                                       TEST_IS_ADMIN));
 
         assertNull(result);
 
@@ -346,9 +348,9 @@ public class UserControllerTest {
                .thenReturn(user);
 
         ComiXedUser result = controller.updateUser(TEST_USER_ID,
-                                                   TEST_EMAIL,
-                                                   TEST_PASSWORD,
-                                                   false);
+                                                   new SaveUserRequest(TEST_EMAIL,
+                                                                       TEST_PASSWORD,
+                                                                       TEST_IS_ADMIN));
 
         assertNotNull(result);
         assertSame(user,
@@ -384,9 +386,9 @@ public class UserControllerTest {
                .thenReturn(user);
 
         ComiXedUser result = controller.updateUser(TEST_USER_ID,
-                                                   TEST_EMAIL,
-                                                   TEST_PASSWORD,
-                                                   true);
+                                                   new SaveUserRequest(TEST_EMAIL,
+                                                                       TEST_PASSWORD,
+                                                                       TEST_IS_ADMIN));
 
         assertNotNull(result);
         assertSame(user,
@@ -440,5 +442,29 @@ public class UserControllerTest {
         Mockito.verify(userService,
                        Mockito.times(1))
                .delete(TEST_USER_ID);
+    }
+
+    @Test
+    public void testSaveNewUser()
+            throws
+            ComiXedUserException {
+        Mockito.when(userService.createUser(Mockito.anyString(),
+                                            Mockito.anyString(),
+                                            Mockito.anyBoolean()))
+               .thenReturn(user);
+
+        final ComiXedUser result = controller.saveNewUser(new SaveUserRequest(TEST_EMAIL,
+                                                                              TEST_PASSWORD,
+                                                                              TEST_IS_ADMIN));
+
+        assertNotNull(result);
+        assertSame(user,
+                   result);
+
+        Mockito.verify(userService,
+                       Mockito.times(1))
+               .createUser(TEST_EMAIL,
+                           TEST_PASSWORD,
+                           TEST_IS_ADMIN);
     }
 }

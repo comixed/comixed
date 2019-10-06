@@ -35,7 +35,7 @@ import { UserService } from 'app/services/user.service';
 import { EffectsModule } from '@ngrx/effects';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import {
-  AUTHENTICATION_FEATURE_KEY,
+  authenticationFeatureKey,
   reducer
 } from 'app/user/reducers/authentication.reducer';
 import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
@@ -52,7 +52,7 @@ describe('AccountPageComponent', () => {
         RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
+        StoreModule.forFeature(authenticationFeatureKey, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([AuthenticationEffects]),
         TabViewModule,

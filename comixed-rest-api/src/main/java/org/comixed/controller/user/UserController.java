@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Preference;
 import org.comixed.model.user.Role;
+import org.comixed.net.SaveUserRequest;
 import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
 import org.comixed.utils.Utils;
@@ -76,17 +77,13 @@ public class UserController
         this.userService.delete(userId);
     }
 
-    @RequestMapping(value = "/admin/users/list",
-                    method = RequestMethod.GET)
+    @GetMapping(value = "/admin/users",
+                produces = "application/json")
     @JsonView(UserList.class)
     public List<ComiXedUser> getAllUsers() {
-        this.logger.debug("Getting the list of all users");
+        this.logger.info("Getting all user accounts");
 
-        List<ComiXedUser> result = this.userService.findAll();
-        this.logger.debug("Found {} users",
-                          result.size());
-
-        return result;
+        return this.userService.findAll();
     }
 
     @RequestMapping(value = "/user",
@@ -141,43 +138,23 @@ public class UserController
         return user.getPreferences();
     }
 
-    @RequestMapping(value = "/admin/users",
-                    method = RequestMethod.POST)
+    @PostMapping(value = "/admin/users",
+                 produces = "application/json",
+                 consumes = "application/json")
     public ComiXedUser saveNewUser(
-            @RequestParam("email")
-                    String email,
-            @RequestParam("password")
-                    String password,
-            @RequestParam("is_admin")
-                    boolean isAdmin)
+            @RequestBody()
+            final SaveUserRequest request)
             throws
             ComiXedUserException {
-        this.logger.debug("Creating new user: email={}",
-                          email);
+        this.logger.info("Creating new user: email={} admin={}",
+                         request.getEmail(),
+                         request.getIsAdmin()
+                         ? "Yes"
+                         : "No");
 
-        ComiXedUser user = this.userService.findByEmail(email);
-
-        if (user == null) {
-            user = new ComiXedUser();
-
-            this.logger.debug("Giving user reader access");
-            user.addRole(this.readerRole);
-
-            if (isAdmin) {
-                this.logger.debug("Giving user admin access");
-                user.addRole(this.adminRole);
-            }
-
-            user.setEmail(email);
-            user.setPasswordHash(this.utils.createHash(password.getBytes()));
-            this.userService.save(user);
-        } else {
-            this.logger.error("Email already used: {}",
-                              email);
-            return null;
-        }
-
-        return user;
+        return this.userService.createUser(request.getEmail(),
+                                           request.getPassword(),
+                                           request.getIsAdmin());
     }
 
     @RequestMapping(value = "/user/preferences/{name}",
@@ -234,49 +211,46 @@ public class UserController
                                                 password);
     }
 
-    @RequestMapping(value = "/admin/users/{id}",
-                    method = RequestMethod.PUT)
+    @PutMapping(value = "/admin/users/{id}",
+                produces = "application/json",
+                consumes = "application/json")
     public ComiXedUser updateUser(
             @PathVariable("id")
                     long id,
-            @RequestParam("email")
-                    String email,
-            @RequestParam("password")
-                    String password,
-            @RequestParam("is_admin")
-                    boolean isAdmin)
+            @RequestBody()
+            final SaveUserRequest request)
             throws
             ComiXedUserException {
-        this.logger.info("Updating user: id={}");
+        this.logger.info("Updating user: id={}",
+                         id);
 
         ComiXedUser user = this.userService.findById(id);
 
         if (user == null) {
-            this.logger.error("No such user: id={}",
-                              id);
+            this.logger.debug("No such user");
             return null;
         }
 
-        user.setEmail(email);
+        user.setEmail(request.getEmail());
 
-        if ((password != null) && !password.isEmpty()) {
+        if ((request.getPassword() != null) && !request.getPassword()
+                                                       .isEmpty()) {
             this.logger.debug("Updating user's password");
-            user.setPasswordHash(this.utils.createHash(password.getBytes()));
+            user.setPasswordHash(this.utils.createHash(request.getPassword()
+                                                              .getBytes()));
         }
         user.clearRoles();
         user.addRole(this.readerRole);
-        if (isAdmin) {
+        if (request.getIsAdmin()) {
             user.addRole(this.adminRole);
         }
         this.logger.debug("Updating user: id={} email={} is_admin={}",
                           id,
-                          email,
-                          isAdmin
+                          request.getEmail(),
+                          request.getIsAdmin()
                           ? "Yes"
                           : "No");
-        this.userService.save(user);
-
-        return user;
+        return this.userService.save(user);
 
     }
 

@@ -18,16 +18,14 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as UserAdminActions from 'app/actions/user-admin.actions';
-import { Observable, Subscription } from 'rxjs';
-import { UserAdmin } from 'app/models/actions/user-admin';
-import { ConfirmationService } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
+import { SaveUserDetails } from 'app/user/models/save-user-details';
 
 @Component({
   selector: 'app-users-page',
@@ -35,24 +33,27 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
   styleUrls: ['./users-page.component.scss']
 })
 export class UsersPageComponent implements OnInit, OnDestroy {
-  private langChangeSubscription: Subscription;
-  private adminSubscription: Subscription;
+  langChangeSubscription: Subscription;
+  adminSubscription: Subscription;
   isAdmin = false;
-
-  private user_admin$: Observable<UserAdmin>;
-  private user_admin_subscription: Subscription;
-  public user_admin: UserAdmin;
+  loggedInUserSubscription: Subscription;
+  loggedInUser: User;
+  fetchingSubscription: Subscription;
+  fetching = false;
+  usersSubscription: Subscription;
+  users: User[];
+  currentSubscription: Subscription;
+  current = null;
 
   constructor(
     private titleService: Title,
+    private messageService: MessageService,
     private translateService: TranslateService,
-    private store: Store<AppState>,
     private confirmationService: ConfirmationService,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
-    private authenticationAdaptor: AuthenticationAdaptor
-  ) {
-    this.user_admin$ = store.select('user_admin');
-  }
+    private authenticationAdaptor: AuthenticationAdaptor,
+    private userAdminAdaptor: UserAdminAdaptor
+  ) {}
 
   ngOnInit() {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
@@ -62,47 +63,60 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('users-page.title')
     );
-    this.user_admin_subscription = this.user_admin$.subscribe(
-      (user_admin: UserAdmin) => {
-        this.user_admin = user_admin;
-      }
-    );
-    this.store.dispatch(new UserAdminActions.UserAdminListUsers());
     this.adminSubscription = this.authenticationAdaptor.role$.subscribe(
       roles => (this.isAdmin = roles.is_admin)
+    );
+    this.loggedInUserSubscription = this.authenticationAdaptor.user$.subscribe(
+      user => (this.loggedInUser = user)
+    );
+    this.fetchingSubscription = this.userAdminAdaptor.fetchingUser$.subscribe(
+      fetching => (this.fetching = fetching)
+    );
+    this.usersSubscription = this.userAdminAdaptor.allUser$.subscribe(
+      users => (this.users = users)
+    );
+    this.userAdminAdaptor.getAllUsers();
+    this.currentSubscription = this.userAdminAdaptor.current$.subscribe(
+      current => (this.current = current)
     );
   }
 
   ngOnDestroy() {
-    this.user_admin_subscription.unsubscribe();
     this.adminSubscription.unsubscribe();
+    this.loggedInUserSubscription.unsubscribe();
+    this.fetchingSubscription.unsubscribe();
+    this.usersSubscription.unsubscribe();
+    this.currentSubscription.unsubscribe();
   }
 
   setCurrentUser(user: User): void {
     if (!!user) {
-      this.store.dispatch(
-        new UserAdminActions.UserAdminEditUser({ user: user })
-      );
+      this.userAdminAdaptor.setCurrent(user);
     } else {
-      this.store.dispatch(new UserAdminActions.UserAdminClearEdit());
+      this.userAdminAdaptor.clearCurrent();
     }
   }
 
   setNewUser(): void {
-    this.store.dispatch(new UserAdminActions.UserAdminCreateUser());
+    this.userAdminAdaptor.createNewUser();
   }
 
   deleteUser(user: User): void {
-    this.confirmationService.confirm({
-      header: `Delete ${user.email}?`,
-      message: 'Are you sure you want to delete this user account?',
-      icon: 'fa fa-exclamation',
-      accept: () => {
-        this.store.dispatch(
-          new UserAdminActions.UserAdminDeleteUser({ user: user })
-        );
-      }
-    });
+    if (user.id === this.loggedInUser.id) {
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'users-page.text.cant-delete-yourself'
+        )
+      });
+    } else {
+      this.confirmationService.confirm({
+        header: `Delete ${user.email}?`,
+        message: 'Are you sure you want to delete this user account?',
+        icon: 'fa fa-exclamation',
+        accept: () => this.userAdminAdaptor.deleteUser(user)
+      });
+    }
   }
 
   private loadTranslations() {
@@ -114,5 +128,9 @@ export class UsersPageComponent implements OnInit, OnDestroy {
         )
       }
     ]);
+  }
+
+  saveUser(details: SaveUserDetails): void {
+    this.userAdminAdaptor.saveUser(details);
   }
 }
