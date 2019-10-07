@@ -60,11 +60,11 @@ describe('AuthenticationAdaptor', () => {
     });
 
     it('returns false for the reader role check', () => {
-      expect(auth_adaptor.is_reader).toBeFalsy();
+      expect(auth_adaptor.isReader).toBeFalsy();
     });
 
     it('returns false for the admin role check', () => {
-      expect(auth_adaptor.is_admin).toBeFalsy();
+      expect(auth_adaptor.isAdmin).toBeFalsy();
     });
   });
 
@@ -78,11 +78,11 @@ describe('AuthenticationAdaptor', () => {
     });
 
     it('returns true for the reader role check', () => {
-      expect(auth_adaptor.is_reader).toBeTruthy();
+      expect(auth_adaptor.isReader).toBeTruthy();
     });
 
     it('returns false for the admin role check', () => {
-      expect(auth_adaptor.is_admin).toBeFalsy();
+      expect(auth_adaptor.isAdmin).toBeFalsy();
     });
   });
 
@@ -96,18 +96,18 @@ describe('AuthenticationAdaptor', () => {
     });
 
     it('returns true for the reader role check', () => {
-      expect(auth_adaptor.is_reader).toBeTruthy();
+      expect(auth_adaptor.isReader).toBeTruthy();
     });
 
     it('returns true for the admin role check', () => {
-      expect(auth_adaptor.is_admin).toBeTruthy();
+      expect(auth_adaptor.isAdmin).toBeTruthy();
     });
   });
 
   describe('when getting the current user', () => {
     beforeEach(() => {
       spyOn(store, 'dispatch');
-      auth_adaptor.get_current_user();
+      auth_adaptor.getCurrentUser();
     });
 
     it('fires an action', () => {
@@ -123,11 +123,11 @@ describe('AuthenticationAdaptor', () => {
     });
 
     it('returns the authentication token if set', () => {
-      expect(auth_adaptor.auth_token).toEqual(AUTH_TOKEN);
+      expect(auth_adaptor.authToken).toEqual(AUTH_TOKEN);
     });
 
     it('returns true when checking if the token is set', () => {
-      expect(auth_adaptor.has_auth_token).toBeTruthy();
+      expect(auth_adaptor.hasAuthToken).toBeTruthy();
     });
   });
 
@@ -137,30 +137,30 @@ describe('AuthenticationAdaptor', () => {
     });
 
     it('returns null if not set', () => {
-      expect(auth_adaptor.auth_token).toBeNull();
+      expect(auth_adaptor.authToken).toBeNull();
     });
 
     it('returns false checking if the token is set', () => {
-      expect(auth_adaptor.has_auth_token).toBeFalsy();
+      expect(auth_adaptor.hasAuthToken).toBeFalsy();
     });
   });
 
   describe('displaying the login dialog', () => {
     it('returns false when hidden', () => {
       store.dispatch(new AuthActions.AuthHideLogin());
-      expect(auth_adaptor.showing_login).toBeFalsy();
+      expect(auth_adaptor.showingLogin).toBeFalsy();
     });
 
     it('returns true when shown', () => {
       store.dispatch(new AuthActions.AuthShowLogin());
-      expect(auth_adaptor.showing_login).toBeTruthy();
+      expect(auth_adaptor.showingLogin).toBeTruthy();
     });
   });
 
   describe('when starting the login process', () => {
     beforeEach(() => {
       spyOn(store, 'dispatch');
-      auth_adaptor.start_login();
+      auth_adaptor.startLogin();
     });
 
     it('fires an action', () => {
@@ -173,7 +173,7 @@ describe('AuthenticationAdaptor', () => {
   describe('when sending the login data', () => {
     beforeEach(() => {
       spyOn(store, 'dispatch');
-      auth_adaptor.send_login_data(EMAIL, PASSWORD);
+      auth_adaptor.sendLoginData(EMAIL, PASSWORD);
     });
 
     it('fires an action', () => {
@@ -186,7 +186,7 @@ describe('AuthenticationAdaptor', () => {
   describe('when canceling the login process', () => {
     beforeEach(() => {
       spyOn(store, 'dispatch');
-      auth_adaptor.cancel_login();
+      auth_adaptor.cancelLogin();
     });
 
     it('fires an action', () => {
@@ -199,7 +199,7 @@ describe('AuthenticationAdaptor', () => {
   describe('when starting the logout process', () => {
     beforeEach(() => {
       spyOn(store, 'dispatch');
-      auth_adaptor.start_logout();
+      auth_adaptor.startLogout();
     });
 
     it('fires an action', () => {
@@ -210,7 +210,7 @@ describe('AuthenticationAdaptor', () => {
   describe('when setting a user preference', () => {
     beforeEach(() => {
       spyOn(store, 'dispatch');
-      auth_adaptor.set_preference(PREFERENCE_NAME, PREFERENCE_VALUE);
+      auth_adaptor.setPreference(PREFERENCE_NAME, PREFERENCE_VALUE);
     });
 
     it('fires an action', () => {
@@ -236,13 +236,13 @@ describe('AuthenticationAdaptor', () => {
     });
 
     it('returns the value for a known property', () => {
-      expect(auth_adaptor.get_preference(PREFERENCE_NAME)).toEqual(
+      expect(auth_adaptor.getPreference(PREFERENCE_NAME)).toEqual(
         PREFERENCE_VALUE
       );
     });
 
     it('returns null for an unknown property', () => {
-      expect(auth_adaptor.get_preference(PREFERENCE_VALUE)).toBeNull();
+      expect(auth_adaptor.getPreference(PREFERENCE_VALUE)).toBeNull();
     });
   });
 });

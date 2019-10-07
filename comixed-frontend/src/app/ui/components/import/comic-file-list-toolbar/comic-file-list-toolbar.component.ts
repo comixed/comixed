@@ -23,7 +23,7 @@ import { AppState } from 'app/app.state';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 import { ComicFile, ImportAdaptor } from 'app/library';
 
 @Component({
@@ -61,17 +61,17 @@ export class ComicFileListToolbarComponent implements OnInit {
     this.load_layout_options();
     this.load_sort_field_options();
     this.load_rows_options();
-    this.layout = this.library_display_adaptor.get_layout();
-    this.sort_field = this.library_display_adaptor.get_sort_field();
-    this.rows = this.library_display_adaptor.get_display_rows();
-    this.same_height = this.library_display_adaptor.get_same_height();
-    this.cover_size = this.library_display_adaptor.get_cover_size();
+    this.layout = this.library_display_adaptor.getLayout();
+    this.sort_field = this.library_display_adaptor.getSortField();
+    this.rows = this.library_display_adaptor.getDisplayRows();
+    this.same_height = this.library_display_adaptor.getSameHeight();
+    this.cover_size = this.library_display_adaptor.getCoverSize();
   }
 
   ngOnInit() {}
 
   find_comics(): void {
-    this.auth_adaptor.set_preference('import.directory', this.directory);
+    this.auth_adaptor.setPreference('import.directory', this.directory);
     this.import_adaptor.fetch_files(this.directory);
   }
 
@@ -85,27 +85,27 @@ export class ComicFileListToolbarComponent implements OnInit {
 
   set_sort_field(sort_field: string): void {
     this.sort_field = sort_field;
-    this.library_display_adaptor.set_sort_field(sort_field, false);
+    this.library_display_adaptor.setSortField(sort_field, false);
   }
 
   set_rows(rows: number): void {
     this.rows = rows;
-    this.library_display_adaptor.set_display_rows(rows);
+    this.library_display_adaptor.setDisplayRows(rows);
   }
 
   set_same_height(same_height: boolean): void {
     this.same_height = same_height;
-    this.library_display_adaptor.set_same_height(same_height);
+    this.library_display_adaptor.setSameHeight(same_height);
   }
 
   set_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
-    this.library_display_adaptor.set_cover_size(cover_size, false);
+    this.library_display_adaptor.setCoverSize(cover_size, false);
   }
 
   save_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
-    this.library_display_adaptor.set_cover_size(cover_size);
+    this.library_display_adaptor.setCoverSize(cover_size);
   }
 
   private load_layout_options(): void {

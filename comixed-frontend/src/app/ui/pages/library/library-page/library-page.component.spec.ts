@@ -53,7 +53,7 @@ import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import { ContextMenuModule } from 'primeng/primeng';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';

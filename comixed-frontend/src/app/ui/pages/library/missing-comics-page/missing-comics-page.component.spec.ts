@@ -52,7 +52,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';

@@ -32,17 +32,17 @@ import { LibraryService } from './services/library.service';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../../environments/environment';
 import { LibraryAdaptor } from './adaptors/library.adaptor';
-import { CardModule } from 'primeng/card';
 import * as fromImport from './reducers/import.reducer';
 import { ImportEffects } from './effects/import.effects';
-import { ImportAdaptor } from 'app/library/adaptors/import.adaptor';
-import { ImportService } from 'app/library/services/import.service';
-import * as fromSelection from 'app/library/reducers/selection.reducer';
-import { SelectionAdaptor } from 'app/library/adaptors/selection.adaptor';
+import { ImportAdaptor } from './adaptors/import.adaptor';
+import { ImportService } from './services/import.service';
+import * as fromSelection from './reducers/selection.reducer';
+import { SelectionAdaptor } from './adaptors/selection.adaptor';
 import * as fromReadingList from './reducers/reading-list.reducer';
 import { ReadingListEffects } from './effects/reading-list.effects';
-import { ReadingListService } from 'app/library/services/reading-list.service';
-import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
+import { ReadingListService } from './services/reading-list.service';
+import { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
+import { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
 
 @NgModule({
   imports: [
@@ -74,6 +74,7 @@ import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
   providers: [
     LibraryService,
     LibraryAdaptor,
+    LibraryDisplayAdaptor,
     ImportService,
     ImportAdaptor,
     SelectionAdaptor,

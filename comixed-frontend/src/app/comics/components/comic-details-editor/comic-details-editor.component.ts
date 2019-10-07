@@ -93,7 +93,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authStateSubscription = this.authenticationAdaptor.user$.subscribe(
       () => {
-        const api_key = this.authenticationAdaptor.get_preference(
+        const api_key = this.authenticationAdaptor.getPreference(
           COMICVINE_API_KEY
         );
         this.form.controls['api_key'].setValue(api_key || '');
@@ -240,7 +240,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   saveApiKey(): void {
-    this.authenticationAdaptor.set_preference(
+    this.authenticationAdaptor.setPreference(
       COMICVINE_API_KEY,
       this.form.controls['api_key'].value.trim()
     );

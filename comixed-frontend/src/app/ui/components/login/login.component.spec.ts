@@ -61,10 +61,10 @@ describe('LoginComponent', () => {
   });
 
   it('user submits the login form using the auth adaptor', () => {
-    spyOn(auth_adaptor, 'send_login_data');
+    spyOn(auth_adaptor, 'sendLoginData');
     component.email = EMAIL;
     component.password = PASSWORD;
     component.do_login();
-    expect(auth_adaptor.send_login_data).toHaveBeenCalledWith(EMAIL, PASSWORD);
+    expect(auth_adaptor.sendLoginData).toHaveBeenCalledWith(EMAIL, PASSWORD);
   });
 });

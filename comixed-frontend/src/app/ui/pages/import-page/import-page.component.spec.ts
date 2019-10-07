@@ -55,7 +55,7 @@ import { REDUCERS } from 'app/app.reducers';
 import { UserPreferencePipe } from 'app/pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';

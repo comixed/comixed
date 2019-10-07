@@ -66,7 +66,7 @@ describe('AdminGuard', () => {
     beforeEach(() => {
       auth_adaptor._initialized$.next(true);
       auth_adaptor._authenticated$.next(true);
-      auth_adaptor._role$.next({ is_admin: true, is_reader: false });
+      auth_adaptor._role$.next({ admin: true, reader: false });
     });
 
     it('grants access', () => {
@@ -78,7 +78,7 @@ describe('AdminGuard', () => {
     beforeEach(() => {
       auth_adaptor._initialized$.next(true);
       auth_adaptor._authenticated$.next(true);
-      auth_adaptor._role$.next({ is_admin: false, is_reader: false });
+      auth_adaptor._role$.next({ admin: false, reader: false });
     });
 
     it('blocks access', () => {

@@ -60,7 +60,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Routes } from '@angular/router/src/config';
 import { BehaviorSubject } from 'rxjs';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
@@ -139,7 +139,7 @@ describe('ComicListComponent', () => {
     fixture = TestBed.createComponent(ComicListComponent);
     component = fixture.componentInstance;
     auth_adaptor = TestBed.get(AuthenticationAdaptor);
-    spyOn(auth_adaptor, 'set_preference');
+    spyOn(auth_adaptor, 'setPreference');
     library_adaptor = TestBed.get(LibraryAdaptor);
     library_display_adaptor = TestBed.get(LibraryDisplayAdaptor);
     reading_list_adaptor = TestBed.get(ReadingListAdaptor);
@@ -160,20 +160,20 @@ describe('ComicListComponent', () => {
 
     beforeEach(() => {
       component.comics = COMICS;
-      old_menu = component.context_menu;
+      old_menu = component.contextMenu;
       spyOn(translate, 'instant');
       translate.use('fr');
     });
 
     it('reloads the context menu', () => {
       expect(translate.instant).toHaveBeenCalled();
-      expect(component.context_menu).not.toEqual(old_menu);
+      expect(component.contextMenu).not.toEqual(old_menu);
     });
   });
 
   describe('when the comic list changes', () => {
     beforeEach(() => {
-      component.context_menu = [];
+      component.contextMenu = [];
       component._comics = [];
       spyOn(translate, 'instant');
       component.comics = COMICS;
@@ -184,25 +184,25 @@ describe('ComicListComponent', () => {
     });
 
     it('reloads the context menu', () => {
-      expect(component.context_menu).not.toEqual([]);
+      expect(component.contextMenu).not.toEqual([]);
       expect(translate.instant).toHaveBeenCalled();
     });
   });
 
   describe('when the selected comic list changes', () => {
     beforeEach(() => {
-      component.context_menu = [];
-      component._selected_comics = [];
+      component.contextMenu = [];
+      component._selectedComics = [];
       spyOn(translate, 'instant');
-      component.selected_comics = COMICS;
+      component.selectedComics = COMICS;
     });
 
     it('sets the list of comics to display', () => {
-      expect(component.selected_comics).toEqual(COMICS);
+      expect(component.selectedComics).toEqual(COMICS);
     });
 
     it('reloads the context menu', () => {
-      expect(component.context_menu).not.toEqual([]);
+      expect(component.contextMenu).not.toEqual([]);
       expect(translate.instant).toHaveBeenCalled();
     });
   });
@@ -212,8 +212,8 @@ describe('ComicListComponent', () => {
 
     beforeEach(() => {
       spyOn(dataview, 'changeLayout');
-      spyOn(library_display_adaptor, 'set_layout');
-      component.set_layout(dataview, 'LIST');
+      spyOn(library_display_adaptor, 'setLayout');
+      component.setLayout(dataview, 'LIST');
     });
 
     it('notifies the data view', () => {
@@ -221,7 +221,7 @@ describe('ComicListComponent', () => {
     });
 
     it('updates the library view state', () => {
-      expect(library_display_adaptor.set_layout).toHaveBeenCalledWith('LIST');
+      expect(library_display_adaptor.setLayout).toHaveBeenCalledWith('LIST');
     });
   });
 
@@ -233,25 +233,25 @@ describe('ComicListComponent', () => {
     });
 
     it('sets this as the first comic index variable', () => {
-      expect(component.index_of_first).toEqual(29);
+      expect(component.indexOfFirst).toEqual(29);
     });
   });
 
   describe('when the first comic index changes', () => {
     beforeEach(() => {
       spyOn(router, 'navigate');
-      component.set_index_of_first(17);
+      component.setIndexOfFirst(17);
     });
 
     it('updates the index', () => {
-      expect(component.index_of_first).toEqual(17);
+      expect(component.indexOfFirst).toEqual(17);
     });
   });
 
   describe('when opening a comic', () => {
     beforeEach(() => {
       spyOn(router, 'navigate');
-      component.open_comic(COMIC_1);
+      component.openComic(COMIC_1);
     });
 
     it('goes to the comic details page', () => {
@@ -263,7 +263,7 @@ describe('ComicListComponent', () => {
     beforeEach(() => {
       component._comics = COMICS;
       spyOn(selection_adaptor, 'select_comics');
-      component.select_all();
+      component.selectAll();
     });
 
     it('fires an action', () => {
@@ -273,9 +273,9 @@ describe('ComicListComponent', () => {
 
   describe('when deselecting all comics', () => {
     beforeEach(() => {
-      component._selected_comics = COMICS;
+      component._selectedComics = COMICS;
       spyOn(selection_adaptor, 'deselect_comics');
-      component.deselect_all();
+      component.deselectAll();
     });
 
     it('fires an action', () => {
@@ -285,9 +285,9 @@ describe('ComicListComponent', () => {
 
   describe('when scraping the selected comics', () => {
     beforeEach(() => {
-      component._selected_comics = COMICS;
+      component._selectedComics = COMICS;
       spyOn(router, 'navigate');
-      component.scrape_comics();
+      component.scrapeComics();
     });
 
     it('navigates to the scraping page', () => {
@@ -297,7 +297,7 @@ describe('ComicListComponent', () => {
 
   describe('when deleting the selected comics', () => {
     beforeEach(() => {
-      component._selected_comics = COMICS;
+      component._selectedComics = COMICS;
     });
 
     it('fires an action if the user approves', () => {
@@ -305,7 +305,7 @@ describe('ComicListComponent', () => {
         params.accept();
       });
       spyOn(library_adaptor, 'delete_comics_by_id');
-      component.delete_comics();
+      component.deleteComics();
       expect(library_adaptor.delete_comics_by_id).toHaveBeenCalledWith(
         COMICS.map(comic => comic.id)
       );

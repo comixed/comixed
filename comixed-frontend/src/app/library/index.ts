@@ -28,6 +28,7 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { SelectionState } from 'app/library/models/selection-state';
 
+export { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
 export { LibraryAdaptor } from './adaptors/library.adaptor';
 export { ImportAdaptor } from './adaptors/import.adaptor';
 export { SelectionAdaptor } from './adaptors/selection.adaptor';

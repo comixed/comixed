@@ -41,8 +41,8 @@ export class ReaderGuard implements CanActivate {
     });
     this.auth_adaptor.role$.subscribe(roles => {
       if (this.initialized) {
-        this.is_reader = roles.is_reader;
-        this.reader_subject.next(roles.is_reader);
+        this.is_reader = roles.reader;
+        this.reader_subject.next(roles.reader);
       }
     });
   }
@@ -55,7 +55,7 @@ export class ReaderGuard implements CanActivate {
         this.router.navigate(['/home']);
         return false;
       } else {
-        this.auth_adaptor.get_current_user();
+        this.auth_adaptor.getCurrentUser();
         return this.reader_subject.asObservable();
       }
     }

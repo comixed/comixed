@@ -91,7 +91,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authSubscription = this.authenticationAdaptor.role$.subscribe(
-      roles => (this.isAdmin = roles.is_admin)
+      roles => (this.isAdmin = roles.admin)
     );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()

@@ -48,7 +48,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
 import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 
 describe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;

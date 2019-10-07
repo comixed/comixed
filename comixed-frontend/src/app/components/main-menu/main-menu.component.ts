@@ -69,7 +69,7 @@ export class MainMenuComponent implements OnInit {
           },
           {
             separator: true,
-            visible: this.authenticationAdaptor.is_admin
+            visible: this.authenticationAdaptor.isAdmin
           },
           {
             label: this.translateService.instant(
@@ -84,7 +84,7 @@ export class MainMenuComponent implements OnInit {
       {
         label: this.translateService.instant('main-menu.item.collections.root'),
         icon: 'fas fa-bookmark',
-        visible: this.authenticationAdaptor.is_reader,
+        visible: this.authenticationAdaptor.isReader,
         items: [
           {
             label: this.translateService.instant(
@@ -138,17 +138,17 @@ export class MainMenuComponent implements OnInit {
       },
       {
         separator: true,
-        visible: this.authenticationAdaptor.is_admin
+        visible: this.authenticationAdaptor.isAdmin
       },
       {
         label: this.translateService.instant('main-menu.item.admin.root'),
         icon: 'fas fa-cogs',
-        visible: this.authenticationAdaptor.is_admin,
+        visible: this.authenticationAdaptor.isAdmin,
         items: [
           {
             label: this.translateService.instant('main-menu.item.admin.users'),
             icon: 'fas fa-users',
-            visible: this.authenticationAdaptor.is_admin,
+            visible: this.authenticationAdaptor.isAdmin,
             routerLink: ['/admin/users']
           },
           {
@@ -156,14 +156,14 @@ export class MainMenuComponent implements OnInit {
               'main-menu.item.admin.library'
             ),
             icon: 'fas fa-book-open',
-            visible: this.authenticationAdaptor.is_admin,
+            visible: this.authenticationAdaptor.isAdmin,
             routerLink: ['/admin/library']
           },
           {
             label: this.translateService.instant('main-menu.item.admin.import'),
             icon: 'fas fa-file-import',
             routerLink: ['/import'],
-            visible: this.authenticationAdaptor.is_admin
+            visible: this.authenticationAdaptor.isAdmin
           },
           {
             label: this.translateService.instant(
@@ -171,7 +171,7 @@ export class MainMenuComponent implements OnInit {
             ),
             icon: 'fas fa-smog',
             routerLink: ['/pages/duplicates'],
-            visible: this.authenticationAdaptor.is_admin
+            visible: this.authenticationAdaptor.isAdmin
           },
           {
             label: this.translateService.instant(
@@ -179,7 +179,7 @@ export class MainMenuComponent implements OnInit {
             ),
             icon: 'fas fa-ghost',
             routerLink: ['/comics/missing'],
-            visible: this.authenticationAdaptor.is_admin
+            visible: this.authenticationAdaptor.isAdmin
           }
         ]
       },
@@ -213,13 +213,13 @@ export class MainMenuComponent implements OnInit {
       {
         label: this.translateService.instant('main-menu.item.login'),
         icon: 'fa fa-fw fa-sign-in-alt',
-        command: () => this.authenticationAdaptor.start_login(),
+        command: () => this.authenticationAdaptor.startLogin(),
         visible: !this.authenticationAdaptor.authenticated
       },
       {
         label: this.translateService.instant('main-menu.item.logout'),
         icon: 'fa fa-fw fa-sign-in-alt',
-        command: () => this.authenticationAdaptor.start_logout(),
+        command: () => this.authenticationAdaptor.startLogout(),
         visible: this.authenticationAdaptor.authenticated
       }
     ];

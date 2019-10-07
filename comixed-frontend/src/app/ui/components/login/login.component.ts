@@ -53,10 +53,10 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   do_login(): void {
-    this.auth_adaptor.send_login_data(this.email, this.password);
+    this.auth_adaptor.sendLoginData(this.email, this.password);
   }
 
   cancel_login(): void {
-    this.auth_adaptor.cancel_login();
+    this.auth_adaptor.cancelLogin();
   }
 }

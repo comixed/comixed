@@ -80,10 +80,10 @@ export class AppComponent implements OnInit {
         this.libraryAdaptor.reset_library();
       }
     });
-    this.authenticationAdaptor.show_login$.subscribe(show_login => {
+    this.authenticationAdaptor.showLogin$.subscribe(show_login => {
       this.showLogin = show_login;
     });
-    this.authenticationAdaptor.get_current_user();
+    this.authenticationAdaptor.getCurrentUser();
 
     this.libraryAdaptor.comic$.subscribe(
       comics => (this.comicCount = comics.length)

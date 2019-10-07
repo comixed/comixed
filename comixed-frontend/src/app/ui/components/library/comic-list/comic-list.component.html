@@ -1,37 +1,37 @@
-<p-contextMenu [model]='context_menu'
+<p-contextMenu [model]='contextMenu'
                [target]='comicListContainer'></p-contextMenu>
 <div #comicListContainer>
     <p-dataView #dataview
-                (onPage)='set_index_of_first($event.first)'
+                (onPage)='setIndexOfFirst($event.first)'
                 [alwaysShowPaginator]='true'
-                [first]='index_of_first'
+                [first]='indexOfFirst'
                 [layout]='layout'
                 [paginator]='true'
                 [rows]='rows'
-                [sortField]='sort_field'
+                [sortField]='sortField'
                 [value]='comics'
                 paginatorPosition='both'>
         <p-header>
             <div class='ui-helper-clearfix'>
-                <app-comic-list-toolbar (changeLayout)='set_layout(dataview, $event)'
-                                        (showSelections)='show_selections = true'
-                                        [library_filter]='library_filter'></app-comic-list-toolbar>
+                <app-comic-list-toolbar (changeLayout)='setLayout(dataview, $event)'
+                                        (showSelections)='showSelections = true'
+                                        [library_filter]='libraryFilter'></app-comic-list-toolbar>
             </div>
         </p-header>
         <ng-template let-comic
                      pTemplate='listItem'>
             <app-comic-list-item [comic]='comic'
-                                 [cover_size]='cover_size'
-                                 [same_height]='same_height'
-                                 [selected]='selected_comics.includes(comic)'
+                                 [cover_size]='coverSize'
+                                 [same_height]='sameHeight'
+                                 [selected]='selectedComics.includes(comic)'
                                  (click)='toggleComicSelection(comic)'></app-comic-list-item>
         </ng-template>
         <ng-template let-comic
                      pTemplate='gridItem'>
             <app-comic-grid-item [comic]='comic'
-                                 [cover_size]='cover_size'
-                                 [same_height]='same_height'
-                                 [selected]='selected_comics.includes(comic)'
+                                 [cover_size]='coverSize'
+                                 [same_height]='sameHeight'
+                                 [selected]='selectedComics.includes(comic)'
                                  (click)='toggleComicSelection(comic)'></app-comic-grid-item>
         </ng-template>
     </p-dataView>

@@ -51,7 +51,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
@@ -116,8 +116,8 @@ describe('ComicFileListComponent', () => {
 
     fixture = TestBed.createComponent(ComicFileListComponent);
     component = fixture.componentInstance;
-    component.comic_files = [];
-    component.selected_comic_files = [];
+    component.comicFiles = [];
+    component.selectedComicFiles = [];
     component.busy = false;
     store = TestBed.get(Store);
 
@@ -126,7 +126,7 @@ describe('ComicFileListComponent', () => {
 
   describe('when no comic files are loaded', () => {
     beforeEach(() => {
-      component.comic_files = [];
+      component.comicFiles = [];
       fixture.detectChanges();
     });
 
@@ -140,23 +140,23 @@ describe('ComicFileListComponent', () => {
 
   describe('when displaying a list of comic files', () => {
     beforeEach(() => {
-      component.comic_files = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
+      component.comicFiles = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
       fixture.detectChanges();
     });
 
     it('shows the comic file list', () => {
-      const file_list = fixture.debugElement.query(
+      const fileList = fixture.debugElement.query(
         By.css('#comic-file-list-view')
       );
-      expect(file_list).toBeTruthy();
+      expect(fileList).toBeTruthy();
     });
 
     it('has an entry for each comic displayed', () => {
-      component.comic_files.forEach((comic_file: ComicFile) => {
-        const comic_file_entry = fixture.debugElement.query(
-          By.css(`#comic-file-${comic_file.id}`)
+      component.comicFiles.forEach((comicFile: ComicFile) => {
+        const comicFileEntry = fixture.debugElement.query(
+          By.css(`#comic-file-${comicFile.id}`)
         );
-        expect(comic_file_entry).toBeTruthy();
+        expect(comicFileEntry).toBeTruthy();
       });
     });
   });

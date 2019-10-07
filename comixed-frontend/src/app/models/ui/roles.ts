@@ -18,6 +18,6 @@
  */
 
 export interface Roles {
-  is_reader: boolean;
-  is_admin: boolean;
+  reader: boolean;
+  admin: boolean;
 }

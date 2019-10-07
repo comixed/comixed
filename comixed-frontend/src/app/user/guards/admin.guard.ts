@@ -41,8 +41,8 @@ export class AdminGuard implements CanActivate {
     });
     this.auth_adaptor.role$.subscribe(roles => {
       if (this.initialized) {
-        this.is_admin = roles.is_admin;
-        this.admin_subject.next(roles.is_admin);
+        this.is_admin = roles.admin;
+        this.admin_subject.next(roles.admin);
       }
     });
   }
@@ -55,7 +55,7 @@ export class AdminGuard implements CanActivate {
         this.router.navigate(['/home']);
         return false;
       } else {
-        this.auth_adaptor.get_current_user();
+        this.auth_adaptor.getCurrentUser();
         return this.admin_subject.asObservable();
       }
     }

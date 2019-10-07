@@ -48,7 +48,7 @@ export class ComicPagesComponent implements OnInit {
       }
     );
     // TODO fix the preference here
-    //    this.image_size = parseInt(this.user_service.get_user_preference('cover_size', '200'), 10);
+    //    this.image_size = parseInt(this.user_service.get_user_preference('coverSize', '200'), 10);
   }
 
   setPageType(page: Page, pageType: PageType): void {

@@ -114,7 +114,6 @@ import {
 } from 'primeng/primeng';
 import { UserPreferencePipe } from './pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from './ui/components/import/comic-file-list-item/comic-file-list-item.component';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
 import { UserModule } from 'app/user/user.module';
 import { EFFECTS } from 'app/app.effects';
 import { LibraryModule } from 'app/library/library.module';
@@ -230,7 +229,6 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
   ],
   providers: [
     BreadcrumbAdaptor,
-    LibraryDisplayAdaptor,
     UserService,
     ComicService,
     MessageService,

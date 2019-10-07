@@ -64,7 +64,7 @@ describe('ReadingListEffects', () => {
               'ReadingListService.get_reading_list'
             ),
             save_reading_list: jasmine.createSpy(
-              'ReadingListService.save_reading_list'
+              'ReadingListService.saveReadingList'
             )
           }
         },

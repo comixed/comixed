@@ -148,7 +148,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
       }
     );
     this.importAdaptor.set_directory(
-      this.authenticationAdaptor.get_preference(IMPORT_LAST_DIRECTORY)
+      this.authenticationAdaptor.getPreference(IMPORT_LAST_DIRECTORY)
     );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -168,13 +168,13 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   set_sort_by(sort_by: string): void {
     this.sort_by = sort_by;
     this.update_params(SORT_PARAMETER, this.sort_by);
-    this.authenticationAdaptor.set_preference(IMPORT_SORT, sort_by);
+    this.authenticationAdaptor.setPreference(IMPORT_SORT, sort_by);
   }
 
   set_rows(rows: number): void {
     this.rows = rows;
     this.update_params(ROWS_PARAMETER, `${this.rows}`);
-    this.authenticationAdaptor.set_preference(IMPORT_ROWS, `${rows}`);
+    this.authenticationAdaptor.setPreference(IMPORT_ROWS, `${rows}`);
   }
 
   set_cover_size(cover_size: number): void {
@@ -183,14 +183,14 @@ export class ImportPageComponent implements OnInit, OnDestroy {
 
   save_cover_size(cover_size: number): void {
     this.update_params(COVER_PARAMETER, `${this.cover_size}`);
-    this.authenticationAdaptor.set_preference(
+    this.authenticationAdaptor.setPreference(
       IMPORT_COVER_SIZE,
       `${cover_size}`
     );
   }
 
   retrieve_files(directory: string): void {
-    this.authenticationAdaptor.set_preference(IMPORT_LAST_DIRECTORY, directory);
+    this.authenticationAdaptor.setPreference(IMPORT_LAST_DIRECTORY, directory);
     this.importAdaptor.fetch_files(directory);
   }
 
@@ -251,7 +251,7 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   private get_parameter(name: string): string {
-    return this.authenticationAdaptor.get_preference(name);
+    return this.authenticationAdaptor.getPreference(name);
   }
 
   private select_comics(files: Array<ComicFile>): void {

@@ -64,7 +64,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
       this.translateService.instant('users-page.title')
     );
     this.adminSubscription = this.authenticationAdaptor.role$.subscribe(
-      roles => (this.isAdmin = roles.is_admin)
+      roles => (this.isAdmin = roles.admin)
     );
     this.loggedInUserSubscription = this.authenticationAdaptor.user$.subscribe(
       user => (this.loggedInUser = user)

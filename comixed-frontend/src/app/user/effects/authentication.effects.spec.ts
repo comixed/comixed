@@ -67,7 +67,7 @@ describe('AuthenticationEffects', () => {
               'AuthenticationService.get_authenticated_user'
             ),
             set_preference: jasmine.createSpy(
-              'AuthenticationService.set_preference'
+              'AuthenticationService.setPreference'
             )
           }
         },

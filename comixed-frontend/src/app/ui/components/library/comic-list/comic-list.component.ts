@@ -32,7 +32,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/adaptors/library-display.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 
 const FIRST = 'first';
@@ -44,110 +44,127 @@ const FIRST = 'first';
 })
 export class ComicListComponent implements OnInit, OnDestroy {
   _comics: Comic[] = [];
-  _selected_comics: Comic[] = [];
-  _current_comic: Comic = null;
-  reading_lists_subscription: Subscription;
-  reading_lists: ReadingList[];
+  _selectedComics: Comic[] = [];
+  _currentComic: Comic = null;
+  readingListsSubscription: Subscription;
+  readingLists: ReadingList[];
 
-  @Input() library_filter: LibraryFilter;
-  @Input() show_selections: boolean;
+  @Input() libraryFilter: LibraryFilter;
+  @Input() showSelections: boolean;
 
-  translate_subscription: Subscription;
+  langChangeSubscription: Subscription;
+  activatedRouteSubscription: Subscription;
 
-  protected additional_sort_field_options: Array<SelectItem>;
+  protected additionalSortFieldOptions: Array<SelectItem>;
 
-  index_of_first = 0;
+  indexOfFirst = 0;
+  layoutSubscription: Subscription;
   layout: string;
-  sort_field: string;
+  sortFieldSubscription: Subscription;
+  sortField: string;
+  rowsSubscription: Subscription;
   rows: number;
-  same_height: boolean;
-  cover_size: number;
-  context_menu: MenuItem[];
+  sameHeightSubscription: Subscription;
+  sameHeight: boolean;
+  coverSizeSubscription: Subscription;
+  coverSize: number;
+  contextMenu: MenuItem[];
 
   constructor(
-    private auth_adaptor: AuthenticationAdaptor,
-    private library_adaptor: LibraryAdaptor,
-    private library_display_adaptor: LibraryDisplayAdaptor,
-    private selection_adaptor: SelectionAdaptor,
-    private reading_list_adaptor: ReadingListAdaptor,
-    private translate: TranslateService,
-    private confirm: ConfirmationService,
-    private activated_route: ActivatedRoute,
+    private authenticationAdaptor: AuthenticationAdaptor,
+    private libraryAdaptor: LibraryAdaptor,
+    private libraryDisplayAdaptor: LibraryDisplayAdaptor,
+    private selectionAdaptor: SelectionAdaptor,
+    private readingListAdaptor: ReadingListAdaptor,
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
+    private activatedRoute: ActivatedRoute,
     private router: Router
-  ) {
-    this.library_display_adaptor.layout$.subscribe(
-      layout => (this.layout = layout)
-    );
-    this.library_display_adaptor.sort_field$.subscribe(
-      sort_field => (this.sort_field = sort_field)
-    );
-    this.library_display_adaptor.rows$.subscribe(rows => (this.rows = rows));
-    this.library_display_adaptor.same_height$.subscribe(
-      same_height => (this.same_height = same_height)
-    );
-    this.library_display_adaptor.cover_size$.subscribe(
-      cover_size => (this.cover_size = cover_size)
-    );
-  }
+  ) {}
 
   ngOnInit() {
-    this.load_additional_sort_field_options();
-    this.activated_route.queryParams.subscribe((params: Params) => {
-      if (params.first) {
-        this.index_of_first = parseInt(params.first, 10);
-      }
-    });
-    this.translate_subscription = this.translate.onLangChange.subscribe(() => {
-      this.load_context_menu();
-    });
-    this.reading_lists_subscription = this.reading_list_adaptor.reading_list$.subscribe(
-      reading_lists => (this.reading_lists = reading_lists)
+    this.loadAdditionalSortFieldOptions();
+    this.layoutSubscription = this.libraryDisplayAdaptor.layout$.subscribe(
+      layout => (this.layout = layout)
     );
-    this.reading_list_adaptor.get_reading_lists();
+    this.sortFieldSubscription = this.libraryDisplayAdaptor.sortField$.subscribe(
+      sort_field => (this.sortField = sort_field)
+    );
+    this.rowsSubscription = this.libraryDisplayAdaptor.rows$.subscribe(
+      rows => (this.rows = rows)
+    );
+    this.sameHeightSubscription = this.libraryDisplayAdaptor.sameHeight$.subscribe(
+      same_height => (this.sameHeight = same_height)
+    );
+    this.coverSizeSubscription = this.libraryDisplayAdaptor.coverSize$.subscribe(
+      cover_size => (this.coverSize = cover_size)
+    );
+    this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
+      (params: Params) => {
+        if (params.first) {
+          this.indexOfFirst = parseInt(params.first, 10);
+        }
+      }
+    );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => {
+        this.loadContextMenu();
+      }
+    );
+    this.readingListsSubscription = this.readingListAdaptor.reading_list$.subscribe(
+      reading_lists => (this.readingLists = reading_lists)
+    );
+    this.readingListAdaptor.get_reading_lists();
   }
 
   ngOnDestroy() {
-    this.translate_subscription.unsubscribe();
-    this.reading_lists_subscription.unsubscribe();
+    this.layoutSubscription.unsubscribe();
+    this.sortFieldSubscription.unsubscribe();
+    this.rowsSubscription.unsubscribe();
+    this.sameHeightSubscription.unsubscribe();
+    this.coverSizeSubscription.unsubscribe();
+    this.activatedRouteSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
+    this.readingListsSubscription.unsubscribe();
   }
 
   @Input() set comics(comics: Comic[]) {
     this._comics = comics;
-    this.load_context_menu();
+    this.loadContextMenu();
   }
 
   get comics(): Comic[] {
     return this._comics;
   }
 
-  @Input() set selected_comics(selected_comics: Comic[]) {
-    this._selected_comics = selected_comics;
-    this.load_context_menu();
+  @Input() set selectedComics(selectedComics: Comic[]) {
+    this._selectedComics = selectedComics;
+    this.loadContextMenu();
   }
 
-  get selected_comics(): Comic[] {
-    return this._selected_comics;
+  get selectedComics(): Comic[] {
+    return this._selectedComics;
   }
 
-  @Input() set current_comic(current_comic: Comic) {
-    this._current_comic = current_comic;
-    this.load_context_menu();
+  @Input() set currentComic(currentComic: Comic) {
+    this._currentComic = currentComic;
+    this.loadContextMenu();
   }
 
-  get current_comic(): Comic {
-    return this._current_comic;
+  get currentComic(): Comic {
+    return this._currentComic;
   }
 
-  private load_additional_sort_field_options(): void {
-    this.additional_sort_field_options = [
+  private loadAdditionalSortFieldOptions(): void {
+    this.additionalSortFieldOptions = [
       {
-        label: this.translate.instant(
+        label: this.translateService.instant(
           'comic-list-toolbar.options.sort-field.publisher'
         ),
         value: 'publisher'
       },
       {
-        label: this.translate.instant(
+        label: this.translateService.instant(
           'comic-list-toolbar.options.sort-field.series'
         ),
         value: 'series'
@@ -155,106 +172,108 @@ export class ComicListComponent implements OnInit, OnDestroy {
     ];
   }
 
-  set_layout(dataview: any, layout: string): void {
+  setLayout(dataview: any, layout: string): void {
     dataview.changeLayout(layout);
-    this.library_display_adaptor.set_layout(layout);
+    this.libraryDisplayAdaptor.setLayout(layout);
     this.layout = layout;
   }
 
-  set_index_of_first(index: number): void {
-    this.index_of_first = index;
+  setIndexOfFirst(index: number): void {
+    this.indexOfFirst = index;
   }
 
-  private load_context_menu() {
-    this.context_menu = [
+  private loadContextMenu() {
+    this.contextMenu = [
       {
-        label: this.translate.instant('comic-list.popup.open-comic'),
-        command: () => this.open_comic(this._selected_comics[0]),
+        label: this.translateService.instant('comic-list.popup.open-comic'),
+        command: () => this.openComic(this._selectedComics[0]),
         icon: 'fas fa-book-open',
-        visible: this._selected_comics.length === 1
+        visible: this._selectedComics.length === 1
       },
       {
-        label: this.translate.instant('comic-list.popup.select-all'),
-        command: () => this.select_all(),
+        label: this.translateService.instant('comic-list.popup.select-all'),
+        command: () => this.selectAll(),
         icon: 'fas fa-check-double',
         visible: this._comics.length > 0
       },
       {
-        label: this.translate.instant('comic-list.popup.deselect-all'),
-        command: () => this.deselect_all(),
+        label: this.translateService.instant('comic-list.popup.deselect-all'),
+        command: () => this.deselectAll(),
         icon: 'fas fa-broom',
-        visible: this._selected_comics.length > 0
+        visible: this._selectedComics.length > 0
       },
       {
-        label: this.translate.instant('comic-list.popup.scrape-comics'),
-        command: () => this.scrape_comics(),
+        label: this.translateService.instant('comic-list.popup.scrape-comics'),
+        command: () => this.scrapeComics(),
         icon: 'fas fa-cloud',
-        visible: this._selected_comics.length > 0
+        visible: this._selectedComics.length > 0
       },
       {
-        label: this.translate.instant('comic-list.popup.delete-comics'),
-        command: () => this.delete_comics(),
+        label: this.translateService.instant('comic-list.popup.delete-comics'),
+        command: () => this.deleteComics(),
         icon: 'fas fa-trash',
-        visible: this._selected_comics.length > 0
+        visible: this._selectedComics.length > 0
       }
     ];
 
-    if (this.reading_lists) {
-      this.context_menu.push({ separator: true });
+    if (this.readingLists) {
+      this.contextMenu.push({ separator: true });
       const reading_lists = [];
-      this.reading_lists.forEach((reading_list: ReadingList) => {
+      this.readingLists.forEach((reading_list: ReadingList) => {
         reading_lists.push({
           label: reading_list.name,
           icon: 'fa fa-fw fa-plus',
-          visible: !this.all_in_reading_list(reading_list),
-          command: () => this.add_to_reading_list(reading_list)
+          visible: !this.allInReadingList(reading_list),
+          command: () => this.addToReadingList(reading_list)
         });
         reading_lists.push({
           label: reading_list.name,
           icon: 'fa fa-fw fa-minus',
-          visible: this.already_in_reading_list(reading_list),
-          command: () => this.remove_from_reading_list(reading_list)
+          visible: this.alreadyInReadingList(reading_list),
+          command: () => this.removeFromReadingList(reading_list)
         });
       });
-      this.context_menu.push({
-        label: this.translate.instant('comic-list.popup.reading-lists'),
+      this.contextMenu.push({
+        label: this.translateService.instant('comic-list.popup.reading-lists'),
         items: reading_lists
       });
     }
   }
 
-  open_comic(comic: Comic): void {
+  openComic(comic: Comic): void {
     this.router.navigate(['/comics', comic.id]);
   }
 
-  select_all(): void {
-    this.selection_adaptor.select_comics(this._comics);
+  selectAll(): void {
+    this.selectionAdaptor.select_comics(this._comics);
   }
 
-  deselect_all(): void {
-    this.selection_adaptor.deselect_comics(this._selected_comics);
+  deselectAll(): void {
+    this.selectionAdaptor.deselect_comics(this._selectedComics);
   }
 
-  scrape_comics(): void {
+  scrapeComics(): void {
     this.router.navigate(['/scraping']);
   }
 
-  delete_comics(): void {
-    this.confirm.confirm({
-      header: this.translate.instant('comic-list.delete-comics.header', {
-        count: this._selected_comics.length
+  deleteComics(): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant('comic-list.delete-comics.header', {
+        count: this._selectedComics.length
       }),
-      message: this.translate.instant('comic-list.delete-comics.message'),
+      message: this.translateService.instant(
+        'comic-list.delete-comics.message'
+      ),
       accept: () =>
-        this.library_adaptor.delete_comics_by_id(
-          this._selected_comics.map(comic => comic.id)
+        this.libraryAdaptor.delete_comics_by_id(
+          this._selectedComics.map(comic => comic.id)
         )
     });
   }
 
-  add_to_reading_list(reading_list: ReadingList): void {
-    const entries = reading_list.entries;
-    this.selected_comics.forEach((comic: Comic) => {
+  addToReadingList(readingList: ReadingList): void {
+    const entries = readingList.entries;
+    this.selectedComics.forEach((comic: Comic) => {
       if (
         !entries.find((entry: ReadingListEntry) => entry.comic.id === comic.id)
       ) {
@@ -262,41 +281,41 @@ export class ComicListComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.save_reading_list(reading_list, entries);
+    this.saveReadingList(readingList, entries);
   }
 
-  remove_from_reading_list(reading_list: ReadingList): void {
-    this.confirm.confirm({
-      header: this.translate.instant(
+  removeFromReadingList(readingList: ReadingList): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
         'comic-list.remove-from-reading-list.header'
       ),
-      message: this.translate.instant(
+      message: this.translateService.instant(
         'comic-list.remove-from-reading-list.message',
-        { reading_list_name: reading_list.name }
+        { reading_list_name: readingList.name }
       ),
       accept: () => {
-        const entries = reading_list.entries.filter(
+        const entries = readingList.entries.filter(
           (entry: ReadingListEntry) => {
-            return !this.selected_comics.some(
+            return !this.selectedComics.some(
               comic => comic.id === entry.comic.id
             );
           }
         );
-        this.save_reading_list(reading_list, entries);
+        this.saveReadingList(readingList, entries);
       }
     });
   }
 
-  save_reading_list(
-    reading_list: ReadingList,
+  saveReadingList(
+    readingList: ReadingList,
     entries: ReadingListEntry[]
   ): void {
-    this.reading_list_adaptor.save(reading_list, entries);
+    this.readingListAdaptor.save(readingList, entries);
   }
 
-  already_in_reading_list(reading_list: ReadingList): boolean {
-    const result = reading_list.entries.some((entry: ReadingListEntry) => {
-      return this.selected_comics.some((comic: Comic) => {
+  alreadyInReadingList(readingList: ReadingList): boolean {
+    const result = readingList.entries.some((entry: ReadingListEntry) => {
+      return this.selectedComics.some((comic: Comic) => {
         return comic.id === entry.comic.id;
       });
     });
@@ -304,9 +323,9 @@ export class ComicListComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  all_in_reading_list(reading_list: ReadingList): boolean {
-    const result = reading_list.entries.some((entry: ReadingListEntry) => {
-      return this.selected_comics.every((comic: Comic) => {
+  allInReadingList(readingList: ReadingList): boolean {
+    const result = readingList.entries.some((entry: ReadingListEntry) => {
+      return this.selectedComics.every((comic: Comic) => {
         return comic.id === entry.comic.id;
       });
     });
@@ -315,10 +334,10 @@ export class ComicListComponent implements OnInit, OnDestroy {
   }
 
   toggleComicSelection(comic: Comic): void {
-    if (this.selected_comics.includes(comic)) {
-      this.selection_adaptor.deselect_comic(comic);
+    if (this.selectedComics.includes(comic)) {
+      this.selectionAdaptor.deselect_comic(comic);
     } else {
-      this.selection_adaptor.select_comic(comic);
+      this.selectionAdaptor.select_comic(comic);
     }
   }
 }

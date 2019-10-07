@@ -31,7 +31,7 @@ import {
   ROWS_QUERY_PARAM,
   SAME_HEIGHT_QUERY_PARAM,
   SORT_QUERY_PARAM
-} from 'app/adaptors/library-display.adaptor';
+} from 'app/library/adaptors/library-display.adaptor';
 
 @Component({
   selector: 'app-comic-list-toolbar',
@@ -68,14 +68,14 @@ export class ComicListToolbarComponent implements OnInit {
     this.library_display_adaptor.layout$.subscribe(layout => {
       this.layout = layout;
     });
-    this.library_display_adaptor.sort_field$.subscribe(
+    this.library_display_adaptor.sortField$.subscribe(
       sort_field => (this.sort_field = sort_field)
     );
     this.library_display_adaptor.rows$.subscribe(rows => (this.rows = rows));
-    this.library_display_adaptor.same_height$.subscribe(
+    this.library_display_adaptor.sameHeight$.subscribe(
       same_height => (this.same_height = same_height)
     );
-    this.library_display_adaptor.cover_size$.subscribe(
+    this.library_display_adaptor.coverSize$.subscribe(
       cover_size => (this.cover_size = cover_size)
     );
   }
@@ -171,26 +171,26 @@ export class ComicListToolbarComponent implements OnInit {
 
   set_sort_field(sort_field: string): void {
     this.sort_field = sort_field;
-    this.library_display_adaptor.set_sort_field(sort_field);
+    this.library_display_adaptor.setSortField(sort_field);
   }
 
   set_rows(rows: number): void {
     this.rows = rows;
-    this.library_display_adaptor.set_display_rows(rows);
+    this.library_display_adaptor.setDisplayRows(rows);
   }
 
   set_same_height(same_height: boolean): void {
     this.same_height = same_height;
-    this.library_display_adaptor.set_same_height(same_height);
+    this.library_display_adaptor.setSameHeight(same_height);
   }
 
   set_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
-    this.library_display_adaptor.set_cover_size(cover_size, false);
+    this.library_display_adaptor.setCoverSize(cover_size, false);
   }
 
   save_cover_size(cover_size: number): void {
     this.cover_size = cover_size;
-    this.library_display_adaptor.set_cover_size(cover_size);
+    this.library_display_adaptor.setCoverSize(cover_size);
   }
 }
