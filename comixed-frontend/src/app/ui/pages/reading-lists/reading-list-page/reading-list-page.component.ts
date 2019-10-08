@@ -37,7 +37,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-reading-list-page',
   templateUrl: './reading-list-page.component.html',
-  styleUrls: ['./reading-list-page.component.css']
+  styleUrls: ['./reading-list-page.component.scss']
 })
 export class ReadingListPageComponent implements OnInit, OnDestroy {
   selectedEntriesSubscription: Subscription;

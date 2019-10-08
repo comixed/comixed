@@ -29,7 +29,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-story-arcs-page',
   templateUrl: './story-arcs-page.component.html',
-  styleUrls: ['./story-arcs-page.component.css']
+  styleUrls: ['./story-arcs-page.component.scss']
 })
 export class StoryArcsPageComponent implements OnInit, OnDestroy {
   storyArcsSubscription: Subscription;

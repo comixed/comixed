@@ -27,7 +27,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-publisher-details-page',
   templateUrl: './publisher-details-page.component.html',
-  styleUrls: ['./publisher-details-page.component.css']
+  styleUrls: ['./publisher-details-page.component.scss']
 })
 export class PublisherDetailsPageComponent implements OnInit, OnDestroy {
   publishersSubscription: Subscription;

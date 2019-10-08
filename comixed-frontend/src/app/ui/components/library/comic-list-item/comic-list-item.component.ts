@@ -23,7 +23,7 @@ import { Comic } from 'app/library';
 @Component({
   selector: 'app-comic-list-item',
   templateUrl: './comic-list-item.component.html',
-  styleUrls: ['./comic-list-item.component.css']
+  styleUrls: ['./comic-list-item.component.scss']
 })
 export class ComicListItemComponent {
   @Input() comic: Comic;

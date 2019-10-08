@@ -25,7 +25,7 @@ import { ComicFile } from 'app/library';
 @Component({
   selector: 'app-comic-file-list-item',
   templateUrl: './comic-file-list-item.component.html',
-  styleUrls: ['./comic-file-list-item.component.css']
+  styleUrls: ['./comic-file-list-item.component.scss']
 })
 export class ComicFileListItemComponent {
   @Input() comic_file: ComicFile;

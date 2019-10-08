@@ -26,7 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-library-filter',
   templateUrl: './library-filter.component.html',
-  styleUrls: ['./library-filter.component.css']
+  styleUrls: ['./library-filter.component.scss']
 })
 export class LibraryFilterComponent implements OnInit {
   @Input() publisher = '';

@@ -36,7 +36,7 @@ import {
 @Component({
   selector: 'app-comic-list-toolbar',
   templateUrl: './comic-list-toolbar.component.html',
-  styleUrls: ['./comic-list-toolbar.component.css']
+  styleUrls: ['./comic-list-toolbar.component.scss']
 })
 export class ComicListToolbarComponent implements OnInit {
   @Input() library_filter: LibraryFilter;

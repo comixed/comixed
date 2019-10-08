@@ -27,7 +27,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-library-admin-page',
   templateUrl: './library-admin-page.component.html',
-  styleUrls: ['./library-admin-page.component.css']
+  styleUrls: ['./library-admin-page.component.scss']
 })
 export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   importCountSubscription: Subscription;

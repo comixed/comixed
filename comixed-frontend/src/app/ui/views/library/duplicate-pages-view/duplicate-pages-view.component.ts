@@ -31,7 +31,7 @@ import { DUPLICATES_HASH_PARAMETER } from 'app/ui/pages/library/duplicates-page/
 @Component({
   selector: 'app-duplicate-pages-view',
   templateUrl: './duplicate-pages-view.component.html',
-  styleUrls: ['./duplicate-pages-view.component.css']
+  styleUrls: ['./duplicate-pages-view.component.scss']
 })
 export class DuplicatePagesViewComponent implements OnInit {
   readonly ROWS_PARAMETER = 'rows';

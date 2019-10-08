@@ -34,7 +34,7 @@ export const DUPLICATES_HASH_PARAMETER = 'hash';
 @Component({
   selector: 'app-duplicates-page',
   templateUrl: './duplicates-page.component.html',
-  styleUrls: ['./duplicates-page.component.css']
+  styleUrls: ['./duplicates-page.component.scss']
 })
 export class DuplicatesPageComponent implements OnInit, OnDestroy {
   duplicates$: Observable<Duplicates>;

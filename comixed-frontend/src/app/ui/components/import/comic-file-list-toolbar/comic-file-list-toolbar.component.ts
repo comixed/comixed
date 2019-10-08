@@ -29,7 +29,7 @@ import { ComicFile, ImportAdaptor } from 'app/library';
 @Component({
   selector: 'app-comic-file-list-toolbar',
   templateUrl: './comic-file-list-toolbar.component.html',
-  styleUrls: ['./comic-file-list-toolbar.component.css']
+  styleUrls: ['./comic-file-list-toolbar.component.scss']
 })
 export class ComicFileListToolbarComponent implements OnInit {
   @Input() busy: boolean;

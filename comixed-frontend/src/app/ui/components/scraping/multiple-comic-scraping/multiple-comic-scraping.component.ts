@@ -26,7 +26,7 @@ import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scra
 @Component({
   selector: 'app-multiple-comic-scraping',
   templateUrl: './multiple-comic-scraping.component.html',
-  styleUrls: ['./multiple-comic-scraping.component.css']
+  styleUrls: ['./multiple-comic-scraping.component.scss']
 })
 export class MultipleComicScrapingComponent implements OnInit {
   @Input() multi_scraping: MultipleComicsScraping;

@@ -23,7 +23,7 @@ import { User } from 'app/user';
 @Component({
   selector: 'app-account-preferences',
   templateUrl: './account-preferences.component.html',
-  styleUrls: ['./account-preferences.component.css']
+  styleUrls: ['./account-preferences.component.scss']
 })
 export class AccountPreferencesComponent implements OnInit {
   @Input() user: User;

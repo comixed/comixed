@@ -28,7 +28,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-story-arc-details-page',
   templateUrl: './story-arc-details-page.component.html',
-  styleUrls: ['./story-arc-details-page.component.css']
+  styleUrls: ['./story-arc-details-page.component.scss']
 })
 export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
   storiesSubscription: Subscription;

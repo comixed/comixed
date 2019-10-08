@@ -29,7 +29,7 @@ import { Comic } from 'app/library';
 @Component({
   selector: 'app-library-scraping-toolbar',
   templateUrl: './library-scraping-toolbar.component.html',
-  styleUrls: ['./library-scraping-toolbar.component.css']
+  styleUrls: ['./library-scraping-toolbar.component.scss']
 })
 export class LibraryScrapingToolbarComponent implements OnInit, OnDestroy {
   @Input() selected_comics: Array<Comic>;

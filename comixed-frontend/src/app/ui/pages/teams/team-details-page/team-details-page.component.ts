@@ -29,7 +29,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-team-details-page',
   templateUrl: './team-details-page.component.html',
-  styleUrls: ['./team-details-page.component.css']
+  styleUrls: ['./team-details-page.component.scss']
 })
 export class TeamDetailsPageComponent implements OnInit, OnDestroy {
   teamsSubscription: Subscription;

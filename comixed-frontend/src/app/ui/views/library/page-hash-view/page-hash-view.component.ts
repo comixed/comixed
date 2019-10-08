@@ -29,7 +29,7 @@ import { Page } from 'app/comics';
 @Component({
   selector: 'app-page-hash-view',
   templateUrl: './page-hash-view.component.html',
-  styleUrls: ['./page-hash-view.component.css']
+  styleUrls: ['./page-hash-view.component.scss']
 })
 export class PageHashViewComponent implements OnInit {
   @Input() duplicates: Duplicates;

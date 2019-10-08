@@ -29,7 +29,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-build-details-page',
   templateUrl: './build-details-page.component.html',
-  styleUrls: ['./build-details-page.component.css']
+  styleUrls: ['./build-details-page.component.scss']
 })
 export class BuildDetailsPageComponent implements OnInit, OnDestroy {
   buildDetailsSubscription: Subscription;

@@ -29,7 +29,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-publishers-page',
   templateUrl: './publishers-page.component.html',
-  styleUrls: ['./publishers-page.component.css']
+  styleUrls: ['./publishers-page.component.scss']
 })
 export class PublishersPageComponent implements OnInit, OnDestroy {
   publishersSubscription: Subscription;

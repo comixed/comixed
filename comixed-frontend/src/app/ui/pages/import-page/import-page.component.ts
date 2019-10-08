@@ -45,7 +45,7 @@ const ROWS_PREFERENCE = 'import_rows';
 @Component({
   selector: 'app-import-page',
   templateUrl: './import-page.component.html',
-  styleUrls: ['./import-page.component.css']
+  styleUrls: ['./import-page.component.scss']
 })
 export class ImportPageComponent implements OnInit, OnDestroy {
   userSubscription: Subscription;

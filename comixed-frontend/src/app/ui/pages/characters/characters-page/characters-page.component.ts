@@ -29,7 +29,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-characters-page',
   templateUrl: './characters-page.component.html',
-  styleUrls: ['./characters-page.component.css']
+  styleUrls: ['./characters-page.component.scss']
 })
 export class CharactersPageComponent implements OnInit, OnDestroy {
   charactersSubscription: Subscription;

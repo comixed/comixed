@@ -28,7 +28,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-location-details-page',
   templateUrl: './location-details-page.component.html',
-  styleUrls: ['./location-details-page.component.css']
+  styleUrls: ['./location-details-page.component.scss']
 })
 export class LocationDetailsPageComponent implements OnInit, OnDestroy {
   locationsSubscription: Subscription;

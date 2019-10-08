@@ -23,7 +23,7 @@ import { Comic } from 'app/library';
 @Component({
   selector: 'app-comic-grid-item',
   templateUrl: './comic-grid-item.component.html',
-  styleUrls: ['./comic-grid-item.component.css']
+  styleUrls: ['./comic-grid-item.component.scss']
 })
 export class ComicGridItemComponent {
   @Input() comic: Comic;

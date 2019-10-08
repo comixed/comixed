@@ -23,7 +23,7 @@ import { ComicFile } from 'app/library';
 @Component({
   selector: 'app-comic-file-grid-item',
   templateUrl: './comic-file-grid-item.component.html',
-  styleUrls: ['./comic-file-grid-item.component.css']
+  styleUrls: ['./comic-file-grid-item.component.scss']
 })
 export class ComicFileGridItemComponent {
   @Input() comic_file: ComicFile;

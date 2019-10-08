@@ -23,7 +23,7 @@ import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry'
 @Component({
   selector: 'app-comic-grouping-card',
   templateUrl: './comic-grouping-card.component.html',
-  styleUrls: ['./comic-grouping-card.component.css']
+  styleUrls: ['./comic-grouping-card.component.scss']
 })
 export class ComicGroupingCardComponent implements OnInit {
   @Input() name: string;

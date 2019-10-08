@@ -37,7 +37,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-library-page',
   templateUrl: './library-page.component.html',
-  styleUrls: ['./library-page.component.css']
+  styleUrls: ['./library-page.component.scss']
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
   authSubscription: Subscription;

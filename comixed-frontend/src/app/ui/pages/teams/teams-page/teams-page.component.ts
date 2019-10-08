@@ -31,7 +31,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-teams-page',
   templateUrl: './teams-page.component.html',
-  styleUrls: ['./teams-page.component.css']
+  styleUrls: ['./teams-page.component.scss']
 })
 export class TeamsPageComponent implements OnInit, OnDestroy {
   teamsSubscription: Subscription;

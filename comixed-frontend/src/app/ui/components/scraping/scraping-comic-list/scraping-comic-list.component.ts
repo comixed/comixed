@@ -23,7 +23,7 @@ import { Comic } from 'app/library';
 @Component({
   selector: 'app-scraping-comic-list',
   templateUrl: './scraping-comic-list.component.html',
-  styleUrls: ['./scraping-comic-list.component.css']
+  styleUrls: ['./scraping-comic-list.component.scss']
 })
 export class ScrapingComicListComponent implements OnInit {
   private _comics: Comic[];

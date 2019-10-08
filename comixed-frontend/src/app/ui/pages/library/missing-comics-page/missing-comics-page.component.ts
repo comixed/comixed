@@ -27,7 +27,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 @Component({
   selector: 'app-missing-comics-page',
   templateUrl: './missing-comics-page.component.html',
-  styleUrls: ['./missing-comics-page.component.css']
+  styleUrls: ['./missing-comics-page.component.scss']
 })
 export class MissingComicsPageComponent implements OnInit, OnDestroy {
   comicsSubscription: Subscription;
