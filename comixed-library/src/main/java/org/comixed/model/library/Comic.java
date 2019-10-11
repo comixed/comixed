@@ -108,19 +108,21 @@ public class Comic {
                DatabaseBackup.class})
     private String filename;
 
-    @Column(name = "comic_vine_id")
+    @Column(name = "comic_vine_id",
+            length = 16)
     @JsonProperty("comicVineId")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String comicVineId;
 
-    @Column(name = "comic_vine_url")
+    @Transient
     @JsonProperty("comicVineURL")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String comicVineURL;
 
-    @Column(name = "publisher")
+    @Column(name = "publisher",
+            length = 128)
     @JsonProperty("publisher")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
@@ -132,7 +134,8 @@ public class Comic {
                DatabaseBackup.class})
     private String imprint;
 
-    @Column(name = "series")
+    @Column(name = "series",
+            length = 128)
     @JsonProperty("series")
     @JsonView({ComicList.class,
                PageList.class,
@@ -167,27 +170,31 @@ public class Comic {
                DatabaseBackup.class})
     private Date coverDate;
 
-    @Column(name = "volume")
+    @Column(name = "volume",
+            length = 4)
     @JsonProperty("volume")
     @JsonView({ComicList.class,
                PageList.class,
                DatabaseBackup.class})
     private String volume;
 
-    @Column(name = "issue_number")
+    @Column(name = "issue_number",
+            length = 16)
     @JsonProperty("issueNumber")
     @JsonView({ComicList.class,
                PageList.class,
                DatabaseBackup.class})
     private String issueNumber;
 
-    @Column(name = "title")
+    @Column(name = "title",
+            length = 128)
     @JsonProperty("title")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     private String title;
 
-    @Column(name = "sort_name")
+    @Column(name = "sort_name",
+            length = 128)
     @JsonProperty("sortName")
     @JsonView({ComicList.class,
                DatabaseBackup.class})
