@@ -20,7 +20,8 @@
 package org.comixed.repositories;
 
 import org.comixed.model.library.Comic;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +30,7 @@ import java.util.List;
 
 @Repository
 public interface ComicRepository
-        extends CrudRepository<Comic, Long> {
+        extends JpaRepository<Comic, Long> {
     /**
      * Returns all comics not read by the specified user.
      *
@@ -41,16 +42,6 @@ public interface ComicRepository
     List<Comic> findAllUnreadByUser(
             @Param("userId")
                     long userId);
-
-    /**
-     * Finds all comics added after the specified date
-     *
-     * @param after
-     *         the cutoff date
-     *
-     * @return the list of comics
-     */
-    List<Comic> findFirst100ByDateLastUpdatedGreaterThan(Date after);
 
     /**
      * Finds a comic based on filename.
@@ -71,4 +62,17 @@ public interface ComicRepository
      * @return the list of comics
      */
     List<Comic> findBySeries(String series);
+
+    /**
+     * Return all comic entries that have been updated after the specified timestamp.
+     *
+     * @param timestamp
+     *         the timestamp
+     * @param pageable
+     *         the pageable settings
+     *
+     * @return the list of comics
+     */
+    List<Comic> findAllByDateLastUpdatedGreaterThan(Date timestamp,
+                                                    Pageable pageable);
 }

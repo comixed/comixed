@@ -59,7 +59,7 @@ export class StoryArcDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.storiesSubscription = this.libraryAdaptor.story_arc$.subscribe(
+    this.storiesSubscription = this.libraryAdaptor.stories$.subscribe(
       stories => {
         const story = stories.find(entry => entry.name === this.storyName);
         this.comics = story ? story.comics : [];

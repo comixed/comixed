@@ -112,18 +112,18 @@ describe('AppComponent', () => {
       auth_adaptor._authenticated$.next(true);
       library_adaptor._comic$.next(COMICS);
       fixture.detectChanges();
-      spyOn(library_adaptor, 'get_comic_updates');
-      spyOn(library_adaptor, 'reset_library');
+      spyOn(library_adaptor, 'getLibraryUpdates');
+      spyOn(library_adaptor, 'resetLibrary');
       auth_adaptor._authenticated$.next(false);
       fixture.detectChanges();
     });
 
     it('does not fetch updates', () => {
-      expect(library_adaptor.get_comic_updates).not.toHaveBeenCalled();
+      expect(library_adaptor.getLibraryUpdates).not.toHaveBeenCalled();
     });
 
     it('resets the library', () => {
-      expect(library_adaptor.reset_library).toHaveBeenCalled();
+      expect(library_adaptor.resetLibrary).toHaveBeenCalled();
     });
 
     it('clears the subscription', () => {
@@ -133,14 +133,14 @@ describe('AppComponent', () => {
 
   describe('when a user is logged in', () => {
     beforeEach(() => {
-      spyOn(library_adaptor, 'get_comic_updates');
+      spyOn(library_adaptor, 'getLibraryUpdates');
       auth_adaptor._authenticated$.next(true);
       library_adaptor._comic$.next(COMICS);
-      library_adaptor._fetching_update$.next(false);
+      library_adaptor._fetchingUpdate$.next(false);
     });
 
     it('fetches updates when not currently fetching', () => {
-      expect(library_adaptor.get_comic_updates).toHaveBeenCalled();
+      expect(library_adaptor.getLibraryUpdates).toHaveBeenCalled();
     });
   });
 });

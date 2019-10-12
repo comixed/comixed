@@ -24,22 +24,22 @@ import { latestUpdatedDate, mergeComics } from 'app/library/utility.functions';
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
 export const initial_state: LibraryState = {
-  fetching_scan_types: false,
-  scan_types: [],
-  fetching_formats: false,
+  fetchingScanTypes: false,
+  scanTypes: [],
+  fetchingFormats: false,
   formats: [],
-  fetching_updates: false,
+  fetchingUpdates: false,
   comics: [],
-  last_read_dates: [],
-  latest_updated_date: 0,
-  pending_imports: 0,
-  pending_rescans: 0,
-  starting_rescan: false,
-  updating_comic: false,
-  current_comic: null,
-  clearing_metadata: false,
-  blocking_hash: false,
-  deleting_multiple_comics: false
+  lastReadDates: [],
+  latestUpdatedDate: 0,
+  pendingImports: 0,
+  pendingRescans: 0,
+  startingRescan: false,
+  updatingComic: false,
+  currentComic: null,
+  clearingMetadata: false,
+  blockingHash: false,
+  deletingComics: false
 };
 
 export function reducer(
@@ -47,116 +47,126 @@ export function reducer(
   action: LibraryActions
 ): LibraryState {
   switch (action.type) {
-    case LibraryActionTypes.ResetLibrary:
+    case LibraryActionTypes.Reset:
       return { ...state, comics: [] };
 
     case LibraryActionTypes.GetScanTypes:
-      return { ...state, fetching_scan_types: true };
+      return { ...state, fetchingScanTypes: true };
 
-    case LibraryActionTypes.GotScanTypes:
+    case LibraryActionTypes.ScanTypesReceived:
       return {
         ...state,
-        fetching_scan_types: false,
-        scan_types: action.payload.scan_types
+        fetchingScanTypes: false,
+        scanTypes: action.payload.scan_types
       };
 
     case LibraryActionTypes.GetScanTypesFailed:
-      return { ...state, fetching_scan_types: false };
+      return { ...state, fetchingScanTypes: false };
 
     case LibraryActionTypes.GetFormats:
-      return { ...state, fetching_formats: true };
+      return { ...state, fetchingFormats: true };
 
-    case LibraryActionTypes.GotFormats:
+    case LibraryActionTypes.FormatsReceived:
       return {
         ...state,
-        fetching_formats: false,
+        fetchingFormats: false,
         formats: action.payload.formats
       };
 
     case LibraryActionTypes.GetFormatsFailed:
-      return { ...state, fetching_formats: false };
+      return { ...state, fetchingFormats: false };
 
     case LibraryActionTypes.GetUpdates:
-      return { ...state, fetching_updates: true };
+      return { ...state, fetchingUpdates: true };
 
-    case LibraryActionTypes.GotUpdates: {
+    case LibraryActionTypes.UpdatesReceived: {
       const comics = mergeComics(state.comics, action.payload.comics);
+      let currentComic = state.currentComic;
+
+      if (currentComic) {
+        const update = action.payload.comics.find(
+          entry => entry.id === currentComic.id
+        );
+        if (!!update) {
+          currentComic = update;
+        }
+      }
 
       return {
         ...state,
-        fetching_updates: false,
+        fetchingUpdates: false,
         comics: comics,
-        latest_updated_date: latestUpdatedDate(comics),
-        pending_imports: action.payload.pending_imports,
-        pending_rescans: action.payload.pending_rescans
+        currentComic: currentComic,
+        lastReadDates: action.payload.last_read_dates,
+        latestUpdatedDate: latestUpdatedDate(comics),
+        pendingImports: action.payload.pending_imports,
+        pendingRescans: action.payload.pending_rescans
       };
     }
 
     case LibraryActionTypes.GetUpdatesFailed:
-      return { ...state, fetching_updates: false };
+      return { ...state, fetchingUpdates: false };
 
     case LibraryActionTypes.StartRescan:
-      return { ...state, starting_rescan: true };
+      return { ...state, startingRescan: true };
 
     case LibraryActionTypes.RescanStarted:
-      return { ...state, starting_rescan: false };
+      return { ...state, startingRescan: false };
 
     case LibraryActionTypes.RescanFailedToStart:
-      return { ...state, starting_rescan: false };
+      return { ...state, startingRescan: false };
 
     case LibraryActionTypes.UpdateComic:
-      return { ...state, updating_comic: true };
+      return { ...state, updatingComic: true };
 
     case LibraryActionTypes.ComicUpdated:
       return {
         ...state,
-        updating_comic: false,
-        current_comic: action.payload.comic
+        updatingComic: false,
+        currentComic: action.payload.comic
       };
 
     case LibraryActionTypes.UpdateComicFailed:
-      return { ...state, updating_comic: false };
+      return { ...state, updatingComic: false };
 
     case LibraryActionTypes.ClearMetadata:
-      return { ...state, clearing_metadata: true };
+      return { ...state, clearingMetadata: true };
 
     case LibraryActionTypes.MetadataCleared:
       return {
         ...state,
-        clearing_metadata: false,
-        current_comic: action.payload.comic
+        clearingMetadata: false,
+        currentComic: action.payload.comic
       };
 
     case LibraryActionTypes.ClearMetadataFailed:
-      return { ...state, clearing_metadata: false };
+      return { ...state, clearingMetadata: false };
 
     case LibraryActionTypes.BlockPageHash:
-      return { ...state, blocking_hash: true };
+      return { ...state, blockingHash: true };
 
     case LibraryActionTypes.PageHashBlocked:
-      return { ...state, blocking_hash: false };
+      return { ...state, blockingHash: false };
 
     case LibraryActionTypes.BlockPagesFailed:
-      return { ...state, blocking_hash: false };
+      return { ...state, blockingHash: false };
 
     case LibraryActionTypes.DeleteMultipleComics:
-      return { ...state, deleting_multiple_comics: true };
+      return { ...state, deletingComics: true };
 
     case LibraryActionTypes.MultipleComicsDeleted:
-      return { ...state, deleting_multiple_comics: false };
+      return { ...state, deletingComics: false };
 
     case LibraryActionTypes.DeleteMultipleComicsFailed:
-      return { ...state, deleting_multiple_comics: false };
+      return { ...state, deletingComics: false };
 
     case LibraryActionTypes.SetCurrentComic:
-      return { ...state, current_comic: action.payload.comic };
+      return { ...state, currentComic: action.payload.comic };
 
     case LibraryActionTypes.FindCurrentComic:
       return {
         ...state,
-        current_comic: state.comics.find(
-          comic => comic.id === action.payload.id
-        )
+        currentComic: state.comics.find(comic => comic.id === action.payload.id)
       };
 
     default:

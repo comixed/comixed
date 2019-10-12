@@ -26,6 +26,7 @@ import org.comixed.model.library.ComicFormat;
 import org.comixed.model.library.ScanType;
 import org.comixed.model.state.LibraryStatus;
 import org.comixed.model.user.LastReadDate;
+import org.comixed.net.GetComicsUpdatedSinceRequest;
 import org.comixed.repositories.*;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
@@ -200,25 +201,23 @@ public class ComicController {
         return this.comicFormatRepository.findAll();
     }
 
-    @RequestMapping(value = "/since/{timestamp}",
-                    method = RequestMethod.GET)
+    @PostMapping(value = "/since/{timestamp}",
+                 produces = "application/json",
+                 consumes = "application/json")
     @JsonView(View.ComicList.class)
-    public LibraryStatus getComicsAddedSince(Principal principal,
-                                             @PathVariable("timestamp")
-                                                     long timestamp,
-                                             @RequestParam(value = "timeout",
-                                                           required = false,
-                                                           defaultValue = "0")
-                                                     long timeout,
-                                             @RequestParam(value = "maximum",
-                                                           required = false,
-                                                           defaultValue = "100")
-                                                     int maximum)
+    public LibraryStatus getComicsUpdatedSince(Principal principal,
+                                               @PathVariable("timestamp")
+                                                       long timestamp,
+                                               @RequestBody()
+                                                       GetComicsUpdatedSinceRequest request)
             throws
             InterruptedException {
         final String email = principal.getName();
         final Date lastUpdated = new Date(timestamp);
+        final long timeout = request.getTimeout();
+        final int maximumResults = request.getMaximumResults();
         final long latestCheck = System.currentTimeMillis() + (timeout * 1000L);
+
         boolean done = false;
 
         this.logger.info("Getting library updates: user={} timestamp={}",
@@ -243,8 +242,8 @@ public class ComicController {
                     }
                 }
                 firstRun = false;
-                comics = this.comicService.getComicsAddedSince(timestamp,
-                                                               maximum);
+                comics = this.comicService.getComicsUpdatedSince(timestamp,
+                                                                 maximumResults);
                 this.logger.debug("Found {} new or updated comic{}",
                                   comics.size(),
                                   comics.size() == 1

@@ -265,7 +265,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
         'comic-list.delete-comics.message'
       ),
       accept: () =>
-        this.libraryAdaptor.delete_comics_by_id(
+        this.libraryAdaptor.deleteComics(
           this._selectedComics.map(comic => comic.id)
         )
     });

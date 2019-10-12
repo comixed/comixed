@@ -93,10 +93,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
       selected_comics => (this.selectedComics = selected_comics)
     );
-    this.importCountSubscription = this.libraryAdaptor.pending_import$.subscribe(
+    this.importCountSubscription = this.libraryAdaptor.pendingImport$.subscribe(
       import_count => (this.importCount = import_count)
     );
-    this.rescanCountSubscription = this.libraryAdaptor.pending_rescan$.subscribe(
+    this.rescanCountSubscription = this.libraryAdaptor.pendingRescan$.subscribe(
       rescan_count => (this.rescanCount = rescan_count)
     );
     this.library_filter_subscription = this.library_filter$.subscribe(
@@ -140,7 +140,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         'library.messages.delete-comic-question'
       ),
       icon: 'fa fa-exclamation',
-      accept: () => this.libraryAdaptor.delete_comics_by_id([comic.id])
+      accept: () => this.libraryAdaptor.deleteComics([comic.id])
     });
   }
 
@@ -157,7 +157,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         'library.messages.rescan-library-message'
       ),
       icon: 'fa fa-exclamation',
-      accept: () => this.libraryAdaptor.start_rescan()
+      accept: () => this.libraryAdaptor.startRescan()
     });
   }
 

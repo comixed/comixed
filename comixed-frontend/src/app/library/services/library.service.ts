@@ -32,6 +32,7 @@ import {
   UPDATE_COMIC_URL
 } from 'app/app.constants';
 import { Comic } from 'app/comics/models/comic';
+import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
 
 @Injectable({
   providedIn: 'root'
@@ -39,44 +40,44 @@ import { Comic } from 'app/comics/models/comic';
 export class LibraryService {
   constructor(private http: HttpClient) {}
 
-  get_scan_types(): Observable<any> {
+  getScanTypes(): Observable<any> {
     return this.http.get(interpolate(GET_SCAN_TYPES_URL));
   }
 
-  get_formats(): Observable<any> {
+  getFormats(): Observable<any> {
     return this.http.get(interpolate(GET_FORMATS_URL));
   }
 
-  get_updates(
-    latest_update_date: number,
+  getUpdatesSince(
+    timestamp: number,
     timeout: number,
-    maximum: number
+    maximumRecords: number
   ): Observable<any> {
-    return this.http.get(
-      interpolate(GET_UPDATES_URL, {
-        later_than: latest_update_date,
+    return this.http.post(
+      interpolate(GET_UPDATES_URL, { timestamp: timestamp }),
+      {
         timeout: timeout,
-        maximum: maximum
-      })
+        maximumResults: maximumRecords
+      } as GetLibraryUpdatesRequest
     );
   }
 
-  start_rescan(): Observable<any> {
+  startRescan(): Observable<any> {
     return this.http.post(interpolate(START_RESCAN_URL), { start: true });
   }
 
-  update_comic(comic: Comic): Observable<any> {
+  saveComic(comic: Comic): Observable<any> {
     return this.http.put(
       interpolate(UPDATE_COMIC_URL, { id: comic.id }),
       comic
     );
   }
 
-  clear_metadata(comic: Comic): Observable<any> {
+  clearComicMetadata(comic: Comic): Observable<any> {
     return this.http.delete(interpolate(CLEAR_METADATA_URL, { id: comic.id }));
   }
 
-  set_block_page_hash(hash: string, block: boolean): Observable<any> {
+  setPageHashBlockedState(hash: string, block: boolean): Observable<any> {
     const url = interpolate(SET_BLOCKED_PAGE_HASH_URL, { hash: hash });
 
     if (block) {
@@ -86,7 +87,7 @@ export class LibraryService {
     }
   }
 
-  delete_multiple_comics(ids: number[]): Observable<any> {
+  deleteMultipleComics(ids: number[]): Observable<any> {
     const params = new HttpParams().set('comic_ids', ids.toString());
     return this.http.post(interpolate(DELETE_MULTIPLE_COMICS_URL), params);
   }

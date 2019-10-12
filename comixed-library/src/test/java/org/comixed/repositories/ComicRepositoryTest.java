@@ -32,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -479,6 +480,18 @@ public class ComicRepositoryTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(3,
+                     result.size());
+    }
+
+    @Test
+    public void testFindAllByDateLastUpdatedGreaterThan() {
+        final List<Comic> result = repository.findAllByDateLastUpdatedGreaterThan(new Date(0L),
+                                                                                  PageRequest.of(0,
+                                                                                                 1));
+
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(1,
                      result.size());
     }
 }

@@ -37,6 +37,7 @@ import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -82,6 +83,7 @@ public class ComicServiceTest {
     @Captor private ArgumentCaptor<Date> lastUpdatedDateCaptor;
     @Mock private ObjectFactory<RescanComicWorkerTask> rescanWorkerTaskFactory;
     @Mock private RescanComicWorkerTask rescanWorkerTask;
+    @Captor private ArgumentCaptor<Pageable> pageableCaptor;
 
     private List<Comic> comicsBySeries = new ArrayList<>();
     private Comic previousComic = new Comic();
@@ -103,20 +105,28 @@ public class ComicServiceTest {
     }
 
     @Test
-    public void testGetComicsAddedSince() {
-        Mockito.when(comicRepository.findFirst100ByDateLastUpdatedGreaterThan(Mockito.any(Date.class)))
+    public void testGetComicsUpdatedSince() {
+        Mockito.when(comicRepository.findAllByDateLastUpdatedGreaterThan(Mockito.any(Date.class),
+                                                                         pageableCaptor.capture()))
                .thenReturn(comicList);
 
-        final List<Comic> result = comicService.getComicsAddedSince(TEST_TIMESTAMP,
-                                                                    TEST_MAXIMUM_COMICS);
+        final List<Comic> result = comicService.getComicsUpdatedSince(TEST_TIMESTAMP,
+                                                                      TEST_MAXIMUM_COMICS);
 
         assertNotNull(result);
         assertSame(comicList,
                    result);
+        assertEquals(0,
+                     pageableCaptor.getValue()
+                                   .getPageNumber());
+        assertEquals(TEST_MAXIMUM_COMICS,
+                     pageableCaptor.getValue()
+                                   .getPageSize());
 
         Mockito.verify(comicRepository,
                        Mockito.times(1))
-               .findFirst100ByDateLastUpdatedGreaterThan(new Date(TEST_TIMESTAMP));
+               .findAllByDateLastUpdatedGreaterThan(new Date(TEST_TIMESTAMP),
+                                                    pageableCaptor.getValue());
     }
 
     @Test

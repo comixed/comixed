@@ -19,14 +19,36 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { LibraryActionTypes } from '../actions/library.actions';
+import {
+  LibraryActionTypes,
+  LibraryBlockPageHash,
+  LibraryBlockPageHashFailed,
+  LibraryClearMetadata,
+  LibraryClearMetadataFailed,
+  LibraryComicUpdated,
+  LibraryDeleteMultipleComics,
+  LibraryDeleteMultipleComicsFailed,
+  LibraryFormatsReceived,
+  LibraryGetFormatsFailed,
+  LibraryGetScanTypesFailed,
+  LibraryGetUpdates,
+  LibraryGetUpdatesFailed,
+  LibraryGotScanTypes,
+  LibraryMetadataCleared,
+  LibraryMultipleComicsDeleted,
+  LibraryPageHashBlocked,
+  LibraryRescanStarted,
+  LibraryStartRescanFailed,
+  LibraryUpdateComic,
+  LibraryUpdateComicFailed,
+  LibraryUpdatesReceived
+} from '../actions/library.actions';
 import { Action } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { LibraryService } from 'app/library/services/library.service';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import * as LibraryActions from 'app/library/actions/library.actions';
 import { BlockedPageResponse } from 'app/library/models/net/blocked-page-response';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
@@ -36,84 +58,78 @@ import { LibraryUpdateResponse } from 'app/library/models/net/library-update-res
 export class LibraryEffects {
   constructor(
     private actions$: Actions,
-    private library_service: LibraryService,
-    private translate_service: TranslateService,
-    private message_service: MessageService
+    private libraryService: LibraryService,
+    private translateService: TranslateService,
+    private messageService: MessageService
   ) {}
 
   @Effect()
   get_scan_types$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.GetScanTypes),
     switchMap(action =>
-      this.library_service.get_scan_types().pipe(
-        map(
-          response =>
-            new LibraryActions.LibraryGotScanTypes({ scan_types: response })
-        ),
+      this.libraryService.getScanTypes().pipe(
+        map(response => new LibraryGotScanTypes({ scan_types: response })),
         catchError(error => {
-          this.message_service.add({
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.get-sort-types.error.details'
             )
           });
-          return of(new LibraryActions.LibraryGetScanTypesFailed());
+          return of(new LibraryGetScanTypesFailed());
         })
       )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
-      return of(new LibraryActions.LibraryGetScanTypesFailed());
+      return of(new LibraryGetScanTypesFailed());
     })
   );
 
   @Effect()
   get_formats$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.GetFormats),
-    switchMap(action =>
-      this.library_service.get_formats().pipe(
-        map(
-          response =>
-            new LibraryActions.LibraryGotFormats({ formats: response })
-        ),
+    switchMap(action => {
+      return this.libraryService.getFormats().pipe(
+        map(response => new LibraryFormatsReceived({ formats: response })),
         catchError(error => {
-          this.message_service.add({
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.get-formats.error.details'
             )
           });
-          return of(new LibraryActions.LibraryGetFormatsFailed());
+          return of(new LibraryGetFormatsFailed());
         })
-      )
-    ),
+      );
+    }),
     catchError(error => {
-      this.message_service.add({
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
-      return of(new LibraryActions.LibraryGetFormatsFailed());
+      return of(new LibraryGetFormatsFailed());
     })
   );
 
   @Effect()
   get_updates$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.GetUpdates),
-    map((action: LibraryActions.LibraryGetUpdates) => action.payload),
+    map((action: LibraryGetUpdates) => action.payload),
     switchMap(action =>
-      this.library_service
-        .get_updates(action.later_than, action.timeout, action.maximum)
+      this.libraryService
+        .getUpdatesSince(action.later_than, action.timeout, action.maximum)
         .pipe(
           map(
             (response: LibraryUpdateResponse) =>
-              new LibraryActions.LibraryGotUpdates({
+              new LibraryUpdatesReceived({
                 comics: response.comics,
                 last_read_dates: response.last_read_dates,
                 pending_imports: response.pending_imports,
@@ -121,24 +137,24 @@ export class LibraryEffects {
               })
           ),
           catchError(error => {
-            this.message_service.add({
+            this.messageService.add({
               severity: 'error',
-              detail: this.translate_service.instant(
+              detail: this.translateService.instant(
                 'library-effects.get-updates.error.detail'
               )
             });
-            return of(new LibraryActions.LibraryGetUpdatesFailed());
+            return of(new LibraryGetUpdatesFailed());
           })
         )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
-      return of(new LibraryActions.LibraryGetUpdatesFailed());
+      return of(new LibraryGetUpdatesFailed());
     })
   );
 
@@ -146,133 +162,127 @@ export class LibraryEffects {
   start_rescan$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.StartRescan),
     switchMap(action =>
-      this.library_service.start_rescan().pipe(
+      this.libraryService.startRescan().pipe(
         tap(() =>
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.start-rescan.success.detail'
             )
           })
         ),
         map(
           (response: StartRescanResponse) =>
-            new LibraryActions.LibraryRescanStarted({ count: response.count })
+            new LibraryRescanStarted({ count: response.count })
         ),
         catchError(error => {
-          this.message_service.add({
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.start-rescan.error.detail'
             )
           });
-          return of(new LibraryActions.LibraryStartRescanFailed());
+          return of(new LibraryStartRescanFailed());
         })
       )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
-      return of(new LibraryActions.LibraryStartRescanFailed());
+      return of(new LibraryStartRescanFailed());
     })
   );
 
   @Effect()
   update_comic$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.UpdateComic),
-    map((action: LibraryActions.LibraryUpdateComic) => action.payload),
+    map((action: LibraryUpdateComic) => action.payload),
     switchMap(action =>
-      this.library_service.update_comic(action.comic).pipe(
+      this.libraryService.saveComic(action.comic).pipe(
         tap(response =>
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.update-comic.success.detail'
             )
           })
         ),
-        map(
-          response =>
-            new LibraryActions.LibraryComicUpdated({ comic: response })
-        ),
+        map(response => new LibraryComicUpdated({ comic: response })),
         catchError(error => {
-          this.message_service.add({
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.update-comic.failure.detail'
             )
           });
-          return of(new LibraryActions.LibraryUpdateComicFailed());
+          return of(new LibraryUpdateComicFailed());
         })
       )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
-      return of(new LibraryActions.LibraryUpdateComicFailed());
+      return of(new LibraryUpdateComicFailed());
     })
   );
 
   @Effect()
   clear_metadata$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.ClearMetadata),
-    map((action: LibraryActions.LibraryClearMetadata) => action.payload),
+    map((action: LibraryClearMetadata) => action.payload),
     switchMap(action =>
-      this.library_service.clear_metadata(action.comic).pipe(
+      this.libraryService.clearComicMetadata(action.comic).pipe(
         tap(response =>
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.clear-metadata.success.detail'
             )
           })
         ),
-        map(
-          reponse =>
-            new LibraryActions.LibraryMetadataCleared({ comic: reponse })
-        ),
+        map(reponse => new LibraryMetadataCleared({ comic: reponse })),
         catchError(error => {
-          this.message_service.add({
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.clear-metadata.failure.detail'
             )
           });
-          return of(new LibraryActions.LibraryClearMetadataFailed());
+          return of(new LibraryClearMetadataFailed());
         })
       )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
-      return of(new LibraryActions.LibraryClearMetadataFailed());
+      return of(new LibraryClearMetadataFailed());
     })
   );
 
   @Effect()
   block_page_hash$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.BlockPageHash),
-    map((action: LibraryActions.LibraryBlockPageHash) => action.payload),
+    map((action: LibraryBlockPageHash) => action.payload),
     switchMap(action =>
-      this.library_service
-        .set_block_page_hash(action.hash, action.blocked)
+      this.libraryService
+        .setPageHashBlockedState(action.hash, action.blocked)
         .pipe(
           tap((response: BlockedPageResponse) =>
-            this.message_service.add({
+            this.messageService.add({
               severity: 'info',
-              detail: this.translate_service.instant(
+              detail: this.translateService.instant(
                 response.blocked
                   ? 'library-effects.block-page-page.success.blocked-detail'
                   : 'library-effects.block-page-hash.success.unblocked-detail',
@@ -282,43 +292,43 @@ export class LibraryEffects {
           ),
           map(
             (response: BlockedPageResponse) =>
-              new LibraryActions.LibraryPageHashBlocked({
+              new LibraryPageHashBlocked({
                 hash: response.hash,
                 blocked: response.blocked
               })
           ),
           catchError(error => {
-            this.message_service.add({
+            this.messageService.add({
               severity: 'error',
-              detail: this.translate_service.instant(
+              detail: this.translateService.instant(
                 'library-effects.block-page-hash.failure.detail'
               )
             });
-            return of(new LibraryActions.LibraryBlockPageHashFailed());
+            return of(new LibraryBlockPageHashFailed());
           })
         )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
-      return of(new LibraryActions.LibraryBlockPageHashFailed());
+      return of(new LibraryBlockPageHashFailed());
     })
   );
 
   @Effect()
   delete_multiple_comics$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.DeleteMultipleComics),
-    map((action: LibraryActions.LibraryDeleteMultipleComics) => action.payload),
+    map((action: LibraryDeleteMultipleComics) => action.payload),
     switchMap(action =>
-      this.library_service.delete_multiple_comics(action.ids).pipe(
+      this.libraryService.deleteMultipleComics(action.ids).pipe(
         tap((response: DeleteMultipleComicsResponse) =>
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.delete-multiple-comics.success.detail',
               { count: response.count }
             )
@@ -326,29 +336,29 @@ export class LibraryEffects {
         ),
         map(
           (response: DeleteMultipleComicsResponse) =>
-            new LibraryActions.LibraryMultipleComicsDeleted({
+            new LibraryMultipleComicsDeleted({
               count: response.count
             })
         ),
         catchError(error => {
-          this.message_service.add({
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'library-effects.delete-multiple-comics.failure.detail'
             )
           });
-          return of(new LibraryActions.LibraryDeleteMultipleComicsFailed());
+          return of(new LibraryDeleteMultipleComicsFailed());
         })
       )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
-      return of(new LibraryActions.LibraryDeleteMultipleComicsFailed());
+      return of(new LibraryDeleteMultipleComicsFailed());
     })
   );
 }

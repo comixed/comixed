@@ -19,37 +19,41 @@
 
 import { initial_state, reducer } from './library.reducer';
 import { LibraryState } from 'app/library/models/library-state';
-import * as LibraryActions from 'app/library/actions/library.actions';
+import {
+  LibraryBlockPageHash,
+  LibraryBlockPageHashFailed,
+  LibraryClearMetadata,
+  LibraryClearMetadataFailed,
+  LibraryComicUpdated,
+  LibraryDeleteMultipleComics,
+  LibraryDeleteMultipleComicsFailed,
+  LibraryFindCurrentComic,
+  LibraryGetFormats,
+  LibraryGetFormatsFailed,
+  LibraryGetScanTypes,
+  LibraryGetScanTypesFailed,
+  LibraryGetUpdates,
+  LibraryGetUpdatesFailed,
+  LibraryFormatsReceived,
+  LibraryGotScanTypes,
+  LibraryUpdatesReceived,
+  LibraryMetadataCleared,
+  LibraryMultipleComicsDeleted,
+  LibraryPageHashBlocked,
+  LibraryRescanStarted,
+  LibraryReset,
+  LibrarySetCurrentComic,
+  LibraryStartRescan,
+  LibraryStartRescanFailed,
+  LibraryUpdateComic,
+  LibraryUpdateComicFailed
+} from 'app/library/actions/library.actions';
 import {
   SCAN_TYPE_1,
   SCAN_TYPE_3,
   SCAN_TYPE_5,
   SCAN_TYPE_7
 } from 'app/comics/models/scan-type.fixtures';
-import {
-  LibraryActionTypes,
-  LibraryGetFormats
-} from 'app/library/actions/library.actions';
-import { LibraryGotFormats } from 'app/library/actions/library.actions';
-import { LibraryGetFormatsFailed } from 'app/library/actions/library.actions';
-import { LibraryGetUpdates } from 'app/library/actions/library.actions';
-import { LibraryGotUpdates } from 'app/library/actions/library.actions';
-import { LibraryGetUpdatesFailed } from 'app/library/actions/library.actions';
-import { LibraryStartRescan } from 'app/library/actions/library.actions';
-import { LibraryRescanStarted } from 'app/library/actions/library.actions';
-import { LibraryStartRescanFailed } from 'app/library/actions/library.actions';
-import { LibraryUpdateComic } from 'app/library/actions/library.actions';
-import { LibraryComicUpdated } from 'app/library/actions/library.actions';
-import { LibraryUpdateComicFailed } from 'app/library/actions/library.actions';
-import { LibraryClearMetadata } from 'app/library/actions/library.actions';
-import { LibraryMetadataCleared } from 'app/library/actions/library.actions';
-import { LibraryClearMetadataFailed } from 'app/library/actions/library.actions';
-import { LibraryBlockPageHash } from 'app/library/actions/library.actions';
-import { LibraryPageHashBlocked } from 'app/library/actions/library.actions';
-import { LibraryBlockPageHashFailed } from 'app/library/actions/library.actions';
-import { LibraryDeleteMultipleComics } from 'app/library/actions/library.actions';
-import { LibraryMultipleComicsDeleted } from 'app/library/actions/library.actions';
-import { LibraryDeleteMultipleComicsFailed } from 'app/library/actions/library.actions';
 import {
   FORMAT_1,
   FORMAT_3,
@@ -85,15 +89,15 @@ describe('Library Reducer', () => {
     });
 
     it('clears the fetching scan types flag', () => {
-      expect(state.fetching_scan_types).toBeFalsy();
+      expect(state.fetchingScanTypes).toBeFalsy();
     });
 
     it('has an empty array of scan types', () => {
-      expect(state.scan_types).toEqual([]);
+      expect(state.scanTypes).toEqual([]);
     });
 
     it('clears the fetching formats flag', () => {
-      expect(state.fetching_formats).toBeFalsy();
+      expect(state.fetchingFormats).toBeFalsy();
     });
 
     it('has an empty array of formats', () => {
@@ -101,7 +105,7 @@ describe('Library Reducer', () => {
     });
 
     it('clears the fetching updates flag', () => {
-      expect(state.fetching_updates).toBeFalsy();
+      expect(state.fetchingUpdates).toBeFalsy();
     });
 
     it('has an empty array of comics', () => {
@@ -109,44 +113,41 @@ describe('Library Reducer', () => {
     });
 
     it('has an empty array of last read dates', () => {
-      expect(state.last_read_dates).toEqual([]);
+      expect(state.lastReadDates).toEqual([]);
     });
 
     it('has a latest updated date of 0', () => {
-      expect(state.latest_updated_date).toEqual(0);
+      expect(state.latestUpdatedDate).toEqual(0);
     });
 
     it('clears the starting rescan flag', () => {
-      expect(state.starting_rescan).toBeFalsy();
+      expect(state.startingRescan).toBeFalsy();
     });
 
     it('clears the updating comic flag', () => {
-      expect(state.updating_comic).toBeFalsy();
+      expect(state.updatingComic).toBeFalsy();
     });
 
     it('has no current comic', () => {
-      expect(state.current_comic).toBeNull();
+      expect(state.currentComic).toBeNull();
     });
 
     it('clears the clearing metadata flag', () => {
-      expect(state.clearing_metadata).toBeFalsy();
+      expect(state.clearingMetadata).toBeFalsy();
     });
 
     it('clears the blocking hash flag', () => {
-      expect(state.blocking_hash).toBeFalsy();
+      expect(state.blockingHash).toBeFalsy();
     });
 
     it('clears the deleting multiple comics flag', () => {
-      expect(state.deleting_multiple_comics).toBeFalsy();
+      expect(state.deletingComics).toBeFalsy();
     });
   });
 
   describe('when resetting the library', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, comics: COMICS },
-        new LibraryActions.LibraryResetLibrary()
-      );
+      state = reducer({ ...state, comics: COMICS }, new LibraryReset());
     });
 
     it('clears the comics', () => {
@@ -157,69 +158,69 @@ describe('Library Reducer', () => {
   describe('when fetching the scan types', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_scan_types: false },
-        new LibraryActions.LibraryGetScanTypes()
+        { ...state, fetchingScanTypes: false },
+        new LibraryGetScanTypes()
       );
     });
 
     it('sets the fetching scan types flag', () => {
-      expect(state.fetching_scan_types).toBeTruthy();
+      expect(state.fetchingScanTypes).toBeTruthy();
     });
   });
 
   describe('when the scan types are received', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_scan_types: true, scan_types: [] },
-        new LibraryActions.LibraryGotScanTypes({ scan_types: SCAN_TYPES })
+        { ...state, fetchingScanTypes: true, scanTypes: [] },
+        new LibraryGotScanTypes({ scan_types: SCAN_TYPES })
       );
     });
 
     it('clears the fetching scan types flag', () => {
-      expect(state.fetching_scan_types).toBeFalsy();
+      expect(state.fetchingScanTypes).toBeFalsy();
     });
 
     it('sets the scan types', () => {
-      expect(state.scan_types).toEqual(SCAN_TYPES);
+      expect(state.scanTypes).toEqual(SCAN_TYPES);
     });
   });
 
   describe('when it fails to get the scan types', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_scan_types: true },
-        new LibraryActions.LibraryGetScanTypesFailed()
+        { ...state, fetchingScanTypes: true },
+        new LibraryGetScanTypesFailed()
       );
     });
 
     it('clears the fetching scan types flag', () => {
-      expect(state.fetching_scan_types).toBeFalsy();
+      expect(state.fetchingScanTypes).toBeFalsy();
     });
   });
 
   describe('getting the set of formats', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_formats: false },
-        new LibraryActions.LibraryGetFormats()
+        { ...state, fetchingFormats: false },
+        new LibraryGetFormats()
       );
     });
 
     it('sets the fetching formats flag', () => {
-      expect(state.fetching_formats).toBeTruthy();
+      expect(state.fetchingFormats).toBeTruthy();
     });
   });
 
   describe('when the formats are received', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_formats: true, formats: [] },
-        new LibraryActions.LibraryGotFormats({ formats: FORMATS })
+        { ...state, fetchingFormats: true, formats: [] },
+        new LibraryFormatsReceived({ formats: FORMATS })
       );
     });
 
     it('clears the fetching formats flag', () => {
-      expect(state.fetching_formats).toBeFalsy();
+      expect(state.fetchingFormats).toBeFalsy();
     });
 
     it('sets the formats', () => {
@@ -230,21 +231,21 @@ describe('Library Reducer', () => {
   describe('when it fails to get the formats', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_formats: true },
-        new LibraryActions.LibraryGetFormatsFailed()
+        { ...state, fetchingFormats: true },
+        new LibraryGetFormatsFailed()
       );
     });
 
     it('clears the fetching formats flag', () => {
-      expect(state.fetching_formats).toBeFalsy();
+      expect(state.fetchingFormats).toBeFalsy();
     });
   });
 
   describe('when getting library updates', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_updates: false },
-        new LibraryActions.LibraryGetUpdates({
+        { ...state, fetchingUpdates: false },
+        new LibraryGetUpdates({
           later_than: new Date().getTime(),
           timeout: 60,
           maximum: 100
@@ -253,28 +254,32 @@ describe('Library Reducer', () => {
     });
 
     it('sets the fetching updates flag', () => {
-      expect(state.fetching_updates).toBeTruthy();
+      expect(state.fetchingUpdates).toBeTruthy();
     });
   });
 
   describe('when updates are received', () => {
     const LATEST_UPDATE = new Date().getTime();
+    const CURRENT_COMIC = COMIC_2;
+    const UPDATED_COMIC = { ...COMIC_2, lastUpdatedDate: LATEST_UPDATE };
     const CURRENT_COMICS = [
       { ...COMIC_1, lastUpdatedDate: 0 },
       { ...COMIC_3, lastUpdatedDate: 0 },
       { ...COMIC_5, lastUpdatedDate: 0 }
     ];
-    const UPDATE_COMICS = [
-      { ...COMIC_2, lastUpdatedDate: LATEST_UPDATE },
-      { ...COMIC_4, lastUpdatedDate: 0 }
-    ];
+    const UPDATE_COMICS = [UPDATED_COMIC, { ...COMIC_4, lastUpdatedDate: 0 }];
     const PENDING_IMPORTS = 20;
     const PENDING_RESCANS = 21;
 
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_updates: true, comics: CURRENT_COMICS },
-        new LibraryActions.LibraryGotUpdates({
+        {
+          ...state,
+          fetchingUpdates: true,
+          comics: CURRENT_COMICS,
+          currentComic: CURRENT_COMIC
+        },
+        new LibraryUpdatesReceived({
           comics: UPDATE_COMICS,
           last_read_dates: LAST_READ_DATES,
           pending_imports: PENDING_IMPORTS,
@@ -284,84 +289,92 @@ describe('Library Reducer', () => {
     });
 
     it('clears the fetching updates flag', () => {
-      expect(state.fetching_updates).toBeFalsy();
+      expect(state.fetchingUpdates).toBeFalsy();
     });
 
     it('updates the set of comics', () => {
       expect(state.comics).toEqual(CURRENT_COMICS.concat(UPDATE_COMICS));
     });
 
+    it('updates the last read dates', () => {
+      expect(state.lastReadDates).toEqual(LAST_READ_DATES);
+    });
+
     it('updates the latest comic update', () => {
-      expect(state.latest_updated_date).toEqual(LATEST_UPDATE);
+      expect(state.latestUpdatedDate).toEqual(LATEST_UPDATE);
     });
 
     it('updates the pending imports count', () => {
-      expect(state.pending_imports).toEqual(PENDING_IMPORTS);
+      expect(state.pendingImports).toEqual(PENDING_IMPORTS);
+    });
+
+    it('updates the current comic if it was received', () => {
+      expect(state.currentComic).toEqual(UPDATED_COMIC);
     });
   });
 
   describe('when getting updates fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_updates: true },
-        new LibraryActions.LibraryGetUpdatesFailed()
+        { ...state, fetchingUpdates: true },
+        new LibraryGetUpdatesFailed()
       );
     });
 
     it('clears the fetching updates flag', () => {
-      expect(state.fetching_updates).toBeFalsy();
+      expect(state.fetchingUpdates).toBeFalsy();
     });
   });
 
   describe('when starting a rescan', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, starting_rescan: false },
-        new LibraryActions.LibraryStartRescan()
+        { ...state, startingRescan: false },
+        new LibraryStartRescan()
       );
     });
 
     it('sets the starting rescan flag', () => {
-      expect(state.starting_rescan).toBeTruthy();
+      expect(state.startingRescan).toBeTruthy();
     });
   });
 
   describe('when rescanning has started', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, starting_rescan: true },
-        new LibraryActions.LibraryRescanStarted({ count: 17 })
+        { ...state, startingRescan: true },
+        new LibraryRescanStarted({ count: 17 })
       );
     });
 
     it('clears the starting rescan flag', () => {
-      expect(state.starting_rescan).toBeFalsy();
+      expect(state.startingRescan).toBeFalsy();
     });
   });
 
   describe('when starting the rescan fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, starting_rescan: true },
-        new LibraryActions.LibraryStartRescanFailed()
+        { ...state, startingRescan: true },
+        new LibraryStartRescanFailed()
       );
     });
 
     it('clears the starting rescan flag', () => {
-      expect(state.starting_rescan).toBeFalsy();
+      expect(state.startingRescan).toBeFalsy();
     });
   });
 
   describe('when updating a comic', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, updating_comic: false },
-        new LibraryActions.LibraryUpdateComic({ comic: COMIC })
+        { ...state, updatingComic: false },
+        new LibraryUpdateComic({ comic: COMIC })
       );
     });
 
     it('sets the updating comic flag', () => {
-      expect(state.updating_comic).toBeTruthy();
+      expect(state.updatingComic).toBeTruthy();
     });
   });
 
@@ -370,43 +383,43 @@ describe('Library Reducer', () => {
 
     beforeEach(() => {
       state = reducer(
-        { ...state, updating_comic: true, current_comic: COMIC },
-        new LibraryActions.LibraryComicUpdated({ comic: UPDATED_COMIC })
+        { ...state, updatingComic: true, currentComic: COMIC },
+        new LibraryComicUpdated({ comic: UPDATED_COMIC })
       );
     });
 
     it('clears the updating comic flag', () => {
-      expect(state.updating_comic).toBeFalsy();
+      expect(state.updatingComic).toBeFalsy();
     });
 
     it('sets the current comic', () => {
-      expect(state.current_comic).toEqual(UPDATED_COMIC);
+      expect(state.currentComic).toEqual(UPDATED_COMIC);
     });
   });
 
   describe('when updating a comic fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, updating_comic: true },
-        new LibraryActions.LibraryUpdateComicFailed()
+        { ...state, updatingComic: true },
+        new LibraryUpdateComicFailed()
       );
     });
 
     it('clears the updating comic flag', () => {
-      expect(state.updating_comic).toBeFalsy();
+      expect(state.updatingComic).toBeFalsy();
     });
   });
 
   describe('when clearing metadata', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, clearing_metadata: false },
-        new LibraryActions.LibraryClearMetadata({ comic: COMIC })
+        { ...state, clearingMetadata: false },
+        new LibraryClearMetadata({ comic: COMIC })
       );
     });
 
     it('sets the clearing metadata flag', () => {
-      expect(state.clearing_metadata).toBeTruthy();
+      expect(state.clearingMetadata).toBeTruthy();
     });
   });
 
@@ -415,134 +428,134 @@ describe('Library Reducer', () => {
 
     beforeEach(() => {
       state = reducer(
-        { ...state, clearing_metadata: true, current_comic: COMIC },
-        new LibraryActions.LibraryMetadataCleared({ comic: UPDATED_COMIC })
+        { ...state, clearingMetadata: true, currentComic: COMIC },
+        new LibraryMetadataCleared({ comic: UPDATED_COMIC })
       );
     });
 
     it('clears the clearing metadata flag', () => {
-      expect(state.clearing_metadata).toBeFalsy();
+      expect(state.clearingMetadata).toBeFalsy();
     });
 
     it('updates the current comic', () => {
-      expect(state.current_comic).toEqual(UPDATED_COMIC);
+      expect(state.currentComic).toEqual(UPDATED_COMIC);
     });
   });
 
   describe('when clearing metadata fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, clearing_metadata: true },
-        new LibraryActions.LibraryClearMetadataFailed()
+        { ...state, clearingMetadata: true },
+        new LibraryClearMetadataFailed()
       );
     });
 
     it('clears the clearing metadata flag', () => {
-      expect(state.clearing_metadata).toBeFalsy();
+      expect(state.clearingMetadata).toBeFalsy();
     });
   });
 
   describe('when blocking a page hash', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, blocking_hash: false },
-        new LibraryActions.LibraryBlockPageHash({ hash: HASH, blocked: true })
+        { ...state, blockingHash: false },
+        new LibraryBlockPageHash({ hash: HASH, blocked: true })
       );
     });
 
     it('sets the blocking hash flag', () => {
-      expect(state.blocking_hash).toBeTruthy();
+      expect(state.blockingHash).toBeTruthy();
     });
   });
 
   describe('when a page has is blocked', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, blocking_hash: true },
-        new LibraryActions.LibraryPageHashBlocked({ hash: HASH, blocked: true })
+        { ...state, blockingHash: true },
+        new LibraryPageHashBlocked({ hash: HASH, blocked: true })
       );
     });
 
     it('clears the blocking hash flag', () => {
-      expect(state.blocking_hash).toBeFalsy();
+      expect(state.blockingHash).toBeFalsy();
     });
   });
 
   describe('when blocking a page hash fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, blocking_hash: true },
-        new LibraryActions.LibraryBlockPageHashFailed()
+        { ...state, blockingHash: true },
+        new LibraryBlockPageHashFailed()
       );
     });
 
     it('clears the blocking hash flag', () => {
-      expect(state.blocking_hash).toBeFalsy();
+      expect(state.blockingHash).toBeFalsy();
     });
   });
 
   describe('when deleting multiple comics', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, deleting_multiple_comics: false },
-        new LibraryActions.LibraryDeleteMultipleComics({ ids: [1, 2, 3, 4] })
+        { ...state, deletingComics: false },
+        new LibraryDeleteMultipleComics({ ids: [1, 2, 3, 4] })
       );
     });
 
     it('sets the deleting multiple comics flag', () => {
-      expect(state.deleting_multiple_comics).toBeTruthy();
+      expect(state.deletingComics).toBeTruthy();
     });
   });
 
   describe('when multiple comics are deleted', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, deleting_multiple_comics: true },
-        new LibraryActions.LibraryMultipleComicsDeleted({ count: 5 })
+        { ...state, deletingComics: true },
+        new LibraryMultipleComicsDeleted({ count: 5 })
       );
     });
 
     it('clears the deleting multiple comics flag', () => {
-      expect(state.deleting_multiple_comics).toBeFalsy();
+      expect(state.deletingComics).toBeFalsy();
     });
   });
 
   describe('when deleting multiple comics fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, deleting_multiple_comics: true },
-        new LibraryActions.LibraryDeleteMultipleComicsFailed()
+        { ...state, deletingComics: true },
+        new LibraryDeleteMultipleComicsFailed()
       );
     });
 
     it('clears the deleting multiple comics flag', () => {
-      expect(state.deleting_multiple_comics).toBeFalsy();
+      expect(state.deletingComics).toBeFalsy();
     });
   });
 
   describe('when setting the current comic', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, current_comic: null },
-        new LibraryActions.LibrarySetCurrentComic({ comic: COMIC })
+        { ...state, currentComic: null },
+        new LibrarySetCurrentComic({ comic: COMIC })
       );
     });
 
     it('updates the state', () => {
-      expect(state.current_comic).toEqual(COMIC);
+      expect(state.currentComic).toEqual(COMIC);
     });
   });
 
   describe('when finding the current comic', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, current_comic: null, comics: COMICS },
-        new LibraryActions.LibraryFindCurrentComic({ id: COMICS[0].id })
+        { ...state, currentComic: null, comics: COMICS },
+        new LibraryFindCurrentComic({ id: COMICS[0].id })
       );
     });
 
     it('sets the current comic', () => {
-      expect(state.current_comic).toEqual(COMICS[0]);
+      expect(state.currentComic).toEqual(COMICS[0]);
     });
   });
 });

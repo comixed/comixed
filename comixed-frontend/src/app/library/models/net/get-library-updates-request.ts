@@ -17,26 +17,7 @@
  * org.comixed;
  */
 
-import { ScanType } from 'app/comics/models/scan-type';
-import { ComicFormat } from 'app/comics/models/comic-format';
-import { Comic } from 'app/comics/models/comic';
-import { LastReadDate } from 'app/library/models/last-read-date';
-
-export interface LibraryState {
-  fetchingScanTypes: boolean;
-  scanTypes: ScanType[];
-  fetchingFormats: boolean;
-  formats: ComicFormat[];
-  fetchingUpdates: boolean;
-  comics: Comic[];
-  lastReadDates: LastReadDate[];
-  latestUpdatedDate: number;
-  pendingImports: number;
-  pendingRescans: number;
-  startingRescan: boolean;
-  updatingComic: boolean;
-  currentComic: Comic;
-  clearingMetadata: boolean;
-  blockingHash: boolean;
-  deletingComics: boolean;
+export interface GetLibraryUpdatesRequest {
+    timeout: number;
+    maximumResults: number;
 }

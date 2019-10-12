@@ -47,7 +47,7 @@ export class StoryArcsPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.storyArcsSubscription = this.libraryAdaptor.story_arc$.subscribe(
+    this.storyArcsSubscription = this.libraryAdaptor.stories$.subscribe(
       story_arcs => {
         this.storyArcs = story_arcs;
         this.titleService.setTitle(

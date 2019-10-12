@@ -24,15 +24,15 @@ import { ScanType } from '../../comics/models/scan-type';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
 export enum LibraryActionTypes {
-  ResetLibrary = '[LIBRARY] Reset the library',
+  Reset = '[LIBRARY] Reset the library',
   GetScanTypes = '[LIBRARY] Get scan types',
-  GotScanTypes = '[LIBRARY] Got scan types',
+  ScanTypesReceived = '[LIBRARY] Got scan types',
   GetScanTypesFailed = '[LIBRARY] Failed to get scan types',
   GetFormats = '[LIBRARY] Get formats',
-  GotFormats = '[LIBRARY] Got formats',
+  FormatsReceived = '[LIBRARY] Got formats',
   GetFormatsFailed = '[LIBRARY] Failed to get formats',
   GetUpdates = '[LIBRARY] Get updates to the library',
-  GotUpdates = '[LIBRARY] Library updates received',
+  UpdatesReceived = '[LIBRARY] Library updates received',
   GetUpdatesFailed = '[LIBRARY] Failed to get updates',
   StartRescan = '[LIBRARY] Start rescanning the library',
   RescanStarted = '[LIBRARY] Library rescanning started',
@@ -53,8 +53,8 @@ export enum LibraryActionTypes {
   FindCurrentComic = '[LIBRARY] Find the current comic'
 }
 
-export class LibraryResetLibrary implements Action {
-  readonly type = LibraryActionTypes.ResetLibrary;
+export class LibraryReset implements Action {
+  readonly type = LibraryActionTypes.Reset;
 
   constructor() {}
 }
@@ -66,7 +66,7 @@ export class LibraryGetScanTypes implements Action {
 }
 
 export class LibraryGotScanTypes implements Action {
-  readonly type = LibraryActionTypes.GotScanTypes;
+  readonly type = LibraryActionTypes.ScanTypesReceived;
 
   constructor(public payload: { scan_types: ScanType[] }) {}
 }
@@ -83,8 +83,8 @@ export class LibraryGetFormats implements Action {
   constructor() {}
 }
 
-export class LibraryGotFormats implements Action {
-  readonly type = LibraryActionTypes.GotFormats;
+export class LibraryFormatsReceived implements Action {
+  readonly type = LibraryActionTypes.FormatsReceived;
 
   constructor(public payload: { formats: ComicFormat[] }) {}
 }
@@ -103,8 +103,8 @@ export class LibraryGetUpdates implements Action {
   ) {}
 }
 
-export class LibraryGotUpdates implements Action {
-  readonly type = LibraryActionTypes.GotUpdates;
+export class LibraryUpdatesReceived implements Action {
+  readonly type = LibraryActionTypes.UpdatesReceived;
 
   constructor(
     public payload: {
@@ -225,15 +225,15 @@ export class LibraryFindCurrentComic implements Action {
 }
 
 export type LibraryActions =
-  | LibraryResetLibrary
+  | LibraryReset
   | LibraryGetScanTypes
   | LibraryGotScanTypes
   | LibraryGetScanTypesFailed
   | LibraryGetFormats
-  | LibraryGotFormats
+  | LibraryFormatsReceived
   | LibraryGetFormatsFailed
   | LibraryGetUpdates
-  | LibraryGotUpdates
+  | LibraryUpdatesReceived
   | LibraryGetUpdatesFailed
   | LibraryStartRescan
   | LibraryRescanStarted

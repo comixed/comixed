@@ -29,36 +29,37 @@ import * as _ from 'lodash';
 import { filter } from 'rxjs/operators';
 import { ComicFormat } from 'app/comics/models/comic-format';
 import * as LibraryActions from '../actions/library.actions';
+import {
+  LibraryGetFormats,
+  LibraryGetScanTypes
+} from '../actions/library.actions';
 import { extractField } from 'app/library/utility.functions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
-import { ofType } from '@ngrx/effects';
-import {
-  LibraryActionTypes,
-  LibrarySetCurrentComic
-} from '../actions/library.actions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
 @Injectable()
 export class LibraryAdaptor {
-  _scan_type$ = new BehaviorSubject<ScanType[]>([]);
+  _fetchingScanType$ = new BehaviorSubject<boolean>(false);
+  _scanType$ = new BehaviorSubject<ScanType[]>([]);
+  _fetchingFormat$ = new BehaviorSubject<boolean>(false);
   _format$ = new BehaviorSubject<ComicFormat[]>([]);
-  _fetching_update$ = new BehaviorSubject<boolean>(false);
+  _fetchingUpdate$ = new BehaviorSubject<boolean>(false);
+  _latestUpdatedDate$ = new BehaviorSubject<number>(0);
   _comic$ = new BehaviorSubject<Comic[]>([]);
-  _last_read_date$ = new BehaviorSubject<LastReadDate[]>([]);
+  _lastReadDate$ = new BehaviorSubject<LastReadDate[]>([]);
   _publisher$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   _serie$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   _character$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   _team$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   _location$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _story_arc$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _pending_import$ = new BehaviorSubject<number>(0);
-  _pending_rescan$ = new BehaviorSubject<number>(0);
-  _current_comic$ = new BehaviorSubject<Comic>(null);
-  current_id = -1;
-  _last_updated$ = new BehaviorSubject<Date>(new Date());
+  _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  _pendingImport$ = new BehaviorSubject<number>(0);
+  _pendingRescan$ = new BehaviorSubject<number>(0);
+  _currentComicId$ = new BehaviorSubject<number>(-1);
+  _currentComic$ = new BehaviorSubject<Comic>(null);
+  _lastUpdated$ = new BehaviorSubject<Date>(new Date());
 
-  private library_state$: Observable<LibraryState>;
-  _latest_updated_date = 0;
+  library_state$: Observable<LibraryState>;
   _timeout = 60;
   _maximum = 100;
 
@@ -66,95 +67,126 @@ export class LibraryAdaptor {
     this.store
       .select(LIBRARY_FEATURE_KEY)
       .pipe(
-        // ofType(LibraryActionTypes.GotUpdates),
+        // ofType(LibraryActionTypes.UpdatesReceived),
         filter(state => {
           return !!state;
         })
       )
       .subscribe((libraryState: LibraryState) => {
-        this._latest_updated_date = libraryState.latest_updated_date;
-        this._pending_import$.next(libraryState.pending_imports);
-        this._pending_rescan$.next(libraryState.pending_rescans);
+        this._pendingImport$.next(libraryState.pendingImports);
+        this._pendingRescan$.next(libraryState.pendingRescans);
 
-        if (!_.isEqual(this._scan_type$.getValue(), libraryState.scan_types)) {
-          this._scan_type$.next(libraryState.scan_types);
+        if (
+          this._fetchingScanType$.getValue() !== libraryState.fetchingScanTypes
+        ) {
+          this._fetchingScanType$.next(libraryState.fetchingScanTypes);
+        }
+        if (!_.isEqual(this._scanType$.getValue(), libraryState.scanTypes)) {
+          this._scanType$.next(libraryState.scanTypes);
+        }
+        if (libraryState.fetchingFormats !== this._fetchingFormat$.getValue()) {
+          this._fetchingFormat$.next(libraryState.fetchingFormats);
         }
         if (!_.isEqual(this._format$.getValue(), libraryState.formats)) {
           this._format$.next(libraryState.formats);
         }
         if (
           !_.isEqual(
-            this._last_read_date$.getValue(),
-            libraryState.last_read_dates
+            this._latestUpdatedDate$.getValue(),
+            libraryState.latestUpdatedDate
           )
         ) {
-          this._last_read_date$.next(libraryState.last_read_dates);
+          this._latestUpdatedDate$.next(libraryState.latestUpdatedDate);
         }
-        this._fetching_update$.next(libraryState.fetching_updates);
+        if (
+          !_.isEqual(this._lastReadDate$.getValue(), libraryState.lastReadDates)
+        ) {
+          this._lastReadDate$.next(libraryState.lastReadDates);
+        }
+        this._fetchingUpdate$.next(libraryState.fetchingUpdates);
         if (!_.isEqual(this._comic$.getValue(), libraryState.comics)) {
           this._comic$.next(libraryState.comics);
-          this._publisher$.next(
-            extractField(libraryState.comics, 'publisher')
-          );
+          this._publisher$.next(extractField(libraryState.comics, 'publisher'));
           this._serie$.next(extractField(libraryState.comics, 'series'));
           this._character$.next(
             extractField(libraryState.comics, 'characters')
           );
           this._team$.next(extractField(libraryState.comics, 'teams'));
           this._location$.next(extractField(libraryState.comics, 'locations'));
-          this._story_arc$.next(
-            extractField(libraryState.comics, 'storyArcs')
-          );
-          if (this.current_id !== -1) {
-            this._current_comic$.next(
-              libraryState.comics.find(comic => comic.id === this.current_id)
-            );
+          this._stories$.next(extractField(libraryState.comics, 'storyArcs'));
+        }
+        if (
+          !_.isEqual(libraryState.currentComic, this._currentComic$.getValue())
+        ) {
+          this._currentComic$.next(libraryState.currentComic);
+          if (libraryState.currentComic) {
+            let id = -1;
+            if (
+              libraryState.currentComic.id !== this._currentComicId$.getValue()
+            ) {
+              id = libraryState.currentComic.id;
+            }
+            if (this._currentComicId$.getValue() !== id) {
+              this._currentComicId$.next(id);
+            }
           }
         }
-        if (this.current_id !== -1 && libraryState.current_comic) {
-          if (
-            !_.isEqual(
-              this._current_comic$.getValue(),
-              libraryState.current_comic
-            )
-          ) {
-            this._current_comic$.next(libraryState.current_comic);
-          }
-        }
-        this._last_updated$.next(new Date());
+        this._lastUpdated$.next(new Date());
       });
   }
 
-  get last_updated$(): Observable<Date> {
-    return this._last_updated$.asObservable();
+  get lastUpdated$(): Observable<Date> {
+    return this._lastUpdated$.asObservable();
   }
 
-  get scan_type$(): Observable<ScanType[]> {
-    return this._scan_type$.asObservable();
+  getScanTypes(): void {
+    this.store.dispatch(new LibraryGetScanTypes());
   }
 
-  get scan_types(): ScanType[] {
-    return this._scan_type$.getValue();
+  get fetchingScanType$(): Observable<boolean> {
+    return this._fetchingScanType$.asObservable();
+  }
+
+  get scanType$(): Observable<ScanType[]> {
+    return this._scanType$.asObservable();
+  }
+
+  getFormats(): void {
+    this.store.dispatch(new LibraryGetFormats());
+  }
+
+  get fetchingFormat$(): Observable<boolean> {
+    return this._fetchingFormat$.asObservable();
   }
 
   get format$(): Observable<ComicFormat[]> {
     return this._format$.asObservable();
   }
 
-  get formats(): ComicFormat[] {
-    return this._format$.getValue();
+  get latestUpdatedDate$(): Observable<number> {
+    return this._latestUpdatedDate$.asObservable();
   }
 
-  get fetching_update$(): Observable<boolean> {
-    return this._fetching_update$.asObservable();
+  getLibraryUpdates(): void {
+    this.store.dispatch(
+      new LibraryActions.LibraryGetUpdates({
+        later_than: this._latestUpdatedDate$.getValue(),
+        timeout: this._timeout,
+        maximum: this._maximum
+      })
+    );
+  }
+
+  get fetchingUpdate$(): Observable<boolean> {
+    return this._fetchingUpdate$.asObservable();
   }
 
   get comic$(): Observable<Comic[]> {
     return this._comic$.asObservable();
   }
 
-  get last_read_date$(): Observable<LastReadDate[]> {
-    return this._last_read_date$.asObservable();
+  get lastReadDate$(): Observable<LastReadDate[]> {
+    return this._lastReadDate$.asObservable();
   }
 
   get publisher$(): Observable<ComicCollectionEntry[]> {
@@ -177,90 +209,73 @@ export class LibraryAdaptor {
     return this._location$.asObservable();
   }
 
-  get story_arc$(): Observable<ComicCollectionEntry[]> {
-    return this._story_arc$.asObservable();
+  get stories$(): Observable<ComicCollectionEntry[]> {
+    return this._stories$.asObservable();
   }
 
-  get pending_import$(): Observable<number> {
-    return this._pending_import$.asObservable();
+  get pendingImport$(): Observable<number> {
+    return this._pendingImport$.asObservable();
   }
 
-  get pending_rescan$(): Observable<number> {
-    return this._pending_rescan$.asObservable();
+  get pendingRescan$(): Observable<number> {
+    return this._pendingRescan$.asObservable();
   }
 
   get comics(): Comic[] {
     return this._comic$.getValue();
   }
 
-  reset_library(): void {
-    this.store.dispatch(new LibraryActions.LibraryResetLibrary());
+  resetLibrary(): void {
+    this.store.dispatch(new LibraryActions.LibraryReset());
   }
 
-  get_comic_updates(): void {
-    this.store.dispatch(
-      new LibraryActions.LibraryGetUpdates({
-        later_than: this._latest_updated_date,
-        timeout: this._timeout,
-        maximum: this._maximum
-      })
-    );
+  get currentComicId$(): Observable<number> {
+    return this._currentComicId$.asObservable();
   }
 
-  get current_comic$(): Observable<Comic> {
-    return this._current_comic$.asObservable();
+  get currentComic$(): Observable<Comic> {
+    return this._currentComic$.asObservable();
   }
 
-  set current_comic(comic: Comic) {
-    this.store.dispatch(
-      new LibraryActions.LibrarySetCurrentComic({ comic: comic })
-    );
-  }
-
-  get current_comic(): Comic {
-    return this._current_comic$.getValue();
-  }
-
-  save_comic(comic: Comic): void {
+  saveComic(comic: Comic): void {
     this.store.dispatch(
       new LibraryActions.LibraryUpdateComic({ comic: comic })
     );
   }
 
-  start_rescan(): void {
+  startRescan(): void {
     this.store.dispatch(new LibraryActions.LibraryStartRescan());
   }
 
-  clear_metadata(comic: Comic): void {
+  clearMetadata(comic: Comic): void {
     this.store.dispatch(
       new LibraryActions.LibraryClearMetadata({ comic: comic })
     );
   }
 
-  block_page_hash(hash: string): void {
+  blockPageHash(hash: string): void {
     this.store.dispatch(
       new LibraryActions.LibraryBlockPageHash({ hash: hash, blocked: true })
     );
   }
 
-  unblock_page_hash(hash: string): void {
+  unblockPageHash(hash: string): void {
     this.store.dispatch(
       new LibraryActions.LibraryBlockPageHash({ hash: hash, blocked: false })
     );
   }
 
-  delete_comics_by_id(ids: number[]): void {
+  deleteComics(ids: number[]): void {
     this.store.dispatch(
       new LibraryActions.LibraryDeleteMultipleComics({ ids: ids })
     );
   }
 
-  get_comic_by_id(id: number): void {
-    this.current_id = id;
+  getComic(id: number): void {
     this.store.dispatch(new LibraryActions.LibraryFindCurrentComic({ id: id }));
   }
 
-  private get_comics_for_series(series: string): Comic[] {
+  private getComicsForSeries(series: string): Comic[] {
     return this._serie$
       .getValue()
       .find(entry => entry.comics[0].series === series)
@@ -271,15 +286,15 @@ export class LibraryAdaptor {
       );
   }
 
-  get_previous_issue(comic: Comic): Comic {
-    const comics = this.get_comics_for_series(comic.series);
+  getPreviousIssue(comic: Comic): Comic {
+    const comics = this.getComicsForSeries(comic.series);
     const index = comics.findIndex(entry => entry.id === comic.id);
 
     return index > 0 ? comics[index - 1] : null;
   }
 
-  get_next_issue(comic: Comic): Comic {
-    const comics = this.get_comics_for_series(comic.series);
+  getNextIssue(comic: Comic): Comic {
+    const comics = this.getComicsForSeries(comic.series);
     const index = comics.findIndex(entry => entry.id === comic.id);
 
     return index < comics.length ? comics[index + 1] : null;

@@ -112,13 +112,13 @@ describe('LibraryAdminPageComponent', () => {
 
     describe('and a rescan is requested', () => {
       beforeEach(() => {
-        spyOn(library_adaptor, 'start_rescan');
+        spyOn(library_adaptor, 'startRescan');
         component.rescanLibrary();
         fixture.detectChanges();
       });
 
       it('sends a notice to start a rescan', () => {
-        expect(library_adaptor.start_rescan).toHaveBeenCalled();
+        expect(library_adaptor.startRescan).toHaveBeenCalled();
       });
     });
   });

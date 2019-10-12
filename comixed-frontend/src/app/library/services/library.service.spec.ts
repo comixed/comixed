@@ -20,7 +20,6 @@
 import { TestBed } from '@angular/core/testing';
 
 import { LibraryService } from './library.service';
-import { HttpClient, HttpResponse } from '@angular/common/http';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -56,12 +55,16 @@ import { BlockedPageResponse } from 'app/library/models/net/blocked-page-respons
 import { generate_random_string } from '../../../test/testing-utils';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
 import { LibraryUpdateResponse } from 'app/library/models/net/library-update-response';
+import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
 
 describe('LibraryService', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5, SCAN_TYPE_7];
   const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
   const COMIC = COMIC_1;
   const HASH = generate_random_string();
+  const TIMESTAMP = new Date().getTime();
+  const TIMEOUT = Math.floor(Math.random() * 3000);
+  const MAXIMUM_RECORDS = Math.floor(Math.random() * 1000);
 
   let service: LibraryService;
   let http_mock: HttpTestingController;
@@ -81,7 +84,7 @@ describe('LibraryService', () => {
   });
 
   it('can get the list of scan types', () => {
-    service.get_scan_types().subscribe((response: ScanType[]) => {
+    service.getScanTypes().subscribe((response: ScanType[]) => {
       expect(response).toEqual(SCAN_TYPES);
     });
 
@@ -91,7 +94,7 @@ describe('LibraryService', () => {
   });
 
   it('can get the list of formats', () => {
-    service.get_formats().subscribe((response: ComicFormat[]) => {
+    service.getFormats().subscribe((response: ComicFormat[]) => {
       expect(response).toEqual(FORMATS);
     });
 
@@ -106,13 +109,17 @@ describe('LibraryService', () => {
     const PENDING_RESCANS = 17;
 
     service
-      .get_updates(0, 60, 100)
+      .getUpdatesSince(TIMESTAMP, TIMEOUT, MAXIMUM_RECORDS)
       .subscribe((response: LibraryUpdateResponse) => {});
 
     const req = http_mock.expectOne(
-      interpolate(GET_UPDATES_URL, { later_than: 0, timeout: 60, maximum: 100 })
+      interpolate(GET_UPDATES_URL, { timestamp: TIMESTAMP })
     );
-    expect(req.request.method).toEqual('GET');
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      timeout: TIMEOUT,
+      maximumResults: MAXIMUM_RECORDS
+    } as GetLibraryUpdatesRequest);
     req.flush({
       comics: COMICS,
       pending_imports: PENDING_IMPORTS,
@@ -123,7 +130,7 @@ describe('LibraryService', () => {
   it('can start a rescan', () => {
     const COUNT = 29;
 
-    service.start_rescan().subscribe((response: StartRescanResponse) => {
+    service.startRescan().subscribe((response: StartRescanResponse) => {
       expect(response.count).toEqual(COUNT);
     });
 
@@ -133,7 +140,7 @@ describe('LibraryService', () => {
   });
 
   it('can update a comic', () => {
-    service.update_comic(COMIC).subscribe((response: Comic) => {
+    service.saveComic(COMIC).subscribe((response: Comic) => {
       expect(response).toEqual(COMIC);
     });
 
@@ -146,7 +153,7 @@ describe('LibraryService', () => {
   });
 
   it('can clear the metadata from a comic', () => {
-    service.clear_metadata(COMIC).subscribe((response: Comic) => {
+    service.clearComicMetadata(COMIC).subscribe((response: Comic) => {
       expect(response).toEqual(COMIC);
     });
 
@@ -159,7 +166,7 @@ describe('LibraryService', () => {
 
   it('can block a page hash', () => {
     service
-      .set_block_page_hash(HASH, true)
+      .setPageHashBlockedState(HASH, true)
       .subscribe((response: BlockedPageResponse) => {
         expect(response.hash).toEqual(HASH);
         expect(response.blocked).toBeTruthy();
@@ -174,7 +181,7 @@ describe('LibraryService', () => {
 
   it('can unblock a page hash', () => {
     service
-      .set_block_page_hash(HASH, false)
+      .setPageHashBlockedState(HASH, false)
       .subscribe((response: BlockedPageResponse) => {
         expect(response.hash).toEqual(HASH);
         expect(response.blocked).toBeFalsy();
@@ -191,7 +198,7 @@ describe('LibraryService', () => {
     const IDS = [3, 20, 9, 21, 4, 17];
 
     service
-      .delete_multiple_comics(IDS)
+      .deleteMultipleComics(IDS)
       .subscribe((response: DeleteMultipleComicsResponse) => {
         expect(response.count).toEqual(IDS.length);
       });

@@ -47,10 +47,10 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('library-admin-page.title')
     );
-    this.importCountSubscription = this.libraryAdaptor.pending_import$.subscribe(
+    this.importCountSubscription = this.libraryAdaptor.pendingImport$.subscribe(
       import_count => (this.importCount = import_count)
     );
-    this.rescanCountSubscription = this.libraryAdaptor.pending_rescan$.subscribe(
+    this.rescanCountSubscription = this.libraryAdaptor.pendingRescan$.subscribe(
       rescan_count => (this.rescanCount = rescan_count)
     );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
@@ -65,7 +65,7 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   }
 
   rescanLibrary(): void {
-    this.libraryAdaptor.start_rescan();
+    this.libraryAdaptor.startRescan();
   }
 
   private loadTranslations() {

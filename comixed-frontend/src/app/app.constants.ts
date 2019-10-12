@@ -23,7 +23,7 @@ export const COMIXED_API_ROOT = '/api';
 
 export const GET_SCAN_TYPES_URL = `${COMIXED_API_ROOT}/comics/scan_types`;
 export const GET_FORMATS_URL = `${COMIXED_API_ROOT}/comics/formats`;
-export const GET_UPDATES_URL = `${COMIXED_API_ROOT}/comics/since/\${later_than}?timeout=\${timeout}&maximum=\${maximum}`;
+export const GET_UPDATES_URL = `${COMIXED_API_ROOT}/comics/since/\${timestamp}`;
 export const START_RESCAN_URL = `${COMIXED_API_ROOT}/comics/rescan`;
 export const UPDATE_COMIC_URL = `${COMIXED_API_ROOT}/comics/\${id}`;
 export const CLEAR_METADATA_URL = `${COMIXED_API_ROOT}/comics/\${id}/metadata`;

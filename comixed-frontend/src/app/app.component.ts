@@ -67,17 +67,17 @@ export class AppComponent implements OnInit {
     this.authenticationAdaptor.authenticated$.subscribe(authenticated => {
       this.authenticated = authenticated;
       if (this.authenticated && !this.fetchingUpdateSubscription) {
-        this.fetchingUpdateSubscription = this.libraryAdaptor._fetching_update$.subscribe(
+        this.fetchingUpdateSubscription = this.libraryAdaptor._fetchingUpdate$.subscribe(
           fetching => {
             if (!fetching) {
-              this.libraryAdaptor.get_comic_updates();
+              this.libraryAdaptor.getLibraryUpdates();
             }
           }
         );
       } else if (!this.authenticated && this.fetchingUpdateSubscription) {
         this.fetchingUpdateSubscription.unsubscribe();
         this.fetchingUpdateSubscription = null;
-        this.libraryAdaptor.reset_library();
+        this.libraryAdaptor.resetLibrary();
       }
     });
     this.authenticationAdaptor.showLogin$.subscribe(show_login => {
@@ -88,10 +88,10 @@ export class AppComponent implements OnInit {
     this.libraryAdaptor.comic$.subscribe(
       comics => (this.comicCount = comics.length)
     );
-    this.libraryAdaptor.pending_import$.subscribe(
+    this.libraryAdaptor.pendingImport$.subscribe(
       imports => (this.importCount = imports)
     );
-    this.libraryAdaptor.pending_rescan$.subscribe(
+    this.libraryAdaptor.pendingRescan$.subscribe(
       rescans => (this.rescanCount = rescans)
     );
     this.breadcrumbsAdaptor.entries$.subscribe(

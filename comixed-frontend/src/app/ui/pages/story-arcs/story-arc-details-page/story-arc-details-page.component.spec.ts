@@ -131,14 +131,14 @@ describe('StoryArcDetailsPageComponent', () => {
   describe('when a story arc update is received', () => {
     it('sets the comics when the story is found', () => {
       component.storyName = STORY_NAME;
-      library_adaptor._story_arc$.next(STORIES);
+      library_adaptor._stories$.next(STORIES);
       fixture.detectChanges();
       expect(component.comics).toEqual([COMIC]);
     });
 
     it('sets an empty set when the story is not found', () => {
       component.storyName = STORY_NAME.substr(1);
-      library_adaptor._story_arc$.next(STORIES);
+      library_adaptor._stories$.next(STORIES);
       fixture.detectChanges();
       expect(component.comics).toEqual([]);
     });

@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,14 +51,27 @@ public class ComicService {
     @Autowired private Worker worker;
     @Autowired private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskFactory;
 
-    public List<Comic> getComicsAddedSince(final long timestamp,
-                                           final int maxComics) {
+    public List<Comic> getComicsUpdatedSince(final long timestamp,
+                                             final int maximumResults) {
         final Date lastUpdated = new Date(timestamp);
+        this.logger.debug("Getting {} comic{} updated since {}",
+                          maximumResults,
+                          maximumResults == 1
+                          ? ""
+                          : "s",
+                          lastUpdated);
 
-        this.logger.info("Getting comics added: last updated={}",
-                         lastUpdated.toString());
+        final List<Comic> result = this.comicRepository.findAllByDateLastUpdatedGreaterThan(lastUpdated,
+                                                                                            PageRequest.of(0,
+                                                                                                           maximumResults));
 
-        return this.comicRepository.findFirst100ByDateLastUpdatedGreaterThan(lastUpdated);
+        this.logger.debug("Returning {} comic{}",
+                          result.size(),
+                          result.size() == 1
+                          ? ""
+                          : "s");
+
+        return result;
     }
 
     @Transactional

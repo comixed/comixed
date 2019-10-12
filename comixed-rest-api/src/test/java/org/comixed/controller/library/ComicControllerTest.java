@@ -24,6 +24,7 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.state.LibraryStatus;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
+import org.comixed.net.GetComicsUpdatedSinceRequest;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.LastReadDatesRepository;
 import org.comixed.service.library.ComicException;
@@ -54,18 +55,13 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class ComicControllerTest {
     private static final long TEST_COMIC_ID = 129;
-    private static final String TEST_NONEXISTENT_FILE = "src/test/resources/this-file-doesnt-exist.cbz";
-    private static final String TEST_DIRECTORY = "src/test/resources";
     private static final String TEST_COMIC_FILE = "src/test/resources/example.cbz";
-    private static final String TEST_SERIES = "Awesome comic series";
-    private static final String TEST_VOLUME = "2018";
-    private static final String TEST_ISSUE_NUMBER = "52";
     private static final int TEST_RESCAN_COUNT = 729;
-    private static final int TEST_IMPORT_COUNT = 217;
-    private static final long TEST_USER_ID = 129;
     private static final String TEST_EMAIL_ADDRESS = "user@testing";
+    private static final Long TEST_TIMESTAMP = System.currentTimeMillis();
     private static final int TEST_TIMEOUT = 2;
     private static final byte[] TEST_COMIC_CONTENT = "This is the comic content.".getBytes();
+    private static final Integer TEST_MAXIMUM_RESULTS = 100;
 
     @InjectMocks private ComicController controller;
     @Mock private ComicService comicService;
@@ -90,8 +86,8 @@ public class ComicControllerTest {
             InterruptedException {
         Mockito.when(principal.getName())
                .thenReturn(TEST_EMAIL_ADDRESS);
-        Mockito.when(comicService.getComicsAddedSince(Mockito.anyLong(),
-                                                      Mockito.anyInt()))
+        Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(),
+                                                        Mockito.anyInt()))
                .thenReturn(comicList);
         Mockito.when(comicList.isEmpty())
                .thenReturn(false);
@@ -103,10 +99,10 @@ public class ComicControllerTest {
         Mockito.when(comicService.getRescanCount())
                .thenReturn(0);
 
-        final LibraryStatus result = controller.getComicsAddedSince(principal,
-                                                                    0,
-                                                                    1000L,
-                                                                    100);
+        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
+                                                                      TEST_TIMESTAMP,
+                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
+                                                                                                       TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -123,8 +119,8 @@ public class ComicControllerTest {
                .getName();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
-               .getComicsAddedSince(0,
-                                    100);
+               .getComicsUpdatedSince(TEST_TIMESTAMP,
+                                      TEST_MAXIMUM_RESULTS);
         Mockito.verify(comicList,
                        Mockito.atLeast(1))
                .isEmpty();
@@ -143,8 +139,8 @@ public class ComicControllerTest {
             InterruptedException {
         Mockito.when(principal.getName())
                .thenReturn(TEST_EMAIL_ADDRESS);
-        Mockito.when(comicService.getComicsAddedSince(Mockito.anyLong(),
-                                                      Mockito.anyInt()))
+        Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(),
+                                                        Mockito.anyInt()))
                .thenReturn(comicList);
         Mockito.when(comicList.isEmpty())
                .thenReturn(true);
@@ -158,10 +154,10 @@ public class ComicControllerTest {
         Mockito.when(comicService.getRescanCount())
                .thenReturn(0);
 
-        final LibraryStatus result = controller.getComicsAddedSince(principal,
-                                                                    0,
-                                                                    1000L,
-                                                                    100);
+        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
+                                                                      TEST_TIMESTAMP,
+                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
+                                                                                                       TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -178,15 +174,15 @@ public class ComicControllerTest {
                .getName();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
-               .getComicsAddedSince(0l,
-                                    100);
+               .getComicsUpdatedSince(TEST_TIMESTAMP,
+                                      TEST_MAXIMUM_RESULTS);
         Mockito.verify(comicList,
                        Mockito.atLeast(1))
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
                .getLastReadDatesSince(TEST_EMAIL_ADDRESS,
-                                      0l);
+                                      TEST_TIMESTAMP);
         Mockito.verify(lastReadList,
                        Mockito.atLeast(1))
                .isEmpty();
@@ -205,8 +201,8 @@ public class ComicControllerTest {
             InterruptedException {
         Mockito.when(principal.getName())
                .thenReturn(TEST_EMAIL_ADDRESS);
-        Mockito.when(comicService.getComicsAddedSince(Mockito.anyLong(),
-                                                      Mockito.anyInt()))
+        Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(),
+                                                        Mockito.anyInt()))
                .thenReturn(comicList);
         Mockito.when(comicList.isEmpty())
                .thenReturn(true);
@@ -220,10 +216,10 @@ public class ComicControllerTest {
         Mockito.when(comicService.getRescanCount())
                .thenReturn(10);
 
-        final LibraryStatus result = controller.getComicsAddedSince(principal,
-                                                                    0,
-                                                                    1000L,
-                                                                    100);
+        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
+                                                                      TEST_TIMESTAMP,
+                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
+                                                                                                       TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -240,15 +236,15 @@ public class ComicControllerTest {
                .getName();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
-               .getComicsAddedSince(0l,
-                                    100);
+               .getComicsUpdatedSince(TEST_TIMESTAMP,
+                                      TEST_MAXIMUM_RESULTS);
         Mockito.verify(comicList,
                        Mockito.atLeast(1))
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
                .getLastReadDatesSince(TEST_EMAIL_ADDRESS,
-                                      0l);
+                                      TEST_TIMESTAMP);
         Mockito.verify(lastReadList,
                        Mockito.atLeast(1))
                .isEmpty();
@@ -267,8 +263,8 @@ public class ComicControllerTest {
             InterruptedException {
         Mockito.when(principal.getName())
                .thenReturn(TEST_EMAIL_ADDRESS);
-        Mockito.when(comicService.getComicsAddedSince(Mockito.anyLong(),
-                                                      Mockito.anyInt()))
+        Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(),
+                                                        Mockito.anyInt()))
                .thenReturn(comicList);
         Mockito.when(comicList.isEmpty())
                .thenReturn(true);
@@ -282,10 +278,10 @@ public class ComicControllerTest {
         Mockito.when(comicService.getRescanCount())
                .thenReturn(0);
 
-        final LibraryStatus result = controller.getComicsAddedSince(principal,
-                                                                    0,
-                                                                    1000L,
-                                                                    100);
+        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
+                                                                      TEST_TIMESTAMP,
+                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
+                                                                                                       TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -302,15 +298,15 @@ public class ComicControllerTest {
                .getName();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
-               .getComicsAddedSince(0l,
-                                    100);
+               .getComicsUpdatedSince(TEST_TIMESTAMP,
+                                      TEST_MAXIMUM_RESULTS);
         Mockito.verify(comicList,
                        Mockito.atLeast(1))
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
                .getLastReadDatesSince(TEST_EMAIL_ADDRESS,
-                                      0l);
+                                      TEST_TIMESTAMP);
         Mockito.verify(lastReadList,
                        Mockito.atLeast(1))
                .isEmpty();
@@ -329,8 +325,8 @@ public class ComicControllerTest {
             InterruptedException {
         Mockito.when(principal.getName())
                .thenReturn(TEST_EMAIL_ADDRESS);
-        Mockito.when(comicService.getComicsAddedSince(Mockito.anyLong(),
-                                                      Mockito.anyInt()))
+        Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(),
+                                                        Mockito.anyInt()))
                .thenReturn(comicList);
         Mockito.when(comicList.isEmpty())
                .thenReturn(true);
@@ -344,10 +340,10 @@ public class ComicControllerTest {
         Mockito.when(comicService.getRescanCount())
                .thenReturn(0);
 
-        final LibraryStatus result = controller.getComicsAddedSince(principal,
-                                                                    0,
-                                                                    TEST_TIMEOUT,
-                                                                    100);
+        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
+                                                                      TEST_TIMESTAMP,
+                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
+                                                                                                       TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -364,15 +360,15 @@ public class ComicControllerTest {
                .getName();
         Mockito.verify(comicService,
                        Mockito.atLeast(TEST_TIMEOUT))
-               .getComicsAddedSince(0l,
-                                    100);
+               .getComicsUpdatedSince(TEST_TIMESTAMP,
+                                      TEST_MAXIMUM_RESULTS);
         Mockito.verify(comicList,
                        Mockito.atLeast(TEST_TIMEOUT))
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(TEST_TIMEOUT))
                .getLastReadDatesSince(TEST_EMAIL_ADDRESS,
-                                      0l);
+                                      TEST_TIMESTAMP);
         Mockito.verify(lastReadList,
                        Mockito.atLeast(TEST_TIMEOUT))
                .isEmpty();

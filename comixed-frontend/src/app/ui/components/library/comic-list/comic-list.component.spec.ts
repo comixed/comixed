@@ -304,9 +304,9 @@ describe('ComicListComponent', () => {
       spyOn(confirm, 'confirm').and.callFake((params: any) => {
         params.accept();
       });
-      spyOn(library_adaptor, 'delete_comics_by_id');
+      spyOn(library_adaptor, 'deleteComics');
       component.deleteComics();
-      expect(library_adaptor.delete_comics_by_id).toHaveBeenCalledWith(
+      expect(library_adaptor.deleteComics).toHaveBeenCalledWith(
         COMICS.map(comic => comic.id)
       );
     });
