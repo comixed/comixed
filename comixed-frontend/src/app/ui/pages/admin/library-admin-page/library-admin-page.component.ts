@@ -47,10 +47,10 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('library-admin-page.title')
     );
-    this.importCountSubscription = this.libraryAdaptor.pendingImport$.subscribe(
+    this.importCountSubscription = this.libraryAdaptor.processingCount$.subscribe(
       import_count => (this.importCount = import_count)
     );
-    this.rescanCountSubscription = this.libraryAdaptor.pendingRescan$.subscribe(
+    this.rescanCountSubscription = this.libraryAdaptor.rescanCount$.subscribe(
       rescan_count => (this.rescanCount = rescan_count)
     );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(

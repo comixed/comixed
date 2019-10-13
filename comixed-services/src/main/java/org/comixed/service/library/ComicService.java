@@ -26,9 +26,9 @@ import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.LastReadDatesRepository;
-import org.comixed.tasks.AddComicWorkerTask;
-import org.comixed.tasks.RescanComicWorkerTask;
-import org.comixed.tasks.Worker;
+import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.task.model.RescanComicWorkerTask;
+import org.comixed.task.runner.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
@@ -47,6 +47,7 @@ public class ComicService {
 
     @Autowired private ComicRepository comicRepository;
     @Autowired private LastReadDatesRepository lastReadDatesRepository;
+    @Autowired private ProcessComicEntryRepository processComicEntryRepository;
     @Autowired private ComiXedUserRepository userRepository;
     @Autowired private Worker worker;
     @Autowired private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskFactory;
@@ -200,10 +201,18 @@ public class ComicService {
         return null;
     }
 
-    public int getImportCount() {
-        this.logger.info("Getting the current import count");
+    public long getProcessingCount() {
+        this.logger.info("Getting the current processing count");
 
-        return this.worker.getCountFor(AddComicWorkerTask.class);
+        final long result = this.processComicEntryRepository.count();
+
+        this.logger.debug("There {} {} record{} to be processed",
+                          result,
+                          result == 1
+                          ? ""
+                          : "s");
+
+        return result;
     }
 
     public int getRescanCount() {

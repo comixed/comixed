@@ -42,7 +42,7 @@ import { generate_random_string } from '../../../test/testing-utils';
 import { BlockedPageResponse } from 'app/library/models/net/blocked-page-response';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
-import { LibraryUpdateResponse } from 'app/library/models/net/library-update-response';
+import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import objectContaining = jasmine.objectContaining;
 import {
@@ -131,14 +131,14 @@ describe('LibraryEffects', () => {
       const service_response = SCAN_TYPES;
       const action = new LibraryGetScanTypes();
       const outcome = new LibraryGotScanTypes({
-        scan_types: SCAN_TYPES
+        scanTypes: SCAN_TYPES
       });
 
       actions$ = hot('-a', { a: action });
       libraryService.getScanTypes.and.returnValue(of(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.get_scan_types$).toBeObservable(expected);
+      expect(effects.getScanTypes$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
@@ -150,7 +150,7 @@ describe('LibraryEffects', () => {
       libraryService.getScanTypes.and.returnValue(throwError(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.get_scan_types$).toBeObservable(expected);
+      expect(effects.getScanTypes$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -164,7 +164,7 @@ describe('LibraryEffects', () => {
       libraryService.getScanTypes.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(effects.get_scan_types$).toBeObservable(expected);
+      expect(effects.getScanTypes$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -183,7 +183,7 @@ describe('LibraryEffects', () => {
       libraryService.getFormats.and.returnValue(of(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.get_formats$).toBeObservable(expected);
+      expect(effects.getFormats$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
@@ -195,7 +195,7 @@ describe('LibraryEffects', () => {
       libraryService.getFormats.and.returnValue(throwError(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.get_formats$).toBeObservable(expected);
+      expect(effects.getFormats$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -209,7 +209,7 @@ describe('LibraryEffects', () => {
       libraryService.getFormats.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(effects.get_formats$).toBeObservable(expected);
+      expect(effects.getFormats$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -220,35 +220,35 @@ describe('LibraryEffects', () => {
     it('fires an action on success', () => {
       const service_response = {
         comics: COMICS,
-        last_read_dates: LAST_READ_DATES,
-        pending_imports: 0,
-        pending_rescans: 0
-      } as LibraryUpdateResponse;
+        lastReadDates: LAST_READ_DATES,
+        processingCount: 0,
+        rescanCount: 0
+      } as GetLibraryUpdateResponse;
       const action = new LibraryGetUpdates({
-        later_than: 0,
+        timestamp: 0,
         timeout: 60,
-        maximum: 100
+        maximumResults: 100
       });
       const outcome = new LibraryUpdatesReceived({
         comics: COMICS,
-        last_read_dates: LAST_READ_DATES,
-        pending_imports: 0,
-        pending_rescans: 0
+        lastReadDates: LAST_READ_DATES,
+        processingCount: 0,
+        rescanCount: 0
       });
 
       actions$ = hot('-a', { a: action });
       libraryService.getUpdatesSince.and.returnValue(of(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.get_updates$).toBeObservable(expected);
+      expect(effects.getUpdates$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const service_response = new HttpErrorResponse({});
       const action = new LibraryGetUpdates({
-        later_than: 0,
+        timestamp: 0,
         timeout: 60,
-        maximum: 100
+        maximumResults: 100
       });
       const outcome = new LibraryGetUpdatesFailed();
 
@@ -258,7 +258,7 @@ describe('LibraryEffects', () => {
       );
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.get_updates$).toBeObservable(expected);
+      expect(effects.getUpdates$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -266,9 +266,9 @@ describe('LibraryEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = new LibraryGetUpdates({
-        later_than: 0,
+        timestamp: 0,
         timeout: 60,
-        maximum: 100
+        maximumResults: 100
       });
       const outcome = new LibraryGetUpdatesFailed();
 
@@ -276,7 +276,7 @@ describe('LibraryEffects', () => {
       libraryService.getUpdatesSince.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(effects.get_updates$).toBeObservable(expected);
+      expect(effects.getUpdates$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -295,7 +295,7 @@ describe('LibraryEffects', () => {
       libraryService.startRescan.and.returnValue(of(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.start_rescan$).toBeObservable(expected);
+      expect(effects.startRescan$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -310,7 +310,7 @@ describe('LibraryEffects', () => {
       libraryService.startRescan.and.returnValue(throwError(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.start_rescan$).toBeObservable(expected);
+      expect(effects.startRescan$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -324,7 +324,7 @@ describe('LibraryEffects', () => {
       libraryService.startRescan.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(effects.start_rescan$).toBeObservable(expected);
+      expect(effects.startRescan$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -341,7 +341,7 @@ describe('LibraryEffects', () => {
       libraryService.saveComic.and.returnValue(of(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.update_comic$).toBeObservable(expected);
+      expect(effects.saveComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -356,7 +356,7 @@ describe('LibraryEffects', () => {
       libraryService.saveComic.and.returnValue(throwError(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.update_comic$).toBeObservable(expected);
+      expect(effects.saveComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -370,7 +370,7 @@ describe('LibraryEffects', () => {
       libraryService.saveComic.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(effects.update_comic$).toBeObservable(expected);
+      expect(effects.saveComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -389,7 +389,7 @@ describe('LibraryEffects', () => {
       libraryService.clearComicMetadata.and.returnValue(of(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.clear_metadata$).toBeObservable(expected);
+      expect(effects.clearComicMetadata$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -406,7 +406,7 @@ describe('LibraryEffects', () => {
       );
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.clear_metadata$).toBeObservable(expected);
+      expect(effects.clearComicMetadata$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -420,7 +420,7 @@ describe('LibraryEffects', () => {
       libraryService.clearComicMetadata.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(effects.clear_metadata$).toBeObservable(expected);
+      expect(effects.clearComicMetadata$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -445,7 +445,7 @@ describe('LibraryEffects', () => {
       );
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.block_page_hash$).toBeObservable(expected);
+      expect(effects.setPageHashBlockedState$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -471,7 +471,7 @@ describe('LibraryEffects', () => {
       );
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.block_page_hash$).toBeObservable(expected);
+      expect(effects.setPageHashBlockedState$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -491,7 +491,7 @@ describe('LibraryEffects', () => {
       );
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.block_page_hash$).toBeObservable(expected);
+      expect(effects.setPageHashBlockedState$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -508,7 +508,7 @@ describe('LibraryEffects', () => {
       libraryService.setPageHashBlockedState.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(effects.block_page_hash$).toBeObservable(expected);
+      expect(effects.setPageHashBlockedState$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -531,7 +531,7 @@ describe('LibraryEffects', () => {
       libraryService.deleteMultipleComics.and.returnValue(of(service_response));
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.delete_multiple_comics$).toBeObservable(expected);
+      expect(effects.deleteMultipleComics$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -550,7 +550,7 @@ describe('LibraryEffects', () => {
       );
 
       const expected = cold('-b', { b: outcome });
-      expect(effects.delete_multiple_comics$).toBeObservable(expected);
+      expect(effects.deleteMultipleComics$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -566,7 +566,7 @@ describe('LibraryEffects', () => {
       libraryService.deleteMultipleComics.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(effects.delete_multiple_comics$).toBeObservable(expected);
+      expect(effects.deleteMultipleComics$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

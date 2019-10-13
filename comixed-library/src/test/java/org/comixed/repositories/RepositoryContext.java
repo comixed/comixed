@@ -27,12 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableAutoConfiguration
-@EnableJpaRepositories(basePackages = {"org.comixed.repositories"})
-@EntityScan(basePackages = {"org.comixed.adaptors",
-                            "org.comixed.handlers",
-                            "org.comixed.loaders",
-                            "org.comixed.library.lists",
-                            "org.comixed.model",
-                            "org.comixed.utils"})
+@EnableJpaRepositories(basePackages = {"org.comixed"})
+@EntityScan(basePackages = {"org.comixed"})
 @EnableTransactionManagement
 public class RepositoryContext {}

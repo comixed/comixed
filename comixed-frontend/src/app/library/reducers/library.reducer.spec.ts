@@ -172,7 +172,7 @@ describe('Library Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, fetchingScanTypes: true, scanTypes: [] },
-        new LibraryGotScanTypes({ scan_types: SCAN_TYPES })
+        new LibraryGotScanTypes({ scanTypes: SCAN_TYPES })
       );
     });
 
@@ -246,9 +246,9 @@ describe('Library Reducer', () => {
       state = reducer(
         { ...state, fetchingUpdates: false },
         new LibraryGetUpdates({
-          later_than: new Date().getTime(),
+          timestamp: new Date().getTime(),
           timeout: 60,
-          maximum: 100
+          maximumResults: 100
         })
       );
     });
@@ -281,9 +281,9 @@ describe('Library Reducer', () => {
         },
         new LibraryUpdatesReceived({
           comics: UPDATE_COMICS,
-          last_read_dates: LAST_READ_DATES,
-          pending_imports: PENDING_IMPORTS,
-          pending_rescans: PENDING_RESCANS
+          lastReadDates: LAST_READ_DATES,
+          processingCount: PENDING_IMPORTS,
+          rescanCount: PENDING_RESCANS
         })
       );
     });
@@ -305,7 +305,7 @@ describe('Library Reducer', () => {
     });
 
     it('updates the pending imports count', () => {
-      expect(state.pendingImports).toEqual(PENDING_IMPORTS);
+      expect(state.processingCount).toEqual(PENDING_IMPORTS);
     });
 
     it('updates the current comic if it was received', () => {

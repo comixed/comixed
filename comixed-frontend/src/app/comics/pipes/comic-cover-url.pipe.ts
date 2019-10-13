@@ -31,7 +31,7 @@ export class ComicCoverUrlPipe implements PipeTransform {
     if (comic.missing) {
       return MISSING_COMIC_IMAGE_URL;
     } else {
-      return `${COMIC_SERVICE_API_URL}/comics/${comic.id}/pages/0/content`;
+      return `${COMIC_SERVICE_API_URL}/comics/${comic.id}/cover/content`;
     }
   }
 }

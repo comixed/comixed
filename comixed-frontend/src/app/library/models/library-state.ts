@@ -31,8 +31,8 @@ export interface LibraryState {
   comics: Comic[];
   lastReadDates: LastReadDate[];
   latestUpdatedDate: number;
-  pendingImports: number;
-  pendingRescans: number;
+  processingCount: number;
+  rescanCount: number;
   startingRescan: boolean;
   updatingComic: boolean;
   currentComic: Comic;

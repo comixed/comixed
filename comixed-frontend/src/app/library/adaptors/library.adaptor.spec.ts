@@ -104,7 +104,7 @@ describe('LibraryAdaptor', () => {
 
     describe('when received', () => {
       beforeEach(() => {
-        store.dispatch(new LibraryGotScanTypes({ scan_types: SCAN_TYPES }));
+        store.dispatch(new LibraryGotScanTypes({ scanTypes: SCAN_TYPES }));
       });
 
       it('returns the set when loaded', () => {
@@ -166,9 +166,9 @@ describe('LibraryAdaptor', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new LibraryGetUpdates({
-          later_than: lastUpdate,
+          timestamp: lastUpdate,
           timeout: 60,
-          maximum: 100
+          maximumResults: 100
         })
       );
     });
@@ -187,9 +187,9 @@ describe('LibraryAdaptor', () => {
         store.dispatch(
           new LibraryUpdatesReceived({
             comics: COMICS,
-            pending_rescans: PENDING_RESCANS,
-            last_read_dates: LAST_READ_DATES,
-            pending_imports: PENDING_IMPORTS
+            rescanCount: PENDING_RESCANS,
+            lastReadDates: LAST_READ_DATES,
+            processingCount: PENDING_IMPORTS
           })
         );
       });
@@ -211,13 +211,13 @@ describe('LibraryAdaptor', () => {
       });
 
       it('updates the pending rescans count', () => {
-        adaptor.pendingRescan$.subscribe(response =>
+        adaptor.rescanCount$.subscribe(response =>
           expect(response).toEqual(PENDING_RESCANS)
         );
       });
 
       it('updates the pending imports count', () => {
-        adaptor.pendingImport$.subscribe(response =>
+        adaptor.processingCount$.subscribe(response =>
           expect(response).toEqual(PENDING_IMPORTS)
         );
       });
@@ -301,9 +301,9 @@ describe('LibraryAdaptor', () => {
         store.dispatch(
           new LibraryUpdatesReceived({
             comics: [UPDATED_COMIC],
-            last_read_dates: [],
-            pending_rescans: 0,
-            pending_imports: 0
+            lastReadDates: [],
+            rescanCount: 0,
+            processingCount: 0
           })
         );
       });
@@ -372,9 +372,9 @@ describe('LibraryAdaptor', () => {
       store.dispatch(
         new LibraryUpdatesReceived({
           comics: COMICS,
-          last_read_dates: [],
-          pending_rescans: 0,
-          pending_imports: 0
+          lastReadDates: [],
+          rescanCount: 0,
+          processingCount: 0
         })
       );
     });

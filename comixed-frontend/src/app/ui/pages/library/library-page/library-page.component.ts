@@ -93,10 +93,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.selectedComicsSubscription = this.selectionAdaptor.comic_selection$.subscribe(
       selected_comics => (this.selectedComics = selected_comics)
     );
-    this.importCountSubscription = this.libraryAdaptor.pendingImport$.subscribe(
+    this.importCountSubscription = this.libraryAdaptor.processingCount$.subscribe(
       import_count => (this.importCount = import_count)
     );
-    this.rescanCountSubscription = this.libraryAdaptor.pendingRescan$.subscribe(
+    this.rescanCountSubscription = this.libraryAdaptor.rescanCount$.subscribe(
       rescan_count => (this.rescanCount = rescan_count)
     );
     this.library_filter_subscription = this.library_filter$.subscribe(

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
+import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.views.View;
 import org.comixed.views.View.ComicDetails;
 import org.comixed.views.View.ComicList;
@@ -65,6 +66,12 @@ public class Comic {
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     ArchiveType archiveType;
+
+    @OneToOne(cascade = CascadeType.ALL,
+              mappedBy = "comic",
+              orphanRemoval = true)
+    @JsonView({ComicDetails.class})
+    private ComicFileDetails fileDetails;
 
     @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -439,6 +446,11 @@ public class Comic {
 
     public ArchiveType getArchiveType() {
         return this.archiveType;
+    }
+
+    @Transient
+    public ArchiveAdaptor getArchiveAdaptor() {
+        return this.archiveType.getArchiveAdaptor();
     }
 
     public void setArchiveType(ArchiveType archiveType) {
@@ -1131,5 +1143,12 @@ public class Comic {
 
     public void setID(final long id) {
         this.id = id;
+    }
+
+    public ComicFileDetails getFileDetails() { return fileDetails; }
+
+    public void setFileDetails(final ComicFileDetails fileDetails) {
+        fileDetails.setComic(this);
+        this.fileDetails = fileDetails;
     }
 }

@@ -54,7 +54,7 @@ import { StartRescanResponse } from 'app/library/models/net/start-rescan-respons
 import { BlockedPageResponse } from 'app/library/models/net/blocked-page-response';
 import { generate_random_string } from '../../../test/testing-utils';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
-import { LibraryUpdateResponse } from 'app/library/models/net/library-update-response';
+import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
 
 describe('LibraryService', () => {
@@ -110,7 +110,7 @@ describe('LibraryService', () => {
 
     service
       .getUpdatesSince(TIMESTAMP, TIMEOUT, MAXIMUM_RECORDS)
-      .subscribe((response: LibraryUpdateResponse) => {});
+      .subscribe((response: GetLibraryUpdateResponse) => {});
 
     const req = http_mock.expectOne(
       interpolate(GET_UPDATES_URL, { timestamp: TIMESTAMP })
@@ -122,9 +122,9 @@ describe('LibraryService', () => {
     } as GetLibraryUpdatesRequest);
     req.flush({
       comics: COMICS,
-      pending_imports: PENDING_IMPORTS,
-      pending_rescans: PENDING_RESCANS
-    } as LibraryUpdateResponse);
+      processingCount: PENDING_IMPORTS,
+      rescanCount: PENDING_RESCANS
+    } as GetLibraryUpdateResponse);
   });
 
   it('can start a rescan', () => {

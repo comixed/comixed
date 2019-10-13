@@ -27,9 +27,10 @@ import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.LastReadDatesRepository;
-import org.comixed.tasks.AddComicWorkerTask;
-import org.comixed.tasks.RescanComicWorkerTask;
-import org.comixed.tasks.Worker;
+import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.task.model.AddComicWorkerTask;
+import org.comixed.task.model.RescanComicWorkerTask;
+import org.comixed.task.runner.Worker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,6 +74,7 @@ public class ComicServiceTest {
     @Mock private ComicRepository comicRepository;
     @Mock private LastReadDatesRepository lastReadDatesRepository;
     @Mock private ComiXedUserRepository userRepository;
+    @Mock private ProcessComicEntryRepository processComicEntryRepository;
     @Mock private List<Comic> comicList;
     @Mock private Comic comicListEntry;
     @Mock private Comic comic;
@@ -377,16 +379,16 @@ public class ComicServiceTest {
     }
 
     @Test
-    public void testGetImportCount() {
-        Mockito.when(worker.getCountFor(Mockito.any(Class.class)))
-               .thenReturn(10);
+    public void testGetProcessingCount() {
+        Mockito.when(processComicEntryRepository.count())
+               .thenReturn(10l);
 
         assertEquals(10,
-                     this.comicService.getImportCount());
+                     this.comicService.getProcessingCount());
 
-        Mockito.verify(worker,
+        Mockito.verify(processComicEntryRepository,
                        Mockito.times(1))
-               .getCountFor(AddComicWorkerTask.class);
+               .count();
     }
 
     @Test

@@ -68,7 +68,7 @@ export class LibraryGetScanTypes implements Action {
 export class LibraryGotScanTypes implements Action {
   readonly type = LibraryActionTypes.ScanTypesReceived;
 
-  constructor(public payload: { scan_types: ScanType[] }) {}
+  constructor(public payload: { scanTypes: ScanType[] }) {}
 }
 
 export class LibraryGetScanTypesFailed implements Action {
@@ -99,7 +99,11 @@ export class LibraryGetUpdates implements Action {
   readonly type = LibraryActionTypes.GetUpdates;
 
   constructor(
-    public payload: { later_than: number; timeout: number; maximum: number }
+    public payload: {
+      timestamp: number;
+      timeout: number;
+      maximumResults: number;
+    }
   ) {}
 }
 
@@ -109,9 +113,9 @@ export class LibraryUpdatesReceived implements Action {
   constructor(
     public payload: {
       comics: Comic[];
-      last_read_dates: LastReadDate[];
-      pending_imports: number;
-      pending_rescans: number;
+      lastReadDates: LastReadDate[];
+      processingCount: number;
+      rescanCount: number;
     }
   ) {}
 }

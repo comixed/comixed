@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/0.5.0/001_issue-559_initial_migration.xml"/>
+  <include file="/db/migrations/0.5.0/002_issue-544_create_comic_file_details_table.xml"/>
 
 </databaseChangeLog>

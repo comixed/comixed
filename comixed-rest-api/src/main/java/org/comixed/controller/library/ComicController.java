@@ -21,17 +21,21 @@ package org.comixed.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.adaptors.ComicDataAdaptor;
+import org.comixed.adaptors.archive.ArchiveAdaptorException;
+import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
 import org.comixed.model.library.ScanType;
-import org.comixed.model.state.LibraryStatus;
+import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.model.user.LastReadDate;
-import org.comixed.net.GetComicsUpdatedSinceRequest;
+import org.comixed.net.GetLibraryUpdatesRequest;
 import org.comixed.repositories.*;
+import org.comixed.service.file.FileService;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
-import org.comixed.tasks.DeleteComicsWorkerTask;
-import org.comixed.tasks.Worker;
+import org.comixed.task.model.DeleteComicsWorkerTask;
+import org.comixed.task.runner.Worker;
+import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.views.View;
 import org.comixed.views.View.ComicDetails;
 import org.slf4j.Logger;
@@ -60,6 +64,8 @@ public class ComicController {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired private ComicService comicService;
+    @Autowired private FileService fileService;
+    @Autowired private FileTypeIdentifier fileTypeIdentifier;
     @Autowired private ComicRepository comicRepository;
     @Autowired private ComiXedUserRepository userRepository;
     @Autowired private LastReadDatesRepository lastReadRepository;
@@ -205,11 +211,11 @@ public class ComicController {
                  produces = "application/json",
                  consumes = "application/json")
     @JsonView(View.ComicList.class)
-    public LibraryStatus getComicsUpdatedSince(Principal principal,
-                                               @PathVariable("timestamp")
+    public GetLibraryUpdatesResponse getComicsUpdatedSince(Principal principal,
+                                                           @PathVariable("timestamp")
                                                        long timestamp,
-                                               @RequestBody()
-                                                       GetComicsUpdatedSinceRequest request)
+                                                           @RequestBody()
+                                                       GetLibraryUpdatesRequest request)
             throws
             InterruptedException {
         final String email = principal.getName();
@@ -226,7 +232,7 @@ public class ComicController {
 
         List<Comic> comics = null;
         List<LastReadDate> lastReadDates = null;
-        int importCount = 0;
+        long processCount = 0;
         int rescanCount = 0;
         boolean firstRun = true;
 
@@ -256,14 +262,14 @@ public class ComicController {
                                   lastReadDates.size() == 1
                                   ? ""
                                   : "s");
-                importCount = this.comicService.getImportCount();
+                processCount = this.comicService.getProcessingCount();
                 this.logger.debug("Import count: {}",
-                                  importCount);
+                                  processCount);
                 rescanCount = this.comicService.getRescanCount();
                 this.logger.debug("Rescan count: {}",
                                   rescanCount);
 
-                done = !comics.isEmpty() || !lastReadDates.isEmpty() || (importCount > 0) || (rescanCount > 0);
+                done = !comics.isEmpty() || !lastReadDates.isEmpty() || (processCount > 0) || (rescanCount > 0);
             }
         }
 
@@ -274,10 +280,10 @@ public class ComicController {
             lastReadDates = new ArrayList<>();
         }
 
-        return new LibraryStatus(comics,
-                                 lastReadDates,
-                                 rescanCount,
-                                 importCount);
+        return new GetLibraryUpdatesResponse(comics,
+                                             lastReadDates,
+                                             rescanCount,
+                                             processCount);
     }
 
     @RequestMapping(value = "/scan_types",
@@ -396,5 +402,51 @@ public class ComicController {
         }
 
         return result;
+    }
+
+    @GetMapping(value = "/{id}/cover/content")
+    public ResponseEntity<byte[]> getCoverImage(
+            @PathVariable("id")
+            final long id)
+            throws
+            ComicException,
+            ArchiveAdaptorException,
+            ComicFileHandlerException {
+        this.logger.info("Getting cover for comic: id={}",
+                         id);
+        final Comic comic = this.comicService.getComic(id);
+
+        if (comic.isMissing()) {
+            throw new ComicException("comic file is missing: " + comic.getFilename());
+        }
+
+        if (comic.getPageCount() > 0) {
+            final String filename = comic.getPage(0)
+                                         .getFilename();
+            final byte[] content = comic.getPage(0)
+                                        .getContent();
+            this.logger.debug("Returning comic cover: filename={} size={}",
+                              filename,
+                              content.length);
+            return this.getResponseEntityForImage(content,
+                                                  filename);
+        } else {
+            this.logger.debug("Comic is unprocessed; getting the first image instead");
+            return this.getResponseEntityForImage(this.fileService.getImportFileCover(comic.getFilename()),
+                                                  "cover-image");
+        }
+    }
+
+    private ResponseEntity<byte[]> getResponseEntityForImage(byte[] content,
+                                                             String filename) {
+        final ByteArrayInputStream inputStream = new ByteArrayInputStream(content);
+        String type =
+                this.fileTypeIdentifier.typeFor(inputStream) + "/" + this.fileTypeIdentifier.subtypeFor(inputStream);
+        return ResponseEntity.ok()
+                             .contentLength(content.length)
+                             .header("Content-Disposition",
+                                     "attachment; filename=\"" + filename + "\"")
+                             .contentType(MediaType.valueOf(type))
+                             .body(content);
     }
 }

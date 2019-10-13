@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
   authenticated = false;
   showLogin = false;
   comicCount = 0;
-  importCount = 0;
+  processingCount = 0;
   rescanCount = 0;
   fetchingUpdateSubscription: Subscription;
   breadcrumbs = [];
@@ -88,10 +88,10 @@ export class AppComponent implements OnInit {
     this.libraryAdaptor.comic$.subscribe(
       comics => (this.comicCount = comics.length)
     );
-    this.libraryAdaptor.pendingImport$.subscribe(
-      imports => (this.importCount = imports)
+    this.libraryAdaptor.processingCount$.subscribe(
+      imports => (this.processingCount = imports)
     );
-    this.libraryAdaptor.pendingRescan$.subscribe(
+    this.libraryAdaptor.rescanCount$.subscribe(
       rescans => (this.rescanCount = rescans)
     );
     this.breadcrumbsAdaptor.entries$.subscribe(

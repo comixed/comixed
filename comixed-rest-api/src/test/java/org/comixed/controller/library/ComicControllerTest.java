@@ -20,23 +20,27 @@
 package org.comixed.controller.library;
 
 import org.comixed.adaptors.ArchiveType;
+import org.comixed.adaptors.archive.ArchiveAdaptorException;
+import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.library.Comic;
-import org.comixed.model.state.LibraryStatus;
+import org.comixed.model.library.Page;
+import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
-import org.comixed.net.GetComicsUpdatedSinceRequest;
+import org.comixed.net.GetLibraryUpdatesRequest;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.LastReadDatesRepository;
+import org.comixed.service.file.FileService;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
-import org.comixed.tasks.DeleteComicsWorkerTask;
-import org.comixed.tasks.Worker;
+import org.comixed.task.model.DeleteComicsWorkerTask;
+import org.comixed.task.runner.Worker;
+import org.comixed.utils.FileTypeIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.omg.CORBA_2_3.portable.InputStream;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.InputStreamResource;
@@ -62,6 +66,10 @@ public class ComicControllerTest {
     private static final int TEST_TIMEOUT = 2;
     private static final byte[] TEST_COMIC_CONTENT = "This is the comic content.".getBytes();
     private static final Integer TEST_MAXIMUM_RESULTS = 100;
+    private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
+    private static final String TEST_PAGE_CONTENT_TYPE = "application";
+    private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
+    private static final String TEST_PAGE_FILENAME = "cover.jpg";
 
     @InjectMocks private ComicController controller;
     @Mock private ComicService comicService;
@@ -76,6 +84,10 @@ public class ComicControllerTest {
     @Mock private ObjectFactory<DeleteComicsWorkerTask> deleteComicsTaskFactory;
     @Mock private DeleteComicsWorkerTask deleteComicsTask;
     @Mock private List<Long> comicIds;
+    @Mock private FileService fileService;
+    @Mock private FileTypeIdentifier fileTypeIdentifier;
+    @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
+    @Mock private Page page;
 
     private List<Comic> emptyComicList = new ArrayList<>();
 
@@ -94,15 +106,15 @@ public class ComicControllerTest {
         Mockito.when(comicService.getLastReadDatesSince(Mockito.anyString(),
                                                         Mockito.anyLong()))
                .thenReturn(lastReadList);
-        Mockito.when(comicService.getImportCount())
-               .thenReturn(0);
+        Mockito.when(comicService.getProcessingCount())
+               .thenReturn(0L);
         Mockito.when(comicService.getRescanCount())
                .thenReturn(0);
 
-        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
-                                                                      TEST_TIMESTAMP,
-                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
-                                                                                                       TEST_MAXIMUM_RESULTS));
+        final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
+                                                                                  TEST_TIMESTAMP,
+                                                                                  new GetLibraryUpdatesRequest(TEST_TIMEOUT,
+                                                                                                   TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -110,7 +122,7 @@ public class ComicControllerTest {
         assertSame(lastReadList,
                    result.getLastReadDates());
         assertEquals(0,
-                     result.getImportCount());
+                     result.getProcessingCount());
         assertEquals(0,
                      result.getRescanCount());
 
@@ -126,7 +138,7 @@ public class ComicControllerTest {
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
-               .getImportCount();
+               .getProcessingCount();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
                .getRescanCount();
@@ -149,15 +161,15 @@ public class ComicControllerTest {
                .thenReturn(lastReadList);
         Mockito.when(lastReadList.isEmpty())
                .thenReturn(false);
-        Mockito.when(comicService.getImportCount())
-               .thenReturn(0);
+        Mockito.when(comicService.getProcessingCount())
+               .thenReturn(0L);
         Mockito.when(comicService.getRescanCount())
                .thenReturn(0);
 
-        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
-                                                                      TEST_TIMESTAMP,
-                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
-                                                                                                       TEST_MAXIMUM_RESULTS));
+        final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
+                                                                                  TEST_TIMESTAMP,
+                                                                                  new GetLibraryUpdatesRequest(TEST_TIMEOUT,
+                                                                                                   TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -165,7 +177,7 @@ public class ComicControllerTest {
         assertSame(lastReadList,
                    result.getLastReadDates());
         assertEquals(0,
-                     result.getImportCount());
+                     result.getProcessingCount());
         assertEquals(0,
                      result.getRescanCount());
 
@@ -188,7 +200,7 @@ public class ComicControllerTest {
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
-               .getImportCount();
+               .getProcessingCount();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
                .getRescanCount();
@@ -211,15 +223,15 @@ public class ComicControllerTest {
                .thenReturn(lastReadList);
         Mockito.when(lastReadList.isEmpty())
                .thenReturn(true);
-        Mockito.when(comicService.getImportCount())
-               .thenReturn(0);
+        Mockito.when(comicService.getProcessingCount())
+               .thenReturn(0L);
         Mockito.when(comicService.getRescanCount())
                .thenReturn(10);
 
-        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
-                                                                      TEST_TIMESTAMP,
-                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
-                                                                                                       TEST_MAXIMUM_RESULTS));
+        final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
+                                                                                  TEST_TIMESTAMP,
+                                                                                  new GetLibraryUpdatesRequest(TEST_TIMEOUT,
+                                                                                                   TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -227,7 +239,7 @@ public class ComicControllerTest {
         assertSame(lastReadList,
                    result.getLastReadDates());
         assertEquals(0,
-                     result.getImportCount());
+                     result.getProcessingCount());
         assertEquals(10,
                      result.getRescanCount());
 
@@ -250,7 +262,7 @@ public class ComicControllerTest {
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
-               .getImportCount();
+               .getProcessingCount();
         Mockito.verify(comicService,
                        Mockito.times(1))
                .getRescanCount();
@@ -273,15 +285,15 @@ public class ComicControllerTest {
                .thenReturn(lastReadList);
         Mockito.when(lastReadList.isEmpty())
                .thenReturn(true);
-        Mockito.when(comicService.getImportCount())
-               .thenReturn(10);
+        Mockito.when(comicService.getProcessingCount())
+               .thenReturn(10L);
         Mockito.when(comicService.getRescanCount())
                .thenReturn(0);
 
-        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
-                                                                      TEST_TIMESTAMP,
-                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
-                                                                                                       TEST_MAXIMUM_RESULTS));
+        final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
+                                                                                  TEST_TIMESTAMP,
+                                                                                  new GetLibraryUpdatesRequest(TEST_TIMEOUT,
+                                                                                                   TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -289,7 +301,7 @@ public class ComicControllerTest {
         assertSame(lastReadList,
                    result.getLastReadDates());
         assertEquals(10,
-                     result.getImportCount());
+                     result.getProcessingCount());
         assertEquals(0,
                      result.getRescanCount());
 
@@ -312,7 +324,7 @@ public class ComicControllerTest {
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
-               .getImportCount();
+               .getProcessingCount();
         Mockito.verify(comicService,
                        Mockito.atLeast(1))
                .getRescanCount();
@@ -335,15 +347,15 @@ public class ComicControllerTest {
                .thenReturn(lastReadList);
         Mockito.when(lastReadList.isEmpty())
                .thenReturn(true);
-        Mockito.when(comicService.getImportCount())
-               .thenReturn(0);
+        Mockito.when(comicService.getProcessingCount())
+               .thenReturn(0L);
         Mockito.when(comicService.getRescanCount())
                .thenReturn(0);
 
-        final LibraryStatus result = controller.getComicsUpdatedSince(principal,
-                                                                      TEST_TIMESTAMP,
-                                                                      new GetComicsUpdatedSinceRequest(TEST_TIMEOUT,
-                                                                                                       TEST_MAXIMUM_RESULTS));
+        final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
+                                                                                  TEST_TIMESTAMP,
+                                                                                  new GetLibraryUpdatesRequest(TEST_TIMEOUT,
+                                                                                                   TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -351,7 +363,7 @@ public class ComicControllerTest {
         assertSame(lastReadList,
                    result.getLastReadDates());
         assertEquals(0,
-                     result.getImportCount());
+                     result.getProcessingCount());
         assertEquals(0,
                      result.getRescanCount());
 
@@ -374,7 +386,7 @@ public class ComicControllerTest {
                .isEmpty();
         Mockito.verify(comicService,
                        Mockito.atLeast(TEST_TIMEOUT))
-               .getImportCount();
+               .getProcessingCount();
         Mockito.verify(comicService,
                        Mockito.atLeast(TEST_TIMEOUT))
                .getRescanCount();
@@ -606,5 +618,141 @@ public class ComicControllerTest {
         Mockito.verify(comicService,
                        Mockito.times(1))
                .rescanComics();
+    }
+
+    @Test(expected = ComicException.class)
+    public void testGetCoverImageForInvalidComic()
+            throws
+            ComicException,
+            ArchiveAdaptorException,
+            ComicFileHandlerException {
+        Mockito.when(comicService.getComic(Mockito.anyLong()))
+               .thenThrow(ComicException.class);
+
+        try {
+            controller.getCoverImage(TEST_COMIC_ID);
+        }
+        finally {
+            Mockito.verify(comicService,
+                           Mockito.times(1))
+                   .getComic(TEST_COMIC_ID);
+        }
+    }
+
+    @Test(expected = ComicException.class)
+    public void testGetCoverImageForMissingComic()
+            throws
+            ComicException,
+            ArchiveAdaptorException,
+            ComicFileHandlerException {
+        Mockito.when(comicService.getComic(Mockito.anyLong()))
+               .thenReturn(comic);
+        Mockito.when(comic.isMissing())
+               .thenReturn(true);
+
+        try {
+            controller.getCoverImage(TEST_COMIC_ID);
+        }
+        finally {
+            Mockito.verify(comicService,
+                           Mockito.times(1))
+                   .getComic(TEST_COMIC_ID);
+            Mockito.verify(comic,
+                           Mockito.times(1))
+                   .isMissing();
+        }
+    }
+
+    @Test
+    public void testGetCoverImageForUnprocessedComic()
+            throws
+            ComicException,
+            ArchiveAdaptorException,
+            ComicFileHandlerException {
+        Mockito.when(comicService.getComic(Mockito.anyLong()))
+               .thenReturn(comic);
+        Mockito.when(comic.isMissing())
+               .thenReturn(false);
+        Mockito.when(comic.getPageCount())
+               .thenReturn(0);
+        Mockito.when(comic.getFilename())
+               .thenReturn(TEST_COMIC_FILE);
+        Mockito.when(fileService.getImportFileCover(Mockito.anyString()))
+               .thenReturn(TEST_PAGE_CONTENT);
+        Mockito.when(fileTypeIdentifier.typeFor(inputStreamCaptor.capture()))
+               .thenReturn(TEST_PAGE_CONTENT_TYPE);
+        Mockito.when(fileTypeIdentifier.subtypeFor(inputStreamCaptor.capture()))
+               .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
+
+        final ResponseEntity<byte[]> result = controller.getCoverImage(TEST_COMIC_ID);
+
+        assertNotNull(result);
+        assertEquals(TEST_PAGE_CONTENT,
+                     result.getBody());
+
+        Mockito.verify(comicService,
+                       Mockito.times(1))
+               .getComic(TEST_COMIC_ID);
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .isMissing();
+        Mockito.verify(fileService,
+                       Mockito.times(1))
+               .getImportFileCover(TEST_COMIC_FILE);
+        Mockito.verify(fileTypeIdentifier,
+                       Mockito.times(1))
+               .typeFor(inputStreamCaptor.getValue());
+        Mockito.verify(fileTypeIdentifier,
+                       Mockito.times(1))
+               .subtypeFor(inputStreamCaptor.getValue());
+    }
+
+    @Test
+    public void testGetCoverImageForProcessedComic()
+            throws
+            ComicException,
+            ArchiveAdaptorException,
+            ComicFileHandlerException {
+        Mockito.when(comicService.getComic(Mockito.anyLong()))
+               .thenReturn(comic);
+        Mockito.when(comic.isMissing())
+               .thenReturn(false);
+        Mockito.when(comic.getPageCount())
+               .thenReturn(5);
+        Mockito.when(comic.getPage(Mockito.anyInt()))
+               .thenReturn(page);
+        Mockito.when(page.getContent())
+               .thenReturn(TEST_PAGE_CONTENT);
+        Mockito.when(page.getFilename())
+               .thenReturn(TEST_PAGE_FILENAME);
+        Mockito.when(fileTypeIdentifier.typeFor(inputStreamCaptor.capture()))
+               .thenReturn(TEST_PAGE_CONTENT_TYPE);
+        Mockito.when(fileTypeIdentifier.subtypeFor(inputStreamCaptor.capture()))
+               .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
+
+        final ResponseEntity<byte[]> result = controller.getCoverImage(TEST_COMIC_ID);
+
+        assertNotNull(result);
+        assertEquals(TEST_PAGE_CONTENT,
+                     result.getBody());
+
+        Mockito.verify(comicService,
+                       Mockito.times(1))
+               .getComic(TEST_COMIC_ID);
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .isMissing();
+        Mockito.verify(page,
+                       Mockito.times(1))
+               .getFilename();
+        Mockito.verify(page,
+                       Mockito.times(1))
+               .getContent();
+        Mockito.verify(fileTypeIdentifier,
+                       Mockito.times(1))
+               .typeFor(inputStreamCaptor.getValue());
+        Mockito.verify(fileTypeIdentifier,
+                       Mockito.times(1))
+               .subtypeFor(inputStreamCaptor.getValue());
     }
 }

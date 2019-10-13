@@ -34,7 +34,7 @@
     "title": "Home",
     "copyright": "Copyright &copy; {years}, The ComiXed Project Team",
     "library-status": "There are {comic_count} comics in the library.",
-    "library-counts": "<b>Total:</b> {comic_count} <b>Read:</b> {read_count} <b>Import:</b> {import_count} <b>Rescan:</b> {rescan_count}"
+    "library-counts": "<b>Total:</b> {comic_count} <b>Read:</b> {read_count} <b>Processing:</b> {import_count} <b>Rescan:</b> {rescan_count}"
   },
   "library-filter": {
     "filters": {

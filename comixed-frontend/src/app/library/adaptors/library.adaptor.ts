@@ -53,8 +53,8 @@ export class LibraryAdaptor {
   _team$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   _location$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _pendingImport$ = new BehaviorSubject<number>(0);
-  _pendingRescan$ = new BehaviorSubject<number>(0);
+  _processingCount$ = new BehaviorSubject<number>(0);
+  _rescanCount$ = new BehaviorSubject<number>(0);
   _currentComicId$ = new BehaviorSubject<number>(-1);
   _currentComic$ = new BehaviorSubject<Comic>(null);
   _lastUpdated$ = new BehaviorSubject<Date>(new Date());
@@ -73,8 +73,8 @@ export class LibraryAdaptor {
         })
       )
       .subscribe((libraryState: LibraryState) => {
-        this._pendingImport$.next(libraryState.pendingImports);
-        this._pendingRescan$.next(libraryState.pendingRescans);
+        this._processingCount$.next(libraryState.processingCount);
+        this._rescanCount$.next(libraryState.rescanCount);
 
         if (
           this._fetchingScanType$.getValue() !== libraryState.fetchingScanTypes
@@ -170,9 +170,9 @@ export class LibraryAdaptor {
   getLibraryUpdates(): void {
     this.store.dispatch(
       new LibraryActions.LibraryGetUpdates({
-        later_than: this._latestUpdatedDate$.getValue(),
+        timestamp: this._latestUpdatedDate$.getValue(),
         timeout: this._timeout,
-        maximum: this._maximum
+        maximumResults: this._maximum
       })
     );
   }
@@ -213,12 +213,12 @@ export class LibraryAdaptor {
     return this._stories$.asObservable();
   }
 
-  get pendingImport$(): Observable<number> {
-    return this._pendingImport$.asObservable();
+  get processingCount$(): Observable<number> {
+    return this._processingCount$.asObservable();
   }
 
-  get pendingRescan$(): Observable<number> {
-    return this._pendingRescan$.asObservable();
+  get rescanCount$(): Observable<number> {
+    return this._rescanCount$.asObservable();
   }
 
   get comics(): Comic[] {

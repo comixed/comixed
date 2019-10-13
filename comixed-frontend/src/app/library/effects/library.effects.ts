@@ -52,7 +52,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BlockedPageResponse } from 'app/library/models/net/blocked-page-response';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
-import { LibraryUpdateResponse } from 'app/library/models/net/library-update-response';
+import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 
 @Injectable()
 export class LibraryEffects {
@@ -64,11 +64,11 @@ export class LibraryEffects {
   ) {}
 
   @Effect()
-  get_scan_types$: Observable<Action> = this.actions$.pipe(
+  getScanTypes$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.GetScanTypes),
     switchMap(action =>
       this.libraryService.getScanTypes().pipe(
-        map(response => new LibraryGotScanTypes({ scan_types: response })),
+        map(response => new LibraryGotScanTypes({ scanTypes: response })),
         catchError(error => {
           this.messageService.add({
             severity: 'error',
@@ -92,7 +92,7 @@ export class LibraryEffects {
   );
 
   @Effect()
-  get_formats$: Observable<Action> = this.actions$.pipe(
+  getFormats$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.GetFormats),
     switchMap(action => {
       return this.libraryService.getFormats().pipe(
@@ -120,20 +120,24 @@ export class LibraryEffects {
   );
 
   @Effect()
-  get_updates$: Observable<Action> = this.actions$.pipe(
+  getUpdates$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.GetUpdates),
     map((action: LibraryGetUpdates) => action.payload),
     switchMap(action =>
       this.libraryService
-        .getUpdatesSince(action.later_than, action.timeout, action.maximum)
+        .getUpdatesSince(
+          action.timestamp,
+          action.timeout,
+          action.maximumResults
+        )
         .pipe(
           map(
-            (response: LibraryUpdateResponse) =>
+            (response: GetLibraryUpdateResponse) =>
               new LibraryUpdatesReceived({
                 comics: response.comics,
-                last_read_dates: response.last_read_dates,
-                pending_imports: response.pending_imports,
-                pending_rescans: response.pending_rescans
+                lastReadDates: response.lastReadDates,
+                processingCount: response.processingCount,
+                rescanCount: response.rescanCount
               })
           ),
           catchError(error => {
@@ -159,7 +163,7 @@ export class LibraryEffects {
   );
 
   @Effect()
-  start_rescan$: Observable<Action> = this.actions$.pipe(
+  startRescan$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.StartRescan),
     switchMap(action =>
       this.libraryService.startRescan().pipe(
@@ -198,7 +202,7 @@ export class LibraryEffects {
   );
 
   @Effect()
-  update_comic$: Observable<Action> = this.actions$.pipe(
+  saveComic$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.UpdateComic),
     map((action: LibraryUpdateComic) => action.payload),
     switchMap(action =>
@@ -235,7 +239,7 @@ export class LibraryEffects {
   );
 
   @Effect()
-  clear_metadata$: Observable<Action> = this.actions$.pipe(
+  clearComicMetadata$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.ClearMetadata),
     map((action: LibraryClearMetadata) => action.payload),
     switchMap(action =>
@@ -272,7 +276,7 @@ export class LibraryEffects {
   );
 
   @Effect()
-  block_page_hash$: Observable<Action> = this.actions$.pipe(
+  setPageHashBlockedState$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.BlockPageHash),
     map((action: LibraryBlockPageHash) => action.payload),
     switchMap(action =>
@@ -320,7 +324,7 @@ export class LibraryEffects {
   );
 
   @Effect()
-  delete_multiple_comics$: Observable<Action> = this.actions$.pipe(
+  deleteMultipleComics$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.DeleteMultipleComics),
     map((action: LibraryDeleteMultipleComics) => action.payload),
     switchMap(action =>

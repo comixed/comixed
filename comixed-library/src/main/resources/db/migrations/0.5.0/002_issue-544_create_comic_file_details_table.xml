@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="002_issue-544_create_comic_file_details_table.xml"
+             author="mcpierce">
+
+    <createTable tableName="comic_file_details">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="comic_id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"/>
+      </column>
+      <column name="file_hash"
+              type="varchar(32)">
+        <constraints nullable="false"
+                     unique="false"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="comic_file_details"
+                      columnName="id"
+                      columnDataType="bigint"
+                      startWith="100"/>
+
+    <addForeignKeyConstraint baseTableName="comic_file_details"
+                             baseColumnNames="comic_id"
+                             constraintName="comic_file_details_comic_fk"
+                             referencedTableName="comics"
+                             referencedColumnNames="id"/>
+
+    <createIndex tableName="comic_file_details"
+                 indexName="idx_comic_file_details_file_hash">
+      <column name="file_hash"/>
+    </createIndex>
+
+    <createTable tableName="process_comic_entries">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="comic_id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"/>
+      </column>
+      <column name="process_type"
+              type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created"
+              type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="process_comic_entries"
+                      columnName="id"
+                      columnDataType="bigint"
+                      startWith="100"/>
+
+    <addForeignKeyConstraint baseTableName="process_comic_entries"
+                             baseColumnNames="comic_id"
+                             constraintName="process_comic_entries_comic_fk"
+                             referencedTableName="comics"
+                             referencedColumnNames="id"/>
+
+    <createIndex tableName="process_comic_entries"
+                 indexName="idx_process_comic_entries_created">
+      <column name="created"/>
+    </createIndex>
+
+  </changeSet>
+</databaseChangeLog>

@@ -138,10 +138,10 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     this.fetchingFilesSubscription = this.importAdaptor.fetching_files$.subscribe(
       fetching => (this.fetchingFiles = fetching)
     );
-    this.importingSubscription = this.libraryAdaptor.pendingImport$.subscribe(
+    this.importingSubscription = this.libraryAdaptor.processingCount$.subscribe(
       count => (this.importing = count > 0)
     );
-    this.importCountSubscription = this.libraryAdaptor.pendingImport$.subscribe(
+    this.importCountSubscription = this.libraryAdaptor.processingCount$.subscribe(
       import_count => {
         this.importCount = import_count;
         this.importing = import_count > 0;

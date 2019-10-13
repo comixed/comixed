@@ -17,7 +17,7 @@
                      primaryKey="true"/>
       </column>
       <column name="email"
-              type="varchar(128)">
+              type="varchar(256)">
         <constraints nullable="false"
                      unique="true"/>
       </column>
@@ -56,7 +56,7 @@
         <constraints nullable="false"/>
       </column>
       <column name="value"
-              type="varchar(128)">
+              type="varchar(256)">
         <constraints nullable="false"/>
       </column>
     </createTable>
@@ -217,7 +217,7 @@
         <constraints nullable="true"/>
       </column>
       <column name="title"
-              type="varchar(128)">
+              type="varchar(256)">
         <constraints nullable="true"/>
       </column>
       <column name="summary"
@@ -280,7 +280,7 @@
         <constraints nullable="false"/>
       </column>
       <column name="filename"
-              type="varchar(128)">
+              type="varchar(256)">
         <constraints nullable="false"/>
       </column>
       <column name="hash"

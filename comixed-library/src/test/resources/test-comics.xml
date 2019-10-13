@@ -98,6 +98,14 @@
           summary="This is a summary"
           scan_type_id="1"
           format_id="1"/>
+  <process_comic_entries ID="1000"
+                         COMIC_ID="1003"
+                         PROCESS_TYPE="ADD_FILE_DELETE_PAGES_WITH_METADATA"
+                         CREATED="2019-10-12 17:14:00"/>
+  <process_comic_entries ID="1001"
+                         COMIC_ID="1002"
+                         PROCESS_TYPE="ADD_FILE_WITHOUT_METADATA"
+                         CREATED="2019-10-12 17:15:00"/>
   <comic_story_arcs comic_id="1000"
                     story_arc_name="Civil War II"/>
   <comic_story_arcs comic_id="1000"

@@ -134,7 +134,7 @@ describe('ImportPageComponent', () => {
 
   describe('when not importing comics', () => {
     beforeEach(() => {
-      library_adaptor._pendingImport$.next(0);
+      library_adaptor._processingCount$.next(0);
       fixture.detectChanges();
     });
 
@@ -153,7 +153,7 @@ describe('ImportPageComponent', () => {
 
   describe('when importing comics', () => {
     beforeEach(() => {
-      library_adaptor._pendingImport$.next(17);
+      library_adaptor._processingCount$.next(17);
       fixture.detectChanges();
     });
 

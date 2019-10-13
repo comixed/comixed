@@ -32,8 +32,8 @@ export const initial_state: LibraryState = {
   comics: [],
   lastReadDates: [],
   latestUpdatedDate: 0,
-  pendingImports: 0,
-  pendingRescans: 0,
+  processingCount: 0,
+  rescanCount: 0,
   startingRescan: false,
   updatingComic: false,
   currentComic: null,
@@ -57,7 +57,7 @@ export function reducer(
       return {
         ...state,
         fetchingScanTypes: false,
-        scanTypes: action.payload.scan_types
+        scanTypes: action.payload.scanTypes
       };
 
     case LibraryActionTypes.GetScanTypesFailed:
@@ -97,10 +97,10 @@ export function reducer(
         fetchingUpdates: false,
         comics: comics,
         currentComic: currentComic,
-        lastReadDates: action.payload.last_read_dates,
+        lastReadDates: action.payload.lastReadDates,
         latestUpdatedDate: latestUpdatedDate(comics),
-        pendingImports: action.payload.pending_imports,
-        pendingRescans: action.payload.pending_rescans
+        processingCount: action.payload.processingCount,
+        rescanCount: action.payload.rescanCount
       };
     }
 
