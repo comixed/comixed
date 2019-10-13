@@ -28,7 +28,7 @@ before_deploy:
     # - export TASKS_ARTIFACT=$(find . -name comixed-tasks-*.jar)
     # - export REST_API_ARTIFACT=$(find . -name comixed-rest-api-*.jar)
     # - export FRONTEND_ARTIFACT=$(find . -name comixed-frontend-*.jar)
-    - export IMPORTER_ARTIFACT=$(find . -name comixed-importer-*.jar)
+    # - export IMPORTER_ARTIFACT=$(find . -name comixed-importer-*.jar)
     - export APP_ARTIFACT=$(find . -name comixed-app-*.jar)
 ###################################
 # NOT GOING TO TAG THINGS FOR NOW #
@@ -46,7 +46,7 @@ deploy:
         # - ${TASKS_ARTIFACT}
         # - ${REST_API_ARTIFACT}
         # - ${FRONTEND_ARTIFACT}
-        - ${IMPORTER_ARTIFACT}
+        # - ${IMPORTER_ARTIFACT}
         - ${APP_ARTIFACT}
       skip_cleanup: true
       keep-history: true
@@ -61,7 +61,7 @@ deploy:
         # - ${TASKS_ARTIFACT}
         # - ${REST_API_ARTIFACT}
         # - ${FRONTEND_ARTIFACT}
-        - ${IMPORTER_ARTIFACT}
+        # - ${IMPORTER_ARTIFACT}
         - ${APP_ARTIFACT}
       skip_cleanup: true
       keep-history: true

@@ -92,6 +92,6 @@
     <module>comixed-rest-api</module>
     <module>comixed-frontend</module>
     <module>comixed-app</module>
-    <module>comixed-importer</module>
+    <!-- module>comixed-importer</module -->
   </modules>
 </project>
