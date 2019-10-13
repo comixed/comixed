@@ -117,25 +117,25 @@ export class ComicListToolbarComponent implements OnInit {
         label: this.translate.instant(
           'comic-list-toolbar.options.sort-field.issue-number'
         ),
-        value: 'sortable_issue_number'
+        value: 'sortableIssueNumber'
       },
       {
         label: this.translate.instant(
           'comic-list-toolbar.options.sort-field.added-date'
         ),
-        value: 'added_date'
+        value: 'addedDate'
       },
       {
         label: this.translate.instant(
           'comic-list-toolbar.options.sort-field.cover-date'
         ),
-        value: 'cover_date'
+        value: 'coverDate'
       },
       {
         label: this.translate.instant(
           'comic-list-toolbar.options.sort-field.last-read-date'
         ),
-        value: 'last_read_date'
+        value: 'lastReadDate'
       }
     );
   }
