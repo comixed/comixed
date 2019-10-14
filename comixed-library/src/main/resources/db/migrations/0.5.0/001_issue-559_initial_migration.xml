@@ -26,11 +26,11 @@
         <constraints nullable="false"/>
       </column>
       <column name="first_login_date"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
       <column name="last_login_date"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
     </createTable>
@@ -169,11 +169,11 @@
         <constraints nullable="false"/>
       </column>
       <column name="added_date"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
       <column name="last_updated_date"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
       <column name="scan_type_id"
@@ -513,7 +513,7 @@
         <constraints nullable="false"/>
       </column>
       <column name="last_read"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
     </createTable>
@@ -551,7 +551,7 @@
         <constraints nullable="false"/>
       </column>
       <column name="created"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
       <column name="summary"
@@ -587,7 +587,7 @@
         <constraints nullable="false"/>
       </column>
       <column name="added"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
     </createTable>
@@ -680,7 +680,7 @@
                      primaryKey="true"/>
       </column>
       <column name="created"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
       <column name="series_name"

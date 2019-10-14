@@ -61,7 +61,7 @@
         <constraints nullable="false"/>
       </column>
       <column name="created"
-              type="timestamp">
+              type="datetime">
         <constraints nullable="false"/>
       </column>
     </createTable>
