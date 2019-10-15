@@ -51,13 +51,17 @@ export class LibraryService {
   getUpdatesSince(
     timestamp: number,
     timeout: number,
-    maximumRecords: number
+    maximumRecords: number,
+    lastProcessingCount: number,
+    lastRescanCount: number
   ): Observable<any> {
     return this.http.post(
       interpolate(GET_UPDATES_URL, { timestamp: timestamp }),
       {
         timeout: timeout,
-        maximumResults: maximumRecords
+        maximumResults: maximumRecords,
+        lastProcessingCount: lastProcessingCount,
+        lastRescanCount: lastRescanCount
       } as GetLibraryUpdatesRequest
     );
   }

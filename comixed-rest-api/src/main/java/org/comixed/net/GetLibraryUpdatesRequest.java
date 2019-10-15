@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class GetLibraryUpdatesRequest {
     @JsonProperty("timeout") private long timeout;
     @JsonProperty("maximumResults") private int maximumResults;
+    @JsonProperty("lastProcessingCount") private int lastProcessingCount;
+    @JsonProperty("lastRescanCount") private int lastRescanCount;
 
     public GetLibraryUpdatesRequest() { }
 
@@ -40,4 +42,12 @@ public class GetLibraryUpdatesRequest {
     public int getMaximumResults() { return maximumResults; }
 
     public void setMaximumResults(final int maximumResults) { this.maximumResults = maximumResults; }
+
+    public int getLastProcessingCount() { return lastProcessingCount; }
+
+    public void setLastProcessingCount(final int lastProcessingCount) { this.lastProcessingCount = lastProcessingCount; }
+
+    public int getLastRescanCount() { return lastRescanCount; }
+
+    public void setLastRescanCount(final int lastRescanCount) { this.lastRescanCount = lastRescanCount; }
 }

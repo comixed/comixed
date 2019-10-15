@@ -18,6 +18,8 @@
  */
 
 export interface GetLibraryUpdatesRequest {
-    timeout: number;
-    maximumResults: number;
+  timeout: number;
+  maximumResults: number;
+  lastProcessingCount: number;
+  lastRescanCount: number;
 }

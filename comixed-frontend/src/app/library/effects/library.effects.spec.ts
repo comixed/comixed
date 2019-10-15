@@ -227,7 +227,9 @@ describe('LibraryEffects', () => {
       const action = new LibraryGetUpdates({
         timestamp: 0,
         timeout: 60,
-        maximumResults: 100
+        maximumResults: 100,
+        lastProcessingCount: 29,
+        lastRescanCount: 27
       });
       const outcome = new LibraryUpdatesReceived({
         comics: COMICS,
@@ -248,7 +250,9 @@ describe('LibraryEffects', () => {
       const action = new LibraryGetUpdates({
         timestamp: 0,
         timeout: 60,
-        maximumResults: 100
+        maximumResults: 100,
+        lastProcessingCount: 29,
+        lastRescanCount: 27
       });
       const outcome = new LibraryGetUpdatesFailed();
 
@@ -268,7 +272,9 @@ describe('LibraryEffects', () => {
       const action = new LibraryGetUpdates({
         timestamp: 0,
         timeout: 60,
-        maximumResults: 100
+        maximumResults: 100,
+        lastProcessingCount: 29,
+        lastRescanCount: 27
       });
       const outcome = new LibraryGetUpdatesFailed();
 

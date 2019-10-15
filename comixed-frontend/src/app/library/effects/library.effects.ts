@@ -128,7 +128,9 @@ export class LibraryEffects {
         .getUpdatesSince(
           action.timestamp,
           action.timeout,
-          action.maximumResults
+          action.maximumResults,
+          action.lastProcessingCount,
+          action.lastRescanCount
         )
         .pipe(
           map(

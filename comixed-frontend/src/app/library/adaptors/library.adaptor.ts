@@ -172,7 +172,9 @@ export class LibraryAdaptor {
       new LibraryActions.LibraryGetUpdates({
         timestamp: this._latestUpdatedDate$.getValue(),
         timeout: this._timeout,
-        maximumResults: this._maximum
+        maximumResults: this._maximum,
+        lastProcessingCount: this._processingCount$.getValue(),
+        lastRescanCount: this._rescanCount$.getValue()
       })
     );
   }

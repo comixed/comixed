@@ -103,6 +103,8 @@ export class LibraryGetUpdates implements Action {
       timestamp: number;
       timeout: number;
       maximumResults: number;
+      lastProcessingCount: number;
+      lastRescanCount: number;
     }
   ) {}
 }

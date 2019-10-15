@@ -168,7 +168,9 @@ describe('LibraryAdaptor', () => {
         new LibraryGetUpdates({
           timestamp: lastUpdate,
           timeout: 60,
-          maximumResults: 100
+          maximumResults: 100,
+          lastProcessingCount: adaptor._processingCount$.getValue(),
+          lastRescanCount: adaptor._rescanCount$.getValue()
         })
       );
     });

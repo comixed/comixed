@@ -107,9 +107,17 @@ describe('LibraryService', () => {
     const COMICS = [COMIC_1, COMIC_3, COMIC_5];
     const PENDING_IMPORTS = 7;
     const PENDING_RESCANS = 17;
+    const PROCESSING_COUNT = 32;
+    const RESCAN_COUNT = 66;
 
     service
-      .getUpdatesSince(TIMESTAMP, TIMEOUT, MAXIMUM_RECORDS)
+      .getUpdatesSince(
+        TIMESTAMP,
+        TIMEOUT,
+        MAXIMUM_RECORDS,
+        PROCESSING_COUNT,
+        RESCAN_COUNT
+      )
       .subscribe((response: GetLibraryUpdateResponse) => {});
 
     const req = http_mock.expectOne(
@@ -118,7 +126,9 @@ describe('LibraryService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       timeout: TIMEOUT,
-      maximumResults: MAXIMUM_RECORDS
+      maximumResults: MAXIMUM_RECORDS,
+      lastProcessingCount: PROCESSING_COUNT,
+      lastRescanCount: RESCAN_COUNT
     } as GetLibraryUpdatesRequest);
     req.flush({
       comics: COMICS,

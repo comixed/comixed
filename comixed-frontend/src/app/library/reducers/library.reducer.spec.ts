@@ -248,7 +248,9 @@ describe('Library Reducer', () => {
         new LibraryGetUpdates({
           timestamp: new Date().getTime(),
           timeout: 60,
-          maximumResults: 100
+          maximumResults: 100,
+          lastProcessingCount: 27,
+          lastRescanCount: 32
         })
       );
     });

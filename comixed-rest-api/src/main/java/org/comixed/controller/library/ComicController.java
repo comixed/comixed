@@ -26,9 +26,9 @@ import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
 import org.comixed.model.library.ScanType;
-import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.net.GetLibraryUpdatesRequest;
+import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.repositories.*;
 import org.comixed.service.file.FileService;
 import org.comixed.service.library.ComicException;
@@ -213,9 +213,9 @@ public class ComicController {
     @JsonView(View.ComicList.class)
     public GetLibraryUpdatesResponse getComicsUpdatedSince(Principal principal,
                                                            @PathVariable("timestamp")
-                                                       long timestamp,
+                                                                   long timestamp,
                                                            @RequestBody()
-                                                       GetLibraryUpdatesRequest request)
+                                                                   GetLibraryUpdatesRequest request)
             throws
             InterruptedException {
         final String email = principal.getName();
@@ -269,7 +269,9 @@ public class ComicController {
                 this.logger.debug("Rescan count: {}",
                                   rescanCount);
 
-                done = !comics.isEmpty() || !lastReadDates.isEmpty() || (processCount > 0) || (rescanCount > 0);
+                done = !comics.isEmpty() || !lastReadDates.isEmpty() ||
+                       (processCount != request.getLastProcessingCount()) ||
+                       (rescanCount != request.getLastRescanCount());
             }
         }
 
