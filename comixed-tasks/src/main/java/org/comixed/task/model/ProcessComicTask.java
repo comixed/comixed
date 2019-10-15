@@ -61,6 +61,18 @@ public class ProcessComicTask
     public void startTask()
             throws
             WorkerTaskException {
+        try {
+            this.startTaskInternal();
+        }
+        finally {
+            this.logger.debug("Deleting process entry");
+            this.processComicEntryRepository.delete(this.entry);
+        }
+    }
+
+    private void startTaskInternal()
+            throws
+            WorkerTaskException {
         final Comic comic = this.entry.getComic();
 
         this.logger.debug("Processing comic: id={}",
@@ -92,9 +104,6 @@ public class ProcessComicTask
         this.logger.debug("Updating comic");
         comic.setDateLastUpdated(new Date());
         this.comicRepository.save(comic);
-
-        this.logger.debug("Deleting process entry");
-        this.processComicEntryRepository.delete(this.entry);
     }
 
     public void setEntry(final ProcessComicEntry entry) {
