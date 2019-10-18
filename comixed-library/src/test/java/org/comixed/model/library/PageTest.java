@@ -108,16 +108,6 @@ public class PageTest
     }
 
     @Test
-    public void testHasImage()
-    {
-        Image result = page.getImage();
-
-        assertNotNull(result);
-        assertEquals(338, result.getWidth(null));
-        assertEquals(479, result.getHeight(null));
-    }
-
-    @Test
     public void testDelete()
     {
         // check the default

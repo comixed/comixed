@@ -30,27 +30,29 @@ import org.springframework.stereotype.Component;
  * a comic.
  *
  * @author Darryl L. Pierce
- *
  */
 @Component
-public class ImageEntryLoader extends AbstractEntryLoader
-{
-    @Autowired
-    private PageTypeRepository pageTypeRepository;
+public class ImageEntryLoader
+        extends AbstractEntryLoader {
+    @Autowired private PageTypeRepository pageTypeRepository;
 
     @Override
-    public void loadContent(Comic comic, String filename, byte[] content)
-    {
+    public void loadContent(Comic comic,
+                            String filename,
+                            byte[] content) {
         this.logger.debug("Loading image into comic");
         // if the comic already has this offset then update the offset's content
-        if (comic.hasPageWithFilename(filename))
-        {
-            comic.getPageWithFilename(filename).setContent(content);
-        }
-        else
-        {
-            Page page = new Page(filename, content, this.pageTypeRepository.getDefaultPageType());
-            comic.addPage(comic.getPageCount(), page);
+        if (comic.hasPageWithFilename(filename)) {
+            this.logger.debug("Ignore known file: {}",
+                              filename);
+            //            comic.getPageWithFilename(filename)
+            //                 .setContent(content);
+        } else {
+            Page page = new Page(filename,
+                                 content,
+                                 this.pageTypeRepository.getDefaultPageType());
+            comic.addPage(comic.getPageCount(),
+                          page);
         }
     }
 }

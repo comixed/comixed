@@ -31,15 +31,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.persistence.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * <code>Page</code> represents a single offset from a comic.
@@ -118,18 +115,6 @@ public class Page {
                DatabaseBackup.class})
     private Integer height = -1;
 
-    @Transient
-    @JsonIgnore
-    private byte[] content;
-
-    @Transient
-    @JsonIgnore
-    private Image icon;
-
-    @Transient
-    @JsonIgnore
-    protected Map<String, Image> imageCache = new WeakHashMap<>();
-
     @Formula("(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
     @JsonView({ComicList.class,
                PageList.class,
@@ -157,10 +142,9 @@ public class Page {
                 PageType pageType) {
         this.logger.debug("Creating offset: filename=" + filename + " content.size=" + content.length);
         this.filename = filename;
-        this.content = content;
         this.hash = this.createHash(content);
         this.pageType = pageType;
-        this.getImageMetrics();
+        this.getImageMetrics(content);
     }
 
     private String createHash(byte[] bytes) {
@@ -228,21 +212,19 @@ public class Page {
      */
     @JsonIgnore
     public byte[] getContent() {
-        if (this.content == null) {
-            this.logger.debug("Loading offset image: filename=" + this.filename);
-            try {
-                if (this.comic.archiveType != null) {
-                    this.content = this.comic.archiveType.getArchiveAdaptor()
-                                                         .loadSingleFile(this.comic,
-                                                                         this.filename);
-                }
-            }
-            catch (ArchiveAdaptorException error) {
-                this.logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(),
-                                 error);
+        this.logger.debug("Loading offset image: filename=" + this.filename);
+        try {
+            if (this.comic.archiveType != null) {
+                return this.comic.archiveType.getArchiveAdaptor()
+                                             .loadSingleFile(this.comic,
+                                                             this.filename);
             }
         }
-        return this.content;
+        catch (ArchiveAdaptorException error) {
+            this.logger.warn("failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(),
+                             error);
+        }
+        return null;
     }
 
     /**
@@ -264,41 +246,14 @@ public class Page {
      * @return the image height
      */
     public int getHeight() {
-        if ((this.height == null) || (this.height == -1)) {
-            this.getImageMetrics();
-        }
         return this.height;
     }
 
-    /**
-     * Returns the original image for the offset.
-     *
-     * @return the image
-     */
-    @JsonIgnore
-    public Image getImage() {
-        if (this.icon == null) {
-            this.logger.debug("Generating image from content");
-            try {
-                this.icon = ImageIO.read(new ByteArrayInputStream(this.getContent()));
-                this.width = this.icon.getWidth(null);
-                this.height = this.icon.getHeight(null);
-            }
-            catch (IOException error) {
-                this.logger.error("Failed to load image from " + this.comic.getFilename(),
-                                  error);
-            }
-        }
-        return this.icon;
-    }
-
-    private void getImageMetrics() {
+    private void getImageMetrics(final byte[] content) {
         try {
-            if (this.getContent() != null && this.getContent().length > 0) {
-                BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(this.getContent()));
-                this.width = bimage.getWidth();
-                this.height = bimage.getHeight();
-            }
+            BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(content));
+            this.width = bimage.getWidth();
+            this.height = bimage.getHeight();
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
@@ -334,9 +289,6 @@ public class Page {
      * @return the image width
      */
     public int getWidth() {
-        if ((this.width == null) || (this.width == -1)) {
-            this.getImageMetrics();
-        }
         return this.width;
     }
 
@@ -380,17 +332,6 @@ public class Page {
 
     void setComic(Comic comic) {
         this.comic = comic;
-    }
-
-    /**
-     * Sets the content for the offset. Also updates the hash.
-     *
-     * @param content
-     *         the content
-     */
-    public void setContent(byte[] content) {
-        this.content = content;
-        this.hash = this.createHash(content);
     }
 
     /**
