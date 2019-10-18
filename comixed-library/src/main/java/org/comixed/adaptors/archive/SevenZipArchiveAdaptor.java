@@ -176,7 +176,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
         }
         String pagename =
             renamePages ? this.getFilenameForEntry(page.getFilename(), index) : page.getFilename();
-        this.logger.debug("Adding entry: " + pagename + " size=" + page.getContent().length);
+        this.logger.debug("Adding entry: " + pagename);
         this.addFileToArchive(sevenzcomic, pagename, page.getContent());
       }
 

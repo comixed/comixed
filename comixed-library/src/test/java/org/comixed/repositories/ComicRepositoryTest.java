@@ -21,6 +21,7 @@ package org.comixed.repositories;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
@@ -40,6 +41,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -62,6 +65,18 @@ public class ComicRepositoryTest {
     private static final Long TEST_COMIC_WITH_DELETED_PAGES = 1002L;
     private static final String TEST_IMPRINT = "This is an imprint";
     private static final Long TEST_USER_ID = 1000L;
+    private static byte[] TEST_IMAGE_CONTENT;
+
+    private static final String TEST_IMAGE_FILE = "src/test/resources/example.jpg";
+
+    static {
+        try {
+            TEST_IMAGE_CONTENT = FileUtils.readFileToByteArray(new File(TEST_IMAGE_FILE));
+        }
+        catch (IOException error) {
+            error.printStackTrace();
+        }
+    }
 
     @Autowired private ComicRepository repository;
     @Autowired private PageTypeRepository pageTypeRepository;
@@ -333,8 +348,8 @@ public class ComicRepositoryTest {
     @Test
     public void testPagesCanBeAdded() {
         int count = comic.getPageCount() + 1;
-        Page page = new Page("src/test/example.jpg",
-                             new byte[0],
+        Page page = new Page("src/test/resources/example.jpg",
+                             TEST_IMAGE_CONTENT,
                              pageTypeRepository.getDefaultPageType());
         comic.addPage(0,
                       page);
