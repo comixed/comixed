@@ -62,48 +62,20 @@ import { ComicService } from 'app/services/comic.service';
 import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
 import { LoginComponent } from 'app/ui/components/login/login.component';
 import { UserService } from 'app/services/user.service';
-import { LibraryPageComponent } from 'app/ui/pages/library/library-page/library-page.component';
 import { ImportPageComponent } from 'app/ui/pages/import-page/import-page.component';
-import { DuplicatesPageComponent } from 'app/ui/pages/library/duplicates-page/duplicates-page.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { DuplicatePagesViewComponent } from 'app/ui/views/library/duplicate-pages-view/duplicate-pages-view.component';
-import { PageHashViewComponent } from 'app/ui/views/library/page-hash-view/page-hash-view.component';
-import { MultipleComicScrapingComponent } from 'app/ui/components/scraping/multiple-comic-scraping/multiple-comic-scraping.component';
-import { LibraryScrapingToolbarComponent } from 'app/ui/components/library/library-scraping-toolbar/library-scraping-toolbar.component';
-import { ScrapingComicListComponent } from 'app/ui/components/scraping/scraping-comic-list/scraping-comic-list.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
-import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
-import { LibraryFilterPipe } from 'app/pipes/library-filter.pipe';
 import {
   TranslateCompiler,
   TranslateLoader,
   TranslateModule
 } from '@ngx-translate/core';
-import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
-import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
-import { SeriesPageComponent } from 'app/ui/pages/series/series-page/series-page.component';
-import { SeriesDetailsPageComponent } from 'app/ui/pages/series/series-details-page/series-details-page.component';
-import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
-import { PublishersPageComponent } from 'app/ui/pages/publishers/publishers-page/publishers-page.component';
-import { PublisherDetailsPageComponent } from 'app/ui/pages/publishers/publisher-details-page/publisher-details-page.component';
-import { CharactersPageComponent } from 'app/ui/pages/characters/characters-page/characters-page.component';
-import { CharacterDetailsPageComponent } from 'app/ui/pages/characters/character-details-page/character-details-page.component';
-import { TeamsPageComponent } from 'app/ui/pages/teams/teams-page/teams-page.component';
-import { TeamDetailsPageComponent } from 'app/ui/pages/teams/team-details-page/team-details-page.component';
-import { LocationsPageComponent } from 'app/ui/pages/locations/locations-page/locations-page.component';
-import { LocationDetailsPageComponent } from 'app/ui/pages/locations/location-details-page/location-details-page.component';
-import { StoryArcsPageComponent } from 'app/ui/pages/story-arcs/story-arcs-page/story-arcs-page.component';
-import { StoryArcDetailsPageComponent } from 'app/ui/pages/story-arcs/story-arc-details-page/story-arc-details-page.component';
-import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
-import { MultiComicScrapingPageComponent } from 'app/ui/pages/library/multi-comic-scraping-page/multi-comic-scraping-page.component';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
 import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
 import { FileSaverModule } from 'ngx-filesaver';
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
-import { MissingComicsPipe } from './pipes/missing-comics.pipe';
-import { MissingComicsPageComponent } from './ui/pages/library/missing-comics-page/missing-comics-page.component';
 import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
 import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
 import { REDUCERS } from 'app/app.reducers';
@@ -129,40 +101,12 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
     AppComponent,
     MainPageComponent,
     LoginComponent,
-    LibraryPageComponent,
     ImportPageComponent,
-    DuplicatesPageComponent,
-    DuplicatePagesViewComponent,
-    PageHashViewComponent,
-    MultipleComicScrapingComponent,
-    LibraryScrapingToolbarComponent,
-    ScrapingComicListComponent,
     ComicFileCoverUrlPipe,
-    LibraryFilterComponent,
-    LibraryFilterPipe,
-    ComicListItemComponent,
-    ComicGridItemComponent,
-    SeriesPageComponent,
-    SeriesDetailsPageComponent,
-    ComicListToolbarComponent,
-    PublishersPageComponent,
-    PublisherDetailsPageComponent,
-    CharactersPageComponent,
-    CharacterDetailsPageComponent,
-    TeamsPageComponent,
-    TeamDetailsPageComponent,
-    LocationsPageComponent,
-    LocationDetailsPageComponent,
-    StoryArcsPageComponent,
-    StoryArcDetailsPageComponent,
-    ComicListComponent,
-    MultiComicScrapingPageComponent,
     ComicFileListToolbarComponent,
     ComicFileGridItemComponent,
     ComicFileListComponent,
     LibraryAdminPageComponent,
-    MissingComicsPipe,
-    MissingComicsPageComponent,
     ReadingListPageComponent,
     ReadingListsPageComponent,
     UserPreferencePipe,

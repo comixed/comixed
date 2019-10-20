@@ -21,7 +21,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComicFileListItemComponent } from './comic-file-list-item.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   CardModule,
@@ -59,11 +58,7 @@ describe('ComicFileListItemComponent', () => {
         PanelModule,
         CardModule
       ],
-      declarations: [
-        ComicFileListItemComponent,
-        ComicCoverComponent,
-        ComicFileCoverUrlPipe
-      ],
+      declarations: [ComicFileListItemComponent, ComicFileCoverUrlPipe],
       providers: [ComicService, UserService, MessageService]
     }).compileComponents();
 

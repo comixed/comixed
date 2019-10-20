@@ -1,0 +1,17 @@
+button {
+  margin-right: 5px;
+  width: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+p-dropdown,
+p-checkbox,
+span {
+  margin-right: 5px;
+}
+
+:host ::ng-deep .ui-slider {
+  margin-top: 15px;
+}

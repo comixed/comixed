@@ -24,8 +24,6 @@ import { ComicFileListComponent } from './comic-file-list.component';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -51,12 +49,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REDUCERS } from 'app/app.reducers';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/library';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
-  ComicFile
+  ComicFile,
+  LibraryDisplayAdaptor
 } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -100,9 +98,7 @@ describe('ComicFileListComponent', () => {
         ComicFileGridItemComponent,
         ComicFileListItemComponent,
         ComicFileListToolbarComponent,
-        ComicCoverComponent,
-        ComicFileCoverUrlPipe,
-        ComicCoverUrlPipe
+        ComicFileCoverUrlPipe
       ],
       providers: [
         AuthenticationAdaptor,

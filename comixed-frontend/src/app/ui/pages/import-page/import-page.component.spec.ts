@@ -30,7 +30,6 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ToolbarModule } from 'primeng/toolbar';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
@@ -39,7 +38,6 @@ import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
 import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
 import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import {
   CheckboxModule,
   ConfirmationService,
@@ -55,13 +53,16 @@ import { REDUCERS } from 'app/app.reducers';
 import { UserPreferencePipe } from 'app/pipes/user-preference.pipe';
 import { ComicFileListItemComponent } from 'app/ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/library';
+import {
+  ImportAdaptor,
+  LibraryAdaptor,
+  LibraryDisplayAdaptor
+} from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
-import { ImportAdaptor, LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 const DIRECTORY_TO_USE = '/OldUser/comixed/Downloads';
@@ -105,8 +106,6 @@ describe('ImportPageComponent', () => {
         ComicFileGridItemComponent,
         ComicFileListItemComponent,
         ComicFileListToolbarComponent,
-        ComicCoverComponent,
-        ComicCoverUrlPipe,
         ComicFileCoverUrlPipe,
         UserPreferencePipe
       ],

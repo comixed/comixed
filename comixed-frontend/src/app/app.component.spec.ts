@@ -36,7 +36,7 @@ import {
   TieredMenuModule
 } from 'primeng/primeng';
 import { REDUCERS } from 'app/app.reducers';
-import { AuthenticationAdaptor } from 'app/user';
+import { AuthenticationAdaptor, USER_READER } from 'app/user';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
@@ -47,20 +47,28 @@ import { LibraryModule } from 'app/library/library.module';
 import { COMIC_1, COMIC_3, COMIC_5, LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
+import {
+  AuthLogout,
+  AuthNoUserLoaded,
+  AuthUserLoaded
+} from 'app/user/actions/authentication.actions';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const USER = USER_READER;
 
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let auth_adaptor: AuthenticationAdaptor;
-  let library_adaptor: LibraryAdaptor;
-  let translate_service: TranslateService;
+  let authenticationAdaptor: AuthenticationAdaptor;
+  let libraryAdaptor: LibraryAdaptor;
+  let translateService: TranslateService;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         UserModule,
         LibraryModule,
         FormsModule,
@@ -92,9 +100,9 @@ describe('AppComponent', () => {
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
-    auth_adaptor = TestBed.get(AuthenticationAdaptor);
-    library_adaptor = TestBed.get(LibraryAdaptor);
-    translate_service = TestBed.get(TranslateService);
+    authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
+    libraryAdaptor = TestBed.get(LibraryAdaptor);
+    translateService = TestBed.get(TranslateService);
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
 
@@ -103,27 +111,26 @@ describe('AppComponent', () => {
 
   describe('on startup', () => {
     it('loads english as the default language', () => {
-      expect(translate_service.getDefaultLang()).toBe('en');
+      expect(translateService.getDefaultLang()).toBe('en');
     });
   });
 
   describe('when no user is logged in', () => {
     beforeEach(() => {
-      auth_adaptor._authenticated$.next(true);
-      library_adaptor._comic$.next(COMICS);
+      store.dispatch(new AuthUserLoaded({ user: USER }));
       fixture.detectChanges();
-      spyOn(library_adaptor, 'getLibraryUpdates');
-      spyOn(library_adaptor, 'resetLibrary');
-      auth_adaptor._authenticated$.next(false);
+      spyOn(libraryAdaptor, 'resetLibrary');
+      store.dispatch(new AuthLogout());
       fixture.detectChanges();
+      spyOn(libraryAdaptor, 'getLibraryUpdates');
     });
 
     it('does not fetch updates', () => {
-      expect(library_adaptor.getLibraryUpdates).not.toHaveBeenCalled();
+      expect(libraryAdaptor.getLibraryUpdates).not.toHaveBeenCalled();
     });
 
     it('resets the library', () => {
-      expect(library_adaptor.resetLibrary).toHaveBeenCalled();
+      expect(libraryAdaptor.resetLibrary).toHaveBeenCalled();
     });
 
     it('clears the subscription', () => {
@@ -133,14 +140,14 @@ describe('AppComponent', () => {
 
   describe('when a user is logged in', () => {
     beforeEach(() => {
-      spyOn(library_adaptor, 'getLibraryUpdates');
-      auth_adaptor._authenticated$.next(true);
-      library_adaptor._comic$.next(COMICS);
-      library_adaptor._fetchingUpdate$.next(false);
+      store.dispatch(new AuthNoUserLoaded());
+      fixture.detectChanges();
+      spyOn(libraryAdaptor, 'getLibraryUpdates');
+      store.dispatch(new AuthUserLoaded({ user: USER }));
     });
 
     it('fetches updates when not currently fetching', () => {
-      expect(library_adaptor.getLibraryUpdates).toHaveBeenCalled();
+      expect(libraryAdaptor.getLibraryUpdates).toHaveBeenCalled();
     });
   });
 });

@@ -32,11 +32,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppState } from 'app/app.state';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { ComicListComponent } from 'app/ui/components/library/comic-list/comic-list.component';
 import { DataViewModule } from 'primeng/dataview';
-import { ComicListToolbarComponent } from 'app/ui/components/library/comic-list-toolbar/comic-list-toolbar.component';
-import { ComicListItemComponent } from 'app/ui/components/library/comic-list-item/comic-list-item.component';
-import { ComicGridItemComponent } from 'app/ui/components/library/comic-grid-item/comic-grid-item.component';
 import {
   CardModule,
   CheckboxModule,
@@ -52,10 +48,6 @@ import {
   SliderModule,
   SplitButtonModule
 } from 'primeng/primeng';
-import { LibraryFilterComponent } from 'app/ui/components/library/library-filter/library-filter.component';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationAdaptor } from 'app/user';
@@ -103,17 +95,7 @@ describe('ReadingListPageComponent', () => {
         ContextMenuModule,
         ContextMenuModule
       ],
-      declarations: [
-        ReadingListPageComponent,
-        ComicListComponent,
-        ComicListToolbarComponent,
-        ComicListItemComponent,
-        ComicGridItemComponent,
-        LibraryFilterComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe,
-        ComicCoverComponent
-      ],
+      declarations: [ReadingListPageComponent],
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,

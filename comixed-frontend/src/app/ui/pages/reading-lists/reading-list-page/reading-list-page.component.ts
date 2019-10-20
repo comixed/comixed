@@ -99,7 +99,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
           this.load_reading_list();
         }
       });
-    this.selectedEntriesSubscription = this.selectionAdaptor.comic_selection$.subscribe(
+    this.selectedEntriesSubscription = this.selectionAdaptor.comicSelection$.subscribe(
       selected_entries => (this.selectedEntries = selected_entries)
     );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(

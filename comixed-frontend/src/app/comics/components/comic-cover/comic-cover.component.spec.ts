@@ -32,7 +32,6 @@ import { StoreModule } from '@ngrx/store';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
-import { LibraryModule } from 'app/library/library.module';
 import { COMIC_FILE_1 } from 'app/library';
 import { MessageService } from 'primeng/api';
 
@@ -43,7 +42,6 @@ describe('ComicCoverComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        LibraryModule,
         HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,

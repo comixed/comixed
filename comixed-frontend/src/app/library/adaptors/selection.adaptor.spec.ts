@@ -18,30 +18,22 @@
  */
 
 import { SelectionAdaptor } from './selection.adaptor';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import {
+  AppState,
   COMIC_1,
+  COMIC_2,
   COMIC_3,
   COMIC_5,
   COMIC_FILE_1,
-  COMIC_FILE_3,
   COMIC_FILE_4
 } from 'app/library';
 import { Store, StoreModule } from '@ngrx/store';
 import { reducer } from 'app/library/reducers/selection.reducer';
-import { AppState } from 'app/library';
-import * as SelectActions from 'app/library/actions/selection.actions';
-import {
-  SelectBulkRemoveComicFiles,
-  SelectBulkRemoveComics,
-  SelectRemoveComic
-} from 'app/library/actions/selection.actions';
-import { SelectBulkAddComics } from 'app/library/actions/selection.actions';
-import { utils } from 'protractor';
-import { SelectionState } from 'app/library/models/selection-state';
 
 describe('SelectionAdaptor', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMIC = COMIC_2;
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_4];
 
   let adaptor: SelectionAdaptor;
@@ -55,120 +47,73 @@ describe('SelectionAdaptor', () => {
 
     adaptor = TestBed.get(SelectionAdaptor);
     store = TestBed.get(Store);
-    spyOn(store, 'dispatch');
+    spyOn(store, 'dispatch').and.callThrough();
   });
 
   it('should create an instance', () => {
     expect(adaptor).toBeTruthy();
   });
 
-  it('provides notifications of comic selection changes', () => {
-    adaptor._comic_selection$.next([COMIC_1]);
-    adaptor.comic_selection$.subscribe(selections =>
-      expect(selections).toEqual([COMIC_1])
-    );
+  describe('selecting a group of comics', () => {
+    beforeEach(() => {
+      adaptor.selectComics(COMICS);
+    });
+
+    it('provides updates', () => {
+      adaptor.comicSelection$.subscribe(response =>
+        expect(response).toEqual(COMICS)
+      );
+    });
+
+    describe('deselecting a group of comics', () => {
+      const REMOVED_COMIC = COMICS[0];
+
+      beforeEach(() => {
+        adaptor.deselectComics([REMOVED_COMIC]);
+      });
+
+      it('provides updates', () => {
+        adaptor.comicSelection$.subscribe(response =>
+          expect(response).not.toContain(REMOVED_COMIC)
+        );
+      });
+    });
   });
 
-  it('sends a notification when the comics have changed', () => {
-    adaptor._comic_selection$.next([]);
-    spyOn(adaptor._comic_selection$, 'next');
-    adaptor.update_state({
-      comics: COMICS,
-      comic_files: []
-    } as SelectionState);
-    expect(adaptor._comic_selection$.next).toHaveBeenCalledWith(COMICS);
+  describe('selecting a single comic', () => {
+    beforeEach(() => {
+      adaptor.selectComic(COMIC);
+    });
+
+    it('provides updates', () => {
+      adaptor.comicSelection$.subscribe(response =>
+        expect(response).toContain(COMIC)
+      );
+    });
+
+    describe('removing a single comic', () => {
+      beforeEach(() => {
+        adaptor.deselectComic(COMIC);
+      });
+
+      it('provides updates', () => {
+        adaptor.comicSelection$.subscribe(response =>
+          expect(response).not.toContain(COMIC)
+        );
+      });
+    });
   });
 
-  it('fires an action when a comic is selected', () => {
-    adaptor.select_comic(COMIC_1);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectActions.SelectAddComic({ comic: COMIC_1 })
-    );
-  });
+  describe('clearing selections', () => {
+    beforeEach(() => {
+      adaptor.selectComics(COMICS);
+      adaptor.clearComicSelections();
+    });
 
-  it('fires an action when comics are bulk added', () => {
-    adaptor.select_comics([COMIC_1, COMIC_3, COMIC_5]);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectActions.SelectBulkAddComics({
-        comics: [COMIC_1, COMIC_3, COMIC_5]
-      })
-    );
-  });
-
-  it('fires an action when a comic is deselected', () => {
-    adaptor.deselect_comic(COMIC_1);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectActions.SelectRemoveComic({ comic: COMIC_1 })
-    );
-  });
-
-  it('fires an action when comics are deselected in bulk', () => {
-    adaptor.deselect_comics(COMICS);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectBulkRemoveComics({ comics: COMICS })
-    );
-  });
-
-  it('fires an action when the selections are cleared', () => {
-    adaptor.deselect_all_comics();
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectActions.SelectRemoveAllComics()
-    );
-  });
-
-  it('provides notifications of comic file selection changes', () => {
-    adaptor._comic_file_selection$.next([COMIC_FILE_1]);
-    adaptor.comic_file_selection$.subscribe(selections =>
-      expect(selections).toEqual([COMIC_FILE_1])
-    );
-  });
-
-  it('sends a notification when the comic files have changed', () => {
-    adaptor._comic_file_selection$.next([]);
-    spyOn(adaptor._comic_file_selection$, 'next');
-    adaptor.update_state({
-      comic_files: COMIC_FILES,
-      comics: []
-    } as SelectionState);
-    expect(adaptor._comic_file_selection$.next).toHaveBeenCalledWith(
-      COMIC_FILES
-    );
-  });
-
-  it('fires an action when a comic file is selected', () => {
-    adaptor.select_comic_file(COMIC_FILE_1);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectActions.SelectAddComicFile({ comic_file: COMIC_FILE_1 })
-    );
-  });
-
-  it('fires an action when comic files are bulk added', () => {
-    adaptor.select_comic_files([COMIC_FILE_1, COMIC_FILE_3, COMIC_FILE_4]);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectActions.SelectBulkAddComicFiles({
-        comic_files: [COMIC_FILE_1, COMIC_FILE_3, COMIC_FILE_4]
-      })
-    );
-  });
-
-  it('fires an action when a comic file is deselected', () => {
-    adaptor.deselect_comic_file(COMIC_FILE_1);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectActions.SelectRemoveComicFile({ comic_file: COMIC_FILE_1 })
-    );
-  });
-
-  it('fires an action when comic files are deselected in bulk', () => {
-    adaptor.deselect_comic_files(COMIC_FILES);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectBulkRemoveComicFiles({ comic_files: COMIC_FILES })
-    );
-  });
-
-  it('fires an action when the comic file selections are cleared', () => {
-    adaptor.deselect_all_comic_files();
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SelectActions.SelectRemoveAllComicFiles()
-    );
+    it('provides updates', () => {
+      adaptor.comicSelection$.subscribe(response =>
+        expect(response).toEqual([])
+      );
+    });
   });
 });

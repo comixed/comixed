@@ -71,7 +71,7 @@ export function reducer(
     case SelectionActionTypes.AddComicFile:
       return {
         ...state,
-        comic_files: mergeComicFiles(state.comic_files, [
+        comicFiles: mergeComicFiles(state.comicFiles, [
           action.payload.comic_file
         ])
       };
@@ -79,8 +79,8 @@ export function reducer(
     case SelectionActionTypes.BulkAddComicFiles:
       return {
         ...state,
-        comic_files: mergeComicFiles(
-          state.comic_files,
+        comicFiles: mergeComicFiles(
+          state.comicFiles,
           action.payload.comic_files
         )
       };
@@ -88,7 +88,7 @@ export function reducer(
     case SelectionActionTypes.RemoveComicFile:
       return {
         ...state,
-        comic_files: state.comic_files.filter(
+        comicFiles: state.comicFiles.filter(
           comic_file => comic_file.id !== action.payload.comic_file.id
         )
       };
@@ -96,7 +96,7 @@ export function reducer(
     case SelectionActionTypes.BulkRemoveComicFiles:
       return {
         ...state,
-        comic_files: state.comic_files.filter(
+        comicFiles: state.comicFiles.filter(
           comic_file =>
             !action.payload.comic_files.some(
               entry => entry.id === comic_file.id
@@ -105,7 +105,7 @@ export function reducer(
       };
 
     case SelectionActionTypes.RemoveAllComicFiles:
-      return { ...state, comic_files: [] };
+      return { ...state, comicFiles: [] };
 
     default:
       return state;

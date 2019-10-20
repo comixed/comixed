@@ -21,10 +21,10 @@ import { Comic, ComicFile } from 'app/library';
 
 export interface SelectionState {
   comics: Comic[];
-  comic_files: ComicFile[];
+  comicFiles: ComicFile[];
 }
 
 export const initial_state: SelectionState = {
   comics: [],
-  comic_files: []
+  comicFiles: []
 };

@@ -1,0 +1,33 @@
+<app-comic-list-toolbar [comics]='comics'
+                        [dataView]='dataview'></app-comic-list-toolbar>
+<p-contextMenu [model]='contextMenu'
+               [target]='comicListContainer'></p-contextMenu>
+<div #comicListContainer>
+    <p-dataView #dataview
+                (onPage)='setIndexOfFirst($event.first)'
+                [alwaysShowPaginator]='true'
+                [first]='indexOfFirst'
+                [layout]='layout'
+                [paginator]='true'
+                [rows]='rows'
+                [sortField]='sortField'
+                [value]='comics'
+                paginatorPosition='both'>
+        <ng-template let-comic
+                     pTemplate='listItem'>
+            <app-comic-list-item [comic]='comic'
+                                 [cover_size]='coverSize'
+                                 [same_height]='sameHeight'
+                                 [selected]='selectedComics.includes(comic)'
+                                 (click)='toggleComicSelection(comic)'></app-comic-list-item>
+        </ng-template>
+        <ng-template let-comic
+                     pTemplate='gridItem'>
+            <app-comic-grid-item [comic]='comic'
+                                 [cover_size]='coverSize'
+                                 [same_height]='sameHeight'
+                                 [selected]='selectedComics.includes(comic)'
+                                 (click)='toggleComicSelection(comic)'></app-comic-grid-item>
+        </ng-template>
+    </p-dataView>
+</div>

@@ -1,0 +1,62 @@
+<p-toolbar>
+    <div class='ui-toolbar-group-left'>
+        <button pButton
+                [icon]='gridLayout?"fa fa-fw fa-th":"fa fa-fw fa-list"'
+                (click)='setGridLayout(!gridLayout)'
+                [pTooltip]='"comic-list-toolbar.options.layout.tooltip"|translate'></button>
+        <span>{{'comic-list-toolbar.options.sorting.label'|translate}}</span>
+        <p-dropdown [options]='sortOptions'
+                    [(ngModel)]='sortField'
+                    (onChange)='changeSortField($event.value)'></p-dropdown>
+
+        <span>{{'comic-list-toolbar.options.rows.label'|translate}}</span>
+        <p-dropdown [options]='rowsOptions'
+                    [(ngModel)]='rows'
+                    (onChange)='changeRows($event.value)'></p-dropdown>
+        <p-checkbox [(ngModel)]='sameHeight'
+                    [label]='"comic-list-toolbar.options.same-height.label"|translate'
+                    [pTooltip]='"comic-list-toolbar.options.same-height.tooltip"|translate'
+                    [binary]='true'
+                    (onChange)='useSameHeight($event)'></p-checkbox>
+        <p-slider [(ngModel)]='coverSize'
+                  [min]='100'
+                  [max]='400'
+                  [pTooltip]='"comic-list-toolbar.options.cover-size.tooltip"|translate'
+                  (onChange)='setCoverSize($event.value, false)'
+                  (onSlideEnd)='setCoverSize($event.value, true)'></p-slider>
+    </div>
+    <div class='ui-toolbar-group-right'>
+        <button pButton
+                class='ui-button-success'
+                type='button'
+                [pTooltip]='"comic-list-toolbar.button.select-all"|translate'
+                [label]='"comic-list-toolbar.label.select-all"|translate'
+                icon='fa fa-fw fa-plus'
+                [disabled]='!comics.length'
+                (click)='selectAll()'></button>
+        <button pButton
+                class='ui-button-success'
+                type='button'
+                [pTooltip]='"comic-list-toolbar.button.deselect-all"|translate'
+                [label]='"comic-list-toolbar.label.deselect-all"|translate'
+                icon='fa fa-fw fa-minus'
+                [disabled]='!selectedComics.length'
+                (click)='deselectAll()'></button>
+        <button pButton
+                class='ui-button-info'
+                type='button'
+                [pTooltip]='"comic-list-toolbar.button.scrape"|translate'
+                [label]='"comic-list-toolbar.label.scrape"|translate'
+                icon='fa fa-fw fa-fingerprint'
+                [disabled]='!selectedComics.length'
+                (click)='scrapeComics()'></button>
+        <button pButton
+                class='ui-button-danger'
+                type='button'
+                [pTooltip]='"comic-list-toolbar.button.delete"|translate'
+                [label]='"comic-list-toolbar.label.delete"|translate'
+                icon='fa fa-fw fa-trash'
+                [disabled]='!selectedComics.length'
+                (click)='deleteComics()'></button>
+    </div>
+</p-toolbar>

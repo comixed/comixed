@@ -19,7 +19,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
@@ -29,18 +29,14 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
 import { ComicPagesComponent } from './comic-pages.component';
-import { REDUCERS } from 'app/app.reducers';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
-import { LibraryModule } from 'app/library/library.module';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { AppState } from 'app/comics';
 import { ComicGotPageTypes } from 'app/comics/actions/comic.actions';
 import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import { PAGE_1, PAGE_2 } from 'app/comics/models/page.fixtures';
 
 describe('ComicPagesComponent', () => {
@@ -52,7 +48,6 @@ describe('ComicPagesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        LibraryModule,
         HttpClientTestingModule,
         FormsModule,
         TranslateModule.forRoot(),

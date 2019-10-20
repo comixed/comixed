@@ -20,8 +20,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicFileGridItemComponent } from './comic-file-grid-item.component';
 import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import {
   CardModule,
   MessageService,
@@ -62,12 +60,7 @@ describe('ComicFileGridItemComponent', () => {
         OverlayPanelModule,
         CardModule
       ],
-      declarations: [
-        ComicFileGridItemComponent,
-        ComicCoverComponent,
-        ComicFileCoverUrlPipe,
-        ComicCoverUrlPipe
-      ],
+      declarations: [ComicFileGridItemComponent, ComicFileCoverUrlPipe],
       providers: [ComicService, UserService, MessageService, ImportAdaptor]
     }).compileComponents();
 

@@ -42,79 +42,74 @@ import { SelectionState } from 'app/library/models/selection-state';
 
 @Injectable()
 export class SelectionAdaptor {
-  _comic_selection$ = new BehaviorSubject<Comic[]>([]);
-  _comic_file_selection$ = new BehaviorSubject<ComicFile[]>([]);
+  private _comicSelection$ = new BehaviorSubject<Comic[]>([]);
+  private _comicFileSelection$ = new BehaviorSubject<ComicFile[]>([]);
 
   constructor(private store: Store<AppState>) {
     this.store
       .select(SELECTION_FEATURE_KEY)
       .pipe(filter(state => !!state))
-      .subscribe(selection_state => this.update_state(selection_state));
+      .subscribe((state: SelectionState) => {
+        if (!_.isEqual(this._comicSelection$.getValue(), state.comics)) {
+          this._comicSelection$.next(state.comics);
+        }
+        if (
+          !_.isEqual(this._comicFileSelection$.getValue(), state.comicFiles)
+        ) {
+          this._comicFileSelection$.next(state.comicFiles);
+        }
+      });
   }
 
-  update_state(selection_state: SelectionState) {
-    if (!_.isEqual(this._comic_selection$.getValue(), selection_state.comics)) {
-      this._comic_selection$.next(selection_state.comics);
-    }
-    if (
-      !_.isEqual(
-        this._comic_file_selection$.getValue(),
-        selection_state.comic_files
-      )
-    ) {
-      this._comic_file_selection$.next(selection_state.comic_files);
-    }
+  get comicSelection$(): Observable<Comic[]> {
+    return this._comicSelection$.asObservable();
   }
 
-  get comic_selection$(): Observable<Comic[]> {
-    return this._comic_selection$.asObservable();
-  }
-
-  select_comic(comic: Comic): void {
+  selectComic(comic: Comic): void {
     this.store.dispatch(new SelectAddComic({ comic: comic }));
   }
 
-  select_comics(comics: Comic[]): void {
+  selectComics(comics: Comic[]): void {
     this.store.dispatch(new SelectBulkAddComics({ comics: comics }));
   }
 
-  deselect_comic(comic: Comic): void {
+  deselectComic(comic: Comic): void {
     this.store.dispatch(new SelectRemoveComic({ comic: comic }));
   }
 
-  deselect_comics(comics: Comic[]): void {
+  deselectComics(comics: Comic[]): void {
     this.store.dispatch(new SelectBulkRemoveComics({ comics: comics }));
   }
 
-  deselect_all_comics(): void {
+  clearComicSelections(): void {
     this.store.dispatch(new SelectRemoveAllComics());
   }
 
-  get comic_file_selection$(): Observable<ComicFile[]> {
-    return this._comic_file_selection$.asObservable();
+  get comicFileSelection$(): Observable<ComicFile[]> {
+    return this._comicFileSelection$.asObservable();
   }
 
-  select_comic_file(comic_file: ComicFile): void {
+  selectComicFile(comic_file: ComicFile): void {
     this.store.dispatch(new SelectAddComicFile({ comic_file: comic_file }));
   }
 
-  select_comic_files(comic_files: ComicFile[]): void {
+  selectComicFiles(comic_files: ComicFile[]): void {
     this.store.dispatch(
       new SelectBulkAddComicFiles({ comic_files: comic_files })
     );
   }
 
-  deselect_comic_file(comic_file: ComicFile): void {
+  deselectComicFile(comic_file: ComicFile): void {
     this.store.dispatch(new SelectRemoveComicFile({ comic_file: comic_file }));
   }
 
-  deselect_comic_files(comic_files: ComicFile[]): void {
+  deselectComicFiles(comic_files: ComicFile[]): void {
     this.store.dispatch(
       new SelectBulkRemoveComicFiles({ comic_files: comic_files })
     );
   }
 
-  deselect_all_comic_files(): void {
+  clearComicFileSelections(): void {
     this.store.dispatch(new SelectRemoveAllComicFiles());
   }
 }

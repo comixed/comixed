@@ -165,5 +165,49 @@
   },
   "library-admin-page": {
     "title": "ComiXed: Library Administration"
+  },
+  "comic-list-toolbar": {
+    "options": {
+      "layout": {
+        "tooltip": "Toggle between grid and list layouts."
+      },
+      "sorting": {
+        "label": "Sort by",
+        "volume": "Volume",
+        "issue-number": "Issue Number",
+        "added-date": "Added Date",
+        "cover-date": "Cover Date"
+      },
+      "rows": {
+        "label": "Comics Per Page",
+        "10-comics": "10 Comics",
+        "25-comics": "25 Comics",
+        "50-comics": "50 Comics",
+        "100-comics": "100 Comics"
+      },
+      "same-height": {
+        "tooltip": "Adjust the size of cover images.",
+        "label": "Use As Cover Height"
+      },
+      "cover-size": {
+        "tooltip": "Set the cover size."
+      }
+    },
+    "label": {
+      "select-all": "All",
+      "deselect-all": "None",
+      "scrape": "Scrape",
+      "delete": "Delete"
+    },
+    "button": {
+      "select-all": "Select All Comics",
+      "deselect-all": "Deselect All Comics",
+      "scrape": "Scrape Selected Comics",
+      "delete": "Delete Selected Comics"
+    },
+    "delete-comics": {
+      "header": "Delete Selected Comics",
+      "message": "Are you sure you want to delete the {count, plural, =1{selected comic} other{# selected comics}}?"
+    }
   }
 }

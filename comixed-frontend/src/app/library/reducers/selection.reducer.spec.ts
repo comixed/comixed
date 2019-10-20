@@ -55,7 +55,7 @@ describe('Selection Reducer', () => {
     });
 
     it('has an empty set of comic files', () => {
-      expect(state.comic_files).toEqual([]);
+      expect(state.comicFiles).toEqual([]);
     });
   });
 
@@ -144,54 +144,54 @@ describe('Selection Reducer', () => {
   describe('when adding a comic file', () => {
     it('adds a comic file if it is not selected', () => {
       state = reducer(
-        { ...state, comic_files: [COMIC_FILE_2] },
+        { ...state, comicFiles: [COMIC_FILE_2] },
         new SelectAddComicFile({ comic_file: COMIC_FILE_1 })
       );
 
-      expect(state.comic_files).toContain(COMIC_FILE_1);
+      expect(state.comicFiles).toContain(COMIC_FILE_1);
     });
 
     it('does not add a comic file if it is already selected', () => {
       state = reducer(
-        { ...state, comic_files: [COMIC_FILE_1] },
+        { ...state, comicFiles: [COMIC_FILE_1] },
         new SelectAddComicFile({ comic_file: COMIC_FILE_1 })
       );
 
-      expect(state.comic_files).toEqual([COMIC_FILE_1]);
+      expect(state.comicFiles).toEqual([COMIC_FILE_1]);
     });
   });
 
   describe('when adding comic files in bulk', () => {
     it('adds all comics provided if none are selected', () => {
       state = reducer(
-        { ...state, comic_files: [COMIC_FILE_1, COMIC_FILE_3] },
+        { ...state, comicFiles: [COMIC_FILE_1, COMIC_FILE_3] },
         new SelectBulkAddComicFiles({
           comic_files: [COMIC_FILE_2, COMIC_FILE_4]
         })
       );
 
-      expect(state.comic_files).toContain(COMIC_FILE_2);
-      expect(state.comic_files).toContain(COMIC_FILE_4);
+      expect(state.comicFiles).toContain(COMIC_FILE_2);
+      expect(state.comicFiles).toContain(COMIC_FILE_4);
     });
   });
 
   describe('when removing a comic file', () => {
     it('removes the comic if it is selected', () => {
       state = reducer(
-        { ...state, comic_files: [COMIC_FILE_1, COMIC_FILE_3] },
+        { ...state, comicFiles: [COMIC_FILE_1, COMIC_FILE_3] },
         new SelectRemoveComicFile({ comic_file: COMIC_FILE_1 })
       );
 
-      expect(state.comic_files).toEqual([COMIC_FILE_3]);
+      expect(state.comicFiles).toEqual([COMIC_FILE_3]);
     });
 
     it('does nothing if the comic file is not selected', () => {
       state = reducer(
-        { ...state, comic_files: [COMIC_FILE_1, COMIC_FILE_3] },
+        { ...state, comicFiles: [COMIC_FILE_1, COMIC_FILE_3] },
         new SelectRemoveComicFile({ comic_file: COMIC_FILE_4 })
       );
 
-      expect(state.comic_files).toEqual([COMIC_FILE_1, COMIC_FILE_3]);
+      expect(state.comicFiles).toEqual([COMIC_FILE_1, COMIC_FILE_3]);
     });
   });
 
@@ -200,15 +200,15 @@ describe('Selection Reducer', () => {
       state = reducer(
         {
           ...state,
-          comic_files: [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4]
+          comicFiles: [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4]
         },
         new SelectBulkRemoveComicFiles({
           comic_files: [COMIC_FILE_2, COMIC_FILE_4]
         })
       );
 
-      expect(state.comic_files).not.toContain(COMIC_FILE_2);
-      expect(state.comic_files).not.toContain(COMIC_FILE_4);
+      expect(state.comicFiles).not.toContain(COMIC_FILE_2);
+      expect(state.comicFiles).not.toContain(COMIC_FILE_4);
     });
   });
 
@@ -217,14 +217,14 @@ describe('Selection Reducer', () => {
       state = reducer(
         {
           ...state,
-          comic_files: [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4]
+          comicFiles: [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4]
         },
         new SelectRemoveAllComicFiles()
       );
     });
 
     it('clears the comic file selections', () => {
-      expect(state.comic_files).toEqual([]);
+      expect(state.comicFiles).toEqual([]);
     });
   });
 });
