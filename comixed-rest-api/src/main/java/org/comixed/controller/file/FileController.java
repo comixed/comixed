@@ -23,6 +23,7 @@ import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.controller.library.ComicController;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
+import org.comixed.net.GetAllComicsUnderRequest;
 import org.comixed.net.ImportComicFilesResponse;
 import org.comixed.net.ImportRequestBody;
 import org.comixed.repositories.ComicRepository;
@@ -56,21 +57,22 @@ public class FileController {
 
     private int requestId = 0;
 
-    @RequestMapping(value = "/contents",
-                    method = RequestMethod.GET)
+    @PostMapping(value = "/contents",
+                 produces = "application/json",
+                 consumes = "application/json")
     @Secured("ROLE_ADMIN")
     public List<FileDetails> getAllComicsUnder(
-            @RequestParam(value = "directory")
-                    String directory)
+            @RequestBody()
+            final GetAllComicsUnderRequest request)
             throws
             IOException,
             JSONException {
-        this.logger.debug("Getting all comics below: {}",
-                          directory);
+        this.logger.info("Getting all comic files: root={}",
+                         request.getDirectory());
 
-        final List<FileDetails> result = this.fileService.getAllComicsUnder(directory);
+        final List<FileDetails> result = this.fileService.getAllComicsUnder(request.getDirectory());
 
-        this.logger.info("Returning details for {} file{}",
+        this.logger.info("Returning {} file{}",
                          result.size(),
                          result.size() != 1
                          ? "s"

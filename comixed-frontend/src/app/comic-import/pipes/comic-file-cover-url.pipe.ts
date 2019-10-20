@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,33 +17,17 @@
  * org.comixed;
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Comic } from 'app/library';
+import { Pipe, PipeTransform } from '@angular/core';
+import { COMIXED_API_ROOT } from 'app/app.constants';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 
-@Component({
-  selector: 'app-comic-cover',
-  templateUrl: './comic-cover.component.html',
-  styleUrls: ['./comic-cover.component.scss']
+@Pipe({
+  name: 'comic_file_cover_url'
 })
-export class ComicCoverComponent {
-  @Input() cover_url: string;
-  @Input() comic: Comic;
-  @Input() comic_file: ComicFile;
-  @Input() cover_size: number;
-  @Input() same_height: boolean;
-  @Input() selected = false;
-  @Input() use_selected_class = true;
-
-  @Output() click = new EventEmitter<Comic | ComicFile>();
-
-  constructor() {}
-
-  clicked(): void {
-    if (this.comic) {
-      this.click.emit(this.comic);
-    } else {
-      this.click.emit(this.comic_file);
-    }
+export class ComicFileCoverUrlPipe implements PipeTransform {
+  transform(comic_file: ComicFile): string {
+    return `${COMIXED_API_ROOT}/files/import/cover?filename=${encodeURIComponent(
+      comic_file.filename
+    )}`;
   }
 }

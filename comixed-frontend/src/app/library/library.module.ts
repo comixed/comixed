@@ -30,10 +30,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { LibraryEffects } from './effects/library.effects';
 import { LibraryService } from './services/library.service';
 import { LibraryAdaptor } from './adaptors/library.adaptor';
-import * as fromImport from './reducers/import.reducer';
-import { ImportEffects } from './effects/import.effects';
-import { ImportAdaptor } from './adaptors/import.adaptor';
-import { ImportService } from './services/import.service';
 import * as fromSelection from './reducers/selection.reducer';
 import { SelectionAdaptor } from './adaptors/selection.adaptor';
 import * as fromReadingList from './reducers/reading-list.reducer';
@@ -92,7 +88,6 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
       fromLibrary.LIBRARY_FEATURE_KEY,
       fromLibrary.reducer
     ),
-    StoreModule.forFeature(fromImport.IMPORT_FEATURE_KEY, fromImport.reducer),
     StoreModule.forFeature(
       fromSelection.SELECTION_FEATURE_KEY,
       fromSelection.reducer
@@ -105,11 +100,7 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
       fromFilters.FILTERS_FEATURE_KEY,
       fromFilters.reducer
     ),
-    EffectsModule.forFeature([
-      LibraryEffects,
-      ImportEffects,
-      ReadingListEffects
-    ]),
+    EffectsModule.forFeature([LibraryEffects, ReadingListEffects]),
     ContextMenuModule,
     CheckboxModule,
     SliderModule,
@@ -152,8 +143,6 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
     LibraryAdaptor,
     FilterAdaptor,
     LibraryDisplayAdaptor,
-    ImportService,
-    ImportAdaptor,
     SelectionAdaptor,
     ReadingListService,
     ReadingListAdaptor

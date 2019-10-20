@@ -13,16 +13,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * along with this program. If not, see <http:/www.gnu.org/licenses/>.package
  * org.comixed;
  */
 
-import { Comic } from 'app/library';
+import { RouterModule, Routes } from '@angular/router';
+import { ImportPageComponent } from 'app/comic-import/pages/import-page/import-page.component';
+import { AdminGuard } from 'app/user';
+import { NgModule } from '@angular/core';
 
-export interface SelectionState {
-  comics: Comic[];
-}
+const routes: Routes = [
+  {
+    path: 'import',
+    component: ImportPageComponent,
+    canActivate: [AdminGuard]
+  }
+];
 
-export const initial_state: SelectionState = {
-  comics: []
-};
+@NgModule({ imports: [RouterModule.forChild(routes)], exports: [RouterModule] })
+export class ComicImportRoutingModule {}

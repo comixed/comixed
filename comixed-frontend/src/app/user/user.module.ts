@@ -55,6 +55,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserAdminEffects } from 'app/user/effects/user-admin.effects';
 import { UserAdminService } from 'app/user/services/user-admin.service';
 import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
+import { UserPreferencePipe } from 'app/user/pipes/user-preference.pipe';
 
 @NgModule({
   imports: [
@@ -97,7 +98,8 @@ import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
     UsersPageComponent,
     UserDetailsComponent,
     UserDetailsEditorComponent,
-    AccountPreferencesComponent
+    AccountPreferencesComponent,
+    UserPreferencePipe
   ],
   exports: [
     CommonModule,
@@ -108,7 +110,8 @@ import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
     PanelModule,
     ButtonModule,
     TooltipModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    UserPreferencePipe
   ]
 })
 export class UserModule {

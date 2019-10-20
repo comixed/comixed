@@ -19,31 +19,23 @@
 
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Comic, ComicFile } from 'app/library';
+import { AppState, Comic } from 'app/library';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
 import { SELECTION_FEATURE_KEY } from 'app/library/reducers/selection.reducer';
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
-import * as SelectActions from 'app/library/actions/selection.actions';
 import {
   SelectAddComic,
-  SelectAddComicFile,
-  SelectBulkAddComicFiles,
   SelectBulkAddComics,
-  SelectBulkRemoveComicFiles,
-  SelectRemoveAllComicFiles,
-  SelectRemoveAllComics,
   SelectBulkRemoveComics,
-  SelectRemoveComic,
-  SelectRemoveComicFile
+  SelectRemoveAllComics,
+  SelectRemoveComic
 } from 'app/library/actions/selection.actions';
 import { SelectionState } from 'app/library/models/selection-state';
 
 @Injectable()
 export class SelectionAdaptor {
   private _comicSelection$ = new BehaviorSubject<Comic[]>([]);
-  private _comicFileSelection$ = new BehaviorSubject<ComicFile[]>([]);
 
   constructor(private store: Store<AppState>) {
     this.store
@@ -52,11 +44,6 @@ export class SelectionAdaptor {
       .subscribe((state: SelectionState) => {
         if (!_.isEqual(this._comicSelection$.getValue(), state.comics)) {
           this._comicSelection$.next(state.comics);
-        }
-        if (
-          !_.isEqual(this._comicFileSelection$.getValue(), state.comicFiles)
-        ) {
-          this._comicFileSelection$.next(state.comicFiles);
         }
       });
   }
@@ -83,33 +70,5 @@ export class SelectionAdaptor {
 
   clearComicSelections(): void {
     this.store.dispatch(new SelectRemoveAllComics());
-  }
-
-  get comicFileSelection$(): Observable<ComicFile[]> {
-    return this._comicFileSelection$.asObservable();
-  }
-
-  selectComicFile(comic_file: ComicFile): void {
-    this.store.dispatch(new SelectAddComicFile({ comic_file: comic_file }));
-  }
-
-  selectComicFiles(comic_files: ComicFile[]): void {
-    this.store.dispatch(
-      new SelectBulkAddComicFiles({ comic_files: comic_files })
-    );
-  }
-
-  deselectComicFile(comic_file: ComicFile): void {
-    this.store.dispatch(new SelectRemoveComicFile({ comic_file: comic_file }));
-  }
-
-  deselectComicFiles(comic_files: ComicFile[]): void {
-    this.store.dispatch(
-      new SelectBulkRemoveComicFiles({ comic_files: comic_files })
-    );
-  }
-
-  clearComicFileSelections(): void {
-    this.store.dispatch(new SelectRemoveAllComicFiles());
   }
 }

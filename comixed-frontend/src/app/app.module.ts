@@ -62,18 +62,13 @@ import { ComicService } from 'app/services/comic.service';
 import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
 import { LoginComponent } from 'app/ui/components/login/login.component';
 import { UserService } from 'app/services/user.service';
-import { ImportPageComponent } from 'app/ui/pages/import-page/import-page.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicFileCoverUrlPipe } from 'app/pipes/comic-file-cover-url.pipe';
 import {
   TranslateCompiler,
   TranslateLoader,
   TranslateModule
 } from '@ngx-translate/core';
-import { ComicFileListToolbarComponent } from 'app/ui/components/import/comic-file-list-toolbar/comic-file-list-toolbar.component';
-import { ComicFileGridItemComponent } from 'app/ui/components/import/comic-file-grid-item/comic-file-grid-item.component';
-import { ComicFileListComponent } from 'app/ui/components/import/comic-file-list/comic-file-list.component';
 import { FileSaverModule } from 'ngx-filesaver';
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
 import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
@@ -84,8 +79,6 @@ import {
   ContextMenuModule,
   TieredMenuModule
 } from 'primeng/primeng';
-import { UserPreferencePipe } from './pipes/user-preference.pipe';
-import { ComicFileListItemComponent } from './ui/components/import/comic-file-list-item/comic-file-list-item.component';
 import { UserModule } from 'app/user/user.module';
 import { EFFECTS } from 'app/app.effects';
 import { LibraryModule } from 'app/library/library.module';
@@ -95,28 +88,23 @@ import { BackendStatusModule } from 'app/backend-status/backend-status.module';
 import { ComicsModule } from 'app/comics/comics.module';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { ComicImportModule } from 'app/comic-import/comic-import.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
     LoginComponent,
-    ImportPageComponent,
-    ComicFileCoverUrlPipe,
-    ComicFileListToolbarComponent,
-    ComicFileGridItemComponent,
-    ComicFileListComponent,
     LibraryAdminPageComponent,
     ReadingListPageComponent,
     ReadingListsPageComponent,
-    UserPreferencePipe,
-    ComicFileListItemComponent,
     MainMenuComponent
   ],
   imports: [
     UserModule,
     ComicsModule,
     LibraryModule,
+    ComicImportModule,
     BackendStatusModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -189,6 +177,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     { prefix: './assets/i18n/app-', suffix: '.json' },
     { prefix: './assets/i18n/comics-', suffix: '.json' },
     { prefix: './assets/i18n/library-', suffix: '.json' },
+    { prefix: './assets/i18n/comic-import-', suffix: '.json' },
     { prefix: './assets/i18n/backend-status-', suffix: '.json' },
     { prefix: './assets/i18n/user-', suffix: '.json' }
   ]);

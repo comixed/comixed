@@ -22,6 +22,7 @@ package org.comixed.controller.file;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
+import org.comixed.net.GetAllComicsUnderRequest;
 import org.comixed.net.ImportComicFilesResponse;
 import org.comixed.net.ImportRequestBody;
 import org.comixed.service.file.FileService;
@@ -86,7 +87,7 @@ public class FileControllerTest {
         Mockito.when(fileService.getAllComicsUnder(Mockito.anyString()))
                .thenReturn(fileDetailsList);
 
-        final List<FileDetails> result = controller.getAllComicsUnder(TEST_DIRECTORY);
+        final List<FileDetails> result = controller.getAllComicsUnder(new GetAllComicsUnderRequest(TEST_DIRECTORY));
 
         assertNotNull(result);
         assertSame(fileDetailsList,

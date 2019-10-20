@@ -18,32 +18,21 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Comic } from 'app/library';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 
 @Component({
-  selector: 'app-comic-cover',
-  templateUrl: './comic-cover.component.html',
-  styleUrls: ['./comic-cover.component.scss']
+  selector: 'app-comic-file-grid-item',
+  templateUrl: './comic-file-grid-item.component.html',
+  styleUrls: ['./comic-file-grid-item.component.scss']
 })
-export class ComicCoverComponent {
-  @Input() cover_url: string;
-  @Input() comic: Comic;
+export class ComicFileGridItemComponent {
   @Input() comic_file: ComicFile;
   @Input() cover_size: number;
   @Input() same_height: boolean;
-  @Input() selected = false;
-  @Input() use_selected_class = true;
+  @Input() use_selected_class: boolean;
+  @Input() selected: boolean;
 
-  @Output() click = new EventEmitter<Comic | ComicFile>();
+  @Output() click = new EventEmitter<ComicFile>();
 
   constructor() {}
-
-  clicked(): void {
-    if (this.comic) {
-      this.click.emit(this.comic);
-    } else {
-      this.click.emit(this.comic_file);
-    }
-  }
 }

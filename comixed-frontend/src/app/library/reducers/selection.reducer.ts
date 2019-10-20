@@ -22,10 +22,9 @@ import {
   SelectionActionTypes
 } from '../actions/selection.actions';
 import {
-  SelectionState,
-  initial_state
+  initial_state,
+  SelectionState
 } from 'app/library/models/selection-state';
-import { mergeComicFiles } from 'app/library/utility.functions';
 
 export const SELECTION_FEATURE_KEY = 'selection_state';
 
@@ -67,45 +66,6 @@ export function reducer(
 
     case SelectionActionTypes.RemoveAllComics:
       return { ...state, comics: [] };
-
-    case SelectionActionTypes.AddComicFile:
-      return {
-        ...state,
-        comicFiles: mergeComicFiles(state.comicFiles, [
-          action.payload.comic_file
-        ])
-      };
-
-    case SelectionActionTypes.BulkAddComicFiles:
-      return {
-        ...state,
-        comicFiles: mergeComicFiles(
-          state.comicFiles,
-          action.payload.comic_files
-        )
-      };
-
-    case SelectionActionTypes.RemoveComicFile:
-      return {
-        ...state,
-        comicFiles: state.comicFiles.filter(
-          comic_file => comic_file.id !== action.payload.comic_file.id
-        )
-      };
-
-    case SelectionActionTypes.BulkRemoveComicFiles:
-      return {
-        ...state,
-        comicFiles: state.comicFiles.filter(
-          comic_file =>
-            !action.payload.comic_files.some(
-              entry => entry.id === comic_file.id
-            )
-        )
-      };
-
-    case SelectionActionTypes.RemoveAllComicFiles:
-      return { ...state, comicFiles: [] };
 
     default:
       return state;

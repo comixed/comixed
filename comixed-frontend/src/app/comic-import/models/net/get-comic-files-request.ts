@@ -17,12 +17,6 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/library';
-
-export interface SelectionState {
-  comics: Comic[];
+export interface GetComicFilesRequest {
+  directory: string;
 }
-
-export const initial_state: SelectionState = {
-  comics: []
-};

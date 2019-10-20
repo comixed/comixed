@@ -1,0 +1,73 @@
+<p-toolbar id='importing-toolbar'>
+    <div class='ui-inputgroup'>
+        <input id='directory-input'
+               pInputText
+               [(ngModel)]='directory'
+               [disabled]='busy'
+               [placeholder]='"import-toolbar.text.directory-placeholder"|translate'
+               [style.width]='"100%"'
+               type='text'/>
+        <button (click)='find_comics()'
+                [disabled]='busy||!directory||!directory.length'
+                [label]='"import-toolbar.button.find"|translate'
+                icon='fa fa-fw fa-search'
+                id='find-comics'
+                pButton
+                type='button'></button>
+    </div>
+</p-toolbar>
+<p-toolbar>
+    <div class='ui-toolbar-group-left'>
+        <p-dropdown (onChange)='changeLayout.next($event.value)'
+                    [(ngModel)]='layout'
+                    [options]='layout_options'
+                    styleClass='cx-layout-dropdown'></p-dropdown>
+        <p-dropdown (onChange)='set_sort_field($event.value)'
+                    [(ngModel)]='sort_field'
+                    [options]='sort_field_options'
+                    styleClass='cx-layout-dropdown'></p-dropdown>
+        <p-dropdown (onChange)='set_rows($event.value)'
+                    [(ngModel)]='rows'
+                    [options]='rows_options'
+                    styleClass='cx-layout-dropdown'></p-dropdown>
+        <p-checkbox (onChange)='set_same_height($event)'
+                    [(ngModel)]='same_height'
+                    [label]='"library-contents.options.cover-size.same-height"|translate'
+                    binary='true'></p-checkbox>
+        <p-slider (onChange)='set_cover_size($event.value)'
+                  (onSlideEnd)='save_cover_size($event.value)'
+                  [(ngModel)]='cover_size'
+                  [max]='400'
+                  [min]='100'></p-slider>
+        {{"library-contents.label.cover-size"|translate: {cover_size: cover_size} }}
+    </div>
+    <div class='ui-toolbar-group-right'>
+        <button pButton
+                type='button'
+                (click)='toggleBlockedPages()'
+                [icon]='deleteBlockedPages?"fa fa-fw fa-check":"fa fa-fw fa-question"'
+                [label]='"import-toolbar.button.delete-blocked-pages"|translate'></button>
+        <button (click)='select_all_comics()'
+                [disabled]='!comic_files.length||selected_comic_count === comic_files.length'
+                icon='fa fa-fw fa-plus'
+                [label]='"import-toolbar.button.select-all"|translate'
+                class='ui-button-secondary'
+                id='select-all-comics'
+                pButton
+                type='button'></button>
+        <button (click)='deselect_all_comics()'
+                [disabled]='selected_comic_count === 0'
+                icon='fa fa-fw fa-minus'
+                [label]='"import-toolbar.button.deselect-all"|translate'
+                class='ui-button-danger'
+                id='deselect-all-comics'
+                pButton
+                type='button'></button>
+        <!-- button (click)='startImport()'
+                [disabled]='selected_comic_count === 0'
+                icon='fa fa-fw fa-start'
+                [label]='"import-toolbar.button.start-import"|translate'
+                pButton
+                type='button'></button -->
+    </div>
+</p-toolbar>

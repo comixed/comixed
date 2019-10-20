@@ -17,12 +17,8 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/library';
-
-export interface SelectionState {
-  comics: Comic[];
+export interface StartImportRequest {
+  filenames: string[];
+  ignoreMetadata: boolean;
+  deleteBlockedPages: boolean;
 }
-
-export const initial_state: SelectionState = {
-  comics: []
-};

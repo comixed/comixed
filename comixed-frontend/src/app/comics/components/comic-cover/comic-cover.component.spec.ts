@@ -32,8 +32,8 @@ import { StoreModule } from '@ngrx/store';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
-import { COMIC_FILE_1 } from 'app/library';
 import { MessageService } from 'primeng/api';
+import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
 
 describe('ComicCoverComponent', () => {
   let component: ComicCoverComponent;

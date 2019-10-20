@@ -17,33 +17,32 @@
  * org.comixed;
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Comic } from 'app/library';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 
-@Component({
-  selector: 'app-comic-cover',
-  templateUrl: './comic-cover.component.html',
-  styleUrls: ['./comic-cover.component.scss']
-})
-export class ComicCoverComponent {
-  @Input() cover_url: string;
-  @Input() comic: Comic;
-  @Input() comic_file: ComicFile;
-  @Input() cover_size: number;
-  @Input() same_height: boolean;
-  @Input() selected = false;
-  @Input() use_selected_class = true;
+export const COMIC_FILE_1: ComicFile = {
+  id: 1,
+  filename: '/Users/comixed/Documents/comics/existing-comic-file.cbz',
+  baseFilename: 'existing-comic-file',
+  size: 65535
+};
 
-  @Output() click = new EventEmitter<Comic | ComicFile>();
+export const COMIC_FILE_2: ComicFile = {
+  id: 2,
+  filename: '/Users/comixed/Documents/comics/another-comic-file.cbz',
+  baseFilename: 'another-comic-file',
+  size: 32767
+};
 
-  constructor() {}
+export const COMIC_FILE_3: ComicFile = {
+  id: 3,
+  filename: '/Users/comixed/Documents/comics/this-comic-file.cbz',
+  baseFilename: 'this-comic-file',
+  size: 46787
+};
 
-  clicked(): void {
-    if (this.comic) {
-      this.click.emit(this.comic);
-    } else {
-      this.click.emit(this.comic_file);
-    }
-  }
-}
+export const COMIC_FILE_4: ComicFile = {
+  id: 4,
+  filename: '/Users/comixed/Documents/comics/that-comic-file.cbz',
+  baseFilename: 'that-comic-file',
+  size: 56213
+};

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,18 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/library';
+import { ComicFileCoverUrlPipe } from './comic-file-cover-url.pipe';
+import { COMIXED_API_ROOT } from 'app/app.constants';
+import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
 
-export interface SelectionState {
-  comics: Comic[];
-}
+describe('ComicFileCoverUrlPipe', () => {
+  const pipe = new ComicFileCoverUrlPipe();
 
-export const initial_state: SelectionState = {
-  comics: []
-};
+  it('returns the url for given page', () => {
+    expect(pipe.transform(COMIC_FILE_1)).toEqual(
+      `${COMIXED_API_ROOT}/files/import/cover?filename=${encodeURIComponent(
+        COMIC_FILE_1.filename
+      )}`
+    );
+  });
+});

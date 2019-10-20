@@ -17,12 +17,18 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/library';
+package org.comixed.net;
 
-export interface SelectionState {
-  comics: Comic[];
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class GetAllComicsUnderRequest {
+    @JsonProperty("directory") private String directory;
+
+    public GetAllComicsUnderRequest() { }
+
+    public GetAllComicsUnderRequest(final String directory) { this.directory = directory; }
+
+    public String getDirectory() { return directory; }
+
+    public void setDirectory(final String directory) { this.directory = directory; }
 }
-
-export const initial_state: SelectionState = {
-  comics: []
-};

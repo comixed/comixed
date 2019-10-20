@@ -19,22 +19,13 @@
 
 import { SelectionAdaptor } from './selection.adaptor';
 import { TestBed } from '@angular/core/testing';
-import {
-  AppState,
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_5,
-  COMIC_FILE_1,
-  COMIC_FILE_4
-} from 'app/library';
+import { AppState, COMIC_1, COMIC_2, COMIC_3, COMIC_5 } from 'app/library';
 import { Store, StoreModule } from '@ngrx/store';
 import { reducer } from 'app/library/reducers/selection.reducer';
 
 describe('SelectionAdaptor', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const COMIC = COMIC_2;
-  const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_4];
 
   let adaptor: SelectionAdaptor;
   let store: Store<AppState>;

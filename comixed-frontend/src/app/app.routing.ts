@@ -21,7 +21,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard, ReaderGuard } from 'app/user';
 import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
-import { ImportPageComponent } from 'app/ui/pages/import-page/import-page.component';
+import { ImportPageComponent } from 'app/comic-import/pages/import-page/import-page.component';
 import { DuplicatesPageComponent } from 'app/library/pages/duplicates-page/duplicates-page.component';
 import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
 import { ReadingListPageComponent } from 'app/ui/pages/reading-lists/reading-list-page/reading-list-page.component';
@@ -46,11 +46,6 @@ export const routes: Routes = [
     path: 'lists',
     component: ReadingListsPageComponent,
     canActivate: [ReaderGuard]
-  },
-  {
-    path: 'import',
-    component: ImportPageComponent,
-    canActivate: [AdminGuard]
   },
   {
     path: 'pages/duplicates',

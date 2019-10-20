@@ -17,12 +17,7 @@
  * org.comixed;
  */
 
-import { Comic } from 'app/library';
+import { API_ROOT_URL } from 'app/app.functions';
 
-export interface SelectionState {
-  comics: Comic[];
-}
-
-export const initial_state: SelectionState = {
-  comics: []
-};
+export const GET_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
+export const START_IMPORT_URL = `${API_ROOT_URL}/files/import`;

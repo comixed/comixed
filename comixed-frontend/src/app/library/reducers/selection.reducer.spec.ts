@@ -19,28 +19,11 @@
 
 import { reducer } from 'app/library/reducers/selection.reducer';
 import {
-  SelectionState,
-  initial_state
+  initial_state,
+  SelectionState
 } from 'app/library/models/selection-state';
-import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4,
-  COMIC_5,
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3,
-  COMIC_FILE_4
-} from 'app/library';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5 } from 'app/library';
 import * as SelectionActions from 'app/library/actions/selection.actions';
-import {
-  SelectAddComicFile,
-  SelectBulkAddComicFiles,
-  SelectBulkRemoveComicFiles,
-  SelectRemoveAllComicFiles,
-  SelectRemoveComicFile
-} from 'app/library/actions/selection.actions';
 
 describe('Selection Reducer', () => {
   let state: SelectionState;
@@ -52,10 +35,6 @@ describe('Selection Reducer', () => {
   describe('the initial state', () => {
     it('has an empty set of comics', () => {
       expect(state.comics).toEqual([]);
-    });
-
-    it('has an empty set of comic files', () => {
-      expect(state.comicFiles).toEqual([]);
     });
   });
 
@@ -138,93 +117,6 @@ describe('Selection Reducer', () => {
         new SelectionActions.SelectRemoveAllComics()
       );
       expect(state.comics).toEqual([]);
-    });
-  });
-
-  describe('when adding a comic file', () => {
-    it('adds a comic file if it is not selected', () => {
-      state = reducer(
-        { ...state, comicFiles: [COMIC_FILE_2] },
-        new SelectAddComicFile({ comic_file: COMIC_FILE_1 })
-      );
-
-      expect(state.comicFiles).toContain(COMIC_FILE_1);
-    });
-
-    it('does not add a comic file if it is already selected', () => {
-      state = reducer(
-        { ...state, comicFiles: [COMIC_FILE_1] },
-        new SelectAddComicFile({ comic_file: COMIC_FILE_1 })
-      );
-
-      expect(state.comicFiles).toEqual([COMIC_FILE_1]);
-    });
-  });
-
-  describe('when adding comic files in bulk', () => {
-    it('adds all comics provided if none are selected', () => {
-      state = reducer(
-        { ...state, comicFiles: [COMIC_FILE_1, COMIC_FILE_3] },
-        new SelectBulkAddComicFiles({
-          comic_files: [COMIC_FILE_2, COMIC_FILE_4]
-        })
-      );
-
-      expect(state.comicFiles).toContain(COMIC_FILE_2);
-      expect(state.comicFiles).toContain(COMIC_FILE_4);
-    });
-  });
-
-  describe('when removing a comic file', () => {
-    it('removes the comic if it is selected', () => {
-      state = reducer(
-        { ...state, comicFiles: [COMIC_FILE_1, COMIC_FILE_3] },
-        new SelectRemoveComicFile({ comic_file: COMIC_FILE_1 })
-      );
-
-      expect(state.comicFiles).toEqual([COMIC_FILE_3]);
-    });
-
-    it('does nothing if the comic file is not selected', () => {
-      state = reducer(
-        { ...state, comicFiles: [COMIC_FILE_1, COMIC_FILE_3] },
-        new SelectRemoveComicFile({ comic_file: COMIC_FILE_4 })
-      );
-
-      expect(state.comicFiles).toEqual([COMIC_FILE_1, COMIC_FILE_3]);
-    });
-  });
-
-  describe('when removing comic files in bulk', () => {
-    it('removes all specified comic files', () => {
-      state = reducer(
-        {
-          ...state,
-          comicFiles: [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4]
-        },
-        new SelectBulkRemoveComicFiles({
-          comic_files: [COMIC_FILE_2, COMIC_FILE_4]
-        })
-      );
-
-      expect(state.comicFiles).not.toContain(COMIC_FILE_2);
-      expect(state.comicFiles).not.toContain(COMIC_FILE_4);
-    });
-  });
-
-  describe('when clearing the comic file selections', () => {
-    beforeEach(() => {
-      state = reducer(
-        {
-          ...state,
-          comicFiles: [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4]
-        },
-        new SelectRemoveAllComicFiles()
-      );
-    });
-
-    it('clears the comic file selections', () => {
-      expect(state.comicFiles).toEqual([]);
     });
   });
 });

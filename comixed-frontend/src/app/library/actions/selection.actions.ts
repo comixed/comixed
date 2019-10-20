@@ -18,19 +18,14 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Comic, ComicFile } from 'app/library';
+import { Comic } from 'app/library';
 
 export enum SelectionActionTypes {
   AddComic = '[SELECT] Add a comic',
   BulkAddComics = '[SELECT] Add comics in bulk',
   RemoveComic = '[SELECT] Remove a comic',
   BulkRemoveComics = '[SELECT] Remove comics in bulk',
-  RemoveAllComics = '[SELECT] Remove all comics',
-  AddComicFile = '[SELECT] Add a comic file',
-  BulkAddComicFiles = '[SELECT] Add comic files in bulk',
-  RemoveComicFile = '[SELECT] Remove a comic file',
-  BulkRemoveComicFiles = '[SELECT] Remove comic files in bulk',
-  RemoveAllComicFiles = '[SELECT] Remove all comic files'
+  RemoveAllComics = '[SELECT] Remove all comics'
 }
 
 export class SelectAddComic implements Action {
@@ -63,44 +58,9 @@ export class SelectRemoveAllComics implements Action {
   constructor() {}
 }
 
-export class SelectAddComicFile implements Action {
-  readonly type = SelectionActionTypes.AddComicFile;
-
-  constructor(public payload: { comic_file: ComicFile }) {}
-}
-
-export class SelectBulkAddComicFiles implements Action {
-  readonly type = SelectionActionTypes.BulkAddComicFiles;
-
-  constructor(public payload: { comic_files: ComicFile[] }) {}
-}
-
-export class SelectRemoveComicFile implements Action {
-  readonly type = SelectionActionTypes.RemoveComicFile;
-
-  constructor(public payload: { comic_file: ComicFile }) {}
-}
-
-export class SelectBulkRemoveComicFiles implements Action {
-  readonly type = SelectionActionTypes.BulkRemoveComicFiles;
-
-  constructor(public payload: { comic_files: ComicFile[] }) {}
-}
-
-export class SelectRemoveAllComicFiles implements Action {
-  readonly type = SelectionActionTypes.RemoveAllComicFiles;
-
-  constructor() {}
-}
-
 export type SelectionActions =
   | SelectAddComic
   | SelectBulkAddComics
   | SelectRemoveComic
   | SelectBulkRemoveComics
-  | SelectRemoveAllComics
-  | SelectAddComicFile
-  | SelectBulkAddComicFiles
-  | SelectRemoveComicFile
-  | SelectBulkRemoveComicFiles
-  | SelectRemoveAllComicFiles;
+  | SelectRemoveAllComics;

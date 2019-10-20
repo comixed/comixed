@@ -69,64 +69,6 @@
     "email": "Email",
     "password": "Password"
   },
-  "comic-file-list-toolbar": {
-    "options": {
-      "sort-field": {
-        "filename": "Sort by filename",
-        "size": "Sort by file size"
-      }
-    }
-  },
-  "comic-file-list-item": {
-    "label": {
-      "filesize": "Filesize",
-      "filename": "Filename"
-    }
-  },
-  "import-toolbar": {
-    "text": {
-      "directory-placeholder": "Path to comics...",
-      "filter-placeholder": "Enter filename text..."
-    },
-    "button": {
-      "find": "Find Comics",
-      "select-all": "Select All",
-      "deselect-all": "Deselect All",
-      "select": "Select",
-      "import": "Import"
-    }
-  },
-  "import-page": {
-    "title": "Importing {comic_count, plural, =1{One Comic} other{# Comics}}...",
-    "label": {
-      "filename": "Filename",
-      "file-size": "File Size",
-      "search-comic-names": "Search Comic Names"
-    },
-    "text": {
-      "blocked-pages-notice": "Blocked pages in those comics will be automatically marked as deleted...",
-      "search-by-series": "Search by series name..."
-    }
-  },
-  "comic-file-list": {
-    "header": "There Are {selected_count} Files Selected",
-    "popup": {
-      "select-all": "Select {comic_count} comics",
-      "deselect-all": "Deselect {comic_count} comics",
-      "import": {
-        "label": "Import {comic_count} Comics",
-        "with-metadata": "With Metadata...",
-        "without-metadata": "Without Metadata..."
-      },
-      "start-import": "Import {comic_count} comics...",
-      "start-import-ignore-metadata": "Import {comic_count} comics, ignore meta-data..."
-    },
-    "import": {
-      "header": "Import Comic Files",
-      "message": "Import {comic_count} comics?",
-      "message-ignore-metadata": "Import {comic_count} comic(s), ignoring all included metadata??"
-    }
-  },
   "library": {
     "tab": {
       "covers": "Covers",

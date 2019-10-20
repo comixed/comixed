@@ -25,14 +25,13 @@ import org.h2.store.fs.FileUtils;
 public class FileDetails {
     private static int COUNT = 0;
 
-    private int id = ++COUNT;
-    private String filename;
-    private String baseFilename;
-    private long size;
+    @JsonProperty("id") private int id = ++COUNT;
+    @JsonProperty("filename") private String filename;
+    @JsonProperty("baseFilename") private String baseFilename;
+    @JsonProperty("size") private long size;
 
-    public FileDetails(String filename,
-                       long size) {
-        super();
+    public FileDetails(final String filename,
+                       final long size) {
         this.baseFilename = FileUtils.getName(filename);
         this.filename = filename.replaceAll("\\\\",
                                             "/");
@@ -49,7 +48,6 @@ public class FileDetails {
         return size;
     }
 
-    @JsonProperty("base_filename")
     public String getBaseFilename() {
         return baseFilename;
     }

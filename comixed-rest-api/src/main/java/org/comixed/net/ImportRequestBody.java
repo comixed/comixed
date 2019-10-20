@@ -23,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ImportRequestBody {
     @JsonProperty("filenames") private String[] filenames;
-    @JsonProperty("ignore_metadata") private boolean ignoreMetadata;
-    @JsonProperty("delete_blocked_pages") private boolean deleteBlockedPages;
+    @JsonProperty("ignoreMetadata") private boolean ignoreMetadata;
+    @JsonProperty("deleteBlockedPages") private boolean deleteBlockedPages;
 
     public ImportRequestBody(final String[] filenames,
                              final boolean deleteBlockedPages,

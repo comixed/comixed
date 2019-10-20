@@ -19,11 +19,9 @@
 
 import * as fromRouter from '@ngrx/router-store';
 import * as fromLibrary from './reducers/library.reducer';
-import * as fromImport from './reducers/import.reducer';
 import * as fromSelection from './reducers/selection.reducer';
 import * as fromFilters from './reducers/filters.reducer';
 import { LibraryState } from './models/library-state';
-import { ImportState } from './models/import-state';
 import { Params } from '@angular/router';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
@@ -32,7 +30,6 @@ import { FilterState } from 'app/library/reducers/filters.reducer';
 
 export { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
 export { LibraryAdaptor } from './adaptors/library.adaptor';
-export { ImportAdaptor } from './adaptors/import.adaptor';
 export { SelectionAdaptor } from './adaptors/selection.adaptor';
 export { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
 export { Comic } from '../comics/models/comic';
@@ -40,7 +37,6 @@ export { ScanType } from '../comics/models/scan-type';
 export { ComicFormat } from '../comics/models/comic-format';
 export { ComicCredit } from '../comics/models/comic-credit';
 export { ComicCollectionEntry } from './models/comic-collection-entry';
-export { ComicFile } from './models/comic-file';
 export { ReadingList } from './models/reading-list/reading-list';
 export { ReadingListEntry } from './models/reading-list/reading-list-entry';
 
@@ -53,7 +49,6 @@ interface RouterStateUrl {
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   library: LibraryState;
-  import: ImportState;
   selection: SelectionState;
   filters_state: FilterState;
 }
@@ -63,7 +58,6 @@ export type State = AppState;
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
   library: fromLibrary.reducer,
-  import: fromImport.reducer,
   selection: fromSelection.reducer,
   filters_state: fromFilters.reducer
 };
@@ -94,9 +88,3 @@ export {
   FORMAT_4,
   FORMAT_5
 } from '../comics/models/comic-format.fixtures';
-export {
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3,
-  COMIC_FILE_4
-} from './models/comic-file.fixtures';
