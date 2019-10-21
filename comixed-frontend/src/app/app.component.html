@@ -10,16 +10,23 @@
     <div class='ui-g-12 ui-sm-12'>
         <router-outlet></router-outlet>
     </div>
-    <div class='ui-g'
-         id='comixed-footer'>
-        <div [innerHTML]='"main-page.library-counts"|translate:{
+    <div id='comixed-footer'
+         class='ui-g'>
+        <div class='ui-g-4'>
+            <div *ngIf='user'
+                 [innerHTML]='"app-component.library-counts"|translate:{
                 comic_count: comicCount,
                 read_count: 0,
                 import_count: processingCount,
                 rescan_count: rescanCount
               }'
-             class='ui-g-3 ui-sm-6'></div>
-        <div [innerHTML]='"main-page.copyright"|translate:{ years: "2017-2019" }'
-             class='ui-g-9 ui-sm-6'></div>
+            >
+            </div>
+        </div>
+        <div class='ui-g-4'></div>
+        <div class='ui-g-4'>
+            <div [innerHTML]='"app-component.copyright"|translate:{ years: "2017-2019" }'>
+            </div>
+        </div>
     </div>
 </div>

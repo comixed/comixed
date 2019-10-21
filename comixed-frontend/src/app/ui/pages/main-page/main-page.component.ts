@@ -27,6 +27,7 @@ import { ComicCollectionEntry } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { AuthenticationAdaptor } from 'app/user';
 
 const COLOR_PALLETTE = [
   '#C0C0C0',
@@ -52,34 +53,37 @@ const COLOR_PALLETTE = [
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent implements OnInit, OnDestroy {
-  comics_subscription: Subscription;
-  publishers_subscription: Subscription;
+  authSubscription: Subscription;
+  authenticated = false;
+  comicsSubscription: Subscription;
+  publishersSubscription: Subscription;
   publishers: ComicCollectionEntry[];
-  series_subscription: Subscription;
+  seriesSubscription: Subscription;
   series: ComicCollectionEntry[];
-  characters_subscription: Subscription;
+  charactersSubscription: Subscription;
   characters: ComicCollectionEntry[];
-  teams_subscription: Subscription;
+  teamsSubscription: Subscription;
   teams: ComicCollectionEntry[];
-  locations_subscription: Subscription;
+  locationsSubscription: Subscription;
   locations: ComicCollectionEntry[];
-  comic_count: number;
+  comicCount: number;
   plural = false;
 
-  public library_data: any;
-  public options: any;
-  public data_options: Array<SelectItem> = [
+  libraryData: any;
+  options: any;
+  dataOptions: Array<SelectItem> = [
     { label: 'Publishers', value: 'publishers' },
     { label: 'Series', value: 'series' },
     { label: 'Characters', value: 'characters' },
     { label: 'Teams', value: 'teams' },
     { label: 'Locations', value: 'locations' }
   ];
-  public data_to_show = 'publishers';
+  dataToShow = 'publishers';
 
   constructor(
     private titleService: Title,
     private translateService: TranslateService,
+    private authenticationAdaptor: AuthenticationAdaptor,
     private libraryAdaptor: LibraryAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {
@@ -96,51 +100,55 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.authSubscription = this.authenticationAdaptor.authenticated$.subscribe(
+      authenticated => (this.authenticated = authenticated)
+    );
     this.translateService.onLangChange.subscribe(() => {
       this.titleService.setTitle(
         this.translateService.instant('main-page.title')
       );
     });
-    this.comics_subscription = this.libraryAdaptor.comic$.subscribe(comics => {
-      this.comic_count = comics.length;
-      this.plural = this.comic_count !== 1;
+    this.comicsSubscription = this.libraryAdaptor.comic$.subscribe(comics => {
+      this.comicCount = comics.length;
+      this.plural = this.comicCount !== 1;
     });
-    this.publishers_subscription = this.libraryAdaptor.publisher$.subscribe(
+    this.publishersSubscription = this.libraryAdaptor.publisher$.subscribe(
       publishers => {
         this.publishers = publishers;
-        this.build_data();
+        this.buildData();
       }
     );
-    this.series_subscription = this.libraryAdaptor.serie$.subscribe(series => {
+    this.seriesSubscription = this.libraryAdaptor.serie$.subscribe(series => {
       this.series = series;
-      this.build_data();
+      this.buildData();
     });
-    this.characters_subscription = this.libraryAdaptor.character$.subscribe(
+    this.charactersSubscription = this.libraryAdaptor.character$.subscribe(
       characters => {
         this.characters = characters;
-        this.build_data();
+        this.buildData();
       }
     );
-    this.teams_subscription = this.libraryAdaptor.team$.subscribe(teams => {
+    this.teamsSubscription = this.libraryAdaptor.team$.subscribe(teams => {
       this.teams = teams;
-      this.build_data();
+      this.buildData();
     });
-    this.locations_subscription = this.libraryAdaptor.location$.subscribe(
+    this.locationsSubscription = this.libraryAdaptor.location$.subscribe(
       locations => {
         this.locations = locations;
-        this.build_data();
+        this.buildData();
       }
     );
     this.breadcrumbAdaptor.loadEntries([]);
   }
 
   ngOnDestroy() {
-    this.comics_subscription.unsubscribe();
-    this.publishers_subscription.unsubscribe();
-    this.series_subscription.unsubscribe();
-    this.characters_subscription.unsubscribe();
-    this.teams_subscription.unsubscribe();
-    this.locations_subscription.unsubscribe();
+    this.authSubscription.unsubscribe();
+    this.comicsSubscription.unsubscribe();
+    this.publishersSubscription.unsubscribe();
+    this.seriesSubscription.unsubscribe();
+    this.charactersSubscription.unsubscribe();
+    this.teamsSubscription.unsubscribe();
+    this.locationsSubscription.unsubscribe();
   }
 
   sort(elements: ComicCollectionEntry[]): ComicCollectionEntry[] {
@@ -159,11 +167,11 @@ export class MainPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  build_data(): void {
+  buildData(): void {
     const names = [];
     const counts = [];
 
-    switch (this.data_to_show) {
+    switch (this.dataToShow) {
       case 'publishers':
         this.sort(this.publishers).forEach(publisher => {
           names.push(publisher.name);
@@ -205,7 +213,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
         break;
     }
 
-    this.library_data = {
+    this.libraryData = {
       labels: names.slice(0, 15),
       datasets: [
         {
