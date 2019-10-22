@@ -35,6 +35,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -62,7 +65,8 @@ public class ProcessComicTaskTest {
     public void testStartTask()
             throws
             WorkerTaskException,
-            ArchiveAdaptorException {
+            ArchiveAdaptorException,
+            IOException {
         Mockito.when(processComicEntry.getComic())
                .thenReturn(comic);
         Mockito.when(comic.getArchiveAdaptor())
@@ -72,7 +76,7 @@ public class ProcessComicTaskTest {
                .loadComic(comic);
         Mockito.when(comic.getFilename())
                .thenReturn(TEST_COMIC_FILENAME);
-        Mockito.when(utils.createHash(Mockito.any()))
+        Mockito.when(utils.createHash(Mockito.any(InputStream.class)))
                .thenReturn(TEST_FILE_HASH);
         Mockito.doNothing()
                .when(comic)

@@ -19,7 +19,6 @@
 
 package org.comixed.task.model;
 
-import org.apache.commons.io.FileUtils;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.model.library.Comic;
@@ -34,7 +33,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
 
@@ -97,7 +96,7 @@ public class ProcessComicTask
         final ComicFileDetails fileDetails = new ComicFileDetails();
 
         try {
-            fileDetails.setHash(this.utils.createHash(FileUtils.readFileToByteArray(new File(comic.getFilename()))));
+            fileDetails.setHash(this.utils.createHash(new FileInputStream(comic.getFilename())));
         }
         catch (IOException error) {
             throw new WorkerTaskException("failed to get hash for file: " + comic.getFilename(),

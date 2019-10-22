@@ -319,7 +319,7 @@ public class UserServiceTest {
             ComiXedUserException {
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                .thenReturn(user);
-        Mockito.when(utils.createHash(Mockito.any()))
+        Mockito.when(utils.createHash(Mockito.any(byte[].class)))
                .thenReturn(TEST_PASSWORD_HASH);
         Mockito.doNothing()
                .when(user)
@@ -384,7 +384,7 @@ public class UserServiceTest {
             ComiXedUserException {
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                .thenReturn(null);
-        Mockito.when(utils.createHash(Mockito.any()))
+        Mockito.when(utils.createHash(Mockito.any(byte[].class)))
                .thenReturn(TEST_PASSWORD_HASH);
         Mockito.when(userRepository.save(userCaptor.capture()))
                .thenReturn(user);
