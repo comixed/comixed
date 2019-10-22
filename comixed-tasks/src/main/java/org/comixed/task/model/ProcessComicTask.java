@@ -57,7 +57,6 @@ public class ProcessComicTask
     }
 
     @Override
-    @Transactional(rollbackFor = {WorkerTaskException.class})
     public void startTask()
             throws
             WorkerTaskException {
@@ -65,9 +64,14 @@ public class ProcessComicTask
             this.startTaskInternal();
         }
         finally {
-            this.logger.debug("Deleting process entry");
-            this.processComicEntryRepository.delete(this.entry);
+            this.cleanup();
         }
+    }
+
+    @Transactional
+    public void cleanup() {
+        this.logger.debug("Deleting process entry");
+        this.processComicEntryRepository.delete(this.entry);
     }
 
     private void startTaskInternal()

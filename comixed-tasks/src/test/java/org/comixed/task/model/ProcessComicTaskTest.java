@@ -107,4 +107,40 @@ public class ProcessComicTaskTest {
                        Mockito.times(1))
                .delete(processComicEntry);
     }
+
+    @Test(expected = WorkerTaskException.class)
+    public void testStartTaskLoadComicFails()
+            throws
+            WorkerTaskException,
+            ArchiveAdaptorException {
+        Mockito.when(processComicEntry.getComic())
+               .thenReturn(comic);
+        Mockito.when(comic.getArchiveAdaptor())
+               .thenReturn(archiveAdaptor);
+        Mockito.doThrow(ArchiveAdaptorException.class)
+               .when(archiveAdaptor)
+               .loadComic(comic);
+        Mockito.doNothing()
+               .when(processComicEntryRepository)
+               .delete(Mockito.any());
+
+        try {
+            task.startTask();
+        }
+        finally {
+
+            Mockito.verify(processComicEntry,
+                           Mockito.times(1))
+                   .getComic();
+            Mockito.verify(comic,
+                           Mockito.times(1))
+                   .getArchiveAdaptor();
+            Mockito.verify(archiveAdaptor,
+                           Mockito.times(1))
+                   .loadComic(comic);
+            Mockito.verify(processComicEntryRepository,
+                           Mockito.times(1))
+                   .delete(processComicEntry);
+        }
+    }
 }
