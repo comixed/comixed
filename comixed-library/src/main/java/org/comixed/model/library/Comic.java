@@ -70,7 +70,8 @@ public class Comic {
     @OneToOne(cascade = CascadeType.ALL,
               mappedBy = "comic",
               orphanRemoval = true)
-    @JsonView({ComicDetails.class})
+    @JsonView({ComicList.class,
+               ComicDetails.class})
     private ComicFileDetails fileDetails;
 
     @ElementCollection

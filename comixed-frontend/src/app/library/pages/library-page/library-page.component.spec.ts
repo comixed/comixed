@@ -59,6 +59,7 @@ import { LibraryPageComponent } from './library-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import {
   ContextMenuModule,
+  ProgressSpinnerModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
@@ -101,7 +102,8 @@ describe('LibraryPageComponent', () => {
         StoreModule.forRoot(REDUCERS),
         EffectsModule.forRoot(EFFECTS),
         TooltipModule,
-        ToolbarModule
+        ToolbarModule,
+        ProgressSpinnerModule
       ],
       declarations: [
         LibraryPageComponent,

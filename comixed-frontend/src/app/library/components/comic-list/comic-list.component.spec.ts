@@ -45,6 +45,7 @@ import {
   ContextMenuModule,
   MenuItem,
   MessageService,
+  ProgressSpinnerModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
@@ -109,7 +110,8 @@ describe('ComicListComponent', () => {
         ConfirmDialogModule,
         ContextMenuModule,
         TooltipModule,
-        ToolbarModule
+        ToolbarModule,
+        ProgressSpinnerModule
       ],
       declarations: [
         ComicListComponent,

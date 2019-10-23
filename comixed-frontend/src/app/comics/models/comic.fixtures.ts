@@ -25,6 +25,7 @@ import {
   COMIC_CREDIT_1,
   COMIC_CREDIT_2
 } from 'app/comics/models/comic-credit.fixtures';
+import { FILE_DETAILS_1 } from 'app/comics/models/file-details.fixtures';
 
 export const COMIC_1: Comic = {
   id: 1,
@@ -61,7 +62,8 @@ export const COMIC_1: Comic = {
   format: FORMAT_1,
   lastUpdatedDate: 0,
   nextIssueId: null,
-  previousIssueId: null
+  previousIssueId: null,
+  fileDetails: FILE_DETAILS_1
 };
 
 export const COMIC_2: Comic = {
@@ -99,7 +101,8 @@ export const COMIC_2: Comic = {
   format: null,
   lastUpdatedDate: 0,
   nextIssueId: null,
-  previousIssueId: null
+  previousIssueId: null,
+  fileDetails: FILE_DETAILS_1
 };
 
 export const COMIC_3: Comic = {
@@ -137,7 +140,8 @@ export const COMIC_3: Comic = {
   format: null,
   lastUpdatedDate: 0,
   nextIssueId: null,
-  previousIssueId: null
+  previousIssueId: null,
+  fileDetails: FILE_DETAILS_1
 };
 
 export const COMIC_4: Comic = {
@@ -175,7 +179,8 @@ export const COMIC_4: Comic = {
   format: null,
   lastUpdatedDate: 0,
   nextIssueId: null,
-  previousIssueId: null
+  previousIssueId: null,
+  fileDetails: FILE_DETAILS_1
 };
 
 export const COMIC_5: Comic = {
@@ -213,5 +218,6 @@ export const COMIC_5: Comic = {
   format: null,
   lastUpdatedDate: 0,
   nextIssueId: null,
-  previousIssueId: null
+  previousIssueId: null,
+  fileDetails: FILE_DETAILS_1
 };

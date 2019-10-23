@@ -49,9 +49,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { CheckboxModule } from 'primeng/checkbox';
 import {
+  ProgressSpinnerModule,
   ScrollPanelModule,
   SliderModule,
-  ToolbarModule
+  ToolbarModule,
+  TooltipModule
 } from 'primeng/primeng';
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
@@ -105,7 +107,9 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
     CheckboxModule,
     SliderModule,
     ScrollPanelModule,
-    ToolbarModule
+    ToolbarModule,
+    ProgressSpinnerModule,
+    TooltipModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [

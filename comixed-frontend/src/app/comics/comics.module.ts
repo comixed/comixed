@@ -43,6 +43,8 @@ import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
 import { BlockUIModule } from 'primeng/blockui';
 import {
   ProgressBarModule,
+  ProgressSpinnerModule,
+  SpinnerModule,
   SplitButtonModule,
   TabViewModule,
   TooltipModule
@@ -101,7 +103,9 @@ import { PageService } from 'app/comics/services/page.service';
     TabViewModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(fromComics.COMIC_FEATURE_KEY, fromComics.reducer),
-    EffectsModule.forFeature([ComicEffects])
+    EffectsModule.forFeature([ComicEffects]),
+    ProgressSpinnerModule,
+    TooltipModule
   ],
   exports: [
     CommonModule,

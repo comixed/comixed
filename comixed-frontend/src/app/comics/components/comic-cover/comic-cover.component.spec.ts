@@ -34,6 +34,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import { MessageService } from 'primeng/api';
 import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
+import { ProgressSpinnerModule, TooltipModule } from 'primeng/primeng';
 
 describe('ComicCoverComponent', () => {
   let component: ComicCoverComponent;
@@ -50,7 +51,9 @@ describe('ComicCoverComponent', () => {
         EffectsModule.forRoot([]),
         OverlayPanelModule,
         PanelModule,
-        CardModule
+        CardModule,
+        ProgressSpinnerModule,
+        TooltipModule
       ],
       declarations: [ComicCoverComponent, ComicCoverUrlPipe, ComicTitlePipe],
       providers: [MessageService]
@@ -58,9 +61,9 @@ describe('ComicCoverComponent', () => {
 
     fixture = TestBed.createComponent(ComicCoverComponent);
     component = fixture.componentInstance;
-    component.cover_url = 'http://localhost/cover.png';
-    component.cover_size = 200;
-    component.same_height = true;
+    component.coverUrl = 'http://localhost/cover.png';
+    component.coverSize = 200;
+    component.useSameHeight = true;
     fixture.detectChanges();
   }));
 
@@ -75,7 +78,7 @@ describe('ComicCoverComponent', () => {
   });
 
   it('fires an event when clicked with an selected comic file', () => {
-    component.comic_file = COMIC_FILE_1;
+    component.comicFile = COMIC_FILE_1;
     component.clicked();
     component.click.subscribe(result => expect(result).toEqual(COMIC_FILE_1));
   });

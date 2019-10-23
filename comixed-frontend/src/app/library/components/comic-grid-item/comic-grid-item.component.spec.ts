@@ -37,6 +37,7 @@ import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { MessageService } from 'primeng/api';
+import { ProgressSpinnerModule, TooltipModule } from 'primeng/primeng';
 
 describe('ComicGridItemComponent', () => {
   let component: ComicGridItemComponent;
@@ -53,7 +54,9 @@ describe('ComicGridItemComponent', () => {
         TranslateModule.forRoot(),
         OverlayPanelModule,
         PanelModule,
-        CardModule
+        CardModule,
+        ProgressSpinnerModule,
+        TooltipModule
       ],
       declarations: [
         ComicGridItemComponent,
@@ -67,8 +70,8 @@ describe('ComicGridItemComponent', () => {
     fixture = TestBed.createComponent(ComicGridItemComponent);
     component = fixture.componentInstance;
     component.comic = COMIC_1;
-    component.same_height = true;
-    component.cover_size = 640;
+    component.useSameHeight = true;
+    component.coverSize = 640;
 
     fixture.detectChanges();
   }));

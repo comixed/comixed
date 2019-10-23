@@ -1,11 +1,18 @@
-<div *ngIf='cover_url'
-     [class.selected-comic]='use_selected_class && selected'>
+<div *ngIf='coverUrl'
+     class='cx-comic-cover-container'
+     [class.cx-comic-cover-dimmed]='unprocessed'
+     [class.selected-comic]='selectSelectedClass && selected'>
     <p-card [styleClass]='"comic-cover-card"'
             (click)='clicked()'>
         <p-header></p-header>
-        <img [src]='cover_url'
-             [style.width]='same_height ? "auto" : cover_size + "px"'
-             [style.height]='same_height ? cover_size + "px" : "auto"'/>
+        <img [src]='coverUrl'
+             [style.width]='useSameHeight ? "auto" : coverSize + "px"'
+             [style.height]='useSameHeight ? coverSize + "px" : "auto"'/>
         <p-footer></p-footer>
     </p-card>
+    <div *ngIf='unprocessed'
+         class='cx-comic-cover-overlay'
+         (click)='clicked()'>
+        <p-progressSpinner [pTooltip]='"global.tooltip.unprocessed-comic"|translate'></p-progressSpinner>
+    </div>
 </div>

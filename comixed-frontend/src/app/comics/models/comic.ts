@@ -21,6 +21,7 @@ import { ScanType } from './scan-type';
 import { ComicFormat } from './comic-format';
 import { Page } from './page';
 import { ComicCredit } from './comic-credit';
+import { FileDetails } from 'app/comics/models/file-details';
 
 export interface Comic {
   id: number;
@@ -58,4 +59,5 @@ export interface Comic {
   format: ComicFormat;
   nextIssueId: number;
   previousIssueId: number;
+  fileDetails: FileDetails;
 }

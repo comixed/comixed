@@ -37,6 +37,7 @@ import {
   MessageService,
   OverlayPanelModule,
   PanelModule,
+  ProgressSpinnerModule,
   ScrollPanelModule,
   SidebarModule,
   SliderModule,
@@ -95,7 +96,8 @@ describe('MissingComicsPageComponent', () => {
         ConfirmDialogModule,
         ContextMenuModule,
         TooltipModule,
-        ToolbarModule
+        ToolbarModule,
+        ProgressSpinnerModule
       ],
       declarations: [
         MissingComicsPageComponent,

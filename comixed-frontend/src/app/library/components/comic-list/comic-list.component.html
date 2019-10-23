@@ -16,16 +16,16 @@
         <ng-template let-comic
                      pTemplate='listItem'>
             <app-comic-list-item [comic]='comic'
-                                 [cover_size]='coverSize'
-                                 [same_height]='sameHeight'
+                                 [coverSize]="coverSize"
+                                 [useSameHeight]="sameHeight"
                                  [selected]='selectedComics.includes(comic)'
                                  (click)='toggleComicSelection(comic)'></app-comic-list-item>
         </ng-template>
         <ng-template let-comic
                      pTemplate='gridItem'>
             <app-comic-grid-item [comic]='comic'
-                                 [cover_size]='coverSize'
-                                 [same_height]='sameHeight'
+                                 [coverSize]="coverSize"
+                                 [useSameHeight]="sameHeight"
                                  [selected]='selectedComics.includes(comic)'
                                  (click)='toggleComicSelection(comic)'></app-comic-grid-item>
         </ng-template>

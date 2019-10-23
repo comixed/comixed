@@ -27,13 +27,14 @@ import { ComicFile } from 'app/comic-import/models/comic-file';
   styleUrls: ['./comic-cover.component.scss']
 })
 export class ComicCoverComponent {
-  @Input() cover_url: string;
+  @Input() coverUrl: string;
   @Input() comic: Comic;
-  @Input() comic_file: ComicFile;
-  @Input() cover_size: number;
-  @Input() same_height: boolean;
+  @Input() comicFile: ComicFile;
+  @Input() coverSize: number;
+  @Input() useSameHeight: boolean;
   @Input() selected = false;
-  @Input() use_selected_class = true;
+  @Input() selectSelectedClass = true;
+  @Input() unprocessed = false;
 
   @Output() click = new EventEmitter<Comic | ComicFile>();
 
@@ -43,7 +44,7 @@ export class ComicCoverComponent {
     if (this.comic) {
       this.click.emit(this.comic);
     } else {
-      this.click.emit(this.comic_file);
+      this.click.emit(this.comicFile);
     }
   }
 }

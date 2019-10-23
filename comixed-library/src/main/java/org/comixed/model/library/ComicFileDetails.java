@@ -22,6 +22,7 @@ package org.comixed.model.library;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.views.View.ComicDetails;
+import org.comixed.views.View.ComicList;
 
 import javax.persistence.*;
 
@@ -31,7 +32,9 @@ public class ComicFileDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
-    @JsonView({ComicDetails.class})
+    @JsonView({ComicList.class,
+               ComicDetails.class})
+
     private Long id;
 
     @OneToOne
@@ -44,7 +47,9 @@ public class ComicFileDetails {
             length = 32,
             nullable = false,
             updatable = true)
-    @JsonView({ComicDetails.class})
+    @JsonProperty("hash")
+    @JsonView({ComicList.class,
+               ComicDetails.class})
     private String hash;
 
     public ComicFileDetails() {}

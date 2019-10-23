@@ -605,5 +605,10 @@
     "error": {
       "general-service-failure": "A general system failure has occurred."
     }
+  },
+  "global": {
+    "tooltip": {
+      "unprocessed-comic": "This comic is scheduled for processing."
+    }
   }
 }

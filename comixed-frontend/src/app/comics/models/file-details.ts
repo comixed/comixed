@@ -17,21 +17,7 @@
  * org.comixed;
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Comic } from 'app/library';
-
-@Component({
-  selector: 'app-comic-grid-item',
-  templateUrl: './comic-grid-item.component.html',
-  styleUrls: ['./comic-grid-item.component.scss']
-})
-export class ComicGridItemComponent {
-  @Input() comic: Comic;
-  @Input() useSameHeight: boolean;
-  @Input() coverSize: number;
-  @Input() selected = false;
-
-  @Output() click = new EventEmitter<Comic>();
-
-  constructor() {}
+export interface FileDetails {
+  id: number;
+  hash: string;
 }

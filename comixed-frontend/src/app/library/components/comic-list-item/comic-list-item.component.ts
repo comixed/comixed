@@ -27,8 +27,8 @@ import { Comic } from 'app/library';
 })
 export class ComicListItemComponent {
   @Input() comic: Comic;
-  @Input() same_height: boolean;
-  @Input() cover_size: number;
+  @Input() useSameHeight: boolean;
+  @Input() coverSize: number;
   @Input() selected = false;
 
   @Output() click = new EventEmitter<Comic>();

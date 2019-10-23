@@ -47,6 +47,7 @@ import {
   ConfirmDialogModule,
   ContextMenuModule,
   MessageService,
+  ProgressSpinnerModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
@@ -95,7 +96,8 @@ describe('LocationDetailsPageComponent', () => {
         ConfirmDialogModule,
         ContextMenuModule,
         TooltipModule,
-        ToolbarModule
+        ToolbarModule,
+        ProgressSpinnerModule
       ],
       providers: [
         AuthenticationAdaptor,
