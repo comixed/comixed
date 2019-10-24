@@ -88,7 +88,7 @@ public class Comic {
                cascade = CascadeType.ALL,
                fetch = FetchType.EAGER,
                orphanRemoval = true)
-    @OrderColumn(name = "index")
+    @OrderColumn(name = "page_number")
     @JsonProperty("pages")
     @JsonView({ComicList.class,})
     List<Page> pages = new ArrayList<>();
@@ -284,7 +284,7 @@ public class Comic {
                DatabaseBackup.class})
     private ComicFormat format;
 
-    @Formula(value = "SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d)")
+    @Formula(value = "(SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d))")
     @JsonProperty("blockedPageCount")
     @JsonView({ComicList.class})
     private int blockedPageCount;
