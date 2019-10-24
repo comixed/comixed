@@ -1,6 +1,7 @@
 import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {
+  HttpErrorResponse,
   HttpHandler,
   HttpHeaderResponse,
   HttpInterceptor,
@@ -66,14 +67,19 @@ export class XhrInterceptor implements HttpInterceptor {
       });
     }
     return next.handle(authReq).pipe(
-      tap((error: any) => {
-        if (error instanceof HttpResponse) {
-          if (error.status !== 200) {
-            this.message_service.add({
-              severity: 'error',
-              summary: 'Server Error',
-              detail: 'Unable to complete the last request...'
-            });
+      tap(response => {
+        if (response instanceof HttpErrorResponse) {
+          const error = response as HttpErrorResponse;
+          switch (error.status) {
+            case 401:
+              this.router.navigateByUrl('/home');
+              return;
+            default:
+              this.message_service.add({
+                severity: 'error',
+                summary: 'Server Error',
+                detail: 'Unable to complete the last request...'
+              });
           }
         }
       })
