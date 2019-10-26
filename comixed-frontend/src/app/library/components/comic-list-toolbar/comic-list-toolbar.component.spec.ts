@@ -24,13 +24,12 @@ import {
   CheckboxModule,
   ConfirmationService,
   DropdownModule,
+  MessageService,
   SliderModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
 import { StoreModule } from '@ngrx/store';
-import * as fromSelection from 'app/library/reducers/selection.reducer';
-import { SELECTION_FEATURE_KEY } from 'app/library/reducers/selection.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import {
   LibraryAdaptor,
@@ -41,6 +40,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthenticationAdaptor } from 'app/user';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;
@@ -49,13 +55,15 @@ describe('ComicListToolbarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
+        HttpClientTestingModule,
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(SELECTION_FEATURE_KEY, fromSelection.reducer),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([]),
+        EffectsModule.forFeature([LibraryEffects]),
         ToolbarModule,
         ButtonModule,
         TooltipModule,
@@ -69,7 +77,8 @@ describe('ComicListToolbarComponent', () => {
         SelectionAdaptor,
         LibraryAdaptor,
         LibraryDisplayAdaptor,
-        ConfirmationService
+        ConfirmationService,
+        MessageService
       ]
     }).compileComponents();
 

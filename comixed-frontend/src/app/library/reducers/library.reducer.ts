@@ -18,27 +18,33 @@
  */
 
 import { LibraryActions, LibraryActionTypes } from '../actions/library.actions';
-import { LibraryState } from 'app/library/models/library-state';
 import { latestUpdatedDate, mergeComics } from 'app/library/utility.functions';
+import { Comic } from 'app/comics';
+import { LastReadDate } from 'app/library/models/last-read-date';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
+export interface LibraryState {
+  fetchingUpdates: boolean;
+  comics: Comic[];
+  updatedIds: number[];
+  lastReadDates: LastReadDate[];
+  latestUpdatedDate: number;
+  processingCount: number;
+  rescanCount: number;
+  startingRescan: boolean;
+  deletingComics: boolean;
+}
+
 export const initial_state: LibraryState = {
-  fetchingScanTypes: false,
-  scanTypes: [],
-  fetchingFormats: false,
-  formats: [],
   fetchingUpdates: false,
   comics: [],
+  updatedIds: [],
   lastReadDates: [],
   latestUpdatedDate: 0,
   processingCount: 0,
   rescanCount: 0,
   startingRescan: false,
-  updatingComic: false,
-  currentComic: null,
-  clearingMetadata: false,
-  blockingHash: false,
   deletingComics: false
 };
 
@@ -50,53 +56,17 @@ export function reducer(
     case LibraryActionTypes.Reset:
       return { ...state, comics: [] };
 
-    case LibraryActionTypes.GetScanTypes:
-      return { ...state, fetchingScanTypes: true };
-
-    case LibraryActionTypes.ScanTypesReceived:
-      return {
-        ...state,
-        fetchingScanTypes: false,
-        scanTypes: action.payload.scanTypes
-      };
-
-    case LibraryActionTypes.GetScanTypesFailed:
-      return { ...state, fetchingScanTypes: false };
-
-    case LibraryActionTypes.GetFormats:
-      return { ...state, fetchingFormats: true };
-
-    case LibraryActionTypes.FormatsReceived:
-      return {
-        ...state,
-        fetchingFormats: false,
-        formats: action.payload.formats
-      };
-
-    case LibraryActionTypes.GetFormatsFailed:
-      return { ...state, fetchingFormats: false };
-
     case LibraryActionTypes.GetUpdates:
       return { ...state, fetchingUpdates: true };
 
     case LibraryActionTypes.UpdatesReceived: {
       const comics = mergeComics(state.comics, action.payload.comics);
-      let currentComic = state.currentComic;
-
-      if (currentComic) {
-        const update = action.payload.comics.find(
-          entry => entry.id === currentComic.id
-        );
-        if (!!update) {
-          currentComic = update;
-        }
-      }
 
       return {
         ...state,
         fetchingUpdates: false,
         comics: comics,
-        currentComic: currentComic,
+        updatedIds: action.payload.comics.map(comic => comic.id),
         lastReadDates: action.payload.lastReadDates,
         latestUpdatedDate: latestUpdatedDate(comics),
         processingCount: action.payload.processingCount,
@@ -116,41 +86,6 @@ export function reducer(
     case LibraryActionTypes.RescanFailedToStart:
       return { ...state, startingRescan: false };
 
-    case LibraryActionTypes.UpdateComic:
-      return { ...state, updatingComic: true };
-
-    case LibraryActionTypes.ComicUpdated:
-      return {
-        ...state,
-        updatingComic: false,
-        currentComic: action.payload.comic
-      };
-
-    case LibraryActionTypes.UpdateComicFailed:
-      return { ...state, updatingComic: false };
-
-    case LibraryActionTypes.ClearMetadata:
-      return { ...state, clearingMetadata: true };
-
-    case LibraryActionTypes.MetadataCleared:
-      return {
-        ...state,
-        clearingMetadata: false,
-        currentComic: action.payload.comic
-      };
-
-    case LibraryActionTypes.ClearMetadataFailed:
-      return { ...state, clearingMetadata: false };
-
-    case LibraryActionTypes.BlockPageHash:
-      return { ...state, blockingHash: true };
-
-    case LibraryActionTypes.PageHashBlocked:
-      return { ...state, blockingHash: false };
-
-    case LibraryActionTypes.BlockPagesFailed:
-      return { ...state, blockingHash: false };
-
     case LibraryActionTypes.DeleteMultipleComics:
       return { ...state, deletingComics: true };
 
@@ -159,15 +94,6 @@ export function reducer(
 
     case LibraryActionTypes.DeleteMultipleComicsFailed:
       return { ...state, deletingComics: false };
-
-    case LibraryActionTypes.SetCurrentComic:
-      return { ...state, currentComic: action.payload.comic };
-
-    case LibraryActionTypes.FindCurrentComic:
-      return {
-        ...state,
-        currentComic: state.comics.find(comic => comic.id === action.payload.id)
-      };
 
     default:
       return state;

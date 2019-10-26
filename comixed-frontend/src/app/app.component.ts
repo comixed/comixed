@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
     this.authenticationAdaptor.authenticated$.subscribe(authenticated => {
       this.authenticated = authenticated;
       if (this.authenticated && !this.fetchingUpdateSubscription) {
-        this.fetchingUpdateSubscription = this.libraryAdaptor._fetchingUpdate$.subscribe(
+        this.fetchingUpdateSubscription = this.libraryAdaptor.fetchingUpdate$.subscribe(
           fetching => {
             if (!fetching) {
               this.libraryAdaptor.getLibraryUpdates();

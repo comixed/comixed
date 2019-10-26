@@ -39,6 +39,7 @@ import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('PublishersPageComponent', () => {
   const PUBLISHER = 'Cheapo Comics';
@@ -54,6 +55,7 @@ describe('PublishersPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
         HttpClientTestingModule,
         FormsModule,
         RouterTestingModule,
@@ -78,7 +80,6 @@ describe('PublishersPageComponent', () => {
     fixture = TestBed.createComponent(PublishersPageComponent);
     component = fixture.componentInstance;
     library_adaptor = TestBed.get(LibraryAdaptor);
-    library_adaptor._publisher$.next(PUBLISHERS);
     fixture.detectChanges();
   }));
 

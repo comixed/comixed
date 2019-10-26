@@ -34,10 +34,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CardModule } from 'primeng/card';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { ComicListComponent } from './comic-list.component';
 import {
   ConfirmationService,
@@ -49,7 +46,6 @@ import {
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { REDUCERS } from 'app/app.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_1,
@@ -65,11 +61,16 @@ import { BehaviorSubject } from 'rxjs';
 import { AuthenticationAdaptor } from 'app/user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -90,13 +91,16 @@ describe('ComicListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
         HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
-        RouterTestingModule.withRoutes(ROUTES),
+        RouterTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects]),
         DataViewModule,
         SidebarModule,
         SplitButtonModule,
@@ -118,10 +122,7 @@ describe('ComicListComponent', () => {
         ComicListItemComponent,
         ComicGridItemComponent,
         ComicListToolbarComponent,
-        ComicCoverComponent,
-        LibraryFilterComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
+        LibraryFilterComponent
       ],
       providers: [
         AuthenticationAdaptor,

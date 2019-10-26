@@ -47,16 +47,12 @@ import { ComicListComponent } from 'app/library/components/comic-list/comic-list
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { LibraryFilterPipe } from 'app/library/pipes/library-filter.pipe';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
 import { ComicService } from 'app/services/comic.service';
 import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
-import { REDUCERS } from 'app/app.reducers';
 import {
   ContextMenuModule,
   ProgressSpinnerModule,
@@ -66,9 +62,14 @@ import {
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -81,12 +82,17 @@ describe('LibraryPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         UserModule,
+        ComicsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         FormsModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects]),
         ConfirmDialogModule,
         DataViewModule,
         SliderModule,
@@ -99,8 +105,6 @@ describe('LibraryPageComponent', () => {
         OverlayPanelModule,
         CardModule,
         ContextMenuModule,
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS),
         TooltipModule,
         ToolbarModule,
         ProgressSpinnerModule
@@ -112,10 +116,7 @@ describe('LibraryPageComponent', () => {
         LibraryFilterComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        ComicCoverComponent,
-        LibraryFilterPipe,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
+        LibraryFilterPipe
       ],
       providers: [
         LibraryAdaptor,

@@ -22,48 +22,49 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'app/library';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Comic } from 'app/comics/models/comic';
-import { LibraryState } from 'app/library/models/library-state';
-import { LIBRARY_FEATURE_KEY } from 'app/library/reducers/library.reducer';
-import { ScanType } from 'app/comics/models/scan-type';
+import {
+  LIBRARY_FEATURE_KEY,
+  LibraryState
+} from 'app/library/reducers/library.reducer';
 import * as _ from 'lodash';
 import { filter } from 'rxjs/operators';
-import { ComicFormat } from 'app/comics/models/comic-format';
-import * as LibraryActions from '../actions/library.actions';
-import {
-  LibraryGetFormats,
-  LibraryGetScanTypes
-} from '../actions/library.actions';
 import { extractField } from 'app/library/utility.functions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LastReadDate } from 'app/library/models/last-read-date';
+import {
+  LibraryDeleteMultipleComics,
+  LibraryGetUpdates,
+  LibraryReset,
+  LibraryStartRescan
+} from 'app/library/actions/library.actions';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { ComicGetIssue } from 'app/comics/actions/comic.actions';
 
 @Injectable()
 export class LibraryAdaptor {
-  _fetchingScanType$ = new BehaviorSubject<boolean>(false);
-  _scanType$ = new BehaviorSubject<ScanType[]>([]);
-  _fetchingFormat$ = new BehaviorSubject<boolean>(false);
-  _format$ = new BehaviorSubject<ComicFormat[]>([]);
-  _fetchingUpdate$ = new BehaviorSubject<boolean>(false);
-  _latestUpdatedDate$ = new BehaviorSubject<number>(0);
-  _comic$ = new BehaviorSubject<Comic[]>([]);
-  _lastReadDate$ = new BehaviorSubject<LastReadDate[]>([]);
-  _publisher$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _serie$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _character$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _team$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _location$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  _processingCount$ = new BehaviorSubject<number>(0);
-  _rescanCount$ = new BehaviorSubject<number>(0);
-  _currentComicId$ = new BehaviorSubject<number>(-1);
-  _currentComic$ = new BehaviorSubject<Comic>(null);
-  _lastUpdated$ = new BehaviorSubject<Date>(new Date());
+  private _fetchingUpdate$ = new BehaviorSubject<boolean>(false);
+  private _latestUpdatedDate$ = new BehaviorSubject<number>(0);
+  private _comic$ = new BehaviorSubject<Comic[]>([]);
+  private _lastReadDate$ = new BehaviorSubject<LastReadDate[]>([]);
+  private _publisher$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _serie$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _character$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _team$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _location$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _processingCount$ = new BehaviorSubject<number>(0);
+  private _rescanCount$ = new BehaviorSubject<number>(0);
+  private comicId = -1;
+  private _timeout = 60;
+  private _maximum = 100;
 
-  library_state$: Observable<LibraryState>;
-  _timeout = 60;
-  _maximum = 100;
-
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private comicAdaptor: ComicAdaptor
+  ) {
+    this.comicAdaptor.comic$.subscribe(
+      comic => (this.comicId = !!comic ? comic.id : -1)
+    );
     this.store
       .select(LIBRARY_FEATURE_KEY)
       .pipe(
@@ -73,22 +74,19 @@ export class LibraryAdaptor {
         })
       )
       .subscribe((libraryState: LibraryState) => {
-        this._processingCount$.next(libraryState.processingCount);
-        this._rescanCount$.next(libraryState.rescanCount);
-
         if (
-          this._fetchingScanType$.getValue() !== libraryState.fetchingScanTypes
+          this._processingCount$.getValue() !== libraryState.processingCount
         ) {
-          this._fetchingScanType$.next(libraryState.fetchingScanTypes);
+          this._processingCount$.next(libraryState.processingCount);
         }
-        if (!_.isEqual(this._scanType$.getValue(), libraryState.scanTypes)) {
-          this._scanType$.next(libraryState.scanTypes);
+        if (this._rescanCount$.getValue() !== libraryState.rescanCount) {
+          this._rescanCount$.next(libraryState.rescanCount);
         }
-        if (libraryState.fetchingFormats !== this._fetchingFormat$.getValue()) {
-          this._fetchingFormat$.next(libraryState.fetchingFormats);
-        }
-        if (!_.isEqual(this._format$.getValue(), libraryState.formats)) {
-          this._format$.next(libraryState.formats);
+        if (
+          this.comicId !== -1 &&
+          libraryState.updatedIds.includes(this.comicId)
+        ) {
+          this.store.dispatch(new ComicGetIssue({ id: this.comicId }));
         }
         if (
           !_.isEqual(
@@ -115,52 +113,7 @@ export class LibraryAdaptor {
           this._location$.next(extractField(libraryState.comics, 'locations'));
           this._stories$.next(extractField(libraryState.comics, 'storyArcs'));
         }
-        if (
-          !_.isEqual(libraryState.currentComic, this._currentComic$.getValue())
-        ) {
-          this._currentComic$.next(libraryState.currentComic);
-          if (libraryState.currentComic) {
-            let id = -1;
-            if (
-              libraryState.currentComic.id !== this._currentComicId$.getValue()
-            ) {
-              id = libraryState.currentComic.id;
-            }
-            if (this._currentComicId$.getValue() !== id) {
-              this._currentComicId$.next(id);
-            }
-          }
-        }
-        this._lastUpdated$.next(new Date());
       });
-  }
-
-  get lastUpdated$(): Observable<Date> {
-    return this._lastUpdated$.asObservable();
-  }
-
-  getScanTypes(): void {
-    this.store.dispatch(new LibraryGetScanTypes());
-  }
-
-  get fetchingScanType$(): Observable<boolean> {
-    return this._fetchingScanType$.asObservable();
-  }
-
-  get scanType$(): Observable<ScanType[]> {
-    return this._scanType$.asObservable();
-  }
-
-  getFormats(): void {
-    this.store.dispatch(new LibraryGetFormats());
-  }
-
-  get fetchingFormat$(): Observable<boolean> {
-    return this._fetchingFormat$.asObservable();
-  }
-
-  get format$(): Observable<ComicFormat[]> {
-    return this._format$.asObservable();
   }
 
   get latestUpdatedDate$(): Observable<number> {
@@ -169,7 +122,7 @@ export class LibraryAdaptor {
 
   getLibraryUpdates(): void {
     this.store.dispatch(
-      new LibraryActions.LibraryGetUpdates({
+      new LibraryGetUpdates({
         timestamp: this._latestUpdatedDate$.getValue(),
         timeout: this._timeout,
         maximumResults: this._maximum,
@@ -223,58 +176,16 @@ export class LibraryAdaptor {
     return this._rescanCount$.asObservable();
   }
 
-  get comics(): Comic[] {
-    return this._comic$.getValue();
-  }
-
   resetLibrary(): void {
-    this.store.dispatch(new LibraryActions.LibraryReset());
-  }
-
-  get currentComicId$(): Observable<number> {
-    return this._currentComicId$.asObservable();
-  }
-
-  get currentComic$(): Observable<Comic> {
-    return this._currentComic$.asObservable();
-  }
-
-  saveComic(comic: Comic): void {
-    this.store.dispatch(
-      new LibraryActions.LibraryUpdateComic({ comic: comic })
-    );
+    this.store.dispatch(new LibraryReset());
   }
 
   startRescan(): void {
-    this.store.dispatch(new LibraryActions.LibraryStartRescan());
-  }
-
-  clearMetadata(comic: Comic): void {
-    this.store.dispatch(
-      new LibraryActions.LibraryClearMetadata({ comic: comic })
-    );
-  }
-
-  blockPageHash(hash: string): void {
-    this.store.dispatch(
-      new LibraryActions.LibraryBlockPageHash({ hash: hash, blocked: true })
-    );
-  }
-
-  unblockPageHash(hash: string): void {
-    this.store.dispatch(
-      new LibraryActions.LibraryBlockPageHash({ hash: hash, blocked: false })
-    );
+    this.store.dispatch(new LibraryStartRescan());
   }
 
   deleteComics(ids: number[]): void {
-    this.store.dispatch(
-      new LibraryActions.LibraryDeleteMultipleComics({ ids: ids })
-    );
-  }
-
-  getComic(id: number): void {
-    this.store.dispatch(new LibraryActions.LibraryFindCurrentComic({ id: id }));
+    this.store.dispatch(new LibraryDeleteMultipleComics({ ids: ids }));
   }
 
   private getComicsForSeries(series: string): Comic[] {

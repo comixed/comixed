@@ -19,11 +19,6 @@
 
 import { LibraryAdaptor } from './library.adaptor';
 import { TestBed } from '@angular/core/testing';
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
 import { Store, StoreModule } from '@ngrx/store';
 import {
   LIBRARY_FEATURE_KEY,
@@ -31,42 +26,26 @@ import {
 } from 'app/library/reducers/library.reducer';
 import * as LibraryActions from '../actions/library.actions';
 import {
-  AppState,
-  Comic,
-  COMIC_2,
-  COMIC_4,
-  ComicCollectionEntry
-} from 'app/library';
-import {
-  FORMAT_1,
-  FORMAT_3,
-  FORMAT_5
-} from 'app/comics/models/comic-format.fixtures';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
-import { generate_random_string } from '../../../test/testing-utils';
-import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
-import {
-  LibraryFindCurrentComic,
-  LibraryGetFormats,
-  LibraryGetScanTypes,
   LibraryGetUpdates,
-  LibraryFormatsReceived,
-  LibraryGotScanTypes,
-  LibraryUpdatesReceived,
-  LibrarySetCurrentComic
+  LibraryUpdatesReceived
 } from '../actions/library.actions';
-import {
-  COMIC_COLLECTION_ENTRY_1,
-  COMIC_COLLECTION_ENTRY_2
-} from 'app/library/models/comic-collection-entry.fixtures';
+import { AppState, Comic, COMIC_2, COMIC_4 } from 'app/library';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
+import { extractField } from 'app/library/utility.functions';
+import { ComicGetIssue, ComicGotIssue } from 'app/comics/actions/comic.actions';
+import { ComicsModule } from 'app/comics/comics.module';
+import { EffectsModule } from '@ngrx/effects';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { MessageService } from 'primeng/api';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LibraryAdaptor', () => {
-  const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
-  const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
   const COMIC = COMIC_1;
-  const HASH = generate_random_string();
   const IDS = [7, 17, 65, 1, 29, 71];
 
   let adaptor: LibraryAdaptor;
@@ -74,8 +53,17 @@ describe('LibraryAdaptor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot({ library_state: reducer })],
-      providers: [LibraryAdaptor]
+      imports: [
+        ComicsModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects])
+      ],
+      providers: [LibraryAdaptor, MessageService]
     });
 
     adaptor = TestBed.get(LibraryAdaptor);
@@ -87,90 +75,19 @@ describe('LibraryAdaptor', () => {
     expect(adaptor).toBeTruthy();
   });
 
-  describe('getting the set of scan types', () => {
-    beforeEach(() => {
-      adaptor.getScanTypes();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new LibraryGetScanTypes());
-    });
-
-    it('provides notification', () => {
-      adaptor.fetchingScanType$.subscribe(response =>
-        expect(response).toBeTruthy()
-      );
-    });
-
-    describe('when received', () => {
-      beforeEach(() => {
-        store.dispatch(new LibraryGotScanTypes({ scanTypes: SCAN_TYPES }));
-      });
-
-      it('returns the set when loaded', () => {
-        adaptor.scanType$.subscribe(response =>
-          expect(response).toEqual(SCAN_TYPES)
-        );
-      });
-
-      it('provides notification', () => {
-        adaptor.fetchingScanType$.subscribe(response =>
-          expect(response).toBeFalsy()
-        );
-      });
-    });
-  });
-
-  describe('getting the set of comic formats', () => {
-    beforeEach(() => {
-      adaptor.getFormats();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new LibraryGetFormats());
-    });
-
-    it('provides notification', () => {
-      adaptor.fetchingFormat$.subscribe(response =>
-        expect(response).toBeTruthy()
-      );
-    });
-
-    describe('when received', () => {
-      beforeEach(() => {
-        store.dispatch(new LibraryFormatsReceived({ formats: FORMATS }));
-      });
-
-      it('returns the set when loaded', () => {
-        adaptor.format$.subscribe(response =>
-          expect(response).toEqual(FORMATS)
-        );
-      });
-
-      it('provides notification', () => {
-        adaptor.fetchingFormat$.subscribe(response =>
-          expect(response).toBeFalsy()
-        );
-      });
-    });
-  });
-
   describe('getting library updates', () => {
-    let lastUpdate: number;
-
     beforeEach(() => {
-      adaptor.latestUpdatedDate$.subscribe(date => (lastUpdate = date));
       adaptor.getLibraryUpdates();
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new LibraryGetUpdates({
-          timestamp: lastUpdate,
+          timestamp: 0,
           timeout: 60,
           maximumResults: 100,
-          lastProcessingCount: adaptor._processingCount$.getValue(),
-          lastRescanCount: adaptor._rescanCount$.getValue()
+          lastProcessingCount: 0,
+          lastRescanCount: 0
         })
       );
     });
@@ -181,7 +98,13 @@ describe('LibraryAdaptor', () => {
       );
     });
 
-    describe('and updates are received', () => {
+    describe('when updates are received', () => {
+      const PUBLISHERS = extractField(COMICS, 'publisher');
+      const SERIES = extractField(COMICS, 'series');
+      const CHARACTERS = extractField(COMICS, 'characters');
+      const TEAMS = extractField(COMICS, 'teams');
+      const LOCATIONS = extractField(COMICS, 'locations');
+      const STORIES = extractField(COMICS, 'storyArcs');
       const PENDING_RESCANS = 17;
       const PENDING_IMPORTS = 29;
 
@@ -223,6 +146,61 @@ describe('LibraryAdaptor', () => {
           expect(response).toEqual(PENDING_IMPORTS)
         );
       });
+
+      it('provides updates on publishers', () => {
+        adaptor.publisher$.subscribe(result =>
+          expect(result).toEqual(PUBLISHERS)
+        );
+      });
+
+      it('provides updates on series', () => {
+        adaptor.serie$.subscribe(result => expect(result).toEqual(SERIES));
+      });
+
+      it('provides updates on characters', () => {
+        adaptor.character$.subscribe(result =>
+          expect(result).toEqual(CHARACTERS)
+        );
+      });
+
+      it('provides updates on teams', () => {
+        adaptor.team$.subscribe(result => expect(result).toEqual(TEAMS));
+      });
+
+      it('provides updates on locations', () => {
+        adaptor.location$.subscribe(result =>
+          expect(result).toEqual(LOCATIONS)
+        );
+      });
+
+      it('provides updates on story arcs', () => {
+        adaptor.stories$.subscribe(result => expect(result).toEqual(STORIES));
+      });
+    });
+
+    describe('when one of the updates is the current comic', () => {
+      const UPDATED_COMIC: Comic = {
+        ...COMIC,
+        lastUpdatedDate: new Date().getTime()
+      };
+
+      beforeEach(() => {
+        store.dispatch(new ComicGotIssue({ comic: COMIC }));
+        store.dispatch(
+          new LibraryUpdatesReceived({
+            comics: [UPDATED_COMIC],
+            lastReadDates: LAST_READ_DATES,
+            processingCount: 7,
+            rescanCount: 17
+          })
+        );
+      });
+
+      it('fires an update action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new ComicGetIssue({ id: UPDATED_COMIC.id })
+        );
+      });
     });
   });
 
@@ -233,91 +211,6 @@ describe('LibraryAdaptor', () => {
     );
   });
 
-  it('provides updates on publishers', () => {
-    const values = [COMIC_COLLECTION_ENTRY_1, COMIC_COLLECTION_ENTRY_2];
-    adaptor._publisher$.next(values);
-    adaptor.publisher$.subscribe(result => expect(result).toEqual(values));
-  });
-
-  it('provides updates on series', () => {
-    const values = [COMIC_COLLECTION_ENTRY_1, COMIC_COLLECTION_ENTRY_2];
-    adaptor._serie$.next(values);
-    adaptor.serie$.subscribe(result => expect(result).toEqual(values));
-  });
-
-  it('provides updates on characters', () => {
-    const values = [COMIC_COLLECTION_ENTRY_1, COMIC_COLLECTION_ENTRY_2];
-    adaptor._character$.next(values);
-    adaptor.character$.subscribe(result => expect(result).toEqual(values));
-  });
-
-  it('provides updates on teams', () => {
-    const values = [COMIC_COLLECTION_ENTRY_1, COMIC_COLLECTION_ENTRY_2];
-    adaptor._team$.next(values);
-    adaptor.team$.subscribe(result => expect(result).toEqual(values));
-  });
-
-  it('provides updates on locations', () => {
-    const values = [COMIC_COLLECTION_ENTRY_1, COMIC_COLLECTION_ENTRY_2];
-    adaptor._location$.next(values);
-    adaptor.location$.subscribe(result => expect(result).toEqual(values));
-  });
-
-  it('provides updates on story arcs', () => {
-    const values = [COMIC_COLLECTION_ENTRY_1, COMIC_COLLECTION_ENTRY_2];
-    adaptor._stories$.next(values);
-    adaptor.stories$.subscribe(result => expect(result).toEqual(values));
-  });
-
-  it('provides a way to update the current comic', () => {
-    adaptor._currentComic$.next(COMIC);
-    adaptor.currentComic$.subscribe(response =>
-      expect(response).toEqual(COMIC)
-    );
-  });
-
-  describe('getting the current comic', () => {
-    beforeEach(() => {
-      store.dispatch(new LibrarySetCurrentComic({ comic: COMIC }));
-    });
-
-    it('updates the current comic id', () => {
-      adaptor.currentComicId$.subscribe(response =>
-        expect(response).toEqual(COMIC.id)
-      );
-    });
-
-    it('updates the current comic', () => {
-      adaptor.currentComic$.subscribe(response =>
-        expect(response).toEqual(COMIC)
-      );
-    });
-
-    describe('when the current comic is updated', () => {
-      const UPDATED_COMIC: Comic = {
-        ...COMIC,
-        sortName: 'this is the updated sort name'
-      };
-
-      beforeEach(() => {
-        store.dispatch(
-          new LibraryUpdatesReceived({
-            comics: [UPDATED_COMIC],
-            lastReadDates: [],
-            rescanCount: 0,
-            processingCount: 0
-          })
-        );
-      });
-
-      it('updates the current comic', () => {
-        adaptor.currentComic$.subscribe(response =>
-          expect(response).toEqual(UPDATED_COMIC)
-        );
-      });
-    });
-  });
-
   it('fires an action when starting a rescan', () => {
     adaptor.startRescan();
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -325,47 +218,10 @@ describe('LibraryAdaptor', () => {
     );
   });
 
-  it('fires an action when updating a comic', () => {
-    adaptor.saveComic(COMIC);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new LibraryActions.LibraryUpdateComic({ comic: COMIC })
-    );
-  });
-
-  it('fires an action when clearing metadata from a comic', () => {
-    adaptor.clearMetadata(COMIC);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new LibraryActions.LibraryClearMetadata({ comic: COMIC })
-    );
-  });
-
-  describe('when setting the blocked state for a hash', () => {
-    it('fires an action when blocking', () => {
-      adaptor.blockPageHash(HASH);
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryActions.LibraryBlockPageHash({ hash: HASH, blocked: true })
-      );
-    });
-
-    it('fires an action when unblocking', () => {
-      adaptor.unblockPageHash(HASH);
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryActions.LibraryBlockPageHash({ hash: HASH, blocked: false })
-      );
-    });
-  });
-
   it('fires an action when deleting multiple comics', () => {
     adaptor.deleteComics(IDS);
     expect(store.dispatch).toHaveBeenCalledWith(
       new LibraryActions.LibraryDeleteMultipleComics({ ids: IDS })
-    );
-  });
-
-  it('fires an action when getting a comic by id', () => {
-    adaptor.getComic(17);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new LibraryFindCurrentComic({ id: 17 })
     );
   });
 

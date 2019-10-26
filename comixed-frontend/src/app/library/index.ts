@@ -19,9 +19,9 @@
 
 import * as fromRouter from '@ngrx/router-store';
 import * as fromLibrary from './reducers/library.reducer';
+import { LibraryState } from './reducers/library.reducer';
 import * as fromSelection from './reducers/selection.reducer';
 import * as fromFilters from './reducers/filters.reducer';
-import { LibraryState } from './models/library-state';
 import { Params } from '@angular/router';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';

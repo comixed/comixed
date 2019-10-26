@@ -35,9 +35,6 @@ import { LibraryFilterComponent } from 'app/library/components/library-filter/li
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { StoryArcDetailsPageComponent } from './story-arc-details-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import {
@@ -67,6 +64,7 @@ import { ComicService } from 'app/services/comic.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('StoryArcDetailsPageComponent', () => {
   const STORY_NAME = 'Story Name';
@@ -82,6 +80,7 @@ describe('StoryArcDetailsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
         HttpClientTestingModule,
         EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
@@ -123,10 +122,7 @@ describe('StoryArcDetailsPageComponent', () => {
         ComicListComponent,
         ComicGridItemComponent,
         ComicListItemComponent,
-        ComicListToolbarComponent,
-        ComicCoverComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
+        ComicListToolbarComponent
       ]
     }).compileComponents();
 
@@ -138,21 +134,5 @@ describe('StoryArcDetailsPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('when a story arc update is received', () => {
-    it('sets the comics when the story is found', () => {
-      component.storyName = STORY_NAME;
-      library_adaptor._stories$.next(STORIES);
-      fixture.detectChanges();
-      expect(component.comics).toEqual([COMIC]);
-    });
-
-    it('sets an empty set when the story is not found', () => {
-      component.storyName = STORY_NAME.substr(1);
-      library_adaptor._stories$.next(STORIES);
-      fixture.detectChanges();
-      expect(component.comics).toEqual([]);
-    });
   });
 });

@@ -29,15 +29,19 @@ import { Store, StoreModule } from '@ngrx/store';
 import { AppState } from 'app/app.state';
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { SeriesPageComponent } from './series-page.component';
-import { REDUCERS } from 'app/app.reducers';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { MessageService } from 'primeng/api';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { LibraryAdaptor } from 'app/library';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('SeriesPageComponent', () => {
   let component: SeriesPageComponent;
@@ -47,11 +51,14 @@ describe('SeriesPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
         HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects]),
         FormsModule,
-        StoreModule.forRoot(REDUCERS),
         RouterTestingModule,
         ButtonModule,
         DropdownModule,

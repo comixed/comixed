@@ -35,11 +35,7 @@ import { LibraryFilterComponent } from 'app/library/components/library-filter/li
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { CharacterDetailsPageComponent } from './character-details-page.component';
-import { REDUCERS } from 'app/app.reducers';
 import {
   ConfirmationService,
   ConfirmDialogModule,
@@ -60,12 +56,17 @@ import {
 import { AuthenticationAdaptor } from 'app/user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('CharacterDetailsPageComponent', () => {
   const COMIC = COMIC_1;
@@ -77,13 +78,16 @@ describe('CharacterDetailsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
         HttpClientTestingModule,
-        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         RouterTestingModule,
         FormsModule,
-        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects]),
         DataViewModule,
         SplitButtonModule,
         ScrollPanelModule,
@@ -118,10 +122,7 @@ describe('CharacterDetailsPageComponent', () => {
         ComicListComponent,
         ComicGridItemComponent,
         ComicListItemComponent,
-        ComicListToolbarComponent,
-        ComicCoverComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
+        ComicListToolbarComponent
       ]
     }).compileComponents();
 

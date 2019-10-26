@@ -21,7 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { DataViewModule } from 'primeng/dataview';
 import { SliderModule } from 'primeng/slider';
 import { ButtonModule } from 'primeng/button';
@@ -61,6 +61,8 @@ import { UserService } from 'app/services/user.service';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import { UserModule } from 'app/user/user.module';
+import { LibraryUpdatesReceived } from 'app/library/actions/library.actions';
+import { AppState } from 'app/app.state';
 
 const DIRECTORY_TO_USE = '/OldUser/comixed/Downloads';
 
@@ -69,6 +71,7 @@ describe('ImportPageComponent', () => {
   let fixture: ComponentFixture<ImportPageComponent>;
   let libraryAdaptor: LibraryAdaptor;
   let comicImportAdaptor: ComicImportAdaptor;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -120,6 +123,7 @@ describe('ImportPageComponent', () => {
 
     fixture = TestBed.createComponent(ImportPageComponent);
     component = fixture.componentInstance;
+    store = TestBed.get(Store);
     libraryAdaptor = TestBed.get(LibraryAdaptor);
     comicImportAdaptor = TestBed.get(ComicImportAdaptor);
     fixture.detectChanges();
@@ -131,7 +135,14 @@ describe('ImportPageComponent', () => {
 
   describe('when not importing comics', () => {
     beforeEach(() => {
-      libraryAdaptor._processingCount$.next(0);
+      store.dispatch(
+        new LibraryUpdatesReceived({
+          processingCount: 0,
+          lastReadDates: [],
+          comics: [],
+          rescanCount: 0
+        })
+      );
       fixture.detectChanges();
     });
 
@@ -150,7 +161,14 @@ describe('ImportPageComponent', () => {
 
   describe('when importing comics', () => {
     beforeEach(() => {
-      libraryAdaptor._processingCount$.next(17);
+      store.dispatch(
+        new LibraryUpdatesReceived({
+          processingCount: 17,
+          lastReadDates: [],
+          comics: [],
+          rescanCount: 0
+        })
+      );
       fixture.detectChanges();
     });
 

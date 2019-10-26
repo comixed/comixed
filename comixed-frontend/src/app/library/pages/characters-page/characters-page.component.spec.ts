@@ -37,6 +37,7 @@ import { MessageService } from 'primeng/api';
 import { ComicService } from 'app/services/comic.service';
 import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('CharactersPageComponent', () => {
   const CHARACTER = 'Superhero Man';
@@ -52,6 +53,7 @@ describe('CharactersPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
+        ComicsModule,
         EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         FormsModule,
@@ -75,8 +77,6 @@ describe('CharactersPageComponent', () => {
     fixture = TestBed.createComponent(CharactersPageComponent);
     component = fixture.componentInstance;
     library_adaptor = TestBed.get(LibraryAdaptor);
-    library_adaptor._comic$.next(COMICS);
-    library_adaptor._character$.next(CHARACTERS);
     fixture.detectChanges();
   }));
 

@@ -34,6 +34,10 @@
       <artifactId>comixed-rest-api</artifactId>
       <version>${comixed.version}</version>
     </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <finalName>comixed-app-${project.version}-${build-details.build.time}</finalName>

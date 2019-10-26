@@ -47,12 +47,8 @@ import {
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor } from 'app/user';
 import {
   LibraryAdaptor,
@@ -62,11 +58,16 @@ import {
 } from 'app/library';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -75,14 +76,16 @@ describe('MissingComicsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
         HttpClientTestingModule,
-        RouterTestingModule,
-        EffectsModule.forRoot(EFFECTS),
         RouterTestingModule,
         FormsModule,
         BrowserAnimationsModule,
-        StoreModule.forRoot(REDUCERS),
         TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects]),
         DataViewModule,
         SidebarModule,
         SplitButtonModule,
@@ -106,10 +109,7 @@ describe('MissingComicsPageComponent', () => {
         ComicListToolbarComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        LibraryFilterComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe,
-        ComicCoverComponent
+        LibraryFilterComponent
       ],
       providers: [
         AuthenticationAdaptor,

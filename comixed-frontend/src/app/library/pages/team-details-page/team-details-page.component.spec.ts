@@ -35,8 +35,6 @@ import { LibraryFilterComponent } from 'app/library/components/library-filter/li
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { TeamDetailsPageComponent } from './team-details-page.component';
 import { REDUCERS } from 'app/app.reducers';
 import {
@@ -63,10 +61,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('TeamDetailsPageComponent', () => {
   const TEAM_NAME = 'Team One';
@@ -87,6 +85,7 @@ describe('TeamDetailsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
         HttpClientTestingModule,
         EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
@@ -128,10 +127,7 @@ describe('TeamDetailsPageComponent', () => {
         ComicListComponent,
         ComicGridItemComponent,
         ComicListItemComponent,
-        ComicListToolbarComponent,
-        ComicCoverComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
+        ComicListToolbarComponent
       ]
     }).compileComponents();
 
@@ -143,21 +139,5 @@ describe('TeamDetailsPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('when a team update is received', () => {
-    it('sets the comics when the team is found', () => {
-      component.teamName = TEAM_NAME;
-      library_adaptor._team$.next(TEAMS);
-      fixture.detectChanges();
-      expect(component.comics).toEqual([COMIC]);
-    });
-
-    it('sets an empty set when the team is not found', () => {
-      component.teamName = TEAM_NAME.substr(1);
-      library_adaptor._team$.next(TEAMS);
-      fixture.detectChanges();
-      expect(component.comics).toEqual([]);
-    });
   });
 });
