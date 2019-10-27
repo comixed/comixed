@@ -687,7 +687,7 @@
               type="varchar(256)">
         <constraints nullable="false"/>
       </column>
-      <column name="page_number"
+      <column name="order"
               type="int">
         <constraints nullable="false"/>
       </column>

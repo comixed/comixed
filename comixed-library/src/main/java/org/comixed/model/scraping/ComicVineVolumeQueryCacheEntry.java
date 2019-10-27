@@ -42,7 +42,7 @@ public class ComicVineVolumeQueryCacheEntry {
 
     @Column(name = "series_name") private String seriesName;
 
-    @Column(name = "index") private int index;
+    @Column(name = "order") private int index;
 
     @Column(name = "created") private Date created = new Date();
 
