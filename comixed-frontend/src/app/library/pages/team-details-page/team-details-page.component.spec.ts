@@ -65,6 +65,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicsModule } from 'app/comics/comics.module';
+import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
+import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 
 describe('TeamDetailsPageComponent', () => {
   const TEAM_NAME = 'Team One';
@@ -112,6 +114,7 @@ describe('TeamDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryAdaptor,
+        FilterAdaptor,
         LibraryDisplayAdaptor,
         SelectionAdaptor,
         ReadingListAdaptor,
@@ -127,7 +130,8 @@ describe('TeamDetailsPageComponent', () => {
         ComicListComponent,
         ComicGridItemComponent,
         ComicListItemComponent,
-        ComicListToolbarComponent
+        ComicListToolbarComponent,
+        ComicFilterPipe
       ]
     }).compileComponents();
 

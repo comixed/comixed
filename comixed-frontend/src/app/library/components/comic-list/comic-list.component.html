@@ -1,5 +1,10 @@
 <app-comic-list-toolbar [comics]='comics'
-                        [dataView]='dataview'></app-comic-list-toolbar>
+                        [dataView]='dataview'
+                        (toggleFilters)='showFilters()'></app-comic-list-toolbar>
+<p-sidebar styleClass='cx-library-filter-sidebar'
+           [(visible)]='displayFilters'>
+    <app-library-filter (filters)='setFilters($event)'></app-library-filter>
+</p-sidebar>
 <p-contextMenu [model]='contextMenu'
                [target]='comicListContainer'></p-contextMenu>
 <div #comicListContainer>
@@ -11,7 +16,7 @@
                 [paginator]='true'
                 [rows]='rows'
                 [sortField]='sortField'
-                [value]='comics'
+                [value]='comics|comicFilter:filters'
                 paginatorPosition='both'>
         <ng-template let-comic
                      pTemplate='listItem'>

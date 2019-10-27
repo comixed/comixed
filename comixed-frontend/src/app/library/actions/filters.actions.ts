@@ -22,9 +22,6 @@ import { Action } from '@ngrx/store';
 export enum FiltersActionTypes {
   SetPublisher = '[FILTERS] Set publisher filter',
   SetSeries = '[FILTERS] Set series filter',
-  SetVolume = '[FILTERS] Set volume filter',
-  SetEarliestYearPublished = '[FILTERS] Set earliest cover date filter',
-  SetLatestYearPublished = '[FILTERS] Set latest cover date filter',
   Clear = '[FILTERS] Clear all filters'
 }
 
@@ -40,24 +37,6 @@ export class FiltersSetSeries implements Action {
   constructor(public payload: { name: string }) {}
 }
 
-export class FiltersSetVolume implements Action {
-  readonly type = FiltersActionTypes.SetVolume;
-
-  constructor(public payload: { name: string }) {}
-}
-
-export class FiltersSetEarliestYearPublished implements Action {
-  readonly type = FiltersActionTypes.SetEarliestYearPublished;
-
-  constructor(public payload: { year: number }) {}
-}
-
-export class FiltersSetLatestYearPublished implements Action {
-  readonly type = FiltersActionTypes.SetLatestYearPublished;
-
-  constructor(public payload: { year: number }) {}
-}
-
 export class FiltersClear implements Action {
   readonly type = FiltersActionTypes.Clear;
 
@@ -67,7 +46,4 @@ export class FiltersClear implements Action {
 export type FiltersActions =
   | FiltersSetPublisher
   | FiltersSetSeries
-  | FiltersSetVolume
-  | FiltersSetEarliestYearPublished
-  | FiltersSetLatestYearPublished
   | FiltersClear;

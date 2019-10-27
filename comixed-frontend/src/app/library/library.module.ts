@@ -49,11 +49,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { CheckboxModule } from 'primeng/checkbox';
 import {
-  ProgressSpinnerModule,
-  ScrollPanelModule,
-  SliderModule,
-  ToolbarModule,
-  TooltipModule
+    ProgressSpinnerModule,
+    ScrollPanelModule, SidebarModule,
+    SliderModule,
+    ToolbarModule,
+    TooltipModule
 } from 'primeng/primeng';
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
@@ -81,36 +81,37 @@ import { ScrapingComicListComponent } from 'app/library/components/scraping-comi
 import { MultipleComicScrapingComponent } from 'app/library/components/multiple-comic-scraping/multiple-comic-scraping.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    LibraryRoutingModule,
-    ComicsModule,
-    TranslateModule.forRoot(),
-    StoreModule.forFeature(
-      fromLibrary.LIBRARY_FEATURE_KEY,
-      fromLibrary.reducer
-    ),
-    StoreModule.forFeature(
-      fromSelection.SELECTION_FEATURE_KEY,
-      fromSelection.reducer
-    ),
-    StoreModule.forFeature(
-      fromReadingList.READING_LIST_FEATURE_KEY,
-      fromReadingList.reducer
-    ),
-    StoreModule.forFeature(
-      fromFilters.FILTERS_FEATURE_KEY,
-      fromFilters.reducer
-    ),
-    EffectsModule.forFeature([LibraryEffects, ReadingListEffects]),
-    ContextMenuModule,
-    CheckboxModule,
-    SliderModule,
-    ScrollPanelModule,
-    ToolbarModule,
-    ProgressSpinnerModule,
-    TooltipModule
-  ],
+    imports: [
+        CommonModule,
+        LibraryRoutingModule,
+        ComicsModule,
+        TranslateModule.forRoot(),
+        StoreModule.forFeature(
+            fromLibrary.LIBRARY_FEATURE_KEY,
+            fromLibrary.reducer
+        ),
+        StoreModule.forFeature(
+            fromSelection.SELECTION_FEATURE_KEY,
+            fromSelection.reducer
+        ),
+        StoreModule.forFeature(
+            fromReadingList.READING_LIST_FEATURE_KEY,
+            fromReadingList.reducer
+        ),
+        StoreModule.forFeature(
+            fromFilters.FILTERS_FEATURE_KEY,
+            fromFilters.reducer
+        ),
+        EffectsModule.forFeature([LibraryEffects, ReadingListEffects]),
+        ContextMenuModule,
+        CheckboxModule,
+        SliderModule,
+        ScrollPanelModule,
+        ToolbarModule,
+        ProgressSpinnerModule,
+        TooltipModule,
+        SidebarModule
+    ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
     LibraryPageComponent,

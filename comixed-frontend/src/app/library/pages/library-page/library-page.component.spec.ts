@@ -70,6 +70,8 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
+import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
+import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -116,10 +118,12 @@ describe('LibraryPageComponent', () => {
         LibraryFilterComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        LibraryFilterPipe
+        LibraryFilterPipe,
+        ComicFilterPipe
       ],
       providers: [
         LibraryAdaptor,
+        FilterAdaptor,
         SelectionAdaptor,
         ReadingListAdaptor,
         LibraryDisplayAdaptor,

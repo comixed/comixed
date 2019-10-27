@@ -24,17 +24,11 @@ export const FILTERS_FEATURE_KEY = 'filter_state';
 export interface FilterState {
   publisher: string;
   series: string;
-  volume: string;
-  earliestYearPublished: number;
-  latestYearPublished: number;
 }
 
 export const initialState: FilterState = {
   publisher: null,
-  series: null,
-  volume: null,
-  earliestYearPublished: null,
-  latestYearPublished: null
+  series: null
 };
 
 export function reducer(
@@ -44,28 +38,16 @@ export function reducer(
   switch (action.type) {
     case FiltersActionTypes.SetPublisher: {
       const name = action.payload.name;
-      return { ...state, publisher: name.length > 0 ? name : null };
+      return { ...state, publisher: !!name && name.length > 0 ? name : null };
     }
 
     case FiltersActionTypes.SetSeries: {
       const name = action.payload.name;
-      return { ...state, series: name.length > 0 ? name : null };
+      return { ...state, series: !!name && name.length > 0 ? name : null };
     }
 
-    case FiltersActionTypes.SetVolume: {
-      const name = action.payload.name;
-      return { ...state, volume: name.length > 0 ? name : null };
-    }
-
-    case FiltersActionTypes.SetEarliestYearPublished: {
-      const year = action.payload.year;
-      return { ...state, earliestYearPublished: year > 0 ? year : null };
-    }
-
-    case FiltersActionTypes.SetLatestYearPublished: {
-      const year = action.payload.year;
-      return { ...state, latestYearPublished: year > 0 ? year : null };
-    }
+    case FiltersActionTypes.Clear:
+      return { ...state, publisher: null, series: null };
 
     default:
       return state;

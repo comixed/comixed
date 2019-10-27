@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,7 @@
  * org.comixed;
  */
 
-import { Action } from '@ngrx/store';
-
-export const LIBRARY_FILTER_RESET = '[LIBRARY FILTER] Reset filters';
-export class LibraryFilterReset implements Action {
-  readonly type = LIBRARY_FILTER_RESET;
-
-  constructor() {}
+export interface LibraryFilter {
+  publisher: string;
+  series: string;
 }
-
-export const LIBRARY_FILTER_SET_FILTERS = '[LIBRARY FILTER] Set the filters';
-export class LibraryFilterSetFilters implements Action {
-  readonly type = LIBRARY_FILTER_SET_FILTERS;
-
-  constructor(
-    public payload: {
-      publisher: string;
-      series: string;
-      volume: string;
-      from_year: number;
-      to_year: number;
-    }
-  ) {}
-}
-
-export type Actions = LibraryFilterReset | LibraryFilterSetFilters;

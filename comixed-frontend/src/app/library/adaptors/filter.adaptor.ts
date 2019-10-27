@@ -27,21 +27,15 @@ import {
 } from 'app/library/reducers/filters.reducer';
 import { filter } from 'rxjs/operators';
 import {
-  FiltersSetEarliestYearPublished,
-  FiltersSetLatestYearPublished,
+  FiltersClear,
   FiltersSetPublisher,
-  FiltersSetSeries,
-  FiltersSetVolume
+  FiltersSetSeries
 } from 'app/library/actions/filters.actions';
-import { LibraryFilterReset } from 'app/actions/library-filter.actions';
 
 @Injectable()
 export class FilterAdaptor {
   private _publisher$ = new BehaviorSubject<string>(null);
   private _series$ = new BehaviorSubject<string>(null);
-  private _volume$ = new BehaviorSubject<string>(null);
-  private _earliestYearPublished$ = new BehaviorSubject<number>(null);
-  private _latestYearPublished$ = new BehaviorSubject<number>(null);
 
   constructor(public store: Store<AppState>) {
     this.store
@@ -53,20 +47,6 @@ export class FilterAdaptor {
         }
         if (state.series !== this._series$.getValue()) {
           this._series$.next(state.series);
-        }
-        if (state.volume !== this._volume$.getValue()) {
-          this._volume$.next(state.volume);
-        }
-        if (
-          state.earliestYearPublished !==
-          this._earliestYearPublished$.getValue()
-        ) {
-          this._earliestYearPublished$.next(state.earliestYearPublished);
-        }
-        if (
-          state.latestYearPublished !== this._latestYearPublished$.getValue()
-        ) {
-          this._latestYearPublished$.next(state.latestYearPublished);
         }
       });
   }
@@ -87,31 +67,7 @@ export class FilterAdaptor {
     return this._series$.asObservable();
   }
 
-  setVolume(name: string): void {
-    this.store.dispatch(new FiltersSetVolume({ name: name }));
-  }
-
-  get volume$(): Observable<string> {
-    return this._volume$.asObservable();
-  }
-
-  setEarliestYearPublished(year: number): void {
-    this.store.dispatch(new FiltersSetEarliestYearPublished({ year: year }));
-  }
-
-  get earliestYearPublished$(): Observable<number> {
-    return this._earliestYearPublished$.asObservable();
-  }
-
-  setLatestYearPublished(year: number): void {
-    this.store.dispatch(new FiltersSetLatestYearPublished({ year: year }));
-  }
-
-  get latestYearPublished$(): Observable<number> {
-    return this._latestYearPublished$.asObservable();
-  }
-
   clearFilters(): void {
-    this.store.dispatch(new LibraryFilterReset());
+    this.store.dispatch(new FiltersClear());
   }
 }

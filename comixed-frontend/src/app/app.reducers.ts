@@ -17,13 +17,11 @@
  * org.comixed;
  */
 
-import { libraryFilterReducer } from 'app/reducers/library-filter.reducer';
 import { singleComicScrapingReducer } from 'app/reducers/single-comic-scraping.reducer';
 import { multipleComicsScrapingReducer } from 'app/reducers/multiple-comics-scraping.reducer';
 import { duplicatesReducer } from 'app/reducers/duplicates.reducer';
 
 export const REDUCERS = {
-  library_filter: libraryFilterReducer,
   single_comic_scraping: singleComicScrapingReducer,
   multiple_comic_scraping: multipleComicsScrapingReducer,
   duplicates: duplicatesReducer

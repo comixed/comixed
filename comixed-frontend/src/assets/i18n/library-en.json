@@ -167,23 +167,24 @@
     "title": "ComiXed: Library Administration"
   },
   "comic-list-toolbar": {
+    "tooltip": {
+      "show-filters": "Show library filters."
+    },
     "options": {
       "layout": {
         "tooltip": "Toggle between grid and list layouts."
       },
       "sorting": {
-        "label": "Sort by",
-        "volume": "Volume",
-        "issue-number": "Issue Number",
-        "added-date": "Added Date",
-        "cover-date": "Cover Date"
+        "volume": "Sort by Volume",
+        "issue-number": "Sort by Issue #",
+        "added-date": "Sort by Added Date",
+        "cover-date": "Sort by Cover Date"
       },
       "rows": {
-        "label": "Comics Per Page",
-        "10-comics": "10 Comics",
-        "25-comics": "25 Comics",
-        "50-comics": "50 Comics",
-        "100-comics": "100 Comics"
+        "10-comics": "Show 10 Comics",
+        "25-comics": "Show 25 Comics",
+        "50-comics": "Show 50 Comics",
+        "100-comics": "Show 100 Comics"
       },
       "same-height": {
         "tooltip": "Adjust the size of cover images.",
@@ -208,6 +209,16 @@
     "delete-comics": {
       "header": "Delete Selected Comics",
       "message": "Are you sure you want to delete the {count, plural, =1{selected comic} other{# selected comics}}?"
+    }
+  },
+  "library-filter": {
+    "title": "Library Filters",
+    "option": {
+      "select-all-publishers": "All Publishers...",
+      "select-all-series": "All Series..."
+    },
+    "button": {
+      "reset-filters": "Reset Filters"
     }
   }
 }

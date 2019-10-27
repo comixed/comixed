@@ -27,14 +27,10 @@ import {
 import { COMIC_2 } from 'app/comics/models/comic.fixtures';
 import { AppState } from 'app/library';
 import {
-  FiltersSetEarliestYearPublished,
-  FiltersSetLatestYearPublished,
+  FiltersClear,
   FiltersSetPublisher,
-  FiltersSetSeries,
-  FiltersSetVolume
+  FiltersSetSeries
 } from 'app/library/actions/filters.actions';
-import { LibraryFilterReset } from 'app/actions/library-filter.actions';
-import { state } from '@angular/animations';
 
 describe('FilterAdaptor', () => {
   let adaptor: FilterAdaptor;
@@ -96,71 +92,13 @@ describe('FilterAdaptor', () => {
     });
   });
 
-  describe('settings the volume', () => {
-    const VOLUME = COMIC_2.volume;
-
-    beforeEach(() => {
-      adaptor.setVolume(VOLUME);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new FiltersSetVolume({ name: VOLUME })
-      );
-    });
-
-    it('provides an update', () => {
-      adaptor.volume$.subscribe(response => expect(response).toEqual(VOLUME));
-    });
-  });
-
-  describe('settings the earliest year published', () => {
-    const YEAR = COMIC_2.yearPublished;
-
-    beforeEach(() => {
-      adaptor.setEarliestYearPublished(YEAR);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new FiltersSetEarliestYearPublished({ year: YEAR })
-      );
-    });
-
-    it('provides an update', () => {
-      adaptor.earliestYearPublished$.subscribe(response =>
-        expect(response).toEqual(YEAR)
-      );
-    });
-  });
-
-  describe('settings the latest year published', () => {
-    const YEAR = COMIC_2.yearPublished;
-
-    beforeEach(() => {
-      adaptor.setLatestYearPublished(YEAR);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new FiltersSetLatestYearPublished({ year: YEAR })
-      );
-    });
-
-    it('provides an update', () => {
-      adaptor.latestYearPublished$.subscribe(response =>
-        expect(response).toEqual(YEAR)
-      );
-    });
-  });
-
   describe('clearing the filters', () => {
     beforeEach(() => {
       adaptor.clearFilters();
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new LibraryFilterReset());
+      expect(store.dispatch).toHaveBeenCalledWith(new FiltersClear());
     });
   });
 });

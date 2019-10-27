@@ -68,6 +68,8 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
+import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
+import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -109,11 +111,13 @@ describe('MissingComicsPageComponent', () => {
         ComicListToolbarComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        LibraryFilterComponent
+        LibraryFilterComponent,
+        ComicFilterPipe
       ],
       providers: [
         AuthenticationAdaptor,
         LibraryAdaptor,
+        FilterAdaptor,
         SelectionAdaptor,
         ReadingListAdaptor,
         LibraryDisplayAdaptor,

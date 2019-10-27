@@ -19,26 +19,25 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { Comic } from 'app/comics';
-import { FilterState } from 'app/library/reducers/filters.reducer';
+import { LibraryFilter } from 'app/library/models/library-filter';
 
 @Pipe({
   name: 'comicFilter'
 })
 export class ComicFilterPipe implements PipeTransform {
-  transform(comics: Comic[], filters: FilterState): Comic[] {
+  transform(comics: Comic[], filters: LibraryFilter): Comic[] {
     if (!comics || !comics.length) {
       return [];
+    }
+
+    if (!filters) {
+      return comics;
     }
 
     return comics.filter(comic => {
       return (
         (!filters.publisher || filters.publisher === comic.publisher) &&
-        (!filters.series || filters.series === comic.series) &&
-        (!filters.volume || filters.volume === comic.volume) &&
-        (!filters.earliestYearPublished ||
-          filters.earliestYearPublished <= comic.yearPublished) &&
-        (!filters.latestYearPublished ||
-          filters.latestYearPublished >= comic.yearPublished)
+        (!filters.series || filters.series === comic.series)
       );
     });
   }

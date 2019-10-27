@@ -1,99 +1,28 @@
-<p-panel
-  [header]="get_header()"
-  [toggleable]="true"
-  toggler="header"
-  [collapsed]="collapsed"
-  (onAfterToggle)="set_collapsed($event.collapsed)"
->
-  <div class="ui-g">
-    <div class="ui-g-4">
-      <div class="ui-g">
-        <div class="ui-g-12">
-          <label for="publisher_filter">{{
-            'library-filter.labels.publisher' | translate
-          }}</label>
-        </div>
-        <div class="ui-g-12">
-          <input
-            id="publisher_filter"
-            type="text"
-            pInputText
-            [(ngModel)]="publisher"
-          />
-        </div>
-        <div class="ui-g-12">
-          <label for="series_filter">{{
-            'library-filter.labels.series' | translate
-          }}</label>
-        </div>
-        <div class="ui-g-12">
-          <input
-            id="series_filter"
-            type="text"
-            pInputText
-            [(ngModel)]="series"
-          />
-        </div>
-        <div class="ui-g-12">
-          <label for="volume_filter">{{
-            'library-filter.labels.volume' | translate
-          }}</label>
-        </div>
-        <div class="ui-g-12">
-          <input
-            id="volume_filter"
-            type="text"
-            pInputText
-            [(ngModel)]="volume"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="ui-g-4">
-      <div class="ui-g">
-        <div class="ui-g-12 cx-container-centered-text">
-          <h3>{{ 'library-filter.labels.cover-dates' | translate }}</h3>
-        </div>
-        <div class="ui-g-12">
-          <label for="from_year">{{
-            'library-filter.labels.earliest-cover-date' | translate
-          }}</label>
-        </div>
-        <div class="ui-g-12">
-          <input
-            id="from_year"
-            type="number"
-            pInputText
-            [(ngModel)]="from_year"
-          />
-        </div>
-        <div class="ui-g-12">
-          <label for="to_year">{{
-            'library-filter.labels.latest-cover-date' | translate
-          }}</label>
-        </div>
-        <div class="ui-g-12">
-          <input id="to_year" type="number" pInputText [(ngModel)]="to_year" />
-        </div>
-      </div>
-    </div>
-    <div class="ui-g-4"></div>
-    <div class="ui-g-12">
-      <button
-        pButton
-        type="button"
-        label="{{ 'button.apply' | translate }}"
-        icon="fa fa-fw fa-filter"
-        [disabled]="!is_filtering()"
-        (click)="apply_filters()"
-      ></button>
-      <button
-        pButton
-        type="button"
-        label="{{ 'button.reset' | translate }}"
-        icon="fa fa-fw fa-undo"
-        (click)="reset_filters()"
-      ></button>
-    </div>
-  </div>
-</p-panel>
+<h3>{{ 'library-filter.title' | translate }}</h3>
+<div>
+    <label for='publisher_filter'>{{
+        'library-filter.labels.publisher' | translate
+        }}</label>
+</div>
+<div>
+    <p-dropdown [(ngModel)]='publisher'
+                [options]='publisherOptions'
+                (onChange)='setPublisher($event.value)'></p-dropdown>
+</div>
+<div>
+    <label for='series_filter'>{{
+        'library-filter.labels.series' | translate
+        }}</label>
+</div>
+<div>
+    <p-dropdown [(ngModel)]='series'
+                [options]='seriesOptions'
+                (onChange)='setSeries($event.value)'></p-dropdown>
+</div>
+<div class='cx-button-box-vertical'>
+    <button pButton
+            class='cx-action-button ui-button-danger'
+            icon='fa fa-fw fa-undo'
+            [label]='"library-filter.button.reset-filters"|translate'
+            (click)='resetFilters()'></button>
+</div>

@@ -25,17 +25,14 @@ import {
   COMIC_4,
   COMIC_5
 } from 'app/comics/models/comic.fixtures';
-import { FilterState } from 'app/library/reducers/filters.reducer';
 import { Comic } from 'app/comics';
+import { LibraryFilter } from 'app/library/models/library-filter';
 
 describe('ComicFilterPipe', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
-  const FILTERS: FilterState = {
+  const FILTERS: LibraryFilter = {
     publisher: null,
-    series: null,
-    volume: null,
-    earliestYearPublished: null,
-    latestYearPublished: null
+    series: null
   };
 
   let pipe: ComicFilterPipe;
@@ -89,70 +86,6 @@ describe('ComicFilterPipe', () => {
 
     it('only returns comics with the given series', () => {
       result.forEach((comic: Comic) => expect(comic.series).toEqual(SERIES));
-    });
-  });
-
-  describe('filtering by volume', () => {
-    const VOLUME = COMIC_2.volume;
-    let result: Comic[];
-
-    beforeEach(() => {
-      result = pipe.transform(COMICS, {
-        ...FILTERS,
-        volume: VOLUME
-      });
-    });
-
-    it('returns a non-empty array', () => {
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it('only returns comics with the given volume', () => {
-      result.forEach((comic: Comic) => expect(comic.volume).toEqual(VOLUME));
-    });
-  });
-
-  describe('filtering by earliest cover year', () => {
-    const YEAR = COMIC_3.yearPublished;
-    let result: Comic[];
-
-    beforeEach(() => {
-      result = pipe.transform(COMICS, {
-        ...FILTERS,
-        earliestYearPublished: YEAR
-      });
-    });
-
-    it('returns a non-empty array', () => {
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it('only returns comics publisher on or after the given year', () => {
-      result.forEach((comic: Comic) =>
-        expect(comic.yearPublished).toBeGreaterThanOrEqual(YEAR)
-      );
-    });
-  });
-
-  describe('filtering by latest cover year', () => {
-    const YEAR = COMIC_3.yearPublished;
-    let result: Comic[];
-
-    beforeEach(() => {
-      result = pipe.transform(COMICS, {
-        ...FILTERS,
-        latestYearPublished: YEAR
-      });
-    });
-
-    it('returns a non-empty array', () => {
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it('only returns comics publisher on or before the given year', () => {
-      result.forEach((comic: Comic) =>
-        expect(comic.yearPublished).toBeLessThanOrEqual(YEAR)
-      );
     });
   });
 });

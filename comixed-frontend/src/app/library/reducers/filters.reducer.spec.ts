@@ -17,21 +17,16 @@
  * org.comixed;
  */
 
-import { reducer, initialState, FilterState } from './filters.reducer';
+import { FilterState, initialState, reducer } from './filters.reducer';
 import {
-  FiltersSetEarliestYearPublished,
-  FiltersSetLatestYearPublished,
+  FiltersClear,
   FiltersSetPublisher,
-  FiltersSetSeries,
-  FiltersSetVolume
+  FiltersSetSeries
 } from 'app/library/actions/filters.actions';
 
 describe('Filters Reducer', () => {
   const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
-  const VOLUME = 'The Volume';
-  const EARLIEST_DATE = 1980;
-  const LATEST_DATE = 2019;
 
   let state: FilterState;
 
@@ -50,18 +45,6 @@ describe('Filters Reducer', () => {
 
     it('has no series', () => {
       expect(state.series).toBeNull();
-    });
-
-    it('has no volume', () => {
-      expect(state.volume).toBeNull();
-    });
-
-    it('has no earliest cover date', () => {
-      expect(state.earliestYearPublished).toBeNull();
-    });
-
-    it('has no latest cover date', () => {
-      expect(state.latestYearPublished).toBeNull();
     });
   });
 
@@ -109,97 +92,22 @@ describe('Filters Reducer', () => {
         expect(state.series).toBeNull();
       });
     });
-
-    describe('settings the earliest year', () => {
-      beforeEach(() => {
-        state = reducer(
-          { ...state, publisher: null },
-          new FiltersSetPublisher({ name: PUBLISHER })
-        );
-      });
-
-      it('sets the publisher', () => {
-        expect(state.publisher).toEqual(PUBLISHER);
-      });
-
-      describe('clearing the publisher with an empty string', () => {
-        beforeEach(() => {
-          state = reducer(state, new FiltersSetPublisher({ name: '' }));
-        });
-
-        it('clears the publisehr', () => {
-          expect(state.publisher).toBeNull();
-        });
-      });
-    });
   });
 
-  describe('settings the volume', () => {
+  describe('clearing the filters', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, publisher: null },
-        new FiltersSetVolume({ name: VOLUME })
+        { ...state, publisher: PUBLISHER, series: SERIES },
+        new FiltersClear()
       );
     });
 
-    it('sets the volume', () => {
-      expect(state.volume).toEqual(VOLUME);
+    it('has no publisher', () => {
+      expect(state.publisher).toBeNull();
     });
 
-    describe('clearing the volume with an empty string', () => {
-      beforeEach(() => {
-        state = reducer(state, new FiltersSetVolume({ name: '' }));
-      });
-
-      it('clears the volume', () => {
-        expect(state.volume).toBeNull();
-      });
-    });
-  });
-
-  describe('settings the earliest cover year', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, earliestYearPublished: null },
-        new FiltersSetEarliestYearPublished({ year: EARLIEST_DATE })
-      );
-    });
-
-    it('sets the earliest cover year', () => {
-      expect(state.earliestYearPublished).toEqual(EARLIEST_DATE);
-    });
-
-    describe('clearing the publisher with an empty string', () => {
-      beforeEach(() => {
-        state = reducer(state, new FiltersSetEarliestYearPublished({ year: 0 }));
-      });
-
-      it('clears the earliest cover year', () => {
-        expect(state.publisher).toBeNull();
-      });
-    });
-  });
-
-  describe('settings the latest cover year filter', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, latestYearPublished: null },
-        new FiltersSetLatestYearPublished({ year: LATEST_DATE })
-      );
-    });
-
-    it('sets the latest cover year', () => {
-      expect(state.latestYearPublished).toEqual(LATEST_DATE);
-    });
-
-    describe('clearing the latest cover year', () => {
-      beforeEach(() => {
-        state = reducer(state, new FiltersSetLatestYearPublished({ year: 0 }));
-      });
-
-      it('clears the latest cover year', () => {
-        expect(state.latestYearPublished).toBeNull();
-      });
+    it('has no series', () => {
+      expect(state.series).toBeNull();
     });
   });
 });

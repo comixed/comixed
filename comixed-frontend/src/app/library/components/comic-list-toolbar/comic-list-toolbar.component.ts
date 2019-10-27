@@ -17,7 +17,14 @@
  * org.comixed;
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import {
   Comic,
   LibraryAdaptor,
@@ -37,6 +44,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ComicListToolbarComponent implements OnInit, OnDestroy {
   @Input() comics: Comic[] = [];
   @Input() dataView: any;
+  @Output() toggleFilters = new EventEmitter<boolean>();
 
   selectionSubscription: Subscription;
   selectedComics: Comic[] = [];

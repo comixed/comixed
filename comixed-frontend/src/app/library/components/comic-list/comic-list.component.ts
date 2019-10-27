@@ -69,6 +69,8 @@ export class ComicListComponent implements OnInit, OnDestroy {
   coverSizeSubscription: Subscription;
   coverSize: number;
   contextMenu: MenuItem[];
+  displayFilters = false;
+  filters = null;
 
   constructor(
     private authenticationAdaptor: AuthenticationAdaptor,
@@ -306,10 +308,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveReadingList(
-    readingList: ReadingList,
-    entries: ReadingListEntry[]
-  ): void {
+  saveReadingList(readingList: ReadingList, entries: ReadingListEntry[]): void {
     this.readingListAdaptor.save(readingList, entries);
   }
 
@@ -339,5 +338,13 @@ export class ComicListComponent implements OnInit, OnDestroy {
     } else {
       this.selectionAdaptor.selectComic(comic);
     }
+  }
+
+  showFilters() {
+    this.displayFilters = true;
+  }
+
+  setFilters(filters: LibraryFilter): void {
+    this.filters = filters;
   }
 }

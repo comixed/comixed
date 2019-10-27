@@ -1,3 +1,5 @@
+@import '~colors.scss';
+
 button {
   margin-right: 5px;
   width: 100px;
@@ -14,4 +16,26 @@ span {
 
 :host ::ng-deep .ui-slider {
   margin-top: 15px;
+}
+
+:host ::ng-deep {
+  .ui-chkbox-label {
+    background-color: $cx-toolbar-background-color;
+    color: $cx-toolbar-text-color;
+    font-weight: bold;
+  }
+}
+
+:host ::ng-deep {
+  .cx-library-toolbar {
+    background-color: $cx-toolbar-background-color;
+    color: $cx-toolbar-text-color;
+  }
+}
+
+:host ::ng-deep {
+  .ui-slider-handle {
+    background-color: $cx-toolbar-background-color;
+    color: $cx-toolbar-text-color;
+  }
 }

@@ -17,114 +17,115 @@
  * org.comixed;
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as FilterActions from 'app/actions/library-filter.actions';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { LibraryAdaptor } from 'app/library';
+import { LibraryFilter } from 'app/library/models/library-filter';
+import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-library-filter',
   templateUrl: './library-filter.component.html',
   styleUrls: ['./library-filter.component.scss']
 })
-export class LibraryFilterComponent implements OnInit {
-  @Input() publisher = '';
-  @Input() series = '';
-  @Input() volume = '';
-  @Input() from_year = 0;
-  @Input() to_year = 0;
-  @Input() collapsed = true;
+export class LibraryFilterComponent implements OnInit, OnDestroy {
+  @Output() filters = new EventEmitter<LibraryFilter>();
+
+  publisherOptionsSubscription: Subscription;
+  publisherOptions: SelectItem[] = [];
+  publisherSubscription: Subscription;
+  publisher: string;
+
+  seriesOptionSubscription: Subscription;
+  seriesOptions: SelectItem[] = [];
+  seriesSubscription: Subscription;
+  series: string;
 
   constructor(
     private store: Store<AppState>,
-    private translate: TranslateService
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor,
+    private filterAdaptor: FilterAdaptor
   ) {}
 
-  ngOnInit() {}
-
-  apply_filters(): void {
-    this.store.dispatch(
-      new FilterActions.LibraryFilterSetFilters({
-        publisher: this.publisher,
-        series: this.series,
-        volume: this.volume,
-        from_year: this.from_year,
-        to_year: this.to_year
-      })
-    );
-    this.collapsed = true;
-  }
-
-  reset_filters(): void {
-    this.store.dispatch(new FilterActions.LibraryFilterReset());
-    this.collapsed = true;
-  }
-
-  set_collapsed(collapsed: boolean): void {
-    this.collapsed = collapsed;
-  }
-
-  get_header(): string {
-    let result = this.translate.instant('library-filter.labels.filter-prefix');
-
-    if (this.collapsed) {
-      if (this.is_filtering()) {
-        if (this.publisher.length) {
-          result = `${result} [${this.translate.instant(
-            'library-filter.filters.publisher',
-            { publisher: this.publisher }
-          )}]`;
-        }
-        if (this.series.length) {
-          result = `${result} [${this.translate.instant(
-            'library-filter.filters.series',
-            { series: this.series }
-          )}]`;
-        }
-        if (this.volume.length) {
-          result = `${result} [${this.translate.instant(
-            'library-filter.filters.volume',
-            { volume: this.volume }
-          )}]`;
-        }
-        if (this.from_year > 0 && this.to_year > 0) {
-          result = `${result} [${this.translate.instant(
-            'library-filter.filters.between-years',
-            {
-              from_year: this.from_year,
-              to_year: this.to_year
-            }
-          )}]`;
-        } else {
-          if (this.from_year > 0) {
-            result = `${result} [${this.translate.instant(
-              'library-filter.filters.from-year',
-              { from_year: this.from_year }
-            )}]`;
+  ngOnInit() {
+    this.publisherOptionsSubscription = this.libraryAdaptor.publisher$.subscribe(
+      publishers => {
+        this.publisherOptions = [
+          {
+            label: this.translateService.instant(
+              'library-filter.option.select-all-publishers'
+            ),
+            value: null
           }
-          if (this.to_year > 0) {
-            result = `${result} [${this.translate.instant(
-              'library-filter.filters.to-year',
-              { to_year: this.to_year }
-            )}]`;
-          }
-        }
-      } else {
-        result = this.translate.instant('library-filter.filters.no-filters');
+        ].concat(
+          publishers.map(entry => {
+            return { label: entry.name, value: entry.name };
+          })
+        );
       }
-    }
-
-    return result;
+    );
+    this.publisherSubscription = this.filterAdaptor.publisher$.subscribe(
+      publisher => {
+        this.publisher = publisher;
+        this.updateLibraryFilter();
+      }
+    );
+    this.seriesOptionSubscription = this.libraryAdaptor.serie$.subscribe(
+      series => {
+        this.seriesOptions = [
+          {
+            label: this.translateService.instant(
+              'library-filter.option.select-all-series'
+            ),
+            value: null
+          }
+        ].concat(
+          series.map(entry => {
+            return { label: entry.name, value: entry.name };
+          })
+        );
+      }
+    );
+    this.seriesSubscription = this.filterAdaptor.series$.subscribe(series => {
+      this.series = series;
+      this.updateLibraryFilter();
+    });
   }
 
-  is_filtering(): boolean {
-    return !(
-      !this.publisher.length &&
-      !this.series.length &&
-      !this.volume.length &&
-      (this.from_year || 0) === 0 &&
-      (this.to_year || 0) === 0
-    );
+  ngOnDestroy() {
+    this.publisherOptionsSubscription.unsubscribe();
+    this.publisherSubscription.unsubscribe();
+    this.seriesOptionSubscription.unsubscribe();
+    this.seriesSubscription.unsubscribe();
+  }
+
+  resetFilters(): void {
+    this.filterAdaptor.clearFilters();
+  }
+
+  private updateLibraryFilter(): void {
+    this.filters.emit({
+      publisher: this.publisher,
+      series: this.series
+    });
+  }
+
+  setPublisher(publisher: string) {
+    this.filterAdaptor.setPublisher(publisher);
+  }
+
+  setSeries(series: string) {
+    this.filterAdaptor.setSeries(series);
   }
 }

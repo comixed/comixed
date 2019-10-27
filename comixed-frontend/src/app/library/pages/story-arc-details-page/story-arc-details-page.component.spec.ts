@@ -65,6 +65,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicsModule } from 'app/comics/comics.module';
+import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
+import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 
 describe('StoryArcDetailsPageComponent', () => {
   const STORY_NAME = 'Story Name';
@@ -107,6 +109,7 @@ describe('StoryArcDetailsPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryAdaptor,
+        FilterAdaptor,
         SelectionAdaptor,
         ReadingListAdaptor,
         LibraryDisplayAdaptor,
@@ -122,7 +125,8 @@ describe('StoryArcDetailsPageComponent', () => {
         ComicListComponent,
         ComicGridItemComponent,
         ComicListItemComponent,
-        ComicListToolbarComponent
+        ComicListToolbarComponent,
+        ComicFilterPipe
       ]
     }).compileComponents();
 
