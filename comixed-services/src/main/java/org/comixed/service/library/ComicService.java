@@ -76,19 +76,25 @@ public class ComicService {
     }
 
     @Transactional
-    public boolean deleteComic(final long id) {
-        this.logger.info("Deleting comics: id={}",
+    public Comic deleteComic(final long id)
+            throws
+            ComicException {
+        this.logger.info("Marking comic for deletion: id={}",
                          id);
 
-        final Optional<Comic> comic = this.comicRepository.findById(id);
+        final Optional<Comic> record = this.comicRepository.findById(id);
 
-        if (!comic.isPresent()) {
-            this.logger.error("No such comic");
-            return false;
+        if (!record.isPresent()) {
+            throw new ComicException("no such comic: id=" + id);
         }
 
-        this.comicRepository.delete(comic.get());
-        return true;
+        final Comic comic = record.get();
+        this.logger.debug("Setting deleted date");
+        comic.setDateDeleted(new Date());
+
+        this.logger.debug("Updating comic in the database");
+        comic.setDateLastUpdated(new Date());
+        return this.comicRepository.save(comic);
     }
 
     @Transactional
@@ -114,59 +120,6 @@ public class ComicService {
             }
         }
         return result;
-    }
-
-    public Comic getComic(final long id)
-            throws
-            ComicException {
-        this.logger.info("Getting comic: id={}",
-                         id);
-
-        final Optional<Comic> comicRecord = this.comicRepository.findById(id);
-
-        if (!comicRecord.isPresent()) {
-            throw new ComicException("no such comic: id=" + id);
-        }
-
-        final Comic comic = comicRecord.get();
-        final String series = comic.getSeries();
-
-        this.logger.debug("Getting all comics for series: {}",
-                          series);
-        final List<Comic> comics = this.comicRepository.findBySeries(series);
-        Collections.sort(comics,
-                         new ComicsComparatorByIssueNumber());
-
-        this.logger.debug("Searching {} comic{} for next and previous issues",
-                          comics.size(),
-                          comics.size() == 1
-                          ? ""
-                          : "s");
-        long previousId = -1L;
-        long nextId = -1L;
-        long currentId = comic.getId();
-        for (int index = 0;
-             index < comics.size();
-             index++) {
-            if (comics.get(index)
-                      .getId() == currentId) {
-                if (index > 0) {
-                    previousId = comics.get(index - 1)
-                                       .getId();
-                }
-                if (index < comics.size() - 1) {
-                    nextId = comics.get(index + 1)
-                                   .getId();
-                }
-                break;
-            }
-        }
-
-        comic.setNextIssueId(nextId);
-        comic.setPreviousIssueId(previousId);
-
-        this.logger.debug("Returning comic");
-        return comic;
     }
 
     public Comic getComicSummary(final long id) {
@@ -272,5 +225,86 @@ public class ComicService {
         }
 
         return count;
+    }
+
+    @Transactional
+    public Comic restoreComic(final long id)
+            throws
+            ComicException {
+        this.logger.debug("Restoring comic: id={}",
+                          id);
+
+        final Optional<Comic> record = this.comicRepository.findById(id);
+
+        if (!record.isPresent()) {
+            throw new ComicException("no such comic: id=" + id);
+        }
+
+        final Comic comic = record.get();
+
+        this.logger.debug("Restoring comic: id={} originally deleted={}",
+                          id,
+                          comic.getDateDeleted());
+
+        this.logger.debug("Clearing deleted date");
+        comic.setDateDeleted(null);
+        this.logger.debug("Refreshing last updated date");
+        comic.setDateLastUpdated(new Date());
+
+        this.logger.debug("Saving comic");
+        return this.comicRepository.save(comic);
+    }
+
+    public Comic getComic(final long id)
+            throws
+            ComicException {
+        this.logger.info("Getting comic: id={}",
+                         id);
+
+        final Optional<Comic> comicRecord = this.comicRepository.findById(id);
+
+        if (!comicRecord.isPresent()) {
+            throw new ComicException("no such comic: id=" + id);
+        }
+
+        final Comic comic = comicRecord.get();
+        final String series = comic.getSeries();
+
+        this.logger.debug("Getting all comics for series: {}",
+                          series);
+        final List<Comic> comics = this.comicRepository.findBySeries(series);
+        Collections.sort(comics,
+                         new ComicsComparatorByIssueNumber());
+
+        this.logger.debug("Searching {} comic{} for next and previous issues",
+                          comics.size(),
+                          comics.size() == 1
+                          ? ""
+                          : "s");
+        long previousId = -1L;
+        long nextId = -1L;
+        long currentId = comic.getId();
+        for (int index = 0;
+             index < comics.size();
+             index++) {
+            if (comics.get(index)
+                      .getId() == currentId) {
+                if (index > 0) {
+                    previousId = comics.get(index - 1)
+                                       .getId();
+                }
+                if (index < comics.size() - 1) {
+                    nextId = comics.get(index + 1)
+                                   .getId();
+                }
+                break;
+            }
+        }
+
+        comic.setNextIssueId(nextId);
+        comic.setPreviousIssueId(previousId);
+
+        this.logger.debug("Returning comic");
+        return comic;
     }
 }

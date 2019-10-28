@@ -48,7 +48,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -75,22 +74,18 @@ public class ComicController {
     @Autowired private Worker worker;
     @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
 
-    @RequestMapping(value = "/{id}",
-                    method = RequestMethod.DELETE)
-    public boolean deleteComic(
+    @DeleteMapping(value = "/{id}",
+                   produces = "application/json")
+    @JsonView({View.ComicDetails.class})
+    public Comic deleteComic(
             @PathVariable("id")
-                    long id) {
-        this.logger.info("Deleting comic: id={}",
+                    long id)
+            throws
+            ComicException {
+        this.logger.info("Marking comic for deletion: id={}",
                          id);
 
-        final boolean result = this.comicService.deleteComic(id);
-
-        this.logger.debug("Deletion was {}successful",
-                          result
-                          ? ""
-                          : "un");
-
-        return result;
+        return this.comicService.deleteComic(id);
     }
 
     @RequestMapping(value = "/{id}/metadata",
@@ -153,7 +148,6 @@ public class ComicController {
             @PathVariable("id")
                     long id)
             throws
-            FileNotFoundException,
             IOException,
             ComicException {
         this.logger.info("Preparing to download comic: id={}",
@@ -450,5 +444,20 @@ public class ComicController {
                                      "attachment; filename=\"" + filename + "\"")
                              .contentType(MediaType.valueOf(type))
                              .body(content);
+    }
+
+    @PutMapping(value = "/{id}/restore",
+                produces = "application/json",
+                consumes = "application/json")
+    @JsonView(View.ComicDetails.class)
+    public Comic restoreComic(
+            @PathVariable("id")
+            final long id)
+            throws
+            ComicException {
+        this.logger.info("Restoring comic: id={}",
+                         id);
+
+        return this.comicService.restoreComic(id);
     }
 }

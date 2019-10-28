@@ -45,6 +45,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
+import { TooltipModule } from 'primeng/primeng';
 
 describe('ComicOverviewComponent', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_2, SCAN_TYPE_3, SCAN_TYPE_4];
@@ -68,7 +69,8 @@ describe('ComicOverviewComponent', () => {
         RouterTestingModule,
         TranslateModule.forRoot(),
         InplaceModule,
-        DropdownModule
+        DropdownModule,
+        TooltipModule
       ],
       declarations: [ComicOverviewComponent],
       providers: [ComicAdaptor, ConfirmationService, MessageService]

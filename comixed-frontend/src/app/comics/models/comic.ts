@@ -45,6 +45,7 @@ export interface Comic {
   comicVineId: string;
   comicVineURL: string;
   addedDate: string;
+  deletedDate: number;
   coverDate: string;
   yearPublished: number;
   pageCount: number;

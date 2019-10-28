@@ -28,7 +28,6 @@ import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.LastReadDatesRepository;
 import org.comixed.repositories.tasks.ProcessComicEntryRepository;
-import org.comixed.task.model.AddComicWorkerTask;
 import org.comixed.task.model.RescanComicWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.junit.Before;
@@ -86,6 +85,7 @@ public class ComicServiceTest {
     @Mock private ObjectFactory<RescanComicWorkerTask> rescanWorkerTaskFactory;
     @Mock private RescanComicWorkerTask rescanWorkerTask;
     @Captor private ArgumentCaptor<Pageable> pageableCaptor;
+    @Captor private ArgumentCaptor<Date> deletedCaptor;
 
     private List<Comic> comicsBySeries = new ArrayList<>();
     private Comic previousComic = new Comic();
@@ -131,34 +131,104 @@ public class ComicServiceTest {
                                                     pageableCaptor.getValue());
     }
 
-    @Test
-    public void testDeleteComicNonexistent() {
+    @Test(expected = ComicException.class)
+    public void testDeleteComicNonexistent()
+            throws
+            ComicException {
         Mockito.when(comicRepository.findById(Mockito.anyLong()))
                .thenReturn(Optional.empty());
 
-        assertFalse(comicService.deleteComic(TEST_COMIC_ID));
-
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .findById(TEST_COMIC_ID);
+        try {
+            comicService.deleteComic(TEST_COMIC_ID);
+        }
+        finally {
+            Mockito.verify(comicRepository,
+                           Mockito.times(1))
+                   .findById(TEST_COMIC_ID);
+        }
     }
 
     @Test
-    public void testDeleteComic() {
+    public void testDeleteComic()
+            throws
+            ComicException {
         Mockito.when(comicRepository.findById(Mockito.anyLong()))
                .thenReturn(Optional.of(comic));
         Mockito.doNothing()
-               .when(comicRepository)
-               .delete(Mockito.any(Comic.class));
+               .when(comic)
+               .setDateDeleted(deletedCaptor.capture());
+        Mockito.doNothing()
+               .when(comic)
+               .setDateLastUpdated(lastUpdatedDateCaptor.capture());
+        Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
+               .thenReturn(comic);
 
-        assertTrue(comicService.deleteComic(TEST_COMIC_ID));
+        final Comic result = comicService.deleteComic(TEST_COMIC_ID);
+
+        assertNotNull(result);
+        assertSame(comic,
+                   result);
 
         Mockito.verify(comicRepository,
                        Mockito.times(1))
                .findById(TEST_COMIC_ID);
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setDateDeleted(deletedCaptor.getValue());
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setDateLastUpdated(lastUpdatedDateCaptor.getValue());
         Mockito.verify(comicRepository,
                        Mockito.times(1))
-               .delete(comic);
+               .save(comic);
+    }
+
+    @Test(expected = ComicException.class)
+    public void testRestoreComicNonexistent()
+            throws
+            ComicException {
+        Mockito.when(comicRepository.findById(Mockito.anyLong()))
+               .thenReturn(Optional.empty());
+
+        try {
+            comicService.restoreComic(TEST_COMIC_ID);
+        }
+        finally {
+            Mockito.verify(comicRepository,
+                           Mockito.times(1))
+                   .findById(TEST_COMIC_ID);
+        }
+    }
+
+    @Test
+    public void testRestoreComic()
+            throws
+            ComicException {
+        Mockito.when(comicRepository.findById(Mockito.anyLong()))
+               .thenReturn(Optional.of(comic));
+        Mockito.when(comic.getDateDeleted())
+               .thenReturn(new Date());
+        Mockito.doNothing()
+               .when(comic)
+               .setDateDeleted(Mockito.any());
+        Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
+               .thenReturn(comic);
+
+        final Comic response = comicService.restoreComic(TEST_COMIC_ID);
+
+        assertNotNull(response);
+        assertSame(comic,
+                   response);
+
+        Mockito.verify(comicRepository,
+                       Mockito.times(1))
+               .findById(TEST_COMIC_ID);
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setDateDeleted(null);
+        Mockito.verify(comicRepository,
+                       Mockito.times(1))
+               .save(comic);
     }
 
     @Test

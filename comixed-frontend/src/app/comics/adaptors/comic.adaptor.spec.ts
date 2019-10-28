@@ -30,6 +30,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import {
   ComicClearMetadata,
   ComicDelete,
+  ComicDeleted,
+  ComicDeleteFailed,
   ComicGetFormats,
   ComicGetIssue,
   ComicGetPageTypes,
@@ -38,6 +40,9 @@ import {
   ComicGotIssue,
   ComicGotPageTypes,
   ComicGotScanTypes,
+  ComicRestore,
+  ComicRestored,
+  ComicRestoreFailed,
   ComicSave,
   ComicSavePage,
   ComicScrape,
@@ -86,6 +91,7 @@ describe('ComicAdaptor', () => {
 
     adaptor = TestBed.get(ComicAdaptor);
     store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
   });
 
   it('should create an instance', () => {
@@ -94,14 +100,12 @@ describe('ComicAdaptor', () => {
 
   describe('loading scan types', () => {
     it('can load the scan types', () => {
-      spyOn(store, 'dispatch');
       adaptor.getScanTypes();
       expect(store.dispatch).toHaveBeenCalledWith(new ComicGetScanTypes());
     });
 
     it('only retrieves the scan types once', () => {
       store.dispatch(new ComicGotScanTypes({ scanTypes: SCAN_TYPES }));
-      spyOn(store, 'dispatch');
       adaptor.getScanTypes();
       expect(store.dispatch).not.toHaveBeenCalledWith(new ComicGetScanTypes());
     });
@@ -127,14 +131,12 @@ describe('ComicAdaptor', () => {
 
   describe('loading the comic formats', () => {
     it('can load the comic formats', () => {
-      spyOn(store, 'dispatch');
       adaptor.getFormats();
       expect(store.dispatch).toHaveBeenCalledWith(new ComicGetFormats());
     });
 
     it('only retrieves the scan types once', () => {
       store.dispatch(new ComicGotFormats({ formats: FORMATS }));
-      spyOn(store, 'dispatch');
       adaptor.getFormats();
       expect(store.dispatch).not.toHaveBeenCalledWith(new ComicGetFormats());
     });
@@ -188,13 +190,11 @@ describe('ComicAdaptor', () => {
   });
 
   it('can get a comic by id', () => {
-    spyOn(store, 'dispatch');
     adaptor.getComicById(17);
     expect(store.dispatch).toHaveBeenCalledWith(new ComicGetIssue({ id: 17 }));
   });
 
   it('can save changes to a page', () => {
-    spyOn(store, 'dispatch');
     adaptor.savePage(PAGE_1);
     expect(store.dispatch).toHaveBeenCalledWith(
       new ComicSavePage({ page: PAGE_1 })
@@ -202,7 +202,6 @@ describe('ComicAdaptor', () => {
   });
 
   it('can block a page hash', () => {
-    spyOn(store, 'dispatch');
     adaptor.blockPageHash(PAGE_1);
     expect(store.dispatch).toHaveBeenCalledWith(
       new ComicSetPageHashBlocking({ page: PAGE_1, state: true })
@@ -210,7 +209,6 @@ describe('ComicAdaptor', () => {
   });
 
   it('can unblock a page hash', () => {
-    spyOn(store, 'dispatch');
     adaptor.unblockPageHash(PAGE_1);
     expect(store.dispatch).toHaveBeenCalledWith(
       new ComicSetPageHashBlocking({ page: PAGE_1, state: false })
@@ -218,7 +216,6 @@ describe('ComicAdaptor', () => {
   });
 
   it('can save a comic', () => {
-    spyOn(store, 'dispatch');
     adaptor.saveComic(COMIC);
     expect(store.dispatch).toHaveBeenCalledWith(
       new ComicSave({ comic: COMIC })
@@ -226,23 +223,103 @@ describe('ComicAdaptor', () => {
   });
 
   it('can clear the metadata from a comic', () => {
-    spyOn(store, 'dispatch');
     adaptor.clearMetadata(COMIC);
     expect(store.dispatch).toHaveBeenCalledWith(
       new ComicClearMetadata({ comic: COMIC })
     );
   });
 
-  it('can delete a comic from the library', () => {
-    spyOn(store, 'dispatch');
-    adaptor.deleteComic(COMIC);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new ComicDelete({ comic: COMIC })
-    );
+  describe('deleting a comic', () => {
+    beforeEach(() => {
+      adaptor.deleteComic(COMIC);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ComicDelete({ comic: COMIC })
+      );
+    });
+
+    it('provides updates on deleting', () => {
+      adaptor.deletingComic$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('when the comic is deleted', () => {
+      const UPDATED_COMIC = { ...COMIC, deletedDate: new Date().getTime() };
+
+      beforeEach(() => {
+        store.dispatch(new ComicDeleted({ comic: UPDATED_COMIC }));
+      });
+
+      it('provides updates on deleting', () => {
+        adaptor.deletingComic$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('updates the comic', () => {
+        adaptor.comic$.subscribe(response =>
+          expect(response).toEqual(UPDATED_COMIC)
+        );
+      });
+    });
+
+    describe('restoring a comic', () => {
+      const COMIC_TO_RESTORE = { ...COMIC, deletedDate: new Date().getTime() };
+
+      beforeEach(() => {
+        adaptor.restoreComic(COMIC_TO_RESTORE);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new ComicRestore({ comic: COMIC_TO_RESTORE })
+        );
+      });
+
+      it('provides updates on restoring', () => {
+        adaptor.restoringComic$.subscribe(response =>
+          expect(response).toBeTruthy()
+        );
+      });
+
+      describe('when the comic is restored', () => {
+        const UPDATED_COMIC = COMIC;
+
+        beforeEach(() => {
+          store.dispatch(new ComicRestored({ comic: UPDATED_COMIC }));
+        });
+
+        it('provides updates on restoring', () => {
+          adaptor.restoringComic$.subscribe(response =>
+            expect(response).toBeFalsy()
+          );
+        });
+
+        it('updates the comic', () => {
+          adaptor.comic$.subscribe(response =>
+            expect(response).toEqual(UPDATED_COMIC)
+          );
+        });
+      });
+    });
+
+    describe('when the restore fails', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicRestoreFailed());
+      });
+
+      it('provides updates on restoring', () => {
+        adaptor.restoringComic$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
   });
 
   it('fires an action when scraping a comic', () => {
-    spyOn(store, 'dispatch');
     adaptor.scrapeComic(COMIC, API_KEY, ISSUE_ID, SKIP_CACHE);
     expect(store.dispatch).toHaveBeenCalledWith(
       new ComicScrape({

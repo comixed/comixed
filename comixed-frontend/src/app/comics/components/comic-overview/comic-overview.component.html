@@ -41,7 +41,9 @@
             <div class='ui-g-12'>
                 <strong>{{"comic-overview.label.added-date"|translate}}</strong>
             </div>
-            <div class='ui-g-12'>{{comic.addedDate|date}}</div>
+            <div class='ui-g-12'>{{comic.addedDate|date}}
+                <span *ngIf='!!comic.deletedDate'>&nbsp;{{'comic-overview.text.deleted-date'|translate:{date: comic.deletedDate|date} }}</span>
+            </div>
             <div class='ui-g-12'>
                 <strong>{{"comic-overview.label.last-read-date"|translate}}</strong>
             </div>
@@ -121,13 +123,24 @@
                 class='ui-button-primary cx-action-button'
                 label='{{"comic-overview.button.clear-metadata"|translate}}'
                 (click)='clearMetadata()'></button>
-        <button id='cx-delete-comic'
+        <button *ngIf='!comic.deletedDate'
+                id='cx-delete-comic'
                 type='button'
                 pButton
+                [pTooltip]='"comic-overview.tooltip.delete-comic"|translate'
                 icon='fas fa-trash'
                 class='ui-button-danger cx-action-button'
                 [label]='"comic-overview.button.delete-comic"|translate'
                 (click)='deleteComic()'></button>
+        <button *ngIf='comic.deletedDate'
+                id='cx-undelete-comic'
+                type='button'
+                pButton
+                [pTooltip]='"comic-overview.tooltip.undelete-comic"|translate'
+                icon='fas fa-trash'
+                class='ui-button-danger cx-action-button'
+                [label]='"comic-overview.button.undelete-comic"|translate'
+                (click)='undeleteComic()'></button>
     </div>
     <div class='ui-g-12 cx-comic-filename-container'>
         <div [innerHTML]='"comic-overview.label.filename"|translate:{filename: comic.filename}'></div>

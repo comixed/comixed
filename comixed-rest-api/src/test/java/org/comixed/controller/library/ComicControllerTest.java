@@ -24,10 +24,10 @@ import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
-import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.net.GetLibraryUpdatesRequest;
+import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.LastReadDatesRepository;
 import org.comixed.service.file.FileService;
@@ -114,7 +114,7 @@ public class ComicControllerTest {
         final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
                                                                                   TEST_TIMESTAMP,
                                                                                   new GetLibraryUpdatesRequest(TEST_TIMEOUT,
-                                                                                                   TEST_MAXIMUM_RESULTS));
+                                                                                                               TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -169,7 +169,7 @@ public class ComicControllerTest {
         final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
                                                                                   TEST_TIMESTAMP,
                                                                                   new GetLibraryUpdatesRequest(TEST_TIMEOUT,
-                                                                                                   TEST_MAXIMUM_RESULTS));
+                                                                                                               TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -231,7 +231,7 @@ public class ComicControllerTest {
         final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
                                                                                   TEST_TIMESTAMP,
                                                                                   new GetLibraryUpdatesRequest(TEST_TIMEOUT,
-                                                                                                   TEST_MAXIMUM_RESULTS));
+                                                                                                               TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -293,7 +293,7 @@ public class ComicControllerTest {
         final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
                                                                                   TEST_TIMESTAMP,
                                                                                   new GetLibraryUpdatesRequest(TEST_TIMEOUT,
-                                                                                                   TEST_MAXIMUM_RESULTS));
+                                                                                                               TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -355,7 +355,7 @@ public class ComicControllerTest {
         final GetLibraryUpdatesResponse result = controller.getComicsUpdatedSince(principal,
                                                                                   TEST_TIMESTAMP,
                                                                                   new GetLibraryUpdatesRequest(TEST_TIMEOUT,
-                                                                                                   TEST_MAXIMUM_RESULTS));
+                                                                                                               TEST_MAXIMUM_RESULTS));
 
         assertNotNull(result);
         assertSame(comicList,
@@ -393,27 +393,74 @@ public class ComicControllerTest {
     }
 
     @Test
-    public void testDeleteComic() {
+    public void testDeleteComic()
+            throws
+            ComicException {
         Mockito.when(comicService.deleteComic(Mockito.anyLong()))
-               .thenReturn(true);
+               .thenReturn(comic);
 
-        assertTrue(controller.deleteComic(TEST_COMIC_ID));
+        final Comic result = controller.deleteComic(TEST_COMIC_ID);
+
+        assertNotNull(result);
+        assertSame(comic,
+                   result);
 
         Mockito.verify(comicService,
                        Mockito.times(1))
                .deleteComic(TEST_COMIC_ID);
     }
 
-    @Test
-    public void testDeleteComicFails() {
+    @Test(expected = ComicException.class)
+    public void testDeleteComicFails()
+            throws
+            ComicException {
         Mockito.when(comicService.deleteComic(Mockito.anyLong()))
-               .thenReturn(false);
+               .thenThrow(ComicException.class);
 
-        assertFalse(controller.deleteComic(TEST_COMIC_ID));
+        try {
+            controller.deleteComic(TEST_COMIC_ID);
+        }
+        finally {
+            Mockito.verify(comicService,
+                           Mockito.times(1))
+                   .deleteComic(TEST_COMIC_ID);
+        }
+    }
+
+    @Test(expected = ComicException.class)
+    public void testRestoreComicFails()
+            throws
+            ComicException {
+        Mockito.when(comicService.restoreComic(Mockito.anyLong()))
+               .thenThrow(ComicException.class);
+
+        try {
+            controller.restoreComic(TEST_COMIC_ID);
+        }
+
+        finally {
+            Mockito.verify(comicService,
+                           Mockito.times(1))
+                   .restoreComic(TEST_COMIC_ID);
+        }
+    }
+
+    @Test
+    public void testRestoreComic()
+            throws
+            ComicException {
+        Mockito.when(comicService.restoreComic(Mockito.anyLong()))
+               .thenReturn(comic);
+
+        final Comic response = controller.restoreComic(TEST_COMIC_ID);
+
+        assertNotNull(response);
+        assertSame(comic,
+                   response);
 
         Mockito.verify(comicService,
                        Mockito.times(1))
-               .deleteComic(TEST_COMIC_ID);
+               .restoreComic(TEST_COMIC_ID);
     }
 
     @Test

@@ -39,6 +39,9 @@ import {
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
   ComicPageSaved,
+  ComicRestore,
+  ComicRestored,
+  ComicRestoreFailed,
   ComicSave,
   ComicSaved,
   ComicSaveFailed,
@@ -71,6 +74,7 @@ import { PAGE_1 } from 'app/comics/models/page.fixtures';
 describe('Comic Reducer', () => {
   const API_KEY = '0123456789ABCDEF';
   const ISSUE_ID = 44147;
+  const COMIC = COMIC_1;
 
   let state: ComicState;
 
@@ -145,6 +149,10 @@ describe('Comic Reducer', () => {
 
     it('clears the deleting comic flag', () => {
       expect(state.deletingComic).toBeFalsy();
+    });
+
+    it('clears the restoring flag', () => {
+      expect(state.restoringComic).toBeFalsy();
     });
 
     it('clears the scraping comic flag', () => {
@@ -335,8 +343,6 @@ describe('Comic Reducer', () => {
   });
 
   describe('when a comic is retrieved', () => {
-    const COMIC = COMIC_1;
-
     beforeEach(() => {
       state = reducer(
         { ...state, fetchingComic: true, comic: null },
@@ -383,7 +389,7 @@ describe('Comic Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, savingPage: false, comic: null },
-        new ComicPageSaved({ comic: COMIC_1 })
+        new ComicPageSaved({ comic: COMIC })
       );
     });
 
@@ -392,7 +398,7 @@ describe('Comic Reducer', () => {
     });
 
     it('updates the current comic', () => {
-      expect(state.comic).toEqual(COMIC_1);
+      expect(state.comic).toEqual(COMIC);
     });
   });
 
@@ -426,7 +432,7 @@ describe('Comic Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, blockingPageHash: true, comic: null },
-        new ComicPageHashBlockingSet({ comic: COMIC_1 })
+        new ComicPageHashBlockingSet({ comic: COMIC })
       );
     });
 
@@ -435,7 +441,7 @@ describe('Comic Reducer', () => {
     });
 
     it('updates the comic', () => {
-      expect(state.comic).toEqual(COMIC_1);
+      expect(state.comic).toEqual(COMIC);
     });
   });
 
@@ -456,7 +462,7 @@ describe('Comic Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, savingComic: false },
-        new ComicSave({ comic: COMIC_1 })
+        new ComicSave({ comic: COMIC })
       );
     });
 
@@ -469,7 +475,7 @@ describe('Comic Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, savingComic: true, comic: null },
-        new ComicSaved({ comic: COMIC_1 })
+        new ComicSaved({ comic: COMIC })
       );
     });
 
@@ -478,7 +484,7 @@ describe('Comic Reducer', () => {
     });
 
     it('updates the comic', () => {
-      expect(state.comic).toEqual(COMIC_1);
+      expect(state.comic).toEqual(COMIC);
     });
   });
 
@@ -496,7 +502,7 @@ describe('Comic Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, clearingMetadata: false },
-        new ComicClearMetadata({ comic: COMIC_1 })
+        new ComicClearMetadata({ comic: COMIC })
       );
     });
 
@@ -509,7 +515,7 @@ describe('Comic Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, clearingMetadata: true, comic: null },
-        new ComicMetadataCleared({ comic: COMIC_1 })
+        new ComicMetadataCleared({ comic: COMIC })
       );
     });
 
@@ -518,7 +524,7 @@ describe('Comic Reducer', () => {
     });
 
     it('updates the computer', () => {
-      expect(state.comic).toEqual(COMIC_1);
+      expect(state.comic).toEqual(COMIC);
     });
   });
 
@@ -539,7 +545,7 @@ describe('Comic Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, deletingComic: false },
-        new ComicDelete({ comic: COMIC_1 })
+        new ComicDelete({ comic: COMIC })
       );
     });
 
@@ -549,10 +555,12 @@ describe('Comic Reducer', () => {
   });
 
   describe('when a comic has been deleted', () => {
+    const DELETED_COMIC = { ...COMIC, deletedDate: new Date().getTime() };
+
     beforeEach(() => {
       state = reducer(
-        { ...state, comic: COMIC_1, deletingComic: true },
-        new ComicDeleted()
+        { ...state, comic: COMIC, deletingComic: true },
+        new ComicDeleted({ comic: DELETED_COMIC })
       );
     });
 
@@ -560,8 +568,8 @@ describe('Comic Reducer', () => {
       expect(state.deletingComic).toBeFalsy();
     });
 
-    it('clears the comic from the state', () => {
-      expect(state.comic).toBeNull();
+    it('updates the comic', () => {
+      expect(state.comic).toEqual(DELETED_COMIC);
     });
   });
 
@@ -578,12 +586,55 @@ describe('Comic Reducer', () => {
     });
   });
 
+  describe('when restoring a comic', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, restoringComic: false },
+        new ComicRestore({ comic: COMIC })
+      );
+    });
+
+    it('sets the restoring flag', () => {
+      expect(state.restoringComic).toBeTruthy();
+    });
+  });
+
+  describe('when a comic is restored', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, restoringComic: true, comic: null },
+        new ComicRestored({ comic: COMIC })
+      );
+    });
+
+    it('clears the restoring flag', () => {
+      expect(state.restoringComic).toBeFalsy();
+    });
+
+    it('updates the comic', () => {
+      expect(state.comic).toEqual(COMIC);
+    });
+  });
+
+  describe('when restoring a comic fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, restoringComic: true },
+        new ComicRestoreFailed()
+      );
+    });
+
+    it('clears the restoring flag', () => {
+      expect(state.restoringComic).toBeFalsy();
+    });
+  });
+
   describe('when scraping a comic', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, scrapingComic: false },
         new ComicScrape({
-          comic: COMIC_1,
+          comic: COMIC,
           apiKey: API_KEY,
           issueId: ISSUE_ID,
           skipCache: false
@@ -600,7 +651,7 @@ describe('Comic Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, scrapingComic: true, comic: null },
-        new ComicScraped({ comic: COMIC_1 })
+        new ComicScraped({ comic: COMIC })
       );
     });
 
@@ -609,7 +660,7 @@ describe('Comic Reducer', () => {
     });
 
     it('updates the current comic', () => {
-      expect(state.comic).toEqual(COMIC_1);
+      expect(state.comic).toEqual(COMIC);
     });
   });
 

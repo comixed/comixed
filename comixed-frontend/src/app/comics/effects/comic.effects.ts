@@ -36,6 +36,8 @@ import {
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
   ComicPageSaved,
+  ComicRestored,
+  ComicRestoreFailed,
   ComicSaved,
   ComicSaveFailed,
   ComicSavePageFailed,
@@ -342,16 +344,15 @@ export class ComicEffects {
     map(action => action.payload),
     switchMap(action =>
       this.comicService.deleteComic(action.comic).pipe(
-        tap(() =>
+        tap((response: Comic) =>
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.delete-comic.success.detail',
-              { id: action.comic.id }
+              'comics-effects.delete-comic.success.detail'
             )
           })
         ),
-        map(() => new ComicDeleted()),
+        map((response: Comic) => new ComicDeleted({ comic: response })),
         catchError(error => {
           this.messageService.add({
             severity: 'error',
@@ -371,6 +372,43 @@ export class ComicEffects {
         )
       });
       return of(new ComicDeleteFailed());
+    })
+  );
+
+  @Effect()
+  restoreComic$: Observable<Action> = this.actions$.pipe(
+    ofType(ComicActionTypes.RestoreComic),
+    map(action => action.payload),
+    switchMap(action =>
+      this.comicService.restoreComic(action.comic).pipe(
+        tap((response: Comic) =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'comics-effects.restore-comic.success.detail'
+            )
+          })
+        ),
+        map((response: Comic) => new ComicRestored({ comic: response })),
+        catchError(error => {
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'comic-effects.restore-comic.error.detail'
+            )
+          });
+          return of(new ComicRestoreFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new ComicRestoreFailed());
     })
   );
 

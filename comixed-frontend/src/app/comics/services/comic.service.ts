@@ -28,6 +28,7 @@ import {
   GET_ISSUE_URL,
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
+  RESTORE_COMIC_URL,
   SAVE_COMIC_URL,
   SCRAPE_COMIC_URL
 } from 'app/comics/comics.constants';
@@ -66,6 +67,10 @@ export class ComicService {
 
   deleteComic(comic: Comic): Observable<any> {
     return this.http.delete(interpolate(DELETE_COMIC_URL, { id: comic.id }));
+  }
+
+  restoreComic(comic: Comic): Observable<any> {
+    return this.http.put(interpolate(RESTORE_COMIC_URL, { id: comic.id }), {});
   }
 
   scrapeComic(

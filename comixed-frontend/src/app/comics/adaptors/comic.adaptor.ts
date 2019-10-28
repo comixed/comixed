@@ -40,6 +40,7 @@ import {
   ComicGetFormats,
   ComicGetIssue,
   ComicGetScanTypes,
+  ComicRestore,
   ComicSave,
   ComicSavePage,
   ComicScrape,
@@ -57,6 +58,8 @@ export class ComicAdaptor {
   private _pageTypes$ = new BehaviorSubject<PageType[]>([]);
   private _pageTypesLoaded$ = new BehaviorSubject<boolean>(false);
   private _comic$ = new BehaviorSubject<Comic>(null);
+  private _deletingComic$ = new BehaviorSubject<boolean>(false);
+  private _restoringComic$ = new BehaviorSubject<boolean>(false);
 
   constructor(private store: Store<AppState>) {
     this.store
@@ -86,6 +89,12 @@ export class ComicAdaptor {
         }
         if (state.fetchingComic !== this._fetchingIssue$.getValue()) {
           this._fetchingIssue$.next(state.fetchingComic);
+        }
+        if (state.deletingComic !== this._deletingComic$.getValue()) {
+          this._deletingComic$.next(state.deletingComic);
+        }
+        if (state.restoringComic !== this._restoringComic$.getValue()) {
+          this._restoringComic$.next(state.restoringComic);
         }
         if (!_.isEqual(state.comic, this._comic$.getValue())) {
           this._comic$.next(state.comic);
@@ -171,6 +180,18 @@ export class ComicAdaptor {
 
   deleteComic(comic: Comic): void {
     this.store.dispatch(new ComicDelete({ comic: comic }));
+  }
+
+  get deletingComic$(): Observable<boolean> {
+    return this._deletingComic$.asObservable();
+  }
+
+  restoreComic(comic: Comic): void {
+    this.store.dispatch(new ComicRestore({ comic: comic }));
+  }
+
+  get restoringComic$(): Observable<boolean> {
+    return this._restoringComic$.asObservable();
   }
 
   scrapeComic(

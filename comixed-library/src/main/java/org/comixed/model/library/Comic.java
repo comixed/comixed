@@ -20,6 +20,7 @@
 package org.comixed.model.library;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -159,6 +160,16 @@ public class Comic {
                DatabaseBackup.class})
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded = new Date();
+
+    @Column(name = "deleted_date",
+            updatable = true,
+            nullable = true)
+    @JsonProperty("deletedDate")
+    @JsonFormat(shape = Shape.NUMBER)
+    @JsonView({ComicList.class,
+               DatabaseBackup.class})
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateDeleted;
 
     @Column(name = "last_updated_date",
             updatable = true,
@@ -616,6 +627,14 @@ public class Comic {
      */
     public Date getDateAdded() {
         return this.dateAdded;
+    }
+
+    public Date getDateDeleted() {
+        return dateDeleted;
+    }
+
+    public void setDateDeleted(final Date dateDeleted) {
+        this.dateDeleted = dateDeleted;
     }
 
     /**

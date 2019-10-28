@@ -33,6 +33,7 @@ import {
   GET_ISSUE_URL,
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
+  RESTORE_COMIC_URL,
   SAVE_COMIC_URL,
   SCRAPE_COMIC_URL
 } from 'app/comics/comics.constants';
@@ -160,6 +161,19 @@ describe('ComicService', () => {
     req.flush(
       new HttpResponse<boolean>({ status: 200, statusText: 'SUCCESS' })
     );
+  });
+
+  it('can restore a comic', () => {
+    service
+      .restoreComic(COMIC)
+      .subscribe(response => expect(response).toEqual(COMIC));
+
+    const req = httpMock.expectOne(
+      interpolate(RESTORE_COMIC_URL, { id: COMIC.id })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({});
+    req.flush(COMIC);
   });
 
   it('can scrape a comic', () => {

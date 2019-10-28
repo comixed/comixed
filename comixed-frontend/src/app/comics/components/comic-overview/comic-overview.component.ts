@@ -149,4 +149,8 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
       accept: () => this.comicAdaptor.deleteComic(this.comic)
     });
   }
+
+  undeleteComic() {
+    this.comicAdaptor.restoreComic(this.comic);
+  }
 }

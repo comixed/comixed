@@ -25,7 +25,7 @@ import { ComicEffects } from './comic.effects';
 import { ComicService } from 'app/comics/services/comic.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1, COMIC_2 } from 'app/comics/models/comic.fixtures';
 import {
   ComicClearMetadata,
   ComicClearMetadataFailed,
@@ -46,7 +46,7 @@ import {
   ComicGotScanTypes,
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
-  ComicPageSaved,
+  ComicPageSaved, ComicRestore, ComicRestored, ComicRestoreFailed,
   ComicSave,
   ComicSaved,
   ComicSaveFailed,
@@ -103,6 +103,7 @@ describe('ComicEffects', () => {
             saveComic: jasmine.createSpy('ComicSave.saveComic'),
             clearMetadata: jasmine.createSpy('ComicService.clearMetadata'),
             deleteComic: jasmine.createSpy('ComicService.deleteComic'),
+            restoreComic: jasmine.createSpy('ComicService.restoreComic()'),
             scrapeComic: jasmine.createSpy('ComicService.scrapeComic')
           }
         },
@@ -499,9 +500,9 @@ describe('ComicEffects', () => {
 
   describe('when deleting a comic', () => {
     it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({});
+      const serviceResponse = COMIC_2;
       const action = new ComicDelete({ comic: COMIC });
-      const outcome = new ComicDeleted();
+      const outcome = new ComicDeleted({ comic: serviceResponse });
 
       actions$ = hot('-a', { a: action });
       comicService.deleteComic.and.returnValue(of(serviceResponse));
@@ -509,7 +510,7 @@ describe('ComicEffects', () => {
       const expected = hot('-b', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'info' })
+          objectContaining({ severity: 'info' })
       );
     });
 
@@ -524,7 +525,7 @@ describe('ComicEffects', () => {
       const expected = hot('-b', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
+          objectContaining({ severity: 'error' })
       );
     });
 
@@ -538,7 +539,53 @@ describe('ComicEffects', () => {
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
+          objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('when restoring a comic', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = COMIC_2;
+      const action = new ComicRestore({ comic: COMIC });
+      const outcome = new ComicRestored({ comic: serviceResponse });
+
+      actions$ = hot('-a', { a: action });
+      comicService.restoreComic.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.restoreComic$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+          objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ComicRestore({ comic: COMIC });
+      const outcome = new ComicRestoreFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.restoreComic.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.restoreComic$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+          objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new ComicRestore({ comic: COMIC });
+      const outcome = new ComicRestoreFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.restoreComic.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.restoreComic$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+          objectContaining({ severity: 'error' })
       );
     });
   });
