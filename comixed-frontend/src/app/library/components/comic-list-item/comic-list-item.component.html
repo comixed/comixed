@@ -2,7 +2,7 @@
     <div class='ui-g-12'>
         <div class='p-grid'>
             <div class='p-col-fixed'
-                 [style.width]='useSameHeight ? "auto":coverSize + "px"'
+                 [style.width]='useSameHeight ? "auto":(coverSize + 25) + "px"'
                  [style.height]='useSameHeight ? coverSize + "px":"auto"'>
                 <app-comic-cover [comic]='comic'
                                  [coverUrl]='comic|comicCoverUrl'
@@ -71,7 +71,10 @@
                             <div class='ui-g-12'>
                                 <strong>{{'comic-list-item.label.added-date'|translate}}</strong>
                             </div>
-                            <div class='ui-g-12'>{{comic.addedDate|date:'medium'}}</div>
+                            <div class='ui-g-12'>{{comic.addedDate|date:'medium'}}
+                                <span *ngIf='!!comic.deletedDate'>&nbsp;({{'comic-list-item.text.date-deleted'|translate:{date: comic.deletedDate|date} }}
+                                    )</span>
+                            </div>
                         </div>
                     </div>
                 </div>

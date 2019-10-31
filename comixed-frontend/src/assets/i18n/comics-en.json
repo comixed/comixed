@@ -188,5 +188,26 @@
         "detail": "No such comic found: id={id}."
       }
     }
+  },
+  "comic-list-item": {
+    "label": {
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume",
+      "issue-number": "Issue #",
+      "cover-date": "Cover Date",
+      "added-date": "Added Date",
+      "no-title": "[no title]",
+      "unknown": "Unknown"
+    },
+    "text": {
+      "date-deleted": "Deleted {date}"
+    }
+  },
+  "comic-cover": {
+    "label": {
+      "volume": "v{volume}",
+      "open-comic": "Open Comic"
+    }
   }
 }

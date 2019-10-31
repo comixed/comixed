@@ -327,24 +327,6 @@
       "message": "Are you sure you want to remove these comics from '{reading_list_name}?"
     }
   },
-  "comic-list-item": {
-    "label": {
-      "publisher": "Publisher",
-      "series": "Series",
-      "volume": "Volume",
-      "issue-number": "Issue #",
-      "cover-date": "Cover Date",
-      "added-date": "Added Date",
-      "no-title": "[no title]",
-      "unknown": "Unknown"
-    }
-  },
-  "comic-cover": {
-    "label": {
-      "volume": "v{volume}",
-      "open-comic": "Open Comic"
-    }
-  },
   "issue-details": {
     "label": {
       "description": "Description",
@@ -608,7 +590,8 @@
   },
   "global": {
     "tooltip": {
-      "unprocessed-comic": "This comic is scheduled for processing."
+      "unprocessed-comic": "This comic is scheduled for processing.",
+      "deleted-comic": "This comic is marked for deletion."
     }
   }
 }

@@ -10,9 +10,14 @@
              [style.height]='useSameHeight ? coverSize + "px" : "auto"'/>
         <p-footer></p-footer>
     </p-card>
-    <div *ngIf='unprocessed'
+    <div *ngIf='showOverlay()'
          class='cx-comic-cover-overlay'
+         [class.cx-comic-deleted]='!!comic.deletedDate'
          (click)='clicked()'>
-        <p-progressSpinner [pTooltip]='"global.tooltip.unprocessed-comic"|translate'></p-progressSpinner>
+        <p-progressSpinner *ngIf='unprocessed'
+                           [pTooltip]='"global.tooltip.unprocessed-comic"|translate'></p-progressSpinner>
+        <span *ngIf='!!comic.deletedDate'
+              [pTooltip]='"global.tooltip.deleted-comic"|translate'
+              class='fa fa-fw fa-minus-square fa-5x'></span>
     </div>
 </div>

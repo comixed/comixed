@@ -47,4 +47,8 @@ export class ComicCoverComponent {
       this.click.emit(this.comicFile);
     }
   }
+
+  showOverlay(): boolean {
+    return this.unprocessed || (this.comic && !!this.comic.deletedDate);
+  }
 }
