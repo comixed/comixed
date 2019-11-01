@@ -42,7 +42,7 @@ public class ComicVineVolumeQueryCacheEntry {
 
     @Column(name = "series_name") private String seriesName;
 
-    @Column(name = "order") private int index;
+    @Column(name = "sequence") private int sequence;
 
     @Column(name = "created") private Date created = new Date();
 
@@ -69,12 +69,12 @@ public class ComicVineVolumeQueryCacheEntry {
         return this.id;
     }
 
-    public int getIndex() {
-        return this.index;
+    public int getSequence() {
+        return this.sequence;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
     }
 
     public String getSeriesName() {

@@ -8,5 +8,6 @@
 
   <include file="/db/migrations/0.5.0/001_issue-559_initial_migration.xml"/>
   <include file="/db/migrations/0.5.0/002_issue-544_create_comic_file_details_table.xml"/>
-  <include file="/db/migrations/0.5.0/003_issue-553_added_date_deleted_to_comics.xml" />
+  <include file="/db/migrations/0.5.0/003_issue-553_added_date_deleted_to_comics.xml"/>
+  <include file="/db/migrations/0.5.0/004_issue-578_rename_order_to_sequence.xml"/>
 </databaseChangeLog>

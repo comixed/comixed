@@ -31,5 +31,5 @@ public interface ComicVineVolumeQueryCacheRepository extends
                                                                     Long>
 
 {
-    List<ComicVineVolumeQueryCacheEntry> findBySeriesName(String series);
+    List<ComicVineVolumeQueryCacheEntry> findBySeriesNameOrderBySequence(String seriesName);
 }

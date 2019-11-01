@@ -35,54 +35,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineQueryForVolumesAdaptor
-{
+public class ComicVineQueryForVolumesAdaptor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private WebRequestProcessor webRequestProcessor;
+    @Autowired private WebRequestProcessor webRequestProcessor;
 
-    @Autowired
-    private ObjectFactory<ComicVineQueryWebRequest> webRequestFactory;
+    @Autowired private ObjectFactory<ComicVineQueryWebRequest> webRequestFactory;
 
-    @Autowired
-    private ComicVineVolumesResponseProcessor responseProcessor;
+    @Autowired private ComicVineVolumesResponseProcessor responseProcessor;
 
-    @Autowired
-    private ComicVineVolumeQueryCacheRepository queryRepository;
+    @Autowired private ComicVineVolumeQueryCacheRepository queryRepository;
 
-    public List<ComicVolume> execute(String apiKey, String name, boolean skipCache) throws ComicVineAdaptorException,
-                                                                                    WebRequestException
-    {
-        this.logger.debug("Fetching volumes: name=\"{}\"", name, apiKey);
+    public List<ComicVolume> execute(String apiKey,
+                                     String name,
+                                     boolean skipCache)
+            throws
+            ComicVineAdaptorException,
+            WebRequestException {
+        this.logger.debug("Fetching volumes: name=\"{}\"",
+                          name,
+                          apiKey);
 
         List<ComicVolume> result = new ArrayList<>();
         boolean done = false;
         int page = 0;
-        List<ComicVineVolumeQueryCacheEntry> entries = this.queryRepository.findBySeriesName(name);
+        List<ComicVineVolumeQueryCacheEntry> entries = this.queryRepository.findBySeriesNameOrderBySequence(name);
         boolean entriesExpired = false;
         long aging = 0;
 
-        if (!skipCache && (entries != null) && !entries.isEmpty())
-        {
+        if (!skipCache && (entries != null) && !entries.isEmpty()) {
             for (int index = 0;
                  index < entries.size();
-                 index++)
-            {
-                aging = entries.get(index).getAgeInDays();
+                 index++) {
+                aging = entries.get(index)
+                               .getAgeInDays();
                 entriesExpired = (entriesExpired || (aging >= ComicVineVolumeQueryCacheEntry.CACHE_TTL));
             }
         }
 
-        if (entriesExpired)
-        {
-            logger.debug("Volume query is expired ({} days old);. Skipping...", aging);
+        if (entriesExpired) {
+            logger.debug("Volume query is expired ({} days old);. Skipping...",
+                         aging);
         }
 
-        if (skipCache || (entries == null) || entries.isEmpty() || entriesExpired)
-        {
-            while (!done)
-            {
+        if (skipCache || (entries == null) || entries.isEmpty() || entriesExpired) {
+            while (!done) {
                 this.logger.debug("Fetching volumes from ComicVine...");
 
                 ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
@@ -90,19 +87,17 @@ public class ComicVineQueryForVolumesAdaptor
                 request.setSeriesName(name);
 
                 page++;
-                if (page > 1)
-                {
-                    this.logger.debug("Setting offset to {}", page);
+                if (page > 1) {
+                    this.logger.debug("Setting offset to {}",
+                                      page);
                     request.setPage(page);
                 }
 
-                try
-                {
+                try {
                     String response = this.webRequestProcessor.execute(request);
 
                     // delete any existing cache
-                    if ((entries != null) && !entries.isEmpty())
-                    {
+                    if ((entries != null) && !entries.isEmpty()) {
                         this.queryRepository.deleteAll(entries);
                     }
 
@@ -111,28 +106,31 @@ public class ComicVineQueryForVolumesAdaptor
 
                     entry.setSeriesName(name);
                     entry.setContent(response);
-                    entry.setIndex(page);
+                    entry.setSequence(page);
                     this.queryRepository.save(entry);
-                    done = this.responseProcessor.process(result, response.getBytes());
+                    done = this.responseProcessor.process(result,
+                                                          response.getBytes());
                 }
-                catch (WebRequestException error)
-                {
-                    throw new ComicVineAdaptorException("unable to query for volumes", error);
+                catch (WebRequestException error) {
+                    throw new ComicVineAdaptorException("unable to query for volumes",
+                                                        error);
                 }
             }
-        }
-        else
-        {
-            this.logger.debug("Processing {} cached query entries...", entries.size());
+        } else {
+            this.logger.debug("Processing {} cached query entries...",
+                              entries.size());
             for (int index = 0;
                  index < entries.size();
-                 index++)
-            {
-                this.responseProcessor.process(result, entries.get(index).getContent().getBytes());
+                 index++) {
+                this.responseProcessor.process(result,
+                                               entries.get(index)
+                                                      .getContent()
+                                                      .getBytes());
             }
         }
 
-        this.logger.debug("Returning {} volumes", result.size());
+        this.logger.debug("Returning {} volumes",
+                          result.size());
 
         return result;
     }

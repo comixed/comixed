@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="004_issue-578_rename_order_to_sequence.xml"
+             author="mcpierce">
+
+    <renameColumn tableName="comic_vine_volume_query_cache"
+                  oldColumnName="order"
+                  newColumnName="sequence"/>
+  </changeSet>
+</databaseChangeLog>
