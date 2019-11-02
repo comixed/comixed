@@ -23,6 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TableModule } from 'primeng/table';
 import {
   ButtonModule,
+  CheckboxModule,
   DropdownModule,
   MessageService,
   PanelModule
@@ -65,7 +66,8 @@ describe('PublishersPageComponent', () => {
         TableModule,
         DropdownModule,
         PanelModule,
-        ButtonModule
+        ButtonModule,
+        CheckboxModule
       ],
       declarations: [PublishersPageComponent, LibraryFilterComponent],
       providers: [

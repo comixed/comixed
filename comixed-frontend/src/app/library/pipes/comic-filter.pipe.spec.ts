@@ -29,10 +29,17 @@ import { Comic } from 'app/comics';
 import { LibraryFilter } from 'app/library/models/library-filter';
 
 describe('ComicFilterPipe', () => {
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
+  const COMICS = [
+    { ...COMIC_1, deletedDate: null },
+    { ...COMIC_2, deletedDate: new Date().getTime() },
+    { ...COMIC_3, deletedDate: null },
+    { ...COMIC_4, deletedDate: new Date().getTime() },
+    { ...COMIC_5, deletedDate: null }
+  ];
   const FILTERS: LibraryFilter = {
     publisher: null,
-    series: null
+    series: null,
+    showDeleted: true
   };
 
   let pipe: ComicFilterPipe;
@@ -47,6 +54,10 @@ describe('ComicFilterPipe', () => {
 
   it('returns an empty array if no comics are provided', () => {
     expect(pipe.transform(null, FILTERS)).toEqual([]);
+  });
+
+  it('returns the comics if no filters are provided', () => {
+    expect(pipe.transform(COMICS, null)).toEqual(COMICS);
   });
 
   describe('filtering by publisher', () => {
@@ -86,6 +97,22 @@ describe('ComicFilterPipe', () => {
 
     it('only returns comics with the given series', () => {
       result.forEach((comic: Comic) => expect(comic.series).toEqual(SERIES));
+    });
+  });
+
+  describe('filtering by deleted', () => {
+    it('can show deleted comics', () => {
+      const result = pipe.transform(COMICS, { ...FILTERS, showDeleted: true });
+
+      expect(result).not.toEqual([]);
+      expect(result).toEqual(COMICS);
+    });
+
+    it('can hide deleted comics', () => {
+      const result = pipe.transform(COMICS, { ...FILTERS, showDeleted: false });
+
+      expect(result).not.toEqual([]);
+      expect(result.every(comic => comic.deletedDate === null)).toBeTruthy();
     });
   });
 });

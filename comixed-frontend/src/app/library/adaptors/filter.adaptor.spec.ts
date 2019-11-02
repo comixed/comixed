@@ -29,7 +29,8 @@ import { AppState } from 'app/library';
 import {
   FiltersClear,
   FiltersSetPublisher,
-  FiltersSetSeries
+  FiltersSetSeries,
+  FiltersSetShowDeleted
 } from 'app/library/actions/filters.actions';
 
 describe('FilterAdaptor', () => {
@@ -89,6 +90,38 @@ describe('FilterAdaptor', () => {
 
     it('provides an update', () => {
       adaptor.series$.subscribe(response => expect(response).toEqual(SERIES));
+    });
+  });
+
+  describe('showing deleted comics', () => {
+    beforeEach(() => {
+      adaptor.showDeletedComics(true);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new FiltersSetShowDeleted({ showDeleted: true })
+      );
+    });
+
+    it('provides updates', () => {
+      adaptor.showDeleted$.subscribe(response => expect(response).toBeTruthy());
+    });
+  });
+
+  describe('hiding deleted comics', () => {
+    beforeEach(() => {
+      adaptor.showDeletedComics(false);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new FiltersSetShowDeleted({ showDeleted: false })
+      );
+    });
+
+    it('provides updates', () => {
+      adaptor.showDeleted$.subscribe(response => expect(response).toBeFalsy());
     });
   });
 

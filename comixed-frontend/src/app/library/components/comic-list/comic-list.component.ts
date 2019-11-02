@@ -22,18 +22,18 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
   Comic,
   LibraryAdaptor,
+  LibraryDisplayAdaptor,
   ReadingList,
   ReadingListEntry,
   SelectionAdaptor
 } from 'app/library';
-import { LibraryFilter } from 'app/models/actions/library-filter';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/library';
 import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
+import { LibraryFilter } from 'app/library/models/library-filter';
 
 const FIRST = 'first';
 
@@ -49,7 +49,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
   readingListsSubscription: Subscription;
   readingLists: ReadingList[];
 
-  @Input() libraryFilter: LibraryFilter;
   @Input() showSelections: boolean;
 
   langChangeSubscription: Subscription;

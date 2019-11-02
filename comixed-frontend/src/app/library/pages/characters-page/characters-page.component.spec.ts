@@ -38,6 +38,7 @@ import { ComicService } from 'app/services/comic.service';
 import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicsModule } from 'app/comics/comics.module';
+import { CheckboxModule } from 'primeng/checkbox';
 
 describe('CharactersPageComponent', () => {
   const CHARACTER = 'Superhero Man';
@@ -62,7 +63,8 @@ describe('CharactersPageComponent', () => {
         ButtonModule,
         DropdownModule,
         TableModule,
-        PanelModule
+        PanelModule,
+        CheckboxModule
       ],
       declarations: [CharactersPageComponent, LibraryFilterComponent],
       providers: [

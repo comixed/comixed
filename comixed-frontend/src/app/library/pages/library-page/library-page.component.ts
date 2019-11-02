@@ -21,7 +21,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { LibraryFilter } from 'app/models/actions/library-filter';
 import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { Observable, Subscription } from 'rxjs';
@@ -52,10 +51,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   importCountSubscription: Subscription;
   langChangeSubscription: Subscription;
 
-  private library_filter$: Observable<LibraryFilter>;
-
-  private library_filter_subscription: Subscription;
-  library_filter: LibraryFilter;
   scraping$: Observable<MultipleComicsScraping>;
 
   scraping_subscription: Subscription;
@@ -74,7 +69,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {
-    this.library_filter$ = store.select('library_filter');
     this.scraping$ = store.select('multiple_comic_scraping');
   }
 
@@ -99,13 +93,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.rescanCountSubscription = this.libraryAdaptor.rescanCount$.subscribe(
       rescan_count => (this.rescanCount = rescan_count)
     );
-    this.library_filter_subscription = this.library_filter$.subscribe(
-      (library_filter: LibraryFilter) => {
-        if (!this.library_filter || library_filter.changed) {
-          this.library_filter = library_filter;
-        }
-      }
-    );
     this.scraping_subscription = this.scraping$.subscribe(
       (scraping: MultipleComicsScraping) => {
         this.scraping = scraping;
@@ -128,7 +115,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.selectedComicsSubscription.unsubscribe();
     this.importCountSubscription.unsubscribe();
     this.rescanCountSubscription.unsubscribe();
-    this.library_filter_subscription.unsubscribe();
   }
 
   delete_comic(comic: Comic): void {

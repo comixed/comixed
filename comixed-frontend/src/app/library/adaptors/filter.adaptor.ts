@@ -29,13 +29,15 @@ import { filter } from 'rxjs/operators';
 import {
   FiltersClear,
   FiltersSetPublisher,
-  FiltersSetSeries
+  FiltersSetSeries,
+  FiltersSetShowDeleted
 } from 'app/library/actions/filters.actions';
 
 @Injectable()
 export class FilterAdaptor {
   private _publisher$ = new BehaviorSubject<string>(null);
   private _series$ = new BehaviorSubject<string>(null);
+  private _showDeleted$ = new BehaviorSubject<boolean>(false);
 
   constructor(public store: Store<AppState>) {
     this.store
@@ -47,6 +49,9 @@ export class FilterAdaptor {
         }
         if (state.series !== this._series$.getValue()) {
           this._series$.next(state.series);
+        }
+        if (state.showDeleted !== this._showDeleted$.getValue()) {
+          this._showDeleted$.next(state.showDeleted);
         }
       });
   }
@@ -69,5 +74,15 @@ export class FilterAdaptor {
 
   clearFilters(): void {
     this.store.dispatch(new FiltersClear());
+  }
+
+  showDeletedComics(showDeleted: boolean) {
+    this.store.dispatch(
+      new FiltersSetShowDeleted({ showDeleted: showDeleted })
+    );
+  }
+
+  get showDeleted$(): Observable<boolean> {
+    return this._showDeleted$.asObservable();
   }
 }

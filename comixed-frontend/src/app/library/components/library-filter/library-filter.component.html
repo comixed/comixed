@@ -1,23 +1,31 @@
 <h3>{{ 'library-filter.title' | translate }}</h3>
-<div>
-    <label for='publisher_filter'>{{
-        'library-filter.labels.publisher' | translate
+<div class='cx-filter-option-container'>
+    <label class='cx-input-label'
+           for='publisher_filter'>{{
+        'library-filter.label.publisher' | translate
         }}</label>
 </div>
-<div>
+<div class='cx-filter-option-container'>
     <p-dropdown [(ngModel)]='publisher'
                 [options]='publisherOptions'
                 (onChange)='setPublisher($event.value)'></p-dropdown>
 </div>
-<div>
-    <label for='series_filter'>{{
-        'library-filter.labels.series' | translate
+<div class='cx-filter-option-container'>
+    <label class='cx-input-label'
+           for='series_filter'>{{
+        'library-filter.label.series' | translate
         }}</label>
 </div>
-<div>
+<div class='cx-filter-option-container'>
     <p-dropdown [(ngModel)]='series'
                 [options]='seriesOptions'
                 (onChange)='setSeries($event.value)'></p-dropdown>
+</div>
+<div class='cx-filter-option-container'>
+    <p-checkbox [(ngModel)]='showDeleted'
+                [label]='"library-filter.label.show-deleted"|translate'
+                (onChange)='setShowDeleted($event)'
+                [binary]='true'></p-checkbox>
 </div>
 <div class='cx-button-box-vertical'>
     <button pButton

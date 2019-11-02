@@ -217,6 +217,11 @@
       "select-all-publishers": "All Publishers...",
       "select-all-series": "All Series..."
     },
+    "label": {
+      "publisher": "Publisher",
+      "series": "Series",
+      "show-deleted": "Show Comics Marked For Deletion"
+    },
     "button": {
       "reset-filters": "Reset Filters"
     }

@@ -47,7 +47,6 @@ import { ComicListComponent } from 'app/library/components/comic-list/comic-list
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
-import { LibraryFilterPipe } from 'app/library/pipes/library-filter.pipe';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
 import { ComicService } from 'app/services/comic.service';
@@ -109,7 +108,8 @@ describe('LibraryPageComponent', () => {
         ContextMenuModule,
         TooltipModule,
         ToolbarModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        CheckboxModule
       ],
       declarations: [
         LibraryPageComponent,
@@ -118,7 +118,6 @@ describe('LibraryPageComponent', () => {
         LibraryFilterComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        LibraryFilterPipe,
         ComicFilterPipe
       ],
       providers: [

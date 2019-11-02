@@ -32,6 +32,9 @@ import { LibraryAdaptor } from 'app/library';
 import { LibraryFilter } from 'app/library/models/library-filter';
 import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 import { SelectItem } from 'primeng/api';
+import { AuthenticationAdaptor, User } from 'app/user';
+
+export const SHOW_DELETED_COMICS_FILTER = 'filter.comics.show-deleted';
 
 @Component({
   selector: 'app-library-filter',
@@ -51,11 +54,17 @@ export class LibraryFilterComponent implements OnInit, OnDestroy {
   seriesSubscription: Subscription;
   series: string;
 
+  showDeletedSubscription: Subscription;
+  showDeleted: boolean;
+
+  userSubscription: Subscription;
+
   constructor(
     private store: Store<AppState>,
     private translateService: TranslateService,
     private libraryAdaptor: LibraryAdaptor,
-    private filterAdaptor: FilterAdaptor
+    private filterAdaptor: FilterAdaptor,
+    private authAdaptor: AuthenticationAdaptor
   ) {}
 
   ngOnInit() {
@@ -101,6 +110,18 @@ export class LibraryFilterComponent implements OnInit, OnDestroy {
       this.series = series;
       this.updateLibraryFilter();
     });
+    this.showDeletedSubscription = this.filterAdaptor.showDeleted$.subscribe(
+      showDeleted => {
+        this.showDeleted = showDeleted;
+        this.updateLibraryFilter();
+      }
+    );
+    this.userSubscription = this.authAdaptor.user$.subscribe((user: User) => {
+      this.filterAdaptor.showDeletedComics(
+        this.authAdaptor.getPreference(SHOW_DELETED_COMICS_FILTER) === 'true'
+      );
+      this.updateLibraryFilter();
+    });
   }
 
   ngOnDestroy() {
@@ -117,7 +138,8 @@ export class LibraryFilterComponent implements OnInit, OnDestroy {
   private updateLibraryFilter(): void {
     this.filters.emit({
       publisher: this.publisher,
-      series: this.series
+      series: this.series,
+      showDeleted: this.showDeleted
     });
   }
 
@@ -127,5 +149,13 @@ export class LibraryFilterComponent implements OnInit, OnDestroy {
 
   setSeries(series: string) {
     this.filterAdaptor.setSeries(series);
+  }
+
+  setShowDeleted(showDeleted: boolean): void {
+    this.filterAdaptor.showDeletedComics(showDeleted);
+    this.authAdaptor.setPreference(
+      SHOW_DELETED_COMICS_FILTER,
+      showDeleted ? 'true' : 'false'
+    );
   }
 }

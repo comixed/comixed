@@ -20,4 +20,5 @@
 export interface LibraryFilter {
   publisher: string;
   series: string;
+  showDeleted: boolean;
 }

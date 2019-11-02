@@ -22,6 +22,7 @@ import { Action } from '@ngrx/store';
 export enum FiltersActionTypes {
   SetPublisher = '[FILTERS] Set publisher filter',
   SetSeries = '[FILTERS] Set series filter',
+  SetShowDeleted = '[FILTERS] Set showing comics marked for deletion',
   Clear = '[FILTERS] Clear all filters'
 }
 
@@ -37,6 +38,12 @@ export class FiltersSetSeries implements Action {
   constructor(public payload: { name: string }) {}
 }
 
+export class FiltersSetShowDeleted implements Action {
+  readonly type = FiltersActionTypes.SetShowDeleted;
+
+  constructor(public payload: { showDeleted: boolean }) {}
+}
+
 export class FiltersClear implements Action {
   readonly type = FiltersActionTypes.Clear;
 
@@ -46,4 +53,5 @@ export class FiltersClear implements Action {
 export type FiltersActions =
   | FiltersSetPublisher
   | FiltersSetSeries
+  | FiltersSetShowDeleted
   | FiltersClear;

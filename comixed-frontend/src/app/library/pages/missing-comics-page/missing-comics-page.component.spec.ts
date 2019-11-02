@@ -102,7 +102,8 @@ describe('MissingComicsPageComponent', () => {
         ContextMenuModule,
         TooltipModule,
         ToolbarModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        CheckboxModule
       ],
       declarations: [
         MissingComicsPageComponent,

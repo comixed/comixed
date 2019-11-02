@@ -105,7 +105,8 @@ describe('PublisherDetailsPageComponent', () => {
         ContextMenuModule,
         TooltipModule,
         ToolbarModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        CheckboxModule
       ],
       providers: [
         AuthenticationAdaptor,

@@ -117,7 +117,8 @@ describe('ComicListComponent', () => {
         ContextMenuModule,
         TooltipModule,
         ToolbarModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        CheckboxModule
       ],
       declarations: [
         ComicListComponent,

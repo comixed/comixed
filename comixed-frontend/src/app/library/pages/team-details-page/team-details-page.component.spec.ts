@@ -109,7 +109,8 @@ describe('TeamDetailsPageComponent', () => {
         ContextMenuModule,
         TooltipModule,
         ToolbarModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        CheckboxModule
       ],
       providers: [
         AuthenticationAdaptor,

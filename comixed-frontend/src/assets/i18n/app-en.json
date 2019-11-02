@@ -40,26 +40,6 @@
       "library-status": "There are {comic_count} comics in the library."
     }
   },
-  "library-filter": {
-    "filters": {
-      "no-filters": "[Showing All Comics]",
-      "publisher": "Publisher is {publisher}",
-      "series": "Series is {series}",
-      "volume": "Volume is {volume}",
-      "from-year": "Cover date >= {from_year}",
-      "to-year": "Cover date <= {to_year}",
-      "between-years": "Cover date between {from_year} and {to_year}"
-    },
-    "labels": {
-      "filter-prefix": "Library Filters",
-      "publisher": "Publisher",
-      "series": "Series",
-      "volume": "Volume",
-      "cover-dates": "Cover Date Ranges",
-      "earliest-cover-date": "Earliest",
-      "latest-cover-date": "Latest"
-    }
-  },
   "iconbar": {
     "home": "Home",
     "library": "Library",

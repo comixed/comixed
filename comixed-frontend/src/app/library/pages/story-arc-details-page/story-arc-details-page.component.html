@@ -1,5 +1,4 @@
 <h2>{{ 'story-details.title' | translate: {story_name: storyName} }}</h2>
 <app-comic-list *ngIf='comics'
                 [comics]='comics'
-                [selectedComics]="selectedComics"
-                [libraryFilter]="library_filter"></app-comic-list>
+                [selectedComics]='selectedComics'></app-comic-list>

@@ -24,11 +24,13 @@ export const FILTERS_FEATURE_KEY = 'filter_state';
 export interface FilterState {
   publisher: string;
   series: string;
+  showDeleted: boolean;
 }
 
 export const initialState: FilterState = {
   publisher: null,
-  series: null
+  series: null,
+  showDeleted: false
 };
 
 export function reducer(
@@ -46,8 +48,11 @@ export function reducer(
       return { ...state, series: !!name && name.length > 0 ? name : null };
     }
 
+    case FiltersActionTypes.SetShowDeleted:
+      return { ...state, showDeleted: action.payload.showDeleted };
+
     case FiltersActionTypes.Clear:
-      return { ...state, publisher: null, series: null };
+      return { ...state, publisher: null, series: null, showDeleted: false };
 
     default:
       return state;

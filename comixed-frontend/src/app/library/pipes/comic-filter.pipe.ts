@@ -37,7 +37,8 @@ export class ComicFilterPipe implements PipeTransform {
     return comics.filter(comic => {
       return (
         (!filters.publisher || filters.publisher === comic.publisher) &&
-        (!filters.series || filters.series === comic.series)
+        (!filters.series || filters.series === comic.series) &&
+        (filters.showDeleted || !comic.deletedDate)
       );
     });
   }

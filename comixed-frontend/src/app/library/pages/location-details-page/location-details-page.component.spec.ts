@@ -103,7 +103,8 @@ describe('LocationDetailsPageComponent', () => {
         ContextMenuModule,
         TooltipModule,
         ToolbarModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        CheckboxModule
       ],
       providers: [
         AuthenticationAdaptor,

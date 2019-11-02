@@ -21,7 +21,8 @@ import { FilterState, initialState, reducer } from './filters.reducer';
 import {
   FiltersClear,
   FiltersSetPublisher,
-  FiltersSetSeries
+  FiltersSetSeries,
+  FiltersSetShowDeleted
 } from 'app/library/actions/filters.actions';
 
 describe('Filters Reducer', () => {
@@ -45,6 +46,10 @@ describe('Filters Reducer', () => {
 
     it('has no series', () => {
       expect(state.series).toBeNull();
+    });
+
+    it('does not show deleted comics', () => {
+      expect(state.showDeleted).toBeFalsy();
     });
   });
 
@@ -94,10 +99,30 @@ describe('Filters Reducer', () => {
     });
   });
 
+  describe('showing deleted comics', () => {
+    it('can show deleted comics', () => {
+      state = reducer(
+        { ...state, showDeleted: false },
+        new FiltersSetShowDeleted({ showDeleted: true })
+      );
+
+      expect(state.showDeleted).toBeTruthy();
+    });
+
+    it('can hide deleted comics', () => {
+      state = reducer(
+        { ...state, showDeleted: true },
+        new FiltersSetShowDeleted({ showDeleted: false })
+      );
+
+      expect(state.showDeleted).toBeFalsy();
+    });
+  });
+
   describe('clearing the filters', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, publisher: PUBLISHER, series: SERIES },
+        { ...state, publisher: PUBLISHER, series: SERIES, showDeleted: true },
         new FiltersClear()
       );
     });
@@ -108,6 +133,10 @@ describe('Filters Reducer', () => {
 
     it('has no series', () => {
       expect(state.series).toBeNull();
+    });
+
+    it('does not show deleted comics', () => {
+      expect(state.showDeleted).toBeFalsy();
     });
   });
 });

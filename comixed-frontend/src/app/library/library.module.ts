@@ -49,16 +49,16 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { CheckboxModule } from 'primeng/checkbox';
 import {
-    ProgressSpinnerModule,
-    ScrollPanelModule, SidebarModule,
-    SliderModule,
-    ToolbarModule,
-    TooltipModule
+  ProgressSpinnerModule,
+  ScrollPanelModule,
+  SidebarModule,
+  SliderModule,
+  ToolbarModule,
+  TooltipModule
 } from 'primeng/primeng';
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
 import { LibraryRoutingModule } from 'app/library/library-routing.module';
-import { LibraryFilterPipe } from 'app/library/pipes/library-filter.pipe';
 import { PublishersPageComponent } from 'app/library/pages/publishers-page/publishers-page.component';
 import { PublisherDetailsPageComponent } from 'app/library/pages/publisher-details-page/publisher-details-page.component';
 import { SeriesPageComponent } from 'app/library/pages/series-page/series-page.component';
@@ -81,37 +81,37 @@ import { ScrapingComicListComponent } from 'app/library/components/scraping-comi
 import { MultipleComicScrapingComponent } from 'app/library/components/multiple-comic-scraping/multiple-comic-scraping.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        LibraryRoutingModule,
-        ComicsModule,
-        TranslateModule.forRoot(),
-        StoreModule.forFeature(
-            fromLibrary.LIBRARY_FEATURE_KEY,
-            fromLibrary.reducer
-        ),
-        StoreModule.forFeature(
-            fromSelection.SELECTION_FEATURE_KEY,
-            fromSelection.reducer
-        ),
-        StoreModule.forFeature(
-            fromReadingList.READING_LIST_FEATURE_KEY,
-            fromReadingList.reducer
-        ),
-        StoreModule.forFeature(
-            fromFilters.FILTERS_FEATURE_KEY,
-            fromFilters.reducer
-        ),
-        EffectsModule.forFeature([LibraryEffects, ReadingListEffects]),
-        ContextMenuModule,
-        CheckboxModule,
-        SliderModule,
-        ScrollPanelModule,
-        ToolbarModule,
-        ProgressSpinnerModule,
-        TooltipModule,
-        SidebarModule
-    ],
+  imports: [
+    CommonModule,
+    LibraryRoutingModule,
+    ComicsModule,
+    TranslateModule.forRoot(),
+    StoreModule.forFeature(
+      fromLibrary.LIBRARY_FEATURE_KEY,
+      fromLibrary.reducer
+    ),
+    StoreModule.forFeature(
+      fromSelection.SELECTION_FEATURE_KEY,
+      fromSelection.reducer
+    ),
+    StoreModule.forFeature(
+      fromReadingList.READING_LIST_FEATURE_KEY,
+      fromReadingList.reducer
+    ),
+    StoreModule.forFeature(
+      fromFilters.FILTERS_FEATURE_KEY,
+      fromFilters.reducer
+    ),
+    EffectsModule.forFeature([LibraryEffects, ReadingListEffects]),
+    ContextMenuModule,
+    CheckboxModule,
+    SliderModule,
+    ScrollPanelModule,
+    ToolbarModule,
+    ProgressSpinnerModule,
+    TooltipModule,
+    SidebarModule
+  ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
     LibraryPageComponent,
@@ -140,7 +140,6 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
     ScrapingComicListComponent,
     MultipleComicScrapingComponent,
     ComicFilterPipe,
-    LibraryFilterPipe,
     MissingComicsPipe
   ],
   providers: [

@@ -42,6 +42,7 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
+import { CheckboxModule } from 'primeng/checkbox';
 
 describe('TeamsPageComponent', () => {
   let component: TeamsPageComponent;
@@ -63,7 +64,8 @@ describe('TeamsPageComponent', () => {
         ButtonModule,
         DropdownModule,
         TableModule,
-        PanelModule
+        PanelModule,
+        CheckboxModule
       ],
       declarations: [TeamsPageComponent, LibraryFilterComponent],
       providers: [
