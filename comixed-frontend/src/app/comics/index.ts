@@ -20,18 +20,20 @@
 import { Params } from '@angular/router';
 import * as fromRouter from '@ngrx/router-store';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
-import * as fromComics from 'app/comics/reducers/comic.reducer';
-import { ComicState } from 'app/comics/reducers/comic.reducer';
+import * as fromComics from './reducers/comic.reducer';
+import * as fromScraping from './reducers/scraping.reducer';
+import { ComicState } from './reducers/comic.reducer';
 import { environment } from '../../environments/environment';
+import { ScrapingState } from './reducers/scraping.reducer';
 
-export { Comic } from 'app/comics/models/comic';
-export { ComicFormat } from 'app/comics/models/comic-format';
-export { ScanType } from 'app/comics/models/scan-type';
-export { ComicCredit } from 'app/comics/models/comic-credit';
-export { Page } from 'app/comics/models/page';
-export { PageType } from 'app/comics/models/page-type';
-export { DuplicatePage } from 'app/comics/models/duplicate-page';
-export { Volume } from 'app/comics/models/volume';
+export { Comic } from './models/comic';
+export { ComicFormat } from './models/comic-format';
+export { ScanType } from './models/scan-type';
+export { ComicCredit } from './models/comic-credit';
+export { Page } from './models/page';
+export { PageType } from './models/page-type';
+export { DuplicatePage } from './models/duplicate-page';
+export { Volume } from './models/volume';
 
 interface RouterStateUrl {
   url: string;
@@ -42,13 +44,15 @@ interface RouterStateUrl {
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   comic: ComicState;
+  scraping_state: ScrapingState;
 }
 
 export type State = AppState;
 
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
-  comic: fromComics.reducer
+  comic: fromComics.reducer,
+  scraping_state: fromScraping.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

@@ -31,7 +31,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class ComicVineIssuesWebRequestTest extends BaseWebRequestTest
 {
     private static final String TEST_API_KEY = "12345";
-    private static final String TEST_COMIC_VOLUME = "92750";
+    private static final Integer TEST_COMIC_VOLUME = 92750;
     private static final String TEST_ISSUE_NUMBER = "38";
     @InjectMocks
     private ComicVineIssuesWebRequest request;

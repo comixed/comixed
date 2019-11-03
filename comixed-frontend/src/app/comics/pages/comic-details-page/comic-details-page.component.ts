@@ -21,9 +21,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 import { Observable, Subscription } from 'rxjs';
-import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
 import { AuthenticationAdaptor } from 'app/user';
 import { Comic } from 'app/library';
 import { Title } from '@angular/platform-browser';
@@ -54,10 +52,6 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
 
   readonly TAB_PARAMETER = 'tab';
 
-  single_comic_scraping$: Observable<SingleComicScraping>;
-  single_comic_scraping_subscription: Subscription;
-  single_comic_scraping: SingleComicScraping;
-
   authSubscription: Subscription;
   isAdmin = false;
   protected currentTab: number;
@@ -75,7 +69,6 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private store: Store<AppState>
   ) {
-    this.single_comic_scraping$ = store.select('single_comic_scraping');
     this.activatedRoute.params.subscribe(params => {
       if (params['id']) {
         this.id = +params['id'];
@@ -125,18 +118,6 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/home');
       }
     });
-    this.single_comic_scraping_subscription = this.single_comic_scraping$
-      .pipe(filter(state => !!state))
-      .subscribe((library_scrape: SingleComicScraping) => {
-        this.single_comic_scraping = library_scrape;
-
-        if (this.single_comic_scraping.data_scraped) {
-          this.comic = this.single_comic_scraping.comic;
-          this.store.dispatch(
-            new ScrapingActions.SingleComicScrapingClearDataScrapedFlag()
-          );
-        }
-      });
     this.activatedRoute.queryParams.subscribe(params => {
       this.setPageSize(
         parseInt(this.loadParameter(params[PAGE_SIZE_PARAMETER], '100'), 10)
@@ -155,8 +136,6 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     if (this.comicSubscription) {
       this.comicSubscription.unsubscribe();
     }
-
-    this.single_comic_scraping_subscription.unsubscribe();
   }
 
   setPageSize(page_size: number): void {

@@ -17,19 +17,22 @@
  * org.comixed;
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Comic } from 'app/library';
-import { Subscription } from 'rxjs';
+package org.comixed.net;
 
-@Component({
-  selector: 'app-multi-comic-scraping-page',
-  templateUrl: './multi-comic-scraping-page.component.html',
-  styleUrls: ['./multi-comic-scraping-page.component.scss']
-})
-export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
-  constructor() {}
+public class GetScrapingIssueRequest {
 
-  ngOnInit() {}
+    private String apiKey;
+    private boolean skipCache;
 
-  ngOnDestroy() {}
+    public GetScrapingIssueRequest() {}
+
+    public GetScrapingIssueRequest(final String apiKey,
+                                   final boolean skipCache) {
+        this.apiKey = apiKey;
+        this.skipCache = skipCache;
+    }
+
+    public String getApiKey() { return apiKey; }
+
+    public boolean isSkipCache() { return skipCache; }
 }

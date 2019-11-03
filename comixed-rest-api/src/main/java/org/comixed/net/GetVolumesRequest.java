@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,23 @@
  * org.comixed;
  */
 
-import { Volume } from 'app/comics/models/volume';
-import { Issue } from './issue';
-import { Comic } from 'app/library';
+package org.comixed.net;
 
-export interface SingleComicScraping {
-  busy: boolean;
-  api_key: string;
-  comic: Comic;
-  series: string;
-  volume: string;
-  issue_number: string;
-  volumes: Array<Volume>;
-  current_volume: Volume;
-  current_issue: Issue;
-  data_scraped: boolean;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class GetVolumesRequest {
+    @JsonProperty("apiKey") private String apiKey;
+    @JsonProperty("skipCache") private Boolean skipCache;
+
+    public GetVolumesRequest() { }
+
+    public GetVolumesRequest(final String apiKey,
+                             final Boolean skipCache) {
+        this.apiKey = apiKey;
+        this.skipCache = skipCache;
+    }
+
+    public String getApiKey() { return apiKey; }
+
+    public Boolean getSkipCache() { return skipCache; }
 }

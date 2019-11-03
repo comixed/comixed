@@ -21,7 +21,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/app.state';
-import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
 import { Observable, Subscription } from 'rxjs';
 import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
@@ -51,11 +50,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   importCountSubscription: Subscription;
   langChangeSubscription: Subscription;
 
-  scraping$: Observable<MultipleComicsScraping>;
-
-  scraping_subscription: Subscription;
-  scraping: MultipleComicsScraping;
-
   constructor(
     private titleService: Title,
     private router: Router,
@@ -68,9 +62,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private translateService: TranslateService,
     private breadcrumbAdaptor: BreadcrumbAdaptor
-  ) {
-    this.scraping$ = store.select('multiple_comic_scraping');
-  }
+  ) {}
 
   ngOnInit() {
     this.authSubscription = this.authenticationAdaptor.user$.subscribe(
@@ -92,11 +84,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
     this.rescanCountSubscription = this.libraryAdaptor.rescanCount$.subscribe(
       rescan_count => (this.rescanCount = rescan_count)
-    );
-    this.scraping_subscription = this.scraping$.subscribe(
-      (scraping: MultipleComicsScraping) => {
-        this.scraping = scraping;
-      }
     );
     this.store.dispatch(
       new ScrapingActions.MultipleComicsScrapingSetup({

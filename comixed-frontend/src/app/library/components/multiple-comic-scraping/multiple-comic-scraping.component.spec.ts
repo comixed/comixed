@@ -18,67 +18,21 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CardModule } from 'primeng/card';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { MultipleComicScrapingComponent } from './multiple-comic-scraping.component';
-import { BlockUIModule } from 'primeng/blockui';
-import {
-  InplaceModule,
-  ProgressBarModule,
-  SplitButtonModule,
-  TooltipModule
-} from 'primeng/primeng';
-import { TranslateModule } from '@ngx-translate/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
-import { TableModule } from 'primeng/table';
-import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
-import { REDUCERS } from 'app/app.reducers';
 
 describe('MultipleComicScrapingComponent', () => {
   let component: MultipleComicScrapingComponent;
   let fixture: ComponentFixture<MultipleComicScrapingComponent>;
-  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
-        CardModule,
-        BlockUIModule,
-        ProgressBarModule,
-        InplaceModule,
-        TooltipModule,
-        SplitButtonModule,
-        TableModule
-      ],
-      declarations: [
-        MultipleComicScrapingComponent,
-        ComicDetailsEditorComponent,
-        ComicCoverUrlPipe,
-        VolumeListComponent,
-        ScrapingIssueTitlePipe
-      ]
+      imports: [],
+      declarations: [MultipleComicScrapingComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MultipleComicScrapingComponent);
     component = fixture.componentInstance;
-    component.multi_scraping = {
-      selecting: false,
-      started: false,
-      busy: false,
-      api_key: '',
-      selected_comics: [],
-      current_comic: null
-    };
     fixture.detectChanges();
-    store = TestBed.get(Store);
   }));
 
   it('should create', async(() => {

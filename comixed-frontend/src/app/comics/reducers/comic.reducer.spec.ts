@@ -17,7 +17,6 @@
  * org.comixed;
  */
 
-import { reducer, initialState, ComicState } from './comic.reducer';
 import {
   ComicClearMetadata,
   ComicClearMetadataFailed,
@@ -47,29 +46,27 @@ import {
   ComicSaveFailed,
   ComicSavePage,
   ComicSavePageFailed,
-  ComicScrape,
-  ComicScraped,
-  ComicScrapeFailed,
   ComicSetPageHashBlocking,
   ComicSetPageHashBlockingFailed
 } from 'app/comics/actions/comic.actions';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
 import {
   FORMAT_1,
   FORMAT_3,
   FORMAT_5
 } from 'app/comics/models/comic-format.fixtures';
+import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import {
   BACK_COVER,
   FRONT_COVER,
   STORY
 } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
+import {
+  SCAN_TYPE_1,
+  SCAN_TYPE_3,
+  SCAN_TYPE_5
+} from 'app/comics/models/scan-type.fixtures';
+import { ComicState, initialState, reducer } from './comic.reducer';
 
 describe('Comic Reducer', () => {
   const API_KEY = '0123456789ABCDEF';
@@ -626,54 +623,6 @@ describe('Comic Reducer', () => {
 
     it('clears the restoring flag', () => {
       expect(state.restoringComic).toBeFalsy();
-    });
-  });
-
-  describe('when scraping a comic', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, scrapingComic: false },
-        new ComicScrape({
-          comic: COMIC,
-          apiKey: API_KEY,
-          issueId: ISSUE_ID,
-          skipCache: false
-        })
-      );
-    });
-
-    it('sets the scraping comic flag', () => {
-      expect(state.scrapingComic).toBeTruthy();
-    });
-  });
-
-  describe('when a comic is successfully scrape', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, scrapingComic: true, comic: null },
-        new ComicScraped({ comic: COMIC })
-      );
-    });
-
-    it('clears the scraping comic flag', () => {
-      expect(state.scrapingComic).toBeFalsy();
-    });
-
-    it('updates the current comic', () => {
-      expect(state.comic).toEqual(COMIC);
-    });
-  });
-
-  describe('when scraping a comic fails', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, scrapingComic: true },
-        new ComicScrapeFailed()
-      );
-    });
-
-    it('clears the scraping comic flag', () => {
-      expect(state.scrapingComic).toBeFalsy();
     });
   });
 });

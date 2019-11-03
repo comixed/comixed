@@ -27,7 +27,7 @@ import org.comixed.repositories.ComicVineVolumeQueryCacheRepository;
 import org.comixed.web.ComicVineQueryWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
-import org.comixed.web.model.ComicVolume;
+import org.comixed.web.model.ScrapingVolume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
@@ -46,9 +46,9 @@ public class ComicVineQueryForVolumesAdaptor {
 
     @Autowired private ComicVineVolumeQueryCacheRepository queryRepository;
 
-    public List<ComicVolume> execute(String apiKey,
-                                     String name,
-                                     boolean skipCache)
+    public List<ScrapingVolume> execute(String apiKey,
+                                        String name,
+                                        boolean skipCache)
             throws
             ComicVineAdaptorException,
             WebRequestException {
@@ -56,7 +56,7 @@ public class ComicVineQueryForVolumesAdaptor {
                           name,
                           apiKey);
 
-        List<ComicVolume> result = new ArrayList<>();
+        List<ScrapingVolume> result = new ArrayList<>();
         boolean done = false;
         int page = 0;
         List<ComicVineVolumeQueryCacheEntry> entries = this.queryRepository.findBySeriesNameOrderBySequence(name);

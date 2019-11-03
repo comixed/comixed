@@ -21,109 +21,77 @@ package org.comixed.web.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ComicIssue
-{
-    @JsonProperty(value = "id")
-    private int id;
+public class ScrapingIssue {
+    @JsonProperty(value = "id") private int id;
+    @JsonProperty(value = "coverDate") private String coverDate;
+    @JsonProperty(value = "coverUrl") private String coverUrl;
+    @JsonProperty(value = "issueNumber") private String issueNumber;
+    @JsonProperty(value = "description") private String description;
+    @JsonProperty(value = "name") private String name;
+    @JsonProperty(value = "volumeName") private String volumeName;
+    @JsonProperty(value = "volumeId") private int volumeId;
 
-    @JsonProperty(value = "cover_date")
-    private String coverDate;
-
-    @JsonProperty(value = "cover_url")
-    private String coverUrl;
-
-    @JsonProperty(value = "issue_number")
-    private String issueNumber;
-
-    @JsonProperty(value = "description")
-    private String description;
-
-    @JsonProperty(value = "name")
-    private String name;
-
-    @JsonProperty(value = "volume_name")
-    private String volumeName;
-
-    @JsonProperty(value = "volume_id")
-    private int volumeId;
-
-    public String getCoverDate()
-    {
+    public String getCoverDate() {
         return this.coverDate;
     }
 
-    public String getCoverUrl()
-    {
+    public String getCoverUrl() {
         return this.coverUrl;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return this.description;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return this.id;
     }
 
-    public String getIssueNumber()
-    {
+    public String getIssueNumber() {
         return this.issueNumber;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
-    public int getVolumeId()
-    {
+    public int getVolumeId() {
         return this.volumeId;
     }
 
-    public String getVolumeName()
-    {
+    public String getVolumeName() {
         return this.volumeName;
     }
 
-    public void setCoverDate(String coverDate)
-    {
+    public void setCoverDate(String coverDate) {
         this.coverDate = coverDate;
     }
 
-    public void setCoverUrl(String coverUrl)
-    {
+    public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setId(int id)
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public void setIssueNumber(String issueNumber)
-    {
+    public void setIssueNumber(String issueNumber) {
         this.issueNumber = issueNumber;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setVolumeId(int volumeId)
-    {
+    public void setVolumeId(int volumeId) {
         this.volumeId = volumeId;
     }
 
-    public void setVolumeName(String volumeName)
-    {
+    public void setVolumeName(String volumeName) {
         this.volumeName = volumeName;
     }
 }

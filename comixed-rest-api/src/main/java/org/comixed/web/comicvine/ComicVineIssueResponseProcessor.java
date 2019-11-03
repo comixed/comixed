@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.comixed.web.model.ComicIssue;
+import org.comixed.web.model.ScrapingIssue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,9 +54,9 @@ public class ComicVineIssueResponseProcessor
         Map<String,
             String> volume = new HashMap<>();
 
-        public ComicIssue toComicIssue()
+        public ScrapingIssue toComicIssue()
         {
-            ComicIssue result = new ComicIssue();
+            ScrapingIssue result = new ScrapingIssue();
 
             result.setId(this.id);
             result.setIssueNumber(this.issueNumber);
@@ -74,7 +74,7 @@ public class ComicVineIssueResponseProcessor
         @JsonProperty(value = "results")
         List<ComicVineIssue> comicVineIssues;
 
-        public ComicIssue getIssue()
+        public ScrapingIssue getIssue()
         {
             return ((this.comicVineIssues != null)
                     && !this.comicVineIssues.isEmpty()) ? this.comicVineIssues.get(0).toComicIssue() : null;
@@ -84,9 +84,9 @@ public class ComicVineIssueResponseProcessor
     @Autowired
     private ObjectMapper objectMapper;
 
-    public ComicIssue process(byte[] content) throws ComicVineAdaptorException
+    public ScrapingIssue process(byte[] content) throws ComicVineAdaptorException
     {
-        ComicIssue result = null;
+        ScrapingIssue result = null;
 
         try
         {

@@ -11,6 +11,7 @@
 
     <renameColumn tableName="comic_vine_volume_query_cache"
                   oldColumnName="order"
-                  newColumnName="sequence"/>
+                  newColumnName="sequence"
+                  columnDataType="int"/>
   </changeSet>
 </databaseChangeLog>

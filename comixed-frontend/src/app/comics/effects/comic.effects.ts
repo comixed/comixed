@@ -19,6 +19,14 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { Comic, ComicFormat, PageType, ScanType } from 'app/comics';
+import { ComicService } from 'app/comics/services/comic.service';
+import { PageService } from 'app/comics/services/page.service';
+import { MessageService } from 'primeng/api';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   ComicActions,
   ComicActionTypes,
@@ -41,18 +49,8 @@ import {
   ComicSaved,
   ComicSaveFailed,
   ComicSavePageFailed,
-  ComicScraped,
-  ComicScrapeFailed,
   ComicSetPageHashBlockingFailed
 } from '../actions/comic.actions';
-import { ComicService } from 'app/comics/services/comic.service';
-import { Observable, of } from 'rxjs';
-import { Action } from '@ngrx/store';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { Comic, ComicFormat, PageType, ScanType } from 'app/comics';
-import { MessageService } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
-import { PageService } from 'app/comics/services/page.service';
 
 @Injectable()
 export class ComicEffects {
@@ -409,50 +407,6 @@ export class ComicEffects {
         )
       });
       return of(new ComicRestoreFailed());
-    })
-  );
-
-  @Effect()
-  scrapeComic$: Observable<Action> = this.actions$.pipe(
-    ofType(ComicActionTypes.ScrapeComic),
-    map(action => action.payload),
-    switchMap(action =>
-      this.comicService
-        .scrapeComic(
-          action.comic,
-          action.apiKey,
-          action.issueId,
-          action.skipCache
-        )
-        .pipe(
-          tap((response: Comic) =>
-            this.messageService.add({
-              severity: 'info',
-              detail: this.translateService.instant(
-                'comic-effects.scrape-comic.success.detail'
-              )
-            })
-          ),
-          map((response: Comic) => new ComicScraped({ comic: response })),
-          catchError(error => {
-            this.messageService.add({
-              severity: 'error',
-              detail: this.translateService.instant(
-                'comic-effects.scrape-comic.error.detail'
-              )
-            });
-            return of(new ComicScrapeFailed());
-          })
-        )
-    ),
-    catchError(error => {
-      this.messageService.add({
-        severity: 'error',
-        detail: this.translateService.instant(
-          'general-message.error.general-service-failure'
-        )
-      });
-      return of(new ComicScrapeFailed());
     })
   );
 }

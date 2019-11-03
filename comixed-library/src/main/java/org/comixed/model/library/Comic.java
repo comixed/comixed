@@ -79,7 +79,7 @@ public class Comic {
     @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "comic_story_arcs",
                      joinColumns = @JoinColumn(name = "comic_id"))
-    @Column(name = "story_arc_name")
+    @Column(name = "story_name")
     @JsonProperty("storyArcs")
     @JsonView({ComicList.class,
                DatabaseBackup.class})

@@ -22,7 +22,7 @@ package org.comixed.web.comicvine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.comixed.web.model.ComicIssue;
+import org.comixed.web.model.ScrapingIssue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class ComicVineIssueResponseProcessorTest
     @Test
     public void testProcess() throws ComicVineAdaptorException
     {
-        ComicIssue result = processor.process(TEST_GOOD_CONTENT);
+        ScrapingIssue result = processor.process(TEST_GOOD_CONTENT);
 
         assertNotNull(result);
 

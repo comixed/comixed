@@ -22,23 +22,24 @@ package org.comixed.controller.scraping;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.model.library.Comic;
 import org.comixed.net.ComicScrapeRequest;
+import org.comixed.net.GetScrapingIssueRequest;
+import org.comixed.net.GetVolumesRequest;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
 import org.comixed.views.View;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.*;
-import org.comixed.web.model.ComicIssue;
-import org.comixed.web.model.ComicVolume;
+import org.comixed.web.model.ScrapingIssue;
+import org.comixed.web.model.ScrapingVolume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/scraper")
+@RequestMapping("/api/scraping")
 public class ComicVineScraperController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -49,79 +50,76 @@ public class ComicVineScraperController {
     @Autowired private ComicVineQueryForPublisherDetailsAdaptor queryForPublisherDetailsAdaptor;
     @Autowired private ComicService comicService;
 
-    @RequestMapping(value = "/query/issue",
-                    method = RequestMethod.POST)
-    public ComicIssue queryForIssue(
-            @RequestParam("api_key")
-                    String apiKey,
-            @RequestParam("volume")
-                    String volume,
-            @RequestParam("issue_number")
-                    String issueNumber)
+    @PostMapping(value = "/volumes/{volume}/issues/{issue}",
+                 produces = "application/json",
+                 consumes = "application/json")
+    public ScrapingIssue queryForIssue(
+            @PathVariable("volume")
+            final Integer volume,
+            @PathVariable("issue")
+            final String issue,
+            @RequestBody()
+            final GetScrapingIssueRequest request)
             throws
             ComicVineAdaptorException {
-        this.logger.debug("Preparing to retrieve issue={} for volume={}",
-                          issueNumber,
-                          volume);
+        this.logger.info("Preparing to retrieve issue={} for volume={} (skipCache={})",
+                         issue,
+                         volume,
+                         request.isSkipCache());
 
-        return this.queryForIssuesAdaptor.execute(apiKey,
+        return this.queryForIssuesAdaptor.execute(request.getApiKey(),
                                                   volume,
-                                                  issueNumber);
+                                                  issue);
     }
 
-    @RequestMapping(value = "/query/volumes",
-                    method = RequestMethod.POST)
-    public List<ComicVolume> queryForVolumes(
-            @RequestParam("api_key")
-                    String apiKey,
-            @RequestParam("series_name")
-                    String seriesName,
-            @RequestParam("volume")
-                    String volume,
-            @RequestParam("issue_number")
-                    String issueNumber,
-            @RequestParam("skip_cache")
-                    boolean skipCache)
+    @PostMapping(value = "/series/{seriesName}",
+                 produces = "application/json",
+                 consumes = "application/json")
+    public List<ScrapingVolume> queryForVolumes(
+            @PathVariable("seriesName")
+            final String seriesName,
+            @RequestBody()
+            final GetVolumesRequest request)
             throws
             WebRequestException,
             ComicVineAdaptorException {
-        this.logger.debug("Preparing to retrieve issues for the given series: {} skipCache={}",
-                          seriesName,
-                          skipCache
-                          ? "yes"
-                          : "no");
+        this.logger.info("Getting volumes: series={}{}",
+                         seriesName,
+                         request.getSkipCache()
+                         ? " (Skipping cache)"
+                         : "");
 
-        List<ComicVolume> result = this.queryForVolumesAdaptor.execute(apiKey,
-                                                                       seriesName,
-                                                                       skipCache);
-
-        this.logger.debug("Returning {} volumes",
-                          result.size());
-
-        return result;
+        return this.queryForVolumesAdaptor.execute(request.getApiKey(),
+                                                   seriesName,
+                                                   request.getSkipCache());
     }
 
-    @PostMapping(value = "/save",
+    @PostMapping(value = "/comics/{comicId}/issue/{issueId}",
                  produces = "application/json",
                  consumes = "application/json")
     @JsonView(View.ComicDetails.class)
     public Comic scrapeAndSaveComicDetails(
+            @PathVariable("comicId")
+            final Long comicId,
+            @PathVariable("issueId")
+            final String issueId,
             @RequestBody()
             final ComicScrapeRequest request)
             throws
             ComicVineAdaptorException,
             ComicException {
-        this.logger.info("Scraping code: id={} issue id={}",
-                         request.getComicId(),
-                         request.getIssueId());
+        this.logger.info("Scraping code: id={} issue id={} (skip cache={})",
+                         comicId,
+                         issueId,
+                         request.getSkipCache());
 
         this.logger.debug("Loading comic");
-        Comic comic = this.comicService.getComic(request.getComicId());
+        Comic comic = this.comicService.getComic(comicId);
 
         this.logger.debug("Fetching details for comic");
         String volumeId = this.queryForIssueDetailsAdaptor.execute(request.getApiKey(),
-                                                                   request.getComicId(),
-                                                                   request.getIssueId(),
+                                                                   comicId,
+                                                                   issueId,
                                                                    comic,
                                                                    request.getSkipCache());
         this.logger.debug("Fetching details for volume");

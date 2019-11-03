@@ -18,15 +18,12 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ScrapingIssue } from 'app/comics/models/scraping-issue';
+import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import { Comic } from 'app/library';
-import { Volume } from 'app/comics/models/volume';
-import { Issue } from 'app/models/scraping/issue';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as ScrapingActions from 'app/actions/single-comic-scraping.actions';
 
-interface VolumeOptions {
-  volume: Volume;
+interface ScrapingVolumeOptions {
+  volume: ScrapingVolume;
   matchability: string;
 }
 
@@ -36,27 +33,28 @@ interface VolumeOptions {
   styleUrls: ['./volume-list.component.scss']
 })
 export class VolumeListComponent implements OnInit {
-  @Input() api_key: string;
+  @Input() apiKey: string;
   @Input() comic: Comic;
-  @Input() current_volume: Volume;
-  @Input() current_issue: Issue;
-  @Output() selectVolume = new EventEmitter<Volume>();
-  @Output() selectIssue = new EventEmitter<Issue>();
-  @Output() cancelSelection = new EventEmitter<Issue>();
+  @Input() currentVolume: ScrapingVolume;
+  @Input() currentIssue: ScrapingIssue;
 
-  _volumes: Array<VolumeOptions>;
-  protected volume_selection_title = '';
+  @Output() volumeSelected = new EventEmitter<ScrapingVolume>();
+  @Output() issueSelected = new EventEmitter<ScrapingIssue>();
+  @Output() cancelSelection = new EventEmitter<any>();
 
-  constructor(private store: Store<AppState>) {}
+  _volumes: ScrapingVolumeOptions[];
+  protected volumeSelectionTitle = '';
+
+  constructor() {}
 
   ngOnInit() {}
 
   @Input()
-  set volumes(volumes: Array<Volume>) {
-    const exact_matches: Array<VolumeOptions> = [];
+  set volumes(volumes: ScrapingVolume[]) {
+    const exactMatches: ScrapingVolumeOptions[] = [];
 
     this._volumes = [];
-    volumes.forEach((volume: Volume) => {
+    volumes.forEach((volume: ScrapingVolume) => {
       const entry = {
         volume: volume,
         matchability: this.isGoodMatch(volume)
@@ -67,54 +65,47 @@ export class VolumeListComponent implements OnInit {
       };
       this._volumes.push(entry);
       if (entry.matchability === '0') {
-        exact_matches.push(entry);
+        exactMatches.push(entry);
       }
     });
 
-    if (exact_matches.length === 1) {
-      this.current_volume = exact_matches[0].volume;
-      this.setCurrentVolume(exact_matches[0].volume);
+    let matchingVolume = null;
+
+    if (exactMatches.length === 1) {
+      matchingVolume = exactMatches[0].volume;
     }
+
+    this.selectVolume(matchingVolume);
   }
 
-  setCurrentVolume(volume: Volume): void {
-    this.selectVolume.next(volume);
-    if (this.current_issue) {
-      this.volume_selection_title = `${this.current_issue.volume_name} #${this.current_issue.issue_number}`;
-    }
+  selectVolume(volume: ScrapingVolume): void {
+    this.volumeSelected.next(volume);
   }
 
-  private isGoodMatch(volume: Volume): boolean {
+  private isGoodMatch(volume: ScrapingVolume): boolean {
     if (!this.isPerfectMatch(volume)) {
-      return this.comic.volume === volume.start_year;
+      return this.comic.volume === volume.startYear;
     }
 
     return false;
   }
 
-  private isPerfectMatch(volume: Volume): boolean {
+  private isPerfectMatch(volume: ScrapingVolume): boolean {
     return (
-      this.comic.volume === volume.start_year &&
+      this.comic.volume === volume.startYear &&
       this.comic.series === volume.name
     );
   }
 
-  getCurrentIssueImageURL(): string {
-    if (this.current_issue === null) {
-      return '';
-    }
-    return `${this.current_issue.cover_url}?api_key=${this.api_key.trim()}`;
-  }
-
   returnToEditing(): void {
-    this.store.dispatch(new ScrapingActions.SingleComicScrapingResetVolumes());
-  }
-
-  setCurrentIssue(): void {
-    this.selectIssue.next(this.current_issue);
+    // TODO stop selecting volumes
   }
 
   stopSelection(): void {
-    this.cancelSelection.next(null);
+    // TODO cancel the issue
+  }
+
+  selectCurrentIssue() {
+    this.issueSelected.next(this.currentIssue);
   }
 }

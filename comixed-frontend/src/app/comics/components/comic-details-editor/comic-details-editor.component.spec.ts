@@ -17,8 +17,22 @@
  * org.comixed;
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicDetailsEditorComponent } from './comic-details-editor.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
+import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
+import { ComicEffects } from 'app/comics/effects/comic.effects';
+import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover-url.pipe';
+import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
+import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
+import { UserModule } from 'app/user/user.module';
 import { BlockUIModule } from 'primeng/blockui';
 import {
   CardModule,
@@ -27,21 +41,11 @@ import {
   MessageService,
   ProgressBarModule,
   SplitButtonModule,
+  ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
 import { TableModule } from 'primeng/table';
-import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
-import { UserModule } from 'app/user/user.module';
-import { StoreModule } from '@ngrx/store';
-import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { ComicEffects } from 'app/comics/effects/comic.effects';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { ComicDetailsEditorComponent } from './comic-details-editor.component';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = '1234567890';
@@ -54,6 +58,7 @@ describe('ComicDetailsEditorComponent', () => {
       imports: [
         UserModule,
         FormsModule,
+        BrowserAnimationsModule,
         ReactiveFormsModule,
         RouterTestingModule,
         HttpClientTestingModule,
@@ -68,14 +73,21 @@ describe('ComicDetailsEditorComponent', () => {
         InplaceModule,
         SplitButtonModule,
         TableModule,
-        CardModule
+        CardModule,
+        ToolbarModule
       ],
       declarations: [
         ComicDetailsEditorComponent,
         VolumeListComponent,
-        ScrapingIssueTitlePipe
+        ScrapingIssueTitlePipe,
+        ScrapingIssueCoverUrlPipe
       ],
-      providers: [ComicAdaptor, MessageService, ConfirmationService]
+      providers: [
+        ComicAdaptor,
+        ScrapingAdaptor,
+        MessageService,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicDetailsEditorComponent);

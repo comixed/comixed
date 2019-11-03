@@ -17,48 +17,52 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import { SINGLE_COMIC_SCRAPING_STATE } from 'app/models/scraping/single-comic-scraping.fixtures';
-import { ComicDetailsPageComponent } from './comic-details-page.component';
-import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { COMIC_1, COMIC_2, COMIC_3 } from 'app/library';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { UserModule } from 'app/user/user.module';
-import { Router } from '@angular/router';
-import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
-import { ComicEffects } from 'app/comics/effects/comic.effects';
-import { routes } from 'app/comics/comics-routing.module';
-import { ComicService } from 'app/comics/services/comic.service';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicDownloadLinkPipe } from 'app/comics/pipes/comic-download-link.pipe';
-import { TranslateModule } from '@ngx-translate/core';
-import { CardModule } from 'primeng/card';
-import { ComicOverviewComponent } from 'app/comics/components/comic-overview/comic-overview.component';
-import { ComicStoryComponent } from 'app/comics/components/comic-story/comic-story.component';
-import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
-import { ComicPagesComponent } from 'app/comics/components/comic-pages/comic-pages.component';
-import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
-import { DropdownModule } from 'primeng/dropdown';
-import { InplaceModule } from 'primeng/inplace';
-import { DataViewModule } from 'primeng/dataview';
-import { ComicGroupingCardComponent } from 'app/comics/components/comic-grouping-card/comic-grouping-card.component';
-import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
-import { BlockUIModule } from 'primeng/blockui';
-import { ProgressBarModule, SplitButtonModule } from 'primeng/primeng';
+import { DebugElement } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
-import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { Store, StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AppState } from 'app/comics';
 import { ComicGotIssue } from 'app/comics/actions/comic.actions';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { routes } from 'app/comics/comics-routing.module';
+import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
+import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
+import { ComicGroupingCardComponent } from 'app/comics/components/comic-grouping-card/comic-grouping-card.component';
+import { ComicOverviewComponent } from 'app/comics/components/comic-overview/comic-overview.component';
+import { ComicPagesComponent } from 'app/comics/components/comic-pages/comic-pages.component';
+import { ComicStoryComponent } from 'app/comics/components/comic-story/comic-story.component';
+import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
+import { ComicEffects } from 'app/comics/effects/comic.effects';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+import { ComicDownloadLinkPipe } from 'app/comics/pipes/comic-download-link.pipe';
+import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
+import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
+import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover-url.pipe';
+import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
+import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
+import { ComicService } from 'app/comics/services/comic.service';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/library';
+import { UserModule } from 'app/user/user.module';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { BlockUIModule } from 'primeng/blockui';
+import { CardModule } from 'primeng/card';
+import { DataViewModule } from 'primeng/dataview';
+import { DropdownModule } from 'primeng/dropdown';
+import { InplaceModule } from 'primeng/inplace';
+import {
+  ProgressBarModule,
+  SplitButtonModule,
+  ToolbarModule
+} from 'primeng/primeng';
+import { ComicDetailsPageComponent } from './comic-details-page.component';
 
 describe('ComicDetailsPageComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -91,7 +95,8 @@ describe('ComicDetailsPageComponent', () => {
         DataViewModule,
         BlockUIModule,
         ProgressBarModule,
-        SplitButtonModule
+        SplitButtonModule,
+        ToolbarModule
       ],
       declarations: [
         ComicDetailsPageComponent,
@@ -106,7 +111,8 @@ describe('ComicDetailsPageComponent', () => {
         ComicCoverUrlPipe,
         ComicDownloadLinkPipe,
         ComicPageUrlPipe,
-        ScrapingIssueTitlePipe
+        ScrapingIssueTitlePipe,
+        ScrapingIssueCoverUrlPipe
       ],
       providers: [
         ComicAdaptor,
@@ -122,7 +128,6 @@ describe('ComicDetailsPageComponent', () => {
     comicAdaptor = TestBed.get(ComicAdaptor);
     router = TestBed.get(Router);
     messageService = TestBed.get(MessageService);
-    component.single_comic_scraping = SINGLE_COMIC_SCRAPING_STATE;
     store = TestBed.get(Store);
 
     store.dispatch(new ComicGotIssue({ comic: COMIC_1 }));

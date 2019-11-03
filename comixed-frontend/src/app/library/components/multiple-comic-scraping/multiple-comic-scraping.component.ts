@@ -18,10 +18,6 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as MultiScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 
 @Component({
   selector: 'app-multiple-comic-scraping',
@@ -29,17 +25,11 @@ import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scra
   styleUrls: ['./multiple-comic-scraping.component.scss']
 })
 export class MultipleComicScrapingComponent implements OnInit {
-  @Input() multi_scraping: MultipleComicsScraping;
+  @Input() multi_scraping: any;
 
-  constructor(private store: Store<AppState>) {}
+  constructor() {}
 
   ngOnInit() {}
 
-  comic_scraped(): void {
-    this.store.dispatch(
-      new MultiScrapingActions.MultipleComicsScrapingComicScraped({
-        comic: this.multi_scraping.current_comic
-      })
-    );
-  }
+  comic_scraped(): void {}
 }

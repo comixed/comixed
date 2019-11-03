@@ -28,88 +28,63 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * <code>ComicVolume</code> represents a comic volume.
  *
  * @author Darryl L. Pierce
- *
  */
-public class ComicVolume
-{
-    @JsonProperty(value = "id")
-    private long id;
+public class ScrapingVolume {
+    @JsonProperty(value = "id") private long id;
+    @JsonProperty(value = "name") private String name;
+    @JsonProperty(value = "issueCount") private int issueCount;
+    @JsonProperty(value = "imageUrl") private String imageURL;
+    @JsonProperty(value = "startYear") private String startYear;
+    @JsonProperty(value = "publisher") private String publisher;
+    @JsonProperty(value = "issue") private List<ScrapingIssue> comicIssue = new ArrayList<ScrapingIssue>();
 
-    @JsonProperty(value = "name")
-    private String name;
-
-    @JsonProperty(value = "issue_count")
-    private int issueCount;
-
-    @JsonProperty(value = "image_url")
-    private String imageURL;
-
-    @JsonProperty(value = "start_year")
-    private String startYear;
-
-    @JsonProperty(value = "publisher")
-    private String publisher;
-
-    @JsonProperty(value = "issue")
-    private List<ComicIssue> comicIssue = new ArrayList<ComicIssue>();
-
-    public long getId()
-    {
+    public long getId() {
         return this.id;
     }
 
-    public String getImageURL()
-    {
+    public String getImageURL() {
         return this.imageURL;
     }
 
-    public int getIssueCount()
-    {
+    public int getIssueCount() {
         return this.issueCount;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
-    public String getPublisher()
-    {
+    public String getPublisher() {
         return this.publisher;
     }
 
-    public String getStartYear()
-    {
-        return this.startYear != null ? this.startYear : "";
+    public String getStartYear() {
+        return this.startYear != null
+               ? this.startYear
+               : "";
     }
 
-    public void setId(long id)
-    {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public void setImageURL(String imageURL)
-    {
+    public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
 
-    public void setIssueCount(int issueCount)
-    {
+    public void setIssueCount(int issueCount) {
         this.issueCount = issueCount;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setPublisher(String publisher)
-    {
+    public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
 
-    public void setStartYear(String startYear)
-    {
+    public void setStartYear(String startYear) {
         this.startYear = startYear;
     }
 }

@@ -42,11 +42,12 @@ import { ComicGroupingCardComponent } from 'app/comics/components/comic-grouping
 import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
 import { BlockUIModule } from 'primeng/blockui';
 import {
+  InputTextModule,
   ProgressBarModule,
   ProgressSpinnerModule,
-  SpinnerModule,
   SplitButtonModule,
   TabViewModule,
+  ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
 import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
@@ -54,6 +55,7 @@ import { TableModule } from 'primeng/table';
 import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
 import { StoreModule } from '@ngrx/store';
 import * as fromComics from './reducers/comic.reducer';
+import * as fromScraping from './reducers/scraping.reducer';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { ComicService } from 'app/comics/services/comic.service';
@@ -65,6 +67,10 @@ import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicDownloadLinkPipe } from 'app/comics/pipes/comic-download-link.pipe';
 import { UserModule } from 'app/user/user.module';
 import { PageService } from 'app/comics/services/page.service';
+import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
+import { ScrapingService } from 'app/comics/services/scraping.service';
+import { ScrapingIssueCoverUrlPipe } from './pipes/scraping-issue-cover-url.pipe';
 
 @NgModule({
   declarations: [
@@ -81,7 +87,8 @@ import { PageService } from 'app/comics/services/page.service';
     ScrapingIssueTitlePipe,
     ComicTitlePipe,
     ComicCoverUrlPipe,
-    ComicDownloadLinkPipe
+    ComicDownloadLinkPipe,
+    ScrapingIssueCoverUrlPipe
   ],
   imports: [
     UserModule,
@@ -103,9 +110,15 @@ import { PageService } from 'app/comics/services/page.service';
     TabViewModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(fromComics.COMIC_FEATURE_KEY, fromComics.reducer),
-    EffectsModule.forFeature([ComicEffects]),
+    StoreModule.forFeature(
+      fromScraping.SCRAPING_FEATURE_KEY,
+      fromScraping.reducer
+    ),
+    EffectsModule.forFeature([ComicEffects, ScrapingEffects]),
     ProgressSpinnerModule,
-    TooltipModule
+    TooltipModule,
+    InputTextModule,
+    ToolbarModule
   ],
   exports: [
     CommonModule,
@@ -135,7 +148,13 @@ import { PageService } from 'app/comics/services/page.service';
     ComicCoverUrlPipe,
     ComicTitlePipe
   ],
-  providers: [ComicAdaptor, ComicService, PageService]
+  providers: [
+    ComicAdaptor,
+    ComicService,
+    ScrapingAdaptor,
+    ScrapingService,
+    PageService
+  ]
 })
 export class ComicsModule {
   constructor(@Optional() @SkipSelf() parentModule?: ComicsModule) {

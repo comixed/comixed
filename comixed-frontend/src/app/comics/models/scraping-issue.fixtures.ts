@@ -17,18 +17,14 @@
  * org.comixed;
  */
 
-import { SingleComicScraping } from './single-comic-scraping';
-import { COMIC_1 } from 'app/library';
+import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 
-export const SINGLE_COMIC_SCRAPING_STATE: SingleComicScraping = {
-  busy: false,
-  api_key: 'abc123',
-  comic: COMIC_1,
-  series: COMIC_1.series,
-  volume: COMIC_1.volume,
-  issue_number: COMIC_1.issueNumber,
-  volumes: [],
-  current_volume: null,
-  current_issue: null,
-  data_scraped: false
-};
+export const SCRAPING_ISSUE_1000: ScrapingIssue = {
+         id: 1000,
+         coverDate: '0',
+         coverUrl: 'http://comixed.org/issues/1000',
+         issueNumber: '1000',
+         name: 'Issue1000',
+         volumeName: '2009',
+         volumeId: 1000
+       };

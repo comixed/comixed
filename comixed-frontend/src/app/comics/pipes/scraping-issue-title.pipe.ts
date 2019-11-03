@@ -18,16 +18,16 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Issue } from 'app/models/scraping/issue';
+import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 
 @Pipe({
   name: 'scrapingIssueTitle'
 })
 export class ScrapingIssueTitlePipe implements PipeTransform {
-  transform(issue: Issue): string {
+  transform(issue: ScrapingIssue): string {
     if (issue) {
-      return `${issue.volume_name} #${issue.issue_number} (${new Date(
-        issue.cover_date
+      return `${issue.volumeName} #${issue.issueNumber} (${new Date(
+        issue.coverDate
       ).getFullYear()})`;
     }
 

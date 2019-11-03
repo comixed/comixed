@@ -23,36 +23,37 @@ import org.springframework.stereotype.Component;
 
 /**
  * <code>ComicVineVolumesWebRequest</code> defines a concrete implementation of
- * {@link AbstractComicVineWebRequest} for retrieving a list of issues for a
- * volume.
- * 
- * @author Darryl L. Pierce
+ * {@link AbstractComicVineWebRequest} for retrieving a list of issues for a volume.
  *
+ * @author Darryl L. Pierce
  */
 @Component
-public class ComicVineIssuesWebRequest extends AbstractComicVineWebRequest
-{
-    public ComicVineIssuesWebRequest()
-    {
+public class ComicVineIssuesWebRequest
+        extends AbstractComicVineWebRequest {
+    public ComicVineIssuesWebRequest() {
         super("issues");
-        this.parameterSet.put("field_list", "cover_date,description,id,image,issue_number,name,store_date,volume");
+        this.parameterSet.put("field_list",
+                              "cover_date,description,id,image,issue_number,name,store_date,volume");
     }
 
     @Override
-    public String getURL() throws WebRequestException
-    {
-        if (!this.filterset.containsKey("issue_number")) { throw new WebRequestException("Missing required filter: issue_number"); }
+    public String getURL()
+            throws
+            WebRequestException {
+        if (!this.filterset.containsKey("issue_number")) {
+            throw new WebRequestException("Missing required filter: issue_number");
+        }
         if (!this.filterset.containsKey("volume")) { throw new WebRequestException("Missing required filter: volume"); }
         return super.getURL();
     }
 
-    public void setIssueNumber(String issueNumber)
-    {
-        this.filterset.put("issue_number", issueNumber);
+    public void setIssueNumber(String issueNumber) {
+        this.filterset.put("issue_number",
+                           issueNumber);
     }
 
-    public void setVolume(String volume)
-    {
-        this.filterset.put("volume", volume);
+    public void setVolume(Integer volume) {
+        this.filterset.put("volume",
+                           volume.toString());
     }
 }

@@ -17,15 +17,10 @@
  * org.comixed;
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-
-import { ComicEffects } from './comic.effects';
-import { ComicService } from 'app/comics/services/comic.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
-import { COMIC_1, COMIC_2 } from 'app/comics/models/comic.fixtures';
 import {
   ComicClearMetadata,
   ComicClearMetadataFailed,
@@ -46,34 +41,39 @@ import {
   ComicGotScanTypes,
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
-  ComicPageSaved, ComicRestore, ComicRestored, ComicRestoreFailed,
+  ComicPageSaved,
+  ComicRestore,
+  ComicRestored,
+  ComicRestoreFailed,
   ComicSave,
   ComicSaved,
   ComicSaveFailed,
   ComicSavePage,
   ComicSavePageFailed,
-  ComicScrape,
-  ComicScraped,
-  ComicScrapeFailed,
   ComicSetPageHashBlocking,
   ComicSetPageHashBlockingFailed
 } from 'app/comics/actions/comic.actions';
-import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import objectContaining = jasmine.objectContaining;
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
 import {
   FORMAT_1,
   FORMAT_3,
   FORMAT_5
 } from 'app/comics/models/comic-format.fixtures';
+import { COMIC_1, COMIC_2 } from 'app/comics/models/comic.fixtures';
 import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
+import {
+  SCAN_TYPE_1,
+  SCAN_TYPE_3,
+  SCAN_TYPE_5
+} from 'app/comics/models/scan-type.fixtures';
+import { ComicService } from 'app/comics/services/comic.service';
 import { PageService } from 'app/comics/services/page.service';
+import { hot } from 'jasmine-marbles';
+import { MessageService } from 'primeng/api';
+import { Observable, of, throwError } from 'rxjs';
+
+import { ComicEffects } from './comic.effects';
+import objectContaining = jasmine.objectContaining;
 
 describe('ComicEffects', () => {
   const COMIC = COMIC_1;
@@ -510,7 +510,7 @@ describe('ComicEffects', () => {
       const expected = hot('-b', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-          objectContaining({ severity: 'info' })
+        objectContaining({ severity: 'info' })
       );
     });
 
@@ -525,7 +525,7 @@ describe('ComicEffects', () => {
       const expected = hot('-b', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-          objectContaining({ severity: 'error' })
+        objectContaining({ severity: 'error' })
       );
     });
 
@@ -539,7 +539,7 @@ describe('ComicEffects', () => {
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.deleteComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-          objectContaining({ severity: 'error' })
+        objectContaining({ severity: 'error' })
       );
     });
   });
@@ -556,7 +556,7 @@ describe('ComicEffects', () => {
       const expected = hot('-b', { b: outcome });
       expect(effects.restoreComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-          objectContaining({ severity: 'info' })
+        objectContaining({ severity: 'info' })
       );
     });
 
@@ -571,7 +571,7 @@ describe('ComicEffects', () => {
       const expected = hot('-b', { b: outcome });
       expect(effects.restoreComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-          objectContaining({ severity: 'error' })
+        objectContaining({ severity: 'error' })
       );
     });
 
@@ -584,67 +584,6 @@ describe('ComicEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.restoreComic$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-          objectContaining({ severity: 'error' })
-      );
-    });
-  });
-
-  describe('when scraping a comic', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = COMIC;
-      const action = new ComicScrape({
-        comic: COMIC,
-        apiKey: API_KEY,
-        issueId: ISSUE_ID,
-        skipCache: SKIP_CACHE
-      });
-      const outcome = new ComicScraped({ comic: COMIC });
-
-      actions$ = hot('-a', { a: action });
-      comicService.scrapeComic.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.scrapeComic$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'info' })
-      );
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = new ComicScrape({
-        comic: COMIC,
-        apiKey: API_KEY,
-        issueId: ISSUE_ID,
-        skipCache: SKIP_CACHE
-      });
-      const outcome = new ComicScrapeFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.scrapeComic.and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.scrapeComic$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-
-    it('fires an action on general failure', () => {
-      const action = new ComicScrape({
-        comic: COMIC,
-        apiKey: API_KEY,
-        issueId: ISSUE_ID,
-        skipCache: SKIP_CACHE
-      });
-      const outcome = new ComicScrapeFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.scrapeComic.and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.scrapeComic$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

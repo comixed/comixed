@@ -156,19 +156,34 @@
   "comic-details-editor": {
     "label": {
       "comicvine-api-key": "ComicVine API Key",
-      "series": "Series",
-      "volume": "Volume",
+      "series-name": "Series",
+      "volume-name": "Volume",
       "issue-number": "Issue #"
     },
     "tooltip": {
-      "comicvine-api-key": "Click to edit..."
+      "comicvine-api-key": "Click to edit...",
+      "save-api-key": "Save the API key.",
+      "reset-api-key": "Reset the API key."
+    },
+    "option": {
+      "fetch-with-cache": "Fetch",
+      "fetch-skip-cache": "Fetch (Skip Cache)"
     },
     "text": {
       "comicvine-api-key-placeholder": "Click to change the API key..."
     },
-    "cancel": {
-      "header": "Skip This Comic",
-      "message": "Skip scraping this comic and go to the next comic? Are you sure?"
+    "button": {
+      "save-changes": "Save Changes",
+      "fetch-volumes": "Fetch Volumes",
+      "reset-changes": "Reset Changes"
+    },
+    "save-changes": {
+      "header": "Save Changes",
+      "message": "Are you sure you want to save the changes made to this comic?"
+    },
+    "issue-selected": {
+      "header": "Scrape This Issue?",
+      "message": "Are you sure you want to load this comic with the selected issue from ComicVine?"
     }
   },
   "comic-details-page": {
@@ -208,6 +223,32 @@
     "label": {
       "volume": "v{volume}",
       "open-comic": "Open Comic"
+    }
+  },
+  "scraping-effects": {
+    "get-volumes": {
+      "success": {
+        "detail": "Found {count, plural, =1{one volume} other{# volumes}}."
+      },
+      "error": {
+        "detail": "Failed to get volumes for this comic."
+      }
+    },
+    "get-issue": {
+      "success": {
+        "detail": "Retrieved issue."
+      },
+      "error": {
+        "detail": "Failed to get issue."
+      }
+    },
+    "load-metadata": {
+      "success": {
+        "detail": "Comic successfully scraped."
+      },
+      "error": {
+        "detail": "Failed to scrape comic."
+      }
     }
   }
 }

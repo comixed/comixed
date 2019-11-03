@@ -569,6 +569,9 @@
     }
   },
   "global": {
+    "errors": {
+      "form-field-required": "{name} is required."
+    },
     "tooltip": {
       "unprocessed-comic": "This comic is scheduled for processing.",
       "deleted-comic": "This comic is marked for deletion."

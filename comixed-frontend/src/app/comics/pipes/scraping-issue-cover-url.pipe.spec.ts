@@ -17,26 +17,34 @@
  * org.comixed;
  */
 
-import { ScrapingIssueTitlePipe } from './scraping-issue-title.pipe';
+import { ScrapingIssueCoverUrlPipe } from './scraping-issue-cover-url.pipe';
 import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
 
-describe('ScrapingIssueTitlePipe', () => {
-  const pipe = new ScrapingIssueTitlePipe();
+describe('ScrapingIssueCoverUrlPipe', () => {
+  const API_KEY = '0123456789ABCDEF';
+  const ISSUE = SCRAPING_ISSUE_1000;
+
+  let pipe: ScrapingIssueCoverUrlPipe;
+
+  beforeEach(() => {
+    pipe = new ScrapingIssueCoverUrlPipe();
+  });
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();
   });
 
-  it('returns an empty string when the volume is null', () => {
-    expect(pipe.transform(null)).toEqual('');
+  it('returns an empty URL for a null issue', () => {
+    expect(pipe.transform(null, API_KEY)).toEqual('');
   });
 
-  it('returns a well formatted title', () => {
-    const issue = SCRAPING_ISSUE_1000;
-    expect(pipe.transform(issue)).toEqual(
-      `${issue.volumeName} #${issue.issueNumber} (${new Date(
-        issue.coverDate
-      ).getFullYear()})`
+  it('returns an empty URL when no API key is provided', () => {
+    expect(pipe.transform(ISSUE, null)).toEqual('');
+  });
+
+  it('returns a URL for an issue', () => {
+    expect(pipe.transform(ISSUE, API_KEY)).toEqual(
+      `${ISSUE.coverUrl}?api_key=${API_KEY}`
     );
   });
 });

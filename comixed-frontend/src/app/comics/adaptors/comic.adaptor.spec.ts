@@ -17,21 +17,16 @@
  * org.comixed;
  */
 
-import { ComicAdaptor } from './comic.adaptor';
-import { TestBed } from '@angular/core/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import * as fromComics from 'app/comics/reducers/comic.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { ComicEffects } from 'app/comics/effects/comic.effects';
-import { AppState } from 'app/comics';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MessageService } from 'primeng/api';
+import { TestBed } from '@angular/core/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { AppState } from 'app/comics';
 import {
   ComicClearMetadata,
   ComicDelete,
   ComicDeleted,
-  ComicDeleteFailed,
   ComicGetFormats,
   ComicGetIssue,
   ComicGetPageTypes,
@@ -45,22 +40,25 @@ import {
   ComicRestoreFailed,
   ComicSave,
   ComicSavePage,
-  ComicScrape,
   ComicSetPageHashBlocking
 } from 'app/comics/actions/comic.actions';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
+import { ComicEffects } from 'app/comics/effects/comic.effects';
 import {
   FORMAT_1,
   FORMAT_3,
   FORMAT_5
 } from 'app/comics/models/comic-format.fixtures';
+import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import { FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
+import {
+  SCAN_TYPE_1,
+  SCAN_TYPE_3,
+  SCAN_TYPE_5
+} from 'app/comics/models/scan-type.fixtures';
+import * as fromComics from 'app/comics/reducers/comic.reducer';
+import { MessageService } from 'primeng/api';
+import { ComicAdaptor } from './comic.adaptor';
 
 describe('ComicAdaptor', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
@@ -317,17 +315,5 @@ describe('ComicAdaptor', () => {
         );
       });
     });
-  });
-
-  it('fires an action when scraping a comic', () => {
-    adaptor.scrapeComic(COMIC, API_KEY, ISSUE_ID, SKIP_CACHE);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new ComicScrape({
-        comic: COMIC,
-        apiKey: API_KEY,
-        issueId: ISSUE_ID,
-        skipCache: SKIP_CACHE
-      })
-    );
   });
 });

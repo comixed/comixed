@@ -35,7 +35,7 @@ export const COMIC_SERVICE_API_URL = '/api';
 
 @Injectable()
 export class ComicService {
-  constructor(private http: HttpClient, private user_service: UserService) {}
+  constructor(private http: HttpClient) {}
 
   get_page_types(): Observable<any> {
     return this.http.get(`/api/pages/types`);
@@ -103,63 +103,6 @@ export class ComicService {
       .set('skip_cache', `${skip_cache}`);
 
     return this.http.post(GET_SCRAPING_CANDIDATES_URL, params);
-  }
-
-  scrape_comic_details_for(
-    api_key: string,
-    volume: string,
-    issue_number: string,
-    skip_cache: boolean
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set('api_key', api_key)
-      .set('volume', volume)
-      .set('issue_number', issue_number)
-      .set('skip_cache', `${skip_cache}`);
-
-    return this.http.post(GET_COMIC_METADATA_URL, params);
-  }
-
-  scrape_and_save_comic_details(
-    api_key: string,
-    comic_id: number,
-    issue_id: number,
-    skip_cache: boolean
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set('api_key', api_key)
-      .set('comic_id', `${comic_id}`)
-      .set('issue_id', `${issue_id}`)
-      .set('skip_cache', `${skip_cache}`);
-
-    return this.http.post(`${COMIC_SERVICE_API_URL}/scraper/save`, params);
-  }
-
-  save_changes_to_comic(
-    comic: Comic,
-    series: string,
-    volume: string,
-    issue_number: string
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set('series', series)
-      .set('volume', volume)
-      .set('issue_number', issue_number);
-    return this.http
-      .put(`${COMIC_SERVICE_API_URL}/comics/${comic.id}`, params)
-      .pipe(
-        finalize(() => {
-          comic.series = series;
-          comic.volume = volume;
-          comic.issueNumber = issue_number;
-        })
-      );
-  }
-
-  clear_metadata(comic: Comic): Observable<any> {
-    return this.http.delete(
-      `${COMIC_SERVICE_API_URL}/comics/${comic.id}/metadata`
-    );
   }
 
   download_backup(): Observable<any> {

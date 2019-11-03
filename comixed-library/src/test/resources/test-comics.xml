@@ -107,9 +107,9 @@
                          PROCESS_TYPE="ADD_FILE_WITHOUT_METADATA"
                          CREATED="2019-10-12 17:15:00"/>
   <comic_story_arcs comic_id="1000"
-                    story_arc_name="Civil War II"/>
+                    story_name="Civil War II"/>
   <comic_story_arcs comic_id="1000"
-                    story_arc_name="Prelude To Civil War II"/>
+                    story_name="Prelude To Civil War II"/>
   <comic_teams comic_id="1000"
                team_name="The Avengers"/>
   <comic_teams comic_id="1000"

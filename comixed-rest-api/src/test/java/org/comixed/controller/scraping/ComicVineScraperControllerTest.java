@@ -21,12 +21,14 @@ package org.comixed.controller.scraping;
 
 import org.comixed.model.library.Comic;
 import org.comixed.net.ComicScrapeRequest;
+import org.comixed.net.GetScrapingIssueRequest;
+import org.comixed.net.GetVolumesRequest;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.*;
-import org.comixed.web.model.ComicIssue;
-import org.comixed.web.model.ComicVolume;
+import org.comixed.web.model.ScrapingIssue;
+import org.comixed.web.model.ScrapingVolume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -45,7 +47,7 @@ import static org.junit.Assert.assertSame;
 public class ComicVineScraperControllerTest {
     private static final String TEST_API_KEY = "12345";
     private static final String TEST_SERIES_NAME = "Awesome Comic";
-    private static final String TEST_VOLUME = "2018";
+    private static final Integer TEST_VOLUME = 2018;
     private static final String TEST_ISSUE_NUMBER = "15";
     private static final long TEST_COMIC_ID = 213L;
     private static final String TEST_ISSUE_ID = "48132";
@@ -59,13 +61,11 @@ public class ComicVineScraperControllerTest {
     @Mock private ComicVineQueryForIssueDetailsAdaptor queryForIssueDetailsAdaptor;
     @Mock private ComicVineQueryForVolumeDetailsAdaptor queryForVolumeDetailsAdaptor;
     @Mock private ComicVineQueryForPublisherDetailsAdaptor queryForPublisherDetailsAdaptor;
-    @Mock private List<ComicVolume> comicVolumeList;
-    @Mock private ComicIssue comicIssue;
+    @Mock private List<ScrapingVolume> comicVolumeList;
+    @Mock private ScrapingIssue comicIssue;
     @Mock private ComicService comicService;
     @Mock private Comic comic;
-    private ComicScrapeRequest comicScrapeRequest = new ComicScrapeRequest(TEST_COMIC_ID,
-                                                                           TEST_API_KEY,
-                                                                           TEST_ISSUE_ID,
+    private ComicScrapeRequest comicScrapeRequest = new ComicScrapeRequest(TEST_API_KEY,
                                                                            TEST_SKIP_CACHE);
 
     @Test(expected = ComicVineAdaptorException.class)
@@ -79,11 +79,9 @@ public class ComicVineScraperControllerTest {
                .thenThrow(new ComicVineAdaptorException("expected"));
 
         try {
-            controller.queryForVolumes(TEST_API_KEY,
-                                       TEST_SERIES_NAME,
-                                       TEST_VOLUME,
-                                       TEST_ISSUE_NUMBER,
-                                       false);
+            controller.queryForVolumes(TEST_SERIES_NAME,
+                                       new GetVolumesRequest(TEST_API_KEY,
+                                                             false));
         }
         finally {
             Mockito.verify(queryForVolumesAdaptor,
@@ -104,11 +102,9 @@ public class ComicVineScraperControllerTest {
                                                     Mockito.anyBoolean()))
                .thenReturn(comicVolumeList);
 
-        List<ComicVolume> result = controller.queryForVolumes(TEST_API_KEY,
-                                                              TEST_SERIES_NAME,
-                                                              TEST_VOLUME,
-                                                              TEST_ISSUE_NUMBER,
-                                                              false);
+        final List<ScrapingVolume> result = controller.queryForVolumes(TEST_SERIES_NAME,
+                                                                       new GetVolumesRequest(TEST_API_KEY,
+                                                                                             false));
 
         assertSame(comicVolumeList,
                    result);
@@ -130,11 +126,9 @@ public class ComicVineScraperControllerTest {
                                                     Mockito.anyBoolean()))
                .thenReturn(comicVolumeList);
 
-        List<ComicVolume> result = controller.queryForVolumes(TEST_API_KEY,
-                                                              TEST_SERIES_NAME,
-                                                              TEST_VOLUME,
-                                                              TEST_ISSUE_NUMBER,
-                                                              true);
+        final List<ScrapingVolume> result = controller.queryForVolumes(TEST_SERIES_NAME,
+                                                                       new GetVolumesRequest(TEST_API_KEY,
+                                                                                             true));
 
         assertSame(comicVolumeList,
                    result);
@@ -151,14 +145,15 @@ public class ComicVineScraperControllerTest {
             throws
             ComicVineAdaptorException {
         Mockito.when(queryForIssueAdaptor.execute(Mockito.anyString(),
-                                                  Mockito.anyString(),
+                                                  Mockito.anyInt(),
                                                   Mockito.anyString()))
                .thenThrow(new ComicVineAdaptorException("expected"));
 
         try {
-            controller.queryForIssue(TEST_API_KEY,
-                                     TEST_VOLUME,
-                                     TEST_ISSUE_NUMBER);
+            controller.queryForIssue(TEST_VOLUME,
+                                     TEST_ISSUE_NUMBER,
+                                     new GetScrapingIssueRequest(TEST_API_KEY,
+                                                                 TEST_SKIP_CACHE));
         }
         finally {
             Mockito.verify(queryForIssueAdaptor,
@@ -174,13 +169,14 @@ public class ComicVineScraperControllerTest {
             throws
             ComicVineAdaptorException {
         Mockito.when(queryForIssueAdaptor.execute(Mockito.anyString(),
-                                                  Mockito.anyString(),
+                                                  Mockito.anyInt(),
                                                   Mockito.anyString()))
                .thenReturn(comicIssue);
 
-        ComicIssue result = controller.queryForIssue(TEST_API_KEY,
-                                                     TEST_VOLUME,
-                                                     TEST_ISSUE_NUMBER);
+        ScrapingIssue result = controller.queryForIssue(TEST_VOLUME,
+                                                        TEST_ISSUE_NUMBER,
+                                                        new GetScrapingIssueRequest(TEST_API_KEY,
+                                                                                    TEST_SKIP_CACHE));
 
         assertNotNull(result);
         assertSame(comicIssue,
@@ -201,11 +197,16 @@ public class ComicVineScraperControllerTest {
         Mockito.when(comicService.getComic(Mockito.anyLong()))
                .thenThrow(ComicException.class);
 
-        controller.scrapeAndSaveComicDetails(comicScrapeRequest);
-
-        Mockito.verify(comicService,
-                       Mockito.times(1))
-               .getComic(TEST_COMIC_ID);
+        try {
+            controller.scrapeAndSaveComicDetails(TEST_COMIC_ID,
+                                                 TEST_ISSUE_ID,
+                                                 comicScrapeRequest);
+        }
+        finally {
+            Mockito.verify(comicService,
+                           Mockito.times(1))
+                   .getComic(TEST_COMIC_ID);
+        }
     }
 
     @Test(expected = ComicVineAdaptorException.class)
@@ -224,7 +225,9 @@ public class ComicVineScraperControllerTest {
                         Mockito.anyBoolean());
 
         try {
-            controller.scrapeAndSaveComicDetails(comicScrapeRequest);
+            controller.scrapeAndSaveComicDetails(TEST_COMIC_ID,
+                                                 TEST_ISSUE_ID,
+                                                 comicScrapeRequest);
         }
         finally {
             Mockito.verify(comicService,
@@ -261,7 +264,9 @@ public class ComicVineScraperControllerTest {
                         Mockito.anyBoolean());
 
         try {
-            controller.scrapeAndSaveComicDetails(comicScrapeRequest);
+            controller.scrapeAndSaveComicDetails(TEST_COMIC_ID,
+                                                 TEST_ISSUE_ID,
+                                                 comicScrapeRequest);
         }
         finally {
             Mockito.verify(comicService,
@@ -309,7 +314,9 @@ public class ComicVineScraperControllerTest {
                         Mockito.anyBoolean());
 
         try {
-            controller.scrapeAndSaveComicDetails(comicScrapeRequest);
+            controller.scrapeAndSaveComicDetails(TEST_COMIC_ID,
+                                                 TEST_ISSUE_ID,
+                                                 comicScrapeRequest);
         }
         finally {
             Mockito.verify(comicService,
@@ -358,7 +365,9 @@ public class ComicVineScraperControllerTest {
         Mockito.when(comicService.save(Mockito.any(Comic.class)))
                .thenReturn(comic);
 
-        Comic result = controller.scrapeAndSaveComicDetails(comicScrapeRequest);
+        Comic result = controller.scrapeAndSaveComicDetails(TEST_COMIC_ID,
+                                                            TEST_ISSUE_ID,
+                                                            comicScrapeRequest);
 
         assertNotNull(result);
         assertSame(comic,
@@ -412,7 +421,9 @@ public class ComicVineScraperControllerTest {
         Mockito.when(comicService.save(Mockito.any(Comic.class)))
                .thenReturn(comic);
 
-        Comic result = controller.scrapeAndSaveComicDetails(comicScrapeRequest);
+        Comic result = controller.scrapeAndSaveComicDetails(TEST_COMIC_ID,
+                                                            TEST_ISSUE_ID,
+                                                            comicScrapeRequest);
 
         assertNotNull(result);
         assertSame(comic,

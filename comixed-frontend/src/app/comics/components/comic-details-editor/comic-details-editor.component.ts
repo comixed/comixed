@@ -17,26 +17,17 @@
  * org.comixed;
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { AppState } from 'app/app.state';
-import * as LibraryScrapingActions from 'app/actions/single-comic-scraping.actions';
-import { Comic } from 'app/library';
-import { Volume } from 'app/comics/models/volume';
-import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
-import { ConfirmationService, MenuItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthenticationAdaptor, COMICVINE_API_KEY, User } from 'app/user';
+import { Comic } from 'app/comics';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
+import { ScrapingIssue } from 'app/comics/models/scraping-issue';
+import { ScrapingVolume } from 'app/comics/models/scraping-volume';
+import { AuthenticationAdaptor, COMICVINE_API_KEY } from 'app/user';
+import { ConfirmationService, MenuItem } from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -44,209 +35,216 @@ import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
   styleUrls: ['./comic-details-editor.component.scss']
 })
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
-  @Input() multi_comic_mode = false;
-  @Output() update: EventEmitter<Comic> = new EventEmitter();
-
   private _comic: Comic;
 
-  fetchOptions: MenuItem[];
+  userSubscription: Subscription;
+  scrapingComicsSubscription: Subscription;
+  scrapingComics = [];
+  fetchingVolumesSubscription: Subscription;
+  fetchingVolumes = false;
+  volumesSubscription: Subscription;
+  volumes: ScrapingVolume[];
+  fetchingIssueSubscription: Subscription;
+  fetchingIssue = false;
+  scrapingSubscription: Subscription;
+  scraping = false;
+  currentVolume: ScrapingVolume;
+  currentIssueSubscription: Subscription;
+  currentIssue: ScrapingIssue;
+  langChangeSubscription: Subscription;
 
-  single_comic_scraping$: Observable<SingleComicScraping>;
-  single_comic_scraping_subscription: Subscription;
-  single_comic_scraping: SingleComicScraping;
-
-  user: User;
-  authStateSubscription: Subscription;
-  skipCache = false;
-  form: FormGroup;
+  comicDetailsForm: FormGroup;
+  fetchOptions: MenuItem[] = [];
+  editingApiKey = false;
 
   constructor(
-    private authenticationAdaptor: AuthenticationAdaptor,
+    private authAdaptor: AuthenticationAdaptor,
     private comicAdaptor: ComicAdaptor,
+    private scrapingAdaptor: ScrapingAdaptor,
     private confirmationService: ConfirmationService,
-    private translate: TranslateService,
-    private store: Store<AppState>,
+    private translateService: TranslateService,
     private formBuilder: FormBuilder
   ) {
-    this.single_comic_scraping$ = store.select('single_comic_scraping');
-
-    this.fetchOptions = [
-      {
-        label: 'Fetch',
-        icon: 'fa fa-search',
-        command: () => this.fetchCandidates(false)
-      },
-      {
-        label: 'Fetch (Skip Cache)',
-        icon: 'fa fa-cloud',
-        command: () => this.fetchCandidates(true)
-      }
-    ];
-    this.form = this.formBuilder.group({
-      api_key: ['', [Validators.required]],
-      series: ['', [Validators.required]],
-      volume: ['', [Validators.required]],
-      issue_number: ['', [Validators.required]]
+    this.comicDetailsForm = this.formBuilder.group({
+      apiKey: ['', [Validators.required]],
+      seriesName: ['', [Validators.required]],
+      volumeName: [''],
+      issueNumber: ['', [Validators.required]]
     });
   }
 
   ngOnInit() {
-    this.authStateSubscription = this.authenticationAdaptor.user$.subscribe(
-      () => {
-        const api_key = this.authenticationAdaptor.getPreference(
-          COMICVINE_API_KEY
-        );
-        this.form.controls['api_key'].setValue(api_key || '');
-      }
+    this.userSubscription = this.authAdaptor.user$.subscribe(user =>
+      this.comicDetailsForm.controls['apiKey'].setValue(
+        this.authAdaptor.getPreference(COMICVINE_API_KEY)
+      )
     );
-    this.single_comic_scraping_subscription = this.single_comic_scraping$.subscribe(
-      (library_scrape: SingleComicScraping) => {
-        this.single_comic_scraping = library_scrape;
-
-        if (this.single_comic_scraping.api_key.length) {
-          this.form.controls['api_key'].setValue(
-            this.single_comic_scraping.api_key
-          );
-        }
-        this.form.controls['series'].setValue(
-          this.single_comic_scraping.series
-        );
-        this.form.controls['volume'].setValue(
-          this.single_comic_scraping.volume
-        );
-        this.form.controls['issue_number'].setValue(
-          this.single_comic_scraping.issue_number
-        );
-      }
+    this.scrapingComicsSubscription = this.scrapingAdaptor.comics$.subscribe(
+      comics => (this.scrapingComics = comics)
     );
+    this.fetchingVolumesSubscription = this.scrapingAdaptor.fetchingVolumes$.subscribe(
+      fetching => (this.fetchingVolumes = fetching)
+    );
+    this.volumesSubscription = this.scrapingAdaptor.volumes$.subscribe(
+      volumes => (this.volumes = volumes)
+    );
+    this.fetchingIssueSubscription = this.scrapingAdaptor.fetchingIssue$.subscribe(
+      fetching => (this.fetchingIssue = fetching)
+    );
+    this.scrapingSubscription = this.scrapingAdaptor.scraping$.subscribe(
+      scraping => (this.scraping = scraping)
+    );
+    this.currentIssueSubscription = this.scrapingAdaptor.issue$.subscribe(
+      issue => (this.currentIssue = issue)
+    );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslatedOptions()
+    );
+    this.loadTranslatedOptions();
   }
 
   ngOnDestroy() {
-    this.authStateSubscription.unsubscribe();
-    this.single_comic_scraping_subscription.unsubscribe();
+    this.userSubscription.unsubscribe();
+    this.scrapingComicsSubscription.unsubscribe();
+    this.fetchingVolumesSubscription.unsubscribe();
+    this.fetchingIssueSubscription.unsubscribe();
+    this.currentIssueSubscription.unsubscribe();
+    this.scrapingSubscription.unsubscribe();
   }
 
   @Input()
   set comic(comic: Comic) {
     this._comic = comic;
-    this.store.dispatch(
-      new LibraryScrapingActions.SingleComicScrapingSetup({
-        api_key: this.form.controls['api_key'].value,
-        comic: comic,
-        series: comic.series,
-        volume: comic.volume,
-        issue_number: comic.issueNumber
-      })
-    );
+    this.loadComicDetailsForm();
+    this.scrapingAdaptor.startScraping([comic]);
   }
 
   get comic(): Comic {
     return this._comic;
   }
 
-  get api_key(): string {
-    return this.form.controls['api_key'].value;
+  private loadTranslatedOptions() {
+    this.fetchOptions = [
+      {
+        label: this.translateService.instant(
+          'comic-details-editor.option.fetch-with-cache'
+        ),
+        icon: 'fa fa-fw fa-search',
+        command: () => this.fetchCandidates(false)
+      },
+      {
+        label: this.translateService.instant(
+          'comic-details-editor.option.fetch-skip-cache'
+        ),
+        icon: 'fa fa-fw fa-search',
+        command: () => this.fetchCandidates(true)
+      }
+    ];
   }
 
-  fetchCandidates(skipCache: boolean): void {
-    this.skipCache = skipCache;
-    this.store.dispatch(
-      new LibraryScrapingActions.SingleComicScrapingFetchVolumes({
-        api_key: this.form.controls['api_key'].value,
-        series: this.form.controls['series'].value,
-        volume: this.form.controls['volume'].value,
-        issue_number: this.form.controls['issue_number'].value,
-        skip_cache: skipCache
-      })
+  private fetchCandidates(skipCache: boolean): void {
+    this.scrapingAdaptor.getVolumes(
+      this.getApiKey(),
+      this.getSeriesName(),
+      this.getIssueNumber(),
+      skipCache
     );
   }
 
-  selectVolume(volume: Volume): void {
-    if (volume) {
-      this.store.dispatch(
-        new LibraryScrapingActions.SingleComicScrapingSetCurrentVolume({
-          api_key: this.form.controls['api_key'].value,
-          volume: volume,
-          issue_number: this.form.controls['issue_number'].value,
-          skip_cache: this.skipCache
-        })
-      );
-    } else {
-      this.store.dispatch(
-        new LibraryScrapingActions.SingleComicScrapingClearCurrentVolume()
-      );
-    }
+  saveApiKey() {
+    this.authAdaptor.setPreference(COMICVINE_API_KEY, this.getApiKey());
+    this.editingApiKey = false;
   }
 
-  selectIssue(): void {
-    this.comicAdaptor.scrapeComic(
-      this.single_comic_scraping.comic,
-      this.form.controls['api_key'].value,
-      this.single_comic_scraping.current_issue.id,
-      this.skipCache
+  resetApiKey() {
+    this.comicDetailsForm.controls['apiKey'].reset(
+      this.authAdaptor.getPreference(COMICVINE_API_KEY)
     );
-    /*
-    this.store.dispatch(
-      new LibraryScrapingActions.SingleComicScrapingScrapeMetadata({
-        api_key: this.form.controls['api_key'].value,
-        comic: this.single_comic_scraping.comic,
-        issue_id: this.single_comic_scraping.current_issue.id,
-        skip_cache: this.skipCache,
-        multi_comic_mode: this.multi_comic_mode
-      })
-    );*/
-    this.update.next(this.single_comic_scraping.comic);
+    this.editingApiKey = false;
   }
 
-  cancelSelection(): void {
+  private loadComicDetailsForm() {
+    this.comicDetailsForm.controls['seriesName'].setValue(this._comic.series);
+    this.comicDetailsForm.controls['volumeName'].setValue(this._comic.volume);
+    this.comicDetailsForm.controls['issueNumber'].setValue(
+      this._comic.issueNumber
+    );
+    this.comicDetailsForm.markAsPristine();
+  }
+
+  saveDetails() {
     this.confirmationService.confirm({
-      header: this.translate.instant('comic-details-editor.cancel.header'),
-      message: this.translate.instant('comic-details-editor.cancel.message'),
-      icon: 'fa fa-exclamation',
+      header: this.translateService.instant(
+        'comic-details-editor.save-changes.header'
+      ),
+      message: this.translateService.instant(
+        'comic-details-editor.save-changes.message'
+      ),
       accept: () => {
-        this.store.dispatch(
-          new LibraryScrapingActions.SingleComicScrapingSetup({
-            api_key: this.form.controls['api_key'].value,
-            comic: this.comic,
-            series: this.form.controls['series'].value,
-            volume: this.form.controls['volume'].value,
-            issue_number: this.form.controls['issue_number'].value
-          })
-        );
-        this.update.next(this.single_comic_scraping.comic);
+        this.comicAdaptor.saveComic({
+          ...this._comic,
+          series: this.getSeriesName(),
+          volume: this.getVolume(),
+          issueNumber: this.getIssueNumber()
+        });
+        this.comicDetailsForm.markAsPristine();
       }
     });
   }
 
-  saveChanges(): void {
-    this.store.dispatch(
-      new LibraryScrapingActions.SingleComicScrapingSaveLocalChanges({
-        api_key: this.form.controls['api_key'].value,
-        comic: this.single_comic_scraping.comic,
-        series: this.form.controls['series'].value,
-        volume: this.form.controls['volume'].value,
-        issue_number: this.form.controls['issue_number'].value
-      })
-    );
+  resetDetails() {
+    this.loadComicDetailsForm();
   }
 
-  resetChanges(): void {
-    this.form.controls['series'].setValue(this.single_comic_scraping.series);
-    this.form.controls['volume'].setValue(this.single_comic_scraping.volume);
-    this.form.controls['issue_number'].setValue(
-      this.single_comic_scraping.comic.issueNumber
-    );
-    this.form.markAsPristine();
+  private getSeriesName() {
+    return this.comicDetailsForm.controls['seriesName'].value;
   }
 
-  saveApiKey(): void {
-    this.authenticationAdaptor.setPreference(
-      COMICVINE_API_KEY,
-      this.form.controls['api_key'].value.trim()
-    );
+  private getVolume() {
+    return this.comicDetailsForm.controls['volumeName'].value;
   }
 
-  isApiKeyValid(): boolean {
-    return (this.form.controls['api_key'].value || '').trim().length > 0;
+  private getIssueNumber() {
+    return this.comicDetailsForm.controls['issueNumber'].value;
+  }
+
+  private getApiKey() {
+    return this.comicDetailsForm.controls['apiKey'].value;
+  }
+
+  volumeSelected(volume: ScrapingVolume) {
+    this.currentVolume = volume;
+    if (!!volume) {
+      this.scrapingAdaptor.getIssue(
+        this.getApiKey(),
+        volume.id,
+        this.getIssueNumber(),
+        false
+      );
+    } else {
+      this.currentIssue = null;
+    }
+  }
+
+  issueSelected(issue: ScrapingIssue) {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'comic-details-editor.issue-selected.header'
+      ),
+      message: this.translateService.instant(
+        'comic-details-editor.issue-selected.message'
+      ),
+      accept: () =>
+        this.scrapingAdaptor.loadMetadata(
+          this.getApiKey(),
+          this.comic.id,
+          `${issue.id}`,
+          false
+        )
+    });
+  }
+
+  selectionCancelled() {
+    // TODO cancel the selection and/or skip the comic
   }
 }

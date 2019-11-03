@@ -152,41 +152,4 @@ describe('ComicService', () => {
       req.flush(VOLUMES);
     });
   });
-
-  describe('when scraping metadata for a single comic', () => {
-    it('posts the details for the comic', () => {
-      service
-        .scrape_comic_details_for(API_KEY, VOLUME, ISSUE_NUMBER, true)
-        .subscribe((result: Comic) => {
-          expect(result).toEqual(COMIC);
-        });
-
-      const req = http_mock.expectOne(GET_COMIC_METADATA_URL);
-      expect(req.request.method).toEqual('POST');
-      expect(req.request.body.get('api_key')).toEqual(API_KEY);
-      expect(req.request.body.get('volume')).toEqual(VOLUME);
-      expect(req.request.body.get('issue_number')).toEqual(ISSUE_NUMBER);
-      expect(req.request.body.get('skip_cache')).toEqual('true');
-      req.flush(COMIC);
-    });
-  });
-
-  describe('when scraping and saving a single comic', () => {
-    it('posts the details to the server', () => {
-      service
-        .scrape_and_save_comic_details(API_KEY, COMIC.id, ISSUE_ID, true)
-        .subscribe((result: Comic) => {
-          expect(result).toEqual(COMIC);
-        });
-
-      const req = http_mock.expectOne(SCRAPE_METADATA_AND_SAVE_URL);
-      expect(req.request.method).toEqual('POST');
-      expect(req.request.body.get('api_key')).toEqual(API_KEY);
-      expect(req.request.body.get('comic_id')).toEqual(`${COMIC.id}`);
-      expect(req.request.body.get('issue_id')).toEqual(`${ISSUE_ID}`);
-      expect(req.request.body.get('skip_cache')).toEqual('true');
-
-      req.flush(COMIC);
-    });
-  });
 });

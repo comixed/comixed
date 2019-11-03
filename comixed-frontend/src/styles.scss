@@ -25,6 +25,33 @@
   color: $cx-detail-value-text-color;
 }
 
+.cx-table-column-smallest {
+  width: 25px;
+}
+
+.cx-table-column-small {
+  width: 50px;
+}
+
+.cx-table-column-medium {
+  width: 125px;
+}
+
+.cx-table-column-large {
+  width: 350px;
+}
+
+.cx-table-column-align-center {
+  text-align: center;
+}
+
+// text
+.cx-no-wrap-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .ui-menuitem-text {
   white-space: nowrap;
   color: #000000;
@@ -50,11 +77,15 @@
   max-width: 100%;
 }
 
-.cx-form-validation-error {
+.cx-form-validation-error-container {
   background-color: $cx-form-validation-error-background-color;
   color: $cx-form-validation-error-text-color;
+  width: 100%;
+  max-width: 100%;
   padding-left: 5px;
-  border-radius: 25px;
+}
+
+.cx-form-validation-error {
 }
 
 .cx-button-box-vertical {

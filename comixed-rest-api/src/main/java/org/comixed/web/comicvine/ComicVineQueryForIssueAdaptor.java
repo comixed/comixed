@@ -22,7 +22,7 @@ package org.comixed.web.comicvine;
 import org.comixed.web.ComicVineIssuesWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
-import org.comixed.web.model.ComicIssue;
+import org.comixed.web.model.ScrapingIssue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
@@ -43,7 +43,7 @@ public class ComicVineQueryForIssueAdaptor
     @Autowired
     private ComicVineIssueResponseProcessor responseProcessor;
 
-    public ComicIssue execute(String apiKey, String volume, String issueNumber) throws ComicVineAdaptorException
+    public ScrapingIssue execute(String apiKey, Integer volume, String issueNumber) throws ComicVineAdaptorException
     {
         this.logger.debug("Getting issue={} for volume={} ", issueNumber, volume);
 
@@ -52,7 +52,7 @@ public class ComicVineQueryForIssueAdaptor
             issueNumber = issueNumber.substring(1);
         }
 
-        ComicIssue result = null;
+        ScrapingIssue result = null;
         ComicVineIssuesWebRequest request = this.webRequestFactory.getObject();
 
         request.setApiKey(apiKey);

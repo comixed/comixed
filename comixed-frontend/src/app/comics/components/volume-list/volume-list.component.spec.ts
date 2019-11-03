@@ -17,45 +17,59 @@
  * org.comixed;
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { TableModule } from 'primeng/table';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { VolumeListComponent } from './volume-list.component';
-import { MessageService, TooltipModule } from 'primeng/primeng';
-import {
-  VOLUME_1000,
-  VOLUME_1002,
-  VOLUME_1003,
-  VOLUME_1004
-} from 'app/comics/models/volume.fixtures';
-import { Volume } from 'app/comics/models/volume';
-import { COMIC_3 } from 'app/library';
-import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
-import { REDUCERS } from 'app/app.reducers';
-import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
+import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
+import { ScrapingVolume } from 'app/comics/models/scraping-volume';
+import {
+  SCRAPING_VOLUME_1002,
+  SCRAPING_VOLUME_1003
+} from 'app/comics/models/scraping-volume.fixtures';
+import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover-url.pipe';
+import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
+import {
+  reducer,
+  SCRAPING_FEATURE_KEY
+} from 'app/comics/reducers/scraping.reducer';
+import { COMIC_3 } from 'app/library';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { MessageService, TooltipModule } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
+import { VolumeListComponent } from './volume-list.component';
 
 describe('VolumeListComponent', () => {
-  const EXACT_MATCH = VOLUME_1002;
-  const EXACT_MATCH_2 = VOLUME_1003;
-  const CLOSE_MATCH = VOLUME_1000;
-  const NO_MATCH = VOLUME_1004;
+  const EXACT_MATCH = { ...SCRAPING_VOLUME_1002, id: 1 };
+  const CLOSE_MATCH = {
+    ...SCRAPING_VOLUME_1002,
+    id: 2,
+    name: 'Some other comic series',
+    publisher: 'Not The Same Publisher',
+    startYear: EXACT_MATCH.startYear
+  };
+  const NO_MATCH = {
+    id: 999,
+    name: 'Farkle',
+    publisher: 'Somebody Nobody Knows',
+    startYear: '1983',
+    imageUrl: '',
+    issueCount: 717
+  } as ScrapingVolume;
   const COMIC = {
     ...COMIC_3,
     publisher: EXACT_MATCH.publisher,
     series: EXACT_MATCH.name,
-    volume: EXACT_MATCH.start_year
+    volume: EXACT_MATCH.startYear
   };
+  const VOLUME = SCRAPING_VOLUME_1003;
+  const ISSUE = SCRAPING_ISSUE_1000;
 
   let component: VolumeListComponent;
   let fixture: ComponentFixture<VolumeListComponent>;
-  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -63,22 +77,24 @@ describe('VolumeListComponent', () => {
         HttpClientTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
+        StoreModule.forFeature(SCRAPING_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([ComicEffects]),
+        EffectsModule.forFeature([ScrapingEffects]),
         TableModule,
         CardModule,
         ButtonModule,
         TooltipModule
       ],
-      declarations: [VolumeListComponent, ScrapingIssueTitlePipe],
+      declarations: [
+        VolumeListComponent,
+        ScrapingIssueTitlePipe,
+        ScrapingIssueCoverUrlPipe
+      ],
       providers: [MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(VolumeListComponent);
     component = fixture.componentInstance;
-    store = TestBed.get(Store);
-    spyOn(store, 'dispatch');
 
     fixture.detectChanges();
   }));
@@ -90,7 +106,7 @@ describe('VolumeListComponent', () => {
   describe('when setting volumes', () => {
     beforeEach(() => {
       component.comic = COMIC;
-      component.volumes = [EXACT_MATCH, EXACT_MATCH_2, CLOSE_MATCH, NO_MATCH];
+      component.volumes = [EXACT_MATCH, CLOSE_MATCH, NO_MATCH];
     });
 
     it('marks exact matches', () => {
@@ -130,18 +146,21 @@ describe('VolumeListComponent', () => {
     });
 
     it('selects the best match if one is present', () => {
-      component.volumes = [EXACT_MATCH, CLOSE_MATCH, NO_MATCH];
-      expect(component.current_volume).toEqual(EXACT_MATCH);
+      component.volumeSelected.subscribe(response =>
+        expect(response).toEqual(EXACT_MATCH)
+      );
     });
-  });
 
-  describe('when selecting a volume', () => {
-    it('sends an output notice', () => {
-      component.selectVolume.subscribe((selected: Volume) => {
-        expect(selected).toEqual(VOLUME_1000);
+    describe('when there was no exact match', () => {
+      beforeEach(() => {
+        component.volumes = [NO_MATCH];
       });
 
-      component.setCurrentVolume(VOLUME_1000);
+      it('has no pre-selected volume', () => {
+        component.volumeSelected.subscribe(response =>
+          expect(response).toBeNull()
+        );
+      });
     });
   });
 
@@ -150,10 +169,27 @@ describe('VolumeListComponent', () => {
   });
 
   describe('when selecting the current volume', () => {
-    xit('notifies of the selection');
+    beforeEach(() => {
+      component.selectVolume(VOLUME);
+    });
+
+    it('provides notification', () => {
+      component.volumeSelected.subscribe(response =>
+        expect(response).toEqual(VOLUME)
+      );
+    });
   });
 
   describe('when canceling the scraping', () => {
-    xit('notifies of the cancellation');
+    beforeEach(() => {
+      component.currentIssue = ISSUE;
+      component.selectCurrentIssue();
+    });
+
+    it('provides notification', () => {
+      component.issueSelected.subscribe(response =>
+        expect(response).toEqual(ISSUE)
+      );
+    });
   });
 });

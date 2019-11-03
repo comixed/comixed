@@ -17,12 +17,8 @@
  * org.comixed;
  */
 
-import { SingleComicScraping } from 'app/models/scraping/single-comic-scraping';
-import { MultipleComicsScraping } from 'app/models/scraping/multiple-comics-scraping';
 import { Duplicates } from 'app/models/state/duplicates';
 
 export interface AppState {
-  readonly single_comic_scraping: SingleComicScraping;
-  readonly multiple_comic_scraping: MultipleComicsScraping;
   readonly duplicates: Duplicates;
 }

@@ -70,7 +70,5 @@ public class ComicVineIssue {
         return this.issueId;
     }
 
-    public void setIssueId(String issueId) {
-        this.issueId = issueId;
-    }
+    public void setIssueId(String issueId) { this.issueId = String.valueOf(issueId); }
 }

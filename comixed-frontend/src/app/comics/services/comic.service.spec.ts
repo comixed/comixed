@@ -17,39 +17,37 @@
  * org.comixed;
  */
 
-import { TestBed } from '@angular/core/testing';
-
-import { ComicService } from './comic.service';
+import { HttpResponse } from '@angular/common/http';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { TestBed } from '@angular/core/testing';
 import { interpolate } from 'app/app.functions';
 import {
   CLEAR_METADATA_URL,
   DELETE_COMIC_URL,
+  GET_COMIC_URL,
   GET_FORMATS_URL,
-  GET_ISSUE_URL,
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
   RESTORE_COMIC_URL,
-  SAVE_COMIC_URL,
-  SCRAPE_COMIC_URL
+  SAVE_COMIC_URL
 } from 'app/comics/comics.constants';
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
 import {
   FORMAT_1,
   FORMAT_3,
   FORMAT_5
 } from 'app/comics/models/comic-format.fixtures';
+import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
-import { HttpResponse } from '@angular/common/http';
-import { ComicScrapeRequest } from 'app/comics/models/net/comic-scrape-request';
+import {
+  SCAN_TYPE_1,
+  SCAN_TYPE_3,
+  SCAN_TYPE_5
+} from 'app/comics/models/scan-type.fixtures';
+
+import { ComicService } from './comic.service';
 
 describe('ComicService', () => {
   const COMIC = COMIC_1;
@@ -116,7 +114,7 @@ describe('ComicService', () => {
       .subscribe(response => expect(response).toEqual(COMIC));
 
     const req = httpMock.expectOne(
-      interpolate(GET_ISSUE_URL, { id: COMIC.id })
+      interpolate(GET_COMIC_URL, { id: COMIC.id })
     );
     expect(req.request.method).toEqual('GET');
     req.flush(COMIC);
@@ -173,22 +171,6 @@ describe('ComicService', () => {
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({});
-    req.flush(COMIC);
-  });
-
-  it('can scrape a comic', () => {
-    service
-      .scrapeComic(COMIC, API_KEY, ISSUE_ID, SKIP_CACHE)
-      .subscribe(response => expect(response).toEqual(COMIC));
-
-    const req = httpMock.expectOne(interpolate(SCRAPE_COMIC_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      comicId: COMIC.id,
-      apiKey: API_KEY,
-      issueId: ISSUE_ID,
-      skipCache: SKIP_CACHE
-    } as ComicScrapeRequest);
     req.flush(COMIC);
   });
 });

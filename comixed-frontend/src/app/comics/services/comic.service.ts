@@ -17,23 +17,21 @@
  * org.comixed;
  */
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { interpolate } from 'app/app.functions';
+import { Comic } from 'app/comics';
 import {
   CLEAR_METADATA_URL,
   DELETE_COMIC_URL,
+  GET_COMIC_URL,
   GET_FORMATS_URL,
-  GET_ISSUE_URL,
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
   RESTORE_COMIC_URL,
-  SAVE_COMIC_URL,
-  SCRAPE_COMIC_URL
+  SAVE_COMIC_URL
 } from 'app/comics/comics.constants';
-import { Comic } from 'app/comics';
-import { ComicScrapeRequest } from 'app/comics/models/net/comic-scrape-request';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +52,7 @@ export class ComicService {
   }
 
   getIssue(id: number): Observable<any> {
-    return this.http.get(interpolate(GET_ISSUE_URL, { id: id }));
+    return this.http.get(interpolate(GET_COMIC_URL, { id: id }));
   }
 
   saveComic(comic: Comic): Observable<any> {
@@ -71,19 +69,5 @@ export class ComicService {
 
   restoreComic(comic: Comic): Observable<any> {
     return this.http.put(interpolate(RESTORE_COMIC_URL, { id: comic.id }), {});
-  }
-
-  scrapeComic(
-    comic: Comic,
-    apiKey: string,
-    issueId: number,
-    skipCache: boolean
-  ): Observable<any> {
-    return this.http.post(interpolate(SCRAPE_COMIC_URL), {
-      comicId: comic.id,
-      apiKey: apiKey,
-      issueId: issueId,
-      skipCache: skipCache
-    } as ComicScrapeRequest);
   }
 }

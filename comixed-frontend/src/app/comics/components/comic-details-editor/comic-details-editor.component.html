@@ -1,101 +1,132 @@
-<p-blockUI [blocked]='single_comic_scraping.busy'>
-    <p-progressBar mode='indeterminate'
-                   [style]='{ height: "6px" }'></p-progressBar>
-</p-blockUI>
-<form [formGroup]='form'>
-    <div *ngIf='single_comic_scraping && !single_comic_scraping.volumes.length'
+<p-blockUI [target]='comicDetailsFormPanel'
+           [blocked]='fetchingIssue||fetchingVolumes||scraping'></p-blockUI>
+<p-progressBar *ngIf='fetchingIssue||fetchingVolumes||scraping'
+               mode='indeterminate'></p-progressBar>
+<p-panel #comicDetailsFormPanel
+         [showHeader]='false'>
+    <div *ngIf='!volumes.length'>
+        <p-toolbar>
+            <div class='ui-toolbar-group-left'>
+                <button id='save-details-changes'
+                        pButton
+                        class='cx-action-button ui-button-success'
+                        type='button'
+                        [label]='"comic-details-editor.button.save-changes"|translate'
+                        [disabled]='!comicDetailsForm.valid || !comicDetailsForm.dirty'
+                        (click)='saveDetails()'></button>
+                <button id='reset-details-changes'
+                        pButton
+                        class='cx-action-button ui-button-danger'
+                        type='button'
+                        [label]='"comic-details-editor.button.reset-changes"|translate'
+                        [disabled]='!comicDetailsForm.dirty'
+                        (click)='resetDetails()'></button>
+            </div>
+            <div class='ui-toolbar-group-right'>
+                <p-splitButton id='fetch-volumes-button'
+                               class='ui-button-secondary'
+                               [label]='"comic-details-editor.button.fetch-volumes"|translate'
+                               icon='fa fa-fw fa-search'
+                               [model]='fetchOptions'
+                               [disabled]='!comicDetailsForm.valid'></p-splitButton>
+            </div>
+        </p-toolbar>
+
+        <form [formGroup]='comicDetailsForm'>
+            <div class='ui-g'>
+                <div class='ui-g-12'>
+                    <div>
+                        <div class='cx-input-label'>
+                            <label for='comicvine-api-key'>{{'comic-details-editor.label.comicvine-api-key'|translate}}</label>
+                        </div>
+                        <p-inplace [active]='editingApiKey'
+                                   (onActivate)='editingApiKey = true'>
+                            <span pInplaceDisplay>{{apiKey || ('comic-details-editor.text.comicvine-api-key-placeholder'|translate)}}</span>
+                            <span pInplaceContent>
+                        <div class='ui-inputgroup'>
+                            <input id='comicvine-api-key'
+                                   formControlName='apiKey'/>
+                            <button id='save-api-key'
+                                    pButton
+                                    type='button'
+                                    class='ui-button-success'
+                                    icon='fa fa-fw fa-save'
+                                    [pTooltip]='"comic-details-editor.tooltip.save-api-key"|translate'
+                                    [disabled]='!comicDetailsForm.controls["apiKey"].dirty'
+                                    (click)='saveApiKey()'></button>
+                            <button id='reset-api-key'
+                                    pButton
+                                    type='button'
+                                    class='ui-button-danger'
+                                    icon='fa fa-fw fa-undo'
+                                    [pTooltip]='"comic-details-editor.tooltip.reset-api-key"|translate'
+                                    [disabled]='!comicDetailsForm.controls["apiKey"].dirty'
+                                    (click)='resetApiKey()'></button>
+                        </div>
+                    </span>
+                        </p-inplace>
+                    </div>
+                </div>
+                <div class='ui-g-12'>
+                    <div class='cx-input-label'>
+                        <label for='series-name'>{{'comic-details-editor.label.series-name'|translate}}</label>
+                    </div>
+                    <div>
+                        <input id='series-name'
+                               pInputText
+                               class='cx-input-field'
+                               formControlName='seriesName'/>
+                        <div *ngIf='comicDetailsForm.controls.seriesName.errors?.required'
+                             class='cx-form-validation-error-container'>
+                            <span class='cx-form-validation-error'>{{'global.errors.form-field-required'|translate:{name: 'Series name'} }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class='ui-g-6'>
+                    <div class='cx-input-label'>
+                        <label for='volume-name'>{{'comic-details-editor.label.volume-name'|translate}}</label>
+                    </div>
+                    <div>
+                        <input id='volume-name'
+                               pInputText
+                               class='cx-input-field'
+                               formControlName='volumeName'/>
+                        <div *ngIf='comicDetailsForm.controls.volumeName.errors?.required'
+                             class='cx-form-validation-error-container'>
+                            <span class='cx-form-validation-error'>{{'global.errors.form-field-required'|translate:{name: 'Volume name'} }}</span>
+                        </div>
+                    </div>
+                    <div class='cx-input-label'>
+                        <label for='issue-number'>{{'comic-details-editor.label.issue-number'|translate}}</label>
+                    </div>
+                    <div>
+                        <input id='issue-number'
+                               pInputText
+                               class='cx-input-field'
+                               formControlName='issueNumber'/>
+                        <div *ngIf='comicDetailsForm.controls.issueNumber.errors?.required'
+                             class='cx-form-validation-error-container'>
+                            <span class='cx-form-validation-error'>{{'global.errors.form-field-required'|translate:{name: 'Issue #'} }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class='ui-g-6'>
+                    <!-- TODO placeholder for filter widgets -->
+                </div>
+            </div>
+        </form>
+    </div>
+    <div *ngIf='volumes.length'
          class='ui-g'>
-        <div class='ui-g-2 ui-sm-2'>
-            <label for='api_key'>
-                <b>{{ "comic-details-editor.label.comicvine-api-key" | translate }}</b>
-            </label>
-        </div>
-        <div class='ui-g-10 ui-sm-6'>
-            <p-inplace closable='closable'>
-        <span pInplaceDisplay
-              pTooltip='{{"comic-details-editor.tooltip.comicvine-api-key" | translate}}'>
-          {{"comic-details-editor.text.comicvine-api-key-placeholder"| translate}}
-        </span>
-                <span pInplaceContent>
-          <input id='api_key_input'
-                 type='text'
-                 formControlName='api_key'
-                 pInputText/>
-          <button pButton
-                  type='button'
-                  icon='pi pi-check'
-                  [disabled]='!isApiKeyValid()'
-                  (click)='saveApiKey()'></button>
-        </span>
-            </p-inplace>
-        </div>
-        <div class='ui-g-2 ui-sm-2'>
-            <label for='series'>
-                <b>{{ "comic-details-editor.label.series" | translate }}</b>
-            </label>
-        </div>
-        <div class='ui-g-10 ui-sm-6'>
-            <input id='series_input'
-                   type='text'
-                   formControlName='series'
-                   pInputText/>
-        </div>
-        <div class='ui-g-2 ui-sm-6'>
-            <label for='volume'>
-                <b>{{ "comic-details-editor.label.volume" | translate }}</b>
-            </label>
-        </div>
-        <div class='ui-g-10 ui-sm-6'>
-            <input id='volume_input'
-                   type='text'
-                   formControlName='volume'
-                   pInputText/>
-        </div>
-        <div class='ui-g-2 ui-sm-6'>
-            <label for='issue_number'>
-                <b>{{ "comic-details-editor.label.issue-number" | translate }}</b>
-            </label>
-        </div>
-        <div class='ui-g-10 ui-sm-6'>
-            <input id='issue_number_input'
-                   type='text'
-                   formControlName='issue_number'
-                   pInputText/>
-        </div>
-        <div class='ui-g-12 ui-sm-12'>
-            <button pButton
-                    id='save_data_button'
-                    type='button'
-                    pInplaceContent
-                    label='{{ "button.save" | translate }}'
-                    icon='fa fa-save'
-                    [disabled]='!form.dirty'
-                    (click)='saveChanges()'></button>
-            <p-splitButton id='fetch_volumes_button'
-                           label='Fetch'
-                           icon='fa fa-search'
-                           [model]='fetchOptions'
-                           [disabled]='!form.valid'></p-splitButton>
-            <button pButton
-                    id='reset_comic_button'
-                    type='button'
-                    label='{{ "button.reset" | translate }}'
-                    icon='fa fa-undo'
-                    [disabled]='!form.dirty'
-                    (click)='resetChanges()'></button>
+        <div class='ui-g-12'>
+            <app-volume-list [volumes]='volumes'
+                             [comic]='comic'
+                             [currentVolume]='currentVolume'
+                             [currentIssue]='currentIssue'
+                             [apiKey]='getApiKey()'
+                             (volumeSelected)='volumeSelected($event)'
+                             (issueSelected)='issueSelected($event)'
+                             (cancelSelection)='selectionCancelled()'></app-volume-list>
         </div>
     </div>
-</form>
-<div *ngIf='single_comic_scraping && single_comic_scraping.volumes?.length'
-     class='ui-g'>
-    <div class='ui-g-12'>
-        <app-volume-list [api_key]='single_comic_scraping.api_key'
-                         [comic]='single_comic_scraping.comic'
-                         [volumes]='single_comic_scraping.volumes'
-                         [current_volume]='single_comic_scraping.current_volume'
-                         [current_issue]='single_comic_scraping.current_issue'
-                         (selectVolume)='selectVolume($event)'
-                         (selectIssue)='selectIssue()'
-                         (cancelSelection)='cancelSelection()'></app-volume-list>
-    </div>
-</div>
+</p-panel>

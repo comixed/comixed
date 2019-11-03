@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.comixed.web.model.ComicVolume;
+import org.comixed.web.model.ScrapingVolume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class ComicVineVolumesResponseProcessorTest
     @Autowired
     private ComicVineVolumesResponseProcessor processor;
 
-    private List<ComicVolume> volumes = new ArrayList<>();
+    private List<ScrapingVolume> volumes = new ArrayList<>();
 
     @Test(expected = ComicVineAdaptorException.class)
     public void testProcessWithBadContent() throws ComicVineAdaptorException
@@ -64,7 +64,7 @@ public class ComicVineVolumesResponseProcessorTest
         assertFalse(result);
         assertEquals(1, volumes.size());
 
-        ComicVolume volume = volumes.get(0);
+        ScrapingVolume volume = volumes.get(0);
         assertEquals("Batman", volume.getName());
         assertEquals(717, volume.getIssueCount());
         assertEquals(796, volume.getId());
@@ -80,7 +80,7 @@ public class ComicVineVolumesResponseProcessorTest
         assertTrue(result);
         assertEquals(1, volumes.size());
 
-        ComicVolume volume = volumes.get(0);
+        ScrapingVolume volume = volumes.get(0);
         assertEquals("Superman & Batman: World's Finest", volume.getName());
         assertEquals(1, volume.getIssueCount());
         assertEquals(55645, volume.getId());

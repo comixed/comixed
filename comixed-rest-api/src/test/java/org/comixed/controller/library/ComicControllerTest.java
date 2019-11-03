@@ -469,7 +469,7 @@ public class ComicControllerTest {
                .thenReturn(this.deleteComicsTask);
         Mockito.doNothing()
                .when(this.deleteComicsTask)
-               .setComicIds(Mockito.anyListOf(Long.class));
+               .setComicIds(Mockito.anyList());
         Mockito.doNothing()
                .when(this.worker)
                .addTasksToQueue(Mockito.any());

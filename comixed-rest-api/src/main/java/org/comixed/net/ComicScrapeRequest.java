@@ -22,28 +22,18 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ComicScrapeRequest {
-    @JsonProperty("comicId") private Long comicId;
     @JsonProperty("apiKey") private String apiKey;
-    @JsonProperty("issueId") private String issueId;
     @JsonProperty("skipCache") private Boolean skipCache;
 
     public ComicScrapeRequest() {}
 
-    public ComicScrapeRequest(final long comicId,
-                              final String apiKey,
-                              final String issueId,
+    public ComicScrapeRequest(final String apiKey,
                               final boolean skipCache) {
-        this.comicId = comicId;
         this.apiKey = apiKey;
-        this.issueId = issueId;
         this.skipCache = skipCache;
     }
 
-    public Long getComicId() { return comicId; }
-
     public String getApiKey() { return apiKey; }
-
-    public String getIssueId() { return issueId; }
 
     public Boolean getSkipCache() { return skipCache; }
 }

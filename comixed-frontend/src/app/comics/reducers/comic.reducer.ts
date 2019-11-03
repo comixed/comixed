@@ -17,8 +17,8 @@
  * org.comixed;
  */
 
-import { ComicActions, ComicActionTypes } from '../actions/comic.actions';
 import { Comic, ComicFormat, PageType, ScanType } from 'app/comics';
+import { ComicActions, ComicActionTypes } from '../actions/comic.actions';
 
 export const COMIC_FEATURE_KEY = 'comic';
 
@@ -173,15 +173,6 @@ export function reducer(
 
     case ComicActionTypes.RestoreComicFailed:
       return { ...state, restoringComic: false };
-
-    case ComicActionTypes.ScrapeComic:
-      return { ...state, scrapingComic: true };
-
-    case ComicActionTypes.ComicScraped:
-      return { ...state, scrapingComic: false, comic: action.payload.comic };
-
-    case ComicActionTypes.ScrapeComicFailed:
-      return { ...state, scrapingComic: false };
 
     default:
       return state;

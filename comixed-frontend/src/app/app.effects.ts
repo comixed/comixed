@@ -17,7 +17,6 @@
  * org.comixed;
  */
 
-import { SingleComicScrapingEffects } from 'app/effects/single-comic-scraping.effects';
 import { DuplicatesEffects } from 'app/effects/duplicates.effects';
 
-export const EFFECTS = [SingleComicScrapingEffects, DuplicatesEffects];
+export const EFFECTS = [DuplicatesEffects];

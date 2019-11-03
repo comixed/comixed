@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,18 @@
  * org.comixed;
  */
 
-export interface Issue {
-  id: number;
-  cover_date: string;
-  cover_url: string;
-  issue_number: number;
-  name: string;
-  volume_name: string;
-  volume_id: number;
+import { Pipe, PipeTransform } from '@angular/core';
+import { ScrapingIssue } from 'app/comics/models/scraping-issue';
+
+@Pipe({
+  name: 'scrapingIssueCoverUrl'
+})
+export class ScrapingIssueCoverUrlPipe implements PipeTransform {
+  transform(issue: ScrapingIssue, apiKey: string): string {
+    if (!issue || (apiKey || '').length === 0) {
+      return '';
+    }
+
+    return `${issue.coverUrl}?api_key=${apiKey}`;
+  }
 }

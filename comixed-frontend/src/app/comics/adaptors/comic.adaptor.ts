@@ -27,13 +27,6 @@ import {
   PageType,
   ScanType
 } from 'app/comics';
-import { BehaviorSubject, Observable } from 'rxjs';
-import {
-  COMIC_FEATURE_KEY,
-  ComicState
-} from 'app/comics/reducers/comic.reducer';
-import { filter } from 'rxjs/operators';
-import * as _ from 'lodash';
 import {
   ComicClearMetadata,
   ComicDelete,
@@ -43,9 +36,15 @@ import {
   ComicRestore,
   ComicSave,
   ComicSavePage,
-  ComicScrape,
   ComicSetPageHashBlocking
 } from 'app/comics/actions/comic.actions';
+import {
+  COMIC_FEATURE_KEY,
+  ComicState
+} from 'app/comics/reducers/comic.reducer';
+import * as _ from 'lodash';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Injectable()
 export class ComicAdaptor {
@@ -192,21 +191,5 @@ export class ComicAdaptor {
 
   get restoringComic$(): Observable<boolean> {
     return this._restoringComic$.asObservable();
-  }
-
-  scrapeComic(
-    comic: Comic,
-    apiKey: string,
-    issueId: number,
-    skipCache: boolean
-  ): void {
-    this.store.dispatch(
-      new ComicScrape({
-        comic: comic,
-        apiKey: apiKey,
-        issueId: issueId,
-        skipCache: skipCache
-      })
-    );
   }
 }

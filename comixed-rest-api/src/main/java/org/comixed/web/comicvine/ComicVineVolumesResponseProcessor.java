@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.comixed.web.model.ComicVolume;
+import org.comixed.web.model.ScrapingVolume;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -159,13 +159,13 @@ public class ComicVineVolumesResponseProcessor
             return this.numberOfTotalResults;
         }
 
-        public List<ComicVolume> getVolumes()
+        public List<ScrapingVolume> getVolumes()
         {
-            List<ComicVolume> result = new ArrayList<>();
+            List<ScrapingVolume> result = new ArrayList<>();
 
             for (ComicVineVolume comicVineVolume : this.volumes)
             {
-                ComicVolume volume = new ComicVolume();
+                ScrapingVolume volume = new ScrapingVolume();
 
                 volume.setId(comicVineVolume.id);
                 volume.setIssueCount(comicVineVolume.getIssueCount());
@@ -198,7 +198,7 @@ public class ComicVineVolumesResponseProcessor
      * @throws ComicVineAdaptorException
      *             if an error occurs
      */
-    public boolean process(List<ComicVolume> list, byte[] content) throws ComicVineAdaptorException
+    public boolean process(List<ScrapingVolume> list, byte[] content) throws ComicVineAdaptorException
     {
         boolean result = true;
 

@@ -17,19 +17,11 @@
  * org.comixed;
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Comic } from 'app/library';
-import { Subscription } from 'rxjs';
-
-@Component({
-  selector: 'app-multi-comic-scraping-page',
-  templateUrl: './multi-comic-scraping-page.component.html',
-  styleUrls: ['./multi-comic-scraping-page.component.scss']
-})
-export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
-  constructor() {}
-
-  ngOnInit() {}
-
-  ngOnDestroy() {}
+export interface ScrapingVolume {
+  id: number;
+  name: string;
+  issueCount: number;
+  imageUrl: string;
+  startYear: string;
+  publisher: string;
 }
