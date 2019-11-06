@@ -49,6 +49,8 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   sameHeight: boolean;
   coverSizeSubscription: Subscription;
   coverSize: number;
+  fetchingFilesSubscription: Subscription;
+  fetchingFiles = false;
 
   langChangeSubscription: Subscription;
   contextMenu: MenuItem[];
@@ -83,6 +85,9 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
     this.coverSizeSubscription = this.libraryDisplayAdaptor.coverSize$.subscribe(
       coverSize => (this.coverSize = coverSize)
     );
+    this.fetchingFilesSubscription = this.comicImportAdaptor.fetchingComicFile$.subscribe(
+      fetching => (this.fetchingFiles = fetching)
+    );
   }
 
   ngOnDestroy() {
@@ -92,6 +97,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
     this.rowsSubscription.unsubscribe();
     this.sameHeightSubscription.unsubscribe();
     this.coverSizeSubscription.unsubscribe();
+    this.fetchingFilesSubscription.unsubscribe();
   }
 
   @Input() set comicFiles(comicFiles: ComicFile[]) {

@@ -47,7 +47,8 @@
     }
   },
   "import-page": {
-    "title": "Importing {comic_count, plural, =1{One Comic} other{# Comics}}...",
+    "title-no-comics": "No Comic Files Loaded",
+    "title-with-comics": "Selected {selectedCount} Of {comicCount, plural, =1{One Comic File} other{# Comic Files}}",
     "label": {
       "filename": "Filename",
       "file-size": "File Size",
@@ -59,7 +60,6 @@
     }
   },
   "comic-file-list": {
-    "header": "There Are {selected_count} Files Selected",
     "popup": {
       "select-all": "Select {comic_count} comics",
       "deselect-all": "Deselect {comic_count} comics",

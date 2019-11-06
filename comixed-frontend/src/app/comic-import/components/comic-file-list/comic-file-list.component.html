@@ -1,51 +1,52 @@
-<div class='ui-g'>
-    <div *ngIf='selectedComicFiles'
-         class='ui-g-12'>
-        <h2>{{"comic-file-list.header"|translate: {selected_count: selectedComicFiles.length} }}</h2>
+<p-blockUI [blocked]='fetchingFiles'
+           [target]='comicFileListContainer'></p-blockUI>
+<p-panel #comicFileListContainer
+         [showHeader]='false'>
+    <div class='ui-g'>
+        <p-contextMenu [model]='contextMenu'
+                       [target]='comicFileListContent'></p-contextMenu>
+        <div #comicFileListContent
+             class='ui-g-12'>
+            <p-dataView #comicFileList
+                        [alwaysShowPaginator]='true'
+                        [layout]='layout'
+                        [paginator]='true'
+                        [rows]='rows'
+                        [sortField]='"comic_file_sort_field"'
+                        [value]='comicFiles'
+                        filterBy='filename'
+                        id='comic-file-list-view'
+                        paginatorPosition='both'>
+                <p-header>
+                    <div class='ui-helper-clearfix'>
+                        <app-comic-file-list-toolbar (changeLayout)='comicFileList.changeLayout($event)'
+                                                     (filterText)='comicFileList.filter($event)'
+                                                     (showSelections)='showSelections = true'
+                                                     [busy]='busy'
+                                                     [comic_files]='comicFiles'
+                                                     [directory]='directory'
+                                                     [selected_comic_count]='(selectedComicFiles||[]).length'></app-comic-file-list-toolbar>
+                    </div>
+                </p-header>
+                <ng-template let-file
+                             pTemplate='gridItem'>
+                    <app-comic-file-grid-item [comic_file]='file'
+                                              [cover_size]='coverSize'
+                                              [same_height]='sameHeight'
+                                              [selected]='selectedComicFiles.includes(file)'
+                                              [use_selected_class]='true'
+                                              (click)='toggleComicFileSelection(file)'></app-comic-file-grid-item>
+                </ng-template>
+                <ng-template let-file
+                             pTemplate='listItem'>
+                    <app-comic-file-list-item [comic_file]='file'
+                                              [cover_size]='coverSize'
+                                              [same_height]='sameHeight'
+                                              [selected]='selectedComicFiles.includes(file)'
+                                              [use_selected_class]='true'
+                                              (click)='toggleComicFileSelection(file)'></app-comic-file-list-item>
+                </ng-template>
+            </p-dataView>
+        </div>
     </div>
-    <p-contextMenu [model]='contextMenu'
-                   [target]='comicFileListContainer'></p-contextMenu>
-    <div #comicFileListContainer
-         class='ui-g-12'>
-        <p-dataView #comicFileList
-                    [alwaysShowPaginator]='true'
-                    [layout]='layout'
-                    [paginator]='true'
-                    [rows]='rows'
-                    [sortField]='"comic_file_sort_field"'
-                    [value]='comicFiles'
-                    filterBy='filename'
-                    id='comic-file-list-view'
-                    paginatorPosition='both'>
-            <p-header>
-                <div class='ui-helper-clearfix'>
-                    <app-comic-file-list-toolbar (changeLayout)='comicFileList.changeLayout($event)'
-                                                 (filterText)='comicFileList.filter($event)'
-                                                 (showSelections)='showSelections = true'
-                                                 [busy]='busy'
-                                                 [comic_files]='comicFiles'
-                                                 [directory]='directory'
-                                                 [selected_comic_count]='(selectedComicFiles||[]).length'></app-comic-file-list-toolbar>
-                </div>
-            </p-header>
-            <ng-template let-file
-                         pTemplate='gridItem'>
-                <app-comic-file-grid-item [comic_file]='file'
-                                          [cover_size]='coverSize'
-                                          [same_height]='sameHeight'
-                                          [selected]='selectedComicFiles.includes(file)'
-                                          [use_selected_class]='true'
-                                          (click)='toggleComicFileSelection(file)'></app-comic-file-grid-item>
-            </ng-template>
-            <ng-template let-file
-                         pTemplate='listItem'>
-                <app-comic-file-list-item [comic_file]='file'
-                                          [cover_size]='coverSize'
-                                          [same_height]='sameHeight'
-                                          [selected]='selectedComicFiles.includes(file)'
-                                          [use_selected_class]='true'
-                                          (click)='toggleComicFileSelection(file)'></app-comic-file-list-item>
-            </ng-template>
-        </p-dataView>
-    </div>
-</div>
+</p-panel>

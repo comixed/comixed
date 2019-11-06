@@ -1,8 +1,14 @@
+<h2 *ngIf='!comicFiles.length && !importing'>{{'import-page.title-no-comics'|translate}}</h2>
+<h2 *ngIf='comicFiles.length'>{{'import-page.title-with-comics'|translate:{
+    comicCount: comicFiles.length,
+    selectedCount: selectedComicFiles.length
+} }}</h2>
 <div *ngIf='importing'
      id='import-busy-indicator-container'>
     <h2>{{'import-page.importing-title'|translate:{count: importCount} }}</h2>
-    <p-progressBar mode='indeterminate'></p-progressBar>
 </div>
+<p-progressBar *ngIf='importing||fetchingFiles'
+               mode='indeterminate'></p-progressBar>
 <div *ngIf='!importing'
      id='comic-file-list-container'>
     <app-comic-file-list [busy]='fetchingFiles'

@@ -28,6 +28,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import {
+  BlockUIModule,
   CardModule,
   CheckboxModule,
   ConfirmationService,
@@ -92,7 +93,8 @@ describe('ComicFileListComponent', () => {
         OverlayPanelModule,
         PanelModule,
         CardModule,
-        ContextMenuModule
+        ContextMenuModule,
+        BlockUIModule
       ],
       declarations: [
         ComicFileListComponent,

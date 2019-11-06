@@ -53,9 +53,9 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   userSubscription: Subscription;
   user: User;
   comicFilesSubscription: Subscription;
-  comicFiles: ComicFile[];
+  comicFiles: ComicFile[] = [];
   selectedComicFilesSubscription: Subscription;
-  selectedComicFiles: ComicFile[];
+  selectedComicFiles: ComicFile[] = [];
   importCountSubscription: Subscription;
   importCount = 0;
   fetchingFilesSubscription: Subscription;
