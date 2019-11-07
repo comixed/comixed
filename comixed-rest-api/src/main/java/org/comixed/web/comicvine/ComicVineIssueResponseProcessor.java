@@ -19,87 +19,89 @@
 
 package org.comixed.web.comicvine;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.comixed.web.model.ScrapingIssue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.comixed.web.model.ScrapingIssue;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Component
-public class ComicVineIssueResponseProcessor
-{
-    static class ComicVineIssue
-    {
-        @JsonProperty(value = "id")
-        int id;
+public class ComicVineIssueResponseProcessor {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-        @JsonProperty(value = "issue_number")
-        String issueNumber;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private ComicVineResponseAdaptor responseAdaptor;
 
-        @JsonProperty(value = "cover_date")
-        String coverDate;
+    public ScrapingIssue process(byte[] content)
+            throws
+            ComicVineAdaptorException {
+        this.logger.debug("Validating ComicVine response content");
+        this.responseAdaptor.checkForErrors(content);
 
-        @JsonProperty(value = "image")
-        Map<String,
-            String> imageUrls = new HashMap<>();
+        ScrapingIssue result = null;
 
-        @JsonProperty(value = "volume")
-        Map<String,
-            String> volume = new HashMap<>();
+        try {
+            // TODO there HAS to be a better way to configure this
+            this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                                        false);
+            ComicVineIssueResponse response = this.objectMapper.readValue(content,
+                                                                          ComicVineIssueResponse.class);
+            result = response.getIssue();
+        }
+        catch (IOException error) {
+            throw new ComicVineAdaptorException("Error processing issues response",
+                                                error);
+        }
 
-        public ScrapingIssue toComicIssue()
-        {
+        return result;
+    }
+
+    static class ComicVineIssue {
+        @JsonProperty(value = "id") int id;
+
+        @JsonProperty(value = "issue_number") String issueNumber;
+
+        @JsonProperty(value = "cover_date") String coverDate;
+
+        @JsonProperty(value = "image") Map<String, String> imageUrls = new HashMap<>();
+
+        @JsonProperty(value = "volume") Map<String, String> volume = new HashMap<>();
+
+        public ScrapingIssue toComicIssue() {
             ScrapingIssue result = new ScrapingIssue();
 
             result.setId(this.id);
             result.setIssueNumber(this.issueNumber);
             result.setCoverDate(this.coverDate);
-            result.setCoverUrl(this.imageUrls.containsKey("original_url") ? this.imageUrls.get("original_url") : "");
+            result.setCoverUrl(this.imageUrls.containsKey("original_url")
+                               ? this.imageUrls.get("original_url")
+                               : "");
             result.setVolumeName(this.volume.get("name"));
-            result.setVolumeId(Integer.valueOf(this.volume.containsKey("id") ? this.volume.get("id") : "0").intValue());
+            result.setVolumeId(Integer.valueOf(this.volume.containsKey("id")
+                                               ? this.volume.get("id")
+                                               : "0")
+                                      .intValue());
 
             return result;
         }
     }
 
-    static class ComicVineIssueResponse
-    {
-        @JsonProperty(value = "results")
-        List<ComicVineIssue> comicVineIssues;
+    static class ComicVineIssueResponse {
+        @JsonProperty(value = "results") List<ComicVineIssue> comicVineIssues;
 
-        public ScrapingIssue getIssue()
-        {
-            return ((this.comicVineIssues != null)
-                    && !this.comicVineIssues.isEmpty()) ? this.comicVineIssues.get(0).toComicIssue() : null;
+        public ScrapingIssue getIssue() {
+            return ((this.comicVineIssues != null) && !this.comicVineIssues.isEmpty())
+                   ? this.comicVineIssues.get(0)
+                                         .toComicIssue()
+                   : null;
         }
-    }
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    public ScrapingIssue process(byte[] content) throws ComicVineAdaptorException
-    {
-        ScrapingIssue result = null;
-
-        try
-        {
-            // TODO there HAS to be a better way to configure this
-            this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            ComicVineIssueResponse response = this.objectMapper.readValue(content, ComicVineIssueResponse.class);
-            result = response.getIssue();
-        }
-        catch (IOException error)
-        {
-            throw new ComicVineAdaptorException("Error processing issues response", error);
-        }
-
-        return result;
     }
 }

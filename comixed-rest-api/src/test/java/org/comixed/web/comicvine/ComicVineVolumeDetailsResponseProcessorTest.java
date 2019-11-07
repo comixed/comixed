@@ -19,9 +19,7 @@
 
 package org.comixed.web.comicvine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.comixed.model.library.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,40 +29,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes =
-{ComicVineVolumeDetailsResponseProcessor.class,
- ObjectMapper.class})
-public class ComicVineVolumeDetailsResponseProcessorTest
-{
+@SpringBootTest(classes = {ComicVineVolumeDetailsResponseProcessor.class,
+                           ComicVineResponseAdaptor.class,
+                           ObjectMapper.class})
+public class ComicVineVolumeDetailsResponseProcessorTest {
     private static final byte[] TEST_BAD_CONTENT = "This is invalid content".getBytes();
     private static final byte[] TEST_GOOD_CONTENT = "{\"error\":\"OK\",\"limit\":1,\"offset\":0,\"number_of_page_results\":1,\"number_of_total_results\":1,\"status_code\":1,\"results\":{\"name\":\"Harley Quinn\",\"publisher\":{\"api_detail_url\":\"https:\\/\\/comicvine.gamespot.com\\/api\\/publisher\\/4010-10\\/\",\"id\":10,\"name\":\"DC Comics\"},\"start_year\":\"2016\"},\"version\":\"1.0\"}".getBytes();
 
-    @Autowired
-    private ComicVineVolumeDetailsResponseProcessor processor;
-
-    @Mock
-    private Comic comic;
+    @Autowired private ComicVineVolumeDetailsResponseProcessor processor;
+    @Mock private Comic comic;
 
     @Test(expected = ComicVineAdaptorException.class)
-    public void testProcessBadContent() throws ComicVineAdaptorException
-    {
-        processor.process(TEST_BAD_CONTENT, comic);
+    public void testProcessBadContent()
+            throws
+            ComicVineAdaptorException {
+        processor.process(TEST_BAD_CONTENT,
+                          comic);
     }
 
     @Test
-    public void testProcess() throws ComicVineAdaptorException
-    {
-        Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
+    public void testProcess()
+            throws
+            ComicVineAdaptorException {
+        Mockito.doNothing()
+               .when(comic)
+               .setVolume(Mockito.anyString());
 
-        String result = processor.process(TEST_GOOD_CONTENT, comic);
+        String result = processor.process(TEST_GOOD_CONTENT,
+                                          comic);
 
         assertNotNull(result);
-        assertEquals("10", result);
+        assertEquals("10",
+                     result);
 
-        Mockito.verify(comic, Mockito.times(1)).setVolume("2016");
-        Mockito.verify(comic, Mockito.times(1)).setSeries("Harley Quinn");
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setVolume("2016");
+        Mockito.verify(comic,
+                       Mockito.times(1))
+               .setSeries("Harley Quinn");
     }
 }
