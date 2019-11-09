@@ -5,7 +5,7 @@ language: node_js
     - "10.15.0"
 
 jdk:
-    - oraclejdk8
+    - openjdk8
 
 env:
     - NODE_VERSION="10.15.0"
