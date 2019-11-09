@@ -40,7 +40,6 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>comixed-app-${project.version}-${build-details.build.time}</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

@@ -24,11 +24,6 @@ before_deploy:
     - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
     - export BUILD_VERSION=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
     - export TRAVIS_TAG=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')-$(date +%Y%m%d%H%M%S)
-    # - export LIBRARY_ARTIFACT=$(find . -name comixed-library-*.jar)
-    # - export TASKS_ARTIFACT=$(find . -name comixed-tasks-*.jar)
-    # - export REST_API_ARTIFACT=$(find . -name comixed-rest-api-*.jar)
-    # - export FRONTEND_ARTIFACT=$(find . -name comixed-frontend-*.jar)
-    # - export IMPORTER_ARTIFACT=$(find . -name comixed-importer-*.jar)
     - export APP_ARTIFACT=$(find . -name comixed-app-*.jar)
 ###################################
 # NOT GOING TO TAG THINGS FOR NOW #
@@ -42,11 +37,6 @@ deploy:
       api_key: $GITHUB_AUTH_TOKEN
       file_glob: true
       file:
-        # - ${LIBRARY_ARTIFACT}
-        # - ${TASKS_ARTIFACT}
-        # - ${REST_API_ARTIFACT}
-        # - ${FRONTEND_ARTIFACT}
-        # - ${IMPORTER_ARTIFACT}
         - ${APP_ARTIFACT}
       skip_cleanup: true
       keep-history: true
@@ -57,11 +47,6 @@ deploy:
       api_key: $GITHUB_AUTH_TOKEN
       file_glob: true
       file:
-        # - ${LIBRARY_ARTIFACT}
-        # - ${TASKS_ARTIFACT}
-        # - ${REST_API_ARTIFACT}
-        # - ${FRONTEND_ARTIFACT}
-        # - ${IMPORTER_ARTIFACT}
         - ${APP_ARTIFACT}
       skip_cleanup: true
       keep-history: true
