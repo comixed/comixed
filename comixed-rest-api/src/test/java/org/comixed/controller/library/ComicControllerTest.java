@@ -39,7 +39,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.omg.CORBA_2_3.portable.InputStream;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.InputStreamResource;
@@ -47,6 +46,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -436,7 +436,6 @@ public class ComicControllerTest {
         try {
             controller.restoreComic(TEST_COMIC_ID);
         }
-
         finally {
             Mockito.verify(comicService,
                            Mockito.times(1))
