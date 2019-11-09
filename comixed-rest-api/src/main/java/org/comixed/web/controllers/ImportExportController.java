@@ -88,7 +88,7 @@ public class ImportExportController implements InitializingBean
     /**
      * Returns the contents of the database as a string.
      * <p>
-     * The result are broken up into multiplate files:
+     * The result are broken up into multiple files:
      * <ol>
      * <li><strong>users.json</strong> The system user list.</li>
      * <li><strong>comics.json</strong> The comics, including their pages, in the library.</li>
