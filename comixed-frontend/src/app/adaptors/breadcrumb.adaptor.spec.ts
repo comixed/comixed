@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *t
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.package
- * org.comixed;
+ * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
 import { BreadcrumbAdaptor } from './breadcrumb.adaptor';
