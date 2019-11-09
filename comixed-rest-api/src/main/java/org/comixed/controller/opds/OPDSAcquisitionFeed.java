@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.web.opds;
+package org.comixed.controller.opds;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.comixed.model.library.Comic;
 import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
 
 /**
- * <code>OPDSNavigationFeed</code> provides an implementation of
- * {@link OPDSFeed}.
+ * <code>OPDSAcquisitionFeed</code> provides data for acquiring feeds.
  *
  * @author Giao Phan
  * @author Darryl L. Pierce
  */
-public class OPDSNavigationFeed implements
-                                OPDSFeed
+public class OPDSAcquisitionFeed implements
+                                 OPDSFeed
 {
     private String id;
     private String title;
@@ -42,23 +43,25 @@ public class OPDSNavigationFeed implements
     private List<OPDSEntry> entries;
     private List<OPDSLink> links;
 
-    public OPDSNavigationFeed()
+    public OPDSAcquisitionFeed(String selfUrl, String title, Iterable<Comic> comics)
     {
         this.id = "urn:uuid:" + UUID.randomUUID();
-        this.title = "ComiXed catalog";
+//        this.entries = StreamSupport.stream(comics.spliterator(), true).map(comic -> new OPDSEntry(comic))
+//                                    .collect(Collectors.toList());
+        this.entries = new ArrayList<>();
+        int count = 0;
+        for (Comic comic : comics)
+        {
+            if (!comic.isMissing())
+                this.entries.add(new OPDSEntry(comic));
+        }
+        this.title = title;
         this.updated = ZonedDateTime.now()
                 .withFixedOffsetZone();
-        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
-                        "/opds"),
+        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=acquisition", "self",
+                        selfUrl),
                 new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
-                        "/opds"));
-
-        List<String> noAuthor = Arrays.asList("None");
-        this.entries = Arrays.asList(new OPDSEntry("All comics", "All comics as a flat list", noAuthor,
-                Arrays.asList(new OPDSLink("application/atom+xml;profile=opds-catalog;kind=acquisition",
-                        "subsection",
-                        "/opds/all?mediaType=atom"))));
-
+                        "/api/opds?mediaType=atom"));
     }
 
     @Override

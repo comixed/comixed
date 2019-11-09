@@ -20,8 +20,8 @@ package org.comixed.web.authentication;
 
 import java.util.List;
 
-import org.comixed.web.opds.OPDSRequestInterceptor;
-import org.comixed.web.opds.OPDSFeedConverter;
+import org.comixed.controller.opds.OPDSRequestInterceptor;
+import org.comixed.controller.opds.OPDSFeedConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;

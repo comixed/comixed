@@ -1,4 +1,4 @@
-package org.comixed.web.opds;
+package org.comixed.controller.opds;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

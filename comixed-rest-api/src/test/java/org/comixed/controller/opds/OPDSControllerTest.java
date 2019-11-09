@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.web.controllers.opds;
+package org.comixed.controller.opds;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -31,8 +31,6 @@ import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.library.Comic;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.ComicRepository;
-import org.comixed.web.opds.OPDSController;
-import org.comixed.web.opds.OPDSFeed;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

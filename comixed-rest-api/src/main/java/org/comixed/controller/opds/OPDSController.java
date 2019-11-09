@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.web.opds;
+package org.comixed.controller.opds;
 
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
