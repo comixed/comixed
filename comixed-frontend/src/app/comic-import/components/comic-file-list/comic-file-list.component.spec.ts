@@ -42,11 +42,9 @@ import {
   SplitButtonModule,
   ToolbarModule
 } from 'primeng/primeng';
-import { Store, StoreModule } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AppState } from 'app/app.state';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { REDUCERS } from 'app/app.reducers';
 import { ComicFileListItemComponent } from 'app/comic-import/components/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryModule } from 'app/library/library.module';
@@ -54,20 +52,27 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UserService } from 'app/services/user.service';
 import { ComicService } from 'app/services/comic.service';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { LibraryDisplayAdaptor } from 'app/library';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
-  COMIC_FILE_3
+  COMIC_FILE_3,
+  COMIC_FILE_4
 } from 'app/comic-import/models/comic-file.fixtures';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
+import {
+  COMIC_IMPORT_FEATURE_KEY,
+  reducer
+} from 'app/comic-import/reducers/comic-import.reducer';
+import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
 
 describe('ComicFileListComponent', () => {
+  const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
+
   let component: ComicFileListComponent;
   let fixture: ComponentFixture<ComicFileListComponent>;
-  let store: Store<AppState>;
+  let comicImportAdaptor: ComicImportAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -78,8 +83,10 @@ describe('ComicFileListComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([ComicImportEffects]),
         DataViewModule,
         ButtonModule,
         DropdownModule,
@@ -115,10 +122,7 @@ describe('ComicFileListComponent', () => {
 
     fixture = TestBed.createComponent(ComicFileListComponent);
     component = fixture.componentInstance;
-    component.comicFiles = [];
-    component.selectedComicFiles = [];
-    component.busy = false;
-    store = TestBed.get(Store);
+    comicImportAdaptor = TestBed.get(ComicImportAdaptor);
 
     fixture.detectChanges();
   }));
@@ -156,6 +160,36 @@ describe('ComicFileListComponent', () => {
           By.css(`#comic-file-${comicFile.id}`)
         );
         expect(comicFileEntry).toBeTruthy();
+      });
+    });
+  });
+
+  describe('selecting a comic file', () => {
+    const SELECTED_COMIC_FILE = COMIC_FILE_3;
+
+    beforeEach(() => {
+      spyOn(comicImportAdaptor, 'selectComicFiles');
+      component.selectedComicFiles = [];
+      component.toggleComicFileSelection(SELECTED_COMIC_FILE);
+    });
+
+    it('invokes the adaptor', () => {
+      expect(comicImportAdaptor.selectComicFiles).toHaveBeenCalledWith([
+        SELECTED_COMIC_FILE
+      ]);
+    });
+
+    describe('unselecting a comic file', () => {
+      beforeEach(() => {
+        spyOn(comicImportAdaptor, 'deselectComicFiles');
+        component.selectedComicFiles = [SELECTED_COMIC_FILE];
+        component.toggleComicFileSelection(SELECTED_COMIC_FILE);
+      });
+
+      it('invokes the adaptor', () => {
+        expect(comicImportAdaptor.deselectComicFiles).toHaveBeenCalledWith([
+          SELECTED_COMIC_FILE
+        ]);
       });
     });
   });

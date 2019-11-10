@@ -7,7 +7,7 @@
                [placeholder]='"import-toolbar.text.directory-placeholder"|translate'
                [style.width]='"100%"'
                type='text'/>
-        <button (click)='find_comics()'
+        <button (click)='findComics()'
                 [disabled]='busy||!directory||!directory.length'
                 [label]='"import-toolbar.button.find"|translate'
                 icon='fa fa-fw fa-search'
@@ -20,26 +20,26 @@
     <div class='ui-toolbar-group-left'>
         <p-dropdown (onChange)='changeLayout.next($event.value)'
                     [(ngModel)]='layout'
-                    [options]='layout_options'
+                    [options]='layoutOptions'
                     styleClass='cx-layout-dropdown'></p-dropdown>
-        <p-dropdown (onChange)='set_sort_field($event.value)'
-                    [(ngModel)]='sort_field'
-                    [options]='sort_field_options'
+        <p-dropdown (onChange)='setSortField($event.value)'
+                    [(ngModel)]='sortField'
+                    [options]='sortFieldOptions'
                     styleClass='cx-layout-dropdown'></p-dropdown>
-        <p-dropdown (onChange)='set_rows($event.value)'
+        <p-dropdown (onChange)='setComicsShown($event.value)'
                     [(ngModel)]='rows'
-                    [options]='rows_options'
+                    [options]='rowOptions'
                     styleClass='cx-layout-dropdown'></p-dropdown>
-        <p-checkbox (onChange)='set_same_height($event)'
-                    [(ngModel)]='same_height'
+        <p-checkbox (onChange)='useSameHeight($event)'
+                    [(ngModel)]='sameHeight'
                     [label]='"library-contents.options.cover-size.same-height"|translate'
                     binary='true'></p-checkbox>
-        <p-slider (onChange)='set_cover_size($event.value)'
-                  (onSlideEnd)='save_cover_size($event.value)'
-                  [(ngModel)]='cover_size'
+        <p-slider (onChange)='setCoverSize($event.value)'
+                  (onSlideEnd)='saveCoverSize($event.value)'
+                  [(ngModel)]='coverSize'
                   [max]='400'
                   [min]='100'></p-slider>
-        {{"library-contents.label.cover-size"|translate: {cover_size: cover_size} }}
+        {{"library-contents.label.cover-size"|translate: {cover_size: coverSize} }}
     </div>
     <div class='ui-toolbar-group-right'>
         <button pButton
@@ -47,27 +47,25 @@
                 (click)='toggleBlockedPages()'
                 [icon]='deleteBlockedPages?"fa fa-fw fa-check":"fa fa-fw fa-question"'
                 [label]='"import-toolbar.button.delete-blocked-pages"|translate'></button>
-        <button (click)='select_all_comics()'
-                [disabled]='!comic_files.length||selected_comic_count === comic_files.length'
+        <button (click)='selectAllComicFiles()'
+                [disabled]='!comicFiles.length||selectedComicFiles.length === comicFiles.length'
                 icon='fa fa-fw fa-plus'
                 [label]='"import-toolbar.button.select-all"|translate'
                 class='ui-button-secondary'
                 id='select-all-comics'
                 pButton
                 type='button'></button>
-        <button (click)='deselect_all_comics()'
-                [disabled]='selected_comic_count === 0'
+        <button (click)='deselectAllComicFiles()'
+                [disabled]='selectedComicFiles.length === 0'
                 icon='fa fa-fw fa-minus'
                 [label]='"import-toolbar.button.deselect-all"|translate'
                 class='ui-button-danger'
                 id='deselect-all-comics'
                 pButton
                 type='button'></button>
-        <!-- button (click)='startImport()'
-                [disabled]='selected_comic_count === 0'
-                icon='fa fa-fw fa-start'
-                [label]='"import-toolbar.button.start-import"|translate'
-                pButton
-                type='button'></button -->
+        <p-splitButton [model]='importOptions'
+                       [disabled]='selectedComicFiles.length === 0'
+                       icon='fa fa-fw fa-start'
+                       [label]='"import-toolbar.button.start-import"|translate'></p-splitButton>
     </div>
 </p-toolbar>

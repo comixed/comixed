@@ -22,7 +22,15 @@
       "sort-field": {
         "filename": "Sort by filename",
         "size": "Sort by file size"
+      },
+      "import": {
+        "with-metadata": "With Metadata",
+        "without-metadata": "Without Metadata"
       }
+    },
+    "start-import": {
+      "header": "Import {count, plural, =1{One Comic File} other{# Comic Files}}?",
+      "message": "Import {count, plural, =1{one comic file} other{# comics files}} {withMetadata, select, true{with} other{without}} metadata?"
     }
   },
   "comic-file-list-item": {

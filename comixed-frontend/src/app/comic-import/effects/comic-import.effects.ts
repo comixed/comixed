@@ -78,7 +78,7 @@ export class ComicImportEffects {
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
-          'generate-message.error.general-service-failure'
+          'general-message.error.general-service-failure'
         )
       });
       return of(new ComicImportGetFilesFailed());
@@ -122,7 +122,7 @@ export class ComicImportEffects {
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
-          'generate-message.error.general-service-failure'
+          'general-message.error.general-service-failure'
         )
       });
       return of(new ComicImportStartFailed());

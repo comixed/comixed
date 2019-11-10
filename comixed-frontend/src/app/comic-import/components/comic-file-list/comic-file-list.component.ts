@@ -17,11 +17,7 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { ConfirmationService, MenuItem } from 'primeng/api';
 import { LibraryDisplayAdaptor } from 'app/library';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
@@ -51,24 +47,14 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   fetchingFilesSubscription: Subscription;
   fetchingFiles = false;
 
-  langChangeSubscription: Subscription;
-  contextMenu: MenuItem[];
   showSelections = false;
 
   constructor(
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
-    private comicImportAdaptor: ComicImportAdaptor,
-    private store: Store<AppState>,
-    private translateService: TranslateService,
-    private confirmationService: ConfirmationService
+    private comicImportAdaptor: ComicImportAdaptor
   ) {}
 
   ngOnInit() {
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => {
-        this.loadContextMenu();
-      }
-    );
     this.layoutSubscription = this.libraryDisplayAdaptor.layout$.subscribe(
       layout => (this.layout = layout)
     );
@@ -90,7 +76,6 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.langChangeSubscription.unsubscribe();
     this.layoutSubscription.unsubscribe();
     this.sortFieldSubscription.unsubscribe();
     this.rowsSubscription.unsubscribe();
@@ -101,7 +86,6 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
 
   @Input() set comicFiles(comicFiles: ComicFile[]) {
     this._comicFiles = comicFiles;
-    this.loadContextMenu();
   }
 
   get comicFiles(): ComicFile[] {
@@ -110,96 +94,10 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
 
   @Input() set selectedComicFiles(selectedComicFiles: ComicFile[]) {
     this._selectedComicFiles = selectedComicFiles;
-    this.loadContextMenu();
   }
 
   get selectedComicFiles(): ComicFile[] {
     return this._selectedComicFiles;
-  }
-
-  loadContextMenu(): void {
-    this.contextMenu = [
-      {
-        label: this.translateService.instant(
-          'comic-file-list.popup.select-all',
-          {
-            comic_count: this.comicFiles.length
-          }
-        ),
-        command: () =>
-          this.comicImportAdaptor.selectComicFiles(this.comicFiles),
-        disabled:
-          !this.comicFiles.length ||
-          (this.selectedComicFiles &&
-            this.comicFiles.length === this.selectedComicFiles.length)
-      },
-      {
-        label: this.translateService.instant(
-          'comic-file-list.popup.deselect-all',
-          {
-            comic_count: this.selectedComicFiles.length
-          }
-        ),
-        command: () =>
-          this.comicImportAdaptor.deselectComicFiles(this.selectedComicFiles),
-        visible: this.selectedComicFiles && this.selectedComicFiles.length > 0
-      },
-      {
-        label: this.translateService.instant(
-          'comic-file-list.popup.import.label',
-          {
-            comic_count: this.selectedComicFiles.length
-          }
-        ),
-        items: [
-          {
-            label: this.translateService.instant(
-              'comic-file-list.popup.import.with-metadata'
-            ),
-            command: () =>
-              this.startImporting('comic-file-list.import.message', false),
-            visible:
-              this.selectedComicFiles && this.selectedComicFiles.length > 0
-          },
-          {
-            label: this.translateService.instant(
-              'comic-file-list.popup.import.without-metadata'
-            ),
-            command: () =>
-              this.startImporting(
-                'comic-file-list.import.message-ignore-metadata',
-                true
-              ),
-            visible:
-              this.selectedComicFiles && this.selectedComicFiles.length > 0
-          }
-        ]
-      }
-    ];
-  }
-
-  startImporting(messageKey: string, ignoreMetadata: boolean): void {
-    this.confirmationService.confirm({
-      header: this.translateService.instant('comic-file-list.import.header'),
-      message: this.translateService.instant(messageKey, {
-        comic_count: this.selectedComicFiles.length
-      }),
-      accept: () => {
-        const filenames = [];
-        this.selectedComicFiles.forEach((comic_file: ComicFile) =>
-          filenames.push(comic_file.filename)
-        );
-        this.comicImportAdaptor.startImport(
-          this.selectedComicFiles,
-          ignoreMetadata,
-          false
-        );
-      }
-    });
-  }
-
-  changeLayout(layout: string): void {
-    this.libraryDisplayAdaptor.setLayout(layout);
   }
 
   toggleComicFileSelection(comicFile: ComicFile): void {

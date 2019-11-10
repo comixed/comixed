@@ -118,8 +118,8 @@ export class ComicImportAdaptor {
     this.store.dispatch(
       new ComicImportStart({
         comicFiles: comicFiles,
-        deleteBlockedPages: deleteBlockedPages,
-        ignoreMetadata: ignoreMetadata
+        ignoreMetadata: ignoreMetadata,
+        deleteBlockedPages: deleteBlockedPages
       })
     );
   }

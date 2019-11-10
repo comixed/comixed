@@ -3,10 +3,7 @@
 <p-panel #comicFileListContainer
          [showHeader]='false'>
     <div class='ui-g'>
-        <p-contextMenu [model]='contextMenu'
-                       [target]='comicFileListContent'></p-contextMenu>
-        <div #comicFileListContent
-             class='ui-g-12'>
+        <div class='ui-g-12'>
             <p-dataView #comicFileList
                         [alwaysShowPaginator]='true'
                         [layout]='layout'
@@ -23,9 +20,9 @@
                                                      (filterText)='comicFileList.filter($event)'
                                                      (showSelections)='showSelections = true'
                                                      [busy]='busy'
-                                                     [comic_files]='comicFiles'
-                                                     [directory]='directory'
-                                                     [selected_comic_count]='(selectedComicFiles||[]).length'></app-comic-file-list-toolbar>
+                                                     [comicFiles]="comicFiles"
+                                                     [selectedComicFiles]='selectedComicFiles'
+                                                     [directory]='directory'></app-comic-file-list-toolbar>
                     </div>
                 </p-header>
                 <ng-template let-file
