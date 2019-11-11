@@ -169,7 +169,7 @@ export class MainMenuComponent implements OnInit {
               'main-menu.item.admin.duplicate-pages'
             ),
             icon: 'fas fa-smog',
-            routerLink: ['/pages/duplicates'],
+            routerLink: ['/duplicates'],
             visible: this.authenticationAdaptor.isAdmin
           },
           {

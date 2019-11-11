@@ -22,7 +22,7 @@ import {
 } from '../actions/user-admin.actions';
 import { User } from 'app/user';
 
-export const userAdminFeatureKey = 'userAdmin';
+export const USER_ADMIN_FEATURE_KEY = 'userAdmin';
 
 export interface UserAdminState {
   fetchingAll: boolean;

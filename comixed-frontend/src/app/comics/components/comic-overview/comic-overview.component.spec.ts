@@ -21,9 +21,17 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { AppState } from 'app/library';
 import { InplaceModule } from 'primeng/inplace';
 import { DropdownModule } from 'primeng/dropdown';
+import { ComicOverviewComponent } from './comic-overview.component';
+import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
+import { ComicEffects } from 'app/comics/effects/comic.effects';
+import { TooltipModule } from 'primeng/primeng';
 import {
   COMIC_1,
   COMIC_5,
@@ -36,15 +44,7 @@ import {
   SCAN_TYPE_3,
   SCAN_TYPE_4,
   SCAN_TYPE_5
-} from 'app/library';
-import { ComicOverviewComponent } from './comic-overview.component';
-import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
-import { ComicEffects } from 'app/comics/effects/comic.effects';
-import { TooltipModule } from 'primeng/primeng';
+} from 'app/comics/comics.fixtures';
 
 describe('ComicOverviewComponent', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_2, SCAN_TYPE_3, SCAN_TYPE_4];

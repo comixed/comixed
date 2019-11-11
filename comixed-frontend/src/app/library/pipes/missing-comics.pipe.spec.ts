@@ -17,7 +17,7 @@
  */
 
 import { MissingComicsPipe } from './missing-comics.pipe';
-import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from 'app/library';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from 'app/comics/comics.fixtures';
 
 describe('MissingComicsPipe', () => {
   const pipe = new MissingComicsPipe();

@@ -18,10 +18,7 @@
 
 package org.comixed.controller.library;
 
-import org.comixed.model.library.BlockedPageHash;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Page;
-import org.comixed.model.library.PageType;
+import org.comixed.model.library.*;
 import org.comixed.service.library.PageException;
 import org.comixed.service.library.PageService;
 import org.comixed.utils.FileTypeIdentifier;
@@ -48,7 +45,7 @@ public class PageControllerTest {
     private static final String[] BLOCKED_HASH_LIST = {"12345",
                                                        "23456",
                                                        "34567"};
-    private static final List<Page> TEST_DUPLICATE_PAGES = new ArrayList<Page>();
+    private static final List<DuplicatePage> TEST_DUPLICATE_PAGES = new ArrayList<>();
     private static final int TEST_PAGE_INDEX = 7;
     private static final long TEST_COMIC_ID = 1002L;
     private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
@@ -152,7 +149,7 @@ public class PageControllerTest {
         Mockito.when(pageService.getDuplicatePages())
                .thenReturn(TEST_DUPLICATE_PAGES);
 
-        List<Page> result = pageController.getDuplicatePages();
+        List<DuplicatePage> result = pageController.getDuplicatePages();
 
         assertNotNull(result);
         assertSame(TEST_DUPLICATE_PAGES,

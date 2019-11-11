@@ -16,19 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { reducer } from 'app/library/reducers/selection.reducer';
 import {
-  initial_state,
+  initialState,
+  reducer,
   SelectionState
-} from 'app/library/models/selection-state';
-import { COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5 } from 'app/library';
+} from 'app/library/reducers/selection.reducer';
 import * as SelectionActions from 'app/library/actions/selection.actions';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_4,
+  COMIC_5
+} from 'app/comics/comics.fixtures';
 
 describe('Selection Reducer', () => {
   let state: SelectionState;
 
   beforeEach(() => {
-    state = reducer(initial_state, {} as any);
+    state = reducer(initialState, {} as any);
   });
 
   describe('the initial state', () => {

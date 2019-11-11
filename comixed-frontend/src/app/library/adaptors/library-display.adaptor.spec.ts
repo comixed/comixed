@@ -20,31 +20,22 @@ import {
   COVER_SIZE_QUERY_PARAM,
   LAYOUT_QUERY_PARAM,
   LIBRARY_DISPLAY_COVER_SIZE,
-  LIBRARY_DISPLAY_COVER_SIZE_DEFAULT,
-  LIBRARY_DISPLAY_LAYOUT,
-  LIBRARY_DISPLAY_LAYOUT_DEFAULT,
-  LIBRARY_DISPLAY_ROWS,
-  LIBRARY_DISPLAY_ROWS_DEFAULT,
   LIBRARY_DISPLAY_SAME_HEIGHT,
   LIBRARY_DISPLAY_SORT_FIELD,
-  LIBRARY_DISPLAY_SORT_FIELD_DEFAULT,
   LibraryDisplayAdaptor,
   ROWS_QUERY_PARAM,
   SAME_HEIGHT_QUERY_PARAM,
   SORT_QUERY_PARAM
 } from 'app/library/adaptors/library-display.adaptor';
 import { TestBed } from '@angular/core/testing';
-import { AuthenticationAdaptor } from 'app/user';
+import { AuthenticationAdaptor, User } from 'app/user';
 import { StoreModule } from '@ngrx/store';
-import { REDUCERS } from 'app/app.reducers';
 import { USER_READER } from 'app/user/models/user.fixtures';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { generate_random_string } from '../../../test/testing-utils';
-import { BehaviorSubject, of } from 'rxjs';
-import { User } from 'app/user';
+import { BehaviorSubject } from 'rxjs';
 import { EffectsModule } from '@ngrx/effects';
-import objectContaining = jasmine.objectContaining;
 
 describe('LibraryDisplayAdaptor', () => {
   const USER = { ...USER_READER };

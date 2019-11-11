@@ -20,10 +20,10 @@ import { Params } from '@angular/router';
 import * as fromRouter from '@ngrx/router-store';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import * as fromComics from './reducers/comic.reducer';
-import * as fromScraping from './reducers/scraping.reducer';
 import { ComicState } from './reducers/comic.reducer';
-import { environment } from '../../environments/environment';
+import * as fromScraping from './reducers/scraping.reducer';
 import { ScrapingState } from './reducers/scraping.reducer';
+import { environment } from '../../environments/environment';
 
 export { Comic } from './models/comic';
 export { ComicFormat } from './models/comic-format';
@@ -31,7 +31,6 @@ export { ScanType } from './models/scan-type';
 export { ComicCredit } from './models/comic-credit';
 export { Page } from './models/page';
 export { PageType } from './models/page-type';
-export { DuplicatePage } from './models/duplicate-page';
 export { Volume } from './models/volume';
 
 interface RouterStateUrl {

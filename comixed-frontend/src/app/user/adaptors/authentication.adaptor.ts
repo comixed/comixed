@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { AppState } from 'app/library';
 import * as AuthActions from 'app/user/actions/authentication.actions';
 import { AuthenticationState } from 'app/user/models/authentication-state';
 import { BehaviorSubject, Observable } from 'rxjs';

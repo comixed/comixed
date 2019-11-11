@@ -26,17 +26,12 @@ import { CardModule } from 'primeng/card';
 import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { COMIC_1 } from 'app/library';
 import { ComicGridItemComponent } from './comic-grid-item.component';
-import { StoreModule } from '@ngrx/store';
-import { REDUCERS } from 'app/app.reducers';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule, TooltipModule } from 'primeng/primeng';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 
 describe('ComicGridItemComponent', () => {
   let component: ComicGridItemComponent;
@@ -48,8 +43,6 @@ describe('ComicGridItemComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
         OverlayPanelModule,
         PanelModule,
@@ -63,7 +56,7 @@ describe('ComicGridItemComponent', () => {
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],
-      providers: [ComicService, UserService, MessageService]
+      providers: [UserService, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicGridItemComponent);

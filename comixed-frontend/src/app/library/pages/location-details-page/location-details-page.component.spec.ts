@@ -20,7 +20,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import { DataViewModule } from 'primeng/dataview';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -35,7 +34,6 @@ import { LibraryFilterComponent } from 'app/library/components/library-filter/li
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
-
 import { LocationDetailsPageComponent } from './location-details-page.component';
 import {
   ConfirmationService,
@@ -49,6 +47,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationAdaptor } from 'app/user';
 import {
+  AppState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   ReadingListAdaptor,
@@ -57,7 +56,6 @@ import {
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { UserService } from 'app/services/user.service';
-import { ComicService } from 'app/services/comic.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
@@ -115,8 +113,7 @@ describe('LocationDetailsPageComponent', () => {
         BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
-        UserService,
-        ComicService
+        UserService
       ],
       declarations: [
         LocationDetailsPageComponent,

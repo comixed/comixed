@@ -1,0 +1,6 @@
+<div *ngIf='item'>
+    <app-comic-cover [coverUrl]='item.pages[0]|comicPageUrl'
+                     [coverSize]='pageSize'
+                     [useSameHeight]='sameHeight'
+                     [title]='"duplicates-page.text.page-summary"|translate:{comicCount:item.pages.length}'></app-comic-cover>
+</div>

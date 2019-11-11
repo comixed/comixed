@@ -21,7 +21,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardModule } from 'primeng/card';
 import { ComicGroupingCardComponent } from './comic-grouping-card.component';
-import { DEFAULT_COMIC_GROUPING } from 'app/app.constants';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+
+export const DEFAULT_COMIC_GROUPING: ComicCollectionEntry = {
+  name: 'grouping name',
+  count: 0,
+  comics: [],
+  last_comic_added: 0
+};
 
 describe('ComicGroupingCardComponent', () => {
   let component: ComicGroupingCardComponent;

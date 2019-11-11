@@ -19,14 +19,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { USER_READER } from 'app/user';
 import { UserDetailsComponent } from './user-details.component';
-import { REDUCERS } from 'app/app.reducers';
-import { StoreModule } from '@ngrx/store';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from 'primeng/api';
-import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 
 describe('UserDetailsComponent', () => {
@@ -38,13 +33,10 @@ describe('UserDetailsComponent', () => {
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
-        StoreModule.forRoot(REDUCERS),
-        TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS)
+        TranslateModule.forRoot()
       ],
       declarations: [UserDetailsComponent],
-      providers: [MessageService, ComicService, UserService]
+      providers: [MessageService, UserService]
     }).compileComponents();
   }));
 

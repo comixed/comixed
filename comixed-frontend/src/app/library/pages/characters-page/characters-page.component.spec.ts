@@ -24,20 +24,19 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
-import { StoreModule } from '@ngrx/store';
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { CharactersPageComponent } from './characters-page.component';
-import { REDUCERS } from 'app/app.reducers';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
 import { MessageService } from 'primeng/api';
-import { ComicService } from 'app/services/comic.service';
-import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
+import { LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicsModule } from 'app/comics/comics.module';
 import { CheckboxModule } from 'primeng/checkbox';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('CharactersPageComponent', () => {
   const CHARACTER = 'Superhero Man';
@@ -54,11 +53,11 @@ describe('CharactersPageComponent', () => {
       imports: [
         HttpClientTestingModule,
         ComicsModule,
-        EffectsModule.forRoot(EFFECTS),
-        TranslateModule.forRoot(),
         FormsModule,
-        StoreModule.forRoot(REDUCERS),
         RouterTestingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
         ButtonModule,
         DropdownModule,
         TableModule,
@@ -69,7 +68,6 @@ describe('CharactersPageComponent', () => {
       providers: [
         MessageService,
         UserService,
-        ComicService,
         BreadcrumbAdaptor,
         LibraryAdaptor
       ]

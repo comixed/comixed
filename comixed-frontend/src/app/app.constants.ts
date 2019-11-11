@@ -16,21 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicCollectionEntry } from 'app/library';
-
 export const COMIXED_API_ROOT = '/api';
 
-export const GET_SCAN_TYPES_URL = `${COMIXED_API_ROOT}/comics/scan_types`;
-export const GET_FORMATS_URL = `${COMIXED_API_ROOT}/comics/formats`;
 export const GET_UPDATES_URL = `${COMIXED_API_ROOT}/comics/since/\${timestamp}`;
 export const START_RESCAN_URL = `${COMIXED_API_ROOT}/comics/rescan`;
-export const UPDATE_COMIC_URL = `${COMIXED_API_ROOT}/comics/\${id}`;
-export const CLEAR_METADATA_URL = `${COMIXED_API_ROOT}/comics/\${id}/metadata`;
-export const SET_BLOCKED_PAGE_HASH_URL = `${COMIXED_API_ROOT}/comics/block/\${hash}`;
 export const DELETE_MULTIPLE_COMICS_URL = `${COMIXED_API_ROOT}/comics/multiple/delete`;
-
-export const GET_COMIC_FILES_URL = `${COMIXED_API_ROOT}/files/contents?directory=\${directory}`;
-export const IMPORT_COMIC_FILES_URL = `${COMIXED_API_ROOT}/files/import`;
 
 export const GET_READING_LISTS_URL = `${COMIXED_API_ROOT}/lists`;
 export const GET_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
@@ -38,10 +28,3 @@ export const CREATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists`;
 export const SAVE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
 
 export const GET_BUILD_DETAILS_URL = `${COMIXED_API_ROOT}/core/build-details`;
-
-export const DEFAULT_COMIC_GROUPING: ComicCollectionEntry = {
-  name: 'grouping name',
-  count: 0,
-  comics: [],
-  last_comic_added: 0
-};

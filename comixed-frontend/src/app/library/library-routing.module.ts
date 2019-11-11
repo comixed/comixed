@@ -34,6 +34,9 @@ import { StoryArcsPageComponent } from 'app/library/pages/story-arcs-page/story-
 import { StoryArcDetailsPageComponent } from 'app/library/pages/story-arc-details-page/story-arc-details-page.component';
 import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
 import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
+import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
+import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
+import { DuplicatesPageComponent } from 'app/library/pages/duplicates-page/duplicates-page.component';
 
 const routes: Routes = [
   {
@@ -109,6 +112,26 @@ const routes: Routes = [
   {
     path: 'scraping',
     component: MultiComicScrapingPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'lists/new',
+    component: ReadingListPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'lists/:id',
+    component: ReadingListPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'lists',
+    component: ReadingListsPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'duplicates',
+    component: DuplicatesPageComponent,
     canActivate: [AdminGuard]
   }
 ];

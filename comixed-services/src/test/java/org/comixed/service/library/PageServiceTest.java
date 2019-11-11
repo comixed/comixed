@@ -18,10 +18,7 @@
 
 package org.comixed.service.library;
 
-import org.comixed.model.library.BlockedPageHash;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Page;
-import org.comixed.model.library.PageType;
+import org.comixed.model.library.*;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.PageRepository;
@@ -298,15 +295,13 @@ public class PageServiceTest {
 
     @Test
     public void testGetDuplicatePages() {
-
         Mockito.when(pageRepository.getDuplicatePages())
                .thenReturn(TEST_DUPLICATE_PAGES);
 
-        List<Page> result = pageService.getDuplicatePages();
+        List<DuplicatePage> result = pageService.getDuplicatePages();
 
         assertNotNull(result);
-        assertSame(TEST_DUPLICATE_PAGES,
-                   result);
+        //        assertFalse(result.isEmpty());
 
         Mockito.verify(pageRepository,
                        Mockito.times(1))

@@ -26,12 +26,10 @@ import { CommonModule } from '@angular/common';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthenticationAdaptor } from 'app/user';
 import { StoreModule } from '@ngrx/store';
-import * as fromAuthentication from './reducers/authentication.reducer';
+import * as fromAuth from './reducers/authentication.reducer';
 import * as fromUserAdmin from './reducers/user-admin.reducer';
 import { AuthenticationEffects } from './effects/authentication.effects';
 import { TokenService } from 'app/user/services/token.service';
-import { environment } from '../../environments/environment';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AdminGuard } from 'app/user/guards/admin.guard';
 import { ReaderGuard } from 'app/user/guards/reader.guard';
 import { UserRoutingModule } from 'app/user/user-routing.module';
@@ -63,19 +61,15 @@ import { UserPreferencePipe } from 'app/user/pipes/user-preference.pipe';
     ReactiveFormsModule,
     UserRoutingModule,
     TranslateModule.forRoot(),
-    EffectsModule.forFeature([AuthenticationEffects, UserAdminEffects]),
-    StoreDevtoolsModule.instrument({
-      name: 'NgRx Testing Store DevTools',
-      logOnly: environment.production
-    }),
     StoreModule.forFeature(
-      fromAuthentication.authenticationFeatureKey,
-      fromAuthentication.reducer
+      fromAuth.AUTHENTICATION_FEATURE_KEY,
+      fromAuth.reducer
     ),
     StoreModule.forFeature(
-      fromUserAdmin.userAdminFeatureKey,
+      fromUserAdmin.USER_ADMIN_FEATURE_KEY,
       fromUserAdmin.reducer
     ),
+    EffectsModule.forFeature([AuthenticationEffects, UserAdminEffects]),
     TabViewModule,
     TableModule,
     PanelModule,

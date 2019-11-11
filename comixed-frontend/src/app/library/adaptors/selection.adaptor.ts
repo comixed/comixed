@@ -18,9 +18,11 @@
 
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AppState, Comic } from 'app/library';
 import { Store } from '@ngrx/store';
-import { SELECTION_FEATURE_KEY } from 'app/library/reducers/selection.reducer';
+import {
+  SELECTION_FEATURE_KEY,
+  SelectionState
+} from 'app/library/reducers/selection.reducer';
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import {
@@ -30,7 +32,8 @@ import {
   SelectRemoveAllComics,
   SelectRemoveComic
 } from 'app/library/actions/selection.actions';
-import { SelectionState } from 'app/library/models/selection-state';
+import { Comic } from 'app/comics';
+import { AppState } from 'app/library';
 
 @Injectable()
 export class SelectionAdaptor {

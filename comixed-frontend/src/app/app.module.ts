@@ -57,29 +57,22 @@ import {
 } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { XhrInterceptor } from 'app/xhr.interceptor';
-import { ComicService } from 'app/services/comic.service';
-import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
-import { LoginComponent } from 'app/ui/components/login/login.component';
+import { MainPageComponent } from 'app/pages/main-page/main-page.component';
+import { LoginComponent } from 'app/components/login/login.component';
 import { UserService } from 'app/services/user.service';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import {
   TranslateCompiler,
   TranslateLoader,
   TranslateModule
 } from '@ngx-translate/core';
 import { FileSaverModule } from 'ngx-filesaver';
-import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
-import { ReadingListPageComponent } from './ui/pages/reading-lists/reading-list-page/reading-list-page.component';
-import { ReadingListsPageComponent } from './ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
-import { REDUCERS } from 'app/app.reducers';
+import { LibraryAdminPageComponent } from 'app/pages/admin/library-admin-page/library-admin-page.component';
 import {
   BreadcrumbModule,
   ContextMenuModule,
   TieredMenuModule
 } from 'primeng/primeng';
 import { UserModule } from 'app/user/user.module';
-import { EFFECTS } from 'app/app.effects';
 import { LibraryModule } from 'app/library/library.module';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
@@ -88,6 +81,8 @@ import { ComicsModule } from 'app/comics/comics.module';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicImportModule } from 'app/comic-import/comic-import.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -95,8 +90,6 @@ import { ComicImportModule } from 'app/comic-import/comic-import.module';
     MainPageComponent,
     LoginComponent,
     LibraryAdminPageComponent,
-    ReadingListPageComponent,
-    ReadingListsPageComponent,
     MainMenuComponent
   ],
   imports: [
@@ -109,6 +102,8 @@ import { ComicImportModule } from 'app/comic-import/comic-import.module';
     BrowserAnimationsModule,
     AppRouting,
     HttpClientModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     MenubarModule,
     SidebarModule,
     InputTextModule,
@@ -141,9 +136,6 @@ import { ComicImportModule } from 'app/comic-import/comic-import.module';
     FormsModule,
     ReactiveFormsModule,
     TieredMenuModule,
-
-    StoreModule.forRoot(REDUCERS),
-    EffectsModule.forRoot(EFFECTS),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -161,7 +153,6 @@ import { ComicImportModule } from 'app/comic-import/comic-import.module';
   providers: [
     BreadcrumbAdaptor,
     UserService,
-    ComicService,
     MessageService,
     [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
     ConfirmationService

@@ -17,8 +17,8 @@
  */
 
 import { ComicDownloadLinkPipe } from './comic-download-link.pipe';
-import { COMIC_1 } from 'app/library';
-import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
+import { API_ROOT_URL } from 'app/app.functions';
 
 describe('ComicDownloadLinkPipe', () => {
   const pipe = new ComicDownloadLinkPipe();
@@ -30,7 +30,7 @@ describe('ComicDownloadLinkPipe', () => {
 
   it('returns a URL for the comic provided', () => {
     expect(pipe.transform(comic)).toEqual(
-      `${COMIC_SERVICE_API_URL}/comics/${comic.id}/download`
+      `${API_ROOT_URL}/comics/${comic.id}/download`
     );
   });
 

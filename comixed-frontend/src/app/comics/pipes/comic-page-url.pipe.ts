@@ -17,14 +17,15 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
 import { Page } from 'app/comics';
+import { GET_PAGE_CONTENT_URL } from 'app/comics/comics.constants';
+import { interpolate } from 'app/app.functions';
 
 @Pipe({
   name: 'comicPageUrl'
 })
 export class ComicPageUrlPipe implements PipeTransform {
   transform(page: Page): string {
-    return `${COMIC_SERVICE_API_URL}/pages/${page.id}/content`;
+    return interpolate(GET_PAGE_CONTENT_URL, { id: page.id });
   }
 }

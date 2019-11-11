@@ -22,9 +22,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import {
-  COMIC_1,
+  AppState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   ReadingListAdaptor,
@@ -48,8 +47,6 @@ import { ComicListItemComponent } from 'app/library/components/comic-list-item/c
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { UserService } from 'app/services/user.service';
 import { UserServiceMock } from 'app/services/user.service.mock';
-import { ComicService } from 'app/services/comic.service';
-import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { LibraryPageComponent } from './library-page.component';
 import {
   ContextMenuModule,
@@ -70,6 +67,7 @@ import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
 import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
 import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -128,10 +126,8 @@ describe('LibraryPageComponent', () => {
         BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
-        ComicService,
         UserService,
-        { provide: UserService, useClass: UserServiceMock },
-        { provide: ComicService, useClass: ComicServiceMock }
+        { provide: UserService, useClass: UserServiceMock }
       ]
     }).compileComponents();
 

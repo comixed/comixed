@@ -24,7 +24,7 @@ import {
   Output
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { AppState } from 'app/library';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { LibraryAdaptor } from 'app/library';

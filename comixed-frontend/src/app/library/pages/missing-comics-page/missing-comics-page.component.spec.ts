@@ -58,7 +58,6 @@ import {
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { UserService } from 'app/services/user.service';
-import { ComicService } from 'app/services/comic.service';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
 import {
@@ -124,8 +123,7 @@ describe('MissingComicsPageComponent', () => {
         BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
-        UserService,
-        ComicService
+        UserService
       ]
     }).compileComponents();
 

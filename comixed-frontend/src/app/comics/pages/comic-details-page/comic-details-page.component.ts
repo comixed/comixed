@@ -19,16 +19,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { Observable, Subscription } from 'rxjs';
+import { AppState } from 'app/library';
+import { Subscription } from 'rxjs';
 import { AuthenticationAdaptor } from 'app/user';
-import { Comic } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { MenuItem, MessageService } from 'primeng/api';
-import { filter } from 'rxjs/operators';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { Comic } from 'app/comics';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';

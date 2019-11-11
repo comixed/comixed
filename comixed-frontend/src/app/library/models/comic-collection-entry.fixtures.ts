@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
   COMIC_4,
-  COMIC_5,
-  ComicCollectionEntry
-} from 'app/library';
+  COMIC_5
+} from 'app/comics/comics.fixtures';
 
 export const COMIC_COLLECTION_ENTRY_1: ComicCollectionEntry = {
   comics: [COMIC_1, COMIC_3, COMIC_5],

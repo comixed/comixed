@@ -25,7 +25,6 @@ import {
   Output
 } from '@angular/core';
 import {
-  Comic,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   SelectionAdaptor
@@ -34,6 +33,7 @@ import { Subscription } from 'rxjs';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Comic } from 'app/comics';
 
 @Component({
   selector: 'app-comic-list-toolbar',
@@ -43,6 +43,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ComicListToolbarComponent implements OnInit, OnDestroy {
   @Input() comics: Comic[] = [];
   @Input() dataView: any;
+
   @Output() toggleFilters = new EventEmitter<boolean>();
 
   selectionSubscription: Subscription;

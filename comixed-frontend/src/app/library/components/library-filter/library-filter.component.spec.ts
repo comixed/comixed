@@ -34,16 +34,7 @@ import { LibraryEffects } from 'app/library/effects/library.effects';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MessageService, SelectItem } from 'primeng/api';
-import {
-  AppState,
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4,
-  COMIC_5,
-  ComicCollectionEntry,
-  LibraryAdaptor
-} from 'app/library';
+import { AppState, LibraryAdaptor } from 'app/library';
 import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 import { ComicsModule } from 'app/comics/comics.module';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -51,6 +42,13 @@ import { UserModule } from 'app/user/user.module';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryUpdatesReceived } from 'app/library/actions/library.actions';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_4,
+  COMIC_5
+} from 'app/comics/comics.fixtures';
 
 describe('LibraryFilterComponent', () => {
   const PUBLISHER = 'DC';

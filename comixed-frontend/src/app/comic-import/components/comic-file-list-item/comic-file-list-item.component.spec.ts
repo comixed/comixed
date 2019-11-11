@@ -31,13 +31,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
-import { StoreModule } from '@ngrx/store';
-import { REDUCERS } from 'app/app.reducers';
-import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('ComicFileListItemComponent', () => {
   let component: ComicFileListItemComponent;
@@ -51,14 +48,14 @@ describe('ComicFileListItemComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS),
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
         OverlayPanelModule,
         PanelModule,
         CardModule
       ],
       declarations: [ComicFileListItemComponent, ComicFileCoverUrlPipe],
-      providers: [ComicService, UserService, MessageService]
+      providers: [UserService, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListItemComponent);

@@ -20,15 +20,20 @@ import {
   SelectionActions,
   SelectionActionTypes
 } from '../actions/selection.actions';
-import {
-  initial_state,
-  SelectionState
-} from 'app/library/models/selection-state';
+import { Comic } from 'app/comics';
 
 export const SELECTION_FEATURE_KEY = 'selection_state';
 
+export interface SelectionState {
+  comics: Comic[];
+}
+
+export const initialState: SelectionState = {
+  comics: []
+};
+
 export function reducer(
-  state = initial_state,
+  state = initialState,
   action: SelectionActions
 ): SelectionState {
   switch (action.type) {

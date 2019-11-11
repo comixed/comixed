@@ -18,18 +18,15 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import * as ScrapingActions from 'app/actions/multiple-comics-scraping.actions';
-import { Observable, Subscription } from 'rxjs';
-import { Comic, LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import { Subscription } from 'rxjs';
+import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { UserService } from 'app/services/user.service';
-import { ComicService } from 'app/services/comic.service';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { Comic } from 'app/comics';
 
 @Component({
   selector: 'app-library-page',
@@ -56,9 +53,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private libraryAdaptor: LibraryAdaptor,
     private selectionAdaptor: SelectionAdaptor,
     private userService: UserService,
-    private comicService: ComicService,
     private confirmationService: ConfirmationService,
-    private store: Store<AppState>,
     private translateService: TranslateService,
     private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {}
@@ -83,11 +78,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
     this.rescanCountSubscription = this.libraryAdaptor.rescanCount$.subscribe(
       rescan_count => (this.rescanCount = rescan_count)
-    );
-    this.store.dispatch(
-      new ScrapingActions.MultipleComicsScrapingSetup({
-        api_key: this.userService.get_user_preference('api_key', '')
-      })
     );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()

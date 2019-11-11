@@ -17,8 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { StoreModule } from '@ngrx/store';
 import { ComicFileListToolbarComponent } from './comic-file-list-toolbar.component';
 import {
   ButtonModule,
@@ -40,7 +39,6 @@ import { LibraryDisplayAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import {
@@ -63,7 +61,6 @@ describe('ComicFileListToolbarComponent', () => {
 
   let component: ComicFileListToolbarComponent;
   let fixture: ComponentFixture<ComicFileListToolbarComponent>;
-  let store: Store<AppState>;
   let comicImportAdaptor: ComicImportAdaptor;
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
@@ -94,7 +91,6 @@ describe('ComicFileListToolbarComponent', () => {
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
         ComicImportAdaptor,
-        ComicService,
         UserService,
         MessageService,
         ConfirmationService
@@ -103,7 +99,6 @@ describe('ComicFileListToolbarComponent', () => {
 
     fixture = TestBed.createComponent(ComicFileListToolbarComponent);
     component = fixture.componentInstance;
-    store = TestBed.get(Store);
     comicImportAdaptor = TestBed.get(ComicImportAdaptor);
     translateService = TestBed.get(TranslateService);
     confirmationService = TestBed.get(ConfirmationService);

@@ -18,38 +18,14 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminGuard, ReaderGuard } from 'app/user';
-import { MainPageComponent } from 'app/ui/pages/main-page/main-page.component';
-import { ImportPageComponent } from 'app/comic-import/pages/import-page/import-page.component';
-import { DuplicatesPageComponent } from 'app/library/pages/duplicates-page/duplicates-page.component';
-import { LibraryAdminPageComponent } from 'app/ui/pages/admin/library-admin-page/library-admin-page.component';
-import { ReadingListPageComponent } from 'app/ui/pages/reading-lists/reading-list-page/reading-list-page.component';
-import { ReadingListsPageComponent } from 'app/ui/pages/reading-lists/reading-lists-page/reading-lists-page.component';
+import { AdminGuard } from 'app/user';
+import { MainPageComponent } from 'app/pages/main-page/main-page.component';
+import { LibraryAdminPageComponent } from 'app/pages/admin/library-admin-page/library-admin-page.component';
 
 export const routes: Routes = [
   {
     path: 'home',
     component: MainPageComponent
-  },
-  {
-    path: 'lists/new',
-    component: ReadingListPageComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'lists/:id',
-    component: ReadingListPageComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'lists',
-    component: ReadingListsPageComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'pages/duplicates',
-    component: DuplicatesPageComponent,
-    canActivate: [AdminGuard]
   },
   {
     path: 'admin/library',

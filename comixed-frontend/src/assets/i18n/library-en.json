@@ -225,5 +225,26 @@
     "button": {
       "reset-filters": "Reset Filters"
     }
+  },
+  "duplicate-pages-effects": {
+    "get-all": {
+      "error": {
+        "detail": "Failed to get all duplicate pages."
+      }
+    }
+  },
+  "duplicates-page": {
+    "title": "{pageCount} Duplicate {pageCount, plural, =1{Page} other{Pages}}",
+    "text": {
+      "page-summary": "This page shows up in {comicCount, plural, =1{one comic} other{# comics}}."
+    },
+    "options": {
+      "page-count": {
+        "10-pages": "10 Pages",
+        "25-pages": "25 Pages",
+        "50-pages": "50 Pages",
+        "100-pages": "100 Pages"
+      }
+    }
   }
 }

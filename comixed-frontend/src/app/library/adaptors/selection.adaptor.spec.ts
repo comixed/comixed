@@ -18,9 +18,10 @@
 
 import { SelectionAdaptor } from './selection.adaptor';
 import { TestBed } from '@angular/core/testing';
-import { AppState, COMIC_1, COMIC_2, COMIC_3, COMIC_5 } from 'app/library';
+import { AppState } from 'app/library';
 import { Store, StoreModule } from '@ngrx/store';
 import { reducer } from 'app/library/reducers/selection.reducer';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 
 describe('SelectionAdaptor', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];

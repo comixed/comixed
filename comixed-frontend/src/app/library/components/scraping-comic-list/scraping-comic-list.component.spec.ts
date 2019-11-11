@@ -21,8 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataViewModule } from 'primeng/dataview';
 import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ScrapingComicListComponent } from './scraping-comic-list.component';
-import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from 'app/library';
-import { Comic } from 'app/library';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from 'app/comics/comics.fixtures';
 
 describe('ScrapingComicListComponent', () => {
   let component: ScrapingComicListComponent;

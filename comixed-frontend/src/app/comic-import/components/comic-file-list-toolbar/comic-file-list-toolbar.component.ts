@@ -24,8 +24,6 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import { ConfirmationService, MenuItem, SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor } from 'app/user';
@@ -67,7 +65,6 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
     private authenticationAdaptor: AuthenticationAdaptor,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private comicImportAdaptor: ComicImportAdaptor,
-    private store: Store<AppState>,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService
   ) {}

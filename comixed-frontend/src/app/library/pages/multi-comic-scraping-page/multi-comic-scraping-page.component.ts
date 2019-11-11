@@ -17,8 +17,6 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Comic } from 'app/library';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-multi-comic-scraping-page',

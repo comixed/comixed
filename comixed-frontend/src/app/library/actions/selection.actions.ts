@@ -17,7 +17,7 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Comic } from 'app/library';
+import { Comic } from 'app/comics';
 
 export enum SelectionActionTypes {
   AddComic = '[SELECT] Add a comic',

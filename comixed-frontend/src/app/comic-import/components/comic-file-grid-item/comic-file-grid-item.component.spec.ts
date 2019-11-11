@@ -27,24 +27,19 @@ import {
 } from 'primeng/primeng';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { REDUCERS } from 'app/app.reducers';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { LibraryModule } from 'app/library/library.module';
 import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('ComicFileGridItemComponent', () => {
   let component: ComicFileGridItemComponent;
   let fixture: ComponentFixture<ComicFileGridItemComponent>;
-  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -54,19 +49,18 @@ describe('ComicFileGridItemComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS),
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
         PanelModule,
         OverlayPanelModule,
         CardModule
       ],
       declarations: [ComicFileGridItemComponent, ComicFileCoverUrlPipe],
-      providers: [ComicService, UserService, MessageService, ComicImportAdaptor]
+      providers: [UserService, MessageService, ComicImportAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileGridItemComponent);
     component = fixture.componentInstance;
-    store = TestBed.get(Store);
     component.comic_file = COMIC_FILE_1;
 
     fixture.detectChanges();

@@ -25,25 +25,18 @@ import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
-import { LoginComponent } from 'app/ui/components/login/login.component';
+import { LoginComponent } from 'app/components/login/login.component';
 import { AppComponent } from 'app/app.component';
 import {
   BreadcrumbModule,
   ConfirmDialogModule,
   TieredMenuModule
 } from 'primeng/primeng';
-import { REDUCERS } from 'app/app.reducers';
 import { AuthenticationAdaptor, USER_READER } from 'app/user';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { LibraryModule } from 'app/library/library.module';
-import { COMIC_1, COMIC_3, COMIC_5, LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 import {
@@ -52,6 +45,10 @@ import {
   AuthUserLoaded
 } from 'app/user/actions/authentication.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LibraryAdaptor } from 'app/library';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
+import { Store, StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('AppComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -62,7 +59,7 @@ describe('AppComponent', () => {
   let authenticationAdaptor: AuthenticationAdaptor;
   let libraryAdaptor: LibraryAdaptor;
   let translateService: TranslateService;
-  let store: Store<AppState>;
+  let store: Store<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -75,8 +72,8 @@ describe('AppComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS),
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
         MenubarModule,
         ButtonModule,
         ToastModule,
@@ -92,7 +89,6 @@ describe('AppComponent', () => {
         ConfirmationService,
         AuthenticationAdaptor,
         BreadcrumbAdaptor,
-        ComicService,
         UserService
       ]
     }).compileComponents();
@@ -103,7 +99,6 @@ describe('AppComponent', () => {
     libraryAdaptor = TestBed.get(LibraryAdaptor);
     translateService = TestBed.get(TranslateService);
     store = TestBed.get(Store);
-    spyOn(store, 'dispatch').and.callThrough();
 
     fixture.detectChanges();
   }));

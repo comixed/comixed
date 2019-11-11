@@ -19,7 +19,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
-import { Comic } from 'app/library';
+import { Comic } from 'app/comics';
 
 interface ScrapingVolumeOptions {
   volume: ScrapingVolume;

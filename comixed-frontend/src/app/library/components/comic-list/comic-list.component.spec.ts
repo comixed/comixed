@@ -47,9 +47,6 @@ import {
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   SelectionAdaptor
@@ -60,7 +57,6 @@ import { BehaviorSubject } from 'rxjs';
 import { AuthenticationAdaptor } from 'app/user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
@@ -72,6 +68,7 @@ import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
 import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
 import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -136,7 +133,6 @@ describe('ComicListComponent', () => {
         LibraryDisplayAdaptor,
         ConfirmationService,
         MessageService,
-        ComicService,
         UserService,
         {
           provide: ActivatedRoute,

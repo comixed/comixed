@@ -21,33 +21,33 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AdminGuard } from './admin.guard';
 import { AuthenticationAdaptor } from 'app/user';
-import { USER_ADMIN, USER_BLOCKED } from 'app/user/models/user.fixtures';
 import { StoreModule } from '@ngrx/store';
-import { REDUCERS } from 'app/app.reducers';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('AdminGuard', () => {
   let guard: AdminGuard;
   let router: Router;
-  let auth_adaptor: AuthenticationAdaptor;
+  let authenticationAdaptor: AuthenticationAdaptor;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([{ path: 'home', redirectTo: '' }]),
-        StoreModule.forRoot(REDUCERS)
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([])
       ],
       providers: [AdminGuard, AuthenticationAdaptor]
     });
 
     guard = TestBed.get(AdminGuard);
-    auth_adaptor = TestBed.get(AuthenticationAdaptor);
+    authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
     router = TestBed.get(Router);
   });
 
   describe('when there is no user logged in', () => {
     beforeEach(() => {
-      auth_adaptor._initialized$.next(true);
-      auth_adaptor._authenticated$.next(false);
+      authenticationAdaptor._initialized$.next(true);
+      authenticationAdaptor._authenticated$.next(false);
       spyOn(router, 'navigate');
     });
 
@@ -63,9 +63,9 @@ describe('AdminGuard', () => {
 
   describe('when a user with the admin role is logged in', () => {
     beforeEach(() => {
-      auth_adaptor._initialized$.next(true);
-      auth_adaptor._authenticated$.next(true);
-      auth_adaptor._role$.next({ admin: true, reader: false });
+      authenticationAdaptor._initialized$.next(true);
+      authenticationAdaptor._authenticated$.next(true);
+      authenticationAdaptor._role$.next({ admin: true, reader: false });
     });
 
     it('grants access', () => {
@@ -75,9 +75,9 @@ describe('AdminGuard', () => {
 
   describe('blocks users without the admin role', () => {
     beforeEach(() => {
-      auth_adaptor._initialized$.next(true);
-      auth_adaptor._authenticated$.next(true);
-      auth_adaptor._role$.next({ admin: false, reader: false });
+      authenticationAdaptor._initialized$.next(true);
+      authenticationAdaptor._authenticated$.next(true);
+      authenticationAdaptor._role$.next({ admin: false, reader: false });
     });
 
     it('blocks access', () => {

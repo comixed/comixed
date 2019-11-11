@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.views.View.ComicList;
 import org.comixed.views.View.DatabaseBackup;
+import org.comixed.views.View.DuplicatePageList;
 import org.comixed.views.View.PageList;
 import org.hibernate.annotations.Formula;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ import java.security.NoSuchAlgorithmException;
 @Entity
 @Table(name = "pages")
 @NamedQueries({@NamedQuery(name = "Page.getDuplicatePages",
-                           query = "SELECT p FROM Page p WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash"),
+                           query = "SELECT p FROM Page p JOIN p.comic WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash"),
                @NamedQuery(name = "Page.updateDeleteOnAllWithHash",
                            query = "UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash")})
 public class Page {
@@ -57,12 +58,14 @@ public class Page {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView({ComicList.class,
                PageList.class,
+               DuplicatePageList.class,
                DatabaseBackup.class})
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "comic_id")
-    @JsonView(PageList.class)
+    @JsonView({PageList.class,
+               DuplicatePageList.class})
     private Comic comic;
 
     @ManyToOne
@@ -117,6 +120,7 @@ public class Page {
     @Formula("(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
     @JsonView({ComicList.class,
                PageList.class,
+               DuplicatePageList.class,
                DatabaseBackup.class})
     private boolean blocked;
 
@@ -165,26 +169,16 @@ public class Page {
         return result;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (this.getClass() != obj.getClass())
-            return false;
-        Page other = (Page) obj;
-        if (this.filename == null) {
-            if (other.filename != null)
-                return false;
-        } else if (!this.filename.equals(other.filename))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        } else if (!this.hash.equals(other.hash))
-            return false;
-        return true;
+    private void getImageMetrics(final byte[] content) {
+        try {
+            BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(content));
+            this.width = bimage.getWidth();
+            this.height = bimage.getHeight();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -194,6 +188,10 @@ public class Page {
      */
     public Comic getComic() {
         return this.comic;
+    }
+
+    void setComic(Comic comic) {
+        this.comic = comic;
     }
 
     @JsonProperty(value = "comic_id")
@@ -235,6 +233,17 @@ public class Page {
         return this.filename;
     }
 
+    /**
+     * Sets a new filename for the offset.
+     *
+     * @param filename
+     *         the new filename
+     */
+    public void setFilename(String filename) {
+        this.logger.debug("Changing filename: " + this.filename + " -> " + filename);
+        this.filename = filename;
+    }
+
     public String getHash() {
         return this.hash;
     }
@@ -246,18 +255,6 @@ public class Page {
      */
     public int getHeight() {
         return this.height;
-    }
-
-    private void getImageMetrics(final byte[] content) {
-        try {
-            BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(content));
-            this.width = bimage.getWidth();
-            this.height = bimage.getHeight();
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -283,6 +280,18 @@ public class Page {
     }
 
     /**
+     * Sets the offset type for the offset.
+     *
+     * @param pageType
+     *         the offset type
+     */
+    public void setPageType(PageType pageType) {
+        this.logger.debug("Changing offset type: {}",
+                          pageType.getId());
+        this.pageType = pageType;
+    }
+
+    /**
      * Returns the width of the image.
      *
      * @return the image width
@@ -302,6 +311,28 @@ public class Page {
                                      ? 0
                                      : this.hash.hashCode());
         return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (this.getClass() != obj.getClass())
+            return false;
+        Page other = (Page) obj;
+        if (this.filename == null) {
+            if (other.filename != null)
+                return false;
+        } else if (!this.filename.equals(other.filename))
+            return false;
+        if (this.hash == null) {
+            if (other.hash != null)
+                return false;
+        } else if (!this.hash.equals(other.hash))
+            return false;
+        return true;
     }
 
     public boolean isBlocked() {
@@ -327,32 +358,5 @@ public class Page {
     public void markDeleted(boolean deleted) {
         this.logger.debug("Mark deletion: " + deleted);
         this.deleted = deleted;
-    }
-
-    void setComic(Comic comic) {
-        this.comic = comic;
-    }
-
-    /**
-     * Sets a new filename for the offset.
-     *
-     * @param filename
-     *         the new filename
-     */
-    public void setFilename(String filename) {
-        this.logger.debug("Changing filename: " + this.filename + " -> " + filename);
-        this.filename = filename;
-    }
-
-    /**
-     * Sets the offset type for the offset.
-     *
-     * @param pageType
-     *         the offset type
-     */
-    public void setPageType(PageType pageType) {
-        this.logger.debug("Changing offset type: {}",
-                          pageType.getId());
-        this.pageType = pageType;
     }
 }

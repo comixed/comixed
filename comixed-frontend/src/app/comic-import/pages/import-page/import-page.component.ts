@@ -19,7 +19,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ComicService } from 'app/services/comic.service';
 import {
   IMPORT_COVER_SIZE,
   IMPORT_LAST_DIRECTORY,
@@ -80,7 +79,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     private authenticationAdaptor: AuthenticationAdaptor,
     private comicImportAdaptor: ComicImportAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
-    private comicService: ComicService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {

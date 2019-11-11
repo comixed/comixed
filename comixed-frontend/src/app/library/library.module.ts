@@ -25,18 +25,19 @@ import {
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import * as fromLibrary from './reducers/library.reducer';
+import * as fromSelection from './reducers/selection.reducer';
+import * as fromReadingList from './reducers/reading-list.reducer';
+import * as fromFilters from './reducers/filters.reducer';
+import * as fromDupes from './reducers/duplicate-pages.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { LibraryEffects } from './effects/library.effects';
 import { LibraryService } from './services/library.service';
 import { LibraryAdaptor } from './adaptors/library.adaptor';
-import * as fromSelection from './reducers/selection.reducer';
 import { SelectionAdaptor } from './adaptors/selection.adaptor';
-import * as fromReadingList from './reducers/reading-list.reducer';
 import { ReadingListEffects } from './effects/reading-list.effects';
 import { ReadingListService } from './services/reading-list.service';
 import { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
 import { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
-import * as fromFilters from './reducers/filters.reducer';
 import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 import { ComicFilterPipe } from './pipes/comic-filter.pipe';
 import { ComicListToolbarComponent } from './components/comic-list-toolbar/comic-list-toolbar.component';
@@ -70,14 +71,20 @@ import { LocationsPageComponent } from 'app/library/pages/locations-page/locatio
 import { LocationDetailsPageComponent } from 'app/library/pages/location-details-page/location-details-page.component';
 import { StoryArcsPageComponent } from 'app/library/pages/story-arcs-page/story-arcs-page.component';
 import { StoryArcDetailsPageComponent } from 'app/library/pages/story-arc-details-page/story-arc-details-page.component';
-import { DuplicatesPageComponent } from 'app/library/pages/duplicates-page/duplicates-page.component';
-import { DuplicatePagesViewComponent } from 'app/library/components/duplicate-pages-view/duplicate-pages-view.component';
 import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
 import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
-import { PageHashViewComponent } from 'app/library/components/page-hash-view/page-hash-view.component';
 import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
 import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
 import { MultipleComicScrapingComponent } from 'app/library/components/multiple-comic-scraping/multiple-comic-scraping.component';
+import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
+import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
+import { DuplicatesPageComponent } from './pages/duplicates-page/duplicates-page.component';
+import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
+import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
+import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
+import { DuplicatePageGridItemComponent } from './components/duplicate-page-grid-item/duplicate-page-grid-item.component';
+import { DuplicatesPageToolbarComponent } from './components/duplicates-page-toolbar/duplicates-page-toolbar.component';
+import { DuplicatePageListItemComponent } from './components/duplicate-page-list-item/duplicate-page-list-item.component';
 
 @NgModule({
   imports: [
@@ -101,7 +108,15 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
       fromFilters.FILTERS_FEATURE_KEY,
       fromFilters.reducer
     ),
-    EffectsModule.forFeature([LibraryEffects, ReadingListEffects]),
+    StoreModule.forFeature(
+      fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
+      fromDupes.reducer
+    ),
+    EffectsModule.forFeature([
+      LibraryEffects,
+      ReadingListEffects,
+      DuplicatePagesEffects
+    ]),
     ContextMenuModule,
     CheckboxModule,
     SliderModule,
@@ -131,15 +146,18 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
     LocationDetailsPageComponent,
     StoryArcsPageComponent,
     StoryArcDetailsPageComponent,
-    DuplicatesPageComponent,
-    DuplicatePagesViewComponent,
     MissingComicsPageComponent,
     MultiComicScrapingPageComponent,
-    PageHashViewComponent,
     ScrapingComicListComponent,
     MultipleComicScrapingComponent,
+    ReadingListsPageComponent,
+    ReadingListPageComponent,
     ComicFilterPipe,
-    MissingComicsPipe
+    MissingComicsPipe,
+    DuplicatesPageComponent,
+    DuplicatePageGridItemComponent,
+    DuplicatesPageToolbarComponent,
+    DuplicatePageListItemComponent
   ],
   providers: [
     LibraryService,
@@ -147,8 +165,10 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
     FilterAdaptor,
     LibraryDisplayAdaptor,
     SelectionAdaptor,
+    DuplicatesPagesAdaptors,
     ReadingListService,
-    ReadingListAdaptor
+    ReadingListAdaptor,
+    DuplicatePagesService
   ]
 })
 export class LibraryModule {

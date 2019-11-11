@@ -20,8 +20,8 @@ import {
   ComicCoverUrlPipe,
   MISSING_COMIC_IMAGE_URL
 } from './comic-cover-url.pipe';
-import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
-import { COMIC_1, COMIC_4 } from 'app/library';
+import { API_ROOT_URL } from 'app/app.functions';
+import { COMIC_1, COMIC_4 } from 'app/comics/comics.fixtures';
 
 describe('ComicCoverUrlPipe', () => {
   const pipe = new ComicCoverUrlPipe();
@@ -34,7 +34,7 @@ describe('ComicCoverUrlPipe', () => {
 
   it('returns the URL for the comic cover image', () => {
     expect(pipe.transform(COMIC_1)).toEqual(
-      `${COMIC_SERVICE_API_URL}/comics/${COMIC_1.id}/cover/content`
+      `${API_ROOT_URL}/comics/${COMIC_1.id}/cover/content`
     );
   });
 });

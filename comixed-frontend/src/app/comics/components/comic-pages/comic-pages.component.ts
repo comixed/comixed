@@ -18,10 +18,9 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { Comic } from 'app/library';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { Subscription } from 'rxjs';
-import { Page, PageType } from 'app/comics';
+import { Comic, Page, PageType } from 'app/comics';
 
 @Component({
   selector: 'app-comic-pages',

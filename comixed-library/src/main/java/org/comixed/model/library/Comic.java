@@ -27,10 +27,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.views.View;
-import org.comixed.views.View.ComicDetails;
-import org.comixed.views.View.ComicList;
-import org.comixed.views.View.DatabaseBackup;
-import org.comixed.views.View.PageList;
+import org.comixed.views.View.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -66,14 +63,6 @@ public class Comic {
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     ArchiveType archiveType;
-
-    @OneToOne(cascade = CascadeType.ALL,
-              mappedBy = "comic",
-              orphanRemoval = true)
-    @JsonView({ComicList.class,
-               ComicDetails.class})
-    private ComicFileDetails fileDetails;
-
     @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "comic_story_arcs",
@@ -83,7 +72,6 @@ public class Comic {
     @JsonView({ComicList.class,
                DatabaseBackup.class})
     List<String> storyArcs = new ArrayList<>();
-
     @OneToMany(mappedBy = "comic",
                cascade = CascadeType.ALL,
                fetch = FetchType.EAGER,
@@ -92,16 +80,21 @@ public class Comic {
     @JsonProperty("pages")
     @JsonView({ComicList.class,})
     List<Page> pages = new ArrayList<>();
-
     @Transient
     @JsonIgnore
     File backingFile;
-
+    @OneToOne(cascade = CascadeType.ALL,
+              mappedBy = "comic",
+              orphanRemoval = true)
+    @JsonView({ComicList.class,
+               ComicDetails.class})
+    private ComicFileDetails fileDetails;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
     @JsonView({ComicList.class,
                PageList.class,
+               DuplicatePageList.class,
                DatabaseBackup.class,
                View.ReadingList.class})
     private Long id;
@@ -133,6 +126,7 @@ public class Comic {
             length = 128)
     @JsonProperty("publisher")
     @JsonView({ComicList.class,
+               DuplicatePageList.class,
                DatabaseBackup.class})
     private String publisher;
 
@@ -147,6 +141,7 @@ public class Comic {
     @JsonProperty("series")
     @JsonView({ComicList.class,
                PageList.class,
+               DuplicatePageList.class,
                DatabaseBackup.class})
     private String series;
 
@@ -193,6 +188,7 @@ public class Comic {
     @JsonProperty("volume")
     @JsonView({ComicList.class,
                PageList.class,
+               DuplicatePageList.class,
                DatabaseBackup.class})
     private String volume;
 
@@ -201,6 +197,7 @@ public class Comic {
     @JsonProperty("issueNumber")
     @JsonView({ComicList.class,
                PageList.class,
+               DuplicatePageList.class,
                DatabaseBackup.class})
     private String issueNumber;
 
@@ -459,13 +456,13 @@ public class Comic {
         return this.archiveType;
     }
 
+    public void setArchiveType(ArchiveType archiveType) {
+        this.archiveType = archiveType;
+    }
+
     @Transient
     public ArchiveAdaptor getArchiveAdaptor() {
         return this.archiveType.getArchiveAdaptor();
-    }
-
-    public void setArchiveType(ArchiveType archiveType) {
-        this.archiveType = archiveType;
     }
 
     /**
@@ -628,14 +625,6 @@ public class Comic {
         return this.dateAdded;
     }
 
-    public Date getDateDeleted() {
-        return dateDeleted;
-    }
-
-    public void setDateDeleted(final Date dateDeleted) {
-        this.dateDeleted = dateDeleted;
-    }
-
     /**
      * Sets the date the comic was added to the library.
      *
@@ -647,6 +636,14 @@ public class Comic {
         if (date == null)
             throw new IllegalArgumentException("Date added cannot be null");
         this.dateAdded = date;
+    }
+
+    public Date getDateDeleted() {
+        return dateDeleted;
+    }
+
+    public void setDateDeleted(final Date dateDeleted) {
+        this.dateDeleted = dateDeleted;
     }
 
     /**

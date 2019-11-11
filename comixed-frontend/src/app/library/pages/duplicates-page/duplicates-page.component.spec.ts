@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,31 +17,35 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { StoreModule } from '@ngrx/store';
-import { CardModule } from 'primeng/card';
-import { DataViewModule } from 'primeng/dataview';
-import { DropdownModule } from 'primeng/dropdown';
-import { SliderModule } from 'primeng/slider';
-import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-import { MessageService } from 'primeng/api';
-import { UserService } from 'app/services/user.service';
-import { UserServiceMock } from 'app/services/user.service.mock';
-import { DuplicatePagesViewComponent } from 'app/library/components/duplicate-pages-view/duplicate-pages-view.component';
-import { PageHashViewComponent } from 'app/library/components/page-hash-view/page-hash-view.component';
-import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+
 import { DuplicatesPageComponent } from './duplicates-page.component';
-import { REDUCERS } from 'app/app.reducers';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { DuplicatesPageToolbarComponent } from 'app/library/components/duplicates-page-toolbar/duplicates-page-toolbar.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { DataViewModule } from 'primeng/dataview';
+import { DuplicatePageGridItemComponent } from 'app/library/components/duplicate-page-grid-item/duplicate-page-grid-item.component';
+import { DuplicatePageListItemComponent } from 'app/library/components/duplicate-page-list-item/duplicate-page-list-item.component';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import {
+  CardModule,
+  CheckboxModule,
+  MessageService,
+  ProgressSpinnerModule,
+  SliderModule,
+  ToolbarModule,
+  TooltipModule
+} from 'primeng/primeng';
+import { FormsModule } from '@angular/forms';
+import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
+import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
+import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
 import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
-import { ComicService } from 'app/services/comic.service';
+import { StoreModule } from '@ngrx/store';
+import { LibraryDisplayAdaptor } from 'app/library';
+import { RouterTestingModule } from '@angular/router/testing';
+import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 
 describe('DuplicatesPageComponent', () => {
   let component: DuplicatesPageComponent;
@@ -50,32 +54,36 @@ describe('DuplicatesPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserModule,
         FormsModule,
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS),
-        CardModule,
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
         DataViewModule,
-        DropdownModule,
-        SliderModule,
         ButtonModule,
-        TableModule
+        DropdownModule,
+        ToolbarModule,
+        TooltipModule,
+        CheckboxModule,
+        SliderModule,
+        CardModule,
+        ProgressSpinnerModule
       ],
       declarations: [
         DuplicatesPageComponent,
-        DuplicatePagesViewComponent,
-        PageHashViewComponent,
-        ComicPageUrlPipe,
-        ComicTitlePipe,
-        ComicCoverUrlPipe
+        DuplicatesPageToolbarComponent,
+        DuplicatePageGridItemComponent,
+        DuplicatePageListItemComponent,
+        ComicCoverComponent,
+        ComicPageUrlPipe
       ],
       providers: [
-        BreadcrumbAdaptor,
+        DuplicatesPagesAdaptors,
+        LibraryDisplayAdaptor,
         MessageService,
-        ComicService,
-        { provide: UserService, useClass: UserServiceMock }
+        BreadcrumbAdaptor
       ]
     }).compileComponents();
   }));

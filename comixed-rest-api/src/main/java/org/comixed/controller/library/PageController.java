@@ -20,6 +20,7 @@ package org.comixed.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.model.library.Comic;
+import org.comixed.model.library.DuplicatePage;
 import org.comixed.model.library.Page;
 import org.comixed.model.library.PageType;
 import org.comixed.service.library.PageException;
@@ -138,11 +139,11 @@ public class PageController {
 
     @RequestMapping(value = "/pages/duplicates",
                     method = RequestMethod.GET)
-    @JsonView(View.PageList.class)
-    public List<Page> getDuplicatePages() {
+    @JsonView(View.DuplicatePageList.class)
+    public List<DuplicatePage> getDuplicatePages() {
         this.logger.info("Getting duplicate pages");
 
-        final List<Page> result = this.pageService.getDuplicatePages();
+        final List<DuplicatePage> result = this.pageService.getDuplicatePages();
 
         this.logger.debug("Returning {} duplicate page{}",
                           result.size(),

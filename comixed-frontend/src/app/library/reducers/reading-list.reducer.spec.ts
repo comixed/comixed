@@ -34,7 +34,7 @@ import {
   ReadingListsLoaded
 } from 'app/library/actions/reading-list.actions';
 import { READING_LIST_1 } from 'app/library/models/reading-list/reading-list.fixtures';
-import { ReadingList } from 'app/library';
+import { ReadingList } from 'app/library/models/reading-list/reading-list';
 
 describe('ReadingList Reducer', () => {
   const READING_LISTS = [READING_LIST_1];

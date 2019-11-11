@@ -19,7 +19,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthenticationAdaptor } from 'app/user';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { AppState } from 'app/library';
 import * as AuthActions from 'app/user/actions/authentication.actions';
 import { USER_ADMIN, USER_READER } from 'app/user/models/user.fixtures';
 import { reducer } from 'app/user/reducers/authentication.reducer';

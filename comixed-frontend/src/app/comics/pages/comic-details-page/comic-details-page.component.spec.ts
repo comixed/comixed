@@ -47,8 +47,6 @@ import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover-url.pipe';
 import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
-import { ComicService } from 'app/comics/services/comic.service';
-import { COMIC_1, COMIC_2, COMIC_3 } from 'app/library';
 import { UserModule } from 'app/user/user.module';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
@@ -62,6 +60,7 @@ import {
   ToolbarModule
 } from 'primeng/primeng';
 import { ComicDetailsPageComponent } from './comic-details-page.component';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
 
 describe('ComicDetailsPageComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -116,7 +115,6 @@ describe('ComicDetailsPageComponent', () => {
       providers: [
         ComicAdaptor,
         BreadcrumbAdaptor,
-        ComicService,
         MessageService,
         ConfirmationService
       ]

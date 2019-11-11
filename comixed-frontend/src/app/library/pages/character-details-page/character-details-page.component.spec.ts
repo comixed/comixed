@@ -46,7 +46,6 @@ import {
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  COMIC_1,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   ReadingListAdaptor,
@@ -55,7 +54,6 @@ import {
 import { AuthenticationAdaptor } from 'app/user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
@@ -68,6 +66,7 @@ import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
 import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
 import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 
 describe('CharacterDetailsPageComponent', () => {
   const COMIC = COMIC_1;
@@ -116,7 +115,6 @@ describe('CharacterDetailsPageComponent', () => {
         BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
-        ComicService,
         UserService
       ],
       declarations: [

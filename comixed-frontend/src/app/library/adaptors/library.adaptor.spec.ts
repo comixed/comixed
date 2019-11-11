@@ -28,8 +28,14 @@ import {
   LibraryGetUpdates,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
-import { AppState, Comic, COMIC_2, COMIC_4 } from 'app/library';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
+import { AppState } from 'app/library';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_4,
+  COMIC_5
+} from 'app/comics/models/comic.fixtures';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import { extractField } from 'app/library/utility.functions';
 import { ComicGetIssue, ComicGotIssue } from 'app/comics/actions/comic.actions';
@@ -40,6 +46,7 @@ import { MessageService } from 'primeng/api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Comic } from 'app/comics';
 
 describe('LibraryAdaptor', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];

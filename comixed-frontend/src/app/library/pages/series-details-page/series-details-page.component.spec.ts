@@ -20,7 +20,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import { DataViewModule } from 'primeng/dataview';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -47,7 +46,7 @@ import {
   TooltipModule
 } from 'primeng/primeng';
 import {
-  COMIC_1,
+  AppState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   ReadingListAdaptor,
@@ -57,7 +56,6 @@ import { AuthenticationAdaptor } from 'app/user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { UserService } from 'app/services/user.service';
-import { ComicService } from 'app/services/comic.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
@@ -69,6 +67,7 @@ import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
 import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
 import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 
 describe('SeriesDetailsPageComponent', () => {
   const COMIC = COMIC_1;
@@ -117,8 +116,7 @@ describe('SeriesDetailsPageComponent', () => {
         BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
-        UserService,
-        ComicService
+        UserService
       ],
       declarations: [
         SeriesDetailsPageComponent,

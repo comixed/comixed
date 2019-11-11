@@ -19,11 +19,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
-  Comic,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
-  ReadingList,
-  ReadingListEntry,
   SelectionAdaptor
 } from 'app/library';
 import { Subscription } from 'rxjs';
@@ -33,6 +30,9 @@ import { MenuItem } from 'primeng/components/common/menuitem';
 import { AuthenticationAdaptor } from 'app/user';
 import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 import { LibraryFilter } from 'app/library/models/library-filter';
+import { Comic } from 'app/comics';
+import { ReadingList } from 'app/library/models/reading-list/reading-list';
+import { ReadingListEntry } from 'app/library/models/reading-list/reading-list-entry';
 
 const FIRST = 'first';
 

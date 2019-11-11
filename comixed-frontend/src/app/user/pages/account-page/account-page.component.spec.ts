@@ -29,12 +29,11 @@ import { AuthenticationAdaptor, TokenService } from 'app/user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from 'primeng/api';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
 import { EffectsModule } from '@ngrx/effects';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import {
-  authenticationFeatureKey,
+  AUTHENTICATION_FEATURE_KEY,
   reducer
 } from 'app/user/reducers/authentication.reducer';
 import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
@@ -51,7 +50,7 @@ describe('AccountPageComponent', () => {
         RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(authenticationFeatureKey, reducer),
+        StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([AuthenticationEffects]),
         TabViewModule,
@@ -66,7 +65,6 @@ describe('AccountPageComponent', () => {
         AuthenticationAdaptor,
         BreadcrumbAdaptor,
         MessageService,
-        ComicService,
         UserService,
         TokenService
       ]

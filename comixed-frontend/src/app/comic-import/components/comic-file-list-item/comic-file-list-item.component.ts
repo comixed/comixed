@@ -17,8 +17,6 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 
 @Component({
@@ -35,5 +33,5 @@ export class ComicFileListItemComponent {
 
   @Output() click = new EventEmitter<ComicFile>();
 
-  constructor(private store: Store<AppState>) {}
+  constructor() {}
 }

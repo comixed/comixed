@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState, ReadingList, ReadingListEntry } from 'app/library';
+import { AppState } from 'app/library';
 import {
   READING_LIST_FEATURE_KEY,
   ReadingListState
@@ -32,6 +32,8 @@ import {
   ReadingListSave,
   ReadingListsLoad
 } from 'app/library/actions/reading-list.actions';
+import { ReadingList } from 'app/library/models/reading-list/reading-list';
+import { ReadingListEntry } from 'app/library/models/reading-list/reading-list-entry';
 
 @Injectable()
 export class ReadingListAdaptor {

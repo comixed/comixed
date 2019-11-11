@@ -17,8 +17,9 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
-import { Comic } from 'app/library';
+import { interpolate } from 'app/app.functions';
+import { GET_COMIC_COVER_URL } from 'app/comics/comics.constants';
+import { Comic } from 'app/comics';
 
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 
@@ -30,7 +31,7 @@ export class ComicCoverUrlPipe implements PipeTransform {
     if (comic.missing) {
       return MISSING_COMIC_IMAGE_URL;
     } else {
-      return `${COMIC_SERVICE_API_URL}/comics/${comic.id}/cover/content`;
+      return interpolate(GET_COMIC_COVER_URL, { id: comic.id });
     }
   }
 }

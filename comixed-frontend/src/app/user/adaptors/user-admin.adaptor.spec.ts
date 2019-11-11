@@ -22,7 +22,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import {
   reducer,
-  userAdminFeatureKey
+  USER_ADMIN_FEATURE_KEY
 } from 'app/user/reducers/user-admin.reducer';
 import { UserAdminEffects } from 'app/user/effects/user-admin.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -52,7 +52,7 @@ describe('UserAdminAdaptor', () => {
         HttpClientTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(userAdminFeatureKey, reducer),
+        StoreModule.forFeature(USER_ADMIN_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([UserAdminEffects])
       ],

@@ -28,7 +28,6 @@ import {
 import * as _ from 'lodash';
 import { filter } from 'rxjs/operators';
 import { extractField } from 'app/library/utility.functions';
-import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import {
   LibraryDeleteMultipleComics,
@@ -38,6 +37,7 @@ import {
 } from 'app/library/actions/library.actions';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { ComicGetIssue } from 'app/comics/actions/comic.actions';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 @Injectable()
 export class LibraryAdaptor {

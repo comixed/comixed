@@ -21,33 +21,33 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReaderGuard } from './reader.guard';
 import { AuthenticationAdaptor } from 'app/user';
-import { USER_ADMIN, USER_BLOCKED } from 'app/user/models/user.fixtures';
 import { StoreModule } from '@ngrx/store';
-import { REDUCERS } from 'app/app.reducers';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('ReaderGuard', () => {
   let guard: ReaderGuard;
   let router: Router;
-  let auth_adaptor: AuthenticationAdaptor;
+  let authenticationAdaptor: AuthenticationAdaptor;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([{ path: 'home', redirectTo: '' }]),
-        StoreModule.forRoot(REDUCERS)
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([])
       ],
       providers: [ReaderGuard, AuthenticationAdaptor]
     });
 
     guard = TestBed.get(ReaderGuard);
-    auth_adaptor = TestBed.get(AuthenticationAdaptor);
+    authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
     router = TestBed.get(Router);
   });
 
   describe('when there is no user logged in', () => {
     beforeEach(() => {
-      auth_adaptor._initialized$.next(true);
-      auth_adaptor._authenticated$.next(false);
+      authenticationAdaptor._initialized$.next(true);
+      authenticationAdaptor._authenticated$.next(false);
       spyOn(router, 'navigate');
     });
 
@@ -63,9 +63,9 @@ describe('ReaderGuard', () => {
 
   describe('when a user with the reader role is logged in', () => {
     beforeEach(() => {
-      auth_adaptor._initialized$.next(true);
-      auth_adaptor._authenticated$.next(true);
-      auth_adaptor._role$.next({ reader: true, admin: false });
+      authenticationAdaptor._initialized$.next(true);
+      authenticationAdaptor._authenticated$.next(true);
+      authenticationAdaptor._role$.next({ reader: true, admin: false });
     });
 
     it('grants access', () => {
@@ -75,9 +75,9 @@ describe('ReaderGuard', () => {
 
   describe('blocks users without the reader role', () => {
     beforeEach(() => {
-      auth_adaptor._initialized$.next(true);
-      auth_adaptor._authenticated$.next(true);
-      auth_adaptor._role$.next({ reader: false, admin: false });
+      authenticationAdaptor._initialized$.next(true);
+      authenticationAdaptor._authenticated$.next(true);
+      authenticationAdaptor._role$.next({ reader: false, admin: false });
     });
 
     it('blocks access', () => {

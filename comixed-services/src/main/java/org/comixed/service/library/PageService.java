@@ -18,10 +18,7 @@
 
 package org.comixed.service.library;
 
-import org.comixed.model.library.BlockedPageHash;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Page;
-import org.comixed.model.library.PageType;
+import org.comixed.model.library.*;
 import org.comixed.repositories.BlockedPageHashRepository;
 import org.comixed.repositories.ComicRepository;
 import org.comixed.repositories.PageRepository;
@@ -32,8 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PageService {
@@ -49,9 +45,9 @@ public class PageService {
                                   final long typeId)
             throws
             PageException {
-        this.logger.info("Setting page type for page: id={} page type={}",
-                         id,
-                         typeId);
+        this.logger.debug("Setting page type for page: id={} page type={}",
+                          id,
+                          typeId);
 
         final Optional<Page> page = this.pageRepository.findById(id);
         final Optional<PageType> pageType = this.pageTypeRepository.findById(typeId);
@@ -77,8 +73,8 @@ public class PageService {
                                     final String hash)
             throws
             PageException {
-        this.logger.info("Adding blocked page hash: {}",
-                         hash);
+        this.logger.debug("Adding blocked page hash: {}",
+                          hash);
         BlockedPageHash existing = this.blockedPageHashRepository.findByHash(hash);
 
         if (existing != null) {
@@ -103,8 +99,8 @@ public class PageService {
                                        final String hash)
             throws
             PageException {
-        this.logger.info("Removing blocked page hash: {}",
-                         hash);
+        this.logger.debug("Removing blocked page hash: {}",
+                          hash);
         final BlockedPageHash entry = this.blockedPageHashRepository.findByHash(hash);
         if (entry == null) {
             this.logger.debug("No such hash");
@@ -123,22 +119,39 @@ public class PageService {
     }
 
     public String[] getAllBlockedPageHashes() {
-        this.logger.info("Returning all blocked page hashes");
+        this.logger.debug("Returning all blocked page hashes");
 
         return this.blockedPageHashRepository.getAllHashes();
     }
 
-    public List<Page> getDuplicatePages() {
-        this.logger.info("Getting duplicate pages");
+    public List<DuplicatePage> getDuplicatePages() {
+        this.logger.debug("Getting pages from repository");
+        final List<Page> pages = this.pageRepository.getDuplicatePages();
 
-        return this.pageRepository.getDuplicatePages();
+        this.logger.debug("Build duplicate page list");
+        Map<String, DuplicatePage> mapped = new HashMap<>();
+        for (Page page : pages) {
+            DuplicatePage entry = mapped.get(page.getHash());
+
+            if (entry == null) {
+                entry = new DuplicatePage();
+
+                entry.setHash(page.getHash());
+                mapped.put(entry.getHash(),
+                           entry);
+            }
+            entry.getPages()
+                 .add(page);
+        }
+
+        return new ArrayList<>(mapped.values());
     }
 
     public Page getPageInComicByIndex(final long comicId,
                                       final int pageIndex) {
-        this.logger.info("Getting page content for comic: comic id={} page index={}",
-                         comicId,
-                         pageIndex);
+        this.logger.debug("Getting page content for comic: comic id={} page index={}",
+                          comicId,
+                          pageIndex);
 
         this.logger.debug("Fetching comic: id={}",
                           comicId);
@@ -162,8 +175,8 @@ public class PageService {
 
     @Transactional
     public Page deletePage(final long id) {
-        this.logger.info("Marking page as deleted: id={}",
-                         id);
+        this.logger.debug("Marking page as deleted: id={}",
+                          id);
         final Optional<Page> page = this.pageRepository.findById(id);
 
         if (page.isPresent()) {
@@ -186,8 +199,8 @@ public class PageService {
 
     @Transactional
     public Page undeletePage(final long id) {
-        this.logger.info("Marking page as not deleted: id={}",
-                         id);
+        this.logger.debug("Marking page as not deleted: id={}",
+                          id);
 
         final Optional<Page> page = this.pageRepository.findById(id);
 
@@ -210,8 +223,8 @@ public class PageService {
     }
 
     public Page findById(final long id) {
-        this.logger.info("Getting page by id: id={}",
-                         id);
+        this.logger.debug("Getting page by id: id={}",
+                          id);
 
         final Optional<Page> result = this.pageRepository.findById(id);
 
@@ -224,22 +237,22 @@ public class PageService {
     }
 
     public List<Page> getAllPagesForComic(final long comicId) {
-        this.logger.info("Getting all pages for comic: id={}",
-                         comicId);
+        this.logger.debug("Getting all pages for comic: id={}",
+                          comicId);
 
         return this.pageRepository.findAllByComicId(comicId);
     }
 
     public List<PageType> getPageTypes() {
-        this.logger.info("Getting all page types");
+        this.logger.debug("Getting all page types");
 
         return this.pageTypeRepository.findPageTypes();
     }
 
     @Transactional
     public int deleteAllWithHash(final String hash) {
-        this.logger.info("Deleting pages by hash: {}",
-                         hash);
+        this.logger.debug("Deleting pages by hash: {}",
+                          hash);
 
         final int result = this.pageRepository.updateDeleteOnAllWithHash(hash,
                                                                          true);
@@ -255,8 +268,8 @@ public class PageService {
 
     @Transactional
     public int undeleteAllWithHash(final String hash) {
-        this.logger.info("Undeleting pages by hash: {}",
-                         hash);
+        this.logger.debug("Undeleting pages by hash: {}",
+                          hash);
 
         final int result = this.pageRepository.updateDeleteOnAllWithHash(hash,
                                                                          false);

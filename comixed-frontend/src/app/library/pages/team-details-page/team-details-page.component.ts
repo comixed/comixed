@@ -20,10 +20,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Comic } from 'app/comics/models/comic';
-import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 
 @Component({
   selector: 'app-team-details-page',

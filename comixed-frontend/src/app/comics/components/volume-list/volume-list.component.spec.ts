@@ -34,12 +34,12 @@ import {
   reducer,
   SCRAPING_FEATURE_KEY
 } from 'app/comics/reducers/scraping.reducer';
-import { COMIC_3 } from 'app/library';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { MessageService, TooltipModule } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { VolumeListComponent } from './volume-list.component';
+import { COMIC_3 } from 'app/comics/comics.fixtures';
 
 describe('VolumeListComponent', () => {
   const EXACT_MATCH = { ...SCRAPING_VOLUME_1002, id: 1 };

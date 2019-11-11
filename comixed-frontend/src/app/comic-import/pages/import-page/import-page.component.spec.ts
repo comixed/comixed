@@ -30,8 +30,6 @@ import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
-import { ComicService } from 'app/services/comic.service';
-import { ComicServiceMock } from 'app/services/comic.service.mock';
 import { ImportPageComponent } from './import-page.component';
 import { By } from '@angular/platform-browser';
 import { ComicFileListComponent } from 'app/comic-import/components/comic-file-list/comic-file-list.component';
@@ -48,20 +46,18 @@ import {
   SidebarModule
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { REDUCERS } from 'app/app.reducers';
 import { ComicFileListItemComponent } from 'app/comic-import/components/comic-file-list-item/comic-file-list-item.component';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryAdaptor, LibraryDisplayAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
 import { UserService } from 'app/services/user.service';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import { UserModule } from 'app/user/user.module';
 import { LibraryUpdatesReceived } from 'app/library/actions/library.actions';
-import { AppState } from 'app/app.state';
+import { AppState } from 'app/comic-import';
+import { EffectsModule } from '@ngrx/effects';
 
 const DIRECTORY_TO_USE = '/OldUser/comixed/Downloads';
 
@@ -79,12 +75,12 @@ describe('ImportPageComponent', () => {
         UserModule,
         HttpClientTestingModule,
         RouterTestingModule,
-        EffectsModule.forRoot(EFFECTS),
         BrowserAnimationsModule,
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
         DataViewModule,
         SliderModule,
         ButtonModule,
@@ -115,8 +111,7 @@ describe('ImportPageComponent', () => {
         BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
-        UserService,
-        { provide: ComicService, useClass: ComicServiceMock }
+        UserService
       ]
     }).compileComponents();
 

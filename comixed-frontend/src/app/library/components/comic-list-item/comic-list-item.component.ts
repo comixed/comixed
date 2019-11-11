@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Comic } from 'app/library';
+import { Comic } from 'app/comics';
 
 @Component({
   selector: 'app-comic-list-item',

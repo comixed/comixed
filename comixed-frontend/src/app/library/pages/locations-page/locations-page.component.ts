@@ -17,8 +17,6 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';

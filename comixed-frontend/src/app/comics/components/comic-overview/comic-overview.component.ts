@@ -19,9 +19,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Comic, ComicFormat, ScanType } from 'app/library';
 import { Subscription } from 'rxjs';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { Comic, ComicFormat, ScanType } from 'app/comics';
 
 @Component({
   selector: 'app-comic-overview',

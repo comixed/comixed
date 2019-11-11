@@ -17,8 +17,9 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from 'app/library';
-import { COMIC_SERVICE_API_URL } from 'app/services/comic.service';
+import { interpolate } from 'app/app.functions';
+import { DOWNLOAD_COMIC_URL } from 'app/comics/comics.constants';
+import { Comic } from 'app/comics';
 
 @Pipe({
   name: 'comicDownloadLink'
@@ -29,6 +30,6 @@ export class ComicDownloadLinkPipe implements PipeTransform {
       return '';
     }
 
-    return `${COMIC_SERVICE_API_URL}/comics/${comic.id}/download`;
+    return interpolate(DOWNLOAD_COMIC_URL, { id: comic.id });
   }
 }

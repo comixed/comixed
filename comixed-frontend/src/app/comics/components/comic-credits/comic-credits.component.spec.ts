@@ -19,8 +19,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
-import { COMIC_1, COMIC_5 } from 'app/library';
 import { ComicCreditsComponent } from './comic-credits.component';
+import { COMIC_1, COMIC_5 } from 'app/comics/comics.fixtures';
 
 describe('ComicCreditsComponent', () => {
   let component: ComicCreditsComponent;

@@ -21,7 +21,7 @@ import { AppState, User } from 'app/user';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as _ from 'lodash';
-import { userAdminFeatureKey } from 'app/user/reducers/user-admin.reducer';
+import { USER_ADMIN_FEATURE_KEY } from 'app/user/reducers/user-admin.reducer';
 import { filter } from 'rxjs/operators';
 import {
   UserAdminClearCurrent,
@@ -44,7 +44,7 @@ export class UserAdminAdaptor {
 
   constructor(private store: Store<AppState>) {
     this.store
-      .select(userAdminFeatureKey)
+      .select(USER_ADMIN_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe(state => {
         if (!_.isEqual(state.users, this._user$.getValue())) {

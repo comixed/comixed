@@ -17,10 +17,11 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Comic } from 'app/library';
+import { Comic } from 'app/comics';
 
 export const MULTIPLE_COMICS_SCRAPING_SETUP =
   '[MULTIPLE COMICS SCRAPING] Setup';
+
 export class MultipleComicsScrapingSetup implements Action {
   readonly type = MULTIPLE_COMICS_SCRAPING_SETUP;
 
@@ -33,6 +34,7 @@ export class MultipleComicsScrapingSetup implements Action {
 
 export const MULTIPLE_COMICS_SCRAPING_START =
   '[MULTIPLE COMICS SCRAPING] Start scraping';
+
 export class MultipleComicsScrapingStart implements Action {
   readonly type = MULTIPLE_COMICS_SCRAPING_START;
 
@@ -41,6 +43,7 @@ export class MultipleComicsScrapingStart implements Action {
 
 export const MULTIPLE_COMICS_SCRAPING_COMIC_SCRAPED =
   '[MULTIPLE COMICS SCRAPING] Comic scraped';
+
 export class MultipleComicsScrapingComicScraped implements Action {
   readonly type = MULTIPLE_COMICS_SCRAPING_COMIC_SCRAPED;
 

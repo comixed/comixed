@@ -20,10 +20,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
-import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LibraryAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 @Component({
   selector: 'app-publishers-page',

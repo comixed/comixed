@@ -32,7 +32,7 @@ import { UserDetailsEditorComponent } from 'app/user/components/user-details-edi
 import { UsersPageComponent } from './users-page.component';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import {
-  authenticationFeatureKey,
+  AUTHENTICATION_FEATURE_KEY,
   reducer
 } from 'app/user/reducers/authentication.reducer';
 import { EffectsModule } from '@ngrx/effects';
@@ -57,7 +57,7 @@ describe('UsersPageComponent', () => {
         RouterTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(authenticationFeatureKey, reducer),
+        StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([AuthenticationEffects]),
         PanelModule,

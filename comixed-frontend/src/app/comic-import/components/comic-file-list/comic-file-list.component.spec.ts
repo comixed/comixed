@@ -50,7 +50,6 @@ import { AuthenticationAdaptor } from 'app/user';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UserService } from 'app/services/user.service';
-import { ComicService } from 'app/services/comic.service';
 import { EffectsModule } from '@ngrx/effects';
 import { LibraryDisplayAdaptor } from 'app/library';
 import {
@@ -114,7 +113,6 @@ describe('ComicFileListComponent', () => {
         LibraryDisplayAdaptor,
         ComicImportAdaptor,
         ConfirmationService,
-        ComicService,
         UserService,
         MessageService
       ]

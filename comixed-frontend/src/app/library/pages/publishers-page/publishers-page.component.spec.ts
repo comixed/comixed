@@ -30,16 +30,15 @@ import {
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { StoreModule } from '@ngrx/store';
-import { REDUCERS } from 'app/app.reducers';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { EFFECTS } from 'app/app.effects';
-import { ComicService } from 'app/services/comic.service';
 import { UserService } from 'app/services/user.service';
-import { COMIC_1, ComicCollectionEntry, LibraryAdaptor } from 'app/library';
+import { LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicsModule } from 'app/comics/comics.module';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('PublishersPageComponent', () => {
   const PUBLISHER = 'Cheapo Comics';
@@ -59,9 +58,9 @@ describe('PublishersPageComponent', () => {
         HttpClientTestingModule,
         FormsModule,
         RouterTestingModule,
-        StoreModule.forRoot(REDUCERS),
-        EffectsModule.forRoot(EFFECTS),
         TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
         TableModule,
         DropdownModule,
         PanelModule,
@@ -73,7 +72,6 @@ describe('PublishersPageComponent', () => {
         BreadcrumbAdaptor,
         LibraryAdaptor,
         MessageService,
-        ComicService,
         UserService
       ]
     }).compileComponents();

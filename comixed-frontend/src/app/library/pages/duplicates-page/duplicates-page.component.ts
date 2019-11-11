@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,13 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { AppState } from 'app/app.state';
-import * as DuplicatesActions from 'app/actions/duplicate-pages.actions';
-import { MessageService } from 'primeng/api';
-import { Duplicates } from 'app/models/state/duplicates';
-import { Title } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { DuplicatePage } from 'app/library/models/duplicate-page';
+import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
+import { LibraryDisplayAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-
-export const DUPLICATES_HASH_PARAMETER = 'hash';
+import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-duplicates-page',
@@ -36,90 +31,71 @@ export const DUPLICATES_HASH_PARAMETER = 'hash';
   styleUrls: ['./duplicates-page.component.scss']
 })
 export class DuplicatesPageComponent implements OnInit, OnDestroy {
-  duplicates$: Observable<Duplicates>;
   duplicatesSubscription: Subscription;
-  duplicates: Duplicates;
+  duplicates: DuplicatePage[];
+  fetchingSubscription: Subscription;
+  fetching = false;
+  layoutSubscription: Subscription;
+  layout = 'grid';
+  pageSizeSubscription: Subscription;
+  pageSize = 200;
+  sameHeightSubscription: Subscription;
+  sameHeight = false;
+  pageCountSubscription: Subscription;
+  pageCount = 10;
   langChangeSubscription: Subscription;
 
   constructor(
-    private titleService: Title,
+    private duplicatesAdaptor: DuplicatesPagesAdaptors,
+    private displayAdaptor: LibraryDisplayAdaptor,
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private store: Store<AppState>,
-    private messageService: MessageService,
-    private breadcrumbAdaptor: BreadcrumbAdaptor
-  ) {
-    this.duplicates$ = store.select('duplicates');
-  }
+    private titleService: Title
+  ) {}
 
   ngOnInit() {
-    this.duplicatesSubscription = this.duplicates$.subscribe(
-      (duplicates: Duplicates) => {
-        this.duplicates = duplicates;
-        this.titleService.setTitle(
-          this.translateService.instant('duplicates-page.title', {
-            pages: this.duplicates.pages.length,
-            hashes: this.duplicates.hashes.length
-          })
-        );
-
-        if (this.duplicates.pages_deleted > 0) {
-          this.messageService.add({
-            severity: 'info',
-            summary: 'Delete Comic',
-            detail: `Marked ${this.duplicates.pages_deleted} page(s) for deletion...`
-          });
-        }
-        if (this.duplicates.pages_undeleted) {
-          this.messageService.add({
-            severity: 'info',
-            summary: 'Undelete Comic',
-            detail: `Unmarked ${this.duplicates.pages_undeleted} page(s) for deletion...`
-          });
-        }
-        if (
-          this.duplicates.current_hash &&
-          !this.duplicates.current_duplicates &&
-          this.duplicates.pages.length > 0
-        ) {
-          this.store.dispatch(
-            new DuplicatesActions.DuplicatePagesShowComicsWithHash({
-              hash: this.duplicates.current_hash
-            })
-          );
-        }
-      }
-    );
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params[DUPLICATES_HASH_PARAMETER]) {
-        this.store.dispatch(
-          new DuplicatesActions.DuplicatePagesShowComicsWithHash(
-            params[DUPLICATES_HASH_PARAMETER]
-          )
-        );
-      }
-    });
-    this.store.dispatch(new DuplicatesActions.DuplicatePagesFetchPages());
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
-    this.loadTranslations();
+    this.layoutSubscription = this.displayAdaptor.layout$.subscribe(
+      layout => (this.layout = layout)
+    );
+    this.pageSizeSubscription = this.displayAdaptor.coverSize$.subscribe(
+      pageSize => (this.pageSize = pageSize)
+    );
+    this.sameHeightSubscription = this.displayAdaptor.sameHeight$.subscribe(
+      sameHeight => (this.sameHeight = sameHeight)
+    );
+    this.pageCountSubscription = this.displayAdaptor.rows$.subscribe(
+      pageCount => (this.pageCount = pageCount)
+    );
+    this.duplicatesSubscription = this.duplicatesAdaptor.pages$.subscribe(
+      duplicates => (this.duplicates = duplicates)
+    );
+    this.fetchingSubscription = this.duplicatesAdaptor.fetchingAll$.subscribe(
+      fetching => (this.fetching = fetching)
+    );
+    this.duplicatesAdaptor.getAll();
   }
 
   ngOnDestroy() {
-    this.duplicatesSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
+    this.layoutSubscription.unsubscribe();
+    this.pageSizeSubscription.unsubscribe();
+    this.sameHeightSubscription.unsubscribe();
+    this.pageCountSubscription.unsubscribe();
+    this.duplicatesSubscription.unsubscribe();
+    this.fetchingSubscription.unsubscribe();
   }
 
   private loadTranslations() {
     this.breadcrumbAdaptor.loadEntries([
-      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
       {
-        label: this.translateService.instant(
-          'breadcrumb.entry.admin.duplicate-pages'
-        )
+        label: this.translateService.instant('breadcrumb.admin.duplicates-page')
       }
     ]);
+    this.titleService.setTitle(
+      this.translateService.instant('duplicates-page.title')
+    );
   }
 }

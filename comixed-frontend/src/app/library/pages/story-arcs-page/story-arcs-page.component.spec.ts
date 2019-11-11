@@ -25,16 +25,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { StoryArcsPageComponent } from './story-arcs-page.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { UserService } from 'app/services/user.service';
-import { ComicService } from 'app/services/comic.service';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { LibraryAdaptor } from 'app/library';
+import { AppState, LibraryAdaptor } from 'app/library';
 import {
   LIBRARY_FEATURE_KEY,
   reducer
@@ -71,8 +69,7 @@ describe('StoryArcsPageComponent', () => {
         BreadcrumbAdaptor,
         LibraryAdaptor,
         MessageService,
-        UserService,
-        ComicService
+        UserService
       ]
     }).compileComponents();
   }));

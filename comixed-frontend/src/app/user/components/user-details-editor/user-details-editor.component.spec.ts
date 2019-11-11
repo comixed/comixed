@@ -19,38 +19,34 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/app.state';
+import { StoreModule } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { UserDetailsEditorComponent } from './user-details-editor.component';
-import { REDUCERS } from 'app/app.reducers';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('UserDetailsEditorComponent', () => {
   let component: UserDetailsEditorComponent;
   let fixture: ComponentFixture<UserDetailsEditorComponent>;
-  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
         ReactiveFormsModule,
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
         TranslateModule.forRoot(),
-        StoreModule.forRoot(REDUCERS),
         ButtonModule,
         ToggleButtonModule
       ],
       declarations: [UserDetailsEditorComponent]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(UserDetailsEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    store = TestBed.get(Store);
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

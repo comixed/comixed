@@ -1,5 +1,5 @@
 <app-comic-list-toolbar [comics]='comics'
-                        [dataView]='dataview'
+                        [dataView]='comicListDataview'
                         (toggleFilters)='showFilters()'></app-comic-list-toolbar>
 <p-sidebar styleClass='cx-library-filter-sidebar'
            [(visible)]='displayFilters'>
@@ -8,7 +8,7 @@
 <p-contextMenu [model]='contextMenu'
                [target]='comicListContainer'></p-contextMenu>
 <div #comicListContainer>
-    <p-dataView #dataview
+    <p-dataView #comicListDataview
                 (onPage)='setIndexOfFirst($event.first)'
                 [alwaysShowPaginator]='true'
                 [first]='indexOfFirst'

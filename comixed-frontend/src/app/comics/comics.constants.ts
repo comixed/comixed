@@ -26,11 +26,15 @@ export const SAVE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const CLEAR_METADATA_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
 export const DELETE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const RESTORE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}/restore`;
+export const DOWNLOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}/download`;
+export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 
 export const SAVE_PAGE_URL = `${API_ROOT_URL}/pages/\${id}`;
+export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 export const BLOCK_PAGE_HASH_URL = `${API_ROOT_URL}/pages/\${id}/block/\${hash}`;
 export const UNBLOCK_PAGE_HASH_URL = `${API_ROOT_URL}/pages/\${id}/unblock/\${hash}`;
 
 export const GET_VOLUMES_URL = `${API_ROOT_URL}/scraping/series/\${series}`;
 export const GET_ISSUE_URL = `${API_ROOT_URL}/scraping/volumes/\${volume}/issues/\${issue}`;
+
 export const LOAD_METADATA_URL = `${API_ROOT_URL}/scraping/comics/\${comicId}/issue/\${issueId}`;
