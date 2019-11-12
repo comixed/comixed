@@ -19,13 +19,16 @@
 package org.comixed.web.authentication;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.comixed.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +55,9 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter implements
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private Utils utils;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -59,6 +65,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter implements
     {
         String header = request.getHeader(HEADER_STRING);
         String username = null;
+        String password = null;
         String authToken = null;
         if ((header != null) && header.startsWith(TOKEN_PREFIX))
         {
@@ -80,6 +87,16 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter implements
                 this.logger.error("Authentication Failed. Username or Password not valid.");
             }
         }
+        else if ((header != null) && header.toLowerCase().startsWith("basic")) {
+
+            String base64Credentials = header.substring("Basic".length()).trim();
+            byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+            String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+
+            String[] userDetails = credentials.split(":", 2);
+            username = userDetails[0];
+            password = this.utils.createHash(userDetails[1].getBytes());
+        }
         else
         {
             this.logger.warn("couldn't find bearer string, will ignore the header");
@@ -89,7 +106,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter implements
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            if (this.jwtTokenUtil.validateToken(authToken, userDetails))
+            if (userDetails.getPassword().equals(password) || this.jwtTokenUtil.validateToken(authToken, userDetails))
             {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
                                                                                                              null,

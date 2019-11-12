@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,52 +13,40 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * org.comixed;
  */
 
 package org.comixed.model.opds;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-
 /**
- * <code>OPDSLink</code> provides references to content within a single OPDS
- * feed.
+ * <code>OPDSAuthor</code> provides authors of a OPDS entry.
  *
  * @author João França
  * @author Darryl L. Pierce
  * @author Giao Phan
  *
  */
-public class OPDSLink
+public class OPDSAuthor
 {
-    @JacksonXmlProperty(isAttribute = true)
-    private String type;
+    private String name;
 
-    @JacksonXmlProperty(isAttribute = true)
-    private String rel;
+    private String uri;
 
-    @JacksonXmlProperty(isAttribute = true )
-    private String href;
-
-    public OPDSLink(String type, String rel, String href)
+    public OPDSAuthor(String name, String uri)
     {
-        this.type = type;
-        this.rel = rel;
-        this.href = href;
+        this.name = name;
+        this.uri = uri;
     }
 
-    public String getHRef()
+    public String getName()
     {
-        return this.href;
+        return this.name;
     }
 
-    public String getRel()
+    public String getUri()
     {
-        return this.rel;
+        return this.uri;
     }
 
-    public String getType()
-    {
-        return this.type;
-    }
 }

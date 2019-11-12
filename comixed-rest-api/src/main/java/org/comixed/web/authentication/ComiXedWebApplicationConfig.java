@@ -42,6 +42,6 @@ public class ComiXedWebApplicationConfig extends WebMvcConfigurerAdapter
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(this.requestInterceptor).addPathPatterns("/**/opds/**/");
+        registry.addInterceptor(this.requestInterceptor).addPathPatterns("/**/opds-comics/**/");
     }
 }

@@ -33,6 +33,11 @@
       <version>0.9.1</version>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <version>2.9.8</version>
+    </dependency>
+    <dependency>
       <groupId>org.comixed</groupId>
       <artifactId>comixed-services</artifactId>
       <version>${comixed.version}</version>

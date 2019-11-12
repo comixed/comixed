@@ -13,7 +13,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * org.comixed;
  */
 
 package org.comixed.model.opds;
@@ -21,44 +22,24 @@ package org.comixed.model.opds;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
- * <code>OPDSLink</code> provides references to content within a single OPDS
- * feed.
+ * <code>OPDSVLink</code> extends OPDSLink with extra link with page count
  *
  * @author João França
  * @author Darryl L. Pierce
  * @author Giao Phan
  *
  */
-public class OPDSLink
+public class OPDSVLink extends OPDSLink
 {
-    @JacksonXmlProperty(isAttribute = true)
-    private String type;
 
-    @JacksonXmlProperty(isAttribute = true)
-    private String rel;
+    @JacksonXmlProperty(isAttribute = true, namespace = "http://vaemendis.net/opds-pse/ns")
+    private String count;
 
-    @JacksonXmlProperty(isAttribute = true )
-    private String href;
-
-    public OPDSLink(String type, String rel, String href)
+    public OPDSVLink(String type, String rel, String href, Integer count)
     {
-        this.type = type;
-        this.rel = rel;
-        this.href = href;
+        super(type, rel, href);
+        this.count = count.toString();
     }
 
-    public String getHRef()
-    {
-        return this.href;
-    }
-
-    public String getRel()
-    {
-        return this.rel;
-    }
-
-    public String getType()
-    {
-        return this.type;
-    }
+    public String getCount() { return this.count; }
 }

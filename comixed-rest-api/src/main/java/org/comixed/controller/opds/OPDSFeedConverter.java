@@ -25,6 +25,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.comixed.model.opds.OPDSAuthor;
 import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
 import org.springframework.http.HttpInputMessage;
@@ -38,6 +39,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
  * <code>OPDSFeedConverter</code> provides a tpe for converting an instance of
  * {@link OPDSFeed} into an instance of {@link HttpOutputMessage}.
  *
+ * @author João França
  * @author Giao Phan
  * @author Darryl L. Pierce
  *
@@ -120,14 +122,17 @@ public class OPDSFeedConverter extends AbstractHttpMessageConverter<OPDSFeed>
 
                 writer.writeStartElement("content");
                 writer.writeAttribute("type", "html");
-                writer.writeCharacters(entry.getContent());
+                writer.writeCharacters(entry.getContent().getValue());
                 writer.writeEndElement();
 
                 writer.writeStartElement("author");
-                for (String author : entry.getAuthors())
+                for (OPDSAuthor author : entry.getAuthors())
                 {
                     writer.writeStartElement("name");
-                    writer.writeCharacters(author);
+                    writer.writeCharacters(author.getName());
+                    writer.writeEndElement();
+                    writer.writeStartElement("uri");
+                    writer.writeCharacters(author.getUri());
                     writer.writeEndElement();
                 }
                 writer.writeEndElement();

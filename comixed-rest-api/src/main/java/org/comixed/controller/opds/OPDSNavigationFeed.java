@@ -19,10 +19,13 @@
 package org.comixed.controller.opds;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.comixed.model.library.ReadingList;
+import org.comixed.model.library.ReadingListEntry;
+import org.comixed.model.opds.OPDSAuthor;
 import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
 
@@ -30,6 +33,7 @@ import org.comixed.model.opds.OPDSLink;
  * <code>OPDSNavigationFeed</code> provides an implementation of
  * {@link OPDSFeed}.
  *
+ * @author João França
  * @author Giao Phan
  * @author Darryl L. Pierce
  */
@@ -37,28 +41,87 @@ public class OPDSNavigationFeed implements
                                 OPDSFeed
 {
     private String id;
+
     private String title;
+
     private ZonedDateTime updated;
-    private List<OPDSEntry> entries;
+
+    private String icon;
+
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "link")
     private List<OPDSLink> links;
+
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "entry")
+    private List<OPDSEntry> entries;
 
     public OPDSNavigationFeed()
     {
+
         this.id = "urn:uuid:" + UUID.randomUUID();
         this.title = "ComiXed catalog";
+        this.icon= "/favicon.ico";
         this.updated = ZonedDateTime.now()
                 .withFixedOffsetZone();
-        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
-                        "/opds"),
-                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
-                        "/opds"));
 
-        List<String> noAuthor = Arrays.asList("None");
+        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
+                        "/opds-comics"),
+                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
+                        "/opds-comics"));
+
+        List<OPDSAuthor> noAuthor = Arrays.asList(new OPDSAuthor("None", ""));
         this.entries = Arrays.asList(new OPDSEntry("All comics", "All comics as a flat list", noAuthor,
                 Arrays.asList(new OPDSLink("application/atom+xml;profile=opds-catalog;kind=acquisition",
                         "subsection",
-                        "/opds/all?mediaType=atom"))));
+                        "/opds-comics/all"))),
+                new OPDSEntry("Folders", "All comics grouped by lists.", noAuthor,
+                        Arrays.asList(new OPDSLink("application/atom+xml;profile=opds-catalog;kind=acquisition",
+                                "subsection",
+                                "/opds-comics/all?groupByFolder=true"))));
 
+    }
+
+    public OPDSNavigationFeed(String selfUrl, String title, List<ReadingList> readingLists)
+    {
+        this.id = "urn:uuid:" + UUID.randomUUID();
+        this.entries = new ArrayList<>();
+        this.icon= "/favicon.ico";
+        for (ReadingList readingList : readingLists)
+        {
+            this.entries.add(new OPDSEntry(readingList, readingList.getId()));
+        }
+        this.title = title + readingLists.size() + " items";
+        this.updated = ZonedDateTime.now()
+                .withFixedOffsetZone();
+        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
+                        selfUrl),
+                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
+                        "/opds-comics"));
+    }
+
+    public OPDSNavigationFeed(String selfUrl, String title, ReadingList readingList)
+    {
+        this.id = "urn:uuid:" + UUID.randomUUID();
+        this.entries = new ArrayList<>();
+        this.icon= "/favicon.ico";
+        int count = 0;
+        Set<ReadingListEntry> comics = readingList.getEntries();
+
+        for (ReadingListEntry comic : comics)
+        {
+            if (!comic.getComic().isMissing()) {
+                this.entries.add(new OPDSEntry(comic.getComic()));
+                count++;
+            }
+        }
+        this.title = title + count + " items";
+        this.updated = ZonedDateTime.now()
+                .withFixedOffsetZone();
+        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
+                        selfUrl),
+                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
+                        "/opds-comics"));
     }
 
     @Override
@@ -71,6 +134,12 @@ public class OPDSNavigationFeed implements
     public String getId()
     {
         return this.id;
+    }
+
+    @Override
+    public String getIcon()
+    {
+        return this.icon;
     }
 
     @Override

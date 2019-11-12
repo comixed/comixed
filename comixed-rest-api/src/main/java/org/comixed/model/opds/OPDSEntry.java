@@ -18,9 +18,12 @@
 
 package org.comixed.model.opds;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.codehaus.plexus.util.StringUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Credit;
+import org.comixed.model.library.ReadingList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +38,7 @@ import java.util.*;
 /**
  * <code>OPDSEntry</code> represents a single entry within an OPDS feed.
  *
+ * @author João França
  * @author Giao Phan
  * @author Darryl L. Pierce
  */
@@ -42,12 +46,21 @@ public class OPDSEntry
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public String id;
     public String title;
+
+    public String id;
+
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "author")
+    public List<OPDSAuthor> authors;
+
     public ZonedDateTime updated;
+
+    public OPDSContent content;
+
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "link")
     public List<OPDSLink> links;
-    public String content;
-    public List<String> authors;
 
     public OPDSEntry(Comic comic)
     {
@@ -60,13 +73,13 @@ public class OPDSEntry
         if (StringUtils.isNotEmpty(comic.getTitle()))
         {
             content.append(comic.getTitle());
-            content.append("<br />");
+            content.append("&lt;br&gt;");
         }
         if (StringUtils.isNotEmpty(comic.getSummary()))
         {
             content.append(comic.getSummary());
         }
-        this.content = content.toString();
+        this.content = new OPDSContent(content.toString());
 
         this.authors = new ArrayList<>();
         for (Credit credit : comic.getCredits())
@@ -75,20 +88,20 @@ public class OPDSEntry
                     .toUpperCase(), "WRITER"))
             {
                 this.logger.debug("Adding author: {}", credit.getName());
-                this.authors.add(credit.getName());
+                this.authors.add(new OPDSAuthor(credit.getName(),""));
             }
         }
 
         // FIXME: Is there some sort of router interface we can
         // use to build urls
-        String urlPrefix = "/opds/feed/comics/" + comic.getId();
+        String urlPrefix = "/opds-comics/feed/comics/" + comic.getId();
 
         if (!comic.isMissing())
         {
             this.logger.debug("Added comic to feed: {}", comic.getFilename());
 
-            String coverUrl = urlPrefix + "/pages/0/cover";
-            String thumbnailUrl = urlPrefix + "/pages/0/thumbnail";
+            String coverUrl = urlPrefix + "/0/0";
+            String thumbnailUrl = urlPrefix + "/0/160";
             String comicUrl = "";
 
             try
@@ -105,31 +118,42 @@ public class OPDSEntry
             this.logger.debug("thumbnailUrl: {}", thumbnailUrl);
             this.logger.debug("comicUrl: {}", comicUrl);
 
-            // TODO need to get the correct mime types for the cover and thumbnail images
+            // TODO need to get the correct mime types for the cover
             this.links = Arrays.asList(new OPDSLink("image/jpeg", "http://opds-spec.org/image",
-                            coverUrl),
+                            coverUrl+"?cover=true"),
                     new OPDSLink("image/jpeg", "http://opds-spec.org/image/thumbnail",
-                            thumbnailUrl),
+                            thumbnailUrl+"?cover=true"),
                     new OPDSLink(comic.getArchiveType()
                             .getMimeType(),
                             "http://opds-spec.org/acquisition",
-                            comicUrl));
+                            comicUrl),
+                    new OPDSVLink("image/jpeg", "http://vaemendis.net/opds-pse/stream",
+                            "/opds-comics/feed/comics/" + comic.getId() + "/{pageNumber}/{maxWidth}", comic.getPageCount()));
         } else
         {
             this.logger.debug("Comic file missing: {}", comic.getFilename());
         }
     }
 
-    public OPDSEntry(String title, String content, List<String> authors, List<OPDSLink> links)
+    public OPDSEntry(String title, String content, List<OPDSAuthor> authors, List<OPDSLink> links)
     {
         this.id = "urn:uuid:" + UUID.randomUUID();
         this.updated = ZonedDateTime.now()
                 .withFixedOffsetZone();
 
         this.title = title;
-        this.content = content;
+        this.content = new OPDSContent(content);
         this.authors = authors;
         this.links = links;
+    }
+
+    public OPDSEntry(ReadingList readingList, Long id) {
+        this.id = readingList.getId()
+                .toString();
+        this.title = readingList.getName();
+        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=acquisition", "subsection",
+                "/opds-comics/" + id + "/?displayFiles=true"));
+
     }
 
     private ZonedDateTime convertDateToZondedDateTime(Date date)
@@ -141,12 +165,12 @@ public class OPDSEntry
                 .withFixedOffsetZone();
     }
 
-    public List<String> getAuthors()
+    public List<OPDSAuthor> getAuthors()
     {
         return this.authors;
     }
 
-    public String getContent()
+    public OPDSContent getContent()
     {
         return this.content;
     }

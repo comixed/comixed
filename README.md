@@ -33,7 +33,7 @@ To achieve this goal, the project will:
 
 ## What The Project Will Not Do
  * It is not a comic reading application.
-    * For that, we recommend applications like [Chunky](http://chunkyreader.com/) or [YACReader](https://www.yacreader.com/)
+    * For that, we recommend applications like [Chunky](http://chunkyreader.com/) (iOS), [YACReader](https://www.yacreader.com/) (iOS), [Kuboo](https://play.google.com/store/apps/details?id=com.sethchhim.kuboo) (Android), [Challenger Viewer](https://play.google.com/store/apps/details?id=org.kill.geek.bdviewer) (Android)
 
 ## Status
  * TravisCI Build Status: [![Build Status](https://travis-ci.org/mcpierce/comixed.svg?branch=develop)](https://travis-ci.org/mcpierce/comixed)
@@ -155,7 +155,7 @@ To allow your reader to access the library, you will need either the hostname or
 running ComiXed. So, for example, if that computers IP address is **192.168.1.29** then you would tell the
 reader:
 
-    Hostname: http://192.168.1.29:7171/opds
+    Hostname: http://192.168.1.29:7171/opds-comics
     Username: [the username for your login]
     Password: [the password for your login]
 

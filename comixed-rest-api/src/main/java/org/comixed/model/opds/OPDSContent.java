@@ -13,52 +13,38 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.package
+ * org.comixed;
  */
 
 package org.comixed.model.opds;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
 /**
- * <code>OPDSLink</code> provides references to content within a single OPDS
- * feed.
+ * <code>OPDSContent</code> provides the content OPDS entry.
  *
  * @author João França
  * @author Darryl L. Pierce
  * @author Giao Phan
  *
  */
-public class OPDSLink
+public class OPDSContent
 {
     @JacksonXmlProperty(isAttribute = true)
-    private String type;
+    private String type = "html";
 
-    @JacksonXmlProperty(isAttribute = true)
-    private String rel;
+    @JacksonXmlText
+    private String value;
 
-    @JacksonXmlProperty(isAttribute = true )
-    private String href;
-
-    public OPDSLink(String type, String rel, String href)
+    public OPDSContent(String value)
     {
-        this.type = type;
-        this.rel = rel;
-        this.href = href;
+        this.value = value;
     }
 
-    public String getHRef()
+    public String getValue()
     {
-        return this.href;
-    }
-
-    public String getRel()
-    {
-        return this.rel;
-    }
-
-    public String getType()
-    {
-        return this.type;
+        return this.value;
     }
 }
