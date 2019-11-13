@@ -6,3 +6,6 @@ coverage
 .classpath
 .project
 .settings
+yarn-error.log
+comixed-frontend/node/*
+comixed-frontend/node_modules/*
