@@ -60,6 +60,13 @@ describe('AppComponent', () => {
   let libraryAdaptor: LibraryAdaptor;
   let translateService: TranslateService;
   let store: Store<any>;
+  let originalTimeout;
+
+  beforeAll(async (done) => {
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
+    done();
+  });
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -143,5 +150,10 @@ describe('AppComponent', () => {
     it('fetches updates when not currently fetching', () => {
       expect(libraryAdaptor.getLibraryUpdates).toHaveBeenCalled();
     });
+  });
+
+  afterAll(async (done) => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+    done();
   });
 });
