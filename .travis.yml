@@ -24,7 +24,7 @@ before_deploy:
     - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
     - export BUILD_VERSION=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
     - export TRAVIS_TAG=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')-$(date +%Y%m%d%H%M%S)
-    - export APP_ARTIFACT=$(find . -name comixed-app-*.jar)
+    - export APP_ARTIFACT=$(find . -name comixed-app-*.zip)
 ###################################
 # NOT GOING TO TAG THINGS FOR NOW #
 ###################################
