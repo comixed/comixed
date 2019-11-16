@@ -5,10 +5,12 @@
             <div class='p-col-fixed'
                  [style.width]='sameHeight ? "auto":(pageSize + 25) + "px"'
                  [style.height]='sameHeight ? pageSize + "px":"auto"'>
-                <app-comic-cover [comic]='item'
+                <app-comic-cover [duplicatePage]='item'
                                  [coverUrl]='item.pages[0]|comicPageUrl'
                                  [coverSize]='pageSize'
-                                 [useSameHeight]='sameHeight'></app-comic-cover>
+                                 [useSameHeight]='sameHeight'
+                                 [selected]='selected'
+                                 (click)='click.next($event)'></app-comic-cover>
             </div>
             <div class='p-col'>
                 <div class='ui-g'>

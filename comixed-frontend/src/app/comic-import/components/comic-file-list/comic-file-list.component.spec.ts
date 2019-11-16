@@ -168,7 +168,7 @@ describe('ComicFileListComponent', () => {
     beforeEach(() => {
       spyOn(comicImportAdaptor, 'selectComicFiles');
       component.selectedComicFiles = [];
-      component.toggleComicFileSelection(SELECTED_COMIC_FILE);
+      component.setSelected(SELECTED_COMIC_FILE, true);
     });
 
     it('invokes the adaptor', () => {
@@ -181,7 +181,7 @@ describe('ComicFileListComponent', () => {
       beforeEach(() => {
         spyOn(comicImportAdaptor, 'deselectComicFiles');
         component.selectedComicFiles = [SELECTED_COMIC_FILE];
-        component.toggleComicFileSelection(SELECTED_COMIC_FILE);
+        component.setSelected(SELECTED_COMIC_FILE, false);
       });
 
       it('invokes the adaptor', () => {

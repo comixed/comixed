@@ -19,6 +19,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 import { Comic } from 'app/comics';
+import { DuplicatePage } from 'app/library/models/duplicate-page';
+import { ComicCoverClickEvent } from 'app/comics/models/event/comic-cover-click-event';
 
 @Component({
   selector: 'app-comic-cover',
@@ -29,25 +31,27 @@ export class ComicCoverComponent {
   @Input() coverUrl: string;
   @Input() comic: Comic;
   @Input() comicFile: ComicFile;
+  @Input() duplicatePage: DuplicatePage;
   @Input() coverSize: number;
   @Input() useSameHeight: boolean;
   @Input() selected = false;
   @Input() selectSelectedClass = true;
   @Input() unprocessed = false;
 
-  @Output() click = new EventEmitter<Comic | ComicFile>();
+  @Output() click = new EventEmitter<ComicCoverClickEvent>();
 
   constructor() {}
 
   clicked(): void {
-    if (this.comic) {
-      this.click.emit(this.comic);
-    } else {
-      this.click.emit(this.comicFile);
-    }
+    this.click.emit({
+      selected: !this.selected,
+      comic: this.comic,
+      comicFile: this.comicFile,
+      duplicatePage: this.duplicatePage
+    });
   }
 
   showOverlay(): boolean {
-    return this.unprocessed || (this.comic && !!this.comic.deletedDate);
+    return this.unprocessed || (!!this.comic && !!this.comic.deletedDate);
   }
 }

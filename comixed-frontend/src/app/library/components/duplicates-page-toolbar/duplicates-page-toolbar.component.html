@@ -21,4 +21,20 @@
                   (onChange)='setPageSize($event.value, false)'
                   (onSlideEnd)='setPageSize($event.value, true)'></p-slider>
     </div>
+    <div class='ui-toolbar-group-right'>
+        <button pButton
+                type='button'
+                class='cx-toolbar-button ui-button-secondary'
+                icon='fa fa-fw fa-plus'
+                [label]='"toolbar.button.select-all"|translate'
+                (click)='selectAll()'
+                [pTooltip]='"toolbar.tooltip.select-all"|translate'></button>
+        <button pButton
+                type='button'
+                class='cx-toolbar-button ui-button-danger'
+                icon='fa fa-fw fa-minus'
+                [label]='"toolbar.button.deselect-all"|translate'
+                (click)='deselectAll()'
+                [pTooltip]='"toolbar.tooltip.deselect-all"|translate'></button>
+    </div>
 </p-toolbar>

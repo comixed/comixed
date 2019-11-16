@@ -21,6 +21,8 @@ import { LibraryDisplayAdaptor } from 'app/library';
 import { SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { DuplicatePage } from 'app/library/models/duplicate-page';
+import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
 
 @Component({
   selector: 'app-duplicates-page-toolbar',
@@ -33,13 +35,16 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
   @Input() pageSize = 200;
   @Input() sameHeight = false;
   @Input() showPages = 10;
+  @Input() pages: DuplicatePage[];
+  @Input() selectedPages: DuplicatePage[];
 
   langChangeSubscription: Subscription;
   showPagesOptions: SelectItem[];
 
   constructor(
     private translateService: TranslateService,
-    private libraryDisplayAdaptor: LibraryDisplayAdaptor
+    private libraryDisplayAdaptor: LibraryDisplayAdaptor,
+    private duplicatesPagesAdaptors: DuplicatesPagesAdaptors
   ) {}
 
   ngOnInit() {
@@ -98,5 +103,13 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
 
   setPageSize(size: number, save: boolean) {
     this.libraryDisplayAdaptor.setCoverSize(size, save);
+  }
+
+  selectAll() {
+    this.duplicatesPagesAdaptors.selectPages(this.pages);
+  }
+
+  deselectAll() {
+    this.duplicatesPagesAdaptors.deselectPages(this.selectedPages);
   }
 }

@@ -23,13 +23,16 @@ import {
 } from './duplicate-pages.reducer';
 import {
   DuplicatePagesAllReceived,
+  DuplicatePagesDeselect,
   DuplicatePagesGetAll,
-  DuplicatePagesGetAllFailed
+  DuplicatePagesGetAllFailed,
+  DuplicatePagesSelect
 } from 'app/library/actions/duplicate-pages.actions';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
+import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
 
 describe('DuplicatePages Reducer', () => {
-  const PAGES = [DUPLICATE_PAGE_1];
+  const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
 
   let state: DuplicatePagesState;
 
@@ -37,7 +40,7 @@ describe('DuplicatePages Reducer', () => {
     state = initialState;
   });
 
-  describe('the default sttae', () => {
+  describe('the default state', () => {
     beforeEach(() => {
       state = reducer(state, {} as any);
     });
@@ -48,6 +51,10 @@ describe('DuplicatePages Reducer', () => {
 
     it('has an empty set of pages', () => {
       expect(state.pages).toEqual([]);
+    });
+
+    it('has an empty select of selected pages', () => {
+      expect(state.selected).toEqual([]);
     });
   });
 
@@ -91,6 +98,38 @@ describe('DuplicatePages Reducer', () => {
 
     it('clears the fetching all flag', () => {
       expect(state.fetchingAll).toBeFalsy();
+    });
+  });
+
+  describe('selecting duplicate pages', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, selected: [DUPLICATE_PAGE_1] },
+        new DuplicatePagesSelect({ pages: PAGES })
+      );
+    });
+
+    it('updates the selected pages', () => {
+      expect(state.selected).toEqual(PAGES);
+    });
+  });
+
+  describe('deselecting duplicate pages', () => {
+    const DESELECTIONS = [DUPLICATE_PAGE_2];
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, selected: PAGES },
+        new DuplicatePagesDeselect({ pages: DESELECTIONS })
+      );
+    });
+
+    it('updates the selected pages', () => {
+      DESELECTIONS.forEach(page => expect(state.selected).not.toContain(page));
+    });
+
+    it('does not remove other pages', () => {
+      expect(state.selected).not.toEqual([]);
     });
   });
 });

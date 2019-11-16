@@ -27,12 +27,17 @@ import {
 } from 'app/library/reducers/duplicate-pages.reducer';
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
-import { DuplicatePagesGetAll } from 'app/library/actions/duplicate-pages.actions';
+import {
+  DuplicatePagesDeselect,
+  DuplicatePagesGetAll,
+  DuplicatePagesSelect
+} from 'app/library/actions/duplicate-pages.actions';
 
 @Injectable()
 export class DuplicatesPagesAdaptors {
   private _fetchingAll$ = new BehaviorSubject<boolean>(false);
   private _pages$ = new BehaviorSubject<DuplicatePage[]>([]);
+  private _selected$ = new BehaviorSubject<DuplicatePage[]>([]);
 
   constructor(private store: Store<AppState>) {
     this.store
@@ -44,6 +49,9 @@ export class DuplicatesPagesAdaptors {
         }
         if (!_.isEqual(dupeState.pages, this._pages$.getValue())) {
           this._pages$.next(dupeState.pages);
+        }
+        if (!_.isEqual(dupeState.selected, this._selected$.getValue())) {
+          this._selected$.next(dupeState.selected);
         }
       });
   }
@@ -58,5 +66,17 @@ export class DuplicatesPagesAdaptors {
 
   get pages$(): Observable<DuplicatePage[]> {
     return this._pages$.asObservable();
+  }
+
+  selectPages(pages: DuplicatePage[]) {
+    this.store.dispatch(new DuplicatePagesSelect({ pages: pages }));
+  }
+
+  get selected$(): Observable<DuplicatePage[]> {
+    return this._selected$.asObservable();
+  }
+
+  deselectPages(pages: DuplicatePage[]) {
+    this.store.dispatch(new DuplicatePagesDeselect({ pages: pages }));
   }
 }

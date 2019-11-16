@@ -16,8 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
+import { ComicCoverClickEvent } from 'app/comics/models/event/comic-cover-click-event';
 
 @Component({
   selector: 'app-duplicate-page-list-item',
@@ -28,6 +29,9 @@ export class DuplicatePageListItemComponent implements OnInit {
   @Input() item: DuplicatePage;
   @Input() pageSize: number;
   @Input() sameHeight: boolean;
+  @Input() selected: boolean;
+
+  @Output() click = new EventEmitter<ComicCoverClickEvent>();
 
   constructor() {}
 

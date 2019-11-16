@@ -100,11 +100,13 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
     return this._selectedComicFiles;
   }
 
-  toggleComicFileSelection(comicFile: ComicFile): void {
-    if (this.selectedComicFiles.includes(comicFile)) {
-      this.comicImportAdaptor.deselectComicFiles([comicFile]);
-    } else {
-      this.comicImportAdaptor.selectComicFiles([comicFile]);
+  setSelected(comicFile: ComicFile, selected: boolean): void {
+    if (!!comicFile) {
+      if (selected) {
+        this.comicImportAdaptor.selectComicFiles([comicFile]);
+      } else {
+        this.comicImportAdaptor.deselectComicFiles([comicFile]);
+      }
     }
   }
 }

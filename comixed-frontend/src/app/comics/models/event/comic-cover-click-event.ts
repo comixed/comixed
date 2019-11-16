@@ -16,22 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Comic } from 'app/comics';
-import { ComicCoverClickEvent } from 'app/comics/models/event/comic-cover-click-event';
+import { ComicFile } from 'app/comic-import/models/comic-file';
+import { DuplicatePage } from 'app/library/models/duplicate-page';
 
-@Component({
-  selector: 'app-comic-grid-item',
-  templateUrl: './comic-grid-item.component.html',
-  styleUrls: ['./comic-grid-item.component.scss']
-})
-export class ComicGridItemComponent {
-  @Input() comic: Comic;
-  @Input() useSameHeight: boolean;
-  @Input() coverSize: number;
-  @Input() selected = false;
-
-  @Output() click = new EventEmitter<ComicCoverClickEvent>();
-
-  constructor() {}
+export interface ComicCoverClickEvent {
+  selected: boolean;
+  comic: Comic;
+  comicFile: ComicFile;
+  duplicatePage: DuplicatePage;
 }

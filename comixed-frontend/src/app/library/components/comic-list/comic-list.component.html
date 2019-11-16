@@ -24,7 +24,7 @@
                                  [coverSize]="coverSize"
                                  [useSameHeight]="sameHeight"
                                  [selected]='selectedComics.includes(comic)'
-                                 (click)='toggleComicSelection(comic)'></app-comic-list-item>
+                                 (click)='toggleComicSelection($event.comic, $event.selected)'></app-comic-list-item>
         </ng-template>
         <ng-template let-comic
                      pTemplate='gridItem'>
@@ -32,7 +32,7 @@
                                  [coverSize]="coverSize"
                                  [useSameHeight]="sameHeight"
                                  [selected]='selectedComics.includes(comic)'
-                                 (click)='toggleComicSelection(comic)'></app-comic-grid-item>
+                                 (click)='toggleComicSelection($event.comic, $event.selected)'></app-comic-grid-item>
         </ng-template>
     </p-dataView>
 </div>

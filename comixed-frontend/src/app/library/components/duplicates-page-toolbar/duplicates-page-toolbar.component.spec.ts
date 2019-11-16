@@ -37,10 +37,16 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
+import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
+import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
 
 describe('DuplicatesPageToolbarComponent', () => {
+  const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
+
   let component: DuplicatesPageToolbarComponent;
   let fixture: ComponentFixture<DuplicatesPageToolbarComponent>;
+  let duplicatesPagesAdaptors: DuplicatesPagesAdaptors;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -60,17 +66,44 @@ describe('DuplicatesPageToolbarComponent', () => {
         ToolbarModule
       ],
       declarations: [DuplicatesPageToolbarComponent],
-      providers: [LibraryDisplayAdaptor, MessageService]
+      providers: [
+        LibraryDisplayAdaptor,
+        DuplicatesPagesAdaptors,
+        MessageService
+      ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DuplicatesPageToolbarComponent);
     component = fixture.componentInstance;
+    duplicatesPagesAdaptors = TestBed.get(DuplicatesPagesAdaptors);
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('selecting all duplicates', () => {
+    beforeEach(() => {
+      spyOn(duplicatesPagesAdaptors, 'selectPages');
+      component.pages = PAGES;
+      component.selectAll();
+    });
+
+    it('invokes the adaptor', () => {
+      expect(duplicatesPagesAdaptors.selectPages).toHaveBeenCalledWith(PAGES);
+    });
+  });
+
+  describe('deselecting all', () => {
+    beforeEach(() => {
+      spyOn(duplicatesPagesAdaptors, 'deselectPages');
+      component.selectedPages = PAGES;
+      component.deselectAll();
+    });
+
+    it('invokes the adaptor', () => {
+      expect(duplicatesPagesAdaptors.deselectPages).toHaveBeenCalledWith(PAGES);
+    });
   });
 });

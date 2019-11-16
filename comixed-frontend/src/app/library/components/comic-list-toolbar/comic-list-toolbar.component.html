@@ -29,7 +29,7 @@
     </div>
     <div class='ui-toolbar-group-right'>
         <button pButton
-                class='ui-button-success'
+                class='ui-button-success cx-toolbar-button'
                 type='button'
                 [pTooltip]='"comic-list-toolbar.button.select-all"|translate'
                 [label]='"comic-list-toolbar.label.select-all"|translate'
@@ -37,7 +37,7 @@
                 [disabled]='!comics.length'
                 (click)='selectAll()'></button>
         <button pButton
-                class='ui-button-success'
+                class='ui-button-success cx-toolbar-button'
                 type='button'
                 [pTooltip]='"comic-list-toolbar.button.deselect-all"|translate'
                 [label]='"comic-list-toolbar.label.deselect-all"|translate'
@@ -45,7 +45,7 @@
                 [disabled]='!selectedComics.length'
                 (click)='deselectAll()'></button>
         <button pButton
-                class='ui-button-info'
+                class='ui-button-info cx-toolbar-button'
                 type='button'
                 [pTooltip]='"comic-list-toolbar.button.scrape"|translate'
                 [label]='"comic-list-toolbar.label.scrape"|translate'
@@ -53,7 +53,7 @@
                 [disabled]='!selectedComics.length'
                 (click)='scrapeComics()'></button>
         <button pButton
-                class='ui-button-danger'
+                class='ui-button-danger cx-toolbar-button'
                 type='button'
                 [pTooltip]='"comic-list-toolbar.button.delete"|translate'
                 [label]='"comic-list-toolbar.label.delete"|translate'

@@ -28,15 +28,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AppState } from 'app/library';
 import {
   DuplicatePagesAllReceived,
-  DuplicatePagesGetAll
+  DuplicatePagesDeselect,
+  DuplicatePagesGetAll,
+  DuplicatePagesSelect
 } from 'app/library/actions/duplicate-pages.actions';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MessageService } from 'primeng/api';
+import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
 
 describe('DuplicatesPagesAdaptors', () => {
-  const DUPLICATE_PAGES = [DUPLICATE_PAGE_1];
+  const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
 
   let adaptor: DuplicatesPagesAdaptors;
   let store: Store<AppState>;
@@ -78,20 +81,52 @@ describe('DuplicatesPagesAdaptors', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        store.dispatch(
-          new DuplicatePagesAllReceived({ pages: DUPLICATE_PAGES })
-        );
+        store.dispatch(new DuplicatePagesAllReceived({ pages: PAGES }));
       });
 
       it('updates the list of pages', () => {
-        adaptor.pages$.subscribe(response =>
-          expect(response).toEqual(DUPLICATE_PAGES)
-        );
+        adaptor.pages$.subscribe(response => expect(response).toEqual(PAGES));
       });
 
       it('provides updates', () => {
         adaptor.fetchingAll$.subscribe(response =>
           expect(response).toBeFalsy()
+        );
+      });
+    });
+  });
+
+  describe('selecting pages', () => {
+    beforeEach(() => {
+      adaptor.selectPages(PAGES);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new DuplicatePagesSelect({ pages: PAGES })
+      );
+    });
+
+    it('provides updates', () => {
+      adaptor.selected$.subscribe(response => expect(response).toEqual(PAGES));
+    });
+
+    describe('deselecting pages', () => {
+      const DESELECTED = PAGES[1];
+
+      beforeEach(() => {
+        adaptor.deselectPages([DESELECTED]);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new DuplicatePagesDeselect({ pages: [DESELECTED] })
+        );
+      });
+
+      it('provides updates', () => {
+        adaptor.selected$.subscribe(response =>
+          expect(response).not.toContain(DESELECTED)
         );
       });
     });

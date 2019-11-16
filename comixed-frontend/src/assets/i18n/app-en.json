@@ -576,5 +576,15 @@
       "unprocessed-comic": "This comic is scheduled for processing.",
       "deleted-comic": "This comic is marked for deletion."
     }
+  },
+  "toolbar": {
+    "button": {
+      "select-all": "All",
+      "deselect-all": "All"
+    },
+    "tooltip": {
+      "select-all": "Select all...",
+      "deselect-all": "Deselect all..."
+    }
   }
 }

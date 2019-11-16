@@ -330,11 +330,13 @@ export class ComicListComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  toggleComicSelection(comic: Comic): void {
-    if (this.selectedComics.includes(comic)) {
-      this.selectionAdaptor.deselectComic(comic);
-    } else {
-      this.selectionAdaptor.selectComic(comic);
+  toggleComicSelection(comic: Comic, selected: boolean): void {
+    if (!!comic) {
+      if (selected) {
+        this.selectionAdaptor.selectComic(comic);
+      } else {
+        this.selectionAdaptor.deselectComic(comic);
+      }
     }
   }
 

@@ -32,7 +32,7 @@
                                               [same_height]='sameHeight'
                                               [selected]='selectedComicFiles.includes(file)'
                                               [use_selected_class]='true'
-                                              (click)='toggleComicFileSelection(file)'></app-comic-file-grid-item>
+                                              (click)='setSelected($event.comicFile, $event.selected)'></app-comic-file-grid-item>
                 </ng-template>
                 <ng-template let-file
                              pTemplate='listItem'>
@@ -41,7 +41,7 @@
                                               [same_height]='sameHeight'
                                               [selected]='selectedComicFiles.includes(file)'
                                               [use_selected_class]='true'
-                                              (click)='toggleComicFileSelection(file)'></app-comic-file-list-item>
+                                              (click)='setSelected($event.comicFile, $event.selected)'></app-comic-file-list-item>
                 </ng-template>
             </p-dataView>
         </div>

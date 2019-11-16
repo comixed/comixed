@@ -1,13 +1,6 @@
 @import '~colors.scss';
 
-button {
-  margin-right: 5px;
-  width: 100px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
+button,
 p-dropdown,
 p-checkbox,
 span {

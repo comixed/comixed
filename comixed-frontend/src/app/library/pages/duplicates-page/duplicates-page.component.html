@@ -1,4 +1,6 @@
 <app-duplicates-page-toolbar class='cx-duplicates-toolbar'
+                             [pages]='duplicates'
+                             [selectedPages]='selected'
                              [gridLayout]='layout === "grid"'
                              [pageSize]='pageSize'
                              [sameHeight]='sameHeight'
@@ -16,12 +18,16 @@
                  pTemplate='gridItem'>
         <app-duplicate-page-grid-item [item]='duplicate'
                                       [pageSize]='pageSize'
-                                      [sameHeight]='sameHeight'></app-duplicate-page-grid-item>
+                                      [sameHeight]='sameHeight'
+                                      [selected]='isSelected(duplicate)'
+                                      (click)='setSelected($event.duplicatePage, $event.selected)'></app-duplicate-page-grid-item>
     </ng-template>
     <ng-template let-duplicate
                  pTemplate='listItem'>
         <app-duplicate-page-list-item [item]='duplicate'
                                       [pageSize]='pageSize'
-                                      [sameHeight]='sameHeight'></app-duplicate-page-list-item>
+                                      [sameHeight]='sameHeight'
+                                      [selected]='isSelected(duplicate)'
+                                      (click)='setSelected($event.duplicatePage, $event.selected)'></app-duplicate-page-list-item>
     </ng-template>
 </p-dataView>

@@ -18,6 +18,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComicFile } from 'app/comic-import/models/comic-file';
+import { ComicCoverClickEvent } from 'app/comics/models/event/comic-cover-click-event';
 
 @Component({
   selector: 'app-comic-file-list-item',
@@ -31,7 +32,7 @@ export class ComicFileListItemComponent {
   @Input() use_selected_class: boolean;
   @Input() selected: boolean;
 
-  @Output() click = new EventEmitter<ComicFile>();
+  @Output() click = new EventEmitter<ComicCoverClickEvent>();
 
   constructor() {}
 }

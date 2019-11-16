@@ -46,12 +46,13 @@
                 type='button'
                 (click)='toggleBlockedPages()'
                 [icon]='deleteBlockedPages?"fa fa-fw fa-check":"fa fa-fw fa-question"'
-                [label]='"import-toolbar.button.delete-blocked-pages"|translate'></button>
+                [label]='"import-toolbar.button.delete-blocked-pages"|translate'
+                class='cx-toolbar-button'></button>
         <button (click)='selectAllComicFiles()'
                 [disabled]='!comicFiles.length||selectedComicFiles.length === comicFiles.length'
                 icon='fa fa-fw fa-plus'
                 [label]='"import-toolbar.button.select-all"|translate'
-                class='ui-button-secondary'
+                class='ui-button-secondary cx-toolbar-button'
                 id='select-all-comics'
                 pButton
                 type='button'></button>
@@ -59,13 +60,14 @@
                 [disabled]='selectedComicFiles.length === 0'
                 icon='fa fa-fw fa-minus'
                 [label]='"import-toolbar.button.deselect-all"|translate'
-                class='ui-button-danger'
+                class='ui-button-danger cx-toolbar-button'
                 id='deselect-all-comics'
                 pButton
                 type='button'></button>
         <p-splitButton [model]='importOptions'
                        [disabled]='selectedComicFiles.length === 0'
                        icon='fa fa-fw fa-start'
-                       [label]='"import-toolbar.button.start-import"|translate'></p-splitButton>
+                       [label]='"import-toolbar.button.start-import"|translate'
+                       class='cx-toolbar-button'></p-splitButton>
     </div>
 </p-toolbar>

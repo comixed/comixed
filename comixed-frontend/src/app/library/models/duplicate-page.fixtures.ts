@@ -18,9 +18,16 @@
 
 import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { PAGE_1, PAGE_2 } from 'app/comics/comics.fixtures';
+import { PAGE_3, PAGE_4 } from 'app/comics/models/page.fixtures';
 
 export const DUPLICATE_PAGE_1: DuplicatePage = {
   hash: PAGE_1.hash,
   blocked: true,
   pages: [PAGE_1, PAGE_2]
+};
+
+export const DUPLICATE_PAGE_2: DuplicatePage = {
+  hash: PAGE_1.hash,
+  blocked: true,
+  pages: [PAGE_3, PAGE_4]
 };

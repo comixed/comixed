@@ -27,11 +27,13 @@ export const DUPLICATE_PAGES_FEATURE_KEY = 'duplicatePages';
 export interface DuplicatePagesState {
   fetchingAll: boolean;
   pages: DuplicatePage[];
+  selected: DuplicatePage[];
 }
 
 export const initialState: DuplicatePagesState = {
   fetchingAll: false,
-  pages: []
+  pages: [],
+  selected: []
 };
 
 export function reducer(
@@ -47,6 +49,22 @@ export function reducer(
 
     case DuplicatePagesActionTypes.GetAllFailed:
       return { ...state, fetchingAll: false };
+
+    case DuplicatePagesActionTypes.Select: {
+      const selected = state.selected
+        .concat(action.payload.pages)
+        .filter((page, index, array) => array.indexOf(page) === index);
+
+      return { ...state, selected: selected };
+    }
+
+    case DuplicatePagesActionTypes.Deselect: {
+      const selected = state.selected.filter(
+        page => action.payload.pages.indexOf(page) === -1
+      );
+
+      return { ...state, selected: selected };
+    }
 
     default:
       return state;

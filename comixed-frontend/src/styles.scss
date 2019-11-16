@@ -1,6 +1,14 @@
 @import '~primeicons/primeicons.css';
 @import '~colors.scss';
 
+.cx-toolbar-button {
+  margin-right: 5px;
+  width: 150px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .cx-table-details {
   border: solid 1px $cx-detail-label-border-color;
   border-collapse: collapse;

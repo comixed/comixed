@@ -33,6 +33,8 @@ import { Title } from '@angular/platform-browser';
 export class DuplicatesPageComponent implements OnInit, OnDestroy {
   duplicatesSubscription: Subscription;
   duplicates: DuplicatePage[];
+  selectedSubscription: Subscription;
+  selected: DuplicatePage[];
   fetchingSubscription: Subscription;
   fetching = false;
   layoutSubscription: Subscription;
@@ -72,6 +74,9 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
     this.duplicatesSubscription = this.duplicatesAdaptor.pages$.subscribe(
       duplicates => (this.duplicates = duplicates)
     );
+    this.selectedSubscription = this.duplicatesAdaptor.selected$.subscribe(
+      selected => (this.selected = selected)
+    );
     this.fetchingSubscription = this.duplicatesAdaptor.fetchingAll$.subscribe(
       fetching => (this.fetching = fetching)
     );
@@ -85,6 +90,7 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
     this.sameHeightSubscription.unsubscribe();
     this.pageCountSubscription.unsubscribe();
     this.duplicatesSubscription.unsubscribe();
+    this.selectedSubscription.unsubscribe();
     this.fetchingSubscription.unsubscribe();
   }
 
@@ -97,5 +103,19 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('duplicates-page.title')
     );
+  }
+
+  isSelected(duplicate: DuplicatePage): boolean {
+    return this.selected.includes(duplicate);
+  }
+
+  setSelected(page: DuplicatePage, selected: boolean): void {
+    if (!!page) {
+      if (selected) {
+        this.duplicatesAdaptor.selectPages([page]);
+      } else {
+        this.duplicatesAdaptor.deselectPages([page]);
+      }
+    }
   }
 }

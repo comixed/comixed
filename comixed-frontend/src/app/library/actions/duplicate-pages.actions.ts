@@ -22,7 +22,9 @@ import { DuplicatePage } from 'app/library/models/duplicate-page';
 export enum DuplicatePagesActionTypes {
   GetAll = '[DUPLICATE PAGES] Get all duplicate pages',
   AllReceived = '[DUPLICATE PAGES] Received all duplicate pages',
-  GetAllFailed = '[DUPLICATE PAGES] Failed to get all duplicate pages'
+  GetAllFailed = '[DUPLICATE PAGES] Failed to get all duplicate pages',
+  Select = '[DUPLICATE PAGES] Select the given pages',
+  Deselect = '[DUPLICATE PAGES] Deselect the given pages'
 }
 
 export class DuplicatePagesGetAll implements Action {
@@ -43,7 +45,21 @@ export class DuplicatePagesGetAllFailed implements Action {
   constructor() {}
 }
 
+export class DuplicatePagesSelect implements Action {
+  readonly type = DuplicatePagesActionTypes.Select;
+
+  constructor(public payload: { pages: DuplicatePage[] }) {}
+}
+
+export class DuplicatePagesDeselect implements Action {
+  readonly type = DuplicatePagesActionTypes.Deselect;
+
+  constructor(public payload: { pages: DuplicatePage[] }) {}
+}
+
 export type DuplicatePagesActions =
   | DuplicatePagesGetAll
   | DuplicatePagesAllReceived
-  | DuplicatePagesGetAllFailed;
+  | DuplicatePagesGetAllFailed
+  | DuplicatePagesSelect
+  | DuplicatePagesDeselect;

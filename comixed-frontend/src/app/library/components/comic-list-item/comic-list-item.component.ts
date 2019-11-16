@@ -18,6 +18,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Comic } from 'app/comics';
+import { ComicCoverClickEvent } from 'app/comics/models/event/comic-cover-click-event';
 
 @Component({
   selector: 'app-comic-list-item',
@@ -30,7 +31,7 @@ export class ComicListItemComponent {
   @Input() coverSize: number;
   @Input() selected = false;
 
-  @Output() click = new EventEmitter<Comic>();
+  @Output() click = new EventEmitter<ComicCoverClickEvent>();
 
   constructor() {}
 }
