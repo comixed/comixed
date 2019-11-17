@@ -21,6 +21,7 @@ package org.comixed.model.library;
 import org.h2.util.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.TestPropertySource;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
@@ -33,6 +34,7 @@ import java.security.NoSuchAlgorithmException;
 
 import static org.junit.Assert.*;
 
+@TestPropertySource(locations = {"classpath:test-application.properties"})
 public class PageTest {
     private static final String TEST_JPG_FILE = "src/test/resources/example.jpg";
     private static String EXPECTED_HASH;

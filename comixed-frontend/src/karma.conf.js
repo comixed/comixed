@@ -25,8 +25,8 @@ module.exports = function(config) {
     angularCli: {
       environment: 'dev'
     },
-    reporters: ['mocha'],
-    // reporters: ['progress'],
+    // reporters: ['mocha'],
+    reporters: ['progress'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
