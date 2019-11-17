@@ -6,6 +6,9 @@ coverage
 .classpath
 .project
 .settings
+._.DS_Store
+.DS_Store
+.fseventsd
 yarn-error.log
 comixed-frontend/node/*
 comixed-frontend/node_modules/*
