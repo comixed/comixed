@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 @Ignore // TODO get this working
 public class WorkerTest
         extends ConcurrentTestCase {

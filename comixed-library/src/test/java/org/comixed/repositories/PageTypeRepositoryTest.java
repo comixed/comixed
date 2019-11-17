@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 @DatabaseSetup("classpath:test-comics.xml")
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
                          DirtiesContextTestExecutionListener.class,

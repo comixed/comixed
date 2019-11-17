@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ComiXedTestContext.class)
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 public class RarArchiveAdaptorTest {
     private static final String TEST_FILE_ENTRY_0 = "exampleCBR.jpg";
     private static final String TEST_FILE_ENTRY_1 = "example.jpeg";

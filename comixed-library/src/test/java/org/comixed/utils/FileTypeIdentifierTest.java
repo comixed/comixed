@@ -34,7 +34,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = UtilsContext.class)
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 public class FileTypeIdentifierTest
 {
     private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";

@@ -40,7 +40,7 @@ import java.io.InputStream;
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest
 public class ProcessComicTaskTest {
     private static final String TEST_FILE_HASH = "OICU812";

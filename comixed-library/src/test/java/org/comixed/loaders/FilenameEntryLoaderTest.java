@@ -34,7 +34,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 public class FilenameEntryLoaderTest extends BaseLoaderTest
 {
     private static final String TEST_FILE = "src/test/resources/ComicInfo-complete.xml";

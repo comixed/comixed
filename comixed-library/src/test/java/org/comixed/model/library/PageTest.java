@@ -34,7 +34,7 @@ import java.security.NoSuchAlgorithmException;
 
 import static org.junit.Assert.*;
 
-@TestPropertySource(locations = {"classpath:test-application.properties"})
+@TestPropertySource(locations = {"classpath:application.properties"})
 public class PageTest {
     private static final String TEST_JPG_FILE = "src/test/resources/example.jpg";
     private static String EXPECTED_HASH;

@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 public class ImageEntryLoaderTest
         extends BaseLoaderTest {
     private static final String TEST_FILENAME = "src/test/resources/example.jpg";

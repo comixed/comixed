@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RunWith(PowerMockRunner.class)
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 @PrepareForTest(FileUtils.class)
 @SpringBootTest
 public class DeleteComicsWorkerTaskTest {

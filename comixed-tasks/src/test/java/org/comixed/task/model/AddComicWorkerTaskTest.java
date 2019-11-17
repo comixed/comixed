@@ -41,7 +41,7 @@ import java.io.File;
 import static junit.framework.TestCase.assertSame;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest
 public class AddComicWorkerTaskTest {
     private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";

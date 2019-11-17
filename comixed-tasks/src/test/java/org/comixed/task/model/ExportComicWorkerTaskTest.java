@@ -35,7 +35,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations = "classpath:test-application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest
 public class ExportComicWorkerTaskTest {
     private static final String TEST_COMIC_FILENAME = "/Users/comixeduser/Comics/thiscomic.cbz";
