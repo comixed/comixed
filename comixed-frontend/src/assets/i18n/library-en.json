@@ -231,6 +231,14 @@
       "error": {
         "detail": "Failed to get all duplicate pages."
       }
+    },
+    "set-blocking": {
+      "success": {
+        "detail": "Successfully {blocked, select, true{blocked} other{unblocked}} {count, plural, =1{one hash} other{# hashes}}."
+      },
+      "error": {
+        "detail": "Failed to block page hashes."
+      }
     }
   },
   "duplicates-page": {
@@ -245,6 +253,21 @@
         "50-pages": "50 Pages",
         "100-pages": "100 Pages"
       }
+    }
+  },
+  "duplicates-page-toolbar": {
+    "options": {
+      "blocking": {
+        "turn-on": "Block",
+        "turn-off": "Unblock"
+      }
+    },
+    "button": {
+      "blocking-options": "Blocking"
+    },
+    "set-blocking": {
+      "header": "Set Blocking State For Pages",
+      "message": "Are you sure you want to {blocking, select, true{block} other{unblock}} the selected pages?"
     }
   }
 }

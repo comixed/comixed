@@ -19,6 +19,7 @@
 package org.comixed.controller.library;
 
 import org.comixed.model.library.*;
+import org.comixed.net.SetBlockingStateRequest;
 import org.comixed.service.library.PageException;
 import org.comixed.service.library.PageService;
 import org.comixed.utils.FileTypeIdentifier;
@@ -42,9 +43,9 @@ import static org.junit.Assert.*;
 public class PageControllerTest {
     private static final long TEST_PAGE_TYPE_ID = 717;
     private static final long TEST_PAGE_ID = 129;
-    private static final String[] BLOCKED_HASH_LIST = {"12345",
-                                                       "23456",
-                                                       "34567"};
+    private static final String[] TEST_PAGE_HASH_LIST = {"12345",
+                                                         "23456",
+                                                         "34567"};
     private static final List<DuplicatePage> TEST_DUPLICATE_PAGES = new ArrayList<>();
     private static final int TEST_PAGE_INDEX = 7;
     private static final long TEST_COMIC_ID = 1002L;
@@ -53,6 +54,7 @@ public class PageControllerTest {
     private static final String TEST_PAGE_HASH = "12345";
     private static final String TEST_PAGE_CONTENT_TYPE = "application";
     private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
+    private static final Boolean TEST_BLOCKING = true;
 
     @InjectMocks private PageController pageController;
     @Mock private PageService pageService;
@@ -62,6 +64,7 @@ public class PageControllerTest {
     @Mock private Comic comic;
     @Mock private List<PageType> pageTypes;
     @Mock private FileTypeIdentifier fileTypeIdentifier;
+    @Mock private List<DuplicatePage> duplicatePageList;
 
     @Captor private ArgumentCaptor<InputStream> inputStream;
 
@@ -131,11 +134,11 @@ public class PageControllerTest {
     @Test
     public void testGetBlockedPageHashes() {
         Mockito.when(pageService.getAllBlockedPageHashes())
-               .thenReturn(BLOCKED_HASH_LIST);
+               .thenReturn(TEST_PAGE_HASH_LIST);
 
         String[] result = pageController.getAllBlockedPageHashes();
 
-        assertSame(BLOCKED_HASH_LIST,
+        assertSame(TEST_PAGE_HASH_LIST,
                    result);
 
         Mockito.verify(pageService,
@@ -399,5 +402,24 @@ public class PageControllerTest {
         Mockito.verify(pageService,
                        Mockito.times(1))
                .undeleteAllWithHash(TEST_PAGE_HASH);
+    }
+
+    @Test
+    public void testSetBlockingState() {
+        Mockito.when(pageService.setBlockingState(Mockito.any(String[].class),
+                                                  Mockito.anyBoolean()))
+               .thenReturn(duplicatePageList);
+
+        final List<DuplicatePage> result = pageController.setBlockingState(new SetBlockingStateRequest(TEST_PAGE_HASH_LIST,
+                                                                                                       TEST_BLOCKING));
+
+        assertNotNull(result);
+        assertSame(duplicatePageList,
+                   result);
+
+        Mockito.verify(pageService,
+                       Mockito.times(1))
+               .setBlockingState(TEST_PAGE_HASH_LIST,
+                                 TEST_BLOCKING);
     }
 }

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from 'app/app.functions';
+package org.comixed.net;
 
-export const GET_ALL_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/pages/duplicates`;
-export const SET_BLOCKING_STATE_URL = `${API_ROOT_URL}/pages/hashes/blocking`;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class SetBlockingStateRequest {
+    @JsonProperty("hashes") private String[] hashes;
+    @JsonProperty("blocked") private Boolean blocked;
+
+    public SetBlockingStateRequest() {}
+
+    public SetBlockingStateRequest(final String[] hashes,
+                                   final Boolean blocked) {
+        this.hashes = hashes;
+        this.blocked = blocked;
+    }
+
+    public String[] getHashes() { return hashes; }
+
+    public Boolean getBlocked() { return blocked; }
+}

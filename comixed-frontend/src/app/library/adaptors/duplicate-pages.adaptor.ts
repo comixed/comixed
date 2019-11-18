@@ -30,14 +30,16 @@ import * as _ from 'lodash';
 import {
   DuplicatePagesDeselect,
   DuplicatePagesGetAll,
-  DuplicatePagesSelect
+  DuplicatePagesSelect,
+  DuplicatePagesSetBlocking
 } from 'app/library/actions/duplicate-pages.actions';
 
 @Injectable()
-export class DuplicatesPagesAdaptors {
+export class DuplicatePagesAdaptors {
   private _fetchingAll$ = new BehaviorSubject<boolean>(false);
   private _pages$ = new BehaviorSubject<DuplicatePage[]>([]);
   private _selected$ = new BehaviorSubject<DuplicatePage[]>([]);
+  private _setBlocking$ = new BehaviorSubject<boolean>(false);
 
   constructor(private store: Store<AppState>) {
     this.store
@@ -52,6 +54,9 @@ export class DuplicatesPagesAdaptors {
         }
         if (!_.isEqual(dupeState.selected, this._selected$.getValue())) {
           this._selected$.next(dupeState.selected);
+        }
+        if (dupeState.setBlocking !== this._setBlocking$.getValue()) {
+          this._setBlocking$.next(dupeState.setBlocking);
         }
       });
   }
@@ -78,5 +83,15 @@ export class DuplicatesPagesAdaptors {
 
   deselectPages(pages: DuplicatePage[]) {
     this.store.dispatch(new DuplicatePagesDeselect({ pages: pages }));
+  }
+
+  setBlocking(pages: DuplicatePage[], blocking: boolean): void {
+    this.store.dispatch(
+      new DuplicatePagesSetBlocking({ pages: pages, blocking: blocking })
+    );
+  }
+
+  get setBlocking$(): Observable<boolean> {
+    return this._setBlocking$.asObservable();
   }
 }

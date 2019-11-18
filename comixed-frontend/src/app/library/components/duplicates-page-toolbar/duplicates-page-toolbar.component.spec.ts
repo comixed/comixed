@@ -16,37 +16,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DuplicatesPageToolbarComponent } from './duplicates-page-toolbar.component';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { LibraryDisplayAdaptor } from 'app/library';
+import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
+import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
+import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
+import { UserModule } from 'app/user/user.module';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import {
   CheckboxModule,
+  Confirmation,
+  ConfirmationService,
   MessageService,
   SliderModule,
+  SplitButtonModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { FormsModule } from '@angular/forms';
-import { LibraryDisplayAdaptor } from 'app/library';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AuthenticationAdaptor } from 'app/user';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { UserModule } from 'app/user/user.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
-import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
-import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
+
+import { DuplicatesPageToolbarComponent } from './duplicates-page-toolbar.component';
 
 describe('DuplicatesPageToolbarComponent', () => {
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
 
   let component: DuplicatesPageToolbarComponent;
   let fixture: ComponentFixture<DuplicatesPageToolbarComponent>;
-  let duplicatesPagesAdaptors: DuplicatesPagesAdaptors;
+  let duplicatesPagesAdaptors: DuplicatePagesAdaptors;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -63,19 +66,22 @@ describe('DuplicatesPageToolbarComponent', () => {
         TooltipModule,
         CheckboxModule,
         SliderModule,
-        ToolbarModule
+        ToolbarModule,
+        SplitButtonModule
       ],
       declarations: [DuplicatesPageToolbarComponent],
       providers: [
         LibraryDisplayAdaptor,
-        DuplicatesPagesAdaptors,
-        MessageService
+        DuplicatePagesAdaptors,
+        MessageService,
+        ConfirmationService
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DuplicatesPageToolbarComponent);
     component = fixture.componentInstance;
-    duplicatesPagesAdaptors = TestBed.get(DuplicatesPagesAdaptors);
+    duplicatesPagesAdaptors = TestBed.get(DuplicatePagesAdaptors);
+    confirmationService = TestBed.get(ConfirmationService);
     fixture.detectChanges();
   }));
 
@@ -104,6 +110,42 @@ describe('DuplicatesPageToolbarComponent', () => {
 
     it('invokes the adaptor', () => {
       expect(duplicatesPagesAdaptors.deselectPages).toHaveBeenCalledWith(PAGES);
+    });
+  });
+
+  describe('turn on blocked for selected pages', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.accept()
+      );
+      spyOn(duplicatesPagesAdaptors, 'setBlocking');
+      component.selectedPages = PAGES;
+      component.setBlocking(true);
+    });
+
+    it('invokes the adaptor', () => {
+      expect(duplicatesPagesAdaptors.setBlocking).toHaveBeenCalledWith(
+        PAGES,
+        true
+      );
+    });
+  });
+
+  describe('turn off blocked for selected pages', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.accept()
+      );
+      spyOn(duplicatesPagesAdaptors, 'setBlocking');
+      component.selectedPages = PAGES;
+      component.setBlocking(false);
+    });
+
+    it('invokes the adaptor', () => {
+      expect(duplicatesPagesAdaptors.setBlocking).toHaveBeenCalledWith(
+        PAGES,
+        false
+      );
     });
   });
 });

@@ -23,10 +23,13 @@ import {
 } from './duplicate-pages.reducer';
 import {
   DuplicatePagesAllReceived,
+  DuplicatePagesBlockingSet,
   DuplicatePagesDeselect,
   DuplicatePagesGetAll,
   DuplicatePagesGetAllFailed,
-  DuplicatePagesSelect
+  DuplicatePagesSelect,
+  DuplicatePagesSetBlocking,
+  DuplicatePagesSetBlockingFailed
 } from 'app/library/actions/duplicate-pages.actions';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
@@ -55,6 +58,10 @@ describe('DuplicatePages Reducer', () => {
 
     it('has an empty select of selected pages', () => {
       expect(state.selected).toEqual([]);
+    });
+
+    it('clears the set blocking flag', () => {
+      expect(state.setBlocking).toBeFalsy();
     });
   });
 
@@ -130,6 +137,49 @@ describe('DuplicatePages Reducer', () => {
 
     it('does not remove other pages', () => {
       expect(state.selected).not.toEqual([]);
+    });
+  });
+
+  describe('setting the blocked state on duplicate pages', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, setBlocking: false },
+        new DuplicatePagesSetBlocking({ pages: PAGES, blocking: true })
+      );
+    });
+
+    it('sets the set blocking flag', () => {
+      expect(state.setBlocking).toBeTruthy();
+    });
+  });
+
+  describe('when the blocked state has been set for pages', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, setBlocking: true, pages: [] },
+        new DuplicatePagesBlockingSet({ pages: PAGES })
+      );
+    });
+
+    it('clears the set blocking flag', () => {
+      expect(state.setBlocking).toBeFalsy();
+    });
+
+    it('updates the page list', () => {
+      expect(state.pages).toEqual(PAGES);
+    });
+  });
+
+  describe('failure to set blocking state', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, setBlocking: true },
+        new DuplicatePagesSetBlockingFailed()
+      );
+    });
+
+    it('clears the set blocking flag', () => {
+      expect(state.setBlocking).toBeFalsy();
     });
   });
 });

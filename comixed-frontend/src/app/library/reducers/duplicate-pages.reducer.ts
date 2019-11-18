@@ -16,24 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { DuplicatePage } from 'app/library/models/duplicate-page';
 import {
   DuplicatePagesActions,
   DuplicatePagesActionTypes
 } from '../actions/duplicate-pages.actions';
-import { DuplicatePage } from 'app/library/models/duplicate-page';
 
-export const DUPLICATE_PAGES_FEATURE_KEY = 'duplicatePages';
+export const DUPLICATE_PAGES_FEATURE_KEY = 'duplicate_pages_state';
 
 export interface DuplicatePagesState {
   fetchingAll: boolean;
   pages: DuplicatePage[];
   selected: DuplicatePage[];
+  setBlocking: boolean;
 }
 
 export const initialState: DuplicatePagesState = {
   fetchingAll: false,
   pages: [],
-  selected: []
+  selected: [],
+  setBlocking: false
 };
 
 export function reducer(
@@ -65,6 +67,15 @@ export function reducer(
 
       return { ...state, selected: selected };
     }
+
+    case DuplicatePagesActionTypes.SetBlocking:
+      return { ...state, setBlocking: true };
+
+    case DuplicatePagesActionTypes.BlockingSet:
+      return { ...state, setBlocking: false, pages: action.payload.pages };
+
+    case DuplicatePagesActionTypes.SetBlockingFailed:
+      return { ...state, setBlocking: false };
 
     default:
       return state;

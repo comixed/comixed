@@ -32,15 +32,18 @@ import { EffectsModule } from '@ngrx/effects';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 import {
   DuplicatePagesAllReceived,
+  DuplicatePagesBlockingSet,
   DuplicatePagesGetAll,
-  DuplicatePagesGetAllFailed
+  DuplicatePagesGetAllFailed,
+  DuplicatePagesSetBlocking,
+  DuplicatePagesSetBlockingFailed
 } from 'app/library/actions/duplicate-pages.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import objectContaining = jasmine.objectContaining;
 
 describe('DuplicatePagesEffects', () => {
-  const DUPLICATE_PAGES = [DUPLICATE_PAGE_1];
+  const PAGES = [DUPLICATE_PAGE_1];
 
   let actions$: Observable<any>;
   let effects: DuplicatePagesEffects;
@@ -62,7 +65,10 @@ describe('DuplicatePagesEffects', () => {
         {
           provide: DuplicatePagesService,
           useValue: {
-            getAll: jasmine.createSpy('DuplicatePagesService.getAll()')
+            getAll: jasmine.createSpy('DuplicatePagesService.getAll()'),
+            setBlocking: jasmine.createSpy(
+              'DuplicatePagesService.setBlocking()'
+            )
           }
         },
         MessageService
@@ -81,7 +87,7 @@ describe('DuplicatePagesEffects', () => {
 
   describe('getting all duplicate pages', () => {
     it('fires an action on success', () => {
-      const serviceResponse = DUPLICATE_PAGES;
+      const serviceResponse = PAGES;
       const action = new DuplicatePagesGetAll();
       const outcome = new DuplicatePagesAllReceived({ pages: serviceResponse });
 
@@ -116,6 +122,63 @@ describe('DuplicatePagesEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.getAll$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('setting the blocked state for duplicate pages', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = PAGES;
+      const action = new DuplicatePagesSetBlocking({
+        pages: PAGES,
+        blocking: true
+      });
+      const outcome = new DuplicatePagesBlockingSet({ pages: PAGES });
+
+      actions$ = hot('-a', { a: action });
+      duplicatePagesService.setBlocking.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setBlocking$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new DuplicatePagesSetBlocking({
+        pages: PAGES,
+        blocking: true
+      });
+      const outcome = new DuplicatePagesSetBlockingFailed();
+
+      actions$ = hot('-a', { a: action });
+      duplicatePagesService.setBlocking.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setBlocking$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new DuplicatePagesSetBlocking({
+        pages: PAGES,
+        blocking: true
+      });
+      const outcome = new DuplicatePagesSetBlockingFailed();
+
+      actions$ = hot('-a', { a: action });
+      duplicatePagesService.setBlocking.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.setBlocking$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

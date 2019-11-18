@@ -23,6 +23,7 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.library.DuplicatePage;
 import org.comixed.model.library.Page;
 import org.comixed.model.library.PageType;
+import org.comixed.net.SetBlockingStateRequest;
 import org.comixed.service.library.PageException;
 import org.comixed.service.library.PageService;
 import org.comixed.utils.FileTypeIdentifier;
@@ -301,5 +302,23 @@ public class PageController {
 
         return this.pageService.updateTypeForPage(id,
                                                   pageTypeId);
+    }
+
+    @PostMapping(value = "/pages/hashes/blocking",
+                 produces = "application/json",
+                 consumes = "application/json")
+    @JsonView(View.DuplicatePageList.class)
+    public List<DuplicatePage> setBlockingState(
+            @RequestBody()
+            final SetBlockingStateRequest request) {
+        this.logger.info("Setting blocked state for {} hash{} to {}",
+                         request.getHashes().length,
+                         request.getHashes().length == 1
+                         ? ""
+                         : "es",
+                         request.getBlocked());
+
+        return this.pageService.setBlockingState(request.getHashes(),
+                                                 request.getBlocked());
     }
 }

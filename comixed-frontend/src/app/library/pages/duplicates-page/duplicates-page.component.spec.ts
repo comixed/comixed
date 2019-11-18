@@ -29,16 +29,18 @@ import { DropdownModule } from 'primeng/dropdown';
 import {
   CardModule,
   CheckboxModule,
+  ConfirmationService,
   MessageService,
   ProgressSpinnerModule,
   SliderModule,
+  SplitButtonModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
 import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
-import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
+import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { LibraryDisplayAdaptor } from 'app/library';
@@ -69,7 +71,8 @@ describe('DuplicatesPageComponent', () => {
         CheckboxModule,
         SliderModule,
         CardModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        SplitButtonModule
       ],
       declarations: [
         DuplicatesPageComponent,
@@ -80,10 +83,11 @@ describe('DuplicatesPageComponent', () => {
         ComicPageUrlPipe
       ],
       providers: [
-        DuplicatesPagesAdaptors,
+        DuplicatePagesAdaptors,
         LibraryDisplayAdaptor,
         MessageService,
-        BreadcrumbAdaptor
+        BreadcrumbAdaptor,
+        ConfirmationService
       ]
     }).compileComponents();
   }));

@@ -24,7 +24,10 @@ export enum DuplicatePagesActionTypes {
   AllReceived = '[DUPLICATE PAGES] Received all duplicate pages',
   GetAllFailed = '[DUPLICATE PAGES] Failed to get all duplicate pages',
   Select = '[DUPLICATE PAGES] Select the given pages',
-  Deselect = '[DUPLICATE PAGES] Deselect the given pages'
+  Deselect = '[DUPLICATE PAGES] Deselect the given pages',
+  SetBlocking = '[DUPLICATE PAGES] Set the blocking state for the given pages',
+  BlockingSet = '[DUPLICATE PAGES] The block state for the given pages was set',
+  SetBlockingFailed = '[DUPLICATE PAGES] Failed to set the blocking state'
 }
 
 export class DuplicatePagesGetAll implements Action {
@@ -57,9 +60,30 @@ export class DuplicatePagesDeselect implements Action {
   constructor(public payload: { pages: DuplicatePage[] }) {}
 }
 
+export class DuplicatePagesSetBlocking implements Action {
+  readonly type = DuplicatePagesActionTypes.SetBlocking;
+
+  constructor(public payload: { pages: DuplicatePage[]; blocking: boolean }) {}
+}
+
+export class DuplicatePagesBlockingSet implements Action {
+  readonly type = DuplicatePagesActionTypes.BlockingSet;
+
+  constructor(public payload: { pages: DuplicatePage[] }) {}
+}
+
+export class DuplicatePagesSetBlockingFailed implements Action {
+  readonly type = DuplicatePagesActionTypes.SetBlockingFailed;
+
+  constructor() {}
+}
+
 export type DuplicatePagesActions =
   | DuplicatePagesGetAll
   | DuplicatePagesAllReceived
   | DuplicatePagesGetAllFailed
   | DuplicatePagesSelect
-  | DuplicatePagesDeselect;
+  | DuplicatePagesDeselect
+  | DuplicatePagesSetBlocking
+  | DuplicatePagesBlockingSet
+  | DuplicatePagesSetBlockingFailed;

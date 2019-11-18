@@ -17,10 +17,15 @@
  */
 
 import { Injectable } from '@angular/core';
+import { DuplicatePage } from 'app/library/models/duplicate-page';
+import { SetBlockingStateRequest } from 'app/library/models/net/set-blocking-state-request';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from 'app/app.functions';
-import { GET_ALL_DUPLICATE_PAGES_URL } from 'app/library/library.constants';
+import {
+  GET_ALL_DUPLICATE_PAGES_URL,
+  SET_BLOCKING_STATE_URL
+} from 'app/library/library.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +35,12 @@ export class DuplicatePagesService {
 
   getAll(): Observable<any> {
     return this.http.get(interpolate(GET_ALL_DUPLICATE_PAGES_URL));
+  }
+
+  setBlocking(pages: DuplicatePage[], blocking: boolean): Observable<any> {
+    return this.http.post(interpolate(SET_BLOCKING_STATE_URL), {
+      hashes: pages.map(page => page.hash),
+      blocked: blocking
+    } as SetBlockingStateRequest);
   }
 }

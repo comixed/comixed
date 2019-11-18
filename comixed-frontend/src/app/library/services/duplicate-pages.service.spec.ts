@@ -17,6 +17,7 @@
  */
 
 import { TestBed } from '@angular/core/testing';
+import { SetBlockingStateRequest } from 'app/library/models/net/set-blocking-state-request';
 import { DuplicatePagesService } from './duplicate-pages.service';
 import { DUPLICATE_PAGE_1 } from 'app/library/models/duplicate-page.fixtures';
 import {
@@ -24,10 +25,14 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { interpolate } from 'app/app.functions';
-import { GET_ALL_DUPLICATE_PAGES_URL } from 'app/library/library.constants';
+import {
+  GET_ALL_DUPLICATE_PAGES_URL,
+  SET_BLOCKING_STATE_URL
+} from 'app/library/library.constants';
 
 describe('DuplicatePagesService', () => {
-  const DUPLICATE_PAGES = [DUPLICATE_PAGE_1];
+  const PAGES = [DUPLICATE_PAGE_1];
+  const HASHES = PAGES.map(page => page.hash);
 
   let service: DuplicatePagesService;
   let httpMock: HttpTestingController;
@@ -47,12 +52,24 @@ describe('DuplicatePagesService', () => {
   });
 
   it('can get all duplicate pages', () => {
-    service
-      .getAll()
-      .subscribe(response => expect(response).toEqual(DUPLICATE_PAGES));
+    service.getAll().subscribe(response => expect(response).toEqual(PAGES));
 
     const req = httpMock.expectOne(interpolate(GET_ALL_DUPLICATE_PAGES_URL));
     expect(req.request.method).toEqual('GET');
-    req.flush(DUPLICATE_PAGES);
+    req.flush(PAGES);
+  });
+
+  it('can set the blocking state for pages', () => {
+    service
+      .setBlocking(PAGES, true)
+      .subscribe(response => expect(response).toEqual(PAGES));
+
+    const req = httpMock.expectOne(interpolate(SET_BLOCKING_STATE_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      blocked: true,
+      hashes: HASHES
+    } as SetBlockingStateRequest);
+    req.flush(PAGES);
   });
 });

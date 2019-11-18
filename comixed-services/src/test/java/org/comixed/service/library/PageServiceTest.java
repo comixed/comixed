@@ -605,4 +605,98 @@ public class PageServiceTest {
                .updateDeleteOnAllWithHash(TEST_PAGE_HASH,
                                           false);
     }
+
+    @Test
+    public void testSetBlockingStateToTrueNotAlreadyBlocked() {
+        Mockito.when(blockedPageHashRepository.findByHash(Mockito.anyString()))
+               .thenReturn(null);
+        Mockito.when(blockedPageHashRepository.save(blockedPageHashCaptor.capture()))
+               .thenReturn(blockedPageHash);
+        Mockito.when(pageRepository.getDuplicatePages())
+               .thenReturn(TEST_DUPLICATE_PAGES);
+
+        final List<DuplicatePage> result = pageService.setBlockingState(new String[]{TEST_PAGE_HASH},
+                                                                        true);
+
+        assertNotNull(result);
+        assertEquals(TEST_PAGE_HASH,
+                     blockedPageHashCaptor.getValue()
+                                          .getHash());
+
+        Mockito.verify(blockedPageHashRepository,
+                       Mockito.times(1))
+               .findByHash(TEST_PAGE_HASH);
+        Mockito.verify(blockedPageHashRepository,
+                       Mockito.times(1))
+               .save(blockedPageHashCaptor.getValue());
+        Mockito.verify(pageRepository,
+                       Mockito.times(1))
+               .getDuplicatePages();
+    }
+
+    @Test
+    public void testSetBlockingStateToTrueAlreadyBlocked() {
+        Mockito.when(blockedPageHashRepository.findByHash(Mockito.anyString()))
+               .thenReturn(blockedPageHash);
+        Mockito.when(pageRepository.getDuplicatePages())
+               .thenReturn(TEST_DUPLICATE_PAGES);
+
+        final List<DuplicatePage> result = pageService.setBlockingState(new String[]{TEST_PAGE_HASH},
+                                                                        true);
+
+        assertNotNull(result);
+
+        Mockito.verify(blockedPageHashRepository,
+                       Mockito.times(1))
+               .findByHash(TEST_PAGE_HASH);
+        Mockito.verify(pageRepository,
+                       Mockito.times(1))
+               .getDuplicatePages();
+    }
+
+    @Test
+    public void testSetBlockingStateToFalseNotAlreadyBlocked() {
+        Mockito.when(blockedPageHashRepository.findByHash(Mockito.anyString()))
+               .thenReturn(null);
+        Mockito.when(pageRepository.getDuplicatePages())
+               .thenReturn(TEST_DUPLICATE_PAGES);
+
+        final List<DuplicatePage> result = pageService.setBlockingState(new String[]{TEST_PAGE_HASH},
+                                                                        false);
+
+        assertNotNull(result);
+
+        Mockito.verify(blockedPageHashRepository,
+                       Mockito.times(1))
+               .findByHash(TEST_PAGE_HASH);
+        Mockito.verify(pageRepository,
+                       Mockito.times(1))
+               .getDuplicatePages();
+    }
+
+    @Test
+    public void testSetBlockingStateToFalseAlreadyBlocked() {
+        Mockito.when(blockedPageHashRepository.findByHash(Mockito.anyString()))
+               .thenReturn(blockedPageHash);
+        Mockito.doNothing()
+               .when(blockedPageHashRepository)
+               .delete(Mockito.any());
+        Mockito.when(pageRepository.getDuplicatePages())
+               .thenReturn(TEST_DUPLICATE_PAGES);
+
+        final List<DuplicatePage> result = pageService.setBlockingState(new String[]{TEST_PAGE_HASH},
+                                                                        false);
+
+        assertNotNull(result);
+
+        Mockito.verify(blockedPageHashRepository,
+                       Mockito.times(1))
+               .findByHash(TEST_PAGE_HASH);
+        Mockito.verify(blockedPageHashRepository,
+                       Mockito.times(1))
+               .delete(blockedPageHash);
+        Mockito.verify(pageRepository,
+                       Mockito.times(1))
+               .getDuplicatePages();
+    }
 }

@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
-import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
+import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
 import { LibraryDisplayAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { TranslateService } from '@ngx-translate/core';
@@ -48,7 +48,7 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
-    private duplicatesAdaptor: DuplicatesPagesAdaptors,
+    private duplicatesAdaptor: DuplicatePagesAdaptors,
     private displayAdaptor: LibraryDisplayAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService,

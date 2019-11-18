@@ -282,4 +282,41 @@ public class PageService {
 
         return result;
     }
+
+    @Transactional
+    public List<DuplicatePage> setBlockingState(final String[] hashes,
+                                                final boolean blocked) {
+        this.logger.debug("Updating {} hash{}",
+                          hashes.length,
+                          hashes.length == 1
+                          ? ""
+                          : "es");
+
+        for (String hash : hashes) {
+            BlockedPageHash entry = this.blockedPageHashRepository.findByHash(hash);
+
+            if (blocked) {
+                if (entry == null) {
+                    entry = new BlockedPageHash(hash);
+                    this.logger.debug("Creating entry for hash: {}",
+                                      hash);
+                    this.blockedPageHashRepository.save(entry);
+                } else {
+                    this.logger.debug("Hash already blocked: {}",
+                                      hash);
+                }
+            } else {
+                if (entry != null) {
+                    this.logger.debug("Deleting entry for hash: {}",
+                                      hash);
+                    this.blockedPageHashRepository.delete(entry);
+                } else {
+                    this.logger.debug("Hash not already blocked: {}",
+                                      hash);
+                }
+            }
+        }
+
+        return this.getDuplicatePages();
+    }
 }

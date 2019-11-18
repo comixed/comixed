@@ -22,12 +22,14 @@ import {
   DuplicatePagesActions,
   DuplicatePagesActionTypes,
   DuplicatePagesAllReceived,
-  DuplicatePagesGetAllFailed
+  DuplicatePagesBlockingSet,
+  DuplicatePagesGetAllFailed,
+  DuplicatePagesSetBlockingFailed
 } from 'app/library/actions/duplicate-pages.actions';
 import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
 import { Observable, of } from 'rxjs';
 import { Action } from '@ngrx/store';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
@@ -69,6 +71,49 @@ export class DuplicatePagesEffects {
         )
       });
       return of(new DuplicatePagesGetAllFailed());
+    })
+  );
+
+  @Effect()
+  setBlocking$: Observable<Action> = this.actions$.pipe(
+    ofType(DuplicatePagesActionTypes.SetBlocking),
+    map(action => action.payload),
+    switchMap(action =>
+      this.duplicatePagesService
+        .setBlocking(action.pages, action.blocking)
+        .pipe(
+          tap(() =>
+            this.messageService.add({
+              severity: 'info',
+              detail: this.translateService.instant(
+                'duplicate-pages-effects.set-blocking.success.detail',
+                { count: action.pages.length, blocked: action.blocking }
+              )
+            })
+          ),
+          map(
+            (response: DuplicatePage[]) =>
+              new DuplicatePagesBlockingSet({ pages: response })
+          ),
+          catchError(error => {
+            this.messageService.add({
+              severity: 'error',
+              detail: this.translateService.instant(
+                'duplicate-pages-effects.set-blocking.error.detail'
+              )
+            });
+            return of(new DuplicatePagesSetBlockingFailed());
+          })
+        )
+    ),
+    catchError(error => {
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new DuplicatePagesSetBlockingFailed());
     })
   );
 }

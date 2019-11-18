@@ -36,5 +36,10 @@
                 [label]='"toolbar.button.deselect-all"|translate'
                 (click)='deselectAll()'
                 [pTooltip]='"toolbar.tooltip.deselect-all"|translate'></button>
+        <p-splitButton [model]='blockingOptions'
+                       [disabled]='selectedPages?.length === 0'
+                       icon='fa fa-fw fa-start'
+                       [label]='"duplicates-page-toolbar.button.blocking-options"|translate'
+                       class='cx-toolbar-button'></p-splitButton>
     </div>
 </p-toolbar>

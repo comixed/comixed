@@ -16,7 +16,7 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-import { DuplicatesPagesAdaptors } from './duplicates-pages.adaptor';
+import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
 import { TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import {
@@ -28,9 +28,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AppState } from 'app/library';
 import {
   DuplicatePagesAllReceived,
+  DuplicatePagesBlockingSet,
   DuplicatePagesDeselect,
   DuplicatePagesGetAll,
-  DuplicatePagesSelect
+  DuplicatePagesSelect,
+  DuplicatePagesSetBlocking,
+  DuplicatePagesSetBlockingFailed
 } from 'app/library/actions/duplicate-pages.actions';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
@@ -38,10 +41,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MessageService } from 'primeng/api';
 import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
 
-describe('DuplicatesPagesAdaptors', () => {
+describe('DuplicatePagesAdaptors', () => {
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
 
-  let adaptor: DuplicatesPagesAdaptors;
+  let adaptor: DuplicatePagesAdaptors;
   let store: Store<AppState>;
 
   beforeEach(() => {
@@ -54,10 +57,10 @@ describe('DuplicatesPagesAdaptors', () => {
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([DuplicatePagesEffects])
       ],
-      providers: [DuplicatesPagesAdaptors, MessageService]
+      providers: [DuplicatePagesAdaptors, MessageService]
     });
 
-    adaptor = TestBed.get(DuplicatesPagesAdaptors);
+    adaptor = TestBed.get(DuplicatePagesAdaptors);
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
   });
@@ -127,6 +130,50 @@ describe('DuplicatesPagesAdaptors', () => {
       it('provides updates', () => {
         adaptor.selected$.subscribe(response =>
           expect(response).not.toContain(DESELECTED)
+        );
+      });
+    });
+  });
+
+  describe('setting the blocking state for pages', () => {
+    beforeEach(() => {
+      adaptor.setBlocking(PAGES, true);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new DuplicatePagesSetBlocking({ pages: PAGES, blocking: true })
+      );
+    });
+
+    it('provides updates', () => {
+      adaptor.setBlocking$.subscribe(response => expect(response).toBeTruthy());
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new DuplicatePagesBlockingSet({ pages: PAGES }));
+      });
+
+      it('provides updates', () => {
+        adaptor.setBlocking$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('updates the duplicate pages', () => {
+        adaptor.pages$.subscribe(response => expect(response).toEqual(PAGES));
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new DuplicatePagesSetBlockingFailed());
+      });
+
+      it('provides updates', () => {
+        adaptor.setBlocking$.subscribe(response =>
+          expect(response).toBeFalsy()
         );
       });
     });

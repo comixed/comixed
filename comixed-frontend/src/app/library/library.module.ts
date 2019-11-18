@@ -79,7 +79,7 @@ import { MultipleComicScrapingComponent } from 'app/library/components/multiple-
 import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
 import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
 import { DuplicatesPageComponent } from './pages/duplicates-page/duplicates-page.component';
-import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
+import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
 import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
 import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
 import { DuplicatePageGridItemComponent } from './components/duplicate-page-grid-item/duplicate-page-grid-item.component';
@@ -165,7 +165,7 @@ import { DuplicatePageListItemComponent } from './components/duplicate-page-list
     FilterAdaptor,
     LibraryDisplayAdaptor,
     SelectionAdaptor,
-    DuplicatesPagesAdaptors,
+    DuplicatePagesAdaptors,
     ReadingListService,
     ReadingListAdaptor,
     DuplicatePagesService

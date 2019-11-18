@@ -18,11 +18,11 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { LibraryDisplayAdaptor } from 'app/library';
-import { SelectItem } from 'primeng/api';
+import { ConfirmationService, MenuItem, SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
-import { DuplicatesPagesAdaptors } from 'app/library/adaptors/duplicates-pages.adaptor';
+import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
 
 @Component({
   selector: 'app-duplicates-page-toolbar',
@@ -36,15 +36,18 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
   @Input() sameHeight = false;
   @Input() showPages = 10;
   @Input() pages: DuplicatePage[];
-  @Input() selectedPages: DuplicatePage[];
+
+  private _selectedPages: DuplicatePage[];
 
   langChangeSubscription: Subscription;
   showPagesOptions: SelectItem[];
+  blockingOptions: MenuItem[];
 
   constructor(
     private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
-    private duplicatesPagesAdaptors: DuplicatesPagesAdaptors
+    private duplicatesPagesAdaptors: DuplicatePagesAdaptors
   ) {}
 
   ngOnInit() {
@@ -56,6 +59,16 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.langChangeSubscription.unsubscribe();
+  }
+
+  @Input()
+  set selectedPages(selectedPages: DuplicatePage[]) {
+    this._selectedPages = selectedPages;
+    this.loadBlockingOptions();
+  }
+
+  get selectedPages(): DuplicatePage[] {
+    return this._selectedPages;
   }
 
   changePageCount(pageCount: any) {
@@ -89,6 +102,24 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
         value: 100
       }
     ];
+    this.loadBlockingOptions();
+  }
+
+  loadBlockingOptions(): void {
+    this.blockingOptions = [
+      {
+        label: this.translateService.instant(
+          'duplicates-page-toolbar.options.blocking.turn-on'
+        ),
+        command: () => this.setBlocking(true)
+      },
+      {
+        label: this.translateService.instant(
+          'duplicates-page-toolbar.options.blocking.turn-off'
+        ),
+        command: () => this.setBlocking(false)
+      }
+    ];
   }
 
   setGridLayout(useGrid: boolean) {
@@ -111,5 +142,21 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
 
   deselectAll() {
     this.duplicatesPagesAdaptors.deselectPages(this.selectedPages);
+  }
+
+  setBlocking(enabled: boolean): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'duplicates-page-toolbar.set-blocking.header'
+      ),
+      message: this.translateService.instant(
+        'duplicates-page-toolbar.set-blocking.message',
+        { blocking: enabled }
+      ),
+      accept: () => {
+        this.duplicatesPagesAdaptors.setBlocking(this.selectedPages, enabled);
+        this.duplicatesPagesAdaptors.deselectPages(this.selectedPages);
+      }
+    });
   }
 }
