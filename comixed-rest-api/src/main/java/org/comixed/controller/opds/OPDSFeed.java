@@ -18,14 +18,12 @@
 
 package org.comixed.controller.opds;
 
-import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <code>OPDSFeed</code> defines a type which represents a single OPDS feed.
@@ -42,7 +40,7 @@ public interface OPDSFeed
 
     public String getTitle();
 
-    public ZonedDateTime getUpdated();
+    public Date getUpdated();
 
     public String getIcon();
 

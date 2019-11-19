@@ -18,9 +18,9 @@
 
 package org.comixed.controller.opds;
 
-import java.time.ZonedDateTime;
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.comixed.model.library.ReadingList;
@@ -37,14 +37,14 @@ import org.comixed.model.opds.OPDSLink;
  * @author Giao Phan
  * @author Darryl L. Pierce
  */
-public class OPDSNavigationFeed implements
-                                OPDSFeed
+public class OPDSNavigationFeed implements OPDSFeed
 {
     private String id;
 
     private String title;
 
-    private ZonedDateTime updated;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private Date updated;
 
     private String icon;
 
@@ -62,8 +62,7 @@ public class OPDSNavigationFeed implements
         this.id = "urn:uuid:" + UUID.randomUUID();
         this.title = "ComiXed catalog";
         this.icon= "/favicon.ico";
-        this.updated = ZonedDateTime.now()
-                .withFixedOffsetZone();
+        this.updated = new Date(System.currentTimeMillis());
 
         this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
                         "/opds-comics"),
@@ -92,8 +91,7 @@ public class OPDSNavigationFeed implements
             this.entries.add(new OPDSEntry(readingList, readingList.getId()));
         }
         this.title = title + readingLists.size() + " items";
-        this.updated = ZonedDateTime.now()
-                .withFixedOffsetZone();
+        this.updated = new Date(System.currentTimeMillis());
         this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
                         selfUrl),
                 new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
@@ -116,8 +114,7 @@ public class OPDSNavigationFeed implements
             }
         }
         this.title = title + count + " items";
-        this.updated = ZonedDateTime.now()
-                .withFixedOffsetZone();
+        this.updated = new Date(System.currentTimeMillis());
         this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
                         selfUrl),
                 new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
@@ -155,7 +152,7 @@ public class OPDSNavigationFeed implements
     }
 
     @Override
-    public ZonedDateTime getUpdated()
+    public Date getUpdated()
     {
         return this.updated;
     }

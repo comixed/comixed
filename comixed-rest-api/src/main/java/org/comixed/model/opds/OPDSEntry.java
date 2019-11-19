@@ -18,6 +18,7 @@
 
 package org.comixed.model.opds;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.codehaus.plexus.util.StringUtils;
@@ -30,9 +31,6 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
@@ -54,7 +52,8 @@ public class OPDSEntry
     @JacksonXmlProperty(localName = "author")
     public List<OPDSAuthor> authors;
 
-    public ZonedDateTime updated;
+    @JsonFormat (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    public Date updated;
 
     public OPDSContent content;
 
@@ -66,20 +65,20 @@ public class OPDSEntry
     {
         this.id = comic.getId()
                 .toString();
-        this.updated = this.convertDateToZondedDateTime(comic.getDateAdded());
+        this.updated = comic.getDateAdded();
 
         this.title = comic.getBaseFilename();
-        StringBuilder content = new StringBuilder("");
+        StringBuilder comicContent = new StringBuilder("");
         if (StringUtils.isNotEmpty(comic.getTitle()))
         {
-            content.append(comic.getTitle());
-            content.append("&lt;br&gt;");
+            comicContent.append(comic.getTitle());
+            comicContent.append(" - ");
         }
         if (StringUtils.isNotEmpty(comic.getSummary()))
         {
-            content.append(comic.getSummary());
+            comicContent.append(comic.getSummary());
         }
-        this.content = new OPDSContent(content.toString());
+        this.content = new OPDSContent(comicContent.toString());
 
         this.authors = new ArrayList<>();
         for (Credit credit : comic.getCredits())
@@ -138,8 +137,7 @@ public class OPDSEntry
     public OPDSEntry(String title, String content, List<OPDSAuthor> authors, List<OPDSLink> links)
     {
         this.id = "urn:uuid:" + UUID.randomUUID();
-        this.updated = ZonedDateTime.now()
-                .withFixedOffsetZone();
+        this.updated = new Date(System.currentTimeMillis());
 
         this.title = title;
         this.content = new OPDSContent(content);
@@ -154,15 +152,6 @@ public class OPDSEntry
         this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=acquisition", "subsection",
                 "/opds-comics/" + id + "/?displayFiles=true"));
 
-    }
-
-    private ZonedDateTime convertDateToZondedDateTime(Date date)
-    {
-        return Instant.ofEpochMilli(date.getTime())
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-                .atStartOfDay(ZoneId.systemDefault())
-                .withFixedOffsetZone();
     }
 
     public List<OPDSAuthor> getAuthors()
@@ -190,7 +179,7 @@ public class OPDSEntry
         return this.title;
     }
 
-    public ZonedDateTime getUpdated()
+    public Date getUpdated()
     {
         return this.updated;
     }

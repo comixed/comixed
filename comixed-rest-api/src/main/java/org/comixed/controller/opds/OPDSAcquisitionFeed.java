@@ -18,12 +18,9 @@
 
 package org.comixed.controller.opds;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.comixed.model.library.Comic;
@@ -44,7 +41,8 @@ public class OPDSAcquisitionFeed implements
 
     private String title;
 
-    private ZonedDateTime updated;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private Date updated;
 
     private String icon;
 
@@ -64,13 +62,13 @@ public class OPDSAcquisitionFeed implements
         int count = 0;
         for (Comic comic : comics)
         {
-            if (!comic.isMissing())
+            if (!comic.isMissing()) {
                 this.entries.add(new OPDSEntry(comic));
                 count++;
+            }
         }
         this.title = title + count + " items";
-        this.updated = ZonedDateTime.now()
-                .withFixedOffsetZone();
+        this.updated = new Date(System.currentTimeMillis());
         this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=acquisition", "self",
                         selfUrl),
                 new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
@@ -108,7 +106,7 @@ public class OPDSAcquisitionFeed implements
     }
 
     @Override
-    public ZonedDateTime getUpdated()
+    public Date getUpdated()
     {
         return this.updated;
     }

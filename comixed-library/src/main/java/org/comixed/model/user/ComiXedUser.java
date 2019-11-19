@@ -80,6 +80,11 @@ public class ComiXedUser {
     @JsonView(View.UserList.class)
     private List<Preference> preferences = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL)
+    @JsonView(View.UserList.class)
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
     @Transient
     @JsonView(View.UserList.class)
     private boolean authenticated = false;
@@ -184,5 +189,39 @@ public class ComiXedUser {
 
     public void deleteProperty(final String name) {
         this.preferences.remove(name);
+    }
+
+    public List<Bookmark> getBookmarks() {
+        return this.bookmarks;
+    }
+
+    /**
+     * Returns the user's mark with the given book.
+     *
+     * @param book the bookmark's book
+     * @return the value, or 0 if not found
+     */
+    public String getBookmark(long book) {
+        for (Bookmark bookmark : this.bookmarks) {
+            if (bookmark.getBook() == book)
+                return bookmark.getMark();
+        }
+        return "0";
+    }
+
+    /**
+     * Sets the user bookmark for the given book.
+     *
+     * @param book the bookmark book
+     * @param mark the bookmark mark
+     */
+    public void setBookmark(long book, String mark) {
+        for (Bookmark bookmark : this.bookmarks) {
+            if (bookmark.getBook() == book) {
+                bookmark.setMark(mark);
+                return;
+            }
+        }
+        this.bookmarks.add(new Bookmark(this, book, mark));
     }
 }
