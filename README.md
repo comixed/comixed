@@ -168,6 +168,24 @@ all comics in your library.
 Future work will allow for different reading lists to be presented via OPDS. Please stay tuned for those
 changes to arrive.
 
+## Participating
+
+There are two mailing lists available for getting involved in the community.
+
+### Users
+
+For users of the project. please sign up for our [user list](https://www.freelists.org/list/comixed). It's where
+general questions, comments and discussions around the application take place.
+
+You can also go [here](https://www.freelists.org/archive/comixed) to search the archives.
+
+### Developers
+
+For contributors to the project, please sign up for our [developer list](https://www.freelists.org/list/comixed-dev).
+It's where feature, coding and bug fix discussions take place.
+
+You can also go [here](https://www.freelists.org/archive/comixed-dev) to search the archives.
+
 ## Contributing
 
 When working on a feature or fixing a bug, please write and test your code against the *develop*
