@@ -54,6 +54,14 @@ command line:
    $ comixed-importer --source=[path to ComicDB.xml]
 ```
 
+#### Import reading status
+
+To also import the reading status of the comics, you'll need to specify the user that will have the status imported into:
+
+```
+   $ comixed-importer --source=[path to ComicDB.xml] --user=[User email]
+```
+
 #### Relocated Comic Files
 
 If the comics are in a different location when you're importing them than they were on your ComicRack computer, you can pass in replacement rules to be used by the importer tool.

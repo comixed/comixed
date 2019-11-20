@@ -35,6 +35,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <code>ComicRackBackupAdaptor</code> handles reading individual book entries from a ComicRack database.
@@ -51,13 +52,13 @@ public class ComicRackBackupAdaptor {
      * @return a list of comic files
      * @throws ImportAdaptorException if an error occurs
      */
-    public List<Comic> load(File filename) throws ImportAdaptorException {
+    public List<Comic> load(File filename, Map<String, String> currentPages) throws ImportAdaptorException {
         try {
             this.logger.debug("Opening file for reading");
             FileInputStream istream = new FileInputStream(filename);
 
             this.logger.debug("Processing file content");
-            List<Comic> result = this.loadFromXml(istream);
+            List<Comic> result = this.loadFromXml(istream, currentPages);
 
             this.logger.debug("Closing file");
             istream.close();
@@ -69,7 +70,7 @@ public class ComicRackBackupAdaptor {
         }
     }
 
-    private List<Comic> loadFromXml(InputStream istream) throws XMLStreamException, ParseException {
+    private List<Comic> loadFromXml(InputStream istream, Map<String, String> currentPages) throws XMLStreamException, ParseException {
         List<Comic> result = new ArrayList<>();
         final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
 
@@ -96,6 +97,13 @@ public class ComicRackBackupAdaptor {
                         Date date = DateUtils.parseDate(xmlInputReader.getElementText(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
                         this.logger.debug("Added date: {}", date.toString());
                         comic.setDateAdded(date);
+                    }
+                    break;
+                    case "CurrentPage": {
+                        this.logger.debug("Setting current page");
+                        String currentPage = xmlInputReader.getElementText();
+                        this.logger.debug("Added current page: {}", currentPage);
+                        currentPages.put(comic.getFilename(), currentPage);
                     }
                     break;
                     default:

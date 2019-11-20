@@ -22,6 +22,8 @@ import org.comixed.importer.adaptors.ComicFileImportAdaptor;
 import org.comixed.importer.adaptors.ComicRackBackupAdaptor;
 import org.comixed.importer.adaptors.ImportAdaptorException;
 import org.comixed.model.library.Comic;
+import org.comixed.model.user.ComiXedUser;
+import org.comixed.repositories.ComiXedUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <code>ImportFileProcessor</code> provides a means for processing an import file.
@@ -41,17 +45,32 @@ import java.util.List;
 @ConfigurationProperties(value = "processor.file.import")
 public class ImportFileProcessor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     protected List<PathReplacement> replacements = new ArrayList<>();
+
+    protected ComiXedUser importUser;
+
+    protected Map<String, String> currentPages = new HashMap<>();
+
     @Autowired
     private ComicRackBackupAdaptor backupAdaptor;
+
     @Autowired
     private ComicFileImportAdaptor importAdaptor;
+
+    @Autowired
+    private ComiXedUserRepository userRepository;
 
     public void setReplacements(List<String> replacements) {
         this.logger.debug("Processing {} replacement rules", replacements.size());
         for (String rule : replacements) {
             this.replacements.add(new PathReplacement(rule));
         }
+    }
+
+    public void setImportUser(String user) {
+        this.logger.debug("Setting import user {}", user);
+        this.importUser = this.userRepository.findByEmail(user);
     }
 
     /**
@@ -76,10 +95,10 @@ public class ImportFileProcessor {
 
         try {
             this.logger.debug("Loading comics from source file");
-            List<Comic> comics = this.backupAdaptor.load(file);
+            List<Comic> comics = this.backupAdaptor.load(file, this.currentPages);
 
             this.logger.debug("Importing {} comic(s)", comics.size());
-            this.importAdaptor.importComics(comics, this.replacements);
+            this.importAdaptor.importComics(comics, this.replacements, this.currentPages, this.importUser);
         } catch (ImportAdaptorException error) {
             throw new ProcessorException("failed to load entries", error);
         }

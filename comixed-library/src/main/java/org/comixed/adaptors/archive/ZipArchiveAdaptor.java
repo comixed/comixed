@@ -23,6 +23,7 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
 import org.springframework.stereotype.Component;
@@ -73,6 +74,8 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   protected void loadAllFiles(Comic comic, ZipFile archiveReference)
       throws ArchiveAdaptorException {
     this.logger.debug("Processing entries for archive");
+    comic.setArchiveType(ArchiveType.CBZ);
+
     Enumeration<ZipArchiveEntry> entries = archiveReference.getEntries();
 
     while (entries.hasMoreElements()) {

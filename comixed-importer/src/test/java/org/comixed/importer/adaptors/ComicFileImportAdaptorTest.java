@@ -22,6 +22,7 @@ import org.comixed.importer.PathReplacement;
 import org.comixed.model.library.Comic;
 import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
+import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComicRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -62,6 +65,10 @@ public class ComicFileImportAdaptorTest {
     private List<PathReplacement> pathReplacements = new ArrayList<>();
 
     private Comic comic = new Comic();
+
+    private ComiXedUser importUser = new ComiXedUser();
+
+    private Map<String, String> currentPages = new HashMap<>();
 
     @Before
     public void setUp() {
@@ -105,7 +112,7 @@ public class ComicFileImportAdaptorTest {
         Mockito.when(comicRepository.findByFilename(Mockito.anyString()))
                 .thenReturn(comic);
 
-        this.adaptor.importComic(comic, this.pathReplacements);
+        this.adaptor.importComic(comic, this.pathReplacements, this.currentPages, this.importUser);
 
         Mockito.verify(comicRepository, Mockito.times(1))
                 .findByFilename(comic.getFilename());
@@ -119,7 +126,7 @@ public class ComicFileImportAdaptorTest {
         comic.setFilename(TEST_COMIC_FILENAME.substring(1));
 
         try {
-            this.adaptor.importComic(comic, this.pathReplacements);
+            this.adaptor.importComic(comic, this.pathReplacements, this.currentPages, this.importUser);
         } finally {
             Mockito.verify(comicRepository, Mockito.times(1))
                     .findByFilename(comic.getFilename());
@@ -136,7 +143,7 @@ public class ComicFileImportAdaptorTest {
         Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
                 .thenReturn(comic);
 
-        this.adaptor.importComic(comic, this.pathReplacements);
+        this.adaptor.importComic(comic, this.pathReplacements, this.currentPages, this.importUser);
 
         Mockito.verify(comicRepository, Mockito.times(1))
                 .findByFilename(comic.getFilename());
