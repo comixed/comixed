@@ -21,18 +21,24 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SetBlockingStateRequest {
-    @JsonProperty("hashes") private String[] hashes;
-    @JsonProperty("blocked") private Boolean blocked;
+  @JsonProperty("hashes")
+  private String[] hashes;
 
-    public SetBlockingStateRequest() {}
+  @JsonProperty("blocked")
+  private Boolean blocked;
 
-    public SetBlockingStateRequest(final String[] hashes,
-                                   final Boolean blocked) {
-        this.hashes = hashes;
-        this.blocked = blocked;
-    }
+  public SetBlockingStateRequest() {}
 
-    public String[] getHashes() { return hashes; }
+  public SetBlockingStateRequest(final String[] hashes, final Boolean blocked) {
+    this.hashes = hashes;
+    this.blocked = blocked;
+  }
 
-    public Boolean getBlocked() { return blocked; }
+  public String[] getHashes() {
+    return hashes;
+  }
+
+  public Boolean getBlocked() {
+    return blocked;
+  }
 }

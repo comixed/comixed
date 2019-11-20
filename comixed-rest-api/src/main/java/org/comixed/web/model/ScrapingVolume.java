@@ -18,10 +18,9 @@
 
 package org.comixed.web.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * <code>ComicVolume</code> represents a comic volume.
@@ -29,61 +28,72 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Darryl L. Pierce
  */
 public class ScrapingVolume {
-    @JsonProperty(value = "id") private long id;
-    @JsonProperty(value = "name") private String name;
-    @JsonProperty(value = "issueCount") private int issueCount;
-    @JsonProperty(value = "imageUrl") private String imageURL;
-    @JsonProperty(value = "startYear") private String startYear;
-    @JsonProperty(value = "publisher") private String publisher;
-    @JsonProperty(value = "issue") private List<ScrapingIssue> comicIssue = new ArrayList<ScrapingIssue>();
+  @JsonProperty(value = "id")
+  private long id;
 
-    public long getId() {
-        return this.id;
-    }
+  @JsonProperty(value = "name")
+  private String name;
 
-    public String getImageURL() {
-        return this.imageURL;
-    }
+  @JsonProperty(value = "issueCount")
+  private int issueCount;
 
-    public int getIssueCount() {
-        return this.issueCount;
-    }
+  @JsonProperty(value = "imageUrl")
+  private String imageURL;
 
-    public String getName() {
-        return this.name;
-    }
+  @JsonProperty(value = "startYear")
+  private String startYear;
 
-    public String getPublisher() {
-        return this.publisher;
-    }
+  @JsonProperty(value = "publisher")
+  private String publisher;
 
-    public String getStartYear() {
-        return this.startYear != null
-               ? this.startYear
-               : "";
-    }
+  @JsonProperty(value = "issue")
+  private List<ScrapingIssue> comicIssue = new ArrayList<ScrapingIssue>();
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public long getId() {
+    return this.id;
+  }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
+  public String getImageURL() {
+    return this.imageURL;
+  }
 
-    public void setIssueCount(int issueCount) {
-        this.issueCount = issueCount;
-    }
+  public int getIssueCount() {
+    return this.issueCount;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
+  public String getPublisher() {
+    return this.publisher;
+  }
 
-    public void setStartYear(String startYear) {
-        this.startYear = startYear;
-    }
+  public String getStartYear() {
+    return this.startYear != null ? this.startYear : "";
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  public void setImageURL(String imageURL) {
+    this.imageURL = imageURL;
+  }
+
+  public void setIssueCount(int issueCount) {
+    this.issueCount = issueCount;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setPublisher(String publisher) {
+    this.publisher = publisher;
+  }
+
+  public void setStartYear(String startYear) {
+    this.startYear = startYear;
+  }
 }

@@ -20,52 +20,59 @@ package org.comixed.model.tasks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.Date;
+import javax.persistence.*;
 import org.comixed.model.library.Comic;
 import org.comixed.views.View.ComicDetails;
-
-import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "process_comic_entries")
 public class ProcessComicEntry {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
-    @JsonView({ComicDetails.class})
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  @JsonView({ComicDetails.class})
+  private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "comic_id",
-                nullable = false,
-                updatable = false)
-    private Comic comic;
+  @OneToOne
+  @JoinColumn(name = "comic_id", nullable = false, updatable = false)
+  private Comic comic;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "process_type",
-            nullable = false,
-            updatable = false)
-    private ProcessComicEntryType processType;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "process_type", nullable = false, updatable = false)
+  private ProcessComicEntryType processType;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created",
-            nullable = false,
-            updatable = false)
-    private Date created = new Date();
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "created", nullable = false, updatable = false)
+  private Date created = new Date();
 
-    public ProcessComicEntry() { }
+  public ProcessComicEntry() {}
 
-    public Long getId() { return id; }
+  public Long getId() {
+    return id;
+  }
 
-    public Comic getComic() { return comic; }
+  public Comic getComic() {
+    return comic;
+  }
 
-    public void setComic(final Comic comic) { this.comic = comic; }
+  public void setComic(final Comic comic) {
+    this.comic = comic;
+  }
 
-    public ProcessComicEntryType getProcessType() { return processType; }
+  public ProcessComicEntryType getProcessType() {
+    return processType;
+  }
 
-    public void setProcessType(final ProcessComicEntryType processType) { this.processType = processType; }
+  public void setProcessType(final ProcessComicEntryType processType) {
+    this.processType = processType;
+  }
 
-    public Date getCreated() { return created; }
+  public Date getCreated() {
+    return created;
+  }
 
-    public void setCreated(final Date created) { this.created = created; }
+  public void setCreated(final Date created) {
+    this.created = created;
+  }
 }

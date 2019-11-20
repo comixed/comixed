@@ -18,6 +18,11 @@
 
 package org.comixed.service.core;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+
+import java.text.ParseException;
+import java.util.Calendar;
 import org.comixed.model.core.BuildDetails;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,76 +31,48 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.text.ParseException;
-import java.util.Calendar;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DetailsService.class)
 @TestPropertySource(locations = {"classpath:/build-details.properties"})
 public class DetailsServiceTest {
-    private static final String TEST_BRANCH = "feature/issue-189";
-    private static final String TEST_BUILD_HOST = "buildmachine.local";
-    private static final Calendar TEST_BUILD_TIME = Calendar.getInstance();
-    private static final String TEST_BUILD_VERSION = "0.4.9";
-    private static final String TEST_COMMIT_ID = "3cbdbaee42d2b6bde342fce32ecd61905d8d12d4";
-    private static final Calendar TEST_COMMIT_TIME = Calendar.getInstance();
-    private static final String TEST_COMMIT_MESSAGE = "[Issue #189] Moved build metadata into build-details.properties.";
-    private static final String TEST_COMMIT_EMAIL = "mcpierce@gmail.com";
-    private static final String TEST_COMMIT_USER = "Darryl L. Pierce";
-    private static final boolean TEST_COMMIT_DIRTY = true;
-    private static final String TEST_REMOTE_ORIGIN_URL = "git@github.com:mcpierce/comixed.git";
+  private static final String TEST_BRANCH = "feature/issue-189";
+  private static final String TEST_BUILD_HOST = "buildmachine.local";
+  private static final Calendar TEST_BUILD_TIME = Calendar.getInstance();
+  private static final String TEST_BUILD_VERSION = "0.4.9";
+  private static final String TEST_COMMIT_ID = "3cbdbaee42d2b6bde342fce32ecd61905d8d12d4";
+  private static final Calendar TEST_COMMIT_TIME = Calendar.getInstance();
+  private static final String TEST_COMMIT_MESSAGE =
+      "[Issue #189] Moved build metadata into build-details.properties.";
+  private static final String TEST_COMMIT_EMAIL = "mcpierce@gmail.com";
+  private static final String TEST_COMMIT_USER = "Darryl L. Pierce";
+  private static final boolean TEST_COMMIT_DIRTY = true;
+  private static final String TEST_REMOTE_ORIGIN_URL = "git@github.com:mcpierce/comixed.git";
 
-    static {
-        TEST_BUILD_TIME.clear();
-        TEST_BUILD_TIME.set(2019,
-                            7,
-                            31,
-                            8,
-                            34,
-                            12);
-        TEST_COMMIT_TIME.clear();
-        TEST_COMMIT_TIME.set(2019,
-                             7,
-                             31,
-                             8,
-                             31,
-                             01);
-    }
+  static {
+    TEST_BUILD_TIME.clear();
+    TEST_BUILD_TIME.set(2019, 7, 31, 8, 34, 12);
+    TEST_COMMIT_TIME.clear();
+    TEST_COMMIT_TIME.set(2019, 7, 31, 8, 31, 01);
+  }
 
-    @Autowired private DetailsService detailsService;
+  @Autowired private DetailsService detailsService;
 
-    @Test
-    public void testGetDetails()
-            throws
-            ParseException {
-        final BuildDetails result = detailsService.getBuildDetails();
+  @Test
+  public void testGetDetails() throws ParseException {
+    final BuildDetails result = detailsService.getBuildDetails();
 
-        assertNotNull(result);
+    assertNotNull(result);
 
-        assertEquals(TEST_BRANCH,
-                     result.getBranch());
-        assertEquals(TEST_BUILD_HOST,
-                     result.getBuildHost());
-        assertEquals(TEST_BUILD_TIME.getTime(),
-                     result.getBuildTime());
-        assertEquals(TEST_BUILD_VERSION,
-                     result.getBuildVersion());
-        assertEquals(TEST_COMMIT_ID,
-                     result.getCommitId());
-        assertEquals(TEST_COMMIT_TIME.getTime(),
-                     result.getCommitTime());
-        assertEquals(TEST_COMMIT_MESSAGE,
-                     result.getCommitMessage());
-        assertEquals(TEST_COMMIT_EMAIL,
-                     result.getCommitEmail());
-        assertEquals(TEST_COMMIT_USER,
-                     result.getCommitUser());
-        assertEquals(TEST_COMMIT_DIRTY,
-                     result.isDirty());
-        assertEquals(TEST_REMOTE_ORIGIN_URL,
-                     result.getRemoteOriginURL());
-    }
+    assertEquals(TEST_BRANCH, result.getBranch());
+    assertEquals(TEST_BUILD_HOST, result.getBuildHost());
+    assertEquals(TEST_BUILD_TIME.getTime(), result.getBuildTime());
+    assertEquals(TEST_BUILD_VERSION, result.getBuildVersion());
+    assertEquals(TEST_COMMIT_ID, result.getCommitId());
+    assertEquals(TEST_COMMIT_TIME.getTime(), result.getCommitTime());
+    assertEquals(TEST_COMMIT_MESSAGE, result.getCommitMessage());
+    assertEquals(TEST_COMMIT_EMAIL, result.getCommitEmail());
+    assertEquals(TEST_COMMIT_USER, result.getCommitUser());
+    assertEquals(TEST_COMMIT_DIRTY, result.isDirty());
+    assertEquals(TEST_REMOTE_ORIGIN_URL, result.getRemoteOriginURL());
+  }
 }

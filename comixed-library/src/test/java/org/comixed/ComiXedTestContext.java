@@ -22,12 +22,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = {"org.comixed.adaptors",
-                               "org.comixed.handlers",
-                               "org.comixed.loaders",
-                               "org.comixed.model",
-                               "org.comixed.repositories",
-                               "org.comixed.utils"})
-public class ComiXedTestContext {
-
-}
+@ComponentScan(
+    basePackages = {
+      "org.comixed.adaptors",
+      "org.comixed.handlers",
+      "org.comixed.loaders",
+      "org.comixed.model",
+      "org.comixed.repositories",
+      "org.comixed.utils"
+    })
+public class ComiXedTestContext {}

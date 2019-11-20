@@ -18,8 +18,6 @@
 
 package org.comixed.task.model;
 
-import org.comixed.task.runner.Worker;
-
 /**
  * <code>WorkerTask</code> defines a type that is executed by the
  * {@link Worker] class.
@@ -27,20 +25,17 @@ import org.comixed.task.runner.Worker;
  * @author Darryl L. Pierce
  */
 public interface WorkerTask {
-    /**
-     * Invoked when the task can begin processing.
-     *
-     * @throws WorkerTaskException
-     *         if an error occurs
-     */
-    void startTask()
-            throws
-            WorkerTaskException;
+  /**
+   * Invoked when the task can begin processing.
+   *
+   * @throws WorkerTaskException if an error occurs
+   */
+  void startTask() throws WorkerTaskException;
 
-    /**
-     * Return a description of the task for use in status and error messages.
-     *
-     * @return the description
-     */
-    String getDescription();
+  /**
+   * Return a description of the task for use in status and error messages.
+   *
+   * @return the description
+   */
+  String getDescription();
 }

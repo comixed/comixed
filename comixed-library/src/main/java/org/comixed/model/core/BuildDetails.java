@@ -19,107 +19,127 @@
 package org.comixed.model.core;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Date;
 
 public class BuildDetails {
-    @JsonProperty("branch") private String branch;
-    @JsonProperty("build_time") private Date buildTime;
-    @JsonProperty("build_host") private String buildHost;
-    @JsonProperty("build_version") private String buildVersion;
-    @JsonProperty("commit_id") private String commitId;
-    @JsonProperty("commit_time") private Date commitTime;
-    @JsonProperty("commit_message") private String commitMessage;
-    @JsonProperty("commit_user") private String commitUser;
-    @JsonProperty("commit_email") private String commitEmail;
-    @JsonProperty("dirty") private boolean dirty;
-    @JsonProperty("remote_origin_url") private String remoteOriginURL;
+  @JsonProperty("branch")
+  private String branch;
 
-    public String getCommitMessage() {
-        return commitMessage;
-    }
+  @JsonProperty("build_time")
+  private Date buildTime;
 
-    public void setCommitMessage(final String commitMessage) {
-        this.commitMessage = commitMessage;
-    }
+  @JsonProperty("build_host")
+  private String buildHost;
 
-    public String getCommitUser() {
-        return commitUser;
-    }
+  @JsonProperty("build_version")
+  private String buildVersion;
 
-    public void setCommitUser(final String commitUser) {
-        this.commitUser = commitUser;
-    }
+  @JsonProperty("commit_id")
+  private String commitId;
 
-    public String getCommitEmail() {
-        return commitEmail;
-    }
+  @JsonProperty("commit_time")
+  private Date commitTime;
 
-    public void setCommitEmail(final String commitEmail) {
-        this.commitEmail = commitEmail;
-    }
+  @JsonProperty("commit_message")
+  private String commitMessage;
 
-    public boolean isDirty() {
-        return dirty;
-    }
+  @JsonProperty("commit_user")
+  private String commitUser;
 
-    public void setDirty(final boolean dirty) {
-        this.dirty = dirty;
-    }
+  @JsonProperty("commit_email")
+  private String commitEmail;
 
-    public String getRemoteOriginURL() {
-        return remoteOriginURL;
-    }
+  @JsonProperty("dirty")
+  private boolean dirty;
 
-    public void setRemoteOriginURL(final String remoteOriginURL) {
-        this.remoteOriginURL = remoteOriginURL;
-    }
+  @JsonProperty("remote_origin_url")
+  private String remoteOriginURL;
 
-    public String getBuildHost() {
-        return buildHost;
-    }
+  public String getCommitMessage() {
+    return commitMessage;
+  }
 
-    public void setBuildHost(final String buildHost) {
-        this.buildHost = buildHost;
-    }
+  public void setCommitMessage(final String commitMessage) {
+    this.commitMessage = commitMessage;
+  }
 
-    public String getBranch() {
-        return branch;
-    }
+  public String getCommitUser() {
+    return commitUser;
+  }
 
-    public void setBranch(final String branch) {
-        this.branch = branch;
-    }
+  public void setCommitUser(final String commitUser) {
+    this.commitUser = commitUser;
+  }
 
-    public Date getBuildTime() {
-        return buildTime;
-    }
+  public String getCommitEmail() {
+    return commitEmail;
+  }
 
-    public void setBuildTime(final Date buildTime) {
-        this.buildTime = buildTime;
-    }
+  public void setCommitEmail(final String commitEmail) {
+    this.commitEmail = commitEmail;
+  }
 
-    public String getBuildVersion() {
-        return buildVersion;
-    }
+  public boolean isDirty() {
+    return dirty;
+  }
 
-    public void setBuildVersion(final String buildVersion) {
-        this.buildVersion = buildVersion;
-    }
+  public void setDirty(final boolean dirty) {
+    this.dirty = dirty;
+  }
 
-    public String getCommitId() {
-        return commitId;
-    }
+  public String getRemoteOriginURL() {
+    return remoteOriginURL;
+  }
 
-    public void setCommitId(final String commitId) {
-        this.commitId = commitId;
-    }
+  public void setRemoteOriginURL(final String remoteOriginURL) {
+    this.remoteOriginURL = remoteOriginURL;
+  }
 
-    public Date getCommitTime() {
-        return commitTime;
-    }
+  public String getBuildHost() {
+    return buildHost;
+  }
 
-    public void setCommitTime(final Date commitTime) {
-        this.commitTime = commitTime;
-    }
+  public void setBuildHost(final String buildHost) {
+    this.buildHost = buildHost;
+  }
+
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(final String branch) {
+    this.branch = branch;
+  }
+
+  public Date getBuildTime() {
+    return buildTime;
+  }
+
+  public void setBuildTime(final Date buildTime) {
+    this.buildTime = buildTime;
+  }
+
+  public String getBuildVersion() {
+    return buildVersion;
+  }
+
+  public void setBuildVersion(final String buildVersion) {
+    this.buildVersion = buildVersion;
+  }
+
+  public String getCommitId() {
+    return commitId;
+  }
+
+  public void setCommitId(final String commitId) {
+    this.commitId = commitId;
+  }
+
+  public Date getCommitTime() {
+    return commitTime;
+  }
+
+  public void setCommitTime(final Date commitTime) {
+    this.commitTime = commitTime;
+  }
 }

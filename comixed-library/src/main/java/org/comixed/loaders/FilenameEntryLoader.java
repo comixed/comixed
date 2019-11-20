@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.comixed.model.library.Comic;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,85 +32,68 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>FilenameEntryLoader</code> takes a filename and decides from it which
- * {@link EntryLoader} bean to use.
+ * <code>FilenameEntryLoader</code> takes a filename and decides from it which {@link EntryLoader}
+ * bean to use.
  *
  * @author Darryl L. Pierce
- *
  */
 @Component
 @EnableConfigurationProperties
-@ConfigurationProperties(prefix = "comic.filename-entry",
-                         ignoreUnknownFields = false)
-public class FilenameEntryLoader extends AbstractEntryLoader implements
-                                 InitializingBean
-{
-    public static class EntryLoaderEntry
-    {
-        public String mask;
-        public String bean;
+@ConfigurationProperties(prefix = "comic.filename-entry", ignoreUnknownFields = false)
+public class FilenameEntryLoader extends AbstractEntryLoader implements InitializingBean {
+  public static class EntryLoaderEntry {
+    public String mask;
+    public String bean;
 
-        public boolean isValid()
-        {
-            return (this.mask != null) && !this.mask.isEmpty() && (this.bean != null) && !this.bean.isEmpty();
-        }
-
-        public void setBean(String bean)
-        {
-            this.bean = bean;
-        }
-
-        public void setMask(String mask)
-        {
-            this.mask = mask;
-        }
+    public boolean isValid() {
+      return (this.mask != null)
+          && !this.mask.isEmpty()
+          && (this.bean != null)
+          && !this.bean.isEmpty();
     }
 
-    @Autowired
-    private ApplicationContext context;
-
-    @Autowired
-    private Map<String,
-                EntryLoader> entryLoaders;
-    private List<EntryLoaderEntry> loaders = new ArrayList<>();
-
-    @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        this.entryLoaders = new HashMap<>();
-        for (EntryLoaderEntry loader : this.loaders)
-        {
-            if (loader.isValid())
-            {
-                if (this.context.containsBean(loader.bean))
-                {
-                    this.entryLoaders.put(loader.mask, (EntryLoader )this.context.getBean(loader.bean));
-                }
-            }
-        }
+    public void setBean(String bean) {
+      this.bean = bean;
     }
 
-    public List<EntryLoaderEntry> getLoaders()
-    {
-        return this.loaders;
+    public void setMask(String mask) {
+      this.mask = mask;
     }
+  }
 
-    @Override
-    public void loadContent(Comic comic, String filename, byte[] content) throws EntryLoaderException
-    {
-        // get the filename.ext only
-        String key = new File(filename).getName();
-        this.logger.debug("Determining filename adaptor for: " + filename);
-        EntryLoader loader = this.entryLoaders.get(key);
-        if (loader != null)
-        {
-            this.logger.debug("Using adaptor: " + loader);
-            loader.loadContent(comic, filename, content);
+  @Autowired private ApplicationContext context;
+
+  @Autowired private Map<String, EntryLoader> entryLoaders;
+  private List<EntryLoaderEntry> loaders = new ArrayList<>();
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    this.entryLoaders = new HashMap<>();
+    for (EntryLoaderEntry loader : this.loaders) {
+      if (loader.isValid()) {
+        if (this.context.containsBean(loader.bean)) {
+          this.entryLoaders.put(loader.mask, (EntryLoader) this.context.getBean(loader.bean));
         }
-        else
-        {
-            this.logger.debug("No filename adaptor defined");
-        }
+      }
     }
+  }
 
+  public List<EntryLoaderEntry> getLoaders() {
+    return this.loaders;
+  }
+
+  @Override
+  public void loadContent(Comic comic, String filename, byte[] content)
+      throws EntryLoaderException {
+    // get the filename.ext only
+    String key = new File(filename).getName();
+    this.logger.debug("Determining filename adaptor for: " + filename);
+    EntryLoader loader = this.entryLoaders.get(key);
+    if (loader != null) {
+      this.logger.debug("Using adaptor: " + loader);
+      loader.loadContent(comic, filename, content);
+    } else {
+      this.logger.debug("No filename adaptor defined");
+    }
+  }
 }

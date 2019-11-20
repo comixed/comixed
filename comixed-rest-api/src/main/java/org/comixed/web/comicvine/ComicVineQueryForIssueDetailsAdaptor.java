@@ -31,72 +31,56 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineQueryForIssueDetailsAdaptor
-{
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class ComicVineQueryForIssueDetailsAdaptor {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ObjectFactory<ComicVineIssueDetailsWebRequest> webRequestFactory;
+  @Autowired private ObjectFactory<ComicVineIssueDetailsWebRequest> webRequestFactory;
 
-    @Autowired
-    private WebRequestProcessor webRequestProcessor;
+  @Autowired private WebRequestProcessor webRequestProcessor;
 
-    @Autowired
-    private ComicVineIssueDetailsResponseProcessor responseProcessor;
+  @Autowired private ComicVineIssueDetailsResponseProcessor responseProcessor;
 
-    @Autowired
-    private ComicVineIssueRepository comicVineIssueRepository;
+  @Autowired private ComicVineIssueRepository comicVineIssueRepository;
 
-    public String execute(String apiKey,
-                          long comicId,
-                          String issueId,
-                          Comic comic,
-                          boolean skipCache) throws ComicVineAdaptorException
-    {
-        String result = null;
-        String content = null;
-        ComicVineIssue issue = null;
+  public String execute(String apiKey, long comicId, String issueId, Comic comic, boolean skipCache)
+      throws ComicVineAdaptorException {
+    String result = null;
+    String content = null;
+    ComicVineIssue issue = null;
 
-        this.logger.debug("Fetching issue details: issueId={}", issueId);
+    this.logger.debug("Fetching issue details: issueId={}", issueId);
 
-        issue = this.comicVineIssueRepository.findByIssueId(issueId);
+    issue = this.comicVineIssueRepository.findByIssueId(issueId);
 
-        if (skipCache || (issue == null))
-        {
-            this.logger.debug("Fetching issue details from ComicVine...");
+    if (skipCache || (issue == null)) {
+      this.logger.debug("Fetching issue details from ComicVine...");
 
-            ComicVineIssueDetailsWebRequest request = this.webRequestFactory.getObject();
+      ComicVineIssueDetailsWebRequest request = this.webRequestFactory.getObject();
 
-            request.setApiKey(apiKey);
-            request.setIssueNumber(issueId);
+      request.setApiKey(apiKey);
+      request.setIssueNumber(issueId);
 
-            try
-            {
-                content = this.webRequestProcessor.execute(request);
+      try {
+        content = this.webRequestProcessor.execute(request);
 
-                if (issue != null)
-                {
-                    this.comicVineIssueRepository.delete(issue);
-                }
-                this.logger.debug("Saving retrieved issue data...");
-                issue = new ComicVineIssue();
-                issue.setIssueId(issueId);
-                issue.setContent(content);
-                this.comicVineIssueRepository.save(issue);
-            }
-            catch (WebRequestException error)
-            {
-                throw new ComicVineAdaptorException("Failed to scrape comic details", error);
-            }
+        if (issue != null) {
+          this.comicVineIssueRepository.delete(issue);
         }
-        else
-        {
-            this.logger.debug("Issue found in database.");
-            content = issue.getContent();
-        }
-
-        result = this.responseProcessor.process(content.getBytes(), comic);
-
-        return result;
+        this.logger.debug("Saving retrieved issue data...");
+        issue = new ComicVineIssue();
+        issue.setIssueId(issueId);
+        issue.setContent(content);
+        this.comicVineIssueRepository.save(issue);
+      } catch (WebRequestException error) {
+        throw new ComicVineAdaptorException("Failed to scrape comic details", error);
+      }
+    } else {
+      this.logger.debug("Issue found in database.");
+      content = issue.getContent();
     }
+
+    result = this.responseProcessor.process(content.getBytes(), comic);
+
+    return result;
+  }
 }

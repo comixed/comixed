@@ -21,32 +21,54 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GetLibraryUpdatesRequest {
-    @JsonProperty("timeout") private long timeout;
-    @JsonProperty("maximumResults") private int maximumResults;
-    @JsonProperty("lastProcessingCount") private int lastProcessingCount;
-    @JsonProperty("lastRescanCount") private int lastRescanCount;
+  @JsonProperty("timeout")
+  private long timeout;
 
-    public GetLibraryUpdatesRequest() { }
+  @JsonProperty("maximumResults")
+  private int maximumResults;
 
-    public GetLibraryUpdatesRequest(final long timeout,
-                                    final int maximumResults) {
-        this.timeout = timeout;
-        this.maximumResults = maximumResults;
-    }
+  @JsonProperty("lastProcessingCount")
+  private int lastProcessingCount;
 
-    public long getTimeout() { return timeout; }
+  @JsonProperty("lastRescanCount")
+  private int lastRescanCount;
 
-    public void setTimeout(final long timeout) { this.timeout = timeout; }
+  public GetLibraryUpdatesRequest() {}
 
-    public int getMaximumResults() { return maximumResults; }
+  public GetLibraryUpdatesRequest(final long timeout, final int maximumResults) {
+    this.timeout = timeout;
+    this.maximumResults = maximumResults;
+  }
 
-    public void setMaximumResults(final int maximumResults) { this.maximumResults = maximumResults; }
+  public long getTimeout() {
+    return timeout;
+  }
 
-    public int getLastProcessingCount() { return lastProcessingCount; }
+  public void setTimeout(final long timeout) {
+    this.timeout = timeout;
+  }
 
-    public void setLastProcessingCount(final int lastProcessingCount) { this.lastProcessingCount = lastProcessingCount; }
+  public int getMaximumResults() {
+    return maximumResults;
+  }
 
-    public int getLastRescanCount() { return lastRescanCount; }
+  public void setMaximumResults(final int maximumResults) {
+    this.maximumResults = maximumResults;
+  }
 
-    public void setLastRescanCount(final int lastRescanCount) { this.lastRescanCount = lastRescanCount; }
+  public int getLastProcessingCount() {
+    return lastProcessingCount;
+  }
+
+  public void setLastProcessingCount(final int lastProcessingCount) {
+    this.lastProcessingCount = lastProcessingCount;
+  }
+
+  public int getLastRescanCount() {
+    return lastRescanCount;
+  }
+
+  public void setLastRescanCount(final int lastRescanCount) {
+    this.lastRescanCount = lastRescanCount;
+  }
 }

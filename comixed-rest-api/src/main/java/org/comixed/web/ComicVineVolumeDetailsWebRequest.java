@@ -21,16 +21,13 @@ package org.comixed.web;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineVolumeDetailsWebRequest extends AbstractComicVineWebRequest
-{
-    public ComicVineVolumeDetailsWebRequest()
-    {
-        super("volume");
-        this.addParameter("field_list", "publisher,start_year,name");
-    }
+public class ComicVineVolumeDetailsWebRequest extends AbstractComicVineWebRequest {
+  public ComicVineVolumeDetailsWebRequest() {
+    super("volume");
+    this.addParameter("field_list", "publisher,start_year,name");
+  }
 
-    public void setVolumeId(String volumeId)
-    {
-        this.endpoint = "volume/4050-" + volumeId;
-    }
+  public void setVolumeId(String volumeId) {
+    this.endpoint = "volume/4050-" + volumeId;
+  }
 }

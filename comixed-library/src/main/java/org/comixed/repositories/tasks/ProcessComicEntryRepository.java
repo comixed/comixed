@@ -23,7 +23,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProcessComicEntryRepository
-        extends CrudRepository<ProcessComicEntry, Long> {
-    ProcessComicEntry findFirstByOrderByCreated();
+public interface ProcessComicEntryRepository extends CrudRepository<ProcessComicEntry, Long> {
+  ProcessComicEntry findFirstByOrderByCreated();
 }

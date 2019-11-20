@@ -21,44 +21,37 @@ package org.comixed.model.opds;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
- * <code>OPDSLink</code> provides references to content within a single OPDS
- * feed.
+ * <code>OPDSLink</code> provides references to content within a single OPDS feed.
  *
  * @author João França
  * @author Darryl L. Pierce
  * @author Giao Phan
- *
  */
-public class OPDSLink
-{
-    @JacksonXmlProperty(isAttribute = true)
-    private String type;
+public class OPDSLink {
+  @JacksonXmlProperty(isAttribute = true)
+  private String type;
 
-    @JacksonXmlProperty(isAttribute = true)
-    private String rel;
+  @JacksonXmlProperty(isAttribute = true)
+  private String rel;
 
-    @JacksonXmlProperty(isAttribute = true )
-    private String href;
+  @JacksonXmlProperty(isAttribute = true)
+  private String href;
 
-    public OPDSLink(String type, String rel, String href)
-    {
-        this.type = type;
-        this.rel = rel;
-        this.href = href;
-    }
+  public OPDSLink(String type, String rel, String href) {
+    this.type = type;
+    this.rel = rel;
+    this.href = href;
+  }
 
-    public String getHRef()
-    {
-        return this.href;
-    }
+  public String getHRef() {
+    return this.href;
+  }
 
-    public String getRel()
-    {
-        return this.rel;
-    }
+  public String getRel() {
+    return this.rel;
+  }
 
-    public String getType()
-    {
-        return this.type;
-    }
+  public String getType() {
+    return this.type;
+  }
 }

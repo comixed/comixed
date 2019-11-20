@@ -18,9 +18,8 @@
 
 package org.comixed.service.library;
 
-public class PageException
-        extends Throwable {
-    public PageException(final String message) {
-        super(message);
-    }
+public class PageException extends Throwable {
+  public PageException(final String message) {
+    super(message);
+  }
 }

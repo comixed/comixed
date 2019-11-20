@@ -21,76 +21,91 @@ package org.comixed.web.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ScrapingIssue {
-    @JsonProperty(value = "id") private int id;
-    @JsonProperty(value = "coverDate") private String coverDate;
-    @JsonProperty(value = "coverUrl") private String coverUrl;
-    @JsonProperty(value = "issueNumber") private String issueNumber;
-    @JsonProperty(value = "description") private String description;
-    @JsonProperty(value = "name") private String name;
-    @JsonProperty(value = "volumeName") private String volumeName;
-    @JsonProperty(value = "volumeId") private int volumeId;
+  @JsonProperty(value = "id")
+  private int id;
 
-    public String getCoverDate() {
-        return this.coverDate;
-    }
+  @JsonProperty(value = "coverDate")
+  private String coverDate;
 
-    public String getCoverUrl() {
-        return this.coverUrl;
-    }
+  @JsonProperty(value = "coverUrl")
+  private String coverUrl;
 
-    public String getDescription() {
-        return this.description;
-    }
+  @JsonProperty(value = "issueNumber")
+  private String issueNumber;
 
-    public int getId() {
-        return this.id;
-    }
+  @JsonProperty(value = "description")
+  private String description;
 
-    public String getIssueNumber() {
-        return this.issueNumber;
-    }
+  @JsonProperty(value = "name")
+  private String name;
 
-    public String getName() {
-        return this.name;
-    }
+  @JsonProperty(value = "volumeName")
+  private String volumeName;
 
-    public int getVolumeId() {
-        return this.volumeId;
-    }
+  @JsonProperty(value = "volumeId")
+  private int volumeId;
 
-    public String getVolumeName() {
-        return this.volumeName;
-    }
+  public String getCoverDate() {
+    return this.coverDate;
+  }
 
-    public void setCoverDate(String coverDate) {
-        this.coverDate = coverDate;
-    }
+  public String getCoverUrl() {
+    return this.coverUrl;
+  }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
+  public String getDescription() {
+    return this.description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public int getId() {
+    return this.id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public String getIssueNumber() {
+    return this.issueNumber;
+  }
 
-    public void setIssueNumber(String issueNumber) {
-        this.issueNumber = issueNumber;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public int getVolumeId() {
+    return this.volumeId;
+  }
 
-    public void setVolumeId(int volumeId) {
-        this.volumeId = volumeId;
-    }
+  public String getVolumeName() {
+    return this.volumeName;
+  }
 
-    public void setVolumeName(String volumeName) {
-        this.volumeName = volumeName;
-    }
+  public void setCoverDate(String coverDate) {
+    this.coverDate = coverDate;
+  }
+
+  public void setCoverUrl(String coverUrl) {
+    this.coverUrl = coverUrl;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public void setIssueNumber(String issueNumber) {
+    this.issueNumber = issueNumber;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setVolumeId(int volumeId) {
+    this.volumeId = volumeId;
+  }
+
+  public void setVolumeName(String volumeName) {
+    this.volumeName = volumeName;
+  }
 }

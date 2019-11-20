@@ -18,9 +18,8 @@
 
 package org.comixed.service.library;
 
-public class NoSuchReadingListException
-        extends Exception {
-    public NoSuchReadingListException(final String message) {
-        super(message);
-    }
+public class NoSuchReadingListException extends Exception {
+  public NoSuchReadingListException(final String message) {
+    super(message);
+  }
 }

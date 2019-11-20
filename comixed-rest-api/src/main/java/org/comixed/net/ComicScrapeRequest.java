@@ -21,18 +21,24 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ComicScrapeRequest {
-    @JsonProperty("apiKey") private String apiKey;
-    @JsonProperty("skipCache") private Boolean skipCache;
+  @JsonProperty("apiKey")
+  private String apiKey;
 
-    public ComicScrapeRequest() {}
+  @JsonProperty("skipCache")
+  private Boolean skipCache;
 
-    public ComicScrapeRequest(final String apiKey,
-                              final boolean skipCache) {
-        this.apiKey = apiKey;
-        this.skipCache = skipCache;
-    }
+  public ComicScrapeRequest() {}
 
-    public String getApiKey() { return apiKey; }
+  public ComicScrapeRequest(final String apiKey, final boolean skipCache) {
+    this.apiKey = apiKey;
+    this.skipCache = skipCache;
+  }
 
-    public Boolean getSkipCache() { return skipCache; }
+  public String getApiKey() {
+    return apiKey;
+  }
+
+  public Boolean getSkipCache() {
+    return skipCache;
+  }
 }

@@ -18,6 +18,9 @@
 
 package org.comixed.task.model;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Date;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.model.library.Comic;
@@ -32,83 +35,67 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Date;
-
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessComicTask
-        extends AbstractWorkerTask {
-    private static final Object semaphore = new Object();
+public class ProcessComicTask extends AbstractWorkerTask {
+  private static final Object semaphore = new Object();
 
-    @Autowired private ProcessComicEntryRepository processComicEntryRepository;
-    @Autowired private ComicRepository comicRepository;
-    @Autowired private Utils utils;
+  @Autowired private ProcessComicEntryRepository processComicEntryRepository;
+  @Autowired private ComicRepository comicRepository;
+  @Autowired private Utils utils;
 
-    private ProcessComicEntry entry;
+  private ProcessComicEntry entry;
 
-    @Override
-    protected String createDescription() {
-        return "Process entry task [" + this.entry.getComic()
-                                                  .getFilename() + "]";
+  @Override
+  protected String createDescription() {
+    return "Process entry task [" + this.entry.getComic().getFilename() + "]";
+  }
+
+  @Override
+  public void startTask() throws WorkerTaskException {
+    try {
+      this.startTaskInternal();
+    } finally {
+      this.cleanup();
+    }
+  }
+
+  @Transactional
+  public void cleanup() {
+    this.logger.debug("Deleting process entry");
+    this.processComicEntryRepository.delete(this.entry);
+  }
+
+  private void startTaskInternal() throws WorkerTaskException {
+    final Comic comic = this.entry.getComic();
+
+    this.logger.debug("Processing comic: id={}", comic.getId());
+
+    this.logger.debug("Getting archive adaptor");
+    final ArchiveAdaptor adaptor = comic.getArchiveAdaptor();
+    this.logger.debug("Loading comic");
+    try {
+      adaptor.loadComic(comic);
+    } catch (ArchiveAdaptorException error) {
+      throw new WorkerTaskException("failed to load comic: " + comic.getFilename(), error);
     }
 
-    @Override
-    public void startTask()
-            throws
-            WorkerTaskException {
-        try {
-            this.startTaskInternal();
-        }
-        finally {
-            this.cleanup();
-        }
+    this.logger.debug("Setting comic file details");
+    final ComicFileDetails fileDetails = new ComicFileDetails();
+
+    try {
+      fileDetails.setHash(this.utils.createHash(new FileInputStream(comic.getFilename())));
+    } catch (IOException error) {
+      throw new WorkerTaskException("failed to get hash for file: " + comic.getFilename(), error);
     }
+    comic.setFileDetails(fileDetails);
 
-    @Transactional
-    public void cleanup() {
-        this.logger.debug("Deleting process entry");
-        this.processComicEntryRepository.delete(this.entry);
-    }
+    this.logger.debug("Updating comic");
+    comic.setDateLastUpdated(new Date());
+    this.comicRepository.save(comic);
+  }
 
-    private void startTaskInternal()
-            throws
-            WorkerTaskException {
-        final Comic comic = this.entry.getComic();
-
-        this.logger.debug("Processing comic: id={}",
-                          comic.getId());
-
-        this.logger.debug("Getting archive adaptor");
-        final ArchiveAdaptor adaptor = comic.getArchiveAdaptor();
-        this.logger.debug("Loading comic");
-        try {
-            adaptor.loadComic(comic);
-        }
-        catch (ArchiveAdaptorException error) {
-            throw new WorkerTaskException("failed to load comic: " + comic.getFilename(),
-                                          error);
-        }
-
-        this.logger.debug("Setting comic file details");
-        final ComicFileDetails fileDetails = new ComicFileDetails();
-
-        try {
-            fileDetails.setHash(this.utils.createHash(new FileInputStream(comic.getFilename())));
-        }
-        catch (IOException error) {
-            throw new WorkerTaskException("failed to get hash for file: " + comic.getFilename(),
-                                          error);
-        }
-        comic.setFileDetails(fileDetails);
-
-        this.logger.debug("Updating comic");
-        comic.setDateLastUpdated(new Date());
-        this.comicRepository.save(comic);
-    }
-
-    public void setEntry(final ProcessComicEntry entry) {
-        this.entry = entry;
-    }
+  public void setEntry(final ProcessComicEntry entry) {
+    this.entry = entry;
+  }
 }

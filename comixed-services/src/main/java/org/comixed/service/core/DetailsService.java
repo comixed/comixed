@@ -18,6 +18,8 @@
 
 package org.comixed.service.core;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import org.comixed.model.core.BuildDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,45 +27,61 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 @Service
 @PropertySource({"classpath:/build-details.properties"})
 public class DetailsService {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private SimpleDateFormat dateParser = new SimpleDateFormat("yyyyMMddhhmmss");
+  private SimpleDateFormat dateParser = new SimpleDateFormat("yyyyMMddhhmmss");
 
-    @Value("${build-details.branch}") private String branch;
-    @Value("${build-details.build.host}") private String buildHost;
-    @Value("${build-details.build.time}") private String buildTime;
-    @Value("${build-details.build.version}") private String buildVersion;
-    @Value("${build-details.commit.id}") private String commitId;
-    @Value("${build-details.commit.time}") private String commitTime;
-    @Value("${build-details.commit.message.short}") private String commitMessage;
-    @Value("${build-details.commit.user.name}") private String commitUser;
-    @Value("${build-details.commit.user.email}") private String commitEmail;
-    @Value("${build-details.dirty}") private String dirty;
-    @Value("${build-details.remote.origin.url}") private String remoteOriginURL;
+  @Value("${build-details.branch}")
+  private String branch;
 
-    public BuildDetails  getBuildDetails()
-            throws
-            ParseException {
-        final BuildDetails result = new BuildDetails();
+  @Value("${build-details.build.host}")
+  private String buildHost;
 
-        result.setBranch(branch);
-        result.setBuildHost(buildHost);
-        result.setBuildTime(dateParser.parse(buildTime));
-        result.setBuildVersion(buildVersion);
-        result.setCommitId(commitId);
-        result.setCommitTime(dateParser.parse(commitTime));
-        result.setCommitMessage(commitMessage);
-        result.setCommitUser(commitUser);
-        result.setCommitEmail(commitEmail);
-        result.setDirty(Boolean.valueOf(dirty));
-        result.setRemoteOriginURL(remoteOriginURL);
+  @Value("${build-details.build.time}")
+  private String buildTime;
 
-        return result;
-    }
+  @Value("${build-details.build.version}")
+  private String buildVersion;
+
+  @Value("${build-details.commit.id}")
+  private String commitId;
+
+  @Value("${build-details.commit.time}")
+  private String commitTime;
+
+  @Value("${build-details.commit.message.short}")
+  private String commitMessage;
+
+  @Value("${build-details.commit.user.name}")
+  private String commitUser;
+
+  @Value("${build-details.commit.user.email}")
+  private String commitEmail;
+
+  @Value("${build-details.dirty}")
+  private String dirty;
+
+  @Value("${build-details.remote.origin.url}")
+  private String remoteOriginURL;
+
+  public BuildDetails getBuildDetails() throws ParseException {
+    final BuildDetails result = new BuildDetails();
+
+    result.setBranch(branch);
+    result.setBuildHost(buildHost);
+    result.setBuildTime(dateParser.parse(buildTime));
+    result.setBuildVersion(buildVersion);
+    result.setCommitId(commitId);
+    result.setCommitTime(dateParser.parse(commitTime));
+    result.setCommitMessage(commitMessage);
+    result.setCommitUser(commitUser);
+    result.setCommitEmail(commitEmail);
+    result.setDirty(Boolean.valueOf(dirty));
+    result.setRemoteOriginURL(remoteOriginURL);
+
+    return result;
+  }
 }

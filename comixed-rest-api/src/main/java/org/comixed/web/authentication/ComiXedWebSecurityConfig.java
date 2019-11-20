@@ -35,46 +35,42 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter
-{
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ComiXedAuthenticationEntryPoint unauthorizedHandler;
+  @Autowired private ComiXedAuthenticationEntryPoint unauthorizedHandler;
 
-    @Autowired
-    private ComiXedAuthenticationFilter authenticationFilter;
+  @Autowired private ComiXedAuthenticationFilter authenticationFilter;
 
-    @Autowired
-    private ComiXedAuthenticationProvider authenticationProvider;
+  @Autowired private ComiXedAuthenticationProvider authenticationProvider;
 
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception
-    {
-        return super.authenticationManagerBean();
-    }
+  @Bean
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception
-    {
-        auth.authenticationProvider(authenticationProvider);
-    }
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.authenticationProvider(authenticationProvider);
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception
-    {
-        // @formatter:off
-        http.cors()
-            .and()
-                .csrf().disable()
-                .authorizeRequests()
-                .anyRequest().permitAll()
-            .and()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-            .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        // @formatter:on
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    // @formatter:off
+    http.cors()
+        .and()
+        .csrf()
+        .disable()
+        .authorizeRequests()
+        .anyRequest()
+        .permitAll()
+        .and()
+        .exceptionHandling()
+        .authenticationEntryPoint(unauthorizedHandler)
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    // @formatter:on
+  }
 }

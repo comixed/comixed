@@ -29,54 +29,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineQueryForIssueAdaptor
-{
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class ComicVineQueryForIssueAdaptor {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ObjectFactory<ComicVineIssuesWebRequest> webRequestFactory;
+  @Autowired private ObjectFactory<ComicVineIssuesWebRequest> webRequestFactory;
 
-    @Autowired
-    private WebRequestProcessor webRequestProcessor;
+  @Autowired private WebRequestProcessor webRequestProcessor;
 
-    @Autowired
-    private ComicVineIssueResponseProcessor responseProcessor;
+  @Autowired private ComicVineIssueResponseProcessor responseProcessor;
 
-    public ScrapingIssue execute(String apiKey, Integer volume, String issueNumber) throws ComicVineAdaptorException
-    {
-        this.logger.debug("Getting issue={} for volume={} ", issueNumber, volume);
+  public ScrapingIssue execute(String apiKey, Integer volume, String issueNumber)
+      throws ComicVineAdaptorException {
+    this.logger.debug("Getting issue={} for volume={} ", issueNumber, volume);
 
-        while (!issueNumber.isEmpty() && ("123456789".indexOf(issueNumber.substring(0, 1)) == -1))
-        {
-            issueNumber = issueNumber.substring(1);
-        }
-
-        ScrapingIssue result = null;
-        ComicVineIssuesWebRequest request = this.webRequestFactory.getObject();
-
-        request.setApiKey(apiKey);
-        request.setVolume(volume);
-        request.setIssueNumber(issueNumber);
-
-        try
-        {
-            String content = this.webRequestProcessor.execute(request);
-            result = this.responseProcessor.process(content.getBytes());
-        }
-        catch (WebRequestException error)
-        {
-            throw new ComicVineAdaptorException("Error getting issues for volume", error);
-        }
-
-        if (result != null)
-        {
-            this.logger.debug("Returning an issue");
-        }
-        else
-        {
-            this.logger.debug("No comic found");
-        }
-
-        return result;
+    while (!issueNumber.isEmpty() && ("123456789".indexOf(issueNumber.substring(0, 1)) == -1)) {
+      issueNumber = issueNumber.substring(1);
     }
+
+    ScrapingIssue result = null;
+    ComicVineIssuesWebRequest request = this.webRequestFactory.getObject();
+
+    request.setApiKey(apiKey);
+    request.setVolume(volume);
+    request.setIssueNumber(issueNumber);
+
+    try {
+      String content = this.webRequestProcessor.execute(request);
+      result = this.responseProcessor.process(content.getBytes());
+    } catch (WebRequestException error) {
+      throw new ComicVineAdaptorException("Error getting issues for volume", error);
+    }
+
+    if (result != null) {
+      this.logger.debug("Returning an issue");
+    } else {
+      this.logger.debug("No comic found");
+    }
+
+    return result;
+  }
 }

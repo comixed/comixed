@@ -18,6 +18,9 @@
 
 package org.comixed.web.comicvine;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.comixed.model.library.Comic;
 import org.comixed.model.scraping.ComicVineIssue;
 import org.comixed.repositories.ComicVineIssueRepository;
@@ -31,326 +34,172 @@ import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(MockitoJUnitRunner.class)
 public class ComicVineQueryForIssueDetailsAdaptorTest {
-    private static final String TEST_CONTENT_TEXT = "This is the response body";
-    private static final String TEST_API_KEY = "12345";
-    private static final long TEST_COMIC_ID = 512L;
-    private static final String TEST_ISSUE_ID = "58312";
-    private static final byte[] TEST_CONTENT = TEST_CONTENT_TEXT.getBytes();
-    private static final String TEST_VOLUME_ID = "21385";
+  private static final String TEST_CONTENT_TEXT = "This is the response body";
+  private static final String TEST_API_KEY = "12345";
+  private static final long TEST_COMIC_ID = 512L;
+  private static final String TEST_ISSUE_ID = "58312";
+  private static final byte[] TEST_CONTENT = TEST_CONTENT_TEXT.getBytes();
+  private static final String TEST_VOLUME_ID = "21385";
 
-    @InjectMocks private ComicVineQueryForIssueDetailsAdaptor adaptor;
+  @InjectMocks private ComicVineQueryForIssueDetailsAdaptor adaptor;
 
-    @Mock private ObjectFactory<ComicVineIssueDetailsWebRequest> requestFactory;
+  @Mock private ObjectFactory<ComicVineIssueDetailsWebRequest> requestFactory;
 
-    @Mock private ComicVineIssueDetailsWebRequest request;
+  @Mock private ComicVineIssueDetailsWebRequest request;
 
-    @Mock private WebRequestProcessor webRequestProcessor;
+  @Mock private WebRequestProcessor webRequestProcessor;
 
-    @Mock private ComicVineIssueDetailsResponseProcessor responseProcessor;
+  @Mock private ComicVineIssueDetailsResponseProcessor responseProcessor;
 
-    @Mock private ScrapingIssue comicIssue;
+  @Mock private ScrapingIssue comicIssue;
 
-    @Mock private Comic comic;
+  @Mock private Comic comic;
 
-    @Mock private ComicVineIssue comicVineIssue;
+  @Mock private ComicVineIssue comicVineIssue;
 
-    @Captor private ArgumentCaptor<ComicVineIssue> comicVineIssueCaptor;
+  @Captor private ArgumentCaptor<ComicVineIssue> comicVineIssueCaptor;
 
-    @Mock private ComicVineIssueRepository comicVineIssueRepository;
+  @Mock private ComicVineIssueRepository comicVineIssueRepository;
 
-    @Test(expected = ComicVineAdaptorException.class)
-    public void testExecuteWebRequestProcessorRaisesException()
-            throws
-            WebRequestException,
-            ComicVineAdaptorException {
-        Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(requestFactory.getObject())
-               .thenReturn(request);
-        Mockito.doNothing()
-               .when(request)
-               .setApiKey(TEST_API_KEY);
-        Mockito.doNothing()
-               .when(request)
-               .setIssueNumber(TEST_ISSUE_ID);
-        Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
-               .thenThrow(new WebRequestException("expected"));
+  @Test(expected = ComicVineAdaptorException.class)
+  public void testExecuteWebRequestProcessorRaisesException()
+      throws WebRequestException, ComicVineAdaptorException {
+    Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString())).thenReturn(null);
+    Mockito.when(requestFactory.getObject()).thenReturn(request);
+    Mockito.doNothing().when(request).setApiKey(TEST_API_KEY);
+    Mockito.doNothing().when(request).setIssueNumber(TEST_ISSUE_ID);
+    Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
+        .thenThrow(new WebRequestException("expected"));
 
-        try {
-            adaptor.execute(TEST_API_KEY,
-                            TEST_COMIC_ID,
-                            TEST_ISSUE_ID,
-                            comic,
-                            false);
-        }
-        finally {
-            Mockito.verify(comicVineIssueRepository,
-                           Mockito.times(1))
-                   .findByIssueId(TEST_ISSUE_ID);
-            Mockito.verify(requestFactory,
-                           Mockito.times(1))
-                   .getObject();
-            Mockito.verify(request,
-                           Mockito.times(1))
-                   .setApiKey(TEST_API_KEY);
-            Mockito.verify(request,
-                           Mockito.times(1))
-                   .setIssueNumber(TEST_ISSUE_ID);
-            Mockito.verify(webRequestProcessor,
-                           Mockito.times(1))
-                   .execute(request);
-        }
+    try {
+      adaptor.execute(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, comic, false);
+    } finally {
+      Mockito.verify(comicVineIssueRepository, Mockito.times(1)).findByIssueId(TEST_ISSUE_ID);
+      Mockito.verify(requestFactory, Mockito.times(1)).getObject();
+      Mockito.verify(request, Mockito.times(1)).setApiKey(TEST_API_KEY);
+      Mockito.verify(request, Mockito.times(1)).setIssueNumber(TEST_ISSUE_ID);
+      Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(request);
     }
+  }
 
-    @Test(expected = ComicVineAdaptorException.class)
-    public void testExecuteResponseProcessorRaisesException()
-            throws
-            WebRequestException,
-            ComicVineAdaptorException {
-        Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(requestFactory.getObject())
-               .thenReturn(request);
-        Mockito.doNothing()
-               .when(request)
-               .setApiKey(TEST_API_KEY);
-        Mockito.doNothing()
-               .when(request)
-               .setIssueNumber(TEST_ISSUE_ID);
-        Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
-               .thenReturn(TEST_CONTENT_TEXT);
-        Mockito.doThrow(new ComicVineAdaptorException("expected"))
-               .when(responseProcessor)
-               .process(Mockito.any(byte[].class),
-                        Mockito.any(Comic.class));
+  @Test(expected = ComicVineAdaptorException.class)
+  public void testExecuteResponseProcessorRaisesException()
+      throws WebRequestException, ComicVineAdaptorException {
+    Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString())).thenReturn(null);
+    Mockito.when(requestFactory.getObject()).thenReturn(request);
+    Mockito.doNothing().when(request).setApiKey(TEST_API_KEY);
+    Mockito.doNothing().when(request).setIssueNumber(TEST_ISSUE_ID);
+    Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
+        .thenReturn(TEST_CONTENT_TEXT);
+    Mockito.doThrow(new ComicVineAdaptorException("expected"))
+        .when(responseProcessor)
+        .process(Mockito.any(byte[].class), Mockito.any(Comic.class));
 
-        try {
-            adaptor.execute(TEST_API_KEY,
-                            TEST_COMIC_ID,
-                            TEST_ISSUE_ID,
-                            comic,
-                            false);
-        }
-        finally {
-            Mockito.verify(comicVineIssueRepository,
-                           Mockito.times(1))
-                   .findByIssueId(TEST_ISSUE_ID);
-            Mockito.verify(requestFactory,
-                           Mockito.times(1))
-                   .getObject();
-            Mockito.verify(request,
-                           Mockito.times(1))
-                   .setApiKey(TEST_API_KEY);
-            Mockito.verify(request,
-                           Mockito.times(1))
-                   .setIssueNumber(TEST_ISSUE_ID);
-            Mockito.verify(webRequestProcessor,
-                           Mockito.times(1))
-                   .execute(request);
-            Mockito.verify(responseProcessor,
-                           Mockito.times(1))
-                   .process(TEST_CONTENT,
-                            comic);
-        }
+    try {
+      adaptor.execute(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, comic, false);
+    } finally {
+      Mockito.verify(comicVineIssueRepository, Mockito.times(1)).findByIssueId(TEST_ISSUE_ID);
+      Mockito.verify(requestFactory, Mockito.times(1)).getObject();
+      Mockito.verify(request, Mockito.times(1)).setApiKey(TEST_API_KEY);
+      Mockito.verify(request, Mockito.times(1)).setIssueNumber(TEST_ISSUE_ID);
+      Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(request);
+      Mockito.verify(responseProcessor, Mockito.times(1)).process(TEST_CONTENT, comic);
     }
+  }
 
-    @Test(expected = ComicVineAdaptorException.class)
-    public void testExecuteNoSuchIssueInComicVine()
-            throws
-            WebRequestException,
-            ComicVineAdaptorException {
-        Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(requestFactory.getObject())
-               .thenReturn(request);
-        Mockito.doNothing()
-               .when(request)
-               .setApiKey(TEST_API_KEY);
-        Mockito.doNothing()
-               .when(request)
-               .setIssueNumber(TEST_ISSUE_ID);
-        Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
-               .thenReturn(TEST_CONTENT_TEXT);
-        Mockito.doThrow(new ComicVineAdaptorException("expected"))
-               .when(responseProcessor)
-               .process(Mockito.any(byte[].class),
-                        Mockito.any(Comic.class));
+  @Test(expected = ComicVineAdaptorException.class)
+  public void testExecuteNoSuchIssueInComicVine()
+      throws WebRequestException, ComicVineAdaptorException {
+    Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString())).thenReturn(null);
+    Mockito.when(requestFactory.getObject()).thenReturn(request);
+    Mockito.doNothing().when(request).setApiKey(TEST_API_KEY);
+    Mockito.doNothing().when(request).setIssueNumber(TEST_ISSUE_ID);
+    Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
+        .thenReturn(TEST_CONTENT_TEXT);
+    Mockito.doThrow(new ComicVineAdaptorException("expected"))
+        .when(responseProcessor)
+        .process(Mockito.any(byte[].class), Mockito.any(Comic.class));
 
-        try {
-            adaptor.execute(TEST_API_KEY,
-                            TEST_COMIC_ID,
-                            TEST_ISSUE_ID,
-                            comic,
-                            false);
-        }
-        finally {
-            Mockito.verify(comicVineIssueRepository,
-                           Mockito.times(1))
-                   .findByIssueId(TEST_ISSUE_ID);
-            Mockito.verify(requestFactory,
-                           Mockito.times(1))
-                   .getObject();
-            Mockito.verify(request,
-                           Mockito.times(1))
-                   .setApiKey(TEST_API_KEY);
-            Mockito.verify(request,
-                           Mockito.times(1))
-                   .setIssueNumber(TEST_ISSUE_ID);
-            Mockito.verify(webRequestProcessor,
-                           Mockito.times(1))
-                   .execute(request);
-            Mockito.verify(responseProcessor,
-                           Mockito.times(1))
-                   .process(TEST_CONTENT,
-                            comic);
-        }
+    try {
+      adaptor.execute(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, comic, false);
+    } finally {
+      Mockito.verify(comicVineIssueRepository, Mockito.times(1)).findByIssueId(TEST_ISSUE_ID);
+      Mockito.verify(requestFactory, Mockito.times(1)).getObject();
+      Mockito.verify(request, Mockito.times(1)).setApiKey(TEST_API_KEY);
+      Mockito.verify(request, Mockito.times(1)).setIssueNumber(TEST_ISSUE_ID);
+      Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(request);
+      Mockito.verify(responseProcessor, Mockito.times(1)).process(TEST_CONTENT, comic);
     }
+  }
 
-    @Test
-    public void testExecute()
-            throws
-            WebRequestException,
-            ComicVineAdaptorException {
-        Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(requestFactory.getObject())
-               .thenReturn(request);
-        Mockito.doNothing()
-               .when(request)
-               .setApiKey(TEST_API_KEY);
-        Mockito.doNothing()
-               .when(request)
-               .setIssueNumber(TEST_ISSUE_ID);
-        Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
-               .thenReturn(TEST_CONTENT_TEXT);
-        Mockito.when(responseProcessor.process(Mockito.any(byte[].class),
-                                               Mockito.any(Comic.class)))
-               .thenReturn(TEST_VOLUME_ID);
+  @Test
+  public void testExecute() throws WebRequestException, ComicVineAdaptorException {
+    Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString())).thenReturn(null);
+    Mockito.when(requestFactory.getObject()).thenReturn(request);
+    Mockito.doNothing().when(request).setApiKey(TEST_API_KEY);
+    Mockito.doNothing().when(request).setIssueNumber(TEST_ISSUE_ID);
+    Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
+        .thenReturn(TEST_CONTENT_TEXT);
+    Mockito.when(responseProcessor.process(Mockito.any(byte[].class), Mockito.any(Comic.class)))
+        .thenReturn(TEST_VOLUME_ID);
 
-        String result = adaptor.execute(TEST_API_KEY,
-                                        TEST_COMIC_ID,
-                                        TEST_ISSUE_ID,
-                                        comic,
-                                        false);
+    String result = adaptor.execute(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, comic, false);
 
-        assertNotNull(result);
-        assertEquals(TEST_VOLUME_ID,
-                     result);
+    assertNotNull(result);
+    assertEquals(TEST_VOLUME_ID, result);
 
-        Mockito.verify(comicVineIssueRepository,
-                       Mockito.times(1))
-               .findByIssueId(TEST_ISSUE_ID);
-        Mockito.verify(requestFactory,
-                       Mockito.times(1))
-               .getObject();
-        Mockito.verify(request,
-                       Mockito.times(1))
-               .setApiKey(TEST_API_KEY);
-        Mockito.verify(request,
-                       Mockito.times(1))
-               .setIssueNumber(TEST_ISSUE_ID);
-        Mockito.verify(webRequestProcessor,
-                       Mockito.times(1))
-               .execute(request);
-        Mockito.verify(responseProcessor,
-                       Mockito.times(1))
-               .process(TEST_CONTENT,
-                        comic);
-    }
+    Mockito.verify(comicVineIssueRepository, Mockito.times(1)).findByIssueId(TEST_ISSUE_ID);
+    Mockito.verify(requestFactory, Mockito.times(1)).getObject();
+    Mockito.verify(request, Mockito.times(1)).setApiKey(TEST_API_KEY);
+    Mockito.verify(request, Mockito.times(1)).setIssueNumber(TEST_ISSUE_ID);
+    Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(request);
+    Mockito.verify(responseProcessor, Mockito.times(1)).process(TEST_CONTENT, comic);
+  }
 
-    @Test
-    public void testExecuteIssueInDatabase()
-            throws
-            ComicVineAdaptorException {
-        Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString()))
-               .thenReturn(comicVineIssue);
-        Mockito.when(comicVineIssue.getContent())
-               .thenReturn(TEST_CONTENT_TEXT);
-        Mockito.when(responseProcessor.process(Mockito.any(byte[].class),
-                                               Mockito.any(Comic.class)))
-               .thenReturn(TEST_VOLUME_ID);
+  @Test
+  public void testExecuteIssueInDatabase() throws ComicVineAdaptorException {
+    Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString()))
+        .thenReturn(comicVineIssue);
+    Mockito.when(comicVineIssue.getContent()).thenReturn(TEST_CONTENT_TEXT);
+    Mockito.when(responseProcessor.process(Mockito.any(byte[].class), Mockito.any(Comic.class)))
+        .thenReturn(TEST_VOLUME_ID);
 
-        String result = adaptor.execute(TEST_API_KEY,
-                                        TEST_COMIC_ID,
-                                        TEST_ISSUE_ID,
-                                        comic,
-                                        false);
-        assertNotNull(result);
-        assertEquals(TEST_VOLUME_ID,
-                     result);
+    String result = adaptor.execute(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, comic, false);
+    assertNotNull(result);
+    assertEquals(TEST_VOLUME_ID, result);
 
-        Mockito.verify(comicVineIssueRepository,
-                       Mockito.times(1))
-               .findByIssueId(TEST_ISSUE_ID);
-        Mockito.verify(comicVineIssue,
-                       Mockito.times(1))
-               .getContent();
-        Mockito.verify(responseProcessor,
-                       Mockito.times(1))
-               .process(TEST_CONTENT,
-                        comic);
-    }
+    Mockito.verify(comicVineIssueRepository, Mockito.times(1)).findByIssueId(TEST_ISSUE_ID);
+    Mockito.verify(comicVineIssue, Mockito.times(1)).getContent();
+    Mockito.verify(responseProcessor, Mockito.times(1)).process(TEST_CONTENT, comic);
+  }
 
-    @Test
-    public void testExecuteIssueInDatabaseBypassDatabase()
-            throws
-            ComicVineAdaptorException,
-            WebRequestException {
-        Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString()))
-               .thenReturn(comicVineIssue);
-        Mockito.when(requestFactory.getObject())
-               .thenReturn(request);
-        Mockito.doNothing()
-               .when(request)
-               .setApiKey(TEST_API_KEY);
-        Mockito.doNothing()
-               .when(request)
-               .setIssueNumber(TEST_ISSUE_ID);
-        Mockito.doNothing()
-               .when(comicVineIssueRepository)
-               .delete(Mockito.any(ComicVineIssue.class));
-        Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
-               .thenReturn(TEST_CONTENT_TEXT);
-        Mockito.when(responseProcessor.process(Mockito.any(byte[].class),
-                                               Mockito.any(Comic.class)))
-               .thenReturn(TEST_VOLUME_ID);
+  @Test
+  public void testExecuteIssueInDatabaseBypassDatabase()
+      throws ComicVineAdaptorException, WebRequestException {
+    Mockito.when(comicVineIssueRepository.findByIssueId(Mockito.anyString()))
+        .thenReturn(comicVineIssue);
+    Mockito.when(requestFactory.getObject()).thenReturn(request);
+    Mockito.doNothing().when(request).setApiKey(TEST_API_KEY);
+    Mockito.doNothing().when(request).setIssueNumber(TEST_ISSUE_ID);
+    Mockito.doNothing().when(comicVineIssueRepository).delete(Mockito.any(ComicVineIssue.class));
+    Mockito.when(webRequestProcessor.execute(Mockito.any(ComicVineIssueDetailsWebRequest.class)))
+        .thenReturn(TEST_CONTENT_TEXT);
+    Mockito.when(responseProcessor.process(Mockito.any(byte[].class), Mockito.any(Comic.class)))
+        .thenReturn(TEST_VOLUME_ID);
 
-        String result = adaptor.execute(TEST_API_KEY,
-                                        TEST_COMIC_ID,
-                                        TEST_ISSUE_ID,
-                                        comic,
-                                        true);
+    String result = adaptor.execute(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, comic, true);
 
-        assertNotNull(result);
-        assertEquals(TEST_VOLUME_ID,
-                     result);
+    assertNotNull(result);
+    assertEquals(TEST_VOLUME_ID, result);
 
-        Mockito.verify(comicVineIssueRepository,
-                       Mockito.times(1))
-               .findByIssueId(TEST_ISSUE_ID);
-        Mockito.verify(requestFactory,
-                       Mockito.times(1))
-               .getObject();
-        Mockito.verify(request,
-                       Mockito.times(1))
-               .setApiKey(TEST_API_KEY);
-        Mockito.verify(request,
-                       Mockito.times(1))
-               .setIssueNumber(TEST_ISSUE_ID);
-        Mockito.verify(comicVineIssueRepository,
-                       Mockito.times(1))
-               .delete(comicVineIssue);
-        Mockito.verify(webRequestProcessor,
-                       Mockito.times(1))
-               .execute(request);
-        Mockito.verify(responseProcessor,
-                       Mockito.times(1))
-               .process(TEST_CONTENT,
-                        comic);
-    }
+    Mockito.verify(comicVineIssueRepository, Mockito.times(1)).findByIssueId(TEST_ISSUE_ID);
+    Mockito.verify(requestFactory, Mockito.times(1)).getObject();
+    Mockito.verify(request, Mockito.times(1)).setApiKey(TEST_API_KEY);
+    Mockito.verify(request, Mockito.times(1)).setIssueNumber(TEST_ISSUE_ID);
+    Mockito.verify(comicVineIssueRepository, Mockito.times(1)).delete(comicVineIssue);
+    Mockito.verify(webRequestProcessor, Mockito.times(1)).execute(request);
+    Mockito.verify(responseProcessor, Mockito.times(1)).process(TEST_CONTENT, comic);
+  }
 }

@@ -18,11 +18,10 @@
 
 package org.comixed.controller.opds;
 
-import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import java.util.*;
 import org.comixed.model.library.Comic;
 import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
@@ -34,80 +33,74 @@ import org.comixed.model.opds.OPDSLink;
  * @author Giao Phan
  * @author Darryl L. Pierce
  */
-public class OPDSAcquisitionFeed implements
-                                 OPDSFeed
-{
-    private String id;
+public class OPDSAcquisitionFeed implements OPDSFeed {
+  private String id;
 
-    private String title;
+  private String title;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Date updated;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+  private Date updated;
 
-    private String icon;
+  private String icon;
 
-    @JacksonXmlElementWrapper(useWrapping = false)
-    @JacksonXmlProperty(localName = "link")
-    private List<OPDSLink> links;
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "link")
+  private List<OPDSLink> links;
 
-    @JacksonXmlElementWrapper(useWrapping = false)
-    @JacksonXmlProperty(localName = "entry")
-    private List<OPDSEntry> entries;
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "entry")
+  private List<OPDSEntry> entries;
 
-    public OPDSAcquisitionFeed(String selfUrl, String title, Iterable<Comic> comics)
-    {
-        this.id = "urn:uuid:" + UUID.randomUUID();
-        this.entries = new ArrayList<>();
-        this.icon= "/favicon.ico";
-        int count = 0;
-        for (Comic comic : comics)
-        {
-            if (!comic.isMissing()) {
-                this.entries.add(new OPDSEntry(comic));
-                count++;
-            }
-        }
-        this.title = title + count + " items";
-        this.updated = new Date(System.currentTimeMillis());
-        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=acquisition", "self",
-                        selfUrl),
-                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
-                        "/opds-comics"));
+  public OPDSAcquisitionFeed(String selfUrl, String title, Iterable<Comic> comics) {
+    this.id = "urn:uuid:" + UUID.randomUUID();
+    this.entries = new ArrayList<>();
+    this.icon = "/favicon.ico";
+    int count = 0;
+    for (Comic comic : comics) {
+      if (!comic.isMissing()) {
+        this.entries.add(new OPDSEntry(comic));
+        count++;
+      }
     }
+    this.title = title + count + " items";
+    this.updated = new Date(System.currentTimeMillis());
+    this.links =
+        Arrays.asList(
+            new OPDSLink(
+                "application/atom+xml; profile=opds-catalog; kind=acquisition", "self", selfUrl),
+            new OPDSLink(
+                "application/atom+xml; profile=opds-catalog; kind=navigation",
+                "start",
+                "/opds-comics"));
+  }
 
-    @Override
-    public List<OPDSEntry> getEntries()
-    {
-        return this.entries;
-    }
+  @Override
+  public List<OPDSEntry> getEntries() {
+    return this.entries;
+  }
 
-    @Override
-    public String getId()
-    {
-        return this.id;
-    }
+  @Override
+  public String getId() {
+    return this.id;
+  }
 
-    @Override
-    public String getIcon()
-    {
-        return this.icon;
-    }
+  @Override
+  public String getIcon() {
+    return this.icon;
+  }
 
-    @Override
-    public List<OPDSLink> getLinks()
-    {
-        return this.links;
-    }
+  @Override
+  public List<OPDSLink> getLinks() {
+    return this.links;
+  }
 
-    @Override
-    public String getTitle()
-    {
-        return this.title;
-    }
+  @Override
+  public String getTitle() {
+    return this.title;
+  }
 
-    @Override
-    public Date getUpdated()
-    {
-        return this.updated;
-    }
+  @Override
+  public Date getUpdated() {
+    return this.updated;
+  }
 }

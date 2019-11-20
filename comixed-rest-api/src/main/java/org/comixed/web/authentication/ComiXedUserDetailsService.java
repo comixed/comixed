@@ -32,31 +32,28 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComiXedUserDetailsService implements
-                                       UserDetailsService
-{
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class ComiXedUserDetailsService implements UserDetailsService {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ComiXedUserRepository userRepository;
+  @Autowired private ComiXedUserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
-    {
-        logger.debug("Loading user: email={}", email);
+  @Override
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    logger.debug("Loading user: email={}", email);
 
-        ComiXedUser user = userRepository.findByEmail(email);
+    ComiXedUser user = userRepository.findByEmail(email);
 
-        if (user == null) { throw new UsernameNotFoundException("User not found"); }
-
-        UserBuilder result = User.withUsername(email);
-
-        result.password(user.getPasswordHash());
-        for (Role role : user.getRoles())
-        {
-            result.roles(role.getName());
-        }
-
-        return result.build();
+    if (user == null) {
+      throw new UsernameNotFoundException("User not found");
     }
+
+    UserBuilder result = User.withUsername(email);
+
+    result.password(user.getPasswordHash());
+    for (Role role : user.getRoles()) {
+      result.roles(role.getName());
+    }
+
+    return result.build();
+  }
 }

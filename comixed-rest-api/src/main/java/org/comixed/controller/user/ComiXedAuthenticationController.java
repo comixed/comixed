@@ -38,31 +38,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/token")
-public class ComiXedAuthenticationController
-{
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class ComiXedAuthenticationController {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+  @Autowired private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+  @Autowired private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private ComiXedUserRepository userRepository;
+  @Autowired private ComiXedUserRepository userRepository;
 
-    @RequestMapping(value = "/generate-token",
-                    method = RequestMethod.POST)
-    public ResponseEntity<AuthToken> register(@RequestParam("email") String email,
-                                              @RequestParam("password") String password) throws AuthenticationException
-    {
-        logger.debug("Attemping to authenticate user: {}", email);
-        final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email,
-                                                                                                                         password));
+  @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
+  public ResponseEntity<AuthToken> register(
+      @RequestParam("email") String email, @RequestParam("password") String password)
+      throws AuthenticationException {
+    logger.debug("Attemping to authenticate user: {}", email);
+    final Authentication authentication =
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(email, password));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final ComiXedUser user = userRepository.findByEmail(email);
-        final String token = jwtTokenUtil.generateToken(user);
-        return ResponseEntity.ok(new AuthToken(token, user.getEmail()));
-    }
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    final ComiXedUser user = userRepository.findByEmail(email);
+    final String token = jwtTokenUtil.generateToken(user);
+    return ResponseEntity.ok(new AuthToken(token, user.getEmail()));
+  }
 }

@@ -18,18 +18,17 @@
 
 package org.comixed.adaptors;
 
-import org.apache.commons.io.FilenameUtils;
-import org.comixed.model.library.Comic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.io.FilenameUtils;
+import org.comixed.model.library.Comic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * <code>FilenameScraperAdaptor</code> scrapes comic meta-information from the filename for a comic.

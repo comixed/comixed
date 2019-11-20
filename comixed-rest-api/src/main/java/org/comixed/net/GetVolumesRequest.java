@@ -21,18 +21,24 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GetVolumesRequest {
-    @JsonProperty("apiKey") private String apiKey;
-    @JsonProperty("skipCache") private Boolean skipCache;
+  @JsonProperty("apiKey")
+  private String apiKey;
 
-    public GetVolumesRequest() { }
+  @JsonProperty("skipCache")
+  private Boolean skipCache;
 
-    public GetVolumesRequest(final String apiKey,
-                             final Boolean skipCache) {
-        this.apiKey = apiKey;
-        this.skipCache = skipCache;
-    }
+  public GetVolumesRequest() {}
 
-    public String getApiKey() { return apiKey; }
+  public GetVolumesRequest(final String apiKey, final Boolean skipCache) {
+    this.apiKey = apiKey;
+    this.skipCache = skipCache;
+  }
 
-    public Boolean getSkipCache() { return skipCache; }
+  public String getApiKey() {
+    return apiKey;
+  }
+
+  public Boolean getSkipCache() {
+    return skipCache;
+  }
 }

@@ -83,6 +83,33 @@
         </executions>
       </plugin>
       -->
+
+      <plugin>
+        <groupId>com.cosium.code</groupId>
+        <artifactId>maven-git-code-format</artifactId>
+        <version>1.36</version>
+        <executions>
+          <execution>
+            <id>install-formatter-hook</id>
+            <goals>
+              <goal>install-hooks</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>validate-code-format</id>
+            <goals>
+              <goal>validate-code-format</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <googleJavaFormatOptions>
+            <aosp>false</aosp>
+            <skipSortingImports>false</skipSortingImports>
+            <skipRemovingUnusedImports>false</skipRemovingUnusedImports>
+          </googleJavaFormatOptions>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <modules>

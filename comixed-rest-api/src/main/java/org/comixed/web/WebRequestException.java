@@ -21,23 +21,18 @@ package org.comixed.web;
 import java.io.IOException;
 
 /**
- * <code>WebRequestException</code> is raised when an error occurs during a web
- * request.
+ * <code>WebRequestException</code> is raised when an error occurs during a web request.
  *
  * @author Darryl L. Pierce
- *
  */
-public class WebRequestException extends Exception
-{
-    private static final long serialVersionUID = -3941719688736497537L;
+public class WebRequestException extends Exception {
+  private static final long serialVersionUID = -3941719688736497537L;
 
-    public WebRequestException(String message)
-    {
-        super(message);
-    }
+  public WebRequestException(String message) {
+    super(message);
+  }
 
-    public WebRequestException(String message, IOException cause)
-    {
-        super(message, cause);
-    }
+  public WebRequestException(String message, IOException cause) {
+    super(message, cause);
+  }
 }

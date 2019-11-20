@@ -18,10 +18,9 @@
 
 package org.comixed.controller.opds;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
 
@@ -31,20 +30,18 @@ import org.comixed.model.opds.OPDSLink;
  * @author João França
  * @author Giao Phan
  * @author Darryl L. Pierce
- *
  */
 @JacksonXmlRootElement(localName = "feed", namespace = "http://www.w3.org/2005/Atom")
-public interface OPDSFeed
-{
-    public String getId();
+public interface OPDSFeed {
+  public String getId();
 
-    public String getTitle();
+  public String getTitle();
 
-    public Date getUpdated();
+  public Date getUpdated();
 
-    public String getIcon();
+  public String getIcon();
 
-    public List<OPDSLink> getLinks();
+  public List<OPDSLink> getLinks();
 
-    public List<OPDSEntry> getEntries();
+  public List<OPDSEntry> getEntries();
 }

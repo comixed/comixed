@@ -18,17 +18,22 @@
 
 package org.comixed.adaptors.archive;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.comixed.adaptors.ComicInfoEntryAdaptor;
+import org.comixed.handlers.ComicFileHandler;
+import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.loaders.EntryLoader;
 import org.comixed.loaders.EntryLoaderException;
 import org.comixed.model.library.Comic;
-import org.comixed.handlers.ComicFileHandler;
-import org.comixed.handlers.ComicFileHandlerException;
-import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.utils.ComicFileUtils;
+import org.comixed.utils.FileTypeIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -38,12 +43,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 /**
  * <code>AbstractArchiveAdaptor</code> provides a foundation for creating new instances of {@link

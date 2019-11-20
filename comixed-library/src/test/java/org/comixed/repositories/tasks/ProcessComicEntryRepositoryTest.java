@@ -18,6 +18,9 @@
 
 package org.comixed.repositories.tasks;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.comixed.model.tasks.ProcessComicEntry;
@@ -33,28 +36,25 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
 @TestPropertySource(locations = "classpath:application.properties")
 @DatabaseSetup("classpath:test-comics.xml")
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
-                         DirtiesContextTestExecutionListener.class,
-                         TransactionalTestExecutionListener.class,
-                         DbUnitTestExecutionListener.class})
+@TestExecutionListeners({
+  DependencyInjectionTestExecutionListener.class,
+  DirtiesContextTestExecutionListener.class,
+  TransactionalTestExecutionListener.class,
+  DbUnitTestExecutionListener.class
+})
 public class ProcessComicEntryRepositoryTest {
-    @Autowired private ProcessComicEntryRepository repository;
+  @Autowired private ProcessComicEntryRepository repository;
 
-    @Test
-    public void testGetNextEntry() {
-        final ProcessComicEntry result = repository.findFirstByOrderByCreated();
+  @Test
+  public void testGetNextEntry() {
+    final ProcessComicEntry result = repository.findFirstByOrderByCreated();
 
-        assertNotNull(result);
-        assertEquals(1000L,
-                     result.getId()
-                           .longValue());
-        assertNotNull(result.getComic());
-    }
+    assertNotNull(result);
+    assertEquals(1000L, result.getId().longValue());
+    assertNotNull(result.getComic());
+  }
 }

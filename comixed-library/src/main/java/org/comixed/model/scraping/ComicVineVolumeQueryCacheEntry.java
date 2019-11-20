@@ -19,77 +19,79 @@
 package org.comixed.model.scraping;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+import javax.persistence.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.*;
-import java.util.Date;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
 @Table(name = "comic_vine_volume_query_cache")
 public class ComicVineVolumeQueryCacheEntry {
-    // max age in days
-    public static final long CACHE_TTL = 7L;
+  // max age in days
+  public static final long CACHE_TTL = 7L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  private Long id;
 
-    @Column(name = "series_name") private String seriesName;
+  @Column(name = "series_name")
+  private String seriesName;
 
-    @Column(name = "sequence") private int sequence;
+  @Column(name = "sequence")
+  private int sequence;
 
-    @Column(name = "created") private Date created = new Date();
+  @Column(name = "created")
+  private Date created = new Date();
 
-    @Column(name = "content")
-    @Lob
-    @JsonProperty
-    private String content;
+  @Column(name = "content")
+  @Lob
+  @JsonProperty
+  private String content;
 
-    public ComicVineVolumeQueryCacheEntry() {}
+  public ComicVineVolumeQueryCacheEntry() {}
 
-    public String getContent() {
-        return this.content;
-    }
+  public String getContent() {
+    return this.content;
+  }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public Date getCreated() {
-        return this.created;
-    }
+  public Date getCreated() {
+    return this.created;
+  }
 
-    public Long getId() {
-        return this.id;
-    }
+  public Long getId() {
+    return this.id;
+  }
 
-    public int getSequence() {
-        return this.sequence;
-    }
+  public int getSequence() {
+    return this.sequence;
+  }
 
-    public void setSequence(int sequence) {
-        this.sequence = sequence;
-    }
+  public void setSequence(int sequence) {
+    this.sequence = sequence;
+  }
 
-    public String getSeriesName() {
-        return this.seriesName;
-    }
+  public String getSeriesName() {
+    return this.seriesName;
+  }
 
-    public void setSeriesName(String seriesName) {
-        this.seriesName = seriesName;
-    }
+  public void setSeriesName(String seriesName) {
+    this.seriesName = seriesName;
+  }
 
-    @Transient
-    public long getAgeInDays() {
-        long age = System.currentTimeMillis() - this.created.getTime();
+  @Transient
+  public long getAgeInDays() {
+    long age = System.currentTimeMillis() - this.created.getTime();
 
-        age = age / (1000 * 60 * 60 * 24);
+    age = age / (1000 * 60 * 60 * 24);
 
-        return age;
-    }
+    return age;
+  }
 }

@@ -27,53 +27,47 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicVineIssuesWebRequestTest extends BaseWebRequestTest
-{
-    private static final String TEST_API_KEY = "12345";
-    private static final Integer TEST_COMIC_VOLUME = 92750;
-    private static final String TEST_ISSUE_NUMBER = "38";
-    @InjectMocks
-    private ComicVineIssuesWebRequest request;
+public class ComicVineIssuesWebRequestTest extends BaseWebRequestTest {
+  private static final String TEST_API_KEY = "12345";
+  private static final Integer TEST_COMIC_VOLUME = 92750;
+  private static final String TEST_ISSUE_NUMBER = "38";
+  @InjectMocks private ComicVineIssuesWebRequest request;
 
-    @Test(expected = WebRequestException.class)
-    public void testGetURLRequiresApiKey() throws WebRequestException
-    {
-        request.setVolume(TEST_COMIC_VOLUME);
-        request.setIssueNumber(TEST_ISSUE_NUMBER);
+  @Test(expected = WebRequestException.class)
+  public void testGetURLRequiresApiKey() throws WebRequestException {
+    request.setVolume(TEST_COMIC_VOLUME);
+    request.setIssueNumber(TEST_ISSUE_NUMBER);
 
-        request.getURL();
-    }
+    request.getURL();
+  }
 
-    @Test(expected = WebRequestException.class)
-    public void testGetURLRequiresVolume() throws WebRequestException
-    {
-        request.setApiKey(TEST_API_KEY);
-        request.setIssueNumber(TEST_ISSUE_NUMBER);
+  @Test(expected = WebRequestException.class)
+  public void testGetURLRequiresVolume() throws WebRequestException {
+    request.setApiKey(TEST_API_KEY);
+    request.setIssueNumber(TEST_ISSUE_NUMBER);
 
-        request.getURL();
-    }
+    request.getURL();
+  }
 
-    @Test(expected = WebRequestException.class)
-    public void testGetURLRequiresIssueNumber() throws WebRequestException
-    {
-        request.setApiKey(TEST_API_KEY);
-        request.setVolume(TEST_COMIC_VOLUME);
+  @Test(expected = WebRequestException.class)
+  public void testGetURLRequiresIssueNumber() throws WebRequestException {
+    request.setApiKey(TEST_API_KEY);
+    request.setVolume(TEST_COMIC_VOLUME);
 
-        request.getURL();
-    }
+    request.getURL();
+  }
 
-    @Test
-    public void testGetURL() throws WebRequestException
-    {
-        request.setApiKey(TEST_API_KEY);
-        request.setVolume(TEST_COMIC_VOLUME);
-        request.setIssueNumber(TEST_ISSUE_NUMBER);
+  @Test
+  public void testGetURL() throws WebRequestException {
+    request.setApiKey(TEST_API_KEY);
+    request.setVolume(TEST_COMIC_VOLUME);
+    request.setIssueNumber(TEST_ISSUE_NUMBER);
 
-        String result = request.getURL();
+    String result = request.getURL();
 
-        assertNotNull(result);
-        assertNotEquals(-1, result.indexOf("api_key=" + TEST_API_KEY));
-        assertNotEquals(-1, result.indexOf("volume:" + TEST_COMIC_VOLUME));
-        assertNotEquals(-1, result.indexOf("issue_number:" + TEST_ISSUE_NUMBER));
-    }
+    assertNotNull(result);
+    assertNotEquals(-1, result.indexOf("api_key=" + TEST_API_KEY));
+    assertNotEquals(-1, result.indexOf("volume:" + TEST_COMIC_VOLUME));
+    assertNotEquals(-1, result.indexOf("issue_number:" + TEST_ISSUE_NUMBER));
+  }
 }

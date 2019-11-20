@@ -19,23 +19,19 @@
 package org.comixed.adaptors.archive;
 
 /**
- * <code>ArchiveAdaptorException</code> is thrown when an error occurs while
- * working with the contents of an archive.
+ * <code>ArchiveAdaptorException</code> is thrown when an error occurs while working with the
+ * contents of an archive.
  *
  * @author Darryl L. Pierce
- *
  */
-public class ArchiveAdaptorException extends Exception
-{
-    private static final long serialVersionUID = 5895095739317473196L;
+public class ArchiveAdaptorException extends Exception {
+  private static final long serialVersionUID = 5895095739317473196L;
 
-    public ArchiveAdaptorException(String message)
-    {
-        super(message);
-    }
+  public ArchiveAdaptorException(String message) {
+    super(message);
+  }
 
-    public ArchiveAdaptorException(String message, Exception cause)
-    {
-        super(message, cause);
-    }
+  public ArchiveAdaptorException(String message, Exception cause) {
+    super(message, cause);
+  }
 }

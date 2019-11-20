@@ -24,36 +24,29 @@ package org.comixed.model.opds;
  *
  * @author João França
  * @author Darryl L. Pierce
- *
  */
-public class OPDSBookmark
-{
-    private long docId;
+public class OPDSBookmark {
+  private long docId;
 
-    private String mark;
+  private String mark;
 
-    private boolean isFinished;
+  private boolean isFinished;
 
-    public OPDSBookmark(long docId, String mark, Boolean isFinished)
-    {
-        this.docId = docId;
-        this.mark = mark;
-        this.isFinished = isFinished;
-    }
+  public OPDSBookmark(long docId, String mark, Boolean isFinished) {
+    this.docId = docId;
+    this.mark = mark;
+    this.isFinished = isFinished;
+  }
 
-    public long getDocId()
-    {
-        return this.docId;
-    }
+  public long getDocId() {
+    return this.docId;
+  }
 
-    public String getMark()
-    {
-        return this.mark;
-    }
+  public String getMark() {
+    return this.mark;
+  }
 
-    public Boolean getIsFinished()
-    {
-        return this.isFinished;
-    }
-
+  public Boolean getIsFinished() {
+    return this.isFinished;
+  }
 }

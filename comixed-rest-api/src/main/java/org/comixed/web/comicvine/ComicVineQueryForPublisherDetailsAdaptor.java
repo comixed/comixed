@@ -31,69 +31,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineQueryForPublisherDetailsAdaptor
-{
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class ComicVineQueryForPublisherDetailsAdaptor {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ObjectFactory<ComicVinePublisherDetailsWebRequest> webRequestFactory;
+  @Autowired private ObjectFactory<ComicVinePublisherDetailsWebRequest> webRequestFactory;
 
-    @Autowired
-    private WebRequestProcessor webRequestProcessor;
+  @Autowired private WebRequestProcessor webRequestProcessor;
 
-    @Autowired
-    private ComicVinePublisherDetailsResponseProcessor contentProcessor;
+  @Autowired private ComicVinePublisherDetailsResponseProcessor contentProcessor;
 
-    @Autowired
-    private ComicVinePublisherRepository comicVinePublisherRepository;
+  @Autowired private ComicVinePublisherRepository comicVinePublisherRepository;
 
-    public void execute(String apiKey,
-                        String publisherId,
-                        Comic comic,
-                        boolean skipCache) throws ComicVineAdaptorException
-    {
-        this.logger.debug("Fetching publisher details: publisherId={}", publisherId);
+  public void execute(String apiKey, String publisherId, Comic comic, boolean skipCache)
+      throws ComicVineAdaptorException {
+    this.logger.debug("Fetching publisher details: publisherId={}", publisherId);
 
-        ComicVinePublisher publisher = null;
-        String content = null;
+    ComicVinePublisher publisher = null;
+    String content = null;
 
-        publisher = this.comicVinePublisherRepository.findByPublisherId(publisherId);
+    publisher = this.comicVinePublisherRepository.findByPublisherId(publisherId);
 
-        if (skipCache || (publisher == null))
-        {
-            this.logger.debug("Fetching publisher details from ComicVine...");
+    if (skipCache || (publisher == null)) {
+      this.logger.debug("Fetching publisher details from ComicVine...");
 
-            ComicVinePublisherDetailsWebRequest request = this.webRequestFactory.getObject();
+      ComicVinePublisherDetailsWebRequest request = this.webRequestFactory.getObject();
 
-            request.setApiKey(apiKey);
-            request.setPublisherId(publisherId);
+      request.setApiKey(apiKey);
+      request.setPublisherId(publisherId);
 
-            try
-            {
-                content = this.webRequestProcessor.execute(request);
+      try {
+        content = this.webRequestProcessor.execute(request);
 
-                if (publisher != null)
-                {
-                    this.comicVinePublisherRepository.delete(publisher);
-                }
-
-                this.logger.debug("Saving retrieved publisher data...");
-                publisher = new ComicVinePublisher();
-                publisher.setPublisherId(publisherId);
-                publisher.setContent(content);
-                this.comicVinePublisherRepository.save(publisher);
-            }
-            catch (WebRequestException error)
-            {
-                throw new ComicVineAdaptorException("Failed to retrieve publisher details", error);
-            }
-        }
-        else
-        {
-            this.logger.debug("Publisher found in database.");
-            content = publisher.getContent();
+        if (publisher != null) {
+          this.comicVinePublisherRepository.delete(publisher);
         }
 
-        this.contentProcessor.process(content.getBytes(), comic);
+        this.logger.debug("Saving retrieved publisher data...");
+        publisher = new ComicVinePublisher();
+        publisher.setPublisherId(publisherId);
+        publisher.setContent(content);
+        this.comicVinePublisherRepository.save(publisher);
+      } catch (WebRequestException error) {
+        throw new ComicVineAdaptorException("Failed to retrieve publisher details", error);
+      }
+    } else {
+      this.logger.debug("Publisher found in database.");
+      content = publisher.getContent();
     }
+
+    this.contentProcessor.process(content.getBytes(), comic);
+  }
 }

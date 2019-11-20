@@ -22,32 +22,29 @@ import org.comixed.model.library.Comic;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicDataAdaptor
-{
-    /**
-     * Clears all metadata scraped from a remove database.
-     * 
-     * @param comic
-     *            the comic
-     */
-    public void clear(Comic comic)
-    {
-        comic.setComicVineId("");
-        comic.setComicVineURL("");
-        comic.setPublisher("");
-        comic.setImprint("");
-        comic.setSeries("");
-        comic.setCoverDate(null);
-        comic.setVolume("");
-        comic.setIssueNumber("");
-        comic.setTitle("");
-        comic.setDescription("");
-        comic.setNotes("");
-        comic.setSummary("");
-        comic.getStoryArcs().clear();
-        comic.getTeams().clear();
-        comic.getCharacters().clear();
-        comic.getLocations().clear();
-        comic.getCredits().clear();
-    }
+public class ComicDataAdaptor {
+  /**
+   * Clears all metadata scraped from a remove database.
+   *
+   * @param comic the comic
+   */
+  public void clear(Comic comic) {
+    comic.setComicVineId("");
+    comic.setComicVineURL("");
+    comic.setPublisher("");
+    comic.setImprint("");
+    comic.setSeries("");
+    comic.setCoverDate(null);
+    comic.setVolume("");
+    comic.setIssueNumber("");
+    comic.setTitle("");
+    comic.setDescription("");
+    comic.setNotes("");
+    comic.setSummary("");
+    comic.getStoryArcs().clear();
+    comic.getTeams().clear();
+    comic.getCharacters().clear();
+    comic.getLocations().clear();
+    comic.getCredits().clear();
+  }
 }

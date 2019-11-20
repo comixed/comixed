@@ -26,16 +26,13 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SimpleWebRequestTest extends BaseWebRequestTest
-{
-    private static final String TEST_URL = "http://www.test.org/getsomething";
+public class SimpleWebRequestTest extends BaseWebRequestTest {
+  private static final String TEST_URL = "http://www.test.org/getsomething";
 
-    @InjectMocks
-    private SimpleWebRequest request = new SimpleWebRequest(TEST_URL);
+  @InjectMocks private SimpleWebRequest request = new SimpleWebRequest(TEST_URL);
 
-    @Test
-    public void testGetURLBase()
-    {
-        assertEquals(TEST_URL, request.getURL());
-    }
+  @Test
+  public void testGetURLBase() {
+    assertEquals(TEST_URL, request.getURL());
+  }
 }

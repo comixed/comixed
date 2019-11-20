@@ -18,46 +18,35 @@
 
 package org.comixed.model.library;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.comixed.views.View.ComicList;
 import org.comixed.views.View.PageList;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 @Component
 @Entity
 @Table(name = "comic_formats")
-public class ComicFormat
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(
-    {ComicList.class,
-     PageList.class})
-    private long id;
+public class ComicFormat {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonView({ComicList.class, PageList.class})
+  private long id;
 
-    @Column(name = "name",
-            updatable = false,
-            nullable = false)
-    @JsonView(
-    {ComicList.class,
-     PageList.class})
-    private String name;
+  @Column(name = "name", updatable = false, nullable = false)
+  @JsonView({ComicList.class, PageList.class})
+  private String name;
 
-    public long getId()
-    {
-        return this.id;
-    }
+  public long getId() {
+    return this.id;
+  }
 
-    public String getName()
-    {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 }

@@ -18,52 +18,40 @@
 
 package org.comixed.model.library;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.views.View.ComicList;
 import org.comixed.views.View.PageList;
 
 /**
  * <code>PageType</code> describes the type of a {@link Page}.
- * 
- * @author The ComiXed Project
  *
+ * @author The ComiXed Project
  */
 @Entity
 @Table(name = "page_types")
-public class PageType
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(
-    {ComicList.class,
-     PageList.class})
-    private Long id;
+public class PageType {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonView({ComicList.class, PageList.class})
+  private Long id;
 
-    @Column(name = "name",
-            updatable = false,
-            nullable = false)
-    @JsonView(
-    {ComicList.class,
-     PageList.class})
-    private String name;
+  @Column(name = "name", updatable = false, nullable = false)
+  @JsonView({ComicList.class, PageList.class})
+  private String name;
 
-    public PageType()
-    {}
+  public PageType() {}
 
-    public Long getId()
-    {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getName()
-    {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 }

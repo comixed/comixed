@@ -18,9 +18,8 @@
 
 package org.comixed.service.library;
 
-public class ComicException
-        extends Exception {
-    public ComicException(final String message) {
-        super(message);
-    }
+public class ComicException extends Exception {
+  public ComicException(final String message) {
+    super(message);
+  }
 }

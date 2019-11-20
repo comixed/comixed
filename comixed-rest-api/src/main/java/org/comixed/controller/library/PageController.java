@@ -19,6 +19,8 @@
 package org.comixed.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import java.io.ByteArrayInputStream;
+import java.util.List;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.DuplicatePage;
 import org.comixed.model.library.Page;
@@ -36,289 +38,194 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayInputStream;
-import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 public class PageController {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired private PageService pageService;
-    @Autowired private FileTypeIdentifier fileTypeIdentifier;
+  @Autowired private PageService pageService;
+  @Autowired private FileTypeIdentifier fileTypeIdentifier;
 
-    @PostMapping(value = "/pages/{id}/block/{hash}",
-                 produces = "application/json",
-                 consumes = "application/json")
-    @JsonView(View.ComicDetails.class)
-    public Comic addBlockedPageHash(
-            @PathVariable("id")
-            final long pageId,
-            @PathVariable("hash")
-                    String hash)
-            throws
-            PageException {
-        this.logger.info("Blocking page hash: {}",
-                         hash);
+  @PostMapping(
+      value = "/pages/{id}/block/{hash}",
+      produces = "application/json",
+      consumes = "application/json")
+  @JsonView(View.ComicDetails.class)
+  public Comic addBlockedPageHash(
+      @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
+      throws PageException {
+    this.logger.info("Blocking page hash: {}", hash);
 
-        return this.pageService.addBlockedPageHash(pageId,
-                                                   hash);
+    return this.pageService.addBlockedPageHash(pageId, hash);
+  }
+
+  @RequestMapping(value = "/pages/hash/{hash}", method = RequestMethod.DELETE)
+  public int deleteAllWithHash(@PathVariable("hash") String hash) {
+    this.logger.info("Marking all pages with hash as deleted: {}", hash);
+
+    int result = this.pageService.deleteAllWithHash(hash);
+
+    this.logger.debug("Affected {} page{}", result, result == 0 ? "" : "s");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/pages/{id}", method = RequestMethod.DELETE)
+  public boolean deletePage(@PathVariable("id") long id) {
+    this.logger.info("Deleting page: id={}", id);
+
+    final boolean result = this.pageService.deletePage(id) != null;
+
+    this.logger.debug("Operation was {}", result ? "successful" : "unsuccessful");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/comics/{id}/pages", method = RequestMethod.GET)
+  @JsonView(PageList.class)
+  public List<Page> getAllPagesForComic(@PathVariable("id") long id) {
+    this.logger.info("Getting all pages for comic: id={}", id);
+
+    final List<Page> result = this.pageService.getAllPagesForComic(id);
+
+    this.logger.debug("Returning {} {}", result.size(), result.size() == 1 ? "comic" : "comics");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/pages/blocked", method = RequestMethod.GET)
+  public String[] getAllBlockedPageHashes() {
+    this.logger.debug("Getting all blocked page hashes");
+
+    String[] result = this.pageService.getAllBlockedPageHashes();
+
+    this.logger.debug("Returning {} page hash{}", result.length, result.length == 1 ? "" : "es");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/pages/duplicates", method = RequestMethod.GET)
+  @JsonView(View.DuplicatePageList.class)
+  public List<DuplicatePage> getDuplicatePages() {
+    this.logger.info("Getting duplicate pages");
+
+    final List<DuplicatePage> result = this.pageService.getDuplicatePages();
+
+    this.logger.debug(
+        "Returning {} duplicate page{}", result.size(), result.size() == 1 ? "" : "s");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/comics/{id}/pages/{index}/content", method = RequestMethod.GET)
+  public ResponseEntity<byte[]> getImageInComicByIndex(
+      @PathVariable("id") long id, @PathVariable("index") int index) {
+    this.logger.debug("Getting image content for comic: id={} index={}", id, index);
+
+    final Page page = this.pageService.getPageInComicByIndex(id, index);
+
+    return this.getResponseEntityForPage(page);
+  }
+
+  private ResponseEntity<byte[]> getResponseEntityForPage(Page page) {
+    byte[] content = page.getContent();
+    String type =
+        this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content))
+            + "/"
+            + this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
+    return ResponseEntity.ok()
+        .contentLength(content.length)
+        .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
+        .contentType(MediaType.valueOf(type))
+        .body(content);
+  }
+
+  @RequestMapping(value = "/pages/{id}/content", method = RequestMethod.GET)
+  public ResponseEntity<byte[]> getPageContent(@PathVariable("id") long id) {
+    this.logger.info("Getting page content: id={}", id);
+
+    final Page page = this.pageService.findById(id);
+
+    if (page != null) {
+      return this.getResponseEntityForPage(page);
     }
 
-    @RequestMapping(value = "/pages/hash/{hash}",
-                    method = RequestMethod.DELETE)
-    public int deleteAllWithHash(
-            @PathVariable("hash")
-                    String hash) {
-        this.logger.info("Marking all pages with hash as deleted: {}",
-                         hash);
+    this.logger.warn("No such page");
+    return null;
+  }
 
-        int result = this.pageService.deleteAllWithHash(hash);
+  @RequestMapping(value = "/comics/{comic_id}/pages/{index}", method = RequestMethod.GET)
+  public Page getPageInComicByIndex(
+      @PathVariable("comic_id") long comicId, @PathVariable("index") int index) {
+    this.logger.info("Getting page in comic: comic id={} page index={}", comicId, index);
 
-        this.logger.debug("Affected {} page{}",
-                          result,
-                          result == 0
-                          ? ""
-                          : "s");
+    return this.pageService.getPageInComicByIndex(comicId, index);
+  }
 
-        return result;
-    }
+  @RequestMapping(value = "/pages/types", method = RequestMethod.GET)
+  public Iterable<PageType> getPageTypes() {
+    this.logger.info("Fetching page types");
 
-    @RequestMapping(value = "/pages/{id}",
-                    method = RequestMethod.DELETE)
-    public boolean deletePage(
-            @PathVariable("id")
-                    long id) {
-        this.logger.info("Deleting page: id={}",
-                         id);
+    final List<PageType> result = this.pageService.getPageTypes();
 
-        final boolean result = this.pageService.deletePage(id) != null;
+    this.logger.debug("Returning {} type{}", result.size(), result.size() == 0 ? "" : "s");
 
-        this.logger.debug("Operation was {}",
-                          result
-                          ? "successful"
-                          : "unsuccessful");
+    return result;
+  }
 
-        return result;
-    }
+  @DeleteMapping(value = "/pages/{id}/unblock/{hash}", produces = "application/json")
+  @JsonView(View.ComicDetails.class)
+  public Comic removeBlockedPageHash(
+      @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
+      throws PageException {
+    this.logger.info("Unblocking page hash: {}", hash);
 
-    @RequestMapping(value = "/comics/{id}/pages",
-                    method = RequestMethod.GET)
-    @JsonView(PageList.class)
-    public List<Page> getAllPagesForComic(
-            @PathVariable("id")
-                    long id) {
-        this.logger.info("Getting all pages for comic: id={}",
-                         id);
+    return this.pageService.removeBlockedPageHash(pageId, hash);
+  }
 
-        final List<Page> result = this.pageService.getAllPagesForComic(id);
+  @RequestMapping(value = "/pages/hash/{hash}", method = RequestMethod.PUT)
+  public int undeleteAllWithHash(@PathVariable("hash") String hash) {
+    this.logger.info("Marking all pages with hash as undeleted: {}", hash);
 
-        this.logger.debug("Returning {} {}",
-                          result.size(),
-                          result.size() == 1
-                          ? "comic"
-                          : "comics");
+    int result = this.pageService.undeleteAllWithHash(hash);
 
-        return result;
-    }
+    this.logger.debug("Affected {} page{}", result, result == 0 ? "" : "s");
 
-    @RequestMapping(value = "/pages/blocked",
-                    method = RequestMethod.GET)
-    public String[] getAllBlockedPageHashes() {
-        this.logger.debug("Getting all blocked page hashes");
+    return result;
+  }
 
-        String[] result = this.pageService.getAllBlockedPageHashes();
+  @RequestMapping(value = "/pages/{id}/undelete", method = RequestMethod.POST)
+  public boolean undeletePage(@PathVariable("id") long id) {
+    this.logger.info("Undeleting page: id={}", id);
 
-        this.logger.debug("Returning {} page hash{}",
-                          result.length,
-                          result.length == 1
-                          ? ""
-                          : "es");
+    final boolean result = this.pageService.undeletePage(id) != null;
 
-        return result;
-    }
+    this.logger.debug("Operation was {}", result ? "successful" : "unsuccessful");
 
-    @RequestMapping(value = "/pages/duplicates",
-                    method = RequestMethod.GET)
-    @JsonView(View.DuplicatePageList.class)
-    public List<DuplicatePage> getDuplicatePages() {
-        this.logger.info("Getting duplicate pages");
+    return result;
+  }
 
-        final List<DuplicatePage> result = this.pageService.getDuplicatePages();
+  @RequestMapping(value = "/pages/{id}/type", method = RequestMethod.PUT)
+  public Page updateTypeForPage(
+      @PathVariable("id") long id, @RequestParam("type_id") long pageTypeId) throws PageException {
+    this.logger.info("Setting page type: id={} typeId={}", id, pageTypeId);
 
-        this.logger.debug("Returning {} duplicate page{}",
-                          result.size(),
-                          result.size() == 1
-                          ? ""
-                          : "s");
+    return this.pageService.updateTypeForPage(id, pageTypeId);
+  }
 
-        return result;
-    }
+  @PostMapping(
+      value = "/pages/hashes/blocking",
+      produces = "application/json",
+      consumes = "application/json")
+  @JsonView(View.DuplicatePageList.class)
+  public List<DuplicatePage> setBlockingState(
+      @RequestBody() final SetBlockingStateRequest request) {
+    this.logger.info(
+        "Setting blocked state for {} hash{} to {}",
+        request.getHashes().length,
+        request.getHashes().length == 1 ? "" : "es",
+        request.getBlocked());
 
-    @RequestMapping(value = "/comics/{id}/pages/{index}/content",
-                    method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getImageInComicByIndex(
-            @PathVariable("id")
-                    long id,
-            @PathVariable("index")
-                    int index) {
-        this.logger.debug("Getting image content for comic: id={} index={}",
-                          id,
-                          index);
-
-        final Page page = this.pageService.getPageInComicByIndex(id,
-                                                                 index);
-
-        return this.getResponseEntityForPage(page);
-    }
-
-    private ResponseEntity<byte[]> getResponseEntityForPage(Page page) {
-        byte[] content = page.getContent();
-        String type = this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content)) + "/" +
-                      this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
-        return ResponseEntity.ok()
-                             .contentLength(content.length)
-                             .header("Content-Disposition",
-                                     "attachment; filename=\"" + page.getFilename() + "\"")
-                             .contentType(MediaType.valueOf(type))
-                             .body(content);
-    }
-
-    @RequestMapping(value = "/pages/{id}/content",
-                    method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getPageContent(
-            @PathVariable("id")
-                    long id) {
-        this.logger.info("Getting page content: id={}",
-                         id);
-
-        final Page page = this.pageService.findById(id);
-
-        if (page != null) {
-            return this.getResponseEntityForPage(page);
-        }
-
-        this.logger.warn("No such page");
-        return null;
-    }
-
-    @RequestMapping(value = "/comics/{comic_id}/pages/{index}",
-                    method = RequestMethod.GET)
-    public Page getPageInComicByIndex(
-            @PathVariable("comic_id")
-                    long comicId,
-            @PathVariable("index")
-                    int index) {
-        this.logger.info("Getting page in comic: comic id={} page index={}",
-                         comicId,
-                         index);
-
-        return this.pageService.getPageInComicByIndex(comicId,
-                                                      index);
-    }
-
-    @RequestMapping(value = "/pages/types",
-                    method = RequestMethod.GET)
-    public Iterable<PageType> getPageTypes() {
-        this.logger.info("Fetching page types");
-
-        final List<PageType> result = this.pageService.getPageTypes();
-
-        this.logger.debug("Returning {} type{}",
-                          result.size(),
-                          result.size() == 0
-                          ? ""
-                          : "s");
-
-        return result;
-    }
-
-    @DeleteMapping(value = "/pages/{id}/unblock/{hash}",
-                   produces = "application/json")
-    @JsonView(View.ComicDetails.class)
-    public Comic removeBlockedPageHash(
-            @PathVariable("id")
-            final long pageId,
-            @PathVariable("hash")
-                    String hash)
-            throws
-            PageException {
-        this.logger.info("Unblocking page hash: {}",
-                         hash);
-
-        return this.pageService.removeBlockedPageHash(pageId,
-                                                      hash);
-    }
-
-    @RequestMapping(value = "/pages/hash/{hash}",
-                    method = RequestMethod.PUT)
-    public int undeleteAllWithHash(
-            @PathVariable("hash")
-                    String hash) {
-        this.logger.info("Marking all pages with hash as undeleted: {}",
-                         hash);
-
-        int result = this.pageService.undeleteAllWithHash(hash);
-
-        this.logger.debug("Affected {} page{}",
-                          result,
-                          result == 0
-                          ? ""
-                          : "s");
-
-        return result;
-    }
-
-    @RequestMapping(value = "/pages/{id}/undelete",
-                    method = RequestMethod.POST)
-    public boolean undeletePage(
-            @PathVariable("id")
-                    long id) {
-        this.logger.info("Undeleting page: id={}",
-                         id);
-
-        final boolean result = this.pageService.undeletePage(id) != null;
-
-        this.logger.debug("Operation was {}",
-                          result
-                          ? "successful"
-                          : "unsuccessful");
-
-        return result;
-    }
-
-    @RequestMapping(value = "/pages/{id}/type",
-                    method = RequestMethod.PUT)
-    public Page updateTypeForPage(
-            @PathVariable("id")
-                    long id,
-            @RequestParam("type_id")
-                    long pageTypeId)
-            throws
-            PageException {
-        this.logger.info("Setting page type: id={} typeId={}",
-                         id,
-                         pageTypeId);
-
-        return this.pageService.updateTypeForPage(id,
-                                                  pageTypeId);
-    }
-
-    @PostMapping(value = "/pages/hashes/blocking",
-                 produces = "application/json",
-                 consumes = "application/json")
-    @JsonView(View.DuplicatePageList.class)
-    public List<DuplicatePage> setBlockingState(
-            @RequestBody()
-            final SetBlockingStateRequest request) {
-        this.logger.info("Setting blocked state for {} hash{} to {}",
-                         request.getHashes().length,
-                         request.getHashes().length == 1
-                         ? ""
-                         : "es",
-                         request.getBlocked());
-
-        return this.pageService.setBlockingState(request.getHashes(),
-                                                 request.getBlocked());
-    }
+    return this.pageService.setBlockingState(request.getHashes(), request.getBlocked());
+  }
 }

@@ -31,71 +31,56 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineQueryForVolumeDetailsAdaptor
-{
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class ComicVineQueryForVolumeDetailsAdaptor {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ObjectFactory<ComicVineVolumeDetailsWebRequest> requestFactory;
+  @Autowired private ObjectFactory<ComicVineVolumeDetailsWebRequest> requestFactory;
 
-    @Autowired
-    private WebRequestProcessor webRequestProcessor;
+  @Autowired private WebRequestProcessor webRequestProcessor;
 
-    @Autowired
-    private ComicVineVolumeDetailsResponseProcessor responseProcessor;
+  @Autowired private ComicVineVolumeDetailsResponseProcessor responseProcessor;
 
-    @Autowired
-    private ComicVineVolumeRepository comicVineVolumeRepository;
+  @Autowired private ComicVineVolumeRepository comicVineVolumeRepository;
 
-    public String execute(String apiKey,
-                          String volumeId,
-                          Comic comic,
-                          boolean skipCache) throws ComicVineAdaptorException
-    {
-        String result = null;
-        String content = null;
-        ComicVineVolume volume = null;
+  public String execute(String apiKey, String volumeId, Comic comic, boolean skipCache)
+      throws ComicVineAdaptorException {
+    String result = null;
+    String content = null;
+    ComicVineVolume volume = null;
 
-        this.logger.debug("Fetching volume details: volumeId={}", volumeId);
+    this.logger.debug("Fetching volume details: volumeId={}", volumeId);
 
-        volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
+    volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
 
-        if (skipCache || (volume == null))
-        {
-            this.logger.debug("Fetching volume details from ComicVine...");
+    if (skipCache || (volume == null)) {
+      this.logger.debug("Fetching volume details from ComicVine...");
 
-            ComicVineVolumeDetailsWebRequest request = this.requestFactory.getObject();
-            request.setApiKey(apiKey);
-            request.setVolumeId(volumeId);
-            try
-            {
-                content = this.webRequestProcessor.execute(request);
+      ComicVineVolumeDetailsWebRequest request = this.requestFactory.getObject();
+      request.setApiKey(apiKey);
+      request.setVolumeId(volumeId);
+      try {
+        content = this.webRequestProcessor.execute(request);
 
-                if (volume != null)
-                {
-                    this.comicVineVolumeRepository.delete(volume);
-                }
-
-                this.logger.debug("Saving retrieved volume data...");
-                volume = new ComicVineVolume();
-                volume.setVolumeId(volumeId);
-                volume.setContent(content.toString());
-
-                this.comicVineVolumeRepository.save(volume);
-            }
-            catch (WebRequestException error)
-            {
-                throw new ComicVineAdaptorException("Failed to get volume details", error);
-            }
-        }
-        else
-        {
-            this.logger.debug("Volume found in database.");
-            content = volume.getContent();
+        if (volume != null) {
+          this.comicVineVolumeRepository.delete(volume);
         }
 
-        result = this.responseProcessor.process(content.getBytes(), comic);
+        this.logger.debug("Saving retrieved volume data...");
+        volume = new ComicVineVolume();
+        volume.setVolumeId(volumeId);
+        volume.setContent(content.toString());
 
-        return result;
+        this.comicVineVolumeRepository.save(volume);
+      } catch (WebRequestException error) {
+        throw new ComicVineAdaptorException("Failed to get volume details", error);
+      }
+    } else {
+      this.logger.debug("Volume found in database.");
+      content = volume.getContent();
     }
+
+    result = this.responseProcessor.process(content.getBytes(), comic);
+
+    return result;
+  }
 }

@@ -21,18 +21,14 @@ package org.comixed.loaders;
 import javax.xml.stream.XMLStreamException;
 
 /**
- * <code>EntryLoaderException</code> is thrown when an error occurs while
- * processing a comic entry.
+ * <code>EntryLoaderException</code> is thrown when an error occurs while processing a comic entry.
  *
  * @author Darryl L. Pierce
- *
  */
-public class EntryLoaderException extends Exception
-{
-    private static final long serialVersionUID = -5175358262813656987L;
+public class EntryLoaderException extends Exception {
+  private static final long serialVersionUID = -5175358262813656987L;
 
-    public EntryLoaderException(XMLStreamException cause)
-    {
-        super(cause);
-    }
+  public EntryLoaderException(XMLStreamException cause) {
+    super(cause);
+  }
 }

@@ -18,6 +18,8 @@
 
 package org.comixed.adaptors.archive;
 
+import static org.junit.Assert.*;
+
 import org.comixed.ComiXedTestContext;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
@@ -29,123 +31,87 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ComiXedTestContext.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class RarArchiveAdaptorTest {
-    private static final String TEST_FILE_ENTRY_0 = "exampleCBR.jpg";
-    private static final String TEST_FILE_ENTRY_1 = "example.jpeg";
-    private static final String TEST_FILE_ENTRY_2 = "example.jpg";
-    private static final String TEST_FILE_ENTRY_3 = "example.png";
-    private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
-    private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
+  private static final String TEST_FILE_ENTRY_0 = "exampleCBR.jpg";
+  private static final String TEST_FILE_ENTRY_1 = "example.jpeg";
+  private static final String TEST_FILE_ENTRY_2 = "example.jpg";
+  private static final String TEST_FILE_ENTRY_3 = "example.png";
+  private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
+  private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
 
-    @Autowired private RarArchiveAdaptor archiveAdaptor;
+  @Autowired private RarArchiveAdaptor archiveAdaptor;
 
-    private Comic comic;
+  private Comic comic;
 
-    @Before
-    public void setUp() {
-        comic = new Comic();
-        comic.setFilename(TEST_CBR_FILE);
-        comic.setArchiveType(ArchiveType.CBR);
-    }
+  @Before
+  public void setUp() {
+    comic = new Comic();
+    comic.setFilename(TEST_CBR_FILE);
+    comic.setArchiveType(ArchiveType.CBR);
+  }
 
-    @Test(expected = ArchiveAdaptorException.class)
-    public void testOpenFileNotFound()
-            throws
-            ArchiveAdaptorException {
-        comic.setFilename(TEST_CBR_FILE.substring(1));
-        archiveAdaptor.loadComic(comic);
-    }
+  @Test(expected = ArchiveAdaptorException.class)
+  public void testOpenFileNotFound() throws ArchiveAdaptorException {
+    comic.setFilename(TEST_CBR_FILE.substring(1));
+    archiveAdaptor.loadComic(comic);
+  }
 
-    @Test(expected = ArchiveAdaptorException.class)
-    public void testOpenFileIsDirectory()
-            throws
-            ArchiveAdaptorException {
-        comic.setFilename("src/test/resources");
-        archiveAdaptor.loadComic(comic);
-    }
+  @Test(expected = ArchiveAdaptorException.class)
+  public void testOpenFileIsDirectory() throws ArchiveAdaptorException {
+    comic.setFilename("src/test/resources");
+    archiveAdaptor.loadComic(comic);
+  }
 
-    @Test(expected = ArchiveAdaptorException.class)
-    public void testOpenInvalidFile()
-            throws
-            ArchiveAdaptorException {
-        comic.setFilename(TEST_CBZ_FILE);
-        archiveAdaptor.loadComic(comic);
-    }
+  @Test(expected = ArchiveAdaptorException.class)
+  public void testOpenInvalidFile() throws ArchiveAdaptorException {
+    comic.setFilename(TEST_CBZ_FILE);
+    archiveAdaptor.loadComic(comic);
+  }
 
-    @Test
-    public void testLoadComic()
-            throws
-            ArchiveAdaptorException {
-        archiveAdaptor.loadComic(comic);
+  @Test
+  public void testLoadComic() throws ArchiveAdaptorException {
+    archiveAdaptor.loadComic(comic);
 
-        assertEquals(4,
-                     comic.getPageCount());
-        assertEquals(TEST_FILE_ENTRY_0,
-                     comic.getPage(0)
-                          .getFilename());
-        assertEquals(TEST_FILE_ENTRY_1,
-                     comic.getPage(1)
-                          .getFilename());
-        assertEquals(TEST_FILE_ENTRY_2,
-                     comic.getPage(2)
-                          .getFilename());
-        assertEquals(TEST_FILE_ENTRY_3,
-                     comic.getPage(3)
-                          .getFilename());
-    }
+    assertEquals(4, comic.getPageCount());
+    assertEquals(TEST_FILE_ENTRY_0, comic.getPage(0).getFilename());
+    assertEquals(TEST_FILE_ENTRY_1, comic.getPage(1).getFilename());
+    assertEquals(TEST_FILE_ENTRY_2, comic.getPage(2).getFilename());
+    assertEquals(TEST_FILE_ENTRY_3, comic.getPage(3).getFilename());
+  }
 
-    @Test
-    public void testGetSingleFile()
-            throws
-            ArchiveAdaptorException {
-        byte[] result = archiveAdaptor.loadSingleFile(comic,
-                                                      TEST_FILE_ENTRY_1);
+  @Test
+  public void testGetSingleFile() throws ArchiveAdaptorException {
+    byte[] result = archiveAdaptor.loadSingleFile(comic, TEST_FILE_ENTRY_1);
 
-        assertNotNull(result);
-        assertEquals(7449985,
-                     result.length);
-    }
+    assertNotNull(result);
+    assertEquals(7449985, result.length);
+  }
 
-    @Test
-    public void testGetSingleFileNotFound()
-            throws
-            ArchiveAdaptorException {
-        byte[] result = archiveAdaptor.loadSingleFile(comic,
-                                                      TEST_FILE_ENTRY_1.substring(1));
+  @Test
+  public void testGetSingleFileNotFound() throws ArchiveAdaptorException {
+    byte[] result = archiveAdaptor.loadSingleFile(comic, TEST_FILE_ENTRY_1.substring(1));
 
-        assertNull(result);
-    }
+    assertNull(result);
+  }
 
-    @Test(expected = ArchiveAdaptorException.class)
-    public void testSaveComic()
-            throws
-            ArchiveAdaptorException {
-        archiveAdaptor.saveComic(comic,
-                                 false);
-    }
+  @Test(expected = ArchiveAdaptorException.class)
+  public void testSaveComic() throws ArchiveAdaptorException {
+    archiveAdaptor.saveComic(comic, false);
+  }
 
-    @Test
-    public void testLoadSingleFile()
-            throws
-            ArchiveAdaptorException {
-        byte[] result = archiveAdaptor.loadSingleFile(TEST_CBR_FILE,
-                                                      TEST_FILE_ENTRY_1);
+  @Test
+  public void testLoadSingleFile() throws ArchiveAdaptorException {
+    byte[] result = archiveAdaptor.loadSingleFile(TEST_CBR_FILE, TEST_FILE_ENTRY_1);
 
-        assertNotNull(result);
-        assertEquals(7449985,
-                     result.length);
-    }
+    assertNotNull(result);
+    assertEquals(7449985, result.length);
+  }
 
-    @Test
-    public void testGetFirstImageFileName()
-            throws
-            ArchiveAdaptorException {
-        assertEquals(TEST_FILE_ENTRY_1,
-                     archiveAdaptor.getFirstImageFileName(TEST_CBR_FILE));
-    }
+  @Test
+  public void testGetFirstImageFileName() throws ArchiveAdaptorException {
+    assertEquals(TEST_FILE_ENTRY_1, archiveAdaptor.getFirstImageFileName(TEST_CBR_FILE));
+  }
 }

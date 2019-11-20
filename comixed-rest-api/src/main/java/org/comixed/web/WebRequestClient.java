@@ -25,25 +25,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>WebRequestClient</code> encapsulates the underlying HTTP client
- * implementation.
- * 
- * @author Darryl L. Pierce
+ * <code>WebRequestClient</code> encapsulates the underlying HTTP client implementation.
  *
+ * @author Darryl L. Pierce
  */
 @Component
-public class WebRequestClient
-{
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class WebRequestClient {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /**
-     * Creates an HTTP client object for use in a web request.
-     * 
-     * @return a client
-     */
-    public HttpClient createClient()
-    {
-        logger.debug("Creating a HTTP client");
-        return HttpClients.createDefault();
-    }
+  /**
+   * Creates an HTTP client object for use in a web request.
+   *
+   * @return a client
+   */
+  public HttpClient createClient() {
+    logger.debug("Creating a HTTP client");
+    return HttpClients.createDefault();
+  }
 }

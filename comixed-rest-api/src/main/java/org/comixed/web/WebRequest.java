@@ -19,22 +19,18 @@
 package org.comixed.web;
 
 /**
- * <code>WebRequest</code> represents a type for describing a web service
- * request.
+ * <code>WebRequest</code> represents a type for describing a web service request.
  *
- * Requests are executed by an instance of {@link WebRequestProcessor}.
+ * <p>Requests are executed by an instance of {@link WebRequestProcessor}.
  *
  * @author Darryl L. Pierce
- *
  */
-public interface WebRequest
-{
-    /**
-     * Returns the URL for the request.
-     *
-     * @return the URL
-     * @throws WebRequestException
-     *             if the URL is missing data
-     */
-    String getURL() throws WebRequestException;
+public interface WebRequest {
+  /**
+   * Returns the URL for the request.
+   *
+   * @return the URL
+   * @throws WebRequestException if the URL is missing data
+   */
+  String getURL() throws WebRequestException;
 }

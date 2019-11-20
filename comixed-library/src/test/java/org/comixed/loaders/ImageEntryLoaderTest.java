@@ -18,6 +18,9 @@
 
 package org.comixed.loaders;
 
+import static org.junit.Assert.*;
+
+import java.io.IOException;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.PageType;
 import org.comixed.repositories.PageTypeRepository;
@@ -31,53 +34,38 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import java.io.IOException;
-
-import static org.junit.Assert.*;
-
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.properties")
-public class ImageEntryLoaderTest
-        extends BaseLoaderTest {
-    private static final String TEST_FILENAME = "src/test/resources/example.jpg";
+public class ImageEntryLoaderTest extends BaseLoaderTest {
+  private static final String TEST_FILENAME = "src/test/resources/example.jpg";
 
-    @InjectMocks private ImageEntryLoader loader;
+  @InjectMocks private ImageEntryLoader loader;
 
-    @Mock private PageTypeRepository pageTypeRepository;
+  @Mock private PageTypeRepository pageTypeRepository;
 
-    @Mock private PageType pageType;
+  @Mock private PageType pageType;
 
-    private Comic comic;
+  private Comic comic;
 
-    @Before
-    public void setUp() {
-        comic = new Comic();
-    }
+  @Before
+  public void setUp() {
+    comic = new Comic();
+  }
 
-    @Test
-    public void testLoadImage()
-            throws
-            IOException {
-        Mockito.when(pageTypeRepository.getDefaultPageType())
-               .thenReturn(pageType);
+  @Test
+  public void testLoadImage() throws IOException {
+    Mockito.when(pageTypeRepository.getDefaultPageType()).thenReturn(pageType);
 
-        byte[] content = loadFile(TEST_FILENAME);
+    byte[] content = loadFile(TEST_FILENAME);
 
-        loader.loadContent(comic,
-                           TEST_FILENAME,
-                           content);
+    loader.loadContent(comic, TEST_FILENAME, content);
 
-        Mockito.verify(pageTypeRepository,
-                       Mockito.times(1))
-               .getDefaultPageType();
+    Mockito.verify(pageTypeRepository, Mockito.times(1)).getDefaultPageType();
 
-        assertEquals(1,
-                     comic.getPageCount());
-        assertNotNull(comic.getPage(0));
-        //        assertEquals(content, comic.getPage(0).getContent());
-        assertSame(pageType,
-                   comic.getPage(0)
-                        .getPageType());
-    }
+    assertEquals(1, comic.getPageCount());
+    assertNotNull(comic.getPage(0));
+    //        assertEquals(content, comic.getPage(0).getContent());
+    assertSame(pageType, comic.getPage(0).getPageType());
+  }
 }

@@ -19,24 +19,19 @@
 package org.comixed.web;
 
 /**
- * <code>SimpleWebRequest</code> performs a simple web request against any web
- * endpoint.
- * 
- * @author Darryl L. Pierce
+ * <code>SimpleWebRequest</code> performs a simple web request against any web endpoint.
  *
+ * @author Darryl L. Pierce
  */
-public class SimpleWebRequest extends AbstractWebRequest
-{
-    private String url;
+public class SimpleWebRequest extends AbstractWebRequest {
+  private String url;
 
-    public SimpleWebRequest(String url)
-    {
-        this.url = url;
-    }
+  public SimpleWebRequest(String url) {
+    this.url = url;
+  }
 
-    @Override
-    public String getURL()
-    {
-        return this.url;
-    }
+  @Override
+  public String getURL() {
+    return this.url;
+  }
 }

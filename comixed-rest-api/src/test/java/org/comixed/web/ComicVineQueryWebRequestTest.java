@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,65 +32,61 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(
-{URLEncoder.class})
-public class ComicVineQueryWebRequestTest
-{
-    private static final String TEST_SERIES_NAME = "A really great comic";
-    private static final String TEST_API_KEY = "12345";
+@PrepareForTest({URLEncoder.class})
+public class ComicVineQueryWebRequestTest {
+  private static final String TEST_SERIES_NAME = "A really great comic";
+  private static final String TEST_API_KEY = "12345";
 
-    @InjectMocks
-    private ComicVineQueryWebRequest request;
+  @InjectMocks private ComicVineQueryWebRequest request;
 
-    @Test
-    public void testSetSeriesName() throws WebRequestException, UnsupportedEncodingException
-    {
-        request.setSeriesName(TEST_SERIES_NAME);
+  @Test
+  public void testSetSeriesName() throws WebRequestException, UnsupportedEncodingException {
+    request.setSeriesName(TEST_SERIES_NAME);
 
-        assertTrue(request.parameterSet.containsKey(ComicVineQueryWebRequest.SERIES_NAME_KEY));
-        assertEquals(URLEncoder.encode(TEST_SERIES_NAME, StandardCharsets.UTF_8.name()),
-                     request.parameterSet.get(ComicVineQueryWebRequest.SERIES_NAME_KEY));
-    }
+    assertTrue(request.parameterSet.containsKey(ComicVineQueryWebRequest.SERIES_NAME_KEY));
+    assertEquals(
+        URLEncoder.encode(TEST_SERIES_NAME, StandardCharsets.UTF_8.name()),
+        request.parameterSet.get(ComicVineQueryWebRequest.SERIES_NAME_KEY));
+  }
 
-    @Test
-    public void testSetSeriesNameWithEmptyString() throws WebRequestException
-    {
-        request.setSeriesName("");
+  @Test
+  public void testSetSeriesNameWithEmptyString() throws WebRequestException {
+    request.setSeriesName("");
 
-        assertFalse(request.parameterSet.containsKey(ComicVineQueryWebRequest.SERIES_NAME_KEY));
-    }
+    assertFalse(request.parameterSet.containsKey(ComicVineQueryWebRequest.SERIES_NAME_KEY));
+  }
 
-    @Test(expected = WebRequestException.class)
-    public void testSetSeriesNameTwice() throws WebRequestException, UnsupportedEncodingException
-    {
-        request.setSeriesName(TEST_SERIES_NAME);
-        request.setSeriesName(TEST_SERIES_NAME);
-    }
+  @Test(expected = WebRequestException.class)
+  public void testSetSeriesNameTwice() throws WebRequestException, UnsupportedEncodingException {
+    request.setSeriesName(TEST_SERIES_NAME);
+    request.setSeriesName(TEST_SERIES_NAME);
+  }
 
-    @Test(expected = WebRequestException.class)
-    public void testGetURLWithNoApiKeySet() throws WebRequestException
-    {
-        request.getURL();
-    }
+  @Test(expected = WebRequestException.class)
+  public void testGetURLWithNoApiKeySet() throws WebRequestException {
+    request.getURL();
+  }
 
-    @Test(expected = WebRequestException.class)
-    public void testGetURLWithNoName() throws WebRequestException
-    {
-        request.setApiKey(TEST_API_KEY);
-        request.setSeriesName("");
-        request.getURL();
-    }
+  @Test(expected = WebRequestException.class)
+  public void testGetURLWithNoName() throws WebRequestException {
+    request.setApiKey(TEST_API_KEY);
+    request.setSeriesName("");
+    request.getURL();
+  }
 
-    @Test
-    public void testGetURL() throws WebRequestException, UnsupportedEncodingException
-    {
-        request.setApiKey(TEST_API_KEY);
-        request.setSeriesName(TEST_SERIES_NAME);
+  @Test
+  public void testGetURL() throws WebRequestException, UnsupportedEncodingException {
+    request.setApiKey(TEST_API_KEY);
+    request.setSeriesName(TEST_SERIES_NAME);
 
-        String result = request.getURL();
+    String result = request.getURL();
 
-        assertTrue(result.indexOf("&query=" + URLEncoder.encode(TEST_SERIES_NAME, StandardCharsets.UTF_8.name())) != -1);
-        assertTrue(result.indexOf("&field_list=name,start_year,publisher,id,image,count_of_issues") != -1);
-        assertTrue(result.indexOf("&resources=volume") != -1);
-    }
+    assertTrue(
+        result.indexOf(
+                "&query=" + URLEncoder.encode(TEST_SERIES_NAME, StandardCharsets.UTF_8.name()))
+            != -1);
+    assertTrue(
+        result.indexOf("&field_list=name,start_year,publisher,id,image,count_of_issues") != -1);
+    assertTrue(result.indexOf("&resources=volume") != -1);
+  }
 }

@@ -18,12 +18,16 @@
 
 package org.comixed.repositories;
 
+import static org.junit.Assert.*;
+
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import java.util.List;
+import java.util.Optional;
+import org.comixed.model.library.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
-import org.comixed.model.library.Comic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,11 +39,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)

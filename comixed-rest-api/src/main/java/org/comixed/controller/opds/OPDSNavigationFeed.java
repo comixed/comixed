@@ -18,11 +18,10 @@
 
 package org.comixed.controller.opds;
 
-import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import java.util.*;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.opds.OPDSAuthor;
@@ -30,130 +29,142 @@ import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
 
 /**
- * <code>OPDSNavigationFeed</code> provides an implementation of
- * {@link OPDSFeed}.
+ * <code>OPDSNavigationFeed</code> provides an implementation of {@link OPDSFeed}.
  *
  * @author João França
  * @author Giao Phan
  * @author Darryl L. Pierce
  */
-public class OPDSNavigationFeed implements OPDSFeed
-{
-    private String id;
+public class OPDSNavigationFeed implements OPDSFeed {
+  private String id;
 
-    private String title;
+  private String title;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Date updated;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+  private Date updated;
 
-    private String icon;
+  private String icon;
 
-    @JacksonXmlElementWrapper(useWrapping = false)
-    @JacksonXmlProperty(localName = "link")
-    private List<OPDSLink> links;
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "link")
+  private List<OPDSLink> links;
 
-    @JacksonXmlElementWrapper(useWrapping = false)
-    @JacksonXmlProperty(localName = "entry")
-    private List<OPDSEntry> entries;
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "entry")
+  private List<OPDSEntry> entries;
 
-    public OPDSNavigationFeed()
-    {
+  public OPDSNavigationFeed() {
 
-        this.id = "urn:uuid:" + UUID.randomUUID();
-        this.title = "ComiXed catalog";
-        this.icon= "/favicon.ico";
-        this.updated = new Date(System.currentTimeMillis());
+    this.id = "urn:uuid:" + UUID.randomUUID();
+    this.title = "ComiXed catalog";
+    this.icon = "/favicon.ico";
+    this.updated = new Date(System.currentTimeMillis());
 
-        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
-                        "/opds-comics"),
-                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
-                        "/opds-comics"));
+    this.links =
+        Arrays.asList(
+            new OPDSLink(
+                "application/atom+xml; profile=opds-catalog; kind=navigation",
+                "self",
+                "/opds-comics"),
+            new OPDSLink(
+                "application/atom+xml; profile=opds-catalog; kind=navigation",
+                "start",
+                "/opds-comics"));
 
-        List<OPDSAuthor> noAuthor = Arrays.asList(new OPDSAuthor("None", ""));
-        this.entries = Arrays.asList(new OPDSEntry("All comics", "All comics as a flat list", noAuthor,
-                Arrays.asList(new OPDSLink("application/atom+xml;profile=opds-catalog;kind=acquisition",
+    List<OPDSAuthor> noAuthor = Arrays.asList(new OPDSAuthor("None", ""));
+    this.entries =
+        Arrays.asList(
+            new OPDSEntry(
+                "All comics",
+                "All comics as a flat list",
+                noAuthor,
+                Arrays.asList(
+                    new OPDSLink(
+                        "application/atom+xml;profile=opds-catalog;kind=acquisition",
                         "subsection",
                         "/opds-comics/all"))),
-                new OPDSEntry("Folders", "All comics grouped by lists.", noAuthor,
-                        Arrays.asList(new OPDSLink("application/atom+xml;profile=opds-catalog;kind=acquisition",
-                                "subsection",
-                                "/opds-comics/all?groupByFolder=true"))));
+            new OPDSEntry(
+                "Folders",
+                "All comics grouped by lists.",
+                noAuthor,
+                Arrays.asList(
+                    new OPDSLink(
+                        "application/atom+xml;profile=opds-catalog;kind=acquisition",
+                        "subsection",
+                        "/opds-comics/all?groupByFolder=true"))));
+  }
 
+  public OPDSNavigationFeed(String selfUrl, String title, List<ReadingList> readingLists) {
+    this.id = "urn:uuid:" + UUID.randomUUID();
+    this.entries = new ArrayList<>();
+    this.icon = "/favicon.ico";
+    for (ReadingList readingList : readingLists) {
+      this.entries.add(new OPDSEntry(readingList, readingList.getId()));
     }
+    this.title = title + readingLists.size() + " items";
+    this.updated = new Date(System.currentTimeMillis());
+    this.links =
+        Arrays.asList(
+            new OPDSLink(
+                "application/atom+xml; profile=opds-catalog; kind=navigation", "self", selfUrl),
+            new OPDSLink(
+                "application/atom+xml; profile=opds-catalog; kind=navigation",
+                "start",
+                "/opds-comics"));
+  }
 
-    public OPDSNavigationFeed(String selfUrl, String title, List<ReadingList> readingLists)
-    {
-        this.id = "urn:uuid:" + UUID.randomUUID();
-        this.entries = new ArrayList<>();
-        this.icon= "/favicon.ico";
-        for (ReadingList readingList : readingLists)
-        {
-            this.entries.add(new OPDSEntry(readingList, readingList.getId()));
-        }
-        this.title = title + readingLists.size() + " items";
-        this.updated = new Date(System.currentTimeMillis());
-        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
-                        selfUrl),
-                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
-                        "/opds-comics"));
+  public OPDSNavigationFeed(String selfUrl, String title, ReadingList readingList) {
+    this.id = "urn:uuid:" + UUID.randomUUID();
+    this.entries = new ArrayList<>();
+    this.icon = "/favicon.ico";
+    int count = 0;
+    Set<ReadingListEntry> comics = readingList.getEntries();
+
+    for (ReadingListEntry comic : comics) {
+      if (!comic.getComic().isMissing()) {
+        this.entries.add(new OPDSEntry(comic.getComic()));
+        count++;
+      }
     }
+    this.title = title + count + " items";
+    this.updated = new Date(System.currentTimeMillis());
+    this.links =
+        Arrays.asList(
+            new OPDSLink(
+                "application/atom+xml; profile=opds-catalog; kind=navigation", "self", selfUrl),
+            new OPDSLink(
+                "application/atom+xml; profile=opds-catalog; kind=navigation",
+                "start",
+                "/opds-comics"));
+  }
 
-    public OPDSNavigationFeed(String selfUrl, String title, ReadingList readingList)
-    {
-        this.id = "urn:uuid:" + UUID.randomUUID();
-        this.entries = new ArrayList<>();
-        this.icon= "/favicon.ico";
-        int count = 0;
-        Set<ReadingListEntry> comics = readingList.getEntries();
+  @Override
+  public List<OPDSEntry> getEntries() {
+    return this.entries;
+  }
 
-        for (ReadingListEntry comic : comics)
-        {
-            if (!comic.getComic().isMissing()) {
-                this.entries.add(new OPDSEntry(comic.getComic()));
-                count++;
-            }
-        }
-        this.title = title + count + " items";
-        this.updated = new Date(System.currentTimeMillis());
-        this.links = Arrays.asList(new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "self",
-                        selfUrl),
-                new OPDSLink("application/atom+xml; profile=opds-catalog; kind=navigation", "start",
-                        "/opds-comics"));
-    }
+  @Override
+  public String getId() {
+    return this.id;
+  }
 
-    @Override
-    public List<OPDSEntry> getEntries()
-    {
-        return this.entries;
-    }
+  @Override
+  public String getIcon() {
+    return this.icon;
+  }
 
-    @Override
-    public String getId()
-    {
-        return this.id;
-    }
+  @Override
+  public List<OPDSLink> getLinks() {
+    return this.links;
+  }
 
-    @Override
-    public String getIcon()
-    {
-        return this.icon;
-    }
+  @Override
+  public String getTitle() {
+    return this.title;
+  }
 
-    @Override
-    public List<OPDSLink> getLinks()
-    {
-        return this.links;
-    }
-
-    @Override
-    public String getTitle()
-    {
-        return this.title;
-    }
-
-    @Override
-    public Date getUpdated()
-    {
-        return this.updated;
-    }
+  @Override
+  public Date getUpdated() {
+    return this.updated;
+  }
 }

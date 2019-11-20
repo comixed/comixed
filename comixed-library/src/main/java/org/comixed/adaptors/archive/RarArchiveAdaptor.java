@@ -22,14 +22,13 @@ import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.impl.FileVolumeManager;
 import com.github.junrar.rarfile.FileHeader;
-import org.comixed.adaptors.ArchiveType;
-import org.comixed.model.library.Comic;
-import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.comixed.adaptors.ArchiveType;
+import org.comixed.model.library.Comic;
+import org.springframework.stereotype.Component;
 
 /**
  * <code>RarArchiveAdaptor</code> provides a concrete implementation of {@link ArchiveAdaptor} for

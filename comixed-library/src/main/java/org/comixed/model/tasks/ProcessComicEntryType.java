@@ -19,29 +19,30 @@
 package org.comixed.model.tasks;
 
 public enum ProcessComicEntryType {
-    ADD_FILE_DELETE_PAGES_WITH_METADATA,
-    ADD_FILE_DELETE_PAGES_WITHOUT_METADATA,
-    ADD_FILE_WITH_METADATA,
-    ADD_FILE_WITHOUT_METADATA;
+  ADD_FILE_DELETE_PAGES_WITH_METADATA,
+  ADD_FILE_DELETE_PAGES_WITHOUT_METADATA,
+  ADD_FILE_WITH_METADATA,
+  ADD_FILE_WITHOUT_METADATA;
 
-    public static void setProcessTypeFor(final ProcessComicEntry entry,
-                                         final boolean deleteBlockedPages,
-                                         final boolean ignoreMetadata) {
-        ProcessComicEntryType type;
+  public static void setProcessTypeFor(
+      final ProcessComicEntry entry,
+      final boolean deleteBlockedPages,
+      final boolean ignoreMetadata) {
+    ProcessComicEntryType type;
 
-        if (deleteBlockedPages) {
-            if (ignoreMetadata) {
-                type = ADD_FILE_DELETE_PAGES_WITHOUT_METADATA;
-            } else {
-                type = ADD_FILE_DELETE_PAGES_WITH_METADATA;
-            }
-        } else {
-            if (ignoreMetadata) {
-                type = ADD_FILE_WITHOUT_METADATA;
-            } else {
-                type = ADD_FILE_WITH_METADATA;
-            }
-        }
-        entry.setProcessType(type);
+    if (deleteBlockedPages) {
+      if (ignoreMetadata) {
+        type = ADD_FILE_DELETE_PAGES_WITHOUT_METADATA;
+      } else {
+        type = ADD_FILE_DELETE_PAGES_WITH_METADATA;
+      }
+    } else {
+      if (ignoreMetadata) {
+        type = ADD_FILE_WITHOUT_METADATA;
+      } else {
+        type = ADD_FILE_WITH_METADATA;
+      }
     }
+    entry.setProcessType(type);
+  }
 }

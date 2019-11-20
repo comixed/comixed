@@ -38,133 +38,82 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest
 public class ExportComicWorkerTaskTest {
-    private static final String TEST_COMIC_FILENAME = "/Users/comixeduser/Comics/thiscomic.cbz";
+  private static final String TEST_COMIC_FILENAME = "/Users/comixeduser/Comics/thiscomic.cbz";
 
-    @InjectMocks private ExportComicWorkerTask workerTask;
-    @Mock private ComicFileHandler comicFileHandler;
-    @Mock private ComicRepository comicRepository;
-    @Mock private ArchiveAdaptor archiveAdaptor;
-    @Mock private Comic comic;
+  @InjectMocks private ExportComicWorkerTask workerTask;
+  @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ComicRepository comicRepository;
+  @Mock private ArchiveAdaptor archiveAdaptor;
+  @Mock private Comic comic;
 
-    @Before
-    public void setUp() {
-        workerTask.setArchiveAdaptor(archiveAdaptor);
-        workerTask.setComic(comic);
+  @Before
+  public void setUp() {
+    workerTask.setArchiveAdaptor(archiveAdaptor);
+    workerTask.setComic(comic);
+  }
+
+  @Test(expected = WorkerTaskException.class)
+  public void testStartTaskComicFileHandlerRaisesException()
+      throws ComicFileHandlerException, WorkerTaskException {
+    Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.doThrow(new ComicFileHandlerException("Expected"))
+        .when(comicFileHandler)
+        .loadComic(Mockito.any(Comic.class));
+
+    try {
+      workerTask.startTask();
+    } finally {
+      Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
+      Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic);
     }
+  }
 
-    @Test(expected = WorkerTaskException.class)
-    public void testStartTaskComicFileHandlerRaisesException()
-            throws
-            ComicFileHandlerException,
-            WorkerTaskException {
-        Mockito.when(comic.getFilename())
-               .thenReturn(TEST_COMIC_FILENAME);
-        Mockito.doThrow(new ComicFileHandlerException("Expected"))
-               .when(comicFileHandler)
-               .loadComic(Mockito.any(Comic.class));
+  @Test(expected = WorkerTaskException.class)
+  public void testStartTaskArchiveAdaptorRaisesException()
+      throws ComicFileHandlerException, ArchiveAdaptorException, WorkerTaskException {
+    Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
+    Mockito.doThrow(new ArchiveAdaptorException("Expected"))
+        .when(archiveAdaptor)
+        .saveComic(Mockito.any(Comic.class), Mockito.anyBoolean());
 
-        try {
-            workerTask.startTask();
-        }
-        finally {
-            Mockito.verify(comic,
-                           Mockito.atLeast(1))
-                   .getFilename();
-            Mockito.verify(comicFileHandler,
-                           Mockito.times(1))
-                   .loadComic(comic);
-        }
+    try {
+      workerTask.startTask();
+    } finally {
+      Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
+      Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic);
+      Mockito.verify(archiveAdaptor, Mockito.times(1)).saveComic(comic, false);
     }
+  }
 
-    @Test(expected = WorkerTaskException.class)
-    public void testStartTaskArchiveAdaptorRaisesException()
-            throws
-            ComicFileHandlerException,
-            ArchiveAdaptorException,
-            WorkerTaskException {
-        Mockito.when(comic.getFilename())
-               .thenReturn(TEST_COMIC_FILENAME);
-        Mockito.doNothing()
-               .when(comicFileHandler)
-               .loadComic(Mockito.any(Comic.class));
-        Mockito.doThrow(new ArchiveAdaptorException("Expected"))
-               .when(archiveAdaptor)
-               .saveComic(Mockito.any(Comic.class),
-                          Mockito.anyBoolean());
+  @Test
+  public void testStartTaskWithRenamePages()
+      throws ArchiveAdaptorException, ComicFileHandlerException, WorkerTaskException {
+    Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
+    Mockito.when(archiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
+        .thenReturn(comic);
 
-        try {
-            workerTask.startTask();
-        }
-        finally {
-            Mockito.verify(comic,
-                           Mockito.atLeast(1))
-                   .getFilename();
-            Mockito.verify(comicFileHandler,
-                           Mockito.times(1))
-                   .loadComic(comic);
-            Mockito.verify(archiveAdaptor,
-                           Mockito.times(1))
-                   .saveComic(comic,
-                              false);
-        }
-    }
+    workerTask.setRenamePages(true);
+    workerTask.startTask();
 
-    @Test
-    public void testStartTaskWithRenamePages()
-            throws
-            ArchiveAdaptorException,
-            ComicFileHandlerException,
-            WorkerTaskException {
-        Mockito.when(comic.getFilename())
-               .thenReturn(TEST_COMIC_FILENAME);
-        Mockito.doNothing()
-               .when(comicFileHandler)
-               .loadComic(Mockito.any(Comic.class));
-        Mockito.when(archiveAdaptor.saveComic(Mockito.any(Comic.class),
-                                              Mockito.anyBoolean()))
-               .thenReturn(comic);
+    Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
+    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic);
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).saveComic(comic, true);
+  }
 
-        workerTask.setRenamePages(true);
-        workerTask.startTask();
+  @Test
+  public void testStartTask()
+      throws ComicFileHandlerException, ArchiveAdaptorException, WorkerTaskException {
+    Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
+    Mockito.when(archiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
+        .thenReturn(comic);
 
-        Mockito.verify(comic,
-                       Mockito.atLeast(1))
-               .getFilename();
-        Mockito.verify(comicFileHandler,
-                       Mockito.times(1))
-               .loadComic(comic);
-        Mockito.verify(archiveAdaptor,
-                       Mockito.times(1))
-               .saveComic(comic,
-                          true);
-    }
+    workerTask.startTask();
 
-    @Test
-    public void testStartTask()
-            throws
-            ComicFileHandlerException,
-            ArchiveAdaptorException,
-            WorkerTaskException {
-        Mockito.when(comic.getFilename())
-               .thenReturn(TEST_COMIC_FILENAME);
-        Mockito.doNothing()
-               .when(comicFileHandler)
-               .loadComic(Mockito.any(Comic.class));
-        Mockito.when(archiveAdaptor.saveComic(Mockito.any(Comic.class),
-                                              Mockito.anyBoolean()))
-               .thenReturn(comic);
-
-        workerTask.startTask();
-
-        Mockito.verify(comic,
-                       Mockito.atLeast(1))
-               .getFilename();
-        Mockito.verify(comicFileHandler,
-                       Mockito.times(1))
-               .loadComic(comic);
-        Mockito.verify(archiveAdaptor,
-                       Mockito.times(1))
-               .saveComic(comic,
-                          false);
-    }
+    Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
+    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComic(comic);
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).saveComic(comic, false);
+  }
 }

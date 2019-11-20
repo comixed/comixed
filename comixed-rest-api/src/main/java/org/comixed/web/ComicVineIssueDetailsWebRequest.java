@@ -21,15 +21,12 @@ package org.comixed.web;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicVineIssueDetailsWebRequest extends AbstractComicVineWebRequest
-{
-    public ComicVineIssueDetailsWebRequest()
-    {
-        super("issue");
-    }
+public class ComicVineIssueDetailsWebRequest extends AbstractComicVineWebRequest {
+  public ComicVineIssueDetailsWebRequest() {
+    super("issue");
+  }
 
-    public void setIssueNumber(String issueNumber)
-    {
-        this.endpoint = "issue/4000-" + issueNumber;
-    }
+  public void setIssueNumber(String issueNumber) {
+    this.endpoint = "issue/4000-" + issueNumber;
+  }
 }

@@ -18,6 +18,8 @@
 
 package org.comixed.service.user;
 
+import java.util.List;
+import java.util.Optional;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
@@ -30,223 +32,173 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
-public class UserService
-        implements InitializingBean {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class UserService implements InitializingBean {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired private ComiXedUserRepository userRepository;
-    @Autowired private RoleRepository roleRepository;
-    @Autowired private Utils utils;
+  @Autowired private ComiXedUserRepository userRepository;
+  @Autowired private RoleRepository roleRepository;
+  @Autowired private Utils utils;
 
-    private Role readerRole;
-    private Role adminRole;
+  private Role readerRole;
+  private Role adminRole;
 
-    public ComiXedUser findByEmail(String email)
-            throws
-            ComiXedUserException {
-        this.logger.info("Finding user by email: {}",
-                         email);
+  public ComiXedUser findByEmail(String email) throws ComiXedUserException {
+    this.logger.info("Finding user by email: {}", email);
 
-        final ComiXedUser result = this.userRepository.findByEmail(email);
+    final ComiXedUser result = this.userRepository.findByEmail(email);
 
-        if (result == null) {
-            this.logger.warn("No such user: {}",
-                             email);
-            throw new ComiXedUserException("No such user: " + email);
-        }
-
-        this.logger.debug("Found user: id={}",
-                          result.getId());
-
-        return result;
+    if (result == null) {
+      this.logger.warn("No such user: {}", email);
+      throw new ComiXedUserException("No such user: " + email);
     }
 
-    public void delete(long id)
-            throws
-            ComiXedUserException {
-        this.logger.info("Deleting user: id={}",
-                         id);
+    this.logger.debug("Found user: id={}", result.getId());
 
-        final Optional<ComiXedUser> record = this.userRepository.findById(id);
+    return result;
+  }
 
-        if (!record.isPresent()) {
-            throw new ComiXedUserException("No such user: id=" + id);
-        }
+  public void delete(long id) throws ComiXedUserException {
+    this.logger.info("Deleting user: id={}", id);
 
-        this.logger.debug("Deleting user record");
-        this.userRepository.delete(record.get());
+    final Optional<ComiXedUser> record = this.userRepository.findById(id);
+
+    if (!record.isPresent()) {
+      throw new ComiXedUserException("No such user: id=" + id);
     }
 
-    public ComiXedUser save(final ComiXedUser user)
-            throws
-            ComiXedUserException {
-        this.logger.info("{} user: email={}",
-                         user.getId() != null
-                         ? "Updating"
-                         : "Saving",
-                         user.getEmail());
+    this.logger.debug("Deleting user record");
+    this.userRepository.delete(record.get());
+  }
 
-        try {
-            return this.userRepository.save(user);
-        }
-        catch (RuntimeException error) {
-            throw new ComiXedUserException("Unable to save user: " + user.getEmail(),
-                                           error);
-        }
+  public ComiXedUser save(final ComiXedUser user) throws ComiXedUserException {
+    this.logger.info(
+        "{} user: email={}", user.getId() != null ? "Updating" : "Saving", user.getEmail());
+
+    try {
+      return this.userRepository.save(user);
+    } catch (RuntimeException error) {
+      throw new ComiXedUserException("Unable to save user: " + user.getEmail(), error);
+    }
+  }
+
+  public List<ComiXedUser> findAll() {
+    this.logger.info("Getting all users");
+
+    final List<ComiXedUser> result = this.userRepository.findAll();
+
+    this.logger.debug("Returning {} records", result.size());
+
+    return result;
+  }
+
+  public ComiXedUser findById(final long id) throws ComiXedUserException {
+    this.logger.info("Finding user: id={}", id);
+
+    final Optional<ComiXedUser> record = this.userRepository.findById(id);
+
+    if (!record.isPresent()) {
+      throw new ComiXedUserException("No such user: id=" + id);
     }
 
-    public List<ComiXedUser> findAll() {
-        this.logger.info("Getting all users");
+    return record.get();
+  }
 
-        final List<ComiXedUser> result = this.userRepository.findAll();
+  public Role findRoleByName(final String name) throws ComiXedUserException {
+    this.logger.info("Finding role: name={}", name);
 
-        this.logger.debug("Returning {} records",
-                          result.size());
+    final Role record = this.roleRepository.findByName(name);
 
-        return result;
+    if (record == null) {
+      this.logger.info("No such role exists");
+      throw new ComiXedUserException("Invalid role: name=" + name);
     }
 
-    public ComiXedUser findById(final long id)
-            throws
-            ComiXedUserException {
-        this.logger.info("Finding user: id={}",
-                         id);
+    return record;
+  }
 
-        final Optional<ComiXedUser> record = this.userRepository.findById(id);
+  public ComiXedUser setUserProperty(
+      final String email, final String propertyName, final String propertyValue)
+      throws ComiXedUserException {
+    this.logger.info(
+        "Setting user property: email={} property[{}]={}", email, propertyName, propertyValue);
 
-        if (!record.isPresent()) {
-            throw new ComiXedUserException("No such user: id=" + id);
-        }
+    final ComiXedUser user = this.userRepository.findByEmail(email);
 
-        return record.get();
+    user.setProperty(propertyName, propertyValue);
+
+    return this.userRepository.save(user);
+  }
+
+  public ComiXedUser setUserPassword(final String email, final String password)
+      throws ComiXedUserException {
+    this.logger.info("Updating password for user: email={} length={}", email, password.length());
+
+    final ComiXedUser record = this.userRepository.findByEmail(email);
+
+    if (record == null) {
+      throw new ComiXedUserException("No such user: email=" + email);
     }
 
-    public Role findRoleByName(final String name)
-            throws
-            ComiXedUserException {
-        this.logger.info("Finding role: name={}",
-                         name);
+    record.setPasswordHash(this.utils.createHash(password.getBytes()));
 
-        final Role record = this.roleRepository.findByName(name);
+    return this.userRepository.save(record);
+  }
 
-        if (record == null) {
-            this.logger.info("No such role exists");
-            throw new ComiXedUserException("Invalid role: name=" + name);
-        }
+  public ComiXedUser setUserEmail(final String currentEmail, final String newEmail)
+      throws ComiXedUserException {
+    this.logger.info("Setting user email: old={} new={}", currentEmail, newEmail);
 
-        return record;
+    final ComiXedUser record = this.userRepository.findByEmail(currentEmail);
+
+    if (record == null) {
+      throw new ComiXedUserException("NO such user: email=" + currentEmail);
     }
 
-    public ComiXedUser setUserProperty(final String email,
-                                       final String propertyName,
-                                       final String propertyValue)
-            throws
-            ComiXedUserException {
-        this.logger.info("Setting user property: email={} property[{}]={}",
-                         email,
-                         propertyName,
-                         propertyValue);
+    record.setEmail(newEmail);
 
-        final ComiXedUser user = this.userRepository.findByEmail(email);
+    return this.userRepository.save(record);
+  }
 
-        user.setProperty(propertyName,
-                         propertyValue);
+  @Transactional
+  public ComiXedUser deleteUserProperty(final String email, final String property) {
+    this.logger.debug("Deleting user property: email={} property={}", email, property);
+    final ComiXedUser user = this.userRepository.findByEmail(email);
+    user.deleteProperty(property);
+    return this.userRepository.save(user);
+  }
 
-        return this.userRepository.save(user);
+  @Transactional
+  public ComiXedUser createUser(final String email, final String password, final boolean isAdmin)
+      throws ComiXedUserException {
+    this.logger.debug("Creating new user: email={}", email);
+
+    ComiXedUser user = this.userRepository.findByEmail(email);
+
+    if (user != null) {
+      throw new ComiXedUserException("user already exists: email=" + email);
     }
 
-    public ComiXedUser setUserPassword(final String email,
-                                       final String password)
-            throws
-            ComiXedUserException {
-        this.logger.info("Updating password for user: email={} length={}",
-                         email,
-                         password.length());
-
-        final ComiXedUser record = this.userRepository.findByEmail(email);
-
-        if (record == null) {
-            throw new ComiXedUserException("No such user: email=" + email);
-        }
-
-        record.setPasswordHash(this.utils.createHash(password.getBytes()));
-
-        return this.userRepository.save(record);
+    user = new ComiXedUser();
+    user.setEmail(email);
+    user.setPasswordHash(this.utils.createHash(password.getBytes()));
+    user.addRole(this.readerRole);
+    if (isAdmin) {
+      user.addRole(this.adminRole);
     }
 
-    public ComiXedUser setUserEmail(final String currentEmail,
-                                    final String newEmail)
-            throws
-            ComiXedUserException {
-        this.logger.info("Setting user email: old={} new={}",
-                         currentEmail,
-                         newEmail);
+    this.logger.debug("Saving new user");
 
-        final ComiXedUser record = this.userRepository.findByEmail(currentEmail);
+    return this.userRepository.save(user);
+  }
 
-        if (record == null) {
-            throw new ComiXedUserException("NO such user: email=" + currentEmail);
-        }
-
-        record.setEmail(newEmail);
-
-        return this.userRepository.save(record);
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    try {
+      this.readerRole = this.findRoleByName("READER");
+      this.adminRole = this.findRoleByName("ADMIN");
+    } catch (ComiXedUserException error) {
+      error.printStackTrace();
     }
-
-    @Transactional
-    public ComiXedUser deleteUserProperty(final String email,
-                                          final String property) {
-        this.logger.debug("Deleting user property: email={} property={}",
-                          email,
-                          property);
-        final ComiXedUser user = this.userRepository.findByEmail(email);
-        user.deleteProperty(property);
-        return this.userRepository.save(user);
-    }
-
-    @Transactional
-    public ComiXedUser createUser(final String email,
-                                  final String password,
-                                  final boolean isAdmin)
-            throws
-            ComiXedUserException {
-        this.logger.debug("Creating new user: email={}",
-                          email);
-
-        ComiXedUser user = this.userRepository.findByEmail(email);
-
-        if (user != null) {
-            throw new ComiXedUserException("user already exists: email=" + email);
-        }
-
-        user = new ComiXedUser();
-        user.setEmail(email);
-        user.setPasswordHash(this.utils.createHash(password.getBytes()));
-        user.addRole(this.readerRole);
-        if (isAdmin) {
-            user.addRole(this.adminRole);
-        }
-
-        this.logger.debug("Saving new user");
-
-        return this.userRepository.save(user);
-    }
-
-    @Override
-    public void afterPropertiesSet()
-            throws
-            Exception {
-        try {
-            this.readerRole = this.findRoleByName("READER");
-            this.adminRole = this.findRoleByName("ADMIN");
-        }
-        catch (ComiXedUserException error) {
-            error.printStackTrace();
-        }
-    }
+  }
 }
-

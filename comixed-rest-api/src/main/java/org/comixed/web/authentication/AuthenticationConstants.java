@@ -18,9 +18,8 @@
 
 package org.comixed.web.authentication;
 
-public interface AuthenticationConstants
-{
-    String SIGNING_KEY = "comixed";
-    String HEADER_STRING = "Authorization";
-    String TOKEN_PREFIX = "Bearer ";
+public interface AuthenticationConstants {
+  String SIGNING_KEY = "comixed";
+  String HEADER_STRING = "Authorization";
+  String TOKEN_PREFIX = "Bearer ";
 }

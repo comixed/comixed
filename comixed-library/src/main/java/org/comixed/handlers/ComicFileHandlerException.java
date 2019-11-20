@@ -19,24 +19,19 @@
 package org.comixed.handlers;
 
 /**
- * <code>ComicFileHandlerException</code> is raised when an error occurs while
- * working with an underlying digital comic file.
+ * <code>ComicFileHandlerException</code> is raised when an error occurs while working with an
+ * underlying digital comic file.
  *
  * @author Darryl L. Pierce
- *
  */
-public class ComicFileHandlerException extends Exception
-{
-    private static final long serialVersionUID = -7821301633974242512L;
+public class ComicFileHandlerException extends Exception {
+  private static final long serialVersionUID = -7821301633974242512L;
 
-    public ComicFileHandlerException(String message)
-    {
-        super(message);
-    }
+  public ComicFileHandlerException(String message) {
+    super(message);
+  }
 
-    public ComicFileHandlerException(String message, Exception cause)
-    {
-        super(message, cause);
-    }
-
+  public ComicFileHandlerException(String message, Exception cause) {
+    super(message, cause);
+  }
 }

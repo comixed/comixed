@@ -28,41 +28,35 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicVineIssueWebRequestTest extends BaseWebRequestTest
-{
-    private static final String TEST_API_KEY = "12345";
-    private static final String TEST_EXPECTED_FILTERED = "filter=id:4055";
+public class ComicVineIssueWebRequestTest extends BaseWebRequestTest {
+  private static final String TEST_API_KEY = "12345";
+  private static final String TEST_EXPECTED_FILTERED = "filter=id:4055";
 
-    @InjectMocks
-    private ComicVineIssueWebRequest request;
+  @InjectMocks private ComicVineIssueWebRequest request;
 
-    @Before
-    public void setUp()
-    {
-        request.setIssueId("599828");
-    }
+  @Before
+  public void setUp() {
+    request.setIssueId("599828");
+  }
 
-    @Test
-    public void testEnsureSetup()
-    {
-        assertEquals("issue/4000-599828", request.endpoint);
-    }
+  @Test
+  public void testEnsureSetup() {
+    assertEquals("issue/4000-599828", request.endpoint);
+  }
 
-    @Test(expected = WebRequestException.class)
-    public void testGetUrlWithoutIssueId() throws WebRequestException
-    {
-        request.endpoint = null;
-        request.getURL();
-    }
+  @Test(expected = WebRequestException.class)
+  public void testGetUrlWithoutIssueId() throws WebRequestException {
+    request.endpoint = null;
+    request.getURL();
+  }
 
-    @Test
-    public void testGetURLWithFilters() throws WebRequestException
-    {
-        request.setApiKey(TEST_API_KEY);
-        request.addFilter("id", "4055");
+  @Test
+  public void testGetURLWithFilters() throws WebRequestException {
+    request.setApiKey(TEST_API_KEY);
+    request.addFilter("id", "4055");
 
-        String result = request.getURL();
+    String result = request.getURL();
 
-        assertNotEquals(-1, result.indexOf(TEST_EXPECTED_FILTERED));
-    }
+    assertNotEquals(-1, result.indexOf(TEST_EXPECTED_FILTERED));
+  }
 }

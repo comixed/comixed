@@ -20,18 +20,21 @@ package org.comixed.net;
 
 public class GetScrapingIssueRequest {
 
-    private String apiKey;
-    private boolean skipCache;
+  private String apiKey;
+  private boolean skipCache;
 
-    public GetScrapingIssueRequest() {}
+  public GetScrapingIssueRequest() {}
 
-    public GetScrapingIssueRequest(final String apiKey,
-                                   final boolean skipCache) {
-        this.apiKey = apiKey;
-        this.skipCache = skipCache;
-    }
+  public GetScrapingIssueRequest(final String apiKey, final boolean skipCache) {
+    this.apiKey = apiKey;
+    this.skipCache = skipCache;
+  }
 
-    public String getApiKey() { return apiKey; }
+  public String getApiKey() {
+    return apiKey;
+  }
 
-    public boolean isSkipCache() { return skipCache; }
+  public boolean isSkipCache() {
+    return skipCache;
+  }
 }

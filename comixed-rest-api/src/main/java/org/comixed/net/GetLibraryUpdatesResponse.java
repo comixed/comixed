@@ -20,52 +20,49 @@ package org.comixed.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.List;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.views.View.ComicList;
 
-import java.util.List;
-
 public class GetLibraryUpdatesResponse {
-    @JsonProperty("comics")
-    @JsonView(ComicList.class)
-    private List<Comic> comics;
+  @JsonProperty("comics")
+  @JsonView(ComicList.class)
+  private List<Comic> comics;
 
-    @JsonProperty("rescanCount")
-    @JsonView(ComicList.class)
-    private int rescanCount;
+  @JsonProperty("rescanCount")
+  @JsonView(ComicList.class)
+  private int rescanCount;
 
-    @JsonProperty("processingCount")
-    @JsonView(ComicList.class)
-    private long processingCount;
+  @JsonProperty("processingCount")
+  @JsonView(ComicList.class)
+  private long processingCount;
 
-    @JsonProperty("lastReadDates")
-    @JsonView(ComicList.class)
-    private List<LastReadDate> lastReadDates;
+  @JsonProperty("lastReadDates")
+  @JsonView(ComicList.class)
+  private List<LastReadDate> lastReadDates;
 
-    public GetLibraryUpdatesResponse(List<Comic> comics,
-                                     List<LastReadDate> lastReadDates,
-                                     int rescanCount,
-                                     long importCount) {
-        this.comics = comics;
-        this.lastReadDates = lastReadDates;
-        this.rescanCount = rescanCount;
-        this.processingCount = importCount;
-    }
+  public GetLibraryUpdatesResponse(
+      List<Comic> comics, List<LastReadDate> lastReadDates, int rescanCount, long importCount) {
+    this.comics = comics;
+    this.lastReadDates = lastReadDates;
+    this.rescanCount = rescanCount;
+    this.processingCount = importCount;
+  }
 
-    public List<Comic> getComics() {
-        return this.comics;
-    }
+  public List<Comic> getComics() {
+    return this.comics;
+  }
 
-    public long getProcessingCount() {
-        return this.processingCount;
-    }
+  public long getProcessingCount() {
+    return this.processingCount;
+  }
 
-    public int getRescanCount() {
-        return this.rescanCount;
-    }
+  public int getRescanCount() {
+    return this.rescanCount;
+  }
 
-    public List<LastReadDate> getLastReadDates() {
-        return lastReadDates;
-    }
+  public List<LastReadDate> getLastReadDates() {
+    return lastReadDates;
+  }
 }

@@ -18,38 +18,36 @@
 
 package org.comixed.model.opds;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class OPDSBookmarkTest {
 
-    private static final long BOOK_ID = 100;
-    private static final String MARK = "10";
-    private static final boolean IS_FINISHED = false;
+  private static final long BOOK_ID = 100;
+  private static final String MARK = "10";
+  private static final boolean IS_FINISHED = false;
 
-    private OPDSBookmark bookmark;
+  private OPDSBookmark bookmark;
 
-    @Before
-    public void setUp() {
-        bookmark = new OPDSBookmark(BOOK_ID, MARK, IS_FINISHED);
-    }
+  @Before
+  public void setUp() {
+    bookmark = new OPDSBookmark(BOOK_ID, MARK, IS_FINISHED);
+  }
 
-    @Test
-    public void testHasBook() {
-        assertEquals(BOOK_ID, bookmark.getDocId());
-    }
+  @Test
+  public void testHasBook() {
+    assertEquals(BOOK_ID, bookmark.getDocId());
+  }
 
-    @Test
-    public void testHasMark() {
-        assertEquals(MARK, bookmark.getMark());
-    }
+  @Test
+  public void testHasMark() {
+    assertEquals(MARK, bookmark.getMark());
+  }
 
-    @Test
-    public void testHasIsFinished() {
-        assertEquals(IS_FINISHED, bookmark.getIsFinished());
-    }
-
-
+  @Test
+  public void testHasIsFinished() {
+    assertEquals(IS_FINISHED, bookmark.getIsFinished());
+  }
 }

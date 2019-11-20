@@ -18,6 +18,12 @@
 
 package org.comixed.service.user;
 
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
+import java.util.List;
+import java.util.Optional;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
@@ -30,386 +36,236 @@ import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-import java.util.Optional;
-
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class UserServiceTest {
-    private static final String TEST_EMAIL = "user@somedomain.com";
-    private static final long TEST_USER_ID = 717L;
-    private static final String TEST_ROLE_NAME = "ADMIN";
-    private static final String TEST_PROPERTY_NAME = "some.property.name";
-    private static final String TEST_PROPERTY_VALUE = "The value of that property";
-    private static final String TEST_PASSWORD = "this.is.my.password!";
-    private static final String TEST_PASSWORD_HASH = TEST_PASSWORD;
-    private static final boolean TEST_IS_ADMIN = true;
+  private static final String TEST_EMAIL = "user@somedomain.com";
+  private static final long TEST_USER_ID = 717L;
+  private static final String TEST_ROLE_NAME = "ADMIN";
+  private static final String TEST_PROPERTY_NAME = "some.property.name";
+  private static final String TEST_PROPERTY_VALUE = "The value of that property";
+  private static final String TEST_PASSWORD = "this.is.my.password!";
+  private static final String TEST_PASSWORD_HASH = TEST_PASSWORD;
+  private static final boolean TEST_IS_ADMIN = true;
 
-    @InjectMocks private UserService service;
-    @Mock private ComiXedUserRepository userRepository;
-    @Mock private RoleRepository roleRepository;
-    @Mock private ComiXedUser user;
-    @Captor private ArgumentCaptor<ComiXedUser> userCaptor;
-    @Mock private List<ComiXedUser> userList;
-    @Mock private Role role;
-    @Mock private Utils utils;
+  @InjectMocks private UserService service;
+  @Mock private ComiXedUserRepository userRepository;
+  @Mock private RoleRepository roleRepository;
+  @Mock private ComiXedUser user;
+  @Captor private ArgumentCaptor<ComiXedUser> userCaptor;
+  @Mock private List<ComiXedUser> userList;
+  @Mock private Role role;
+  @Mock private Utils utils;
 
-    @Test(expected = ComiXedUserException.class)
-    public void testFindByEmailDoesNotExist()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-               .thenReturn(null);
+  @Test(expected = ComiXedUserException.class)
+  public void testFindByEmailDoesNotExist() throws ComiXedUserException {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
 
-        try {
-            service.findByEmail(TEST_EMAIL);
-        }
-        finally {
-            Mockito.verify(userRepository,
-                           Mockito.times(1))
-                   .findByEmail(TEST_EMAIL);
-        }
+    try {
+      service.findByEmail(TEST_EMAIL);
+    } finally {
+      Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
     }
+  }
 
-    @Test
-    public void testFindByEmail()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findByEmail(TEST_EMAIL))
-               .thenReturn(user);
+  @Test
+  public void testFindByEmail() throws ComiXedUserException {
+    Mockito.when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(user);
 
-        final ComiXedUser result = service.findByEmail(TEST_EMAIL);
+    final ComiXedUser result = service.findByEmail(TEST_EMAIL);
 
-        assertNotNull(result);
-        assertSame(user,
-                   result);
+    assertNotNull(result);
+    assertSame(user, result);
 
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findByEmail(TEST_EMAIL);
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testDeleteForInvalidUser() throws ComiXedUserException {
+    Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+    try {
+      service.delete(TEST_USER_ID);
+    } finally {
+      Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
     }
+  }
 
-    @Test(expected = ComiXedUserException.class)
-    public void testDeleteForInvalidUser()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findById(Mockito.anyLong()))
-               .thenReturn(Optional.empty());
+  @Test
+  public void testDelete() throws ComiXedUserException {
+    Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
+    Mockito.doNothing().when(userRepository).delete(Mockito.any(ComiXedUser.class));
 
-        try {
-            service.delete(TEST_USER_ID);
-        }
-        finally {
-            Mockito.verify(userRepository,
-                           Mockito.times(1))
-                   .findById(TEST_USER_ID);
-        }
+    service.delete(TEST_USER_ID);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
+    Mockito.verify(userRepository, Mockito.times(1)).delete(user);
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testSaveRepositoryThrowsException() throws ComiXedUserException {
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class)))
+        .thenThrow(ConstraintViolationException.class);
+
+    try {
+      service.save(user);
+    } finally {
+      Mockito.verify(userRepository, Mockito.times(1)).save(user);
     }
+  }
 
-    @Test
-    public void testDelete()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findById(Mockito.anyLong()))
-               .thenReturn(Optional.of(user));
-        Mockito.doNothing()
-               .when(userRepository)
-               .delete(Mockito.any(ComiXedUser.class));
+  @Test
+  public void testSave() throws ComiXedUserException {
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
 
-        service.delete(TEST_USER_ID);
+    final ComiXedUser result = service.save(user);
 
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findById(TEST_USER_ID);
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .delete(user);
+    assertNotNull(result);
+    assertSame(user, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+  }
+
+  @Test
+  public void testFindAll() {
+    Mockito.when(userRepository.findAll()).thenReturn(userList);
+
+    final List<ComiXedUser> result = service.findAll();
+
+    assertNotNull(result);
+    assertSame(userList, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testFindByIdWithInvalidId() throws ComiXedUserException {
+    Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+    try {
+      service.findById(TEST_USER_ID);
+    } finally {
+      Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
     }
+  }
 
-    @Test(expected = ComiXedUserException.class)
-    public void testSaveRepositoryThrowsException()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class)))
-               .thenThrow(ConstraintViolationException.class);
+  @Test
+  public void testFindById() throws ComiXedUserException {
+    Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
 
-        try {
-            service.save(user);
-        }
-        finally {
-            Mockito.verify(userRepository,
-                           Mockito.times(1))
-                   .save(user);
-        }
+    final ComiXedUser result = service.findById(TEST_USER_ID);
+
+    assertNotNull(result);
+    assertSame(user, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findById(TEST_USER_ID);
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testFindRoleByNameWithInvalidName() throws ComiXedUserException {
+    Mockito.when(roleRepository.findByName(Mockito.anyString())).thenReturn(null);
+
+    try {
+      service.findRoleByName(TEST_ROLE_NAME);
+    } finally {
+      Mockito.verify(roleRepository, Mockito.times(1)).findByName(TEST_ROLE_NAME);
     }
+  }
 
-    @Test
-    public void testSave()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class)))
-               .thenReturn(user);
+  @Test
+  public void testFindRoleByName() throws ComiXedUserException {
+    Mockito.when(roleRepository.findByName(Mockito.anyString())).thenReturn(role);
 
-        final ComiXedUser result = service.save(user);
+    final Role result = service.findRoleByName(TEST_ROLE_NAME);
 
-        assertNotNull(result);
-        assertSame(user,
-                   result);
+    assertNotNull(result);
+    assertSame(role, result);
 
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .save(user);
-    }
+    Mockito.verify(roleRepository, Mockito.times(1)).findByName(TEST_ROLE_NAME);
+  }
 
-    @Test
-    public void testFindAll() {
-        Mockito.when(userRepository.findAll())
-               .thenReturn(userList);
+  @Test
+  public void testSetUserProperty() throws ComiXedUserException {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.doNothing().when(user).setProperty(Mockito.anyString(), Mockito.anyString());
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
 
-        final List<ComiXedUser> result = service.findAll();
+    final ComiXedUser result =
+        service.setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
 
-        assertNotNull(result);
-        assertSame(userList,
-                   result);
+    assertNotNull(result);
+    assertSame(user, result);
 
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findAll();
-    }
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.times(1)).setProperty(TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+  }
 
-    @Test(expected = ComiXedUserException.class)
-    public void testFindByIdWithInvalidId()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findById(Mockito.anyLong()))
-               .thenReturn(Optional.empty());
+  @Test
+  public void testDeleteUserProperty() {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.doNothing().when(user).deleteProperty(Mockito.anyString());
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
 
-        try {
-            service.findById(TEST_USER_ID);
-        }
-        finally {
-            Mockito.verify(userRepository,
-                           Mockito.times(1))
-                   .findById(TEST_USER_ID);
-        }
-    }
+    final ComiXedUser result = service.deleteUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME);
 
-    @Test
-    public void testFindById()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findById(Mockito.anyLong()))
-               .thenReturn(Optional.of(user));
+    assertNotNull(result);
+    assertSame(user, result);
 
-        final ComiXedUser result = service.findById(TEST_USER_ID);
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.times(1)).deleteProperty(TEST_PROPERTY_NAME);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+  }
 
-        assertNotNull(result);
-        assertSame(user,
-                   result);
+  @Test
+  public void testSetUserPassword() throws ComiXedUserException {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.doNothing().when(user).setPasswordHash(Mockito.anyString());
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
 
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findById(TEST_USER_ID);
-    }
+    final ComiXedUser result = service.setUserPassword(TEST_EMAIL, TEST_PASSWORD);
 
-    @Test(expected = ComiXedUserException.class)
-    public void testFindRoleByNameWithInvalidName()
-            throws
-            ComiXedUserException {
-        Mockito.when(roleRepository.findByName(Mockito.anyString()))
-               .thenReturn(null);
+    assertNotNull(result);
+    assertSame(user, result);
 
-        try {
-            service.findRoleByName(TEST_ROLE_NAME);
-        }
-        finally {
-            Mockito.verify(roleRepository,
-                           Mockito.times(1))
-                   .findByName(TEST_ROLE_NAME);
-        }
-    }
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(utils, Mockito.times(1)).createHash(TEST_PASSWORD.getBytes());
+    Mockito.verify(user, Mockito.times(1)).setPasswordHash(TEST_PASSWORD_HASH);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+  }
 
-    @Test
-    public void testFindRoleByName()
-            throws
-            ComiXedUserException {
-        Mockito.when(roleRepository.findByName(Mockito.anyString()))
-               .thenReturn(role);
+  @Test
+  public void testSetUserEmail() throws ComiXedUserException {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.doNothing().when(user).setEmail(Mockito.anyString());
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
 
-        final Role result = service.findRoleByName(TEST_ROLE_NAME);
+    final ComiXedUser result = service.setUserEmail(TEST_EMAIL, TEST_EMAIL);
 
-        assertNotNull(result);
-        assertSame(role,
-                   result);
+    assertNotNull(result);
+    assertSame(user, result);
 
-        Mockito.verify(roleRepository,
-                       Mockito.times(1))
-               .findByName(TEST_ROLE_NAME);
-    }
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+  }
 
-    @Test
-    public void testSetUserProperty()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-               .thenReturn(user);
-        Mockito.doNothing()
-               .when(user)
-               .setProperty(Mockito.anyString(),
-                            Mockito.anyString());
-        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class)))
-               .thenReturn(user);
+  @Test
+  public void testCreateUser() throws ComiXedUserException {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
+    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(userRepository.save(userCaptor.capture())).thenReturn(user);
 
-        final ComiXedUser result = service.setUserProperty(TEST_EMAIL,
-                                                           TEST_PROPERTY_NAME,
-                                                           TEST_PROPERTY_VALUE);
+    final ComiXedUser result = service.createUser(TEST_EMAIL, TEST_PASSWORD, TEST_IS_ADMIN);
 
-        assertNotNull(result);
-        assertSame(user,
-                   result);
+    assertNotNull(result);
+    assertSame(user, result);
+    assertEquals(TEST_EMAIL, userCaptor.getValue().getEmail());
+    assertEquals(TEST_PASSWORD_HASH, userCaptor.getValue().getPasswordHash());
 
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findByEmail(TEST_EMAIL);
-        Mockito.verify(user,
-                       Mockito.times(1))
-               .setProperty(TEST_PROPERTY_NAME,
-                            TEST_PROPERTY_VALUE);
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .save(user);
-    }
-
-    @Test
-    public void testDeleteUserProperty() {
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-               .thenReturn(user);
-        Mockito.doNothing()
-               .when(user)
-               .deleteProperty(Mockito.anyString());
-        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class)))
-               .thenReturn(user);
-
-        final ComiXedUser result = service.deleteUserProperty(TEST_EMAIL,
-                                                              TEST_PROPERTY_NAME);
-
-        assertNotNull(result);
-        assertSame(user,
-                   result);
-
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findByEmail(TEST_EMAIL);
-        Mockito.verify(user,
-                       Mockito.times(1))
-               .deleteProperty(TEST_PROPERTY_NAME);
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .save(user);
-    }
-
-    @Test
-    public void testSetUserPassword()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-               .thenReturn(user);
-        Mockito.when(utils.createHash(Mockito.any(byte[].class)))
-               .thenReturn(TEST_PASSWORD_HASH);
-        Mockito.doNothing()
-               .when(user)
-               .setPasswordHash(Mockito.anyString());
-        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class)))
-               .thenReturn(user);
-
-        final ComiXedUser result = service.setUserPassword(TEST_EMAIL,
-                                                           TEST_PASSWORD);
-
-        assertNotNull(result);
-        assertSame(user,
-                   result);
-
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findByEmail(TEST_EMAIL);
-        Mockito.verify(utils,
-                       Mockito.times(1))
-               .createHash(TEST_PASSWORD.getBytes());
-        Mockito.verify(user,
-                       Mockito.times(1))
-               .setPasswordHash(TEST_PASSWORD_HASH);
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .save(user);
-    }
-
-    @Test
-    public void testSetUserEmail()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-               .thenReturn(user);
-        Mockito.doNothing()
-               .when(user)
-               .setEmail(Mockito.anyString());
-        Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class)))
-               .thenReturn(user);
-
-        final ComiXedUser result = service.setUserEmail(TEST_EMAIL,
-                                                        TEST_EMAIL);
-
-        assertNotNull(result);
-        assertSame(user,
-                   result);
-
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findByEmail(TEST_EMAIL);
-        Mockito.verify(user,
-                       Mockito.times(1))
-               .setEmail(TEST_EMAIL);
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .save(user);
-    }
-
-    @Test
-    public void testCreateUser()
-            throws
-            ComiXedUserException {
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(utils.createHash(Mockito.any(byte[].class)))
-               .thenReturn(TEST_PASSWORD_HASH);
-        Mockito.when(userRepository.save(userCaptor.capture()))
-               .thenReturn(user);
-
-        final ComiXedUser result = service.createUser(TEST_EMAIL,
-                                                      TEST_PASSWORD,
-                                                      TEST_IS_ADMIN);
-
-        assertNotNull(result);
-        assertSame(user,
-                   result);
-        assertEquals(TEST_EMAIL,
-                     userCaptor.getValue()
-                               .getEmail());
-        assertEquals(TEST_PASSWORD_HASH,
-                     userCaptor.getValue()
-                               .getPasswordHash());
-
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .findByEmail(TEST_EMAIL);
-        Mockito.verify(utils,
-                       Mockito.times(1))
-               .createHash(TEST_PASSWORD.getBytes());
-        Mockito.verify(userRepository,
-                       Mockito.times(1))
-               .save(userCaptor.getValue());
-    }
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(utils, Mockito.times(1)).createHash(TEST_PASSWORD.getBytes());
+    Mockito.verify(userRepository, Mockito.times(1)).save(userCaptor.getValue());
+  }
 }

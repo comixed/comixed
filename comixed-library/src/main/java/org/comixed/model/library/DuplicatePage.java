@@ -19,33 +19,44 @@ package org.comixed.model.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.comixed.views.View;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.comixed.views.View;
 
 public class DuplicatePage {
-    @JsonProperty("hash")
-    @JsonView(View.DuplicatePageList.class)
-    private String hash;
+  @JsonProperty("hash")
+  @JsonView(View.DuplicatePageList.class)
+  private String hash;
 
-    @JsonProperty("blocked")
-    @JsonView(View.DuplicatePageList.class)
-    private boolean blocked;
+  @JsonProperty("blocked")
+  @JsonView(View.DuplicatePageList.class)
+  private boolean blocked;
 
-    @JsonProperty("pages")
-    @JsonView(View.DuplicatePageList.class)
-    private List<Page> pages = new ArrayList<>();
+  @JsonProperty("pages")
+  @JsonView(View.DuplicatePageList.class)
+  private List<Page> pages = new ArrayList<>();
 
-    public String getHash() { return hash; }
+  public String getHash() {
+    return hash;
+  }
 
-    public void setHash(final String hash) { this.hash = hash; }
+  public void setHash(final String hash) {
+    this.hash = hash;
+  }
 
-    public boolean isBlocked() { return blocked; }
+  public boolean isBlocked() {
+    return blocked;
+  }
 
-    public void setBlocked(final boolean blocked) { this.blocked = blocked; }
+  public void setBlocked(final boolean blocked) {
+    this.blocked = blocked;
+  }
 
-    public List<Page> getPages() { return pages; }
+  public List<Page> getPages() {
+    return pages;
+  }
 
-    public void setPages(final List<Page> pages) { this.pages = pages; }
+  public void setPages(final List<Page> pages) {
+    this.pages = pages;
+  }
 }

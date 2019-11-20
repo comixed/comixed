@@ -18,6 +18,8 @@
 
 package org.comixed.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,64 +28,49 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import org.comixed.views.View.UserList;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "user_preferences")
-public class Preference
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Preference {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private ComiXedUser user;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  @JsonIgnore
+  private ComiXedUser user;
 
-    @Column(name = "name",
-            nullable = false)
-    @JsonView(UserList.class)
-    private String name;
+  @Column(name = "name", nullable = false)
+  @JsonView(UserList.class)
+  private String name;
 
-    @Column(name = "value",
-            updatable = true,
-            nullable = false)
-    @JsonView(UserList.class)
-    private String value;
+  @Column(name = "value", updatable = true, nullable = false)
+  @JsonView(UserList.class)
+  private String value;
 
-    public Preference()
-    {}
+  public Preference() {}
 
-    public Preference(ComiXedUser user, String name, String value)
-    {
-        this.user = user;
-        this.name = name;
-        this.value = value;
-    }
+  public Preference(ComiXedUser user, String name, String value) {
+    this.user = user;
+    this.name = name;
+    this.value = value;
+  }
 
-    public String getName()
-    {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getValue()
-    {
-        return value;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public void setValue(String value)
-    {
-        this.value = value;
-    }
-
+  public void setValue(String value) {
+    this.value = value;
+  }
 }

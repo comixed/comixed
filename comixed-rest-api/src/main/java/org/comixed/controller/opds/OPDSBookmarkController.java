@@ -18,6 +18,7 @@
 
 package org.comixed.controller.opds;
 
+import java.util.Optional;
 import org.comixed.model.library.Comic;
 import org.comixed.model.opds.OPDSBookmark;
 import org.comixed.model.user.ComiXedUser;
@@ -33,57 +34,53 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 /**
- * <code>OPDSBookmarkController</code> allows the remote agent request reading bookmark
- * and set reading bookmark of a book
+ * <code>OPDSBookmarkController</code> allows the remote agent request reading bookmark and set
+ * reading bookmark of a book
  *
  * @author João França
  * @author Darryl L. Pierce
  */
 @RestController
 @RequestMapping("/user-api")
-public class OPDSBookmarkController
-{
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class OPDSBookmarkController {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired private ComiXedUserRepository userRepository;
+  @Autowired private ComiXedUserRepository userRepository;
 
-    @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicRepository comicRepository;
 
-    @GetMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
-    public OPDSBookmark getBookmark(@RequestParam("docId") long docId) throws ComicException{
-        this.logger.debug("Getting book bookmark: id={}", docId);
+  @GetMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
+  public OPDSBookmark getBookmark(@RequestParam("docId") long docId) throws ComicException {
+    this.logger.debug("Getting book bookmark: id={}", docId);
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        ComiXedUser user = this.userRepository.findByEmail(email);
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    ComiXedUser user = this.userRepository.findByEmail(email);
 
-        if (user.getBookmark(docId).equalsIgnoreCase("0"))
-            throw new ComicException("Bookmark Not Found");
-        else {
-            String mark =  user.getBookmark(docId);
-            Optional<Comic> record = this.comicRepository.findById(docId);
-            if (!record.isPresent())
-            {
-                this.logger.error("No such comic");
-                throw new ComicException("Bookmark Not Found");
-            }
-            String totalPages = String.valueOf(record.get().getPageCount());
-            return new OPDSBookmark(docId, mark , mark.equalsIgnoreCase(totalPages));
-        }
+    if (user.getBookmark(docId).equalsIgnoreCase("0"))
+      throw new ComicException("Bookmark Not Found");
+    else {
+      String mark = user.getBookmark(docId);
+      Optional<Comic> record = this.comicRepository.findById(docId);
+      if (!record.isPresent()) {
+        this.logger.error("No such comic");
+        throw new ComicException("Bookmark Not Found");
+      }
+      String totalPages = String.valueOf(record.get().getPageCount());
+      return new OPDSBookmark(docId, mark, mark.equalsIgnoreCase(totalPages));
     }
+  }
 
-    @PutMapping(value = "/bookmark", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity setBookmark(@RequestParam("docId") long docId,
-                                      @RequestBody() final OPDSBookmark opdsBookmark){
-        this.logger.debug("Setting book bookmark: id={}", docId);
+  @PutMapping(value = "/bookmark", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity setBookmark(
+      @RequestParam("docId") long docId, @RequestBody() final OPDSBookmark opdsBookmark) {
+    this.logger.debug("Setting book bookmark: id={}", docId);
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        ComiXedUser user = this.userRepository.findByEmail(email);
-        user.setBookmark(docId, opdsBookmark.getMark());
-        this.userRepository.save(user);
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    ComiXedUser user = this.userRepository.findByEmail(email);
+    user.setBookmark(docId, opdsBookmark.getMark());
+    this.userRepository.save(user);
 
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-    }
+    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+  }
 }

@@ -19,21 +19,15 @@
 package org.comixed.task.runner;
 
 /**
- * <code>WorkerListener</code> defines a type that receives updates when
- * {@link Worker} has a change in its queue.
+ * <code>WorkerListener</code> defines a type that receives updates when {@link Worker} has a change
+ * in its queue.
  *
  * @author Darryl L. Pierce
- *
  */
-public interface WorkerListener
-{
-    /**
-     * Fired when the worker queue changes.
-     */
-    void queueChanged();
+public interface WorkerListener {
+  /** Fired when the worker queue changes. */
+  void queueChanged();
 
-    /**
-     * Fired when the worker's state changes.
-     */
-    void workerStateChanged();
+  /** Fired when the worker's state changes. */
+  void workerStateChanged();
 }

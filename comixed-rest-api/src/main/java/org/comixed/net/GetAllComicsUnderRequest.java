@@ -21,13 +21,20 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GetAllComicsUnderRequest {
-    @JsonProperty("directory") private String directory;
+  @JsonProperty("directory")
+  private String directory;
 
-    public GetAllComicsUnderRequest() { }
+  public GetAllComicsUnderRequest() {}
 
-    public GetAllComicsUnderRequest(final String directory) { this.directory = directory; }
+  public GetAllComicsUnderRequest(final String directory) {
+    this.directory = directory;
+  }
 
-    public String getDirectory() { return directory; }
+  public String getDirectory() {
+    return directory;
+  }
 
-    public void setDirectory(final String directory) { this.directory = directory; }
+  public void setDirectory(final String directory) {
+    this.directory = directory;
+  }
 }

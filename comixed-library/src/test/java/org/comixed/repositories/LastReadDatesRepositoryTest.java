@@ -1,17 +1,17 @@
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
@@ -22,8 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
-
 import org.comixed.model.user.LastReadDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,33 +37,28 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
 @TestPropertySource(locations = "classpath:application.properties")
 @DatabaseSetup("classpath:test-comics.xml")
-@TestExecutionListeners(
-{DependencyInjectionTestExecutionListener.class,
- DirtiesContextTestExecutionListener.class,
- TransactionalTestExecutionListener.class,
- DbUnitTestExecutionListener.class})
-public class LastReadDatesRepositoryTest
-{
-    private static final Long TEST_USER_ID = 1000L;
-    private static final Long TEST_COMIC_ID = 1000L;
-    @Autowired
-    private LastReadDatesRepository repository;
+@TestExecutionListeners({
+  DependencyInjectionTestExecutionListener.class,
+  DirtiesContextTestExecutionListener.class,
+  TransactionalTestExecutionListener.class,
+  DbUnitTestExecutionListener.class
+})
+public class LastReadDatesRepositoryTest {
+  private static final Long TEST_USER_ID = 1000L;
+  private static final Long TEST_COMIC_ID = 1000L;
+  @Autowired private LastReadDatesRepository repository;
 
-    @Test
-    public void testFindAllForUser()
-    {
-        List<LastReadDate> result = repository.findAllForUser(TEST_USER_ID);
+  @Test
+  public void testFindAllForUser() {
+    List<LastReadDate> result = repository.findAllForUser(TEST_USER_ID);
 
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(TEST_COMIC_ID, result.get(0).getComic().getId());
-        assertEquals(TEST_USER_ID, result.get(0).getUser().getId());
-    }
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(TEST_COMIC_ID, result.get(0).getComic().getId());
+    assertEquals(TEST_USER_ID, result.get(0).getUser().getId());
+  }
 }

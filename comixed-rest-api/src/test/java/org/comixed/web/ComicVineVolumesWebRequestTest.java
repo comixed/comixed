@@ -27,28 +27,24 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicVineVolumesWebRequestTest extends BaseWebRequestTest
-{
-    private static final String TEST_API_KEY = "12345";
-    private static final String TEST_EXPECTED_FILTER = "filter=name:Batman";
+public class ComicVineVolumesWebRequestTest extends BaseWebRequestTest {
+  private static final String TEST_API_KEY = "12345";
+  private static final String TEST_EXPECTED_FILTER = "filter=name:Batman";
 
-    @InjectMocks
-    private ComicVineVolumesWebRequest request;
+  @InjectMocks private ComicVineVolumesWebRequest request;
 
-    @Test
-    public void testEnsureSetup()
-    {
-        assertEquals("volumes", request.endpoint);
-    }
+  @Test
+  public void testEnsureSetup() {
+    assertEquals("volumes", request.endpoint);
+  }
 
-    @Test
-    public void testGetURLWithFilters() throws WebRequestException
-    {
-        request.setApiKey(TEST_API_KEY);
-        request.addFilter("name", "Batman");
+  @Test
+  public void testGetURLWithFilters() throws WebRequestException {
+    request.setApiKey(TEST_API_KEY);
+    request.addFilter("name", "Batman");
 
-        String result = request.getURL();
+    String result = request.getURL();
 
-        assertNotEquals(-1, result.indexOf(TEST_EXPECTED_FILTER));
-    }
+    assertNotEquals(-1, result.indexOf(TEST_EXPECTED_FILTER));
+  }
 }

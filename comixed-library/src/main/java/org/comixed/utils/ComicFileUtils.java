@@ -20,44 +20,39 @@ package org.comixed.utils;
 
 import java.io.File;
 import java.text.MessageFormat;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <code>ComicFileUtils</code> provides a set of utility methods related to
- * comic files and filenames.
- * 
- * @author Darryl L. Pierce
+ * <code>ComicFileUtils</code> provides a set of utility methods related to comic files and
+ * filenames.
  *
+ * @author Darryl L. Pierce
  */
-public class ComicFileUtils
-{
-    protected final static Logger logger = LoggerFactory.getLogger(ComicFileUtils.class);
+public class ComicFileUtils {
+  protected static final Logger logger = LoggerFactory.getLogger(ComicFileUtils.class);
 
-    public static String findAvailableFilename(String filename, int attempt, String defaultExtension)
-    {
-        String candidate = filename;
+  public static String findAvailableFilename(
+      String filename, int attempt, String defaultExtension) {
+    String candidate = filename;
 
-        if (attempt > 0)
-        {
-            candidate = MessageFormat.format("{0}-{1}.{2}", filename, attempt, defaultExtension);
-        }
-        else
-        {
-            candidate = MessageFormat.format("{0}.{1}", filename, defaultExtension);
-        }
-
-        logger.debug("Candidate filename=" + candidate);
-        File file = new File(candidate);
-        return (!file.exists()) ? candidate : findAvailableFilename(filename, ++attempt, defaultExtension);
+    if (attempt > 0) {
+      candidate = MessageFormat.format("{0}-{1}.{2}", filename, attempt, defaultExtension);
+    } else {
+      candidate = MessageFormat.format("{0}.{1}", filename, defaultExtension);
     }
 
-    public static boolean isComicFile(File file)
-    {
-        String name = file.getName().toUpperCase();
-        boolean result = (name.endsWith("CBZ") || name.endsWith("CBR") || name.endsWith("CB7"));
-        logger.debug("Is {} a comic? {}", file.getName(), result ? "Yes" : "No");
-        return result;
-    }
+    logger.debug("Candidate filename=" + candidate);
+    File file = new File(candidate);
+    return (!file.exists())
+        ? candidate
+        : findAvailableFilename(filename, ++attempt, defaultExtension);
+  }
+
+  public static boolean isComicFile(File file) {
+    String name = file.getName().toUpperCase();
+    boolean result = (name.endsWith("CBZ") || name.endsWith("CBR") || name.endsWith("CB7"));
+    logger.debug("Is {} a comic? {}", file.getName(), result ? "Yes" : "No");
+    return result;
+  }
 }

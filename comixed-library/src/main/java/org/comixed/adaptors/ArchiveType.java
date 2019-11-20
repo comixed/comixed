@@ -21,51 +21,43 @@ package org.comixed.adaptors;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 
 /**
- * <code>ArchiveType</code> provides a means for association a
- * {@link ArchiveAdaptor} to a disk format.
+ * <code>ArchiveType</code> provides a means for association a {@link ArchiveAdaptor} to a disk
+ * format.
  *
  * @author Darryl L. Pierce
- *
  */
-public enum ArchiveType
-{
- CBZ("ZIP Comic", "application/vnc.comicbook+zip"),
- CBR("RAR Comic", "application/vnc.comicbook+rar"),
- CB7("7Z Comic", "application/vnc.comicbook+octet-stream");
+public enum ArchiveType {
+  CBZ("ZIP Comic", "application/vnc.comicbook+zip"),
+  CBR("RAR Comic", "application/vnc.comicbook+rar"),
+  CB7("7Z Comic", "application/vnc.comicbook+octet-stream");
 
-    private String name;
-    private String mimeType;
-    private ArchiveAdaptor archiveAdaptor;
+  private String name;
+  private String mimeType;
+  private ArchiveAdaptor archiveAdaptor;
 
-    private ArchiveType(String name, String mimeType)
-    {
-        this.name = name;
-        this.mimeType = mimeType;
-    }
+  private ArchiveType(String name, String mimeType) {
+    this.name = name;
+    this.mimeType = mimeType;
+  }
 
-    public ArchiveAdaptor getArchiveAdaptor()
-    {
-        return this.archiveAdaptor;
-    }
+  public ArchiveAdaptor getArchiveAdaptor() {
+    return this.archiveAdaptor;
+  }
 
-    public String getMimeType()
-    {
-        return this.mimeType;
-    }
+  public String getMimeType() {
+    return this.mimeType;
+  }
 
-    public String getName()
-    {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public void setArchiveAdaptor(ArchiveAdaptor archiveAdaptor)
-    {
-        this.archiveAdaptor = archiveAdaptor;
-    }
+  public void setArchiveAdaptor(ArchiveAdaptor archiveAdaptor) {
+    this.archiveAdaptor = archiveAdaptor;
+  }
 
-    @Override
-    public String toString()
-    {
-        return this.name;
-    }
+  @Override
+  public String toString() {
+    return this.name;
+  }
 }

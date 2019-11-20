@@ -1,7 +1,10 @@
 package org.comixed.repositories;
 
+import static org.junit.Assert.*;
+
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import java.util.List;
 import org.comixed.model.scraping.ComicVineVolumeQueryCacheEntry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,44 +17,40 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
 @TestPropertySource(locations = "classpath:application.properties")
 @DatabaseSetup("classpath:test-comics.xml")
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
-                         DirtiesContextTestExecutionListener.class,
-                         TransactionalTestExecutionListener.class,
-                         DbUnitTestExecutionListener.class})
+@TestExecutionListeners({
+  DependencyInjectionTestExecutionListener.class,
+  DirtiesContextTestExecutionListener.class,
+  TransactionalTestExecutionListener.class,
+  DbUnitTestExecutionListener.class
+})
 public class ComicVineVolumeQueryCacheRepositoryTest {
-    private static final String TEST_MISSING_SERIES_NAME = "Farkle: The Series";
-    private static final String TEST_SERIES_NAME = "Cached Series";
+  private static final String TEST_MISSING_SERIES_NAME = "Farkle: The Series";
+  private static final String TEST_SERIES_NAME = "Cached Series";
 
-    @Autowired private ComicVineVolumeQueryCacheRepository repository;
+  @Autowired private ComicVineVolumeQueryCacheRepository repository;
 
-    @Test
-    public void testFindBySeriesNameNoEntries() {
-        final List<ComicVineVolumeQueryCacheEntry> result = this.repository.findBySeriesNameOrderBySequence(TEST_MISSING_SERIES_NAME);
+  @Test
+  public void testFindBySeriesNameNoEntries() {
+    final List<ComicVineVolumeQueryCacheEntry> result =
+        this.repository.findBySeriesNameOrderBySequence(TEST_MISSING_SERIES_NAME);
 
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void testFindBySeriesName() {
+    final List<ComicVineVolumeQueryCacheEntry> result =
+        this.repository.findBySeriesNameOrderBySequence(TEST_SERIES_NAME);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    for (int index = 0; index < result.size(); index++) {
+      assertEquals(index, result.get(index).getSequence());
     }
-
-    @Test
-    public void testFindBySeriesName() {
-        final List<ComicVineVolumeQueryCacheEntry> result = this.repository.findBySeriesNameOrderBySequence(TEST_SERIES_NAME);
-
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        for (int index = 0;
-             index < result.size();
-             index++) {
-            assertEquals(index,
-                         result.get(index)
-                               .getSequence());
-        }
-    }
+  }
 }

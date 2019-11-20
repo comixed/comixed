@@ -18,9 +18,8 @@
 
 package org.comixed.service.library;
 
-public class ReadingListNameException
-        extends Exception {
-    public ReadingListNameException(final String message) {
-        super(message);
-    }
+public class ReadingListNameException extends Exception {
+  public ReadingListNameException(final String message) {
+    super(message);
+  }
 }

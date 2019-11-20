@@ -19,6 +19,8 @@
 package org.comixed.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import java.security.Principal;
+import java.util.List;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Preference;
 import org.comixed.model.user.Role;
@@ -35,243 +37,180 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/api")
-public class UserController
-        implements InitializingBean {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class UserController implements InitializingBean {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    Role readerRole;
-    Role adminRole;
+  Role readerRole;
+  Role adminRole;
 
-    @Autowired private UserService userService;
-    @Autowired private Utils utils;
+  @Autowired private UserService userService;
+  @Autowired private Utils utils;
 
-    @Override
-    public void afterPropertiesSet()
-            throws
-            Exception {
-        try {
-            this.readerRole = this.userService.findRoleByName("READER");
-            this.adminRole = this.userService.findRoleByName("ADMIN");
-        }
-        catch (ComiXedUserException error) {
-            error.printStackTrace();
-        }
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    try {
+      this.readerRole = this.userService.findRoleByName("READER");
+      this.adminRole = this.userService.findRoleByName("ADMIN");
+    } catch (ComiXedUserException error) {
+      error.printStackTrace();
+    }
+  }
+
+  @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.DELETE)
+  public void deleteUser(@PathVariable("id") long userId) throws ComiXedUserException {
+    this.logger.info("Deleting user: id={}", userId);
+
+    this.userService.delete(userId);
+  }
+
+  @GetMapping(value = "/admin/users", produces = "application/json")
+  @JsonView(UserList.class)
+  public List<ComiXedUser> getAllUsers() {
+    this.logger.info("Getting all user accounts");
+
+    return this.userService.findAll();
+  }
+
+  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  @JsonView(UserDetails.class)
+  public ComiXedUser getCurrentUser(Principal user) throws ComiXedUserException {
+    this.logger.debug("Returning current user");
+
+    if (user == null) {
+      this.logger.debug("Not authenticated");
+      return null;
     }
 
-    @RequestMapping(value = "/admin/users/{id}",
-                    method = RequestMethod.DELETE)
-    public void deleteUser(
-            @PathVariable("id")
-                    long userId)
-            throws
-            ComiXedUserException {
-        this.logger.info("Deleting user: id={}",
-                         userId);
+    this.logger.debug("Loading user: {}", user.getName());
+    ComiXedUser comiXedUser = this.userService.findByEmail(user.getName());
 
-        this.userService.delete(userId);
+    if (comiXedUser != null) {
+      this.logger.debug("Setting authenticated flag");
+      comiXedUser.setAuthenticated(true);
     }
 
-    @GetMapping(value = "/admin/users",
-                produces = "application/json")
-    @JsonView(UserList.class)
-    public List<ComiXedUser> getAllUsers() {
-        this.logger.info("Getting all user accounts");
+    return comiXedUser;
+  }
 
-        return this.userService.findAll();
+  @RequestMapping(value = "/user/preferences", method = RequestMethod.GET)
+  public List<Preference> getUserPreferences(Authentication authentication)
+      throws ComiXedUserException {
+    this.logger.debug("Getting user preferences");
+
+    if (authentication == null) {
+      this.logger.debug("User is not authenticated");
+      return null;
     }
 
-    @RequestMapping(value = "/user",
-                    method = RequestMethod.GET)
-    @JsonView(UserDetails.class)
-    public ComiXedUser getCurrentUser(Principal user)
-            throws
-            ComiXedUserException {
-        this.logger.debug("Returning current user");
+    String email = authentication.getName();
 
-        if (user == null) {
-            this.logger.debug("Not authenticated");
-            return null;
-        }
+    this.logger.debug("Loading user: email={}", email);
+    ComiXedUser user = this.userService.findByEmail(email);
 
-        this.logger.debug("Loading user: {}",
-                          user.getName());
-        ComiXedUser comiXedUser = this.userService.findByEmail(user.getName());
-
-        if (comiXedUser != null) {
-            this.logger.debug("Setting authenticated flag");
-            comiXedUser.setAuthenticated(true);
-        }
-
-        return comiXedUser;
+    if (user == null) {
+      this.logger.debug("No such user: {}", email);
+      return null;
     }
 
-    @RequestMapping(value = "/user/preferences",
-                    method = RequestMethod.GET)
-    public List<Preference> getUserPreferences(Authentication authentication)
-            throws
-            ComiXedUserException {
-        this.logger.debug("Getting user preferences");
+    return user.getPreferences();
+  }
 
-        if (authentication == null) {
-            this.logger.debug("User is not authenticated");
-            return null;
-        }
+  @PostMapping(value = "/admin/users", produces = "application/json", consumes = "application/json")
+  public ComiXedUser saveNewUser(@RequestBody() final SaveUserRequest request)
+      throws ComiXedUserException {
+    this.logger.info(
+        "Creating new user: email={} admin={}",
+        request.getEmail(),
+        request.getIsAdmin() ? "Yes" : "No");
 
-        String email = authentication.getName();
+    return this.userService.createUser(
+        request.getEmail(), request.getPassword(), request.getIsAdmin());
+  }
 
-        this.logger.debug("Loading user: email={}",
-                          email);
-        ComiXedUser user = this.userService.findByEmail(email);
+  @RequestMapping(value = "/user/preferences/{name}", method = RequestMethod.PUT)
+  public ComiXedUser setUserProperty(
+      Authentication authentication, @PathVariable("name") String name, @RequestBody() String value)
+      throws ComiXedUserException {
+    final String email = authentication.getName();
 
-        if (user == null) {
-            this.logger.debug("No such user: {}",
-                              email);
-            return null;
-        }
+    this.logger.info("Setting user property: email={} property[{}]={}", email, name, value);
 
-        return user.getPreferences();
+    return this.userService.setUserProperty(email, name, value);
+  }
+
+  @RequestMapping(value = "/user/email", method = RequestMethod.POST)
+  public ComiXedUser setUserEmail(
+      Authentication authentication, @RequestParam("username") String username)
+      throws ComiXedUserException {
+    final String email = authentication.getName();
+
+    this.logger.info("Updating email address for: email={} new={}", email, username);
+
+    return this.userService.setUserEmail(email, username);
+  }
+
+  @RequestMapping(value = "/user/password", method = RequestMethod.POST)
+  public ComiXedUser updatePassword(
+      Authentication authentication, @RequestParam("password") String password)
+      throws ComiXedUserException {
+    final String email = authentication.getName();
+
+    this.logger.info("Updating password for: email={}", email);
+
+    return this.userService.setUserPassword(email, password);
+  }
+
+  @PutMapping(
+      value = "/admin/users/{id}",
+      produces = "application/json",
+      consumes = "application/json")
+  public ComiXedUser updateUser(
+      @PathVariable("id") long id, @RequestBody() final SaveUserRequest request)
+      throws ComiXedUserException {
+    this.logger.info("Updating user: id={}", id);
+
+    ComiXedUser user = this.userService.findById(id);
+
+    if (user == null) {
+      this.logger.debug("No such user");
+      return null;
     }
 
-    @PostMapping(value = "/admin/users",
-                 produces = "application/json",
-                 consumes = "application/json")
-    public ComiXedUser saveNewUser(
-            @RequestBody()
-            final SaveUserRequest request)
-            throws
-            ComiXedUserException {
-        this.logger.info("Creating new user: email={} admin={}",
-                         request.getEmail(),
-                         request.getIsAdmin()
-                         ? "Yes"
-                         : "No");
+    user.setEmail(request.getEmail());
 
-        return this.userService.createUser(request.getEmail(),
-                                           request.getPassword(),
-                                           request.getIsAdmin());
+    if ((request.getPassword() != null) && !request.getPassword().isEmpty()) {
+      this.logger.debug("Updating user's password");
+      user.setPasswordHash(this.utils.createHash(request.getPassword().getBytes()));
     }
-
-    @RequestMapping(value = "/user/preferences/{name}",
-                    method = RequestMethod.PUT)
-    public ComiXedUser setUserProperty(Authentication authentication,
-                                       @PathVariable("name")
-                                               String name,
-                                       @RequestBody()
-                                               String value)
-            throws
-            ComiXedUserException {
-        final String email = authentication.getName();
-
-        this.logger.info("Setting user property: email={} property[{}]={}",
-                         email,
-                         name,
-                         value);
-
-        return this.userService.setUserProperty(email,
-                                                name,
-                                                value);
+    user.clearRoles();
+    user.addRole(this.readerRole);
+    if (request.getIsAdmin()) {
+      user.addRole(this.adminRole);
     }
+    this.logger.debug(
+        "Updating user: id={} email={} is_admin={}",
+        id,
+        request.getEmail(),
+        request.getIsAdmin() ? "Yes" : "No");
+    return this.userService.save(user);
+  }
 
-    @RequestMapping(value = "/user/email",
-                    method = RequestMethod.POST)
-    public ComiXedUser setUserEmail(Authentication authentication,
-                                    @RequestParam("username")
-                                            String username)
-            throws
-            ComiXedUserException {
-        final String email = authentication.getName();
+  void setReaderRole(final Role role) {
+    this.readerRole = role;
+  }
 
-        this.logger.info("Updating email address for: email={} new={}",
-                         email,
-                         username);
+  void setAdminRole(final Role role) {
+    this.adminRole = role;
+  }
 
-        return this.userService.setUserEmail(email,
-                                             username);
-    }
+  @RequestMapping(value = "/user/preferences/{name}", method = RequestMethod.DELETE)
+  public ComiXedUser deleteUserProperty(
+      final Authentication authentication, @PathVariable("name") final String propertyName) {
 
-    @RequestMapping(value = "/user/password",
-                    method = RequestMethod.POST)
-    public ComiXedUser updatePassword(Authentication authentication,
-                                      @RequestParam("password")
-                                              String password)
-            throws
-            ComiXedUserException {
-        final String email = authentication.getName();
-
-        this.logger.info("Updating password for: email={}",
-                         email);
-
-        return this.userService.setUserPassword(email,
-                                                password);
-    }
-
-    @PutMapping(value = "/admin/users/{id}",
-                produces = "application/json",
-                consumes = "application/json")
-    public ComiXedUser updateUser(
-            @PathVariable("id")
-                    long id,
-            @RequestBody()
-            final SaveUserRequest request)
-            throws
-            ComiXedUserException {
-        this.logger.info("Updating user: id={}",
-                         id);
-
-        ComiXedUser user = this.userService.findById(id);
-
-        if (user == null) {
-            this.logger.debug("No such user");
-            return null;
-        }
-
-        user.setEmail(request.getEmail());
-
-        if ((request.getPassword() != null) && !request.getPassword()
-                                                       .isEmpty()) {
-            this.logger.debug("Updating user's password");
-            user.setPasswordHash(this.utils.createHash(request.getPassword()
-                                                              .getBytes()));
-        }
-        user.clearRoles();
-        user.addRole(this.readerRole);
-        if (request.getIsAdmin()) {
-            user.addRole(this.adminRole);
-        }
-        this.logger.debug("Updating user: id={} email={} is_admin={}",
-                          id,
-                          request.getEmail(),
-                          request.getIsAdmin()
-                          ? "Yes"
-                          : "No");
-        return this.userService.save(user);
-
-    }
-
-    void setReaderRole(final Role role) {
-        this.readerRole = role;
-    }
-
-    void setAdminRole(final Role role) {
-        this.adminRole = role;
-    }
-
-    @RequestMapping(value = "/user/preferences/{name}",
-                    method = RequestMethod.DELETE)
-    public ComiXedUser deleteUserProperty(final Authentication authentication,
-                                          @PathVariable("name")
-                                          final String propertyName) {
-
-        final String email = authentication.getName();
-        this.logger.info("Deleting user property: email={} property={}",
-                         email,
-                         propertyName);
-        return this.userService.deleteUserProperty(email,
-                                                   propertyName);
-    }
+    final String email = authentication.getName();
+    this.logger.info("Deleting user property: email={} property={}", email, propertyName);
+    return this.userService.deleteUserProperty(email, propertyName);
+  }
 }

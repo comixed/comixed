@@ -22,14 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <code>AbstractWebRequest</code> defines an abstract type for build new
- * instances of {@link WebRequest}.
+ * <code>AbstractWebRequest</code> defines an abstract type for build new instances of {@link
+ * WebRequest}.
  *
  * @author Darryl L. Pierce
- *
  */
-public abstract class AbstractWebRequest implements
-                                         WebRequest
-{
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+public abstract class AbstractWebRequest implements WebRequest {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 }

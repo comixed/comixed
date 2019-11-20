@@ -18,6 +18,10 @@
 
 package org.comixed.controller.file;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.controller.library.ComicController;
 import org.comixed.handlers.ComicFileHandlerException;
@@ -35,11 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 /**
  * <code>FileController</code> allows the remote agent to query directories and import files, to
  * download files and work with the file system.
@@ -49,116 +48,85 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/files")
 public class FileController {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired private ComicRepository comicRepository;
-    @Autowired private FileService fileService;
+  @Autowired private ComicRepository comicRepository;
+  @Autowired private FileService fileService;
 
-    private int requestId = 0;
+  private int requestId = 0;
 
-    @PostMapping(value = "/contents",
-                 produces = "application/json",
-                 consumes = "application/json")
-    @Secured("ROLE_ADMIN")
-    public List<FileDetails> getAllComicsUnder(
-            @RequestBody()
-            final GetAllComicsUnderRequest request)
-            throws
-            IOException,
-            JSONException {
-        this.logger.info("Getting all comic files: root={}",
-                         request.getDirectory());
+  @PostMapping(value = "/contents", produces = "application/json", consumes = "application/json")
+  @Secured("ROLE_ADMIN")
+  public List<FileDetails> getAllComicsUnder(@RequestBody() final GetAllComicsUnderRequest request)
+      throws IOException, JSONException {
+    this.logger.info("Getting all comic files: root={}", request.getDirectory());
 
-        final List<FileDetails> result = this.fileService.getAllComicsUnder(request.getDirectory());
+    final List<FileDetails> result = this.fileService.getAllComicsUnder(request.getDirectory());
 
-        this.logger.info("Returning {} file{}",
-                         result.size(),
-                         result.size() != 1
-                         ? "s"
-                         : "");
+    this.logger.info("Returning {} file{}", result.size(), result.size() != 1 ? "s" : "");
 
-        return result;
-    }
+    return result;
+  }
 
-    private void getAllFilesUnder(File root,
-                                  List<FileDetails> result)
-            throws
-            IOException {
-        for (File file : root.listFiles()) {
-            if (file.isDirectory()) {
-                this.logger.debug("Searching directory: " + file.getAbsolutePath());
-                this.getAllFilesUnder(file,
-                                      result);
-            } else {
+  private void getAllFilesUnder(File root, List<FileDetails> result) throws IOException {
+    for (File file : root.listFiles()) {
+      if (file.isDirectory()) {
+        this.logger.debug("Searching directory: " + file.getAbsolutePath());
+        this.getAllFilesUnder(file, result);
+      } else {
 
-                if (ComicFileUtils.isComicFile(file) &&
-                    (this.comicRepository.findByFilename(file.getCanonicalPath()) == null)) {
-                    this.logger.debug("Adding file: " + file.getCanonicalPath());
-                    result.add(new FileDetails(file.getCanonicalPath(),
-                                               file.length()));
-                }
-            }
+        if (ComicFileUtils.isComicFile(file)
+            && (this.comicRepository.findByFilename(file.getCanonicalPath()) == null)) {
+          this.logger.debug("Adding file: " + file.getCanonicalPath());
+          result.add(new FileDetails(file.getCanonicalPath(), file.length()));
         }
+      }
     }
+  }
 
-    @RequestMapping(value = "/import/cover",
-                    method = RequestMethod.GET)
-    public byte[] getImportFileCover(
-            @RequestParam("filename")
-                    String filename)
-            throws
-            ComicFileHandlerException,
-            ArchiveAdaptorException {
-        // for some reason, during development, this value ALWAYS had a trailing
-        // space...
-        filename = filename.trim();
+  @RequestMapping(value = "/import/cover", method = RequestMethod.GET)
+  public byte[] getImportFileCover(@RequestParam("filename") String filename)
+      throws ComicFileHandlerException, ArchiveAdaptorException {
+    // for some reason, during development, this value ALWAYS had a trailing
+    // space...
+    filename = filename.trim();
 
-        this.logger.info("Getting cover image for archive: filename={}",
-                         filename);
+    this.logger.info("Getting cover image for archive: filename={}", filename);
 
-        return this.fileService.getImportFileCover(filename);
-    }
+    return this.fileService.getImportFileCover(filename);
+  }
 
-    @RequestMapping(value = "/import/status",
-                    method = RequestMethod.GET)
-    public int getImportStatus()
-            throws
-            InterruptedException {
-        this.logger.info("Getting import status");
+  @RequestMapping(value = "/import/status", method = RequestMethod.GET)
+  public int getImportStatus() throws InterruptedException {
+    this.logger.info("Getting import status");
 
-        final int result = this.fileService.getImportStatus();
+    final int result = this.fileService.getImportStatus();
 
-        this.logger.debug("Returning {}",
-                          result);
+    this.logger.debug("Returning {}", result);
 
-        return result;
-    }
+    return result;
+  }
 
-    @PostMapping(value = "/import",
-                 produces = "application/json",
-                 consumes = "application/json")
-    @Secured("ROLE_ADMIN")
-    public ImportComicFilesResponse importComicFiles(
-            @RequestBody()
-                    ImportRequestBody request)
-            throws
-            UnsupportedEncodingException {
-        this.logger.info("Importing {} comic files: delete blocked pages={} ignore metadata={}",
-                         request.getFilenames().length,
-                         request.isDeleteBlockedPages(),
-                         request.isIgnoreMetadata());
+  @PostMapping(value = "/import", produces = "application/json", consumes = "application/json")
+  @Secured("ROLE_ADMIN")
+  public ImportComicFilesResponse importComicFiles(@RequestBody() ImportRequestBody request)
+      throws UnsupportedEncodingException {
+    this.logger.info(
+        "Importing {} comic files: delete blocked pages={} ignore metadata={}",
+        request.getFilenames().length,
+        request.isDeleteBlockedPages(),
+        request.isIgnoreMetadata());
 
-        this.fileService.importComicFiles(request.getFilenames(),
-                                          request.isDeleteBlockedPages(),
-                                          request.isIgnoreMetadata());
+    this.fileService.importComicFiles(
+        request.getFilenames(), request.isDeleteBlockedPages(), request.isIgnoreMetadata());
 
-        this.logger.debug("Notifying waiting processes");
-        ComicController.stopWaitingForStatus();
+    this.logger.debug("Notifying waiting processes");
+    ComicController.stopWaitingForStatus();
 
-        final ImportComicFilesResponse response = new ImportComicFilesResponse();
+    final ImportComicFilesResponse response = new ImportComicFilesResponse();
 
-        response.setImportComicCount(request.getFilenames().length);
+    response.setImportComicCount(request.getFilenames().length);
 
-        return response;
-    }
+    return response;
+  }
 }

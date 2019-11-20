@@ -18,6 +18,11 @@
 
 package org.comixed.adaptors;
 
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import org.comixed.model.library.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,12 +33,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest

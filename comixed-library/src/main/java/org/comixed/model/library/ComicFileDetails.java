@@ -20,46 +20,47 @@ package org.comixed.model.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import javax.persistence.*;
 import org.comixed.views.View.ComicDetails;
 import org.comixed.views.View.ComicList;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "comic_file_details")
 public class ComicFileDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
-    @JsonView({ComicList.class,
-               ComicDetails.class})
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  @JsonView({ComicList.class, ComicDetails.class})
+  private Long id;
 
-    private Long id;
+  @OneToOne
+  @JoinColumn(name = "comic_id", nullable = false, updatable = false)
+  private Comic comic;
 
-    @OneToOne
-    @JoinColumn(name = "comic_id",
-                nullable = false,
-                updatable = false)
-    private Comic comic;
+  @Column(name = "file_hash", length = 32, nullable = false, updatable = true)
+  @JsonProperty("hash")
+  @JsonView({ComicList.class, ComicDetails.class})
+  private String hash;
 
-    @Column(name = "file_hash",
-            length = 32,
-            nullable = false,
-            updatable = true)
-    @JsonProperty("hash")
-    @JsonView({ComicList.class,
-               ComicDetails.class})
-    private String hash;
+  public ComicFileDetails() {}
 
-    public ComicFileDetails() {}
+  public Long getId() {
+    return id;
+  }
 
-    public Long getId() { return id; }
+  public Comic getComic() {
+    return comic;
+  }
 
-    public Comic getComic() { return comic; }
+  public void setComic(final Comic comic) {
+    this.comic = comic;
+  }
 
-    public void setComic(final Comic comic) { this.comic = comic; }
+  public String getHash() {
+    return hash;
+  }
 
-    public String getHash() { return hash; }
-
-    public void setHash(final String hash) { this.hash = hash; }
+  public void setHash(final String hash) {
+    this.hash = hash;
+  }
 }

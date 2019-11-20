@@ -18,6 +18,7 @@
 
 package org.comixed.controller.core;
 
+import java.text.ParseException;
 import org.comixed.model.core.BuildDetails;
 import org.comixed.service.core.DetailsService;
 import org.slf4j.Logger;
@@ -27,21 +28,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
-
 @RestController
 @RequestMapping("/api/core")
 public class DetailsController {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired private DetailsService detailsService;
+  @Autowired private DetailsService detailsService;
 
-    @GetMapping("/build-details")
-    public BuildDetails getBuildDetails()
-            throws
-            ParseException {
-        this.logger.info("Getting application build details");
+  @GetMapping("/build-details")
+  public BuildDetails getBuildDetails() throws ParseException {
+    this.logger.info("Getting application build details");
 
-        return this.detailsService.getBuildDetails();
-    }
+    return this.detailsService.getBuildDetails();
+  }
 }

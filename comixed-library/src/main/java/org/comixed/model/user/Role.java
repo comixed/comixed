@@ -20,40 +20,36 @@ package org.comixed.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.comixed.views.View.UserList;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
+import org.comixed.views.View.UserList;
 
 @Entity
 @Table(name = "roles")
 public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonIgnore
+  private Long id;
 
-    @Column(name = "name",
-            updatable = true,
-            nullable = false,
-            unique = true)
-    @JsonView(UserList.class)
-    private String name;
+  @Column(name = "name", updatable = true, nullable = false, unique = true)
+  @JsonView(UserList.class)
+  private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    @JsonIgnore
-    private List<ComiXedUser> users = new ArrayList<>();
+  @ManyToMany(mappedBy = "roles")
+  @JsonIgnore
+  private List<ComiXedUser> users = new ArrayList<>();
 
-    public Long getId() {
-        return this.id;
-    }
+  public Long getId() {
+    return this.id;
+  }
 
-    public String getName() {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public List<ComiXedUser> getUsers() {
-        return this.users;
-    }
+  public List<ComiXedUser> getUsers() {
+    return this.users;
+  }
 }

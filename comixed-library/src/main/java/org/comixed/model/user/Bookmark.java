@@ -20,62 +20,50 @@ package org.comixed.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.comixed.views.View.UserList;
-
 import javax.persistence.*;
+import org.comixed.views.View.UserList;
 
 @Entity
 @Table(name = "user_bookmarks")
-public class Bookmark
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Bookmark {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private ComiXedUser user;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  @JsonIgnore
+  private ComiXedUser user;
 
-    @Column(name = "book",
-            nullable = false)
-    @JsonView(UserList.class)
-    private long book;
+  @Column(name = "book", nullable = false)
+  @JsonView(UserList.class)
+  private long book;
 
-    @Column(name = "mark",
-            updatable = true,
-            nullable = false)
-    @JsonView(UserList.class)
-    private String mark;
+  @Column(name = "mark", updatable = true, nullable = false)
+  @JsonView(UserList.class)
+  private String mark;
 
-    public Bookmark()
-    {}
+  public Bookmark() {}
 
-    public Bookmark(ComiXedUser user, long book, String mark)
-    {
-        this.user = user;
-        this.book = book;
-        this.mark = mark;
-    }
+  public Bookmark(ComiXedUser user, long book, String mark) {
+    this.user = user;
+    this.book = book;
+    this.mark = mark;
+  }
 
-    public long getBook()
-    {
-        return book;
-    }
+  public long getBook() {
+    return book;
+  }
 
-    public void setBook(long book)
-    {
-        this.book = book;
-    }
+  public void setBook(long book) {
+    this.book = book;
+  }
 
-    public String getMark()
-    {
-        return mark;
-    }
+  public String getMark() {
+    return mark;
+  }
 
-    public void setMark(String mark)
-    {
-        this.mark = mark;
-    }
-
+  public void setMark(String mark) {
+    this.mark = mark;
+  }
 }

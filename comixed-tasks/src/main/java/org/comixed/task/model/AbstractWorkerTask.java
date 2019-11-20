@@ -22,32 +22,30 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * <code>AbstractWorkerTask</code> provides a foundation for creating new
- * {@link WorkerTask} types.
+ * <code>AbstractWorkerTask</code> provides a foundation for creating new {@link WorkerTask} types.
  *
  * @author Darryl L. Pierce
  */
-public abstract class AbstractWorkerTask
-        implements WorkerTask {
-    protected static final Logger logger = LogManager.getLogger(AbstractWorkerTask.class);
+public abstract class AbstractWorkerTask implements WorkerTask {
+  protected static final Logger logger = LogManager.getLogger(AbstractWorkerTask.class);
 
-    private String description;
+  private String description;
 
-    public AbstractWorkerTask() {}
+  public AbstractWorkerTask() {}
 
-    @Override
-    public String getDescription() {
-        if (this.description == null) {
-            this.description = this.createDescription();
-        }
-
-        return this.description;
+  @Override
+  public String getDescription() {
+    if (this.description == null) {
+      this.description = this.createDescription();
     }
 
-    /**
-     * Must be overridden by child classes to provide a description.
-     *
-     * @return the description
-     */
-    protected abstract String createDescription();
+    return this.description;
+  }
+
+  /**
+   * Must be overridden by child classes to provide a description.
+   *
+   * @return the description
+   */
+  protected abstract String createDescription();
 }

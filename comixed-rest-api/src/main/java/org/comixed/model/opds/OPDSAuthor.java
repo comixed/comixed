@@ -25,28 +25,22 @@ package org.comixed.model.opds;
  * @author João França
  * @author Darryl L. Pierce
  * @author Giao Phan
- *
  */
-public class OPDSAuthor
-{
-    private String name;
+public class OPDSAuthor {
+  private String name;
 
-    private String uri;
+  private String uri;
 
-    public OPDSAuthor(String name, String uri)
-    {
-        this.name = name;
-        this.uri = uri;
-    }
+  public OPDSAuthor(String name, String uri) {
+    this.name = name;
+    this.uri = uri;
+  }
 
-    public String getName()
-    {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public String getUri()
-    {
-        return this.uri;
-    }
-
+  public String getUri() {
+    return this.uri;
+  }
 }

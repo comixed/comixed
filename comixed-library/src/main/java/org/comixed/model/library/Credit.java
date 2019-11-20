@@ -18,6 +18,9 @@
 
 package org.comixed.model.library;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,72 +29,59 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import org.comixed.views.View.ComicList;
 
 @Entity
 @Table(name = "comic_credits")
-public class Credit
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(ComicList.class)
-    private Long id;
+public class Credit {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonView(ComicList.class)
+  private Long id;
 
-    @Column(name = "name")
-    @JsonProperty("name")
-    @JsonView(ComicList.class)
-    private String name;
+  @Column(name = "name")
+  @JsonProperty("name")
+  @JsonView(ComicList.class)
+  private String name;
 
-    @Column(name = "role")
-    @JsonProperty("role")
-    @JsonView(ComicList.class)
-    private String role;
+  @Column(name = "role")
+  @JsonProperty("role")
+  @JsonView(ComicList.class)
+  private String role;
 
-    @ManyToOne
-    @JoinColumn(name = "comic_id")
-    @JsonIgnore
-    private Comic comic;
+  @ManyToOne
+  @JoinColumn(name = "comic_id")
+  @JsonIgnore
+  private Comic comic;
 
-    public Credit()
-    {}
+  public Credit() {}
 
-    public Credit(String name, String role)
-    {
-        this.name = name;
-        this.role = role;
-    }
+  public Credit(String name, String role) {
+    this.name = name;
+    this.role = role;
+  }
 
-    public Long getId()
-    {
-        return this.id;
-    }
+  public Long getId() {
+    return this.id;
+  }
 
-    public String getName()
-    {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public String getRole()
-    {
-        return this.role;
-    }
+  public String getRole() {
+    return this.role;
+  }
 
-    public void setComic(Comic comic)
-    {
-        this.comic = comic;
-    }
+  public void setComic(Comic comic) {
+    this.comic = comic;
+  }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setRole(String role)
-    {
-        this.role = role;
-    }
+  public void setRole(String role) {
+    this.role = role;
+  }
 }

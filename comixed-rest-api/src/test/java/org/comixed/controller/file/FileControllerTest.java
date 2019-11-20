@@ -18,6 +18,12 @@
 
 package org.comixed.controller.file;
 
+import static org.junit.Assert.*;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
@@ -34,103 +40,68 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-
-import static org.junit.Assert.*;
-
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class FileControllerTest {
-    private static final String COVER_IMAGE_FILENAME = "coverimage.png";
-    private static final String COMIC_ARCHIVE = "testcomic.cbz";
-    private static final byte[] IMAGE_CONTENT = new byte[65535];
-    private static final String TEST_FILE = "src/test/resources/example.cbz";
-    private static final String TEST_DIRECTORY = "src/test";
-    private static final String[] TEST_FILENAMES = new String[]{"First.cbz",
-                                                                "Second.cbz",
-                                                                "Third.cbr",
-                                                                "Fourth.cb7"};
-    private static final int TEST_IMPORT_STATUS = 129;
+  private static final String COVER_IMAGE_FILENAME = "coverimage.png";
+  private static final String COMIC_ARCHIVE = "testcomic.cbz";
+  private static final byte[] IMAGE_CONTENT = new byte[65535];
+  private static final String TEST_FILE = "src/test/resources/example.cbz";
+  private static final String TEST_DIRECTORY = "src/test";
+  private static final String[] TEST_FILENAMES =
+      new String[] {"First.cbz", "Second.cbz", "Third.cbr", "Fourth.cb7"};
+  private static final int TEST_IMPORT_STATUS = 129;
 
-    @InjectMocks private FileController controller;
-    @Mock private FileService fileService;
-    @Mock private List<FileDetails> fileDetailsList;
+  @InjectMocks private FileController controller;
+  @Mock private FileService fileService;
+  @Mock private List<FileDetails> fileDetailsList;
 
-    @Test
-    public void testGetImportFileCover()
-            throws
-            ComicFileHandlerException,
-            ArchiveAdaptorException {
-        Mockito.when(fileService.getImportFileCover(Mockito.anyString()))
-               .thenReturn(IMAGE_CONTENT);
+  @Test
+  public void testGetImportFileCover() throws ComicFileHandlerException, ArchiveAdaptorException {
+    Mockito.when(fileService.getImportFileCover(Mockito.anyString())).thenReturn(IMAGE_CONTENT);
 
-        final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
+    final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
 
-        assertNotNull(result);
-        assertEquals(IMAGE_CONTENT,
-                     result);
+    assertNotNull(result);
+    assertEquals(IMAGE_CONTENT, result);
 
-        Mockito.verify(fileService,
-                       Mockito.times(1))
-               .getImportFileCover(COMIC_ARCHIVE);
-    }
+    Mockito.verify(fileService, Mockito.times(1)).getImportFileCover(COMIC_ARCHIVE);
+  }
 
-    @Test
-    public void testGetAllComicsUnder()
-            throws
-            IOException,
-            JSONException {
-        Mockito.when(fileService.getAllComicsUnder(Mockito.anyString()))
-               .thenReturn(fileDetailsList);
+  @Test
+  public void testGetAllComicsUnder() throws IOException, JSONException {
+    Mockito.when(fileService.getAllComicsUnder(Mockito.anyString())).thenReturn(fileDetailsList);
 
-        final List<FileDetails> result = controller.getAllComicsUnder(new GetAllComicsUnderRequest(TEST_DIRECTORY));
+    final List<FileDetails> result =
+        controller.getAllComicsUnder(new GetAllComicsUnderRequest(TEST_DIRECTORY));
 
-        assertNotNull(result);
-        assertSame(fileDetailsList,
-                   result);
+    assertNotNull(result);
+    assertSame(fileDetailsList, result);
 
-        Mockito.verify(fileService,
-                       Mockito.times(1))
-               .getAllComicsUnder(TEST_DIRECTORY);
-    }
+    Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY);
+  }
 
-    @Test
-    public void testGetImportStatus()
-            throws
-            NoSuchAlgorithmException,
-            InterruptedException {
-        Mockito.when(fileService.getImportStatus())
-               .thenReturn(TEST_IMPORT_STATUS);
+  @Test
+  public void testGetImportStatus() throws NoSuchAlgorithmException, InterruptedException {
+    Mockito.when(fileService.getImportStatus()).thenReturn(TEST_IMPORT_STATUS);
 
-        final int result = controller.getImportStatus();
+    final int result = controller.getImportStatus();
 
-        assertEquals(TEST_IMPORT_STATUS,
-                     result);
-    }
+    assertEquals(TEST_IMPORT_STATUS, result);
+  }
 
-    @Test
-    public void testImportComicFiles()
-            throws
-            UnsupportedEncodingException {
-        Mockito.when(fileService.importComicFiles(Mockito.any(String[].class),
-                                                  Mockito.anyBoolean(),
-                                                  Mockito.anyBoolean()))
-               .thenReturn(TEST_FILENAMES.length);
+  @Test
+  public void testImportComicFiles() throws UnsupportedEncodingException {
+    Mockito.when(
+            fileService.importComicFiles(
+                Mockito.any(String[].class), Mockito.anyBoolean(), Mockito.anyBoolean()))
+        .thenReturn(TEST_FILENAMES.length);
 
-        final ImportComicFilesResponse result = controller.importComicFiles(new ImportRequestBody(TEST_FILENAMES,
-                                                                                                  false,
-                                                                                                  false));
+    final ImportComicFilesResponse result =
+        controller.importComicFiles(new ImportRequestBody(TEST_FILENAMES, false, false));
 
-        assertEquals(TEST_FILENAMES.length,
-                     result.getImportComicCount());
+    assertEquals(TEST_FILENAMES.length, result.getImportComicCount());
 
-        Mockito.verify(fileService,
-                       Mockito.times(1))
-               .importComicFiles(TEST_FILENAMES,
-                                 false,
-                                 false);
-    }
+    Mockito.verify(fileService, Mockito.times(1)).importComicFiles(TEST_FILENAMES, false, false);
+  }
 }

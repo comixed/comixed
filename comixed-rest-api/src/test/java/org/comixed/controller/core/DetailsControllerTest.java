@@ -18,6 +18,10 @@
 
 package org.comixed.controller.core;
 
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
+
+import java.text.ParseException;
 import org.comixed.model.core.BuildDetails;
 import org.comixed.service.core.DetailsService;
 import org.junit.Test;
@@ -28,33 +32,22 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.text.ParseException;
-
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
-
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class DetailsControllerTest {
-    @InjectMocks private DetailsController detailsController;
-    @Mock private DetailsService detailsService;
-    @Mock private BuildDetails buildDetails;
+  @InjectMocks private DetailsController detailsController;
+  @Mock private DetailsService detailsService;
+  @Mock private BuildDetails buildDetails;
 
-    @Test
-    public void testGetBuildDetails()
-            throws
-            ParseException {
-        Mockito.when(detailsService.getBuildDetails())
-               .thenReturn(buildDetails);
+  @Test
+  public void testGetBuildDetails() throws ParseException {
+    Mockito.when(detailsService.getBuildDetails()).thenReturn(buildDetails);
 
-        final BuildDetails result = detailsController.getBuildDetails();
+    final BuildDetails result = detailsController.getBuildDetails();
 
-        assertNotNull(result);
-        assertSame(buildDetails,
-                   result);
+    assertNotNull(result);
+    assertSame(buildDetails, result);
 
-        Mockito.verify(detailsService,
-                       Mockito.times(1))
-               .getBuildDetails();
-    }
+    Mockito.verify(detailsService, Mockito.times(1)).getBuildDetails();
+  }
 }

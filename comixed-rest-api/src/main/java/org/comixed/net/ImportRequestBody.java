@@ -21,27 +21,31 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ImportRequestBody {
-    @JsonProperty("filenames") private String[] filenames;
-    @JsonProperty("ignoreMetadata") private boolean ignoreMetadata;
-    @JsonProperty("deleteBlockedPages") private boolean deleteBlockedPages;
+  @JsonProperty("filenames")
+  private String[] filenames;
 
-    public ImportRequestBody(final String[] filenames,
-                             final boolean deleteBlockedPages,
-                             final boolean ignoreMetadata) {
-        this.filenames = filenames;
-        this.deleteBlockedPages = deleteBlockedPages;
-        this.ignoreMetadata = ignoreMetadata;
-    }
+  @JsonProperty("ignoreMetadata")
+  private boolean ignoreMetadata;
 
-    public String[] getFilenames() {
-        return filenames;
-    }
+  @JsonProperty("deleteBlockedPages")
+  private boolean deleteBlockedPages;
 
-    public boolean isIgnoreMetadata() {
-        return ignoreMetadata;
-    }
+  public ImportRequestBody(
+      final String[] filenames, final boolean deleteBlockedPages, final boolean ignoreMetadata) {
+    this.filenames = filenames;
+    this.deleteBlockedPages = deleteBlockedPages;
+    this.ignoreMetadata = ignoreMetadata;
+  }
 
-    public boolean isDeleteBlockedPages() {
-        return deleteBlockedPages;
-    }
+  public String[] getFilenames() {
+    return filenames;
+  }
+
+  public boolean isIgnoreMetadata() {
+    return ignoreMetadata;
+  }
+
+  public boolean isDeleteBlockedPages() {
+    return deleteBlockedPages;
+  }
 }

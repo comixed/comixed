@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
@@ -32,75 +31,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>FileTypeIdentifier</code> identifies the mime type for a file or file
- * entry.
+ * <code>FileTypeIdentifier</code> identifies the mime type for a file or file entry.
  *
  * @author Darryl L. Pierce
- *
  */
 @Component
-public class FileTypeIdentifier
-{
-    public static final List<String> IMAGE_TYPES = Arrays.asList(new String[]
-    {"jpeg",
-     "png",
-     "gif"});
+public class FileTypeIdentifier {
+  public static final List<String> IMAGE_TYPES = Arrays.asList(new String[] {"jpeg", "png", "gif"});
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private Tika tika;
-    @Autowired
-    private Metadata metadata;
+  @Autowired private Tika tika;
+  @Autowired private Metadata metadata;
 
-    private MediaType getMimeType(InputStream input)
-    {
-        this.logger.debug("Attempting to detect mime type for stream");
-        MediaType result = null;
+  private MediaType getMimeType(InputStream input) {
+    this.logger.debug("Attempting to detect mime type for stream");
+    MediaType result = null;
 
-        try
-        {
-            input.mark(Integer.MAX_VALUE);
-            result = this.tika.getDetector().detect(input, this.metadata);
-            input.reset();
-        }
-        catch (IOException error)
-        {
-            this.logger.error("Error determining filetype from stream", error);
-        }
-
-        this.logger.debug("result=" + result);
-
-        return result;
+    try {
+      input.mark(Integer.MAX_VALUE);
+      result = this.tika.getDetector().detect(input, this.metadata);
+      input.reset();
+    } catch (IOException error) {
+      this.logger.error("Error determining filetype from stream", error);
     }
 
-    /**
-     * Returns the MIME subtype for the supplied input stream.
-     *
-     * @param input
-     *            the input stream, which must support
-     *            {@link InputStream#mark(int)} and {@link InputStream#reset()}
-     * @return the MIME subtype
-     */
-    public String subtypeFor(InputStream input)
-    {
-        MediaType result = this.getMimeType(input);
+    this.logger.debug("result=" + result);
 
-        return result != null ? result.getSubtype() : null;
-    }
+    return result;
+  }
 
-    /**
-     * Returns the MIME type for the supplied input stream.
-     *
-     * @param input
-     *            the input stream, which must support
-     *            {@link InputStream#mark(int)} and {@link InputStream#reset()}
-     * @return the MIME type
-     */
-    public String typeFor(InputStream input)
-    {
-        MediaType result = this.getMimeType(input);
+  /**
+   * Returns the MIME subtype for the supplied input stream.
+   *
+   * @param input the input stream, which must support {@link InputStream#mark(int)} and {@link
+   *     InputStream#reset()}
+   * @return the MIME subtype
+   */
+  public String subtypeFor(InputStream input) {
+    MediaType result = this.getMimeType(input);
 
-        return result != null ? result.getType() : null;
-    }
+    return result != null ? result.getSubtype() : null;
+  }
+
+  /**
+   * Returns the MIME type for the supplied input stream.
+   *
+   * @param input the input stream, which must support {@link InputStream#mark(int)} and {@link
+   *     InputStream#reset()}
+   * @return the MIME type
+   */
+  public String typeFor(InputStream input) {
+    MediaType result = this.getMimeType(input);
+
+    return result != null ? result.getType() : null;
+  }
 }

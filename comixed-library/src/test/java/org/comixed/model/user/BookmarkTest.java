@@ -18,47 +18,45 @@
 
 package org.comixed.model.user;
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class BookmarkTest {
 
-    private static final long BOOK_ID = 100;
-    private static final String MARK = "10";
+  private static final long BOOK_ID = 100;
+  private static final String MARK = "10";
 
-    private Bookmark bookmark;
+  private Bookmark bookmark;
 
-    @Before
-    public void setUp() {
-        ComiXedUser user = new ComiXedUser();
-        bookmark = new Bookmark(user, BOOK_ID, MARK);
-    }
+  @Before
+  public void setUp() {
+    ComiXedUser user = new ComiXedUser();
+    bookmark = new Bookmark(user, BOOK_ID, MARK);
+  }
 
-    @Test
-    public void testHasBook() {
-        assertEquals(BOOK_ID, bookmark.getBook());
-    }
+  @Test
+  public void testHasBook() {
+    assertEquals(BOOK_ID, bookmark.getBook());
+  }
 
-    @Test
-    public void testCanUpdateBook() {
-        long newBookId = 105;
-        bookmark.setBook(newBookId);
-        assertEquals(newBookId, bookmark.getBook());
-    }
+  @Test
+  public void testCanUpdateBook() {
+    long newBookId = 105;
+    bookmark.setBook(newBookId);
+    assertEquals(newBookId, bookmark.getBook());
+  }
 
-    @Test
-    public void testHasMark() {
-        assertEquals(MARK, bookmark.getMark());
-    }
+  @Test
+  public void testHasMark() {
+    assertEquals(MARK, bookmark.getMark());
+  }
 
-    @Test
-    public void testCanUpdateMark() {
-        String newMark = "11";
-        bookmark.setMark(newMark);
-        assertEquals(newMark, bookmark.getMark());
-    }
-
-
+  @Test
+  public void testCanUpdateMark() {
+    String newMark = "11";
+    bookmark.setMark(newMark);
+    assertEquals(newMark, bookmark.getMark());
+  }
 }

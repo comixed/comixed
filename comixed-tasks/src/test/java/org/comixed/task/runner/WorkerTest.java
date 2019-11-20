@@ -18,6 +18,13 @@
 
 package org.comixed.task.runner;
 
+import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeoutException;
 import net.jodah.concurrentunit.ConcurrentTestCase;
 import net.jodah.concurrentunit.Waiter;
 import org.comixed.task.model.WorkerTask;
@@ -33,348 +40,276 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeoutException;
-
-import static org.junit.Assert.*;
-
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.properties")
 @Ignore // TODO get this working
-public class WorkerTest
-        extends ConcurrentTestCase {
-    private static final int TEST_TASK_COUNT = 72;
+public class WorkerTest extends ConcurrentTestCase {
+  private static final int TEST_TASK_COUNT = 72;
 
-    @InjectMocks private Worker worker;
-    @Mock private WorkerListener workerListener;
-    @Mock private WorkerTask workerTask;
-    @Mock private BlockingQueue<WorkerTask> blockingQueue;
-    @Mock private Map<Class<? extends WorkerTask>, Integer> taskCounts;
-    @Mock private Object semaphore;
+  @InjectMocks private Worker worker;
+  @Mock private WorkerListener workerListener;
+  @Mock private WorkerTask workerTask;
+  @Mock private BlockingQueue<WorkerTask> blockingQueue;
+  @Mock private Map<Class<? extends WorkerTask>, Integer> taskCounts;
+  @Mock private Object semaphore;
 
-    @Before
-    public void setUp() {
-        worker.queue = blockingQueue;
-        worker.taskCounts = taskCounts;
-    }
+  @Before
+  public void setUp() {
+    worker.queue = blockingQueue;
+    worker.taskCounts = taskCounts;
+  }
 
-    @Test
-    public void testGetState() {
-        worker.state = Worker.State.IDLE;
+  @Test
+  public void testGetState() {
+    worker.state = Worker.State.IDLE;
 
-        assertSame(Worker.State.IDLE,
-                   worker.getState());
-    }
+    assertSame(Worker.State.IDLE, worker.getState());
+  }
 
-    @Test
-    public void testGetIsQueueEmptyWhenNot()
-            throws
-            InterruptedException {
-        Mockito.when(blockingQueue.isEmpty())
-               .thenReturn(false);
+  @Test
+  public void testGetIsQueueEmptyWhenNot() throws InterruptedException {
+    Mockito.when(blockingQueue.isEmpty()).thenReturn(false);
 
-        assertFalse(worker.isQueueEmpty());
-    }
+    assertFalse(worker.isQueueEmpty());
+  }
 
-    @Test
-    public void testGetIsQueueEmpty() {
-        Mockito.when(blockingQueue.isEmpty())
-               .thenReturn(true);
+  @Test
+  public void testGetIsQueueEmpty() {
+    Mockito.when(blockingQueue.isEmpty()).thenReturn(true);
 
-        assertTrue(worker.isQueueEmpty());
-    }
+    assertTrue(worker.isQueueEmpty());
+  }
 
-    @Test
-    public void testQueueSize() {
-        Mockito.when(blockingQueue.size())
-               .thenReturn(TEST_TASK_COUNT);
+  @Test
+  public void testQueueSize() {
+    Mockito.when(blockingQueue.size()).thenReturn(TEST_TASK_COUNT);
 
-        assertEquals(TEST_TASK_COUNT,
-                     worker.queueSize());
+    assertEquals(TEST_TASK_COUNT, worker.queueSize());
 
-        Mockito.verify(blockingQueue,
-                       Mockito.times(1))
-               .size();
-    }
+    Mockito.verify(blockingQueue, Mockito.times(1)).size();
+  }
 
-    @Test
-    public void testAddTaskToQueueRaisesException()
-            throws
-            InterruptedException {
-        Mockito.doThrow(new InterruptedException())
-               .when(blockingQueue)
-               .put(Mockito.any(WorkerTask.class));
+  @Test
+  public void testAddTaskToQueueRaisesException() throws InterruptedException {
+    Mockito.doThrow(new InterruptedException())
+        .when(blockingQueue)
+        .put(Mockito.any(WorkerTask.class));
 
-        worker.queue = blockingQueue;
+    worker.queue = blockingQueue;
 
-        worker.addTasksToQueue(workerTask);
+    worker.addTasksToQueue(workerTask);
 
-        Mockito.verify(blockingQueue,
-                       Mockito.times(1))
-               .put(workerTask);
-    }
+    Mockito.verify(blockingQueue, Mockito.times(1)).put(workerTask);
+  }
 
-    @Test
-    public void testAddTaskToQueueUpdatesExistingTaskCount() {
-        Mockito.when(taskCounts.containsKey(Mockito.any(Class.class)))
-               .thenReturn(true);
-        Mockito.when(taskCounts.get(Mockito.any(Class.class)))
-               .thenReturn(TEST_TASK_COUNT);
-        Mockito.when(taskCounts.put(Mockito.any(),
-                                    Mockito.anyInt()))
-               .thenReturn(TEST_TASK_COUNT + 1);
+  @Test
+  public void testAddTaskToQueueUpdatesExistingTaskCount() {
+    Mockito.when(taskCounts.containsKey(Mockito.any(Class.class))).thenReturn(true);
+    Mockito.when(taskCounts.get(Mockito.any(Class.class))).thenReturn(TEST_TASK_COUNT);
+    Mockito.when(taskCounts.put(Mockito.any(), Mockito.anyInt())).thenReturn(TEST_TASK_COUNT + 1);
 
-        worker.addTasksToQueue(workerTask);
+    worker.addTasksToQueue(workerTask);
 
-        Mockito.verify(taskCounts,
-                       Mockito.times(1))
-               .containsKey(workerTask.getClass());
-        Mockito.verify(taskCounts,
-                       Mockito.times(1))
-               .get(workerTask.getClass());
-        Mockito.verify(taskCounts,
-                       Mockito.times(1))
-               .put(workerTask.getClass(),
-                    TEST_TASK_COUNT + 1);
-    }
+    Mockito.verify(taskCounts, Mockito.times(1)).containsKey(workerTask.getClass());
+    Mockito.verify(taskCounts, Mockito.times(1)).get(workerTask.getClass());
+    Mockito.verify(taskCounts, Mockito.times(1)).put(workerTask.getClass(), TEST_TASK_COUNT + 1);
+  }
 
-    @Test
-    public void testAddTaskToQueue() {
-        Mockito.when(taskCounts.containsKey(Mockito.any(Class.class)))
-               .thenReturn(false);
-        Mockito.when(taskCounts.put(Mockito.any(),
-                                    Mockito.anyInt()))
-               .thenReturn(1);
+  @Test
+  public void testAddTaskToQueue() {
+    Mockito.when(taskCounts.containsKey(Mockito.any(Class.class))).thenReturn(false);
+    Mockito.when(taskCounts.put(Mockito.any(), Mockito.anyInt())).thenReturn(1);
 
-        worker.addTasksToQueue(workerTask);
+    worker.addTasksToQueue(workerTask);
 
-        Mockito.verify(taskCounts,
-                       Mockito.times(1))
-               .containsKey(workerTask.getClass());
-        Mockito.verify(taskCounts,
-                       Mockito.times(1))
-               .put(workerTask.getClass(),
-                    1);
-    }
+    Mockito.verify(taskCounts, Mockito.times(1)).containsKey(workerTask.getClass());
+    Mockito.verify(taskCounts, Mockito.times(1)).put(workerTask.getClass(), 1);
+  }
 
-    // TODO fix test failures that have become non-deterministic after upgrading
-    // @Test
-    // public void testRunSleepsOnEmptyQueue() throws InterruptedException,
-    // TimeoutException
-    // {
-    // Mockito.when(blockingQueue.isEmpty()).thenReturn(true);
-    //
-    // final Waiter waiter = new Waiter();
-    //
-    // new Thread(() ->
-    // {
-    // waiter.resume();
-    // worker.run();
-    // waiter.resume();
-    // }).start();
-    //
-    // waiter.await();
-    //
-    // // pause a second to give run a chance to do something
-    // Thread.sleep(1000);
-    //
-    // assertSame(Worker.State.IDLE, worker.getState());
-    //
-    // worker.stop();
-    //
-    // waiter.await(10000);
-    //
-    // Mockito.verify(blockingQueue, Mockito.atLeast(2)).isEmpty();
-    // }
+  // TODO fix test failures that have become non-deterministic after upgrading
+  // @Test
+  // public void testRunSleepsOnEmptyQueue() throws InterruptedException,
+  // TimeoutException
+  // {
+  // Mockito.when(blockingQueue.isEmpty()).thenReturn(true);
+  //
+  // final Waiter waiter = new Waiter();
+  //
+  // new Thread(() ->
+  // {
+  // waiter.resume();
+  // worker.run();
+  // waiter.resume();
+  // }).start();
+  //
+  // waiter.await();
+  //
+  // // pause a second to give run a chance to do something
+  // Thread.sleep(1000);
+  //
+  // assertSame(Worker.State.IDLE, worker.getState());
+  //
+  // worker.stop();
+  //
+  // waiter.await(10000);
+  //
+  // Mockito.verify(blockingQueue, Mockito.atLeast(2)).isEmpty();
+  // }
 
-    @Test
-    public void testRunProcessesTheQueue()
-            throws
-            InterruptedException,
-            TimeoutException,
-            WorkerTaskException {
-        final Waiter waiter = new Waiter();
-        worker.queue = new LinkedBlockingQueue<>();
-        worker.taskCounts = new HashMap<>();
+  @Test
+  public void testRunProcessesTheQueue()
+      throws InterruptedException, TimeoutException, WorkerTaskException {
+    final Waiter waiter = new Waiter();
+    worker.queue = new LinkedBlockingQueue<>();
+    worker.taskCounts = new HashMap<>();
 
-        WorkerTask shutdownTask = new WorkerTask() {
-            @Override
-            public void startTask()
-                    throws
-                    WorkerTaskException {
-                assertSame(Worker.State.RUNNING,
-                           WorkerTest.this.worker.getState());
-                WorkerTest.this.worker.stop();
-            }
+    WorkerTask shutdownTask =
+        new WorkerTask() {
+          @Override
+          public void startTask() throws WorkerTaskException {
+            assertSame(Worker.State.RUNNING, WorkerTest.this.worker.getState());
+            WorkerTest.this.worker.stop();
+          }
 
-            @Override
-            public String getDescription() {
-                return "This is a test task";
-            }
+          @Override
+          public String getDescription() {
+            return "This is a test task";
+          }
         };
-        worker.addTasksToQueue(shutdownTask);
+    worker.addTasksToQueue(shutdownTask);
 
-        new Thread(() -> {
-            waiter.resume();
-            worker.run();
-            waiter.resume();
-        }).start();
+    new Thread(
+            () -> {
+              waiter.resume();
+              worker.run();
+              waiter.resume();
+            })
+        .start();
 
-        // wait for shutdownTask to run
-        waiter.await(1000);
+    // wait for shutdownTask to run
+    waiter.await(1000);
 
-        // wait for stop to finish
-        waiter.await(1000);
-    }
+    // wait for stop to finish
+    waiter.await(1000);
+  }
 
-    // TODO fix test failures that have become non-deterministic after upgrading
-    // to Spring Boot 2.2.0
-    // @Test
-    // public void testRunProcessesRaisesException() throws
-    // InterruptedException, TimeoutException, WorkerTaskException
-    // {
-    // final Waiter waiter = new Waiter();
-    // worker.queue = new LinkedBlockingQueue<>();
-    // worker.taskCounts = new HashMap<>();
-    //
-    // WorkerTask shutdownTask = new WorkerTask()
-    // {
-    // @Override
-    // public void startTask() throws WorkerTaskException
-    // {
-    // assertNotSame(Worker.State.STOP, WorkerTest.this.worker.getState());
-    // waiter.resume();
-    // throw new WorkerTaskException("Expected failure");
-    // }
-    // };
-    // worker.addTasksToQueue(shutdownTask);
-    //
-    // new Thread(() ->
-    // {
-    // waiter.resume();
-    // worker.run();
-    // waiter.resume();
-    // }).start();
-    //
-    // // wait for shutdownTask to run
-    // waiter.await(1000);
-    //
-    // // wait for stop to finish
-    // waiter.await(1000);
-    // }
+  // TODO fix test failures that have become non-deterministic after upgrading
+  // to Spring Boot 2.2.0
+  // @Test
+  // public void testRunProcessesRaisesException() throws
+  // InterruptedException, TimeoutException, WorkerTaskException
+  // {
+  // final Waiter waiter = new Waiter();
+  // worker.queue = new LinkedBlockingQueue<>();
+  // worker.taskCounts = new HashMap<>();
+  //
+  // WorkerTask shutdownTask = new WorkerTask()
+  // {
+  // @Override
+  // public void startTask() throws WorkerTaskException
+  // {
+  // assertNotSame(Worker.State.STOP, WorkerTest.this.worker.getState());
+  // waiter.resume();
+  // throw new WorkerTaskException("Expected failure");
+  // }
+  // };
+  // worker.addTasksToQueue(shutdownTask);
+  //
+  // new Thread(() ->
+  // {
+  // waiter.resume();
+  // worker.run();
+  // waiter.resume();
+  // }).start();
+  //
+  // // wait for shutdownTask to run
+  // waiter.await(1000);
+  //
+  // // wait for stop to finish
+  // waiter.await(1000);
+  // }
 
-    @Test
-    public void testRun()
-            throws
-            InterruptedException,
-            TimeoutException {
-        final Waiter waiter = new Waiter();
+  @Test
+  public void testRun() throws InterruptedException, TimeoutException {
+    final Waiter waiter = new Waiter();
 
-        worker.addWorkerListener(new WorkerListener() {
-            private boolean called = false;
+    worker.addWorkerListener(
+        new WorkerListener() {
+          private boolean called = false;
 
-            @Override
-            public void queueChanged() {
+          @Override
+          public void queueChanged() {}
+
+          @Override
+          public void workerStateChanged() {
+            if (!called) {
+              called = true;
+              assertEquals(Worker.State.RUNNING, worker.state);
+              worker.stop();
             }
-
-            @Override
-            public void workerStateChanged() {
-                if (!called) {
-                    called = true;
-                    assertEquals(Worker.State.RUNNING,
-                                 worker.state);
-                    worker.stop();
-                }
-            }
+          }
         });
-        new Thread(() -> {
-            worker.run();
-            waiter.resume();
-        }).start();
+    new Thread(
+            () -> {
+              worker.run();
+              waiter.resume();
+            })
+        .start();
 
-        waiter.await(1000);
+    waiter.await(1000);
 
-        assertSame(Worker.State.STOP,
-                   worker.state);
-    }
+    assertSame(Worker.State.STOP, worker.state);
+  }
 
-    @Test
-    public void testAddWorkerListener() {
-        assertTrue(worker.listeners.isEmpty());
-        worker.addWorkerListener(workerListener);
-        assertFalse(worker.listeners.isEmpty());
-    }
+  @Test
+  public void testAddWorkerListener() {
+    assertTrue(worker.listeners.isEmpty());
+    worker.addWorkerListener(workerListener);
+    assertFalse(worker.listeners.isEmpty());
+  }
 
-    @Test
-    public void testFireQueueChangedEvent() {
-        worker.addWorkerListener(workerListener);
+  @Test
+  public void testFireQueueChangedEvent() {
+    worker.addWorkerListener(workerListener);
 
-        Mockito.doNothing()
-               .when(workerListener)
-               .queueChanged();
+    Mockito.doNothing().when(workerListener).queueChanged();
 
-        worker.fireQueueChangedEvent();
+    worker.fireQueueChangedEvent();
 
-        Mockito.verify(workerListener,
-                       Mockito.times(1))
-               .queueChanged();
-    }
+    Mockito.verify(workerListener, Mockito.times(1)).queueChanged();
+  }
 
-    @Test
-    public void testGetCountForEmptyQueue() {
-        Mockito.when(blockingQueue.isEmpty())
-               .thenReturn(true);
+  @Test
+  public void testGetCountForEmptyQueue() {
+    Mockito.when(blockingQueue.isEmpty()).thenReturn(true);
 
-        assertEquals(0,
-                     worker.getCountFor(workerTask.getClass()));
+    assertEquals(0, worker.getCountFor(workerTask.getClass()));
 
-        Mockito.verify(blockingQueue,
-                       Mockito.times(1))
-               .isEmpty();
-    }
+    Mockito.verify(blockingQueue, Mockito.times(1)).isEmpty();
+  }
 
-    @Test
-    public void testGetCountForNonexistentWorkerTask() {
-        Mockito.when(blockingQueue.isEmpty())
-               .thenReturn(false);
-        Mockito.when(taskCounts.containsKey(Mockito.any()))
-               .thenReturn(false);
+  @Test
+  public void testGetCountForNonexistentWorkerTask() {
+    Mockito.when(blockingQueue.isEmpty()).thenReturn(false);
+    Mockito.when(taskCounts.containsKey(Mockito.any())).thenReturn(false);
 
-        assertEquals(0,
-                     worker.getCountFor(workerTask.getClass()));
+    assertEquals(0, worker.getCountFor(workerTask.getClass()));
 
-        Mockito.verify(blockingQueue,
-                       Mockito.times(1))
-               .isEmpty();
-        Mockito.verify(taskCounts,
-                       Mockito.times(1))
-               .containsKey(workerTask.getClass());
-    }
+    Mockito.verify(blockingQueue, Mockito.times(1)).isEmpty();
+    Mockito.verify(taskCounts, Mockito.times(1)).containsKey(workerTask.getClass());
+  }
 
-    @Test
-    public void testGetCountFor() {
-        Mockito.when(blockingQueue.isEmpty())
-               .thenReturn(false);
-        Mockito.when(taskCounts.containsKey(Mockito.any()))
-               .thenReturn(true);
-        Mockito.when(taskCounts.get(Mockito.any()))
-               .thenReturn(TEST_TASK_COUNT);
+  @Test
+  public void testGetCountFor() {
+    Mockito.when(blockingQueue.isEmpty()).thenReturn(false);
+    Mockito.when(taskCounts.containsKey(Mockito.any())).thenReturn(true);
+    Mockito.when(taskCounts.get(Mockito.any())).thenReturn(TEST_TASK_COUNT);
 
-        assertEquals(TEST_TASK_COUNT,
-                     worker.getCountFor(workerTask.getClass()));
+    assertEquals(TEST_TASK_COUNT, worker.getCountFor(workerTask.getClass()));
 
-        Mockito.verify(blockingQueue,
-                       Mockito.times(1))
-               .isEmpty();
-        Mockito.verify(taskCounts,
-                       Mockito.times(1))
-               .containsKey(workerTask.getClass());
-        Mockito.verify(taskCounts,
-                       Mockito.times(1))
-               .get(workerTask.getClass());
-    }
+    Mockito.verify(blockingQueue, Mockito.times(1)).isEmpty();
+    Mockito.verify(taskCounts, Mockito.times(1)).containsKey(workerTask.getClass());
+    Mockito.verify(taskCounts, Mockito.times(1)).get(workerTask.getClass());
+  }
 }

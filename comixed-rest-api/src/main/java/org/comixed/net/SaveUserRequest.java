@@ -21,23 +21,32 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SaveUserRequest {
-    @JsonProperty("email") private String email;
-    @JsonProperty("password") private String password;
-    @JsonProperty("isAdmin") private Boolean isAdmin;
+  @JsonProperty("email")
+  private String email;
 
-    public SaveUserRequest() {}
+  @JsonProperty("password")
+  private String password;
 
-    public SaveUserRequest(final String email,
-                           final String password,
-                           final Boolean isAdmin) {
-        this.email = email;
-        this.password = password;
-        this.isAdmin = isAdmin;
-    }
+  @JsonProperty("isAdmin")
+  private Boolean isAdmin;
 
-    public String getEmail() { return email; }
+  public SaveUserRequest() {}
 
-    public String getPassword() { return password; }
+  public SaveUserRequest(final String email, final String password, final Boolean isAdmin) {
+    this.email = email;
+    this.password = password;
+    this.isAdmin = isAdmin;
+  }
 
-    public Boolean getIsAdmin() { return isAdmin; }
+  public String getEmail() {
+    return email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public Boolean getIsAdmin() {
+    return isAdmin;
+  }
 }

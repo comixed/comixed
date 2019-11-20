@@ -18,6 +18,9 @@
 
 package org.comixed.task.model;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.comixed.task.runner.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,88 +30,72 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class QueueComicsWorkerTask
-        extends AbstractWorkerTask {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    public List<String> filenames = new ArrayList<>();
-    public boolean deleteBlockedPages = false;
-    boolean ignoreMetadata = false;
-    @Autowired private Worker worker;
-    @Autowired private ObjectFactory<AddComicWorkerTask> taskFactory;
+public class QueueComicsWorkerTask extends AbstractWorkerTask {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  public List<String> filenames = new ArrayList<>();
+  public boolean deleteBlockedPages = false;
+  boolean ignoreMetadata = false;
+  @Autowired private Worker worker;
+  @Autowired private ObjectFactory<AddComicWorkerTask> taskFactory;
 
-    public void setDeleteBlockedPages(boolean deleteBlockedPages) {
-        this.logger.debug("Setting delete blocked pages flag to {}",
-                          deleteBlockedPages);
-        this.deleteBlockedPages = deleteBlockedPages;
+  public void setDeleteBlockedPages(boolean deleteBlockedPages) {
+    this.logger.debug("Setting delete blocked pages flag to {}", deleteBlockedPages);
+    this.deleteBlockedPages = deleteBlockedPages;
+  }
+
+  public void setFilenames(List<String> filenames) {
+    this.filenames.addAll(filenames);
+    this.logger.debug("Preparing to queue {} files for import", this.filenames.size());
+  }
+
+  /**
+   * When set, tells the import to ignore any <code>ComicInfo.xml</code> file in the comic.
+   *
+   * <p>Defaults to false.
+   *
+   * @param ignore the ignore state
+   */
+  public void setIgnoreMetadata(boolean ignore) {
+    this.ignoreMetadata = ignore;
+  }
+
+  @Override
+  public void startTask() throws WorkerTaskException {
+    this.logger.debug("Processing comics queue");
+
+    long started = System.currentTimeMillis();
+
+    for (String filename : this.filenames) {
+      AddComicWorkerTask task = this.taskFactory.getObject();
+
+      this.logger.debug("Will import comic: {}", filename);
+      task.setFile(new File(filename));
+      this.logger.debug("Setting delete blocked pages flag to {}", this.deleteBlockedPages);
+      task.setDeleteBlockedPages(this.deleteBlockedPages);
+      this.logger.debug("Setting ignore comicinfo.xml file to {}", this.ignoreMetadata);
+      task.setIgnoreMetadata(this.ignoreMetadata);
+      this.worker.addTasksToQueue(task);
     }
 
-    public void setFilenames(List<String> filenames) {
-        this.filenames.addAll(filenames);
-        this.logger.debug("Preparing to queue {} files for import",
-                          this.filenames.size());
-    }
+    this.logger.debug(
+        "Finished processing comics queue: {}ms", System.currentTimeMillis() - started);
+  }
 
-    /**
-     * When set, tells the import to ignore any <code>ComicInfo.xml</code> file in the comic.
-     *
-     * <p>Defaults to false.
-     *
-     * @param ignore
-     *         the ignore state
-     */
-    public void setIgnoreMetadata(boolean ignore) {
-        this.ignoreMetadata = ignore;
-    }
+  @Override
+  protected String createDescription() {
+    final StringBuilder result = new StringBuilder();
 
-    @Override
-    public void startTask()
-            throws
-            WorkerTaskException {
-        this.logger.debug("Processing comics queue");
+    result
+        .append("Queue comics for import:")
+        .append(" count=")
+        .append(this.filenames.size())
+        .append(" delete blocked pages=")
+        .append(this.deleteBlockedPages ? "Yes" : "No")
+        .append(" ignore metadata=")
+        .append(this.ignoreMetadata ? "Yes" : "No");
 
-        long started = System.currentTimeMillis();
-
-        for (String filename : this.filenames) {
-            AddComicWorkerTask task = this.taskFactory.getObject();
-
-            this.logger.debug("Will import comic: {}",
-                              filename);
-            task.setFile(new File(filename));
-            this.logger.debug("Setting delete blocked pages flag to {}",
-                              this.deleteBlockedPages);
-            task.setDeleteBlockedPages(this.deleteBlockedPages);
-            this.logger.debug("Setting ignore comicinfo.xml file to {}",
-                              this.ignoreMetadata);
-            task.setIgnoreMetadata(this.ignoreMetadata);
-            this.worker.addTasksToQueue(task);
-        }
-
-        this.logger.debug("Finished processing comics queue: {}ms",
-                          System.currentTimeMillis() - started);
-    }
-
-    @Override
-    protected String createDescription() {
-        final StringBuilder result = new StringBuilder();
-
-        result.append("Queue comics for import:")
-              .append(" count=")
-              .append(this.filenames.size())
-              .append(" delete blocked pages=")
-              .append(this.deleteBlockedPages
-                      ? "Yes"
-                      : "No")
-              .append(" ignore metadata=")
-              .append(this.ignoreMetadata
-                      ? "Yes"
-                      : "No");
-
-        return result.toString();
-    }
+    return result.toString();
+  }
 }

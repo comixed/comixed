@@ -19,32 +19,26 @@
 package org.comixed.web;
 
 import java.text.MessageFormat;
-
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicVineVolumesWebRequest</code> defines a concrete implementation of
- * {@link AbstractComicVineWebRequest} for retrieving a single issue's details.
- * 
- * @author Darryl L. Pierce
+ * <code>ComicVineVolumesWebRequest</code> defines a concrete implementation of {@link
+ * AbstractComicVineWebRequest} for retrieving a single issue's details.
  *
+ * @author Darryl L. Pierce
  */
 @Component
-public class ComicVineIssueWebRequest extends AbstractComicVineWebRequest
-{
-    public ComicVineIssueWebRequest()
-    {
-        super(null);
-    }
+public class ComicVineIssueWebRequest extends AbstractComicVineWebRequest {
+  public ComicVineIssueWebRequest() {
+    super(null);
+  }
 
-    /**
-     * Sets the issue ID for the request.
-     * 
-     * @param id
-     *            the id
-     */
-    public void setIssueId(String id)
-    {
-        this.endpoint = MessageFormat.format("issue/4000-{0}", id);
-    }
+  /**
+   * Sets the issue ID for the request.
+   *
+   * @param id the id
+   */
+  public void setIssueId(String id) {
+    this.endpoint = MessageFormat.format("issue/4000-{0}", id);
+  }
 }

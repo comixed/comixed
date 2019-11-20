@@ -24,66 +24,65 @@ import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.dataformat.xml.util.StaxUtil;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 
 /**
- * <code>OPDSXMLOutputConfiguration</code> Configures xmlMapper and
- * adds support to extra namespaces in fasterxmljackson xml writer
+ * <code>OPDSXMLOutputConfiguration</code> Configures xmlMapper and adds support to extra namespaces
+ * in fasterxmljackson xml writer
  *
  * @author João França
  * @author Giao Phan
  * @author Darryl L. Pierce
  */
-
 @Configuration
 public class OPDSXMLOutputConfiguration {
-    @Bean
-    public MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter(
-            Jackson2ObjectMapperBuilder builder) {
+  @Bean
+  public MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter(
+      Jackson2ObjectMapperBuilder builder) {
 
-        String defaultNamespace = "http://www.w3.org/2005/Atom";
-        Map<String, String> otherNamespaces = Collections.singletonMap("pse", "http://vaemendis.net/opds-pse/ns");
+    String defaultNamespace = "http://www.w3.org/2005/Atom";
+    Map<String, String> otherNamespaces =
+        Collections.singletonMap("pse", "http://vaemendis.net/opds-pse/ns");
 
-        XmlMapper xmlMapper = new XmlMapper(new NamespaceXmlFactory(defaultNamespace, otherNamespaces));
-        xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        xmlMapper.enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION);
+    XmlMapper xmlMapper = new XmlMapper(new NamespaceXmlFactory(defaultNamespace, otherNamespaces));
+    xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    xmlMapper.enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION);
 
-        return new MappingJackson2XmlHttpMessageConverter(xmlMapper);
+    return new MappingJackson2XmlHttpMessageConverter(xmlMapper);
+  }
+
+  class NamespaceXmlFactory extends XmlFactory {
+
+    private final String defaultNamespace;
+    private final Map<String, String> prefix2Namespace;
+
+    public NamespaceXmlFactory(String defaultNamespace, Map<String, String> prefix2Namespace) {
+      this.defaultNamespace = Objects.requireNonNull(defaultNamespace);
+      this.prefix2Namespace = Objects.requireNonNull(prefix2Namespace);
     }
 
-    class NamespaceXmlFactory extends XmlFactory {
-
-        private final String defaultNamespace;
-        private final Map<String, String> prefix2Namespace;
-
-        public NamespaceXmlFactory(String defaultNamespace, Map<String, String> prefix2Namespace) {
-            this.defaultNamespace = Objects.requireNonNull(defaultNamespace);
-            this.prefix2Namespace = Objects.requireNonNull(prefix2Namespace);
+    @Override
+    protected XMLStreamWriter _createXmlWriter(OutputStream out) throws IOException {
+      XMLStreamWriter writer = super._createXmlWriter(out);
+      try {
+        writer.setDefaultNamespace(defaultNamespace);
+        for (Map.Entry<String, String> e : prefix2Namespace.entrySet()) {
+          writer.setPrefix(e.getKey(), e.getValue());
         }
-
-        @Override
-        protected XMLStreamWriter _createXmlWriter(OutputStream out) throws IOException {
-            XMLStreamWriter writer = super._createXmlWriter(out);
-            try {
-                writer.setDefaultNamespace(defaultNamespace);
-                for (Map.Entry<String, String> e : prefix2Namespace.entrySet()) {
-                    writer.setPrefix(e.getKey(), e.getValue());
-                }
-            } catch (XMLStreamException e) {
-                StaxUtil.throwAsGenerationException(e, null);
-            }
-            return writer;
-        }
+      } catch (XMLStreamException e) {
+        StaxUtil.throwAsGenerationException(e, null);
+      }
+      return writer;
     }
+  }
 }

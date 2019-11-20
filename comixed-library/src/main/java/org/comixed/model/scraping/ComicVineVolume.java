@@ -20,54 +20,51 @@ package org.comixed.model.scraping;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
-
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
 @Table(name = "comic_vine_volumes")
 public class ComicVineVolume {
-    @Transient
-    @JsonIgnore
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  private Long id;
 
-    @Column(name = "cv_volume_id")
-    @JsonProperty("comicvine_volume_id")
-    private String volumeId;
+  @Column(name = "cv_volume_id")
+  @JsonProperty("comicvine_volume_id")
+  private String volumeId;
 
-    @Column(name = "content")
-    @Lob
-    @JsonProperty
-    private String content;
+  @Column(name = "content")
+  @Lob
+  @JsonProperty
+  private String content;
 
-    public String getContent() {
-        return this.content;
-    }
+  public String getContent() {
+    return this.content;
+  }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public Long getId() {
-        return this.id;
-    }
+  public Long getId() {
+    return this.id;
+  }
 
-    public String getVolumeId() {
-        return this.volumeId;
-    }
+  public String getVolumeId() {
+    return this.volumeId;
+  }
 
-    public void setVolumeId(String volumeId) {
-        this.volumeId = volumeId;
-    }
+  public void setVolumeId(String volumeId) {
+    this.volumeId = volumeId;
+  }
 }

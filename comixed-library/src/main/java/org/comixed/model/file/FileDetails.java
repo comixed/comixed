@@ -22,32 +22,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.h2.store.fs.FileUtils;
 
 public class FileDetails {
-    private static int COUNT = 0;
+  private static int COUNT = 0;
 
-    @JsonProperty("id") private int id = ++COUNT;
-    @JsonProperty("filename") private String filename;
-    @JsonProperty("baseFilename") private String baseFilename;
-    @JsonProperty("size") private long size;
+  @JsonProperty("id")
+  private int id = ++COUNT;
 
-    public FileDetails(final String filename,
-                       final long size) {
-        this.baseFilename = FileUtils.getName(filename);
-        this.filename = filename.replaceAll("\\\\",
-                                            "/");
-        this.size = size;
-    }
+  @JsonProperty("filename")
+  private String filename;
 
-    public int getId() { return id; }
+  @JsonProperty("baseFilename")
+  private String baseFilename;
 
-    public String getFilename() {
-        return filename;
-    }
+  @JsonProperty("size")
+  private long size;
 
-    public long getSize() {
-        return size;
-    }
+  public FileDetails(final String filename, final long size) {
+    this.baseFilename = FileUtils.getName(filename);
+    this.filename = filename.replaceAll("\\\\", "/");
+    this.size = size;
+  }
 
-    public String getBaseFilename() {
-        return baseFilename;
-    }
+  public int getId() {
+    return id;
+  }
+
+  public String getFilename() {
+    return filename;
+  }
+
+  public long getSize() {
+    return size;
+  }
+
+  public String getBaseFilename() {
+    return baseFilename;
+  }
 }

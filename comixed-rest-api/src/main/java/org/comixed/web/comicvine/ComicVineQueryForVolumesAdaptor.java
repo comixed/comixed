@@ -20,7 +20,6 @@ package org.comixed.web.comicvine;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.comixed.model.scraping.ComicVineVolumeQueryCacheEntry;
 import org.comixed.repositories.ComicVineVolumeQueryCacheRepository;
 import org.comixed.web.ComicVineQueryWebRequest;
@@ -35,102 +34,82 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ComicVineQueryForVolumesAdaptor {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired private WebRequestProcessor webRequestProcessor;
+  @Autowired private WebRequestProcessor webRequestProcessor;
 
-    @Autowired private ObjectFactory<ComicVineQueryWebRequest> webRequestFactory;
+  @Autowired private ObjectFactory<ComicVineQueryWebRequest> webRequestFactory;
 
-    @Autowired private ComicVineVolumesResponseProcessor responseProcessor;
+  @Autowired private ComicVineVolumesResponseProcessor responseProcessor;
 
-    @Autowired private ComicVineVolumeQueryCacheRepository queryRepository;
+  @Autowired private ComicVineVolumeQueryCacheRepository queryRepository;
 
-    public List<ScrapingVolume> execute(String apiKey,
-                                        String name,
-                                        boolean skipCache)
-            throws
-            ComicVineAdaptorException,
-            WebRequestException {
-        this.logger.debug("Fetching volumes: name=\"{}\"",
-                          name,
-                          apiKey);
+  public List<ScrapingVolume> execute(String apiKey, String name, boolean skipCache)
+      throws ComicVineAdaptorException, WebRequestException {
+    this.logger.debug("Fetching volumes: name=\"{}\"", name, apiKey);
 
-        List<ScrapingVolume> result = new ArrayList<>();
-        boolean done = false;
-        int page = 0;
-        List<ComicVineVolumeQueryCacheEntry> entries = this.queryRepository.findBySeriesNameOrderBySequence(name);
-        boolean entriesExpired = false;
-        long aging = 0;
+    List<ScrapingVolume> result = new ArrayList<>();
+    boolean done = false;
+    int page = 0;
+    List<ComicVineVolumeQueryCacheEntry> entries =
+        this.queryRepository.findBySeriesNameOrderBySequence(name);
+    boolean entriesExpired = false;
+    long aging = 0;
 
-        if (!skipCache && (entries != null) && !entries.isEmpty()) {
-            for (int index = 0;
-                 index < entries.size();
-                 index++) {
-                aging = entries.get(index)
-                               .getAgeInDays();
-                entriesExpired = (entriesExpired || (aging >= ComicVineVolumeQueryCacheEntry.CACHE_TTL));
-            }
-        }
-
-        if (entriesExpired) {
-            logger.debug("Volume query is expired ({} days old);. Skipping...",
-                         aging);
-        }
-
-        if (skipCache || (entries == null) || entries.isEmpty() || entriesExpired) {
-            while (!done) {
-                this.logger.debug("Fetching volumes from ComicVine...");
-
-                ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
-                request.setApiKey(apiKey);
-                request.setSeriesName(name);
-
-                page++;
-                if (page > 1) {
-                    this.logger.debug("Setting offset to {}",
-                                      page);
-                    request.setPage(page);
-                }
-
-                try {
-                    String response = this.webRequestProcessor.execute(request);
-
-                    // delete any existing cache
-                    if ((entries != null) && !entries.isEmpty()) {
-                        this.queryRepository.deleteAll(entries);
-                    }
-
-                    // put the entry in the cache
-                    ComicVineVolumeQueryCacheEntry entry = new ComicVineVolumeQueryCacheEntry();
-
-                    entry.setSeriesName(name);
-                    entry.setContent(response);
-                    entry.setSequence(page);
-                    this.queryRepository.save(entry);
-                    done = this.responseProcessor.process(result,
-                                                          response.getBytes());
-                }
-                catch (WebRequestException error) {
-                    throw new ComicVineAdaptorException("unable to query for volumes",
-                                                        error);
-                }
-            }
-        } else {
-            this.logger.debug("Processing {} cached query entries...",
-                              entries.size());
-            for (int index = 0;
-                 index < entries.size();
-                 index++) {
-                this.responseProcessor.process(result,
-                                               entries.get(index)
-                                                      .getContent()
-                                                      .getBytes());
-            }
-        }
-
-        this.logger.debug("Returning {} volumes",
-                          result.size());
-
-        return result;
+    if (!skipCache && (entries != null) && !entries.isEmpty()) {
+      for (int index = 0; index < entries.size(); index++) {
+        aging = entries.get(index).getAgeInDays();
+        entriesExpired = (entriesExpired || (aging >= ComicVineVolumeQueryCacheEntry.CACHE_TTL));
+      }
     }
+
+    if (entriesExpired) {
+      logger.debug("Volume query is expired ({} days old);. Skipping...", aging);
+    }
+
+    if (skipCache || (entries == null) || entries.isEmpty() || entriesExpired) {
+      while (!done) {
+        this.logger.debug("Fetching volumes from ComicVine...");
+
+        ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
+        request.setApiKey(apiKey);
+        request.setSeriesName(name);
+
+        page++;
+        if (page > 1) {
+          this.logger.debug("Setting offset to {}", page);
+          request.setPage(page);
+        }
+
+        try {
+          String response = this.webRequestProcessor.execute(request);
+
+          // delete any existing cache
+          if ((entries != null) && !entries.isEmpty()) {
+            this.queryRepository.deleteAll(entries);
+          }
+
+          // put the entry in the cache
+          ComicVineVolumeQueryCacheEntry entry = new ComicVineVolumeQueryCacheEntry();
+
+          entry.setSeriesName(name);
+          entry.setContent(response);
+          entry.setSequence(page);
+          this.queryRepository.save(entry);
+          done = this.responseProcessor.process(result, response.getBytes());
+        } catch (WebRequestException error) {
+          throw new ComicVineAdaptorException("unable to query for volumes", error);
+        }
+      }
+    } else {
+      this.logger.debug("Processing {} cached query entries...", entries.size());
+      for (int index = 0; index < entries.size(); index++) {
+        this.responseProcessor.process(result, entries.get(index).getContent().getBytes());
+      }
+    }
+
+    this.logger.debug("Returning {} volumes", result.size());
+
+    return result;
+  }
 }

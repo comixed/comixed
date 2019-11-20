@@ -21,12 +21,11 @@ package org.comixed.model.library;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.Date;
+import javax.persistence.*;
 import org.comixed.views.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.persistence.*;
-import java.util.Date;
 
 /**
  * <code>ReadingListEntry</code> represents a single entry in a {@link ReadingList}.

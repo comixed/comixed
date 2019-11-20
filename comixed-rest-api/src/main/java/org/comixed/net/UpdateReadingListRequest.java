@@ -21,31 +21,31 @@ package org.comixed.net;
 import java.util.List;
 
 public class UpdateReadingListRequest {
-    private String name;
-    private String summary;
-    private List<Long> entries;
+  private String name;
+  private String summary;
+  private List<Long> entries;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(final String name) {
-        this.name = name;
-    }
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-    public String getSummary() {
-        return summary;
-    }
+  public String getSummary() {
+    return summary;
+  }
 
-    public void setSummary(final String summary) {
-        this.summary = summary;
-    }
+  public void setSummary(final String summary) {
+    this.summary = summary;
+  }
 
-    public List<Long> getEntries() {
-        return entries;
-    }
+  public List<Long> getEntries() {
+    return entries;
+  }
 
-    public void setEntries(final List<Long> entries) {
-        this.entries = entries;
-    }
+  public void setEntries(final List<Long> entries) {
+    this.entries = entries;
+  }
 }

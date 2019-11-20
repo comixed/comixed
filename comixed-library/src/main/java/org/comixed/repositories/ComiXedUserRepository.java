@@ -19,15 +19,11 @@
 package org.comixed.repositories;
 
 import java.util.List;
-
 import org.comixed.model.user.ComiXedUser;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ComiXedUserRepository extends
-                                       CrudRepository<ComiXedUser,
-                                                      Long>
-{
-    List<ComiXedUser> findAll();
+public interface ComiXedUserRepository extends CrudRepository<ComiXedUser, Long> {
+  List<ComiXedUser> findAll();
 
-    ComiXedUser findByEmail(String email);
+  ComiXedUser findByEmail(String email);
 }

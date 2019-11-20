@@ -18,6 +18,9 @@
 
 package org.comixed.task.model;
 
+import static junit.framework.TestCase.assertSame;
+
+import java.io.File;
 import org.comixed.adaptors.AdaptorException;
 import org.comixed.adaptors.FilenameScraperAdaptor;
 import org.comixed.handlers.ComicFileHandler;
@@ -36,284 +39,168 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import java.io.File;
-
-import static junit.framework.TestCase.assertSame;
-
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest
 public class AddComicWorkerTaskTest {
-    private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
-    private static final String PAGE_HASH = "0123456789ABCDEF";
+  private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
+  private static final String PAGE_HASH = "0123456789ABCDEF";
 
-    @InjectMocks private AddComicWorkerTask task;
-    @Mock private ComicFileHandler comicFileHandler;
-    @Mock private ComicRepository comicRepository;
-    @Mock private ProcessComicEntryRepository processComicEntryRepository;
-    @Mock private ObjectFactory<Comic> comicFactory;
-    @Mock private Comic comic;
-    @Mock private Page page;
-    @Mock private FilenameScraperAdaptor filenameScraperAdaptor;
-    @Mock private ProcessComicEntry processComicEntry;
-    @Captor private ArgumentCaptor<ProcessComicEntry> processComicEntryCaptor;
+  @InjectMocks private AddComicWorkerTask task;
+  @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ComicRepository comicRepository;
+  @Mock private ProcessComicEntryRepository processComicEntryRepository;
+  @Mock private ObjectFactory<Comic> comicFactory;
+  @Mock private Comic comic;
+  @Mock private Page page;
+  @Mock private FilenameScraperAdaptor filenameScraperAdaptor;
+  @Mock private ProcessComicEntry processComicEntry;
+  @Captor private ArgumentCaptor<ProcessComicEntry> processComicEntryCaptor;
 
-    @Test(expected = WorkerTaskException.class)
-    public void testAddFileComicFileHandlerException()
-            throws
-            ComicFileHandlerException,
-            WorkerTaskException {
-        Mockito.when(comicFactory.getObject())
-               .thenReturn(comic);
-        Mockito.doThrow(ComicFileHandlerException.class)
-               .when(comicFileHandler)
-               .loadComicArchiveType(Mockito.any(Comic.class));
+  @Test(expected = WorkerTaskException.class)
+  public void testAddFileComicFileHandlerException()
+      throws ComicFileHandlerException, WorkerTaskException {
+    Mockito.when(comicFactory.getObject()).thenReturn(comic);
+    Mockito.doThrow(ComicFileHandlerException.class)
+        .when(comicFileHandler)
+        .loadComicArchiveType(Mockito.any(Comic.class));
 
-        try {
-            File file = new File(TEST_CBZ_FILE);
+    try {
+      File file = new File(TEST_CBZ_FILE);
 
-            task.setFile(file);
-            task.startTask();
-        }
-        finally {
-            Mockito.verify(comicFactory,
-                           Mockito.times(1))
-                   .getObject();
-            Mockito.verify(comicFileHandler,
-                           Mockito.times(1))
-                   .loadComicArchiveType(comic);
-        }
+      task.setFile(file);
+      task.startTask();
+    } finally {
+      Mockito.verify(comicFactory, Mockito.times(1)).getObject();
+      Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     }
+  }
 
-    @Test
-    public void testAddFile()
-            throws
-            WorkerTaskException,
-            ComicFileHandlerException,
-            AdaptorException {
-        Mockito.when(comicRepository.findByFilename(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(comicFactory.getObject())
-               .thenReturn(comic);
-        Mockito.doNothing()
-               .when(comic)
-               .setFilename(Mockito.anyString());
-        Mockito.doNothing()
-               .when(filenameScraperAdaptor)
-               .execute(Mockito.any(Comic.class));
-        Mockito.doNothing()
-               .when(comicFileHandler)
-               .loadComicArchiveType(Mockito.any(Comic.class));
-        Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
-               .thenReturn(comic);
-        Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
-               .thenReturn(processComicEntry);
+  @Test
+  public void testAddFile()
+      throws WorkerTaskException, ComicFileHandlerException, AdaptorException {
+    Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.when(comicFactory.getObject()).thenReturn(comic);
+    Mockito.doNothing().when(comic).setFilename(Mockito.anyString());
+    Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
+    Mockito.doNothing().when(comicFileHandler).loadComicArchiveType(Mockito.any(Comic.class));
+    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+    Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
+        .thenReturn(processComicEntry);
 
-        task.setFile(new File(TEST_CBZ_FILE));
-        task.startTask();
+    task.setFile(new File(TEST_CBZ_FILE));
+    task.startTask();
 
-        assertSame(comic,
-                   processComicEntryCaptor.getValue()
-                                          .getComic());
-        assertSame(ProcessComicEntryType.ADD_FILE_WITH_METADATA,
-                   processComicEntryCaptor.getValue()
-                                          .getProcessType());
+    assertSame(comic, processComicEntryCaptor.getValue().getComic());
+    assertSame(
+        ProcessComicEntryType.ADD_FILE_WITH_METADATA,
+        processComicEntryCaptor.getValue().getProcessType());
 
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-        Mockito.verify(comicFactory,
-                       Mockito.times(1))
-               .getObject();
-        Mockito.verify(comic,
-                       Mockito.times(1))
-               .setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-        Mockito.verify(filenameScraperAdaptor,
-                       Mockito.times(1))
-               .execute(comic);
-        Mockito.verify(comicFileHandler,
-                       Mockito.times(1))
-               .loadComicArchiveType(comic);
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .save(comic);
-        Mockito.verify(processComicEntryRepository,
-                       Mockito.times(1))
-               .save(processComicEntryCaptor.getValue());
-    }
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+    Mockito.verify(comicFactory, Mockito.times(1)).getObject();
+    Mockito.verify(comic, Mockito.times(1)).setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
+    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(processComicEntryRepository, Mockito.times(1))
+        .save(processComicEntryCaptor.getValue());
+  }
 
-    @Test
-    public void testAddFileIgnoreMetadata()
-            throws
-            WorkerTaskException,
-            ComicFileHandlerException,
-            AdaptorException {
-        Mockito.when(comicRepository.findByFilename(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(comicFactory.getObject())
-               .thenReturn(comic);
-        Mockito.doNothing()
-               .when(comic)
-               .setFilename(Mockito.anyString());
-        Mockito.doNothing()
-               .when(filenameScraperAdaptor)
-               .execute(Mockito.any(Comic.class));
-        Mockito.doNothing()
-               .when(comicFileHandler)
-               .loadComicArchiveType(Mockito.any(Comic.class));
-        Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
-               .thenReturn(comic);
-        Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
-               .thenReturn(processComicEntry);
+  @Test
+  public void testAddFileIgnoreMetadata()
+      throws WorkerTaskException, ComicFileHandlerException, AdaptorException {
+    Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.when(comicFactory.getObject()).thenReturn(comic);
+    Mockito.doNothing().when(comic).setFilename(Mockito.anyString());
+    Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
+    Mockito.doNothing().when(comicFileHandler).loadComicArchiveType(Mockito.any(Comic.class));
+    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+    Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
+        .thenReturn(processComicEntry);
 
-        task.setFile(new File(TEST_CBZ_FILE));
-        task.setIgnoreMetadata(true);
-        task.startTask();
+    task.setFile(new File(TEST_CBZ_FILE));
+    task.setIgnoreMetadata(true);
+    task.startTask();
 
-        assertSame(comic,
-                   processComicEntryCaptor.getValue()
-                                          .getComic());
-        assertSame(ProcessComicEntryType.ADD_FILE_WITHOUT_METADATA,
-                   processComicEntryCaptor.getValue()
-                                          .getProcessType());
+    assertSame(comic, processComicEntryCaptor.getValue().getComic());
+    assertSame(
+        ProcessComicEntryType.ADD_FILE_WITHOUT_METADATA,
+        processComicEntryCaptor.getValue().getProcessType());
 
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-        Mockito.verify(comicFactory,
-                       Mockito.times(1))
-               .getObject();
-        Mockito.verify(comic,
-                       Mockito.times(1))
-               .setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-        Mockito.verify(filenameScraperAdaptor,
-                       Mockito.times(1))
-               .execute(comic);
-        Mockito.verify(comicFileHandler,
-                       Mockito.times(1))
-               .loadComicArchiveType(comic);
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .save(comic);
-        Mockito.verify(processComicEntryRepository,
-                       Mockito.times(1))
-               .save(processComicEntryCaptor.getValue());
-    }
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+    Mockito.verify(comicFactory, Mockito.times(1)).getObject();
+    Mockito.verify(comic, Mockito.times(1)).setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
+    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(processComicEntryRepository, Mockito.times(1))
+        .save(processComicEntryCaptor.getValue());
+  }
 
-    @Test
-    public void testAddFileDeleteBlockedPages()
-            throws
-            WorkerTaskException,
-            ComicFileHandlerException,
-            AdaptorException {
-        Mockito.when(comicRepository.findByFilename(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(comicFactory.getObject())
-               .thenReturn(comic);
-        Mockito.doNothing()
-               .when(comic)
-               .setFilename(Mockito.anyString());
-        Mockito.doNothing()
-               .when(filenameScraperAdaptor)
-               .execute(Mockito.any(Comic.class));
-        Mockito.doNothing()
-               .when(comicFileHandler)
-               .loadComicArchiveType(Mockito.any(Comic.class));
-        Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
-               .thenReturn(comic);
-        Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
-               .thenReturn(processComicEntry);
+  @Test
+  public void testAddFileDeleteBlockedPages()
+      throws WorkerTaskException, ComicFileHandlerException, AdaptorException {
+    Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.when(comicFactory.getObject()).thenReturn(comic);
+    Mockito.doNothing().when(comic).setFilename(Mockito.anyString());
+    Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
+    Mockito.doNothing().when(comicFileHandler).loadComicArchiveType(Mockito.any(Comic.class));
+    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+    Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
+        .thenReturn(processComicEntry);
 
-        task.setFile(new File(TEST_CBZ_FILE));
-        task.setDeleteBlockedPages(true);
-        task.startTask();
+    task.setFile(new File(TEST_CBZ_FILE));
+    task.setDeleteBlockedPages(true);
+    task.startTask();
 
-        assertSame(comic,
-                   processComicEntryCaptor.getValue()
-                                          .getComic());
-        assertSame(ProcessComicEntryType.ADD_FILE_DELETE_PAGES_WITH_METADATA,
-                   processComicEntryCaptor.getValue()
-                                          .getProcessType());
+    assertSame(comic, processComicEntryCaptor.getValue().getComic());
+    assertSame(
+        ProcessComicEntryType.ADD_FILE_DELETE_PAGES_WITH_METADATA,
+        processComicEntryCaptor.getValue().getProcessType());
 
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-        Mockito.verify(comicFactory,
-                       Mockito.times(1))
-               .getObject();
-        Mockito.verify(comic,
-                       Mockito.times(1))
-               .setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-        Mockito.verify(filenameScraperAdaptor,
-                       Mockito.times(1))
-               .execute(comic);
-        Mockito.verify(comicFileHandler,
-                       Mockito.times(1))
-               .loadComicArchiveType(comic);
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .save(comic);
-        Mockito.verify(processComicEntryRepository,
-                       Mockito.times(1))
-               .save(processComicEntryCaptor.getValue());
-    }
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+    Mockito.verify(comicFactory, Mockito.times(1)).getObject();
+    Mockito.verify(comic, Mockito.times(1)).setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
+    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(processComicEntryRepository, Mockito.times(1))
+        .save(processComicEntryCaptor.getValue());
+  }
 
-    @Test
-    public void testAddFileDeleteBlockedPagesIgnoreMetadata()
-            throws
-            WorkerTaskException,
-            ComicFileHandlerException,
-            AdaptorException {
-        Mockito.when(comicRepository.findByFilename(Mockito.anyString()))
-               .thenReturn(null);
-        Mockito.when(comicFactory.getObject())
-               .thenReturn(comic);
-        Mockito.doNothing()
-               .when(comic)
-               .setFilename(Mockito.anyString());
-        Mockito.doNothing()
-               .when(filenameScraperAdaptor)
-               .execute(Mockito.any(Comic.class));
-        Mockito.doNothing()
-               .when(comicFileHandler)
-               .loadComicArchiveType(Mockito.any(Comic.class));
-        Mockito.when(comicRepository.save(Mockito.any(Comic.class)))
-               .thenReturn(comic);
-        Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
-               .thenReturn(processComicEntry);
+  @Test
+  public void testAddFileDeleteBlockedPagesIgnoreMetadata()
+      throws WorkerTaskException, ComicFileHandlerException, AdaptorException {
+    Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.when(comicFactory.getObject()).thenReturn(comic);
+    Mockito.doNothing().when(comic).setFilename(Mockito.anyString());
+    Mockito.doNothing().when(filenameScraperAdaptor).execute(Mockito.any(Comic.class));
+    Mockito.doNothing().when(comicFileHandler).loadComicArchiveType(Mockito.any(Comic.class));
+    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+    Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
+        .thenReturn(processComicEntry);
 
-        task.setFile(new File(TEST_CBZ_FILE));
-        task.setDeleteBlockedPages(true);
-        task.setIgnoreMetadata(true);
-        task.startTask();
+    task.setFile(new File(TEST_CBZ_FILE));
+    task.setDeleteBlockedPages(true);
+    task.setIgnoreMetadata(true);
+    task.startTask();
 
-        assertSame(comic,
-                   processComicEntryCaptor.getValue()
-                                          .getComic());
-        assertSame(ProcessComicEntryType.ADD_FILE_DELETE_PAGES_WITHOUT_METADATA,
-                   processComicEntryCaptor.getValue()
-                                          .getProcessType());
+    assertSame(comic, processComicEntryCaptor.getValue().getComic());
+    assertSame(
+        ProcessComicEntryType.ADD_FILE_DELETE_PAGES_WITHOUT_METADATA,
+        processComicEntryCaptor.getValue().getProcessType());
 
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-        Mockito.verify(comicFactory,
-                       Mockito.times(1))
-               .getObject();
-        Mockito.verify(comic,
-                       Mockito.times(1))
-               .setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-        Mockito.verify(filenameScraperAdaptor,
-                       Mockito.times(1))
-               .execute(comic);
-        Mockito.verify(comicFileHandler,
-                       Mockito.times(1))
-               .loadComicArchiveType(comic);
-        Mockito.verify(comicRepository,
-                       Mockito.times(1))
-               .save(comic);
-        Mockito.verify(processComicEntryRepository,
-                       Mockito.times(1))
-               .save(processComicEntryCaptor.getValue());
-    }
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+    Mockito.verify(comicFactory, Mockito.times(1)).getObject();
+    Mockito.verify(comic, Mockito.times(1)).setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
+    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(processComicEntryRepository, Mockito.times(1))
+        .save(processComicEntryCaptor.getValue());
+  }
 }

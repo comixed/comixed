@@ -27,19 +27,18 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
  * @author João França
  * @author Darryl L. Pierce
  * @author Giao Phan
- *
  */
-public class OPDSVLink extends OPDSLink
-{
+public class OPDSVLink extends OPDSLink {
 
-    @JacksonXmlProperty(isAttribute = true, namespace = "http://vaemendis.net/opds-pse/ns")
-    private String count;
+  @JacksonXmlProperty(isAttribute = true, namespace = "http://vaemendis.net/opds-pse/ns")
+  private String count;
 
-    public OPDSVLink(String type, String rel, String href, Integer count)
-    {
-        super(type, rel, href);
-        this.count = count.toString();
-    }
+  public OPDSVLink(String type, String rel, String href, Integer count) {
+    super(type, rel, href);
+    this.count = count.toString();
+  }
 
-    public String getCount() { return this.count; }
+  public String getCount() {
+    return this.count;
+  }
 }

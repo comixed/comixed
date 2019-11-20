@@ -19,23 +19,19 @@
 package org.comixed.task.model;
 
 /**
- * <code>WorkerTaskException</code> is raised when an error occurs while
- * performing a {@link WorkerTask}.
+ * <code>WorkerTaskException</code> is raised when an error occurs while performing a {@link
+ * WorkerTask}.
  *
  * @author Darryl L. Pierce
- *
  */
-public class WorkerTaskException extends Exception
-{
-    private static final long serialVersionUID = 7919030698664175776L;
+public class WorkerTaskException extends Exception {
+  private static final long serialVersionUID = 7919030698664175776L;
 
-    public WorkerTaskException(String message)
-    {
-        super(message);
-    }
+  public WorkerTaskException(String message) {
+    super(message);
+  }
 
-    public WorkerTaskException(String message, Exception cause)
-    {
-        super(message, cause);
-    }
+  public WorkerTaskException(String message, Exception cause) {
+    super(message, cause);
+  }
 }

@@ -21,13 +21,14 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ImportComicFilesResponse {
-    @JsonProperty("import_comic_count") private int importComicCount;
+  @JsonProperty("import_comic_count")
+  private int importComicCount;
 
-    public int getImportComicCount() {
-        return importComicCount;
-    }
+  public int getImportComicCount() {
+    return importComicCount;
+  }
 
-    public void setImportComicCount(final int importComicCount) {
-        this.importComicCount = importComicCount;
-    }
+  public void setImportComicCount(final int importComicCount) {
+    this.importComicCount = importComicCount;
+  }
 }

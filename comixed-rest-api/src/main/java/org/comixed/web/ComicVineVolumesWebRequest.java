@@ -21,17 +21,14 @@ package org.comixed.web;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicVineVolumesWebRequest</code> defines a concrete implementation of
- * {@link AbstractComicVineWebRequest} for retrieving a list of volumes.
- * 
- * @author Darryl L. Pierce
+ * <code>ComicVineVolumesWebRequest</code> defines a concrete implementation of {@link
+ * AbstractComicVineWebRequest} for retrieving a list of volumes.
  *
+ * @author Darryl L. Pierce
  */
 @Component
-public class ComicVineVolumesWebRequest extends AbstractComicVineWebRequest
-{
-    public ComicVineVolumesWebRequest()
-    {
-        super("volumes");
-    }
+public class ComicVineVolumesWebRequest extends AbstractComicVineWebRequest {
+  public ComicVineVolumesWebRequest() {
+    super("volumes");
+  }
 }

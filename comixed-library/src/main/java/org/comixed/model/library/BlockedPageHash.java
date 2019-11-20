@@ -18,47 +18,38 @@
 
 package org.comixed.model.library;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.comixed.views.View.PageList;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "blocked_page_hashes")
-public class BlockedPageHash
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
-    @JsonView(PageList.class)
-    private Long id;
+public class BlockedPageHash {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  @JsonView(PageList.class)
+  private Long id;
 
-    @Column(name = "hash",
-            nullable = false,
-            unique = true,
-            length = 1024)
-    @JsonProperty
-    @JsonView(PageList.class)
-    private String hash;
+  @Column(name = "hash", nullable = false, unique = true, length = 1024)
+  @JsonProperty
+  @JsonView(PageList.class)
+  private String hash;
 
-    public BlockedPageHash()
-    {}
+  public BlockedPageHash() {}
 
-    public BlockedPageHash(String hash)
-    {
-        super();
-        this.hash = hash;
-    }
+  public BlockedPageHash(String hash) {
+    super();
+    this.hash = hash;
+  }
 
-    public String getHash()
-    {
-        return this.hash;
-    }
+  public String getHash() {
+    return this.hash;
+  }
 }

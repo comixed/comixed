@@ -18,13 +18,12 @@
 
 package org.comixed.repositories;
 
+import java.util.List;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface ReadingListRepository extends CrudRepository<ReadingList, Long> {

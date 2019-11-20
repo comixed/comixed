@@ -28,23 +28,18 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
  * @author João França
  * @author Darryl L. Pierce
  * @author Giao Phan
- *
  */
-public class OPDSContent
-{
-    @JacksonXmlProperty(isAttribute = true)
-    private String type = "html";
+public class OPDSContent {
+  @JacksonXmlProperty(isAttribute = true)
+  private String type = "html";
 
-    @JacksonXmlText
-    private String value;
+  @JacksonXmlText private String value;
 
-    public OPDSContent(String value)
-    {
-        this.value = value;
-    }
+  public OPDSContent(String value) {
+    this.value = value;
+  }
 
-    public String getValue()
-    {
-        return this.value;
-    }
+  public String getValue() {
+    return this.value;
+  }
 }

@@ -20,54 +20,53 @@ package org.comixed.model.scraping;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
-
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
 @Table(name = "comic_vine_issues")
 public class ComicVineIssue {
-    @Transient
-    @JsonIgnore
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  private Long id;
 
-    @Column(name = "cv_issue_id")
-    @JsonProperty("comicvine_issue_id")
-    private String issueId;
+  @Column(name = "cv_issue_id")
+  @JsonProperty("comicvine_issue_id")
+  private String issueId;
 
-    @Column(name = "content")
-    @Lob
-    @JsonProperty
-    private String content;
+  @Column(name = "content")
+  @Lob
+  @JsonProperty
+  private String content;
 
-    public ComicVineIssue() {}
+  public ComicVineIssue() {}
 
-    public String getContent() {
-        return this.content;
-    }
+  public String getContent() {
+    return this.content;
+  }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public Long getId() {
-        return this.id;
-    }
+  public Long getId() {
+    return this.id;
+  }
 
-    public String getIssueId() {
-        return this.issueId;
-    }
+  public String getIssueId() {
+    return this.issueId;
+  }
 
-    public void setIssueId(String issueId) { this.issueId = String.valueOf(issueId); }
+  public void setIssueId(String issueId) {
+    this.issueId = String.valueOf(issueId);
+  }
 }

@@ -21,7 +21,6 @@ package org.comixed.web.authentication;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
@@ -38,59 +37,49 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComiXedAuthenticationProvider implements
-                                           AuthenticationProvider
-{
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class ComiXedAuthenticationProvider implements AuthenticationProvider {
+  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ComiXedUserRepository userRepository;
+  @Autowired private ComiXedUserRepository userRepository;
 
-    @Autowired
-    private Utils utils;
+  @Autowired private Utils utils;
 
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException
-    {
-        String email = authentication.getName();
-        String password = authentication.getCredentials().toString();
+  @Override
+  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    String email = authentication.getName();
+    String password = authentication.getCredentials().toString();
 
-        logger.debug("Attempting to authenticate: email={}", email);
+    logger.debug("Attempting to authenticate: email={}", email);
 
-        ComiXedUser user = userRepository.findByEmail(email);
+    ComiXedUser user = userRepository.findByEmail(email);
 
-        if (user == null)
-        {
-            logger.debug("No such user");
-            return null;
-        }
-
-        if (utils.createHash(password.getBytes()).equals(user.getPasswordHash()))
-        {
-            logger.debug("Passwords match!");
-
-            List<GrantedAuthority> roles = new ArrayList<>();
-
-            for (Role role : user.getRoles())
-            {
-                logger.debug("Granting role: {}", role.getName());
-                roles.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-            }
-            // update the last authenticated date
-            user.setLastLoginDate(new Date());
-            userRepository.save(user);
-            return new UsernamePasswordAuthenticationToken(email, password, roles);
-        }
-
-        logger.debug("Passwords did not match!");
-
-        return null;
+    if (user == null) {
+      logger.debug("No such user");
+      return null;
     }
 
-    @Override
-    public boolean supports(Class<?> authentication)
-    {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    if (utils.createHash(password.getBytes()).equals(user.getPasswordHash())) {
+      logger.debug("Passwords match!");
+
+      List<GrantedAuthority> roles = new ArrayList<>();
+
+      for (Role role : user.getRoles()) {
+        logger.debug("Granting role: {}", role.getName());
+        roles.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+      }
+      // update the last authenticated date
+      user.setLastLoginDate(new Date());
+      userRepository.save(user);
+      return new UsernamePasswordAuthenticationToken(email, password, roles);
     }
 
+    logger.debug("Passwords did not match!");
+
+    return null;
+  }
+
+  @Override
+  public boolean supports(Class<?> authentication) {
+    return authentication.equals(UsernamePasswordAuthenticationToken.class);
+  }
 }

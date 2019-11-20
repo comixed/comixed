@@ -24,31 +24,25 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 /**
- * <code>BlockedPageHashRepository</code> manages persisted instances of
- * {@link BlockedPageHash}.
+ * <code>BlockedPageHashRepository</code> manages persisted instances of {@link BlockedPageHash}.
  *
  * @author The ComiXed Project
- *
  */
-public interface BlockedPageHashRepository extends
-                                           CrudRepository<BlockedPageHash,
-                                                          Long>
-{
-    /**
-     * Returns the one instance with the given hash.
-     *
-     * @param hash
-     *            the offset hash
-     * @return the instance, or <code>null</code> if no such hash is registered
-     */
-    @Query("SELECT b FROM BlockedPageHash b WHERE b.hash = :#{#hash}")
-    BlockedPageHash findByHash(@Param("hash") String hash);
+public interface BlockedPageHashRepository extends CrudRepository<BlockedPageHash, Long> {
+  /**
+   * Returns the one instance with the given hash.
+   *
+   * @param hash the offset hash
+   * @return the instance, or <code>null</code> if no such hash is registered
+   */
+  @Query("SELECT b FROM BlockedPageHash b WHERE b.hash = :#{#hash}")
+  BlockedPageHash findByHash(@Param("hash") String hash);
 
-    /**
-     * Returns the list of all hash values.
-     *
-     * @return the hashes
-     */
-    @Query("SELECT b.hash FROM BlockedPageHash b")
-    String[] getAllHashes();
+  /**
+   * Returns the list of all hash values.
+   *
+   * @return the hashes
+   */
+  @Query("SELECT b.hash FROM BlockedPageHash b")
+  String[] getAllHashes();
 }
