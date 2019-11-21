@@ -29,5 +29,8 @@ If applicable, add screenshots to help explain your problem.
  - Browser name [e.g. chrome, safari]
  - Browser version [e.g. 22]
 
+** ComiXed Build Detail **
+Copy and past the details from **Help** -> **Build Details**
+
 **Additional context**
 Add any other context about the problem here.
