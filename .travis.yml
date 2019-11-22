@@ -13,7 +13,7 @@ env:
 before_script:
     - npm install -g @angular/cli prettier
 
-script: (mvn clean test package)
+script: (mvn clean test package -Pci)
 
 branches:
     only:
