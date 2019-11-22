@@ -18,6 +18,8 @@
 
 package org.comixed;
 
+import static java.lang.System.exit;
+
 import org.comixed.importer.ImportFileProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,49 +30,46 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-import static java.lang.System.exit;
-
 @SpringBootApplication
 @EnableConfigurationProperties
 public class ComiXedImporterApp implements ApplicationRunner {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ImportFileProcessor importFileProcessor;
+  @Autowired private ImportFileProcessor importFileProcessor;
 
-    public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(ComiXedImporterApp.class);
-        app.run(args);
+  public static void main(String[] args) {
+    SpringApplication app = new SpringApplication(ComiXedImporterApp.class);
+    app.run(args);
+  }
+
+  private void missingArgument(String name) {
+    this.logger.info("Missing required argument: {}", name);
+    exit(1);
+  }
+
+  @Override
+  public void run(ApplicationArguments args) throws Exception {
+    if (args.getSourceArgs().length == 0) {
+      this.logger.error("No commandline options provided. Exiting...");
+      exit(1);
     }
 
-    private void missingArgument(String name) {
-        this.logger.info("Missing required argument: {}", name);
-        exit(1);
+    if (!args.containsOption("source")) {
+      this.missingArgument("source");
     }
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        if (args.getSourceArgs().length == 0) {
-            this.logger.error("No commandline options provided. Exiting...");
-            exit(1);
-        }
+    String source = args.getOptionValues("source").get(0);
 
-        if (!args.containsOption("source")) {
-            this.missingArgument("source");
-        }
-
-        String source = args.getOptionValues("source").get(0);
-
-        if (args.containsOption("replacements")) {
-            this.importFileProcessor.setReplacements(args.getOptionValues("replacements"));
-        }
-
-        if (args.containsOption("user")) {
-            this.importFileProcessor.setImportUser(args.getOptionValues("user").get(0));
-        }
-
-        this.logger.info("Source file: {}", source);
-
-        this.importFileProcessor.process(source);
+    if (args.containsOption("replacements")) {
+      this.importFileProcessor.setReplacements(args.getOptionValues("replacements"));
     }
+
+    if (args.containsOption("user")) {
+      this.importFileProcessor.setImportUser(args.getOptionValues("user").get(0));
+    }
+
+    this.logger.info("Source file: {}", source);
+
+    this.importFileProcessor.process(source);
+  }
 }

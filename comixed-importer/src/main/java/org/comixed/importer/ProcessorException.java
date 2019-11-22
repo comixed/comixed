@@ -24,11 +24,11 @@ package org.comixed.importer;
  * @author Darryl L. Pierce
  */
 public class ProcessorException extends Exception {
-    public ProcessorException(String message) {
-        super(message);
-    }
+  public ProcessorException(String message) {
+    super(message);
+  }
 
-    public ProcessorException(String message, Exception cause) {
-        super(message, cause);
-    }
+  public ProcessorException(String message, Exception cause) {
+    super(message, cause);
+  }
 }
