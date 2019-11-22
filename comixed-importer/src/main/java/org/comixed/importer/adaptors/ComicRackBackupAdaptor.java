@@ -18,15 +18,6 @@
 
 package org.comixed.importer.adaptors;
 
-import org.apache.commons.lang3.time.DateUtils;
-import org.comixed.model.library.Comic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,84 +27,100 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import org.apache.commons.lang3.time.DateUtils;
+import org.comixed.model.library.Comic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicRackBackupAdaptor</code> handles reading individual book entries from a ComicRack database.
+ * <code>ComicRackBackupAdaptor</code> handles reading individual book entries from a ComicRack
+ * database.
  *
  * @author Darryl L. Pierce
  */
 @Component
 public class ComicRackBackupAdaptor {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
 
-    /**
-     * @param filename
-     * @return a list of comic files
-     * @throws ImportAdaptorException if an error occurs
-     */
-    public List<Comic> load(File filename, Map<String, String> currentPages) throws ImportAdaptorException {
-        try {
-            this.logger.debug("Opening file for reading");
-            FileInputStream istream = new FileInputStream(filename);
+  /**
+   * @param filename
+   * @return a list of comic files
+   * @throws ImportAdaptorException if an error occurs
+   */
+  public List<Comic> load(File filename, Map<String, String> currentPages)
+      throws ImportAdaptorException {
+    try {
+      this.logger.debug("Opening file for reading");
+      FileInputStream istream = new FileInputStream(filename);
 
-            this.logger.debug("Processing file content");
-            List<Comic> result = this.loadFromXml(istream, currentPages);
+      this.logger.debug("Processing file content");
+      List<Comic> result = this.loadFromXml(istream, currentPages);
 
-            this.logger.debug("Closing file");
-            istream.close();
+      this.logger.debug("Closing file");
+      istream.close();
 
-            this.logger.debug("Returning {} comic entries", result.size());
-            return result;
-        } catch (IOException | XMLStreamException | ParseException error) {
-            throw new ImportAdaptorException("unable to read file", error);
-        }
+      this.logger.debug("Returning {} comic entries", result.size());
+      return result;
+    } catch (IOException | XMLStreamException | ParseException error) {
+      throw new ImportAdaptorException("unable to read file", error);
     }
+  }
 
-    private List<Comic> loadFromXml(InputStream istream, Map<String, String> currentPages) throws XMLStreamException, ParseException {
-        List<Comic> result = new ArrayList<>();
-        final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
+  private List<Comic> loadFromXml(InputStream istream, Map<String, String> currentPages)
+      throws XMLStreamException, ParseException {
+    List<Comic> result = new ArrayList<>();
+    final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
 
-        this.logger.debug("Reading contents of XML file");
+    this.logger.debug("Reading contents of XML file");
 
-        Comic comic = null;
+    Comic comic = null;
 
-        while (xmlInputReader.hasNext()) {
-            if (xmlInputReader.isStartElement()) {
-                String tagName = xmlInputReader.getLocalName();
+    while (xmlInputReader.hasNext()) {
+      if (xmlInputReader.isStartElement()) {
+        String tagName = xmlInputReader.getLocalName();
 
-                switch (tagName) {
-                    case "Book": {
-                        this.logger.debug("Starting new comic file");
-                        comic = new Comic();
-                        String filename = xmlInputReader.getAttributeValue(null, "File");
-                        this.logger.debug("Filename: {}", filename);
-                        comic.setFilename(filename);
-                        result.add(comic);
-                    }
-                    break;
-                    case "Added": {
-                        this.logger.debug("Setting added date");
-                        Date date = DateUtils.parseDate(xmlInputReader.getElementText(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-                        this.logger.debug("Added date: {}", date.toString());
-                        comic.setDateAdded(date);
-                    }
-                    break;
-                    case "CurrentPage": {
-                        this.logger.debug("Setting current page");
-                        String currentPage = xmlInputReader.getElementText();
-                        this.logger.debug("Added current page: {}", currentPage);
-                        currentPages.put(comic.getFilename(), currentPage);
-                    }
-                    break;
-                    default:
-                        // this.logger.debug("Unsupported tag");
-                        break;
-                }
+        switch (tagName) {
+          case "Book":
+            {
+              this.logger.debug("Starting new comic file");
+              comic = new Comic();
+              String filename = xmlInputReader.getAttributeValue(null, "File");
+              this.logger.debug("Filename: {}", filename);
+              comic.setFilename(filename);
+              result.add(comic);
             }
-            xmlInputReader.next();
+            break;
+          case "Added":
+            {
+              this.logger.debug("Setting added date");
+              Date date =
+                  DateUtils.parseDate(
+                      xmlInputReader.getElementText(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+              this.logger.debug("Added date: {}", date.toString());
+              comic.setDateAdded(date);
+            }
+            break;
+          case "CurrentPage":
+            {
+              this.logger.debug("Setting current page");
+              String currentPage = xmlInputReader.getElementText();
+              this.logger.debug("Added current page: {}", currentPage);
+              currentPages.put(comic.getFilename(), currentPage);
+            }
+            break;
+          default:
+            // this.logger.debug("Unsupported tag");
+            break;
         }
-
-        return result;
+      }
+      xmlInputReader.next();
     }
+
+    return result;
+  }
 }

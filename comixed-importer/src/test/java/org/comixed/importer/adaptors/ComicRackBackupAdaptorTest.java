@@ -18,6 +18,12 @@
 
 package org.comixed.importer.adaptors;
 
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.comixed.model.library.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,27 +31,20 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.*;
-
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class ComicRackBackupAdaptorTest {
-    private static final File TEST_COMICRACK_BACKUP_FILE = new File("src/test/resources/comicrack-backup.xml");
-    private static final Map<String, String> CURRENT_PAGES = new HashMap<>();
-    @InjectMocks
-    private ComicRackBackupAdaptor adaptor;
+  private static final File TEST_COMICRACK_BACKUP_FILE =
+      new File("src/test/resources/comicrack-backup.xml");
+  private static final Map<String, String> CURRENT_PAGES = new HashMap<>();
+  @InjectMocks private ComicRackBackupAdaptor adaptor;
 
-    @Test
-    public void testLoadLoadsComics() throws ImportAdaptorException {
-        List<Comic> result = this.adaptor.load(TEST_COMICRACK_BACKUP_FILE, CURRENT_PAGES);
+  @Test
+  public void testLoadLoadsComics() throws ImportAdaptorException {
+    List<Comic> result = this.adaptor.load(TEST_COMICRACK_BACKUP_FILE, CURRENT_PAGES);
 
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(8, result.size());
-    }
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(8, result.size());
+  }
 }
