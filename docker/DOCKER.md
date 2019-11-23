@@ -11,7 +11,7 @@ docker run -it -p 7171:7171/tcp mcpierce/comixed
 ```
 ## Tag Push
 ```
-docker tag mcpierce/comixed mcpierce/comixed:4.4.9-SNAPSHOT
+docker tag mcpierce/comixed mcpierce/comixed:0.4.9-SNAPSHOT
 docker push mcpierce/comixed
 ```
 
