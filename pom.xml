@@ -14,18 +14,27 @@
   </parent>
   <name>comixed-parent</name>
   <url>http://github.com/mcpierce/comixed</url>
+  <properties>
+    <comixed.url>http://www.github.com/comixed/comixed</comixed.url>
+    <comixed.version>0.4.9-SNAPSHOT</comixed.version>
+    <maven-git-code-format.version>1.37</maven-git-code-format.version>
+  </properties>
   <profiles>
     <profile>
       <id>dev</id>
       <activation>
         <activeByDefault>true</activeByDefault>
+        <property>
+          <name>env</name>
+          <value>dev</value>
+        </property>
       </activation>
       <build>
         <plugins>
           <plugin>
             <groupId>com.cosium.code</groupId>
             <artifactId>maven-git-code-format</artifactId>
-            <version>1.37</version>
+            <version>${maven-git-code-format.version}</version>
             <executions>
               <execution>
                 <id>install-formatter-hook</id>
@@ -47,12 +56,18 @@
     </profile>
     <profile>
       <id>ci</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>ci</value>
+        </property>
+      </activation>
       <build>
         <plugins>
           <plugin>
             <groupId>com.cosium.code</groupId>
             <artifactId>maven-git-code-format</artifactId>
-            <version>1.36</version>
+            <version>${maven-git-code-format.version}</version>
             <executions>
               <execution>
                 <id>install-formatter-hook</id>
@@ -70,6 +85,7 @@
             <configuration>
               <googleJavaFormatOptions>
                 <aosp>false</aosp>
+                <fixImportsOnly>false</fixImportsOnly>
                 <skipSortingImports>false</skipSortingImports>
                 <skipRemovingUnusedImports>false</skipRemovingUnusedImports>
               </googleJavaFormatOptions>
@@ -79,10 +95,6 @@
       </build>
     </profile>
   </profiles>
-  <properties>
-    <comixed.url>http://www.github.com/mcpierce/comixed</comixed.url>
-    <comixed.version>0.4.9-SNAPSHOT</comixed.version>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -148,32 +160,19 @@
         </executions>
       </plugin>
       -->
-
       <plugin>
-        <groupId>com.cosium.code</groupId>
-        <artifactId>maven-git-code-format</artifactId>
-        <version>1.36</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-help-plugin</artifactId>
+        <version>3.1.0</version>
         <executions>
           <execution>
-            <id>install-formatter-hook</id>
+            <id>show-profiles</id>
+            <phase>compile</phase>
             <goals>
-              <goal>install-hooks</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>validate-code-format</id>
-            <goals>
-              <goal>validate-code-format</goal>
+              <goal>active-profiles</goal>
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <googleJavaFormatOptions>
-            <aosp>false</aosp>
-            <skipSortingImports>false</skipSortingImports>
-            <skipRemovingUnusedImports>false</skipRemovingUnusedImports>
-          </googleJavaFormatOptions>
-        </configuration>
       </plugin>
     </plugins>
   </build>
