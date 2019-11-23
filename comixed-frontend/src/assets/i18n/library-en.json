@@ -1,5 +1,10 @@
 {
   "library-effects": {
+    "get-comics": {
+      "error": {
+        "detail": "Failed to get comics."
+      }
+    },
     "get-scan-types": {
       "error": {
         "detail": "Failed to get the list of scan types."
