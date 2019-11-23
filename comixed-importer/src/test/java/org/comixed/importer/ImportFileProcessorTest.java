@@ -18,6 +18,10 @@
 
 package org.comixed.importer;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.comixed.importer.adaptors.ComicFileImportAdaptor;
 import org.comixed.importer.adaptors.ComicRackBackupAdaptor;
 import org.comixed.importer.adaptors.ImportAdaptorException;
@@ -28,92 +32,90 @@ import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class ImportFileProcessorTest {
-    private static final String TEST_SOURCE_FILENAME = "src/test/resources/comicrack-backup.xml";
+  private static final String TEST_SOURCE_FILENAME = "src/test/resources/comicrack-backup.xml";
 
-    @InjectMocks
-    private ImportFileProcessor processor;
+  @InjectMocks private ImportFileProcessor processor;
 
-    @Mock
-    private ComicRackBackupAdaptor comicRackBackupAdaptor;
+  @Mock private ComicRackBackupAdaptor comicRackBackupAdaptor;
 
-    @Captor
-    private ArgumentCaptor<File> fileCaptor;
+  @Captor private ArgumentCaptor<File> fileCaptor;
 
-    @Captor
-    private ArgumentCaptor<Map> mapCaptor;
+  @Captor private ArgumentCaptor<Map> mapCaptor;
 
-    @Mock
-    private ComicFileImportAdaptor importAdaptor;
+  @Mock private ComicFileImportAdaptor importAdaptor;
 
-    private List<Comic> comicList = new ArrayList<>();
+  private List<Comic> comicList = new ArrayList<>();
 
-    @Test(expected = ProcessorException.class)
-    public void testProcessNullFile() throws ProcessorException {
-        this.processor.process(null);
+  @Test(expected = ProcessorException.class)
+  public void testProcessNullFile() throws ProcessorException {
+    this.processor.process(null);
+  }
+
+  @Test(expected = ProcessorException.class)
+  public void testProcessFileNotFound() throws ProcessorException {
+    this.processor.process(TEST_SOURCE_FILENAME.substring(1));
+  }
+
+  @Test(expected = ProcessorException.class)
+  public void testProcessSourceIsDirectory() throws ProcessorException {
+    this.processor.process("src/test/resources");
+  }
+
+  @Test(expected = ProcessorException.class)
+  public void testProcessComicRackAdaptorThrowsException()
+      throws ProcessorException, ImportAdaptorException {
+    Mockito.when(comicRackBackupAdaptor.load(Mockito.any(), Mockito.any()))
+        .thenThrow(ImportAdaptorException.class);
+
+    try {
+      this.processor.process(TEST_SOURCE_FILENAME);
+    } finally {
+      Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
+          .load(fileCaptor.capture(), mapCaptor.capture());
     }
+  }
 
-    @Test(expected = ProcessorException.class)
-    public void testProcessFileNotFound() throws ProcessorException {
-        this.processor.process(TEST_SOURCE_FILENAME.substring(1));
+  @Test(expected = ProcessorException.class)
+  public void testProcessComicFileImporterThrowsException()
+      throws ImportAdaptorException, ProcessorException {
+    Mockito.when(comicRackBackupAdaptor.load(Mockito.any(), Mockito.any())).thenReturn(comicList);
+    Mockito.doThrow(ImportAdaptorException.class)
+        .when(importAdaptor)
+        .importComics(Mockito.anyList(), Mockito.anyList(), Mockito.anyMap(), Mockito.any());
+
+    try {
+      this.processor.process(TEST_SOURCE_FILENAME);
+    } finally {
+      Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
+          .load(fileCaptor.capture(), mapCaptor.capture());
+      Mockito.verify(importAdaptor, Mockito.times(1))
+          .importComics(
+              comicList,
+              this.processor.replacements,
+              this.processor.currentPages,
+              this.processor.importUser);
     }
+  }
 
-    @Test(expected = ProcessorException.class)
-    public void testProcessSourceIsDirectory() throws ProcessorException {
-        this.processor.process("src/test/resources");
-    }
+  @Test
+  public void testProcess() throws ImportAdaptorException, ProcessorException {
+    Mockito.when(comicRackBackupAdaptor.load(Mockito.any(), Mockito.any())).thenReturn(comicList);
+    Mockito.doNothing()
+        .when(importAdaptor)
+        .importComics(Mockito.anyList(), Mockito.anyList(), Mockito.anyMap(), Mockito.any());
 
-    @Test(expected = ProcessorException.class)
-    public void testProcessComicRackAdaptorThrowsException() throws ProcessorException, ImportAdaptorException {
-        Mockito.when(comicRackBackupAdaptor.load(Mockito.any(), Mockito.any()))
-                .thenThrow(ImportAdaptorException.class);
+    this.processor.process(TEST_SOURCE_FILENAME);
 
-        try {
-            this.processor.process(TEST_SOURCE_FILENAME);
-        } finally {
-            Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
-                    .load(fileCaptor.capture(), mapCaptor.capture());
-        }
-    }
-
-    @Test(expected = ProcessorException.class)
-    public void testProcessComicFileImporterThrowsException() throws ImportAdaptorException, ProcessorException {
-        Mockito.when(comicRackBackupAdaptor.load(Mockito.any(), Mockito.any()))
-                .thenReturn(comicList);
-        Mockito.doThrow(ImportAdaptorException.class)
-                .when(importAdaptor)
-                .importComics(Mockito.anyList(), Mockito.anyList(), Mockito.anyMap(), Mockito.any());
-
-        try {
-            this.processor.process(TEST_SOURCE_FILENAME);
-        } finally {
-            Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
-                    .load(fileCaptor.capture(), mapCaptor.capture());
-            Mockito.verify(importAdaptor, Mockito.times(1))
-                    .importComics(comicList, this.processor.replacements, this.processor.currentPages, this.processor.importUser);
-        }
-    }
-
-    @Test
-    public void testProcess() throws ImportAdaptorException, ProcessorException {
-        Mockito.when(comicRackBackupAdaptor.load(Mockito.any(), Mockito.any()))
-                .thenReturn(comicList);
-        Mockito.doNothing()
-                .when(importAdaptor)
-                .importComics(Mockito.anyList(), Mockito.anyList(), Mockito.anyMap(), Mockito.any());
-
-        this.processor.process(TEST_SOURCE_FILENAME);
-
-        Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
-                .load(fileCaptor.capture(), mapCaptor.capture());
-        Mockito.verify(importAdaptor, Mockito.times(1))
-                .importComics(comicList, this.processor.replacements, this.processor.currentPages, this.processor.importUser);
-    }
+    Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
+        .load(fileCaptor.capture(), mapCaptor.capture());
+    Mockito.verify(importAdaptor, Mockito.times(1))
+        .importComics(
+            comicList,
+            this.processor.replacements,
+            this.processor.currentPages,
+            this.processor.importUser);
+  }
 }

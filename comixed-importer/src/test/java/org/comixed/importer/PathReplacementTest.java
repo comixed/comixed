@@ -18,76 +18,78 @@
 
 package org.comixed.importer;
 
+import static org.junit.Assert.*;
+
+import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
-
-import static org.junit.Assert.*;
-
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class PathReplacementTest {
-    private static final String TEST_SOURCE1 = "olddir";
-    private static final String TEST_DESTINATION1 = "newdir";
-    private static final String TEST_PATH1 = TEST_SOURCE1 + "=" + TEST_DESTINATION1;
-    private static final String TEST_FILE_IN_DESTINATION = TEST_DESTINATION1 + File.separator + "comic.cbz";
-    private static final String TEST_FILE_IN_SOURCE = TEST_SOURCE1 + File.separator + "comic.cbz";
+  private static final String TEST_SOURCE1 = "olddir";
+  private static final String TEST_DESTINATION1 = "newdir";
+  private static final String TEST_PATH1 = TEST_SOURCE1 + "=" + TEST_DESTINATION1;
+  private static final String TEST_FILE_IN_DESTINATION =
+      TEST_DESTINATION1 + File.separator + "comic.cbz";
+  private static final String TEST_FILE_IN_SOURCE = TEST_SOURCE1 + File.separator + "comic.cbz";
 
-    private PathReplacement replacement;
+  private PathReplacement replacement;
 
-    @Before
-    public void startUp() {
-        replacement = new PathReplacement(TEST_PATH1);
-    }
+  @Before
+  public void startUp() {
+    replacement = new PathReplacement(TEST_PATH1);
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testCreateFailsWhenMalformed() {
-        new PathReplacement("thisrulehasnoequal");
-    }
+  @Test(expected = RuntimeException.class)
+  public void testCreateFailsWhenMalformed() {
+    new PathReplacement("thisrulehasnoequal");
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testCreateWithMissingSource() {
-        new PathReplacement("=destination");
-    }
+  @Test(expected = RuntimeException.class)
+  public void testCreateWithMissingSource() {
+    new PathReplacement("=destination");
+  }
 
-    @Test
-    public void testCreateStripsTrailingSeparatorOnSource() {
-        PathReplacement result = new PathReplacement(TEST_SOURCE1 + File.separator + "=" + TEST_DESTINATION1);
+  @Test
+  public void testCreateStripsTrailingSeparatorOnSource() {
+    PathReplacement result =
+        new PathReplacement(TEST_SOURCE1 + File.separator + "=" + TEST_DESTINATION1);
 
-        assertEquals(TEST_SOURCE1, result.source);
-    }
+    assertEquals(TEST_SOURCE1, result.source);
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testCreateWithMissingDestination() {
-        new PathReplacement("source=");
-    }
+  @Test(expected = RuntimeException.class)
+  public void testCreateWithMissingDestination() {
+    new PathReplacement("source=");
+  }
 
-    @Test
-    public void testCreateStripsTrailingSeparatorOnDestination() {
-        PathReplacement result = new PathReplacement(TEST_SOURCE1 + "=" + TEST_DESTINATION1 + File.separator);
+  @Test
+  public void testCreateStripsTrailingSeparatorOnDestination() {
+    PathReplacement result =
+        new PathReplacement(TEST_SOURCE1 + "=" + TEST_DESTINATION1 + File.separator);
 
-        assertEquals(TEST_DESTINATION1, result.destination);
-    }
+    assertEquals(TEST_DESTINATION1, result.destination);
+  }
 
-    @Test
-    public void testIsMatchWhenDifferent() {
-        assertFalse(replacement.isMatch(TEST_FILE_IN_DESTINATION));
-    }
+  @Test
+  public void testIsMatchWhenDifferent() {
+    assertFalse(replacement.isMatch(TEST_FILE_IN_DESTINATION));
+  }
 
-    @Test
-    public void testIsMatchWhenSame() {
-        assertTrue(replacement.isMatch(TEST_FILE_IN_SOURCE));
-    }
+  @Test
+  public void testIsMatchWhenSame() {
+    assertTrue(replacement.isMatch(TEST_FILE_IN_SOURCE));
+  }
 
-    @Test
-    public void testGetReplacement() {
-        String result = replacement.getReplacement(TEST_FILE_IN_SOURCE);
+  @Test
+  public void testGetReplacement() {
+    String result = replacement.getReplacement(TEST_FILE_IN_SOURCE);
 
-        assertNotNull(result);
-        assertEquals(TEST_FILE_IN_DESTINATION, result);
-    }
+    assertNotNull(result);
+    assertEquals(TEST_FILE_IN_DESTINATION, result);
+  }
 }
