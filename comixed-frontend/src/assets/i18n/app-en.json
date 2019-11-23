@@ -578,6 +578,18 @@
     }
   },
   "toolbar": {
+    "options": {
+      "sorting": {
+        "volume-asc": "Volume",
+        "volume-desc": "Volume (desc)",
+        "issue-number-asc": "Issue #",
+        "issue-number-desc": "Issue # (desc)",
+        "added-date-asc": "Added date",
+        "added-date-desc": "Added date (desc)",
+        "cover-date-asc": "Cover date",
+        "cover-date-desc": "Cover date (desc)"
+      }
+    },
     "button": {
       "select-all": "All",
       "deselect-all": "All"
