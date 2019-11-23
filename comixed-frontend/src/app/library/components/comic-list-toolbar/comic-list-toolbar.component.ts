@@ -80,7 +80,7 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
       selections => (this.selectedComics = selections)
     );
     this.sortSubscription = this.libraryDisplayAdaptor.sortField$.subscribe(
-      field => (this.sortField = field)
+      sortField => (this.sortField = sortField)
     );
     this.rowsSubscription = this.libraryDisplayAdaptor.rows$.subscribe(
       rows => (this.rows = rows)
@@ -145,27 +145,51 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
     this.sortOptions = [
       {
         label: this.translateService.instant(
-          'comic-list-toolbar.options.sorting.volume'
+          'toolbar.options.sorting.volume-asc'
         ),
         value: 'volume'
       },
       {
         label: this.translateService.instant(
-          'comic-list-toolbar.options.sorting.issue-number'
+          'toolbar.options.sorting.volume-desc'
+        ),
+        value: '!volume'
+      },
+      {
+        label: this.translateService.instant(
+          'toolbar.options.sorting.issue-number-asc'
         ),
         value: 'sortableIssueNumber'
       },
       {
         label: this.translateService.instant(
-          'comic-list-toolbar.options.sorting.added-date'
+          'toolbar.options.sorting.issue-number-desc'
+        ),
+        value: '!sortableIssueNumber'
+      },
+      {
+        label: this.translateService.instant(
+          'toolbar.options.sorting.added-date-asc'
         ),
         value: 'addedDate'
       },
       {
         label: this.translateService.instant(
-          'comic-list-toolbar.options.sorting.cover-date'
+          'toolbar.options.sorting.added-date-desc'
+        ),
+        value: '!addedDate'
+      },
+      {
+        label: this.translateService.instant(
+          'toolbar.options.sorting.cover-date-asc'
         ),
         value: 'coverDate'
+      },
+      {
+        label: this.translateService.instant(
+          'toolbar.options.sorting.cover-date-desc'
+        ),
+        value: '!coverDate'
       }
     ];
   }

@@ -174,12 +174,6 @@
       "layout": {
         "tooltip": "Toggle between grid and list layouts."
       },
-      "sorting": {
-        "volume": "Sort by Volume",
-        "issue-number": "Sort by Issue #",
-        "added-date": "Sort by Added Date",
-        "cover-date": "Sort by Cover Date"
-      },
       "rows": {
         "10-comics": "Show 10 Comics",
         "25-comics": "Show 25 Comics",
