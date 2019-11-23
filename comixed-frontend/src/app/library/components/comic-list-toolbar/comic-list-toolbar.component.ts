@@ -44,8 +44,6 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
   @Input() comics: Comic[] = [];
   @Input() dataView: any;
 
-  @Output() toggleFilters = new EventEmitter<boolean>();
-
   selectionSubscription: Subscription;
   selectedComics: Comic[] = [];
   langChangeSubscription: Subscription;

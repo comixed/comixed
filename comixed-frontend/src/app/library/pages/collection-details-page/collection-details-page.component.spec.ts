@@ -37,12 +37,10 @@ import {
   SelectionAdaptor
 } from 'app/library';
 import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
-import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
-import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { CollectionEffects } from 'app/library/effects/collection.effects';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import {
@@ -108,7 +106,6 @@ describe('CollectionDetailsPageComponent', () => {
         ComicListToolbarComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        LibraryFilterComponent,
         ComicCoverComponent,
         ComicCoverUrlPipe,
         ComicTitlePipe
@@ -122,7 +119,6 @@ describe('CollectionDetailsPageComponent', () => {
         SelectionAdaptor,
         ReadingListAdaptor,
         BreadcrumbAdaptor,
-        FilterAdaptor,
         MessageService,
         ConfirmationService,
         {
