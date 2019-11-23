@@ -36,7 +36,7 @@ To achieve this goal, the project will:
     * For that, we recommend applications like [Chunky](http://chunkyreader.com/) (iOS), [YACReader](https://www.yacreader.com/) (iOS), [Kuboo](https://play.google.com/store/apps/details?id=com.sethchhim.kuboo) (Android), [Challenger Viewer](https://play.google.com/store/apps/details?id=org.kill.geek.bdviewer) (Android)
 
 ## Status
- * TravisCI Build Status: [![Build Status](https://travis-ci.org/mcpierce/comixed.svg?branch=develop)](https://travis-ci.org/mcpierce/comixed)
+ * Travis Development Build Status: [![Build Status](https://travis-ci.org/comixed/comixed.svg?branch=develop)](https://travis-ci.org/comixed/comixed)
  * You can download the latest **unsupported** release from the **Releases** tab. Every merge to the **Develop** branch triggers a new build.
 
 ## Overview And Goals

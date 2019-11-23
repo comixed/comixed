@@ -10,10 +10,7 @@ jdk:
 env:
     - NODE_VERSION="10.15.0"
 
-before_script:
-    - npm install -g @angular/cli prettier
-
-script: (mvn clean test package -Pci)
+script: (mvn clean package -Pci -DskipTests)
 
 branches:
     only:
