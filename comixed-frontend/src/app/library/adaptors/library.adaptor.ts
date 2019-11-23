@@ -31,6 +31,7 @@ import { extractField } from 'app/library/utility.functions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import {
   LibraryDeleteMultipleComics,
+  LibraryGetComics,
   LibraryGetUpdates,
   LibraryReset,
   LibraryStartRescan
@@ -45,6 +46,8 @@ export class LibraryAdaptor {
   private _latestUpdatedDate$ = new BehaviorSubject<number>(0);
   private _comic$ = new BehaviorSubject<Comic[]>([]);
   private _lastReadDate$ = new BehaviorSubject<LastReadDate[]>([]);
+  private _comicCount$ = new BehaviorSubject<number>(0);
+  private _lastUpdatedDate$ = new BehaviorSubject<Date>(new Date(0));
   private _publisher$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _serie$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _character$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
@@ -100,6 +103,17 @@ export class LibraryAdaptor {
         ) {
           this._lastReadDate$.next(libraryState.lastReadDates);
         }
+        if (this._comicCount$.getValue() !== libraryState.comicCount) {
+          this._comicCount$.next(libraryState.comicCount);
+        }
+        if (
+          !_.isEqual(
+            this._lastUpdatedDate$.getValue(),
+            libraryState.lastUpdatedDate
+          )
+        ) {
+          this._lastUpdatedDate$.next(libraryState.lastUpdatedDate);
+        }
         this._fetchingUpdate$.next(libraryState.fetchingUpdates);
         if (!_.isEqual(this._comic$.getValue(), libraryState.comics)) {
           this._comic$.next(libraryState.comics);
@@ -113,6 +127,22 @@ export class LibraryAdaptor {
           this._stories$.next(extractField(libraryState.comics, 'storyArcs'));
         }
       });
+  }
+
+  getComics(
+    page: number,
+    count: number,
+    sortField: string,
+    ascending: boolean
+  ) {
+    this.store.dispatch(
+      new LibraryGetComics({
+        page: page,
+        count: count,
+        sortField: sortField,
+        ascending: ascending
+      })
+    );
   }
 
   get latestUpdatedDate$(): Observable<number> {
@@ -141,6 +171,14 @@ export class LibraryAdaptor {
 
   get lastReadDate$(): Observable<LastReadDate[]> {
     return this._lastReadDate$.asObservable();
+  }
+
+  get comicCount$(): Observable<number> {
+    return this._comicCount$.asObservable();
+  }
+
+  get lastUpdatedDate$(): Observable<Date> {
+    return this._lastUpdatedDate$.asObservable();
   }
 
   get publisher$(): Observable<ComicCollectionEntry[]> {

@@ -31,8 +31,11 @@ import { StartRescanResponse } from 'app/library/models/net/start-rescan-respons
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import {
+  LibraryComicsReceived,
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
+  LibraryGetComics,
+  LibraryGetComicsFailed,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryMultipleComicsDeleted,
@@ -41,12 +44,19 @@ import {
   LibraryStartRescanFailed,
   LibraryUpdatesReceived
 } from 'app/library/actions/library.actions';
+import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
 import objectContaining = jasmine.objectContaining;
 
 describe('LibraryEffects', () => {
   const COMIC = COMIC_1;
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
+  const LATEST_UPDATED_DATE = new Date();
+  const COMIC_COUNT = 2814;
+  const PAGE = 12;
+  const COUNT = 25;
+  const SORT_FIELD = 'addedDate';
+  const ASCENDING = false;
 
   let actions$: Observable<any>;
   let effects: LibraryEffects;
@@ -62,12 +72,13 @@ describe('LibraryEffects', () => {
         {
           provide: LibraryService,
           useValue: {
+            getComics: jasmine.createSpy('LibraryService.getComics()'),
             getUpdatesSince: jasmine.createSpy(
-              'LibraryService.getUpdatesSince'
+              'LibraryService.getUpdatesSince()'
             ),
-            startRescan: jasmine.createSpy('LibraryService.startRescan'),
+            startRescan: jasmine.createSpy('LibraryService.startRescan()'),
             deleteMultipleComics: jasmine.createSpy(
-              'LibraryService.deleteMultipleComics'
+              'LibraryService.deleteMultipleComics()'
             )
           }
         },
@@ -83,6 +94,74 @@ describe('LibraryEffects', () => {
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
+  });
+
+  describe('when getting comics', () => {
+    it('fires an action on success', () => {
+      const serviceResponse: GetComicsResponse = {
+        comics: COMICS,
+        lastReadDates: LAST_READ_DATES,
+        latestUpdatedDate: LATEST_UPDATED_DATE,
+        comicCount: COMIC_COUNT
+      };
+      const action = new LibraryGetComics({
+        page: PAGE,
+        count: COUNT,
+        sortField: SORT_FIELD,
+        ascending: ASCENDING
+      });
+      const outcome = new LibraryComicsReceived({
+        comics: COMICS,
+        lastReadDates: LAST_READ_DATES,
+        lastUpdatedDate: LATEST_UPDATED_DATE,
+        comicCount: COMIC_COUNT
+      });
+
+      actions$ = hot('-a', { a: action });
+      libraryService.getComics.and.returnValue(of(serviceResponse));
+
+      const expected = cold('-b', { b: outcome });
+      expect(effects.getComics$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const service_response = new HttpErrorResponse({});
+      const action = new LibraryGetComics({
+        page: PAGE,
+        count: COUNT,
+        sortField: SORT_FIELD,
+        ascending: ASCENDING
+      });
+      const outcome = new LibraryGetComicsFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.getComics.and.returnValue(throwError(service_response));
+
+      const expected = cold('-b', { b: outcome });
+      expect(effects.getComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new LibraryGetComics({
+        page: PAGE,
+        count: COUNT,
+        sortField: SORT_FIELD,
+        ascending: ASCENDING
+      });
+      const outcome = new LibraryGetComicsFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.getComics.and.throwError('expected');
+
+      const expected = cold('-(b|)', { b: outcome });
+      expect(effects.getComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
   });
 
   describe('when getting library updates', () => {
@@ -159,8 +238,6 @@ describe('LibraryEffects', () => {
   });
 
   describe('when starting a rescan', () => {
-    const COUNT = 17;
-
     it('fires an action on success', () => {
       const service_response = { count: COUNT } as StartRescanResponse;
       const action = new LibraryStartRescan();
@@ -207,8 +284,6 @@ describe('LibraryEffects', () => {
   });
 
   describe('when deleting multiple comics', () => {
-    const COUNT = 5;
-
     it('fires an action on success', () => {
       const service_response = { count: COUNT } as DeleteMultipleComicsResponse;
       const action = new LibraryDeleteMultipleComics({

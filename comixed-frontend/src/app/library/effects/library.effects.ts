@@ -20,8 +20,11 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import {
   LibraryActionTypes,
+  LibraryComicsReceived,
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
+  LibraryGetComics,
+  LibraryGetComicsFailed,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryMultipleComicsDeleted,
@@ -38,6 +41,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
+import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
 
 @Injectable()
 export class LibraryEffects {
@@ -47,6 +51,50 @@ export class LibraryEffects {
     private translateService: TranslateService,
     private messageService: MessageService
   ) {}
+
+  @Effect()
+  getComics$: Observable<Action> = this.actions$.pipe(
+    ofType(LibraryActionTypes.GetComics),
+    map((action: LibraryGetComics) => action.payload),
+    switchMap(action =>
+      this.libraryService
+        .getComics(
+          action.page,
+          action.count,
+          action.sortField,
+          action.ascending
+        )
+        .pipe(
+          map(
+            (response: GetComicsResponse) =>
+              new LibraryComicsReceived({
+                comics: response.comics,
+                lastReadDates: response.lastReadDates,
+                lastUpdatedDate: response.latestUpdatedDate,
+                comicCount: response.comicCount
+              })
+          ),
+          catchError(error => {
+            this.messageService.add({
+              severity: 'error',
+              detail: this.translateService.instant(
+                'library-effects.get-comics.error.detail'
+              )
+            });
+            return of(new LibraryGetComicsFailed());
+          })
+        )
+    ),
+    catchError(error => {
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new LibraryGetComicsFailed());
+    })
+  );
 
   @Effect()
   getUpdates$: Observable<Action> = this.actions$.pipe(
