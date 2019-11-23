@@ -59,7 +59,8 @@ export class ComicListComponent implements OnInit, OnDestroy {
   layoutSubscription: Subscription;
   layout: string;
   sortFieldSubscription: Subscription;
-  sortField: string;
+  sortField = '';
+  sortOrder = 1;
   rowsSubscription: Subscription;
   rows: number;
   sameHeightSubscription: Subscription;
@@ -88,7 +89,15 @@ export class ComicListComponent implements OnInit, OnDestroy {
       layout => (this.layout = layout)
     );
     this.sortFieldSubscription = this.libraryDisplayAdaptor.sortField$.subscribe(
-      sort_field => (this.sortField = sort_field)
+      sortField => {
+        if (sortField.indexOf('!') === 0) {
+          this.sortOrder = -1;
+          this.sortField = sortField.substr(1);
+        } else {
+          this.sortOrder = 1;
+          this.sortField = sortField;
+        }
+      }
     );
     this.rowsSubscription = this.libraryDisplayAdaptor.rows$.subscribe(
       rows => (this.rows = rows)
