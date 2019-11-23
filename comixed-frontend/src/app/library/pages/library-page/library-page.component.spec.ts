@@ -42,7 +42,6 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CardModule } from 'primeng/card';
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
-import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { UserService } from 'app/services/user.service';
@@ -65,8 +64,6 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
-import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
-import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 import { COMIC_1 } from 'app/comics/comics.fixtures';
 
 describe('LibraryPageComponent', () => {
@@ -112,14 +109,11 @@ describe('LibraryPageComponent', () => {
         LibraryPageComponent,
         ComicListComponent,
         ComicListToolbarComponent,
-        LibraryFilterComponent,
         ComicListItemComponent,
-        ComicGridItemComponent,
-        ComicFilterPipe
+        ComicGridItemComponent
       ],
       providers: [
         LibraryAdaptor,
-        FilterAdaptor,
         SelectionAdaptor,
         ReadingListAdaptor,
         LibraryDisplayAdaptor,

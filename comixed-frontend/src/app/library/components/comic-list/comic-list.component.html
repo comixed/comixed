@@ -1,10 +1,6 @@
 <app-comic-list-toolbar [comics]='comics'
                         [dataView]='comicListDataview'
                         (toggleFilters)='showFilters()'></app-comic-list-toolbar>
-<p-sidebar styleClass='cx-library-filter-sidebar'
-           [(visible)]='displayFilters'>
-    <app-library-filter (filters)='setFilters($event)'></app-library-filter>
-</p-sidebar>
 <p-contextMenu [model]='contextMenu'
                [target]='comicListContainer'></p-contextMenu>
 <div #comicListContainer>

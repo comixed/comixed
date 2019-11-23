@@ -22,7 +22,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 import { DataViewModule } from 'primeng/dataview';
-import { SidebarModule } from 'primeng/sidebar';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { SliderModule } from 'primeng/slider';
@@ -33,7 +32,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CardModule } from 'primeng/card';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
-import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { ComicListComponent } from './comic-list.component';
 import {
   ConfirmationService,
@@ -66,8 +64,6 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
-import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
-import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 
 describe('ComicListComponent', () => {
@@ -100,7 +96,6 @@ describe('ComicListComponent', () => {
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([LibraryEffects]),
         DataViewModule,
-        SidebarModule,
         SplitButtonModule,
         ScrollPanelModule,
         SliderModule,
@@ -120,14 +115,11 @@ describe('ComicListComponent', () => {
         ComicListComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        ComicListToolbarComponent,
-        LibraryFilterComponent,
-        ComicFilterPipe
+        ComicListToolbarComponent
       ],
       providers: [
         AuthenticationAdaptor,
         LibraryAdaptor,
-        FilterAdaptor,
         SelectionAdaptor,
         ReadingListAdaptor,
         LibraryDisplayAdaptor,

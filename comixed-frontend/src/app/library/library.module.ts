@@ -27,7 +27,6 @@ import { StoreModule } from '@ngrx/store';
 import * as fromLibrary from './reducers/library.reducer';
 import * as fromSelection from './reducers/selection.reducer';
 import * as fromReadingList from './reducers/reading-list.reducer';
-import * as fromFilters from './reducers/filters.reducer';
 import * as fromDupes from './reducers/duplicate-pages.reducer';
 import * as fromCollections from './reducers/collection.reducer';
 import { EffectsModule } from '@ngrx/effects';
@@ -39,8 +38,6 @@ import { ReadingListEffects } from './effects/reading-list.effects';
 import { ReadingListService } from './services/reading-list.service';
 import { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
 import { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
-import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
-import { ComicFilterPipe } from './pipes/comic-filter.pipe';
 import { ComicListToolbarComponent } from './components/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
@@ -52,12 +49,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import {
   ProgressSpinnerModule,
   ScrollPanelModule,
-  SidebarModule,
   SliderModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
 import { LibraryRoutingModule } from 'app/library/library-routing.module';
 import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
@@ -99,10 +94,6 @@ import { CollectionPageComponent } from './pages/collection-page/collection-page
       fromReadingList.reducer
     ),
     StoreModule.forFeature(
-      fromFilters.FILTERS_FEATURE_KEY,
-      fromFilters.reducer
-    ),
-    StoreModule.forFeature(
       fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
       fromDupes.reducer
     ),
@@ -122,8 +113,7 @@ import { CollectionPageComponent } from './pages/collection-page/collection-page
     ScrollPanelModule,
     ToolbarModule,
     ProgressSpinnerModule,
-    TooltipModule,
-    SidebarModule
+    TooltipModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
@@ -132,14 +122,12 @@ import { CollectionPageComponent } from './pages/collection-page/collection-page
     ComicListItemComponent,
     ComicListComponent,
     ComicListToolbarComponent,
-    LibraryFilterComponent,
     MissingComicsPageComponent,
     MultiComicScrapingPageComponent,
     ScrapingComicListComponent,
     MultipleComicScrapingComponent,
     ReadingListsPageComponent,
     ReadingListPageComponent,
-    ComicFilterPipe,
     MissingComicsPipe,
     DuplicatesPageComponent,
     DuplicatePageGridItemComponent,
@@ -151,7 +139,6 @@ import { CollectionPageComponent } from './pages/collection-page/collection-page
   providers: [
     LibraryService,
     LibraryAdaptor,
-    FilterAdaptor,
     LibraryDisplayAdaptor,
     SelectionAdaptor,
     DuplicatePagesAdaptors,
