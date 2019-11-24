@@ -94,6 +94,9 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>debugging</id>
+    </profile>
   </profiles>
   <dependencies>
     <dependency>
