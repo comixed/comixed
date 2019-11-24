@@ -25,7 +25,7 @@ import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.ReadingListRepository;
+import org.comixed.repositories.library.ReadingListRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

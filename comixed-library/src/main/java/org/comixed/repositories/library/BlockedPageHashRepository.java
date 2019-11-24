@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
 import org.comixed.model.library.BlockedPageHash;
 import org.springframework.data.jpa.repository.Query;

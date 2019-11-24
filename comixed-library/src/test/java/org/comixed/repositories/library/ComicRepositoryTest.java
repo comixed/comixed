@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
 import static org.junit.Assert.*;
 
@@ -33,6 +33,7 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
 import org.comixed.model.library.Page;
 import org.comixed.model.library.ScanType;
+import org.comixed.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -65,9 +68,8 @@ public class ComicRepositoryTest {
   private static final Long TEST_COMIC_WITH_DELETED_PAGES = 1002L;
   private static final String TEST_IMPRINT = "This is an imprint";
   private static final Long TEST_USER_ID = 1000L;
-  private static byte[] TEST_IMAGE_CONTENT;
-
   private static final String TEST_IMAGE_FILE = "src/test/resources/example.jpg";
+  private static byte[] TEST_IMAGE_CONTENT;
 
   static {
     try {
@@ -433,5 +435,27 @@ public class ComicRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(1, result.size());
+  }
+
+  @Test
+  public void testGetComics() {
+    final List<Comic> result =
+        repository.findAll(PageRequest.of(1, 2, Sort.by(Direction.DESC, "dateAdded"))).getContent();
+
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertTrue(result.get(0).getDateAdded().after(result.get(1).getDateAdded()));
+  }
+
+  @Test
+  public void testFindTopByLastUpdatedDateDesc() {
+    final List<Comic> result = repository.findTopByOrderByDateLastUpdatedDesc(PageRequest.of(0, 3));
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    for (int index = 1; index < result.size(); index++) {
+      assertTrue(
+          result.get(index - 1).getDateLastUpdated().after(result.get(index).getDateLastUpdated()));
+    }
   }
 }

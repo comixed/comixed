@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project.
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import org.comixed.model.library.BlockedPageHash;
+import java.util.List;
+import org.comixed.model.user.LastReadDate;
+import org.comixed.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,40 +48,18 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   TransactionalTestExecutionListener.class,
   DbUnitTestExecutionListener.class
 })
-public class BlockedPageHashRepositoryTest {
-  private static final String BLOCKED_PAGE_HASH = "12345";
-
-  @Autowired private BlockedPageHashRepository repository;
+public class LastReadDatesRepositoryTest {
+  private static final Long TEST_USER_ID = 1000L;
+  private static final Long TEST_COMIC_ID = 1000L;
+  @Autowired private LastReadDatesRepository repository;
 
   @Test
-  public void testAddBlockedHash() {
-    BlockedPageHash hash = new BlockedPageHash(BLOCKED_PAGE_HASH + BLOCKED_PAGE_HASH);
-
-    repository.save(hash);
-
-    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH + BLOCKED_PAGE_HASH);
+  public void testFindAllForUser() {
+    List<LastReadDate> result = repository.findAllForUser(TEST_USER_ID);
 
     assertNotNull(result);
-    assertEquals(BLOCKED_PAGE_HASH + BLOCKED_PAGE_HASH, result.getHash());
-  }
-
-  @Test
-  public void testRemoveBlockedHash() {
-    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH);
-
-    assertNotNull(result);
-
-    repository.delete(result);
-
-    result = repository.findByHash(BLOCKED_PAGE_HASH);
-
-    assertNull(result);
-  }
-
-  @Test
-  public void testGetAllHashes() {
-    String[] result = repository.getAllHashes();
-
-    assertArrayEquals(new String[] {"12345", "23456"}, result);
+    assertFalse(result.isEmpty());
+    assertEquals(TEST_COMIC_ID, result.get(0).getComic().getId());
+    assertEquals(TEST_USER_ID, result.get(0).getUser().getId());
   }
 }

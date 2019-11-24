@@ -23,7 +23,7 @@ import java.security.Principal;
 import java.util.List;
 import org.comixed.model.library.ReadingList;
 import org.comixed.net.UpdateReadingListRequest;
-import org.comixed.repositories.ReadingListRepository;
+import org.comixed.repositories.library.ReadingListRepository;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListNameException;

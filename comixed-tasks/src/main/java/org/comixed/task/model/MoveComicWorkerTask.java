@@ -23,7 +23,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.model.library.Comic;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.comixed.utils.ComicFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

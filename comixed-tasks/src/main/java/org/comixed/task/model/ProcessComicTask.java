@@ -26,7 +26,7 @@ import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFileDetails;
 import org.comixed.model.tasks.ProcessComicEntry;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.comixed.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,6 +28,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.Arrays;
 import java.util.List;
 import org.comixed.model.library.Page;
+import org.comixed.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

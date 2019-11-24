@@ -23,7 +23,7 @@ import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.library.Comic;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

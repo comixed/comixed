@@ -28,7 +28,7 @@ import java.util.List;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.ComiXedUser;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListService;
 import org.junit.Test;
