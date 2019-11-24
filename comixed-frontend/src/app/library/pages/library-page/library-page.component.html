@@ -1,3 +1,5 @@
 <app-comic-list *ngIf='comics'
                 [comics]='comics'
-                [selectedComics]="selectedComics"></app-comic-list>
+                [comicCount]='comicCount'
+                [selectedComics]='selectedComics'
+                (loadPage)='loadPage($event)'></app-comic-list>

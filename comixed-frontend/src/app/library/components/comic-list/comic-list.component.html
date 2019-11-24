@@ -17,8 +17,11 @@
                 [rows]='rows'
                 [sortField]='sortField'
                 [sortOrder]='sortOrder'
-                [value]='comics|comicFilter:filters'
-                paginatorPosition='both'>
+                [value]='comics'
+                [totalRecords]='comicCount'
+                paginatorPosition='both'
+                [lazy]='true'
+                (onLazyLoad)='onLazyLoad($event.first)'>
         <ng-template let-comic
                      pTemplate='listItem'>
             <app-comic-list-item [comic]='comic'

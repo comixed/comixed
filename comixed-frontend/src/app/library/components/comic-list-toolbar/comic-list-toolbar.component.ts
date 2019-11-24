@@ -159,25 +159,25 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
         label: this.translateService.instant(
           'toolbar.options.sorting.issue-number-asc'
         ),
-        value: 'sortableIssueNumber'
+        value: 'issueNumber'
       },
       {
         label: this.translateService.instant(
           'toolbar.options.sorting.issue-number-desc'
         ),
-        value: '!sortableIssueNumber'
+        value: '!issueNumber'
       },
       {
         label: this.translateService.instant(
           'toolbar.options.sorting.added-date-asc'
         ),
-        value: 'addedDate'
+        value: 'dateAdded'
       },
       {
         label: this.translateService.instant(
           'toolbar.options.sorting.added-date-desc'
         ),
-        value: '!addedDate'
+        value: '!dateAdded'
       },
       {
         label: this.translateService.instant(
