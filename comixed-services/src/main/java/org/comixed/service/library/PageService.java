@@ -20,10 +20,10 @@ package org.comixed.service.library;
 
 import java.util.*;
 import org.comixed.model.library.*;
-import org.comixed.repositories.BlockedPageHashRepository;
-import org.comixed.repositories.ComicRepository;
-import org.comixed.repositories.PageRepository;
-import org.comixed.repositories.PageTypeRepository;
+import org.comixed.repositories.library.BlockedPageHashRepository;
+import org.comixed.repositories.library.ComicRepository;
+import org.comixed.repositories.library.PageRepository;
+import org.comixed.repositories.library.PageTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

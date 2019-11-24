@@ -23,7 +23,7 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.opds.OPDSBookmark;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.library.ComicException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

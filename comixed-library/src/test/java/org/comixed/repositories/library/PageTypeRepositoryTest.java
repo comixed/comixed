@@ -1,4 +1,4 @@
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.comixed.model.library.PageType;
+import org.comixed.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

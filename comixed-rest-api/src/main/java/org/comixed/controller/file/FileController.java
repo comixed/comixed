@@ -29,7 +29,7 @@ import org.comixed.model.file.FileDetails;
 import org.comixed.net.GetAllComicsUnderRequest;
 import org.comixed.net.ImportComicFilesResponse;
 import org.comixed.net.ImportRequestBody;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.file.FileService;
 import org.comixed.utils.ComicFileUtils;
 import org.json.JSONException;

@@ -29,7 +29,7 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
 import org.comixed.model.tasks.ProcessComicEntry;
 import org.comixed.model.tasks.ProcessComicEntryType;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

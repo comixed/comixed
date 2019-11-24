@@ -30,7 +30,7 @@ import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.importer.PathReplacement;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

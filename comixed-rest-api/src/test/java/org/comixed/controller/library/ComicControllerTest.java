@@ -36,7 +36,7 @@ import org.comixed.model.user.LastReadDate;
 import org.comixed.net.GetLibraryUpdatesRequest;
 import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.LastReadDatesRepository;
+import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.service.file.FileService;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;

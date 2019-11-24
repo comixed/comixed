@@ -54,7 +54,7 @@ import org.springframework.stereotype.Component;
   @NamedQuery(
       name = "Comic.findAllUnreadByUser",
       query =
-          "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)")
+          "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)"),
 })
 public class Comic {
   @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());

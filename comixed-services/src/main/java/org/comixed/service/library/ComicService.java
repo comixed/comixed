@@ -26,8 +26,8 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.ComicRepository;
-import org.comixed.repositories.LastReadDatesRepository;
+import org.comixed.repositories.library.ComicRepository;
+import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.comixed.task.model.RescanComicWorkerTask;
 import org.comixed.task.runner.Worker;
@@ -261,5 +261,15 @@ public class ComicService {
 
     this.logger.debug("Returning comic");
     return comic;
+  }
+
+  public List<LastReadDate> getLastReadDates(final List<Comic> comics, final ComiXedUser user) {
+    this.logger.debug(
+        "Getting last read dates for {} comic{} for {}",
+        comics.size(),
+        comics.size() == 1 ? "" : "s",
+        user.getEmail());
+
+    return this.lastReadDatesRepository.findByComicInAndUserIn(comics, user);
   }
 }

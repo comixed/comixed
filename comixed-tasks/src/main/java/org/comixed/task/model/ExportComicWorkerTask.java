@@ -23,7 +23,7 @@ import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.library.Comic;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -20,7 +20,7 @@ package org.comixed.loaders;
 
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
-import org.comixed.repositories.PageTypeRepository;
+import org.comixed.repositories.library.PageTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

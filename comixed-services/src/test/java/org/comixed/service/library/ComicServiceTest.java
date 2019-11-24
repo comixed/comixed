@@ -31,8 +31,8 @@ import org.comixed.model.library.ScanType;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.ComicRepository;
-import org.comixed.repositories.LastReadDatesRepository;
+import org.comixed.repositories.library.ComicRepository;
+import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.comixed.task.model.RescanComicWorkerTask;
 import org.comixed.task.runner.Worker;
@@ -84,6 +84,8 @@ public class ComicServiceTest {
   @Mock private RescanComicWorkerTask rescanWorkerTask;
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<Date> deletedCaptor;
+  @Mock private LastReadDate lastReadDate;
+  @Mock private List<LastReadDate> lastReadDateList;
 
   private List<Comic> comicsBySeries = new ArrayList<>();
   private Comic previousComic = new Comic();
@@ -366,5 +368,19 @@ public class ComicServiceTest {
     Mockito.verify(rescanWorkerTaskFactory, Mockito.times(1)).getObject();
     Mockito.verify(rescanWorkerTask, Mockito.times(comics.size())).setComic(comic);
     Mockito.verify(worker, Mockito.times(comics.size())).addTasksToQueue(rescanWorkerTask);
+  }
+
+  @Test
+  public void testGetLastReadDates() {
+    Mockito.when(lastReadDatesRepository.findByComicInAndUserIn(Mockito.anyList(), Mockito.any()))
+        .thenReturn(lastReadDateList);
+
+    final List<LastReadDate> result = this.comicService.getLastReadDates(comicList, user);
+
+    assertNotNull(result);
+    assertSame(lastReadDateList, result);
+
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1))
+        .findByComicInAndUserIn(comicList, user);
   }
 }
