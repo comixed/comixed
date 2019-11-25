@@ -1,6 +1,9 @@
-name: development
+name: deploy
 
-on: push
+on:
+  push:
+    tags:
+    - 'v*'
 
 jobs:
   build:
@@ -10,16 +13,29 @@ jobs:
     steps:
     - name: Checkout sources
       uses: actions/checkout@v1
-    - name: Set up JDK 1.8
+    - name: Setup build environment
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
     - name: Build project
       run: mvn -B package --file pom.xml -P ci -DskipTests
-    - name: Publish release artifacts
-      uses: actions/upload-artifact@v1
+    - name: Create release artifacts
+      id: create_release
+      uses: actions/create-release@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: Release Binaries
-        path: comixed-app/target/artifacts
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload release artifacts
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: 'comixed-app/target/artifacts/comixed-app*.zip'
+        asset_name: 'comixed-app-*.zip'
+        asset_content_type: application/zip

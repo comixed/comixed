@@ -1,0 +1,21 @@
+name: Bump version
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - 'release/**'
+      - github-actions-attempt-2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Bump version and create tag
+      uses: anothrNick/github-tag-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RELEASE_BRANCHES: github-actions-attempt-2
+        WITH_V: true
+        DEFAULT_BUMP: patch
