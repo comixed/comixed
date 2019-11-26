@@ -37,6 +37,7 @@ To achieve this goal, the project will:
 
 ## Status
  * Project Build Status: [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fcomixed%2Fcomixed%2Fbadge%3Fref%3Ddevelop&style=flat-square)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=develop)
+ * SonarCloud Status: [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=comixed_comixed&metric=alert_status)](https://sonarcloud.io/dashboard?id=comixed_comixed)
  * You can download the latest **unsupported** release from the **Releases** tab. Every merge to the **Develop** branch triggers a new build.
 
 ## Overview And Goals
