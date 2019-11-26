@@ -481,6 +481,163 @@
             </ComicBookMatcher>
           </Matchers>
         </Item>
+        <Item xsi:type="ComicIdListItem" Id="8d6ebd2e-22fa-420a-8b3e-7e0ec4a1aeef" Name="Manual">
+          <BookCount>20</BookCount>
+          <NewBookCountDate>2019-11-11T00:17:22.8972318Z</NewBookCountDate>
+          <UnreadBookCount>20</UnreadBookCount>
+          <Display>
+            <View SortKey="1,17,100">
+              <Columns>
+                <Column Id="101" Width="51">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="100" Visible="false" Width="30">
+                  <LastTimeVisible>2014-03-19T22:46:05.9963668+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="102" Width="22">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Width="82">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="1" Width="394">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="17" Width="62">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="2" Width="95">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="3" Visible="false" Width="111">
+                  <LastTimeVisible>2014-03-18T20:43:15.742009+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="4" Visible="false" Width="200" />
+                <Column Id="5" Visible="false" Width="72">
+                  <LastTimeVisible>2014-03-19T22:47:41.5158302+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="6" Visible="false" Width="150">
+                  <LastTimeVisible>2014-03-19T22:44:16.4120989+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="7" Width="58">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="39" Width="91">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="9" Visible="false" Width="200" />
+                <Column Id="10" Visible="false" Width="200" />
+                <Column Id="11" Visible="false" Width="205">
+                  <LastTimeVisible>2014-03-19T22:44:10.6127672+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="12" Visible="false" />
+                <Column Id="13" Visible="false" />
+                <Column Id="14" Visible="false" />
+                <Column Id="15" Width="129">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="16" Visible="false" Width="40" />
+                <Column Id="18" Visible="false" Width="40" />
+                <Column Id="19" Visible="false" Width="40" />
+                <Column Id="20" Width="143">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="21" Visible="false" Width="40" />
+                <Column Id="22" Visible="false" />
+                <Column Id="23" Visible="false" />
+                <Column Id="24" Visible="false" />
+                <Column Id="25" Visible="false" Width="40" />
+                <Column Id="26" Visible="false" Width="200" />
+                <Column Id="27" Visible="false" Width="40" />
+                <Column Id="28" Visible="false" Width="40" />
+                <Column Id="29" Visible="false" Width="40" />
+                <Column Id="30" Visible="false" Width="200" />
+                <Column Id="31" Visible="false" Width="60" />
+                <Column Id="32" Visible="false" Width="40" />
+                <Column Id="33" Visible="false" Width="40" />
+                <Column Id="34" Visible="false" Width="40" />
+                <Column Id="35" Visible="false" Width="22" />
+                <Column Id="36" Visible="false" Width="22" />
+                <Column Id="37" Visible="false" Width="40" />
+                <Column Id="38" Visible="false" Width="40" />
+                <Column Id="8" Visible="false" Width="60" />
+                <Column Id="40" Visible="false" Width="60" />
+                <Column Id="41" Visible="false" Width="60" />
+                <Column Id="42" Visible="false" Width="60" />
+                <Column Id="43" Visible="false" Width="60" />
+                <Column Id="44" Visible="false" Width="60" />
+                <Column Id="45" Visible="false" Width="60" />
+                <Column Id="46" Visible="false" Width="60" />
+                <Column Id="47" Visible="false" Width="60" />
+                <Column Id="48" Visible="false" Width="50" />
+                <Column Id="49" Visible="false" Width="50" />
+                <Column Id="50" Visible="false" Width="50" />
+                <Column Id="51" Visible="false" Width="50" />
+                <Column Id="52" Visible="false" Width="50" />
+                <Column Id="53" Visible="false" Width="50" />
+                <Column Id="54" Visible="false" Width="50" />
+                <Column Id="55" Visible="false" Width="50" />
+                <Column Id="56" Visible="false" Width="50" />
+                <Column Id="57" Visible="false" Width="50" />
+                <Column Id="58" Visible="false" Width="22" />
+                <Column Id="59" Visible="false" Width="22" />
+                <Column Id="60" Visible="false" Width="16" />
+                <Column Id="61" Visible="false" Width="22" />
+                <Column Id="62" Width="100">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="63" Visible="false" Width="100" />
+                <Column Id="64" Visible="false" Width="100" />
+                <Column Id="65" Visible="false" Width="100" />
+                <Column Id="66" Visible="false" Width="100" />
+                <Column Id="67" Visible="false" Width="100" />
+                <Column Id="68" Visible="false" Width="40" />
+                <Column Id="69" Visible="false" Width="40" />
+                <Column Id="70" Visible="false" Width="60" />
+                <Column Id="200" Visible="false" Width="50" />
+                <Column Id="201" Visible="false" Width="50" />
+                <Column Id="202" Visible="false" Width="50" />
+                <Column Id="203" Visible="false" Width="50" />
+                <Column Id="204" Visible="false" Width="50" />
+                <Column Id="205" Visible="false" Width="50" />
+                <Column Id="206" Visible="false" Width="50" />
+                <Column Id="207" Visible="false" Width="50" />
+                <Column Id="208" Visible="false" Width="50" />
+                <Column Id="209" Visible="false" Width="50" />
+                <Column Id="210" Visible="false" Width="50" />
+                <Column Id="211" Visible="false" Width="50" />
+                <Column Id="212" Visible="false" Width="50" />
+                <Column Id="213" Visible="false" Width="50" />
+              </Columns>
+              <GroupsStatus>
+                <Status>AllExpanded</Status>
+                <Keys />
+              </GroupsStatus>
+              <ThumbnailSize>
+                <Width>128</Width>
+                <Height>128</Height>
+              </ThumbnailSize>
+              <TileSize>
+                <Width>192</Width>
+                <Height>96</Height>
+              </TileSize>
+              <ItemRowHeight>30</ItemRowHeight>
+            </View>
+            <Thumbnail>
+              <Lines>
+                <Id>30</Id>
+              </Lines>
+            </Thumbnail>
+            <ShowGroupHeadersWidth>883</ShowGroupHeadersWidth>
+            <QuickSearch />
+          </Display>
+          <BookIds>
+            <guid>cf1d94a6-72e5-4557-8f88-ba54013c8e7a</guid>
+            <guid>afd6e20b-6094-40b1-aa97-b49d3755ffee</guid>
+            <guid>2f3dfc9f-0d3e-49a4-a1ed-76f745de427e</guid>
+            <guid>23414c70-c09b-445d-a488-f0f4e82fee57</guid>
+          </BookIds>
+        </Item>
       </Items>
     </Item>
     <Item xsi:type="ComicListItemFolder" Id="0fbac8ca-ee8d-4b78-a3b5-3d48547b2f53" Name="Temporary Lists"
