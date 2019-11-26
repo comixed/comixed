@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - automate-release-on-develop
 
 jobs:
   build:
