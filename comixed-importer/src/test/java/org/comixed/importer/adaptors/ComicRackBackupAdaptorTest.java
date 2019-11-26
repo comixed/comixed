@@ -41,10 +41,25 @@ public class ComicRackBackupAdaptorTest {
 
   @Test
   public void testLoadLoadsComics() throws ImportAdaptorException {
-    List<Comic> result = this.adaptor.load(TEST_COMICRACK_BACKUP_FILE, CURRENT_PAGES);
+    List<Comic> result =
+        this.adaptor.load(TEST_COMICRACK_BACKUP_FILE, CURRENT_PAGES, new HashMap<>());
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(8, result.size());
+  }
+
+  @Test
+  public void testLoadLoadsLists() throws ImportAdaptorException {
+
+    Map<String, String> guids = new HashMap<>();
+
+    this.adaptor.load(TEST_COMICRACK_BACKUP_FILE, CURRENT_PAGES, guids);
+    Map<String, List> result = this.adaptor.loadLists(TEST_COMICRACK_BACKUP_FILE, guids);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(1, result.size());
+    assertEquals(2, result.get("Manual").size());
   }
 }

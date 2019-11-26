@@ -29,6 +29,7 @@ import org.comixed.importer.adaptors.ImportAdaptorException;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
+import org.comixed.service.library.ComicException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,8 @@ public class ImportFileProcessor {
   protected ComiXedUser importUser;
 
   protected Map<String, String> currentPages = new HashMap<>();
+
+  protected Map<String, String> booksguids = new HashMap<>();
 
   @Autowired private ComicRackBackupAdaptor backupAdaptor;
 
@@ -91,13 +94,22 @@ public class ImportFileProcessor {
 
     try {
       this.logger.debug("Loading comics from source file");
-      List<Comic> comics = this.backupAdaptor.load(file, this.currentPages);
+      List<Comic> comics = this.backupAdaptor.load(file, this.currentPages, this.booksguids);
 
       this.logger.debug("Importing {} comic(s)", comics.size());
       this.importAdaptor.importComics(
           comics, this.replacements, this.currentPages, this.importUser);
+
+      this.logger.debug("Loading comic lists from source file");
+      Map<String, List> comicsLists = this.backupAdaptor.loadLists(file, this.booksguids);
+
+      this.logger.debug("Importing {} comic lists(s)", comicsLists.size());
+      this.importAdaptor.importLists(comicsLists, this.importUser);
+
     } catch (ImportAdaptorException error) {
       throw new ProcessorException("failed to load entries", error);
+    } catch (ComicException error) {
+      throw new ProcessorException("failed to import lists", error);
     }
   }
 }

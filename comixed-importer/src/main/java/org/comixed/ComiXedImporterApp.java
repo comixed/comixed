@@ -71,5 +71,7 @@ public class ComiXedImporterApp implements ApplicationRunner {
     this.logger.info("Source file: {}", source);
 
     this.importFileProcessor.process(source);
+
+    exit(0);
   }
 }

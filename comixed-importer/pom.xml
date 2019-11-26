@@ -25,6 +25,11 @@
       <version>${comixed.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.comixed</groupId>
+      <artifactId>comixed-services</artifactId>
+      <version>${comixed.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.8.1</version>
@@ -35,6 +40,35 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>get-the-git-infos</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>initialize</phase>
+          </execution>
+          <execution>
+            <id>validate-the-git-infos</id>
+            <goals>
+              <goal>validateRevision</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+          <injectAllReactorProjects>true</injectAllReactorProjects>
+          <dateFormat>yyyyMMddHHmmss</dateFormat>
+          <generateGitPropertiesFilename>${project.build.outputDirectory}/build-details.properties
+          </generateGitPropertiesFilename>
+          <verbose>false</verbose>
+          <prefix>build-details</prefix>
+        </configuration>
       </plugin>
     </plugins>
   </build>

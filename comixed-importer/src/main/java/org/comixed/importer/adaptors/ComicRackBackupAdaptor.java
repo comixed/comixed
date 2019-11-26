@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.stream.XMLInputFactory;
@@ -52,14 +53,15 @@ public class ComicRackBackupAdaptor {
    * @return a list of comic files
    * @throws ImportAdaptorException if an error occurs
    */
-  public List<Comic> load(File filename, Map<String, String> currentPages)
+  public List<Comic> load(
+      File filename, Map<String, String> currentPages, Map<String, String> booksguids)
       throws ImportAdaptorException {
     try {
       this.logger.debug("Opening file for reading");
       FileInputStream istream = new FileInputStream(filename);
 
       this.logger.debug("Processing file content");
-      List<Comic> result = this.loadFromXml(istream, currentPages);
+      List<Comic> result = this.loadFromXml(istream, currentPages, booksguids);
 
       this.logger.debug("Closing file");
       istream.close();
@@ -71,7 +73,8 @@ public class ComicRackBackupAdaptor {
     }
   }
 
-  private List<Comic> loadFromXml(InputStream istream, Map<String, String> currentPages)
+  private List<Comic> loadFromXml(
+      InputStream istream, Map<String, String> currentPages, Map<String, String> booksguids)
       throws XMLStreamException, ParseException {
     List<Comic> result = new ArrayList<>();
     final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
@@ -93,6 +96,7 @@ public class ComicRackBackupAdaptor {
               this.logger.debug("Filename: {}", filename);
               comic.setFilename(filename);
               result.add(comic);
+              booksguids.put(xmlInputReader.getAttributeValue(null, "Id"), filename);
             }
             break;
           case "Added":
@@ -117,6 +121,65 @@ public class ComicRackBackupAdaptor {
             // this.logger.debug("Unsupported tag");
             break;
         }
+      }
+      xmlInputReader.next();
+    }
+
+    return result;
+  }
+
+  /**
+   * @param filename
+   * @return a list of comic files
+   * @throws ImportAdaptorException if an error occurs
+   */
+  public Map<String, List> loadLists(File filename, Map<String, String> booksguids)
+      throws ImportAdaptorException {
+    try {
+      this.logger.debug("Opening file for reading");
+      FileInputStream istream = new FileInputStream(filename);
+
+      this.logger.debug("Processing file content");
+      Map<String, List> result = this.loadListsFromXml(istream, booksguids);
+
+      this.logger.debug("Closing file");
+      istream.close();
+
+      this.logger.debug("Returning {} comic entries", result.size());
+      return result;
+    } catch (IOException | XMLStreamException | ParseException error) {
+      throw new ImportAdaptorException("unable to read file", error);
+    }
+  }
+
+  private Map<String, List> loadListsFromXml(InputStream istream, Map<String, String> booksguids)
+      throws XMLStreamException, ParseException {
+    Map<String, List> result = new HashMap<>();
+    final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
+
+    this.logger.debug("Reading lists of XML file");
+
+    while (xmlInputReader.hasNext()) {
+      if (xmlInputReader.isStartElement()
+          && xmlInputReader.getLocalName().equalsIgnoreCase("Item")
+          && xmlInputReader
+              .getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "type")
+              .equalsIgnoreCase("ComicIdListItem")) {
+        String listName = xmlInputReader.getAttributeValue(null, "Name");
+        List<String> comics = new ArrayList<>();
+        while (xmlInputReader.hasNext()) {
+          if (xmlInputReader.isStartElement()
+              && xmlInputReader.getLocalName().equalsIgnoreCase("guid")) {
+            String guid = xmlInputReader.getElementText();
+            String filename = booksguids.get(guid);
+            if (filename == null) this.logger.debug("Book not found for guid {}", guid);
+            else comics.add(filename);
+          }
+          xmlInputReader.next();
+          if (xmlInputReader.isStartElement()
+              && xmlInputReader.getLocalName().equalsIgnoreCase("Item")) break;
+        }
+        result.put(listName, comics);
       }
       xmlInputReader.next();
     }

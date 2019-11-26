@@ -20,6 +20,7 @@ package org.comixed.importer.adaptors;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.comixed.handlers.ComicFileHandler;
@@ -29,6 +30,9 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ComicRepository;
+import org.comixed.service.library.ComicException;
+import org.comixed.service.library.ReadingListNameException;
+import org.comixed.service.library.ReadingListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,7 @@ import org.springframework.stereotype.Component;
  * <code>ComicFileImportAdaptor</code> handles taking a list of comic files and importing them into
  * the database.
  *
+ * @author João França
  * @author Darryl L. Pierce
  */
 @Component
@@ -49,6 +54,8 @@ public class ComicFileImportAdaptor {
   @Autowired private ComicFileHandler comicFileHandler;
 
   @Autowired private ComiXedUserRepository userRepository;
+
+  @Autowired private ReadingListService readingListService;
 
   public void importComics(
       List<Comic> comics,
@@ -113,6 +120,30 @@ public class ComicFileImportAdaptor {
         this.logger.debug("Replacing filename: {}={}", oldname, newname);
         comic.setFilename(newname);
         return;
+      }
+    }
+  }
+
+  public void importLists(Map<String, List> comicsLists, ComiXedUser importUser)
+      throws ComicException {
+
+    for (Map.Entry<String, List> list : comicsLists.entrySet()) {
+
+      String email = importUser.getEmail();
+      String name = list.getKey();
+      List<Long> entries = new ArrayList<>();
+
+      for (String filename : (List<String>) list.getValue()) {
+        Comic comic = this.comicRepository.findByFilename(filename);
+        if (comic != null) {
+          entries.add(comic.getId());
+        }
+      }
+
+      try {
+        this.readingListService.createReadingList(email, name, "Imported from ComicRack", entries);
+      } catch (ReadingListNameException e) {
+        this.logger.info("Reading list {} already exists", name);
       }
     }
   }
