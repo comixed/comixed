@@ -36,7 +36,7 @@ To achieve this goal, the project will:
     * For that, we recommend applications like [Chunky](http://chunkyreader.com/) (iOS), [YACReader](https://www.yacreader.com/) (iOS), [Kuboo](https://play.google.com/store/apps/details?id=com.sethchhim.kuboo) (Android), [Challenger Viewer](https://play.google.com/store/apps/details?id=org.kill.geek.bdviewer) (Android)
 
 ## Status
- * Travis Development Build Status: [![Build Status](https://travis-ci.org/comixed/comixed.svg?branch=develop)](https://travis-ci.org/comixed/comixed)
+ * Project Build Status: [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fcomixed%2Fcomixed%2Fbadge%3Fref%3Ddevelop&style=flat-square)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=develop)
  * You can download the latest **unsupported** release from the **Releases** tab. Every merge to the **Develop** branch triggers a new build.
 
 ## Overview And Goals
