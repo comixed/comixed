@@ -12,4 +12,4 @@ The latest version may be a development build. Use this to get the latest releas
 
 Yopu could also pull a specific version:
 
-```docker run -it -p 7171:7171/tcp -v /PATH/TO/COMICS:/comic_dir -v /PATH/TO/COMIXDB:/root/.comixed mcpierce/comixed:0.4.9-SNAPSHOT```
+```docker run -it -p 7171:7171/tcp -v /PATH/TO/COMICS:/comic_dir -v /PATH/TO/COMIXDB:/root/.comixed mcpierce/comixed:0.5.0-PRERELEASE```
