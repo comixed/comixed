@@ -16,10 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from 'app/app.functions';
-
-export const GET_ALL_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/pages/duplicates`;
-export const SET_BLOCKING_STATE_URL = `${API_ROOT_URL}/pages/hashes/blocking`;
-
-export const GET_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${type}`;
-export const GET_PAGE_FOR_ENTRY_URL = `${API_ROOT_URL}/collections/\${type}/\${name}`;
+export enum CollectionType {
+  PUBLISHERS = 'publisher',
+  SERIES = 'series',
+  CHARACTERS = 'characters',
+  TEAMS = 'teams',
+  LOCATIONS = 'locations',
+  STORIES = 'stories'
+}

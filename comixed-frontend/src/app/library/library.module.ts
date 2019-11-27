@@ -29,6 +29,7 @@ import * as fromSelection from './reducers/selection.reducer';
 import * as fromReadingList from './reducers/reading-list.reducer';
 import * as fromFilters from './reducers/filters.reducer';
 import * as fromDupes from './reducers/duplicate-pages.reducer';
+import * as fromCollections from './reducers/collection.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { LibraryEffects } from './effects/library.effects';
 import { LibraryService } from './services/library.service';
@@ -85,6 +86,9 @@ import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effec
 import { DuplicatePageGridItemComponent } from './components/duplicate-page-grid-item/duplicate-page-grid-item.component';
 import { DuplicatesPageToolbarComponent } from './components/duplicates-page-toolbar/duplicates-page-toolbar.component';
 import { DuplicatePageListItemComponent } from './components/duplicate-page-list-item/duplicate-page-list-item.component';
+import { CollectionService } from 'app/library/services/collection.service';
+import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
+import { CollectionEffects } from 'app/library/effects/collection.effects';
 
 @NgModule({
   imports: [
@@ -112,10 +116,15 @@ import { DuplicatePageListItemComponent } from './components/duplicate-page-list
       fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
       fromDupes.reducer
     ),
+    StoreModule.forFeature(
+      fromCollections.COLLECTION_FEATURE_KEY,
+      fromCollections.reducer
+    ),
     EffectsModule.forFeature([
       LibraryEffects,
       ReadingListEffects,
-      DuplicatePagesEffects
+      DuplicatePagesEffects,
+      CollectionEffects
     ]),
     ContextMenuModule,
     CheckboxModule,
@@ -168,7 +177,9 @@ import { DuplicatePageListItemComponent } from './components/duplicate-page-list
     DuplicatePagesAdaptors,
     ReadingListService,
     ReadingListAdaptor,
-    DuplicatePagesService
+    DuplicatePagesService,
+    CollectionService,
+    CollectionAdaptor
   ]
 })
 export class LibraryModule {

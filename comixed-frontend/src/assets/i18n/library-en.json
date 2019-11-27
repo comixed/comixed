@@ -268,5 +268,17 @@
       "header": "Set Blocking State For Pages",
       "message": "Are you sure you want to {blocking, select, true{block} other{unblock}} the selected pages?"
     }
+  },
+  "collection-effects": {
+    "get-entries": {
+      "error": {
+        "detail": "Failed to get all entries by {collectionType}."
+      }
+    },
+    "get-page-for-entry": {
+      "error": {
+        "details": "Failed to load comics."
+      }
+    }
   }
 }
