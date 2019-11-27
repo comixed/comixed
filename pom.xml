@@ -17,7 +17,7 @@
   <properties>
     <comixed.url>http://www.github.com/comixed/comixed</comixed.url>
     <comixed.version>0.5.0-PRERELEASE</comixed.version>
-    <maven-git-code-format.version>1.37</maven-git-code-format.version>
+    <maven-git-code-format.version>1.36</maven-git-code-format.version>
   </properties>
   <profiles>
     <profile>
