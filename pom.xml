@@ -142,11 +142,10 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      <!-- TODO disabling to fix builds on Windows
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.5</version>
         <executions>
           <execution>
             <goals>
@@ -155,14 +154,13 @@
           </execution>
           <execution>
             <id>report</id>
-            <phase>prepare-package</phase>
+            <phase>test</phase>
             <goals>
               <goal>report</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
-      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-help-plugin</artifactId>
