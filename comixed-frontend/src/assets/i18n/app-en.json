@@ -533,21 +533,6 @@
       },
       "multi-comic-scraping-page": "Scraping",
       "reading-lists-page": "Reading Lists",
-      "collections": {
-        "root": "Collections",
-        "publishers-page": "Publishers",
-        "publisher-details-page": "{name}",
-        "series-page": "Series",
-        "series-details-page": "{name}",
-        "characters-page": "Characters",
-        "character-details-page": "{name}",
-        "teams-page": "Teams",
-        "team-details-page": "{name}",
-        "locations-page": "Locations",
-        "location-details-page": "{name}",
-        "stories-page": "Stories",
-        "story-details-page": "{name}"
-      },
       "account-page": "Account",
       "help": {
         "root": "Help",

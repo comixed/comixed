@@ -280,5 +280,14 @@
         "details": "Failed to load comics."
       }
     }
+  },
+  "collection-details-page": {
+    "page-title": "{name} - {count, plural, =1{One Comic} other{# Comics}}",
+    "title": "{collectionType}: {name}"
+  },
+  "collections": {
+    "error": {
+      "invalid-collection-type": "No such collection type: {name}"
+    }
   }
 }

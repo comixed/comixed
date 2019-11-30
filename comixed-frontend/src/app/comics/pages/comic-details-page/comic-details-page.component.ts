@@ -17,17 +17,17 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
-import { Subscription } from 'rxjs';
-import { AuthenticationAdaptor } from 'app/user';
-import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { MenuItem, MessageService } from 'primeng/api';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Comic } from 'app/comics';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { AppState } from 'app/library';
+import { AuthenticationAdaptor } from 'app/user';
+import { MenuItem, MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -221,7 +221,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
           'breadcrumb.entry.comic-details-page.publisher',
           { name: this.comic.publisher }
         ),
-        routerLink: ['/publishers', this.comic.publisher]
+        routerLink: ['/collections/publishers', this.comic.publisher]
       });
     } else {
       entries.push({ label: '?' });
@@ -232,7 +232,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
           'breadcrumb.entry.comic-details-page.series',
           { name: this.comic.series }
         ),
-        routerLink: ['/series', this.comic.series]
+        routerLink: ['/collections/series', this.comic.series]
       });
     } else {
       entries.push({ label: '?' });

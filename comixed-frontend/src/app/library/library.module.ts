@@ -89,6 +89,7 @@ import { DuplicatePageListItemComponent } from './components/duplicate-page-list
 import { CollectionService } from 'app/library/services/collection.service';
 import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
 import { CollectionEffects } from 'app/library/effects/collection.effects';
+import { CollectionDetailsPageComponent } from './pages/collection-details-page/collection-details-page.component';
 
 @NgModule({
   imports: [
@@ -166,7 +167,8 @@ import { CollectionEffects } from 'app/library/effects/collection.effects';
     DuplicatesPageComponent,
     DuplicatePageGridItemComponent,
     DuplicatesPageToolbarComponent,
-    DuplicatePageListItemComponent
+    DuplicatePageListItemComponent,
+    CollectionDetailsPageComponent
   ],
   providers: [
     LibraryService,
