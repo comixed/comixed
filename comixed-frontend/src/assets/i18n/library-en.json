@@ -289,5 +289,32 @@
     "error": {
       "invalid-collection-type": "No such collection type: {name}"
     }
+  },
+  "collection-page": {
+    "page-title": "{collectionType} - {count, plural, =1{One Comic} other{# Comics}}",
+    "title": "{collectionType}",
+    "table": {
+      "header": {
+        "collection-name": "{collectionType} NAME",
+        "collection-count": "# OF COMICS"
+      },
+      "value": {
+        "collection-count": "{count, plural, =1{1 COMIC} other{# COMICS}}"
+      }
+    },
+    "error": {
+      "invalid-collection-type": "No such collection type: {name}"
+    }
+  },
+  "breadcrumb": {
+    "collections": {
+      "root": "Collections",
+      "publishers": "Publishers",
+      "series": "Series",
+      "characters": "Characters",
+      "teams": "Teams",
+      "locations": "Locations",
+      "stories": "Stories"
+    }
   }
 }

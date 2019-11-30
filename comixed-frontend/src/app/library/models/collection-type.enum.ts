@@ -17,7 +17,7 @@
  */
 
 export enum CollectionType {
-  PUBLISHERS = 'publisher',
+  PUBLISHERS = 'publishers',
   SERIES = 'series',
   CHARACTERS = 'characters',
   TEAMS = 'teams',
