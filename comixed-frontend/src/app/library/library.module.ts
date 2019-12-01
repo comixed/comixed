@@ -60,18 +60,6 @@ import {
 import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
 import { LibraryRoutingModule } from 'app/library/library-routing.module';
-import { PublishersPageComponent } from 'app/library/pages/publishers-page/publishers-page.component';
-import { PublisherDetailsPageComponent } from 'app/library/pages/publisher-details-page/publisher-details-page.component';
-import { SeriesPageComponent } from 'app/library/pages/series-page/series-page.component';
-import { SeriesDetailsPageComponent } from 'app/library/pages/series-details-page/series-details-page.component';
-import { CharactersPageComponent } from 'app/library/pages/characters-page/characters-page.component';
-import { CharacterDetailsPageComponent } from 'app/library/pages/character-details-page/character-details-page.component';
-import { TeamsPageComponent } from 'app/library/pages/teams-page/teams-page.component';
-import { TeamDetailsPageComponent } from 'app/library/pages/team-details-page/team-details-page.component';
-import { LocationsPageComponent } from 'app/library/pages/locations-page/locations-page.component';
-import { LocationDetailsPageComponent } from 'app/library/pages/location-details-page/location-details-page.component';
-import { StoryArcsPageComponent } from 'app/library/pages/story-arcs-page/story-arcs-page.component';
-import { StoryArcDetailsPageComponent } from 'app/library/pages/story-arc-details-page/story-arc-details-page.component';
 import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
 import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
 import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
@@ -145,18 +133,6 @@ import { CollectionPageComponent } from './pages/collection-page/collection-page
     ComicListComponent,
     ComicListToolbarComponent,
     LibraryFilterComponent,
-    PublishersPageComponent,
-    PublisherDetailsPageComponent,
-    SeriesPageComponent,
-    SeriesDetailsPageComponent,
-    CharactersPageComponent,
-    CharacterDetailsPageComponent,
-    TeamsPageComponent,
-    TeamDetailsPageComponent,
-    LocationsPageComponent,
-    LocationDetailsPageComponent,
-    StoryArcsPageComponent,
-    StoryArcDetailsPageComponent,
     MissingComicsPageComponent,
     MultiComicScrapingPageComponent,
     ScrapingComicListComponent,
