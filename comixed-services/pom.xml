@@ -7,7 +7,6 @@
     <groupId>org.comixed</groupId>
     <artifactId>comixed</artifactId>
     <version>0.5.0-PRERELEASE</version>
-    <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixed</groupId>
   <artifactId>comixed-services</artifactId>

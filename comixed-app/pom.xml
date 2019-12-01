@@ -7,7 +7,6 @@
     <groupId>org.comixed</groupId>
     <artifactId>comixed</artifactId>
     <version>0.5.0-PRERELEASE</version>
-    <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixed</groupId>
   <artifactId>comixed-app</artifactId>
@@ -45,14 +44,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <manifest>
             <mainClass>org.comixed.ComiXedApp</mainClass>
-          </manifest>
         </configuration>
       </plugin>
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
+        <version>4.0.0</version>
         <executions>
           <execution>
             <id>get-the-git-infos</id>
@@ -77,11 +75,12 @@
           </generateGitPropertiesFilename>
           <verbose>false</verbose>
           <prefix>build-details</prefix>
+          <useNativeGit>true</useNativeGit>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.2.0</version>
         <configuration>
           <outputDirectory>target/artifacts</outputDirectory>
           <descriptors>
