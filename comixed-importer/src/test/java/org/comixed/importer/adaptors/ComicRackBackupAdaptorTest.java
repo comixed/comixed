@@ -55,11 +55,11 @@ public class ComicRackBackupAdaptorTest {
     Map<String, String> guids = new HashMap<>();
 
     this.adaptor.load(TEST_COMICRACK_BACKUP_FILE, CURRENT_PAGES, guids);
-    Map<String, List> result = this.adaptor.loadLists(TEST_COMICRACK_BACKUP_FILE, guids);
+    Map<String, Object> result = this.adaptor.loadLists(TEST_COMICRACK_BACKUP_FILE, guids);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(1, result.size());
-    assertEquals(2, result.get("Manual").size());
+    assertEquals(8, result.size());
+    assertEquals(2, ((List<String>) result.get("Manual")).size());
   }
 }

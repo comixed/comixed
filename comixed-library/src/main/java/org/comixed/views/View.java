@@ -48,6 +48,9 @@ public class View {
   /** Used when fetching a reading list. */
   public interface ReadingList {}
 
+  /** Used when fetching a smart reading list. */
+  public interface SmartReadingList {}
+
   /** Uses when fetching the list of duplicate pages. */
   public class DuplicatePageList {}
 }

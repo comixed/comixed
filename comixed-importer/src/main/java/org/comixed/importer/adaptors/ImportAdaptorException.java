@@ -27,4 +27,8 @@ public class ImportAdaptorException extends Exception {
   public ImportAdaptorException(String message, Exception cause) {
     super(message, cause);
   }
+
+  public ImportAdaptorException(String message) {
+    super(message);
+  }
 }

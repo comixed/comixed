@@ -26,7 +26,12 @@ import java.util.Map;
 import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.importer.PathReplacement;
+import org.comixed.importer.model.ComicBookGroupMatcher;
+import org.comixed.importer.model.ComicBookItemMatcher;
+import org.comixed.importer.model.ComicBookMatcher;
+import org.comixed.importer.model.ComicSmartListItem;
 import org.comixed.model.library.Comic;
+import org.comixed.model.library.Matcher;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ComicRepository;
@@ -124,27 +129,96 @@ public class ComicFileImportAdaptor {
     }
   }
 
-  public void importLists(Map<String, List> comicsLists, ComiXedUser importUser)
+  public void importLists(Map<String, Object> lists, ComiXedUser importUser)
+      throws ReadingListNameException, ComicException, ImportAdaptorException {
+
+    for (Map.Entry list : lists.entrySet()) {
+
+      String listName = (String) list.getKey();
+
+      if (list.getValue() instanceof List) {
+        this.logger.info("Importing list: {}", listName);
+        importList(listName, (List) list.getValue(), importUser);
+      } else if (list.getValue() instanceof ComicSmartListItem) {
+        this.logger.info("Importing smart list: {}", listName);
+        importSmartList(listName, (ComicSmartListItem) list.getValue(), importUser);
+      } else {
+        this.logger.error("List {} of unknown type!", listName);
+      }
+    }
+  }
+
+  public void importList(String listName, List<String> list, ComiXedUser importUser)
       throws ComicException {
 
-    for (Map.Entry<String, List> list : comicsLists.entrySet()) {
+    String email = importUser.getEmail();
+    List<Long> entries = new ArrayList<>();
 
-      String email = importUser.getEmail();
-      String name = list.getKey();
-      List<Long> entries = new ArrayList<>();
-
-      for (String filename : (List<String>) list.getValue()) {
-        Comic comic = this.comicRepository.findByFilename(filename);
-        if (comic != null) {
-          entries.add(comic.getId());
-        }
+    for (String filename : list) {
+      Comic comic = this.comicRepository.findByFilename(filename);
+      if (comic != null) {
+        entries.add(comic.getId());
       }
+    }
 
-      try {
-        this.readingListService.createReadingList(email, name, "Imported from ComicRack", entries);
-      } catch (ReadingListNameException e) {
-        this.logger.info("Reading list {} already exists", name);
+    try {
+      this.readingListService.createReadingList(
+          email, listName, "Imported from ComicRack", entries);
+    } catch (ReadingListNameException e) {
+      this.logger.error("Reading list {} already exists!", listName);
+    }
+  }
+
+  public void importSmartList(String listName, ComicSmartListItem list, ComiXedUser importUser)
+      throws ReadingListNameException, ImportAdaptorException {
+
+    String email = importUser.getEmail();
+
+    List<Matcher> matchers = importMatchers(list.getMatchers());
+
+    this.readingListService.createSmartReadingList(
+        email, listName, "Imported from ComicRack", list.isNot(), list.getMatcherMode(), matchers);
+  }
+
+  public List<Matcher> importMatchers(final List<ComicBookMatcher> matchers)
+      throws ImportAdaptorException {
+
+    List<Matcher> matchersList = new ArrayList<>();
+
+    for (ComicBookMatcher matcher : matchers) {
+      matchersList.add(importMatcher(matcher));
+    }
+
+    return matchersList;
+  }
+
+  public Matcher importMatcher(final ComicBookMatcher matcher) throws ImportAdaptorException {
+
+    if (matcher instanceof ComicBookGroupMatcher) {
+
+      ComicBookGroupMatcher groupMatcher = (ComicBookGroupMatcher) matcher;
+      List<Matcher> matchersList = new ArrayList<>();
+      for (ComicBookMatcher matcherMatcher : groupMatcher.getMatchers()) {
+        matchersList.add(importMatcher(matcherMatcher));
       }
+      return this.readingListService.createMatcher(
+          groupMatcher.getType(),
+          groupMatcher.isNot(),
+          groupMatcher.getMatcherMode(),
+          matchersList);
+
+    } else if (matcher instanceof ComicBookItemMatcher) {
+
+      ComicBookItemMatcher itemMatcher = (ComicBookItemMatcher) matcher;
+      return this.readingListService.createMatcher(
+          itemMatcher.getType(),
+          itemMatcher.isNot(),
+          itemMatcher.getMatchOperator(),
+          itemMatcher.getValue());
+
+    } else {
+      this.logger.error("Matcher {} of unknown type!", matcher.getType());
+      throw new ImportAdaptorException("Failed to import matcher");
     }
   }
 }

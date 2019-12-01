@@ -30,6 +30,7 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.service.library.ComicException;
+import org.comixed.service.library.ReadingListNameException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,15 +102,17 @@ public class ImportFileProcessor {
           comics, this.replacements, this.currentPages, this.importUser);
 
       this.logger.debug("Loading comic lists from source file");
-      Map<String, List> comicsLists = this.backupAdaptor.loadLists(file, this.booksguids);
+      Map<String, Object> comicsLists = this.backupAdaptor.loadLists(file, this.booksguids);
 
-      this.logger.debug("Importing {} comic lists(s)", comicsLists.size());
+      this.logger.debug("Importing {} comic list(s)", comicsLists.size());
       this.importAdaptor.importLists(comicsLists, this.importUser);
 
     } catch (ImportAdaptorException error) {
       throw new ProcessorException("failed to load entries", error);
     } catch (ComicException error) {
       throw new ProcessorException("failed to import lists", error);
+    } catch (ReadingListNameException error) {
+      throw new ProcessorException("failed to import smart lists", error);
     }
   }
 }

@@ -10,6 +10,7 @@
         <Page Image="1" ImageWidth="1988" ImageHeight="3056" Type="FrontCover"/>
       </Pages>
       <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <CurrentPage>33</CurrentPage>
       <ComicInfoIsDirty>true</ComicInfoIsDirty>
       <FileSize>49503776</FileSize>
       <FileModifiedTime>2018-08-26T20:56:49.6180916Z</FileModifiedTime>
@@ -267,7 +268,7 @@
           <CacheStorage/>
           <Display/>
           <Matchers>
-            <ComicBookMatcher xsi:type="ComicBookRatingMatcher" MatchOperator="1">
+            <ComicBookMatcher xsi:type="ComicBookRatingMatcher" Not="true" MatchOperator="1">
               <MatchValue>3</MatchValue>
             </ComicBookMatcher>
           </Matchers>
