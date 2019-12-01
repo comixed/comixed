@@ -8,7 +8,7 @@
   <fileSets>
     <fileSet>
       <directory>${project.basedir}/..</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <includes>
         <include>CONTRIBUTORS.md</include>
         <include>LICENSE</include>
@@ -19,14 +19,14 @@
     </fileSet>
     <fileSet>
       <directory>${project.build.directory}</directory>
-      <outputDirectory>/bin</outputDirectory>
+      <outputDirectory>bin</outputDirectory>
       <includes>
         <include>*.jar</include>
       </includes>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/src/main/scripts</directory>
-      <outputDirectory>/bin</outputDirectory>
+      <outputDirectory>bin</outputDirectory>
       <includes>
         <include>*.sh</include>
         <include>*.bat</include>
