@@ -11,4 +11,5 @@
   <include file="/db/migrations/0.5.0/003_issue-553_added_date_deleted_to_comics.xml"/>
   <include file="/db/migrations/0.5.0/004_issue-578_rename_order_to_sequence.xml"/>
   <include file="/db/migrations/0.5.0/005_create_bookmarks_table.xml"/>
+  <include file="/db/migrations/0.5.0/006_issue-72_create_smartlists_table.xml"/>
 </databaseChangeLog>

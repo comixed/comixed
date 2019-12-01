@@ -26,6 +26,8 @@ import org.comixed.importer.adaptors.ComicFileImportAdaptor;
 import org.comixed.importer.adaptors.ComicRackBackupAdaptor;
 import org.comixed.importer.adaptors.ImportAdaptorException;
 import org.comixed.model.library.Comic;
+import org.comixed.service.library.ComicException;
+import org.comixed.service.library.ReadingListNameException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -66,20 +68,6 @@ public class ImportFileProcessorTest {
     this.processor.process("src/test/resources");
   }
 
-  //    @Test(expected = ProcessorException.class)
-  public void testProcessComicRackAdaptorThrowsException()
-      throws ProcessorException, ImportAdaptorException {
-    Mockito.when(comicRackBackupAdaptor.load(Mockito.any(), Mockito.any(), Mockito.any()))
-        .thenThrow(ImportAdaptorException.class);
-
-    try {
-      this.processor.process(TEST_SOURCE_FILENAME);
-    } finally {
-      Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
-          .load(fileCaptor.capture(), pagesCaptor.capture(), guidsCaptor.capture());
-    }
-  }
-
   @Test(expected = ProcessorException.class)
   public void testProcessComicFileImporterThrowsException()
       throws ImportAdaptorException, ProcessorException {
@@ -100,6 +88,36 @@ public class ImportFileProcessorTest {
               this.processor.replacements,
               this.processor.currentPages,
               this.processor.importUser);
+    }
+  }
+
+  @Test(expected = ProcessorException.class)
+  public void testProcessComicFileImporterThrowsComicExceptionException()
+      throws ProcessorException, ImportAdaptorException, ReadingListNameException, ComicException {
+    Mockito.doThrow(ComicException.class)
+        .when(importAdaptor)
+        .importLists(Mockito.any(), Mockito.any());
+
+    try {
+      this.processor.process(TEST_SOURCE_FILENAME);
+    } finally {
+      Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
+          .load(fileCaptor.capture(), pagesCaptor.capture(), guidsCaptor.capture());
+    }
+  }
+
+  @Test(expected = ProcessorException.class)
+  public void testProcessComicFileImporterThrowsReadingListNameExceptionExceptionException()
+      throws ProcessorException, ImportAdaptorException, ReadingListNameException, ComicException {
+    Mockito.doThrow(ReadingListNameException.class)
+        .when(importAdaptor)
+        .importLists(Mockito.any(), Mockito.any());
+
+    try {
+      this.processor.process(TEST_SOURCE_FILENAME);
+    } finally {
+      Mockito.verify(comicRackBackupAdaptor, Mockito.times(1))
+          .load(fileCaptor.capture(), pagesCaptor.capture(), guidsCaptor.capture());
     }
   }
 
