@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project.
+ * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
-import java.util.List;
-import org.comixed.model.library.PageType;
-import org.springframework.data.jpa.repository.Query;
+import org.comixed.model.library.ComicFormat;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-/**
- * <code>PageTypeRepository</code> retrieves instances of {@link PageType} from the database.
- *
- * @author The ComiXed Project
- */
-public interface PageTypeRepository extends CrudRepository<PageType, Long> {
-  /**
-   * Returns the default offset type.
-   *
-   * @return the default offset type
-   */
-  @Query("SELECT pt FROM PageType pt WHERE pt.name = 'story'")
-  PageType getDefaultPageType();
-
-  @Query("SELECT pt FROM PageType pt")
-  List<PageType> findPageTypes();
-}
+@Repository
+public interface ComicFormatRepository extends CrudRepository<ComicFormat, Long> {}

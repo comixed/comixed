@@ -16,13 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
 import java.util.List;
+import org.comixed.model.library.Comic;
+import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 public interface LastReadDatesRepository extends CrudRepository<LastReadDate, Long> {
   List<LastReadDate> findAllForUser(@Param("userId") long userId);
+
+  List<LastReadDate> findByComicInAndUserIn(List<Comic> comics, ComiXedUser user);
 }

@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListService;
 import org.comixed.utils.FileTypeIdentifier;

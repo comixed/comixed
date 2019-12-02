@@ -18,6 +18,7 @@
 
 export const COMIXED_API_ROOT = '/api';
 
+export const GET_COMICS_URL = `${COMIXED_API_ROOT}/library`;
 export const GET_UPDATES_URL = `${COMIXED_API_ROOT}/comics/since/\${timestamp}`;
 export const START_RESCAN_URL = `${COMIXED_API_ROOT}/comics/rescan`;
 export const DELETE_MULTIPLE_COMICS_URL = `${COMIXED_API_ROOT}/comics/multiple/delete`;

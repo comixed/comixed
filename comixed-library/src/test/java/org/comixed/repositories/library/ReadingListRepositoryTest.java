@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
 import static org.junit.Assert.*;
 
@@ -28,6 +28,8 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
+import org.comixed.repositories.ComiXedUserRepository;
+import org.comixed.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -25,6 +25,9 @@ import {
 } from 'app/library/reducers/library.reducer';
 import * as LibraryActions from '../actions/library.actions';
 import {
+  LibraryComicsReceived,
+  LibraryGetComics,
+  LibraryGetComicsFailed,
   LibraryGetUpdates,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
@@ -49,8 +52,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Comic } from 'app/comics';
 
 describe('LibraryAdaptor', () => {
+  const PAGE = 17;
+  const COUNT = 100;
+  const SORT_FIELD = 'series';
+  const ASCENDING = false;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
+  const LATEST_UPDATED_DATE = new Date();
+  const COMIC_COUNT = 3072;
   const COMIC = COMIC_1;
   const IDS = [7, 17, 65, 1, 29, 71];
 
@@ -79,6 +88,82 @@ describe('LibraryAdaptor', () => {
 
   it('should create an instance', () => {
     expect(adaptor).toBeTruthy();
+  });
+
+  describe('getting comics', () => {
+    beforeEach(() => {
+      adaptor.getComics(PAGE, COUNT, SORT_FIELD, ASCENDING);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryGetComics({
+          page: PAGE,
+          count: COUNT,
+          sortField: SORT_FIELD,
+          ascending: ASCENDING
+        })
+      );
+    });
+
+    it('provides updates', () => {
+      adaptor.fetchingUpdate$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(
+          new LibraryComicsReceived({
+            comics: COMICS,
+            lastReadDates: LAST_READ_DATES,
+            lastUpdatedDate: LATEST_UPDATED_DATE,
+            comicCount: COMIC_COUNT
+          })
+        );
+      });
+
+      it('provides updates', () => {
+        adaptor.fetchingUpdate$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('updates the comics', () => {
+        adaptor.comic$.subscribe(response => expect(response).toEqual(COMICS));
+      });
+
+      it('updates the last read dates', () => {
+        adaptor.lastReadDate$.subscribe(response =>
+          expect(response).toEqual(LAST_READ_DATES)
+        );
+      });
+
+      it('updates the last updated date', () => {
+        adaptor.lastUpdatedDate$.subscribe(response =>
+          expect(response).toEqual(LATEST_UPDATED_DATE)
+        );
+      });
+
+      it('updates the comic count', () => {
+        adaptor.comicCount$.subscribe(response =>
+          expect(response).toEqual(COMIC_COUNT)
+        );
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryGetComicsFailed());
+      });
+
+      it('provides updates', () => {
+        adaptor.fetchingUpdate$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
   });
 
   describe('getting library updates', () => {

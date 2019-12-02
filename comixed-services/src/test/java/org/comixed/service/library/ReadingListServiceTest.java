@@ -26,7 +26,7 @@ import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.ReadingListRepository;
+import org.comixed.repositories.library.ReadingListRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;

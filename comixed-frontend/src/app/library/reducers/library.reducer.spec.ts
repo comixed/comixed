@@ -16,10 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { initial_state, LibraryState, reducer } from './library.reducer';
+import { initialState, LibraryState, reducer } from './library.reducer';
 import {
+  LibraryComicsReceived,
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
+  LibraryGetComics,
+  LibraryGetComicsFailed,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryMultipleComicsDeleted,
@@ -41,11 +44,17 @@ import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtur
 describe('Library Reducer', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
+  const PAGE = 1;
+  const COUNT = 25;
+  const SORT_FIELD = 'addedDate';
+  const ASCENDING = true;
+  const COMIC_COUNT = 2372;
+  const LATEST_UPDATED_DATE = new Date();
 
   let state: LibraryState;
 
   beforeEach(() => {
-    state = { ...initial_state };
+    state = { ...initialState };
   });
 
   describe('the initial state', () => {
@@ -69,6 +78,14 @@ describe('Library Reducer', () => {
       expect(state.lastReadDates).toEqual([]);
     });
 
+    it('has a comic count of 0', () => {
+      expect(state.comicCount).toEqual(0);
+    });
+
+    it('has a last updated date of 0', () => {
+      expect(state.lastUpdatedDate).toEqual(new Date(0));
+    });
+
     it('has a latest updated date of 0', () => {
       expect(state.latestUpdatedDate).toEqual(0);
     });
@@ -89,6 +106,78 @@ describe('Library Reducer', () => {
 
     it('clears the comics', () => {
       expect(state.comics).toEqual([]);
+    });
+  });
+
+  describe('when getting a page of comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, fetchingUpdates: false },
+        new LibraryGetComics({
+          page: PAGE,
+          count: COUNT,
+          sortField: SORT_FIELD,
+          ascending: ASCENDING
+        })
+      );
+    });
+
+    it('sets the updating flag', () => {
+      expect(state.fetchingUpdates).toBeTruthy();
+    });
+  });
+
+  describe('when comics are received', () => {
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          fetchingUpdates: true,
+          comics: [],
+          lastReadDates: [],
+          comicCount: 0,
+          latestUpdatedDate: 0
+        },
+        new LibraryComicsReceived({
+          comics: COMICS,
+          lastReadDates: LAST_READ_DATES,
+          comicCount: COMIC_COUNT,
+          lastUpdatedDate: LATEST_UPDATED_DATE
+        })
+      );
+    });
+
+    it('clears the fetching updates flag', () => {
+      expect(state.fetchingUpdates).toBeFalsy();
+    });
+
+    it('updates the list of comics', () => {
+      expect(state.comics).toEqual(COMICS);
+    });
+
+    it('updates the last read dates', () => {
+      expect(state.lastReadDates).toEqual(LAST_READ_DATES);
+    });
+
+    it('updates the comic count', () => {
+      expect(state.comicCount).toEqual(COMIC_COUNT);
+    });
+
+    it('updates the latest updated date', () => {
+      expect(state.lastUpdatedDate).toEqual(LATEST_UPDATED_DATE);
+    });
+  });
+
+  describe('when getting a page of comics fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, fetchingUpdates: true },
+        new LibraryGetComicsFailed()
+      );
+    });
+
+    it('clears the fetching updates flag', () => {
+      expect(state.fetchingUpdates).toBeFalsy();
     });
   });
 

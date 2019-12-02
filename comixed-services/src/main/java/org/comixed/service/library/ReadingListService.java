@@ -20,12 +20,11 @@ package org.comixed.service.library;
 
 import java.util.List;
 import java.util.Optional;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.ReadingList;
-import org.comixed.model.library.ReadingListEntry;
+import org.comixed.model.library.*;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.ReadingListRepository;
+import org.comixed.repositories.library.ReadingListRepository;
+import org.comixed.repositories.library.SmartReadingListRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,7 @@ public class ReadingListService {
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired ReadingListRepository readingListRepository;
+  @Autowired SmartReadingListRepository smartReadingListRepository;
   @Autowired ComiXedUserRepository userRepository;
   @Autowired ComicService comicService;
 
@@ -134,5 +134,68 @@ public class ReadingListService {
     }
 
     throw new NoSuchReadingListException("Invalid reading list: id=" + id);
+  }
+
+  @Transactional
+  public SmartReadingList createSmartReadingList(
+      final String email,
+      final String name,
+      final String summary,
+      final boolean not,
+      final String mode,
+      final List<Matcher> matchers)
+      throws ReadingListNameException {
+    this.logger.info("Creating smart reading list: email={} name={}", email, name);
+
+    this.logger.debug("Getting owner");
+    final ComiXedUser owner = this.userRepository.findByEmail(email);
+    SmartReadingList smartReadingList =
+        this.smartReadingListRepository.findSmartReadingListForUser(owner, name);
+
+    if (smartReadingList != null) {
+      throw new ReadingListNameException("Name already used: " + name);
+    }
+    this.logger.debug("Creating reading list object");
+    smartReadingList = new SmartReadingList();
+    smartReadingList.setOwner(owner);
+    smartReadingList.setName(name);
+    smartReadingList.setSummary(summary);
+    smartReadingList.setNot(not);
+    smartReadingList.setMode(mode);
+    for (Matcher matcher : matchers) {
+      smartReadingList.addMatcher(matcher);
+    }
+
+    this.logger.debug("Saving smart reading list");
+    return this.smartReadingListRepository.save(smartReadingList);
+  }
+
+  public Matcher createMatcher(
+      final String type, final boolean not, final String mode, final List<Matcher> matchers) {
+    this.logger.debug("Creating Group matcher: type={} not={} mode={}", type, not, mode);
+
+    Matcher matcher = new Matcher();
+    matcher.setType(type);
+    matcher.setNot(not);
+    matcher.setMode(mode);
+    for (Matcher matcherMatcher : matchers) {
+      matcher.addMatcher(matcher);
+    }
+
+    return matcher;
+  }
+
+  public Matcher createMatcher(
+      final String type, final boolean not, final String operator, final String value) {
+    this.logger.debug(
+        "Creating Item matcher: type={} not={} operator={} value={}", type, not, operator, value);
+
+    Matcher matcher = new Matcher();
+    matcher.setType(type);
+    matcher.setNot(not);
+    matcher.setOperator(operator);
+    matcher.setValue(value);
+
+    return matcher;
   }
 }

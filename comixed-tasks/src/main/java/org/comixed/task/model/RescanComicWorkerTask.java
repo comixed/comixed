@@ -20,7 +20,7 @@ package org.comixed.task.model;
 
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
-import org.comixed.repositories.PageRepository;
+import org.comixed.repositories.library.PageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

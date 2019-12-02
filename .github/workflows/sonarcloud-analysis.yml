@@ -1,0 +1,24 @@
+name: "Analyze code with SonarCloud"
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+
+jobs:
+  sonarCloudTrigger:
+    name: SonarCloud Trigger
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Setup build environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build
+        run: mvn clean package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=comixed -Dsonar.projectKey=comixed_comixed -Dsonar.sources=./src -Dsonar.exclusions=**/*test*/** -Dsonar.test.inclusions=**/*test*/** -Pci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

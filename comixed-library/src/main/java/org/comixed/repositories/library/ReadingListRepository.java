@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
-import org.comixed.model.library.ComicFormat;
+import java.util.List;
+import org.comixed.model.library.ReadingList;
+import org.comixed.model.user.ComiXedUser;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ComicFormatRepository extends CrudRepository<ComicFormat, Long> {}
+public interface ReadingListRepository extends CrudRepository<ReadingList, Long> {
+  @Query("SELECT list FROM ReadingList list WHERE list.owner = :owner")
+  List<ReadingList> findAllReadingListsForUser(ComiXedUser owner);
+
+  @Query("SELECT list FROM ReadingList list WHERE list.owner = :owner AND list.name = :listName")
+  ReadingList findReadingListForUser(ComiXedUser owner, String listName);
+}

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
 import java.util.Date;
 import java.util.List;
@@ -56,8 +56,16 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * Return all comic entries that have been updated after the specified timestamp.
    *
    * @param timestamp the timestamp
-   * @param pageable the pageable settings
+   * @param pageable the constraints
    * @return the list of comics
    */
   List<Comic> findAllByDateLastUpdatedGreaterThan(Date timestamp, Pageable pageable);
+
+  /**
+   * Returns the most recently updated comics.
+   *
+   * @param pageable the constraints
+   * @return the list of comics
+   */
+  List<Comic> findTopByOrderByDateLastUpdatedDesc(Pageable pageable);
 }

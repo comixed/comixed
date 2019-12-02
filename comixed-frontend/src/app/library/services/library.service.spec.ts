@@ -26,6 +26,7 @@ import {
 import { interpolate } from 'app/app.functions';
 import {
   DELETE_MULTIPLE_COMICS_URL,
+  GET_COMICS_URL,
   GET_UPDATES_URL,
   START_RESCAN_URL
 } from 'app/app.constants';
@@ -34,11 +35,22 @@ import { StartRescanResponse } from 'app/library/models/net/start-rescan-respons
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
+import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
+import { GetComicsRequest } from 'app/library/models/net/get-comics-request';
 
 describe('LibraryService', () => {
   const TIMESTAMP = new Date().getTime();
   const TIMEOUT = Math.floor(Math.random() * 3000);
   const MAXIMUM_RECORDS = Math.floor(Math.random() * 1000);
+  const PAGE = 17;
+  const COUNT = 100;
+  const SORT_FIELD = 'series';
+  const ASCENDING = false;
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
+  const COMIC_COUNT = 2372;
+  const LATEST_UPDATED_DATE = new Date();
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
@@ -57,8 +69,29 @@ describe('LibraryService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('can get comics', () => {
+    const RESPONSE = {
+      comics: COMICS,
+      lastReadDates: LAST_READ_DATES,
+      latestUpdatedDate: LATEST_UPDATED_DATE,
+      comicCount: COMIC_COUNT
+    } as GetComicsResponse;
+    service
+      .getComics(PAGE, COUNT, SORT_FIELD, ASCENDING)
+      .subscribe(response => expect(response).toEqual(RESPONSE));
+
+    const req = httpMock.expectOne(interpolate(GET_COMICS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      page: PAGE,
+      count: COUNT,
+      sortField: SORT_FIELD,
+      ascending: ASCENDING
+    } as GetComicsRequest);
+    req.flush(RESPONSE);
+  });
+
   it('can get updates from the library', () => {
-    const COMICS = [COMIC_1, COMIC_3, COMIC_5];
     const PENDING_IMPORTS = 7;
     const PENDING_RESCANS = 17;
     const PROCESSING_COUNT = 32;
@@ -92,8 +125,6 @@ describe('LibraryService', () => {
   });
 
   it('can start a rescan', () => {
-    const COUNT = 29;
-
     service.startRescan().subscribe((response: StartRescanResponse) => {
       expect(response.count).toEqual(COUNT);
     });

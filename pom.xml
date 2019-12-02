@@ -6,7 +6,7 @@
   <groupId>org.comixed</groupId>
   <artifactId>comixed</artifactId>
   <packaging>pom</packaging>
-  <version>0.4.9-SNAPSHOT</version>
+  <version>0.5.0-PRERELEASE</version>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -16,8 +16,8 @@
   <url>http://github.com/mcpierce/comixed</url>
   <properties>
     <comixed.url>http://www.github.com/comixed/comixed</comixed.url>
-    <comixed.version>0.4.9-SNAPSHOT</comixed.version>
-    <maven-git-code-format.version>1.37</maven-git-code-format.version>
+    <comixed.version>0.5.0-PRERELEASE</comixed.version>
+    <maven-git-code-format.version>1.36</maven-git-code-format.version>
   </properties>
   <profiles>
     <profile>
@@ -94,6 +94,9 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>debugging</id>
+    </profile>
   </profiles>
   <dependencies>
     <dependency>
@@ -139,11 +142,10 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      <!-- TODO disabling to fix builds on Windows
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.5</version>
         <executions>
           <execution>
             <goals>
@@ -152,14 +154,13 @@
           </execution>
           <execution>
             <id>report</id>
-            <phase>prepare-package</phase>
+            <phase>test</phase>
             <goals>
               <goal>report</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
-      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-help-plugin</artifactId>
@@ -173,6 +174,11 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>3.7.0.1746</version>
       </plugin>
     </plugins>
   </build>

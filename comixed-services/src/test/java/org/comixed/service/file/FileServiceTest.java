@@ -32,7 +32,7 @@ import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
 import org.comixed.model.library.Comic;
-import org.comixed.repositories.ComicRepository;
+import org.comixed.repositories.library.ComicRepository;
 import org.comixed.task.model.AddComicWorkerTask;
 import org.comixed.task.model.QueueComicsWorkerTask;
 import org.comixed.task.runner.Worker;

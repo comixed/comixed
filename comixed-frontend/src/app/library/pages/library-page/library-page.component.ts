@@ -27,6 +27,7 @@ import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Comic } from 'app/comics';
+import { LoadPageEvent } from 'app/library/models/ui/load-page-event';
 
 @Component({
   selector: 'app-library-page',
@@ -38,6 +39,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   user: User;
   comicsSubscription: Subscription;
   comics: Comic[] = [];
+  comicCountSubscription: Subscription;
+  comicCount = 0;
   selectedComicsSubscription: Subscription;
   selectedComics: Comic[] = [];
   rescanCount = 0;
@@ -70,6 +73,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         })
       );
     });
+    this.comicCountSubscription = this.libraryAdaptor.comicCount$.subscribe(
+      count => (this.comicCount = count)
+    );
     this.selectedComicsSubscription = this.selectionAdaptor.comicSelection$.subscribe(
       selected_comics => (this.selectedComics = selected_comics)
     );
@@ -88,6 +94,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.authSubscription.unsubscribe();
     this.comicsSubscription.unsubscribe();
+    this.comicCountSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
     this.importCountSubscription.unsubscribe();
     this.rescanCountSubscription.unsubscribe();
@@ -131,5 +138,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.breadcrumbAdaptor.loadEntries([
       { label: this.translateService.instant('breadcrumb.entry.library-page') }
     ]);
+  }
+
+  loadPage(event: LoadPageEvent): void {
+    this.libraryAdaptor.getComics(
+      event.page,
+      event.size,
+      event.sortField,
+      event.ascending
+    );
   }
 }

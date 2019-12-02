@@ -22,16 +22,32 @@ import { Observable } from 'rxjs';
 import { interpolate } from 'app/app.functions';
 import {
   DELETE_MULTIPLE_COMICS_URL,
+  GET_COMICS_URL,
   GET_UPDATES_URL,
   START_RESCAN_URL
 } from 'app/app.constants';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
+import { GetComicsRequest } from 'app/library/models/net/get-comics-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LibraryService {
   constructor(private http: HttpClient) {}
+
+  getComics(
+    page: number,
+    count: number,
+    sortField: string,
+    ascending: boolean
+  ): Observable<any> {
+    return this.http.post(interpolate(GET_COMICS_URL), {
+      page: page,
+      count: count,
+      sortField: sortField,
+      ascending: ascending
+    } as GetComicsRequest);
+  }
 
   getUpdatesSince(
     timestamp: number,

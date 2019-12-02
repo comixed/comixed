@@ -16,33 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+package org.comixed.repositories.library;
 
-import org.comixed.model.library.BlockedPageHash;
+import java.util.List;
+import org.comixed.model.library.PageType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 /**
- * <code>BlockedPageHashRepository</code> manages persisted instances of {@link BlockedPageHash}.
+ * <code>PageTypeRepository</code> retrieves instances of {@link PageType} from the database.
  *
  * @author The ComiXed Project
  */
-public interface BlockedPageHashRepository extends CrudRepository<BlockedPageHash, Long> {
+public interface PageTypeRepository extends CrudRepository<PageType, Long> {
   /**
-   * Returns the one instance with the given hash.
+   * Returns the default offset type.
    *
-   * @param hash the offset hash
-   * @return the instance, or <code>null</code> if no such hash is registered
+   * @return the default offset type
    */
-  @Query("SELECT b FROM BlockedPageHash b WHERE b.hash = :#{#hash}")
-  BlockedPageHash findByHash(@Param("hash") String hash);
+  @Query("SELECT pt FROM PageType pt WHERE pt.name = 'story'")
+  PageType getDefaultPageType();
 
-  /**
-   * Returns the list of all hash values.
-   *
-   * @return the hashes
-   */
-  @Query("SELECT b.hash FROM BlockedPageHash b")
-  String[] getAllHashes();
+  @Query("SELECT pt FROM PageType pt")
+  List<PageType> findPageTypes();
 }

@@ -16,20 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories;
+import { Comic } from 'app/comics';
+import { LastReadDate } from 'app/library/models/last-read-date';
 
-import java.util.List;
-import org.comixed.model.library.ReadingList;
-import org.comixed.model.user.ComiXedUser;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface ReadingListRepository extends CrudRepository<ReadingList, Long> {
-  @Query("SELECT list FROM ReadingList list WHERE list.owner = :owner")
-  List<ReadingList> findAllReadingListsForUser(ComiXedUser owner);
-
-  @Query("SELECT list FROM ReadingList list WHERE list.owner = :owner AND list.name = :listName")
-  ReadingList findReadingListForUser(ComiXedUser owner, String listName);
+export interface GetComicsResponse {
+  comics: Comic[];
+  lastReadDates: LastReadDate[];
+  latestUpdatedDate: Date;
+  comicCount: number;
 }

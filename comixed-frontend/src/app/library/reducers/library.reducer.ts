@@ -28,6 +28,8 @@ export interface LibraryState {
   comics: Comic[];
   updatedIds: number[];
   lastReadDates: LastReadDate[];
+  comicCount: number;
+  lastUpdatedDate: Date;
   latestUpdatedDate: number;
   processingCount: number;
   rescanCount: number;
@@ -35,11 +37,13 @@ export interface LibraryState {
   deletingComics: boolean;
 }
 
-export const initial_state: LibraryState = {
+export const initialState: LibraryState = {
   fetchingUpdates: false,
   comics: [],
   updatedIds: [],
   lastReadDates: [],
+  comicCount: 0,
+  lastUpdatedDate: new Date(0),
   latestUpdatedDate: 0,
   processingCount: 0,
   rescanCount: 0,
@@ -48,12 +52,28 @@ export const initial_state: LibraryState = {
 };
 
 export function reducer(
-  state = initial_state,
+  state = initialState,
   action: LibraryActions
 ): LibraryState {
   switch (action.type) {
     case LibraryActionTypes.Reset:
       return { ...state, comics: [] };
+
+    case LibraryActionTypes.GetComics:
+      return { ...state, fetchingUpdates: true };
+
+    case LibraryActionTypes.ComicsReceived:
+      return {
+        ...state,
+        fetchingUpdates: false,
+        comics: action.payload.comics,
+        lastReadDates: action.payload.lastReadDates,
+        comicCount: action.payload.comicCount,
+        lastUpdatedDate: action.payload.lastUpdatedDate
+      };
+
+    case LibraryActionTypes.GetComicsFailed:
+      return { ...state, fetchingUpdates: false };
 
     case LibraryActionTypes.GetUpdates:
       return { ...state, fetchingUpdates: true };
