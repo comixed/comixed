@@ -198,4 +198,14 @@ public class ComiXedUser {
     }
     this.bookmarks.add(new Bookmark(this, book, mark));
   }
+
+  public boolean isAdmin() {
+    for (int index = 0; index < this.roles.size(); index++) {
+      if (this.roles.get(index).getName().equals("ADMIN")) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
