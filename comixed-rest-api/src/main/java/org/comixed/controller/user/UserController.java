@@ -194,10 +194,14 @@ public class UserController implements InitializingBean {
 
     if (authUser.isAdmin()) {
       this.logger.debug("Auth user is admin: updating roles");
-      user.clearRoles();
-      user.addRole(this.readerRole);
-      if (request.getIsAdmin()) {
-        user.addRole(this.adminRole);
+      if (authUser.getId() != id) {
+        user.clearRoles();
+        user.addRole(this.readerRole);
+        if (request.getIsAdmin()) {
+          user.addRole(this.adminRole);
+        }
+      } else {
+        this.logger.debug("Admins cannot change their own roles");
       }
     }
     this.logger.debug(

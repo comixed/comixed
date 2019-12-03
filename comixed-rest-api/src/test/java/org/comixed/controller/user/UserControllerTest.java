@@ -254,8 +254,32 @@ public class UserControllerTest {
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_AUTH_EMAIL);
     Mockito.verify(userService, Mockito.times(1)).findById(TEST_USER_ID);
     Mockito.verify(user, Mockito.never()).clearRoles();
-    Mockito.verify(user, Mockito.never()).addRole(TEST_ROLE_READER);
+    Mockito.verify(user, Mockito.never()).addRole(Mockito.any());
     Mockito.verify(userService, Mockito.times(1)).save(user);
+  }
+
+  @Test
+  public void testUpdateUserAdminCantChangeOwnRoles() throws ComiXedUserException {
+    Mockito.when(principal.getName()).thenReturn(TEST_AUTH_EMAIL);
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(adminUser);
+    Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(adminUser);
+    Mockito.when(adminUser.isAdmin()).thenReturn(true);
+    Mockito.when(adminUser.getId()).thenReturn(TEST_USER_ID);
+    Mockito.when(userService.save(Mockito.any(ComiXedUser.class))).thenReturn(user);
+
+    ComiXedUser result =
+        controller.updateUser(
+            principal, TEST_USER_ID, new SaveUserRequest(TEST_EMAIL, TEST_PASSWORD, TEST_IS_ADMIN));
+
+    assertNotNull(result);
+    assertSame(user, result);
+
+    Mockito.verify(principal, Mockito.times(1)).getName();
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_AUTH_EMAIL);
+    Mockito.verify(userService, Mockito.times(1)).findById(TEST_USER_ID);
+    Mockito.verify(user, Mockito.never()).clearRoles();
+    Mockito.verify(user, Mockito.never()).addRole(Mockito.any());
+    Mockito.verify(userService, Mockito.times(1)).save(adminUser);
   }
 
   @Test
