@@ -18,9 +18,15 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { User } from 'app/user';
+import { UserAdminService } from 'app/user/services/user-admin.service';
+import { NGXLogger } from 'ngx-logger';
+import { MessageService } from 'primeng/api';
+import { Observable, of } from 'rxjs';
 
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
 import {
   UserAdminActions,
   UserAdminActionTypes,
@@ -31,15 +37,11 @@ import {
   UserAdminSaved,
   UserAdminSaveFailed
 } from '../actions/user-admin.actions';
-import { Action } from '@ngrx/store';
-import { UserAdminService } from 'app/user/services/user-admin.service';
-import { MessageService } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
-import { User } from 'app/user';
 
 @Injectable()
 export class UserAdminEffects {
   constructor(
+    private logger: NGXLogger,
     private actions$: Actions<UserAdminActions>,
     private userAdminService: UserAdminService,
     private messageService: MessageService,
@@ -49,12 +51,15 @@ export class UserAdminEffects {
   @Effect()
   getAll$: Observable<Action> = this.actions$.pipe(
     ofType(UserAdminActionTypes.GetAll),
+    tap(() => this.logger.debug('effect: get all users')),
     switchMap(action =>
       this.userAdminService.getAll().pipe(
+        tap(response => this.logger.debug('received response:', response)),
         map(
           (response: User[]) => new UserAdminAllReceived({ users: response })
         ),
         catchError(error => {
+          this.logger.error('service failure error getting all users:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -66,6 +71,7 @@ export class UserAdminEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('general failure error getting all users:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -80,8 +86,10 @@ export class UserAdminEffects {
   save$: Observable<Action> = this.actions$.pipe(
     ofType(UserAdminActionTypes.Save),
     map(action => action.payload),
+    tap(action => this.logger.debug('effect: saving user:', action)),
     switchMap(action =>
       this.userAdminService.save(action.details).pipe(
+        tap(response => this.logger.debug('received response:', response)),
         tap((response: User) =>
           this.messageService.add({
             severity: 'info',
@@ -93,6 +101,7 @@ export class UserAdminEffects {
         ),
         map((response: User) => new UserAdminSaved({ user: response })),
         catchError(error => {
+          this.logger.error('service failure error saving user:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -105,6 +114,7 @@ export class UserAdminEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('general failure error saving user:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -119,8 +129,10 @@ export class UserAdminEffects {
   deleteUser$: Observable<Action> = this.actions$.pipe(
     ofType(UserAdminActionTypes.Delete),
     map(action => action.payload),
+    tap(action => this.logger.debug('effect: delete user:', action)),
     switchMap(action =>
       this.userAdminService.deleteUser(action.user).pipe(
+        tap(response => this.logger.debug('received response:', response)),
         tap(() =>
           this.messageService.add({
             severity: 'info',
@@ -132,6 +144,7 @@ export class UserAdminEffects {
         ),
         map(() => new UserAdminDeletedUser({ user: action.user })),
         catchError(error => {
+          this.logger.error('service failure error deleting user:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -143,6 +156,7 @@ export class UserAdminEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('general failure error deleting user:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(

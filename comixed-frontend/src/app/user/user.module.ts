@@ -37,12 +37,12 @@ import { AccountPageComponent } from 'app/user/pages/account-page/account-page.c
 import { TranslateModule } from '@ngx-translate/core';
 import { UserDetailsComponent } from 'app/user/components/user-details/user-details.component';
 import {
-  ButtonModule,
-  PanelModule,
-  TabViewModule,
-  ToggleButtonModule,
-  ToolbarModule,
-  TooltipModule
+    ButtonModule, InputSwitchModule,
+    PanelModule,
+    TabViewModule,
+    ToggleButtonModule,
+    ToolbarModule,
+    TooltipModule
 } from 'primeng/primeng';
 import { AccountPreferencesComponent } from 'app/user/components/account-preferences/account-preferences.component';
 import { TableModule } from 'primeng/table';
@@ -55,29 +55,30 @@ import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 import { UserPreferencePipe } from 'app/user/pipes/user-preference.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    UserRoutingModule,
-    TranslateModule.forRoot(),
-    StoreModule.forFeature(
-      fromAuth.AUTHENTICATION_FEATURE_KEY,
-      fromAuth.reducer
-    ),
-    StoreModule.forFeature(
-      fromUserAdmin.USER_ADMIN_FEATURE_KEY,
-      fromUserAdmin.reducer
-    ),
-    EffectsModule.forFeature([AuthenticationEffects, UserAdminEffects]),
-    TabViewModule,
-    TableModule,
-    PanelModule,
-    ButtonModule,
-    TooltipModule,
-    ToggleButtonModule,
-    ToolbarModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        UserRoutingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forFeature(
+            fromAuth.AUTHENTICATION_FEATURE_KEY,
+            fromAuth.reducer
+        ),
+        StoreModule.forFeature(
+            fromUserAdmin.USER_ADMIN_FEATURE_KEY,
+            fromUserAdmin.reducer
+        ),
+        EffectsModule.forFeature([AuthenticationEffects, UserAdminEffects]),
+        TabViewModule,
+        TableModule,
+        PanelModule,
+        ButtonModule,
+        TooltipModule,
+        ToggleButtonModule,
+        ToolbarModule,
+        InputSwitchModule
+    ],
   providers: [
     AuthenticationAdaptor,
     UserAdminAdaptor,

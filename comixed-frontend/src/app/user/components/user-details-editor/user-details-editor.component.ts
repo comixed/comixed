@@ -24,8 +24,8 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { User } from 'app/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Role, User } from 'app/user';
 import { SaveUserDetails } from 'app/user/models/save-user-details';
 
 @Component({
@@ -34,8 +34,9 @@ import { SaveUserDetails } from 'app/user/models/save-user-details';
   styleUrls: ['./user-details-editor.component.scss']
 })
 export class UserDetailsEditorComponent implements OnInit, OnDestroy {
-  @Input() isAdmin = false;
+  private _isAdmin = false;
 
+  @Input() adminEdit = false;
   @Output() save = new EventEmitter<SaveUserDetails>();
 
   private _user: User;
@@ -45,8 +46,11 @@ export class UserDetailsEditorComponent implements OnInit, OnDestroy {
     this.userForm = this.formBuilder.group(
       {
         email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
-        passwordVerify: ['', [Validators.required, Validators.minLength(8)]],
+        password: ['', [Validators.minLength(8), Validators.maxLength(16)]],
+        passwordVerify: [
+          '',
+          [Validators.minLength(8), Validators.maxLength(16)]
+        ],
         isAdmin: [false]
       },
       {
@@ -63,6 +67,36 @@ export class UserDetailsEditorComponent implements OnInit, OnDestroy {
   set user(user: User) {
     this._user = user;
     this.loadForm();
+  }
+
+  @Input()
+  set isAdmin(admin: boolean) {
+    this._isAdmin = admin;
+  }
+
+  get isAdmin(): boolean {
+    return this._isAdmin;
+  }
+
+  @Input()
+  set requirePassword(requirePassword: boolean) {
+    if (requirePassword) {
+      this.userForm.controls['password'].setValidators([
+        Validators.required,
+        Validators.minLength(8)
+      ]);
+      this.userForm.controls['passwordVerify'].setValidators([
+        Validators.required,
+        Validators.minLength(8)
+      ]);
+    } else {
+      this.userForm.controls['password'].setValidators([
+        Validators.minLength(8)
+      ]);
+      this.userForm.controls['passwordVerify'].setValidators([
+        Validators.minLength(8)
+      ]);
+    }
   }
 
   get user(): User {
@@ -84,9 +118,20 @@ export class UserDetailsEditorComponent implements OnInit, OnDestroy {
 
   private loadForm() {
     this.userForm.controls['email'].setValue(this._user.email);
-    this.userForm.controls['isAdmin'].setValue(this.isAdmin);
+    this.userForm.controls['isAdmin'].setValue(this.userIsAdmin());
     this.userForm.controls['password'].setValue('');
     this.userForm.controls['passwordVerify'].setValue('');
+    this.userForm.markAsPristine();
+  }
+
+  private userIsAdmin(): boolean {
+    return (
+      this.user.roles.findIndex((role: Role) => role.name === 'ADMIN') !== -1
+    );
+  }
+
+  adminIsSet(): boolean {
+    return this.userForm.controls['isAdmin'].value;
   }
 }
 
