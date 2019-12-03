@@ -268,5 +268,53 @@
       "header": "Set Blocking State For Pages",
       "message": "Are you sure you want to {blocking, select, true{block} other{unblock}} the selected pages?"
     }
+  },
+  "collection-effects": {
+    "get-entries": {
+      "error": {
+        "detail": "Failed to get all entries by {collectionType}."
+      }
+    },
+    "get-page-for-entry": {
+      "error": {
+        "details": "Failed to load comics."
+      }
+    }
+  },
+  "collection-details-page": {
+    "page-title": "{name} - {count, plural, =1{One Comic} other{# Comics}}",
+    "title": "{collectionType}: {name}"
+  },
+  "collections": {
+    "error": {
+      "invalid-collection-type": "No such collection type: {name}"
+    }
+  },
+  "collection-page": {
+    "page-title": "{collectionType} - {count, plural, =1{One Comic} other{# Comics}}",
+    "title": "{collectionType}",
+    "table": {
+      "header": {
+        "collection-name": "{collectionType} NAME",
+        "collection-count": "# OF COMICS"
+      },
+      "value": {
+        "collection-count": "{count, plural, =1{1 COMIC} other{# COMICS}}"
+      }
+    },
+    "error": {
+      "invalid-collection-type": "No such collection type: {name}"
+    }
+  },
+  "breadcrumb": {
+    "collections": {
+      "root": "Collections",
+      "publishers": "Publishers",
+      "series": "Series",
+      "characters": "Characters",
+      "teams": "Teams",
+      "locations": "Locations",
+      "stories": "Stories"
+    }
   }
 }

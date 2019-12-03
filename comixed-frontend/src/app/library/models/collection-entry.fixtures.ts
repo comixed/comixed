@@ -16,10 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from 'app/app.functions';
+import { CollectionEntry } from 'app/library/models/collection-entry';
 
-export const GET_ALL_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/pages/duplicates`;
-export const SET_BLOCKING_STATE_URL = `${API_ROOT_URL}/pages/hashes/blocking`;
+export const COLLECTION_ENTRY_1: CollectionEntry = {
+  name: 'Collection 1',
+  count: 7
+};
 
-export const GET_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${type}`;
-export const GET_PAGE_FOR_ENTRY_URL = `${API_ROOT_URL}/collections/\${type}/\${name}`;
+export const COLLECTION_ENTRY_2: CollectionEntry = {
+  name: 'Collection 2',
+  count: 17
+};
+
+export const COLLECTION_ENTRY_3: CollectionEntry = {
+  name: 'Collection 4',
+  count: 65
+};
+
+export const COLLECTION_ENTRY_4: CollectionEntry = {
+  name: 'Collection 4',
+  count: 1
+};
+
+export const COLLECTION_ENTRY_5: CollectionEntry = {
+  name: 'Collection 5',
+  count: 29
+};
