@@ -17,6 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 
 import { DuplicatesPageComponent } from './duplicates-page.component';
 import { DuplicatesPageToolbarComponent } from 'app/library/components/duplicates-page-toolbar/duplicates-page-toolbar.component';
@@ -85,6 +86,7 @@ describe('DuplicatesPageComponent', () => {
       providers: [
         DuplicatePagesAdaptors,
         LibraryDisplayAdaptor,
+        ScrapingAdaptor,
         MessageService,
         BreadcrumbAdaptor,
         ConfirmationService

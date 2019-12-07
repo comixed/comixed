@@ -16,7 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Comic } from 'app/comics';
@@ -34,6 +41,10 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./comic-details-editor.component.scss']
 })
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
+  @Input() multiComicMode: boolean = false;
+
+  @Output() skipComic = new EventEmitter<Comic>();
+
   private _comic: Comic;
 
   userSubscription: Subscription;
@@ -115,7 +126,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   set comic(comic: Comic) {
     this._comic = comic;
     this.loadComicDetailsForm();
-    this.scrapingAdaptor.startScraping([comic]);
+    if (!this.multiComicMode) {
+      this.scrapingAdaptor.startScraping([comic]);
+    }
   }
 
   get comic(): Comic {
@@ -244,6 +257,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   selectionCancelled() {
-    // TODO cancel the selection and/or skip the comic
+    this.scrapingAdaptor.resetVolumes();
+  }
+
+  skipCurrentComic() {
+    this.skipComic.next(this.comic);
   }
 }

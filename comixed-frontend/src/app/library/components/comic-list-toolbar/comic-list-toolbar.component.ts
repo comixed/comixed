@@ -34,6 +34,7 @@ import { ConfirmationService, SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Comic } from 'app/comics';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 
 @Component({
   selector: 'app-comic-list-toolbar',
@@ -66,7 +67,8 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private libraryAdaptor: LibraryAdaptor,
     private selectionAdaptor: SelectionAdaptor,
-    private libraryDisplayAdaptor: LibraryDisplayAdaptor
+    private libraryDisplayAdaptor: LibraryDisplayAdaptor,
+    private scrapingAdaptor: ScrapingAdaptor
   ) {}
 
   ngOnInit() {
@@ -110,10 +112,6 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
 
   deselectAll(): void {
     this.selectionAdaptor.clearComicSelections();
-  }
-
-  scrapeComics(): void {
-    this.router.navigateByUrl('/scraping');
   }
 
   deleteComics(): void {
@@ -241,5 +239,22 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
 
   setCoverSize(size: number, save: boolean): void {
     this.libraryDisplayAdaptor.setCoverSize(size, save);
+  }
+
+  startScraping() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'comic-list-toolbar.start-scraping.header'
+      ),
+      message: this.translateService.instant(
+        'comic-list-toolbar.start-scraping.message',
+        { count: this.selectedComics.length }
+      ),
+      accept: () => {
+        this.scrapingAdaptor.startScraping(this.selectedComics);
+        this.selectionAdaptor.clearComicSelections();
+        this.router.navigateByUrl('/scraping');
+      }
+    });
   }
 }

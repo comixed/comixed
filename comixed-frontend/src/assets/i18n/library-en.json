@@ -205,6 +205,10 @@
       "scrape": "Scrape Selected Comics",
       "delete": "Delete Selected Comics"
     },
+    "start-scraping": {
+      "header": "Scrape Selected Comic",
+      "message": "Are you sure you want to start scraping {count, plural, =1{one comic} other{# comics}}?"
+    },
     "delete-comics": {
       "header": "Delete Selected Comics",
       "message": "Are you sure you want to delete the {count, plural, =1{selected comic} other{# selected comics}}?"
@@ -305,6 +309,9 @@
     "error": {
       "invalid-collection-type": "No such collection type: {name}"
     }
+  },
+  "multi-comic-scraping-page": {
+    "title": "Scraping {count, plural, =1{One Comic} other{# Comics}}"
   },
   "breadcrumb": {
     "collections": {

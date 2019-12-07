@@ -103,22 +103,6 @@
       "target-search-filter": "Search by series name..."
     }
   },
-  "volume-list": {
-    "columns": {
-      "start-year": "Start Year",
-      "series": "Series",
-      "issues": "Issues",
-      "publisher": "Publisher"
-    },
-    "text": {
-      "search-placeholder": "Search volume titles..."
-    },
-    "button": {
-      "back": "Back",
-      "select": "Select",
-      "cancel": "Cancel"
-    }
-  },
   "library-contents": {
     "label": {
       "cover-size": "Cover size: {cover_size}px"
@@ -174,19 +158,6 @@
         "cover-date": "Sort by cover date",
         "last-read-date": "Sort by last read"
       }
-    }
-  },
-  "multi-comic-scraping-page": {
-    "title": {
-      "preparing-to-scrape": "Preparing To Scrape {comic_count} Comics",
-      "scraping": "Scraping {comic_count} Comics"
-    },
-    "text": {
-      "describing-the-comic-scraping-process-1": "To begin scraping the selected comics, click the start button below. The application will then process the comics one at a time, fetching the meta-details from the ComicVine website.",
-      "describing-the-comic-scraping-process-2": "For this to work, you MUST have a ComicVine API key. If you do not have one, you will need to go to the ComicVine website and apply for one."
-    },
-    "button": {
-      "start": "Start Scraping"
     }
   },
   "duplicate-pages": {

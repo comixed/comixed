@@ -1,7 +1,7 @@
 <div class='ui-g'>
     <div class='ui-g-9 ui-sm-9'>
         <p-table #dt
-                 [value]='_volumes'
+                 [value]='volumeOptions'
                  [paginator]='true'
                  [rows]='10'
                  [paginatorPosition]='"both"'
@@ -92,19 +92,13 @@
                  [style.width]='"100%"'/>
         </p-card>
         <div class='cx-button-box-vertical'>
-            <button type='button'
+            <button *ngIf='!multiComicMode'
+                    type='button'
                     pButton
                     class='cx-selection-button ui-button-danger'
                     icon='fa fa-fw fa-step-backward'
                     [label]='"volume-list.button.back" | translate'
-                    (click)='returnToEditing()'></button>
-            <button
-                    type='button'
-                    pButton
-                    class='cx-selection-button ui-button-warning'
-                    icon='fa fa-fw fa-stop'
-                    [label]='"volume-list.button.cancel" | translate'
-                    (click)='stopSelection()'></button>
+                    (click)='cancelVolumeSelection()'></button>
             <button *ngIf='currentIssue'
                     pButton
                     type='button'
