@@ -59,7 +59,6 @@ import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-pag
 import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
 import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
 import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
-import { MultipleComicScrapingComponent } from 'app/library/components/multiple-comic-scraping/multiple-comic-scraping.component';
 import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
 import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
 import { DuplicatesPageComponent } from './pages/duplicates-page/duplicates-page.component';
@@ -125,7 +124,6 @@ import { CollectionPageComponent } from './pages/collection-page/collection-page
     MissingComicsPageComponent,
     MultiComicScrapingPageComponent,
     ScrapingComicListComponent,
-    MultipleComicScrapingComponent,
     ReadingListsPageComponent,
     ReadingListPageComponent,
     MissingComicsPipe,
