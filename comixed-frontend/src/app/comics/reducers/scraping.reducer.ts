@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { Comic } from 'app/comics';
+import { ScrapingIssue } from 'app/comics/models/scraping-issue';
+import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import {
   ScrapingActions,
   ScrapingActionTypes
 } from '../actions/scraping.actions';
-import { ScrapingVolume } from 'app/comics/models/scraping-volume';
-import { Comic } from 'app/comics';
-import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 
 export const SCRAPING_FEATURE_KEY = 'scraping_state';
 
@@ -90,11 +90,28 @@ export function reducer(
         entry => entry.id !== action.payload.comic.id
       );
       const comic = comics.length > 0 ? comics[0] : null;
-      return { ...state, scraping: false, comics: comics, comic: comic };
+      return {
+        ...state,
+        scraping: false,
+        comics: comics,
+        comic: comic,
+        volumes: []
+      };
     }
 
     case ScrapingActionTypes.LoadMetadataFailed:
       return { ...state, scraping: false };
+
+    case ScrapingActionTypes.SkipComic: {
+      const comics = state.comics.filter(
+        comic => comic.id !== action.payload.comic.id
+      );
+      const comic = comics.length > 0 ? comics[0] : null;
+      return { ...state, comics: comics, comic: comic };
+    }
+
+    case ScrapingActionTypes.ResetVolumes:
+      return { ...state, volumes: [] };
 
     default:
       return state;

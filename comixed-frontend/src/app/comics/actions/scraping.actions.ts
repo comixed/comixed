@@ -18,8 +18,8 @@
 
 import { Action } from '@ngrx/store';
 import { Comic } from 'app/comics';
-import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
+import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 
 export enum ScrapingActionTypes {
   Start = '[SCRAPE] Start scraping comics',
@@ -31,7 +31,9 @@ export enum ScrapingActionTypes {
   GetIssueFailed = '[SCRAPE] Failed to get the requested issue',
   LoadMetadata = '[SCRAPE] Get the metadata for the comic',
   MetadataLoaded = '[SCRAPE] Successfully retrieved the metadata',
-  LoadMetadataFailed = '[SCRAPE] Failed to get the metadata'
+  LoadMetadataFailed = '[SCRAPE] Failed to get the metadata',
+  SkipComic = '[SCRAPE] Skip over a comic',
+  ResetVolumes = '[SCRAPE] Reset the list of volumes'
 }
 
 export class ScrapingStart implements Action {
@@ -115,6 +117,18 @@ export class ScrapingLoadMetadataFailed implements Action {
   constructor() {}
 }
 
+export class ScrapingSkipComic implements Action {
+  readonly type = ScrapingActionTypes.SkipComic;
+
+  constructor(public payload: { comic: Comic }) {}
+}
+
+export class ScrapingResetVolumes implements Action {
+  readonly type = ScrapingActionTypes.ResetVolumes;
+
+  constructor() {}
+}
+
 export type ScrapingActions =
   | ScrapingStart
   | ScrapingGetVolumes
@@ -125,4 +139,6 @@ export type ScrapingActions =
   | ScrapingGetIssueFailed
   | ScrapingLoadMetadata
   | ScrapingMetadataLoaded
-  | ScrapingLoadMetadataFailed;
+  | ScrapingLoadMetadataFailed
+  | ScrapingSkipComic
+  | ScrapingResetVolumes;

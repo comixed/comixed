@@ -175,7 +175,8 @@
     "button": {
       "save-changes": "Save Changes",
       "fetch-volumes": "Fetch Volumes",
-      "reset-changes": "Reset Changes"
+      "reset-changes": "Reset Changes",
+      "skip-comic": "Skip"
     },
     "save-changes": {
       "header": "Save Changes",
@@ -249,6 +250,21 @@
       "error": {
         "detail": "Failed to scrape comic."
       }
+    }
+  },
+  "volume-list": {
+    "columns": {
+      "start-year": "Start Year",
+      "series": "Series",
+      "issues": "Issues",
+      "publisher": "Publisher"
+    },
+    "text": {
+      "search-placeholder": "Search volume titles..."
+    },
+    "button": {
+      "back": "Back",
+      "select": "Select"
     }
   }
 }

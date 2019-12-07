@@ -17,9 +17,9 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Comic } from 'app/comics';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
-import { Comic } from 'app/comics';
 
 interface ScrapingVolumeOptions {
   volume: ScrapingVolume;
@@ -32,6 +32,9 @@ interface ScrapingVolumeOptions {
   styleUrls: ['./volume-list.component.scss']
 })
 export class VolumeListComponent implements OnInit {
+  private _volumeOptions: ScrapingVolumeOptions[];
+
+  @Input() multiComicMode = false;
   @Input() apiKey: string;
   @Input() comic: Comic;
   @Input() currentVolume: ScrapingVolume;
@@ -39,10 +42,7 @@ export class VolumeListComponent implements OnInit {
 
   @Output() volumeSelected = new EventEmitter<ScrapingVolume>();
   @Output() issueSelected = new EventEmitter<ScrapingIssue>();
-  @Output() cancelSelection = new EventEmitter<any>();
-
-  _volumes: ScrapingVolumeOptions[];
-  protected volumeSelectionTitle = '';
+  @Output() cancelSelection = new EventEmitter<Comic>();
 
   constructor() {}
 
@@ -52,7 +52,7 @@ export class VolumeListComponent implements OnInit {
   set volumes(volumes: ScrapingVolume[]) {
     const exactMatches: ScrapingVolumeOptions[] = [];
 
-    this._volumes = [];
+    this._volumeOptions = [];
     volumes.forEach((volume: ScrapingVolume) => {
       const entry = {
         volume: volume,
@@ -62,7 +62,7 @@ export class VolumeListComponent implements OnInit {
           ? '0'
           : '2'
       };
-      this._volumes.push(entry);
+      this._volumeOptions.push(entry);
       if (entry.matchability === '0') {
         exactMatches.push(entry);
       }
@@ -75,6 +75,14 @@ export class VolumeListComponent implements OnInit {
     }
 
     this.selectVolume(matchingVolume);
+  }
+
+  get volumeOptions(): ScrapingVolumeOptions[] {
+    return this._volumeOptions;
+  }
+
+  get volumes(): ScrapingVolume[] {
+    return this._volumeOptions.map(entry => entry.volume);
   }
 
   selectVolume(volume: ScrapingVolume): void {
@@ -96,12 +104,8 @@ export class VolumeListComponent implements OnInit {
     );
   }
 
-  returnToEditing(): void {
-    // TODO stop selecting volumes
-  }
-
-  stopSelection(): void {
-    // TODO cancel the issue
+  cancelVolumeSelection(): void {
+    this.cancelSelection.next(this.comic);
   }
 
   selectCurrentIssue() {

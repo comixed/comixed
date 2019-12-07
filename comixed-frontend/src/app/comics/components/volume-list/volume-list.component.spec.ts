@@ -21,6 +21,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { COMIC_3 } from 'app/comics/comics.fixtures';
 import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
 import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
@@ -39,7 +40,6 @@ import { CardModule } from 'primeng/card';
 import { MessageService, TooltipModule } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { VolumeListComponent } from './volume-list.component';
-import { COMIC_3 } from 'app/comics/comics.fixtures';
 
 describe('VolumeListComponent', () => {
   const EXACT_MATCH = { ...SCRAPING_VOLUME_1002, id: 1 };
@@ -102,15 +102,27 @@ describe('VolumeListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when setting volumes', () => {
+  describe('when setting the volumes', () => {
+    const VOLUMES = [EXACT_MATCH, CLOSE_MATCH, NO_MATCH];
+
     beforeEach(() => {
       component.comic = COMIC;
-      component.volumes = [EXACT_MATCH, CLOSE_MATCH, NO_MATCH];
+      component.volumes = VOLUMES;
+    });
+
+    it('sets the volumes for the component', () => {
+      expect(component.volumes).toEqual(VOLUMES);
+    });
+
+    it('sets the volume options', () => {
+      expect(component.volumeOptions.map(option => option.volume)).toEqual(
+        VOLUMES
+      );
     });
 
     it('marks exact matches', () => {
       expect(
-        component._volumes.forEach((entry: any) => {
+        component.volumeOptions.forEach((entry: any) => {
           switch (entry.volume.id) {
             case EXACT_MATCH.id:
               expect(entry.matchability).toEqual('0');
@@ -122,7 +134,7 @@ describe('VolumeListComponent', () => {
 
     it('marks close matches', () => {
       expect(
-        component._volumes.forEach((entry: any) => {
+        component.volumeOptions.forEach((entry: any) => {
           switch (entry.volume.id) {
             case CLOSE_MATCH.id:
               expect(entry.matchability).toEqual('1');
@@ -134,7 +146,7 @@ describe('VolumeListComponent', () => {
 
     it('marks mismatches', () => {
       expect(
-        component._volumes.forEach((entry: any) => {
+        component.volumeOptions.forEach((entry: any) => {
           switch (entry.volume.id) {
             case NO_MATCH.id:
               expect(entry.matchability).toEqual('2');
@@ -179,13 +191,26 @@ describe('VolumeListComponent', () => {
     });
   });
 
-  describe('when canceling the scraping', () => {
+  describe('canceling the scraping', () => {
+    beforeEach(() => {
+      component.currentIssue = ISSUE;
+      component.cancelVolumeSelection();
+    });
+
+    it('sends an event', () => {
+      component.cancelSelection.subscribe(response =>
+        expect(response).toEqual(ISSUE)
+      );
+    });
+  });
+
+  describe('selecting an issue', () => {
     beforeEach(() => {
       component.currentIssue = ISSUE;
       component.selectCurrentIssue();
     });
 
-    it('provides notification', () => {
+    it('sends an event', () => {
       component.issueSelected.subscribe(response =>
         expect(response).toEqual(ISSUE)
       );

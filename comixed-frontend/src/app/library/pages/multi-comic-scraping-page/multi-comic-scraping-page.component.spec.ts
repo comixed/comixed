@@ -16,7 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ComicsModule } from 'app/comics/comics.module';
+import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
+import {
+  reducer,
+  SCRAPING_FEATURE_KEY
+} from 'app/comics/reducers/scraping.reducer';
+import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
+import { MessageService } from 'primeng/api';
 import { MultiComicScrapingPageComponent } from './multi-comic-scraping-page.component';
 
 describe('MultiComicScrapingPageComponent', () => {
@@ -25,7 +38,21 @@ describe('MultiComicScrapingPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MultiComicScrapingPageComponent]
+      imports: [
+        ComicsModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(SCRAPING_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([ScrapingEffects])
+      ],
+      declarations: [
+        MultiComicScrapingPageComponent,
+        ScrapingComicListComponent
+      ],
+      providers: [MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MultiComicScrapingPageComponent);

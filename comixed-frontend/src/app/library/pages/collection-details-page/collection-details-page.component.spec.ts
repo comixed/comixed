@@ -27,6 +27,7 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
@@ -113,6 +114,7 @@ describe('CollectionDetailsPageComponent', () => {
       providers: [
         CollectionAdaptor,
         ComicAdaptor,
+        ScrapingAdaptor,
         AuthenticationAdaptor,
         LibraryAdaptor,
         LibraryDisplayAdaptor,

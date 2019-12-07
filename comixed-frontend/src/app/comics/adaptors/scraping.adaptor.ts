@@ -25,6 +25,8 @@ import {
   ScrapingGetIssue,
   ScrapingGetVolumes,
   ScrapingLoadMetadata,
+  ScrapingResetVolumes,
+  ScrapingSkipComic,
   ScrapingStart
 } from 'app/comics/actions/scraping.actions';
 import {
@@ -152,5 +154,13 @@ export class ScrapingAdaptor {
 
   get scraping$(): Observable<boolean> {
     return this._scraping$.asObservable();
+  }
+
+  skipComic(comic: Comic) {
+    this.store.dispatch(new ScrapingSkipComic({ comic: comic }));
+  }
+
+  resetVolumes() {
+    this.store.dispatch(new ScrapingResetVolumes());
   }
 }
