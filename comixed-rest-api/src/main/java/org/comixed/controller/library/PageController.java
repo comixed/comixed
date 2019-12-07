@@ -20,12 +20,14 @@ package org.comixed.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.DuplicatePage;
 import org.comixed.model.library.Page;
 import org.comixed.model.library.PageType;
 import org.comixed.net.SetBlockingStateRequest;
+import org.comixed.service.library.PageCacheService;
 import org.comixed.service.library.PageException;
 import org.comixed.service.library.PageService;
 import org.comixed.utils.FileTypeIdentifier;
@@ -44,6 +46,7 @@ public class PageController {
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private PageService pageService;
+  @Autowired private PageCacheService pageCacheService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
 
   @PostMapping(
@@ -119,7 +122,7 @@ public class PageController {
 
   @RequestMapping(value = "/comics/{id}/pages/{index}/content", method = RequestMethod.GET)
   public ResponseEntity<byte[]> getImageInComicByIndex(
-      @PathVariable("id") long id, @PathVariable("index") int index) {
+      @PathVariable("id") long id, @PathVariable("index") int index) throws IOException {
     this.logger.debug("Getting image content for comic: id={} index={}", id, index);
 
     final Page page = this.pageService.getPageInComicByIndex(id, index);
@@ -127,12 +130,23 @@ public class PageController {
     return this.getResponseEntityForPage(page);
   }
 
-  private ResponseEntity<byte[]> getResponseEntityForPage(Page page) {
-    byte[] content = page.getContent();
+  private ResponseEntity<byte[]> getResponseEntityForPage(Page page) throws IOException {
+    byte[] content = this.pageCacheService.findByHash(page.getHash());
+
+    if (content == null) {
+      content = page.getContent();
+      this.logger.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
+      this.pageCacheService.saveByHash(page.getHash(), content);
+    } else {
+      this.logger.debug("Loaded cached page");
+    }
+
     String type =
         this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content))
             + "/"
             + this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
+    this.logger.debug("Page type: {}", type);
+
     return ResponseEntity.ok()
         .contentLength(content.length)
         .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
@@ -141,9 +155,8 @@ public class PageController {
   }
 
   @RequestMapping(value = "/pages/{id}/content", method = RequestMethod.GET)
-  public ResponseEntity<byte[]> getPageContent(@PathVariable("id") long id) {
+  public ResponseEntity<byte[]> getPageContent(@PathVariable("id") long id) throws IOException {
     this.logger.info("Getting page content: id={}", id);
-
     final Page page = this.pageService.findById(id);
 
     if (page != null) {
