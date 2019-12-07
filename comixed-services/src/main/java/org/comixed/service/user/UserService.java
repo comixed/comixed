@@ -44,7 +44,7 @@ public class UserService implements InitializingBean {
   private Role adminRole;
 
   public ComiXedUser findByEmail(String email) throws ComiXedUserException {
-    this.logger.info("Finding user by email: {}", email);
+    this.logger.debug("Finding user by email: {}", email);
 
     final ComiXedUser result = this.userRepository.findByEmail(email);
 
@@ -59,7 +59,7 @@ public class UserService implements InitializingBean {
   }
 
   public void delete(long id) throws ComiXedUserException {
-    this.logger.info("Deleting user: id={}", id);
+    this.logger.debug("Deleting user: id={}", id);
 
     final Optional<ComiXedUser> record = this.userRepository.findById(id);
 
@@ -72,7 +72,7 @@ public class UserService implements InitializingBean {
   }
 
   public ComiXedUser save(final ComiXedUser user) throws ComiXedUserException {
-    this.logger.info(
+    this.logger.debug(
         "{} user: email={}", user.getId() != null ? "Updating" : "Saving", user.getEmail());
 
     try {
@@ -83,7 +83,7 @@ public class UserService implements InitializingBean {
   }
 
   public List<ComiXedUser> findAll() {
-    this.logger.info("Getting all users");
+    this.logger.debug("Getting all users");
 
     final List<ComiXedUser> result = this.userRepository.findAll();
 
@@ -93,7 +93,7 @@ public class UserService implements InitializingBean {
   }
 
   public ComiXedUser findById(final long id) throws ComiXedUserException {
-    this.logger.info("Finding user: id={}", id);
+    this.logger.debug("Finding user: id={}", id);
 
     final Optional<ComiXedUser> record = this.userRepository.findById(id);
 
@@ -105,12 +105,12 @@ public class UserService implements InitializingBean {
   }
 
   public Role findRoleByName(final String name) throws ComiXedUserException {
-    this.logger.info("Finding role: name={}", name);
+    this.logger.debug("Finding role: name={}", name);
 
     final Role record = this.roleRepository.findByName(name);
 
     if (record == null) {
-      this.logger.info("No such role exists");
+      this.logger.debug("No such role exists");
       throw new ComiXedUserException("Invalid role: name=" + name);
     }
 
@@ -120,7 +120,7 @@ public class UserService implements InitializingBean {
   public ComiXedUser setUserProperty(
       final String email, final String propertyName, final String propertyValue)
       throws ComiXedUserException {
-    this.logger.info(
+    this.logger.debug(
         "Setting user property: email={} property[{}]={}", email, propertyName, propertyValue);
 
     final ComiXedUser user = this.userRepository.findByEmail(email);
@@ -132,7 +132,7 @@ public class UserService implements InitializingBean {
 
   public ComiXedUser setUserPassword(final String email, final String password)
       throws ComiXedUserException {
-    this.logger.info("Updating password for user: email={} length={}", email, password.length());
+    this.logger.debug("Updating password for user: email={} length={}", email, password.length());
 
     final ComiXedUser record = this.userRepository.findByEmail(email);
 
@@ -147,7 +147,7 @@ public class UserService implements InitializingBean {
 
   public ComiXedUser setUserEmail(final String currentEmail, final String newEmail)
       throws ComiXedUserException {
-    this.logger.info("Setting user email: old={} new={}", currentEmail, newEmail);
+    this.logger.debug("Setting user email: old={} new={}", currentEmail, newEmail);
 
     final ComiXedUser record = this.userRepository.findByEmail(currentEmail);
 

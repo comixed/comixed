@@ -44,7 +44,7 @@ public class ReadingListService {
   public ReadingList createReadingList(
       final String email, final String name, final String summary, final List<Long> entries)
       throws ReadingListNameException, ComicException {
-    this.logger.info("Creating reading list: email={} name={}", email, name);
+    this.logger.debug("Creating reading list: email={} name={}", email, name);
 
     this.logger.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
@@ -79,7 +79,7 @@ public class ReadingListService {
   }
 
   public List<ReadingList> getReadingListsForUser(final String email) {
-    this.logger.info("Getting reading lists for user: email={}", email);
+    this.logger.debug("Getting reading lists for user: email={}", email);
 
     this.logger.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
@@ -95,7 +95,7 @@ public class ReadingListService {
       final String summary,
       final List<Long> entries)
       throws NoSuchReadingListException, ComicException {
-    this.logger.info("Updating reading list: owner={} id={} name={}", email, id, name);
+    this.logger.debug("Updating reading list: owner={} id={} name={}", email, id, name);
 
     this.logger.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
@@ -145,7 +145,7 @@ public class ReadingListService {
       final String mode,
       final List<Matcher> matchers)
       throws ReadingListNameException {
-    this.logger.info("Creating smart reading list: email={} name={}", email, name);
+    this.logger.debug("Creating smart reading list: email={} name={}", email, name);
 
     this.logger.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);

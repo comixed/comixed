@@ -151,7 +151,7 @@ public class ComicFileHandler implements InitializingBean {
    */
   public void loadComic(Comic comic, boolean ignoreComicInfoXml) throws ComicFileHandlerException {
     if (comic.isMissing()) {
-      this.logger.info("Unable to load missing file: " + comic.getFilename());
+      this.logger.debug("Unable to load missing file: " + comic.getFilename());
       return;
     }
     this.logger.debug("Loading comic: " + comic.getFilename());
@@ -177,7 +177,7 @@ public class ComicFileHandler implements InitializingBean {
 
   public void loadComicArchiveType(final Comic comic) throws ComicFileHandlerException {
     if (comic.isMissing()) {
-      this.logger.info("Unable to determine type for missing file: file={}", comic.getFilename());
+      this.logger.debug("Unable to determine type for missing file: file={}", comic.getFilename());
       return;
     }
     this.logger.debug("Determining archive type: file={}", comic.getFilename());

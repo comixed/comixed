@@ -69,7 +69,7 @@ public class ComicService {
 
   @Transactional
   public Comic deleteComic(final long id) throws ComicException {
-    this.logger.info("Marking comic for deletion: id={}", id);
+    this.logger.debug("Marking comic for deletion: id={}", id);
 
     final Optional<Comic> record = this.comicRepository.findById(id);
 
@@ -88,7 +88,7 @@ public class ComicService {
 
   @Transactional
   public List<Long> deleteMultipleComics(final List<Long> ids) {
-    this.logger.info("Preparing to delete {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
+    this.logger.debug("Preparing to delete {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
     List<Long> result = new ArrayList<>();
 
     for (long id : ids) {
@@ -112,7 +112,7 @@ public class ComicService {
 
   @Transactional
   public Comic updateComic(final long id, final Comic update) {
-    this.logger.info("Updating comic: id={}", id);
+    this.logger.debug("Updating comic: id={}", id);
 
     final Optional<Comic> record = this.comicRepository.findById(id);
 
@@ -137,7 +137,7 @@ public class ComicService {
   }
 
   public long getProcessingCount() {
-    this.logger.info("Getting the current processing count");
+    this.logger.debug("Getting the current processing count");
 
     final long result = this.processComicEntryRepository.count();
 
@@ -147,13 +147,13 @@ public class ComicService {
   }
 
   public int getRescanCount() {
-    this.logger.info("Getting the current rescan count");
+    this.logger.debug("Getting the current rescan count");
 
     return this.worker.getCountFor(RescanComicWorkerTask.class);
   }
 
   public List<LastReadDate> getLastReadDatesSince(final String email, final long timestamp) {
-    this.logger.info("Getting last read dates for user: email={}", email);
+    this.logger.debug("Getting last read dates for user: email={}", email);
 
     final ComiXedUser user = this.userRepository.findByEmail(email);
 
@@ -161,7 +161,7 @@ public class ComicService {
   }
 
   public Comic save(final Comic comic) {
-    this.logger.info("Saving comic: filename={}", comic.getFilename());
+    this.logger.debug("Saving comic: filename={}", comic.getFilename());
 
     comic.setDateLastUpdated(new Date());
 
@@ -170,7 +170,7 @@ public class ComicService {
 
   @Transactional
   public byte[] getComicContent(final Comic comic) {
-    this.logger.info("Getting file content: filename={}", comic.getFilename());
+    this.logger.debug("Getting file content: filename={}", comic.getFilename());
 
     try {
       return FileUtils.readFileToByteArray(new File(comic.getFilename()));
@@ -222,7 +222,7 @@ public class ComicService {
   }
 
   public Comic getComic(final long id) throws ComicException {
-    this.logger.info("Getting comic: id={}", id);
+    this.logger.debug("Getting comic: id={}", id);
 
     final Optional<Comic> comicRecord = this.comicRepository.findById(id);
 
