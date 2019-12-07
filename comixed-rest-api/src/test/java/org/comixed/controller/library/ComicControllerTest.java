@@ -40,6 +40,7 @@ import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.service.file.FileService;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
+import org.comixed.service.library.PageCacheService;
 import org.comixed.task.model.DeleteComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.FileTypeIdentifier;
@@ -68,9 +69,11 @@ public class ComicControllerTest {
   private static final String TEST_PAGE_CONTENT_TYPE = "application";
   private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
   private static final String TEST_PAGE_FILENAME = "cover.jpg";
+  private static final String TEST_PAGE_HASH = "1234567890ABCDEF1234567890ABCDEF";
 
   @InjectMocks private ComicController controller;
   @Mock private ComicService comicService;
+  @Mock private PageCacheService pageCacheService;
   @Mock private LastReadDatesRepository lastReadRepository;
   @Mock private Worker worker;
   @Mock private List<Comic> comicList;
@@ -432,7 +435,7 @@ public class ComicControllerTest {
 
   @Test(expected = ComicException.class)
   public void testGetCoverImageForInvalidComic()
-      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException {
+      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
     try {
@@ -444,7 +447,7 @@ public class ComicControllerTest {
 
   @Test(expected = ComicException.class)
   public void testGetCoverImageForMissingComic()
-      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException {
+      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(comic.isMissing()).thenReturn(true);
 
@@ -457,8 +460,8 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testGetCoverImageForUnprocessedComic()
-      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException {
+  public void testGetCachedCoverImageForUnprocessedComic()
+      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(comic.isMissing()).thenReturn(false);
     Mockito.when(comic.getPageCount()).thenReturn(0);
@@ -483,12 +486,17 @@ public class ComicControllerTest {
 
   @Test
   public void testGetCoverImageForProcessedComic()
-      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException {
+      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(comic.isMissing()).thenReturn(false);
     Mockito.when(comic.getPageCount()).thenReturn(5);
     Mockito.when(comic.getPage(Mockito.anyInt())).thenReturn(page);
+    Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
+    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
+    Mockito.doNothing()
+        .when(pageCacheService)
+        .saveByHash(Mockito.anyString(), Mockito.any(byte[].class));
     Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_FILENAME);
     Mockito.when(fileTypeIdentifier.typeFor(inputStreamCaptor.capture()))
         .thenReturn(TEST_PAGE_CONTENT_TYPE);
@@ -503,7 +511,39 @@ public class ComicControllerTest {
     Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(comic, Mockito.times(1)).isMissing();
     Mockito.verify(page, Mockito.times(1)).getFilename();
+    Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(page, Mockito.times(1)).getContent();
+    Mockito.verify(pageCacheService, Mockito.times(1))
+        .saveByHash(TEST_PAGE_HASH, TEST_PAGE_CONTENT);
+    ;
+    Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStreamCaptor.getValue());
+    Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStreamCaptor.getValue());
+  }
+
+  @Test
+  public void testGetCachedCoverImageForProcessedComic()
+      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comic.isMissing()).thenReturn(false);
+    Mockito.when(comic.getPageCount()).thenReturn(5);
+    Mockito.when(comic.getPage(Mockito.anyInt())).thenReturn(page);
+    Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
+    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(TEST_PAGE_CONTENT);
+    Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_FILENAME);
+    Mockito.when(fileTypeIdentifier.typeFor(inputStreamCaptor.capture()))
+        .thenReturn(TEST_PAGE_CONTENT_TYPE);
+    Mockito.when(fileTypeIdentifier.subtypeFor(inputStreamCaptor.capture()))
+        .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
+
+    final ResponseEntity<byte[]> result = controller.getCoverImage(TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertEquals(TEST_PAGE_CONTENT, result.getBody());
+
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(comic, Mockito.times(1)).isMissing();
+    Mockito.verify(page, Mockito.times(1)).getFilename();
+    Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStreamCaptor.getValue());
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStreamCaptor.getValue());
   }
