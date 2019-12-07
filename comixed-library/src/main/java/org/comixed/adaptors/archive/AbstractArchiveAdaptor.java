@@ -127,7 +127,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   public void loadComic(Comic comic) throws ArchiveAdaptorException {
     I archiveReference = null;
 
-    this.logger.info("Processing archive: {}", comic.getFilename());
+    this.logger.debug("Processing archive: {}", comic.getFilename());
     long started = System.currentTimeMillis();
 
     try {

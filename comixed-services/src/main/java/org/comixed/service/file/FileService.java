@@ -54,7 +54,7 @@ public class FileService {
 
   public byte[] getImportFileCover(final String comicArchive)
       throws ComicFileHandlerException, ArchiveAdaptorException {
-    this.logger.info("Getting first image from archive: {}", comicArchive);
+    this.logger.debug("Getting first image from archive: {}", comicArchive);
 
     byte[] result = null;
     final ArchiveAdaptor archiveAdaptor = this.comicFileHandler.getArchiveAdaptorFor(comicArchive);
@@ -65,7 +65,7 @@ public class FileService {
 
     final String coverFile = archiveAdaptor.getFirstImageFileName(comicArchive);
     if (coverFile == null) {
-      this.logger.info("Archive contains no images");
+      this.logger.debug("Archive contains no images");
       return null;
     }
 
@@ -78,7 +78,7 @@ public class FileService {
   }
 
   public List<FileDetails> getAllComicsUnder(final String rootDirectory) throws IOException {
-    this.logger.info("Getting comics below root: {}", rootDirectory);
+    this.logger.debug("Getting comics below root: {}", rootDirectory);
 
     final File rootFile = new File(rootDirectory);
     final List<FileDetails> result = new ArrayList<>();
@@ -112,7 +112,7 @@ public class FileService {
           if (comic != null) {
             this.logger.debug("File already in the library: id={}", comic.getId());
           } else {
-            this.logger.info("Adding file: {} ({} bytes)", filePath, fileSize);
+            this.logger.debug("Adding file: {} ({} bytes)", filePath, fileSize);
 
             files.add(new FileDetails(filePath, fileSize));
           }
@@ -153,7 +153,7 @@ public class FileService {
   public int importComicFiles(
       final String[] filenames, final boolean deleteBlockedPages, final boolean ignoreMetadata)
       throws UnsupportedEncodingException {
-    this.logger.info(
+    this.logger.debug(
         "Preparing to import {} comic files: delete blocked pages={} ignore metadata={}",
         filenames.length,
         deleteBlockedPages ? "Yes" : "No",

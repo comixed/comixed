@@ -80,7 +80,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.logger.info("Adding file to library: {}", this.file);
+    this.logger.debug("Adding file to library: {}", this.file);
 
     Comic result = this.comicRepository.findByFilename(this.file.getAbsolutePath());
     if (result != null) {

@@ -46,7 +46,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
 
   private void addFileToArchive(SevenZOutputFile archive, String filename, byte[] content)
       throws IOException {
-    this.logger.info("Saving file to archive: " + filename + " [size=" + content.length + "]");
+    this.logger.debug("Saving file to archive: " + filename + " [size=" + content.length + "]");
 
     File tempFile = File.createTempFile("comixed", "tmp");
     this.logger.debug("Saving entry as temporary filename: " + tempFile.getAbsolutePath());

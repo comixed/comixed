@@ -70,10 +70,10 @@ public class ComicFileImportAdaptor {
       throws ImportAdaptorException {
     for (int index = 0; index < comics.size(); index++) {
       try {
-        this.logger.info("Importing comic: {}", comics.get(index).getFilename());
+        this.logger.debug("Importing comic: {}", comics.get(index).getFilename());
         this.importComic(comics.get(index), replacements, currentPages, importUser);
       } catch (FileNotFoundException error) {
-        this.logger.info("Comic not found: skipping");
+        this.logger.debug("Comic not found: skipping");
       } catch (ComicFileHandlerException error) {
         throw new ImportAdaptorException("unable to load comic file", error);
       }
@@ -95,7 +95,7 @@ public class ComicFileImportAdaptor {
 
     File file = new File(comic.getFilename());
     if (!file.exists()) {
-      this.logger.info("No such file: {}", comic.getFilename());
+      this.logger.debug("No such file: {}", comic.getFilename());
       throw new FileNotFoundException("no such file: " + comic.getFilename());
     }
 
@@ -137,10 +137,10 @@ public class ComicFileImportAdaptor {
       String listName = (String) list.getKey();
 
       if (list.getValue() instanceof List) {
-        this.logger.info("Importing list: {}", listName);
+        this.logger.debug("Importing list: {}", listName);
         importList(listName, (List) list.getValue(), importUser);
       } else if (list.getValue() instanceof ComicSmartListItem) {
-        this.logger.info("Importing smart list: {}", listName);
+        this.logger.debug("Importing smart list: {}", listName);
         importSmartList(listName, (ComicSmartListItem) list.getValue(), importUser);
       } else {
         this.logger.error("List {} of unknown type!", listName);
