@@ -76,7 +76,7 @@ public class ComicController {
   @Autowired private Worker worker;
   @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
 
-  @DeleteMapping(value = "/{id}", produces = "application/json")
+  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({View.ComicDetails.class})
   public Comic deleteComic(@PathVariable("id") long id) throws ComicException {
     this.logger.info("Marking comic for deletion: id={}", id);
@@ -151,7 +151,7 @@ public class ComicController {
         .body(new InputStreamResource(new ByteArrayInputStream(content)));
   }
 
-  @GetMapping(value = "/{id}", produces = "application/json")
+  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetails.class)
   public Comic getComic(@PathVariable("id") long id) throws ComicException {
     this.logger.info("Getting comic: id={}", id);
@@ -173,8 +173,8 @@ public class ComicController {
 
   @PostMapping(
       value = "/since/{timestamp}",
-      produces = "application/json",
-      consumes = "application/json")
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicList.class)
   public GetLibraryUpdatesResponse getComicsUpdatedSince(
       Principal principal,
@@ -309,7 +309,10 @@ public class ComicController {
     }
   }
 
-  @PutMapping(value = "/{id}", produces = "application/json", consumes = "application/json")
+  @PutMapping(
+      value = "/{id}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
   public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic) {
     this.logger.info("Updating comic: id={}", id, comic);
@@ -358,7 +361,10 @@ public class ComicController {
         .body(content);
   }
 
-  @PutMapping(value = "/{id}/restore", produces = "application/json", consumes = "application/json")
+  @PutMapping(
+      value = "/{id}/restore",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
   public Comic restoreComic(@PathVariable("id") final long id) throws ComicException {
     this.logger.info("Restoring comic: id={}", id);

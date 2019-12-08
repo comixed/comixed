@@ -42,7 +42,7 @@ import org.springframework.http.ResponseEntity;
 public class PageControllerTest {
   private static final long TEST_PAGE_TYPE_ID = 717;
   private static final long TEST_PAGE_ID = 129;
-  private static final String[] TEST_PAGE_HASH_LIST = {"12345", "23456", "34567"};
+  private static final List<String> TEST_PAGE_HASH_LIST = new ArrayList<>();
   private static final List<DuplicatePage> TEST_DUPLICATE_PAGES = new ArrayList<>();
   private static final int TEST_PAGE_INDEX = 7;
   private static final long TEST_COMIC_ID = 1002L;
@@ -52,6 +52,12 @@ public class PageControllerTest {
   private static final String TEST_PAGE_CONTENT_TYPE = "application";
   private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
   private static final Boolean TEST_BLOCKING = true;
+
+  static {
+    TEST_PAGE_HASH_LIST.add("12345");
+    TEST_PAGE_HASH_LIST.add("23456");
+    TEST_PAGE_HASH_LIST.add("34567");
+  }
 
   @InjectMocks private PageController pageController;
   @Mock private PageService pageService;
@@ -110,7 +116,7 @@ public class PageControllerTest {
   public void testGetBlockedPageHashes() {
     Mockito.when(pageService.getAllBlockedPageHashes()).thenReturn(TEST_PAGE_HASH_LIST);
 
-    String[] result = pageController.getAllBlockedPageHashes();
+    List<String> result = pageController.getAllBlockedPageHashes();
 
     assertSame(TEST_PAGE_HASH_LIST, result);
 
@@ -304,7 +310,7 @@ public class PageControllerTest {
 
   @Test
   public void testSetBlockingState() {
-    Mockito.when(pageService.setBlockingState(Mockito.any(String[].class), Mockito.anyBoolean()))
+    Mockito.when(pageService.setBlockingState(Mockito.anyList(), Mockito.anyBoolean()))
         .thenReturn(duplicatePageList);
 
     final List<DuplicatePage> result =

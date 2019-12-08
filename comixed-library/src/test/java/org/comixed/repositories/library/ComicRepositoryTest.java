@@ -340,7 +340,7 @@ public class ComicRepositoryTest {
   public void testComicsReturnTheirBlockedPageCount() {
     Comic result = repository.findById(TEST_COMIC_WITH_BLOCKED_PAGES).get();
 
-    assertEquals(2, result.getBlockedPageCount());
+    assertEquals(1, result.getBlockedPageCount());
   }
 
   @Test

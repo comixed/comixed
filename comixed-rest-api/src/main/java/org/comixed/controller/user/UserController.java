@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,7 +66,7 @@ public class UserController implements InitializingBean {
     this.userService.delete(userId);
   }
 
-  @GetMapping(value = "/admin/users", produces = "application/json")
+  @GetMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(UserList.class)
   public List<ComiXedUser> getAllUsers() {
     this.logger.info("Getting all user accounts");
@@ -117,7 +118,10 @@ public class UserController implements InitializingBean {
     return user.getPreferences();
   }
 
-  @PostMapping(value = "/admin/users", produces = "application/json", consumes = "application/json")
+  @PostMapping(
+      value = "/admin/users",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComiXedUser saveNewUser(@RequestBody() final SaveUserRequest request)
       throws ComiXedUserException {
     this.logger.info(
@@ -164,8 +168,8 @@ public class UserController implements InitializingBean {
 
   @PutMapping(
       value = "/admin/users/{id}",
-      produces = "application/json",
-      consumes = "application/json")
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComiXedUser updateUser(
       @PathVariable("id") long id, @RequestBody() final SaveUserRequest request)
       throws ComiXedUserException {

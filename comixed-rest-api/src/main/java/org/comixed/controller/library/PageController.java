@@ -48,8 +48,8 @@ public class PageController {
 
   @PostMapping(
       value = "/pages/{id}/block/{hash}",
-      produces = "application/json",
-      consumes = "application/json")
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
   public Comic addBlockedPageHash(
       @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
@@ -94,12 +94,12 @@ public class PageController {
   }
 
   @RequestMapping(value = "/pages/blocked", method = RequestMethod.GET)
-  public String[] getAllBlockedPageHashes() {
+  public List<String> getAllBlockedPageHashes() {
     this.logger.debug("Getting all blocked page hashes");
 
-    String[] result = this.pageService.getAllBlockedPageHashes();
+    List<String> result = this.pageService.getAllBlockedPageHashes();
 
-    this.logger.debug("Returning {} page hash{}", result.length, result.length == 1 ? "" : "es");
+    this.logger.debug("Returning {} page hash{}", result.size(), result.size() == 1 ? "" : "es");
 
     return result;
   }
@@ -173,7 +173,7 @@ public class PageController {
     return result;
   }
 
-  @DeleteMapping(value = "/pages/{id}/unblock/{hash}", produces = "application/json")
+  @DeleteMapping(value = "/pages/{id}/unblock/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
   public Comic removeBlockedPageHash(
       @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
@@ -215,15 +215,15 @@ public class PageController {
 
   @PostMapping(
       value = "/pages/hashes/blocking",
-      produces = "application/json",
-      consumes = "application/json")
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageList.class)
   public List<DuplicatePage> setBlockingState(
       @RequestBody() final SetBlockingStateRequest request) {
     this.logger.info(
         "Setting blocked state for {} hash{} to {}",
-        request.getHashes().length,
-        request.getHashes().length == 1 ? "" : "es",
+        request.getHashes().size(),
+        request.getHashes().size() == 1 ? "" : "es",
         request.getBlocked());
 
     return this.pageService.setBlockingState(request.getHashes(), request.getBlocked());

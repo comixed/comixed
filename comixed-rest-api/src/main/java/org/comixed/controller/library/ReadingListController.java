@@ -32,6 +32,7 @@ import org.comixed.views.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -57,7 +58,10 @@ public class ReadingListController {
     return this.readingListService.createReadingList(email, name, summary, entries);
   }
 
-  @PutMapping(value = "/lists/{id}", produces = "application/json", consumes = "application/json")
+  @PutMapping(
+      value = "/lists/{id}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingList.class)
   public ReadingList updateReadingList(
       Principal principal,
@@ -95,7 +99,7 @@ public class ReadingListController {
     return result;
   }
 
-  @GetMapping(value = "/lists/{id}", produces = "application/json")
+  @GetMapping(value = "/lists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingList.class)
   public ReadingList getReadingList(final Principal principal, @PathVariable("id") final long id)
       throws NoSuchReadingListException {

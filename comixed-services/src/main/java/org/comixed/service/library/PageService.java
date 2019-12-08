@@ -103,7 +103,7 @@ public class PageService {
     throw new PageException("no such page: id=" + pageId);
   }
 
-  public String[] getAllBlockedPageHashes() {
+  public List<String> getAllBlockedPageHashes() {
     this.logger.debug("Returning all blocked page hashes");
 
     return this.blockedPageHashRepository.getAllHashes();
@@ -221,11 +221,11 @@ public class PageService {
   }
 
   @Transactional
-  public List<DuplicatePage> setBlockingState(final String[] hashes, final boolean blocked) {
+  public List<DuplicatePage> setBlockingState(final List<String> hashes, final boolean blocked) {
     this.logger.debug(
         "Updating {} hash{} to {}blocked",
-        hashes.length,
-        hashes.length == 1 ? "" : "es",
+        hashes.size(),
+        hashes.size() == 1 ? "" : "es",
         blocked ? "" : "un");
 
     for (String hash : hashes) {

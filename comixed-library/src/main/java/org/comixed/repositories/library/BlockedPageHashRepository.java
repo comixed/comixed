@@ -18,6 +18,7 @@
 
 package org.comixed.repositories.library;
 
+import java.util.List;
 import org.comixed.model.library.BlockedPageHash;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -44,5 +45,5 @@ public interface BlockedPageHashRepository extends CrudRepository<BlockedPageHas
    * @return the hashes
    */
   @Query("SELECT b.hash FROM BlockedPageHash b")
-  String[] getAllHashes();
+  List<String> getAllHashes();
 }
