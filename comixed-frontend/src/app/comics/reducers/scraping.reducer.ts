@@ -104,7 +104,7 @@ export function reducer(
 
     case ScrapingActionTypes.SkipComic: {
       const comics = state.comics.filter(
-        comic => comic.id !== action.payload.comic.id
+        entry => entry.id !== action.payload.comic.id
       );
       const comic = comics.length > 0 ? comics[0] : null;
       return { ...state, comics: comics, comic: comic };

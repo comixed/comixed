@@ -48,7 +48,7 @@ export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
     this.currentComicSubscription.unsubscribe();
   }
 
-  skipComic(comic: Comic):void {
+  skipComic(comic: Comic): void {
     this.scrapingAdaptor.skipComic(comic);
   }
 }

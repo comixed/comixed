@@ -41,7 +41,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./comic-details-editor.component.scss']
 })
 export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
-  @Input() multiComicMode: boolean = false;
+  @Input() multiComicMode = false;
 
   @Output() skipComic = new EventEmitter<Comic>();
 
