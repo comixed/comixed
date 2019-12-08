@@ -28,6 +28,7 @@ import { ComicCoverClickEvent } from 'app/comics/models/event/comic-cover-click-
   styleUrls: ['./comic-cover.component.scss']
 })
 export class ComicCoverComponent {
+  @Input() caption = null;
   @Input() coverUrl: string;
   @Input() comic: Comic;
   @Input() comicFile: ComicFile;

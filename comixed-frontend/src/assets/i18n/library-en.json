@@ -273,6 +273,12 @@
       "message": "Are you sure you want to {blocking, select, true{block} other{unblock}} the selected pages?"
     }
   },
+  "duplicate-page-grid-item": {
+    "cover-caption": "{blocked, select, true{Blocked} other{Found}} in {count, plural, =1{one comic} other{# comics}}."
+  },
+  "duplicate-page-list-item": {
+    "title": "{blocked, select, true{Blocked} other{Found}} in {count, plural, =1{one comic} other{# comics}}."
+  },
   "collection-effects": {
     "get-entries": {
       "error": {
