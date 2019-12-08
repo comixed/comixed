@@ -45,7 +45,6 @@ import {
   TooltipModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
-import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationAdaptor } from 'app/user';
@@ -66,8 +65,6 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
-import { ComicFilterPipe } from 'app/library/pipes/comic-filter.pipe';
-import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -109,14 +106,11 @@ describe('MissingComicsPageComponent', () => {
         MissingComicsPipe,
         ComicListToolbarComponent,
         ComicListItemComponent,
-        ComicGridItemComponent,
-        LibraryFilterComponent,
-        ComicFilterPipe
+        ComicGridItemComponent
       ],
       providers: [
         AuthenticationAdaptor,
         LibraryAdaptor,
-        FilterAdaptor,
         SelectionAdaptor,
         ReadingListAdaptor,
         LibraryDisplayAdaptor,

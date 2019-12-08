@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { reducer, initialState, ScrapingState } from './scraping.reducer';
+import { initialState, reducer, ScrapingState } from './scraping.reducer';
 import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
 import {
   ScrapingGetIssue,
@@ -27,6 +27,8 @@ import {
   ScrapingLoadMetadata,
   ScrapingLoadMetadataFailed,
   ScrapingMetadataLoaded,
+  ScrapingResetVolumes,
+  ScrapingSkipComic,
   ScrapingStart,
   ScrapingVolumesReceived
 } from 'app/comics/actions/scraping.actions';
@@ -246,7 +248,13 @@ describe('Scraping Reducer', () => {
   describe('the comic metadata was retrieved', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, scraping: true, comics: COMICS, comic: COMIC },
+        {
+          ...state,
+          scraping: true,
+          comics: COMICS,
+          comic: COMIC,
+          volumes: VOLUMES
+        },
         new ScrapingMetadataLoaded({ comic: COMIC })
       );
     });
@@ -261,6 +269,10 @@ describe('Scraping Reducer', () => {
 
     it('sets the next comic to scrape', () => {
       expect(state.comic).toEqual(state.comics[0]);
+    });
+
+    it('clears the volume list', () => {
+      expect(state.volumes).toEqual([]);
     });
   });
 
@@ -295,6 +307,57 @@ describe('Scraping Reducer', () => {
 
     it('clears the current comic', () => {
       expect(state.comic).toBeNull();
+    });
+  });
+
+  describe('skipping a comic', () => {
+    const SKIPPED_COMIC = COMICS[1];
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, comic: SKIPPED_COMIC, comics: COMICS },
+        new ScrapingSkipComic({ comic: SKIPPED_COMIC })
+      );
+    });
+
+    it('removes the skipped comic from the list', () => {
+      expect(state.comics).not.toContain(SKIPPED_COMIC);
+    });
+
+    it('replaces the current comic with the front of the queue', () => {
+      expect(state.comic).toEqual(state.comics[0]);
+    });
+  });
+
+  describe('skipping the last comic', () => {
+    const SKIPPED_COMIC = COMICS[1];
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, comic: SKIPPED_COMIC, comics: [SKIPPED_COMIC] },
+        new ScrapingSkipComic({ comic: SKIPPED_COMIC })
+      );
+    });
+
+    it('removes the skipped comic from the list', () => {
+      expect(state.comics).not.toContain(SKIPPED_COMIC);
+    });
+
+    it('sets the current comic to nul', () => {
+      expect(state.comic).toBeNull();
+    });
+  });
+
+  describe('resetting the list of volumes', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, volumes: VOLUMES },
+        new ScrapingResetVolumes()
+      );
+    });
+
+    it('sets an empty set', () => {
+      expect(state.volumes).toEqual([]);
     });
   });
 });

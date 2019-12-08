@@ -27,8 +27,8 @@ import { StoreModule } from '@ngrx/store';
 import * as fromLibrary from './reducers/library.reducer';
 import * as fromSelection from './reducers/selection.reducer';
 import * as fromReadingList from './reducers/reading-list.reducer';
-import * as fromFilters from './reducers/filters.reducer';
 import * as fromDupes from './reducers/duplicate-pages.reducer';
+import * as fromCollections from './reducers/collection.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { LibraryEffects } from './effects/library.effects';
 import { LibraryService } from './services/library.service';
@@ -38,8 +38,6 @@ import { ReadingListEffects } from './effects/reading-list.effects';
 import { ReadingListService } from './services/reading-list.service';
 import { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
 import { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
-import { FilterAdaptor } from 'app/library/adaptors/filter.adaptor';
-import { ComicFilterPipe } from './pipes/comic-filter.pipe';
 import { ComicListToolbarComponent } from './components/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
@@ -51,31 +49,16 @@ import { CheckboxModule } from 'primeng/checkbox';
 import {
   ProgressSpinnerModule,
   ScrollPanelModule,
-  SidebarModule,
   SliderModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { LibraryFilterComponent } from 'app/library/components/library-filter/library-filter.component';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
 import { LibraryRoutingModule } from 'app/library/library-routing.module';
-import { PublishersPageComponent } from 'app/library/pages/publishers-page/publishers-page.component';
-import { PublisherDetailsPageComponent } from 'app/library/pages/publisher-details-page/publisher-details-page.component';
-import { SeriesPageComponent } from 'app/library/pages/series-page/series-page.component';
-import { SeriesDetailsPageComponent } from 'app/library/pages/series-details-page/series-details-page.component';
-import { CharactersPageComponent } from 'app/library/pages/characters-page/characters-page.component';
-import { CharacterDetailsPageComponent } from 'app/library/pages/character-details-page/character-details-page.component';
-import { TeamsPageComponent } from 'app/library/pages/teams-page/teams-page.component';
-import { TeamDetailsPageComponent } from 'app/library/pages/team-details-page/team-details-page.component';
-import { LocationsPageComponent } from 'app/library/pages/locations-page/locations-page.component';
-import { LocationDetailsPageComponent } from 'app/library/pages/location-details-page/location-details-page.component';
-import { StoryArcsPageComponent } from 'app/library/pages/story-arcs-page/story-arcs-page.component';
-import { StoryArcDetailsPageComponent } from 'app/library/pages/story-arc-details-page/story-arc-details-page.component';
 import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
 import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
 import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
 import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
-import { MultipleComicScrapingComponent } from 'app/library/components/multiple-comic-scraping/multiple-comic-scraping.component';
 import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
 import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
 import { DuplicatesPageComponent } from './pages/duplicates-page/duplicates-page.component';
@@ -85,6 +68,11 @@ import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effec
 import { DuplicatePageGridItemComponent } from './components/duplicate-page-grid-item/duplicate-page-grid-item.component';
 import { DuplicatesPageToolbarComponent } from './components/duplicates-page-toolbar/duplicates-page-toolbar.component';
 import { DuplicatePageListItemComponent } from './components/duplicate-page-list-item/duplicate-page-list-item.component';
+import { CollectionService } from 'app/library/services/collection.service';
+import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
+import { CollectionEffects } from 'app/library/effects/collection.effects';
+import { CollectionDetailsPageComponent } from './pages/collection-details-page/collection-details-page.component';
+import { CollectionPageComponent } from './pages/collection-page/collection-page.component';
 
 @NgModule({
   imports: [
@@ -105,17 +93,18 @@ import { DuplicatePageListItemComponent } from './components/duplicate-page-list
       fromReadingList.reducer
     ),
     StoreModule.forFeature(
-      fromFilters.FILTERS_FEATURE_KEY,
-      fromFilters.reducer
-    ),
-    StoreModule.forFeature(
       fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
       fromDupes.reducer
+    ),
+    StoreModule.forFeature(
+      fromCollections.COLLECTION_FEATURE_KEY,
+      fromCollections.reducer
     ),
     EffectsModule.forFeature([
       LibraryEffects,
       ReadingListEffects,
-      DuplicatePagesEffects
+      DuplicatePagesEffects,
+      CollectionEffects
     ]),
     ContextMenuModule,
     CheckboxModule,
@@ -123,8 +112,7 @@ import { DuplicatePageListItemComponent } from './components/duplicate-page-list
     ScrollPanelModule,
     ToolbarModule,
     ProgressSpinnerModule,
-    TooltipModule,
-    SidebarModule
+    TooltipModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
@@ -133,42 +121,30 @@ import { DuplicatePageListItemComponent } from './components/duplicate-page-list
     ComicListItemComponent,
     ComicListComponent,
     ComicListToolbarComponent,
-    LibraryFilterComponent,
-    PublishersPageComponent,
-    PublisherDetailsPageComponent,
-    SeriesPageComponent,
-    SeriesDetailsPageComponent,
-    CharactersPageComponent,
-    CharacterDetailsPageComponent,
-    TeamsPageComponent,
-    TeamDetailsPageComponent,
-    LocationsPageComponent,
-    LocationDetailsPageComponent,
-    StoryArcsPageComponent,
-    StoryArcDetailsPageComponent,
     MissingComicsPageComponent,
     MultiComicScrapingPageComponent,
     ScrapingComicListComponent,
-    MultipleComicScrapingComponent,
     ReadingListsPageComponent,
     ReadingListPageComponent,
-    ComicFilterPipe,
     MissingComicsPipe,
     DuplicatesPageComponent,
     DuplicatePageGridItemComponent,
     DuplicatesPageToolbarComponent,
-    DuplicatePageListItemComponent
+    DuplicatePageListItemComponent,
+    CollectionDetailsPageComponent,
+    CollectionPageComponent
   ],
   providers: [
     LibraryService,
     LibraryAdaptor,
-    FilterAdaptor,
     LibraryDisplayAdaptor,
     SelectionAdaptor,
     DuplicatePagesAdaptors,
     ReadingListService,
     ReadingListAdaptor,
-    DuplicatePagesService
+    DuplicatePagesService,
+    CollectionService,
+    CollectionAdaptor
   ]
 })
 export class LibraryModule {

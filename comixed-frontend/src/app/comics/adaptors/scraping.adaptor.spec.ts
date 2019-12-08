@@ -31,6 +31,8 @@ import {
   ScrapingLoadMetadata,
   ScrapingLoadMetadataFailed,
   ScrapingMetadataLoaded,
+  ScrapingResetVolumes,
+  ScrapingSkipComic,
   ScrapingStart,
   ScrapingVolumesReceived
 } from 'app/comics/actions/scraping.actions';
@@ -266,6 +268,42 @@ describe('ScrapingAdaptor', () => {
       it('provides updates on loading metadata', () => {
         adaptor.scraping$.subscribe(response => expect(response).toBeFalsy());
       });
+    });
+  });
+
+  describe('skipping a comic', () => {
+    const SKIPPED_COMIC = COMICS[0];
+
+    beforeEach(() => {
+      store.dispatch(new ScrapingStart({ comics: COMICS }));
+      adaptor.skipComic(SKIPPED_COMIC);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ScrapingSkipComic({ comic: SKIPPED_COMIC })
+      );
+    });
+
+    it('updates the comics list', () => {
+      adaptor.comics$.subscribe(comics =>
+        expect(comics).not.toContain(SKIPPED_COMIC)
+      );
+    });
+  });
+
+  describe('resetting the volume list', () => {
+    beforeEach(() => {
+      store.dispatch(new ScrapingVolumesReceived({ volumes: VOLUMES }));
+      adaptor.resetVolumes();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(new ScrapingResetVolumes());
+    });
+
+    it('updates the list of volumes', () => {
+      adaptor.volumes$.subscribe(response => expect(response).toEqual([]));
     });
   });
 });

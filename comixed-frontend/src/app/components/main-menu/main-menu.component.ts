@@ -90,7 +90,7 @@ export class MainMenuComponent implements OnInit {
               'main-menu.item.collections.publishers'
             ),
             icon: 'fas fa-newspaper',
-            routerLink: ['/publishers'],
+            routerLink: ['/collections/publishers'],
             visible: this.authenticationAdaptor.authenticated
           },
           {
@@ -98,7 +98,7 @@ export class MainMenuComponent implements OnInit {
               'main-menu.item.collections.series'
             ),
             icon: 'fa fa-fw fa-book',
-            routerLink: ['/series'],
+            routerLink: ['/collections/series'],
             visible: this.authenticationAdaptor.authenticated
           },
           {
@@ -106,7 +106,7 @@ export class MainMenuComponent implements OnInit {
               'main-menu.item.collections.characters'
             ),
             icon: 'fas fa-user',
-            routerLink: ['/characters'],
+            routerLink: ['/collections/characters'],
             visible: this.authenticationAdaptor.authenticated
           },
           {
@@ -114,7 +114,7 @@ export class MainMenuComponent implements OnInit {
               'main-menu.item.collections.teams'
             ),
             icon: 'fas fa-users',
-            routerLink: ['/teams'],
+            routerLink: ['/collections/teams'],
             visible: this.authenticationAdaptor.authenticated
           },
           {
@@ -122,7 +122,7 @@ export class MainMenuComponent implements OnInit {
               'main-menu.item.collections.locations'
             ),
             icon: 'fas fa-location-arrow',
-            routerLink: ['/locations'],
+            routerLink: ['/collections/locations'],
             visible: this.authenticationAdaptor.authenticated
           },
           {
@@ -130,7 +130,7 @@ export class MainMenuComponent implements OnInit {
               'main-menu.item.collections.story-arcs'
             ),
             icon: 'fas fa-folder-open',
-            routerLink: ['/stories'],
+            routerLink: ['/collections/stories'],
             visible: this.authenticationAdaptor.authenticated
           }
         ]

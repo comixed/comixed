@@ -17,6 +17,9 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
+import { Comic } from 'app/comics';
 
 @Component({
   selector: 'app-multi-comic-scraping-page',
@@ -24,9 +27,28 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
   styleUrls: ['./multi-comic-scraping-page.component.scss']
 })
 export class MultiComicScrapingPageComponent implements OnInit, OnDestroy {
-  constructor() {}
+  comicsSubscription: Subscription;
+  comics: Comic[] = [];
+  currentComicSubscription: Subscription;
+  currentComic: Comic = null;
 
-  ngOnInit() {}
+  constructor(private scrapingAdaptor: ScrapingAdaptor) {}
 
-  ngOnDestroy() {}
+  ngOnInit() {
+    this.comicsSubscription = this.scrapingAdaptor.comics$.subscribe(
+      comics => (this.comics = comics)
+    );
+    this.currentComicSubscription = this.scrapingAdaptor.comic$.subscribe(
+      comic => (this.currentComic = comic)
+    );
+  }
+
+  ngOnDestroy() {
+    this.comicsSubscription.unsubscribe();
+    this.currentComicSubscription.unsubscribe();
+  }
+
+  skipComic(comic: Comic):void {
+    this.scrapingAdaptor.skipComic(comic);
+  }
 }

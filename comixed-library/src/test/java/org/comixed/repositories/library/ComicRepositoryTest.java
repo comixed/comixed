@@ -69,6 +69,18 @@ public class ComicRepositoryTest {
   private static final String TEST_IMPRINT = "This is an imprint";
   private static final Long TEST_USER_ID = 1000L;
   private static final String TEST_IMAGE_FILE = "src/test/resources/example.jpg";
+  private static final String TEST_PUBLISHER_NAME_1 = "Warren";
+  private static final String TEST_PUBLISHER_NAME_2 = "Marvel";
+  private static final String TEST_SERIES_NAME_1 = "Creepy";
+  private static final String TEST_SERIES_NAME_2 = "Steve Rogers: Captain America";
+  private static final String TEST_CHARACTER_1 = "Lois Lane";
+  private static final String TEST_CHARACTER_2 = "Steve Rogers";
+  private static final String TEST_TEAM_1 = "SHIELD";
+  private static final String TEST_TEAM_2 = "The Daily Planet";
+  private static final String TEST_LOCATION_NAME_1 = "Genosha";
+  private static final String TEST_LOCATION_NAME_2 = "The Fortress Of Solitude";
+  private static final String TEST_STORY_NAME_1 = "Civil War II";
+  private static final String TEST_STORY_NAME_2 = "Prelude To Civil War II";
   private static byte[] TEST_IMAGE_CONTENT;
 
   static {
@@ -273,17 +285,17 @@ public class ComicRepositoryTest {
 
   @Test
   public void testStoryArcs() {
-    assertEquals(2, comic.getStoryArcCount());
+    assertEquals(1, comic.getStoryArcCount());
   }
 
   @Test
   public void testTeams() {
-    assertEquals(5, comic.getTeamCount());
+    assertEquals(2, comic.getTeamCount());
   }
 
   @Test
   public void testCharacters() {
-    assertEquals(1, comic.getCharacterCount());
+    assertEquals(3, comic.getCharacterCount());
   }
 
   @Test
@@ -457,5 +469,197 @@ public class ComicRepositoryTest {
       assertTrue(
           result.get(index - 1).getDateLastUpdated().after(result.get(index).getDateLastUpdated()));
     }
+  }
+
+  @Test
+  public void testGetPublisherNames() {
+    final List<String> result = this.repository.getPublisherNames();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(3, result.size());
+    assertTrue(result.contains(TEST_PUBLISHER_NAME_1));
+    assertTrue(result.contains(TEST_PUBLISHER_NAME_2));
+  }
+
+  @Test
+  public void testGetComicCountForPublisher() {
+    int result = this.repository.getComicCountForPublisher(TEST_PUBLISHER_NAME_1);
+
+    assertEquals(1, result);
+
+    result = this.repository.getComicCountForPublisher(TEST_PUBLISHER_NAME_2);
+    assertEquals(2, result);
+  }
+
+  @Test
+  public void testGetSeriesNames() {
+    final List<String> result = this.repository.getSeriesNames();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(3, result.size());
+    assertTrue(result.contains(TEST_SERIES_NAME_1));
+    assertTrue(result.contains(TEST_SERIES_NAME_2));
+  }
+
+  @Test
+  public void testGetComicCountForSeries() {
+    int result = this.repository.getComicCountForSeries(TEST_SERIES_NAME_1);
+
+    assertEquals(1, result);
+
+    result = this.repository.getComicCountForSeries(TEST_SERIES_NAME_2);
+    assertEquals(2, result);
+  }
+
+  @Test
+  public void testGetCharacterNames() {
+    final List<String> result = this.repository.getCharacterNames();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(9, result.size());
+    assertTrue(result.contains(TEST_CHARACTER_1));
+    assertTrue(result.contains(TEST_CHARACTER_2));
+  }
+
+  @Test
+  public void testGetComicCountForCharacter() {
+    int result = this.repository.getComicCountForCharacter(TEST_CHARACTER_1);
+
+    assertEquals(1, result);
+
+    result = this.repository.getComicCountForCharacter(TEST_CHARACTER_2);
+    assertEquals(1, result);
+  }
+
+  @Test
+  public void testGetTeamNames() {
+    final List<String> result = this.repository.getTeamNames();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(4, result.size());
+    assertTrue(result.contains(TEST_TEAM_1));
+    assertTrue(result.contains(TEST_TEAM_2));
+  }
+
+  @Test
+  public void testGetComicCountForTeam() {
+    int result = this.repository.getComicCountForTeam(TEST_TEAM_1);
+
+    assertEquals(2, result);
+
+    result = this.repository.getComicCountForTeam(TEST_TEAM_2);
+    assertEquals(1, result);
+  }
+
+  @Test
+  public void testGetLocationNames() {
+    final List<String> result = this.repository.getLocationNames();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(5, result.size());
+    assertTrue(result.contains(TEST_LOCATION_NAME_1));
+    assertTrue(result.contains(TEST_LOCATION_NAME_2));
+  }
+
+  @Test
+  public void testGetComicCountForLocation() {
+    int result = this.repository.getComicCountForLocation(TEST_LOCATION_NAME_1);
+
+    assertEquals(2, result);
+
+    result = this.repository.getComicCountForLocation(TEST_LOCATION_NAME_2);
+    assertEquals(1, result);
+  }
+
+  @Test
+  public void testGetStoryNames() {
+    final List<String> result = this.repository.getStoryNames();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(2, result.size());
+    assertTrue(result.contains(TEST_STORY_NAME_1));
+    assertTrue(result.contains(TEST_STORY_NAME_2));
+  }
+
+  @Test
+  public void testGetComicCountForStory() {
+    int result = this.repository.getComicCountForStory(TEST_STORY_NAME_1);
+
+    assertEquals(1, result);
+
+    result = this.repository.getComicCountForStory(TEST_STORY_NAME_2);
+    assertEquals(1, result);
+  }
+
+  @Test
+  public void testGetComicPageForPublisher() {
+    final List<Comic> result =
+        this.repository.getComicPageForPublisher(
+            TEST_PUBLISHER_NAME_1, PageRequest.of(0, 1, Sort.by(Direction.ASC, "coverDate")));
+
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals(1003L, result.get(0).getId().longValue());
+  }
+
+  @Test
+  public void testGetComicPageForSeries() {
+    final List<Comic> result =
+        this.repository.getComicPageForSeries(
+            TEST_SERIES_NAME_1, PageRequest.of(0, 1, Sort.by(Direction.ASC, "coverDate")));
+
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals(1003L, result.get(0).getId().longValue());
+  }
+
+  @Test
+  public void testGetComicPageForCharacter() {
+    final List<Comic> result =
+        this.repository.getComicPageForCharacter(
+            TEST_CHARACTER_2, PageRequest.of(0, 1, Sort.by(Direction.ASC, "coverDate")));
+
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals(1001L, result.get(0).getId().longValue());
+  }
+
+  @Test
+  public void testGetComicPageForTeam() {
+    final List<Comic> result =
+        this.repository.getComicPageForTeam(
+            TEST_TEAM_1, PageRequest.of(0, 1, Sort.by(Direction.ASC, "coverDate")));
+
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals(1000L, result.get(0).getId().longValue());
+  }
+
+  @Test
+  public void testGetComicPageForLocation() {
+    final List<Comic> result =
+        this.repository.getComicPageForLocation(
+            TEST_LOCATION_NAME_2, PageRequest.of(0, 1, Sort.by(Direction.ASC, "addedDate")));
+
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals(1002L, result.get(0).getId().longValue());
+  }
+
+  @Test
+  public void testGetComicPageForStory() {
+    final List<Comic> result =
+        this.repository.getComicPageForStory(
+            TEST_STORY_NAME_2, PageRequest.of(0, 1, Sort.by(Direction.ASC, "addedDate")));
+
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals(1001L, result.get(0).getId().longValue());
   }
 }

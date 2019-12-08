@@ -23,6 +23,13 @@
                         (click)='resetDetails()'></button>
             </div>
             <div class='ui-toolbar-group-right'>
+                <button *ngIf='multiComicMode'
+                        pButton
+                        class='cx-action-button ui-button-danger'
+                        type='button'
+                        [label]='"comic-details-editor.button.skip-comic"|translate'
+                        icon='fa fa-fw fas fa-step-forward'
+                        (click)='skipCurrentComic()'></button>
                 <p-splitButton id='fetch-volumes-button'
                                class='ui-button-secondary'
                                [label]='"comic-details-editor.button.fetch-volumes"|translate'
@@ -119,7 +126,7 @@
     <div *ngIf='volumes.length'
          class='ui-g'>
         <div class='ui-g-12'>
-            <app-volume-list [volumes]='volumes'
+            <app-volume-list [volumes]="volumes"
                              [comic]='comic'
                              [currentVolume]='currentVolume'
                              [currentIssue]='currentIssue'
