@@ -1,5 +1,4 @@
-<div *ngIf='item'
-     class='ui-g'>
+<div class='ui-g'>
     <div class='ui-g-12'>
         <div class='p-grid'>
             <div class='p-col-fixed'
@@ -15,7 +14,10 @@
             <div class='p-col'>
                 <div class='ui-g'>
                     <div class='ui-g-12'>
-                        <h3>{{'duplicate-page-list-item.title'|translate:{comicCount: item.pages.length} }}</h3>
+                        <h3>{{'duplicate-page-list-item.title'|translate:{
+                            count: item.pages.length,
+                            blocked: item.blocked
+                        } }}</h3>
                     </div>
                 </div>
             </div>

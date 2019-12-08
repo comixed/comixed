@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +56,10 @@ public class FileController {
 
   private int requestId = 0;
 
-  @PostMapping(value = "/contents", produces = "application/json", consumes = "application/json")
+  @PostMapping(
+      value = "/contents",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @Secured("ROLE_ADMIN")
   public List<FileDetails> getAllComicsUnder(@RequestBody() final GetAllComicsUnderRequest request)
       throws IOException, JSONException {
@@ -107,7 +111,10 @@ public class FileController {
     return result;
   }
 
-  @PostMapping(value = "/import", produces = "application/json", consumes = "application/json")
+  @PostMapping(
+      value = "/import",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @Secured("ROLE_ADMIN")
   public ImportComicFilesResponse importComicFiles(@RequestBody() ImportRequestBody request)
       throws UnsupportedEncodingException {

@@ -19,22 +19,24 @@
 package org.comixed.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SetBlockingStateRequest {
   @JsonProperty("hashes")
-  private String[] hashes;
+  private List<String> hashes = new ArrayList<>();
 
   @JsonProperty("blocked")
   private Boolean blocked;
 
   public SetBlockingStateRequest() {}
 
-  public SetBlockingStateRequest(final String[] hashes, final Boolean blocked) {
+  public SetBlockingStateRequest(final List<String> hashes, final Boolean blocked) {
     this.hashes = hashes;
     this.blocked = blocked;
   }
 
-  public String[] getHashes() {
+  public List<String> getHashes() {
     return hashes;
   }
 

@@ -8,7 +8,7 @@
         <img [src]='coverUrl'
              [style.width]='useSameHeight ? "auto" : coverSize + "px"'
              [style.height]='useSameHeight ? coverSize + "px" : "auto"'/>
-        <p-footer></p-footer>
+        <p-footer *ngIf='caption'><strong><span class='cx-comic-cover-caption'>{{caption}}</span></strong></p-footer>
     </p-card>
     <div *ngIf='showOverlay()'
          class='cx-comic-cover-overlay'

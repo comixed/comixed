@@ -35,3 +35,9 @@
   background-color: #800000;
   opacity: 0.8;
 }
+
+.cx-comic-cover-caption {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

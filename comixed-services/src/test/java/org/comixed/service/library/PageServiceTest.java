@@ -44,12 +44,18 @@ public class PageServiceTest {
   private static final long TEST_PAGE_TYPE_ID = 717;
   private static final long TEST_PAGE_ID = 129;
   private static final String BLOCKED_PAGE_HASH_VALUE = "0123456789ABCDEF";
-  private static final String[] BLOCKED_HASH_LIST = {"12345", "23456", "34567"};
+  private static final List<String> BLOCKED_HASH_LIST = new ArrayList<>();
   private static final List<Page> TEST_DUPLICATE_PAGES = new ArrayList<>();
   private static final long TEST_COMIC_ID = 1002L;
   private static final int TEST_PAGE_INDEX = 7;
   private static final int TEST_DELETED_PAGE_COUNT = 17;
   private static final String TEST_PAGE_HASH = "12345";
+
+  static {
+    BLOCKED_HASH_LIST.add("12345");
+    BLOCKED_HASH_LIST.add("23456");
+    BLOCKED_HASH_LIST.add("34567");
+  }
 
   @InjectMocks private PageService pageService;
   @Mock private PageRepository pageRepository;
@@ -186,7 +192,7 @@ public class PageServiceTest {
   public void testGetBlockedPageHashes() {
     Mockito.when(blockedPageHashRepository.getAllHashes()).thenReturn(BLOCKED_HASH_LIST);
 
-    String[] result = pageService.getAllBlockedPageHashes();
+    List<String> result = pageService.getAllBlockedPageHashes();
 
     assertSame(BLOCKED_HASH_LIST, result);
 
@@ -417,8 +423,10 @@ public class PageServiceTest {
         .thenReturn(blockedPageHash);
     Mockito.when(pageRepository.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGES);
 
-    final List<DuplicatePage> result =
-        pageService.setBlockingState(new String[] {TEST_PAGE_HASH}, true);
+    List<String> hashes = new ArrayList<>();
+    hashes.add(TEST_PAGE_HASH);
+
+    final List<DuplicatePage> result = pageService.setBlockingState(hashes, true);
 
     assertNotNull(result);
     assertEquals(TEST_PAGE_HASH, blockedPageHashCaptor.getValue().getHash());
@@ -435,8 +443,10 @@ public class PageServiceTest {
         .thenReturn(blockedPageHash);
     Mockito.when(pageRepository.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGES);
 
-    final List<DuplicatePage> result =
-        pageService.setBlockingState(new String[] {TEST_PAGE_HASH}, true);
+    List<String> hashes = new ArrayList<>();
+    hashes.add(TEST_PAGE_HASH);
+
+    final List<DuplicatePage> result = pageService.setBlockingState(hashes, true);
 
     assertNotNull(result);
 
@@ -449,8 +459,10 @@ public class PageServiceTest {
     Mockito.when(blockedPageHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(pageRepository.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGES);
 
-    final List<DuplicatePage> result =
-        pageService.setBlockingState(new String[] {TEST_PAGE_HASH}, false);
+    List<String> hashes = new ArrayList<>();
+    hashes.add(TEST_PAGE_HASH);
+
+    final List<DuplicatePage> result = pageService.setBlockingState(hashes, false);
 
     assertNotNull(result);
 
@@ -465,8 +477,10 @@ public class PageServiceTest {
     Mockito.doNothing().when(blockedPageHashRepository).delete(Mockito.any());
     Mockito.when(pageRepository.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGES);
 
-    final List<DuplicatePage> result =
-        pageService.setBlockingState(new String[] {TEST_PAGE_HASH}, false);
+    List<String> hashes = new ArrayList<>();
+    hashes.add(TEST_PAGE_HASH);
+
+    final List<DuplicatePage> result = pageService.setBlockingState(hashes, false);
 
     assertNotNull(result);
 

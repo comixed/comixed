@@ -22,7 +22,20 @@ import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
 import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardModule } from 'primeng/card';
-import { ProgressSpinnerModule, TooltipModule } from 'primeng/primeng';
+import {
+  MessageService,
+  ProgressSpinnerModule,
+  TooltipModule
+} from 'primeng/primeng';
+import { StoreModule } from '@ngrx/store';
+import {
+  DUPLICATE_PAGES_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/duplicate-pages.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 
 describe('DuplicatePageListItemComponent', () => {
   let component: DuplicatePageListItemComponent;
@@ -31,7 +44,12 @@ describe('DuplicatePageListItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        HttpClientTestingModule,
         TranslateModule.forRoot(),
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(DUPLICATE_PAGES_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([DuplicatePagesEffects]),
         CardModule,
         ProgressSpinnerModule,
         TooltipModule
@@ -40,15 +58,15 @@ describe('DuplicatePageListItemComponent', () => {
         DuplicatePageListItemComponent,
         ComicCoverComponent,
         ComicPageUrlPipe
-      ]
+      ],
+      providers: [MessageService]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DuplicatePageListItemComponent);
     component = fixture.componentInstance;
+    component.item = DUPLICATE_PAGE_1;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

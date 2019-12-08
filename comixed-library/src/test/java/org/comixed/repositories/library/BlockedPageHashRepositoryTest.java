@@ -18,13 +18,12 @@
 
 package org.comixed.repositories.library;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import java.util.List;
 import org.comixed.model.library.BlockedPageHash;
 import org.comixed.repositories.RepositoryContext;
 import org.junit.Test;
@@ -49,39 +48,41 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   DbUnitTestExecutionListener.class
 })
 public class BlockedPageHashRepositoryTest {
-  private static final String BLOCKED_PAGE_HASH = "12345";
+  private static final String BLOCKED_PAGE_HASH_1 = "0123456789ABCDEF0123456789ABCDEF";
+  private static final String BLOCKED_PAGE_HASH_2 = "ABCDEF0123456789ABCDEF0123456789";
 
   @Autowired private BlockedPageHashRepository repository;
 
   @Test
   public void testAddBlockedHash() {
-    BlockedPageHash hash = new BlockedPageHash(BLOCKED_PAGE_HASH + BLOCKED_PAGE_HASH);
+    BlockedPageHash hash = new BlockedPageHash(BLOCKED_PAGE_HASH_1 + BLOCKED_PAGE_HASH_1);
 
     repository.save(hash);
 
-    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH + BLOCKED_PAGE_HASH);
+    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH_1 + BLOCKED_PAGE_HASH_1);
 
     assertNotNull(result);
-    assertEquals(BLOCKED_PAGE_HASH + BLOCKED_PAGE_HASH, result.getHash());
+    assertEquals(BLOCKED_PAGE_HASH_1 + BLOCKED_PAGE_HASH_1, result.getHash());
   }
 
   @Test
   public void testRemoveBlockedHash() {
-    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH);
+    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH_1);
 
     assertNotNull(result);
 
     repository.delete(result);
 
-    result = repository.findByHash(BLOCKED_PAGE_HASH);
+    result = repository.findByHash(BLOCKED_PAGE_HASH_1);
 
     assertNull(result);
   }
 
   @Test
   public void testGetAllHashes() {
-    String[] result = repository.getAllHashes();
+    List<String> result = repository.getAllHashes();
 
-    assertArrayEquals(new String[] {"12345", "23456"}, result);
+    assertTrue(result.contains(BLOCKED_PAGE_HASH_1));
+    assertTrue(result.contains(BLOCKED_PAGE_HASH_2));
   }
 }

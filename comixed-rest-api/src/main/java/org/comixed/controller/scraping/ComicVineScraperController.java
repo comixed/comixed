@@ -34,6 +34,7 @@ import org.comixed.web.model.ScrapingVolume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -50,8 +51,8 @@ public class ComicVineScraperController {
 
   @PostMapping(
       value = "/volumes/{volume}/issues/{issue}",
-      produces = "application/json",
-      consumes = "application/json")
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   public ScrapingIssue queryForIssue(
       @PathVariable("volume") final Integer volume,
       @PathVariable("issue") final String issue,
@@ -68,8 +69,8 @@ public class ComicVineScraperController {
 
   @PostMapping(
       value = "/series/{seriesName}",
-      produces = "application/json",
-      consumes = "application/json")
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   public List<ScrapingVolume> queryForVolumes(
       @PathVariable("seriesName") final String seriesName,
       @RequestBody() final GetVolumesRequest request)
@@ -85,8 +86,8 @@ public class ComicVineScraperController {
 
   @PostMapping(
       value = "/comics/{comicId}/issue/{issueId}",
-      produces = "application/json",
-      consumes = "application/json")
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
   public Comic scrapeAndSaveComicDetails(
       @PathVariable("comicId") final Long comicId,

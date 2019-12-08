@@ -18,14 +18,11 @@
 
 package org.comixed.repositories.library;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import org.comixed.model.library.Page;
 import org.comixed.repositories.RepositoryContext;
@@ -53,14 +50,17 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 public class PageRepositoryTest {
   private static final Long BLOCKED_PAGE_ID = 1000L;
   private static final Long UNBLOCKED_PAGE_ID = 1001L;
-  private static final String TEST_DUPLICATE_PAGE_HASH_1 = "12345";
-  private static final String TEST_DUPLICATE_PAGE_HASH_2 = "12346";
-  private static final String TEST_DUPLICATE_PAGE_HASH_3 = "12347";
-  private static final List<String> TEST_DUPLICATE_PAGE_HASHES =
-      Arrays.asList(
-          new String[] {
-            TEST_DUPLICATE_PAGE_HASH_1, TEST_DUPLICATE_PAGE_HASH_2, TEST_DUPLICATE_PAGE_HASH_3,
-          });
+  private static final String TEST_DUPLICATE_PAGE_HASH_1 = "F0123456789ABCDEF0123456789ABCDE";
+  private static final String TEST_DUPLICATE_PAGE_HASH_2 = "0123456789ABCDEF0123456789ABCDEF";
+  private static final String TEST_DUPLICATE_PAGE_HASH_3 = "123456789ABCDEF0123456789ABCDEF0";
+  private static final List<String> TEST_DUPLICATE_PAGE_HASHES = new ArrayList<>();
+
+  static {
+    TEST_DUPLICATE_PAGE_HASHES.add(TEST_DUPLICATE_PAGE_HASH_1);
+    TEST_DUPLICATE_PAGE_HASHES.add(TEST_DUPLICATE_PAGE_HASH_2);
+    TEST_DUPLICATE_PAGE_HASHES.add(TEST_DUPLICATE_PAGE_HASH_3);
+  }
+
   @Autowired private PageRepository repository;
 
   @Test
@@ -83,17 +83,14 @@ public class PageRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(11, result.size());
-    for (Page page : result) {
-      assertTrue(TEST_DUPLICATE_PAGE_HASHES.contains(page.getHash()));
-    }
+    assertEquals(6, result.size());
   }
 
   @Test
   public void testUpdateDeleteOnAllWithHashAsDeleted() {
     int result = repository.updateDeleteOnAllWithHash(TEST_DUPLICATE_PAGE_HASH_1, true);
 
-    assertEquals(3, result);
+    assertEquals(2, result);
 
     Iterable<Page> pages = repository.findAll();
     for (Page page : pages) {
@@ -107,7 +104,7 @@ public class PageRepositoryTest {
   public void testUpdateDeleteOnAllWithHashAsNotDeleted() {
     int result = repository.updateDeleteOnAllWithHash(TEST_DUPLICATE_PAGE_HASH_1, false);
 
-    assertEquals(3, result);
+    assertEquals(2, result);
 
     Iterable<Page> pages = repository.findAll();
     for (Page page : pages) {
