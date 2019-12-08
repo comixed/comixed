@@ -39,8 +39,8 @@ public class RarArchiveAdaptorTest {
   private static final String TEST_FILE_ENTRY_1 = "example.jpeg";
   private static final String TEST_FILE_ENTRY_2 = "example.jpg";
   private static final String TEST_FILE_ENTRY_3 = "example.png";
-  private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
-  private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
+  private static final String TEST_CBZ_FILE = "target/test-classes/example.cbz";
+  private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
 
   @Autowired private RarArchiveAdaptor archiveAdaptor;
 
