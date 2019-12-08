@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -106,27 +107,6 @@ public class PageService {
     this.logger.debug("Returning all blocked page hashes");
 
     return this.blockedPageHashRepository.getAllHashes();
-  }
-
-  public List<DuplicatePage> getDuplicatePages() {
-    this.logger.debug("Getting pages from repository");
-    final List<Page> pages = this.pageRepository.getDuplicatePages();
-
-    this.logger.debug("Build duplicate page list");
-    Map<String, DuplicatePage> mapped = new HashMap<>();
-    for (Page page : pages) {
-      DuplicatePage entry = mapped.get(page.getHash());
-
-      if (entry == null) {
-        entry = new DuplicatePage();
-
-        entry.setHash(page.getHash());
-        mapped.put(entry.getHash(), entry);
-      }
-      entry.getPages().add(page);
-    }
-
-    return new ArrayList<>(mapped.values());
   }
 
   public Page getPageInComicByIndex(final long comicId, final int pageIndex) {
@@ -242,7 +222,11 @@ public class PageService {
 
   @Transactional
   public List<DuplicatePage> setBlockingState(final String[] hashes, final boolean blocked) {
-    this.logger.debug("Updating {} hash{}", hashes.length, hashes.length == 1 ? "" : "es");
+    this.logger.debug(
+        "Updating {} hash{} to {}blocked",
+        hashes.length,
+        hashes.length == 1 ? "" : "es",
+        blocked ? "" : "un");
 
     for (String hash : hashes) {
       BlockedPageHash entry = this.blockedPageHashRepository.findByHash(hash);
@@ -266,5 +250,28 @@ public class PageService {
     }
 
     return this.getDuplicatePages();
+  }
+
+  @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+  public List<DuplicatePage> getDuplicatePages() {
+    this.logger.debug("Getting pages from repository");
+    final List<Page> pages = this.pageRepository.getDuplicatePages();
+
+    this.logger.debug("Build duplicate page list");
+    Map<String, DuplicatePage> mapped = new HashMap<>();
+    for (Page page : pages) {
+      DuplicatePage entry = mapped.get(page.getHash());
+
+      if (entry == null) {
+        entry = new DuplicatePage();
+
+        entry.setHash(page.getHash());
+        entry.setBlocked(page.isBlocked());
+        mapped.put(entry.getHash(), entry);
+      }
+      entry.getPages().add(page);
+    }
+
+    return new ArrayList<>(mapped.values());
   }
 }

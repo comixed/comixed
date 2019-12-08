@@ -49,7 +49,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   DbUnitTestExecutionListener.class
 })
 public class BlockedPageHashRepositoryTest {
-  private static final String BLOCKED_PAGE_HASH = "12345";
+  private static final String BLOCKED_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
 
   @Autowired private BlockedPageHashRepository repository;
 
