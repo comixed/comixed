@@ -3,13 +3,14 @@ RUN apk --no-cache add openjdk8 unzip wget
 
 MAINTAINER Pidockmedia "pidockmedia@gmail.com"
 
-RUN mkdir /app /dl
-WORKDIR /dl
-RUN wget -qO- https://api.github.com/repos/comixed/comixed/releases/latest | grep browser_download_url | cut -d '"' -f 4 | wget -qi -
+RUN mkdir /app /ul
+WORKDIR /ul
+RUN wget -q -O comixed-app.zip https://github.com/comixed/comixed/releases/download/0.5.0-PRERELEASE-20191205032145/comixed-app-0.5.0-PRERELEASE-20191205032145.zip
 RUN unzip *.zip
 RUN rm *.zip
 RUN mv comixed*/bin/comixed-app*.jar /app/comixed-app.jar
-RUN rm -r comixed*
+WORKDIR /app
+RUN rm -r /ul
 
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
 ENV PATH="$JAVA_HOME/bin:${PATH}"

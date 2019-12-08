@@ -6,20 +6,20 @@ Update the dockerfile to have the .jar file path.
 
 ## Test
 ```
-docker build -t mcpierce/comixed .
-docker run -it -p 7171:7171/tcp mcpierce/comixed
+docker build -t comixed/comixed .
+docker run -it -p 7171:7171/tcp comixed/comixed
 ```
 ## Tag Push
 ```
-docker tag mcpierce/comixed mcpierce/comixed:0.4.9-SNAPSHOT
-docker push mcpierce/comixed
+docker tag comixed/comixed comixed/comixed:0.5.0-PRERELEASE
+docker push comixed/comixed
 ```
 
 ## Upload to dockerhub as latest and/or release
 ```
-docker tag mcpierce/comixed mcpierce/comixed:latest
-docker push mcpierce/comixed
+docker tag comixed/comixed comixed/comixed:latest
+docker push comixed/comixed
 
-docker tag mcpierce/comixed mcpierce/comixed:release
-docker push mcpierce/comixed
+docker tag comixed/comixed comixed/comixed:release
+docker push comixed/comixed
 ```
