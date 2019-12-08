@@ -179,7 +179,7 @@ public class ReadingListService {
     matcher.setNot(not);
     matcher.setMode(mode);
     for (Matcher matcherMatcher : matchers) {
-      matcher.addMatcher(matcher);
+      matcher.addMatcher(matcherMatcher);
     }
 
     return matcher;
