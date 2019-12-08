@@ -39,8 +39,8 @@ public class SevenZipArchiveAdaptorTest {
   private static final String TEST_FILE_ENTRY_2 = "example.png";
   private static final String TEST_FILE_ENTRY_1 = "example.jpg";
   private static final String TEST_FILE_ENTRY_0 = "example.jpeg";
-  private static final String TEST_CB7_FILE = "src/test/resources/example.cb7";
-  private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
+  private static final String TEST_CB7_FILE = "target/test-classes/example.cb7";
+  private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
   private static final Object TEST_FILE_ENTRY_RENAMED_0 = "offset-000.jpeg";
   private static final Object TEST_FILE_ENTRY_RENAMED_1 = "offset-001.jpg";
   private static final Object TEST_FILE_ENTRY_RENAMED_2 = "offset-002.png";
