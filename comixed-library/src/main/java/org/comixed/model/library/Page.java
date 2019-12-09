@@ -28,6 +28,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.imageio.ImageIO;
 import javax.persistence.*;
+import org.codehaus.plexus.util.StringUtils;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.views.View.ComicList;
 import org.comixed.views.View.DatabaseBackup;
@@ -122,7 +123,8 @@ public class Page {
     try {
       md = MessageDigest.getInstance("MD5");
       md.update(bytes);
-      result = new BigInteger(1, md.digest()).toString(16).toUpperCase();
+      result =
+          StringUtils.leftPad(new BigInteger(1, md.digest()).toString(16).toUpperCase(), 32, "0");
     } catch (NoSuchAlgorithmException error) {
       this.logger.error("Failed to generate hash", error);
     }

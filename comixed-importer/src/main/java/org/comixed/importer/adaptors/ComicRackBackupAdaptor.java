@@ -23,11 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -188,7 +184,7 @@ public class ComicRackBackupAdaptor {
 
         ComicSmartListItem smartList = readComicSmartListItem(xmlInputReader);
         result.put(smartList.getName(), smartList);
-        this.logger.info("Loaded smart list: {}", smartList.getName());
+        this.logger.debug("Loaded smart list: {}", smartList.getName());
       }
       xmlInputReader.next();
     }
@@ -213,7 +209,7 @@ public class ComicRackBackupAdaptor {
         break;
     }
     result.put(listName, comics);
-    this.logger.info("Loaded list: {}", listName);
+    this.logger.debug("Loaded list: {}", listName);
   }
 
   private ComicSmartListItem readComicSmartListItem(XMLStreamReader xmlInputReader)

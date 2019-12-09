@@ -114,7 +114,7 @@ public class Worker implements Runnable, InitializingBean {
    * @return the count
    */
   public int getCountFor(Class<? extends WorkerTask> taskClass) {
-    this.logger.info("Getting worker count: class={}", taskClass.getName());
+    this.logger.debug("Getting worker count: class={}", taskClass.getName());
     this.logger.debug("Getting worker queue count: class={}", taskClass.getName());
     synchronized (this.semaphore) {
       if (this.queue.isEmpty()) {
