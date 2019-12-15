@@ -16,12 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { SelectionAdaptor } from './selection.adaptor';
 import { TestBed } from '@angular/core/testing';
-import { AppState } from 'app/library';
 import { Store, StoreModule } from '@ngrx/store';
-import { reducer } from 'app/library/reducers/selection.reducer';
 import { COMIC_1, COMIC_2, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
+import { AppState } from 'app/library';
+import { reducer } from 'app/library/reducers/selection.reducer';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SelectionAdaptor } from './selection.adaptor';
 
 describe('SelectionAdaptor', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -32,7 +33,10 @@ describe('SelectionAdaptor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot({ selection_state: reducer })],
+      imports: [
+        StoreModule.forRoot({ selection_state: reducer }),
+        LoggerTestingModule
+      ],
       providers: [SelectionAdaptor]
     });
 

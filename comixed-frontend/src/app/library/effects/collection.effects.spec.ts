@@ -16,27 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-
-import { CollectionEffects } from './collection.effects';
-import { CollectionService } from 'app/library/services/collection.service';
-import { MessageService } from 'primeng/api';
-import { TranslateModule } from '@ngx-translate/core';
-import { StoreModule } from '@ngrx/store';
-import {
-  COLLECTION_FEATURE_KEY,
-  reducer
-} from 'app/library/reducers/collection.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import {
-  COLLECTION_ENTRY_1,
-  COLLECTION_ENTRY_2,
-  COLLECTION_ENTRY_3,
-  COLLECTION_ENTRY_4,
-  COLLECTION_ENTRY_5
-} from 'app/library/models/collection-entry.fixtures';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/models/comic.fixtures';
 import {
   CollectionComicsReceived,
   CollectionGetComics,
@@ -45,11 +31,26 @@ import {
   CollectionLoadFailed,
   CollectionReceived
 } from 'app/library/actions/collection.actions';
+import {
+  COLLECTION_ENTRY_1,
+  COLLECTION_ENTRY_2,
+  COLLECTION_ENTRY_3,
+  COLLECTION_ENTRY_4,
+  COLLECTION_ENTRY_5
+} from 'app/library/models/collection-entry.fixtures';
 import { CollectionType } from 'app/library/models/collection-type.enum';
-import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
-import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/models/comic.fixtures';
 import { GetCollectionPageResponse } from 'app/library/models/net/get-collection-page-response';
+import {
+  COLLECTION_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/collection.reducer';
+import { CollectionService } from 'app/library/services/collection.service';
+import { hot } from 'jasmine-marbles';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { Observable, of, throwError } from 'rxjs';
+
+import { CollectionEffects } from './collection.effects';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionEffects', () => {
@@ -78,6 +79,7 @@ describe('CollectionEffects', () => {
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(COLLECTION_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

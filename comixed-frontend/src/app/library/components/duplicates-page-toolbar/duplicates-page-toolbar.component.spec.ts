@@ -42,6 +42,7 @@ import {
 } from 'primeng/primeng';
 
 import { DuplicatesPageToolbarComponent } from './duplicates-page-toolbar.component';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('DuplicatesPageToolbarComponent', () => {
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
@@ -59,6 +60,7 @@ describe('DuplicatesPageToolbarComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         ButtonModule,
@@ -115,9 +117,10 @@ describe('DuplicatesPageToolbarComponent', () => {
 
   describe('turn on blocked for selected pages', () => {
     beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirm: Confirmation) => confirm.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirm: Confirmation) => confirm.accept());
       spyOn(duplicatesPagesAdaptors, 'setBlocking');
       component.selectedPages = PAGES;
       component.setBlocking(true);
@@ -133,9 +136,10 @@ describe('DuplicatesPageToolbarComponent', () => {
 
   describe('turn off blocked for selected pages', () => {
     beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirm: Confirmation) => confirm.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirm: Confirmation) => confirm.accept());
       spyOn(duplicatesPagesAdaptors, 'setBlocking');
       component.selectedPages = PAGES;
       component.setBlocking(false);

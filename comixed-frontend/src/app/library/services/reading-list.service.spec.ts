@@ -30,8 +30,8 @@ import {
   GET_READING_LISTS_URL,
   SAVE_READING_LIST_URL
 } from 'app/app.constants';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
 import { SaveReadingListRequest } from 'app/library/models/net/save-reading-list-request';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1];
@@ -41,7 +41,7 @@ describe('ReadingListService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [ReadingListService]
     });
 

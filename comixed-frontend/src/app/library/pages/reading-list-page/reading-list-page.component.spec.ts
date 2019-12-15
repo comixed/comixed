@@ -16,126 +16,140 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ReadingListPageComponent} from './reading-list-page.component';
-import {AbstractControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
-import {ButtonModule} from 'primeng/button';
-import {RouterTestingModule} from '@angular/router/testing';
-import {ActivatedRoute} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
-import {DataViewModule} from 'primeng/dataview';
+import { ReadingListPageComponent } from './reading-list-page.component';
 import {
-    CardModule,
-    CheckboxModule,
-    ConfirmationService,
-    ConfirmDialogModule,
-    ContextMenuModule,
-    DropdownModule,
-    MessageService,
-    OverlayPanelModule,
-    PanelModule,
-    ProgressSpinnerModule,
-    ScrollPanelModule,
-    SidebarModule,
-    SliderModule,
-    SplitButtonModule,
-    ToolbarModule,
-    TooltipModule
+  AbstractControl,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from 'primeng/button';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { DataViewModule } from 'primeng/dataview';
+import {
+  CardModule,
+  CheckboxModule,
+  ConfirmationService,
+  ConfirmDialogModule,
+  ContextMenuModule,
+  DropdownModule,
+  MessageService,
+  OverlayPanelModule,
+  PanelModule,
+  ProgressSpinnerModule,
+  ScrollPanelModule,
+  SidebarModule,
+  SliderModule,
+  SplitButtonModule,
+  ToolbarModule,
+  TooltipModule
 } from 'primeng/primeng';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {AuthenticationAdaptor} from 'app/user';
-import {LibraryAdaptor, LibraryDisplayAdaptor, ReadingListAdaptor, SelectionAdaptor} from 'app/library';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {UserService} from 'app/services/user.service';
-import {BreadcrumbAdaptor} from 'app/adaptors/breadcrumb.adaptor';
-import {ComicListComponent} from 'app/library/components/comic-list/comic-list.component';
-import {ComicListToolbarComponent} from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
-import {ComicListItemComponent} from 'app/library/components/comic-list-item/comic-list-item.component';
-import {ComicGridItemComponent} from 'app/library/components/comic-grid-item/comic-grid-item.component';
-import {StoreModule} from '@ngrx/store';
-import {EffectsModule} from '@ngrx/effects';
-import {ComicsModule} from 'app/comics/comics.module';
-import {UserModule} from 'app/user/user.module';
-import {LIBRARY_FEATURE_KEY, reducer} from 'app/library/reducers/library.reducer';
-import {LibraryEffects} from 'app/library/effects/library.effects';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthenticationAdaptor } from 'app/user';
+import {
+  LibraryAdaptor,
+  LibraryDisplayAdaptor,
+  ReadingListAdaptor,
+  SelectionAdaptor
+} from 'app/library';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UserService } from 'app/services/user.service';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
+import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
+import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { ComicsModule } from 'app/comics/comics.module';
+import { UserModule } from 'app/user/user.module';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ReadingListPageComponent', () => {
-    let component: ReadingListPageComponent;
-    let fixture: ComponentFixture<ReadingListPageComponent>;
-    let activated_route: ActivatedRoute;
-    let reading_list_name: AbstractControl;
-    let reading_list_summary: AbstractControl;
+  let component: ReadingListPageComponent;
+  let fixture: ComponentFixture<ReadingListPageComponent>;
+  let activated_route: ActivatedRoute;
+  let reading_list_name: AbstractControl;
+  let reading_list_summary: AbstractControl;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                ComicsModule,
-                UserModule,
-                HttpClientTestingModule,
-                BrowserAnimationsModule,
-                RouterTestingModule,
-                FormsModule,
-                ReactiveFormsModule,
-                TranslateModule.forRoot(),
-                StoreModule.forRoot({}),
-                StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
-                EffectsModule.forRoot([]),
-                EffectsModule.forFeature([LibraryEffects]),
-                ButtonModule,
-                DataViewModule,
-                SidebarModule,
-                SplitButtonModule,
-                ScrollPanelModule,
-                DropdownModule,
-                CheckboxModule,
-                SliderModule,
-                PanelModule,
-                OverlayPanelModule,
-                CardModule,
-                ConfirmDialogModule,
-                ContextMenuModule,
-                ToolbarModule,
-                TooltipModule,
-                ProgressSpinnerModule
-            ],
-            declarations: [
-                ReadingListPageComponent,
-                ComicListComponent,
-                ComicListToolbarComponent,
-                ComicListItemComponent,
-                ComicGridItemComponent
-            ],
-            providers: [
-                AuthenticationAdaptor,
-                LibraryAdaptor,
-                LibraryDisplayAdaptor,
-                BreadcrumbAdaptor,
-                SelectionAdaptor,
-                ReadingListAdaptor,
-                ConfirmationService,
-                MessageService,
-                UserService,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        params: new BehaviorSubject<{}>({}),
-                        queryParams: new BehaviorSubject<{}>({})
-                    }
-                }
-            ]
-        }).compileComponents();
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        ComicsModule,
+        UserModule,
+        HttpClientTestingModule,
+        BrowserAnimationsModule,
+        RouterTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule.forRoot(),
+        LoggerTestingModule,
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects]),
+        ButtonModule,
+        DataViewModule,
+        SidebarModule,
+        SplitButtonModule,
+        ScrollPanelModule,
+        DropdownModule,
+        CheckboxModule,
+        SliderModule,
+        PanelModule,
+        OverlayPanelModule,
+        CardModule,
+        ConfirmDialogModule,
+        ContextMenuModule,
+        ToolbarModule,
+        TooltipModule,
+        ProgressSpinnerModule
+      ],
+      declarations: [
+        ReadingListPageComponent,
+        ComicListComponent,
+        ComicListToolbarComponent,
+        ComicListItemComponent,
+        ComicGridItemComponent
+      ],
+      providers: [
+        AuthenticationAdaptor,
+        LibraryAdaptor,
+        LibraryDisplayAdaptor,
+        BreadcrumbAdaptor,
+        SelectionAdaptor,
+        ReadingListAdaptor,
+        ConfirmationService,
+        MessageService,
+        UserService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<{}>({})
+          }
+        }
+      ]
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(ReadingListPageComponent);
-        component = fixture.componentInstance;
-        activated_route = TestBed.get(ActivatedRoute);
-        fixture.detectChanges();
-        reading_list_name = component.readingListForm.controls['name'];
-        reading_list_summary = component.readingListForm.controls['summary'];
-    }));
+    fixture = TestBed.createComponent(ReadingListPageComponent);
+    component = fixture.componentInstance;
+    activated_route = TestBed.get(ActivatedRoute);
+    fixture.detectChanges();
+    reading_list_name = component.readingListForm.controls['name'];
+    reading_list_summary = component.readingListForm.controls['summary'];
+  }));
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

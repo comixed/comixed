@@ -17,11 +17,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { AuthenticationAdaptor } from 'app/user';
-import { User } from 'app/user';
+import { AuthenticationAdaptor, User } from 'app/user';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
+import { NGXLogger } from 'ngx-logger';
 
 export const LIBRARY_DISPLAY_LAYOUT = 'library_display_layout';
 export const LIBRARY_DISPLAY_LAYOUT_DEFAULT = 'grid';
@@ -57,9 +57,11 @@ export class LibraryDisplayAdaptor {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private authenticationAdaptor: AuthenticationAdaptor
+    private authenticationAdaptor: AuthenticationAdaptor,
+    private logger: NGXLogger
   ) {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
+      this.logger.debug('query parameters changed:', params);
       this.ignoreFields = [];
       if (
         !!params[LAYOUT_QUERY_PARAM] &&
@@ -92,6 +94,7 @@ export class LibraryDisplayAdaptor {
   }
 
   loadUserSettings(): void {
+    this.logger.debug('loading library display user settings');
     if (!this.ignoreFields.includes(LAYOUT_QUERY_PARAM)) {
       this._layout$.next(this.getLayout());
     }
@@ -137,6 +140,7 @@ export class LibraryDisplayAdaptor {
   }
 
   setLayout(layout: string): void {
+    this.logger.debug('setting layout:', layout);
     this.authenticationAdaptor.setPreference(LIBRARY_DISPLAY_LAYOUT, layout);
     this._layout$.next(layout);
     this.updateQueryParameters(LAYOUT_QUERY_PARAM, layout);
@@ -150,6 +154,7 @@ export class LibraryDisplayAdaptor {
   }
 
   setSortField(sortField: string, save: boolean = true): void {
+    this.logger.debug('setting sort field:', sortField, save);
     if (save) {
       this.authenticationAdaptor.setPreference(
         LIBRARY_DISPLAY_SORT_FIELD,
@@ -169,6 +174,7 @@ export class LibraryDisplayAdaptor {
   }
 
   setDisplayRows(rows: number): void {
+    this.logger.debug('setting display rows:', rows);
     this.authenticationAdaptor.setPreference(LIBRARY_DISPLAY_ROWS, `${rows}`);
     this._rows$.next(rows);
     this.updateQueryParameters(ROWS_QUERY_PARAM, `${rows}`);
@@ -182,6 +188,7 @@ export class LibraryDisplayAdaptor {
   }
 
   setSameHeight(sameHeight: boolean): void {
+    this.logger.debug('setting same height:', sameHeight);
     this.authenticationAdaptor.setPreference(
       LIBRARY_DISPLAY_SAME_HEIGHT,
       sameHeight ? '1' : '0'
@@ -199,6 +206,7 @@ export class LibraryDisplayAdaptor {
   }
 
   setCoverSize(coverSize: number, save: boolean = true): void {
+    this.logger.debug('setting cover size:', coverSize, save);
     if (save) {
       this.authenticationAdaptor.setPreference(
         LIBRARY_DISPLAY_COVER_SIZE,
@@ -210,6 +218,7 @@ export class LibraryDisplayAdaptor {
   }
 
   updateQueryParameters(name: string, value: string): void {
+    this.logger.debug('updating query parameter:', name, value);
     const queryParams: Params = Object.assign(
       {},
       this.activatedRoute.snapshot.queryParams

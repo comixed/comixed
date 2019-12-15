@@ -16,9 +16,8 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {
   CREATE_READING_LIST_URL,
   GET_READING_LIST_URL,
@@ -26,20 +25,24 @@ import {
   SAVE_READING_LIST_URL
 } from 'app/app.constants';
 import { interpolate } from 'app/app.functions';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
 import { SaveReadingListRequest } from 'app/library/models/net/save-reading-list-request';
+import { ReadingList } from 'app/library/models/reading-list/reading-list';
+import { NGXLogger } from 'ngx-logger';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReadingListService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private logger: NGXLogger) {}
 
   get_all(): Observable<any> {
+    this.logger.debug('getting all reading lists');
     return this.http.get(interpolate(GET_READING_LISTS_URL));
   }
 
   get_reading_list(id: number): Observable<any> {
+    this.logger.debug(`getting reading list: id=${id}`);
     return this.http.get(interpolate(GET_READING_LIST_URL, { id: id }));
   }
 
@@ -51,11 +54,13 @@ export class ReadingListService {
       summary: reading_list.summary
     };
     if (reading_list.id) {
+      this.logger.debug(`saving reading list: ${reading_list}`);
       return this.http.put(
         interpolate(SAVE_READING_LIST_URL, { id: reading_list.id }),
         encoded
       );
     } else {
+      this.logger.debug(`creating reading list: ${reading_list}`);
       const params = new HttpParams()
         .set('name', reading_list.name)
         .set('summary', reading_list.summary)

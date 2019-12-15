@@ -33,6 +33,7 @@ import {
   DuplicatePagesSelect,
   DuplicatePagesSetBlocking
 } from 'app/library/actions/duplicate-pages.actions';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class DuplicatePagesAdaptors {
@@ -41,11 +42,12 @@ export class DuplicatePagesAdaptors {
   private _selected$ = new BehaviorSubject<DuplicatePage[]>([]);
   private _setBlocking$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private logger: NGXLogger) {
     this.store
       .select(DUPLICATE_PAGES_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe((dupeState: DuplicatePagesState) => {
+        this.logger.debug('duplicate page state updated:', dupeState);
         if (dupeState.fetchingAll !== this._fetchingAll$.getValue()) {
           this._fetchingAll$.next(dupeState.fetchingAll);
         }
@@ -62,6 +64,7 @@ export class DuplicatePagesAdaptors {
   }
 
   getAll(): void {
+    this.logger.debug('getting all duplicate pages');
     this.store.dispatch(new DuplicatePagesGetAll());
   }
 
@@ -74,6 +77,7 @@ export class DuplicatePagesAdaptors {
   }
 
   selectPages(pages: DuplicatePage[]) {
+    this.logger.debug(`selecting ${pages.length} page(s)`, pages);
     this.store.dispatch(new DuplicatePagesSelect({ pages: pages }));
   }
 
@@ -82,10 +86,15 @@ export class DuplicatePagesAdaptors {
   }
 
   deselectPages(pages: DuplicatePage[]) {
+    this.logger.debug(`deselecting ${pages.length} page(s)`, pages);
     this.store.dispatch(new DuplicatePagesDeselect({ pages: pages }));
   }
 
   setBlocking(pages: DuplicatePage[], blocking: boolean): void {
+    this.logger.debug(
+      `${blocking ? 'Blocking' : 'Unblocking'} ${pages.length} page(s):`,
+      pages
+    );
     this.store.dispatch(
       new DuplicatePagesSetBlocking({ pages: pages, blocking: blocking })
     );

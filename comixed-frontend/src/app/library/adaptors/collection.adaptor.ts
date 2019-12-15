@@ -33,6 +33,7 @@ import {
   CollectionLoad
 } from 'app/library/actions/collection.actions';
 import { Comic } from 'app/comics';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class CollectionAdaptor {
@@ -42,11 +43,12 @@ export class CollectionAdaptor {
   private _comics$ = new BehaviorSubject<Comic[]>([]);
   private _comicCount$ = new BehaviorSubject<number>(0);
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private logger: NGXLogger) {
     this.store
       .select(COLLECTION_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe((state: CollectionState) => {
+        this.logger.debug('collection state updated:', state);
         if (state.fetchingEntries !== this._fetchingEntries$.getValue()) {
           this._fetchingEntries$.next(state.fetchingEntries);
         }
@@ -66,6 +68,7 @@ export class CollectionAdaptor {
   }
 
   getCollection(collectionType: CollectionType): void {
+    this.logger.debug('getting collection:', collectionType);
     this.store.dispatch(new CollectionLoad({ collectionType: collectionType }));
   }
 
@@ -85,6 +88,18 @@ export class CollectionAdaptor {
     sortField: string,
     ascending: boolean
   ): void {
+    this.logger.debug(
+      'getting page for collection: type=',
+      collectionType,
+      'name:',
+      name,
+      'page:',
+      page,
+      'sortField:',
+      sortField,
+      'ascending:',
+      ascending
+    );
     this.store.dispatch(
       new CollectionGetComics({
         collectionType: collectionType,

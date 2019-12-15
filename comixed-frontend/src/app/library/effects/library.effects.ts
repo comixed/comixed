@@ -18,6 +18,17 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
+import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
+import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
+import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
+import { LibraryService } from 'app/library/services/library.service';
+import { NGXLogger } from 'ngx-logger';
+import { MessageService } from 'primeng/api';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   LibraryActionTypes,
   LibraryComicsReceived,
@@ -32,16 +43,6 @@ import {
   LibraryStartRescanFailed,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
-import { Action } from '@ngrx/store';
-import { Observable, of } from 'rxjs';
-import { LibraryService } from 'app/library/services/library.service';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { MessageService } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
-import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
-import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
-import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
-import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
 
 @Injectable()
 export class LibraryEffects {
@@ -49,7 +50,8 @@ export class LibraryEffects {
     private actions$: Actions,
     private libraryService: LibraryService,
     private translateService: TranslateService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private logger: NGXLogger
   ) {}
 
   @Effect()
@@ -75,6 +77,7 @@ export class LibraryEffects {
               })
           ),
           catchError(error => {
+            this.logger.error('get comics by page service failure:', error);
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -86,6 +89,7 @@ export class LibraryEffects {
         )
     ),
     catchError(error => {
+      this.logger.error('get comics by page general failure:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -110,6 +114,12 @@ export class LibraryEffects {
           action.lastRescanCount
         )
         .pipe(
+          tap((response: GetLibraryUpdateResponse) =>
+            this.logger.debug(
+              `received ${response.comics.length} comics in response:`,
+              response
+            )
+          ),
           map(
             (response: GetLibraryUpdateResponse) =>
               new LibraryUpdatesReceived({
@@ -120,6 +130,7 @@ export class LibraryEffects {
               })
           ),
           catchError(error => {
+            this.logger.error('get library updates service failure:', error);
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -131,6 +142,7 @@ export class LibraryEffects {
         )
     ),
     catchError(error => {
+      this.logger.error('get library updates general failure:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -159,6 +171,7 @@ export class LibraryEffects {
             new LibraryRescanStarted({ count: response.count })
         ),
         catchError(error => {
+          this.logger.error('start rescan service failure:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -170,6 +183,7 @@ export class LibraryEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('start rescan general failure:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -202,6 +216,7 @@ export class LibraryEffects {
             })
         ),
         catchError(error => {
+          this.logger.error('delete multiple comics service failure:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -213,6 +228,7 @@ export class LibraryEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('delete multiple comics general failure:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(

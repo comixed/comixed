@@ -18,6 +18,15 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { CollectionEntry } from 'app/library/models/collection-entry';
+import { GetCollectionPageResponse } from 'app/library/models/net/get-collection-page-response';
+import { CollectionService } from 'app/library/services/collection.service';
+import { NGXLogger } from 'ngx-logger';
+import { MessageService } from 'primeng/api';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import {
   CollectionActions,
   CollectionActionTypes,
@@ -26,14 +35,6 @@ import {
   CollectionLoadFailed,
   CollectionReceived
 } from '../actions/collection.actions';
-import { Observable, of } from 'rxjs';
-import { Action } from '@ngrx/store';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { CollectionService } from 'app/library/services/collection.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
-import { GetCollectionPageResponse } from 'app/library/models/net/get-collection-page-response';
-import { CollectionEntry } from 'app/library/models/collection-entry';
 
 @Injectable()
 export class CollectionEffects {
@@ -41,7 +42,8 @@ export class CollectionEffects {
     private actions$: Actions<CollectionActions>,
     private translateService: TranslateService,
     private messageService: MessageService,
-    private collectionService: CollectionService
+    private collectionService: CollectionService,
+    private logger: NGXLogger
   ) {}
 
   @Effect()
@@ -55,6 +57,7 @@ export class CollectionEffects {
             new CollectionReceived({ entries: response })
         ),
         catchError(error => {
+          this.logger.error('getting collection entries service error:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -67,6 +70,7 @@ export class CollectionEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('getting collection entries general error:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -100,6 +104,10 @@ export class CollectionEffects {
               })
           ),
           catchError(error => {
+            this.logger.error(
+              'getting collection page entries service failure:',
+              error
+            );
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -111,6 +119,10 @@ export class CollectionEffects {
         )
     ),
     catchError(error => {
+      this.logger.error(
+        'getting collection page entries general failure:',
+        error
+      );
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(

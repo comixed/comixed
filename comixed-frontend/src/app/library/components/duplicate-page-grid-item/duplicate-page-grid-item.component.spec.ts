@@ -24,6 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule, TooltipModule } from 'primeng/primeng';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('DuplicatePageGridItemComponent', () => {
   let component: DuplicatePageGridItemComponent;
@@ -33,6 +34,7 @@ describe('DuplicatePageGridItemComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         CardModule,
         TooltipModule,
         ProgressSpinnerModule

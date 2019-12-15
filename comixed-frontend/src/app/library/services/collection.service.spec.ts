@@ -16,14 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
-
-import { CollectionService } from './collection.service';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { CollectionType } from 'app/library/models/collection-type.enum';
+import { TestBed } from '@angular/core/testing';
+import { interpolate } from 'app/app.functions';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/models/comic.fixtures';
+import {
+  GET_COLLECTION_ENTRIES_URL,
+  GET_PAGE_FOR_ENTRY_URL
+} from 'app/library/library.constants';
 import {
   COLLECTION_ENTRY_1,
   COLLECTION_ENTRY_2,
@@ -31,14 +34,12 @@ import {
   COLLECTION_ENTRY_4,
   COLLECTION_ENTRY_5
 } from 'app/library/models/collection-entry.fixtures';
-import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/models/comic.fixtures';
-import { interpolate } from 'app/app.functions';
-import {
-  GET_COLLECTION_ENTRIES_URL,
-  GET_PAGE_FOR_ENTRY_URL
-} from 'app/library/library.constants';
-import { GetCollectionPageResponse } from 'app/library/models/net/get-collection-page-response';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 import { GetCollectionPageRequest } from 'app/library/models/net/get-collection-page-request';
+import { GetCollectionPageResponse } from 'app/library/models/net/get-collection-page-response';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+
+import { CollectionService } from './collection.service';
 
 describe('CollectionService', () => {
   const COLLECTION_TYPE = CollectionType.CHARACTERS;
@@ -62,7 +63,7 @@ describe('CollectionService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [CollectionService]
     });
 

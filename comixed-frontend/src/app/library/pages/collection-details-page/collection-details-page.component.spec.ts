@@ -66,6 +66,7 @@ import {
 } from 'primeng/primeng';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionDetailsPageComponent } from './collection-details-page.component';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionDetailsPageComponent', () => {
@@ -85,6 +86,7 @@ describe('CollectionDetailsPageComponent', () => {
         HttpClientTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(COLLECTION_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

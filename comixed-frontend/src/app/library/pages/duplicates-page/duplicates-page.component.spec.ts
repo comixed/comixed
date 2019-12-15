@@ -49,6 +49,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('DuplicatesPageComponent', () => {
   let component: DuplicatesPageComponent;
@@ -62,6 +63,7 @@ describe('DuplicatesPageComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         DataViewModule,

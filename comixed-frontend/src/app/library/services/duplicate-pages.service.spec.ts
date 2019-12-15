@@ -16,19 +16,20 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
-import { SetBlockingStateRequest } from 'app/library/models/net/set-blocking-state-request';
-import { DuplicatePagesService } from './duplicate-pages.service';
-import { DUPLICATE_PAGE_1 } from 'app/library/models/duplicate-page.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { interpolate } from 'app/app.functions';
 import {
   GET_ALL_DUPLICATE_PAGES_URL,
   SET_BLOCKING_STATE_URL
 } from 'app/library/library.constants';
+import { DUPLICATE_PAGE_1 } from 'app/library/models/duplicate-page.fixtures';
+import { SetBlockingStateRequest } from 'app/library/models/net/set-blocking-state-request';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { DuplicatePagesService } from './duplicate-pages.service';
 
 describe('DuplicatePagesService', () => {
   const PAGES = [DUPLICATE_PAGE_1];
@@ -39,7 +40,7 @@ describe('DuplicatePagesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [DuplicatePagesService]
     });
 

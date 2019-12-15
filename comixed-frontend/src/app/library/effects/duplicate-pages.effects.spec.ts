@@ -16,20 +16,12 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-import { DuplicatePagesEffects } from './duplicate-pages.effects';
-import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
-import { MessageService } from 'primeng/api';
-import { TranslateModule } from '@ngx-translate/core';
-import { StoreModule } from '@ngrx/store';
-import {
-  DUPLICATE_PAGES_FEATURE_KEY,
-  reducer
-} from 'app/library/reducers/duplicate-pages.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   DuplicatePagesAllReceived,
   DuplicatePagesBlockingSet,
@@ -38,8 +30,17 @@ import {
   DuplicatePagesSetBlocking,
   DuplicatePagesSetBlockingFailed
 } from 'app/library/actions/duplicate-pages.actions';
+import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
+import {
+  DUPLICATE_PAGES_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/duplicate-pages.reducer';
+import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { Observable, of, throwError } from 'rxjs';
+import { DuplicatePagesEffects } from './duplicate-pages.effects';
 import objectContaining = jasmine.objectContaining;
 
 describe('DuplicatePagesEffects', () => {
@@ -54,6 +55,7 @@ describe('DuplicatePagesEffects', () => {
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(DUPLICATE_PAGES_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
