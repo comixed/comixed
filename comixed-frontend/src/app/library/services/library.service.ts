@@ -20,15 +20,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   DELETE_MULTIPLE_COMICS_URL,
-  GET_COMICS_URL,
-  GET_UPDATES_URL,
   START_RESCAN_URL
 } from 'app/app.constants';
 import { interpolate } from 'app/app.functions';
-import { GetComicsRequest } from 'app/library/models/net/get-comics-request';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
+import { GET_LIBRARY_UPDATES_URL } from 'app/library/library.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -36,42 +34,23 @@ import { Observable } from 'rxjs';
 export class LibraryService {
   constructor(private http: HttpClient, private logger: NGXLogger) {}
 
-  getComics(
-    page: number,
-    count: number,
-    sortField: string,
-    ascending: boolean
-  ): Observable<any> {
-    this.logger.debug(
-      `getting comics: page=${page} count=${count} sortField=${sortField} ascending=${ascending}`
-    );
-    return this.http.post(interpolate(GET_COMICS_URL), {
-      page: page,
-      count: count,
-      sortField: sortField,
-      ascending: ascending
-    } as GetComicsRequest);
-  }
-
   getUpdatesSince(
-    timestamp: number,
-    timeout: number,
-    maximumRecords: number,
-    lastProcessingCount: number,
-    lastRescanCount: number
+    lastUpdateDate: Date,
+    lastComicId: number,
+    maximumComics: number,
+    processingCount: number,
+    timeout: number
   ): Observable<any> {
     this.logger.debug(
-      `getting comic updates: timestamp=${timestamp} timeout=${timeout} maximumRecords=${maximumRecords} lastRescanCount=${lastRescanCount}`
+      `getting comic updates: lastUpdateDate=${lastUpdateDate} lastComicId=${lastComicId} maximumComics=${maximumComics}`
     );
-    return this.http.post(
-      interpolate(GET_UPDATES_URL, { timestamp: timestamp }),
-      {
-        timeout: timeout,
-        maximumResults: maximumRecords,
-        lastProcessingCount: lastProcessingCount,
-        lastRescanCount: lastRescanCount
-      } as GetLibraryUpdatesRequest
-    );
+    return this.http.post(interpolate(GET_LIBRARY_UPDATES_URL), {
+      lastUpdatedDate: lastUpdateDate.getTime(),
+      lastComicId: lastComicId,
+      maximumComics: maximumComics,
+      processingCount: processingCount,
+      timeout: timeout
+    } as GetLibraryUpdatesRequest);
   }
 
   startRescan(): Observable<any> {

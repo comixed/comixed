@@ -27,7 +27,6 @@ import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Comic } from 'app/comics';
-import { LoadPageEvent } from 'app/library/models/ui/load-page-event';
 
 @Component({
   selector: 'app-library-page',
@@ -39,13 +38,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   user: User;
   comicsSubscription: Subscription;
   comics: Comic[] = [];
-  comicCountSubscription: Subscription;
-  comicCount = 0;
   selectedComicsSubscription: Subscription;
   selectedComics: Comic[] = [];
-  rescanCount = 0;
-  rescanCountSubscription: Subscription;
-  importCount = 0;
+  processingCount = 0;
   importCountSubscription: Subscription;
   langChangeSubscription: Subscription;
 
@@ -73,17 +68,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         })
       );
     });
-    this.comicCountSubscription = this.libraryAdaptor.comicCount$.subscribe(
-      count => (this.comicCount = count)
-    );
     this.selectedComicsSubscription = this.selectionAdaptor.comicSelection$.subscribe(
       selected_comics => (this.selectedComics = selected_comics)
     );
     this.importCountSubscription = this.libraryAdaptor.processingCount$.subscribe(
-      import_count => (this.importCount = import_count)
-    );
-    this.rescanCountSubscription = this.libraryAdaptor.rescanCount$.subscribe(
-      rescan_count => (this.rescanCount = rescan_count)
+      processing => (this.processingCount = processing)
     );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -94,13 +83,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.authSubscription.unsubscribe();
     this.comicsSubscription.unsubscribe();
-    this.comicCountSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
     this.importCountSubscription.unsubscribe();
-    this.rescanCountSubscription.unsubscribe();
   }
 
-  delete_comic(comic: Comic): void {
+  deleteComic(comic: Comic): void {
     this.confirmationService.confirm({
       header: this.translateService.instant(
         'library.messages.delete-comic-title'
@@ -113,11 +100,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  open_comic(comic: Comic): void {
+  openComic(comic: Comic): void {
     this.router.navigate(['comics', `${comic.id}`]);
   }
 
-  rescan_library(): void {
+  rescanLibrary(): void {
     this.confirmationService.confirm({
       header: this.translateService.instant(
         'library.messages.rescan-library-title'
@@ -130,22 +117,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  can_rescan(): boolean {
-    return this.importCount === 0 && this.rescanCount === 0;
+  canRescan(): boolean {
+    return this.processingCount === 0;
   }
 
   private loadTranslations() {
     this.breadcrumbAdaptor.loadEntries([
       { label: this.translateService.instant('breadcrumb.entry.library-page') }
     ]);
-  }
-
-  loadPage(event: LoadPageEvent): void {
-    this.libraryAdaptor.getComics(
-      event.page,
-      event.size,
-      event.sortField,
-      event.ascending
-    );
   }
 }

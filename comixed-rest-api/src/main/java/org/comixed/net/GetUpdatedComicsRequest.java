@@ -19,11 +19,10 @@
 package org.comixed.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 
 public class GetUpdatedComicsRequest {
   @JsonProperty("lastUpdatedDate")
-  private Date lastUpdatedDate;
+  private Long lastUpdatedDate;
 
   @JsonProperty("maximumComics")
   private Integer maximumComics;
@@ -40,7 +39,7 @@ public class GetUpdatedComicsRequest {
   public GetUpdatedComicsRequest() {}
 
   public GetUpdatedComicsRequest(
-      Date lastUpdatedDate,
+      Long lastUpdatedDate,
       Integer maximumComics,
       Long lastComicId,
       Long processingCount,
@@ -52,7 +51,7 @@ public class GetUpdatedComicsRequest {
     this.timeout = timeout;
   }
 
-  public Date getLastUpdatedDate() {
+  public Long getLastUpdatedDate() {
     return lastUpdatedDate;
   }
 

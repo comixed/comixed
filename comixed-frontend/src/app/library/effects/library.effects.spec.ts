@@ -22,11 +22,8 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
 import {
-  LibraryComicsReceived,
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
-  LibraryGetComics,
-  LibraryGetComicsFailed,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryMultipleComicsDeleted,
@@ -37,7 +34,6 @@ import {
 } from 'app/library/actions/library.actions';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
-import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
 import { LibraryService } from 'app/library/services/library.service';
@@ -51,6 +47,8 @@ import objectContaining = jasmine.objectContaining;
 describe('LibraryEffects', () => {
   const COMIC = COMIC_1;
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const LAST_COMIC_ID = 2716;
+  const MOST_RECENT_UPDATE = new Date();
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
   const LATEST_UPDATED_DATE = new Date();
   const COMIC_COUNT = 2814;
@@ -97,94 +95,30 @@ describe('LibraryEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('when getting comics', () => {
-    it('fires an action on success', () => {
-      const serviceResponse: GetComicsResponse = {
-        comics: COMICS,
-        lastReadDates: LAST_READ_DATES,
-        latestUpdatedDate: LATEST_UPDATED_DATE,
-        comicCount: COMIC_COUNT
-      };
-      const action = new LibraryGetComics({
-        page: PAGE,
-        count: COUNT,
-        sortField: SORT_FIELD,
-        ascending: ASCENDING
-      });
-      const outcome = new LibraryComicsReceived({
-        comics: COMICS,
-        lastReadDates: LAST_READ_DATES,
-        lastUpdatedDate: LATEST_UPDATED_DATE,
-        comicCount: COMIC_COUNT
-      });
-
-      actions$ = hot('-a', { a: action });
-      libraryService.getComics.and.returnValue(of(serviceResponse));
-
-      const expected = cold('-b', { b: outcome });
-      expect(effects.getComics$).toBeObservable(expected);
-    });
-
-    it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
-      const action = new LibraryGetComics({
-        page: PAGE,
-        count: COUNT,
-        sortField: SORT_FIELD,
-        ascending: ASCENDING
-      });
-      const outcome = new LibraryGetComicsFailed();
-
-      actions$ = hot('-a', { a: action });
-      libraryService.getComics.and.returnValue(throwError(service_response));
-
-      const expected = cold('-b', { b: outcome });
-      expect(effects.getComics$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-
-    it('fires an action on general failure', () => {
-      const action = new LibraryGetComics({
-        page: PAGE,
-        count: COUNT,
-        sortField: SORT_FIELD,
-        ascending: ASCENDING
-      });
-      const outcome = new LibraryGetComicsFailed();
-
-      actions$ = hot('-a', { a: action });
-      libraryService.getComics.and.throwError('expected');
-
-      const expected = cold('-(b|)', { b: outcome });
-      expect(effects.getComics$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-  });
-
   describe('when getting library updates', () => {
     it('fires an action on success', () => {
       const service_response = {
         comics: COMICS,
+        lastComicId: LAST_COMIC_ID,
+        mostRecentUpdate: MOST_RECENT_UPDATE,
+        moreUpdates: false,
         lastReadDates: LAST_READ_DATES,
-        processingCount: 0,
-        rescanCount: 0
+        processingCount: 0
       } as GetLibraryUpdateResponse;
       const action = new LibraryGetUpdates({
-        timestamp: 0,
+        lastUpdateDate: new Date(),
         timeout: 60,
-        maximumResults: 100,
-        lastProcessingCount: 29,
-        lastRescanCount: 27
+        maximumComics: 100,
+        processingCount: 29,
+        lastComicId: 1010
       });
       const outcome = new LibraryUpdatesReceived({
         comics: COMICS,
+        lastComicId: LAST_COMIC_ID,
+        mostRecentUpdate: MOST_RECENT_UPDATE,
         lastReadDates: LAST_READ_DATES,
         processingCount: 0,
-        rescanCount: 0
+        moreUpdates: false
       });
 
       actions$ = hot('-a', { a: action });
@@ -197,11 +131,11 @@ describe('LibraryEffects', () => {
     it('fires an action on service failure', () => {
       const service_response = new HttpErrorResponse({});
       const action = new LibraryGetUpdates({
-        timestamp: 0,
+        lastUpdateDate: new Date(),
         timeout: 60,
-        maximumResults: 100,
-        lastProcessingCount: 29,
-        lastRescanCount: 27
+        maximumComics: 100,
+        processingCount: 29,
+        lastComicId: 1010
       });
       const outcome = new LibraryGetUpdatesFailed();
 
@@ -219,11 +153,11 @@ describe('LibraryEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = new LibraryGetUpdates({
-        timestamp: 0,
+        lastUpdateDate: new Date(),
         timeout: 60,
-        maximumResults: 100,
-        lastProcessingCount: 29,
-        lastRescanCount: 27
+        maximumComics: 100,
+        processingCount: 29,
+        lastComicId: 1010
       });
       const outcome = new LibraryGetUpdatesFailed();
 

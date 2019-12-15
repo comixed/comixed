@@ -80,7 +80,6 @@ describe('LibraryAdminPageComponent', () => {
   describe('when an import is in process', () => {
     beforeEach(() => {
       component.importCount = 12;
-      component.rescanCount = 0;
       fixture.detectChanges();
     });
 
@@ -96,7 +95,6 @@ describe('LibraryAdminPageComponent', () => {
   describe('when not rescanning', () => {
     beforeEach(() => {
       component.importCount = 0;
-      component.rescanCount = 0;
       fixture.detectChanges();
     });
 
@@ -118,21 +116,6 @@ describe('LibraryAdminPageComponent', () => {
       it('sends a notice to start a rescan', () => {
         expect(library_adaptor.startRescan).toHaveBeenCalled();
       });
-    });
-  });
-
-  describe('when rescanning', () => {
-    beforeEach(() => {
-      component.rescanCount = 3;
-      fixture.detectChanges();
-    });
-
-    it('disables the rescan button', () => {
-      expect(rescan_button.nativeElement.disabled).toBeTruthy();
-    });
-
-    it('disables the export button', () => {
-      expect(export_button.nativeElement.disabled).toBeTruthy();
     });
   });
 });

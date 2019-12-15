@@ -45,7 +45,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
     readingListsSubscription: Subscription;
     readingLists: ReadingList[];
 
-    @Input() comicCount: number;
     @Input() showSelections: boolean;
     @Output() loadPage = new EventEmitter<LoadPageEvent>();
 

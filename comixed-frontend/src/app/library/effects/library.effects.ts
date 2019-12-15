@@ -21,7 +21,6 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
-import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
 import { LibraryService } from 'app/library/services/library.service';
@@ -31,11 +30,8 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   LibraryActionTypes,
-  LibraryComicsReceived,
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
-  LibraryGetComics,
-  LibraryGetComicsFailed,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryMultipleComicsDeleted,
@@ -55,65 +51,21 @@ export class LibraryEffects {
   ) {}
 
   @Effect()
-  getComics$: Observable<Action> = this.actions$.pipe(
-    ofType(LibraryActionTypes.GetComics),
-    map((action: LibraryGetComics) => action.payload),
-    switchMap(action =>
-      this.libraryService
-        .getComics(
-          action.page,
-          action.count,
-          action.sortField,
-          action.ascending
-        )
-        .pipe(
-          map(
-            (response: GetComicsResponse) =>
-              new LibraryComicsReceived({
-                comics: response.comics,
-                lastReadDates: response.lastReadDates,
-                lastUpdatedDate: response.latestUpdatedDate,
-                comicCount: response.comicCount
-              })
-          ),
-          catchError(error => {
-            this.logger.error('get comics by page service failure:', error);
-            this.messageService.add({
-              severity: 'error',
-              detail: this.translateService.instant(
-                'library-effects.get-comics.error.detail'
-              )
-            });
-            return of(new LibraryGetComicsFailed());
-          })
-        )
-    ),
-    catchError(error => {
-      this.logger.error('get comics by page general failure:', error);
-      this.messageService.add({
-        severity: 'error',
-        detail: this.translateService.instant(
-          'general-message.error.general-service-failure'
-        )
-      });
-      return of(new LibraryGetComicsFailed());
-    })
-  );
-
-  @Effect()
   getUpdates$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.GetUpdates),
     map((action: LibraryGetUpdates) => action.payload),
+    tap(action => this.logger.debug('get updates effect:', action)),
     switchMap(action =>
       this.libraryService
         .getUpdatesSince(
-          action.timestamp,
-          action.timeout,
-          action.maximumResults,
-          action.lastProcessingCount,
-          action.lastRescanCount
+          action.lastUpdateDate,
+          action.lastComicId,
+          action.maximumComics,
+          action.processingCount,
+          action.timeout
         )
         .pipe(
+          tap(response => this.logger.debug('got update response:', response)),
           tap((response: GetLibraryUpdateResponse) =>
             this.logger.debug(
               `received ${response.comics.length} comics in response:`,
@@ -124,13 +76,17 @@ export class LibraryEffects {
             (response: GetLibraryUpdateResponse) =>
               new LibraryUpdatesReceived({
                 comics: response.comics,
+                lastComicId: response.lastComicId,
+                mostRecentUpdate: !!response.mostRecentUpdate
+                  ? new Date(response.mostRecentUpdate)
+                  : null,
+                moreUpdates: response.moreUpdates,
                 lastReadDates: response.lastReadDates,
-                processingCount: response.processingCount,
-                rescanCount: response.rescanCount
+                processingCount: response.processingCount
               })
           ),
           catchError(error => {
-            this.logger.error('get library updates service failure:', error);
+            this.logger.error('service failure getting updates:', error);
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -142,7 +98,7 @@ export class LibraryEffects {
         )
     ),
     catchError(error => {
-      this.logger.error('get library updates general failure:', error);
+      this.logger.error('general failure getting updates:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -156,8 +112,10 @@ export class LibraryEffects {
   @Effect()
   startRescan$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.StartRescan),
+    tap(action => this.logger.debug('start rescan effect:', action)),
     switchMap(action =>
       this.libraryService.startRescan().pipe(
+        tap(response => this.logger.debug('got response:', response)),
         tap(() =>
           this.messageService.add({
             severity: 'info',
@@ -171,7 +129,7 @@ export class LibraryEffects {
             new LibraryRescanStarted({ count: response.count })
         ),
         catchError(error => {
-          this.logger.error('start rescan service failure:', error);
+          this.logger.error('service failure starting rescan:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -183,7 +141,7 @@ export class LibraryEffects {
       )
     ),
     catchError(error => {
-      this.logger.error('start rescan general failure:', error);
+      this.logger.error('general failure starting rescan:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -198,8 +156,12 @@ export class LibraryEffects {
   deleteMultipleComics$: Observable<Action> = this.actions$.pipe(
     ofType(LibraryActionTypes.DeleteMultipleComics),
     map((action: LibraryDeleteMultipleComics) => action.payload),
+    tap(action => this.logger.debug('delete multiple comics effect:', action)),
     switchMap(action =>
       this.libraryService.deleteMultipleComics(action.ids).pipe(
+        tap(response =>
+          this.logger.debug('delete multiple comics response:', response)
+        ),
         tap((response: DeleteMultipleComicsResponse) =>
           this.messageService.add({
             severity: 'info',
@@ -216,7 +178,7 @@ export class LibraryEffects {
             })
         ),
         catchError(error => {
-          this.logger.error('delete multiple comics service failure:', error);
+          this.logger.error('service failure deleting multiple comics:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -228,7 +190,7 @@ export class LibraryEffects {
       )
     ),
     catchError(error => {
-      this.logger.error('delete multiple comics general failure:', error);
+      this.logger.error('general failure deleting multiple comics:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(

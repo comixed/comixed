@@ -55,13 +55,14 @@ public class LibraryController {
   @JsonView(View.ComicList.class)
   public GetUpdatedComicsResponse getUpdatedComics(
       Principal principal, @RequestBody() GetUpdatedComicsRequest request) {
+    Date latestUpdateDate = new Date(request.getLastUpdatedDate());
     this.log.info(
         "Getting comics updated since {} for {} (max: {}, last id: {}, timeout: {}s)",
-        request.getLastUpdatedDate(),
+        latestUpdateDate,
         principal.getName(),
         request.getMaximumComics(),
         request.getLastComicId(),
-        request.getTimeout() / 1000L);
+        request.getTimeout());
 
     long expire = System.currentTimeMillis() + (request.getTimeout() * 1000L);
     boolean done = false;
@@ -75,7 +76,7 @@ public class LibraryController {
       comics =
           this.libraryService.getComicsUpdatedSince(
               principal.getName(),
-              request.getLastUpdatedDate(),
+              latestUpdateDate,
               request.getMaximumComics() + 1,
               request.getLastComicId());
 
@@ -109,8 +110,7 @@ public class LibraryController {
 
     this.log.debug("Loading updated last read dates");
     List<LastReadDate> lastReadDates =
-        this.libraryService.getLastReadDatesSince(
-            principal.getName(), request.getLastUpdatedDate());
+        this.libraryService.getLastReadDatesSince(principal.getName(), latestUpdateDate);
 
     this.log.debug("Returning result");
     return new GetUpdatedComicsResponse(

@@ -18,6 +18,8 @@
 
 import { API_ROOT_URL } from 'app/app.functions';
 
+export const GET_LIBRARY_UPDATES_URL = `${API_ROOT_URL}/library/updates`;
+
 export const GET_ALL_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/pages/duplicates`;
 export const SET_BLOCKING_STATE_URL = `${API_ROOT_URL}/pages/hashes/blocking`;
 

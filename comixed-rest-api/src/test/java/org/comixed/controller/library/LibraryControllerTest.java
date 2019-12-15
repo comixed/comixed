@@ -40,12 +40,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LibraryControllerTest {
-  private static final int TEST_PAGE = 29;
-  private static final int TEST_COUNT = 50;
-  private static final String TEST_SORT_FIELD = "sortableIssueNumber";
   private static final Date TEST_LATEST_UPDATED_DATE = new Date();
-  private static final long TEST_COMIC_COUNT = 71765L;
-  private static final boolean TEST_ASCENDING = false;
   private static final String TEST_USER_EMAIL = "reader@localhost";
   private static final int TEST_MAXIMUM_COMICS = 1000;
   private static final Long TEST_MOST_RECENT_COMIC_ID = 71765L;
@@ -83,7 +78,7 @@ public class LibraryControllerTest {
         libraryController.getUpdatedComics(
             principal,
             new GetUpdatedComicsRequest(
-                TEST_LATEST_UPDATED_DATE,
+                TEST_LATEST_UPDATED_DATE.getTime(),
                 TEST_MAXIMUM_COMICS,
                 TEST_MOST_RECENT_COMIC_ID,
                 TEST_PROCESSING_COUNT,
@@ -128,7 +123,7 @@ public class LibraryControllerTest {
         libraryController.getUpdatedComics(
             principal,
             new GetUpdatedComicsRequest(
-                TEST_LATEST_UPDATED_DATE,
+                TEST_LATEST_UPDATED_DATE.getTime(),
                 TEST_MAXIMUM_COMICS,
                 TEST_MOST_RECENT_COMIC_ID,
                 TEST_PROCESSING_COUNT,
@@ -170,7 +165,7 @@ public class LibraryControllerTest {
         libraryController.getUpdatedComics(
             principal,
             new GetUpdatedComicsRequest(
-                TEST_LATEST_UPDATED_DATE,
+                TEST_LATEST_UPDATED_DATE.getTime(),
                 TEST_MAXIMUM_COMICS,
                 TEST_MOST_RECENT_COMIC_ID,
                 TEST_PROCESSING_COUNT,
