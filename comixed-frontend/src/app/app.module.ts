@@ -16,73 +16,74 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenubarModule } from 'primeng/menubar';
-import { SidebarModule } from 'primeng/sidebar';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DropdownModule } from 'primeng/dropdown';
-import { SliderModule } from 'primeng/slider';
-import { TabViewModule } from 'primeng/tabview';
-import { TableModule } from 'primeng/table';
-import { ToastModule } from 'primeng/toast';
-import { CardModule } from 'primeng/card';
-import { DataViewModule } from 'primeng/dataview';
-import { DialogModule } from 'primeng/dialog';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
-import { ToggleButtonModule } from 'primeng/togglebutton';
-import { PanelModule } from 'primeng/panel';
-import { TooltipModule } from 'primeng/tooltip';
-import { ToolbarModule } from 'primeng/toolbar';
-import { SplitButtonModule } from 'primeng/splitbutton';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { BlockUIModule } from 'primeng/blockui';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { PasswordModule } from 'primeng/password';
-import { PickListModule } from 'primeng/picklist';
-import { InplaceModule } from 'primeng/inplace';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { ChartModule } from 'primeng/chart';
-import { AppRouting } from 'app/app.routing';
-import { AppComponent } from 'app/app.component';
 import {
   HTTP_INTERCEPTORS,
   HttpClient,
   HttpClientModule
 } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { XhrInterceptor } from 'app/xhr.interceptor';
-import { MainPageComponent } from 'app/pages/main-page/main-page.component';
-import { LoginComponent } from 'app/components/login/login.component';
-import { UserService } from 'app/services/user.service';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import {
   TranslateCompiler,
   TranslateLoader,
   TranslateModule
 } from '@ngx-translate/core';
-import { FileSaverModule } from 'ngx-filesaver';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { AppComponent } from 'app/app.component';
+import { AppRouting } from 'app/app.routing';
+import { BackendStatusModule } from 'app/backend-status/backend-status.module';
+import { ComicImportModule } from 'app/comic-import/comic-import.module';
+import { ComicsModule } from 'app/comics/comics.module';
+import { LoginComponent } from 'app/components/login/login.component';
+import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
+import { LibraryModule } from 'app/library/library.module';
 import { LibraryAdminPageComponent } from 'app/pages/admin/library-admin-page/library-admin-page.component';
+import { MainPageComponent } from 'app/pages/main-page/main-page.component';
+import { UserService } from 'app/services/user.service';
+import { UserModule } from 'app/user/user.module';
+import { XhrInterceptor } from 'app/xhr.interceptor';
+import { FileSaverModule } from 'ngx-filesaver';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { BlockUIModule } from 'primeng/blockui';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DataViewModule } from 'primeng/dataview';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InplaceModule } from 'primeng/inplace';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenubarModule } from 'primeng/menubar';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
+import { PasswordModule } from 'primeng/password';
+import { PickListModule } from 'primeng/picklist';
 import {
   BreadcrumbModule,
   ContextMenuModule,
   TieredMenuModule
 } from 'primeng/primeng';
-import { UserModule } from 'app/user/user.module';
-import { LibraryModule } from 'app/library/library.module';
-import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { BackendStatusModule } from 'app/backend-status/backend-status.module';
-import { ComicsModule } from 'app/comics/comics.module';
-import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { ComicImportModule } from 'app/comic-import/comic-import.module';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { SidebarModule } from 'primeng/sidebar';
+import { SliderModule } from 'primeng/slider';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TableModule } from 'primeng/table';
+import { TabViewModule } from 'primeng/tabview';
+import { ToastModule } from 'primeng/toast';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -146,6 +147,11 @@ import { StoreModule } from '@ngrx/store';
         provide: TranslateCompiler,
         useClass: TranslateMessageFormatCompiler
       }
+    }),
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG,
+      disableConsoleLogging: false,
+      enableSourceMaps: true
     }),
     FileSaverModule,
     BreadcrumbModule

@@ -16,23 +16,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Routes } from '@angular/router/src/config';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { DataViewModule } from 'primeng/dataview';
-import { SplitButtonModule } from 'primeng/splitbutton';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
-import { SliderModule } from 'primeng/slider';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DropdownModule } from 'primeng/dropdown';
-import { PanelModule } from 'primeng/panel';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { CardModule } from 'primeng/card';
-import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
+import { ComicsModule } from 'app/comics/comics.module';
+import {
+  LibraryAdaptor,
+  LibraryDisplayAdaptor,
+  SelectionAdaptor
+} from 'app/library';
+import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
-import { ComicListComponent } from './comic-list.component';
+import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
+import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { UserService } from 'app/services/user.service';
+import { AuthenticationAdaptor } from 'app/user';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { CardModule } from 'primeng/card';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DataViewModule } from 'primeng/dataview';
+import { DropdownModule } from 'primeng/dropdown';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
 import {
   ConfirmationService,
   ConfirmDialogModule,
@@ -43,28 +61,11 @@ import {
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  LibraryAdaptor,
-  LibraryDisplayAdaptor,
-  SelectionAdaptor
-} from 'app/library';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Routes } from '@angular/router/src/config';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { SliderModule } from 'primeng/slider';
+import { SplitButtonModule } from 'primeng/splitbutton';
 import { BehaviorSubject } from 'rxjs';
-import { AuthenticationAdaptor } from 'app/user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { UserService } from 'app/services/user.service';
-import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
-import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
-import {
-  LIBRARY_FEATURE_KEY,
-  reducer
-} from 'app/library/reducers/library.reducer';
-import { LibraryEffects } from 'app/library/effects/library.effects';
-import { ComicsModule } from 'app/comics/comics.module';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
+import { ComicListComponent } from './comic-list.component';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -91,6 +92,7 @@ describe('ComicListComponent', () => {
         RouterTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

@@ -16,26 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicFileGridItemComponent } from './comic-file-grid-item.component';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
+import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
 import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
+import { LibraryModule } from 'app/library/library.module';
+import { UserService } from 'app/services/user.service';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import {
   CardModule,
   MessageService,
   OverlayPanelModule,
   PanelModule
 } from 'primeng/primeng';
-import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UserService } from 'app/services/user.service';
-import { LibraryModule } from 'app/library/library.module';
-import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
-import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+import { ComicFileGridItemComponent } from './comic-file-grid-item.component';
 
 describe('ComicFileGridItemComponent', () => {
   let component: ComicFileGridItemComponent;
@@ -49,6 +50,7 @@ describe('ComicFileGridItemComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         PanelModule,

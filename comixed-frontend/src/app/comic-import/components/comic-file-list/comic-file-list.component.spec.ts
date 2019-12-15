@@ -16,16 +16,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DataViewModule } from 'primeng/dataview';
-import { By } from '@angular/platform-browser';
-import { ComicFileListComponent } from './comic-file-list.component';
-import { ComicFileGridItemComponent } from 'app/comic-import/components/comic-file-grid-item/comic-file-grid-item.component';
-import { ComicFileListToolbarComponent } from 'app/comic-import/components/comic-file-list-toolbar/comic-file-list-toolbar.component';
-import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
-import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
+import { ComicFileGridItemComponent } from 'app/comic-import/components/comic-file-grid-item/comic-file-grid-item.component';
+import { ComicFileListItemComponent } from 'app/comic-import/components/comic-file-list-item/comic-file-list-item.component';
+import { ComicFileListToolbarComponent } from 'app/comic-import/components/comic-file-list-toolbar/comic-file-list-toolbar.component';
+import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
+import { ComicFile } from 'app/comic-import/models/comic-file';
+import {
+  COMIC_FILE_1,
+  COMIC_FILE_2,
+  COMIC_FILE_3,
+  COMIC_FILE_4
+} from 'app/comic-import/models/comic-file.fixtures';
+import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
+import {
+  COMIC_IMPORT_FEATURE_KEY,
+  reducer
+} from 'app/comic-import/reducers/comic-import.reducer';
+import { LibraryDisplayAdaptor } from 'app/library';
+import { LibraryModule } from 'app/library/library.module';
+import { UserService } from 'app/services/user.service';
+import { AuthenticationAdaptor } from 'app/user';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ButtonModule } from 'primeng/button';
+import { DataViewModule } from 'primeng/dataview';
 import {
   BlockUIModule,
   CardModule,
@@ -42,29 +65,7 @@ import {
   SplitButtonModule,
   ToolbarModule
 } from 'primeng/primeng';
-import { StoreModule } from '@ngrx/store';
-import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ComicFileListItemComponent } from 'app/comic-import/components/comic-file-list-item/comic-file-list-item.component';
-import { AuthenticationAdaptor } from 'app/user';
-import { LibraryModule } from 'app/library/library.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UserService } from 'app/services/user.service';
-import { EffectsModule } from '@ngrx/effects';
-import { LibraryDisplayAdaptor } from 'app/library';
-import {
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3,
-  COMIC_FILE_4
-} from 'app/comic-import/models/comic-file.fixtures';
-import { ComicFile } from 'app/comic-import/models/comic-file';
-import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  reducer
-} from 'app/comic-import/reducers/comic-import.reducer';
-import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
+import { ComicFileListComponent } from './comic-file-list.component';
 
 describe('ComicFileListComponent', () => {
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
@@ -82,6 +83,7 @@ describe('ComicFileListComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
