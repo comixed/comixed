@@ -16,39 +16,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { MenubarModule } from 'primeng/menubar';
-import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
-import { DialogModule } from 'primeng/dialog';
-import { LoginComponent } from 'app/components/login/login.component';
-import { AppComponent } from 'app/app.component';
-import {
-  BreadcrumbModule,
-  ConfirmDialogModule,
-  TieredMenuModule
-} from 'primeng/primeng';
-import { AuthenticationAdaptor, USER_READER } from 'app/user';
-import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UserService } from 'app/services/user.service';
-import { LibraryModule } from 'app/library/library.module';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { Store, StoreModule } from '@ngrx/store';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { AppComponent } from 'app/app.component';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
+import { LoginComponent } from 'app/components/login/login.component';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
+import { LibraryAdaptor } from 'app/library';
+import { LibraryModule } from 'app/library/library.module';
+import { UserService } from 'app/services/user.service';
+import { AuthenticationAdaptor, USER_READER } from 'app/user';
 import {
   AuthLogout,
   AuthNoUserLoaded,
   AuthUserLoaded
 } from 'app/user/actions/authentication.actions';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LibraryAdaptor } from 'app/library';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
-import { Store, StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+import { UserModule } from 'app/user/user.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { MenubarModule } from 'primeng/menubar';
+import {
+  BreadcrumbModule,
+  ConfirmDialogModule,
+  TieredMenuModule
+} from 'primeng/primeng';
+import { ToastModule } from 'primeng/toast';
 
 describe('AppComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -62,7 +63,7 @@ describe('AppComponent', () => {
   let store: Store<any>;
   let originalTimeout;
 
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
     done();
@@ -79,6 +80,7 @@ describe('AppComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         MenubarModule,
@@ -152,7 +154,7 @@ describe('AppComponent', () => {
     });
   });
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
     done();
   });

@@ -43,9 +43,10 @@ import {
   CollectionLoadFailed,
   CollectionReceived
 } from 'app/library/actions/collection.actions';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('CollectionAdaptor', () => {
   const COLLECTION_TYPE = CollectionType.STORIES;
@@ -71,6 +72,7 @@ describe('CollectionAdaptor', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
+        LoggerTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COLLECTION_FEATURE_KEY, reducer),

@@ -36,6 +36,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('DuplicatePageListItemComponent', () => {
   let component: DuplicatePageListItemComponent;
@@ -46,6 +47,7 @@ describe('DuplicatePageListItemComponent', () => {
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(DUPLICATE_PAGES_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

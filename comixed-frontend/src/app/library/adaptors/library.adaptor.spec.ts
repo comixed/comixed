@@ -50,6 +50,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Comic } from 'app/comics';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('LibraryAdaptor', () => {
   const PAGE = 17;
@@ -73,6 +74,7 @@ describe('LibraryAdaptor', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

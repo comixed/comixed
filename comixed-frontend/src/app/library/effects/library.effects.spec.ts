@@ -16,20 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-import { LibraryEffects } from './library.effects';
-import { LibraryService } from 'app/library/services/library.service';
-import { MessageService } from 'primeng/api';
 import { TranslateModule } from '@ngx-translate/core';
-import { cold, hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
-import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
-import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
-import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
-import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import {
   LibraryComicsReceived,
   LibraryDeleteMultipleComics,
@@ -44,7 +35,17 @@ import {
   LibraryStartRescanFailed,
   LibraryUpdatesReceived
 } from 'app/library/actions/library.actions';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
+import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
 import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
+import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
+import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
+import { LibraryService } from 'app/library/services/library.service';
+import { cold, hot } from 'jasmine-marbles';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { Observable, of, throwError } from 'rxjs';
+import { LibraryEffects } from './library.effects';
 import objectContaining = jasmine.objectContaining;
 
 describe('LibraryEffects', () => {
@@ -65,7 +66,7 @@ describe('LibraryEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), LoggerTestingModule],
       providers: [
         LibraryEffects,
         provideMockActions(() => actions$),

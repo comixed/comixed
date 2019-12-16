@@ -16,36 +16,37 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
+import { CommonModule } from '@angular/common';
 import {
   ModuleWithProviders,
   NgModule,
   Optional,
   SkipSelf
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { StoreModule } from '@ngrx/store';
-import * as fromLibrary from './reducers/library.reducer';
-import * as fromSelection from './reducers/selection.reducer';
-import * as fromReadingList from './reducers/reading-list.reducer';
-import * as fromDupes from './reducers/duplicate-pages.reducer';
-import * as fromCollections from './reducers/collection.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { LibraryEffects } from './effects/library.effects';
-import { LibraryService } from './services/library.service';
-import { LibraryAdaptor } from './adaptors/library.adaptor';
-import { SelectionAdaptor } from './adaptors/selection.adaptor';
-import { ReadingListEffects } from './effects/reading-list.effects';
-import { ReadingListService } from './services/reading-list.service';
-import { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
-import { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
-import { ComicListToolbarComponent } from './components/comic-list-toolbar/comic-list-toolbar.component';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ComicsModule } from 'app/comics/comics.module';
+import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
+import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
-import { ComicsModule } from 'app/comics/comics.module';
-import { TranslateModule } from '@ngx-translate/core';
-import { ContextMenuModule } from 'primeng/contextmenu';
+import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
+import { CollectionEffects } from 'app/library/effects/collection.effects';
+import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
+import { LibraryRoutingModule } from 'app/library/library-routing.module';
+import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
+import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
+import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
+import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
+import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
+import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
+import { CollectionService } from 'app/library/services/collection.service';
+import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
+import { LoggerModule } from 'ngx-logger';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ContextMenuModule } from 'primeng/contextmenu';
 import {
   ProgressSpinnerModule,
   ScrollPanelModule,
@@ -53,26 +54,26 @@ import {
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
-import { LibraryRoutingModule } from 'app/library/library-routing.module';
-import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
-import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
-import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
-import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
-import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
-import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
-import { DuplicatesPageComponent } from './pages/duplicates-page/duplicates-page.component';
-import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
-import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
-import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
+import { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
+import { LibraryAdaptor } from './adaptors/library.adaptor';
+import { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
+import { SelectionAdaptor } from './adaptors/selection.adaptor';
+import { ComicListToolbarComponent } from './components/comic-list-toolbar/comic-list-toolbar.component';
 import { DuplicatePageGridItemComponent } from './components/duplicate-page-grid-item/duplicate-page-grid-item.component';
-import { DuplicatesPageToolbarComponent } from './components/duplicates-page-toolbar/duplicates-page-toolbar.component';
 import { DuplicatePageListItemComponent } from './components/duplicate-page-list-item/duplicate-page-list-item.component';
-import { CollectionService } from 'app/library/services/collection.service';
-import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
-import { CollectionEffects } from 'app/library/effects/collection.effects';
+import { DuplicatesPageToolbarComponent } from './components/duplicates-page-toolbar/duplicates-page-toolbar.component';
+import { LibraryEffects } from './effects/library.effects';
+import { ReadingListEffects } from './effects/reading-list.effects';
 import { CollectionDetailsPageComponent } from './pages/collection-details-page/collection-details-page.component';
 import { CollectionPageComponent } from './pages/collection-page/collection-page.component';
+import { DuplicatesPageComponent } from './pages/duplicates-page/duplicates-page.component';
+import * as fromCollections from './reducers/collection.reducer';
+import * as fromDupes from './reducers/duplicate-pages.reducer';
+import * as fromLibrary from './reducers/library.reducer';
+import * as fromReadingList from './reducers/reading-list.reducer';
+import * as fromSelection from './reducers/selection.reducer';
+import { LibraryService } from './services/library.service';
+import { ReadingListService } from './services/reading-list.service';
 
 @NgModule({
   imports: [
@@ -80,6 +81,7 @@ import { CollectionPageComponent } from './pages/collection-page/collection-page
     LibraryRoutingModule,
     ComicsModule,
     TranslateModule.forRoot(),
+    LoggerModule.forChild(),
     StoreModule.forFeature(
       fromLibrary.LIBRARY_FEATURE_KEY,
       fromLibrary.reducer
@@ -114,7 +116,7 @@ import { CollectionPageComponent } from './pages/collection-page/collection-page
     ProgressSpinnerModule,
     TooltipModule
   ],
-  exports: [CommonModule, ComicsModule, ComicListComponent],
+  exports: [CommonModule, LoggerModule, ComicsModule, ComicListComponent],
   declarations: [
     LibraryPageComponent,
     ComicGridItemComponent,

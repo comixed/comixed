@@ -16,13 +16,10 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-
-import { ReadingListEffects } from './reading-list.effects';
-import { ReadingListService } from 'app/library/services/reading-list.service';
-import { READING_LIST_1 } from 'app/library/models/reading-list/reading-list.fixtures';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   ReadingListGet,
   ReadingListGetFailed,
@@ -34,12 +31,15 @@ import {
   ReadingListsLoad,
   ReadingListsLoaded
 } from 'app/library/actions/reading-list.actions';
+import { READING_LIST_1 } from 'app/library/models/reading-list/reading-list.fixtures';
+import { ReadingListService } from 'app/library/services/reading-list.service';
 import { hot } from 'jasmine-marbles';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MessageService } from 'primeng/api';
-import { TranslateModule } from '@ngx-translate/core';
-import arrayContaining = jasmine.arrayContaining;
+import { Observable, of, throwError } from 'rxjs';
+
+import { ReadingListEffects } from './reading-list.effects';
 import objectContaining = jasmine.objectContaining;
-import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ReadingListEffects', () => {
   const READING_LISTS = [READING_LIST_1];
@@ -51,7 +51,7 @@ describe('ReadingListEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), LoggerTestingModule],
       providers: [
         ReadingListEffects,
         provideMockActions(() => actions$),
@@ -91,7 +91,7 @@ describe('ReadingListEffects', () => {
       reading_list_service.get_all.and.returnValue(of(service_response));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.get_all$).toBeObservable(expected);
+      expect(effects.getAll$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -108,7 +108,7 @@ describe('ReadingListEffects', () => {
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.get_all$).toBeObservable(expected);
+      expect(effects.getAll$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -122,7 +122,7 @@ describe('ReadingListEffects', () => {
       reading_list_service.get_all.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.get_all$).toBeObservable(expected);
+      expect(effects.getAll$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -141,7 +141,7 @@ describe('ReadingListEffects', () => {
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.get_reading_list$).toBeObservable(expected);
+      expect(effects.getReadingList$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -158,7 +158,7 @@ describe('ReadingListEffects', () => {
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.get_reading_list$).toBeObservable(expected);
+      expect(effects.getReadingList$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -172,7 +172,7 @@ describe('ReadingListEffects', () => {
       reading_list_service.get_reading_list.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.get_reading_list$).toBeObservable(expected);
+      expect(effects.getReadingList$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -191,7 +191,7 @@ describe('ReadingListEffects', () => {
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.save_reading_list$).toBeObservable(expected);
+      expect(effects.savingReadingList$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
@@ -208,7 +208,7 @@ describe('ReadingListEffects', () => {
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.save_reading_list$).toBeObservable(expected);
+      expect(effects.savingReadingList$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
@@ -222,7 +222,7 @@ describe('ReadingListEffects', () => {
       reading_list_service.save_reading_list.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.save_reading_list$).toBeObservable(expected);
+      expect(effects.savingReadingList$).toBeObservable(expected);
       expect(message_service.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

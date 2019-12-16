@@ -39,6 +39,7 @@ import {
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { ComicGetIssue } from 'app/comics/actions/comic.actions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class LibraryAdaptor {
@@ -62,7 +63,8 @@ export class LibraryAdaptor {
 
   constructor(
     private store: Store<AppState>,
-    private comicAdaptor: ComicAdaptor
+    private comicAdaptor: ComicAdaptor,
+    private logger: NGXLogger
   ) {
     this.comicAdaptor.comic$.subscribe(
       comic => (this.comicId = !!comic ? comic.id : -1)
@@ -76,6 +78,7 @@ export class LibraryAdaptor {
         })
       )
       .subscribe((libraryState: LibraryState) => {
+        this.logger.debug('library state updated:', libraryState);
         if (
           this._processingCount$.getValue() !== libraryState.processingCount
         ) {
@@ -135,6 +138,9 @@ export class LibraryAdaptor {
     sortField: string,
     ascending: boolean
   ) {
+    this.logger.debug(
+      `getting comics: page=${page} count=${count} sortField=${sortField} ascending=${ascending}`
+    );
     this.store.dispatch(
       new LibraryGetComics({
         page: page,
@@ -150,6 +156,7 @@ export class LibraryAdaptor {
   }
 
   getLibraryUpdates(): void {
+    this.logger.debug('getting library updates');
     this.store.dispatch(
       new LibraryGetUpdates({
         timestamp: this._latestUpdatedDate$.getValue(),
@@ -226,6 +233,7 @@ export class LibraryAdaptor {
   }
 
   private getComicsForSeries(series: string): Comic[] {
+    this.logger.debug(`getting comics for series: ${series}`);
     return this._serie$
       .getValue()
       .find(entry => entry.comics[0].series === series)
@@ -237,6 +245,7 @@ export class LibraryAdaptor {
   }
 
   getPreviousIssue(comic: Comic): Comic {
+    this.logger.debug('getting previous issue for comic:', comic);
     const comics = this.getComicsForSeries(comic.series);
     const index = comics.findIndex(entry => entry.id === comic.id);
 
@@ -244,6 +253,7 @@ export class LibraryAdaptor {
   }
 
   getNextIssue(comic: Comic): Comic {
+    this.logger.debug('getting next issue for comic:', comic);
     const comics = this.getComicsForSeries(comic.series);
     const index = comics.findIndex(entry => entry.id === comic.id);
 

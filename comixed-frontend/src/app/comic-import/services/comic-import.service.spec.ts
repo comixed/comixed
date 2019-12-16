@@ -35,6 +35,7 @@ import {
 import { GetComicFilesRequest } from 'app/comic-import/models/net/get-comic-files-request';
 import { HttpResponse } from '@angular/common/http';
 import { StartImportRequest } from 'app/comic-import/models/net/start-import-request';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ComicImportService', () => {
   const DIRECTORY = '/Users/comixedreader/Library';
@@ -45,7 +46,7 @@ describe('ComicImportService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [ComicImportService]
     });
 

@@ -28,7 +28,9 @@
       },
       "help": {
         "root": "Help",
-        "build-details": "Build Details"
+        "build-details": "Build Details",
+        "enable-debugging": "Enable Debugging",
+        "disable-debugging": "Disable Debugging"
       }
     },
     "button": {

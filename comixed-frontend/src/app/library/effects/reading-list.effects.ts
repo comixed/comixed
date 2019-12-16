@@ -18,9 +18,15 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { ReadingList } from 'app/library/models/reading-list/reading-list';
+import { ReadingListService } from 'app/library/services/reading-list.service';
+import { NGXLogger } from 'ngx-logger';
+import { MessageService } from 'primeng/api';
+import { Observable, of } from 'rxjs';
 
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
 import {
   ReadingListActions,
   ReadingListActionTypes,
@@ -33,30 +39,26 @@ import {
   ReadingListSaveFailed,
   ReadingListsLoaded
 } from '../actions/reading-list.actions';
-import { ReadingListService } from 'app/library/services/reading-list.service';
-import { Action } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
 
 @Injectable()
 export class ReadingListEffects {
   constructor(
     private actions$: Actions<ReadingListActions>,
-    private reading_list_service: ReadingListService,
-    private translate_service: TranslateService,
-    private message_service: MessageService
+    private readingListService: ReadingListService,
+    private translateService: TranslateService,
+    private messageService: MessageService,
+    private logger: NGXLogger
   ) {}
 
   @Effect()
-  get_all$: Observable<Action> = this.actions$.pipe(
+  getAll$: Observable<Action> = this.actions$.pipe(
     ofType(ReadingListActionTypes.LoadReadingLists),
     switchMap(action =>
-      this.reading_list_service.get_all().pipe(
+      this.readingListService.get_all().pipe(
         tap((response: ReadingList[]) =>
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'reading-list-effects.get-all.success.detail',
               { count: response.length }
             )
@@ -67,9 +69,10 @@ export class ReadingListEffects {
             new ReadingListsLoaded({ reading_lists: response })
         ),
         catchError(error => {
-          this.message_service.add({
+          this.logger.error('get all reading lists service failure:', error);
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'reading-list-effects.get-all.error.detail'
             )
           });
@@ -78,9 +81,10 @@ export class ReadingListEffects {
       )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.logger.error('get all reading lists general failure:', error);
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
@@ -89,15 +93,15 @@ export class ReadingListEffects {
   );
 
   @Effect()
-  get_reading_list$: Observable<Action> = this.actions$.pipe(
+  getReadingList$: Observable<Action> = this.actions$.pipe(
     ofType(ReadingListActionTypes.GetReadingList),
     map((action: ReadingListGet) => action.payload),
     switchMap(action =>
-      this.reading_list_service.get_reading_list(action.id).pipe(
+      this.readingListService.get_reading_list(action.id).pipe(
         tap((response: ReadingList) =>
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'reading-list-effects.get-reading-list.success.detail',
               { name: response.name }
             )
@@ -108,9 +112,10 @@ export class ReadingListEffects {
             new ReadingListReceived({ reading_list: response })
         ),
         catchError(error => {
-          this.message_service.add({
+          this.logger.error('get reading list service failure:', error);
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'reading-list-effects.get-reading-list.error.detail'
             )
           });
@@ -119,9 +124,10 @@ export class ReadingListEffects {
       )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.logger.error('get reading list general failure:', error);
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });
@@ -130,15 +136,15 @@ export class ReadingListEffects {
   );
 
   @Effect()
-  save_reading_list$: Observable<Action> = this.actions$.pipe(
+  savingReadingList$: Observable<Action> = this.actions$.pipe(
     ofType(ReadingListActionTypes.SaveReadingList),
     map((action: ReadingListSave) => action.payload),
     switchMap(action =>
-      this.reading_list_service.save_reading_list(action.reading_list).pipe(
+      this.readingListService.save_reading_list(action.reading_list).pipe(
         tap((response: ReadingList) =>
-          this.message_service.add({
+          this.messageService.add({
             severity: 'info',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'reading-list-effects.save.success.detail',
               { name: response.name }
             )
@@ -149,9 +155,10 @@ export class ReadingListEffects {
             new ReadingListSaved({ reading_list: response })
         ),
         catchError(error => {
-          this.message_service.add({
+          this.logger.error('save reading list service failure:', error);
+          this.messageService.add({
             severity: 'error',
-            detail: this.translate_service.instant(
+            detail: this.translateService.instant(
               'reading-list-effects.save.error.detail'
             )
           });
@@ -160,9 +167,10 @@ export class ReadingListEffects {
       )
     ),
     catchError(error => {
-      this.message_service.add({
+      this.logger.error('save reading list general failure:', error);
+      this.messageService.add({
         severity: 'error',
-        detail: this.translate_service.instant(
+        detail: this.translateService.instant(
           'general-message.error.general-service-failure'
         )
       });

@@ -16,25 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ComicFileListItemComponent } from './comic-file-list-item.component';
-import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
+import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
+import { LibraryModule } from 'app/library/library.module';
+import { UserService } from 'app/services/user.service';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import {
   CardModule,
   MessageService,
   OverlayPanelModule,
   PanelModule
 } from 'primeng/primeng';
-import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LibraryModule } from 'app/library/library.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UserService } from 'app/services/user.service';
-import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+
+import { ComicFileListItemComponent } from './comic-file-list-item.component';
 
 describe('ComicFileListItemComponent', () => {
   let component: ComicFileListItemComponent;
@@ -48,6 +49,7 @@ describe('ComicFileListItemComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         OverlayPanelModule,

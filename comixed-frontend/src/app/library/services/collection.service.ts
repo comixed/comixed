@@ -16,24 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { CollectionType } from 'app/library/models/collection-type.enum';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { interpolate } from 'app/app.functions';
 import {
   GET_COLLECTION_ENTRIES_URL,
   GET_PAGE_FOR_ENTRY_URL
 } from 'app/library/library.constants';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 import { GetCollectionPageRequest } from 'app/library/models/net/get-collection-page-request';
+import { NGXLogger } from 'ngx-logger';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollectionService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private logger: NGXLogger) {}
 
   getEntries(type: CollectionType): Observable<any> {
+    this.logger.debug('getting collection entries');
     return this.http.get(
       interpolate(GET_COLLECTION_ENTRIES_URL, { type: type })
     );
@@ -47,6 +49,9 @@ export class CollectionService {
     sortField: string,
     ascending: boolean
   ): Observable<any> {
+    this.logger.debug(
+      `getting collection page: type=${type} name=${name} page=${page} count=${count} sortField=${sortField} ascending=${ascending}`
+    );
     return this.http.post(
       interpolate(GET_PAGE_FOR_ENTRY_URL, { type: type, name: name }),
       {

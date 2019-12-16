@@ -16,18 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ReadingListAdaptor } from './reading-list.adaptor';
-import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ReadingListEffects } from 'app/library/effects/reading-list.effects';
 import {
   READING_LIST_FEATURE_KEY,
   reducer
 } from 'app/library/reducers/reading-list.reducer';
-import { ReadingListEffects } from 'app/library/effects/reading-list.effects';
-import { EffectsModule } from '@ngrx/effects';
-import { TranslateModule } from '@ngx-translate/core';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MessageService } from 'primeng/api';
+import { ReadingListAdaptor } from './reading-list.adaptor';
 
 describe('ReadingListAdaptor', () => {
   let adaptor: ReadingListAdaptor;
@@ -37,6 +38,7 @@ describe('ReadingListAdaptor', () => {
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(READING_LIST_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

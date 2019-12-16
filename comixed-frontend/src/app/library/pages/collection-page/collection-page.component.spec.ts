@@ -36,6 +36,7 @@ import { MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionPageComponent } from './collection-page.component';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionPageComponent', () => {
@@ -51,6 +52,7 @@ describe('CollectionPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(COLLECTION_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

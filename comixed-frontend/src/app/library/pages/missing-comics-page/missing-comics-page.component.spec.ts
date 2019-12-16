@@ -65,6 +65,7 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -79,6 +80,7 @@ describe('MissingComicsPageComponent', () => {
         FormsModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

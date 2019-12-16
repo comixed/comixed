@@ -65,6 +65,7 @@ import {
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
 import { COMIC_1 } from 'app/comics/comics.fixtures';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -84,6 +85,7 @@ describe('LibraryPageComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

@@ -18,6 +18,8 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import {
   DuplicatePagesActions,
   DuplicatePagesActionTypes,
@@ -26,13 +28,12 @@ import {
   DuplicatePagesGetAllFailed,
   DuplicatePagesSetBlockingFailed
 } from 'app/library/actions/duplicate-pages.actions';
-import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
-import { Observable, of } from 'rxjs';
-import { Action } from '@ngrx/store';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
+import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
+import { NGXLogger } from 'ngx-logger';
 import { MessageService } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 export class DuplicatePagesEffects {
@@ -40,7 +41,8 @@ export class DuplicatePagesEffects {
     private actions$: Actions<DuplicatePagesActions>,
     private duplicatePagesService: DuplicatePagesService,
     private messageService: MessageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private logger: NGXLogger
   ) {}
 
   @Effect()
@@ -53,6 +55,7 @@ export class DuplicatePagesEffects {
             new DuplicatePagesAllReceived({ pages: response })
         ),
         catchError(error => {
+          this.logger.error('get all duplicate pages service failure:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -64,6 +67,7 @@ export class DuplicatePagesEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('get all duplicate pages general failure:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -96,6 +100,10 @@ export class DuplicatePagesEffects {
               new DuplicatePagesBlockingSet({ pages: response })
           ),
           catchError(error => {
+            this.logger.error(
+              'set blocking on duplicate pages service failure:',
+              error
+            );
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -107,6 +115,10 @@ export class DuplicatePagesEffects {
         )
     ),
     catchError(error => {
+      this.logger.error(
+        'set blocking on duplicate pages general failure:',
+        error
+      );
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(

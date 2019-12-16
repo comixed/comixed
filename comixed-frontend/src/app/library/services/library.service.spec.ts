@@ -16,28 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
-
-import { LibraryService } from './library.service';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { interpolate } from 'app/app.functions';
+import { TestBed } from '@angular/core/testing';
 import {
   DELETE_MULTIPLE_COMICS_URL,
   GET_COMICS_URL,
   GET_UPDATES_URL,
   START_RESCAN_URL
 } from 'app/app.constants';
+import { interpolate } from 'app/app.functions';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
-import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
+import { GetComicsRequest } from 'app/library/models/net/get-comics-request';
+import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
-import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
-import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
-import { GetComicsRequest } from 'app/library/models/net/get-comics-request';
+import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+
+import { LibraryService } from './library.service';
 
 describe('LibraryService', () => {
   const TIMESTAMP = new Date().getTime();
@@ -57,7 +58,7 @@ describe('LibraryService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [LibraryService]
     });
 

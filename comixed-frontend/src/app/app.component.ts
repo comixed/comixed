@@ -24,6 +24,7 @@ import { Subscription } from 'rxjs';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { MenuItem } from 'primeng/api';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-root',
@@ -54,8 +55,10 @@ export class AppComponent implements OnInit {
     private translateService: TranslateService,
     private authenticationAdaptor: AuthenticationAdaptor,
     private libraryAdaptor: LibraryAdaptor,
-    private breadcrumbsAdaptor: BreadcrumbAdaptor
+    private breadcrumbsAdaptor: BreadcrumbAdaptor,
+    private logger: NGXLogger
   ) {
+    this.logger.debug('Setting default language');
     translateService.setDefaultLang('en');
   }
 

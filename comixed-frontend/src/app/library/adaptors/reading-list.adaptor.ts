@@ -20,13 +20,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/library';
 import {
-  READING_LIST_FEATURE_KEY,
-  ReadingListState
-} from 'app/library/reducers/reading-list.reducer';
-import { filter } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
-import * as _ from 'lodash';
-import {
   ReadingListCreate,
   ReadingListGet,
   ReadingListSave,
@@ -34,6 +27,14 @@ import {
 } from 'app/library/actions/reading-list.actions';
 import { ReadingList } from 'app/library/models/reading-list/reading-list';
 import { ReadingListEntry } from 'app/library/models/reading-list/reading-list-entry';
+import {
+  READING_LIST_FEATURE_KEY,
+  ReadingListState
+} from 'app/library/reducers/reading-list.reducer';
+import * as _ from 'lodash';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Injectable()
 export class ReadingListAdaptor {
@@ -41,11 +42,12 @@ export class ReadingListAdaptor {
   _reading_list$ = new BehaviorSubject<ReadingList[]>([]);
   _current_list$ = new BehaviorSubject<ReadingList>(null);
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private logger: NGXLogger) {
     this.store
       .select(READING_LIST_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe((state: ReadingListState) => {
+        this.logger.debug('reading list state changed:', state);
         if (!_.isEqual(this._reading_list$.getValue(), state.reading_lists)) {
           this._reading_list$.next(state.reading_lists);
         }
@@ -69,6 +71,7 @@ export class ReadingListAdaptor {
   }
 
   save(reading_list: ReadingList, entries: ReadingListEntry[]): void {
+    this.logger.debug('saving reading list:', reading_list, entries);
     this.store.dispatch(
       new ReadingListSave({
         reading_list: {

@@ -16,24 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { interpolate } from 'app/app.functions';
+import { Injectable } from '@angular/core';
 import {
   DELETE_MULTIPLE_COMICS_URL,
   GET_COMICS_URL,
   GET_UPDATES_URL,
   START_RESCAN_URL
 } from 'app/app.constants';
-import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
+import { interpolate } from 'app/app.functions';
 import { GetComicsRequest } from 'app/library/models/net/get-comics-request';
+import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
+import { NGXLogger } from 'ngx-logger';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LibraryService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private logger: NGXLogger) {}
 
   getComics(
     page: number,
@@ -41,6 +42,9 @@ export class LibraryService {
     sortField: string,
     ascending: boolean
   ): Observable<any> {
+    this.logger.debug(
+      `getting comics: page=${page} count=${count} sortField=${sortField} ascending=${ascending}`
+    );
     return this.http.post(interpolate(GET_COMICS_URL), {
       page: page,
       count: count,
@@ -56,6 +60,9 @@ export class LibraryService {
     lastProcessingCount: number,
     lastRescanCount: number
   ): Observable<any> {
+    this.logger.debug(
+      `getting comic updates: timestamp=${timestamp} timeout=${timeout} maximumRecords=${maximumRecords} lastRescanCount=${lastRescanCount}`
+    );
     return this.http.post(
       interpolate(GET_UPDATES_URL, { timestamp: timestamp }),
       {
@@ -68,10 +75,12 @@ export class LibraryService {
   }
 
   startRescan(): Observable<any> {
+    this.logger.debug('starting rescan');
     return this.http.post(interpolate(START_RESCAN_URL), { start: true });
   }
 
   deleteMultipleComics(ids: number[]): Observable<any> {
+    this.logger.debug(`deleting multiple comics: ids=${ids}`);
     const params = new HttpParams().set('comic_ids', ids.toString());
     return this.http.post(interpolate(DELETE_MULTIPLE_COMICS_URL), params);
   }

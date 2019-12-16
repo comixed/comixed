@@ -16,9 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { ComicFileListToolbarComponent } from './comic-file-list-toolbar.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
+import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
+import {
+  COMIC_FILE_1,
+  COMIC_FILE_2,
+  COMIC_FILE_3,
+  COMIC_FILE_4
+} from 'app/comic-import/models/comic-file.fixtures';
+import {
+  COMIC_IMPORT_FEATURE_KEY,
+  reducer
+} from 'app/comic-import/reducers/comic-import.reducer';
+import { LibraryDisplayAdaptor } from 'app/library';
+import { LibraryModule } from 'app/library/library.module';
+import { UserService } from 'app/services/user.service';
+import { AuthenticationAdaptor } from 'app/user';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import {
   ButtonModule,
   CheckboxModule,
@@ -31,27 +52,7 @@ import {
   SplitButtonModule,
   ToolbarModule
 } from 'primeng/primeng';
-import { FormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AuthenticationAdaptor } from 'app/user';
-import { LibraryDisplayAdaptor } from 'app/library';
-import { LibraryModule } from 'app/library/library.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { UserService } from 'app/services/user.service';
-import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  reducer
-} from 'app/comic-import/reducers/comic-import.reducer';
-import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
-import {
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3,
-  COMIC_FILE_4
-} from 'app/comic-import/models/comic-file.fixtures';
+import { ComicFileListToolbarComponent } from './comic-file-list-toolbar.component';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 
@@ -78,6 +79,7 @@ describe('ComicFileListToolbarComponent', () => {
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([ComicImportEffects]),
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         ToolbarModule,
         InputTextModule,
         ButtonModule,

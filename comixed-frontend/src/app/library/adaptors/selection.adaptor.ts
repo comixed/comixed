@@ -17,14 +17,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import {
-  SELECTION_FEATURE_KEY,
-  SelectionState
-} from 'app/library/reducers/selection.reducer';
-import { filter } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { Comic } from 'app/comics';
+import { AppState } from 'app/library';
 import {
   SelectAddComic,
   SelectBulkAddComics,
@@ -32,18 +27,25 @@ import {
   SelectRemoveAllComics,
   SelectRemoveComic
 } from 'app/library/actions/selection.actions';
-import { Comic } from 'app/comics';
-import { AppState } from 'app/library';
+import {
+  SELECTION_FEATURE_KEY,
+  SelectionState
+} from 'app/library/reducers/selection.reducer';
+import * as _ from 'lodash';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Injectable()
 export class SelectionAdaptor {
   private _comicSelection$ = new BehaviorSubject<Comic[]>([]);
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private logger: NGXLogger) {
     this.store
       .select(SELECTION_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe((state: SelectionState) => {
+        this.logger.debug('selection state changed:', state);
         if (!_.isEqual(this._comicSelection$.getValue(), state.comics)) {
           this._comicSelection$.next(state.comics);
         }
@@ -55,22 +57,27 @@ export class SelectionAdaptor {
   }
 
   selectComic(comic: Comic): void {
+    this.logger.debug('selecting comic:', comic);
     this.store.dispatch(new SelectAddComic({ comic: comic }));
   }
 
   selectComics(comics: Comic[]): void {
+    this.logger.debug('selecting comics:', comics);
     this.store.dispatch(new SelectBulkAddComics({ comics: comics }));
   }
 
   deselectComic(comic: Comic): void {
+    this.logger.debug('deselecting comic:', comic);
     this.store.dispatch(new SelectRemoveComic({ comic: comic }));
   }
 
   deselectComics(comics: Comic[]): void {
+    this.logger.debug('deselecting comics:', comics);
     this.store.dispatch(new SelectBulkRemoveComics({ comics: comics }));
   }
 
   clearComicSelections(): void {
+    this.logger.debug('cleaning comic selections');
     this.store.dispatch(new SelectRemoveAllComics());
   }
 }
