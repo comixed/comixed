@@ -30,7 +30,7 @@
 		"karma-coverage": "^1.1.2",
 		"ngx-loading": "^1.0.14",
 		"ngx-pagination": "^3.1.1",
-		"npm": "^5.6.0",
+		"npm": "^6.13.4",
 		"popper.js": "^1.14.4",
 		"primeflex": "^1.0.0-rc.1",
 		"primeicons": "^1.0.0",
