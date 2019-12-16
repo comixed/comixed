@@ -21,6 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { TieredMenu } from 'primeng/primeng';
+import { NGXLogger, NgxLoggerLevel } from 'ngx-logger';
 
 @Component({
   selector: 'app-main-menu',
@@ -32,11 +33,13 @@ export class MainMenuComponent implements OnInit {
   menu: TieredMenu;
 
   items: MenuItem[];
+  debugging = false;
   private user: User;
 
   constructor(
     private translateService: TranslateService,
-    private authenticationAdaptor: AuthenticationAdaptor
+    private authenticationAdaptor: AuthenticationAdaptor,
+    private logger: NGXLogger
   ) {}
 
   toggle(event: any): void {
@@ -204,8 +207,24 @@ export class MainMenuComponent implements OnInit {
             label: this.translateService.instant(
               'main-menu.item.help.build-details'
             ),
-            icon: 'fas fa-landmark',
+            icon: 'fa fa-fw fas fa-landmark',
             routerLink: ['/build/details']
+          },
+          {
+            label: this.translateService.instant(
+              'main-menu.item.help.enable-debugging'
+            ),
+            icon: 'fa fa-fw fas fa-bug',
+            visible: this.authenticationAdaptor.isAdmin && !this.debugging,
+            command: () => this.toggleDebugging(true)
+          },
+          {
+            label: this.translateService.instant(
+              'main-menu.item.help.disable-debugging'
+            ),
+            icon: 'fa fa-fw fas fa-bug',
+            visible: this.authenticationAdaptor.isAdmin && this.debugging,
+            command: () => this.toggleDebugging(false)
           }
         ]
       },
@@ -222,5 +241,15 @@ export class MainMenuComponent implements OnInit {
         visible: this.authenticationAdaptor.authenticated
       }
     ];
+  }
+
+  private toggleDebugging(debugging: boolean) {
+    this.logger.info(`toggling debugging output ${debugging ? 'on' : 'off'}`);
+    this.debugging = debugging;
+    this.logger.updateConfig({
+      ...this.logger.getConfigSnapshot(),
+      level: this.debugging ? NgxLoggerLevel.DEBUG : NgxLoggerLevel.ERROR
+    });
+    this.loadMenuItems();
   }
 }
