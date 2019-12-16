@@ -27,7 +27,7 @@
     },
     "help": {
       "root": "Help",
-      "build-details": "Build Details",
+      "build-details": "Build Details"
     }
   },
   "app-component": {
