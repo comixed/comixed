@@ -26,12 +26,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
-import org.comixed.model.library.Page;
 import org.comixed.model.library.ScanType;
 import org.comixed.repositories.RepositoryContext;
 import org.junit.Before;
@@ -81,6 +81,10 @@ public class ComicRepositoryTest {
   private static final String TEST_LOCATION_NAME_2 = "The Fortress Of Solitude";
   private static final String TEST_STORY_NAME_1 = "Civil War II";
   private static final String TEST_STORY_NAME_2 = "Prelude To Civil War II";
+  private static final long TEST_LAST_UPDATE_MIDDLE_OF_LIBRARY =
+      new GregorianCalendar(2017, 6 - 1, 14, 15, 20).getTimeInMillis();
+  private static final long TEST_LAST_COMIC_ID = 1001L;
+  private static final long TEST_INVALID_ID = 9797L;
   private static byte[] TEST_IMAGE_CONTENT;
 
   static {
@@ -100,7 +104,7 @@ public class ComicRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    comic = repository.findById(TEST_COMIC).get();
+    comic = repository.getById(TEST_COMIC);
   }
 
   @Test(expected = DataIntegrityViolationException.class)
@@ -306,34 +310,6 @@ public class ComicRepositoryTest {
   @Test
   public void testPageCount() {
     assertEquals(5, comic.getPageCount());
-  }
-
-  @Test
-  public void testPagesCanBeDeleted() {
-    int count = comic.getPageCount() - 1;
-    comic.deletePage(0);
-    repository.save(comic);
-
-    Comic result = repository.findById(comic.getId()).get();
-
-    assertEquals(count, result.getPageCount());
-  }
-
-  @Test
-  public void testPagesCanBeAdded() {
-    int count = comic.getPageCount() + 1;
-    Page page =
-        new Page(
-            "src/test/resources/example.jpg",
-            TEST_IMAGE_CONTENT,
-            pageTypeRepository.getDefaultPageType());
-    comic.addPage(0, page);
-    repository.save(comic);
-
-    Comic result = repository.findById(comic.getId()).get();
-
-    assertEquals(count, result.getPageCount());
-    assertEquals(page, result.getPage(0));
   }
 
   @Test
@@ -661,5 +637,69 @@ public class ComicRepositoryTest {
     assertNotNull(result);
     assertEquals(1, result.size());
     assertEquals(1001L, result.get(0).getId().longValue());
+  }
+
+  @Test
+  public void testGetComicsUpdatedSinceDateFirstRequest() {
+    List<Comic> result =
+        this.repository.getComicsUpdatedSinceDate(new Date(0L), 0, PageRequest.of(0, 100));
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(4, result.size());
+    testComicOrder(0L, 0L, result);
+  }
+
+  private void testComicOrder(long id, long timestamp, List<Comic> comicList) {
+    for (int index = 0; index < comicList.size(); index++) {
+      long thisId = comicList.get(index).getId();
+      long thisTimestamp = comicList.get(index).getDateLastUpdated().getTime();
+
+      if (thisTimestamp == timestamp) {
+        assertTrue(id < thisId);
+      } else {
+        assertTrue(timestamp < thisTimestamp);
+        timestamp = thisTimestamp;
+      }
+      id = thisId;
+    }
+  }
+
+  @Test
+  public void testGetComicsUpdatedSinceDateSubsequentRequest() {
+    List<Comic> result =
+        this.repository.getComicsUpdatedSinceDate(
+            new Date(TEST_LAST_UPDATE_MIDDLE_OF_LIBRARY),
+            TEST_LAST_COMIC_ID,
+            PageRequest.of(0, 100));
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    testComicOrder(TEST_LAST_COMIC_ID, TEST_LAST_UPDATE_MIDDLE_OF_LIBRARY, result);
+  }
+
+  @Test
+  public void testGetComicsUpdatedSinceDateNoUpdates() {
+    List<Comic> result =
+        this.repository.getComicsUpdatedSinceDate(
+            new Date(), TEST_LAST_COMIC_ID, PageRequest.of(0, 100));
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void testGetByIdWithInvalidId() {
+    Comic result = this.repository.getById(TEST_INVALID_ID);
+
+    assertNull(result);
+  }
+
+  @Test
+  public void testGetById() {
+    Comic result = this.repository.getById(TEST_COMIC);
+
+    assertNotNull(result);
+    assertFalse(result.getPages().isEmpty());
   }
 }

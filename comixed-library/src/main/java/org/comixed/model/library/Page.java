@@ -81,6 +81,10 @@ public class Page {
   @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
   private String hash;
 
+  @Column(name = "page_number", nullable = false, updatable = true)
+  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  private Integer pageNumber;
+
   @Column(name = "deleted", updatable = true, nullable = false)
   @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
   private boolean deleted = false;
@@ -299,5 +303,13 @@ public class Page {
   public void markDeleted(boolean deleted) {
     this.logger.debug("Mark deletion: " + deleted);
     this.deleted = deleted;
+  }
+
+  public Integer getPageNumber() {
+    return pageNumber;
+  }
+
+  public void setPageNumber(Integer pageNumber) {
+    this.pageNumber = pageNumber;
   }
 }

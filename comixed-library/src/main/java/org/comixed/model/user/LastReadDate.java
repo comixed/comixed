@@ -18,6 +18,7 @@
 
 package org.comixed.model.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
@@ -48,6 +49,7 @@ public class LastReadDate {
 
   @Column(name = "last_read", nullable = false, updatable = false)
   @JsonProperty("last_read")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView(View.UserDetails.class)
   private Date lastRead = new Date();
 

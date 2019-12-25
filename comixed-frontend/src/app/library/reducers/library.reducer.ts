@@ -80,12 +80,15 @@ export function reducer(
 
     case LibraryActionTypes.UpdatesReceived: {
       const comics = mergeComics(state.comics, action.payload.comics);
+      const lastComicId = action.payload.lastComicId || state.lastComicId;
 
       return {
         ...state,
         fetchingUpdates: false,
         comics: comics,
-        updatedIds: action.payload.comics.map(comic => comic.id),
+        lastComicId: lastComicId,
+        latestUpdatedDate: action.payload.mostRecentUpdate,
+        moreUpdates: action.payload.moreUpdates,
         lastReadDates: action.payload.lastReadDates,
         latestUpdatedDate: latestUpdatedDate(comics),
         processingCount: action.payload.processingCount,

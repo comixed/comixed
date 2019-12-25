@@ -109,4 +109,11 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   List<Comic> getComicPageForLocation(@Param("name") String name, Pageable page);
 
   List<Comic> getComicPageForStory(@Param("name") String name, Pageable page);
+
+  List<Comic> getComicsUpdatedSinceDate(
+      @Param("latestUpdatedDate") Date latestUpdatedDate,
+      @Param("lastComicId") long lastComicId,
+      Pageable pageable);
+
+  Comic getById(@Param("id") long id);
 }
