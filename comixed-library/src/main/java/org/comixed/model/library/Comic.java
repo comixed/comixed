@@ -58,54 +58,6 @@ import org.springframework.stereotype.Component;
       name = "Comic.findAllUnreadByUser",
       query =
           "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)"),
-  @NamedQuery(name = "Comic.getPublisherNames", query = "SELECT DISTINCT c.publisher FROM Comic c"),
-  @NamedQuery(
-      name = "Comic.getComicCountForPublisher",
-      query = "SELECT COUNT(*) FROM Comic c WHERE c.publisher = :name"),
-  @NamedQuery(name = "Comic.getSeriesNames", query = "SELECT DISTINCT c.series FROM Comic c"),
-  @NamedQuery(
-      name = "Comic.getComicCountForSeries",
-      query = "SELECT COUNT(*) FROM Comic c WHERE c.series = :name"),
-  @NamedQuery(
-      name = "Comic.getCharacterNames",
-      query = "SELECT DISTINCT n FROM Comic c JOIN c.characters n"),
-  @NamedQuery(
-      name = "Comic.getComicCountForCharacter",
-      query = "SELECT COUNT(*) FROM Comic c JOIN c.characters n WHERE n = :name"),
-  @NamedQuery(name = "Comic.getTeamNames", query = "SELECT DISTINCT t FROM Comic c JOIN c.teams t"),
-  @NamedQuery(
-      name = "Comic.getComicCountForTeam",
-      query = "SELECT COUNT(*) FROM Comic c JOIN c.teams t WHERE t = :name"),
-  @NamedQuery(
-      name = "Comic.getLocationNames",
-      query = "SELECT DISTINCT l FROM Comic c JOIN c.locations l"),
-  @NamedQuery(
-      name = "Comic.getComicCountForLocation",
-      query = "SELECT COUNT(*) FROM Comic c JOIN c.locations l WHERE l = :name"),
-  @NamedQuery(
-      name = "Comic.getStoryNames",
-      query = "SELECT DISTINCT s FROM Comic c JOIN c.storyArcs s"),
-  @NamedQuery(
-      name = "Comic.getComicCountForStory",
-      query = "SELECT COUNT(*) FROM Comic c JOIN c.storyArcs s WHERE s = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForPublisher",
-      query = "SELECT c FROM Comic c WHERE c.publisher = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForSeries",
-      query = "SELECT c FROM Comic c WHERE c.series = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForCharacter",
-      query = "SELECT c FROM Comic c JOIN c.characters r WHERE r = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForTeam",
-      query = "SELECT c FROM Comic c JOIN c.teams t WHERE t = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForLocation",
-      query = "SELECT c FROM Comic c JOIN c.locations l WHERE l = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForStory",
-      query = "SELECT c FROM Comic c JOIN c.storyArcs s WHERE s = :name"),
   @NamedQuery(
       name = "Comic.getComicsUpdatedSinceDate",
       query =
