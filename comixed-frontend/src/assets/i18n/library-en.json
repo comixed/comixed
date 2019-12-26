@@ -296,7 +296,7 @@
     }
   },
   "collection-page": {
-    "page-title": "{collectionType} - {count, plural, =1{One Comic} other{# Comics}}",
+    "page-title": "{collectionType} - {count, plural, =1{One Entry} other{# Entries}}",
     "title": "{collectionType}",
     "table": {
       "header": {

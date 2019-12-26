@@ -37,17 +37,11 @@ import {
   ReadingListAdaptor,
   SelectionAdaptor
 } from 'app/library';
-import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
-import { CollectionEffects } from 'app/library/effects/collection.effects';
 import { CollectionType } from 'app/library/models/collection-type.enum';
-import {
-  COLLECTION_FEATURE_KEY,
-  reducer
-} from 'app/library/reducers/collection.reducer';
 import { AuthenticationAdaptor } from 'app/user';
 import { DataViewModule } from 'primeng/dataview';
 import {
@@ -67,6 +61,11 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { CollectionDetailsPageComponent } from './collection-details-page.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionDetailsPageComponent', () => {
@@ -88,9 +87,9 @@ describe('CollectionDetailsPageComponent', () => {
         TranslateModule.forRoot(),
         LoggerTestingModule,
         StoreModule.forRoot({}),
-        StoreModule.forFeature(COLLECTION_FEATURE_KEY, reducer),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([CollectionEffects]),
+        EffectsModule.forFeature([LibraryEffects]),
         SidebarModule,
         ContextMenuModule,
         DataViewModule,
@@ -114,7 +113,7 @@ describe('CollectionDetailsPageComponent', () => {
         ComicTitlePipe
       ],
       providers: [
-        CollectionAdaptor,
+        LibraryAdaptor,
         ComicAdaptor,
         ScrapingAdaptor,
         AuthenticationAdaptor,

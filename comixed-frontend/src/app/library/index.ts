@@ -22,12 +22,10 @@ import { LibraryState } from './reducers/library.reducer';
 import * as fromSelection from './reducers/selection.reducer';
 import { SelectionState } from './reducers/selection.reducer';
 import * as fromDupePages from './reducers/duplicate-pages.reducer';
-import * as fromCollections from './reducers/collection.reducer';
 import { Params } from '@angular/router';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { DuplicatePagesState } from 'app/library/reducers/duplicate-pages.reducer';
-import { CollectionState } from 'app/library/reducers/collection.reducer';
 
 export { LibraryAdaptor } from './adaptors/library.adaptor';
 export { SelectionAdaptor } from './adaptors/selection.adaptor';
@@ -45,7 +43,6 @@ export interface AppState {
   library: LibraryState;
   selection_state: SelectionState;
   duplicate_pages_state: DuplicatePagesState;
-  collection_state: CollectionState;
 }
 
 export type State = AppState;
@@ -54,8 +51,7 @@ export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
   library: fromLibrary.reducer,
   selection_state: fromSelection.reducer,
-  duplicate_pages_state: fromDupePages.reducer,
-  collection_state: fromCollections.reducer
+  duplicate_pages_state: fromDupePages.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

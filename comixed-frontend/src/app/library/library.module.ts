@@ -27,13 +27,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ComicsModule } from 'app/comics/comics.module';
-import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
 import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
 import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
 import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
-import { CollectionEffects } from 'app/library/effects/collection.effects';
 import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
 import { LibraryRoutingModule } from 'app/library/library-routing.module';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
@@ -42,7 +40,6 @@ import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-s
 import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
 import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
 import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
-import { CollectionService } from 'app/library/services/collection.service';
 import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
 import { LoggerModule } from 'ngx-logger';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -67,7 +64,6 @@ import { ReadingListEffects } from './effects/reading-list.effects';
 import { CollectionDetailsPageComponent } from './pages/collection-details-page/collection-details-page.component';
 import { CollectionPageComponent } from './pages/collection-page/collection-page.component';
 import { DuplicatesPageComponent } from './pages/duplicates-page/duplicates-page.component';
-import * as fromCollections from './reducers/collection.reducer';
 import * as fromDupes from './reducers/duplicate-pages.reducer';
 import * as fromLibrary from './reducers/library.reducer';
 import * as fromReadingList from './reducers/reading-list.reducer';
@@ -98,15 +94,10 @@ import { ReadingListService } from './services/reading-list.service';
       fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
       fromDupes.reducer
     ),
-    StoreModule.forFeature(
-      fromCollections.COLLECTION_FEATURE_KEY,
-      fromCollections.reducer
-    ),
     EffectsModule.forFeature([
       LibraryEffects,
       ReadingListEffects,
-      DuplicatePagesEffects,
-      CollectionEffects
+      DuplicatePagesEffects
     ]),
     ContextMenuModule,
     CheckboxModule,
@@ -144,9 +135,7 @@ import { ReadingListService } from './services/reading-list.service';
     DuplicatePagesAdaptors,
     ReadingListService,
     ReadingListAdaptor,
-    DuplicatePagesService,
-    CollectionService,
-    CollectionAdaptor
+    DuplicatePagesService
   ]
 })
 export class LibraryModule {

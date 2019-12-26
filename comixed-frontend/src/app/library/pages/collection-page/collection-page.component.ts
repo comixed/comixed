@@ -21,12 +21,12 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { LibraryDisplayAdaptor } from 'app/library';
-import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
+import { LibraryAdaptor, LibraryDisplayAdaptor } from 'app/library';
 import { CollectionEntry } from 'app/library/models/collection-entry';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 @Component({
   selector: 'app-collection-page',
@@ -47,7 +47,7 @@ export class CollectionPageComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
-    private collectionAdaptor: CollectionAdaptor,
+    private libraryAdaptor: LibraryAdaptor,
     private displayAdaptor: LibraryDisplayAdaptor,
     private translateService: TranslateService,
     private messageService: MessageService
@@ -59,10 +59,31 @@ export class CollectionPageComponent implements OnInit, OnDestroy {
         const typeName = params['collectionType'].toString().toUpperCase();
         this.collectionType = CollectionType[typeName] as CollectionType;
         if (!!this.collectionType) {
-          this.collectionSubscription = this.collectionAdaptor.entries$.subscribe(
+          let target: Observable<ComicCollectionEntry[]> = null;
+
+          switch (this.collectionType) {
+            case CollectionType.PUBLISHERS:
+              target = this.libraryAdaptor.publishers$;
+              break;
+            case CollectionType.SERIES:
+              target = this.libraryAdaptor.series$;
+              break;
+            case CollectionType.CHARACTERS:
+              target = this.libraryAdaptor.characters$;
+              break;
+            case CollectionType.TEAMS:
+              target = this.libraryAdaptor.teams$;
+              break;
+            case CollectionType.LOCATIONS:
+              target = this.libraryAdaptor.locations$;
+              break;
+            case CollectionType.STORIES:
+              target = this.libraryAdaptor.stories$;
+              break;
+          }
+          this.collectionSubscription = target.subscribe(
             collection => (this.collection = collection)
           );
-          this.collectionAdaptor.getCollection(this.collectionType);
         } else {
           this.messageService.add({
             severity: 'error',

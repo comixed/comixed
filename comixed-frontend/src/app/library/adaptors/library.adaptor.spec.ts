@@ -134,7 +134,6 @@ describe('LibraryAdaptor', () => {
       const LOCATIONS = extractField(COMICS, 'locations');
       const STORIES = extractField(COMICS, 'storyArcs');
       const PENDING_RESCANS = 17;
-      const PROCESSING_COUNT = 29;
 
       beforeEach(() => {
         store.dispatch(
@@ -172,27 +171,27 @@ describe('LibraryAdaptor', () => {
       });
 
       it('provides updates on publishers', () => {
-        adaptor.publisher$.subscribe(result =>
+        adaptor.publishers$.subscribe(result =>
           expect(result).toEqual(PUBLISHERS)
         );
       });
 
       it('provides updates on series', () => {
-        adaptor.serie$.subscribe(result => expect(result).toEqual(SERIES));
+        adaptor.series$.subscribe(result => expect(result).toEqual(SERIES));
       });
 
       it('provides updates on characters', () => {
-        adaptor.character$.subscribe(result =>
+        adaptor.characters$.subscribe(result =>
           expect(result).toEqual(CHARACTERS)
         );
       });
 
       it('provides updates on teams', () => {
-        adaptor.team$.subscribe(result => expect(result).toEqual(TEAMS));
+        adaptor.teams$.subscribe(result => expect(result).toEqual(TEAMS));
       });
 
       it('provides updates on locations', () => {
-        adaptor.location$.subscribe(result =>
+        adaptor.locations$.subscribe(result =>
           expect(result).toEqual(LOCATIONS)
         );
       });

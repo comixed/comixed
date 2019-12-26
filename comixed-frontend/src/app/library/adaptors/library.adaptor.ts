@@ -48,11 +48,11 @@ export class LibraryAdaptor {
   private _lastComicId$ = new BehaviorSubject<number>(0);
   private _lastReadDate$ = new BehaviorSubject<LastReadDate[]>([]);
   private _comicCount$ = new BehaviorSubject<number>(0);
-  private _publisher$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _serie$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _character$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _team$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _location$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _publishers$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _series$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _characters$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _teams$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _locations$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _processingCount$ = new BehaviorSubject<number>(0);
   private comicId = -1;
@@ -100,11 +100,11 @@ export class LibraryAdaptor {
         this._fetchingUpdate$.next(state.fetchingUpdates);
         if (!_.isEqual(this._comic$.getValue(), state.comics)) {
           this._comic$.next(state.comics);
-          this._publisher$.next(extractField(state.comics, 'publisher'));
-          this._serie$.next(extractField(state.comics, 'series'));
-          this._character$.next(extractField(state.comics, 'characters'));
-          this._team$.next(extractField(state.comics, 'teams'));
-          this._location$.next(extractField(state.comics, 'locations'));
+          this._publishers$.next(extractField(state.comics, 'publisher'));
+          this._series$.next(extractField(state.comics, 'series'));
+          this._characters$.next(extractField(state.comics, 'characters'));
+          this._teams$.next(extractField(state.comics, 'teams'));
+          this._locations$.next(extractField(state.comics, 'locations'));
           this._stories$.next(extractField(state.comics, 'storyArcs'));
         }
         if (
@@ -149,24 +149,24 @@ export class LibraryAdaptor {
     return this._comicCount$.asObservable();
   }
 
-  get publisher$(): Observable<ComicCollectionEntry[]> {
-    return this._publisher$.asObservable();
+  get publishers$(): Observable<ComicCollectionEntry[]> {
+    return this._publishers$.asObservable();
   }
 
-  get serie$(): Observable<ComicCollectionEntry[]> {
-    return this._serie$.asObservable();
+  get series$(): Observable<ComicCollectionEntry[]> {
+    return this._series$.asObservable();
   }
 
-  get character$(): Observable<ComicCollectionEntry[]> {
-    return this._character$.asObservable();
+  get characters$(): Observable<ComicCollectionEntry[]> {
+    return this._characters$.asObservable();
   }
 
-  get team$(): Observable<ComicCollectionEntry[]> {
-    return this._team$.asObservable();
+  get teams$(): Observable<ComicCollectionEntry[]> {
+    return this._teams$.asObservable();
   }
 
-  get location$(): Observable<ComicCollectionEntry[]> {
-    return this._location$.asObservable();
+  get locations$(): Observable<ComicCollectionEntry[]> {
+    return this._locations$.asObservable();
   }
 
   get stories$(): Observable<ComicCollectionEntry[]> {
@@ -191,7 +191,7 @@ export class LibraryAdaptor {
 
   private getComicsForSeries(series: string): Comic[] {
     this.logger.debug('getting comics for series:', series);
-    return this._serie$
+    return this._series$
       .getValue()
       .find(entry => entry.comics[0].series === series)
       .comics.sort((c1: Comic, c2: Comic) =>

@@ -24,19 +24,19 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { LibraryDisplayAdaptor } from 'app/library';
-import { CollectionAdaptor } from 'app/library/adaptors/collection.adaptor';
-import { CollectionEffects } from 'app/library/effects/collection.effects';
-import {
-  COLLECTION_FEATURE_KEY,
-  reducer
-} from 'app/library/reducers/collection.reducer';
+import { LibraryAdaptor, LibraryDisplayAdaptor } from 'app/library';
 import { AuthenticationAdaptor } from 'app/user';
 import { MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionPageComponent } from './collection-page.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionPageComponent', () => {
@@ -54,14 +54,15 @@ describe('CollectionPageComponent', () => {
         TranslateModule.forRoot(),
         LoggerTestingModule,
         StoreModule.forRoot({}),
-        StoreModule.forFeature(COLLECTION_FEATURE_KEY, reducer),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([CollectionEffects]),
+        EffectsModule.forFeature([LibraryEffects]),
         TableModule
       ],
       declarations: [CollectionPageComponent],
       providers: [
-        CollectionAdaptor,
+        LibraryAdaptor,
+        ComicAdaptor,
         LibraryDisplayAdaptor,
         AuthenticationAdaptor,
         BreadcrumbAdaptor,

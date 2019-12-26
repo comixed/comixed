@@ -18,7 +18,7 @@
                  let-entry>
         <tr>
             <td><a [routerLink]='["/collections", collectionType, entry.name]'>{{entry.name}}</a></td>
-            <td class='cx-table-column-align-center'>{{'collection-page.table.value.collection-count'|translate:{count: entry.comicCount} }}</td>
+            <td class='cx-table-column-align-center'>{{'collection-page.table.value.collection-count'|translate:{count: entry.count} }}</td>
         </tr>
     </ng-template>
 </p-table>
