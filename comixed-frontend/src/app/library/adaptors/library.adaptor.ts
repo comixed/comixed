@@ -31,7 +31,6 @@ import { extractField } from 'app/library/utility.functions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import {
   LibraryDeleteMultipleComics,
-  LibraryGetComics,
   LibraryGetUpdates,
   LibraryReset,
   LibraryStartRescan
@@ -44,19 +43,18 @@ import { NGXLogger } from 'ngx-logger';
 @Injectable()
 export class LibraryAdaptor {
   private _fetchingUpdate$ = new BehaviorSubject<boolean>(false);
-  private _latestUpdatedDate$ = new BehaviorSubject<number>(0);
+  private _latestUpdatedDate$ = new BehaviorSubject<Date>(new Date(0));
   private _comic$ = new BehaviorSubject<Comic[]>([]);
+  private _lastComicId$ = new BehaviorSubject<number>(0);
   private _lastReadDate$ = new BehaviorSubject<LastReadDate[]>([]);
   private _comicCount$ = new BehaviorSubject<number>(0);
-  private _lastUpdatedDate$ = new BehaviorSubject<Date>(new Date(0));
-  private _publisher$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _serie$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _character$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _team$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _location$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _publishers$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _series$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _characters$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _teams$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _locations$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _processingCount$ = new BehaviorSubject<number>(0);
-  private _rescanCount$ = new BehaviorSubject<number>(0);
   private comicId = -1;
   private _timeout = 60;
   private _maximum = 100;
@@ -77,93 +75,60 @@ export class LibraryAdaptor {
           return !!state;
         })
       )
-      .subscribe((libraryState: LibraryState) => {
-        this.logger.debug('library state updated:', libraryState);
-        if (
-          this._processingCount$.getValue() !== libraryState.processingCount
-        ) {
-          this._processingCount$.next(libraryState.processingCount);
+      .subscribe((state: LibraryState) => {
+        this.logger.debug('library state updated:', state);
+        if (this._processingCount$.getValue() !== state.processingCount) {
+          this._processingCount$.next(state.processingCount);
         }
-        if (this._rescanCount$.getValue() !== libraryState.rescanCount) {
-          this._rescanCount$.next(libraryState.rescanCount);
-        }
-        if (
-          this.comicId !== -1 &&
-          libraryState.updatedIds.includes(this.comicId)
-        ) {
+        if (this.comicId !== -1 && state.updatedIds.includes(this.comicId)) {
           this.store.dispatch(new ComicGetIssue({ id: this.comicId }));
         }
         if (
           !_.isEqual(
             this._latestUpdatedDate$.getValue(),
-            libraryState.latestUpdatedDate
+            state.latestUpdatedDate
           )
         ) {
-          this._latestUpdatedDate$.next(libraryState.latestUpdatedDate);
+          this._latestUpdatedDate$.next(state.latestUpdatedDate);
+        }
+        if (!_.isEqual(this._lastReadDate$.getValue(), state.lastReadDates)) {
+          this._lastReadDate$.next(state.lastReadDates);
+        }
+        if (this._comicCount$.getValue() !== state.comicCount) {
+          this._comicCount$.next(state.comicCount);
+        }
+        this._fetchingUpdate$.next(state.fetchingUpdates);
+        if (!_.isEqual(this._comic$.getValue(), state.comics)) {
+          this._comic$.next(state.comics);
+          this._publishers$.next(extractField(state.comics, 'publisher'));
+          this._series$.next(extractField(state.comics, 'series'));
+          this._characters$.next(extractField(state.comics, 'characters'));
+          this._teams$.next(extractField(state.comics, 'teams'));
+          this._locations$.next(extractField(state.comics, 'locations'));
+          this._stories$.next(extractField(state.comics, 'storyArcs'));
         }
         if (
-          !_.isEqual(this._lastReadDate$.getValue(), libraryState.lastReadDates)
+          !!state.lastComicId &&
+          this._lastComicId$.getValue() !== state.lastComicId
         ) {
-          this._lastReadDate$.next(libraryState.lastReadDates);
-        }
-        if (this._comicCount$.getValue() !== libraryState.comicCount) {
-          this._comicCount$.next(libraryState.comicCount);
-        }
-        if (
-          !_.isEqual(
-            this._lastUpdatedDate$.getValue(),
-            libraryState.lastUpdatedDate
-          )
-        ) {
-          this._lastUpdatedDate$.next(libraryState.lastUpdatedDate);
-        }
-        this._fetchingUpdate$.next(libraryState.fetchingUpdates);
-        if (!_.isEqual(this._comic$.getValue(), libraryState.comics)) {
-          this._comic$.next(libraryState.comics);
-          this._publisher$.next(extractField(libraryState.comics, 'publisher'));
-          this._serie$.next(extractField(libraryState.comics, 'series'));
-          this._character$.next(
-            extractField(libraryState.comics, 'characters')
-          );
-          this._team$.next(extractField(libraryState.comics, 'teams'));
-          this._location$.next(extractField(libraryState.comics, 'locations'));
-          this._stories$.next(extractField(libraryState.comics, 'storyArcs'));
+          this._lastComicId$.next(state.lastComicId);
         }
       });
   }
 
-  getComics(
-    page: number,
-    count: number,
-    sortField: string,
-    ascending: boolean
-  ) {
-    this.logger.debug(
-      `getting comics: page=${page} count=${count} sortField=${sortField} ascending=${ascending}`
-    );
-    this.store.dispatch(
-      new LibraryGetComics({
-        page: page,
-        count: count,
-        sortField: sortField,
-        ascending: ascending
-      })
-    );
-  }
-
-  get latestUpdatedDate$(): Observable<number> {
+  get latestUpdatedDate$(): Observable<Date> {
     return this._latestUpdatedDate$.asObservable();
   }
 
   getLibraryUpdates(): void {
-    this.logger.debug('getting library updates');
+    this.logger.debug('firing action to get library updates');
     this.store.dispatch(
       new LibraryGetUpdates({
-        timestamp: this._latestUpdatedDate$.getValue(),
-        timeout: this._timeout,
-        maximumResults: this._maximum,
-        lastProcessingCount: this._processingCount$.getValue(),
-        lastRescanCount: this._rescanCount$.getValue()
+        lastUpdateDate: this._latestUpdatedDate$.getValue(),
+        maximumComics: this._maximum,
+        lastComicId: this._lastComicId$.getValue(),
+        processingCount: this._processingCount$.getValue(),
+        timeout: this._timeout
       })
     );
   }
@@ -184,28 +149,24 @@ export class LibraryAdaptor {
     return this._comicCount$.asObservable();
   }
 
-  get lastUpdatedDate$(): Observable<Date> {
-    return this._lastUpdatedDate$.asObservable();
+  get publishers$(): Observable<ComicCollectionEntry[]> {
+    return this._publishers$.asObservable();
   }
 
-  get publisher$(): Observable<ComicCollectionEntry[]> {
-    return this._publisher$.asObservable();
+  get series$(): Observable<ComicCollectionEntry[]> {
+    return this._series$.asObservable();
   }
 
-  get serie$(): Observable<ComicCollectionEntry[]> {
-    return this._serie$.asObservable();
+  get characters$(): Observable<ComicCollectionEntry[]> {
+    return this._characters$.asObservable();
   }
 
-  get character$(): Observable<ComicCollectionEntry[]> {
-    return this._character$.asObservable();
+  get teams$(): Observable<ComicCollectionEntry[]> {
+    return this._teams$.asObservable();
   }
 
-  get team$(): Observable<ComicCollectionEntry[]> {
-    return this._team$.asObservable();
-  }
-
-  get location$(): Observable<ComicCollectionEntry[]> {
-    return this._location$.asObservable();
+  get locations$(): Observable<ComicCollectionEntry[]> {
+    return this._locations$.asObservable();
   }
 
   get stories$(): Observable<ComicCollectionEntry[]> {
@@ -214,10 +175,6 @@ export class LibraryAdaptor {
 
   get processingCount$(): Observable<number> {
     return this._processingCount$.asObservable();
-  }
-
-  get rescanCount$(): Observable<number> {
-    return this._rescanCount$.asObservable();
   }
 
   resetLibrary(): void {
@@ -233,8 +190,8 @@ export class LibraryAdaptor {
   }
 
   private getComicsForSeries(series: string): Comic[] {
-    this.logger.debug(`getting comics for series: ${series}`);
-    return this._serie$
+    this.logger.debug('getting comics for series:', series);
+    return this._series$
       .getValue()
       .find(entry => entry.comics[0].series === series)
       .comics.sort((c1: Comic, c2: Comic) =>

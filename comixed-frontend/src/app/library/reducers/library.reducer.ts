@@ -17,7 +17,7 @@
  */
 
 import { LibraryActions, LibraryActionTypes } from '../actions/library.actions';
-import { latestUpdatedDate, mergeComics } from 'app/library/utility.functions';
+import { mergeComics } from 'app/library/utility.functions';
 import { Comic } from 'app/comics';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
@@ -26,13 +26,13 @@ export const LIBRARY_FEATURE_KEY = 'library_state';
 export interface LibraryState {
   fetchingUpdates: boolean;
   comics: Comic[];
+  lastComicId: number;
+  moreUpdates: boolean;
   updatedIds: number[];
   lastReadDates: LastReadDate[];
   comicCount: number;
-  lastUpdatedDate: Date;
-  latestUpdatedDate: number;
+  latestUpdatedDate: Date;
   processingCount: number;
-  rescanCount: number;
   startingRescan: boolean;
   deletingComics: boolean;
 }
@@ -40,13 +40,13 @@ export interface LibraryState {
 export const initialState: LibraryState = {
   fetchingUpdates: false,
   comics: [],
+  lastComicId: 0,
+  moreUpdates: false,
   updatedIds: [],
   lastReadDates: [],
   comicCount: 0,
-  lastUpdatedDate: new Date(0),
-  latestUpdatedDate: 0,
+  latestUpdatedDate: new Date(0),
   processingCount: 0,
-  rescanCount: 0,
   startingRescan: false,
   deletingComics: false
 };
@@ -59,37 +59,25 @@ export function reducer(
     case LibraryActionTypes.Reset:
       return { ...state, comics: [] };
 
-    case LibraryActionTypes.GetComics:
-      return { ...state, fetchingUpdates: true };
-
-    case LibraryActionTypes.ComicsReceived:
-      return {
-        ...state,
-        fetchingUpdates: false,
-        comics: action.payload.comics,
-        lastReadDates: action.payload.lastReadDates,
-        comicCount: action.payload.comicCount,
-        lastUpdatedDate: action.payload.lastUpdatedDate
-      };
-
-    case LibraryActionTypes.GetComicsFailed:
-      return { ...state, fetchingUpdates: false };
-
     case LibraryActionTypes.GetUpdates:
       return { ...state, fetchingUpdates: true };
 
     case LibraryActionTypes.UpdatesReceived: {
       const comics = mergeComics(state.comics, action.payload.comics);
+      const lastComicId = action.payload.lastComicId || state.lastComicId;
+      const latestUpdatedDate =
+        action.payload.mostRecentUpdate || state.latestUpdatedDate;
 
       return {
         ...state,
         fetchingUpdates: false,
         comics: comics,
+        lastComicId: lastComicId,
+        latestUpdatedDate: latestUpdatedDate,
+        moreUpdates: action.payload.moreUpdates,
         updatedIds: action.payload.comics.map(comic => comic.id),
         lastReadDates: action.payload.lastReadDates,
-        latestUpdatedDate: latestUpdatedDate(comics),
-        processingCount: action.payload.processingCount,
-        rescanCount: action.payload.rescanCount
+        processingCount: action.payload.processingCount
       };
     }
 

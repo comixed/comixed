@@ -23,25 +23,24 @@ import {
 import { TestBed } from '@angular/core/testing';
 import {
   DELETE_MULTIPLE_COMICS_URL,
-  GET_COMICS_URL,
-  GET_UPDATES_URL,
   START_RESCAN_URL
 } from 'app/app.constants';
 import { interpolate } from 'app/app.functions';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
-import { GetComicsRequest } from 'app/library/models/net/get-comics-request';
-import { GetComicsResponse } from 'app/library/models/net/get-comics-response';
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { LibraryService } from './library.service';
+import { GET_LIBRARY_UPDATES_URL } from 'app/library/library.constants';
 
 describe('LibraryService', () => {
-  const TIMESTAMP = new Date().getTime();
+  const LAST_UPDATED_DATE = new Date();
+  const MORE_UPDATES = true;
+  const LAST_COMIC_ID = 229;
   const TIMEOUT = Math.floor(Math.random() * 3000);
   const MAXIMUM_RECORDS = Math.floor(Math.random() * 1000);
   const PAGE = 17;
@@ -70,59 +69,40 @@ describe('LibraryService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('can get comics', () => {
-    const RESPONSE = {
-      comics: COMICS,
-      lastReadDates: LAST_READ_DATES,
-      latestUpdatedDate: LATEST_UPDATED_DATE,
-      comicCount: COMIC_COUNT
-    } as GetComicsResponse;
-    service
-      .getComics(PAGE, COUNT, SORT_FIELD, ASCENDING)
-      .subscribe(response => expect(response).toEqual(RESPONSE));
-
-    const req = httpMock.expectOne(interpolate(GET_COMICS_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      page: PAGE,
-      count: COUNT,
-      sortField: SORT_FIELD,
-      ascending: ASCENDING
-    } as GetComicsRequest);
-    req.flush(RESPONSE);
-  });
-
   it('can get updates from the library', () => {
     const PENDING_IMPORTS = 7;
     const PENDING_RESCANS = 17;
     const PROCESSING_COUNT = 32;
     const RESCAN_COUNT = 66;
+    const RESPONSE: GetLibraryUpdateResponse = {
+      comics: COMICS,
+      lastComicId: LAST_COMIC_ID,
+      mostRecentUpdate: LAST_UPDATED_DATE,
+      moreUpdates: MORE_UPDATES,
+      lastReadDates: LAST_READ_DATES,
+      processingCount: PENDING_IMPORTS
+    };
 
     service
       .getUpdatesSince(
-        TIMESTAMP,
-        TIMEOUT,
+        LAST_UPDATED_DATE,
+        LAST_COMIC_ID,
         MAXIMUM_RECORDS,
         PROCESSING_COUNT,
-        RESCAN_COUNT
+        TIMEOUT
       )
-      .subscribe((response: GetLibraryUpdateResponse) => {});
+      .subscribe(response => expect(response).toEqual(RESPONSE));
 
-    const req = httpMock.expectOne(
-      interpolate(GET_UPDATES_URL, { timestamp: TIMESTAMP })
-    );
+    const req = httpMock.expectOne(interpolate(GET_LIBRARY_UPDATES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      timeout: TIMEOUT,
-      maximumResults: MAXIMUM_RECORDS,
-      lastProcessingCount: PROCESSING_COUNT,
-      lastRescanCount: RESCAN_COUNT
+      lastUpdatedDate: LAST_UPDATED_DATE.getTime(),
+      lastComicId: LAST_COMIC_ID,
+      maximumComics: MAXIMUM_RECORDS,
+      processingCount: PROCESSING_COUNT,
+      timeout: TIMEOUT
     } as GetLibraryUpdatesRequest);
-    req.flush({
-      comics: COMICS,
-      processingCount: PENDING_IMPORTS,
-      rescanCount: PENDING_RESCANS
-    } as GetLibraryUpdateResponse);
+    req.flush(RESPONSE);
   });
 
   it('can start a rescan', () => {

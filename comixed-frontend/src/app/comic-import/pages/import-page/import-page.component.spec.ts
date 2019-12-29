@@ -133,10 +133,12 @@ describe('ImportPageComponent', () => {
     beforeEach(() => {
       store.dispatch(
         new LibraryUpdatesReceived({
-          processingCount: 0,
-          lastReadDates: [],
           comics: [],
-          rescanCount: 0
+          lastComicId: null,
+          mostRecentUpdate: null,
+          moreUpdates: false,
+          lastReadDates: [],
+          processingCount: 0
         })
       );
       fixture.detectChanges();
@@ -159,10 +161,12 @@ describe('ImportPageComponent', () => {
     beforeEach(() => {
       store.dispatch(
         new LibraryUpdatesReceived({
-          processingCount: 17,
-          lastReadDates: [],
           comics: [],
-          rescanCount: 0
+          lastComicId: null,
+          mostRecentUpdate: null,
+          moreUpdates: false,
+          lastReadDates: [],
+          processingCount: 17
         })
       );
       fixture.detectChanges();

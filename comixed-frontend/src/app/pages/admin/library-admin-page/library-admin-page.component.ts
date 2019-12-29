@@ -31,8 +31,6 @@ import { LibraryAdaptor } from 'app/library';
 export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   importCountSubscription: Subscription;
   importCount = 0;
-  rescanCountSubscription: Subscription;
-  rescanCount = 0;
   langChangeSubscription: Subscription;
 
   constructor(
@@ -49,9 +47,6 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
     this.importCountSubscription = this.libraryAdaptor.processingCount$.subscribe(
       import_count => (this.importCount = import_count)
     );
-    this.rescanCountSubscription = this.libraryAdaptor.rescanCount$.subscribe(
-      rescan_count => (this.rescanCount = rescan_count)
-    );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -60,7 +55,6 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.importCountSubscription.unsubscribe();
-    this.rescanCountSubscription.unsubscribe();
   }
 
   rescanLibrary(): void {

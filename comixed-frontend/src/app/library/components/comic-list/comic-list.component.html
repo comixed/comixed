@@ -14,10 +14,7 @@
                 [sortField]='sortField'
                 [sortOrder]='sortOrder'
                 [value]='comics'
-                [totalRecords]='comicCount'
-                paginatorPosition='both'
-                [lazy]='true'
-                (onLazyLoad)='onLazyLoad($event.first)'>
+                paginatorPosition='both'>
         <ng-template let-comic
                      pTemplate='listItem'>
             <app-comic-list-item [comic]='comic'

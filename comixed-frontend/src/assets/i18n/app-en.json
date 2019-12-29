@@ -32,7 +32,7 @@
   },
   "app-component": {
     "copyright": "<b>Copyright &copy; {years}, The ComiXed Project Team</b>",
-    "library-counts": "<b>Total:</b> {comic_count} <b>Read:</b> {read_count} <b>Processing:</b> {import_count} <b>Rescan:</b> {rescan_count}"
+    "library-counts": "<b>Total:</b> {comic_count} <b>Read:</b> {read_count} <b>Processing:</b> {import_count}"
   },
   "main-page": {
     "text": {

@@ -109,27 +109,27 @@ export class MainPageComponent implements OnInit, OnDestroy {
       this.comicCount = comics.length;
       this.plural = this.comicCount !== 1;
     });
-    this.publishersSubscription = this.libraryAdaptor.publisher$.subscribe(
+    this.publishersSubscription = this.libraryAdaptor.publishers$.subscribe(
       publishers => {
         this.publishers = publishers;
         this.buildData();
       }
     );
-    this.seriesSubscription = this.libraryAdaptor.serie$.subscribe(series => {
+    this.seriesSubscription = this.libraryAdaptor.series$.subscribe(series => {
       this.series = series;
       this.buildData();
     });
-    this.charactersSubscription = this.libraryAdaptor.character$.subscribe(
+    this.charactersSubscription = this.libraryAdaptor.characters$.subscribe(
       characters => {
         this.characters = characters;
         this.buildData();
       }
     );
-    this.teamsSubscription = this.libraryAdaptor.team$.subscribe(teams => {
+    this.teamsSubscription = this.libraryAdaptor.teams$.subscribe(teams => {
       this.teams = teams;
       this.buildData();
     });
-    this.locationsSubscription = this.libraryAdaptor.location$.subscribe(
+    this.locationsSubscription = this.libraryAdaptor.locations$.subscribe(
       locations => {
         this.locations = locations;
         this.buildData();

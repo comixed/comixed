@@ -1,12 +1,12 @@
 package org.comixed.service.library;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.util.Date;
 import java.util.List;
 import org.comixed.model.library.Comic;
 import org.comixed.repositories.library.ComicRepository;
+import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -21,9 +21,15 @@ public class LibraryServiceTest {
   private static final String TEST_SORTABLE_FIELD = "coverDate";
   private static final boolean TEST_ASCENDING = true;
   private static final long TEST_COMIC_COUNT = 2019;
+  private static final String TEST_EMAIL = "reader@comixed.org";
+  private static final Date TEST_LAST_UPDATED_TIMESTAMP = new Date();
+  private static final int TEST_MAXIMUM_COMICS = 100;
+  private static final long TEST_LAST_COMIC_ID = 23579;
+  private static final long TEST_PROCESSING_COUNT = 273L;
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
+  @Mock private ProcessComicEntryRepository processComicEntryRepository;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Mock private List<Comic> comicList;
   @Mock private Date lastUpdatedDate;
@@ -31,47 +37,32 @@ public class LibraryServiceTest {
   @Mock private Page comicPage;
 
   @Test
-  public void testGetComics() {
-    Mockito.when(comicRepository.findAll(pageableArgumentCaptor.capture())).thenReturn(comicPage);
-    Mockito.when(comicPage.getContent()).thenReturn(comicList);
-
-    final List<Comic> result =
-        libraryService.getComics(TEST_PAGE, TEST_COUNT, TEST_SORTABLE_FIELD, TEST_ASCENDING);
-
-    assertSame(comicList, result);
-    assertEquals(TEST_PAGE, pageableArgumentCaptor.getValue().getPageNumber());
-    assertEquals(TEST_COUNT, pageableArgumentCaptor.getValue().getPageSize());
-
-    Mockito.verify(comicRepository, Mockito.times(1)).findAll(pageableArgumentCaptor.getValue());
-    Mockito.verify(comicPage, Mockito.times(1)).getContent();
-  }
-
-  @Test
-  public void testGetLastUpdatedDate() {
+  public void testGetComicsUpdatedSince() {
     Mockito.when(
-            comicRepository.findTopByOrderByDateLastUpdatedDesc(pageableArgumentCaptor.capture()))
+            comicRepository.getComicsUpdatedSinceDate(
+                Mockito.any(Date.class), Mockito.anyLong(), pageableArgumentCaptor.capture()))
         .thenReturn(comicList);
-    Mockito.when(comicList.get(Mockito.anyInt())).thenReturn(comic);
-    Mockito.when(comic.getDateLastUpdated()).thenReturn(lastUpdatedDate);
 
-    final Date result = libraryService.getLatestUpdatedDate();
+    List<Comic> result =
+        libraryService.getComicsUpdatedSince(
+            TEST_EMAIL, TEST_LAST_UPDATED_TIMESTAMP, TEST_MAXIMUM_COMICS, TEST_LAST_COMIC_ID);
 
-    assertSame(lastUpdatedDate, result);
+    assertNotNull(result);
+    assertSame(comicList, result);
+    assertEquals(0, pageableArgumentCaptor.getValue().getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageableArgumentCaptor.getValue().getPageSize());
 
     Mockito.verify(comicRepository, Mockito.times(1))
-        .findTopByOrderByDateLastUpdatedDesc(pageableArgumentCaptor.getValue());
-    Mockito.verify(comicList, Mockito.times(1)).get(0);
-    Mockito.verify(comic, Mockito.times(1)).getDateLastUpdated();
+        .getComicsUpdatedSinceDate(
+            TEST_LAST_UPDATED_TIMESTAMP, TEST_LAST_COMIC_ID, pageableArgumentCaptor.getValue());
   }
 
   @Test
-  public void testGetComicCount() {
-    Mockito.when(comicRepository.count()).thenReturn(TEST_COMIC_COUNT);
+  public void testGetProcessingCount() {
+    Mockito.when(processComicEntryRepository.count()).thenReturn(TEST_PROCESSING_COUNT);
 
-    final long result = libraryService.getComicCount();
+    long result = libraryService.getProcessingCount();
 
-    assertEquals(TEST_COMIC_COUNT, result);
-
-    Mockito.verify(comicRepository, Mockito.times(1)).count();
+    assertEquals(TEST_PROCESSING_COUNT, result);
   }
 }

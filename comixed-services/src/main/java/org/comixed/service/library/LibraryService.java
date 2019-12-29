@@ -21,59 +21,43 @@ package org.comixed.service.library;
 import java.util.Date;
 import java.util.List;
 import org.comixed.model.library.Comic;
+import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.library.ComicRepository;
+import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LibraryService {
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private ComicRepository comicRepository;
+  @Autowired private ProcessComicEntryRepository processComicEntryRepository;
 
-  @Transactional
-  public List<Comic> getComics(
-      final int page, final int count, final String sortField, final boolean ascending) {
+  public List<Comic> getComicsUpdatedSince(
+      String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
     this.logger.debug(
-        "Getting comics for page: page={} count={} sortField={}", page, count, sortField);
+        "Finding up to {} comics updated since {} for {}", maximumComics, latestUpdatedDate, email);
 
-    final List<Comic> result =
-        this.comicRepository
-            .findAll(
-                PageRequest.of(
-                    page, count, Sort.by(ascending ? Direction.ASC : Direction.DESC, sortField)))
-            .getContent();
-
-    this.logger.debug("Returning {} comic{}", result.size(), result.size() == 1 ? "" : "s");
-    return result;
+    return this.comicRepository.getComicsUpdatedSinceDate(
+        latestUpdatedDate,
+        lastComicId,
+        PageRequest.of(
+            0,
+            maximumComics,
+            Sort.by("dateLastUpdated").ascending().and(Sort.by("id").ascending())));
   }
 
-  public Date getLatestUpdatedDate() {
-    this.logger.debug("Getting the latest updated date in the library");
-
-    final List<Comic> comics =
-        this.comicRepository.findTopByOrderByDateLastUpdatedDesc(PageRequest.of(1, 1));
-
-    final Date result = comics.isEmpty() ? null : comics.get(0).getDateLastUpdated();
-
-    this.logger.debug("Latest updated date: {}", result);
-
-    return result;
+  public List<LastReadDate> getLastReadDatesSince(String email, Date lastReadDate) {
+    return null;
   }
 
-  public long getComicCount() {
-    this.logger.debug("Getting the library comic count");
-
-    final long result = this.comicRepository.count();
-
-    this.logger.debug("There are {} comic{} in the library", result, result == 1 ? "" : "s");
-
-    return result;
+  public long getProcessingCount() {
+    this.logger.debug("Getting processing count");
+    return this.processComicEntryRepository.count();
   }
 }

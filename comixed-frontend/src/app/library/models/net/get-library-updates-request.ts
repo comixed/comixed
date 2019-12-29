@@ -17,8 +17,9 @@
  */
 
 export interface GetLibraryUpdatesRequest {
+  lastUpdatedDate: number;
+  lastComicId: number;
+  maximumComics: number;
+  processingCount: number;
   timeout: number;
-  maximumResults: number;
-  lastProcessingCount: number;
-  lastRescanCount: number;
 }

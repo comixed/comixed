@@ -80,6 +80,8 @@ public class ProcessComicTask extends AbstractWorkerTask {
       throw new WorkerTaskException("failed to load comic: " + comic.getFilename(), error);
     }
 
+    this.logger.debug("Sorting pages");
+    comic.sortPages();
     this.logger.debug("Setting comic file details");
     final ComicFileDetails fileDetails = new ComicFileDetails();
 

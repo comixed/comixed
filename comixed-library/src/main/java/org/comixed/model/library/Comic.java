@@ -52,91 +52,19 @@ import org.springframework.stereotype.Component;
 @Table(name = "comics")
 @NamedQueries({
   @NamedQuery(
+      name = "Comic.getById",
+      query = "SELECT c FROM Comic c JOIN FETCH c.pages WHERE c.id = :id"),
+  @NamedQuery(
       name = "Comic.findAllUnreadByUser",
       query =
           "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)"),
-  @NamedQuery(name = "Comic.getPublisherNames", query = "SELECT DISTINCT c.publisher FROM Comic c"),
   @NamedQuery(
-      name = "Comic.getComicCountForPublisher",
-      query = "SELECT COUNT(*) FROM Comic c WHERE c.publisher = :name"),
-  @NamedQuery(name = "Comic.getSeriesNames", query = "SELECT DISTINCT c.series FROM Comic c"),
-  @NamedQuery(
-      name = "Comic.getComicCountForSeries",
-      query = "SELECT COUNT(*) FROM Comic c WHERE c.series = :name"),
-  @NamedQuery(
-      name = "Comic.getCharacterNames",
-      query = "SELECT DISTINCT n FROM Comic c JOIN c.characters n"),
-  @NamedQuery(
-      name = "Comic.getComicCountForCharacter",
-      query = "SELECT COUNT(*) FROM Comic c JOIN c.characters n WHERE n = :name"),
-  @NamedQuery(name = "Comic.getTeamNames", query = "SELECT DISTINCT t FROM Comic c JOIN c.teams t"),
-  @NamedQuery(
-      name = "Comic.getComicCountForTeam",
-      query = "SELECT COUNT(*) FROM Comic c JOIN c.teams t WHERE t = :name"),
-  @NamedQuery(
-      name = "Comic.getLocationNames",
-      query = "SELECT DISTINCT l FROM Comic c JOIN c.locations l"),
-  @NamedQuery(
-      name = "Comic.getComicCountForLocation",
-      query = "SELECT COUNT(*) FROM Comic c JOIN c.locations l WHERE l = :name"),
-  @NamedQuery(
-      name = "Comic.getStoryNames",
-      query = "SELECT DISTINCT s FROM Comic c JOIN c.storyArcs s"),
-  @NamedQuery(
-      name = "Comic.getComicCountForStory",
-      query = "SELECT COUNT(*) FROM Comic c JOIN c.storyArcs s WHERE s = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForPublisher",
-      query = "SELECT c FROM Comic c WHERE c.publisher = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForSeries",
-      query = "SELECT c FROM Comic c WHERE c.series = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForCharacter",
-      query = "SELECT c FROM Comic c JOIN c.characters r WHERE r = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForTeam",
-      query = "SELECT c FROM Comic c JOIN c.teams t WHERE t = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForLocation",
-      query = "SELECT c FROM Comic c JOIN c.locations l WHERE l = :name"),
-  @NamedQuery(
-      name = "Comic.getComicPageForStory",
-      query = "SELECT c FROM Comic c JOIN c.storyArcs s WHERE s = :name"),
+      name = "Comic.getComicsUpdatedSinceDate",
+      query =
+          "SELECT c FROM Comic c WHERE c.dateLastUpdated >= :latestUpdatedDate AND c.id > :lastComicId")
 })
 public class Comic {
   @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-  @Enumerated(EnumType.STRING)
-  @JsonProperty("archiveType")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  ArchiveType archiveType;
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "comic_story_arcs", joinColumns = @JoinColumn(name = "comic_id"))
-  @Column(name = "story_name")
-  @JsonProperty("storyArcs")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  List<String> storyArcs = new ArrayList<>();
-
-  @OneToMany(
-      mappedBy = "comic",
-      cascade = CascadeType.ALL,
-      fetch = FetchType.EAGER,
-      orphanRemoval = true)
-  @OrderColumn(name = "page_number")
-  @JsonProperty("pages")
-  @JsonView({
-    ComicList.class,
-  })
-  List<Page> pages = new ArrayList<>();
-
-  @Transient @JsonIgnore File backingFile;
-
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "comic", orphanRemoval = true)
-  @JsonView({ComicList.class, ComicDetails.class})
-  private ComicFileDetails fileDetails;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -150,35 +78,42 @@ public class Comic {
   })
   private Long id;
 
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("archiveType")
+  @JsonView({ComicList.class, DatabaseBackup.class})
+  ArchiveType archiveType;
+
+  @ManyToOne
+  @JoinColumn(name = "scan_type_id")
+  @JsonProperty("scanType")
+  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  private ScanType scanType;
+
+  @ManyToOne
+  @JoinColumn(name = "format_id")
+  @JsonProperty("format")
+  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  private ComicFormat format;
+
   @Column(name = "filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")
   @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
   private String filename;
 
-  @Column(name = "comic_vine_id", length = 16)
-  @JsonProperty("comicVineId")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  private String comicVineId;
+  @Transient @JsonIgnore File backingFile;
 
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "comic", orphanRemoval = true)
+  @JsonView({ComicList.class, ComicDetails.class})
+  private ComicFileDetails fileDetails;
+
+  @Formula(value = "(SELECT COUNT(*) FROM pages p WHERE p.comic_id = id)")
+  @JsonIgnore
   @Transient
-  @JsonProperty("comicVineURL")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  private String comicVineURL;
+  private Integer calculatedPageCount;
 
-  @Column(name = "publisher", length = 128)
-  @JsonProperty("publisher")
-  @JsonView({ComicList.class, DuplicatePageList.class, DatabaseBackup.class})
-  private String publisher;
-
-  @Column(name = "imprint")
-  @JsonProperty("imprint")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  private String imprint;
-
-  @Column(name = "series", length = 128)
-  @JsonProperty("series")
-  @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
-  private String series;
+  @Formula(value = "(SELECT COUNT(*) FROM pages p where p.comic_id = id AND p.deleted = true)")
+  @JsonIgnore
+  private Integer calculatedDeletedPageCount;
 
   @Column(name = "added_date", updatable = false, nullable = false)
   @JsonProperty("addedDate")
@@ -201,11 +136,15 @@ public class Comic {
   @Temporal(TemporalType.TIMESTAMP)
   private Date dateLastUpdated = new Date();
 
-  @Column(name = "cover_date", nullable = true)
-  @Temporal(TemporalType.DATE)
-  @JsonProperty("coverDate")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  private Date coverDate;
+  @Column(name = "publisher", length = 128)
+  @JsonProperty("publisher")
+  @JsonView({ComicList.class, DuplicatePageList.class, DatabaseBackup.class})
+  private String publisher;
+
+  @Column(name = "series", length = 128)
+  @JsonProperty("series")
+  @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
+  private String series;
 
   @Column(name = "volume", length = 4)
   @JsonProperty("volume")
@@ -217,6 +156,22 @@ public class Comic {
   @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
   private String issueNumber;
 
+  @Column(name = "imprint")
+  @JsonProperty("imprint")
+  @JsonView({ComicList.class, DatabaseBackup.class})
+  private String imprint;
+
+  @Column(name = "comic_vine_id", length = 16)
+  @JsonProperty("comicVineId")
+  @JsonView({ComicList.class, DatabaseBackup.class})
+  private String comicVineId;
+
+  @Column(name = "cover_date", nullable = true)
+  @Temporal(TemporalType.DATE)
+  @JsonProperty("coverDate")
+  @JsonView({ComicList.class, DatabaseBackup.class})
+  private Date coverDate;
+
   @Column(name = "title", length = 128)
   @JsonProperty("title")
   @JsonView({ComicList.class, DatabaseBackup.class})
@@ -226,32 +181,6 @@ public class Comic {
   @JsonProperty("sortName")
   @JsonView({ComicList.class, DatabaseBackup.class})
   private String sortName;
-
-  @Column(name = "description")
-  @Lob
-  @JsonProperty("description")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  private String description;
-
-  @Column(name = "notes")
-  @Lob
-  @JsonProperty("notes")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  private String notes;
-
-  @Column(name = "summary")
-  @Lob
-  @JsonProperty("summary")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  private String summary;
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "comic_teams", joinColumns = @JoinColumn(name = "comic_id"))
-  @Column(name = "team_name")
-  @JsonProperty("teams")
-  @JsonView({ComicList.class, DatabaseBackup.class})
-  private List<String> teams = new ArrayList<>();
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
@@ -263,11 +192,27 @@ public class Comic {
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "comic_teams", joinColumns = @JoinColumn(name = "comic_id"))
+  @Column(name = "team_name")
+  @JsonProperty("teams")
+  @JsonView({ComicList.class, DatabaseBackup.class})
+  private List<String> teams = new ArrayList<>();
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
   @CollectionTable(name = "comic_locations", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "location_name")
   @JsonProperty("locations")
   @JsonView({ComicList.class, DatabaseBackup.class})
   private List<String> locations = new ArrayList<>();
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "comic_story_arcs", joinColumns = @JoinColumn(name = "comic_id"))
+  @Column(name = "story_name")
+  @JsonProperty("storyArcs")
+  @JsonView({ComicList.class, DatabaseBackup.class})
+  List<String> storyArcs = new ArrayList<>();
 
   @OneToMany(
       mappedBy = "comic",
@@ -278,25 +223,6 @@ public class Comic {
   @JsonView({ComicList.class, DatabaseBackup.class})
   private Set<Credit> credits = new HashSet<>();
 
-  @ManyToOne
-  @JoinColumn(name = "scan_type_id")
-  @JsonProperty("scanType")
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
-  private ScanType scanType;
-
-  @ManyToOne
-  @JoinColumn(name = "format_id")
-  @JsonProperty("format")
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
-  private ComicFormat format;
-
-  @Formula(
-      value =
-          "(SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d))")
-  @JsonProperty("blockedPageCount")
-  @JsonView({ComicList.class})
-  private int blockedPageCount;
-
   @Transient
   @JsonProperty("nextIssueId")
   @JsonView({ComicDetails.class})
@@ -306,6 +232,44 @@ public class Comic {
   @JsonProperty("previousIssueId")
   @JsonView({ComicDetails.class})
   private Long previousIssueId;
+
+  @Formula(
+      value =
+          "(SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d))")
+  @JsonProperty("blockedPageCount")
+  @JsonView({ComicList.class})
+  private int blockedPageCount;
+
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "page_number")
+  @JsonProperty("pages")
+  @JsonView({
+    ComicDetails.class,
+  })
+  List<Page> pages = new ArrayList<>();
+
+  @Transient
+  @JsonProperty("comicVineURL")
+  @JsonView({ComicDetails.class, DatabaseBackup.class})
+  private String comicVineURL;
+
+  @Column(name = "description")
+  @Lob
+  @JsonProperty("description")
+  @JsonView({ComicDetails.class, DatabaseBackup.class})
+  private String description;
+
+  @Column(name = "notes")
+  @Lob
+  @JsonProperty("notes")
+  @JsonView({ComicDetails.class, DatabaseBackup.class})
+  private String notes;
+
+  @Column(name = "summary")
+  @Lob
+  @JsonProperty("summary")
+  @JsonView({ComicDetails.class, DatabaseBackup.class})
+  private String summary;
 
   public Date getDateLastUpdated() {
     return dateLastUpdated;
@@ -360,6 +324,7 @@ public class Comic {
   public void addPage(int index, Page page) {
     this.logger.debug("Adding offset: index=" + index + " hash=" + page.getHash());
     page.setComic(this);
+    page.setPageNumber(index);
     this.pages.add(index, page);
   }
 
@@ -622,15 +587,7 @@ public class Comic {
   @JsonProperty("deletedPageCount")
   @JsonView(ComicList.class)
   public int getDeletedPageCount() {
-    int result = 0;
-
-    for (Page page : this.pages) {
-      if (page.isMarkedDeleted()) {
-        result++;
-      }
-    }
-
-    return result;
+    return this.calculatedDeletedPageCount;
   }
 
   /**
@@ -811,10 +768,13 @@ public class Comic {
    *
    * @return the offset count
    */
+  @Transient
   @JsonProperty("pageCount")
   @JsonView(ComicList.class)
   public int getPageCount() {
-    return this.pages.size();
+    return this.pages.isEmpty()
+        ? (this.calculatedPageCount != null ? this.calculatedPageCount.intValue() : 0)
+        : this.pages.size();
   }
 
   /**
@@ -1078,6 +1038,9 @@ public class Comic {
             return p1.getFilename().compareTo(p2.getFilename());
           }
         });
+    for (int index = 0; index < this.pages.size(); index++) {
+      this.pages.get(index).setPageNumber(index);
+    }
   }
 
   public Long getNextIssueId() {

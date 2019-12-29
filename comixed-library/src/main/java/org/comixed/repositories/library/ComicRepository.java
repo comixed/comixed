@@ -69,44 +69,10 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   List<Comic> findTopByOrderByDateLastUpdatedDesc(Pageable pageable);
 
-  /**
-   * Returns the list of all comic locations.
-   *
-   * @return the locations
-   */
-  List<String> getLocationNames();
+  List<Comic> getComicsUpdatedSinceDate(
+      @Param("latestUpdatedDate") Date latestUpdatedDate,
+      @Param("lastComicId") long lastComicId,
+      Pageable pageable);
 
-  int getComicCountForLocation(@Param("name") String name);
-
-  List<String> getPublisherNames();
-
-  int getComicCountForPublisher(@Param("name") String name);
-
-  List<String> getSeriesNames();
-
-  int getComicCountForSeries(@Param("name") String name);
-
-  List<String> getCharacterNames();
-
-  int getComicCountForCharacter(@Param("name") String name);
-
-  List<String> getTeamNames();
-
-  int getComicCountForTeam(@Param("name") String name);
-
-  List<String> getStoryNames();
-
-  int getComicCountForStory(@Param("name") String name);
-
-  List<Comic> getComicPageForPublisher(@Param("name") String name, Pageable page);
-
-  List<Comic> getComicPageForSeries(@Param("name") String name, Pageable page);
-
-  List<Comic> getComicPageForCharacter(@Param("name") String name, Pageable page);
-
-  List<Comic> getComicPageForTeam(@Param("name") String name, Pageable page);
-
-  List<Comic> getComicPageForLocation(@Param("name") String name, Pageable page);
-
-  List<Comic> getComicPageForStory(@Param("name") String name, Pageable page);
+  Comic getById(@Param("id") long id);
 }

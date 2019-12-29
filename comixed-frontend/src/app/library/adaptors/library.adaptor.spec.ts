@@ -25,9 +25,6 @@ import {
 } from 'app/library/reducers/library.reducer';
 import * as LibraryActions from '../actions/library.actions';
 import {
-  LibraryComicsReceived,
-  LibraryGetComics,
-  LibraryGetComicsFailed,
   LibraryGetUpdates,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
@@ -58,6 +55,10 @@ describe('LibraryAdaptor', () => {
   const SORT_FIELD = 'series';
   const ASCENDING = false;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
+  const LAST_COMIC_ID = 467;
+  const PROCESSING_COUNT = 222;
+  const MOST_RECENT_UPDATE = new Date();
+  const MORE_UPDATES = false;
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
   const LATEST_UPDATED_DATE = new Date();
   const COMIC_COUNT = 3072;
@@ -92,95 +93,29 @@ describe('LibraryAdaptor', () => {
     expect(adaptor).toBeTruthy();
   });
 
-  describe('getting comics', () => {
-    beforeEach(() => {
-      adaptor.getComics(PAGE, COUNT, SORT_FIELD, ASCENDING);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryGetComics({
-          page: PAGE,
-          count: COUNT,
-          sortField: SORT_FIELD,
-          ascending: ASCENDING
-        })
-      );
-    });
-
-    it('provides updates', () => {
-      adaptor.fetchingUpdate$.subscribe(response =>
-        expect(response).toBeTruthy()
-      );
-    });
-
-    describe('success', () => {
-      beforeEach(() => {
-        store.dispatch(
-          new LibraryComicsReceived({
-            comics: COMICS,
-            lastReadDates: LAST_READ_DATES,
-            lastUpdatedDate: LATEST_UPDATED_DATE,
-            comicCount: COMIC_COUNT
-          })
-        );
-      });
-
-      it('provides updates', () => {
-        adaptor.fetchingUpdate$.subscribe(response =>
-          expect(response).toBeFalsy()
-        );
-      });
-
-      it('updates the comics', () => {
-        adaptor.comic$.subscribe(response => expect(response).toEqual(COMICS));
-      });
-
-      it('updates the last read dates', () => {
-        adaptor.lastReadDate$.subscribe(response =>
-          expect(response).toEqual(LAST_READ_DATES)
-        );
-      });
-
-      it('updates the last updated date', () => {
-        adaptor.lastUpdatedDate$.subscribe(response =>
-          expect(response).toEqual(LATEST_UPDATED_DATE)
-        );
-      });
-
-      it('updates the comic count', () => {
-        adaptor.comicCount$.subscribe(response =>
-          expect(response).toEqual(COMIC_COUNT)
-        );
-      });
-    });
-
-    describe('failure', () => {
-      beforeEach(() => {
-        store.dispatch(new LibraryGetComicsFailed());
-      });
-
-      it('provides updates', () => {
-        adaptor.fetchingUpdate$.subscribe(response =>
-          expect(response).toBeFalsy()
-        );
-      });
-    });
-  });
-
   describe('getting library updates', () => {
     beforeEach(() => {
+      store.dispatch(
+        new LibraryUpdatesReceived({
+          lastComicId: LAST_COMIC_ID,
+          mostRecentUpdate: MOST_RECENT_UPDATE,
+          moreUpdates: MORE_UPDATES,
+          processingCount: PROCESSING_COUNT,
+          comics: [],
+          lastReadDates: []
+        })
+      );
       adaptor.getLibraryUpdates();
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new LibraryGetUpdates({
-          timestamp: 0,
+          lastUpdateDate: MOST_RECENT_UPDATE,
           timeout: 60,
-          maximumResults: 100,
-          lastProcessingCount: 0,
-          lastRescanCount: 0
+          maximumComics: 100,
+          processingCount: PROCESSING_COUNT,
+          lastComicId: LAST_COMIC_ID
         })
       );
     });
@@ -199,15 +134,16 @@ describe('LibraryAdaptor', () => {
       const LOCATIONS = extractField(COMICS, 'locations');
       const STORIES = extractField(COMICS, 'storyArcs');
       const PENDING_RESCANS = 17;
-      const PENDING_IMPORTS = 29;
 
       beforeEach(() => {
         store.dispatch(
           new LibraryUpdatesReceived({
             comics: COMICS,
-            rescanCount: PENDING_RESCANS,
+            lastComicId: LAST_COMIC_ID,
+            mostRecentUpdate: MOST_RECENT_UPDATE,
+            moreUpdates: MORE_UPDATES,
             lastReadDates: LAST_READ_DATES,
-            processingCount: PENDING_IMPORTS
+            processingCount: PROCESSING_COUNT
           })
         );
       });
@@ -228,40 +164,34 @@ describe('LibraryAdaptor', () => {
         );
       });
 
-      it('updates the pending rescans count', () => {
-        adaptor.rescanCount$.subscribe(response =>
-          expect(response).toEqual(PENDING_RESCANS)
-        );
-      });
-
-      it('updates the pending imports count', () => {
+      it('updates the processing count', () => {
         adaptor.processingCount$.subscribe(response =>
-          expect(response).toEqual(PENDING_IMPORTS)
+          expect(response).toEqual(PROCESSING_COUNT)
         );
       });
 
       it('provides updates on publishers', () => {
-        adaptor.publisher$.subscribe(result =>
+        adaptor.publishers$.subscribe(result =>
           expect(result).toEqual(PUBLISHERS)
         );
       });
 
       it('provides updates on series', () => {
-        adaptor.serie$.subscribe(result => expect(result).toEqual(SERIES));
+        adaptor.series$.subscribe(result => expect(result).toEqual(SERIES));
       });
 
       it('provides updates on characters', () => {
-        adaptor.character$.subscribe(result =>
+        adaptor.characters$.subscribe(result =>
           expect(result).toEqual(CHARACTERS)
         );
       });
 
       it('provides updates on teams', () => {
-        adaptor.team$.subscribe(result => expect(result).toEqual(TEAMS));
+        adaptor.teams$.subscribe(result => expect(result).toEqual(TEAMS));
       });
 
       it('provides updates on locations', () => {
-        adaptor.location$.subscribe(result =>
+        adaptor.locations$.subscribe(result =>
           expect(result).toEqual(LOCATIONS)
         );
       });
@@ -282,9 +212,11 @@ describe('LibraryAdaptor', () => {
         store.dispatch(
           new LibraryUpdatesReceived({
             comics: [UPDATED_COMIC],
+            lastComicId: LAST_COMIC_ID,
+            moreUpdates: MORE_UPDATES,
+            mostRecentUpdate: MOST_RECENT_UPDATE,
             lastReadDates: LAST_READ_DATES,
-            processingCount: 7,
-            rescanCount: 17
+            processingCount: 7
           })
         );
       });
@@ -323,8 +255,10 @@ describe('LibraryAdaptor', () => {
       store.dispatch(
         new LibraryUpdatesReceived({
           comics: COMICS,
+          lastComicId: LAST_COMIC_ID,
+          moreUpdates: MORE_UPDATES,
+          mostRecentUpdate: MOST_RECENT_UPDATE,
           lastReadDates: [],
-          rescanCount: 0,
           processingCount: 0
         })
       );

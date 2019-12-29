@@ -22,9 +22,6 @@ import { LastReadDate } from 'app/library/models/last-read-date';
 
 export enum LibraryActionTypes {
   Reset = '[LIBRARY] Reset the library',
-  GetComics = '[LIBRARY] Get one page of comics',
-  ComicsReceived = '[LIBRARY] Received one page of comics',
-  GetComicsFailed = '[LIBRARY] Failed to get one page of comics',
   GetUpdates = '[LIBRARY] Get updates to the library',
   UpdatesReceived = '[LIBRARY] Library updates received',
   GetUpdatesFailed = '[LIBRARY] Failed to get updates',
@@ -42,48 +39,16 @@ export class LibraryReset implements Action {
   constructor() {}
 }
 
-export class LibraryGetComics implements Action {
-  readonly type = LibraryActionTypes.GetComics;
-
-  constructor(
-    public payload: {
-      page: number;
-      count: number;
-      sortField: string;
-      ascending: boolean;
-    }
-  ) {}
-}
-
-export class LibraryComicsReceived implements Action {
-  readonly type = LibraryActionTypes.ComicsReceived;
-
-  constructor(
-    public payload: {
-      comics: Comic[];
-      lastReadDates: LastReadDate[];
-      lastUpdatedDate: Date;
-      comicCount: number;
-    }
-  ) {}
-}
-
-export class LibraryGetComicsFailed implements Action {
-  readonly type = LibraryActionTypes.GetComicsFailed;
-
-  constructor() {}
-}
-
 export class LibraryGetUpdates implements Action {
   readonly type = LibraryActionTypes.GetUpdates;
 
   constructor(
     public payload: {
-      timestamp: number;
+      lastUpdateDate: Date;
       timeout: number;
-      maximumResults: number;
-      lastProcessingCount: number;
-      lastRescanCount: number;
+      maximumComics: number;
+      processingCount: number;
+      lastComicId: number;
     }
   ) {}
 }
@@ -94,9 +59,11 @@ export class LibraryUpdatesReceived implements Action {
   constructor(
     public payload: {
       comics: Comic[];
+      lastComicId: number;
+      mostRecentUpdate: Date;
+      moreUpdates: boolean;
       lastReadDates: LastReadDate[];
       processingCount: number;
-      rescanCount: number;
     }
   ) {}
 }
@@ -145,9 +112,6 @@ export class LibraryDeleteMultipleComicsFailed implements Action {
 
 export type LibraryActions =
   | LibraryReset
-  | LibraryGetComics
-  | LibraryComicsReceived
-  | LibraryGetComicsFailed
   | LibraryGetUpdates
   | LibraryUpdatesReceived
   | LibraryGetUpdatesFailed

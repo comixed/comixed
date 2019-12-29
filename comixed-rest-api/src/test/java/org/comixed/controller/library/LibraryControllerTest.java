@@ -26,11 +26,10 @@ import java.util.List;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
-import org.comixed.net.GetComicsRequest;
-import org.comixed.net.GetComicsResponse;
+import org.comixed.net.GetUpdatedComicsRequest;
+import org.comixed.net.GetUpdatedComicsResponse;
 import org.comixed.service.library.ComicService;
 import org.comixed.service.library.LibraryService;
-import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,51 +40,152 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LibraryControllerTest {
-  private static final int TEST_PAGE = 29;
-  private static final int TEST_COUNT = 50;
-  private static final String TEST_SORT_FIELD = "sortableIssueNumber";
   private static final Date TEST_LATEST_UPDATED_DATE = new Date();
-  private static final long TEST_COMIC_COUNT = 71765L;
-  private static final boolean TEST_ASCENDING = false;
   private static final String TEST_USER_EMAIL = "reader@localhost";
+  private static final int TEST_MAXIMUM_COMICS = 1000;
+  private static final Long TEST_MOST_RECENT_COMIC_ID = 71765L;
+  private static final long TEST_PROCESSING_COUNT = 797L;
+  private static final Long TEST_TIMEOUT = 1L;
+  private static final Date TEST_LAST_UPDATED_DATE = new Date();
 
   @InjectMocks private LibraryController libraryController;
   @Mock private LibraryService libraryService;
   @Mock private UserService userService;
   @Mock private ComicService comicService;
   @Mock private List<Comic> comicList;
+  @Mock private Comic comic;
   @Mock private List<LastReadDate> lastReadList;
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
 
   @Test
-  public void testGetComics() throws ComiXedUserException {
+  public void testGetUpdatedComics() {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
-            libraryService.getComics(
-                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
+            libraryService.getComicsUpdatedSince(
+                Mockito.anyString(), Mockito.any(Date.class), Mockito.anyInt(), Mockito.anyLong()))
         .thenReturn(comicList);
-    Mockito.when(comicService.getLastReadDates(Mockito.anyList(), Mockito.any()))
+    Mockito.when(comicList.isEmpty()).thenReturn(false);
+    Mockito.when(comicList.size()).thenReturn(TEST_MAXIMUM_COMICS);
+    Mockito.when(comicList.get(Mockito.anyInt())).thenReturn(comic);
+    Mockito.when(comic.getId()).thenReturn(TEST_MOST_RECENT_COMIC_ID);
+    Mockito.when(comic.getDateLastUpdated()).thenReturn(TEST_LAST_UPDATED_DATE);
+    Mockito.when(libraryService.getLastReadDatesSince(Mockito.anyString(), Mockito.any(Date.class)))
         .thenReturn(lastReadList);
-    Mockito.when(libraryService.getLatestUpdatedDate()).thenReturn(TEST_LATEST_UPDATED_DATE);
-    Mockito.when(libraryService.getComicCount()).thenReturn(TEST_COMIC_COUNT);
+    Mockito.when(libraryService.getProcessingCount()).thenReturn(TEST_PROCESSING_COUNT);
 
-    final GetComicsResponse result =
-        libraryController.getComics(
+    GetUpdatedComicsResponse result =
+        libraryController.getUpdatedComics(
             principal,
-            new GetComicsRequest(TEST_PAGE, TEST_COUNT, TEST_SORT_FIELD, TEST_ASCENDING));
+            new GetUpdatedComicsRequest(
+                TEST_LATEST_UPDATED_DATE.getTime(),
+                TEST_MAXIMUM_COMICS,
+                TEST_MOST_RECENT_COMIC_ID,
+                TEST_PROCESSING_COUNT,
+                TEST_TIMEOUT));
 
     assertNotNull(result);
     assertSame(comicList, result.getComics());
+    assertEquals(TEST_MOST_RECENT_COMIC_ID, result.getLastComicId());
+    assertEquals(TEST_LAST_UPDATED_DATE, result.getMostRecentUpdate());
     assertSame(lastReadList, result.getLastReadDates());
-    assertEquals(TEST_LATEST_UPDATED_DATE, result.getLatestUpdatedDate());
-    assertEquals(TEST_COMIC_COUNT, result.getComicCount());
+    assertFalse(result.hasMoreUpdates());
+    assertEquals(TEST_PROCESSING_COUNT, result.getProcessingCount());
 
     Mockito.verify(libraryService, Mockito.times(1))
-        .getComics(TEST_PAGE, TEST_COUNT, TEST_SORT_FIELD, TEST_ASCENDING);
-    Mockito.verify(comicService, Mockito.times(1)).getLastReadDates(comicList, user);
-    Mockito.verify(libraryService, Mockito.times(1)).getLatestUpdatedDate();
-    Mockito.verify(libraryService, Mockito.times(1)).getComicCount();
+        .getComicsUpdatedSince(
+            TEST_USER_EMAIL,
+            TEST_LATEST_UPDATED_DATE,
+            TEST_MAXIMUM_COMICS + 1,
+            TEST_MOST_RECENT_COMIC_ID);
+    Mockito.verify(libraryService, Mockito.times(1))
+        .getLastReadDatesSince(TEST_USER_EMAIL, TEST_LATEST_UPDATED_DATE);
+  }
+
+  @Test
+  public void testGetUpdatedComicsMoreRemaining() {
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
+    Mockito.when(
+            libraryService.getComicsUpdatedSince(
+                Mockito.anyString(), Mockito.any(Date.class), Mockito.anyInt(), Mockito.anyLong()))
+        .thenReturn(comicList);
+    Mockito.when(comicList.isEmpty()).thenReturn(false);
+    Mockito.when(comicList.size()).thenReturn(TEST_MAXIMUM_COMICS + 1);
+    Mockito.when(comicList.remove(Mockito.anyInt())).thenReturn(comic);
+    Mockito.when(comicList.get(Mockito.anyInt())).thenReturn(comic);
+    Mockito.when(comic.getId()).thenReturn(TEST_MOST_RECENT_COMIC_ID);
+    Mockito.when(comic.getDateLastUpdated()).thenReturn(TEST_LAST_UPDATED_DATE);
+    Mockito.when(libraryService.getLastReadDatesSince(Mockito.anyString(), Mockito.any(Date.class)))
+        .thenReturn(lastReadList);
+    Mockito.when(libraryService.getProcessingCount()).thenReturn(TEST_PROCESSING_COUNT);
+
+    GetUpdatedComicsResponse result =
+        libraryController.getUpdatedComics(
+            principal,
+            new GetUpdatedComicsRequest(
+                TEST_LATEST_UPDATED_DATE.getTime(),
+                TEST_MAXIMUM_COMICS,
+                TEST_MOST_RECENT_COMIC_ID,
+                TEST_PROCESSING_COUNT,
+                TEST_TIMEOUT));
+
+    assertNotNull(result);
+    assertSame(comicList, result.getComics());
+    assertEquals(TEST_MOST_RECENT_COMIC_ID, result.getLastComicId());
+    assertEquals(TEST_LAST_UPDATED_DATE, result.getMostRecentUpdate());
+    assertSame(lastReadList, result.getLastReadDates());
+    assertTrue(result.hasMoreUpdates());
+    assertEquals(TEST_PROCESSING_COUNT, result.getProcessingCount());
+
+    Mockito.verify(libraryService, Mockito.times(1))
+        .getComicsUpdatedSince(
+            TEST_USER_EMAIL,
+            TEST_LATEST_UPDATED_DATE,
+            TEST_MAXIMUM_COMICS + 1,
+            TEST_MOST_RECENT_COMIC_ID);
+    Mockito.verify(comicList, Mockito.times(1)).remove(TEST_MAXIMUM_COMICS);
+    Mockito.verify(libraryService, Mockito.times(1))
+        .getLastReadDatesSince(TEST_USER_EMAIL, TEST_LATEST_UPDATED_DATE);
+  }
+
+  @Test
+  public void testGetUpdatedComicsNoResult() {
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
+    Mockito.when(
+            libraryService.getComicsUpdatedSince(
+                Mockito.anyString(), Mockito.any(Date.class), Mockito.anyInt(), Mockito.anyLong()))
+        .thenReturn(comicList);
+    Mockito.when(comicList.isEmpty()).thenReturn(true);
+    Mockito.when(comicList.size()).thenReturn(0);
+    Mockito.when(libraryService.getLastReadDatesSince(Mockito.anyString(), Mockito.any(Date.class)))
+        .thenReturn(lastReadList);
+    Mockito.when(libraryService.getProcessingCount()).thenReturn(TEST_PROCESSING_COUNT);
+
+    GetUpdatedComicsResponse result =
+        libraryController.getUpdatedComics(
+            principal,
+            new GetUpdatedComicsRequest(
+                TEST_LATEST_UPDATED_DATE.getTime(),
+                TEST_MAXIMUM_COMICS,
+                TEST_MOST_RECENT_COMIC_ID,
+                TEST_PROCESSING_COUNT,
+                TEST_TIMEOUT));
+
+    assertNotNull(result);
+    assertSame(comicList, result.getComics());
+    assertNull(result.getLastComicId());
+    assertNull(result.getMostRecentUpdate());
+    assertSame(lastReadList, result.getLastReadDates());
+    assertFalse(result.hasMoreUpdates());
+    assertEquals(TEST_PROCESSING_COUNT, result.getProcessingCount());
+
+    Mockito.verify(libraryService, Mockito.atLeast(1))
+        .getComicsUpdatedSince(
+            TEST_USER_EMAIL,
+            TEST_LATEST_UPDATED_DATE,
+            TEST_MAXIMUM_COMICS + 1,
+            TEST_MOST_RECENT_COMIC_ID);
+    Mockito.verify(libraryService, Mockito.times(1))
+        .getLastReadDatesSince(TEST_USER_EMAIL, TEST_LATEST_UPDATED_DATE);
   }
 }

@@ -43,7 +43,6 @@ export class AppComponent implements OnInit {
   showLogin = false;
   comicCount = 0;
   processingCount = 0;
-  rescanCount = 0;
   fetchingUpdateSubscription: Subscription;
   breadcrumbs = [];
   home = {
@@ -92,9 +91,6 @@ export class AppComponent implements OnInit {
     );
     this.libraryAdaptor.processingCount$.subscribe(
       imports => (this.processingCount = imports)
-    );
-    this.libraryAdaptor.rescanCount$.subscribe(
-      rescans => (this.rescanCount = rescans)
     );
     this.breadcrumbsAdaptor.entries$.subscribe(
       entries => (this.breadcrumbs = entries)

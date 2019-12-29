@@ -21,7 +21,9 @@ import { LastReadDate } from 'app/library/models/last-read-date';
 
 export interface GetLibraryUpdateResponse {
   comics: Comic[];
+  lastComicId: number;
+  mostRecentUpdate: Date;
+  moreUpdates: boolean;
   lastReadDates: LastReadDate[];
   processingCount: number;
-  rescanCount: number;
 }
