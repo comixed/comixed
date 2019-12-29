@@ -23,6 +23,7 @@ import java.util.List;
 import org.comixed.model.library.Comic;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -69,10 +70,17 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   List<Comic> findTopByOrderByDateLastUpdatedDesc(Pageable pageable);
 
-  List<Comic> getComicsUpdatedSinceDate(
-      @Param("latestUpdatedDate") Date latestUpdatedDate,
-      @Param("lastComicId") long lastComicId,
-      Pageable pageable);
+  /**
+   * Returns comics updated on or since the specified latestUpdatedDate.
+   *
+   * @param latestUpdatedDate the latest updated latestUpdatedDate
+   * @param paging the paging parameters
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM Comic c WHERE c.dateLastUpdated >= :latestUpdatedDate ORDER BY c.dateLastUpdated ASC")
+  List<Comic> getLibraryUpdates(
+      @Param("latestUpdatedDate") Date latestUpdatedDate, final Pageable paging);
 
   Comic getById(@Param("id") long id);
 }
