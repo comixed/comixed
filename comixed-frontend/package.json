@@ -44,6 +44,7 @@
     "ngx-logger": "^4.0.7",
     "ngx-translate-messageformat-compiler": "^4.5.0",
     "ngx-translate-multi-http-loader": "^3.0.0",
+    "node-sass": "^4.13.0",
     "popper.js": "1.14.4",
     "primeflex": "^1.0.0-rc.1",
     "primeicons": "^1.0.0",
