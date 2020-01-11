@@ -26,20 +26,23 @@
                 type='button'
                 class='cx-toolbar-button ui-button-secondary'
                 icon='fa fa-fw fa-plus'
-                [label]='"toolbar.button.select-all"|translate'
                 (click)='selectAll()'
                 [pTooltip]='"toolbar.tooltip.select-all"|translate'></button>
         <button pButton
                 type='button'
                 class='cx-toolbar-button ui-button-danger'
                 icon='fa fa-fw fa-minus'
-                [label]='"toolbar.button.deselect-all"|translate'
                 (click)='deselectAll()'
                 [pTooltip]='"toolbar.tooltip.deselect-all"|translate'></button>
         <p-splitButton [model]='blockingOptions'
                        [disabled]='selectedPages?.length === 0'
                        icon='fa fa-fw fa-start'
                        [label]='"duplicates-page-toolbar.button.blocking-options"|translate'
+                       class='cx-toolbar-button'></p-splitButton>
+        <p-splitButton [model]='deletingOptions'
+                       [disabled]='selectedPages?.length === 0'
+                       icon='fa fa-fw fa-start'
+                       [label]='"duplicates-page-toolbar.button.deleting-options"|translate'
                        class='cx-toolbar-button'></p-splitButton>
     </div>
 </p-toolbar>

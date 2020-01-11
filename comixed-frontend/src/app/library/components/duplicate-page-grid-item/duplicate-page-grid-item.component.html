@@ -4,6 +4,7 @@
                      [coverSize]='pageSize'
                      [useSameHeight]='sameHeight'
                      [selected]='selected'
-                     [caption]='"duplicate-page-grid-item.cover-caption"|translate:{count:item.pages.length, blocked:item.blocked}'
+                     [pTooltip]='"duplicate-page-grid-item.tooltip"|translate:{count:item.pages.length,blocked:item.blocked, deletedCount:getDeletedCount(item)}'
+                     [caption]='"duplicate-page-grid-item.caption"|translate:{count:item.pages.length}'
                      (click)='click.next($event)'></app-comic-cover>
 </div>

@@ -29,11 +29,14 @@ import { AppState } from 'app/library';
 import {
   DuplicatePagesAllReceived,
   DuplicatePagesBlockingSet,
+  DuplicatePagesDeletedSet,
   DuplicatePagesDeselect,
   DuplicatePagesGetAll,
   DuplicatePagesSelect,
   DuplicatePagesSetBlocking,
-  DuplicatePagesSetBlockingFailed
+  DuplicatePagesSetBlockingFailed,
+  DuplicatePagesSetDeleted,
+  DuplicatePagesSetDeletedFailed
 } from 'app/library/actions/duplicate-pages.actions';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
@@ -177,6 +180,46 @@ describe('DuplicatePagesAdaptors', () => {
         adaptor.setBlocking$.subscribe(response =>
           expect(response).toBeFalsy()
         );
+      });
+    });
+  });
+
+  describe('setting the deleted state for duplicate pages', () => {
+    beforeEach(() => {
+      adaptor.setDeleted(PAGES, true);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new DuplicatePagesSetDeleted({ pages: PAGES, deleted: true })
+      );
+    });
+
+    it('provides updates on setting deleted', () => {
+      adaptor.setDeleted$.subscribe(response => expect(response).toBeTruthy());
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new DuplicatePagesDeletedSet({ pages: PAGES }));
+      });
+
+      it('updates the duplicate pages', () => {
+        adaptor.pages$.subscribe(response => expect(response).toEqual(PAGES));
+      });
+
+      it('provides updates on setting deleted', () => {
+        adaptor.setDeleted$.subscribe(response => expect(response).toBeFalsy());
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new DuplicatePagesSetDeletedFailed());
+      });
+
+      it('provides updates on setting deleted', () => {
+        adaptor.setDeleted$.subscribe(response => expect(response).toBeFalsy());
       });
     });
   });
