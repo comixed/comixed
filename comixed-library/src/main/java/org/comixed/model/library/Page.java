@@ -120,6 +120,10 @@ public class Page {
     this.getImageMetrics(content);
   }
 
+  public Long getId() {
+    return id;
+  }
+
   private String createHash(byte[] bytes) {
     this.logger.debug("Generating MD5 hash");
     String result = "";
