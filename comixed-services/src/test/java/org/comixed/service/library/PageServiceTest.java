@@ -488,4 +488,42 @@ public class PageServiceTest {
     Mockito.verify(blockedPageHashRepository, Mockito.times(1)).delete(blockedPageHash);
     Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
   }
+
+  @Test
+  public void testSetDeletedStateMark() {
+    List<Page> pages = new ArrayList<>();
+    pages.add(page);
+
+    Mockito.when(pageRepository.getPagesWithHash(Mockito.anyString())).thenReturn(pages);
+    Mockito.doNothing().when(page).markDeleted(Mockito.anyBoolean());
+    Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
+
+    List<String> hashes = new ArrayList<>();
+    hashes.add(TEST_PAGE_HASH);
+
+    pageService.setDeletedState(hashes, true);
+
+    Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithHash(TEST_PAGE_HASH);
+    Mockito.verify(page, Mockito.times(1)).markDeleted(true);
+    Mockito.verify(pageRepository, Mockito.times(1)).save(page);
+  }
+
+  @Test
+  public void testSetDeletedStateUnmark() {
+    List<Page> pages = new ArrayList<>();
+    pages.add(page);
+
+    Mockito.when(pageRepository.getPagesWithHash(Mockito.anyString())).thenReturn(pages);
+    Mockito.doNothing().when(page).markDeleted(Mockito.anyBoolean());
+    Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
+
+    List<String> hashes = new ArrayList<>();
+    hashes.add(TEST_PAGE_HASH);
+
+    pageService.setDeletedState(hashes, false);
+
+    Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithHash(TEST_PAGE_HASH);
+    Mockito.verify(page, Mockito.times(1)).markDeleted(false);
+    Mockito.verify(pageRepository, Mockito.times(1)).save(page);
+  }
 }

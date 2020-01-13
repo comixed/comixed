@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixed.model.library.*;
 import org.comixed.net.SetBlockingStateRequest;
+import org.comixed.net.SetDeletedStateRequest;
 import org.comixed.service.library.PageCacheService;
 import org.comixed.service.library.PageException;
 import org.comixed.service.library.PageService;
@@ -53,6 +54,7 @@ public class PageControllerTest {
   private static final String TEST_PAGE_CONTENT_TYPE = "application";
   private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
   private static final Boolean TEST_BLOCKING = true;
+  private static final Boolean TEST_DELETED = false;
 
   static {
     TEST_PAGE_HASH_LIST.add("12345");
@@ -355,5 +357,22 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1))
         .setBlockingState(TEST_PAGE_HASH_LIST, TEST_BLOCKING);
+  }
+
+  @Test
+  public void testSetDeletedState() {
+    Mockito.doNothing().when(pageService).setDeletedState(Mockito.anyList(), Mockito.anyBoolean());
+    Mockito.when(pageService.getDuplicatePages()).thenReturn(duplicatePageList);
+
+    final List<DuplicatePage> result =
+        pageController.setDeletedState(
+            new SetDeletedStateRequest(TEST_PAGE_HASH_LIST, TEST_DELETED));
+
+    assertNotNull(result);
+    assertSame(duplicatePageList, result);
+
+    Mockito.verify(pageService, Mockito.times(1))
+        .setDeletedState(TEST_PAGE_HASH_LIST, TEST_DELETED);
+    Mockito.verify(pageService, Mockito.times(1)).getDuplicatePages();
   }
 }

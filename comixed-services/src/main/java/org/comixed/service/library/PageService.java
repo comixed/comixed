@@ -274,4 +274,19 @@ public class PageService {
 
     return new ArrayList<>(mapped.values());
   }
+
+  @Transactional
+  public void setDeletedState(final List<String> hashes, final boolean deleted) {
+    for (int index = 0; index < hashes.size(); index++) {
+      final String hash = hashes.get(index);
+      this.logger.debug("Loading pages with hash: {}", hash);
+      final List<Page> pages = this.pageRepository.getPagesWithHash(hash);
+      for (int pageIndex = 0; pageIndex < pages.size(); pageIndex++) {
+        final Page page = pages.get(pageIndex);
+        this.logger.debug("Marking page deleted flag: id={} deleted={}", page.getId(), deleted);
+        page.markDeleted(deleted);
+        this.pageRepository.save(page);
+      }
+    }
+  }
 }

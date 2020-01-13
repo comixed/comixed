@@ -54,6 +54,7 @@ public class PageRepositoryTest {
   private static final String TEST_DUPLICATE_PAGE_HASH_2 = "0123456789ABCDEF0123456789ABCDEF";
   private static final String TEST_DUPLICATE_PAGE_HASH_3 = "123456789ABCDEF0123456789ABCDEF0";
   private static final List<String> TEST_DUPLICATE_PAGE_HASHES = new ArrayList<>();
+  private static final String TEST_INVALID_HASH = "111111111AAAAAA1111111111AAAAAA1";
 
   static {
     TEST_DUPLICATE_PAGE_HASHES.add(TEST_DUPLICATE_PAGE_HASH_1);
@@ -111,6 +112,25 @@ public class PageRepositoryTest {
       if (page.getHash().equals(TEST_DUPLICATE_PAGE_HASH_1)) {
         assertFalse(page.isMarkedDeleted());
       }
+    }
+  }
+
+  @Test
+  public void testGetPagesWithHashNoSuchHash() {
+    final List<Page> result = repository.getPagesWithHash(TEST_INVALID_HASH);
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void testGetPagesWithHash() {
+    final List<Page> result = repository.getPagesWithHash(TEST_DUPLICATE_PAGE_HASH_1);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    for (int index = 0; index < result.size(); index++) {
+      assertEquals(TEST_DUPLICATE_PAGE_HASH_1, result.get(index).getHash());
     }
   }
 }

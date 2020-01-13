@@ -27,6 +27,7 @@ import org.comixed.model.library.DuplicatePage;
 import org.comixed.model.library.Page;
 import org.comixed.model.library.PageType;
 import org.comixed.net.SetBlockingStateRequest;
+import org.comixed.net.SetDeletedStateRequest;
 import org.comixed.service.library.PageCacheService;
 import org.comixed.service.library.PageException;
 import org.comixed.service.library.PageService;
@@ -211,5 +212,22 @@ public class PageController {
         request.getBlocked());
 
     return this.pageService.setBlockingState(request.getHashes(), request.getBlocked());
+  }
+
+  @PostMapping(
+      value = "/pages/hashes/deleted",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.DuplicatePageList.class)
+  public List<DuplicatePage> setDeletedState(@RequestBody() final SetDeletedStateRequest request) {
+    final List<String> hashes = request.getHashes();
+    this.logger.info(
+        "{}arking {} page hash{} for deletion",
+        request.getDeleted() ? "M" : "Unm",
+        hashes.size(),
+        hashes.size() == 1 ? "" : "es");
+    this.pageService.setDeletedState(hashes, request.getDeleted());
+
+    return this.pageService.getDuplicatePages();
   }
 }

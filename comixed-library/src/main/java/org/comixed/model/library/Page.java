@@ -86,7 +86,7 @@ public class Page {
   private Integer pageNumber;
 
   @Column(name = "deleted", updatable = true, nullable = false)
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class, DuplicatePageList.class})
   private boolean deleted = false;
 
   @Column(name = "width", updatable = true)
