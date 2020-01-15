@@ -58,6 +58,7 @@ import {
 import * as fromComics from 'app/comics/reducers/comic.reducer';
 import { MessageService } from 'primeng/api';
 import { ComicAdaptor } from './comic.adaptor';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ComicAdaptor', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
@@ -75,6 +76,7 @@ describe('ComicAdaptor', () => {
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(
           fromComics.COMIC_FEATURE_KEY,

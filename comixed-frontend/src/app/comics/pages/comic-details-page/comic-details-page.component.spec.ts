@@ -61,6 +61,7 @@ import {
 } from 'primeng/primeng';
 import { ComicDetailsPageComponent } from './comic-details-page.component';
 import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ComicDetailsPageComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -82,6 +83,7 @@ describe('ComicDetailsPageComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         RouterTestingModule.withRoutes(routes),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
@@ -147,28 +149,6 @@ describe('ComicDetailsPageComponent', () => {
       expect(downloadLink.nativeElement.innerText).toEqual(
         'comic-details-page.text.download-link'
       );
-    });
-  });
-
-  describe('setting the comic navigation buttons', () => {
-    it('disables the previous button if there is no previous comic', () => {
-      component.comic = { ...COMIC_1, previousIssueId: -1 };
-      expect(component.hasPreviousComic()).toBeFalsy();
-    });
-
-    it('enables the previous button if there is a previous comic', () => {
-      component.comic = { ...COMIC_1, previousIssueId: 17 };
-      expect(component.hasPreviousComic()).toBeTruthy();
-    });
-
-    it('disables the next button if there is no next comic', () => {
-      component.comic = { ...COMIC_1, nextIssueId: -1 };
-      expect(component.hasNextComic()).toBeFalsy();
-    });
-
-    it('enables the next button if there is a next comic', () => {
-      component.comic = { ...COMIC_1, nextIssueId: 17 };
-      expect(component.hasNextComic()).toBeTruthy();
     });
   });
 });

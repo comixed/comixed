@@ -45,6 +45,7 @@ import {
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { ComicDetailsEditorComponent } from './comic-details-editor.component';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = '1234567890';
@@ -62,6 +63,7 @@ describe('ComicDetailsEditorComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
