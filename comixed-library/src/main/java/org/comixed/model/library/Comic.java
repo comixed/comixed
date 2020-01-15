@@ -1055,7 +1055,7 @@ public class Comic {
     this.previousIssueId = previousIssueId;
   }
 
-  public void setID(final long id) {
+  public void setId(final long id) {
     this.id = id;
   }
 

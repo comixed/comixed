@@ -18,9 +18,6 @@
 
 package org.comixed.service.library;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 import org.apache.commons.io.FileUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
@@ -38,6 +35,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ComicService {
@@ -230,37 +234,24 @@ public class ComicService {
       throw new ComicException("no such comic: id=" + id);
     }
 
-    final Comic comic = comicRecord.get();
-    final String series = comic.getSeries();
-
-    this.logger.debug("Getting all comics for series: {}", series);
-    final List<Comic> comics = this.comicRepository.findBySeries(series);
-    Collections.sort(comics, new ComicsComparatorByIssueNumber());
-
-    this.logger.debug(
-        "Searching {} comic{} for next and previous issues",
-        comics.size(),
-        comics.size() == 1 ? "" : "s");
-    long previousId = -1L;
-    long nextId = -1L;
-    long currentId = comic.getId();
-    for (int index = 0; index < comics.size(); index++) {
-      if (comics.get(index).getId() == currentId) {
-        if (index > 0) {
-          previousId = comics.get(index - 1).getId();
-        }
-        if (index < comics.size() - 1) {
-          nextId = comics.get(index + 1).getId();
-        }
-        break;
-      }
+    final Comic result = comicRecord.get();
+    final Comic next =
+        this.comicRepository.findFirstSucceedingComic(
+            result.getSeries(), result.getVolume(), result.getIssueNumber());
+    if (next != null) {
+      this.logger.debug("Setting the next comic: id={}", next.getId());
+      result.setNextIssueId(next.getId());
+    }
+    final Comic prev =
+        this.comicRepository.findFirstPreviousComic(
+            result.getSeries(), result.getVolume(), result.getIssueNumber());
+    if (prev != null) {
+      this.logger.debug("Setting previous comic: id={}", prev.getId());
+      result.setPreviousIssueId(prev.getId());
     }
 
-    comic.setNextIssueId(nextId);
-    comic.setPreviousIssueId(previousId);
-
-    this.logger.debug("Returning comic");
-    return comic;
+    this.logger.debug("Returning comic: id={}", result.getId());
+    return result;
   }
 
   public List<LastReadDate> getLastReadDates(final List<Comic> comics, final ComiXedUser user) {
