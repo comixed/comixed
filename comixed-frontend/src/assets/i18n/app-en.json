@@ -546,10 +546,6 @@
         "cover-date-desc": "Cover date (desc)"
       }
     },
-    "button": {
-      "select-all": "All",
-      "deselect-all": "All"
-    },
     "tooltip": {
       "select-all": "Select all...",
       "deselect-all": "Deselect all..."

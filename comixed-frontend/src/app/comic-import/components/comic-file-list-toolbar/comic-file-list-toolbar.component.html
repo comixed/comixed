@@ -51,7 +51,7 @@
         <button (click)='selectAllComicFiles()'
                 [disabled]='!comicFiles.length||selectedComicFiles.length === comicFiles.length'
                 icon='fa fa-fw fa-plus'
-                [label]='"import-toolbar.button.select-all"|translate'
+                [pTooltip]='"toolbar.tooltip.select-all"|translate'
                 class='ui-button-secondary cx-toolbar-button'
                 id='select-all-comics'
                 pButton
@@ -59,7 +59,7 @@
         <button (click)='deselectAllComicFiles()'
                 [disabled]='selectedComicFiles.length === 0'
                 icon='fa fa-fw fa-minus'
-                [label]='"import-toolbar.button.deselect-all"|translate'
+                [pTooltip]='"toolbar.tooltip.deselect-all"|translate'
                 class='ui-button-danger cx-toolbar-button'
                 id='deselect-all-comics'
                 pButton
