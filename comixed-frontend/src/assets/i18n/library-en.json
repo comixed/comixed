@@ -189,8 +189,6 @@
       }
     },
     "label": {
-      "select-all": "All",
-      "deselect-all": "None",
       "scrape": "Scrape",
       "delete": "Delete"
     },

@@ -29,7 +29,6 @@
                 class='ui-button-success cx-toolbar-button'
                 type='button'
                 [pTooltip]='"comic-list-toolbar.button.select-all"|translate'
-                [label]='"comic-list-toolbar.label.select-all"|translate'
                 icon='fa fa-fw fa-plus'
                 [disabled]='!comics.length'
                 (click)='selectAll()'></button>
@@ -37,7 +36,6 @@
                 class='ui-button-success cx-toolbar-button'
                 type='button'
                 [pTooltip]='"comic-list-toolbar.button.deselect-all"|translate'
-                [label]='"comic-list-toolbar.label.deselect-all"|translate'
                 icon='fa fa-fw fa-minus'
                 [disabled]='!selectedComics.length'
                 (click)='deselectAll()'></button>

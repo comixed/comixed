@@ -46,8 +46,6 @@
     },
     "button": {
       "find": "Find Comics",
-      "select-all": "All",
-      "deselect-all": "None",
       "delete-blocked-pages": "Blocked Pages",
       "start-import": "Start Import",
       "select": "Select",
