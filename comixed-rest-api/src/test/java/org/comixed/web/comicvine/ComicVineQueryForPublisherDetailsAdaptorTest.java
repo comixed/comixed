@@ -28,11 +28,7 @@ import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
@@ -44,21 +40,13 @@ public class ComicVineQueryForPublisherDetailsAdaptorTest {
   private static final String TEST_PUBLISHER_ID = "92134";
 
   @InjectMocks private ComicVineQueryForPublisherDetailsAdaptor adaptor;
-
   @Mock private WebRequestProcessor webRequestProcessor;
-
   @Mock private ObjectFactory<ComicVinePublisherDetailsWebRequest> requestFactory;
-
   @Mock private ComicVinePublisherDetailsWebRequest request;
-
   @Mock private Comic comic;
-
   @Mock private ComicVinePublisherDetailsResponseProcessor contentProcessor;
-
   @Mock private ComicVinePublisher comicVinePublisher;
-
   @Captor private ArgumentCaptor<ComicVinePublisher> comicVinePublisherCaptor;
-
   @Mock private ComicVinePublisherRepository comicVinePublisherRepository;
 
   @Test(expected = ComicVineAdaptorException.class)
