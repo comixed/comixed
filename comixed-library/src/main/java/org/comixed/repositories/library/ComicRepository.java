@@ -83,4 +83,24 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
       @Param("latestUpdatedDate") Date latestUpdatedDate, final Pageable paging);
 
   Comic getById(@Param("id") long id);
+
+  @Query("SELECT c FROM Comic c")
+  Comic getPreviousComicInSeries(
+      @Param("series") String series,
+      @Param("volume") String volume,
+      @Param("issueNumber") String issueNumber);
+
+  @Query(
+      "SELECT c FROM Comic c WHERE c.series = :series and c.volume = :volume AND c.issueNumber < :issueNumber ORDER BY c.issueNumber DESC")
+  Comic findFirstPreviousComic(
+      @Param("series") String series,
+      @Param("volume") String volume,
+      @Param("issueNumber") String issueNumber);
+
+  @Query(
+      "SELECT c FROM Comic c WHERE c.series = :series and c.volume = :volume AND c.issueNumber > :issueNumber ORDER BY c.issueNumber ASC")
+  Comic findFirstSucceedingComic(
+      @Param("series") String series,
+      @Param("volume") String volume,
+      @Param("issueNumber") String issueNumber);
 }

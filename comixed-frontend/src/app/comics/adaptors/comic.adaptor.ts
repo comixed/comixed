@@ -44,6 +44,7 @@ import {
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class ComicAdaptor {
@@ -59,11 +60,12 @@ export class ComicAdaptor {
   private _deletingComic$ = new BehaviorSubject<boolean>(false);
   private _restoringComic$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<AppState>) {
+  constructor(private logger: NGXLogger, private store: Store<AppState>) {
     this.store
       .select(COMIC_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe((state: ComicState) => {
+        this.logger.debug('comic state updated:', state);
         if (state.scanTypesLoaded !== this._scanTypesLoaded$.getValue()) {
           this._scanTypesLoaded$.next(state.scanTypesLoaded);
         }
@@ -101,6 +103,7 @@ export class ComicAdaptor {
   }
 
   getScanTypes(): void {
+    this.logger.debug('firing action to get scan types');
     if (this._scanTypesLoaded$.getValue() === false) {
       this.store.dispatch(new ComicGetScanTypes());
     }
@@ -115,6 +118,7 @@ export class ComicAdaptor {
   }
 
   getFormats(): void {
+    this.logger.debug('firing action to get formats');
     if (this._formatsLoaded$.getValue() === false) {
       this.store.dispatch(new ComicGetFormats());
     }
@@ -148,35 +152,42 @@ export class ComicAdaptor {
     return this._comic$.asObservable();
   }
 
-  getComicById(number: number): void {
-    this.store.dispatch(new ComicGetIssue({ id: number }));
+  getComicById(id: number): void {
+    this.logger.debug(`firing action to get comic: id=${id}`);
+    this.store.dispatch(new ComicGetIssue({ id: id }));
   }
 
   savePage(page: Page): void {
+    this.logger.debug('saving comic page:', page);
     this.store.dispatch(new ComicSavePage({ page: page }));
   }
 
   blockPageHash(page: Page): void {
+    this.logger.debug(`firing action to block pages: hash=${page.hash}`);
     this.store.dispatch(
       new ComicSetPageHashBlocking({ page: page, state: true })
     );
   }
 
   unblockPageHash(page: Page): void {
+    this.logger.debug(`firing action to unblock pages: hash=${page.hash}`);
     this.store.dispatch(
       new ComicSetPageHashBlocking({ page: page, state: false })
     );
   }
 
   saveComic(comic: Comic): void {
+    this.logger.debug('firing action to save comic:', comic);
     this.store.dispatch(new ComicSave({ comic: comic }));
   }
 
   clearMetadata(comic: Comic): void {
+    this.logger.debug('firing action to clear metadata for comic:', comic);
     this.store.dispatch(new ComicClearMetadata({ comic: comic }));
   }
 
   deleteComic(comic: Comic): void {
+    this.logger.debug('firing action to delete comic:', comic);
     this.store.dispatch(new ComicDelete({ comic: comic }));
   }
 
@@ -185,6 +196,7 @@ export class ComicAdaptor {
   }
 
   restoreComic(comic: Comic): void {
+    this.logger.debug('firing action to restore comic:', comic);
     this.store.dispatch(new ComicRestore({ comic: comic }));
   }
 

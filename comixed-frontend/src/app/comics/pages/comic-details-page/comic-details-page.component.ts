@@ -19,15 +19,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Comic } from 'app/comics';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { AppState } from 'app/library';
 import { AuthenticationAdaptor } from 'app/user';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -57,6 +56,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   protected currentPage: number;
 
   constructor(
+    private logger: NGXLogger,
     private titleService: Title,
     private translateService: TranslateService,
     private messageService: MessageService,
@@ -64,12 +64,12 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     private comicAdaptor: ComicAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private store: Store<AppState>
+    private router: Router
   ) {
     this.activatedRoute.params.subscribe(params => {
       if (params['id']) {
         this.id = +params['id'];
+        this.logger.debug(`query parameter: id=${this.id}`);
         this.comicAdaptor.getComicById(+params['id']);
       } else {
         this.router.navigateByUrl('/home');
@@ -149,14 +149,6 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   setCurrentTab(current_tab: number): void {
     this.currentTab = current_tab;
     this.updateParams(this.TAB_PARAMETER, `${this.currentTab}`);
-  }
-
-  hasNextComic(): boolean {
-    return this.comic.nextIssueId !== -1;
-  }
-
-  hasPreviousComic(): boolean {
-    return this.comic.previousIssueId !== -1;
   }
 
   gotToNextComic(): void {

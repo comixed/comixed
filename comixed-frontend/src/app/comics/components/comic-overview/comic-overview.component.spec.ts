@@ -45,6 +45,7 @@ import {
   SCAN_TYPE_4,
   SCAN_TYPE_5
 } from 'app/comics/comics.fixtures';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ComicOverviewComponent', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_2, SCAN_TYPE_3, SCAN_TYPE_4];
@@ -67,6 +68,7 @@ describe('ComicOverviewComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         InplaceModule,
         DropdownModule,
         TooltipModule
@@ -157,9 +159,10 @@ describe('ComicOverviewComponent', () => {
 
   it('can clean the comic metadata', () => {
     spyOn(comicAdaptor, 'clearMetadata');
-    spyOn(confirmationService, 'confirm').and.callFake(
-      (confirm: Confirmation) => confirm.accept()
-    );
+    spyOn(
+      confirmationService,
+      'confirm'
+    ).and.callFake((confirm: Confirmation) => confirm.accept());
     component.comic = COMIC_1;
     component.clearMetadata();
     expect(comicAdaptor.clearMetadata).toHaveBeenCalledWith(COMIC_1);
@@ -167,9 +170,10 @@ describe('ComicOverviewComponent', () => {
 
   it('can delete a comic', () => {
     spyOn(comicAdaptor, 'deleteComic');
-    spyOn(confirmationService, 'confirm').and.callFake(
-      (confirm: Confirmation) => confirm.accept()
-    );
+    spyOn(
+      confirmationService,
+      'confirm'
+    ).and.callFake((confirm: Confirmation) => confirm.accept());
     component.comic = COMIC_1;
     component.deleteComic();
     expect(comicAdaptor.deleteComic).toHaveBeenCalledWith(COMIC_1);

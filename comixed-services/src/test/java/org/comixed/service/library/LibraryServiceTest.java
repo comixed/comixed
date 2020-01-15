@@ -37,16 +37,16 @@ public class LibraryServiceTest {
   public void setUp() {
     // updated now
     comic1.setDateLastUpdated(new Date());
-    comic1.setID(1L);
+    comic1.setId(1L);
     // updated yesterday
     comic2.setDateLastUpdated(new Date(System.currentTimeMillis() - 24L * 60L * 60L * 1000L));
-    comic2.setID(2L);
+    comic2.setId(2L);
     // updated same as previous comic
     comic3.setDateLastUpdated(comic2.getDateLastUpdated());
-    comic3.setID(3L);
+    comic3.setId(3L);
     //
     comic4.setDateLastUpdated(comic3.getDateLastUpdated());
-    comic4.setID(4L);
+    comic4.setId(4L);
   }
 
   @Test

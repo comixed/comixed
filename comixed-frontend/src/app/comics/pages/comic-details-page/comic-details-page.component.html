@@ -20,7 +20,7 @@
                                 class='cx-action-button ui-button-info'
                                 icon='fas fa-caret-left'
                                 [label]='"comic-details-page.button.prev-comic"|translate'
-                                [disabled]='!hasPreviousComic()'
+                                [disabled]='!comic.previousIssueId'
                                 (click)='goToPreviousComic()'></button>
                     </div>
                     <div class='ui-g-6'>
@@ -29,7 +29,7 @@
                                 icon='fas fa-caret-right'
                                 iconPos='right'
                                 [label]='"comic-details-page.button.next-comic"|translate'
-                                [disabled]='!hasNextComic()'
+                                [disabled]='!comic.nextIssueId'
                                 (click)='gotToNextComic()'></button>
                     </div>
                 </div>

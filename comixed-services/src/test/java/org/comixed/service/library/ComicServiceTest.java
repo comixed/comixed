@@ -18,13 +18,6 @@
 
 package org.comixed.service.library;
 
-import static junit.framework.TestCase.*;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
 import org.comixed.model.library.ScanType;
@@ -44,6 +37,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static junit.framework.TestCase.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -95,12 +96,13 @@ public class ComicServiceTest {
   @Before
   public void setUp() {
     previousComic.setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
-    previousComic.setID(TEST_PREVIOUS_COMIC_ID);
+    previousComic.setId(TEST_PREVIOUS_COMIC_ID);
     currentComic.setSeries(TEST_SERIES);
+    currentComic.setVolume(TEST_VOLUME);
     currentComic.setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
-    currentComic.setID(TEST_CURRENT_COMIC_ID);
+    currentComic.setId(TEST_CURRENT_COMIC_ID);
     nextComic.setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
-    nextComic.setID(TEST_NEXT_COMIC_ID);
+    nextComic.setId(TEST_NEXT_COMIC_ID);
     comicsBySeries.add(nextComic);
     comicsBySeries.add(previousComic);
     comicsBySeries.add(currentComic);
@@ -241,17 +243,28 @@ public class ComicServiceTest {
   @Test
   public void testGetComic() throws ComicException {
     Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(currentComic));
-    Mockito.when(comicRepository.findBySeries(Mockito.anyString())).thenReturn(comicsBySeries);
+
+    Mockito.when(
+            comicRepository.findFirstPreviousComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(previousComic);
+    Mockito.when(
+            comicRepository.findFirstSucceedingComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(nextComic);
 
     final Comic result = comicService.getComic(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(currentComic, result);
-    assertEquals(TEST_NEXT_COMIC_ID, result.getNextIssueId().longValue());
-    assertEquals(TEST_PREVIOUS_COMIC_ID, result.getPreviousIssueId().longValue());
+    assertEquals(previousComic.getId(), result.getPreviousIssueId());
+    assertEquals(nextComic.getId(), result.getNextIssueId());
 
     Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
-    Mockito.verify(comicRepository, Mockito.times(1)).findBySeries(TEST_SERIES);
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findFirstPreviousComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER);
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findFirstSucceedingComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER);
   }
 
   @Test
