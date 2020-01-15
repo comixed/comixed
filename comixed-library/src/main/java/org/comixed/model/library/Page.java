@@ -86,7 +86,7 @@ public class Page {
   private Integer pageNumber;
 
   @Column(name = "deleted", updatable = true, nullable = false)
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class, DuplicatePageList.class})
   private boolean deleted = false;
 
   @Column(name = "width", updatable = true)
@@ -118,6 +118,10 @@ public class Page {
     this.hash = this.createHash(content);
     this.pageType = pageType;
     this.getImageMetrics(content);
+  }
+
+  public Long getId() {
+    return id;
   }
 
   private String createHash(byte[] bytes) {

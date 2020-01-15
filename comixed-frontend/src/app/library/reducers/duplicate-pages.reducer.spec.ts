@@ -24,15 +24,19 @@ import {
 import {
   DuplicatePagesAllReceived,
   DuplicatePagesBlockingSet,
+  DuplicatePagesDeletedSet,
   DuplicatePagesDeselect,
   DuplicatePagesGetAll,
   DuplicatePagesGetAllFailed,
   DuplicatePagesSelect,
   DuplicatePagesSetBlocking,
-  DuplicatePagesSetBlockingFailed
+  DuplicatePagesSetBlockingFailed,
+  DuplicatePagesSetDeleted,
+  DuplicatePagesSetDeletedFailed
 } from 'app/library/actions/duplicate-pages.actions';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
+import { DuplicatePage } from 'app/library/models/duplicate-page';
 
 describe('DuplicatePages Reducer', () => {
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
@@ -62,6 +66,10 @@ describe('DuplicatePages Reducer', () => {
 
     it('clears the set blocking flag', () => {
       expect(state.setBlocking).toBeFalsy();
+    });
+
+    it('clears the set deleted flag', () => {
+      expect(state.setDeleted).toBeFalsy();
     });
   });
 
@@ -180,6 +188,56 @@ describe('DuplicatePages Reducer', () => {
 
     it('clears the set blocking flag', () => {
       expect(state.setBlocking).toBeFalsy();
+    });
+  });
+
+  describe('marking duplicate pages as deleted', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, setDeleted: false },
+        new DuplicatePagesSetDeleted({ pages: PAGES, deleted: true })
+      );
+    });
+
+    it('sets the setting deleted flag', () => {
+      expect(state.setDeleted).toBeTruthy();
+    });
+  });
+
+  describe('when the pages are marked as deleted', () => {
+    const ORIGINAL = PAGES[0];
+    const UPDATED = {
+      ...ORIGINAL,
+      blocked: !ORIGINAL.blocked
+    };
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, setDeleted: true, pages: [] },
+        new DuplicatePagesDeletedSet({ pages: [UPDATED] })
+      );
+    });
+
+    it('clears the setting deleted flag', () => {
+      expect(state.setDeleted).toBeFalsy();
+    });
+
+    it('merges the updated page into the list of duplicate pages', () => {
+      expect(state.pages).toContain(UPDATED);
+      expect(state.pages).not.toContain(ORIGINAL);
+    });
+  });
+
+  describe('when deleting duplicate pages fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, setDeleted: true },
+        new DuplicatePagesSetDeletedFailed()
+      );
+    });
+
+    it('clears the setting deleted flag', () => {
+      expect(state.setDeleted).toBeFalsy();
     });
   });
 });

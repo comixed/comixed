@@ -151,7 +151,18 @@
     "title": "ComiXed: Story Arc - {name} ({count, plural, =1{One Comic} other{# Comics}})"
   },
   "duplicates-page": {
-    "title": "ComiXed: Duplicate Pages - {hashes, plural, =1{One Hash} other{# Hashes}} In {pages, plural, =1{One Duplicate Page} other{# Duplicate Pages}}"
+    "title": "{pageCount} Duplicate {pageCount, plural, =1{Page} other{Pages}}",
+    "text": {
+      "page-summary": "This page shows up in {comicCount, plural, =1{one comic} other{# comics}}."
+    },
+    "options": {
+      "page-count": {
+        "10-pages": "10 Pages",
+        "25-pages": "25 Pages",
+        "50-pages": "50 Pages",
+        "100-pages": "100 Pages"
+      }
+    }
   },
   "missing-comics-page": {
     "title": "ComiXed: Missing Comics - {count, plural, =1{One Comic} other{# Comics}}"
@@ -237,19 +248,13 @@
       "error": {
         "detail": "Failed to block page hashes."
       }
-    }
-  },
-  "duplicates-page": {
-    "title": "{pageCount} Duplicate {pageCount, plural, =1{Page} other{Pages}}",
-    "text": {
-      "page-summary": "This page shows up in {comicCount, plural, =1{one comic} other{# comics}}."
     },
-    "options": {
-      "page-count": {
-        "10-pages": "10 Pages",
-        "25-pages": "25 Pages",
-        "50-pages": "50 Pages",
-        "100-pages": "100 Pages"
+    "set-deleted": {
+      "success": {
+        "detail": "Successfully {deleted, select, true{marked} other{unmarked}} {count, plural, =1{one page} other{# pages}} as deleted."
+      },
+      "error": {
+        "detail": "Failed to {deleted, select, true{mark} other{unmark}} pages for deletion."
       }
     }
   },
@@ -258,21 +263,32 @@
       "blocking": {
         "turn-on": "Block",
         "turn-off": "Unblock"
+      },
+      "deleting": {
+        "mark": "Mark",
+        "unmark": "Unmark"
       }
     },
     "button": {
-      "blocking-options": "Blocking"
+      "blocking-options": "Blocking",
+      "deleting-options": "Deleting"
     },
     "set-blocking": {
       "header": "Set Blocking State For Pages",
       "message": "Are you sure you want to {blocking, select, true{block} other{unblock}} the selected pages?"
+    },
+    "set-deleted": {
+      "header": "Mark Pages For Deletion",
+      "message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} the selected pages?"
     }
   },
   "duplicate-page-grid-item": {
-    "cover-caption": "{blocked, select, true{Blocked} other{Found}} in {count, plural, =1{one comic} other{# comics}}."
+    "tooltip": "This page is {blocked, select, true{blocked} other{not blocked}}, and {deletedCount, plural, =0{none are} =1{# is} other{# are}} marked for deletion.",
+    "caption": "Found in {count, plural, =1{one comic} other{# comics}}."
   },
   "duplicate-page-list-item": {
-    "title": "{blocked, select, true{Blocked} other{Found}} in {count, plural, =1{one comic} other{# comics}}."
+    "title": "Found in {count, plural, =1{one comic} other{# comics}}.",
+    "subtitle": "This page is {blocked, select, true{blocked} other{not blocked}}, and {deletedCount, plural, =0{none are} =1{# is} other{# are}} marked for deletion."
   },
   "collection-effects": {
     "get-entries": {

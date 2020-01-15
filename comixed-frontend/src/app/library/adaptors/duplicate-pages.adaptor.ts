@@ -31,7 +31,8 @@ import {
   DuplicatePagesDeselect,
   DuplicatePagesGetAll,
   DuplicatePagesSelect,
-  DuplicatePagesSetBlocking
+  DuplicatePagesSetBlocking,
+  DuplicatePagesSetDeleted
 } from 'app/library/actions/duplicate-pages.actions';
 import { NGXLogger } from 'ngx-logger';
 
@@ -41,6 +42,7 @@ export class DuplicatePagesAdaptors {
   private _pages$ = new BehaviorSubject<DuplicatePage[]>([]);
   private _selected$ = new BehaviorSubject<DuplicatePage[]>([]);
   private _setBlocking$ = new BehaviorSubject<boolean>(false);
+  private _setDeleted$ = new BehaviorSubject<boolean>(false);
 
   constructor(private store: Store<AppState>, private logger: NGXLogger) {
     this.store
@@ -59,6 +61,9 @@ export class DuplicatePagesAdaptors {
         }
         if (dupeState.setBlocking !== this._setBlocking$.getValue()) {
           this._setBlocking$.next(dupeState.setBlocking);
+        }
+        if (dupeState.setDeleted !== this._setDeleted$.getValue()) {
+          this._setDeleted$.next(dupeState.setDeleted);
         }
       });
   }
@@ -102,5 +107,20 @@ export class DuplicatePagesAdaptors {
 
   get setBlocking$(): Observable<boolean> {
     return this._setBlocking$.asObservable();
+  }
+
+  setDeleted(pages: DuplicatePage[], deleted: boolean): void {
+    this.logger.debug(
+      'firing action to set duplicate pages deleted state:',
+      pages,
+      deleted
+    );
+    this.store.dispatch(
+      new DuplicatePagesSetDeleted({ pages: pages, deleted: deleted })
+    );
+  }
+
+  get setDeleted$(): Observable<boolean> {
+    return this._setDeleted$.asObservable();
   }
 }

@@ -17,8 +17,8 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { ComicCoverClickEvent } from 'app/comics/models/event/comic-cover-click-event';
+import { DuplicatePage } from 'app/library/models/duplicate-page';
 
 @Component({
   selector: 'app-duplicate-page-list-item',
@@ -36,4 +36,8 @@ export class DuplicatePageListItemComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  getDeletedCount(item: DuplicatePage): number {
+    return item.pages.filter(page => page.deleted).length;
+  }
 }

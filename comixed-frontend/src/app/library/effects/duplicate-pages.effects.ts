@@ -25,8 +25,10 @@ import {
   DuplicatePagesActionTypes,
   DuplicatePagesAllReceived,
   DuplicatePagesBlockingSet,
+  DuplicatePagesDeletedSet,
   DuplicatePagesGetAllFailed,
-  DuplicatePagesSetBlockingFailed
+  DuplicatePagesSetBlockingFailed,
+  DuplicatePagesSetDeletedFailed
 } from 'app/library/actions/duplicate-pages.actions';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
@@ -126,6 +128,71 @@ export class DuplicatePagesEffects {
         )
       });
       return of(new DuplicatePagesSetBlockingFailed());
+    })
+  );
+
+  @Effect()
+  setDeleted$: Observable<Action> = this.actions$.pipe(
+    ofType(DuplicatePagesActionTypes.SetDeleted),
+    map(action => action.payload),
+    tap(action =>
+      this.logger.debug(
+        'effect: setting duplicate pages deleted state:',
+        action
+      )
+    ),
+    switchMap(action =>
+      this.duplicatePagesService.setDeleted(action.pages, action.deleted).pipe(
+        tap(response =>
+          this.logger.debug(
+            'set deleted on duplicate pages response:',
+            response
+          )
+        ),
+        tap((response: DuplicatePage[]) =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'duplicate-pages-effects.set-deleted.success.detail',
+              {
+                count: response.length,
+                deleted: action.deleted
+              }
+            )
+          })
+        ),
+        map(
+          (response: DuplicatePage[]) =>
+            new DuplicatePagesDeletedSet({ pages: response })
+        ),
+        catchError(error => {
+          this.logger.error(
+            'general failure setting duplicate pages deleted state:',
+            error
+          );
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'duplicate-pages-effects.set-deleted.error.detail',
+              { deleted: action.deleted }
+            )
+          });
+          return of(new DuplicatePagesSetDeletedFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.error(
+        'service failure setting duplicate pages deleted state:',
+        error
+      );
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new DuplicatePagesSetDeletedFailed());
     })
   );
 }

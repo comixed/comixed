@@ -18,6 +18,7 @@
 
 import { Action } from '@ngrx/store';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
+import { Page } from 'app/comics';
 
 export enum DuplicatePagesActionTypes {
   GetAll = '[DUPLICATE PAGES] Get all duplicate pages',
@@ -27,7 +28,10 @@ export enum DuplicatePagesActionTypes {
   Deselect = '[DUPLICATE PAGES] Deselect the given pages',
   SetBlocking = '[DUPLICATE PAGES] Set the blocking state for the given pages',
   BlockingSet = '[DUPLICATE PAGES] The block state for the given pages was set',
-  SetBlockingFailed = '[DUPLICATE PAGES] Failed to set the blocking state'
+  SetBlockingFailed = '[DUPLICATE PAGES] Failed to set the blocking state',
+  SetDeleted = '[DUPLICATE PAGES] Set duplicate pages deleted state',
+  DeletedSet = '[DUPLICATE PAGES] Duplicate pages deleted state set',
+  SetDeletedFailed = '[DUPLICATE PAGES] Set duplicate pages deleted state failed'
 }
 
 export class DuplicatePagesGetAll implements Action {
@@ -78,6 +82,24 @@ export class DuplicatePagesSetBlockingFailed implements Action {
   constructor() {}
 }
 
+export class DuplicatePagesSetDeleted implements Action {
+  readonly type = DuplicatePagesActionTypes.SetDeleted;
+
+  constructor(public payload: { pages: DuplicatePage[]; deleted: boolean }) {}
+}
+
+export class DuplicatePagesDeletedSet implements Action {
+  readonly type = DuplicatePagesActionTypes.DeletedSet;
+
+  constructor(public payload: { pages: DuplicatePage[] }) {}
+}
+
+export class DuplicatePagesSetDeletedFailed implements Action {
+  readonly type = DuplicatePagesActionTypes.SetDeletedFailed;
+
+  constructor() {}
+}
+
 export type DuplicatePagesActions =
   | DuplicatePagesGetAll
   | DuplicatePagesAllReceived
@@ -86,4 +108,7 @@ export type DuplicatePagesActions =
   | DuplicatePagesDeselect
   | DuplicatePagesSetBlocking
   | DuplicatePagesBlockingSet
-  | DuplicatePagesSetBlockingFailed;
+  | DuplicatePagesSetBlockingFailed
+  | DuplicatePagesSetDeleted
+  | DuplicatePagesDeletedSet
+  | DuplicatePagesSetDeletedFailed;

@@ -14,9 +14,11 @@
             <div class='p-col'>
                 <div class='ui-g'>
                     <div class='ui-g-12'>
-                        <h3>{{'duplicate-page-list-item.title'|translate:{
+                        <h2>{{'duplicate-page-list-item.title'|translate:{count: item.pages.length} }}</h2>
+                        <h3>{{'duplicate-page-list-item.subtitle'|translate:{
                             count: item.pages.length,
-                            blocked: item.blocked
+                            blocked: item.blocked,
+                            deletedCount: getDeletedCount(item)
                         } }}</h3>
                     </div>
                 </div>

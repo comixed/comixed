@@ -21,12 +21,14 @@ import { Injectable } from '@angular/core';
 import { interpolate } from 'app/app.functions';
 import {
   GET_ALL_DUPLICATE_PAGES_URL,
-  SET_BLOCKING_STATE_URL
+  SET_BLOCKING_STATE_URL,
+  SET_DELETED_STATE_URL
 } from 'app/library/library.constants';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { SetBlockingStateRequest } from 'app/library/models/net/set-blocking-state-request';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
+import { SetDeletedStateRequest } from 'app/library/models/net/set-deleted-state-request';
 
 @Injectable({
   providedIn: 'root'
@@ -35,17 +37,29 @@ export class DuplicatePagesService {
   constructor(private http: HttpClient, private logger: NGXLogger) {}
 
   getAll(): Observable<any> {
-    this.logger.debug('getting all duplicate pages');
+    this.logger.debug('[GET] http request getting all duplicate pages');
     return this.http.get(interpolate(GET_ALL_DUPLICATE_PAGES_URL));
   }
 
   setBlocking(pages: DuplicatePage[], blocking: boolean): Observable<any> {
     this.logger.debug(
-      `setting blocked state for pages: pages=${pages} blocking=${blocking}`
+      `[POST] http request setting blocked state for pages: blocking=${blocking}:`,
+      pages
     );
     return this.http.post(interpolate(SET_BLOCKING_STATE_URL), {
       hashes: pages.map(page => page.hash),
       blocked: blocking
     } as SetBlockingStateRequest);
+  }
+
+  setDeleted(pages: DuplicatePage[], deleted: boolean): Observable<any> {
+    this.logger.debug(
+      `[POST] http request setting dupicate pages delete state: deleted=${deleted} :`,
+      pages
+    );
+    return this.http.post(interpolate(SET_DELETED_STATE_URL), {
+      hashes: pages.map(page => page.hash),
+      deleted: deleted
+    } as SetDeletedStateRequest);
   }
 }

@@ -29,13 +29,15 @@ export interface DuplicatePagesState {
   pages: DuplicatePage[];
   selected: DuplicatePage[];
   setBlocking: boolean;
+  setDeleted: boolean;
 }
 
 export const initialState: DuplicatePagesState = {
   fetchingAll: false,
   pages: [],
   selected: [],
-  setBlocking: false
+  setBlocking: false,
+  setDeleted: false
 };
 
 export function reducer(
@@ -76,6 +78,22 @@ export function reducer(
 
     case DuplicatePagesActionTypes.SetBlockingFailed:
       return { ...state, setBlocking: false };
+
+    case DuplicatePagesActionTypes.SetDeleted:
+      return { ...state, setDeleted: true };
+
+    case DuplicatePagesActionTypes.DeletedSet: {
+      const pages = action.payload.pages;
+      state.pages.forEach(page => {
+        if (!pages.find(entry => entry.hash === page.hash)) {
+          pages.push(page);
+        }
+      });
+      return { ...state, setDeleted: false, pages: pages };
+    }
+
+    case DuplicatePagesActionTypes.SetDeletedFailed:
+      return { ...state, setDeleted: false };
 
     default:
       return state;

@@ -25,10 +25,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import {
   DuplicatePagesAllReceived,
   DuplicatePagesBlockingSet,
+  DuplicatePagesDeletedSet,
   DuplicatePagesGetAll,
   DuplicatePagesGetAllFailed,
   DuplicatePagesSetBlocking,
-  DuplicatePagesSetBlockingFailed
+  DuplicatePagesSetBlockingFailed,
+  DuplicatePagesSetDeleted,
+  DuplicatePagesSetDeletedFailed
 } from 'app/library/actions/duplicate-pages.actions';
 import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 import {
@@ -70,7 +73,8 @@ describe('DuplicatePagesEffects', () => {
             getAll: jasmine.createSpy('DuplicatePagesService.getAll()'),
             setBlocking: jasmine.createSpy(
               'DuplicatePagesService.setBlocking()'
-            )
+            ),
+            setDeleted: jasmine.createSpy('DuplicatePagesService.setDeleted()')
           }
         },
         MessageService
@@ -181,6 +185,63 @@ describe('DuplicatePagesEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.setBlocking$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('setting the deleted state for duplicate pages', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = PAGES;
+      const action = new DuplicatePagesSetDeleted({
+        pages: PAGES,
+        deleted: true
+      });
+      const outcome = new DuplicatePagesDeletedSet({ pages: PAGES });
+
+      actions$ = hot('-a', { a: action });
+      duplicatePagesService.setDeleted.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setDeleted$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new DuplicatePagesSetDeleted({
+        pages: PAGES,
+        deleted: true
+      });
+      const outcome = new DuplicatePagesSetDeletedFailed();
+
+      actions$ = hot('-a', { a: action });
+      duplicatePagesService.setDeleted.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setDeleted$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new DuplicatePagesSetDeleted({
+        pages: PAGES,
+        deleted: true
+      });
+      const outcome = new DuplicatePagesSetDeletedFailed();
+
+      actions$ = hot('-a', { a: action });
+      duplicatePagesService.setDeleted.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.setDeleted$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

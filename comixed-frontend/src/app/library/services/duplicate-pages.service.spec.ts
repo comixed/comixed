@@ -24,12 +24,14 @@ import { TestBed } from '@angular/core/testing';
 import { interpolate } from 'app/app.functions';
 import {
   GET_ALL_DUPLICATE_PAGES_URL,
-  SET_BLOCKING_STATE_URL
+  SET_BLOCKING_STATE_URL,
+  SET_DELETED_STATE_URL
 } from 'app/library/library.constants';
 import { DUPLICATE_PAGE_1 } from 'app/library/models/duplicate-page.fixtures';
 import { SetBlockingStateRequest } from 'app/library/models/net/set-blocking-state-request';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { DuplicatePagesService } from './duplicate-pages.service';
+import { SetDeletedStateRequest } from 'app/library/models/net/set-deleted-state-request';
 
 describe('DuplicatePagesService', () => {
   const PAGES = [DUPLICATE_PAGE_1];
@@ -71,6 +73,20 @@ describe('DuplicatePagesService', () => {
       blocked: true,
       hashes: HASHES
     } as SetBlockingStateRequest);
+    req.flush(PAGES);
+  });
+
+  it('can set the deleted state for pages', () => {
+    service
+      .setDeleted(PAGES, true)
+      .subscribe(response => expect(response).toEqual(PAGES));
+
+    const req = httpMock.expectOne(interpolate(SET_DELETED_STATE_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      hashes: PAGES.map(page => page.hash),
+      deleted: true
+    } as SetDeletedStateRequest);
     req.flush(PAGES);
   });
 });

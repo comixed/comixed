@@ -42,6 +42,7 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   showPagesOptions: SelectItem[];
   blockingOptions: MenuItem[];
+  deletingOptions: MenuItem[];
 
   constructor(
     private translateService: TranslateService,
@@ -65,6 +66,7 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
   set selectedPages(selectedPages: DuplicatePage[]) {
     this._selectedPages = selectedPages;
     this.loadBlockingOptions();
+    this.loadDeletingOptions();
   }
 
   get selectedPages(): DuplicatePage[] {
@@ -155,6 +157,39 @@ export class DuplicatesPageToolbarComponent implements OnInit, OnDestroy {
       ),
       accept: () => {
         this.duplicatesPagesAdaptors.setBlocking(this.selectedPages, enabled);
+        this.duplicatesPagesAdaptors.deselectPages(this.selectedPages);
+      }
+    });
+  }
+
+  private loadDeletingOptions() {
+    this.deletingOptions = [
+      {
+        label: this.translateService.instant(
+          'duplicates-page-toolbar.options.deleting.mark'
+        ),
+        command: () => this.setDeleted(true)
+      },
+      {
+        label: this.translateService.instant(
+          'duplicates-page-toolbar.options.deleting.unmark'
+        ),
+        command: () => this.setDeleted(false)
+      }
+    ];
+  }
+
+  private setDeleted(deleted: boolean): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'duplicates-page-toolbar.set-deleted.header'
+      ),
+      message: this.translateService.instant(
+        'duplicates-page-toolbar.set-deleted.message',
+        { deleted: deleted }
+      ),
+      accept: () => {
+        this.duplicatesPagesAdaptors.setDeleted(this.selectedPages, deleted);
         this.duplicatesPagesAdaptors.deselectPages(this.selectedPages);
       }
     });

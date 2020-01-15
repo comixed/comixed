@@ -48,5 +48,8 @@ public interface PageRepository extends CrudRepository<Page, Long> {
   int updateDeleteOnAllWithHash(@Param("hash") String hash, @Param("deleted") boolean deleted);
 
   @Query("SELECT p FROM Page p WHERE p.comic.id = :id")
-  List<Page> findAllByComicId(long id);
+  List<Page> findAllByComicId(@Param("id") long id);
+
+  @Query("SELECT p FROM Page p WHERE p.hash = :hash")
+  List<Page> getPagesWithHash(@Param("hash") String hash);
 }
