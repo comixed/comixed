@@ -18,6 +18,12 @@
 
 package org.comixed.service.library;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
@@ -35,13 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ComicService {
@@ -235,19 +234,19 @@ public class ComicService {
     }
 
     final Comic result = comicRecord.get();
-    final Comic next =
-        this.comicRepository.findFirstSucceedingComic(
+    final List<Comic> next =
+        this.comicRepository.findIssuesAfterComic(
             result.getSeries(), result.getVolume(), result.getIssueNumber());
-    if (next != null) {
-      this.logger.debug("Setting the next comic: id={}", next.getId());
-      result.setNextIssueId(next.getId());
+    if (!next.isEmpty()) {
+      this.logger.debug("Setting the next comic: id={}", next.get(0).getId());
+      result.setNextIssueId(next.get(0).getId());
     }
-    final Comic prev =
-        this.comicRepository.findFirstPreviousComic(
+    final List<Comic> prev =
+        this.comicRepository.findIssuesBeforeComic(
             result.getSeries(), result.getVolume(), result.getIssueNumber());
-    if (prev != null) {
-      this.logger.debug("Setting previous comic: id={}", prev.getId());
-      result.setPreviousIssueId(prev.getId());
+    if (!prev.isEmpty()) {
+      this.logger.debug("Setting previous comic: id={}", prev.get(0).getId());
+      result.setPreviousIssueId(prev.get(0).getId());
     }
 
     this.logger.debug("Returning comic: id={}", result.getId());

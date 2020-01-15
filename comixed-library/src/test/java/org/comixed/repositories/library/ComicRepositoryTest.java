@@ -18,8 +18,13 @@
 
 package org.comixed.repositories.library;
 
+import static org.junit.Assert.*;
+
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
@@ -40,12 +45,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
@@ -68,11 +67,11 @@ public class ComicRepositoryTest {
   private static final long TEST_INVALID_ID = 9797L;
   private static final String TEST_SERIES = "Steve Rogers: Captain America";
   private static final String TEST_VOLUME = "2017";
-  private static final String TEST_ISSUE_WITH_NO_NEXT = "513";
+  private static final String TEST_ISSUE_WITH_NO_NEXT = "514";
   private static final String TEST_ISSUE_WITH_NEXT = "512";
   private static final Long TEST_NEXT_ISSUE_ID = 1001L;
   private static final Long TEST_PREV_ISSUE_ID = 1000L;
-  private static final String TEST_ISSUE_WITH_NO_PREV = "512";
+  private static final String TEST_ISSUE_WITH_NO_PREV = "249";
   private static final String TEST_ISSUE_WITH_PREV = "513";
 
   @Autowired private ComicRepository repository;
@@ -392,7 +391,7 @@ public class ComicRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(3, result.size());
+    assertEquals(6, result.size());
   }
 
   @Test
@@ -433,7 +432,7 @@ public class ComicRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(4, result.size());
+    assertEquals(7, result.size());
     testComicOrder(0L, 0L, result);
   }
 
@@ -446,7 +445,7 @@ public class ComicRepositoryTest {
     testComicOrder(0, timestamp.getTime(), result);
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(2, result.size());
+    assertEquals(5, result.size());
   }
 
   private void testComicOrder(long id, long timestamp, List<Comic> comicList) {
@@ -481,36 +480,42 @@ public class ComicRepositoryTest {
   }
 
   @Test
-  public void testGetNextForComicWithNone() {
-    final Comic result =
-        this.repository.findFirstSucceedingComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_NEXT);
+  public void testGetIssuesAfterComicWithNone() {
+    final List<Comic> result =
+        this.repository.findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_NEXT);
 
-    assertNull(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
-  public void testGetNextForComic() {
-    final Comic result =
-        this.repository.findFirstSucceedingComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NEXT);
+  public void testGetIssuesAfterComic() {
+    final List<Comic> result =
+        this.repository.findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NEXT);
 
-    assertNotNull(result);
-    assertEquals(TEST_NEXT_ISSUE_ID, result.getId());
+    assertFalse(result.isEmpty());
+    assertEquals(TEST_NEXT_ISSUE_ID, result.get(0).getId());
+    for (int index = 0; index < result.size(); index++) {
+      assertTrue(result.get(index).getIssueNumber().compareTo(TEST_ISSUE_WITH_NEXT) > 0);
+    }
   }
 
   @Test
-  public void testGetPreviousForComicWithNone() {
-    final Comic result =
-        this.repository.findFirstPreviousComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_PREV);
+  public void testGetIssuesBeforeComicNone() {
+    final List<Comic> result =
+        this.repository.findIssuesBeforeComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_PREV);
 
-    assertNull(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
-  public void testGetPreviousForComic() {
-    final Comic result =
-        this.repository.findFirstPreviousComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_PREV);
+  public void testGetIssuesBeforeComic() {
+    final List<Comic> result =
+        this.repository.findIssuesBeforeComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_PREV);
 
-    assertNotNull(result);
-    assertEquals(TEST_PREV_ISSUE_ID, result.getId());
+    assertFalse(result.isEmpty());
+    assertEquals(TEST_PREV_ISSUE_ID, result.get(0).getId());
+    for (int index = 0; index < result.size(); index++) {
+      assertTrue(result.get(index).getIssueNumber().compareTo(TEST_ISSUE_WITH_PREV) < 0);
+    }
   }
 }
