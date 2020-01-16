@@ -18,6 +18,13 @@
 
 package org.comixed.service.library;
 
+import static junit.framework.TestCase.*;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
 import org.comixed.model.library.ScanType;
@@ -37,14 +44,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static junit.framework.TestCase.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -242,16 +241,21 @@ public class ComicServiceTest {
 
   @Test
   public void testGetComic() throws ComicException {
+    List<Comic> previousComics = new ArrayList<>();
+    previousComics.add(previousComic);
+    List<Comic> nextComics = new ArrayList<>();
+    nextComics.add(nextComic);
+
     Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(currentComic));
 
     Mockito.when(
-            comicRepository.findFirstPreviousComic(
+            comicRepository.findIssuesBeforeComic(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(previousComic);
+        .thenReturn(previousComics);
     Mockito.when(
-            comicRepository.findFirstSucceedingComic(
+            comicRepository.findIssuesAfterComic(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(nextComic);
+        .thenReturn(nextComics);
 
     final Comic result = comicService.getComic(TEST_COMIC_ID);
 
@@ -262,9 +266,9 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
     Mockito.verify(comicRepository, Mockito.times(1))
-        .findFirstPreviousComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER);
+        .findIssuesBeforeComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER);
     Mockito.verify(comicRepository, Mockito.times(1))
-        .findFirstSucceedingComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER);
+        .findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER);
   }
 
   @Test
