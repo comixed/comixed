@@ -35,11 +35,8 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private ObjectFactory<ComicVinePublisherDetailsWebRequest> webRequestFactory;
-
   @Autowired private WebRequestProcessor webRequestProcessor;
-
   @Autowired private ComicVinePublisherDetailsResponseProcessor contentProcessor;
-
   @Autowired private ComicVinePublisherRepository comicVinePublisherRepository;
 
   public void execute(String apiKey, String publisherId, Comic comic, boolean skipCache)
@@ -58,6 +55,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
 
       request.setApiKey(apiKey);
       request.setPublisherId(publisherId);
+      request.addFilter("field_list", "id,name,image");
 
       try {
         content = this.webRequestProcessor.execute(request);
