@@ -179,12 +179,11 @@
   },
   "comic-list-toolbar": {
     "tooltip": {
-      "show-filters": "Show library filters."
+      "show-filters": "Show library filters.",
+      "list-layout": "Show comics as a list.",
+      "grid-layout": "Show comics as a grid."
     },
     "options": {
-      "layout": {
-        "tooltip": "Toggle between grid and list layouts."
-      },
       "rows": {
         "10-comics": "Show 10 Comics",
         "25-comics": "Show 25 Comics",
@@ -198,10 +197,6 @@
       "cover-size": {
         "tooltip": "Set the cover size."
       }
-    },
-    "label": {
-      "scrape": "Scrape",
-      "delete": "Delete"
     },
     "button": {
       "select-all": "Select All Comics",
