@@ -46,10 +46,13 @@
     },
     "button": {
       "find": "Find Comics",
-      "delete-blocked-pages": "Blocked Pages",
       "start-import": "Start Import",
       "select": "Select",
       "import": "Import"
+    },
+    "tooltip": {
+      "delete-blocked-pages": "Blocked pages will be marked for deletion.",
+      "allow-blocked-pages": "Blocked pages will not be marked for deletion."
     }
   },
   "import-page": {
