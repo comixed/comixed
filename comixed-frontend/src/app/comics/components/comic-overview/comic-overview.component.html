@@ -5,14 +5,14 @@
                 <strong>{{"comic-overview.label.publisher"|translate}}</strong>
             </div>
             <div class='ui-g-12'>
-                <a [routerLink]='["/publishers", comic.publisher||"undefined"]'>{{comic.imprint || comic.publisher || "text.unknown"|translate}}</a>
+                <a [routerLink]='["/collections", "publishers", comic.publisher||"undefined"]'>{{comic.imprint || comic.publisher || "text.unknown"|translate}}</a>
                 <span *ngIf='comic.imprint'> ({{comic.publisher}})</span>
             </div>
             <div class='ui-g-12'>
                 <strong>{{"comic-overview.label.series"|translate}}</strong>
             </div>
             <div class='ui-g-12'>
-                <a [routerLink]='["/series", comic.series||"undefine"]'>{{comic.series || "text.unknown"|translate}}</a>
+                <a [routerLink]='["/collections","series", comic.series||"undefine"]'>{{comic.series || "text.unknown"|translate}}</a>
             </div>
             <div class='ui-g-12'>
                 <strong>{{"comic-overview.label.volume"|translate}}</strong>
