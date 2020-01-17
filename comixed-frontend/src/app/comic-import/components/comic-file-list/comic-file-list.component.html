@@ -16,9 +16,9 @@
                         paginatorPosition='both'>
                 <p-header>
                     <div class='ui-helper-clearfix'>
-                        <app-comic-file-list-toolbar (changeLayout)='comicFileList.changeLayout($event)'
-                                                     (filterText)='comicFileList.filter($event)'
+                        <app-comic-file-list-toolbar (filterText)='comicFileList.filter($event)'
                                                      (showSelections)='showSelections = true'
+                                                     [dataView]='comicFileList'
                                                      [busy]='busy'
                                                      [comicFiles]="comicFiles"
                                                      [selectedComicFiles]='selectedComicFiles'

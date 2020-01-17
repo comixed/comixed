@@ -42,6 +42,7 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
   @Input() directory: string;
   @Input() comicFiles: ComicFile[] = [];
   @Input() selectedComicFiles: ComicFile[] = [];
+  @Input() dataView: any;
 
   @Output() changeLayout = new EventEmitter<string>();
   @Output() showSelections = new EventEmitter<boolean>();
@@ -49,12 +50,12 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
 
   langChangeSubscription: Subscription;
 
-  layoutOptions: SelectItem[];
   sortFieldOptions: SelectItem[];
   rowOptions: SelectItem[];
   importOptions: MenuItem[];
 
-  layout: string;
+  layoutSubscription: Subscription;
+  gridLayout = true;
   sortField: string;
   rows: number;
   sameHeight: boolean;
@@ -75,10 +76,12 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
         this.loadTranslations();
       }
     );
-    this.loadLayoutOptions();
     this.loadSortFieldOptions();
     this.loadRowsOptions();
     this.loadImportOptions();
+    this.layoutSubscription = this.libraryDisplayAdaptor.layout$.subscribe(
+      layout => (this.gridLayout = layout === 'grid')
+    );
     this.layout = this.libraryDisplayAdaptor.getLayout();
     this.sortField = this.libraryDisplayAdaptor.getSortField();
     this.rows = this.libraryDisplayAdaptor.getDisplayRows();
@@ -129,23 +132,6 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
   saveCoverSize(coverSize: number): void {
     this.coverSize = coverSize;
     this.libraryDisplayAdaptor.setCoverSize(coverSize);
-  }
-
-  private loadLayoutOptions(): void {
-    this.layoutOptions = [
-      {
-        label: this.translateService.instant(
-          'library-contents.options.layout.grid-layout'
-        ),
-        value: 'grid'
-      },
-      {
-        label: this.translateService.instant(
-          'library-contents.options.layout.list-layout'
-        ),
-        value: 'list'
-      }
-    ];
   }
 
   private loadSortFieldOptions(): void {
@@ -239,5 +225,11 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
           this.deleteBlockedPages
         )
     });
+  }
+
+  setGridLayout(useGridLayout: boolean): void {
+    const layout = useGridLayout ? 'grid' : 'list';
+    this.libraryDisplayAdaptor.setLayout(layout);
+    this.dataView.changeLayout(layout);
   }
 }
