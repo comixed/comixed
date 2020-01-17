@@ -115,7 +115,7 @@ describe('LibraryDisplayAdaptor', () => {
     });
 
     it('provides updates', () => {
-      libraryDisplayAdaptor._sortField$.subscribe(value => {
+      libraryDisplayAdaptor.sortField$.subscribe(value => {
         expect(value).toEqual(SORT);
       });
     });

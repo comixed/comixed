@@ -42,6 +42,7 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
   @Input() directory: string;
   @Input() comicFiles: ComicFile[] = [];
   @Input() selectedComicFiles: ComicFile[] = [];
+  @Input() dataView: any;
 
   @Output() changeLayout = new EventEmitter<string>();
   @Output() showSelections = new EventEmitter<boolean>();
@@ -49,15 +50,19 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
 
   langChangeSubscription: Subscription;
 
-  layoutOptions: SelectItem[];
   sortFieldOptions: SelectItem[];
   rowOptions: SelectItem[];
   importOptions: MenuItem[];
 
-  layout: string;
+  layoutSubscription: Subscription;
+  gridLayout = true;
+  sortFieldSubscription: Subscription;
   sortField: string;
+  rowsSubscription: Subscription;
   rows: number;
+  sameHeightSubscription: Subscription;
   sameHeight: boolean;
+  coverSizeSubscription: Subscription;
   coverSize: number;
   deleteBlockedPages = false;
 
@@ -75,19 +80,25 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
         this.loadTranslations();
       }
     );
-    this.loadLayoutOptions();
     this.loadSortFieldOptions();
     this.loadRowsOptions();
     this.loadImportOptions();
-    this.layout = this.libraryDisplayAdaptor.getLayout();
-    this.sortField = this.libraryDisplayAdaptor.getSortField();
-    this.rows = this.libraryDisplayAdaptor.getDisplayRows();
-    this.sameHeight = this.libraryDisplayAdaptor.getSameHeight();
-    this.coverSize = this.libraryDisplayAdaptor.getCoverSize();
+    this.layoutSubscription = this.libraryDisplayAdaptor.layout$.subscribe(
+      layout => (this.gridLayout = layout === 'grid')
+    );
+    this.sortFieldSubscription = this.libraryDisplayAdaptor.sortField$.subscribe(field => this.sortField = field);
+    this.rowsSubscription = this.libraryDisplayAdaptor.rows$.subscribe(rows => this.rows = rows);
+    this.sameHeightSubscription = this.libraryDisplayAdaptor.sameHeight$.subscribe(sameHeight => this.sameHeight = sameHeight);
+    this.coverSizeSubscription = this.libraryDisplayAdaptor.coverSize$.subscribe(coverSize => this.coverSize = coverSize);
   }
 
   ngOnDestroy() {
     this.langChangeSubscription.unsubscribe();
+    this.layoutSubscription.unsubscribe();
+    this.sortFieldSubscription.unsubscribe();
+    this.rowsSubscription.unsubscribe();
+    this.sameHeightSubscription.unsubscribe();
+    this.coverSizeSubscription.unsubscribe();
   }
 
   findComics(): void {
@@ -107,45 +118,23 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
   }
 
   setSortField(sortField: string): void {
-    this.sortField = sortField;
     this.libraryDisplayAdaptor.setSortField(sortField, false);
   }
 
   setComicsShown(rows: number): void {
-    this.rows = rows;
     this.libraryDisplayAdaptor.setDisplayRows(rows);
   }
 
   useSameHeight(sameHeight: boolean): void {
-    this.sameHeight = sameHeight;
     this.libraryDisplayAdaptor.setSameHeight(sameHeight);
   }
 
   setCoverSize(coverSize: number): void {
-    this.coverSize = coverSize;
     this.libraryDisplayAdaptor.setCoverSize(coverSize, false);
   }
 
   saveCoverSize(coverSize: number): void {
-    this.coverSize = coverSize;
     this.libraryDisplayAdaptor.setCoverSize(coverSize);
-  }
-
-  private loadLayoutOptions(): void {
-    this.layoutOptions = [
-      {
-        label: this.translateService.instant(
-          'library-contents.options.layout.grid-layout'
-        ),
-        value: 'grid'
-      },
-      {
-        label: this.translateService.instant(
-          'library-contents.options.layout.list-layout'
-        ),
-        value: 'list'
-      }
-    ];
   }
 
   private loadSortFieldOptions(): void {
@@ -239,5 +228,11 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
           this.deleteBlockedPages
         )
     });
+  }
+
+  setGridLayout(useGridLayout: boolean): void {
+    const layout = useGridLayout ? 'grid' : 'list';
+    this.libraryDisplayAdaptor.setLayout(layout);
+    this.dataView.changeLayout(layout);
   }
 }

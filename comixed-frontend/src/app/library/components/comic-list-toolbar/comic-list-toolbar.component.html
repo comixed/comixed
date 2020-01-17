@@ -3,7 +3,7 @@
         <button pButton
                 [icon]='gridLayout?"fa fa-fw fa-th":"fa fa-fw fa-list"'
                 (click)='setGridLayout(!gridLayout)'
-                [pTooltip]='"comic-list-toolbar.options.layout.tooltip"|translate'></button>
+                [pTooltip]='"comic-list-toolbar.tooltip."+(gridLayout?"grid":"list")+"-layout"|translate'></button>
         <p-dropdown [options]='sortOptions'
                     [(ngModel)]='sortField'
                     (onChange)='changeSortField($event.value)'></p-dropdown>
@@ -43,7 +43,6 @@
                 class='ui-button-info cx-toolbar-button'
                 type='button'
                 [pTooltip]='"comic-list-toolbar.button.scrape"|translate'
-                [label]='"comic-list-toolbar.label.scrape"|translate'
                 icon='fa fa-fw fa-fingerprint'
                 [disabled]='!selectedComics.length'
                 (click)='startScraping()'></button>
@@ -51,7 +50,6 @@
                 class='ui-button-danger cx-toolbar-button'
                 type='button'
                 [pTooltip]='"comic-list-toolbar.button.delete"|translate'
-                [label]='"comic-list-toolbar.label.delete"|translate'
                 icon='fa fa-fw fa-trash'
                 [disabled]='!selectedComics.length'
                 (click)='deleteComics()'></button>

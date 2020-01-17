@@ -18,10 +18,10 @@
 </p-toolbar>
 <p-toolbar>
     <div class='ui-toolbar-group-left'>
-        <p-dropdown (onChange)='changeLayout.next($event.value)'
-                    [(ngModel)]='layout'
-                    [options]='layoutOptions'
-                    styleClass='cx-layout-dropdown'></p-dropdown>
+        <button pButton
+                [icon]='gridLayout?"fa fa-fw fa-th":"fa fa-fw fa-list"'
+                (click)='setGridLayout(!gridLayout)'
+                [pTooltip]='"import-toolbar.tooltip."+(gridLayout?"grid":"list")+"-layout"|translate'></button>
         <p-dropdown (onChange)='setSortField($event.value)'
                     [(ngModel)]='sortField'
                     [options]='sortFieldOptions'
@@ -45,9 +45,11 @@
         <button pButton
                 type='button'
                 (click)='toggleBlockedPages()'
-                [icon]='deleteBlockedPages?"fa fa-fw fa-check":"fa fa-fw fa-question"'
-                [label]='"import-toolbar.button.delete-blocked-pages"|translate'
-                class='cx-toolbar-button'></button>
+                [icon]='deleteBlockedPages?"fa fa-fw fas fa-ban":"fa fa-fw far fa-stop-circle"'
+                [pTooltip]='"import-toolbar.tooltip."+(deleteBlockedPages?"delete-blocked-pages":"allow-blocked-pages")|translate'
+                class='cx-toolbar-button'
+                [class.ui-button-danger]='deleteBlockedPages'
+                [class.ui-button-success]='!deleteBlockedPages'></button>
         <button (click)='selectAllComicFiles()'
                 [disabled]='!comicFiles.length||selectedComicFiles.length === comicFiles.length'
                 icon='fa fa-fw fa-plus'
@@ -66,8 +68,8 @@
                 type='button'></button>
         <p-splitButton [model]='importOptions'
                        [disabled]='selectedComicFiles.length === 0'
-                       icon='fa fa-fw fa-start'
-                       [label]='"import-toolbar.button.start-import"|translate'
+                       icon='fa fa-fw fa-play'
+                       [pTooltip]='"import-toolbar.tooltip.start-import"|translate'
                        class='cx-toolbar-button'></p-splitButton>
     </div>
 </p-toolbar>

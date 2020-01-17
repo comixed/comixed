@@ -45,12 +45,16 @@ export class LibraryDisplayAdaptor {
   private _layout$ = new BehaviorSubject<string>(
     LIBRARY_DISPLAY_LAYOUT_DEFAULT
   );
-  _sortField$ = new BehaviorSubject<string>(LIBRARY_DISPLAY_SORT_FIELD_DEFAULT);
-  _rows$ = new BehaviorSubject<number>(LIBRARY_DISPLAY_ROWS_DEFAULT);
-  _sameHeight$ = new BehaviorSubject<boolean>(
+  private _sortField$ = new BehaviorSubject<string>(
+    LIBRARY_DISPLAY_SORT_FIELD_DEFAULT
+  );
+  private _rows$ = new BehaviorSubject<number>(LIBRARY_DISPLAY_ROWS_DEFAULT);
+  private _sameHeight$ = new BehaviorSubject<boolean>(
     LIBRARY_DISPLAY_SAME_HEIGHT_DEFAULT
   );
-  _coverSize$ = new BehaviorSubject<number>(LIBRARY_DISPLAY_COVER_SIZE_DEFAULT);
+  private _coverSize$ = new BehaviorSubject<number>(
+    LIBRARY_DISPLAY_COVER_SIZE_DEFAULT
+  );
 
   private ignoreFields = [];
 
