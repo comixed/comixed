@@ -188,10 +188,6 @@ describe('ComicFileListToolbarComponent', () => {
         false
       );
     });
-
-    it('updates the sort field', () => {
-      expect(component.sortField).toEqual(SORT_FIELD);
-    });
   });
 
   describe('changing the number of comics shown', () => {
@@ -207,10 +203,6 @@ describe('ComicFileListToolbarComponent', () => {
         COMICS_SHOWN
       );
     });
-
-    it('updates the number of comics shown', () => {
-      expect(component.rows).toEqual(COMICS_SHOWN);
-    });
   });
 
   describe('setting using the same height', () => {
@@ -225,10 +217,6 @@ describe('ComicFileListToolbarComponent', () => {
       expect(libraryDisplayAdaptor.setSameHeight).toHaveBeenCalledWith(
         SAME_HEIGHT
       );
-    });
-
-    it('sets the same height flag', () => {
-      expect(component.sameHeight).toEqual(SAME_HEIGHT);
     });
   });
 
@@ -246,10 +234,6 @@ describe('ComicFileListToolbarComponent', () => {
         false
       );
     });
-
-    it('sets the cover size', () => {
-      expect(component.coverSize).toEqual(COVER_SIZE, false);
-    });
   });
 
   describe('saving the covers size', () => {
@@ -264,10 +248,6 @@ describe('ComicFileListToolbarComponent', () => {
       expect(libraryDisplayAdaptor.setCoverSize).toHaveBeenCalledWith(
         COVER_SIZE
       );
-    });
-
-    it('sets the cover size', () => {
-      expect(component.coverSize).toEqual(COVER_SIZE, false);
     });
   });
 
