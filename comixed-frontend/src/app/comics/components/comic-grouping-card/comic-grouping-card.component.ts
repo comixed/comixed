@@ -26,7 +26,7 @@ import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry'
 })
 export class ComicGroupingCardComponent implements OnInit {
   @Input() name: string;
-  @Input() parent_route: string;
+  @Input() parentRoute: string;
 
   constructor() {}
 
