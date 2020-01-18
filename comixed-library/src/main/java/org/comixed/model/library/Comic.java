@@ -23,10 +23,6 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import java.io.File;
-import java.text.DateFormat;
-import java.util.*;
-import javax.persistence.*;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
@@ -40,6 +36,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
+import java.io.File;
+import java.text.DateFormat;
+import java.util.*;
 
 /**
  * <code>Comic</code> represents a single digital comic issue.
@@ -693,7 +694,7 @@ public class Comic {
     this.logger.debug("Setting issue number=" + issueNumber);
     if ((issueNumber != null) && issueNumber.startsWith("0")) {
       this.logger.debug("Removing leading 0s from issue number");
-      while (issueNumber.startsWith("0")) {
+      while (issueNumber.startsWith("0") && !issueNumber.equals("0")) {
         issueNumber = issueNumber.substring(1);
       }
     }
