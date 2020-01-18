@@ -16,30 +16,47 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { CommonModule } from '@angular/common';
 import {
   ModuleWithProviders,
   NgModule,
   Optional,
   SkipSelf
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
-import { ComicOverviewComponent } from 'app/comics/components/comic-overview/comic-overview.component';
-import { ComicStoryComponent } from 'app/comics/components/comic-story/comic-story.component';
-import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
-import { ComicPagesComponent } from 'app/comics/components/comic-pages/comic-pages.component';
-import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
-import { CardModule } from 'primeng/card';
-import { TranslateModule } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
-import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
+import { ComicsRoutingModule } from 'app/comics/comics-routing.module';
+import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
+import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
+import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
+import { ComicGroupingCardComponent } from 'app/comics/components/comic-grouping-card/comic-grouping-card.component';
+import { ComicOverviewComponent } from 'app/comics/components/comic-overview/comic-overview.component';
+import { ComicPagesComponent } from 'app/comics/components/comic-pages/comic-pages.component';
+import { ComicStoryComponent } from 'app/comics/components/comic-story/comic-story.component';
+import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
+import { ComicEffects } from 'app/comics/effects/comic.effects';
+import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
+import { ComicDetailsPageComponent } from 'app/comics/pages/comic-details-page/comic-details-page.component';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+import { ComicDownloadLinkPipe } from 'app/comics/pipes/comic-download-link.pipe';
+import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
+import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
+import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
+import { ComicService } from 'app/comics/services/comic.service';
+import { PageService } from 'app/comics/services/page.service';
+import { ScrapingService } from 'app/comics/services/scraping.service';
+import { UserModule } from 'app/user/user.module';
+import { BlockUIModule } from 'primeng/blockui';
+import { CardModule } from 'primeng/card';
+import { DataViewModule } from 'primeng/dataview';
+import { DropdownModule } from 'primeng/dropdown';
 import { InplaceModule } from 'primeng/inplace';
 import { PanelModule } from 'primeng/panel';
-import { DataViewModule } from 'primeng/dataview';
-import { ComicGroupingCardComponent } from 'app/comics/components/comic-grouping-card/comic-grouping-card.component';
-import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
-import { BlockUIModule } from 'primeng/blockui';
 import {
   InputTextModule,
   ProgressBarModule,
@@ -49,27 +66,10 @@ import {
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
 import { TableModule } from 'primeng/table';
-import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
-import { StoreModule } from '@ngrx/store';
+import { ScrapingIssueCoverUrlPipe } from './pipes/scraping-issue-cover-url.pipe';
 import * as fromComics from './reducers/comic.reducer';
 import * as fromScraping from './reducers/scraping.reducer';
-import { ComicEffects } from 'app/comics/effects/comic.effects';
-import { EffectsModule } from '@ngrx/effects';
-import { ComicService } from 'app/comics/services/comic.service';
-import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { ComicDetailsPageComponent } from 'app/comics/pages/comic-details-page/comic-details-page.component';
-import { ComicsRoutingModule } from 'app/comics/comics-routing.module';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicDownloadLinkPipe } from 'app/comics/pipes/comic-download-link.pipe';
-import { UserModule } from 'app/user/user.module';
-import { PageService } from 'app/comics/services/page.service';
-import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
-import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
-import { ScrapingService } from 'app/comics/services/scraping.service';
-import { ScrapingIssueCoverUrlPipe } from './pipes/scraping-issue-cover-url.pipe';
 
 @NgModule({
   declarations: [
