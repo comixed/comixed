@@ -42,7 +42,9 @@ public class ComicVineQueryForIssueAdaptor {
       throws ComicVineAdaptorException {
     this.logger.debug("Getting issue={} for volume={} ", issueNumber, volume);
 
-    while (!issueNumber.isEmpty() && ("123456789".indexOf(issueNumber.substring(0, 1)) == -1)) {
+    while (!issueNumber.isEmpty()
+        && !issueNumber.equals("0")
+        && "123456789".indexOf(issueNumber.substring(0, 1)) == -1) {
       issueNumber = issueNumber.substring(1);
     }
 
