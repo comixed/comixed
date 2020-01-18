@@ -57,6 +57,7 @@ import {
 } from 'app/comics/reducers/scraping.reducer';
 import { MessageService } from 'primeng/api';
 import { ScrapingAdaptor } from './scraping.adaptor';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ScrapingAdaptor', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
@@ -84,6 +85,7 @@ describe('ScrapingAdaptor', () => {
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(SCRAPING_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

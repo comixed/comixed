@@ -44,9 +44,10 @@ import {
   ScrapingVolumesReceived
 } from 'app/comics/actions/scraping.actions';
 import { hot } from 'jasmine-marbles';
-import objectContaining = jasmine.objectContaining;
 import { HttpErrorResponse } from '@angular/common/http';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import objectContaining = jasmine.objectContaining;
 
 describe('ScrapingEffects', () => {
   const API_KEY = 'A0B1C2D3E4F56789';
@@ -72,7 +73,7 @@ describe('ScrapingEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), LoggerTestingModule],
       providers: [
         ScrapingEffects,
         provideMockActions(() => actions$),

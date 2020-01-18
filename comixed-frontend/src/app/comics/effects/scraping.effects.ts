@@ -37,10 +37,12 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { Comic } from 'app/comics';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class ScrapingEffects {
   constructor(
+    private logger: NGXLogger,
     private actions$: Actions<ScrapingActions>,
     private scrapingService: ScrapingService,
     private messageService: MessageService,
@@ -51,6 +53,7 @@ export class ScrapingEffects {
   getVolumes$: Observable<Action> = this.actions$.pipe(
     ofType(ScrapingActionTypes.GetVolumes),
     map(action => action.payload),
+    tap(action => this.logger.debug('effect: get comic volumes:', action)),
     switchMap(action =>
       this.scrapingService
         .getVolumes(
@@ -60,6 +63,9 @@ export class ScrapingEffects {
           action.skipCache
         )
         .pipe(
+          tap(response =>
+            this.logger.debug('get coic volumes response:', response)
+          ),
           tap((response: ScrapingVolume[]) =>
             this.messageService.add({
               severity: 'info',
@@ -74,6 +80,7 @@ export class ScrapingEffects {
               new ScrapingVolumesReceived({ volumes: response })
           ),
           catchError(error => {
+            this.logger.error('service error getting volumes:', error);
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -85,6 +92,7 @@ export class ScrapingEffects {
         )
     ),
     catchError(error => {
+      this.logger.error('general error getting volumes:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -99,6 +107,7 @@ export class ScrapingEffects {
   getIssue$: Observable<Action> = this.actions$.pipe(
     ofType(ScrapingActionTypes.GetIssue),
     map(action => action.payload),
+    tap(action => this.logger.debug('effect: get scraping issue:', action)),
     switchMap(action =>
       this.scrapingService
         .getIssue(
@@ -108,6 +117,9 @@ export class ScrapingEffects {
           action.skipCache
         )
         .pipe(
+          tap(response =>
+            this.logger.debug('getting scraping issue response:', response)
+          ),
           tap((response: ScrapingIssue) =>
             this.messageService.add({
               severity: 'info',
@@ -121,6 +133,7 @@ export class ScrapingEffects {
               new ScrapingIssueReceived({ issue: response })
           ),
           catchError(error => {
+            this.logger.error('service error getting scraping issue:', error);
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -132,6 +145,7 @@ export class ScrapingEffects {
         )
     ),
     catchError(error => {
+      this.logger.error('general error getting scraping issue:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -146,6 +160,7 @@ export class ScrapingEffects {
   loadMetadata$: Observable<Action> = this.actions$.pipe(
     ofType(ScrapingActionTypes.LoadMetadata),
     map(action => action.payload),
+    tap(action => this.logger.debug('effect: loading metadata:', action)),
     switchMap(action =>
       this.scrapingService
         .loadMetadata(
@@ -155,6 +170,9 @@ export class ScrapingEffects {
           action.skipCache
         )
         .pipe(
+          tap(response =>
+            this.logger.debug('load metadata response:', response)
+          ),
           tap((response: Comic) =>
             this.messageService.add({
               severity: 'info',
@@ -167,6 +185,7 @@ export class ScrapingEffects {
             (response: Comic) => new ScrapingMetadataLoaded({ comic: response })
           ),
           catchError(error => {
+            this.logger.error('service error loading metadata:', error);
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -178,6 +197,7 @@ export class ScrapingEffects {
         )
     ),
     catchError(error => {
+      this.logger.error('general error loading metadata:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(

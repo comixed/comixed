@@ -41,6 +41,7 @@ import {
 import { GetScrapingIssueRequest } from 'app/comics/models/net/get-scraping-issue-request';
 import { LoadMetadataRequest } from 'app/comics/models/net/load-metadata-request';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ScrapingService', () => {
   const API_KEY = 'A0B1C2D3E4F56789';
@@ -64,7 +65,7 @@ describe('ScrapingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [ScrapingService]
     });
 
