@@ -18,15 +18,16 @@
 
 package org.comixed.model.library;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+
+import static org.junit.Assert.*;
 
 public class ComicTest {
   private static final String TEST_SERIES = "Batman";
@@ -286,6 +287,12 @@ public class ComicTest {
   public void testIssueNumber() {
     this.comic.setIssueNumber("0" + TEST_ISSUE_NUMBER);
     assertEquals(TEST_ISSUE_NUMBER, this.comic.getIssueNumber());
+  }
+
+  @Test
+  public void testIssueNumberAllowsItToBe0() {
+    this.comic.setIssueNumber("0");
+    assertEquals("0", this.comic.getIssueNumber());
   }
 
   @Test
