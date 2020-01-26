@@ -24,17 +24,17 @@ export const TOKEN_KEY = 'AuthToken';
 export class TokenService {
   constructor() {}
 
-  sign_out(): void {
+  signout(): void {
     window.sessionStorage.removeItem(TOKEN_KEY);
     window.sessionStorage.clear();
   }
 
-  save_token(token: string): void {
+  saveToken(token: string): void {
     window.sessionStorage.removeItem(TOKEN_KEY);
     window.sessionStorage.setItem(TOKEN_KEY, token);
   }
 
-  get_token(): string {
+  getToken(): string {
     return sessionStorage.getItem(TOKEN_KEY);
   }
 }
