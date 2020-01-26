@@ -16,27 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { interpolate } from 'app/app.functions';
 import {
   AUTH_SET_PREFERENCE_URL,
   AUTH_SUBMIT_LOGIN_DATA_URL,
   GET_AUTHENTICATED_USER_URL
 } from 'app/services/url.constants';
-import { interpolate } from 'app/app.functions';
+import { NGXLogger } from 'ngx-logger';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  constructor(private http: HttpClient) {}
+  constructor(private logger: NGXLogger, private http: HttpClient) {}
 
-  get_authenticated_user(): Observable<any> {
+  getAuthenticatedUser(): Observable<any> {
+    this.logger.debug('[GET] http request: get authenticated user');
     return this.http.get(interpolate(GET_AUTHENTICATED_USER_URL));
   }
 
-  submit_login_data(email: string, password: string): Observable<any> {
+  submitLoginData(email: string, password: string): Observable<any> {
+    this.logger.debug(`[POST] http request: submit login data: email=${email}`);
     const params = new HttpParams()
       .set('email', email)
       .set('password', password);
@@ -44,12 +47,18 @@ export class AuthenticationService {
     return this.http.post(interpolate(AUTH_SUBMIT_LOGIN_DATA_URL), params);
   }
 
-  set_preference(name: string, value: string): Observable<any> {
+  setPreference(name: string, value: string): Observable<any> {
     const url = interpolate(AUTH_SET_PREFERENCE_URL, { name: name });
 
     if (!value) {
+      this.logger.debug(
+        `[DELETE] http request: delete user preference: name=${name}`
+      );
       return this.http.delete(url);
     } else {
+      this.logger.debug(
+        `[PUT] http request: set user preference: name=${name} value=${value}`
+      );
       return this.http.put(url, value);
     }
   }

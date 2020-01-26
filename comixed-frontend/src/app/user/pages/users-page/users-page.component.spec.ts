@@ -16,32 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { PanelModule } from 'primeng/panel';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { TooltipModule } from 'primeng/tooltip';
-import { ToggleButtonModule } from 'primeng/togglebutton';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { UserDetailsEditorComponent } from 'app/user/components/user-details-editor/user-details-editor.component';
-import { UsersPageComponent } from './users-page.component';
+import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { AuthenticationAdaptor, TokenService } from 'app/user';
+import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
+import { UserDetailsEditorComponent } from 'app/user/components/user-details-editor/user-details-editor.component';
+import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
 import {
   AUTHENTICATION_FEATURE_KEY,
   reducer
 } from 'app/user/reducers/authentication.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AuthenticationAdaptor, TokenService } from 'app/user';
-import { RouterTestingModule } from '@angular/router/testing';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PanelModule } from 'primeng/panel';
 import { ToolbarModule } from 'primeng/primeng';
-import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
+import { TableModule } from 'primeng/table';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { TooltipModule } from 'primeng/tooltip';
+import { UsersPageComponent } from './users-page.component';
 
 describe('UsersPageComponent', () => {
   let component: UsersPageComponent;
@@ -56,6 +57,7 @@ describe('UsersPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

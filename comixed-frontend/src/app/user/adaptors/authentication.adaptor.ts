@@ -19,11 +19,18 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/library';
-import * as AuthActions from 'app/user/actions/authentication.actions';
+import { Roles } from 'app/models/ui/roles';
+import { User } from 'app/user';
+import {
+  AuthCheckState,
+  AuthHideLogin,
+  AuthLogout,
+  AuthSetPreference,
+  AuthShowLogin,
+  AuthSubmitLogin
+} from 'app/user/actions/authentication.actions';
 import { AuthenticationState } from 'app/user/models/authentication-state';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from 'app/user';
-import { Roles } from 'app/models/ui/roles';
 import { filter } from 'rxjs/operators';
 
 @Injectable()
@@ -37,6 +44,7 @@ export class AuthenticationAdaptor {
     admin: false,
     reader: false
   });
+
   constructor(private store: Store<AppState>) {
     this.store
       .select('auth_state')
@@ -84,7 +92,7 @@ export class AuthenticationAdaptor {
   }
 
   getCurrentUser(): void {
-    this.store.dispatch(new AuthActions.AuthCheckState());
+    this.store.dispatch(new AuthCheckState());
   }
 
   get authenticated(): boolean {
@@ -112,27 +120,25 @@ export class AuthenticationAdaptor {
   }
 
   startLogin(): void {
-    this.store.dispatch(new AuthActions.AuthShowLogin());
+    this.store.dispatch(new AuthShowLogin());
   }
 
   sendLoginData(email: string, password: string): void {
     this.store.dispatch(
-      new AuthActions.AuthSubmitLogin({ email: email, password: password })
+      new AuthSubmitLogin({ email: email, password: password })
     );
   }
 
   cancelLogin(): void {
-    this.store.dispatch(new AuthActions.AuthHideLogin());
+    this.store.dispatch(new AuthHideLogin());
   }
 
   startLogout(): void {
-    this.store.dispatch(new AuthActions.AuthLogout());
+    this.store.dispatch(new AuthLogout());
   }
 
   setPreference(name: string, value: string): void {
-    this.store.dispatch(
-      new AuthActions.AuthSetPreference({ name: name, value: value })
-    );
+    this.store.dispatch(new AuthSetPreference({ name: name, value: value }));
   }
 
   getPreference(name: string): string {

@@ -16,20 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-import * as AuthActions from 'app/user/actions/authentication.actions';
-import { AuthenticationEffects } from './authentication.effects';
-import { AuthenticationService } from 'app/user/services/authentication.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { cold, hot } from 'jasmine-marbles';
-import objectContaining = jasmine.objectContaining;
+import { provideMockActions } from '@ngrx/effects/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { USER_READER } from 'app/user';
+import * as AuthActions from 'app/user/actions/authentication.actions';
+import { AuthenticationService } from 'app/user/services/authentication.service';
 import { TokenService } from 'app/user/services/token.service';
+import { cold, hot } from 'jasmine-marbles';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { Observable, of, throwError } from 'rxjs';
+import { AuthenticationEffects } from './authentication.effects';
+import objectContaining = jasmine.objectContaining;
 
 describe('AuthenticationEffects', () => {
   const USER = USER_READER;
@@ -39,19 +40,18 @@ describe('AuthenticationEffects', () => {
   const PREFERENCE_NAME = 'pref.name';
   const PREFERENCE_VALUE = 'pref-value';
 
-  let auth_effects: AuthenticationEffects;
-  let auth_service: jasmine.SpyObj<AuthenticationService>;
-  let router: Router;
-  let token_service: TokenService;
-  let translate_service: TranslateService;
-  let message_service: MessageService;
+  let effects: AuthenticationEffects;
+  let authenticationService: jasmine.SpyObj<AuthenticationService>;
+  let tokenService: TokenService;
+  let messageService: MessageService;
   let actions: Observable<any>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([{ path: 'home', redirectTo: '' }]),
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
+        LoggerTestingModule
       ],
       providers: [
         AuthenticationEffects,
@@ -59,13 +59,13 @@ describe('AuthenticationEffects', () => {
         {
           provide: AuthenticationService,
           useValue: {
-            submit_login_data: jasmine.createSpy(
-              'AuthenticationService.submit_login_data'
+            submitLoginData: jasmine.createSpy(
+              'AuthenticationService.submitLoginData'
             ),
-            get_authenticated_user: jasmine.createSpy(
-              'AuthenticationService.get_authenticated_user'
+            getAuthenticatedUser: jasmine.createSpy(
+              'AuthenticationService.getAuthenticatedUser'
             ),
-            set_preference: jasmine.createSpy(
+            setPreference: jasmine.createSpy(
               'AuthenticationService.setPreference'
             )
           }
@@ -75,25 +75,22 @@ describe('AuthenticationEffects', () => {
       ]
     });
 
-    auth_effects = TestBed.get(AuthenticationEffects);
-    auth_service = TestBed.get(AuthenticationService);
-    token_service = TestBed.get(TokenService);
-    spyOn(token_service, 'save_token');
-    spyOn(token_service, 'sign_out');
-    translate_service = TestBed.get(TranslateService);
-    message_service = TestBed.get(MessageService);
-    spyOn(message_service, 'add');
-    router = TestBed.get(Router);
-    spyOn(router, 'navigate');
+    effects = TestBed.get(AuthenticationEffects);
+    authenticationService = TestBed.get(AuthenticationService);
+    tokenService = TestBed.get(TokenService);
+    spyOn(tokenService, 'saveToken');
+    spyOn(tokenService, 'signout');
+    messageService = TestBed.get(MessageService);
+    spyOn(messageService, 'add');
   });
 
   it('should be created', () => {
-    expect(auth_effects).toBeTruthy();
+    expect(effects).toBeTruthy();
   });
 
   describe('when the user logs in', () => {
     it('fires an actions on success', () => {
-      const service_response = { email: USER_READER.email, token: AUTH_TOKEN };
+      const serviceResponse = { email: USER_READER.email, token: AUTH_TOKEN };
       const action = new AuthActions.AuthSubmitLogin({
         email: EMAIL,
         password: PASSWORD
@@ -103,18 +100,19 @@ describe('AuthenticationEffects', () => {
       const outcome3 = new AuthActions.AuthHideLogin();
 
       actions = hot('-a', { a: action });
-      const response = cold('-a|', { a: [service_response] });
-      auth_service.submit_login_data.and.returnValue(of(service_response));
+      authenticationService.submitLoginData.and.returnValue(
+        of(serviceResponse)
+      );
 
       const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
-      expect(auth_effects.submit_login_data$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
+      expect(effects.submitLoginData$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new Error('expected');
+      const serviceResponse = new HttpErrorResponse({});
       const action = new AuthActions.AuthSubmitLogin({
         email: EMAIL,
         password: PASSWORD
@@ -122,20 +120,18 @@ describe('AuthenticationEffects', () => {
       const outcome = new AuthActions.AuthNoUserLoaded();
 
       actions = hot('-a', { a: action });
-      const response = cold('-a|', { a: [service_response] });
-      auth_service.submit_login_data.and.returnValue(
-        throwError(service_response)
+      authenticationService.submitLoginData.and.returnValue(
+        throwError(serviceResponse)
       );
 
       const expected = cold('-b', { b: outcome });
-      expect(auth_effects.submit_login_data$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
+      expect(effects.submitLoginData$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
     });
 
     it('fires an action on general failure', () => {
-      const service_response = new Error('expected');
       const action = new AuthActions.AuthSubmitLogin({
         email: EMAIL,
         password: PASSWORD
@@ -143,12 +139,11 @@ describe('AuthenticationEffects', () => {
       const outcome = new AuthActions.AuthNoUserLoaded();
 
       actions = hot('-a', { a: action });
-      const response = cold('-#|', {}, service_response);
-      auth_service.submit_login_data.and.throwError(service_response.message);
+      authenticationService.submitLoginData.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(auth_effects.submit_login_data$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
+      expect(effects.submitLoginData$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
     });
@@ -156,62 +151,58 @@ describe('AuthenticationEffects', () => {
 
   describe('when performing an authentication check', () => {
     it('fires an action when a user is retrieved', () => {
-      const service_response = USER;
+      const serviceResponse = USER;
       const action = new AuthActions.AuthCheckState();
       const outcome = new AuthActions.AuthUserLoaded({
-        user: service_response
+        user: serviceResponse
       });
 
       actions = hot('-a', { a: action });
-      const response = cold('-a|', { a: [service_response] });
-      auth_service.get_authenticated_user.and.returnValue(of(service_response));
+      authenticationService.getAuthenticatedUser.and.returnValue(
+        of(serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
-      expect(auth_effects.get_authenticated_user$).toBeObservable(expected);
+      expect(effects.getAuthenticatedUser$).toBeObservable(expected);
     });
 
     it('fires an action when no user is retrieved', () => {
-      const service_response = null;
+      const serviceResponse = null;
       const action = new AuthActions.AuthCheckState();
       const outcome = new AuthActions.AuthNoUserLoaded();
 
       actions = hot('-a', { a: action });
-      const response = cold('-a|', { a: [service_response] });
-      auth_service.get_authenticated_user.and.returnValue(of(service_response));
+      authenticationService.getAuthenticatedUser.and.returnValue(
+        of(serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
-      expect(auth_effects.get_authenticated_user$).toBeObservable(expected);
-      expect(router.navigate).toHaveBeenCalledWith(['home']);
+      expect(effects.getAuthenticatedUser$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new Error('expected');
+      const serviceResponse = new HttpErrorResponse({});
       const action = new AuthActions.AuthCheckState();
       const outcome = new AuthActions.AuthNoUserLoaded();
 
       actions = hot('-a', { a: action });
-      const response = cold('-a|', { a: [service_response] });
-      auth_service.get_authenticated_user.and.returnValue(
-        throwError(service_response)
+      authenticationService.getAuthenticatedUser.and.returnValue(
+        throwError(serviceResponse)
       );
 
       const expected = cold('-b', { b: outcome });
-      expect(auth_effects.get_authenticated_user$).toBeObservable(expected);
+      expect(effects.getAuthenticatedUser$).toBeObservable(expected);
     });
 
     it('fires an action on general failure', () => {
-      const service_response = new Error('expected');
       const action = new AuthActions.AuthCheckState();
       const outcome = new AuthActions.AuthNoUserLoaded();
 
       actions = hot('-a', { a: action });
-      const response = cold('-#|', {}, service_response);
-      auth_service.get_authenticated_user.and.throwError(
-        service_response.message
-      );
+      authenticationService.getAuthenticatedUser.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(auth_effects.get_authenticated_user$).toBeObservable(expected);
+      expect(effects.getAuthenticatedUser$).toBeObservable(expected);
     });
   });
 
@@ -221,11 +212,10 @@ describe('AuthenticationEffects', () => {
       const outcome = new AuthActions.AuthCheckState();
 
       actions = hot('-a', { a: action });
-      const response = cold('-a|', { a: of(() => {}) });
 
       const expected = cold('-b', { b: outcome });
-      expect(auth_effects.logout$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
+      expect(effects.logout$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
     });
@@ -233,7 +223,7 @@ describe('AuthenticationEffects', () => {
 
   describe('when setting a preference', () => {
     it('fires an action one success', () => {
-      const service_response = USER;
+      const serviceResponse = USER;
       const action = new AuthActions.AuthSetPreference({
         name: PREFERENCE_NAME,
         value: PREFERENCE_VALUE
@@ -241,15 +231,14 @@ describe('AuthenticationEffects', () => {
       const outcome = new AuthActions.AuthPreferenceSet({ user: USER });
 
       actions = hot('-a', { a: action });
-      const response = cold('-a|', { a: [service_response] });
-      auth_service.set_preference.and.returnValue(of(service_response));
+      authenticationService.setPreference.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(auth_effects.set_preference$).toBeObservable(expected);
+      expect(effects.setPreference$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new Error('expected');
+      const serviceResponse = new HttpErrorResponse({});
       const action = new AuthActions.AuthSetPreference({
         name: PREFERENCE_NAME,
         value: PREFERENCE_VALUE
@@ -257,15 +246,15 @@ describe('AuthenticationEffects', () => {
       const outcome = new AuthActions.AuthSetPreferenceFailed();
 
       actions = hot('-a', { a: action });
-      const response = cold('-a|', { a: [service_response] });
-      auth_service.set_preference.and.returnValue(throwError(service_response));
+      authenticationService.setPreference.and.returnValue(
+        throwError(serviceResponse)
+      );
 
       const expected = cold('-b', { b: outcome });
-      expect(auth_effects.set_preference$).toBeObservable(expected);
+      expect(effects.setPreference$).toBeObservable(expected);
     });
 
     it('fires an action on general failure', () => {
-      const service_response = new Error('expected');
       const action = new AuthActions.AuthSetPreference({
         name: PREFERENCE_NAME,
         value: PREFERENCE_VALUE
@@ -273,11 +262,10 @@ describe('AuthenticationEffects', () => {
       const outcome = new AuthActions.AuthSetPreferenceFailed();
 
       actions = hot('-a', { a: action });
-      const response = cold('-#|', {}, service_response);
-      auth_service.set_preference.and.throwError(service_response.message);
+      authenticationService.setPreference.and.throwError('expected');
 
       const expected = cold('-(b|)', { b: outcome });
-      expect(auth_effects.set_preference$).toBeObservable(expected);
+      expect(effects.setPreference$).toBeObservable(expected);
     });
   });
 });

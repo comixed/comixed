@@ -16,27 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { TabViewModule } from 'primeng/tabview';
-import { TableModule } from 'primeng/table';
+import { TranslateModule } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { UserService } from 'app/services/user.service';
+import { AuthenticationAdaptor, TokenService } from 'app/user';
 import { AccountPreferencesComponent } from 'app/user/components/account-preferences/account-preferences.component';
 import { UserDetailsComponent } from 'app/user/components/user-details/user-details.component';
+import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
 import { USER_READER } from 'app/user/models/user.fixtures';
-import { AccountPageComponent } from './account-page.component';
-import { AuthenticationAdaptor, TokenService } from 'app/user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MessageService } from 'primeng/api';
-import { UserService } from 'app/services/user.service';
-import { EffectsModule } from '@ngrx/effects';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import {
   AUTHENTICATION_FEATURE_KEY,
   reducer
 } from 'app/user/reducers/authentication.reducer';
-import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { TabViewModule } from 'primeng/tabview';
+import { AccountPageComponent } from './account-page.component';
 
 describe('AccountPageComponent', () => {
   let component: AccountPageComponent;
@@ -49,6 +50,7 @@ describe('AccountPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

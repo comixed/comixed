@@ -16,22 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
-
-import { AuthenticationService } from './authentication.service';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { User } from 'app/user';
-import { USER_READER } from 'app/user/models/user.fixtures';
+import { TestBed } from '@angular/core/testing';
+import { interpolate } from 'app/app.functions';
 import {
   AUTH_DELETE_PREFERENCE_URL,
   AUTH_SET_PREFERENCE_URL,
   AUTH_SUBMIT_LOGIN_DATA_URL,
   GET_AUTHENTICATED_USER_URL
 } from 'app/services/url.constants';
-import { interpolate } from 'app/app.functions';
+import { User } from 'app/user';
+import { USER_READER } from 'app/user/models/user.fixtures';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+
+import { AuthenticationService } from './authentication.service';
 
 describe('AuthenticationService', () => {
   const USER = USER_READER;
@@ -45,7 +46,7 @@ describe('AuthenticationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [AuthenticationService]
     });
 
@@ -58,7 +59,7 @@ describe('AuthenticationService', () => {
   });
 
   it('gets data during an authentication check', () => {
-    auth_service.get_authenticated_user().subscribe((response: User) => {
+    auth_service.getAuthenticatedUser().subscribe((response: User) => {
       expect(response).toEqual(USER);
     });
 
@@ -69,7 +70,7 @@ describe('AuthenticationService', () => {
 
   it('posts data on login', () => {
     auth_service
-      .submit_login_data(EMAIL, PASSWORD)
+      .submitLoginData(EMAIL, PASSWORD)
       .subscribe((response: User) => {
         expect(response).toEqual(USER);
       });
@@ -83,7 +84,7 @@ describe('AuthenticationService', () => {
 
   it('posts when setting a preference', () => {
     auth_service
-      .set_preference(PREFERENCE_NAME, PREFERENCE_VALUE)
+      .setPreference(PREFERENCE_NAME, PREFERENCE_VALUE)
       .subscribe((response: User) => {
         expect(response).toEqual(USER);
       });
@@ -100,7 +101,7 @@ describe('AuthenticationService', () => {
 
   it('deletes when removing a preference', () => {
     auth_service
-      .set_preference(PREFERENCE_NAME, null)
+      .setPreference(PREFERENCE_NAME, null)
       .subscribe((response: User) => {
         expect(response).toEqual(USER);
       });
