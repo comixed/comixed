@@ -1,5 +1,3 @@
-import { tap } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
 import {
   HttpErrorResponse,
   HttpHandler,
@@ -11,10 +9,12 @@ import {
   HttpSentEvent,
   HttpUserEvent
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { MessageService } from 'primeng/api';
-import { TokenService } from 'app/user';
+import { AuthenticationAdaptor, TokenService } from 'app/user';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
 /*
  * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project
@@ -38,9 +38,10 @@ export const TOKEN_HEADER_KEY = 'Authorization';
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
   constructor(
-    private token_service: TokenService,
+    private logger: NGXLogger,
+    private tokenService: TokenService,
     private router: Router,
-    private message_service: MessageService
+    private authenticationAdaptor: AuthenticationAdaptor
   ) {}
 
   intercept(
@@ -54,10 +55,10 @@ export class XhrInterceptor implements HttpInterceptor {
     | HttpUserEvent<any>
   > {
     let authReq = req;
-    if (this.token_service.get_token() !== null) {
+    if (this.tokenService.getToken() !== null) {
       authReq = req.clone({
         headers: req.headers
-          .set(TOKEN_HEADER_KEY, `Bearer ${this.token_service.get_token()}`)
+          .set(TOKEN_HEADER_KEY, `Bearer ${this.tokenService.getToken()}`)
           .set('X-Request-With', 'XMLHttpRequest')
       });
     } else {
@@ -66,20 +67,22 @@ export class XhrInterceptor implements HttpInterceptor {
       });
     }
     return next.handle(authReq).pipe(
-      tap(response => {
-        if (response instanceof HttpErrorResponse) {
-          const error = response as HttpErrorResponse;
-          switch (error.status) {
-            case 401:
-              this.router.navigateByUrl('/home');
-              return;
-            default:
-              this.message_service.add({
-                severity: 'error',
-                summary: 'Server Error',
-                detail: 'Unable to complete the last request...'
-              });
-          }
+      retry(2),
+      catchError((error: HttpErrorResponse) => {
+        switch (error.status || 200) {
+          case 200:
+          case 503:
+          case 504:
+            this.logger.debug('[XHR] no error:', error);
+            return;
+          case 401:
+            this.logger.error('[XHR] user not authenticated:', error);
+            this.authenticationAdaptor.startLogout();
+            this.router.navigateByUrl('/');
+            break;
+          default:
+            this.logger.error('[XHR] rethrowing error:', error);
+            return throwError(error);
         }
       })
     );
