@@ -1,6 +1,6 @@
 {
   "name": "comixed",
-  "version": "0.5.0-PRERELEASE",
+  "version": "0.5.0-0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
