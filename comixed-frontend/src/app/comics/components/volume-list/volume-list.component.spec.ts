@@ -18,6 +18,7 @@
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -35,6 +36,7 @@ import {
   reducer,
   SCRAPING_FEATURE_KEY
 } from 'app/comics/reducers/scraping.reducer';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { MessageService, TooltipModule } from 'primeng/primeng';
@@ -73,8 +75,10 @@ describe('VolumeListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        FormsModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(SCRAPING_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

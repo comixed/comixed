@@ -36,6 +36,7 @@ import {
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class ScrapingAdaptor {
@@ -47,11 +48,12 @@ export class ScrapingAdaptor {
   private _issue$ = new BehaviorSubject<ScrapingIssue>(null);
   private _scraping$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<AppState>) {
+  constructor(private logger: NGXLogger, private store: Store<AppState>) {
     this.store
       .select(SCRAPING_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe((state: ScrapingState) => {
+        this.logger.debug('scraping state update:', state);
         if (!_.isEqual(this._comics$.getValue(), state.comics)) {
           this._comics$.next(state.comics);
         }
@@ -77,6 +79,7 @@ export class ScrapingAdaptor {
   }
 
   startScraping(comics: Comic[]): void {
+    this.logger.debug('firing action to start scraping comics:', comics);
     this.store.dispatch(new ScrapingStart({ comics: comics }));
   }
 
@@ -94,6 +97,9 @@ export class ScrapingAdaptor {
     volume: string,
     skipCache: boolean
   ): void {
+    this.logger.debug(
+      `firing action to get comic volumes: apiKey=${apiKey} series=${series} volume=${volume} skipCache=${skipCache}`
+    );
     this.store.dispatch(
       new ScrapingGetVolumes({
         apiKey: apiKey,
@@ -118,6 +124,9 @@ export class ScrapingAdaptor {
     issueNumber: string,
     skipCache: boolean
   ): void {
+    this.logger.debug(
+      `firing action to get single issue: apiKey=${apiKey} volumeId=${volumeId} issueNumber=${issueNumber} skipCache=${skipCache}`
+    );
     this.store.dispatch(
       new ScrapingGetIssue({
         apiKey: apiKey,
@@ -142,6 +151,9 @@ export class ScrapingAdaptor {
     issueNumber: string,
     skipCache: boolean
   ): void {
+    this.logger.debug(
+      `firing action to load metadata: apiKey=${apiKey} comicId=${comicId} issueNumber=${issueNumber} skipCache=${skipCache}`
+    );
     this.store.dispatch(
       new ScrapingLoadMetadata({
         apiKey: apiKey,
@@ -157,10 +169,12 @@ export class ScrapingAdaptor {
   }
 
   skipComic(comic: Comic) {
+    this.logger.debug('firing action to skip comic:', comic);
     this.store.dispatch(new ScrapingSkipComic({ comic: comic }));
   }
 
   resetVolumes() {
+    this.logger.debug('firing action to reset volumes');
     this.store.dispatch(new ScrapingResetVolumes());
   }
 }

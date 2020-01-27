@@ -32,6 +32,7 @@ import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import { AuthenticationAdaptor, COMICVINE_API_KEY } from 'app/user';
+import { NGXLogger } from 'ngx-logger';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
@@ -66,9 +67,11 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   comicDetailsForm: FormGroup;
   fetchOptions: MenuItem[] = [];
   editingApiKey = false;
+  skipCache = false;
 
   constructor(
-    private authAdaptor: AuthenticationAdaptor,
+    private logger: NGXLogger,
+    private authenticationAdaptor: AuthenticationAdaptor,
     private comicAdaptor: ComicAdaptor,
     private scrapingAdaptor: ScrapingAdaptor,
     private confirmationService: ConfirmationService,
@@ -84,9 +87,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.userSubscription = this.authAdaptor.user$.subscribe(user =>
+    this.userSubscription = this.authenticationAdaptor.user$.subscribe(user =>
       this.comicDetailsForm.controls['apiKey'].setValue(
-        this.authAdaptor.getPreference(COMICVINE_API_KEY)
+        this.authenticationAdaptor.getPreference(COMICVINE_API_KEY)
       )
     );
     this.scrapingComicsSubscription = this.scrapingAdaptor.comics$.subscribe(
@@ -142,35 +145,40 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
           'comic-details-editor.option.fetch-with-cache'
         ),
         icon: 'fa fa-fw fa-search',
-        command: () => this.fetchCandidates(false)
+        command: () => this.getVolumes(false)
       },
       {
         label: this.translateService.instant(
           'comic-details-editor.option.fetch-skip-cache'
         ),
         icon: 'fa fa-fw fa-search',
-        command: () => this.fetchCandidates(true)
+        command: () => this.getVolumes(true)
       }
     ];
   }
 
-  private fetchCandidates(skipCache: boolean): void {
+  private getVolumes(skipCache: boolean): void {
+    this.logger.debug(`'getting volumes for comic: skipCache=${skipCache}`);
+    this.skipCache = skipCache;
     this.scrapingAdaptor.getVolumes(
       this.getApiKey(),
       this.getSeriesName(),
       this.getIssueNumber(),
-      skipCache
+      this.skipCache
     );
   }
 
   saveApiKey() {
-    this.authAdaptor.setPreference(COMICVINE_API_KEY, this.getApiKey());
+    this.authenticationAdaptor.setPreference(
+      COMICVINE_API_KEY,
+      this.getApiKey()
+    );
     this.editingApiKey = false;
   }
 
   resetApiKey() {
     this.comicDetailsForm.controls['apiKey'].reset(
-      this.authAdaptor.getPreference(COMICVINE_API_KEY)
+      this.authenticationAdaptor.getPreference(COMICVINE_API_KEY)
     );
     this.editingApiKey = false;
   }
@@ -231,7 +239,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         this.getApiKey(),
         volume.id,
         this.getIssueNumber(),
-        false
+        this.skipCache
       );
     } else {
       this.currentIssue = null;
@@ -251,7 +259,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
           this.getApiKey(),
           this.comic.id,
           `${issue.id}`,
-          false
+          this.skipCache
         )
     });
   }

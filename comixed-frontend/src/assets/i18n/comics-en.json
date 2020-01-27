@@ -265,6 +265,9 @@
     "button": {
       "back": "Back",
       "select": "Select"
+    },
+    "option": {
+      "skip-cache": "Skip cache"
     }
   }
 }

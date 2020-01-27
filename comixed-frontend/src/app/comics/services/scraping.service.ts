@@ -28,12 +28,13 @@ import {
 import { GetVolumesRequest } from 'app/comics/models/net/get-volumes-request';
 import { GetScrapingIssueRequest } from 'app/comics/models/net/get-scraping-issue-request';
 import { LoadMetadataRequest } from 'app/comics/models/net/load-metadata-request';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScrapingService {
-  constructor(private http: HttpClient) {}
+  constructor(private logger: NGXLogger, private http: HttpClient) {}
 
   getVolumes(
     apiKey: string,
@@ -41,6 +42,9 @@ export class ScrapingService {
     volume: string,
     skipCache: boolean
   ): Observable<any> {
+    this.logger.debug(
+      `[POST] http request: get volumes: apiKey=${apiKey} series=${series} volume=${volume} skipCache=${skipCache}`
+    );
     return this.http.post(interpolate(GET_VOLUMES_URL, { series: series }), {
       apiKey: apiKey,
       series: series,
@@ -55,6 +59,9 @@ export class ScrapingService {
     issueId: string,
     skipCache: boolean
   ): Observable<any> {
+    this.logger.debug(
+      `[POST] http request: get scraping issue: apiKey=${apiKey} volumeId=${volumeId} issueId=${issueId} skipCache=${skipCache}`
+    );
     return this.http.post(
       interpolate(GET_ISSUE_URL, { volume: `${volumeId}`, issue: issueId }),
       {
@@ -70,6 +77,9 @@ export class ScrapingService {
     issueId: string,
     skipCache: boolean
   ): Observable<any> {
+    this.logger.debug(
+      `[POST] http request: load metadata: apiKey=${apiKey} comicId=${comicId} issueId=${issueId} skipCache=${skipCache}`
+    );
     return this.http.post(
       interpolate(LOAD_METADATA_URL, { comicId: comicId, issueId: issueId }),
       {

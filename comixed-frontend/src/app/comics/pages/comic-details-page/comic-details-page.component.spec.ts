@@ -32,6 +32,7 @@ import { AppState } from 'app/comics';
 import { ComicGotIssue } from 'app/comics/actions/comic.actions';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { routes } from 'app/comics/comics-routing.module';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
 import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
 import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
 import { ComicGroupingCardComponent } from 'app/comics/components/comic-grouping-card/comic-grouping-card.component';
@@ -48,6 +49,7 @@ import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover
 import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { UserModule } from 'app/user/user.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
 import { CardModule } from 'primeng/card';
@@ -60,8 +62,6 @@ import {
   ToolbarModule
 } from 'primeng/primeng';
 import { ComicDetailsPageComponent } from './comic-details-page.component';
-import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
-import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ComicDetailsPageComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
