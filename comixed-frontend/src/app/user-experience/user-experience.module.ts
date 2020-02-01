@@ -23,10 +23,20 @@ import {
   Optional,
   SkipSelf
 } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
+import * as fromContextMenu from './reducers/context-menu.reducer';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule]
+  imports: [
+    CommonModule,
+    StoreModule.forFeature(
+      fromContextMenu.CONTEXT_MENU_FEATURE_KEY,
+      fromContextMenu.reducer
+    )
+  ],
+  providers: [ContextMenuAdaptor]
 })
 export class UserExperienceModule {
   constructor(@Optional() @SkipSelf() parentModule?: UserExperienceModule) {
