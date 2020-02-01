@@ -70,12 +70,14 @@ import * as fromReadingList from './reducers/reading-list.reducer';
 import * as fromSelection from './reducers/selection.reducer';
 import { LibraryService } from './services/library.service';
 import { ReadingListService } from './services/reading-list.service';
+import { UserExperienceModule } from 'app/user-experience/user-experience.module';
 
 @NgModule({
   imports: [
     CommonModule,
     LibraryRoutingModule,
     ComicsModule,
+    UserExperienceModule,
     TranslateModule.forRoot(),
     LoggerModule.forChild(),
     StoreModule.forFeature(

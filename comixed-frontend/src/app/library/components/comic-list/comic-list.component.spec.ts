@@ -24,11 +24,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Routes } from '@angular/router/src/config';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 import { ComicsModule } from 'app/comics/comics.module';
 import {
+  AppState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   SelectionAdaptor
@@ -44,6 +45,9 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { UserService } from 'app/services/user.service';
 import { AuthenticationAdaptor } from 'app/user';
+import { ContextMenuShow } from 'app/user-experience/actions/context-menu.actions';
+import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
+import { UserExperienceModule } from 'app/user-experience/user-experience.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -52,10 +56,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
 import {
+  Confirmation,
   ConfirmationService,
   ConfirmDialogModule,
   ContextMenuModule,
-  MenuItem,
   MessageService,
   ProgressSpinnerModule,
   ToolbarModule,
@@ -65,28 +69,36 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { SliderModule } from 'primeng/slider';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { BehaviorSubject } from 'rxjs';
-import { ComicListComponent } from './comic-list.component';
+import {
+  COMIC_LIST_MENU_DESELECT_ALL,
+  COMIC_LIST_MENU_SELECT_ALL,
+  ComicListComponent
+} from './comic-list.component';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const ROUTES: Routes = [{ path: 'test', component: ComicListComponent }];
+  const MOUSE_EVENT = new MouseEvent('mousedown');
 
   let component: ComicListComponent;
   let fixture: ComponentFixture<ComicListComponent>;
-  let auth_adaptor: AuthenticationAdaptor;
-  let library_adaptor: LibraryAdaptor;
-  let library_display_adaptor: LibraryDisplayAdaptor;
-  let selection_adaptor: SelectionAdaptor;
-  let reading_list_adaptor: ReadingListAdaptor;
-  let translate: TranslateService;
+  let authenticationAdaptor: AuthenticationAdaptor;
+  let libraryAdaptor: LibraryAdaptor;
+  let libraryDisplayAdaptor: LibraryDisplayAdaptor;
+  let selectionAdaptor: SelectionAdaptor;
+  let readingListAdaptor: ReadingListAdaptor;
+  let translateService: TranslateService;
   let router: Router;
-  let activated_route: ActivatedRoute;
-  let confirm: ConfirmationService;
+  let activatedRoute: ActivatedRoute;
+  let confirmationService: ConfirmationService;
+  let contextMenuAdaptor: ContextMenuAdaptor;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         ComicsModule,
+        UserExperienceModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
         RouterTestingModule,
@@ -140,16 +152,19 @@ describe('ComicListComponent', () => {
 
     fixture = TestBed.createComponent(ComicListComponent);
     component = fixture.componentInstance;
-    auth_adaptor = TestBed.get(AuthenticationAdaptor);
-    spyOn(auth_adaptor, 'setPreference');
-    library_adaptor = TestBed.get(LibraryAdaptor);
-    library_display_adaptor = TestBed.get(LibraryDisplayAdaptor);
-    reading_list_adaptor = TestBed.get(ReadingListAdaptor);
-    selection_adaptor = TestBed.get(SelectionAdaptor);
-    translate = TestBed.get(TranslateService);
+    authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
+    spyOn(authenticationAdaptor, 'setPreference');
+    libraryAdaptor = TestBed.get(LibraryAdaptor);
+    libraryDisplayAdaptor = TestBed.get(LibraryDisplayAdaptor);
+    readingListAdaptor = TestBed.get(ReadingListAdaptor);
+    selectionAdaptor = TestBed.get(SelectionAdaptor);
+    translateService = TestBed.get(TranslateService);
     router = TestBed.get(Router);
-    activated_route = TestBed.get(ActivatedRoute);
-    confirm = TestBed.get(ConfirmationService);
+    activatedRoute = TestBed.get(ActivatedRoute);
+    confirmationService = TestBed.get(ConfirmationService);
+    contextMenuAdaptor = TestBed.get(ContextMenuAdaptor);
+    store = TestBed.get(Store);
+
     fixture.detectChanges();
   }));
 
@@ -157,27 +172,11 @@ describe('ComicListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when the selected language changes', () => {
-    let old_menu: MenuItem[];
-
-    beforeEach(() => {
-      component.comics = COMICS;
-      old_menu = component.contextMenu;
-      spyOn(translate, 'instant');
-      translate.use('fr');
-    });
-
-    it('reloads the context menu', () => {
-      expect(translate.instant).toHaveBeenCalled();
-      expect(component.contextMenu).not.toEqual(old_menu);
-    });
-  });
-
   describe('when the comic list changes', () => {
     beforeEach(() => {
-      component.contextMenu = [];
+      component.contextMenuItems = [];
       component._comics = [];
-      spyOn(translate, 'instant');
+      spyOn(translateService, 'instant');
       component.comics = COMICS;
     });
 
@@ -186,16 +185,16 @@ describe('ComicListComponent', () => {
     });
 
     it('reloads the context menu', () => {
-      expect(component.contextMenu).not.toEqual([]);
-      expect(translate.instant).toHaveBeenCalled();
+      expect(component.contextMenuItems).not.toEqual([]);
+      expect(translateService.instant).toHaveBeenCalled();
     });
   });
 
   describe('when the selected comic list changes', () => {
     beforeEach(() => {
-      component.contextMenu = [];
+      component.contextMenuItems = [];
       component._selectedComics = [];
-      spyOn(translate, 'instant');
+      spyOn(translateService, 'instant');
       component.selectedComics = COMICS;
     });
 
@@ -204,8 +203,8 @@ describe('ComicListComponent', () => {
     });
 
     it('reloads the context menu', () => {
-      expect(component.contextMenu).not.toEqual([]);
-      expect(translate.instant).toHaveBeenCalled();
+      expect(component.contextMenuItems).not.toEqual([]);
+      expect(translateService.instant).toHaveBeenCalled();
     });
   });
 
@@ -216,7 +215,7 @@ describe('ComicListComponent', () => {
 
     beforeEach(() => {
       spyOn(dataview, 'changeLayout');
-      spyOn(library_display_adaptor, 'setLayout');
+      spyOn(libraryDisplayAdaptor, 'setLayout');
       component.setLayout(dataview, 'LIST');
     });
 
@@ -225,13 +224,13 @@ describe('ComicListComponent', () => {
     });
 
     it('updates the library view state', () => {
-      expect(library_display_adaptor.setLayout).toHaveBeenCalledWith('LIST');
+      expect(libraryDisplayAdaptor.setLayout).toHaveBeenCalledWith('LIST');
     });
   });
 
   describe('when the first comic index is a query parameter', () => {
     beforeEach(() => {
-      (activated_route.queryParams as BehaviorSubject<{}>).next({
+      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
         first: 29
       });
     });
@@ -266,36 +265,43 @@ describe('ComicListComponent', () => {
   describe('when selecting all comics', () => {
     beforeEach(() => {
       component._comics = COMICS;
-      spyOn(selection_adaptor, 'selectComics');
+      spyOn(selectionAdaptor, 'selectComics');
       component.selectAll();
     });
 
     it('fires an action', () => {
-      expect(selection_adaptor.selectComics).toHaveBeenCalledWith(COMICS);
+      expect(selectionAdaptor.selectComics).toHaveBeenCalledWith(COMICS);
     });
   });
 
   describe('when deselecting all comics', () => {
     beforeEach(() => {
       component._selectedComics = COMICS;
-      spyOn(selection_adaptor, 'deselectComics');
+      spyOn(selectionAdaptor, 'deselectComics');
       component.deselectAll();
     });
 
     it('fires an action', () => {
-      expect(selection_adaptor.deselectComics).toHaveBeenCalledWith(COMICS);
+      expect(selectionAdaptor.deselectComics).toHaveBeenCalledWith(COMICS);
     });
   });
 
   describe('when scraping the selected comics', () => {
     beforeEach(() => {
       component._selectedComics = COMICS;
-      spyOn(router, 'navigate');
+      spyOn(router, 'navigateByUrl');
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.accept()
+      );
       component.scrapeComics();
     });
 
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
     it('navigates to the scraping page', () => {
-      expect(router.navigate).toHaveBeenCalledWith(['/scraping']);
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/scraping');
     });
   });
 
@@ -305,14 +311,77 @@ describe('ComicListComponent', () => {
     });
 
     it('fires an action if the user approves', () => {
-      spyOn(confirm, 'confirm').and.callFake((params: any) => {
+      spyOn(confirmationService, 'confirm').and.callFake((params: any) => {
         params.accept();
       });
-      spyOn(library_adaptor, 'deleteComics');
+      spyOn(libraryAdaptor, 'deleteComics');
       component.deleteComics();
-      expect(library_adaptor.deleteComics).toHaveBeenCalledWith(
+      expect(libraryAdaptor.deleteComics).toHaveBeenCalledWith(
         COMICS.map(comic => comic.id)
       );
+    });
+  });
+
+  describe('when a mouse event occurs', () => {
+    describe('with an actual event', () => {
+      beforeEach(() => {
+        spyOn(component.contextMenu, 'show');
+        store.dispatch(new ContextMenuShow({ event: MOUSE_EVENT }));
+      });
+
+      it('shows the context menu', () => {
+        expect(component.contextMenu.show).toHaveBeenCalledWith(MOUSE_EVENT);
+      });
+    });
+
+    describe('with a null event', () => {
+      beforeEach(() => {
+        spyOn(component.contextMenu, 'show');
+        store.dispatch(new ContextMenuShow({ event: null }));
+      });
+
+      it('shows the context menu', () => {
+        expect(component.contextMenu.show).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('when the context menu is closed', () => {
+    beforeEach(() => {
+      spyOn(contextMenuAdaptor, 'hideMenu');
+      component.hideContextMenu();
+    });
+
+    it('notifies the adaptor', () => {
+      expect(contextMenuAdaptor.hideMenu).toHaveBeenCalled();
+    });
+  });
+
+  describe('selecting all comics', () => {
+    beforeEach(() => {
+      component.comics = COMICS;
+      spyOn(selectionAdaptor, 'selectComics');
+      component.contextMenuItems
+        .find(item => item.id === COMIC_LIST_MENU_SELECT_ALL)
+        .command();
+    });
+
+    it('notifies the adaptor', () => {
+      expect(selectionAdaptor.selectComics).toHaveBeenCalledWith(COMICS);
+    });
+  });
+
+  describe('deselecting all comics', () => {
+    beforeEach(() => {
+      component.selectedComics = COMICS;
+      spyOn(selectionAdaptor, 'deselectComics');
+      component.contextMenuItems
+        .find(item => item.id === COMIC_LIST_MENU_DESELECT_ALL)
+        .command();
+    });
+
+    it('notifies the adaptor', () => {
+      expect(selectionAdaptor.deselectComics).toHaveBeenCalledWith(COMICS);
     });
   });
 });

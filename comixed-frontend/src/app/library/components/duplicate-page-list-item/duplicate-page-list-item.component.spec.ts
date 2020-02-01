@@ -16,27 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DuplicatePageListItemComponent } from './duplicate-page-list-item.component';
-import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { CardModule } from 'primeng/card';
-import {
-  MessageService,
-  ProgressSpinnerModule,
-  TooltipModule
-} from 'primeng/primeng';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { ComicsModule } from 'app/comics/comics.module';
+import { LibraryAdaptor } from 'app/library';
+import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
+import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
 import {
   DUPLICATE_PAGES_FEATURE_KEY,
   reducer
 } from 'app/library/reducers/duplicate-pages.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effects';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DUPLICATE_PAGE_1 } from 'app/library/library.fixtures';
+import { UserExperienceModule } from 'app/user-experience/user-experience.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { CardModule } from 'primeng/card';
+import {
+  ConfirmationService,
+  MessageService,
+  ProgressSpinnerModule,
+  TooltipModule
+} from 'primeng/primeng';
+import { DuplicatePageListItemComponent } from './duplicate-page-list-item.component';
 
 describe('DuplicatePageListItemComponent', () => {
   let component: DuplicatePageListItemComponent;
@@ -45,7 +48,10 @@ describe('DuplicatePageListItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
+        UserExperienceModule,
         HttpClientTestingModule,
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerTestingModule,
         StoreModule.forRoot({}),
@@ -56,12 +62,8 @@ describe('DuplicatePageListItemComponent', () => {
         ProgressSpinnerModule,
         TooltipModule
       ],
-      declarations: [
-        DuplicatePageListItemComponent,
-        ComicCoverComponent,
-        ComicPageUrlPipe
-      ],
-      providers: [MessageService]
+      declarations: [DuplicatePageListItemComponent],
+      providers: [MessageService, LibraryAdaptor, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DuplicatePageListItemComponent);

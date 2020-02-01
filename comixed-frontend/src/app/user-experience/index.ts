@@ -19,12 +19,12 @@
 import { Params } from '@angular/router';
 import * as fromRouter from '@ngrx/router-store';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { ContextMenuItem } from 'app/user-experience/models/context-menu-item';
 import { environment } from 'environments/environment';
+import { MenuItem } from 'primeng/components/common/menuitem';
 import * as fromContextMenu from './reducers/context-menu.reducer';
 import { ContextMenuState } from './reducers/context-menu.reducer';
-import { ContextMenuItem } from 'app/user-experience/models/context-menu-item';
-import { MenuItem } from 'primeng/components/common/menuitem';
-import { TranslateService } from '@ngx-translate/core';
 
 export { ContextMenuItem } from './models/context-menu-item';
 
@@ -52,6 +52,7 @@ export function generateContextMenuItems(
 ) {
   return items.map(item => {
     return {
+      id: item.id,
       icon: item.icon,
       label: translateService.instant(item.labelKey),
       disabled: !item.enabled,

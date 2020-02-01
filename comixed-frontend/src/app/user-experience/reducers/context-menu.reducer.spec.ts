@@ -41,7 +41,7 @@ import {
 } from './context-menu.reducer';
 
 describe('ContextMenu Reducer', () => {
-  const MOUSE_EVENT: MouseEvent = { button: 2 };
+  const MOUSE_EVENT = new MouseEvent('mousedown');
   const ITEM = CONTEXT_MENU_ITEM_1;
   const ID = ITEM.id;
   const ICON = 'fa fa-fw fa-icon';

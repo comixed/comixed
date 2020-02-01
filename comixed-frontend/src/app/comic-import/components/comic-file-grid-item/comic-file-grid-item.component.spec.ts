@@ -32,6 +32,7 @@ import { UserService } from 'app/services/user.service';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import {
   CardModule,
+  ConfirmationService,
   MessageService,
   OverlayPanelModule,
   PanelModule
@@ -58,7 +59,12 @@ describe('ComicFileGridItemComponent', () => {
         CardModule
       ],
       declarations: [ComicFileGridItemComponent, ComicFileCoverUrlPipe],
-      providers: [UserService, MessageService, ComicImportAdaptor]
+      providers: [
+        UserService,
+        MessageService,
+        ComicImportAdaptor,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileGridItemComponent);

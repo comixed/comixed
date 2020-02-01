@@ -1,8 +1,10 @@
+<p-contextMenu #contextMenu
+               [model]='contextMenuItems'
+               (onHide)='hideContextMenu()'></p-contextMenu>
 <app-comic-list-toolbar [comics]='comics'
-                        [dataView]='comicListDataview'></app-comic-list-toolbar>
-<p-contextMenu [model]='contextMenu'
-               [target]='comicListContainer'></p-contextMenu>
-<div #comicListContainer>
+                        [dataView]='comicListDataview'
+                        (startScraping)='scrapeComics()'></app-comic-list-toolbar>
+<div>
     <p-dataView #comicListDataview
                 (onPage)='setIndexOfFirst($event.first)'
                 [alwaysShowPaginator]='true'

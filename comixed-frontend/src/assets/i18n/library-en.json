@@ -177,6 +177,42 @@
   "library-admin-page": {
     "title": "ComiXed: Library Administration"
   },
+  "comic-list": {
+    "label": {
+      "series": "Series",
+      "volume": "Volume",
+      "issue-number": "Issue #"
+    },
+    "text": {
+      "no-comics-to-scrape": "No comics to scrape..."
+    },
+    "popup": {
+      "open-comic": "Open comic...",
+      "select-all": "Select all",
+      "deselect-all": "Deselect all",
+      "scrape-comics": "Scrape comics...",
+      "delete-comics": "Delete comics...",
+      "reading-lists": "Reading lists"
+    },
+    "context-menu": {
+      "select-all": "Select all",
+      "deselect-all": "Deselect all",
+      "delete-selected": "Delete selections...",
+      "scrape-selected": "Scrape selections"
+    },
+    "start-scraping": {
+      "header": "Scrape Selected Comic",
+      "message": "Are you sure you want to start scraping {count, plural, =1{one comic} other{# comics}}?"
+    },
+    "delete-comics": {
+      "header": "Delete {count} Comics",
+      "message": "Are you sure you want to delete these comics?"
+    },
+    "remove-from-reading-list": {
+      "header": "Remove From Reading List",
+      "message": "Are you sure you want to remove these comics from '{reading_list_name}?"
+    }
+  },
   "comic-list-toolbar": {
     "tooltip": {
       "show-filters": "Show library filters.",
@@ -203,10 +239,6 @@
       "deselect-all": "Deselect All Comics",
       "scrape": "Scrape Selected Comics",
       "delete": "Delete Selected Comics"
-    },
-    "start-scraping": {
-      "header": "Scrape Selected Comic",
-      "message": "Are you sure you want to start scraping {count, plural, =1{one comic} other{# comics}}?"
     },
     "delete-comics": {
       "header": "Delete Selected Comics",

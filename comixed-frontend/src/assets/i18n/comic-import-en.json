@@ -82,6 +82,10 @@
       "start-import": "Import {comic_count} comics...",
       "start-import-ignore-metadata": "Import {comic_count} comics, ignore meta-data..."
     },
+    "context-menu": {
+      "select-all": "Select all",
+      "deselect-all": "Deselect all"
+    },
     "import": {
       "header": "Import Comic Files",
       "message": "Import {comic_count} comics?",

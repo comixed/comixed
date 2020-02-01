@@ -50,6 +50,7 @@ import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pi
 import { ComicService } from 'app/comics/services/comic.service';
 import { PageService } from 'app/comics/services/page.service';
 import { ScrapingService } from 'app/comics/services/scraping.service';
+import { UserExperienceModule } from 'app/user-experience/user-experience.module';
 import { UserModule } from 'app/user/user.module';
 import { BlockUIModule } from 'primeng/blockui';
 import { CardModule } from 'primeng/card';
@@ -58,6 +59,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InplaceModule } from 'primeng/inplace';
 import { PanelModule } from 'primeng/panel';
 import {
+  ContextMenuModule,
   InputTextModule,
   ProgressBarModule,
   ProgressSpinnerModule,
@@ -92,6 +94,7 @@ import * as fromScraping from './reducers/scraping.reducer';
   imports: [
     UserModule,
     ComicsRoutingModule,
+    UserExperienceModule,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -110,14 +113,15 @@ import * as fromScraping from './reducers/scraping.reducer';
     TranslateModule.forRoot(),
     StoreModule.forFeature(fromComics.COMIC_FEATURE_KEY, fromComics.reducer),
     StoreModule.forFeature(
-      fromScraping.SCRAPING_FEATURE_KEY,
-      fromScraping.reducer
+        fromScraping.SCRAPING_FEATURE_KEY,
+        fromScraping.reducer
     ),
     EffectsModule.forFeature([ComicEffects, ScrapingEffects]),
     ProgressSpinnerModule,
     TooltipModule,
     InputTextModule,
-    ToolbarModule
+    ToolbarModule,
+    ContextMenuModule
   ],
   exports: [
     CommonModule,

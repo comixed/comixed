@@ -224,6 +224,14 @@
     "label": {
       "volume": "v{volume}",
       "open-comic": "Open Comic"
+    },
+    "context-menu": {
+      "open-comic": "Open comic...",
+      "delete-comic": "Delete comic..."
+    },
+    "delete-comic": {
+      "header": "Delete Comic?",
+      "message": "Are you sure you want to delete {title}?"
     }
   },
   "scraping-effects": {

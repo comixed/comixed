@@ -16,24 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
+import { LibraryAdaptor } from 'app/library';
+import { UserExperienceModule } from 'app/user-experience/user-experience.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
-import { CardModule } from 'primeng/card';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
+import {
+  ContextMenuModule,
+  ProgressSpinnerModule,
+  TooltipModule
+} from 'primeng/primeng';
 import { ComicCoverComponent } from './comic-cover.component';
-import { StoreModule } from '@ngrx/store';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
-import { MessageService } from 'primeng/api';
-import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
-import { ProgressSpinnerModule, TooltipModule } from 'primeng/primeng';
 
 describe('ComicCoverComponent', () => {
   let component: ComicCoverComponent;
@@ -42,20 +50,28 @@ describe('ComicCoverComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserExperienceModule,
         HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         OverlayPanelModule,
         PanelModule,
         CardModule,
         ProgressSpinnerModule,
-        TooltipModule
+        TooltipModule,
+        ContextMenuModule
       ],
       declarations: [ComicCoverComponent, ComicCoverUrlPipe, ComicTitlePipe],
-      providers: [MessageService]
+      providers: [
+        MessageService,
+        LibraryAdaptor,
+        ComicAdaptor,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicCoverComponent);
