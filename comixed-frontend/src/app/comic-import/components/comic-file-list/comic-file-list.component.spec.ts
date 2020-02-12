@@ -23,8 +23,9 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { AppState } from 'app/comic-import';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import { ComicFileGridItemComponent } from 'app/comic-import/components/comic-file-grid-item/comic-file-grid-item.component';
 import { ComicFileListItemComponent } from 'app/comic-import/components/comic-file-list-item/comic-file-list-item.component';
@@ -46,6 +47,8 @@ import { LibraryDisplayAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { UserService } from 'app/services/user.service';
 import { AuthenticationAdaptor } from 'app/user';
+import { ContextMenuShow } from 'app/user-experience/actions/context-menu.actions';
+import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
@@ -54,6 +57,7 @@ import {
   CardModule,
   CheckboxModule,
   ConfirmationService,
+  ContextMenu,
   ContextMenuModule,
   DropdownModule,
   MessageService,
@@ -65,7 +69,11 @@ import {
   SplitButtonModule,
   ToolbarModule
 } from 'primeng/primeng';
-import { ComicFileListComponent } from './comic-file-list.component';
+import {
+  COMIC_FILE_CONTEXT_MENU_DESELECT_ALL,
+  COMIC_FILE_CONTEXT_MENU_SELECT_ALL,
+  ComicFileListComponent
+} from './comic-file-list.component';
 
 describe('ComicFileListComponent', () => {
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
@@ -73,6 +81,9 @@ describe('ComicFileListComponent', () => {
   let component: ComicFileListComponent;
   let fixture: ComponentFixture<ComicFileListComponent>;
   let comicImportAdaptor: ComicImportAdaptor;
+  let contextMenuAdaptor: ContextMenuAdaptor;
+  let contextMenu: ContextMenu;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -123,6 +134,10 @@ describe('ComicFileListComponent', () => {
     fixture = TestBed.createComponent(ComicFileListComponent);
     component = fixture.componentInstance;
     comicImportAdaptor = TestBed.get(ComicImportAdaptor);
+    contextMenuAdaptor = TestBed.get(ContextMenuAdaptor);
+    contextMenu = component.contextMenu;
+    store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
 
     fixture.detectChanges();
   }));
@@ -191,6 +206,63 @@ describe('ComicFileListComponent', () => {
           SELECTED_COMIC_FILE
         ]);
       });
+    });
+  });
+
+  describe('when a mouse event occurs', () => {
+    const MOUSE_EVENT = new MouseEvent('mousedown');
+
+    beforeEach(() => {
+      spyOn(contextMenu, 'show');
+      store.dispatch(new ContextMenuShow({ event: MOUSE_EVENT }));
+    });
+
+    it('notifies the context menu', () => {
+      expect(contextMenu.show).toHaveBeenCalledWith(MOUSE_EVENT);
+    });
+  });
+
+  describe('when the context menu is closed', () => {
+    beforeEach(() => {
+      spyOn(contextMenuAdaptor, 'hideMenu');
+      component.hideContextMenu();
+    });
+
+    it('notifies the adaptor', () => {
+      expect(contextMenuAdaptor.hideMenu).toHaveBeenCalled();
+    });
+  });
+
+  describe('selecting all comic files', () => {
+    beforeEach(() => {
+      spyOn(comicImportAdaptor, 'selectComicFiles');
+      component.comicFiles = COMIC_FILES;
+      component.contextMenuItems
+        .find(item => item.id === COMIC_FILE_CONTEXT_MENU_SELECT_ALL)
+        .command();
+    });
+
+    it('selects all comic files', () => {
+      expect(comicImportAdaptor.selectComicFiles).toHaveBeenCalledWith(
+        COMIC_FILES
+      );
+    });
+  });
+
+  describe('deselecting all comic files', () => {
+    beforeEach(() => {
+      spyOn(comicImportAdaptor, 'deselectComicFiles');
+      component.comicFiles = COMIC_FILES;
+      component.selectedComicFiles = COMIC_FILES;
+      component.contextMenuItems
+        .find(item => item.id === COMIC_FILE_CONTEXT_MENU_DESELECT_ALL)
+        .command();
+    });
+
+    it('deselects all comic files', () => {
+      expect(comicImportAdaptor.deselectComicFiles).toHaveBeenCalledWith(
+        COMIC_FILES
+      );
     });
   });
 });

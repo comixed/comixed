@@ -24,17 +24,17 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Comic } from 'app/comics';
+import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import {
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   SelectionAdaptor
 } from 'app/library';
-import { Subscription } from 'rxjs';
 import { ConfirmationService, SelectItem } from 'primeng/api';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { Comic } from 'app/comics';
-import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comic-list-toolbar',
@@ -44,6 +44,7 @@ import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 export class ComicListToolbarComponent implements OnInit, OnDestroy {
   @Input() comics: Comic[] = [];
   @Input() dataView: any;
+  @Output() startScraping = new EventEmitter<any>();
 
   selectionSubscription: Subscription;
   selectedComics: Comic[] = [];
@@ -241,20 +242,7 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
     this.libraryDisplayAdaptor.setCoverSize(size, save);
   }
 
-  startScraping() {
-    this.confirmationService.confirm({
-      header: this.translateService.instant(
-        'comic-list-toolbar.start-scraping.header'
-      ),
-      message: this.translateService.instant(
-        'comic-list-toolbar.start-scraping.message',
-        { count: this.selectedComics.length }
-      ),
-      accept: () => {
-        this.scrapingAdaptor.startScraping(this.selectedComics);
-        this.selectionAdaptor.clearComicSelections();
-        this.router.navigateByUrl('/scraping');
-      }
-    });
+  fireStartScraping() {
+    this.startScraping.emit(true);
   }
 }

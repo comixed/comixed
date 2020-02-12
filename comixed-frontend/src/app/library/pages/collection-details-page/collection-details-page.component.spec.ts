@@ -41,8 +41,15 @@ import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/c
 import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
 import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
+import { LibraryEffects } from 'app/library/effects/library.effects';
 import { CollectionType } from 'app/library/models/collection-type.enum';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
 import { AuthenticationAdaptor } from 'app/user';
+import { UserExperienceModule } from 'app/user-experience/user-experience.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { DataViewModule } from 'primeng/dataview';
 import {
   ButtonModule,
@@ -60,12 +67,6 @@ import {
 } from 'primeng/primeng';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionDetailsPageComponent } from './collection-details-page.component';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-import {
-  LIBRARY_FEATURE_KEY,
-  reducer
-} from 'app/library/reducers/library.reducer';
-import { LibraryEffects } from 'app/library/effects/library.effects';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionDetailsPageComponent', () => {
@@ -80,6 +81,7 @@ describe('CollectionDetailsPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserExperienceModule,
         BrowserAnimationsModule,
         RouterTestingModule,
         HttpClientTestingModule,

@@ -1,3 +1,6 @@
+<p-contextMenu #contextMenu
+               [model]='contextMenuItems'
+               (onHide)='hideContextMenu()'></p-contextMenu>
 <p-blockUI [blocked]='fetchingFiles'
            [target]='comicFileListContainer'></p-blockUI>
 <p-panel #comicFileListContainer

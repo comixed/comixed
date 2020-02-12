@@ -35,6 +35,7 @@ import {
   ComicImportSetDirectory,
   ComicImportStart
 } from 'app/comic-import/actions/comic-import.actions';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class ComicImportAdaptor {
@@ -44,11 +45,12 @@ export class ComicImportAdaptor {
   private _selectedComicFile$ = new BehaviorSubject<ComicFile[]>([]);
   private _startingImport$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<AppState>) {
+  constructor(private logger: NGXLogger, private store: Store<AppState>) {
     this.store
       .select(COMIC_IMPORT_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe((state: ComicImportState) => {
+        this.logger.debug('comic import state updated:', state);
         if (!_.isEqual(this._directory$.getValue(), state.directory)) {
           this._directory$.next(state.directory);
         }
@@ -97,10 +99,12 @@ export class ComicImportAdaptor {
   }
 
   selectComicFiles(comicFiles: ComicFile[]): void {
+    this.logger.debug('firing action to select comic files:', comicFiles);
     this.store.dispatch(new ComicImportSelectFiles({ comicFiles: comicFiles }));
   }
 
   deselectComicFiles(comicFiles: ComicFile[]): void {
+    this.logger.debug('firing action to deselect comic files:', comicFiles);
     this.store.dispatch(
       new ComicImportDeselectFiles({ comicFiles: comicFiles })
     );

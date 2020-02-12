@@ -41,7 +41,6 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import {
   ButtonModule,
   CheckboxModule,
-  Confirmation,
   ConfirmationService,
   DropdownModule,
   MessageService,
@@ -118,28 +117,13 @@ describe('ComicListToolbarComponent', () => {
   describe('starting to scrape comics', () => {
     beforeEach(() => {
       component.selectedComics = COMICS;
-      spyOn(scrapingAdaptor, 'startScraping');
-      spyOn(selectionAdaptor, 'clearComicSelections');
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.accept()
+      component.fireStartScraping();
+    });
+
+    it('emits an event', () => {
+      component.startScraping.subscribe(response =>
+        expect(response).toBeTruthy()
       );
-      component.startScraping();
-    });
-
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
-    });
-
-    it('sets up the scraping process', () => {
-      expect(scrapingAdaptor.startScraping).toHaveBeenCalledWith(COMICS);
-    });
-
-    it('clears the comics selection', () => {
-      expect(selectionAdaptor.clearComicSelections).toHaveBeenCalled();
-    });
-
-    it('navigates to the multi-comic scraping page', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/scraping');
     });
   });
 });
