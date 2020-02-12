@@ -16,22 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
+import { ComicsModule } from 'app/comics/comics.module';
+import { LibraryAdaptor } from 'app/library';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { UserService } from 'app/services/user.service';
+import { UserExperienceModule } from 'app/user-experience/user-experience.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
-import { CardModule } from 'primeng/card';
-import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
-import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
-import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { ComicListItemComponent } from './comic-list-item.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UserService } from 'app/services/user.service';
-import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule, TooltipModule } from 'primeng/primeng';
-import { COMIC_1 } from 'app/comics/comics.fixtures';
+import { ComicListItemComponent } from './comic-list-item.component';
 
 describe('ComicListItemComponent', () => {
   let component: ComicListItemComponent;
@@ -40,23 +48,30 @@ describe('ComicListItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ComicsModule,
+        UserExperienceModule,
         HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects]),
         OverlayPanelModule,
         PanelModule,
         CardModule,
         ProgressSpinnerModule,
         TooltipModule
       ],
-      declarations: [
-        ComicListItemComponent,
-        ComicCoverComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
-      ],
-      providers: [UserService, MessageService]
+      declarations: [ComicListItemComponent],
+      providers: [
+        UserService,
+        MessageService,
+        LibraryAdaptor,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicListItemComponent);

@@ -16,22 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { PanelModule } from 'primeng/panel';
-import { CardModule } from 'primeng/card';
+import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
-import { ComicGridItemComponent } from './comic-grid-item.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { LibraryAdaptor } from 'app/library';
+import { LibraryEffects } from 'app/library/effects/library.effects';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
 import { UserService } from 'app/services/user.service';
-import { MessageService } from 'primeng/api';
+import { UserExperienceModule } from 'app/user-experience/user-experience.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
 import { ProgressSpinnerModule, TooltipModule } from 'primeng/primeng';
-import { COMIC_1 } from 'app/comics/comics.fixtures';
+import { ComicGridItemComponent } from './comic-grid-item.component';
 
 describe('ComicGridItemComponent', () => {
   let component: ComicGridItemComponent;
@@ -40,10 +51,16 @@ describe('ComicGridItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserExperienceModule,
         HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
+        StoreModule.forRoot({}),
+        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        EffectsModule.forRoot([]),
+        EffectsModule.forFeature([LibraryEffects]),
         OverlayPanelModule,
         PanelModule,
         CardModule,
@@ -56,7 +73,13 @@ describe('ComicGridItemComponent', () => {
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],
-      providers: [UserService, MessageService]
+      providers: [
+        UserService,
+        MessageService,
+        LibraryAdaptor,
+        ComicAdaptor,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicGridItemComponent);

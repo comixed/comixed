@@ -16,11 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { LibraryDisplayAdaptor } from 'app/library';
-import { ComicFile } from 'app/comic-import/models/comic-file';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
+import { ComicFile } from 'app/comic-import/models/comic-file';
+import { LibraryDisplayAdaptor } from 'app/library';
+import { generateContextMenuItems } from 'app/user-experience';
+import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
+import { NGXLogger } from 'ngx-logger';
+import { MenuItem } from 'primeng/api';
+import { ContextMenu } from 'primeng/contextmenu';
+import { Subscription } from 'rxjs';
+
+export const COMIC_FILE_CONTEXT_MENU_SELECT_ALL = 'comic-file-list-select-all';
+export const COMIC_FILE_CONTEXT_MENU_DESELECT_ALL =
+  'comic-file-list-deselect-all';
+export const COMIC_FILE_CONTEXT_MENU_START_IMPORT =
+  'comic-file-list-start-import';
 
 @Component({
   selector: 'app-comic-file-list',
@@ -30,6 +42,8 @@ import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adapt
 export class ComicFileListComponent implements OnInit, OnDestroy {
   @Input() busy: boolean;
   @Input() directory: string;
+
+  @ViewChild('contextMenu') contextMenu: ContextMenu;
 
   _comicFiles: Array<ComicFile> = [];
   _selectedComicFiles: Array<ComicFile> = [];
@@ -46,15 +60,37 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   coverSize: number;
   fetchingFilesSubscription: Subscription;
   fetchingFiles = false;
+  contextMenuSubscription: Subscription;
+  contextMenuItems: MenuItem[] = [];
+  mouseEventSubscription: Subscription;
 
   showSelections = false;
 
   constructor(
+    private logger: NGXLogger,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
-    private comicImportAdaptor: ComicImportAdaptor
-  ) {}
+    private comicImportAdaptor: ComicImportAdaptor,
+    private contextMenuAdaptor: ContextMenuAdaptor,
+    private translateService: TranslateService
+  ) {
+    this.addContextMenuItems();
+  }
 
   ngOnInit() {
+    this.contextMenuSubscription = this.contextMenuAdaptor.items$.subscribe(
+      items =>
+        (this.contextMenuItems = generateContextMenuItems(
+          items,
+          this.translateService
+        ))
+    );
+    this.mouseEventSubscription = this.contextMenuAdaptor.mouseEvent$.subscribe(
+      event => {
+        if (!!event) {
+          this.contextMenu.show(event);
+        }
+      }
+    );
     this.layoutSubscription = this.libraryDisplayAdaptor.layout$.subscribe(
       layout => (this.layout = layout)
     );
@@ -76,6 +112,9 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.removeContextMenuItems();
+    this.contextMenuSubscription.unsubscribe();
+    this.mouseEventSubscription.unsubscribe();
     this.layoutSubscription.unsubscribe();
     this.sortFieldSubscription.unsubscribe();
     this.rowsSubscription.unsubscribe();
@@ -86,6 +125,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
 
   @Input() set comicFiles(comicFiles: ComicFile[]) {
     this._comicFiles = comicFiles;
+    this.toggleMenuItems();
   }
 
   get comicFiles(): ComicFile[] {
@@ -94,6 +134,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
 
   @Input() set selectedComicFiles(selectedComicFiles: ComicFile[]) {
     this._selectedComicFiles = selectedComicFiles;
+    this.toggleMenuItems();
   }
 
   get selectedComicFiles(): ComicFile[] {
@@ -107,6 +148,59 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
       } else {
         this.comicImportAdaptor.deselectComicFiles([comicFile]);
       }
+    }
+  }
+
+  hideContextMenu(): void {
+    this.contextMenuAdaptor.hideMenu();
+  }
+
+  private addContextMenuItems(): void {
+    this.contextMenuAdaptor.addItem(
+      COMIC_FILE_CONTEXT_MENU_SELECT_ALL,
+      'fa fa-fw fa-plus',
+      'comic-file-list.context-menu.select-all',
+      false,
+      true,
+      () => this.selectAll()
+    );
+    this.contextMenuAdaptor.addItem(
+      COMIC_FILE_CONTEXT_MENU_DESELECT_ALL,
+      'fa fa-fw fa-minus',
+      'comic-file-list.context-menu.deselect-all',
+      false,
+      true,
+      () => this.deselectAll()
+    );
+  }
+
+  private removeContextMenuItems(): void {
+    this.contextMenuAdaptor.removeItem(COMIC_FILE_CONTEXT_MENU_SELECT_ALL);
+    this.contextMenuAdaptor.removeItem(COMIC_FILE_CONTEXT_MENU_DESELECT_ALL);
+  }
+
+  private selectAll(): void {
+    this.comicImportAdaptor.selectComicFiles(this.comicFiles);
+  }
+
+  private deselectAll(): void {
+    this.comicImportAdaptor.deselectComicFiles(this.comicFiles);
+  }
+
+  private toggleMenuItems(): void {
+    const hasSelections = this.selectedComicFiles.length > 0;
+    const allSelected =
+      this.selectedComicFiles.length === this.comicFiles.length;
+
+    if (allSelected) {
+      this.contextMenuAdaptor.disableItem(COMIC_FILE_CONTEXT_MENU_SELECT_ALL);
+    } else {
+      this.contextMenuAdaptor.enableItem(COMIC_FILE_CONTEXT_MENU_SELECT_ALL);
+    }
+    if (hasSelections) {
+      this.contextMenuAdaptor.enableItem(COMIC_FILE_CONTEXT_MENU_DESELECT_ALL);
+    } else {
+      this.contextMenuAdaptor.disableItem(COMIC_FILE_CONTEXT_MENU_DESELECT_ALL);
     }
   }
 }

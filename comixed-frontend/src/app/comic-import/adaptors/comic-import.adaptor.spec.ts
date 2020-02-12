@@ -16,23 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicImportAdaptor } from './comic-import.adaptor';
-import { TestBed } from '@angular/core/testing';
-import { MessageService } from 'primeng/api';
-import { Store, StoreModule } from '@ngrx/store';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  reducer
-} from 'app/comic-import/reducers/comic-import.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
-import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3
-} from 'app/comic-import/models/comic-file.fixtures';
+import { TestBed } from '@angular/core/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { Store, StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { AppState } from 'app/comic-import';
 import {
   ComicImportDeselectFiles,
@@ -46,6 +34,19 @@ import {
   ComicImportStarted,
   ComicImportStartFailed
 } from 'app/comic-import/actions/comic-import.actions';
+import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
+import {
+  COMIC_FILE_1,
+  COMIC_FILE_2,
+  COMIC_FILE_3
+} from 'app/comic-import/models/comic-file.fixtures';
+import {
+  COMIC_IMPORT_FEATURE_KEY,
+  reducer
+} from 'app/comic-import/reducers/comic-import.reducer';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { ComicImportAdaptor } from './comic-import.adaptor';
 
 describe('ComicImportAdaptor', () => {
   const DIRECTORY = '/Users/comixedreader/Library';
@@ -60,6 +61,7 @@ describe('ComicImportAdaptor', () => {
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
+        LoggerTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

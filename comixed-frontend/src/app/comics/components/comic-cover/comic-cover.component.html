@@ -2,12 +2,13 @@
      class='cx-comic-cover-container'
      [class.cx-comic-cover-dimmed]='unprocessed'
      [class.selected-comic]='selectSelectedClass && selected'>
-    <p-card [styleClass]='"comic-cover-card"'
-            (click)='clicked()'>
+    <p-card [styleClass]='"comic-cover-card"'>
         <p-header></p-header>
         <img [src]='coverUrl'
              [style.width]='useSameHeight ? "auto" : coverSize + "px"'
-             [style.height]='useSameHeight ? coverSize + "px" : "auto"'/>
+             [style.height]='useSameHeight ? coverSize + "px" : "auto"'
+             (click)='clicked()'
+             (contextmenu)='showContextMenu($event)'/>
         <p-footer *ngIf='caption'><strong><span class='cx-comic-cover-caption'>{{caption}}</span></strong></p-footer>
     </p-card>
     <div *ngIf='showOverlay()'
