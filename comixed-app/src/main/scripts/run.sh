@@ -28,6 +28,7 @@ VERBOSE=false
 JDBCURL=""
 DBUSER=""
 DBPWRD=""
+IMGCACHEDIR=""
 
 usage() {
   echo "Usage: run.sh [OPTIONS]"
@@ -36,6 +37,7 @@ usage() {
   echo " -j [URL]\t\t- Set the database URL (see -u and -p)"
   echo " -u [USERNAME]\t\t- Set the database username"
   echo " -p [PASSWORD]\t\t- Set the database password"
+  echo " -i [DIR]\t\t- Set the image caching directory"
   echo ""
   echo "Other options:"
   echo " -d\t\t\t- Debug mode (def. false)"
@@ -44,11 +46,12 @@ usage() {
   exit 0
 }
 
-while getopts "j:u:p:dDv" option; do
+while getopts "j:u:p:i:dDv" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
   p) DBPWRD="${OPTARG}" ;;
+  i) IMGCACHEDIR="${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
   v) VERBOSE=true ;;
@@ -85,6 +88,10 @@ fi
 
 if [[ $DBPWRD ]]; then
   OPTIONS="${OPTIONS} --spring.datasource.password=${DBPWRD}"
+fi
+
+if [[ $IMGCACHEDIR ]]; then
+  OPTIONS="${OPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
 fi
 
 $JAVA -jar $COMIXED_JAR_FILE $OPTIONS

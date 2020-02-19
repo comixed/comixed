@@ -30,6 +30,7 @@ IF "%PARAM%" == "-D" SET FULLDEBUG="ON"
 IF "%PARAM%" == "-j" GOTO set_jdbc_url
 IF "%PARAM%" == "-u" GOTO set_jdbc_user
 IF "%PARAM%" == "-p" GOTO set_jdbc_pwrd
+IF "%PARAM%" == "-i" GOTO set_image_cache_dir
 GOTO process_command_line
 
 :set_jdbc_url
@@ -50,6 +51,12 @@ SHIFT
 SHIFT
 GOTO process_command_line
 
+:set_image_cache_dir
+SET IMGCACHEDIR=%ARG%
+SHIFT
+SHIFT
+GOTO process_command_line
+
 :show_help
 ECHO Usage: run.bat [OPTIONS]
 ECHO.
@@ -57,6 +64,7 @@ ECHO OPTIONS:
 ECHO  -j [URL]      - Set the database URL
 ECHO  -u [USERNAME] - Set the database username
 ECHO  -p [PASSWORD] - Set the database password
+ECHO  -i [DIR]      - Set the image caching directory
 ECHO.
 ECHO OTHER OPTIONS:
 ECHO  -d            - Enable debugging (def. off)
@@ -86,6 +94,10 @@ SET OPTIONS=%OPTIONS% --spring.datasource.username=%DBUSER%
 IF "%DBPWRD%" == "" GOTO skip_jdbc_pwrd
 SET OPTIONS=%OPTIONS% --spring.datasource.password=%DBPWRD%
 :skip_jdbc_pwrd
+
+IF "%IMGCACHEDIR%" == "" GOTO skip_image_cache_dir
+SET OPTIONS=%OPTIONS% --comixed.images.cache.location=%IMGCACHEDIR%
+:skip_image_cache_dir
 
 java -jar %JARFILE% %OPTIONS%
 
