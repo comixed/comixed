@@ -235,7 +235,6 @@ public class Worker implements Runnable, InitializingBean {
     if (entry != null) {
       this.logger.debug("Entry found for: {}", entry.getComic().getFilename());
       final ProcessComicTask task = this.processComicTaskFactory.getObject();
-      task.setEntry(entry);
 
       this.logger.debug("Queueing task");
       this.addTasksToQueue(task);

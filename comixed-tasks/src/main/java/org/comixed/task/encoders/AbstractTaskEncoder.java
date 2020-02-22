@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Darryl L. Pierce
  */
-public abstract class AbstractTaskEncoder<T extends AbstractWorkerTask> implements TaskEncoder {
+public abstract class AbstractTaskEncoder<T extends AbstractWorkerTask> implements TaskEncoder<T> {
   final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private TaskRepository taskRepository;

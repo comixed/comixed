@@ -25,65 +25,51 @@ import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFileDetails;
-import org.comixed.model.tasks.ProcessComicEntry;
 import org.comixed.repositories.library.ComicRepository;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.comixed.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessComicTask extends AbstractWorkerTask {
   private static final Object semaphore = new Object();
 
-  @Autowired private ProcessComicEntryRepository processComicEntryRepository;
   @Autowired private ComicRepository comicRepository;
   @Autowired private Utils utils;
 
-  private ProcessComicEntry entry;
+  private Comic comic;
+  private Boolean deleteBlockedPages;
+  private Boolean ignoreMetadata;
 
   @Override
   protected String createDescription() {
-    return "Process entry task [" + this.entry.getComic().getFilename() + "]";
+    return "Process entry task: filename=" + this.comic.getFilename();
   }
 
   @Override
   public void startTask() throws WorkerTaskException {
-    try {
-      this.startTaskInternal();
-    } finally {
-      this.cleanup();
-    }
-  }
+    logger.debug("Processing comic: id={}", comic.getId());
 
-  @Transactional
-  public void cleanup() {
-    this.logger.debug("Deleting process entry");
-    this.processComicEntryRepository.delete(this.entry);
-  }
-
-  private void startTaskInternal() throws WorkerTaskException {
-    final Comic comic = this.entry.getComic();
-
-    this.logger.debug("Processing comic: id={}", comic.getId());
-
-    this.logger.debug("Getting archive adaptor");
+    logger.debug("Getting archive adaptor");
     final ArchiveAdaptor adaptor = comic.getArchiveAdaptor();
-    this.logger.debug("Loading comic");
+    logger.debug("Loading comic");
     try {
       adaptor.loadComic(comic);
     } catch (ArchiveAdaptorException error) {
       throw new WorkerTaskException("failed to load comic: " + comic.getFilename(), error);
     }
 
-    this.logger.debug("Sorting pages");
+    logger.debug("Sorting pages");
     comic.sortPages();
-    this.logger.debug("Setting comic file details");
-    final ComicFileDetails fileDetails = new ComicFileDetails();
+    logger.debug("Setting comic file details");
+    ComicFileDetails fileDetails = comic.getFileDetails();
+    if (fileDetails == null) {
+      this.logger.debug("Creating new file details entry for comic");
+      fileDetails = new ComicFileDetails();
+    }
 
     try {
       fileDetails.setHash(this.utils.createHash(new FileInputStream(comic.getFilename())));
@@ -92,12 +78,20 @@ public class ProcessComicTask extends AbstractWorkerTask {
     }
     comic.setFileDetails(fileDetails);
 
-    this.logger.debug("Updating comic");
+    logger.debug("Updating comic");
     comic.setDateLastUpdated(new Date());
     this.comicRepository.save(comic);
   }
 
-  public void setEntry(final ProcessComicEntry entry) {
-    this.entry = entry;
+  public void setComic(final Comic comic) {
+    this.comic = comic;
+  }
+
+  public void setDeleteBlockedPages(final Boolean deleteBlockedPages) {
+    this.deleteBlockedPages = deleteBlockedPages;
+  }
+
+  public void setIgnoreMetadata(final Boolean ignoreMetadata) {
+    this.ignoreMetadata = ignoreMetadata;
   }
 }

@@ -24,10 +24,10 @@ import org.comixed.adaptors.FilenameScraperAdaptor;
 import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.library.Comic;
-import org.comixed.model.tasks.ProcessComicEntry;
-import org.comixed.model.tasks.ProcessComicEntryType;
+import org.comixed.model.tasks.Task;
 import org.comixed.repositories.library.ComicRepository;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.repositories.tasks.TaskRepository;
+import org.comixed.task.encoders.ProcessComicTaskEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
@@ -47,8 +47,9 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
   @Autowired private ObjectFactory<Comic> comicFactory;
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicRepository comicRepository;
-  @Autowired private ProcessComicEntryRepository processComicEntryRepository;
   @Autowired private FilenameScraperAdaptor filenameScraper;
+  @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
+  @Autowired private TaskRepository taskRepository;
 
   private String filename;
   private boolean deleteBlockedPages = false;
@@ -60,8 +61,8 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
     this.logger.debug("Adding file to library: {}", this.filename);
 
     final File file = new File(this.filename);
-
     Comic result = this.comicRepository.findByFilename(file.getAbsolutePath());
+
     if (result != null) {
       this.logger.debug("Comic already imported: " + file.getAbsolutePath());
       return;
@@ -77,16 +78,18 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
       this.comicFileHandler.loadComicArchiveType(result);
 
       this.logger.debug("Saving comic");
-      this.comicRepository.save(result);
+      result = this.comicRepository.save(result);
 
-      this.logger.debug("Creating process comic entry");
-      final ProcessComicEntry processComicEntry = new ProcessComicEntry();
-      processComicEntry.setComic(result);
-      ProcessComicEntryType.setProcessTypeFor(
-          processComicEntry, this.deleteBlockedPages, this.ignoreMetadata);
+      this.logger.debug("Encoding process comic task");
+      final ProcessComicTaskEncoder taskEncoder =
+          this.processComicTaskEncoderObjectFactory.getObject();
+      taskEncoder.setComic(result);
+      taskEncoder.setDeleteBlockedPages(this.deleteBlockedPages);
+      taskEncoder.setIgnoreMetadata(this.ignoreMetadata);
 
-      this.logger.debug("Saving process comic entry: type={}", processComicEntry.getProcessType());
-      this.processComicEntryRepository.save(processComicEntry);
+      this.logger.debug("Saving process comic task");
+      final Task task = taskEncoder.encode();
+      this.taskRepository.save(task);
     } catch (ComicFileHandlerException | AdaptorException error) {
       throw new WorkerTaskException("Failed to load comic", error);
     }
