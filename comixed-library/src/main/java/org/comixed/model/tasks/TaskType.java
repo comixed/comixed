@@ -23,4 +23,6 @@ package org.comixed.model.tasks;
  *
  * @author Darryl L. Pierce
  */
-public enum TaskType {}
+public enum TaskType {
+  AddComic;
+}

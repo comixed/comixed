@@ -50,48 +50,27 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
   @Autowired private ProcessComicEntryRepository processComicEntryRepository;
   @Autowired private FilenameScraperAdaptor filenameScraper;
 
-  private File file;
+  private String filename;
   private boolean deleteBlockedPages = false;
   private boolean ignoreMetadata = false;
-
-  /**
-   * Sets whether blocked pages are marked as deleted.
-   *
-   * @param deleteBlockedPages the flag
-   */
-  public void setDeleteBlockedPages(boolean deleteBlockedPages) {
-    this.deleteBlockedPages = deleteBlockedPages;
-  }
-
-  /**
-   * Sets the name of the file to be added.
-   *
-   * @param file the file
-   */
-  public void setFile(File file) {
-    this.logger.debug("Setting filename: {}", file.getName());
-    this.file = file;
-  }
-
-  public void setIgnoreMetadata(boolean ignore) {
-    this.ignoreMetadata = ignore;
-  }
 
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.logger.debug("Adding file to library: {}", this.file);
+    this.logger.debug("Adding file to library: {}", this.filename);
 
-    Comic result = this.comicRepository.findByFilename(this.file.getAbsolutePath());
+    final File file = new File(this.filename);
+
+    Comic result = this.comicRepository.findByFilename(file.getAbsolutePath());
     if (result != null) {
-      this.logger.debug("Comic already imported: " + this.file.getAbsolutePath());
+      this.logger.debug("Comic already imported: " + file.getAbsolutePath());
       return;
     }
 
     try {
       result = this.comicFactory.getObject();
       this.logger.debug("Setting comic filename");
-      result.setFilename(this.file.getAbsolutePath());
+      result.setFilename(file.getAbsolutePath());
       this.logger.debug("Scraping details from filename");
       this.filenameScraper.execute(result);
       this.logger.debug("Loading comic details");
@@ -120,12 +99,41 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
     result
         .append("Add comic to library:")
         .append(" filename=")
-        .append(this.file.getAbsolutePath())
+        .append(this.filename)
         .append(" delete blocked pages=")
         .append(this.deleteBlockedPages ? "Yes" : "No")
         .append(" ignore metadata=")
         .append(this.ignoreMetadata ? "Yes" : "No");
 
     return result.toString();
+  }
+
+  public String getFilename() {
+    return this.filename;
+  }
+
+  public void setFilename(final String filename) {
+    this.filename = filename;
+  }
+
+  public boolean getDeleteBlockedPages() {
+    return this.deleteBlockedPages;
+  }
+
+  /**
+   * Sets whether blocked pages are marked as deleted.
+   *
+   * @param deleteBlockedPages the flag
+   */
+  public void setDeleteBlockedPages(boolean deleteBlockedPages) {
+    this.deleteBlockedPages = deleteBlockedPages;
+  }
+
+  public boolean getIgnoreMetadata() {
+    return this.ignoreMetadata;
+  }
+
+  public void setIgnoreMetadata(boolean ignore) {
+    this.ignoreMetadata = ignore;
   }
 }

@@ -18,42 +18,45 @@
 
 package org.comixed.task.model;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import org.comixed.task.runner.Worker;
+import org.comixed.model.tasks.Task;
+import org.comixed.model.tasks.TaskType;
+import org.comixed.repositories.tasks.TaskRepository;
+import org.comixed.task.encoders.AddComicTaskEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class QueueComicsWorkerTask extends AbstractWorkerTask {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  public List<String> filenames = new ArrayList<>();
-  public boolean deleteBlockedPages = false;
+
+  @Autowired private TaskRepository taskRepository;
+
+  private List<String> filenames;
+  private boolean deleteBlockedPages = false;
   boolean ignoreMetadata = false;
-  @Autowired private Worker worker;
-  @Autowired private ObjectFactory<AddComicWorkerTask> taskFactory;
 
   public void setDeleteBlockedPages(boolean deleteBlockedPages) {
-    this.logger.debug("Setting delete blocked pages flag to {}", deleteBlockedPages);
     this.deleteBlockedPages = deleteBlockedPages;
   }
 
+  /**
+   * Sets the list of filenames to be added.
+   *
+   * @param filenames the filenames
+   */
   public void setFilenames(List<String> filenames) {
-    this.filenames.addAll(filenames);
-    this.logger.debug("Preparing to queue {} files for import", this.filenames.size());
+    this.filenames = filenames;
   }
 
   /**
-   * When set, tells the import to ignore any <code>ComicInfo.xml</code> file in the comic.
-   *
-   * <p>Defaults to false.
+   * Sets whether to ignore any <code>ComicInfo.xml</code> file in the comic.
    *
    * @param ignore the ignore state
    */
@@ -62,21 +65,28 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
   }
 
   @Override
+  @Transactional
   public void startTask() throws WorkerTaskException {
-    this.logger.debug("Processing comics queue");
+    this.logger.debug(
+        "Enqueueing {} comic{}: delete blocked pages={} ignore metadata={}",
+        this.filenames.size(),
+        this.filenames.size() == 1 ? "" : "s",
+        this.deleteBlockedPages,
+        this.ignoreMetadata);
 
     long started = System.currentTimeMillis();
 
     for (String filename : this.filenames) {
-      AddComicWorkerTask task = this.taskFactory.getObject();
+      final Task task = new Task();
 
-      this.logger.debug("Will import comic: {}", filename);
-      task.setFile(new File(filename));
-      this.logger.debug("Setting delete blocked pages flag to {}", this.deleteBlockedPages);
-      task.setDeleteBlockedPages(this.deleteBlockedPages);
-      this.logger.debug("Setting ignore comicinfo.xml file to {}", this.ignoreMetadata);
-      task.setIgnoreMetadata(this.ignoreMetadata);
-      this.worker.addTasksToQueue(task);
+      this.logger.debug("Comic file: {}", filename);
+
+      task.setTaskType(TaskType.AddComic);
+      task.setProperty(AddComicTaskEncoder.FILENAME, filename);
+      task.setProperty(
+          AddComicTaskEncoder.DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
+      task.setProperty(AddComicTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
+      this.taskRepository.save(task);
     }
 
     this.logger.debug(
@@ -97,5 +107,9 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
         .append(this.ignoreMetadata ? "Yes" : "No");
 
     return result.toString();
+  }
+
+  public List<String> gettFilenames() {
+    return this.filenames;
   }
 }

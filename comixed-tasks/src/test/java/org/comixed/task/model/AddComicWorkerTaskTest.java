@@ -57,25 +57,6 @@ public class AddComicWorkerTaskTest {
   @Mock private ProcessComicEntry processComicEntry;
   @Captor private ArgumentCaptor<ProcessComicEntry> processComicEntryCaptor;
 
-  @Test(expected = WorkerTaskException.class)
-  public void testAddFileComicFileHandlerException()
-      throws ComicFileHandlerException, WorkerTaskException {
-    Mockito.when(comicFactory.getObject()).thenReturn(comic);
-    Mockito.doThrow(ComicFileHandlerException.class)
-        .when(comicFileHandler)
-        .loadComicArchiveType(Mockito.any(Comic.class));
-
-    try {
-      File file = new File(TEST_CBZ_FILE);
-
-      task.setFile(file);
-      task.startTask();
-    } finally {
-      Mockito.verify(comicFactory, Mockito.times(1)).getObject();
-      Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
-    }
-  }
-
   @Test
   public void testAddFile()
       throws WorkerTaskException, ComicFileHandlerException, AdaptorException {
@@ -88,7 +69,7 @@ public class AddComicWorkerTaskTest {
     Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
         .thenReturn(processComicEntry);
 
-    task.setFile(new File(TEST_CBZ_FILE));
+    task.setFilename(TEST_CBZ_FILE);
     task.startTask();
 
     assertSame(comic, processComicEntryCaptor.getValue().getComic());
@@ -119,7 +100,7 @@ public class AddComicWorkerTaskTest {
     Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
         .thenReturn(processComicEntry);
 
-    task.setFile(new File(TEST_CBZ_FILE));
+    task.setFilename(TEST_CBZ_FILE);
     task.setIgnoreMetadata(true);
     task.startTask();
 
@@ -151,7 +132,7 @@ public class AddComicWorkerTaskTest {
     Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
         .thenReturn(processComicEntry);
 
-    task.setFile(new File(TEST_CBZ_FILE));
+    task.setFilename(TEST_CBZ_FILE);
     task.setDeleteBlockedPages(true);
     task.startTask();
 
@@ -183,7 +164,7 @@ public class AddComicWorkerTaskTest {
     Mockito.when(processComicEntryRepository.save(processComicEntryCaptor.capture()))
         .thenReturn(processComicEntry);
 
-    task.setFile(new File(TEST_CBZ_FILE));
+    task.setFilename(TEST_CBZ_FILE);
     task.setDeleteBlockedPages(true);
     task.setIgnoreMetadata(true);
     task.startTask();
