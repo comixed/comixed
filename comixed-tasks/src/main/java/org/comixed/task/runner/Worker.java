@@ -23,6 +23,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.comixed.model.tasks.ProcessComicEntry;
 import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.task.adaptors.TaskAdaptor;
 import org.comixed.task.model.ProcessComicTask;
 import org.comixed.task.model.WorkerTask;
 import org.comixed.task.model.WorkerTaskException;
@@ -48,6 +49,7 @@ public class Worker implements Runnable, InitializingBean {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  @Autowired private TaskAdaptor taskAdaptor;
   @Autowired private ProcessComicEntryRepository processComicEntryRepository;
   @Autowired private ObjectFactory<ProcessComicTask> processComicTaskFactory;
 
