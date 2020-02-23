@@ -49,7 +49,7 @@ public class DeleteComicsWorkerTaskTest {
     List<Long> ids = new ArrayList<>();
     ids.add(TEST_COMIC_ID);
 
-    Mockito.when(taskAdaptor.getActionDecoder(Mockito.any(TaskType.class)))
+    Mockito.when(taskAdaptor.getEncoder(Mockito.any(TaskType.class)))
         .thenReturn(deleteComicTaskEncoder);
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(taskAdaptor.save(taskArgumentCaptor.capture())).thenReturn(taskRecord);
@@ -57,7 +57,7 @@ public class DeleteComicsWorkerTaskTest {
     task.setComicIds(ids);
     task.startTask();
 
-    Mockito.verify(taskAdaptor, Mockito.times(ids.size())).getActionDecoder(TaskType.DeleteComic);
+    Mockito.verify(taskAdaptor, Mockito.times(ids.size())).getEncoder(TaskType.DeleteComic);
     Mockito.verify(deleteComicTaskEncoder, Mockito.times(ids.size())).setComic(comic);
     Mockito.verify(deleteComicTaskEncoder, Mockito.times(ids.size())).setDeleteComicFile(false);
     Mockito.verify(taskAdaptor, Mockito.times(ids.size())).save(taskArgumentCaptor.getValue());

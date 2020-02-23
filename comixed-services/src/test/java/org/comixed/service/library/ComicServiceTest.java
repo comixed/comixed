@@ -375,7 +375,7 @@ public class ComicServiceTest {
     comics.add(comic);
 
     Mockito.when(comicRepository.findAll()).thenReturn(comics);
-    Mockito.when(taskAdaptor.getActionDecoder(Mockito.any(TaskType.class))).thenReturn(taskEncoder);
+    Mockito.when(taskAdaptor.getEncoder(Mockito.any(TaskType.class))).thenReturn(taskEncoder);
     Mockito.when(taskEncoder.encode()).thenReturn(task);
 
     final int result = comicService.rescanComics();
@@ -383,7 +383,7 @@ public class ComicServiceTest {
     assertEquals(comics.size(), result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findAll();
-    Mockito.verify(taskAdaptor, Mockito.times(1)).getActionDecoder(TaskType.RescanComic);
+    Mockito.verify(taskAdaptor, Mockito.times(1)).getEncoder(TaskType.RescanComic);
     Mockito.verify(taskEncoder, Mockito.times(1)).setComic(comic);
   }
 

@@ -90,13 +90,13 @@ public class TaskAdaptor implements InitializingBean {
   }
 
   /**
-   * Returns the configured {@link TaskAdaptor} for the given {@link TaskType}.
+   * Returns the configured {@link TaskEncoder} for the given {@link TaskType}.
    *
    * @param taskType the task type
    * @return the adaptor bean
    * @throws TaskException if no adaptor is configured
    */
-  public <T extends TaskEncoder> T getActionDecoder(final TaskType taskType) throws TaskException {
+  public <T extends TaskEncoder> T getEncoder(final TaskType taskType) throws TaskException {
     this.logger.debug("Getting task adaptor: type={}", taskType);
 
     if (!this.adaptorMap.containsKey(taskType))

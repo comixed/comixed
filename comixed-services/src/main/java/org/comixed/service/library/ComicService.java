@@ -33,8 +33,6 @@ import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.service.task.TaskService;
-import org.comixed.task.model.RescanComicWorkerTask;
-import org.comixed.service.task.TaskService;
 import org.comixed.task.TaskException;
 import org.comixed.task.adaptors.TaskAdaptor;
 import org.comixed.task.encoders.RescanComicTaskEncoder;
@@ -197,7 +195,7 @@ public class ComicService {
       count++;
       try {
         this.logger.debug("Queueing comic for rescan: {}", comic.getFilename());
-        RescanComicTaskEncoder encoder = this.taskAdaptor.getActionDecoder(TaskType.RescanComic);
+        RescanComicTaskEncoder encoder = this.taskAdaptor.getEncoder(TaskType.RescanComic);
 
         encoder.setComic(comic);
         this.taskAdaptor.save(encoder.encode());

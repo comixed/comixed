@@ -58,7 +58,7 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask {
       if (comic != null) {
         try {
           final DeleteComicTaskEncoder encoder;
-          encoder = this.taskAdaptor.getActionDecoder(TaskType.DeleteComic);
+          encoder = this.taskAdaptor.getEncoder(TaskType.DeleteComic);
           encoder.setComic(comic);
           encoder.setDeleteComicFile(false);
           this.taskAdaptor.save(encoder.encode());

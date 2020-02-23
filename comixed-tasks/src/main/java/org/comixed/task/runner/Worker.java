@@ -172,7 +172,7 @@ public class Worker implements Runnable, InitializingBean {
           this.logger.debug("Found a persisted task to run: type={}", taskToRun.getTaskType());
           final TaskEncoder<?> decoder;
           try {
-            decoder = this.taskAdaptor.getActionDecoder(taskToRun.getTaskType());
+            decoder = this.taskAdaptor.getEncoder(taskToRun.getTaskType());
             currentTask = decoder.decode(tasks.get(0));
           } catch (TaskException error) {
             this.logger.error("Failed to decode and run task", error);
@@ -182,7 +182,7 @@ public class Worker implements Runnable, InitializingBean {
 
       if (currentTask != null) {
         try {
-          this.logger.debug("Starting task: " + currentTask);
+          this.logger.debug("Starting task: {}", currentTask.getDescription());
           long start = System.currentTimeMillis();
           currentTask.startTask();
           this.logger.debug(
