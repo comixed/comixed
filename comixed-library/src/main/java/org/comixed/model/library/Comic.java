@@ -23,6 +23,10 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.io.File;
+import java.text.DateFormat;
+import java.util.*;
+import javax.persistence.*;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
@@ -37,11 +41,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
-import java.io.File;
-import java.text.DateFormat;
-import java.util.*;
-
 /**
  * <code>Comic</code> represents a single digital comic issue.
  *
@@ -52,9 +51,6 @@ import java.util.*;
 @Entity
 @Table(name = "comics")
 @NamedQueries({
-  @NamedQuery(
-      name = "Comic.getById",
-      query = "SELECT c FROM Comic c JOIN FETCH c.pages WHERE c.id = :id"),
   @NamedQuery(
       name = "Comic.findAllUnreadByUser",
       query =
