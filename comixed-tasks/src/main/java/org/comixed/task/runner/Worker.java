@@ -21,16 +21,15 @@ package org.comixed.task.runner;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import org.comixed.model.tasks.ProcessComicEntry;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.model.tasks.Task;
+import org.comixed.task.TaskException;
 import org.comixed.task.adaptors.TaskAdaptor;
-import org.comixed.task.model.ProcessComicTask;
+import org.comixed.task.encoders.TaskEncoder;
 import org.comixed.task.model.WorkerTask;
 import org.comixed.task.model.WorkerTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,8 +49,6 @@ public class Worker implements Runnable, InitializingBean {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private TaskAdaptor taskAdaptor;
-  @Autowired private ProcessComicEntryRepository processComicEntryRepository;
-  @Autowired private ObjectFactory<ProcessComicTask> processComicTaskFactory;
 
   public List<WorkerListener> listeners = new ArrayList<>();
   BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<>();
@@ -208,9 +205,21 @@ public class Worker implements Runnable, InitializingBean {
       }
 
       if (currentTask == null) {
-        this.lookForProcessEntries();
-      } else if (currentTask != null) {
+        final List<Task> tasks = this.taskAdaptor.getNextTask();
+        if (!tasks.isEmpty()) {
+          final Task taskToRun = tasks.get(0);
+          this.logger.debug("Found a persisted task to run: type={}", taskToRun.getTaskType());
+          final TaskEncoder<?> decoder;
+          try {
+            decoder = this.taskAdaptor.getActionDecoder(taskToRun.getTaskType());
+            currentTask = decoder.decode(tasks.get(0));
+          } catch (TaskException error) {
+            this.logger.error("Failed to decode and run task", error);
+          }
+        }
+      }
 
+      if (currentTask != null) {
         try {
           this.logger.debug("Starting task: " + currentTask);
           long start = System.currentTimeMillis();
@@ -228,19 +237,6 @@ public class Worker implements Runnable, InitializingBean {
     }
     this.logger.debug("Stop processing the work queue");
     this.fireWorkerStateChangedEvent();
-  }
-
-  private void lookForProcessEntries() {
-    this.logger.debug("Checking for entries to process");
-    final ProcessComicEntry entry = this.processComicEntryRepository.findFirstByOrderByCreated();
-
-    if (entry != null) {
-      this.logger.debug("Entry found for: {}", entry.getComic().getFilename());
-      final ProcessComicTask task = this.processComicTaskFactory.getObject();
-
-      this.logger.debug("Queueing task");
-      this.addTasksToQueue(task);
-    }
   }
 
   private void fireWorkerStateChangedEvent() {
