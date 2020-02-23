@@ -37,10 +37,6 @@ public class RescanComicWorkerTask extends AbstractWorkerTask {
 
   private Comic comic;
 
-  public void setComic(Comic comic) {
-    this.comic = comic;
-  }
-
   @Override
   public void startTask() throws WorkerTaskException {
     this.logger.debug("Rescanning comic: id={} {}", this.comic.getId(), this.comic.getFilename());
@@ -62,5 +58,13 @@ public class RescanComicWorkerTask extends AbstractWorkerTask {
     result.append("Rescan comic:").append(" comic=").append(this.comic.getFilename());
 
     return result.toString();
+  }
+
+  public Comic getComic() {
+    return this.comic;
+  }
+
+  public void setComic(Comic comic) {
+    this.comic = comic;
   }
 }

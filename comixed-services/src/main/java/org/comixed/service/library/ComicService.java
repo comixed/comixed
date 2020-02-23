@@ -33,10 +33,13 @@ import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.comixed.task.model.RescanComicWorkerTask;
+import org.comixed.service.task.TaskService;
+import org.comixed.task.TaskException;
+import org.comixed.task.adaptors.TaskAdaptor;
+import org.comixed.task.encoders.RescanComicTaskEncoder;
 import org.comixed.task.runner.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -51,7 +54,7 @@ public class ComicService {
   @Autowired private ProcessComicEntryRepository processComicEntryRepository;
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private Worker worker;
-  @Autowired private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskFactory;
+  @Autowired private TaskAdaptor taskAdaptor;
 
   public List<Comic> getComicsUpdatedSince(final long timestamp, final int maximumResults) {
     final Date lastUpdated = new Date(timestamp);
@@ -191,11 +194,15 @@ public class ComicService {
 
     for (Comic comic : comics) {
       count++;
-      this.logger.debug("Queueing comic for rescan: {}", comic.getFilename());
-      RescanComicWorkerTask task = this.rescanComicWorkerTaskFactory.getObject();
+      try {
+        this.logger.debug("Queueing comic for rescan: {}", comic.getFilename());
+        RescanComicTaskEncoder encoder = this.taskAdaptor.getActionDecoder(TaskType.RescanComic);
 
-      task.setComic(comic);
-      this.worker.addTasksToQueue(task);
+        encoder.setComic(comic);
+        this.taskAdaptor.save(encoder.encode());
+      } catch (TaskException error) {
+        this.logger.error("Failed to encode rescan task", error);
+      }
     }
 
     return count;
