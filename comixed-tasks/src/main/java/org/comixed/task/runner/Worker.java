@@ -18,7 +18,10 @@
 
 package org.comixed.task.runner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.comixed.model.tasks.Task;
@@ -107,54 +110,12 @@ public class Worker implements Runnable, InitializingBean {
   }
 
   /**
-   * Returns the number of pending tasks of the specified type are in the queue.
-   *
-   * @param taskClass the task type
-   * @return the count
-   */
-  public int getCountFor(Class<? extends WorkerTask> taskClass) {
-    this.logger.debug("Getting worker count: class={}", taskClass.getName());
-    this.logger.debug("Getting worker queue count: class={}", taskClass.getName());
-    synchronized (this.semaphore) {
-      if (this.queue.isEmpty()) {
-        this.logger.debug("The queue is empty");
-        return 0;
-      }
-
-      if (!this.taskCounts.containsKey(taskClass)) {
-        this.logger.debug("No entries in queue for {}", taskClass.getName());
-
-        for (Iterator<Class<? extends WorkerTask>> keyIter = this.taskCounts.keySet().iterator();
-            keyIter.hasNext(); ) {
-          this.logger.debug("KEY={}", keyIter.next());
-        }
-        return 0;
-      }
-
-      final Integer result = this.taskCounts.get(taskClass);
-
-      this.logger.debug("{} task{} found", result, result == 1 ? "" : "s");
-
-      return result;
-    }
-  }
-
-  /**
    * Returns the current state of the worker.
    *
    * @return the state
    */
   public State getState() {
     return this.state;
-  }
-
-  /**
-   * Returns whether the worker queue is empty or has tasks remaining.
-   *
-   * @return true if the queue is empty
-   */
-  public boolean isQueueEmpty() {
-    return this.queue.isEmpty();
   }
 
   /**

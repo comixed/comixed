@@ -26,12 +26,13 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.comixed.model.library.Comic;
+import org.comixed.model.tasks.TaskType;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.service.task.TaskService;
 import org.comixed.task.model.RescanComicWorkerTask;
 import org.comixed.service.task.TaskService;
 import org.comixed.task.TaskException;
@@ -51,7 +52,7 @@ public class ComicService {
 
   @Autowired private ComicRepository comicRepository;
   @Autowired private LastReadDatesRepository lastReadDatesRepository;
-  @Autowired private ProcessComicEntryRepository processComicEntryRepository;
+  @Autowired private TaskService taskService;
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private Worker worker;
   @Autowired private TaskAdaptor taskAdaptor;
@@ -145,7 +146,7 @@ public class ComicService {
   public long getProcessingCount() {
     this.logger.debug("Getting the current processing count");
 
-    final long result = this.processComicEntryRepository.count();
+    final long result = this.taskService.getTaskCount(TaskType.ProcessComic);
 
     this.logger.debug("There {} {} record{} to be processed", result, result == 1 ? "" : "s");
 
@@ -155,7 +156,7 @@ public class ComicService {
   public int getRescanCount() {
     this.logger.debug("Getting the current rescan count");
 
-    return this.worker.getCountFor(RescanComicWorkerTask.class);
+    return this.taskService.getTaskCount(TaskType.RescanComic);
   }
 
   public List<LastReadDate> getLastReadDatesSince(final String email, final long timestamp) {

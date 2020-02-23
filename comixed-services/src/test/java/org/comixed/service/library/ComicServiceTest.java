@@ -35,7 +35,6 @@ import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.comixed.service.task.TaskService;
 import org.comixed.task.TaskException;
 import org.comixed.task.adaptors.TaskAdaptor;
@@ -76,7 +75,7 @@ public class ComicServiceTest {
   @Mock private ComicRepository comicRepository;
   @Mock private LastReadDatesRepository lastReadDatesRepository;
   @Mock private ComiXedUserRepository userRepository;
-  @Mock private ProcessComicEntryRepository processComicEntryRepository;
+  @Mock private TaskService taskService;
   @Mock private List<Comic> comicList;
   @Mock private Comic comicListEntry;
   @Mock private Comic comic;
@@ -329,20 +328,16 @@ public class ComicServiceTest {
 
   @Test
   public void testGetProcessingCount() {
-    Mockito.when(processComicEntryRepository.count()).thenReturn(10l);
+    Mockito.when(taskService.getTaskCount(TaskType.ProcessComic)).thenReturn(10);
 
     assertEquals(10, this.comicService.getProcessingCount());
-
-    Mockito.verify(processComicEntryRepository, Mockito.times(1)).count();
   }
 
   @Test
   public void testGetRescanCount() {
-    Mockito.when(worker.getCountFor(Mockito.any(Class.class))).thenReturn(10);
+    Mockito.when(taskService.getTaskCount(TaskType.RescanComic)).thenReturn(10);
 
     assertEquals(10, this.comicService.getRescanCount());
-
-    Mockito.verify(worker, Mockito.times(1)).getCountFor(RescanComicWorkerTask.class);
   }
 
   @Test

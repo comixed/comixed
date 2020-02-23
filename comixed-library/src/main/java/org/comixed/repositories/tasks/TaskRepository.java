@@ -20,13 +20,18 @@ package org.comixed.repositories.tasks;
 
 import java.util.List;
 import org.comixed.model.tasks.Task;
+import org.comixed.model.tasks.TaskType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaskRepository extends CrudRepository<Task, Long> {
   @Query("SELECT t FROM Task t JOIN FETCH t.properties ORDER BY t.created ASC")
   List<Task> getTasksToRun(PageRequest request);
+
+  @Query("SELECT COUNT(*) FROM Task t WHERE t.taskType = :taskType")
+  int getTaskCount(@Param("taskType") TaskType taskType);
 }

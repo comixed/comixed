@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.comixed.model.library.Comic;
+import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.library.ComicRepository;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.service.task.TaskService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,11 +22,11 @@ public class LibraryServiceTest {
   private static final Date TEST_LAST_UPDATED_TIMESTAMP = new Date();
   private static final int TEST_MAXIMUM_COMICS = 100;
   private static final long TEST_LAST_COMIC_ID = 23579;
-  private static final long TEST_PROCESSING_COUNT = 273L;
+  private static final int TEST_PROCESSING_COUNT = 273;
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
-  @Mock private ProcessComicEntryRepository processComicEntryRepository;
+  @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
 
   private Comic comic1 = new Comic();
@@ -80,7 +81,7 @@ public class LibraryServiceTest {
 
   @Test
   public void testGetProcessingCount() {
-    Mockito.when(processComicEntryRepository.count()).thenReturn(TEST_PROCESSING_COUNT);
+    Mockito.when(taskService.getTaskCount(TaskType.ProcessComic)).thenReturn(TEST_PROCESSING_COUNT);
 
     long result = libraryService.getProcessingCount();
 
