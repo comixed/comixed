@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories.tasks;
+package org.comixed.model.tasks;
 
-import org.comixed.model.tasks.ProcessComicEntry;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface ProcessComicEntryRepository extends CrudRepository<ProcessComicEntry, Long> {
-  ProcessComicEntry findFirstByOrderByCreated();
+/**
+ * <code>TaskType</code> defines the list of supported tasks that can be performed.
+ *
+ * @author Darryl L. Pierce
+ */
+public enum TaskType {
+  AddComic,
+  ProcessComic,
+  RescanComic,
+  DeleteComic,
+  DeleteComics;
 }

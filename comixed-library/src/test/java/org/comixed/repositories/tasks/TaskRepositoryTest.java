@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,17 +18,19 @@
 
 package org.comixed.repositories.tasks;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import org.comixed.model.tasks.ProcessComicEntry;
+import java.util.List;
+import org.comixed.model.tasks.Task;
+import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -46,15 +48,22 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   TransactionalTestExecutionListener.class,
   DbUnitTestExecutionListener.class
 })
-public class ProcessComicEntryRepositoryTest {
-  @Autowired private ProcessComicEntryRepository repository;
+public class TaskRepositoryTest {
+  private static final long TEST_FIRST_TASK_ID = 1000L;
+  private static final String TEST_ADD_COMIC_FILENAME = "/path/to/comic1.cbz";
+  @Autowired private TaskRepository repository;
 
   @Test
-  public void testGetNextEntry() {
-    final ProcessComicEntry result = repository.findFirstByOrderByCreated();
+  public void testGetTasksToRun() {
+    final List<Task> result = this.repository.getTasksToRun(PageRequest.of(0, 1));
 
     assertNotNull(result);
-    assertEquals(1000L, result.getId().longValue());
-    assertNotNull(result.getComic());
+    assertFalse(result.isEmpty());
+    final Task task = result.get(0);
+    assertEquals(TEST_FIRST_TASK_ID, task.getId().longValue());
+    assertSame(TaskType.AddComic, task.getTaskType());
+    assertEquals(TEST_ADD_COMIC_FILENAME, task.getProperty("filename"));
+    assertTrue(Boolean.valueOf(task.getProperty("delete-blocked-pages")));
+    assertFalse(Boolean.valueOf(task.getProperty("ignore-metadata")));
   }
 }

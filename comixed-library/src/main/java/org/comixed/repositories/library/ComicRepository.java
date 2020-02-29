@@ -82,6 +82,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   List<Comic> getLibraryUpdates(
       @Param("latestUpdatedDate") Date latestUpdatedDate, final Pageable paging);
 
+  @Query("SELECT c FROM Comic c JOIN FETCH c.pages WHERE c.id = :id")
   Comic getById(@Param("id") long id);
 
   @Query(

@@ -32,8 +32,9 @@ import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
 import org.comixed.model.library.Comic;
+import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.library.ComicRepository;
-import org.comixed.task.model.AddComicWorkerTask;
+import org.comixed.service.task.TaskService;
 import org.comixed.task.model.QueueComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.junit.Test;
@@ -63,6 +64,7 @@ public class FileServiceTest {
   @Mock private ComicRepository comicRepository;
   @Mock private Comic comic;
   @Mock private Worker worker;
+  @Mock private TaskService taskService;
   @Mock private ObjectFactory<QueueComicsWorkerTask> taskFactory;
   @Mock private QueueComicsWorkerTask queueComicsWorkerTask;
 
@@ -150,14 +152,14 @@ public class FileServiceTest {
 
   @Test
   public void testGetImportStatus() throws NoSuchAlgorithmException, InterruptedException {
-    int expected = SecureRandom.getInstanceStrong().nextInt(21275);
-    Mockito.when(worker.getCountFor(AddComicWorkerTask.class)).thenReturn(expected);
+    int addCount = SecureRandom.getInstanceStrong().nextInt(21275);
+    int importCount = SecureRandom.getInstanceStrong().nextInt(21275);
+    Mockito.when(taskService.getTaskCount(TaskType.AddComic)).thenReturn(addCount);
+    Mockito.when(taskService.getTaskCount(TaskType.ProcessComic)).thenReturn(importCount);
 
     int result = service.getImportStatus();
 
-    assertEquals(expected, result);
-
-    Mockito.verify(worker, Mockito.times(1)).getCountFor(AddComicWorkerTask.class);
+    assertEquals(addCount + importCount, result);
   }
 
   @Test
