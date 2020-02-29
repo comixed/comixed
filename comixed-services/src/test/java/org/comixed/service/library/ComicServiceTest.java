@@ -28,12 +28,17 @@ import java.util.Optional;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFormat;
 import org.comixed.model.library.ScanType;
+import org.comixed.model.tasks.Task;
+import org.comixed.model.tasks.TaskType;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.service.task.TaskService;
+import org.comixed.task.TaskException;
+import org.comixed.task.adaptors.TaskAdaptor;
+import org.comixed.task.encoders.RescanComicTaskEncoder;
 import org.comixed.task.model.RescanComicWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.junit.Before;
@@ -41,7 +46,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 
@@ -71,7 +75,7 @@ public class ComicServiceTest {
   @Mock private ComicRepository comicRepository;
   @Mock private LastReadDatesRepository lastReadDatesRepository;
   @Mock private ComiXedUserRepository userRepository;
-  @Mock private ProcessComicEntryRepository processComicEntryRepository;
+  @Mock private TaskService taskService;
   @Mock private List<Comic> comicList;
   @Mock private Comic comicListEntry;
   @Mock private Comic comic;
@@ -80,7 +84,9 @@ public class ComicServiceTest {
   @Mock private ComiXedUser user;
   @Mock private List<LastReadDate> listLastReadDate;
   @Captor private ArgumentCaptor<Date> lastUpdatedDateCaptor;
-  @Mock private ObjectFactory<RescanComicWorkerTask> rescanWorkerTaskFactory;
+  @Mock private TaskAdaptor taskAdaptor;
+  @Mock private RescanComicTaskEncoder taskEncoder;
+  @Mock private Task task;
   @Mock private RescanComicWorkerTask rescanWorkerTask;
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<Date> deletedCaptor;
@@ -322,20 +328,16 @@ public class ComicServiceTest {
 
   @Test
   public void testGetProcessingCount() {
-    Mockito.when(processComicEntryRepository.count()).thenReturn(10l);
+    Mockito.when(taskService.getTaskCount(TaskType.ProcessComic)).thenReturn(10);
 
     assertEquals(10, this.comicService.getProcessingCount());
-
-    Mockito.verify(processComicEntryRepository, Mockito.times(1)).count();
   }
 
   @Test
   public void testGetRescanCount() {
-    Mockito.when(worker.getCountFor(Mockito.any(Class.class))).thenReturn(10);
+    Mockito.when(taskService.getTaskCount(TaskType.RescanComic)).thenReturn(10);
 
     assertEquals(10, this.comicService.getRescanCount());
-
-    Mockito.verify(worker, Mockito.times(1)).getCountFor(RescanComicWorkerTask.class);
   }
 
   @Test
@@ -368,23 +370,21 @@ public class ComicServiceTest {
   }
 
   @Test
-  public void testRescanComics() {
+  public void testRescanComics() throws TaskException {
     List<Comic> comics = new ArrayList<>();
     comics.add(comic);
 
     Mockito.when(comicRepository.findAll()).thenReturn(comics);
-    Mockito.when(rescanWorkerTaskFactory.getObject()).thenReturn(rescanWorkerTask);
-    Mockito.doNothing().when(rescanWorkerTask).setComic(Mockito.any(Comic.class));
-    Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(RescanComicWorkerTask.class));
+    Mockito.when(taskAdaptor.getEncoder(Mockito.any(TaskType.class))).thenReturn(taskEncoder);
+    Mockito.when(taskEncoder.encode()).thenReturn(task);
 
     final int result = comicService.rescanComics();
 
     assertEquals(comics.size(), result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findAll();
-    Mockito.verify(rescanWorkerTaskFactory, Mockito.times(1)).getObject();
-    Mockito.verify(rescanWorkerTask, Mockito.times(comics.size())).setComic(comic);
-    Mockito.verify(worker, Mockito.times(comics.size())).addTasksToQueue(rescanWorkerTask);
+    Mockito.verify(taskAdaptor, Mockito.times(1)).getEncoder(TaskType.RescanComic);
+    Mockito.verify(taskEncoder, Mockito.times(1)).setComic(comic);
   }
 
   @Test

@@ -18,22 +18,21 @@
 
 package org.comixed.task.model;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
-import org.comixed.task.runner.Worker;
-import org.junit.Before;
+import org.comixed.model.tasks.Task;
+import org.comixed.model.tasks.TaskType;
+import org.comixed.repositories.tasks.TaskRepository;
+import org.comixed.task.encoders.AddComicTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
@@ -41,100 +40,83 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest
 public class QueueComicsWorkerTaskTest {
-  @InjectMocks private QueueComicsWorkerTask task;
-  @Mock private Worker worker;
-  @Mock private ObjectFactory<AddComicWorkerTask> addComicTaskFactory;
-  @Mock private AddComicWorkerTask addComicTask;
+  @InjectMocks private QueueComicsWorkerTask workerTask;
+  @Mock private TaskRepository taskRepository;
+  @Captor private ArgumentCaptor<Task> taskArgumentCaptor;
+  @Mock private Task task;
 
-  private List<String> filenames;
-
-  @Before
-  public void setUp() {
-    filenames = new ArrayList<>();
-
-    for (int index = 0; index < 1000; index++) {
-      filenames.add(RandomStringUtils.random(128, true, true));
-    }
-  }
+  private List<String> filenames = new ArrayList<>();
 
   @Test
   public void testAddFiles() {
-    task.setFilenames(filenames);
+    for (int index = 0; index < 1000; index++) {
+      filenames.add(RandomStringUtils.random(128, true, true));
+    }
+    workerTask.setFilenames(filenames);
 
-    assertFalse(task.filenames.isEmpty());
+    assertFalse(workerTask.gettFilenames().isEmpty());
     for (String filename : filenames) {
-      assertTrue(task.filenames.contains(filename));
+      assertTrue(workerTask.gettFilenames().contains(filename));
     }
   }
 
   @Test
-  public void testAddFilesAndDeleteBlockedPages() {
-    task.setFilenames(filenames);
-    task.setDeleteBlockedPages(true);
+  public void testStartTaskDeleteBlockedPages() throws WorkerTaskException {
+    filenames.add(RandomStringUtils.random(128, true, true));
 
-    assertFalse(task.filenames.isEmpty());
-    for (String filename : filenames) {
-      assertTrue(task.filenames.contains(filename));
-    }
-    assertTrue(task.deleteBlockedPages);
+    Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(task);
+
+    workerTask.setFilenames(filenames);
+    workerTask.setDeleteBlockedPages(true);
+    workerTask.setIgnoreMetadata(false);
+
+    workerTask.startTask();
+
+    final Task record = taskArgumentCaptor.getValue();
+    assertEquals(TaskType.AddComic, record.getTaskType());
+    assertEquals(filenames.get(0), record.getProperty(AddComicTaskEncoder.FILENAME));
+    assertEquals(
+        Boolean.TRUE.toString(), record.getProperty(AddComicTaskEncoder.DELETE_BLOCKED_PAGES));
+    assertEquals(Boolean.FALSE.toString(), record.getProperty(AddComicTaskEncoder.IGNORE_METADATA));
   }
 
   @Test
-  public void testAddFilesAndIgnoreComicInfoXml() {
-    task.setFilenames(filenames);
-    task.setIgnoreMetadata(true);
+  public void testStartTaskIgnoreMetadata() throws WorkerTaskException {
+    filenames.add(RandomStringUtils.random(128, true, true));
 
-    assertFalse(task.filenames.isEmpty());
-    for (String filename : filenames) {
-      assertTrue(task.filenames.contains(filename));
-    }
-    assertTrue(task.ignoreMetadata);
+    Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(task);
+
+    workerTask.setFilenames(filenames);
+    workerTask.setDeleteBlockedPages(false);
+    workerTask.setIgnoreMetadata(true);
+
+    workerTask.startTask();
+
+    final Task record = taskArgumentCaptor.getValue();
+    assertEquals(TaskType.AddComic, record.getTaskType());
+    assertEquals(filenames.get(0), record.getProperty(AddComicTaskEncoder.FILENAME));
+    assertEquals(
+        Boolean.FALSE.toString(), record.getProperty(AddComicTaskEncoder.DELETE_BLOCKED_PAGES));
+    assertEquals(Boolean.TRUE.toString(), record.getProperty(AddComicTaskEncoder.IGNORE_METADATA));
   }
 
   @Test
-  public void testStartTask() throws WorkerTaskException {
-    Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
-    Mockito.when(addComicTaskFactory.getObject()).thenReturn(addComicTask);
-    Mockito.doNothing().when(addComicTask).setDeleteBlockedPages(false);
+  public void testStartTaskDeleteBlockedPagesAndIgnoreMetadata() throws WorkerTaskException {
+    filenames.add(RandomStringUtils.random(128, true, true));
 
-    task.filenames = filenames;
+    Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(task);
 
-    task.startTask();
+    workerTask.setFilenames(filenames);
+    workerTask.setDeleteBlockedPages(true);
+    workerTask.setIgnoreMetadata(true);
 
-    Mockito.verify(worker, Mockito.times(filenames.size())).addTasksToQueue(addComicTask);
-    Mockito.verify(addComicTask, Mockito.times(filenames.size())).setFile(Mockito.any(File.class));
-    Mockito.verify(addComicTask, Mockito.times(filenames.size())).setDeleteBlockedPages(false);
-  }
+    workerTask.startTask();
 
-  @Test
-  public void testStartTaskAndDeleteBlockedPages() throws WorkerTaskException {
-    Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
-    Mockito.when(addComicTaskFactory.getObject()).thenReturn(addComicTask);
-    Mockito.doNothing().when(addComicTask).setDeleteBlockedPages(true);
-
-    task.filenames = filenames;
-    task.deleteBlockedPages = true;
-
-    task.startTask();
-
-    Mockito.verify(worker, Mockito.times(filenames.size())).addTasksToQueue(addComicTask);
-    Mockito.verify(addComicTask, Mockito.times(filenames.size())).setFile(Mockito.any(File.class));
-    Mockito.verify(addComicTask, Mockito.times(filenames.size())).setDeleteBlockedPages(true);
-  }
-
-  @Test
-  public void testStartTaskAndIgnoreComicInfoXml() throws WorkerTaskException {
-    Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(AddComicWorkerTask.class));
-    Mockito.when(addComicTaskFactory.getObject()).thenReturn(addComicTask);
-    Mockito.doNothing().when(addComicTask).setIgnoreMetadata(true);
-
-    task.filenames = filenames;
-    task.ignoreMetadata = true;
-
-    task.startTask();
-
-    Mockito.verify(worker, Mockito.times(filenames.size())).addTasksToQueue(addComicTask);
-    Mockito.verify(addComicTask, Mockito.times(filenames.size())).setFile(Mockito.any(File.class));
-    Mockito.verify(addComicTask, Mockito.times(filenames.size())).setIgnoreMetadata(true);
+    final Task record = taskArgumentCaptor.getValue();
+    assertEquals(TaskType.AddComic, record.getTaskType());
+    assertEquals(filenames.get(0), record.getProperty(AddComicTaskEncoder.FILENAME));
+    assertEquals(
+        Boolean.TRUE.toString(), record.getProperty(AddComicTaskEncoder.DELETE_BLOCKED_PAGES));
+    assertEquals(Boolean.TRUE.toString(), record.getProperty(AddComicTaskEncoder.IGNORE_METADATA));
   }
 }

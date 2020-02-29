@@ -68,20 +68,6 @@ public class WorkerTest extends ConcurrentTestCase {
   }
 
   @Test
-  public void testGetIsQueueEmptyWhenNot() throws InterruptedException {
-    Mockito.when(blockingQueue.isEmpty()).thenReturn(false);
-
-    assertFalse(worker.isQueueEmpty());
-  }
-
-  @Test
-  public void testGetIsQueueEmpty() {
-    Mockito.when(blockingQueue.isEmpty()).thenReturn(true);
-
-    assertTrue(worker.isQueueEmpty());
-  }
-
-  @Test
   public void testQueueSize() {
     Mockito.when(blockingQueue.size()).thenReturn(TEST_TASK_COUNT);
 
@@ -278,38 +264,5 @@ public class WorkerTest extends ConcurrentTestCase {
     worker.fireQueueChangedEvent();
 
     Mockito.verify(workerListener, Mockito.times(1)).queueChanged();
-  }
-
-  @Test
-  public void testGetCountForEmptyQueue() {
-    Mockito.when(blockingQueue.isEmpty()).thenReturn(true);
-
-    assertEquals(0, worker.getCountFor(workerTask.getClass()));
-
-    Mockito.verify(blockingQueue, Mockito.times(1)).isEmpty();
-  }
-
-  @Test
-  public void testGetCountForNonexistentWorkerTask() {
-    Mockito.when(blockingQueue.isEmpty()).thenReturn(false);
-    Mockito.when(taskCounts.containsKey(Mockito.any())).thenReturn(false);
-
-    assertEquals(0, worker.getCountFor(workerTask.getClass()));
-
-    Mockito.verify(blockingQueue, Mockito.times(1)).isEmpty();
-    Mockito.verify(taskCounts, Mockito.times(1)).containsKey(workerTask.getClass());
-  }
-
-  @Test
-  public void testGetCountFor() {
-    Mockito.when(blockingQueue.isEmpty()).thenReturn(false);
-    Mockito.when(taskCounts.containsKey(Mockito.any())).thenReturn(true);
-    Mockito.when(taskCounts.get(Mockito.any())).thenReturn(TEST_TASK_COUNT);
-
-    assertEquals(TEST_TASK_COUNT, worker.getCountFor(workerTask.getClass()));
-
-    Mockito.verify(blockingQueue, Mockito.times(1)).isEmpty();
-    Mockito.verify(taskCounts, Mockito.times(1)).containsKey(workerTask.getClass());
-    Mockito.verify(taskCounts, Mockito.times(1)).get(workerTask.getClass());
   }
 }

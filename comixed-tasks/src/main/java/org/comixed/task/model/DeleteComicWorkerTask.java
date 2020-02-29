@@ -1,0 +1,79 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2017, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+package org.comixed.task.model;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Date;
+import org.apache.commons.io.FileUtils;
+import org.comixed.model.library.Comic;
+import org.comixed.repositories.library.ComicRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+@Component
+public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerTask {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+  @Autowired private ComicRepository repository;
+
+  private boolean deleteFile;
+  private Comic comic;
+
+  public void setDeleteFile(boolean deleteFile) {
+    this.deleteFile = deleteFile;
+  }
+
+  @Override
+  @Transactional
+  public void startTask() throws WorkerTaskException {
+    if (this.deleteFile) {
+      final String filename = this.comic.getFilename();
+      this.logger.debug("Deleting comic file: {}", filename);
+      File file = new File(filename);
+
+      try {
+        FileUtils.forceDelete(file);
+        this.logger.debug("Removing comic from repository: id={}", this.comic.getId());
+        this.repository.delete(this.comic);
+      } catch (IOException error) {
+        this.logger.error("Unable to delete comic: {}", filename, error);
+      }
+    } else {
+      this.logger.debug("Marking comic for deletion: id={}", this.comic.getId());
+      comic.setDateDeleted(new Date());
+      comic.setDateLastUpdated(new Date());
+      this.repository.save(this.comic);
+    }
+  }
+
+  @Override
+  protected String createDescription() {
+    return MessageFormat.format(
+        "Deleting comic: id={0} [delete file={1}]", this.comic.getId(), this.deleteFile);
+  }
+
+  public void setComic(final Comic comic) {
+    this.comic = comic;
+  }
+}

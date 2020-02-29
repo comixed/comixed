@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,90 +18,58 @@
 
 package org.comixed.task.model;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.List;
-import java.util.Optional;
-import org.apache.commons.io.FileUtils;
 import org.comixed.model.library.Comic;
+import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.library.ComicRepository;
+import org.comixed.task.TaskException;
+import org.comixed.task.adaptors.TaskAdaptor;
+import org.comixed.task.encoders.DeleteComicTaskEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeleteComicsWorkerTask extends AbstractWorkerTask implements WorkerTask {
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class DeleteComicsWorkerTask extends AbstractWorkerTask {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  @Autowired private ComicRepository repository;
-
-  private List<Comic> comics;
-  private boolean deleteFiles;
+  @Autowired private ComicRepository comicRepository;
+  @Autowired private TaskAdaptor taskAdaptor;
   private List<Long> comicIds;
 
-  public void setComicIds(List<Long> comicIds) {
-    this.comicIds = comicIds;
-  }
-
-  public void setComics(List<Comic> comics) {
-    this.comics = comics;
-  }
-
-  public void setDeleteFiles(boolean deleteFiles) {
-    this.deleteFiles = deleteFiles;
+  @Override
+  protected String createDescription() {
+    return MessageFormat.format(
+        "Enqueuing {0} comic{1} for deletion",
+        this.comicIds.size(), this.comicIds.size() == 1 ? "" : "s");
   }
 
   @Override
   public void startTask() throws WorkerTaskException {
-    if (this.comics == null) {
-      this.logger.debug("No comics provided.");
-      if (this.comicIds == null) throw new WorkerTaskException("No comics provided for deletion");
+    for (int index = 0; index < this.comicIds.size(); index++) {
+      final Long id = this.comicIds.get(index);
+      final Comic comic = this.comicRepository.getById(id);
 
-      this.comics = new ArrayList<>();
-      for (Long comicId : this.comicIds) {
-        Optional<Comic> comic = this.repository.findById(comicId);
-        if (comic.isPresent()) {
-          this.logger.debug("Adding comic with id={}", comicId);
-          this.comics.add(comic.get());
-        } else {
-          this.logger.debug("No such comic: id={}", comicId);
-        }
-      }
-    }
-    for (int index = 0; index < this.comics.size(); index++) {
-      Comic comic = this.comics.get(index);
-
-      this.logger.debug("Deleting {} of {} comic(s)", index + 1, this.comics.size());
-
-      if (this.deleteFiles) {
-        this.logger.debug("Deleting comic file: " + comic.getFilename());
-        File file = new File(comic.getFilename());
-
+      if (comic != null) {
         try {
-          FileUtils.forceDelete(file);
-          this.logger.debug("Removing comic from repository: " + comic);
-        } catch (IOException error) {
-          this.logger.error("Unable to delete comic: " + comic.getFilename(), error);
+          final DeleteComicTaskEncoder encoder;
+          encoder = this.taskAdaptor.getEncoder(TaskType.DeleteComic);
+          encoder.setComic(comic);
+          encoder.setDeleteComicFile(false);
+          this.taskAdaptor.save(encoder.encode());
+        } catch (TaskException error) {
+          this.logger.error("Failed to encode delete comic task", error);
         }
       }
-
-      this.repository.delete(comic);
     }
   }
 
-  @Override
-  protected String createDescription() {
-    final StringBuilder result = new StringBuilder();
-
-    result
-        .append("Delete comic:")
-        .append(" comic count=")
-        .append(this.comics.size())
-        .append(" delete files=")
-        .append(this.deleteFiles ? "Yes" : "No");
-
-    return result.toString();
+  public void setComicIds(final List<Long> comicIds) {
+    this.comicIds = comicIds;
   }
 }

@@ -30,8 +30,9 @@ import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.file.FileDetails;
 import org.comixed.model.library.Comic;
+import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.library.ComicRepository;
-import org.comixed.task.model.AddComicWorkerTask;
+import org.comixed.service.task.TaskService;
 import org.comixed.task.model.QueueComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.ComicFileUtils;
@@ -49,6 +50,7 @@ public class FileService {
   @Autowired private ComicRepository comicRepository;
   @Autowired private Worker worker;
   @Autowired private ObjectFactory<QueueComicsWorkerTask> taskFactory;
+  @Autowired private TaskService taskService;
 
   private int requestId = 0;
 
@@ -122,32 +124,8 @@ public class FileService {
   }
 
   public int getImportStatus() throws InterruptedException {
-
-    long started = System.currentTimeMillis();
-    this.logger.debug("Received import status request [{}]", ++this.requestId);
-    boolean done = false;
-    int result = 0;
-
-    while (!done) {
-      result = this.worker.getCountFor(AddComicWorkerTask.class);
-
-      if (result == 0) {
-        Thread.sleep(1000);
-        if ((System.currentTimeMillis() - started) > 60000) {
-          done = true;
-        }
-      } else {
-        done = true;
-      }
-    }
-
-    this.logger.debug(
-        "Responding to import status request [{}] in {}ms (BTW, there are {} imports pending)",
-        this.requestId,
-        (System.currentTimeMillis() - started),
-        result);
-
-    return result;
+    return this.taskService.getTaskCount(TaskType.AddComic)
+        + this.taskService.getTaskCount(TaskType.ProcessComic);
   }
 
   public int importComicFiles(

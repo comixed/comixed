@@ -18,25 +18,23 @@
 
 package org.comixed.task.model;
 
-import static junit.framework.TestCase.assertEquals;
-
-import java.io.IOException;
-import java.io.InputStream;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.ComicFileDetails;
-import org.comixed.model.tasks.ProcessComicEntry;
 import org.comixed.repositories.library.ComicRepository;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
 import org.comixed.utils.Utils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static junit.framework.TestCase.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -46,58 +44,32 @@ public class ProcessComicTaskTest {
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
 
   @InjectMocks private ProcessComicTask task;
-  @Mock private ProcessComicEntry processComicEntry;
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsCaptor;
   @Mock private ArchiveAdaptor archiveAdaptor;
-  @Mock private ProcessComicEntryRepository processComicEntryRepository;
   @Mock private ComicRepository comicRepository;
   @Mock private Utils utils;
 
-  @Before
-  public void setUp() {
-    task.setEntry(processComicEntry);
-  }
-
   @Test
   public void testStartTask() throws WorkerTaskException, ArchiveAdaptorException, IOException {
-    Mockito.when(processComicEntry.getComic()).thenReturn(comic);
     Mockito.when(comic.getArchiveAdaptor()).thenReturn(archiveAdaptor);
     Mockito.doNothing().when(archiveAdaptor).loadComic(comic);
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(utils.createHash(Mockito.any(InputStream.class))).thenReturn(TEST_FILE_HASH);
     Mockito.doNothing().when(comic).setFileDetails(comicFileDetailsCaptor.capture());
     Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
-    Mockito.doNothing()
-        .when(processComicEntryRepository)
-        .delete(Mockito.any(ProcessComicEntry.class));
+
+    task.setComic(comic);
+    task.setIgnoreMetadata(false);
+    task.setDeleteBlockedPages(false);
 
     task.startTask();
+
     assertEquals(TEST_FILE_HASH, comicFileDetailsCaptor.getValue().getHash());
 
-    Mockito.verify(processComicEntry, Mockito.times(1)).getComic();
     Mockito.verify(comic, Mockito.times(1)).getArchiveAdaptor();
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
-    Mockito.verify(processComicEntryRepository, Mockito.times(1)).delete(processComicEntry);
-  }
-
-  @Test(expected = WorkerTaskException.class)
-  public void testStartTaskLoadComicFails() throws WorkerTaskException, ArchiveAdaptorException {
-    Mockito.when(processComicEntry.getComic()).thenReturn(comic);
-    Mockito.when(comic.getArchiveAdaptor()).thenReturn(archiveAdaptor);
-    Mockito.doThrow(ArchiveAdaptorException.class).when(archiveAdaptor).loadComic(comic);
-    Mockito.doNothing().when(processComicEntryRepository).delete(Mockito.any());
-
-    try {
-      task.startTask();
-    } finally {
-
-      Mockito.verify(processComicEntry, Mockito.times(1)).getComic();
-      Mockito.verify(comic, Mockito.times(1)).getArchiveAdaptor();
-      Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
-      Mockito.verify(processComicEntryRepository, Mockito.times(1)).delete(processComicEntry);
-    }
   }
 }

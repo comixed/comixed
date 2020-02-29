@@ -18,18 +18,21 @@
 
 package org.comixed.task.runner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import org.comixed.model.tasks.ProcessComicEntry;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
-import org.comixed.task.model.ProcessComicTask;
+import org.comixed.model.tasks.Task;
+import org.comixed.task.TaskException;
+import org.comixed.task.adaptors.TaskAdaptor;
+import org.comixed.task.encoders.TaskEncoder;
 import org.comixed.task.model.WorkerTask;
 import org.comixed.task.model.WorkerTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,8 +51,7 @@ public class Worker implements Runnable, InitializingBean {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  @Autowired private ProcessComicEntryRepository processComicEntryRepository;
-  @Autowired private ObjectFactory<ProcessComicTask> processComicTaskFactory;
+  @Autowired private TaskAdaptor taskAdaptor;
 
   public List<WorkerListener> listeners = new ArrayList<>();
   BlockingQueue<WorkerTask> queue = new LinkedBlockingQueue<>();
@@ -108,54 +110,12 @@ public class Worker implements Runnable, InitializingBean {
   }
 
   /**
-   * Returns the number of pending tasks of the specified type are in the queue.
-   *
-   * @param taskClass the task type
-   * @return the count
-   */
-  public int getCountFor(Class<? extends WorkerTask> taskClass) {
-    this.logger.debug("Getting worker count: class={}", taskClass.getName());
-    this.logger.debug("Getting worker queue count: class={}", taskClass.getName());
-    synchronized (this.semaphore) {
-      if (this.queue.isEmpty()) {
-        this.logger.debug("The queue is empty");
-        return 0;
-      }
-
-      if (!this.taskCounts.containsKey(taskClass)) {
-        this.logger.debug("No entries in queue for {}", taskClass.getName());
-
-        for (Iterator<Class<? extends WorkerTask>> keyIter = this.taskCounts.keySet().iterator();
-            keyIter.hasNext(); ) {
-          this.logger.debug("KEY={}", keyIter.next());
-        }
-        return 0;
-      }
-
-      final Integer result = this.taskCounts.get(taskClass);
-
-      this.logger.debug("{} task{} found", result, result == 1 ? "" : "s");
-
-      return result;
-    }
-  }
-
-  /**
    * Returns the current state of the worker.
    *
    * @return the state
    */
   public State getState() {
     return this.state;
-  }
-
-  /**
-   * Returns whether the worker queue is empty or has tasks remaining.
-   *
-   * @return true if the queue is empty
-   */
-  public boolean isQueueEmpty() {
-    return this.queue.isEmpty();
   }
 
   /**
@@ -206,11 +166,23 @@ public class Worker implements Runnable, InitializingBean {
       }
 
       if (currentTask == null) {
-        this.lookForProcessEntries();
-      } else if (currentTask != null) {
+        final List<Task> tasks = this.taskAdaptor.getNextTask();
+        if (!tasks.isEmpty()) {
+          final Task taskToRun = tasks.get(0);
+          this.logger.debug("Found a persisted task to run: type={}", taskToRun.getTaskType());
+          final TaskEncoder<?> decoder;
+          try {
+            decoder = this.taskAdaptor.getEncoder(taskToRun.getTaskType());
+            currentTask = decoder.decode(tasks.get(0));
+          } catch (TaskException error) {
+            this.logger.error("Failed to decode and run task", error);
+          }
+        }
+      }
 
+      if (currentTask != null) {
         try {
-          this.logger.debug("Starting task: " + currentTask);
+          this.logger.debug("Starting task: {}", currentTask.getDescription());
           long start = System.currentTimeMillis();
           currentTask.startTask();
           this.logger.debug(
@@ -226,20 +198,6 @@ public class Worker implements Runnable, InitializingBean {
     }
     this.logger.debug("Stop processing the work queue");
     this.fireWorkerStateChangedEvent();
-  }
-
-  private void lookForProcessEntries() {
-    this.logger.debug("Checking for entries to process");
-    final ProcessComicEntry entry = this.processComicEntryRepository.findFirstByOrderByCreated();
-
-    if (entry != null) {
-      this.logger.debug("Entry found for: {}", entry.getComic().getFilename());
-      final ProcessComicTask task = this.processComicTaskFactory.getObject();
-      task.setEntry(entry);
-
-      this.logger.debug("Queueing task");
-      this.addTasksToQueue(task);
-    }
   }
 
   private void fireWorkerStateChangedEvent() {

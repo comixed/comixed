@@ -22,9 +22,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.comixed.model.library.Comic;
+import org.comixed.model.tasks.TaskType;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.library.ComicRepository;
-import org.comixed.repositories.tasks.ProcessComicEntryRepository;
+import org.comixed.service.task.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class LibraryService {
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private ComicRepository comicRepository;
-  @Autowired private ProcessComicEntryRepository processComicEntryRepository;
+  @Autowired private TaskService taskService;
 
   public List<Comic> getComicsUpdatedSince(
       String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
@@ -76,6 +77,6 @@ public class LibraryService {
 
   public long getProcessingCount() {
     this.logger.debug("Getting processing count");
-    return this.processComicEntryRepository.count();
+    return this.taskService.getTaskCount(TaskType.ProcessComic);
   }
 }

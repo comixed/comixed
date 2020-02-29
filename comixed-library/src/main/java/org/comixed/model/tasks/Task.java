@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,38 +18,47 @@
 
 package org.comixed.model.tasks;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.persistence.*;
 import org.comixed.model.library.Comic;
-import org.comixed.views.View.ComicDetails;
 
 @Entity
-@Table(name = "process_comic_entries")
-public class ProcessComicEntry {
+@Table(name = "tasks")
+public class Task {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
-  @JsonView({ComicDetails.class})
   private Long id;
 
-  @OneToOne
-  @JoinColumn(name = "comic_id", nullable = false, updatable = false)
+  @Column(name = "task_type", nullable = false, updatable = false)
+  @Enumerated(EnumType.STRING)
+  private TaskType taskType;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "comic_id", nullable = true, updatable = false)
   private Comic comic;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "process_type", nullable = false, updatable = false)
-  private ProcessComicEntryType processType;
+  @ElementCollection
+  @CollectionTable(name = "task_properties")
+  @MapKeyColumn(name = "name")
+  @Column(name = "value")
+  private Map<String, String> properties = new HashMap<>();
 
+  @Column(name = "created", updatable = false, nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "created", nullable = false, updatable = false)
   private Date created = new Date();
-
-  public ProcessComicEntry() {}
 
   public Long getId() {
     return id;
+  }
+
+  public TaskType getTaskType() {
+    return taskType;
+  }
+
+  public void setTaskType(final TaskType taskType) {
+    this.taskType = taskType;
   }
 
   public Comic getComic() {
@@ -60,19 +69,19 @@ public class ProcessComicEntry {
     this.comic = comic;
   }
 
-  public ProcessComicEntryType getProcessType() {
-    return processType;
-  }
-
-  public void setProcessType(final ProcessComicEntryType processType) {
-    this.processType = processType;
-  }
-
   public Date getCreated() {
     return created;
   }
 
   public void setCreated(final Date created) {
     this.created = created;
+  }
+
+  public void setProperty(final String name, final String value) {
+    this.properties.put(name, value);
+  }
+
+  public String getProperty(final String name) {
+    return this.properties.get(name);
   }
 }
