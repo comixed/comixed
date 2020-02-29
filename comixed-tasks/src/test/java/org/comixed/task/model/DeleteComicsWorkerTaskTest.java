@@ -57,7 +57,7 @@ public class DeleteComicsWorkerTaskTest {
     task.setComicIds(ids);
     task.startTask();
 
-    Mockito.verify(taskAdaptor, Mockito.times(ids.size())).getEncoder(TaskType.DeleteComic);
+    Mockito.verify(taskAdaptor, Mockito.times(ids.size())).getEncoder(TaskType.DELETE_COMIC);
     Mockito.verify(deleteComicTaskEncoder, Mockito.times(ids.size())).setComic(comic);
     Mockito.verify(deleteComicTaskEncoder, Mockito.times(ids.size())).setDeleteComicFile(false);
     Mockito.verify(taskAdaptor, Mockito.times(ids.size())).save(taskArgumentCaptor.getValue());

@@ -81,7 +81,8 @@ public class LibraryServiceTest {
 
   @Test
   public void testGetProcessingCount() {
-    Mockito.when(taskService.getTaskCount(TaskType.ProcessComic)).thenReturn(TEST_PROCESSING_COUNT);
+    Mockito.when(taskService.getTaskCount(TaskType.PROCESS_COMIC))
+        .thenReturn(TEST_PROCESSING_COUNT);
 
     long result = libraryService.getProcessingCount();
 

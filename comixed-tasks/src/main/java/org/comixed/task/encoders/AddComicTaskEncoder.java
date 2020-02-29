@@ -40,7 +40,7 @@ public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask>
 
   @Autowired private ObjectFactory<AddComicWorkerTask> addComicWorkerTaskObjectFactory;
 
-  private String filename;
+  private String comicFilename;
   private boolean deleteBlockedPages;
   private boolean ignoreMetadata;
 
@@ -48,13 +48,13 @@ public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask>
   public Task encode() {
     this.logger.debug(
         "Encoding add comic task: filename={} delete blocked pages={} ignore metadata={}",
-        this.filename,
+        this.comicFilename,
         this.deleteBlockedPages,
         this.ignoreMetadata);
 
     final Task result = new Task();
 
-    result.setProperty(FILENAME, this.filename);
+    result.setProperty(FILENAME, this.comicFilename);
     result.setProperty(DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
     result.setProperty(IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
 
@@ -75,8 +75,8 @@ public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask>
     return result;
   }
 
-  public void setFilename(final String filename) {
-    this.filename = filename;
+  public void setComicFilename(final String comicFilename) {
+    this.comicFilename = comicFilename;
   }
 
   public void setDeleteBlockedPages(final boolean deleteBlockedPages) {

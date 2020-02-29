@@ -23,8 +23,6 @@ import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.model.RescanComicWorkerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -34,8 +32,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RescanComicTaskEncoder extends AbstractTaskEncoder<RescanComicWorkerTask> {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskObjectFactory;
 
@@ -50,7 +46,7 @@ public class RescanComicTaskEncoder extends AbstractTaskEncoder<RescanComicWorke
     this.logger.debug("Encoding rescan comic task: comic={}", this.comic.getId());
 
     final Task result = new Task();
-    result.setTaskType(TaskType.RescanComic);
+    result.setTaskType(TaskType.RESCAN_COMIC);
     result.setComic(this.comic);
     result.setProperty("DUMMY", "PROPERTY");
 

@@ -24,9 +24,9 @@ package org.comixed.model.tasks;
  * @author Darryl L. Pierce
  */
 public enum TaskType {
-  AddComic,
-  ProcessComic,
-  RescanComic,
-  DeleteComic,
-  DeleteComics;
+  ADD_COMIC,
+  PROCESS_COMIC,
+  RESCAN_COMIC,
+  DELETE_COMIC,
+  DELETE_COMICS;
 }

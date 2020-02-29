@@ -22,8 +22,6 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.task.model.DeleteComicWorkerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -35,8 +33,6 @@ import org.springframework.stereotype.Component;
 public class DeleteComicTaskEncoder extends AbstractTaskEncoder<DeleteComicWorkerTask> {
   public static final String DELETE_COMIC = "delete-comic";
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ObjectFactory<DeleteComicWorkerTask> deleteComicWorkerTaskObjectFactory;
 
   private Comic comic;
@@ -47,7 +43,7 @@ public class DeleteComicTaskEncoder extends AbstractTaskEncoder<DeleteComicWorke
     this.logger.debug("Encoding delete comic task: comic={}", this.comic.getId());
 
     final Task result = new Task();
-    result.setTaskType(TaskType.DeleteComic);
+    result.setTaskType(TaskType.DELETE_COMIC);
     result.setComic(comic);
     result.setProperty(DELETE_COMIC, String.valueOf(this.deleteComicFile));
     return result;

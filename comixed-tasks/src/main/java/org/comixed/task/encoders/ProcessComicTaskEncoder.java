@@ -22,8 +22,6 @@ import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.task.model.ProcessComicTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -35,8 +33,6 @@ import org.springframework.stereotype.Component;
 public class ProcessComicTaskEncoder extends AbstractTaskEncoder<ProcessComicTask> {
   public static final String DELETE_BLOCKED_PAGES = "delete-blocked-pages";
   public static final String IGNORE_METADATA = "ignore-metadata";
-
-  private Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private ObjectFactory<ProcessComicTask> processComicTaskObjectFactory;
 
@@ -54,7 +50,7 @@ public class ProcessComicTaskEncoder extends AbstractTaskEncoder<ProcessComicTas
 
     final Task result = new Task();
 
-    result.setTaskType(TaskType.ProcessComic);
+    result.setTaskType(TaskType.PROCESS_COMIC);
     result.setComic(this.comic);
     result.setProperty(DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
     result.setProperty(IGNORE_METADATA, String.valueOf(this.ignoreMetadata));

@@ -52,15 +52,15 @@ public class TaskAdaptorTest {
   public void testGetAdaptorForUnsupportedTask() throws TaskException {
     adaptor.adaptorMap.clear();
 
-    adaptor.getEncoder(TaskType.AddComic);
+    adaptor.getEncoder(TaskType.ADD_COMIC);
   }
 
   @Test
   public void testGetAdaptor() throws TaskException {
-    adaptor.adaptorMap.put(TaskType.AddComic, TEST_ADAPTOR_NAME);
+    adaptor.adaptorMap.put(TaskType.ADD_COMIC, TEST_ADAPTOR_NAME);
     Mockito.when(applicationContext.getBean(Mockito.anyString())).thenReturn(taskEncoder);
 
-    final TaskEncoder<?> result = adaptor.getEncoder(TaskType.AddComic);
+    final TaskEncoder<?> result = adaptor.getEncoder(TaskType.ADD_COMIC);
 
     assertNotNull(result);
     assertSame(taskEncoder, result);

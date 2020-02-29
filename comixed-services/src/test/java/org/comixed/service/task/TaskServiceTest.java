@@ -41,7 +41,7 @@ public class TaskServiceTest {
     Mockito.when(taskRepository.getTaskCount(Mockito.any(TaskType.class)))
         .thenReturn(TEST_TASK_COUNT);
 
-    final int result = service.getTaskCount(TaskType.AddComic);
+    final int result = service.getTaskCount(TaskType.ADD_COMIC);
 
     assertEquals(TEST_TASK_COUNT, result);
   }
