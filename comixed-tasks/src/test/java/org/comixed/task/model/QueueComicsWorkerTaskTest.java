@@ -73,7 +73,7 @@ public class QueueComicsWorkerTaskTest {
     workerTask.startTask();
 
     final Task record = taskArgumentCaptor.getValue();
-    assertEquals(TaskType.AddComic, record.getTaskType());
+    assertEquals(TaskType.ADD_COMIC, record.getTaskType());
     assertEquals(filenames.get(0), record.getProperty(AddComicTaskEncoder.FILENAME));
     assertEquals(
         Boolean.TRUE.toString(), record.getProperty(AddComicTaskEncoder.DELETE_BLOCKED_PAGES));
@@ -93,7 +93,7 @@ public class QueueComicsWorkerTaskTest {
     workerTask.startTask();
 
     final Task record = taskArgumentCaptor.getValue();
-    assertEquals(TaskType.AddComic, record.getTaskType());
+    assertEquals(TaskType.ADD_COMIC, record.getTaskType());
     assertEquals(filenames.get(0), record.getProperty(AddComicTaskEncoder.FILENAME));
     assertEquals(
         Boolean.FALSE.toString(), record.getProperty(AddComicTaskEncoder.DELETE_BLOCKED_PAGES));
@@ -113,7 +113,7 @@ public class QueueComicsWorkerTaskTest {
     workerTask.startTask();
 
     final Task record = taskArgumentCaptor.getValue();
-    assertEquals(TaskType.AddComic, record.getTaskType());
+    assertEquals(TaskType.ADD_COMIC, record.getTaskType());
     assertEquals(filenames.get(0), record.getProperty(AddComicTaskEncoder.FILENAME));
     assertEquals(
         Boolean.TRUE.toString(), record.getProperty(AddComicTaskEncoder.DELETE_BLOCKED_PAGES));

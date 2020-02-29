@@ -126,8 +126,8 @@ public class FileService {
   }
 
   public int getImportStatus() throws InterruptedException {
-    return this.taskService.getTaskCount(TaskType.AddComic)
-        + this.taskService.getTaskCount(TaskType.ProcessComic);
+    return this.taskService.getTaskCount(TaskType.ADD_COMIC)
+        + this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
   }
 
   public int importComicFiles(

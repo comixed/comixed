@@ -141,7 +141,7 @@
           scan_type_id="2"
           format_id="1"/>
   <tasks id="1000"
-         task_type="AddComic"
+         task_type="ADD_COMIC"
          created="2020-02-19 08:24:00"/>
   <task_properties task_id="1000"
                    name="filename"
@@ -153,11 +153,11 @@
                    name="ignore-metadata"
                    value="false"/>
   <tasks id="1001"
-         task_type="ProcessComic"
+         task_type="PROCESS_COMIC"
          comic_id="1000"
          created="2020-02-19 08:24:00"/>
   <tasks id="1002"
-         task_type="AddComic"
+         task_type="ADD_COMIC"
          created="2020-02-19 08:24:00"/>
   <comic_characters comic_id="1000"
                     character_name="Captain America"/>

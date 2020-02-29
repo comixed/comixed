@@ -77,6 +77,6 @@ public class LibraryService {
 
   public long getProcessingCount() {
     this.logger.debug("Getting processing count");
-    return this.taskService.getTaskCount(TaskType.ProcessComic);
+    return this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
   }
 }

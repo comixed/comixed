@@ -154,8 +154,8 @@ public class FileServiceTest {
   public void testGetImportStatus() throws NoSuchAlgorithmException, InterruptedException {
     int addCount = SecureRandom.getInstanceStrong().nextInt(21275);
     int importCount = SecureRandom.getInstanceStrong().nextInt(21275);
-    Mockito.when(taskService.getTaskCount(TaskType.AddComic)).thenReturn(addCount);
-    Mockito.when(taskService.getTaskCount(TaskType.ProcessComic)).thenReturn(importCount);
+    Mockito.when(taskService.getTaskCount(TaskType.ADD_COMIC)).thenReturn(addCount);
+    Mockito.when(taskService.getTaskCount(TaskType.PROCESS_COMIC)).thenReturn(importCount);
 
     int result = service.getImportStatus();
 

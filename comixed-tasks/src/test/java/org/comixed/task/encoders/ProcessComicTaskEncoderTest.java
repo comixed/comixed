@@ -55,7 +55,7 @@ public class ProcessComicTaskEncoderTest {
     final Task result = encoder.encode();
 
     assertNotNull(result);
-    assertSame(TaskType.ProcessComic, result.getTaskType());
+    assertSame(TaskType.PROCESS_COMIC, result.getTaskType());
     assertSame(comic, result.getComic());
     assertEquals(
         this.deleteBlockedPages,

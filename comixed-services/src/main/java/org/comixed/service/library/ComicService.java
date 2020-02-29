@@ -144,7 +144,7 @@ public class ComicService {
   public long getProcessingCount() {
     this.logger.debug("Getting the current processing count");
 
-    final long result = this.taskService.getTaskCount(TaskType.ProcessComic);
+    final long result = this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
 
     this.logger.debug("There {} {} record{} to be processed", result, result == 1 ? "" : "s");
 
@@ -154,7 +154,7 @@ public class ComicService {
   public int getRescanCount() {
     this.logger.debug("Getting the current rescan count");
 
-    return this.taskService.getTaskCount(TaskType.RescanComic);
+    return this.taskService.getTaskCount(TaskType.RESCAN_COMIC);
   }
 
   public List<LastReadDate> getLastReadDatesSince(final String email, final long timestamp) {
@@ -195,7 +195,7 @@ public class ComicService {
       count++;
       try {
         this.logger.debug("Queueing comic for rescan: {}", comic.getFilename());
-        RescanComicTaskEncoder encoder = this.taskAdaptor.getEncoder(TaskType.RescanComic);
+        RescanComicTaskEncoder encoder = this.taskAdaptor.getEncoder(TaskType.RESCAN_COMIC);
 
         encoder.setComic(comic);
         this.taskAdaptor.save(encoder.encode());

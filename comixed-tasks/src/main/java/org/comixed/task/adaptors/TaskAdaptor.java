@@ -19,7 +19,7 @@
 package org.comixed.task.adaptors;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import org.comixed.model.tasks.Task;
@@ -50,7 +50,7 @@ public class TaskAdaptor implements InitializingBean {
   @Autowired private TaskRepository taskRepository;
 
   private List<TaskTypeEntry> adaptors = new ArrayList<>();
-  Map<TaskType, String> adaptorMap = new HashMap<>();
+  Map<TaskType, String> adaptorMap = new EnumMap<>(TaskType.class);
 
   public List<TaskTypeEntry> getAdaptors() {
     return adaptors;
@@ -79,10 +79,10 @@ public class TaskAdaptor implements InitializingBean {
     this.adaptorMap.clear();
     for (TaskTypeEntry entry : this.adaptors) {
       if (this.adaptorMap.containsKey(entry.getType())) {
-        throw new Exception("Configuration already set for type: " + entry.getType());
+        throw new TaskException("Configuration already set for type: " + entry.getType());
       } else {
         if (!this.applicationContext.containsBean(entry.getName()))
-          throw new Exception("Missing decoder bean: " + entry.getName());
+          throw new TaskException("Missing decoder bean: " + entry.getName());
 
         this.adaptorMap.put(entry.getType(), entry.getName());
       }

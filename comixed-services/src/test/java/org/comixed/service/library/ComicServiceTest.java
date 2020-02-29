@@ -328,14 +328,14 @@ public class ComicServiceTest {
 
   @Test
   public void testGetProcessingCount() {
-    Mockito.when(taskService.getTaskCount(TaskType.ProcessComic)).thenReturn(10);
+    Mockito.when(taskService.getTaskCount(TaskType.PROCESS_COMIC)).thenReturn(10);
 
     assertEquals(10, this.comicService.getProcessingCount());
   }
 
   @Test
   public void testGetRescanCount() {
-    Mockito.when(taskService.getTaskCount(TaskType.RescanComic)).thenReturn(10);
+    Mockito.when(taskService.getTaskCount(TaskType.RESCAN_COMIC)).thenReturn(10);
 
     assertEquals(10, this.comicService.getRescanCount());
   }
@@ -383,7 +383,7 @@ public class ComicServiceTest {
     assertEquals(comics.size(), result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findAll();
-    Mockito.verify(taskAdaptor, Mockito.times(1)).getEncoder(TaskType.RescanComic);
+    Mockito.verify(taskAdaptor, Mockito.times(1)).getEncoder(TaskType.RESCAN_COMIC);
     Mockito.verify(taskEncoder, Mockito.times(1)).setComic(comic);
   }
 

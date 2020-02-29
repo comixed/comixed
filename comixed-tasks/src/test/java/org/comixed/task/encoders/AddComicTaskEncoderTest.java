@@ -49,7 +49,7 @@ public class AddComicTaskEncoderTest {
 
   @Test
   public void testEncode() {
-    adaptor.setFilename(TEST_FILENAME);
+    adaptor.setComicFilename(TEST_FILENAME);
     adaptor.setDeleteBlockedPages(deleteBlockedPages);
     adaptor.setIgnoreMetadata(ignoreMetadata);
 

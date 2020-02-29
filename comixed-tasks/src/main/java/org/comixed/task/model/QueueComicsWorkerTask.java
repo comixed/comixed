@@ -81,7 +81,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
 
       this.logger.debug("Comic file: {}", filename);
 
-      task.setTaskType(TaskType.AddComic);
+      task.setTaskType(TaskType.ADD_COMIC);
       task.setProperty(AddComicTaskEncoder.FILENAME, filename);
       task.setProperty(
           AddComicTaskEncoder.DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
