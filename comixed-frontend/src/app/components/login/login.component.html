@@ -1,0 +1,42 @@
+<p-dialog header='{{"login.title"|translate}}'
+          [(visible)]='show_login_dialog'
+          [modal]='true'
+          [responsive]='true'
+          [width]='350'
+          [minWidth]='200'
+          [minY]='70'
+          [maximizable]='false'
+          [baseZIndex]='10000'>
+    <div class='ui-g'>
+        <div class='ui-g-4 ui-sm-6'>
+            <strong>{{"login.email"|translate}}</strong>
+        </div>
+        <div class='ui-g-8 ui-sm-6'>
+            <input id='email'
+                   type='text'
+                   pInputText
+                   [(ngModel)]='email'/>
+        </div>
+        <div class='ui-g-4 ui-sm-6'>
+            <strong>{{'login.password'|translate}}</strong>
+        </div>
+        <div class='ui-g-8 ui-sm-6'>
+            <input id='password'
+                   type='password'
+                   pPassword
+                   [(ngModel)]='password'/>
+        </div>
+    </div>
+    <p-footer>
+        <button type='button'
+                pButton
+                icon='fa fa-sign-in'
+                label='{{"button.login"|translate}}'
+                (click)='do_login()'></button>
+        <button type='button'
+                pButton
+                icon='fa fa-cancel'
+                label='{{"button.cancel"|translate}}'
+                (click)='cancel_login()'></button>
+    </p-footer>
+</p-dialog>

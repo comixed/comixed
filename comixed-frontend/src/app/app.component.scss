@@ -1,0 +1,28 @@
+:host ::ng-deep h2 {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+:host ::ng-deep#comixed-footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  z-index: 102;
+  background-color: #eeeeee;
+  color: #212121;
+}
+
+:host ::ng-deep .selected-comic {
+  filter: opacity(50%);
+  border: 1px solid 0 xff0000;
+}
+
+:host ::ng-deep .cx-alerts .ui-toast-message-info {
+  background-color: #ffff00;
+  color: #000000;
+}
+
+:host ::ng-deep .cx-alerts .ui-toast-message-error {
+  background-color: #b22222;
+  color: #000000;
+}

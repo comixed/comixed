@@ -1,0 +1,29 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Create Release
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup build environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Build project
+        run: mvn package -Pci -DskipTests -Dassembly-name=RC1
+      - name: Upload release artifact
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: RELEASE.md
+          files: |
+            comixed-app/target/artifacts/comixed-app-0.5.0-1-RC1.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

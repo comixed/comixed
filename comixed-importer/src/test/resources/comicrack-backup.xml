@@ -1,0 +1,654 @@
+<?xml version="1.0"?>
+<ComicDatabase xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               Id="575a7f96-4ca1-472c-b907-ed8df7a045c4">
+  <Books>
+    <Book Id="cf1d94a6-72e5-4557-8f88-ba54013c8e7a"
+          File="C:\Users\comixed\Git\test_library\Barbarella 009 (2018) (5 covers) (Digital) (Oracle-SWA).cbr">
+      <PageCount>33</PageCount>
+      <Pages>
+        <Page Image="0" ImageWidth="1988" ImageHeight="3056" Type="FrontCover"/>
+        <Page Image="1" ImageWidth="1988" ImageHeight="3056" Type="FrontCover"/>
+      </Pages>
+      <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <CurrentPage>33</CurrentPage>
+      <ComicInfoIsDirty>true</ComicInfoIsDirty>
+      <FileSize>49503776</FileSize>
+      <FileModifiedTime>2018-08-26T20:56:49.6180916Z</FileModifiedTime>
+      <FileCreationTime>2019-03-03T16:35:32.5391345Z</FileCreationTime>
+    </Book>
+    <Book Id="afd6e20b-6094-40b1-aa97-b49d3755ffee"
+          File="C:\Users\comixed\Git\test_library\Batman - Damned 01 (of 03) (2018) (Webrip) (The Last Kryptonian-DCP).cbr">
+      <PageCount>54</PageCount>
+      <Pages>
+        <Page Image="0" ImageWidth="2550" ImageHeight="3263" Type="FrontCover"/>
+        <Page Image="1" ImageWidth="2550" ImageHeight="3263"/>
+      </Pages>
+      <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <ComicInfoIsDirty>true</ComicInfoIsDirty>
+      <FileSize>63633126</FileSize>
+      <FileModifiedTime>2018-09-23T12:34:50.1281449Z</FileModifiedTime>
+      <FileCreationTime>2019-03-03T16:34:40.7363349Z</FileCreationTime>
+    </Book>
+    <Book Id="5fc2305a-2191-497e-97f1-94ca27978444"
+          File="C:\Users\comixed\Git\test_library\Buffy the Vampire Slayer Season 12 001 - The Reckoning (2018) (digital) (Son of Ultron-Empire).cbr">
+      <PageCount>24</PageCount>
+      <Pages>
+        <Page Image="0" ImageWidth="1988" ImageHeight="3056" Type="FrontCover"/>
+        <Page Image="1" ImageWidth="1988" ImageHeight="3056"/>
+      </Pages>
+      <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <ComicInfoIsDirty>true</ComicInfoIsDirty>
+      <FileSize>68084543</FileSize>
+      <FileModifiedTime>2018-08-26T21:00:08.7949494Z</FileModifiedTime>
+      <FileCreationTime>2019-03-03T16:34:49.6612305Z</FileCreationTime>
+    </Book>
+    <Book Id="839a42d0-b035-4c9b-8e2a-229a91e27708"
+          File="C:\Users\comixed\Git\test_library\Buffy the Vampire Slayer Season 12 002 - The Reckoning (20_) (digital) (Son of Ultron-Empire).cbr">
+      <PageCount>25</PageCount>
+      <Pages>
+        <Page Image="0" ImageWidth="1988" ImageHeight="3056" Type="FrontCover"/>
+        <Page Image="1" ImageWidth="1988" ImageHeight="3056"/>
+      </Pages>
+      <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <ComicInfoIsDirty>true</ComicInfoIsDirty>
+      <FileSize>65669516</FileSize>
+      <FileModifiedTime>2018-08-26T21:00:53.773585Z</FileModifiedTime>
+      <FileCreationTime>2019-03-03T16:34:58.9430754Z</FileCreationTime>
+    </Book>
+    <Book Id="f18c9480-1fae-4ac1-a334-403b35c6ed5f"
+          File="C:\Users\comixed\Git\test_library\Buffy the Vampire Slayer Season 12 003 - The Reckoning (2018) (digital) (Son of Ultron-Empire).cbr">
+      <PageCount>25</PageCount>
+      <Pages>
+        <Page Image="0" ImageWidth="1987" ImageHeight="3056" Type="FrontCover"/>
+        <Page Image="1" ImageWidth="1987" ImageHeight="3056"/>
+      </Pages>
+      <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <ComicInfoIsDirty>true</ComicInfoIsDirty>
+      <FileSize>36046288</FileSize>
+      <FileModifiedTime>2018-08-26T20:55:28.0482021Z</FileModifiedTime>
+      <FileCreationTime>2019-03-03T16:35:09.1226228Z</FileCreationTime>
+    </Book>
+    <Book Id="baf89484-c635-4852-a3eb-5af6e6edc6e0"
+          File="C:\Users\comixed\Git\test_library\Hit-Girl 007 (2018) (Digital) (Zone-Empire).cbr">
+      <PageCount>30</PageCount>
+      <Pages>
+        <Page Image="0" ImageWidth="1988" ImageHeight="3056" Type="FrontCover"/>
+        <Page Image="1" ImageWidth="1988" ImageHeight="3056"/>
+      </Pages>
+      <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <ComicInfoIsDirty>true</ComicInfoIsDirty>
+      <FileSize>34232127</FileSize>
+      <FileModifiedTime>2018-08-26T20:57:39.1923024Z</FileModifiedTime>
+      <FileCreationTime>2019-03-03T16:35:14.1095525Z</FileCreationTime>
+    </Book>
+    <Book Id="70ca56d3-fa6f-4b7b-9b4f-1e2f17902ebd"
+          File="C:\Users\comixed\Git\test_library\Red Sonja - Tarzan 004 (2018) (4 covers) (digital) (Son of Ultron-Empire).cbr">
+      <PageCount>29</PageCount>
+      <Pages>
+        <Page Image="0" ImageWidth="1987" ImageHeight="3056" Type="FrontCover"/>
+        <Page Image="1" ImageWidth="1987" ImageHeight="3056" Type="FrontCover"/>
+      </Pages>
+      <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <ComicInfoIsDirty>true</ComicInfoIsDirty>
+      <FileSize>54329282</FileSize>
+      <FileModifiedTime>2018-08-26T20:57:34.403101Z</FileModifiedTime>
+      <FileCreationTime>2019-03-03T16:35:18.9078797Z</FileCreationTime>
+    </Book>
+    <Book Id="95b168dc-30f3-4d6d-99b8-8795c9a32f4e"
+          File="C:\Users\comixed\Git\test_library\Red Sonja V4 020(2018)(5 covers)(Digital)(TLK-EMPIRE-HD).cbr">
+      <PageCount>29</PageCount>
+      <Pages>
+        <Page Image="0" ImageWidth="1987" ImageHeight="3056" Type="FrontCover"/>
+        <Page Image="1" ImageWidth="1987" ImageHeight="3056" Type="FrontCover"/>
+      </Pages>
+      <Added>2019-03-03T11:36:13.5299335-05:00</Added>
+      <ComicInfoIsDirty>true</ComicInfoIsDirty>
+      <FileSize>52076629</FileSize>
+      <FileModifiedTime>2018-09-03T10:26:25.925072Z</FileModifiedTime>
+      <FileCreationTime>2019-03-03T16:35:25.6930267Z</FileCreationTime>
+    </Book>
+  </Books>
+  <ComicLists>
+    <Item xsi:type="ComicLibraryListItem" Id="b0f2944b-3b66-476c-860f-e58dfd587967" Name="Library">
+      <BookCount>8</BookCount>
+      <NewBookCount>8</NewBookCount>
+      <NewBookCountDate>2019-03-03T16:28:01.3165761Z</NewBookCountDate>
+      <CacheStorage>Custom</CacheStorage>
+      <Display>
+        <View ItemViewMode="Thumbnail" SortKey="100">
+          <Columns>
+            <Column Id="101" Width="60">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="100" Width="30">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="102" Width="22">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Width="40">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="1" Width="200">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="2" Width="40">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="3" Width="40">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="4" Visible="false" Width="200"/>
+            <Column Id="5" Width="40">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="6" Width="40">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="7" Width="40">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="39" Width="40">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="9" Visible="false" Width="200"/>
+            <Column Id="10" Visible="false" Width="200"/>
+            <Column Id="11">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="12" Visible="false"/>
+            <Column Id="13" Visible="false"/>
+            <Column Id="14" Visible="false"/>
+            <Column Id="15" Width="50">
+              <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+            </Column>
+            <Column Id="16" Visible="false" Width="40"/>
+            <Column Id="17" Visible="false" Width="40"/>
+            <Column Id="18" Visible="false" Width="40"/>
+            <Column Id="19" Visible="false" Width="40"/>
+            <Column Id="20" Visible="false" Width="40"/>
+            <Column Id="21" Visible="false" Width="40"/>
+            <Column Id="22" Visible="false"/>
+            <Column Id="23" Visible="false"/>
+            <Column Id="24" Visible="false"/>
+            <Column Id="25" Visible="false" Width="40"/>
+            <Column Id="26" Visible="false" Width="200"/>
+            <Column Id="27" Visible="false" Width="40"/>
+            <Column Id="28" Visible="false" Width="40"/>
+            <Column Id="29" Visible="false" Width="40"/>
+            <Column Id="30" Visible="false" Width="200"/>
+            <Column Id="31" Visible="false" Width="60"/>
+            <Column Id="32" Visible="false" Width="40"/>
+            <Column Id="33" Visible="false" Width="40"/>
+            <Column Id="34" Visible="false" Width="40"/>
+            <Column Id="35" Visible="false" Width="22"/>
+            <Column Id="36" Visible="false" Width="22"/>
+            <Column Id="37" Visible="false" Width="40"/>
+            <Column Id="38" Visible="false" Width="40"/>
+            <Column Id="8" Visible="false" Width="60"/>
+            <Column Id="40" Visible="false" Width="60"/>
+            <Column Id="41" Visible="false" Width="60"/>
+            <Column Id="42" Visible="false" Width="60"/>
+            <Column Id="43" Visible="false" Width="60"/>
+            <Column Id="44" Visible="false" Width="60"/>
+            <Column Id="45" Visible="false" Width="60"/>
+            <Column Id="46" Visible="false" Width="60"/>
+            <Column Id="47" Visible="false" Width="60"/>
+            <Column Id="48" Visible="false" Width="50"/>
+            <Column Id="49" Visible="false" Width="50"/>
+            <Column Id="50" Visible="false" Width="50"/>
+            <Column Id="51" Visible="false" Width="50"/>
+            <Column Id="52" Visible="false" Width="50"/>
+            <Column Id="53" Visible="false" Width="50"/>
+            <Column Id="54" Visible="false" Width="50"/>
+            <Column Id="55" Visible="false" Width="50"/>
+            <Column Id="56" Visible="false" Width="50"/>
+            <Column Id="57" Visible="false" Width="50"/>
+            <Column Id="58" Visible="false" Width="22"/>
+            <Column Id="59" Visible="false" Width="22"/>
+            <Column Id="60" Visible="false" Width="16"/>
+            <Column Id="61" Visible="false" Width="22"/>
+            <Column Id="62" Visible="false" Width="100"/>
+            <Column Id="63" Visible="false" Width="100"/>
+            <Column Id="64" Visible="false" Width="100"/>
+            <Column Id="65" Visible="false" Width="100"/>
+            <Column Id="66" Visible="false" Width="100"/>
+            <Column Id="67" Visible="false" Width="100"/>
+            <Column Id="68" Visible="false" Width="40"/>
+            <Column Id="69" Visible="false" Width="40"/>
+            <Column Id="70" Visible="false" Width="60"/>
+            <Column Id="200" Visible="false" Width="50"/>
+            <Column Id="201" Visible="false" Width="50"/>
+            <Column Id="202" Visible="false" Width="50"/>
+            <Column Id="203" Visible="false" Width="50"/>
+            <Column Id="204" Visible="false" Width="50"/>
+            <Column Id="205" Visible="false" Width="50"/>
+            <Column Id="206" Visible="false" Width="50"/>
+            <Column Id="207" Visible="false" Width="50"/>
+            <Column Id="208" Visible="false" Width="50"/>
+            <Column Id="209" Visible="false" Width="50"/>
+            <Column Id="210" Visible="false" Width="50"/>
+            <Column Id="211" Visible="false" Width="50"/>
+            <Column Id="212" Visible="false" Width="50"/>
+            <Column Id="213" Visible="false" Width="50"/>
+          </Columns>
+          <GroupsStatus>
+            <Status>AllExpanded</Status>
+            <Keys/>
+          </GroupsStatus>
+          <ThumbnailSize>
+            <Width>128</Width>
+            <Height>128</Height>
+          </ThumbnailSize>
+          <TileSize>
+            <Width>192</Width>
+            <Height>96</Height>
+          </TileSize>
+          <ItemRowHeight>22</ItemRowHeight>
+        </View>
+        <Thumbnail>
+          <Lines>
+            <Id>30</Id>
+          </Lines>
+        </Thumbnail>
+        <ShowGroupHeadersWidth>1504</ShowGroupHeadersWidth>
+      </Display>
+    </Item>
+    <Item xsi:type="ComicListItemFolder" Id="7729927f-4c98-476a-a1d7-cb97071c9467" Name="Smart Lists">
+      <BookCount>8</BookCount>
+      <NewBookCount>8</NewBookCount>
+      <NewBookCountDate>2019-03-03T16:37:01.4174273Z</NewBookCountDate>
+      <CacheStorage>
+        cf1d94a6-72e5-4557-8f88-ba54013c8e7a,afd6e20b-6094-40b1-aa97-b49d3755ffee,5fc2305a-2191-497e-97f1-94ca27978444,839a42d0-b035-4c9b-8e2a-229a91e27708,f18c9480-1fae-4ac1-a334-403b35c6ed5f,baf89484-c635-4852-a3eb-5af6e6edc6e0,70ca56d3-fa6f-4b7b-9b4f-1e2f17902ebd,95b168dc-30f3-4d6d-99b8-8795c9a32f4e
+      </CacheStorage>
+      <Display/>
+      <Items>
+        <Item xsi:type="ComicSmartListItem" Id="c8590bb4-fa2e-4fc6-a9ad-7ece9fcd7b73" Name="My Favorites">
+          <NewBookCountDate>2019-03-03T16:37:01.4174273Z</NewBookCountDate>
+          <CacheStorage/>
+          <Display/>
+          <Matchers>
+            <ComicBookMatcher xsi:type="ComicBookRatingMatcher" Not="true" MatchOperator="1">
+              <MatchValue>3</MatchValue>
+            </ComicBookMatcher>
+          </Matchers>
+        </Item>
+        <Item xsi:type="ComicSmartListItem" Id="80ad4f57-2c42-422d-9bcb-1b3ccccc860d" Name="Recently Added">
+          <BookCount>8</BookCount>
+          <NewBookCount>8</NewBookCount>
+          <NewBookCountDate>2019-03-03T16:37:01.4174273Z</NewBookCountDate>
+          <CacheStorage>Custom</CacheStorage>
+          <Display/>
+          <Matchers>
+            <ComicBookMatcher xsi:type="ComicBookAddedMatcher" MatchOperator="3">
+              <MatchValue>14</MatchValue>
+            </ComicBookMatcher>
+          </Matchers>
+        </Item>
+        <Item xsi:type="ComicSmartListItem" Id="0d6adf22-f3cb-41b5-b73b-52c4e00ab397" Name="Recently Read">
+          <NewBookCountDate>2019-03-03T16:37:01.4174273Z</NewBookCountDate>
+          <CacheStorage>Custom</CacheStorage>
+          <Display/>
+          <Matchers>
+            <ComicBookMatcher xsi:type="ComicBookOpenedMatcher" MatchOperator="3">
+              <MatchValue>14</MatchValue>
+            </ComicBookMatcher>
+          </Matchers>
+        </Item>
+        <Item xsi:type="ComicSmartListItem" Id="045a834d-5535-4ff5-80ae-dd5e2013e376" Name="Never Read">
+          <BookCount>8</BookCount>
+          <NewBookCount>8</NewBookCount>
+          <NewBookCountDate>2019-03-03T16:37:01.4174273Z</NewBookCountDate>
+          <CacheStorage>
+            cf1d94a6-72e5-4557-8f88-ba54013c8e7a,afd6e20b-6094-40b1-aa97-b49d3755ffee,5fc2305a-2191-497e-97f1-94ca27978444,839a42d0-b035-4c9b-8e2a-229a91e27708,f18c9480-1fae-4ac1-a334-403b35c6ed5f,baf89484-c635-4852-a3eb-5af6e6edc6e0,70ca56d3-fa6f-4b7b-9b4f-1e2f17902ebd,95b168dc-30f3-4d6d-99b8-8795c9a32f4e
+          </CacheStorage>
+          <Display/>
+          <Matchers>
+            <ComicBookMatcher xsi:type="ComicBookReadPercentageMatcher" MatchOperator="2">
+              <MatchValue>10</MatchValue>
+            </ComicBookMatcher>
+          </Matchers>
+        </Item>
+        <Item xsi:type="ComicSmartListItem" Id="f012b3ff-8eac-464c-8cfe-3d8b605f818e" Name="Reading">
+          <NewBookCountDate>2019-03-03T16:37:01.4174273Z</NewBookCountDate>
+          <CacheStorage/>
+          <Display/>
+          <Matchers>
+            <ComicBookMatcher xsi:type="ComicBookReadPercentageMatcher" MatchOperator="3">
+              <MatchValue>10</MatchValue>
+              <MatchValue2>95</MatchValue2>
+            </ComicBookMatcher>
+          </Matchers>
+        </Item>
+        <Item xsi:type="ComicSmartListItem" Id="673dd97c-315d-4ad6-a994-248951618066" Name="Read">
+          <NewBookCountDate>2019-03-03T16:37:01.4174273Z</NewBookCountDate>
+          <CacheStorage/>
+          <Display/>
+          <Matchers>
+            <ComicBookMatcher xsi:type="ComicBookReadPercentageMatcher" MatchOperator="1">
+              <MatchValue>95</MatchValue>
+            </ComicBookMatcher>
+          </Matchers>
+        </Item>
+        <Item xsi:type="ComicSmartListItem" Id="3f313071-a85b-460e-a56e-63fd0c78b79f" Name="Files to update">
+          <BookCount>8</BookCount>
+          <NewBookCount>8</NewBookCount>
+          <NewBookCountDate>2019-03-03T16:38:10.8347538Z</NewBookCountDate>
+          <CacheStorage>
+            cf1d94a6-72e5-4557-8f88-ba54013c8e7a,afd6e20b-6094-40b1-aa97-b49d3755ffee,5fc2305a-2191-497e-97f1-94ca27978444,839a42d0-b035-4c9b-8e2a-229a91e27708,f18c9480-1fae-4ac1-a334-403b35c6ed5f,baf89484-c635-4852-a3eb-5af6e6edc6e0,70ca56d3-fa6f-4b7b-9b4f-1e2f17902ebd,95b168dc-30f3-4d6d-99b8-8795c9a32f4e
+          </CacheStorage>
+          <Display>
+            <View ItemViewMode="Thumbnail" SortKey="100">
+              <Columns>
+                <Column Id="101" Width="60">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="100" Width="30">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="102" Width="22">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Width="40">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="1" Width="200">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="2" Width="40">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="3" Width="40">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="4" Visible="false" Width="200"/>
+                <Column Id="5" Width="40">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="6" Width="40">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="7" Width="40">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="39" Width="40">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="9" Visible="false" Width="200"/>
+                <Column Id="10" Visible="false" Width="200"/>
+                <Column Id="11">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="12" Visible="false"/>
+                <Column Id="13" Visible="false"/>
+                <Column Id="14" Visible="false"/>
+                <Column Id="15" Width="50">
+                  <LastTimeVisible>2019-03-03T16:28:00.4256811Z</LastTimeVisible>
+                </Column>
+                <Column Id="16" Visible="false" Width="40"/>
+                <Column Id="17" Visible="false" Width="40"/>
+                <Column Id="18" Visible="false" Width="40"/>
+                <Column Id="19" Visible="false" Width="40"/>
+                <Column Id="20" Visible="false" Width="40"/>
+                <Column Id="21" Visible="false" Width="40"/>
+                <Column Id="22" Visible="false"/>
+                <Column Id="23" Visible="false"/>
+                <Column Id="24" Visible="false"/>
+                <Column Id="25" Visible="false" Width="40"/>
+                <Column Id="26" Visible="false" Width="200"/>
+                <Column Id="27" Visible="false" Width="40"/>
+                <Column Id="28" Visible="false" Width="40"/>
+                <Column Id="29" Visible="false" Width="40"/>
+                <Column Id="30" Visible="false" Width="200"/>
+                <Column Id="31" Visible="false" Width="60"/>
+                <Column Id="32" Visible="false" Width="40"/>
+                <Column Id="33" Visible="false" Width="40"/>
+                <Column Id="34" Visible="false" Width="40"/>
+                <Column Id="35" Visible="false" Width="22"/>
+                <Column Id="36" Visible="false" Width="22"/>
+                <Column Id="37" Visible="false" Width="40"/>
+                <Column Id="38" Visible="false" Width="40"/>
+                <Column Id="8" Visible="false" Width="60"/>
+                <Column Id="40" Visible="false" Width="60"/>
+                <Column Id="41" Visible="false" Width="60"/>
+                <Column Id="42" Visible="false" Width="60"/>
+                <Column Id="43" Visible="false" Width="60"/>
+                <Column Id="44" Visible="false" Width="60"/>
+                <Column Id="45" Visible="false" Width="60"/>
+                <Column Id="46" Visible="false" Width="60"/>
+                <Column Id="47" Visible="false" Width="60"/>
+                <Column Id="48" Visible="false" Width="50"/>
+                <Column Id="49" Visible="false" Width="50"/>
+                <Column Id="50" Visible="false" Width="50"/>
+                <Column Id="51" Visible="false" Width="50"/>
+                <Column Id="52" Visible="false" Width="50"/>
+                <Column Id="53" Visible="false" Width="50"/>
+                <Column Id="54" Visible="false" Width="50"/>
+                <Column Id="55" Visible="false" Width="50"/>
+                <Column Id="56" Visible="false" Width="50"/>
+                <Column Id="57" Visible="false" Width="50"/>
+                <Column Id="58" Visible="false" Width="22"/>
+                <Column Id="59" Visible="false" Width="22"/>
+                <Column Id="60" Visible="false" Width="16"/>
+                <Column Id="61" Visible="false" Width="22"/>
+                <Column Id="62" Visible="false" Width="100"/>
+                <Column Id="63" Visible="false" Width="100"/>
+                <Column Id="64" Visible="false" Width="100"/>
+                <Column Id="65" Visible="false" Width="100"/>
+                <Column Id="66" Visible="false" Width="100"/>
+                <Column Id="67" Visible="false" Width="100"/>
+                <Column Id="68" Visible="false" Width="40"/>
+                <Column Id="69" Visible="false" Width="40"/>
+                <Column Id="70" Visible="false" Width="60"/>
+                <Column Id="200" Visible="false" Width="50"/>
+                <Column Id="201" Visible="false" Width="50"/>
+                <Column Id="202" Visible="false" Width="50"/>
+                <Column Id="203" Visible="false" Width="50"/>
+                <Column Id="204" Visible="false" Width="50"/>
+                <Column Id="205" Visible="false" Width="50"/>
+                <Column Id="206" Visible="false" Width="50"/>
+                <Column Id="207" Visible="false" Width="50"/>
+                <Column Id="208" Visible="false" Width="50"/>
+                <Column Id="209" Visible="false" Width="50"/>
+                <Column Id="210" Visible="false" Width="50"/>
+                <Column Id="211" Visible="false" Width="50"/>
+                <Column Id="212" Visible="false" Width="50"/>
+                <Column Id="213" Visible="false" Width="50"/>
+              </Columns>
+              <GroupsStatus>
+                <Status>AllExpanded</Status>
+                <Keys/>
+              </GroupsStatus>
+              <ThumbnailSize>
+                <Width>128</Width>
+                <Height>128</Height>
+              </ThumbnailSize>
+              <TileSize>
+                <Width>192</Width>
+                <Height>96</Height>
+              </TileSize>
+              <ItemRowHeight>22</ItemRowHeight>
+            </View>
+            <Thumbnail>
+              <Lines>
+                <Id>30</Id>
+              </Lines>
+            </Thumbnail>
+            <ShowGroupHeadersWidth>1504</ShowGroupHeadersWidth>
+          </Display>
+          <Matchers>
+            <ComicBookMatcher xsi:type="ComicBookModifiedInfoMatcher">
+              <MatchValue/>
+            </ComicBookMatcher>
+          </Matchers>
+        </Item>
+        <Item xsi:type="ComicIdListItem" Id="8d6ebd2e-22fa-420a-8b3e-7e0ec4a1aeef" Name="Manual">
+          <BookCount>20</BookCount>
+          <NewBookCountDate>2019-11-11T00:17:22.8972318Z</NewBookCountDate>
+          <UnreadBookCount>20</UnreadBookCount>
+          <Display>
+            <View SortKey="1,17,100">
+              <Columns>
+                <Column Id="101" Width="51">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="100" Visible="false" Width="30">
+                  <LastTimeVisible>2014-03-19T22:46:05.9963668+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="102" Width="22">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Width="82">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="1" Width="394">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="17" Width="62">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="2" Width="95">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="3" Visible="false" Width="111">
+                  <LastTimeVisible>2014-03-18T20:43:15.742009+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="4" Visible="false" Width="200" />
+                <Column Id="5" Visible="false" Width="72">
+                  <LastTimeVisible>2014-03-19T22:47:41.5158302+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="6" Visible="false" Width="150">
+                  <LastTimeVisible>2014-03-19T22:44:16.4120989+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="7" Width="58">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="39" Width="91">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="9" Visible="false" Width="200" />
+                <Column Id="10" Visible="false" Width="200" />
+                <Column Id="11" Visible="false" Width="205">
+                  <LastTimeVisible>2014-03-19T22:44:10.6127672+00:00</LastTimeVisible>
+                </Column>
+                <Column Id="12" Visible="false" />
+                <Column Id="13" Visible="false" />
+                <Column Id="14" Visible="false" />
+                <Column Id="15" Width="129">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="16" Visible="false" Width="40" />
+                <Column Id="18" Visible="false" Width="40" />
+                <Column Id="19" Visible="false" Width="40" />
+                <Column Id="20" Width="143">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="21" Visible="false" Width="40" />
+                <Column Id="22" Visible="false" />
+                <Column Id="23" Visible="false" />
+                <Column Id="24" Visible="false" />
+                <Column Id="25" Visible="false" Width="40" />
+                <Column Id="26" Visible="false" Width="200" />
+                <Column Id="27" Visible="false" Width="40" />
+                <Column Id="28" Visible="false" Width="40" />
+                <Column Id="29" Visible="false" Width="40" />
+                <Column Id="30" Visible="false" Width="200" />
+                <Column Id="31" Visible="false" Width="60" />
+                <Column Id="32" Visible="false" Width="40" />
+                <Column Id="33" Visible="false" Width="40" />
+                <Column Id="34" Visible="false" Width="40" />
+                <Column Id="35" Visible="false" Width="22" />
+                <Column Id="36" Visible="false" Width="22" />
+                <Column Id="37" Visible="false" Width="40" />
+                <Column Id="38" Visible="false" Width="40" />
+                <Column Id="8" Visible="false" Width="60" />
+                <Column Id="40" Visible="false" Width="60" />
+                <Column Id="41" Visible="false" Width="60" />
+                <Column Id="42" Visible="false" Width="60" />
+                <Column Id="43" Visible="false" Width="60" />
+                <Column Id="44" Visible="false" Width="60" />
+                <Column Id="45" Visible="false" Width="60" />
+                <Column Id="46" Visible="false" Width="60" />
+                <Column Id="47" Visible="false" Width="60" />
+                <Column Id="48" Visible="false" Width="50" />
+                <Column Id="49" Visible="false" Width="50" />
+                <Column Id="50" Visible="false" Width="50" />
+                <Column Id="51" Visible="false" Width="50" />
+                <Column Id="52" Visible="false" Width="50" />
+                <Column Id="53" Visible="false" Width="50" />
+                <Column Id="54" Visible="false" Width="50" />
+                <Column Id="55" Visible="false" Width="50" />
+                <Column Id="56" Visible="false" Width="50" />
+                <Column Id="57" Visible="false" Width="50" />
+                <Column Id="58" Visible="false" Width="22" />
+                <Column Id="59" Visible="false" Width="22" />
+                <Column Id="60" Visible="false" Width="16" />
+                <Column Id="61" Visible="false" Width="22" />
+                <Column Id="62" Width="100">
+                  <LastTimeVisible>2016-04-06T22:46:24.6383663Z</LastTimeVisible>
+                </Column>
+                <Column Id="63" Visible="false" Width="100" />
+                <Column Id="64" Visible="false" Width="100" />
+                <Column Id="65" Visible="false" Width="100" />
+                <Column Id="66" Visible="false" Width="100" />
+                <Column Id="67" Visible="false" Width="100" />
+                <Column Id="68" Visible="false" Width="40" />
+                <Column Id="69" Visible="false" Width="40" />
+                <Column Id="70" Visible="false" Width="60" />
+                <Column Id="200" Visible="false" Width="50" />
+                <Column Id="201" Visible="false" Width="50" />
+                <Column Id="202" Visible="false" Width="50" />
+                <Column Id="203" Visible="false" Width="50" />
+                <Column Id="204" Visible="false" Width="50" />
+                <Column Id="205" Visible="false" Width="50" />
+                <Column Id="206" Visible="false" Width="50" />
+                <Column Id="207" Visible="false" Width="50" />
+                <Column Id="208" Visible="false" Width="50" />
+                <Column Id="209" Visible="false" Width="50" />
+                <Column Id="210" Visible="false" Width="50" />
+                <Column Id="211" Visible="false" Width="50" />
+                <Column Id="212" Visible="false" Width="50" />
+                <Column Id="213" Visible="false" Width="50" />
+              </Columns>
+              <GroupsStatus>
+                <Status>AllExpanded</Status>
+                <Keys />
+              </GroupsStatus>
+              <ThumbnailSize>
+                <Width>128</Width>
+                <Height>128</Height>
+              </ThumbnailSize>
+              <TileSize>
+                <Width>192</Width>
+                <Height>96</Height>
+              </TileSize>
+              <ItemRowHeight>30</ItemRowHeight>
+            </View>
+            <Thumbnail>
+              <Lines>
+                <Id>30</Id>
+              </Lines>
+            </Thumbnail>
+            <ShowGroupHeadersWidth>883</ShowGroupHeadersWidth>
+            <QuickSearch />
+          </Display>
+          <BookIds>
+            <guid>cf1d94a6-72e5-4557-8f88-ba54013c8e7a</guid>
+            <guid>afd6e20b-6094-40b1-aa97-b49d3755ffee</guid>
+            <guid>2f3dfc9f-0d3e-49a4-a1ed-76f745de427e</guid>
+            <guid>23414c70-c09b-445d-a488-f0f4e82fee57</guid>
+          </BookIds>
+        </Item>
+      </Items>
+    </Item>
+    <Item xsi:type="ComicListItemFolder" Id="0fbac8ca-ee8d-4b78-a3b5-3d48547b2f53" Name="Temporary Lists"
+          Temporary="true">
+      <NewBookCountDate>2019-03-03T16:28:02.2699899Z</NewBookCountDate>
+      <CacheStorage/>
+      <Display/>
+      <Items/>
+    </Item>
+  </ComicLists>
+  <WatchFolders/>
+  <BlackList/>
+</ComicDatabase>

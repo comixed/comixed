@@ -1,0 +1,48 @@
+<p-toolbar>
+    <div class='ui-toolbar-group-left'>
+        <button pButton
+                [icon]='gridLayout?"fa fa-fw fa-th":"fa fa-fw fa-list"'
+                (click)='setGridLayout(!gridLayout)'
+                [pTooltip]='"comic-list-toolbar.options.layout.tooltip"|translate'></button>
+        <p-dropdown [options]='showPagesOptions'
+                    [(ngModel)]='showPages'
+                    (onChange)='changePageCount($event.value)'></p-dropdown>
+        <p-checkbox [(ngModel)]='sameHeight'
+                    styleClass='cx-toolbar-checkbox'
+                    [label]='"comic-list-toolbar.options.same-height.label"|translate'
+                    [pTooltip]='"comic-list-toolbar.options.same-height.tooltip"|translate'
+                    [binary]='true'
+                    (onChange)='useSameHeight($event)'></p-checkbox>
+        <p-slider [(ngModel)]='pageSize'
+                  styleClass='cx-toolbar-slider'
+                  [min]='100'
+                  [max]='400'
+                  [pTooltip]='"comic-list-toolbar.options.cover-size.tooltip"|translate'
+                  (onChange)='setPageSize($event.value, false)'
+                  (onSlideEnd)='setPageSize($event.value, true)'></p-slider>
+    </div>
+    <div class='ui-toolbar-group-right'>
+        <button pButton
+                type='button'
+                class='cx-toolbar-button ui-button-secondary'
+                icon='fa fa-fw fa-plus'
+                (click)='selectAll()'
+                [pTooltip]='"toolbar.tooltip.select-all"|translate'></button>
+        <button pButton
+                type='button'
+                class='cx-toolbar-button ui-button-danger'
+                icon='fa fa-fw fa-minus'
+                (click)='deselectAll()'
+                [pTooltip]='"toolbar.tooltip.deselect-all"|translate'></button>
+        <p-splitButton [model]='blockingOptions'
+                       [disabled]='selectedPages?.length === 0'
+                       icon='fa fa-fw fa-start'
+                       [label]='"duplicates-page-toolbar.button.blocking-options"|translate'
+                       class='cx-toolbar-button'></p-splitButton>
+        <p-splitButton [model]='deletingOptions'
+                       [disabled]='selectedPages?.length === 0'
+                       icon='fa fa-fw fa-start'
+                       [label]='"duplicates-page-toolbar.button.deleting-options"|translate'
+                       class='cx-toolbar-button'></p-splitButton>
+    </div>
+</p-toolbar>

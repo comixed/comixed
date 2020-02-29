@@ -1,0 +1,49 @@
+<p-blockUI [blocked]='fetchingFiles'
+           [target]='comicFileListContainer'></p-blockUI>
+<p-panel #comicFileListContainer
+         [showHeader]='false'>
+    <div class='ui-g'>
+        <div class='ui-g-12'>
+            <p-dataView #comicFileList
+                        [alwaysShowPaginator]='true'
+                        [layout]='layout'
+                        [paginator]='true'
+                        [rows]='rows'
+                        [sortField]='"comic_file_sort_field"'
+                        [value]='comicFiles'
+                        filterBy='filename'
+                        id='comic-file-list-view'
+                        paginatorPosition='both'>
+                <p-header>
+                    <div class='ui-helper-clearfix'>
+                        <app-comic-file-list-toolbar (filterText)='comicFileList.filter($event)'
+                                                     (showSelections)='showSelections = true'
+                                                     [dataView]='comicFileList'
+                                                     [busy]='busy'
+                                                     [comicFiles]="comicFiles"
+                                                     [selectedComicFiles]='selectedComicFiles'
+                                                     [directory]='directory'></app-comic-file-list-toolbar>
+                    </div>
+                </p-header>
+                <ng-template let-file
+                             pTemplate='gridItem'>
+                    <app-comic-file-grid-item [comic_file]='file'
+                                              [cover_size]='coverSize'
+                                              [same_height]='sameHeight'
+                                              [selected]='selectedComicFiles.includes(file)'
+                                              [use_selected_class]='true'
+                                              (click)='setSelected($event.comicFile, $event.selected)'></app-comic-file-grid-item>
+                </ng-template>
+                <ng-template let-file
+                             pTemplate='listItem'>
+                    <app-comic-file-list-item [comic_file]='file'
+                                              [cover_size]='coverSize'
+                                              [same_height]='sameHeight'
+                                              [selected]='selectedComicFiles.includes(file)'
+                                              [use_selected_class]='true'
+                                              (click)='setSelected($event.comicFile, $event.selected)'></app-comic-file-list-item>
+                </ng-template>
+            </p-dataView>
+        </div>
+    </div>
+</p-panel>

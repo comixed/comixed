@@ -1,0 +1,47 @@
+{
+  "user-admin-effects": {
+    "get-all": {
+      "error": {
+        "detail": "Failed to get all users."
+      }
+    },
+    "save": {
+      "success": {
+        "detail": "Successfully updated {email}."
+      },
+      "error": {
+        "detail": "Failed to {update, select, true{update} other{save}} user."
+      }
+    },
+    "delete-user": {
+      "success": {
+        "detail": "Deleted user: {email}"
+      },
+      "error": {
+        "delete": "Failed to delete user."
+      }
+    }
+  },
+  "user-details-editor": {
+    "user-form": {
+      "email-required": "Email is required.",
+      "email-invalid": "Email address is invalid.",
+      "password-required": "Password is required",
+      "password-required-length": "Password must be at least {length} characters.",
+      "passwords-must-match": "Passwords must match."
+    },
+    "label": {
+      "email-address": "Email Address",
+      "password": "Password",
+      "password-verify": "Password (Again)",
+      "user-is-reader": "Reader Account",
+      "user-is-admin": "Admin Account"
+    }
+  },
+  "users-page": {
+    "text": {
+      "cant-delete-yourself": "You cannot delete your account",
+      "delete-user": "Delete the current user."
+    }
+  }
+}

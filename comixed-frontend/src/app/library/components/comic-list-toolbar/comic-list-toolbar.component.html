@@ -1,0 +1,57 @@
+<p-toolbar styleClass='cx-library-toolbar'>
+    <div class='ui-toolbar-group-left'>
+        <button pButton
+                [icon]='gridLayout?"fa fa-fw fa-th":"fa fa-fw fa-list"'
+                (click)='setGridLayout(!gridLayout)'
+                [pTooltip]='"comic-list-toolbar.tooltip."+(gridLayout?"grid":"list")+"-layout"|translate'></button>
+        <p-dropdown [options]='sortOptions'
+                    [(ngModel)]='sortField'
+                    (onChange)='changeSortField($event.value)'></p-dropdown>
+        <p-dropdown [options]='rowsOptions'
+                    [(ngModel)]='rows'
+                    (onChange)='changeRows($event.value)'></p-dropdown>
+        <p-checkbox [(ngModel)]='sameHeight'
+                    styleClass='cx-toolbar-checkbox'
+                    [label]='"comic-list-toolbar.options.same-height.label"|translate'
+                    [pTooltip]='"comic-list-toolbar.options.same-height.tooltip"|translate'
+                    [binary]='true'
+                    (onChange)='useSameHeight($event)'></p-checkbox>
+        <p-slider [(ngModel)]='coverSize'
+                  styleClass='cx-toolbar-slider'
+                  [min]='100'
+                  [max]='400'
+                  [pTooltip]='"comic-list-toolbar.options.cover-size.tooltip"|translate'
+                  (onChange)='setCoverSize($event.value, false)'
+                  (onSlideEnd)='setCoverSize($event.value, true)'></p-slider>
+    </div>
+    <div class='ui-toolbar-group-right'>
+        <button pButton
+                class='ui-button-success cx-toolbar-button'
+                type='button'
+                [pTooltip]='"comic-list-toolbar.button.select-all"|translate'
+                icon='fa fa-fw fa-plus'
+                [disabled]='!comics.length'
+                (click)='selectAll()'></button>
+        <button pButton
+                class='ui-button-success cx-toolbar-button'
+                type='button'
+                [pTooltip]='"comic-list-toolbar.button.deselect-all"|translate'
+                icon='fa fa-fw fa-minus'
+                [disabled]='!selectedComics.length'
+                (click)='deselectAll()'></button>
+        <button pButton
+                class='ui-button-info cx-toolbar-button'
+                type='button'
+                [pTooltip]='"comic-list-toolbar.button.scrape"|translate'
+                icon='fa fa-fw fa-fingerprint'
+                [disabled]='!selectedComics.length'
+                (click)='startScraping()'></button>
+        <button pButton
+                class='ui-button-danger cx-toolbar-button'
+                type='button'
+                [pTooltip]='"comic-list-toolbar.button.delete"|translate'
+                icon='fa fa-fw fa-trash'
+                [disabled]='!selectedComics.length'
+                (click)='deleteComics()'></button>
+    </div>
+</p-toolbar>

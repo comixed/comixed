@@ -2,41 +2,55 @@ os:
     - linux
 
 language: node_js
-    - "9.11.1"
+    - "10.15.0"
 
 jdk:
-    - oraclejdk8
+    - openjdk8
 
 env:
-    - NODE_VERSION="9.11.1"
+    - NODE_VERSION="10.15.0"
 
-before_install:
-    - (cd web-frontend && npm install --global @angular/cli && npm install)
+script: (mvn clean package -Pci -DskipTests)
 
-script: (cd java-backend && mvn clean test package -DskipTests=true)
+branches:
+    only:
+        - develop
+        - /^release\/.*$/
 
-#before_deploy:
-#    - cd java-backend
-#    - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
-#    - export TRAVIS_TAG=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')-$(date +%Y%m%d%H%M%S)
-#    - cd ..
-#    - export BUILD_ARTIFACT=$(find . -name comixed-app-*.jar)
+before_deploy:
+    - export BUILD_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+    - export TRAVIS_TAG=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)-$(date +%Y%m%d%H%M%S)
+    - export APP_ARTIFACT=$(find . -name comixed-app-*.zip)
+###################################
+# NOT GOING TO TAG THINGS FOR NOW #
+###################################
 #    - git config --local user.name "Darryl L. Pierce"
 #    - git config --local user.email "mcpierce@gmail.com"
 #    - git tag $TAG_NAME
 
-#deploy:
-#    provider: releases
-#    api_key: $GITHUB_AUTH_TOKEN
-#    file_glob: true
-#    file: ${BUILD_ARTIFACT}
-#    skip_cleanup: true
-#    keep-history: true
-#    overwrite: true
-#    on:
-#        branch: develop
+deploy:
+    - provider: releases
+      api_key: $GITHUB_AUTH_TOKEN
+      file_glob: true
+      file:
+        - ${APP_ARTIFACT}
+      skip_cleanup: true
+      keep-history: true
+      overwrite: true
+      on:
+        branch: develop
+    - provider: releases
+      api_key: $GITHUB_AUTH_TOKEN
+      file_glob: true
+      file:
+        - ${APP_ARTIFACT}
+      skip_cleanup: true
+      keep-history: true
+      overwrite: true
+      on:
+        branch: release\/.*$/
 
-#cache:
-#    directories:
-#        - ~/.m2/repository
-#        - web-frontend/node_modules
+cache:
+    directories:
+        - $HOME/.m2/repository
+        - $TRAVIS_BUILD_DIR/comixed-frontend/node_modules

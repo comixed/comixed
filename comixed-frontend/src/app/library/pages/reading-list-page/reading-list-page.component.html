@@ -1,0 +1,43 @@
+<form [formGroup]='readingListForm'
+      (ngSubmit()='submit_form()'>
+    <div class='ui-g'>
+        <div class='ui-g-3'></div>
+        <div class='ui-g-6'>
+            <div class='ui-g'>
+                <div class='ui-g-12'>
+                    <label for='reading_list_name'>{{"reading-list-page.label.name" | translate}}</label>
+                </div>
+                <div class='ui-g-12'>
+                    <input pInputText
+                           id='reading_list_name'
+                           [placeholder]='"reading-list-page.text.name-placeholder" | translate'
+                           formControlName='name'/>
+                </div>
+
+                <div class='ui-g-12'>
+                    <label for='reading_list_summary'>{{"reading-list-page.label.summary" | translate}}</label>
+                </div>
+                <div class='ui-g-12'>
+                    <input pInputText
+                           id='reading_list_summary'
+                           formControlName='summary'/>
+                </div>
+
+                <div class='ui-g-12'>
+                    <button pButton
+                            [disabled]='!readingListForm.valid || !readingListForm.dirty'
+                            [label]='"reading-list-page.button.save" | translate'
+                            (click)='submit_form()'></button>
+                </div>
+            </div>
+        </div>
+        <div class='ui-g-3'></div>
+        <div #context_target
+             class='ui-g-12'>
+            <app-comic-list [comics]='entries'
+                            [selectedComics]="selectedEntries"></app-comic-list>
+        </div>
+    </div>
+    <p-contextMenu [target]='context_target'
+                   [model]='contextMenu'></p-contextMenu>
+</form>

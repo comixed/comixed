@@ -1,0 +1,8 @@
+<h2>{{'collection-details-page.page-title'|translate:{
+    name: collectionName,
+    count: comics.length
+} }}</h2>
+<app-comic-list *ngIf='!!collectionName'
+                [comics]='comics'
+                [selectedComics]='selectedComics'
+                [showSelections]='true'></app-comic-list>

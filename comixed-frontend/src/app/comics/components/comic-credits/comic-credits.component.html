@@ -1,0 +1,11 @@
+<p-dataView [value]='credits'
+            [layout]='"grid"'>
+    <ng-template let-credit
+                 pTemplate='gridItem'>
+        <p-card>
+            <p-header>
+                <h4>{{ credit.name }}</h4>
+            </p-header>
+            {{ credit.role }}</p-card>
+    </ng-template>
+</p-dataView>

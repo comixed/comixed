@@ -1,0 +1,40 @@
+{
+  "main-menu": {
+    "item": {
+      "login": "Login",
+      "account": "Account",
+      "logout": "Logout",
+      "library": {
+        "root": "Library",
+        "comics": "Comics",
+        "reading-lists": "Reading Lists"
+      },
+      "collections": {
+        "root": "Collections",
+        "publishers": "Publishers",
+        "series": "Series",
+        "characters": "Characters",
+        "teams": "Teams",
+        "locations": "Locations",
+        "story-arcs": "Story Arcs"
+      },
+      "admin": {
+        "root": "Admin",
+        "users": "Users",
+        "library": "Library",
+        "import": "Import",
+        "duplicate-pages": "Duplicate Pages",
+        "missing-comics": "Missing Comics"
+      },
+      "help": {
+        "root": "Help",
+        "build-details": "Build Details",
+        "enable-debugging": "Enable Debugging",
+        "disable-debugging": "Disable Debugging"
+      }
+    },
+    "button": {
+      "show-menu": "Menu"
+    }
+  }
+}

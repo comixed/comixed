@@ -18,23 +18,39 @@ where **xxx** is the issue being addressed.
 Using this template, your changes are then visible on the ticket's page. This lets everybody know
 what changes were made for any issue.
 
-## Formatting And Cleaning Up Code
+## Coding Conventions And Formatting
 
-Before you submit your code for a pull request, please be sure to clean up and format your code.
+### Java
 
-Included in the repository are Eclipse files for (formatting)[docs/eclipse formatter.xml] and (cleaning up)[docs/eclipse cleanup.xml] your code automatically. If you use Eclipse then please import these configuration files and use them.
+The Java code for the project is formatted using the [Google Java Formatter](https://github.com/google/google-java-format) tool. Code is automatically formatted for you when you commit locally.
 
+To manually format the code, use the following command line:
 
-## Pull Request Process
+```
+$ mvn git-code-format:format-code
+```
 
-1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
-   build.
-2. Update the README.md with details of changes to the interface, this includes new environment 
-   variables, exposed ports, useful file locations and container parameters.
-3. Increase the version numbers in any examples files and the README.md to the new version that this
-   Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
-4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you 
-   do not have permission to do that, you may request the second reviewer to merge it for you.
+### Typescript
+
+The frontend code uses [Prettier](https://prettier.io/) for code formatting, and the build process will fail code that does not meet this standard.
+
+Most editors and IDEs support formatting Typescript code. Please check the documentation for the one you use for how to apply the convention when coding.
+
+#### Lint Checks
+
+To ensure your Angular code meets project requirements, please run the lint checks in the **comixed-frontend** module:
+
+```
+$ cd comixed-frontend
+$ yarn lint
+```
+
+There should be no errors reported.
+
+## Pull Requests
+
+Ensure your branch builds without errors or warnings locally. Any PR that does not pass the automated build process on [Travis](https://travis-ci.org/mcpierce/comixed) will be automatically declined.
+ 
 
 ## Code of Conduct
 

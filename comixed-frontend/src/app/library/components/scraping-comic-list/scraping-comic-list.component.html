@@ -1,0 +1,46 @@
+<p-dataView [value]='comics'
+            [rows]='10'
+            [paginator]='true'
+            emptyMessage='{{ "comic-list.text.no-comics-to-scrape" | translate }}'
+            paginatorPosition='both'>
+    <ng-template let-comic
+                 pTemplate='listItem'>
+        <div class='ui-g'>
+            <div class='ui-g-3'>
+                <img src='{{ comic | comicCoverUrl }}'
+                     [style.width]='"100%"'
+                     [style.height]='"auto"'/>
+            </div>
+            <div class='ui-g-3'>
+                <div class='ui-g'>
+                    <div class='ui-g-12'>
+                        <b>{{ "comic-list.label.series" | translate }}</b>
+                    </div>
+                    <div class='ui-g-12'>
+                        {{ comic.series || "text.unknown" | translate }}
+                    </div>
+                </div>
+            </div>
+            <div class='ui-g-3'>
+                <div class='ui-g'>
+                    <div class='ui-g-12'>
+                        <b>{{ "comic-list.label.volume" | translate }}</b>
+                    </div>
+                    <div class='ui-g-12'>
+                        {{ comic.volume || "text.unknown" | translate }}
+                    </div>
+                </div>
+            </div>
+            <div class='ui-g-3'>
+                <div class='ui-g'>
+                    <div class='ui-g-12'>
+                        <b>{{ "comic-list.label.issue-number" | translate }}</b>
+                    </div>
+                    <div class='ui-g-12'>
+                        {{ comic.issue_number || "text.unknown" | translate }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-dataView>

@@ -1,0 +1,130 @@
+@import '~primeicons/primeicons.css';
+@import '~colors.scss';
+
+.cx-toolbar-button {
+  margin-right: 5px;
+  width: 150px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.cx-table-details {
+  border: solid 1px $cx-detail-label-border-color;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.cx-table-details-label,
+.cx-table-details-value {
+  border: solid 1px $cx-detail-label-border-color;
+  padding: 10px;
+}
+
+.cx-table-details-label {
+  background-color: $cx-detail-label-background-color;
+  color: $cx-detail-label-text-color;
+  font-weight: bold;
+  text-align: right;
+}
+
+.cx-table-details-value {
+  background-color: $cx-detail-value-background-color;
+  color: $cx-detail-value-text-color;
+}
+
+.cx-table-column-smallest {
+  width: 25px;
+}
+
+.cx-table-column-small {
+  width: 50px;
+}
+
+.cx-table-column-medium {
+  width: 125px;
+}
+
+.cx-table-column-large {
+  width: 350px;
+}
+
+.cx-table-column-align-center {
+  text-align: center;
+}
+
+// text
+.cx-no-wrap-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ui-menuitem-text {
+  white-space: nowrap;
+  color: #000000;
+}
+
+.cx-container-align-center {
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+// form styles
+
+.cx-input-label {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
+
+.cx-input-field {
+  width: 100%;
+  max-width: 100%;
+}
+
+.cx-form-validation-error-container {
+  background-color: $cx-form-validation-error-background-color;
+  color: $cx-form-validation-error-text-color;
+  width: 100%;
+  max-width: 100%;
+  padding-left: 5px;
+}
+
+.cx-form-validation-error {
+}
+
+.cx-button-box-vertical {
+  width: 100%;
+  text-align: center;
+}
+
+.cx-selection-button {
+  width: 75%;
+  margin-top: 1px;
+}
+
+.cx-action-button {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.cx-container-centered-text {
+  text-align: center;
+}
+
+.cx-horizonal-centered {
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.cx-right-align-container {
+  float: right;
+}
+
+input {
+  width: 100%;
+}

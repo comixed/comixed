@@ -1,6 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
 
 ---
 
@@ -21,9 +24,13 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
+ - ComiXed version [from **Help** -> **Build Details**]
  - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+ - Browser name [e.g. chrome, safari]
+ - Browser version [e.g. 22]
+
+** ComiXed Build Detail **
+Copy and past the details from **Help** -> **Build Details**
 
 **Additional context**
 Add any other context about the problem here.

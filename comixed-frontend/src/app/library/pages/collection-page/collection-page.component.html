@@ -1,0 +1,24 @@
+<h2>{{'collection-page.page-title'|translate:{collectionType: collectionType, count: collection.length} }}</h2>
+<p-table [value]='collection'
+         paginator='true'
+         alwaysShowPaginator='true'
+         [rows]='rows'
+         paginatorPosition='both'>
+    <ng-template pTemplate='colgroup'>
+        <col>
+        <col class='cx-table-column-large'>
+    </ng-template>
+    <ng-template pTemplate='header'>
+        <tr>
+            <th>{{'collection-page.table.header.collection-name'|translate:{collectionType: collectionType.toString().toUpperCase()} }}</th>
+            <th>{{'collection-page.table.header.collection-count'|translate}}</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate='body'
+                 let-entry>
+        <tr>
+            <td><a [routerLink]='["/collections", collectionType, entry.name]'>{{entry.name}}</a></td>
+            <td class='cx-table-column-align-center'>{{'collection-page.table.value.collection-count'|translate:{count: entry.count} }}</td>
+        </tr>
+    </ng-template>
+</p-table>

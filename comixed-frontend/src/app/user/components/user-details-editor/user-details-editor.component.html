@@ -1,0 +1,65 @@
+<div id='user-edit-form-container'>
+    <div id='user-edit-form'>
+        <h2>{{user?.email || "admin.user-editor.label.new-user"|translate}}</h2>
+        <form [formGroup]='userForm'>
+            <div>
+                <label for='email'
+                       class='cx-input-label'>{{"user-details-editor.label.email-address"|translate}}</label>
+                <input id='email'
+                       pInputText
+                       class='form-control'
+                       type='text'
+                       formControlName='email'/>
+                <span *ngIf='userForm.controls.email.errors?.required'
+                      class='cx-form-validation-error'>{{'user-details-editor.user-form.email-required'|translate}}</span>
+                <span *ngIf='userForm.controls.email.errors?.email'
+                      class='cx-form-validation-error'>{{'user-details-editor.user-form.email-invalid'|translate}}</span>
+            </div>
+            <div>
+                <label for='password'
+                       class='cx-input-label'>{{"user-details-editor.label.password"|translate}}</label>
+                <input id='password'
+                       pInputText
+                       class='form-control'
+                       type='password'
+                       formControlName='password'/>
+                <span *ngIf='userForm.controls.password.errors?.required'
+                      class='cx-form-validation-error'>{{'user-details-editor.user-form.password-required'|translate}}</span>
+                <span *ngIf='userForm.controls.password.errors?.minlength'
+                      class='cx-form-validation-error'>{{'user-details-editor.user-form.password-required-length'|translate:{length: userForm.controls.password.errors.minlength.requiredLength} }}</span>
+            </div>
+            <div>
+                <label for='passwordVerify'
+                       class='cx-input-label'>{{"user-details-editor.label.password-verify"|translate}}</label>
+                <input id='passwordVerify'
+                       pInputText
+                       type='password'
+                       class='form-control'
+                       formControlName='passwordVerify'/>
+                <span *ngIf='userForm.controls.passwordVerify.errors?.mustMatch'
+                      class='cx-form-validation-error'>{{'user-details-editor.user-form.passwords-must-match'|translate}}</span>
+            </div>
+            <div>
+                <p-toggleButton onLabel='{{"user-details-editor.label.user-is-admin"|translate}}'
+                                offLabel='{{"user-details-editor.label.user-is-reader"|translate}}'
+                                onIcon='fa fa-fw fa-user-secret'
+                                offIcon='fa fa-fw fa-user'
+                                formControlName='isAdmin'></p-toggleButton>
+            </div>
+        </form>
+    </div>
+
+    <div class='cx-button-box-vertical'>
+        <button pButton
+                class='cx-selection-button ui-button-primary'
+                [disabled]='!userForm.valid'
+                icon='fa fa-fw fa-save'
+                label='{{"button.save"|translate}}'
+                (click)='saveUser()'></button>
+        <button pButton
+                class='cx-selection-button ui-button-danger'
+                icon='fa fa-fw fa-reset'
+                label='{{"button.reset"|translate}}'
+                (click)='resetUser()'></button>
+    </div>
+</div>

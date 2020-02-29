@@ -1,0 +1,28 @@
+<div class='ui-g'>
+    <div class='ui-g-12'>
+        <div class='p-grid'>
+            <div class='p-col-fixed'
+                 [style.width]='sameHeight ? "auto":(pageSize + 25) + "px"'
+                 [style.height]='sameHeight ? pageSize + "px":"auto"'>
+                <app-comic-cover [duplicatePage]='item'
+                                 [coverUrl]='item.pages[0]|comicPageUrl'
+                                 [coverSize]='pageSize'
+                                 [useSameHeight]='sameHeight'
+                                 [selected]='selected'
+                                 (click)='click.next($event)'></app-comic-cover>
+            </div>
+            <div class='p-col'>
+                <div class='ui-g'>
+                    <div class='ui-g-12'>
+                        <h2>{{'duplicate-page-list-item.title'|translate:{count: item.pages.length} }}</h2>
+                        <h3>{{'duplicate-page-list-item.subtitle'|translate:{
+                            count: item.pages.length,
+                            blocked: item.blocked,
+                            deletedCount: getDeletedCount(item)
+                        } }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
