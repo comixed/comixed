@@ -14,7 +14,7 @@
                  (onRowUnselect)='selectVolume(null)'>
             <ng-template pTemplate='caption'>
                 <div style='text-align: right'>
-                    <i class='fa fa-search'></i>
+                    <em class='fa fa-search'></em>
                     <input type='text'
                            pInputText
                            [placeholder]='"volume-list.text.search-placeholder" | translate'
@@ -33,29 +33,34 @@
             </ng-template>
             <ng-template pTemplate='header'>
                 <tr>
-                    <th class='cx-no-wrap-text'
+                    <th id='matchability'
+                        class='cx-no-wrap-text'
                         [pSortableColumn]='"matchability"'
                         pResizableColumn>
                         <p-sortIcon [field]='"matchability"'></p-sortIcon>
                     </th>
-                    <th class='cx-no-wrap-text'
+                    <th id='start-year'
+                        class='cx-no-wrap-text'
                         [pSortableColumn]='"volume.start_year"'
                         pResizableColumn>
                         <p-sortIcon [field]='"volume.start_year"'></p-sortIcon>
                         {{ "volume-list.columns.start-year" | translate }}
                     </th>
-                    <th class='cx-no-wrap-text'
+                    <th id='volume-name'
+                        class='cx-no-wrap-text'
                         [pSortableColumn]='"volume.name"'>
                         <p-sortIcon [field]='"volume.name"'></p-sortIcon>
                         {{ "volume-list.columns.series" | translate }}
                     </th>
-                    <th class='cx-no-wrap-text'
+                    <th id='issue-count'
+                        class='cx-no-wrap-text'
                         [pSortableColumn]='"volume.issue_count"'
                         pResizableColumn>
                         <p-sortIcon [field]='"volume.issue_count"'></p-sortIcon>
                         {{ "volume-list.columns.issues" | translate }}
                     </th>
-                    <th class='cx-no-wrap-text'
+                    <th id='publisher'
+                        class='cx-no-wrap-text'
                         [pSortableColumn]='"volume.publisher"'>
                         <p-sortIcon [field]='"volume.publisher"'></p-sortIcon>
                         {{ "volume-list.columns.publisher" | translate }}
@@ -88,7 +93,8 @@
                 tooltipPosition='top'>{{ currentIssue | scrapingIssueTitle }}</span>
                 </h3>
             </p-header>
-            <img src='{{currentIssue|scrapingIssueCoverUrl:apiKey}}}'
+            <img alt='scraping cover'
+                 src='{{currentIssue|scrapingIssueCoverUrl:apiKey}}}'
                  [style.width]='"100%"'/>
         </p-card>
         <div class='cx-button-box-vertical'>

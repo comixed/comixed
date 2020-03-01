@@ -55,9 +55,9 @@ import {
   reducer,
   SCRAPING_FEATURE_KEY
 } from 'app/comics/reducers/scraping.reducer';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MessageService } from 'primeng/api';
 import { ScrapingAdaptor } from './scraping.adaptor';
-import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('ScrapingAdaptor', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
@@ -74,7 +74,6 @@ describe('ScrapingAdaptor', () => {
     SCRAPING_VOLUME_1005
   ];
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1003;
-  const ISSUES = [SCRAPING_ISSUE_1000];
   const ISSUE = SCRAPING_ISSUE_1000;
 
   let adaptor: ScrapingAdaptor;

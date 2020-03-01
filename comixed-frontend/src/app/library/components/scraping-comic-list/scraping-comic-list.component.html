@@ -7,14 +7,15 @@
                  pTemplate='listItem'>
         <div class='ui-g'>
             <div class='ui-g-3'>
-                <img src='{{ comic | comicCoverUrl }}'
+                <img alt='comic cover'
+                     src='{{ comic | comicCoverUrl }}'
                      [style.width]='"100%"'
                      [style.height]='"auto"'/>
             </div>
             <div class='ui-g-3'>
                 <div class='ui-g'>
                     <div class='ui-g-12'>
-                        <b>{{ "comic-list.label.series" | translate }}</b>
+                        <strong>{{ "comic-list.label.series" | translate }}</strong>
                     </div>
                     <div class='ui-g-12'>
                         {{ comic.series || "text.unknown" | translate }}
@@ -24,7 +25,7 @@
             <div class='ui-g-3'>
                 <div class='ui-g'>
                     <div class='ui-g-12'>
-                        <b>{{ "comic-list.label.volume" | translate }}</b>
+                        <strong>{{ "comic-list.label.volume" | translate }}</strong>
                     </div>
                     <div class='ui-g-12'>
                         {{ comic.volume || "text.unknown" | translate }}
@@ -34,7 +35,7 @@
             <div class='ui-g-3'>
                 <div class='ui-g'>
                     <div class='ui-g-12'>
-                        <b>{{ "comic-list.label.issue-number" | translate }}</b>
+                        <strong>{{ "comic-list.label.issue-number" | translate }}</strong>
                     </div>
                     <div class='ui-g-12'>
                         {{ comic.issue_number || "text.unknown" | translate }}

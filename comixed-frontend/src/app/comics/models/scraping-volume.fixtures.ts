@@ -16,7 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Volume } from 'app/comics';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 
 export const SCRAPING_VOLUME_1000: ScrapingVolume = {

@@ -68,8 +68,6 @@ import {
 import { ComicState, initialState, reducer } from './comic.reducer';
 
 describe('Comic Reducer', () => {
-  const API_KEY = '0123456789ABCDEF';
-  const ISSUE_ID = 44147;
   const COMIC = COMIC_1;
 
   let state: ComicState;

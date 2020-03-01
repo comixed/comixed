@@ -17,7 +17,6 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 @Component({
   selector: 'app-comic-grouping-card',

@@ -33,6 +33,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties
 public class ComiXedImporterApp implements ApplicationRunner {
+  public static final String SOURCE_CMDLINE_ARG = "source";
+  public static final String REPLACEMENTS_CMDLINE_ARG = "replacements";
+  public static final String USER_CMDLINE_ARG = "user";
+
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private ImportFileProcessor importFileProcessor;
@@ -58,14 +62,14 @@ public class ComiXedImporterApp implements ApplicationRunner {
       this.missingArgument("source");
     }
 
-    String source = args.getOptionValues("source").get(0);
+    String source = args.getOptionValues(SOURCE_CMDLINE_ARG).get(0);
 
     if (args.containsOption("replacements")) {
-      this.importFileProcessor.setReplacements(args.getOptionValues("replacements"));
+      this.importFileProcessor.setReplacements(args.getOptionValues(REPLACEMENTS_CMDLINE_ARG));
     }
 
     if (args.containsOption("user")) {
-      this.importFileProcessor.setImportUser(args.getOptionValues("user").get(0));
+      this.importFileProcessor.setImportUser(args.getOptionValues(USER_CMDLINE_ARG).get(0));
     }
 
     this.logger.info("Source file: {}", source);

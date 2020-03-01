@@ -35,20 +35,23 @@ public class PageCacheService {
   @Value("${comixed.images.cache.location}")
   private String cacheDirectory;
 
-  public byte[] findByHash(final String hash) {
+  public byte[] findByHash(final String hash) throws IOException {
     this.logger.debug("Searching for cached image: hash={}", hash);
 
     final File file = this.getFileForHash(hash);
     if (file.exists() && !file.isDirectory()) {
       this.logger.debug("Loading cached image content: {} bytes", file.length());
+      FileInputStream input = null;
 
       try {
-        FileInputStream input = new FileInputStream(file);
+        input = new FileInputStream(file);
         byte[] result = IOUtils.readFully(input, (int) file.length());
         input.close();
         return result;
       } catch (Exception error) {
         this.logger.error("Failed to load cached image", error);
+      } finally {
+        if (input != null) input.close();
       }
     }
 

@@ -45,16 +45,11 @@ import { LibraryEffects } from './library.effects';
 import objectContaining = jasmine.objectContaining;
 
 describe('LibraryEffects', () => {
-  const COMIC = COMIC_1;
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const LAST_COMIC_ID = 2716;
   const MOST_RECENT_UPDATE = new Date();
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
-  const LATEST_UPDATED_DATE = new Date();
-  const COMIC_COUNT = 2814;
-  const PAGE = 12;
   const COUNT = 25;
-  const SORT_FIELD = 'addedDate';
   const ASCENDING = false;
 
   let actions$: Observable<any>;

@@ -146,7 +146,7 @@ public class ComicService {
 
     final long result = this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
 
-    this.logger.debug("There {} {} record{} to be processed", result, result == 1 ? "" : "s");
+    this.logger.debug("There {} record{} to be processed", result, result == 1 ? "" : "s");
 
     return result;
   }

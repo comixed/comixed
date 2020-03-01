@@ -29,8 +29,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.comixed.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,8 +41,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class ComiXedAuthenticationFilter extends OncePerRequestFilter
     implements AuthenticationConstants {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComiXedUserDetailsService userDetailsService;
 
   @Autowired private JwtTokenUtil jwtTokenUtil;

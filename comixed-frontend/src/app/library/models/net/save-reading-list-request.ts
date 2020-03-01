@@ -16,8 +16,6 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-import { ReadingListEntry } from 'app/library/models/reading-list/reading-list-entry';
-
 export interface SaveReadingListRequest {
   name: string;
   summary: string;

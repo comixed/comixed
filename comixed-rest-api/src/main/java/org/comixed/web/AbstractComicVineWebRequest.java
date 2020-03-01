@@ -22,8 +22,6 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import org.codehaus.plexus.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <code>AbstractComicVineWebRequest</code> defines a foundation for creating concrete
@@ -37,7 +35,6 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
 
   private static final String FILTER_ARGUMENT = "&filter={0}";
   private static final String FILTER_FORMAT = "{0}:{1}";
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   String endpoint;
 

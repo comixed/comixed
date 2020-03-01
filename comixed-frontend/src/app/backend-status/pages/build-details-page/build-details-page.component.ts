@@ -17,13 +17,12 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.adaptor';
-import { Subscription } from 'rxjs';
-import { BuildDetails } from 'app/backend-status/models/build-details';
-import { formatDate } from '@angular/common';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.adaptor';
+import { BuildDetails } from 'app/backend-status/models/build-details';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-build-details-page',

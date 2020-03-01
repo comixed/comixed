@@ -5,7 +5,8 @@
             <p-header>
                 <h2>{{ comic | comicTitle }}</h2>
             </p-header>
-            <img src='{{ comic | comicCoverUrl }}'
+            <img alt='comic cover'
+                 src='{{ comic | comicCoverUrl }}'
                  [style.height]='"auto"'
                  [style.width]='"100%"'/>
             <p-footer>

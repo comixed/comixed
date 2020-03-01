@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { initialState, LibraryState, reducer } from './library.reducer';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_4,
+  COMIC_5
+} from 'app/comics/models/comic.fixtures';
 import {
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
@@ -29,14 +35,8 @@ import {
   LibraryStartRescanFailed,
   LibraryUpdatesReceived
 } from 'app/library/actions/library.actions';
-import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4,
-  COMIC_5
-} from 'app/comics/models/comic.fixtures';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
+import { initialState, LibraryState, reducer } from './library.reducer';
 
 describe('Library Reducer', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -171,12 +171,6 @@ describe('Library Reducer', () => {
 
     it('updates the last comic id', () => {
       expect(state.lastComicId).toEqual(LAST_COMIC_ID);
-    });
-
-    it('contains the list of updated ids', () => {
-      expect(state.updatedIds.sort()).toEqual(
-        UPDATE_COMICS.map(comic => comic.id).sort()
-      );
     });
 
     it('updates the last read dates', () => {

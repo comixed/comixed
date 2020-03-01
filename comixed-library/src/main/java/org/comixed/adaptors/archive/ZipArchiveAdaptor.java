@@ -184,9 +184,10 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
     this.logger.debug("Encoding {} files", content.size());
 
     ByteArrayOutputStream result = new ByteArrayOutputStream();
+    ZipArchiveOutputStream zoutput = null;
 
     try {
-      ZipArchiveOutputStream zoutput =
+      zoutput =
           (ZipArchiveOutputStream)
               new ArchiveStreamFactory()
                   .createArchiveOutputStream(ArchiveStreamFactory.ZIP, result);
@@ -204,11 +205,21 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
         zoutput.write(entryData);
         zoutput.closeArchiveEntry();
       }
-
-      zoutput.finish();
-      zoutput.close();
     } catch (IOException | ArchiveException error) {
       throw new ArchiveAdaptorException("failed to encode files", error);
+    } finally {
+      if (zoutput != null) {
+        try {
+          zoutput.finish();
+        } catch (IOException error) {
+          throw new ArchiveAdaptorException("error finishing comic archive", error);
+        }
+        try {
+          zoutput.close();
+        } catch (IOException error) {
+          throw new ArchiveAdaptorException("error closing comic archive", error);
+        }
+      }
     }
 
     this.logger.debug("Encoding to {} bytes", result.size());

@@ -16,8 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { initialState, reducer, ScrapingState } from './scraping.reducer';
-import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
 import {
   ScrapingGetIssue,
   ScrapingGetIssueFailed,
@@ -33,18 +31,20 @@ import {
   ScrapingVolumesReceived
 } from 'app/comics/actions/scraping.actions';
 import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_4
+} from 'app/comics/models/comic.fixtures';
+import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
+import {
   SCRAPING_VOLUME_1001,
   SCRAPING_VOLUME_1002,
   SCRAPING_VOLUME_1003,
   SCRAPING_VOLUME_1004,
   SCRAPING_VOLUME_1005
 } from 'app/comics/models/scraping-volume.fixtures';
-import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4
-} from 'app/comics/models/comic.fixtures';
+import { initialState, reducer, ScrapingState } from './scraping.reducer';
 
 describe('Scraping Reducer', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
@@ -61,7 +61,6 @@ describe('Scraping Reducer', () => {
     SCRAPING_VOLUME_1004,
     SCRAPING_VOLUME_1005
   ];
-  const ISSUES = [SCRAPING_ISSUE_1000];
   const ISSUE = SCRAPING_ISSUE_1000;
 
   let state: ScrapingState;
@@ -264,7 +263,7 @@ describe('Scraping Reducer', () => {
     });
 
     it('removes the scraped coming from the list', () => {
-      state.comics.every(comic => expect(comic.id).not.toEqual(COMIC.id));
+      state.comics.forEach(comic => expect(comic.id).not.toEqual(COMIC.id));
     });
 
     it('sets the next comic to scrape', () => {

@@ -16,16 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { Comic, Page } from 'app/comics';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { interpolate } from 'app/app.functions';
+import { Page } from 'app/comics';
 import {
-  SAVE_PAGE_URL,
   BLOCK_PAGE_HASH_URL,
+  SAVE_PAGE_URL,
   UNBLOCK_PAGE_HASH_URL
 } from 'app/comics/comics.constants';
-import { interpolate } from 'app/app.functions';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

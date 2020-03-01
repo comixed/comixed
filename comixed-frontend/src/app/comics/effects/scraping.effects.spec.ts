@@ -16,22 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-
-import { ScrapingEffects } from './scraping.effects';
-import { ScrapingService } from 'app/comics/services/scraping.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
-import {
-  SCRAPING_VOLUME_1001,
-  SCRAPING_VOLUME_1002,
-  SCRAPING_VOLUME_1003,
-  SCRAPING_VOLUME_1004,
-  SCRAPING_VOLUME_1005
-} from 'app/comics/models/scraping-volume.fixtures';
-import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
 import {
   ScrapingGetIssue,
   ScrapingGetIssueFailed,
@@ -43,10 +31,22 @@ import {
   ScrapingMetadataLoaded,
   ScrapingVolumesReceived
 } from 'app/comics/actions/scraping.actions';
-import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
+import {
+  SCRAPING_VOLUME_1001,
+  SCRAPING_VOLUME_1002,
+  SCRAPING_VOLUME_1003,
+  SCRAPING_VOLUME_1004,
+  SCRAPING_VOLUME_1005
+} from 'app/comics/models/scraping-volume.fixtures';
+import { ScrapingService } from 'app/comics/services/scraping.service';
+import { hot } from 'jasmine-marbles';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { Observable, of, throwError } from 'rxjs';
+
+import { ScrapingEffects } from './scraping.effects';
 import objectContaining = jasmine.objectContaining;
 
 describe('ScrapingEffects', () => {
@@ -62,7 +62,6 @@ describe('ScrapingEffects', () => {
     SCRAPING_VOLUME_1005
   ];
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1003;
-  const ISSUES = [SCRAPING_ISSUE_1000];
   const ISSUE = SCRAPING_ISSUE_1000;
   const COMIC = COMIC_1;
 

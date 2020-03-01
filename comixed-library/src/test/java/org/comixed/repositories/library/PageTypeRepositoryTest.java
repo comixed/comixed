@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import java.util.List;
 import org.comixed.model.library.PageType;
 import org.comixed.repositories.RepositoryContext;
 import org.junit.Test;
@@ -40,5 +41,10 @@ public class PageTypeRepositoryTest {
   }
 
   @Test
-  public void findAllPageTypes() {}
+  public void findAllPageTypes() {
+    final List<PageType> result = repository.findPageTypes();
+
+    assertNotNull(result);
+    assertEquals(3, result.size());
+  }
 }

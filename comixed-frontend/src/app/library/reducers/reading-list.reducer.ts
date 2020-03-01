@@ -47,39 +47,39 @@ export function reducer(
   action: ReadingListActions
 ): ReadingListState {
   switch (action.type) {
-    case ReadingListActionTypes.LoadReadingLists:
+    case ReadingListActionTypes.GetAll:
       return { ...state, fetching_lists: true };
 
-    case ReadingListActionTypes.ReadingListsLoaded:
+    case ReadingListActionTypes.AllReceived:
       return {
         ...state,
         fetching_lists: false,
         reading_lists: action.payload.reading_lists
       };
 
-    case ReadingListActionTypes.LoadReadingListsFailed:
+    case ReadingListActionTypes.GetAllFailed:
       return { ...state, fetching_lists: false };
 
-    case ReadingListActionTypes.GetReadingList:
+    case ReadingListActionTypes.Get:
       return { ...state, fetching_list: true };
 
-    case ReadingListActionTypes.ReadingListReceived:
+    case ReadingListActionTypes.Received:
       return {
         ...state,
         fetching_list: false,
         current_list: action.payload.reading_list
       };
 
-    case ReadingListActionTypes.GetReadingListFailed:
+    case ReadingListActionTypes.GetFailed:
       return { ...state, fetching_list: false };
 
-    case ReadingListActionTypes.CreateReadingList:
+    case ReadingListActionTypes.Create:
       return { ...state, current_list: {} as ReadingList };
 
-    case ReadingListActionTypes.SaveReadingList:
+    case ReadingListActionTypes.Save:
       return { ...state, saving_reading_list: true };
 
-    case ReadingListActionTypes.ReadingListSaved: {
+    case ReadingListActionTypes.Saved: {
       const lists = state.reading_lists.filter(
         list => list.id !== action.payload.reading_list.id
       );
@@ -94,7 +94,7 @@ export function reducer(
       };
     }
 
-    case ReadingListActionTypes.SaveReadingListFailed:
+    case ReadingListActionTypes.SaveFailed:
       return {
         ...state,
         saving_reading_list: false,
