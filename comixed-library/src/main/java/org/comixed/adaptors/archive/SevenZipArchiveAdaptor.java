@@ -50,9 +50,14 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
 
     File tempFile = File.createTempFile("comixed", "tmp");
     this.logger.debug("Saving entry as temporary filename: " + tempFile.getAbsolutePath());
-    FileOutputStream output = new FileOutputStream(tempFile);
-    output.write(content, 0, content.length);
-    output.close();
+    FileOutputStream output = null;
+
+    try {
+      output = new FileOutputStream(tempFile);
+      output.write(content, 0, content.length);
+    } finally {
+      output.close();
+    }
 
     this.logger.debug("Adding temporary file to archive");
     SevenZArchiveEntry entry = archive.createArchiveEntry(tempFile, filename);
@@ -158,9 +163,10 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
   void saveComicInternal(Comic source, String filename, boolean renamePages)
       throws ArchiveAdaptorException {
     this.logger.debug("Creating temporary file: " + filename);
+    SevenZOutputFile sevenzcomic = null;
 
     try {
-      SevenZOutputFile sevenzcomic = new SevenZOutputFile(new File(filename));
+      sevenzcomic = new SevenZOutputFile(new File(filename));
       sevenzcomic.setContentCompression(SevenZMethod.LZMA2);
 
       this.logger.debug("Adding the ComicInfo.xml entry");
@@ -179,11 +185,21 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
         this.logger.debug("Adding entry: " + pagename);
         this.addFileToArchive(sevenzcomic, pagename, page.getContent());
       }
-
-      sevenzcomic.finish();
-      sevenzcomic.close();
     } catch (IOException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);
+    } finally {
+      if (sevenzcomic != null) {
+        try {
+          sevenzcomic.finish();
+        } catch (IOException error) {
+          throw new ArchiveAdaptorException("error finishing comic archive", error);
+        }
+        try {
+          sevenzcomic.close();
+        } catch (IOException error) {
+          throw new ArchiveAdaptorException("error closing comic archive", error);
+        }
+      }
     }
   }
 }

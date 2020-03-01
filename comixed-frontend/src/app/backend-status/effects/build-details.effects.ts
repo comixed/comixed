@@ -18,20 +18,20 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
-import { EMPTY, Observable, of } from 'rxjs';
-import {
-  BuildDetailsActionTypes,
-  BuildDetailsActions,
-  BuildDetailsReceive,
-  BuildDetailsGetFailed
-} from '../actions/build-details.actions';
 import { Action } from '@ngrx/store';
-import { BuildDetailsService } from 'app/backend-status/services/build-details.service';
-import { BuildDetails } from 'app/backend-status/models/build-details';
-import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { BuildDetails } from 'app/backend-status/models/build-details';
+import { BuildDetailsService } from 'app/backend-status/services/build-details.service';
+import { MessageService } from 'primeng/api';
+import { Observable, of } from 'rxjs';
+
+import { catchError, map, switchMap } from 'rxjs/operators';
+import {
+  BuildDetailsActions,
+  BuildDetailsActionTypes,
+  BuildDetailsGetFailed,
+  BuildDetailsReceive
+} from '../actions/build-details.actions';
 
 @Injectable()
 export class BuildDetailsEffects {

@@ -26,7 +26,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AppComponent } from 'app/app.component';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 import { LoginComponent } from 'app/components/login/login.component';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 import { LibraryAdaptor } from 'app/library';
@@ -52,7 +51,6 @@ import {
 import { ToastModule } from 'primeng/toast';
 
 describe('AppComponent', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const USER = USER_READER;
 
   let component: AppComponent;

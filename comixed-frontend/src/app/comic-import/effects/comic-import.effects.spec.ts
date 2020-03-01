@@ -16,17 +16,10 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-
-import { ComicImportEffects } from './comic-import.effects';
-import { ComicImportService } from 'app/comic-import/services/comic-import.service';
-import { MessageService } from 'primeng/api';
-import {
-  COMIC_FILE_1,
-  COMIC_FILE_3
-} from 'app/comic-import/models/comic-file.fixtures';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   ComicImportFilesReceived,
   ComicImportGetFiles,
@@ -35,10 +28,17 @@ import {
   ComicImportStarted,
   ComicImportStartFailed
 } from 'app/comic-import/actions/comic-import.actions';
+import {
+  COMIC_FILE_1,
+  COMIC_FILE_3
+} from 'app/comic-import/models/comic-file.fixtures';
+import { ComicImportService } from 'app/comic-import/services/comic-import.service';
 import { hot } from 'jasmine-marbles';
+import { MessageService } from 'primeng/api';
+import { Observable, of, throwError } from 'rxjs';
+
+import { ComicImportEffects } from './comic-import.effects';
 import objectContaining = jasmine.objectContaining;
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 describe('ComicImportEffects', () => {
   const DIRECTORY = '/Users/comixedreader/Library';

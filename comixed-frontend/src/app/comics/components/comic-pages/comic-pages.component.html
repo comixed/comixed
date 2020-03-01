@@ -14,25 +14,26 @@
                  pTemplate='listItem'>
         <div class='ui-g'>
             <div class='ui-g-2 ui-sm-6'>
-                <img src='{{ page | comicPageUrl }}'
+                <img alt='comic cover'
+                     src='{{ page | comicPageUrl }}'
                      [style.height]='"auto"'
                      [style.width]='"100%"'/>
             </div>
             <div class='ui-g-10 ui-sm-6'>
                 <div class='ui-g'>
                     <div class='ui-g-2 ui-sm-6'>
-                        <b>{{ "comic-pages.label.filename" | translate }}</b>
+                        <strong>{{ "comic-pages.label.filename" | translate }}</strong>
                     </div>
                     <div class='ui-g-10 ui-sm-6'>{{ page.filename }}</div>
                     <div class='ui-g-2 ui-sm-6'>
-                        <b>{{ "comic-pages.label.dimensions" | translate }}</b>
+                        <strong>{{ "comic-pages.label.dimensions" | translate }}</strong>
                     </div>
                     <div class='ui-g-10 ui-sm-6'>
                         {{ page.width }} x {{ page.height }}
                     </div>
                     <div *ngIf='page.deleted'
                          class='ui-g-12 ui-sm-12'>
-                        <i>{{ "comic-pages.text.marked-for-deletion" | translate }} </i>
+                        <em>{{ "comic-pages.text.marked-for-deletion" | translate }} </em>
                     </div>
                     <div *ngIf='is_admin && page_type_options?.length'
                          class='ui-g-12 ui-sm-12'>
@@ -56,7 +57,7 @@
                     </div>
                     <div *ngIf='page.blocked'
                          class='ui-g-12 ui-sm-12'>
-                        <i>{{ "comic-pages.text.page-is-blocked" | translate }} </i>
+                        <em>{{ "comic-pages.text.page-is-blocked" | translate }} </em>
                     </div>
                 </div>
             </div>
@@ -64,7 +65,8 @@
     </ng-template>
     <ng-template let-page
                  pTemplate='gridItem'>
-        <p-card><img src='{{ page | comicPageUrl }}'
+        <p-card><img alt='comic page'
+                     src='{{ page | comicPageUrl }}'
                      [style.height]='"" + image_size + "px"'
                      [style.width]='"auto"'/>
             <p-footer>

@@ -18,7 +18,6 @@
 
 import { Action } from '@ngrx/store';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
-import { Page } from 'app/comics';
 
 export enum DuplicatePagesActionTypes {
   GetAll = '[DUPLICATE PAGES] Get all duplicate pages',

@@ -18,7 +18,6 @@
 
 import { Action } from '@ngrx/store';
 import { Comic, ComicFormat, Page, PageType, ScanType } from 'app/comics';
-import { Actions } from '@ngrx/effects';
 
 export enum ComicActionTypes {
   GetScanTypes = '[COMIC] Get the set of scan types',
@@ -40,16 +39,16 @@ export enum ComicActionTypes {
   PageHashBlockingSet = '[COMIC] The blocking state is set for a page hash',
   SetPageHashBlockingFailed = '[COMIC] Failed to set the block state for a page hash',
   SaveComic = '[COMIC] Save changes to a comic',
-  ComicSaved = '[COMIC] Changes to a comic were saved',
+  SaveComicSucceeded = '[COMIC] Changes to a comic were saved',
   SaveComicFailed = '[COMIC] Failed to save changes to a comic',
   ClearMetadata = '[COMIC] Clear the metadata from a comic',
   MetadataCleared = '[COMIC] The metadata was cleared',
   ClearMetadataFailed = '[COMIC] Failed to clear the metadata from a comic',
   DeleteComic = '[COMIC] Delete a comic from the library',
-  ComicDeleted = '[COMIC] Comic deleted from the library',
+  DeleteComicSucceeded = '[COMIC] Comic deleted from the library',
   DeleteComicFailed = '[COMIC] Failed to delete comic from the library',
   RestoreComic = '[COMIC] Unmark a comic for deletion',
-  ComicRestored = '[COMIC] Comic unmarked for deletion',
+  RestoreComicSucceeded = '[COMIC] Comic unmarked for deletion',
   RestoreComicFailed = '[COMIC] Failed to unmark a comic for deletion'
 }
 
@@ -168,7 +167,7 @@ export class ComicSave implements Action {
 }
 
 export class ComicSaved implements Action {
-  readonly type = ComicActionTypes.ComicSaved;
+  readonly type = ComicActionTypes.SaveComicSucceeded;
 
   constructor(public payload: { comic: Comic }) {}
 }
@@ -204,7 +203,7 @@ export class ComicDelete implements Action {
 }
 
 export class ComicDeleted implements Action {
-  readonly type = ComicActionTypes.ComicDeleted;
+  readonly type = ComicActionTypes.DeleteComicSucceeded;
 
   constructor(public payload: { comic: Comic }) {}
 }
@@ -222,7 +221,7 @@ export class ComicRestore implements Action {
 }
 
 export class ComicRestored implements Action {
-  readonly type = ComicActionTypes.ComicRestored;
+  readonly type = ComicActionTypes.RestoreComicSucceeded;
 
   constructor(public payload: { comic: Comic }) {}
 }

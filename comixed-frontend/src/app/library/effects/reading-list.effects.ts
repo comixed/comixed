@@ -52,7 +52,7 @@ export class ReadingListEffects {
 
   @Effect()
   getAll$: Observable<Action> = this.actions$.pipe(
-    ofType(ReadingListActionTypes.LoadReadingLists),
+    ofType(ReadingListActionTypes.GetAll),
     switchMap(action =>
       this.readingListService.get_all().pipe(
         tap((response: ReadingList[]) =>
@@ -94,7 +94,7 @@ export class ReadingListEffects {
 
   @Effect()
   getReadingList$: Observable<Action> = this.actions$.pipe(
-    ofType(ReadingListActionTypes.GetReadingList),
+    ofType(ReadingListActionTypes.Get),
     map((action: ReadingListGet) => action.payload),
     switchMap(action =>
       this.readingListService.get_reading_list(action.id).pipe(
@@ -137,7 +137,7 @@ export class ReadingListEffects {
 
   @Effect()
   savingReadingList$: Observable<Action> = this.actions$.pipe(
-    ofType(ReadingListActionTypes.SaveReadingList),
+    ofType(ReadingListActionTypes.Save),
     map((action: ReadingListSave) => action.payload),
     switchMap(action =>
       this.readingListService.save_reading_list(action.reading_list).pipe(

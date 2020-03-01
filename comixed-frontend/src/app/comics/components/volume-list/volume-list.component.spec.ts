@@ -127,10 +127,8 @@ describe('VolumeListComponent', () => {
     it('marks exact matches', () => {
       expect(
         component.volumeOptions.forEach((entry: any) => {
-          switch (entry.volume.id) {
-            case EXACT_MATCH.id:
-              expect(entry.matchability).toEqual('0');
-              break;
+          if (entry.volume.id === EXACT_MATCH.id) {
+            expect(entry.matchability).toEqual('0');
           }
         })
       );
@@ -139,10 +137,8 @@ describe('VolumeListComponent', () => {
     it('marks close matches', () => {
       expect(
         component.volumeOptions.forEach((entry: any) => {
-          switch (entry.volume.id) {
-            case CLOSE_MATCH.id:
-              expect(entry.matchability).toEqual('1');
-              break;
+          if (entry.volume.id === CLOSE_MATCH.id) {
+            expect(entry.matchability).toEqual('1');
           }
         })
       );
@@ -151,10 +147,8 @@ describe('VolumeListComponent', () => {
     it('marks mismatches', () => {
       expect(
         component.volumeOptions.forEach((entry: any) => {
-          switch (entry.volume.id) {
-            case NO_MATCH.id:
-              expect(entry.matchability).toEqual('2');
-              break;
+          if (entry.volume.id === NO_MATCH.id) {
+            expect(entry.matchability).toEqual('2');
           }
         })
       );

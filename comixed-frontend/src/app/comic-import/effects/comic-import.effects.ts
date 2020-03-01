@@ -18,22 +18,22 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { ComicFile } from 'app/comic-import/models/comic-file';
+import { ComicImportService } from 'app/comic-import/services/comic-import.service';
+import { MessageService } from 'primeng/api';
+import { Observable, of } from 'rxjs';
 
-import { catchError, concatMap, map, switchMap, tap } from 'rxjs/operators';
-import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
-  ComicImportActionTypes,
   ComicImportActions,
+  ComicImportActionTypes,
   ComicImportFilesReceived,
   ComicImportGetFilesFailed,
   ComicImportStarted,
   ComicImportStartFailed
 } from '../actions/comic-import.actions';
-import { TranslateService } from '@ngx-translate/core';
-import { ComicImportService } from 'app/comic-import/services/comic-import.service';
-import { MessageService } from 'primeng/api';
-import { Action } from '@ngrx/store';
-import { ComicFile } from 'app/comic-import/models/comic-file';
 
 @Injectable()
 export class ComicImportEffects {

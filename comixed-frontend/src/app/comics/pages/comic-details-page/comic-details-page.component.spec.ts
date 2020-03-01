@@ -32,7 +32,7 @@ import { AppState } from 'app/comics';
 import { ComicGotIssue } from 'app/comics/actions/comic.actions';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { routes } from 'app/comics/comics-routing.module';
-import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
 import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
 import { ComicGroupingCardComponent } from 'app/comics/components/comic-grouping-card/comic-grouping-card.component';
@@ -64,8 +64,6 @@ import {
 import { ComicDetailsPageComponent } from './comic-details-page.component';
 
 describe('ComicDetailsPageComponent', () => {
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
-
   let component: ComicDetailsPageComponent;
   let fixture: ComponentFixture<ComicDetailsPageComponent>;
   let downloadLink: DebugElement;

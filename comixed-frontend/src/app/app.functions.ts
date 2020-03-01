@@ -21,7 +21,7 @@ import * as _ from 'lodash';
 export const API_ROOT_URL = '/api';
 
 export function interpolate(template: string, values: any = {}): string {
-  const vals = _.merge(values, { API_ROOT_URL: API_ROOT_URL });
+  _.merge(values, { API_ROOT_URL: API_ROOT_URL });
   _.templateSettings.interpolate = /\${([\s\S]+?)}/g;
   const compiled = _.template(template);
   const result = compiled(values);

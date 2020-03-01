@@ -16,19 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { LibraryAdaptor } from './library.adaptor';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
-import {
-  LIBRARY_FEATURE_KEY,
-  reducer
-} from 'app/library/reducers/library.reducer';
-import * as LibraryActions from '../actions/library.actions';
-import {
-  LibraryGetUpdates,
-  LibraryUpdatesReceived
-} from '../actions/library.actions';
-import { AppState } from 'app/library';
+import { TranslateModule } from '@ngx-translate/core';
+import { Comic } from 'app/comics';
+import { ComicGetIssue, ComicGotIssue } from 'app/comics/actions/comic.actions';
+import { ComicsModule } from 'app/comics/comics.module';
 import {
   COMIC_1,
   COMIC_2,
@@ -36,23 +32,24 @@ import {
   COMIC_4,
   COMIC_5
 } from 'app/comics/models/comic.fixtures';
-import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
-import { extractField } from 'app/library/utility.functions';
-import { ComicGetIssue, ComicGotIssue } from 'app/comics/actions/comic.actions';
-import { ComicsModule } from 'app/comics/comics.module';
-import { EffectsModule } from '@ngrx/effects';
+import { AppState } from 'app/library';
 import { LibraryEffects } from 'app/library/effects/library.effects';
-import { MessageService } from 'primeng/api';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Comic } from 'app/comics';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
+import {
+  LIBRARY_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/library.reducer';
+import { extractField } from 'app/library/utility.functions';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import * as LibraryActions from '../actions/library.actions';
+import {
+  LibraryGetUpdates,
+  LibraryUpdatesReceived
+} from '../actions/library.actions';
+import { LibraryAdaptor } from './library.adaptor';
 
 describe('LibraryAdaptor', () => {
-  const PAGE = 17;
-  const COUNT = 100;
-  const SORT_FIELD = 'series';
   const ASCENDING = false;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
   const LAST_COMIC_ID = 467;
@@ -60,8 +57,6 @@ describe('LibraryAdaptor', () => {
   const MOST_RECENT_UPDATE = new Date();
   const MORE_UPDATES = false;
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
-  const LATEST_UPDATED_DATE = new Date();
-  const COMIC_COUNT = 3072;
   const COMIC = COMIC_1;
   const IDS = [7, 17, 65, 1, 29, 71];
 
@@ -133,7 +128,6 @@ describe('LibraryAdaptor', () => {
       const TEAMS = extractField(COMICS, 'teams');
       const LOCATIONS = extractField(COMICS, 'locations');
       const STORIES = extractField(COMICS, 'storyArcs');
-      const PENDING_RESCANS = 17;
 
       beforeEach(() => {
         store.dispatch(

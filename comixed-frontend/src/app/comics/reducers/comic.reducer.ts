@@ -140,7 +140,7 @@ export function reducer(
     case ComicActionTypes.SaveComic:
       return { ...state, savingComic: true };
 
-    case ComicActionTypes.ComicSaved:
+    case ComicActionTypes.SaveComicSucceeded:
       return { ...state, savingComic: false, comic: action.payload.comic };
 
     case ComicActionTypes.SaveComicFailed:
@@ -158,7 +158,7 @@ export function reducer(
     case ComicActionTypes.DeleteComic:
       return { ...state, deletingComic: true };
 
-    case ComicActionTypes.ComicDeleted:
+    case ComicActionTypes.DeleteComicSucceeded:
       return { ...state, deletingComic: false, comic: action.payload.comic };
 
     case ComicActionTypes.DeleteComicFailed:
@@ -167,7 +167,7 @@ export function reducer(
     case ComicActionTypes.RestoreComic:
       return { ...state, restoringComic: true };
 
-    case ComicActionTypes.ComicRestored:
+    case ComicActionTypes.RestoreComicSucceeded:
       return { ...state, restoringComic: false, comic: action.payload.comic };
 
     case ComicActionTypes.RestoreComicFailed:

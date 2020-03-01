@@ -35,7 +35,6 @@ import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
 import { NGXLogger } from 'ngx-logger';
 import { ConfirmationService } from 'primeng/api';
-import { ContextMenu } from 'primeng/contextmenu';
 import { Subscription } from 'rxjs';
 
 @Component({

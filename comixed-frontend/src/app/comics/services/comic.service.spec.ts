@@ -50,8 +50,6 @@ import { ComicService } from './comic.service';
 
 describe('ComicService', () => {
   const COMIC = COMIC_1;
-  const API_KEY = 'ABCDEF0123456789';
-  const ISSUE_ID = 44147;
   const SKIP_CACHE = false;
 
   let service: ComicService;

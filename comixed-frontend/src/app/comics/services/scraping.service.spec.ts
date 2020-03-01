@@ -16,9 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import {
+  HttpClientTestingModule,
+  HttpTestingController
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-
-import { ScrapingService } from './scraping.service';
+import { interpolate } from 'app/app.functions';
+import {
+  GET_ISSUE_URL,
+  GET_VOLUMES_URL,
+  LOAD_METADATA_URL
+} from 'app/comics/comics.constants';
+import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { GetScrapingIssueRequest } from 'app/comics/models/net/get-scraping-issue-request';
+import { GetVolumesRequest } from 'app/comics/models/net/get-volumes-request';
+import { LoadMetadataRequest } from 'app/comics/models/net/load-metadata-request';
+import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
 import {
   SCRAPING_VOLUME_1001,
   SCRAPING_VOLUME_1002,
@@ -26,22 +39,9 @@ import {
   SCRAPING_VOLUME_1004,
   SCRAPING_VOLUME_1005
 } from 'app/comics/models/scraping-volume.fixtures';
-import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-} from '@angular/common/http/testing';
-import { interpolate } from 'app/app.functions';
-import { GetVolumesRequest } from 'app/comics/models/net/get-volumes-request';
-import {
-  GET_ISSUE_URL,
-  GET_VOLUMES_URL,
-  LOAD_METADATA_URL
-} from 'app/comics/comics.constants';
-import { GetScrapingIssueRequest } from 'app/comics/models/net/get-scraping-issue-request';
-import { LoadMetadataRequest } from 'app/comics/models/net/load-metadata-request';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+
+import { ScrapingService } from './scraping.service';
 
 describe('ScrapingService', () => {
   const API_KEY = 'A0B1C2D3E4F56789';
@@ -56,7 +56,6 @@ describe('ScrapingService', () => {
     SCRAPING_VOLUME_1005
   ];
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1003;
-  const ISSUES = [SCRAPING_ISSUE_1000];
   const ISSUE = SCRAPING_ISSUE_1000;
   const COMIC = COMIC_1;
 

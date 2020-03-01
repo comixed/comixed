@@ -4,7 +4,8 @@
      [class.selected-comic]='selectSelectedClass && selected'>
     <p-card [styleClass]='"comic-cover-card"'>
         <p-header></p-header>
-        <img [src]='coverUrl'
+        <img alt='comic cover'
+             [src]='coverUrl'
              [style.width]='useSameHeight ? "auto" : coverSize + "px"'
              [style.height]='useSameHeight ? coverSize + "px" : "auto"'
              (click)='clicked()'

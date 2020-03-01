@@ -64,8 +64,6 @@ describe('ComicAdaptor', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
   const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
   const COMIC = COMIC_1;
-  const API_KEY = 'ABCDEF0123456789';
-  const ISSUE_ID = 44147;
   const SKIP_CACHE = false;
 
   let adaptor: ComicAdaptor;

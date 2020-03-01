@@ -68,7 +68,7 @@ public class ComicVineQueryWebRequest extends AbstractComicVineWebRequest {
         throw new WebRequestException("Series name already set");
 
       try {
-        this.addParameter("query", URLEncoder.encode(name, StandardCharsets.UTF_8.name()));
+        this.addParameter(SERIES_NAME_KEY, URLEncoder.encode(name, StandardCharsets.UTF_8.name()));
       } catch (UnsupportedEncodingException error) {
         throw new WebRequestException("Unable to encode series name", error);
       }
