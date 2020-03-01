@@ -18,13 +18,13 @@
 
 package org.comixed.model.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.*;
+import org.comixed.model.library.Comic;
 import org.comixed.views.View.UserList;
 
 @Entity
-@Table(name = "user_bookmarks")
+@Table(name = "bookmarks")
 public class Bookmark {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,12 +32,12 @@ public class Bookmark {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
-  @JsonIgnore
   private ComiXedUser user;
 
-  @Column(name = "book", nullable = false)
+  @ManyToOne
+  @JoinColumn(name = "comic_id", nullable = false, updatable = false)
   @JsonView(UserList.class)
-  private long book;
+  private Comic comic;
 
   @Column(name = "mark", updatable = true, nullable = false)
   @JsonView(UserList.class)
@@ -45,18 +45,18 @@ public class Bookmark {
 
   public Bookmark() {}
 
-  public Bookmark(ComiXedUser user, long book, String mark) {
+  public Bookmark(ComiXedUser user, Comic comic, String mark) {
     this.user = user;
-    this.book = book;
+    this.comic = comic;
     this.mark = mark;
   }
 
-  public long getBook() {
-    return book;
+  public Comic getComic() {
+    return comic;
   }
 
-  public void setBook(long book) {
-    this.book = book;
+  public void setComic(Comic comic) {
+    this.comic = comic;
   }
 
   public String getMark() {
