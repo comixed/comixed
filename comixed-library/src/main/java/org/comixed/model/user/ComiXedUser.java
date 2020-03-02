@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
+import org.comixed.model.library.Comic;
 import org.comixed.views.View;
 
 @Entity
@@ -174,28 +175,28 @@ public class ComiXedUser {
    * Returns the user's mark with the given book.
    *
    * @param book the bookmark's book
-   * @return the value, or 0 if not found
+   * @return the value, or null if none is set
    */
-  public String getBookmark(long book) {
+  public String getBookmark(Comic comic) {
     for (Bookmark bookmark : this.bookmarks) {
-      if (bookmark.getBook() == book) return bookmark.getMark();
+      if (bookmark.getComic().getId().equals(comic.getId())) return bookmark.getMark();
     }
-    return "0";
+    return null;
   }
 
   /**
    * Sets the user bookmark for the given book.
    *
-   * @param book the bookmark book
+   * @param comic the comic
    * @param mark the bookmark mark
    */
-  public void setBookmark(long book, String mark) {
+  public void setBookmark(Comic comic, String mark) {
     for (Bookmark bookmark : this.bookmarks) {
-      if (bookmark.getBook() == book) {
+      if (bookmark.getComic() == comic) {
         bookmark.setMark(mark);
         return;
       }
     }
-    this.bookmarks.add(new Bookmark(this, book, mark));
+    this.bookmarks.add(new Bookmark(this, comic, mark));
   }
 }

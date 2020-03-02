@@ -108,7 +108,7 @@ public class ComicFileImportAdaptor {
     String currentPage = currentPages.get(comic.getFilename());
     if (currentPage != null && importUser != null) {
       Comic currentComic = this.comicRepository.findByFilename(comic.getFilename());
-      importUser.setBookmark(currentComic.getId(), currentPage);
+      importUser.setBookmark(currentComic, currentPage);
       this.userRepository.save(importUser);
     } else {
       this.logger.debug("No import user defined, no bookmark saved");

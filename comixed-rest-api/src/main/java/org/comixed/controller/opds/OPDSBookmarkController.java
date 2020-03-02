@@ -18,13 +18,12 @@
 
 package org.comixed.controller.opds;
 
-import java.util.Optional;
 import org.comixed.model.library.Comic;
 import org.comixed.model.opds.OPDSBookmark;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.library.ComicException;
+import org.comixed.service.library.ComicService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,38 +46,44 @@ public class OPDSBookmarkController {
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private ComiXedUserRepository userRepository;
-
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
 
   @GetMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
-  public OPDSBookmark getBookmark(@RequestParam("docId") long docId) throws ComicException {
-    this.logger.debug("Getting book bookmark: id={}", docId);
+  public OPDSBookmark getBookmark(@RequestParam("docId") long comicId) throws ComicException {
+    this.logger.debug("Loading comic: id={}", comicId);
+    final Comic comic = this.comicService.getComic(comicId);
+    if (comic == null) {
+      throw new ComicException("No such comic: id=" + comicId);
+    }
 
+    this.logger.debug("Getting book bookmark: id={}", comicId);
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     ComiXedUser user = this.userRepository.findByEmail(email);
+    final String bookmark = user.getBookmark(comic);
 
-    if (user.getBookmark(docId).equalsIgnoreCase("0"))
-      throw new ComicException("Bookmark Not Found");
+    if (bookmark == null) throw new ComicException("Bookmark Not Found");
     else {
-      String mark = user.getBookmark(docId);
-      Optional<Comic> record = this.comicRepository.findById(docId);
-      if (!record.isPresent()) {
-        this.logger.error("No such comic");
-        throw new ComicException("Bookmark Not Found");
-      }
-      String totalPages = String.valueOf(record.get().getPageCount());
-      return new OPDSBookmark(docId, mark, mark.equalsIgnoreCase(totalPages));
+      String totalPages = String.valueOf(comic.getPageCount());
+      return new OPDSBookmark(comic.getId(), bookmark, bookmark.equals(totalPages));
     }
   }
 
   @PutMapping(value = "/bookmark", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity setBookmark(
-      @RequestParam("docId") long docId, @RequestBody() final OPDSBookmark opdsBookmark) {
-    this.logger.debug("Setting book bookmark: id={}", docId);
+      @RequestParam("docId") long comicId, @RequestBody() final OPDSBookmark opdsBookmark)
+      throws ComicException {
+    this.logger.debug("Loading comic: id={}", comicId);
+    final Comic comic = this.comicService.getComic(comicId);
+
+    if (comic == null) {
+      throw new ComicException("No such comic: id=" + comicId);
+    }
+
+    this.logger.debug("Setting book bookmark: id={}", comicId);
 
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     ComiXedUser user = this.userRepository.findByEmail(email);
-    user.setBookmark(docId, opdsBookmark.getMark());
+    user.setBookmark(comic, opdsBookmark.getMark());
     this.userRepository.save(user);
 
     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
