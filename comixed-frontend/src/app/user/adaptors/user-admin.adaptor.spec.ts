@@ -16,27 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { UserAdminAdaptor } from './user-admin.adaptor';
-import { async, TestBed } from '@angular/core/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import {
-  reducer,
-  USER_ADMIN_FEATURE_KEY
-} from 'app/user/reducers/user-admin.reducer';
-import { UserAdminEffects } from 'app/user/effects/user-admin.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MessageService } from 'primeng/api';
+import { async, TestBed } from '@angular/core/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppState, User, USER_ADMIN, USER_READER } from 'app/user';
 import {
   UserAdminAllReceived,
-  UserAdminCreateNew, UserAdminDeleteUser,
+  UserAdminCreateNew,
+  UserAdminDeleteUser,
   UserAdminGetAll,
   UserAdminSave,
   UserAdminSaved
 } from 'app/user/actions/user-admin.actions';
+import { UserAdminEffects } from 'app/user/effects/user-admin.effects';
 import { SaveUserDetails } from 'app/user/models/save-user-details';
+import {
+  reducer,
+  USER_ADMIN_FEATURE_KEY
+} from 'app/user/reducers/user-admin.reducer';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { UserAdminAdaptor } from './user-admin.adaptor';
 
 describe('UserAdminAdaptor', () => {
   const USERS = [USER_ADMIN, USER_READER];
@@ -50,6 +52,7 @@ describe('UserAdminAdaptor', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
+        LoggerTestingModule,
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(USER_ADMIN_FEATURE_KEY, reducer),
@@ -185,7 +188,9 @@ describe('UserAdminAdaptor', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new UserAdminDeleteUser({user: USER}));
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new UserAdminDeleteUser({ user: USER })
+      );
     });
   });
 });

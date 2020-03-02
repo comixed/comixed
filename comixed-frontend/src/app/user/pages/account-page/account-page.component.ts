@@ -18,13 +18,14 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthenticationAdaptor } from 'app/user';
-import { AuthenticationState } from 'app/user/models/authentication-state';
-import { User } from 'app/user';
+import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { SaveUserDetails } from 'app/user/models/save-user-details';
+import { ConfirmationService } from 'primeng/api';
+import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 
 @Component({
   selector: 'app-account-page',
@@ -39,7 +40,9 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   constructor(
     private titleService: Title,
     private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
     private authenticationAdaptor: AuthenticationAdaptor,
+    private userAdminAdaptor: UserAdminAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {}
 
@@ -69,5 +72,13 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     this.breadcrumbAdaptor.loadEntries([
       { label: this.translateService.instant('breadcrumb.entry.account-page') }
     ]);
+  }
+
+  saveUser(details: SaveUserDetails): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant('account-page.save-user.header'),
+      message: this.translateService.instant('account-page.save-user.message'),
+      accept: () => this.userAdminAdaptor.saveUser(details)
+    });
   }
 }

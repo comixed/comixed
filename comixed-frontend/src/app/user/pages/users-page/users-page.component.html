@@ -15,6 +15,7 @@
 
 <div *ngIf='current'
      id='user-editor-container'>
+    <h2>{{current?.email || "admin.user-editor.label.new-user"|translate}}</h2>
     <app-user-details-editor *ngIf='current'
                              [user]='current'
                              [isAdmin]='isAdmin'

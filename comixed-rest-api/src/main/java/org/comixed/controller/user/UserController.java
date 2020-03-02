@@ -171,10 +171,13 @@ public class UserController implements InitializingBean {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComiXedUser updateUser(
-      @PathVariable("id") long id, @RequestBody() final SaveUserRequest request)
+      final Principal principal,
+      @PathVariable("id") long id,
+      @RequestBody() final SaveUserRequest request)
       throws ComiXedUserException {
-    this.logger.info("Updating user: id={}", id);
+    final ComiXedUser authUser = this.userService.findByEmail(principal.getName());
 
+    this.logger.info("Updating user: id={}", id);
     ComiXedUser user = this.userService.findById(id);
 
     if (user == null) {
@@ -188,10 +191,18 @@ public class UserController implements InitializingBean {
       this.logger.debug("Updating user's password");
       user.setPasswordHash(this.utils.createHash(request.getPassword().getBytes()));
     }
-    user.clearRoles();
-    user.addRole(this.readerRole);
-    if (request.getIsAdmin()) {
-      user.addRole(this.adminRole);
+
+    if (authUser.isAdmin()) {
+      this.logger.debug("Auth user is admin: updating roles");
+      if (authUser.getId() != id) {
+        user.clearRoles();
+        user.addRole(this.readerRole);
+        if (request.getIsAdmin()) {
+          user.addRole(this.adminRole);
+        }
+      } else {
+        this.logger.debug("Admins cannot change their own roles");
+      }
     }
     this.logger.debug(
         "Updating user: id={} email={} is_admin={}",

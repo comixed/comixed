@@ -16,23 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
-
-import { UserAdminService } from './user-admin.service';
+import { HttpResponse } from '@angular/common/http';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { USER_ADMIN, USER_READER } from 'app/user';
+import { TestBed } from '@angular/core/testing';
 import { interpolate } from 'app/app.functions';
+import { USER_ADMIN, USER_READER } from 'app/user';
+import { SaveUserDetails } from 'app/user/models/save-user-details';
 import {
   DELETE_USER_URL,
   GET_USERS_URL,
   SAVE_NEW_USER_URL,
   SAVE_USER_URL
 } from 'app/user/user.constants';
-import { SaveUserDetails } from 'app/user/models/save-user-details';
-import { HttpResponse } from '@angular/common/http';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+
+import { UserAdminService } from './user-admin.service';
 
 describe('UserAdminService', () => {
   const USERS = [USER_READER, USER_ADMIN];
@@ -43,7 +44,7 @@ describe('UserAdminService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [UserAdminService]
     });
 
