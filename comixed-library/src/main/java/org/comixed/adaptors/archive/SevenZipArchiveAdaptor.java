@@ -190,8 +190,10 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
     } catch (IOException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);
     } finally {
-      sevenzcomic.finish();
-      sevenzcomic.close();
+      if (sevenzcomic != null) {
+        sevenzcomic.finish();
+        sevenzcomic.close();
+      }
     }
   }
 }

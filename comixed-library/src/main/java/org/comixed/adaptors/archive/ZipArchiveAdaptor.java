@@ -209,8 +209,10 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
     } catch (IOException | ArchiveException error) {
       throw new ArchiveAdaptorException("failed to encode files", error);
     } finally {
-      zoutput.finish();
-      zoutput.close();
+      if (zoutput != null) {
+        zoutput.finish();
+        zoutput.close();
+      }
     }
 
     this.logger.debug("Encoding to {} bytes", result.size());
