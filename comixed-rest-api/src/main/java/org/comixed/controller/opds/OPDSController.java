@@ -60,30 +60,23 @@ public class OPDSController {
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
 
   @ResponseBody
-  @RequestMapping(
-      value = "/opds-comics",
-      method = RequestMethod.GET,
-      produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(value = "/opds-comics", produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
   public OPDSFeed getNavigationFeed() throws ParseException {
     return new OPDSNavigationFeed();
   }
 
   @ResponseBody
-  @RequestMapping(
-      value = "/opds-comics/all",
-      method = RequestMethod.GET,
-      produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(value = "/opds-comics/all", produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
   public OPDSFeed getAllComics() throws ParseException {
     return new OPDSAcquisitionFeed("/opds/all", "Comics - ", this.comicRepository.findAll());
   }
 
   @ResponseBody
-  @RequestMapping(
+  @GetMapping(
       value = "/opds/all",
       params = {"groupByFolder"},
-      method = RequestMethod.GET,
       produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
   public OPDSFeed getAllLists() throws ParseException {
@@ -95,10 +88,7 @@ public class OPDSController {
   }
 
   @ResponseBody
-  @RequestMapping(
-      value = "/opds/{id}",
-      method = RequestMethod.GET,
-      produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(value = "/opds/{id}", produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
   public OPDSFeed getList(@PathVariable("id") long id)
       throws ParseException, NoSuchReadingListException {
@@ -109,7 +99,7 @@ public class OPDSController {
         this.readingListService.getReadingListForUser(authentication.getName(), id));
   }
 
-  @RequestMapping(value = "/opds/feed/comics/{id}/download/{filename}", method = RequestMethod.GET)
+  @GetMapping(value = "/opds/feed/comics/{id}/download/{filename}")
   @CrossOrigin
   public ResponseEntity<InputStreamResource> downloadComic(
       @PathVariable("id") long id, @PathVariable("filename") String filename)
@@ -140,7 +130,7 @@ public class OPDSController {
         .body(resource);
   }
 
-  @RequestMapping(value = "/opds/feed/comics/{id}/{index}/{maxWidth}", method = RequestMethod.GET)
+  @GetMapping(value = "/opds/feed/comics/{id}/{index}/{maxWidth}")
   @CrossOrigin
   public ResponseEntity<byte[]> getImageInComicByIndex(
       @PathVariable("id") long id,

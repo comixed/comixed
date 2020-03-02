@@ -56,7 +56,9 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
       output = new FileOutputStream(tempFile);
       output.write(content, 0, content.length);
     } finally {
-      output.close();
+      if (output != null) {
+        output.close();
+      }
     }
 
     this.logger.debug("Adding temporary file to archive");
@@ -161,7 +163,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
 
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
-      throws ArchiveAdaptorException {
+      throws ArchiveAdaptorException, IOException {
     this.logger.debug("Creating temporary file: " + filename);
     SevenZOutputFile sevenzcomic = null;
 
@@ -188,18 +190,8 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
     } catch (IOException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);
     } finally {
-      if (sevenzcomic != null) {
-        try {
-          sevenzcomic.finish();
-        } catch (IOException error) {
-          throw new ArchiveAdaptorException("error finishing comic archive", error);
-        }
-        try {
-          sevenzcomic.close();
-        } catch (IOException error) {
-          throw new ArchiveAdaptorException("error closing comic archive", error);
-        }
-      }
+      sevenzcomic.finish();
+      sevenzcomic.close();
     }
   }
 }

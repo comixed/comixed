@@ -18,6 +18,7 @@
 
 package org.comixed.task.model;
 
+import java.io.IOException;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandler;
@@ -70,7 +71,7 @@ public class ExportComicWorkerTaskTest {
 
   @Test(expected = WorkerTaskException.class)
   public void testStartTaskArchiveAdaptorRaisesException()
-      throws ComicFileHandlerException, ArchiveAdaptorException, WorkerTaskException {
+      throws ComicFileHandlerException, ArchiveAdaptorException, WorkerTaskException, IOException {
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
     Mockito.doThrow(new ArchiveAdaptorException("Expected"))
@@ -88,7 +89,7 @@ public class ExportComicWorkerTaskTest {
 
   @Test
   public void testStartTaskWithRenamePages()
-      throws ArchiveAdaptorException, ComicFileHandlerException, WorkerTaskException {
+      throws ArchiveAdaptorException, ComicFileHandlerException, WorkerTaskException, IOException {
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
     Mockito.when(archiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
@@ -104,7 +105,7 @@ public class ExportComicWorkerTaskTest {
 
   @Test
   public void testStartTask()
-      throws ComicFileHandlerException, ArchiveAdaptorException, WorkerTaskException {
+      throws ComicFileHandlerException, ArchiveAdaptorException, WorkerTaskException, IOException {
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.doNothing().when(comicFileHandler).loadComic(Mockito.any(Comic.class));
     Mockito.when(archiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))

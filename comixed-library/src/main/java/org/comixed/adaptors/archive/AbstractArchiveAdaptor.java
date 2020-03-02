@@ -218,7 +218,8 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   }
 
   @Override
-  public Comic saveComic(Comic source, boolean renamePages) throws ArchiveAdaptorException {
+  public Comic saveComic(Comic source, boolean renamePages)
+      throws ArchiveAdaptorException, IOException {
     this.logger.debug("Saving comic: {}", source.getFilename());
 
     String tempFilename;
@@ -264,9 +265,10 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
    * @param filename the new filename
    * @param renamePages rename pages
    * @throws ArchiveException if an error occurs
+   * @throws IOException if an error occurs
    */
   abstract void saveComicInternal(Comic source, String filename, boolean renamePages)
-      throws ArchiveAdaptorException;
+      throws ArchiveAdaptorException, IOException;
 
   protected File validateFile(Comic comic) throws ArchiveAdaptorException {
     File file = new File(comic.getFilename());
@@ -303,7 +305,8 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   }
 
   @Override
-  public byte[] encodeFileToStream(Map<String, byte[]> entries) throws ArchiveAdaptorException {
+  public byte[] encodeFileToStream(Map<String, byte[]> entries)
+      throws ArchiveAdaptorException, IOException {
     throw new RuntimeException("Not supported");
   }
 

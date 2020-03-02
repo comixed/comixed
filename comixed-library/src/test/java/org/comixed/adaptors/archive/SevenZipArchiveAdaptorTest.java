@@ -20,6 +20,7 @@ package org.comixed.adaptors.archive;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import org.comixed.ComiXedTestContext;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
@@ -102,7 +103,7 @@ public class SevenZipArchiveAdaptorTest {
   }
 
   @Test
-  public void testSaveComic() throws ArchiveAdaptorException {
+  public void testSaveComic() throws ArchiveAdaptorException, IOException {
     // load an existing comic
     archiveAdaptor.loadComic(comic);
 
@@ -117,7 +118,7 @@ public class SevenZipArchiveAdaptorTest {
   }
 
   @Test
-  public void testSaveComicRenamePages() throws ArchiveAdaptorException {
+  public void testSaveComicRenamePages() throws ArchiveAdaptorException, IOException {
     // load an existing comic
     archiveAdaptor.loadComic(comic);
 
@@ -132,7 +133,7 @@ public class SevenZipArchiveAdaptorTest {
   }
 
   @Test
-  public void testSaveComicDeletePages() throws ArchiveAdaptorException {
+  public void testSaveComicDeletePages() throws ArchiveAdaptorException, IOException {
     // load an existing comic
     archiveAdaptor.loadComic(comic);
 

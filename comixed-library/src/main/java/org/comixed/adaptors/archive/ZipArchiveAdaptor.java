@@ -180,7 +180,8 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   }
 
   @Override
-  public byte[] encodeFileToStream(Map<String, byte[]> content) throws ArchiveAdaptorException {
+  public byte[] encodeFileToStream(Map<String, byte[]> content)
+      throws ArchiveAdaptorException, IOException {
     this.logger.debug("Encoding {} files", content.size());
 
     ByteArrayOutputStream result = new ByteArrayOutputStream();
@@ -208,18 +209,8 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
     } catch (IOException | ArchiveException error) {
       throw new ArchiveAdaptorException("failed to encode files", error);
     } finally {
-      if (zoutput != null) {
-        try {
-          zoutput.finish();
-        } catch (IOException error) {
-          throw new ArchiveAdaptorException("error finishing comic archive", error);
-        }
-        try {
-          zoutput.close();
-        } catch (IOException error) {
-          throw new ArchiveAdaptorException("error closing comic archive", error);
-        }
-      }
+      zoutput.finish();
+      zoutput.close();
     }
 
     this.logger.debug("Encoding to {} bytes", result.size());
