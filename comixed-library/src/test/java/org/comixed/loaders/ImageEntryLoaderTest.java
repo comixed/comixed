@@ -38,7 +38,8 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.properties")
 public class ImageEntryLoaderTest extends BaseLoaderTest {
-  private static final String TEST_FILENAME = "src/test/resources/example.jpg";
+  private static final String TEST_JPEG_FILENAME = "src/test/resources/example.jpg";
+  private static final String TEST_WEBP_FILENAME = "src/test/resources/example.webp";
 
   @InjectMocks private ImageEntryLoader loader;
 
@@ -54,12 +55,28 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
   }
 
   @Test
-  public void testLoadImage() throws IOException {
+  public void testLoadJPGImage() throws IOException {
     Mockito.when(pageTypeRepository.getDefaultPageType()).thenReturn(pageType);
 
-    byte[] content = loadFile(TEST_FILENAME);
+    byte[] content = loadFile(TEST_JPEG_FILENAME);
 
-    loader.loadContent(comic, TEST_FILENAME, content);
+    loader.loadContent(comic, TEST_JPEG_FILENAME, content);
+
+    Mockito.verify(pageTypeRepository, Mockito.times(1)).getDefaultPageType();
+
+    assertEquals(1, comic.getPageCount());
+    assertNotNull(comic.getPage(0));
+    //        assertEquals(content, comic.getPage(0).getContent());
+    assertSame(pageType, comic.getPage(0).getPageType());
+  }
+
+  @Test
+  public void testLoadWebPImage() throws IOException {
+    Mockito.when(pageTypeRepository.getDefaultPageType()).thenReturn(pageType);
+
+    byte[] content = loadFile(TEST_WEBP_FILENAME);
+
+    loader.loadContent(comic, TEST_WEBP_FILENAME, content);
 
     Mockito.verify(pageTypeRepository, Mockito.times(1)).getDefaultPageType();
 
