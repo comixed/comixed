@@ -59,7 +59,7 @@ public class ComiXedImporterApp implements ApplicationRunner {
     }
 
     if (!args.containsOption(SOURCE_CMDLINE_ARG)) {
-      this.missingArgument("source");
+      this.missingArgument(SOURCE_CMDLINE_ARG);
     }
 
     String source = args.getOptionValues(SOURCE_CMDLINE_ARG).get(0);
