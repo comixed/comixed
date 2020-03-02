@@ -50,7 +50,9 @@ public class PageCacheService {
       } catch (Exception error) {
         this.logger.error("Failed to load cached image", error);
       } finally {
-        input.close();
+        if (input != null) {
+          input.close();
+        }
       }
 
       return result;
