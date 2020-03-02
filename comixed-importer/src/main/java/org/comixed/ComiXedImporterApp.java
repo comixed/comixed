@@ -58,17 +58,17 @@ public class ComiXedImporterApp implements ApplicationRunner {
       exit(1);
     }
 
-    if (!args.containsOption("source")) {
+    if (!args.containsOption(SOURCE_CMDLINE_ARG)) {
       this.missingArgument("source");
     }
 
     String source = args.getOptionValues(SOURCE_CMDLINE_ARG).get(0);
 
-    if (args.containsOption("replacements")) {
+    if (args.containsOption(REPLACEMENTS_CMDLINE_ARG)) {
       this.importFileProcessor.setReplacements(args.getOptionValues(REPLACEMENTS_CMDLINE_ARG));
     }
 
-    if (args.containsOption("user")) {
+    if (args.containsOption(USER_CMDLINE_ARG)) {
       this.importFileProcessor.setImportUser(args.getOptionValues(USER_CMDLINE_ARG).get(0));
     }
 

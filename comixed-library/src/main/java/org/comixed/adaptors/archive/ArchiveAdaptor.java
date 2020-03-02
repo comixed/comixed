@@ -18,6 +18,7 @@
 
 package org.comixed.adaptors.archive;
 
+import java.io.IOException;
 import java.util.Map;
 import org.comixed.model.library.Comic;
 
@@ -78,7 +79,7 @@ public interface ArchiveAdaptor {
    * @return the new comic
    * @throws ArchiveAdaptorException if an error occurs
    */
-  Comic saveComic(Comic comic, boolean renamePages) throws ArchiveAdaptorException;
+  Comic saveComic(Comic comic, boolean renamePages) throws ArchiveAdaptorException, IOException;
 
   /**
    * Encodes the provided comics into an encoded stream of data.
@@ -88,6 +89,8 @@ public interface ArchiveAdaptor {
    * @param entries the map of file entries
    * @return the encoded stream
    * @throws ArchiveAdaptorException if an error occurs
+   * @throws IOException if an error occurs
    */
-  byte[] encodeFileToStream(Map<String, byte[]> entries) throws ArchiveAdaptorException;
+  byte[] encodeFileToStream(Map<String, byte[]> entries)
+      throws ArchiveAdaptorException, IOException;
 }

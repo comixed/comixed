@@ -39,20 +39,21 @@ public class PageCacheService {
     this.logger.debug("Searching for cached image: hash={}", hash);
 
     final File file = this.getFileForHash(hash);
+    byte[] result = null;
     if (file.exists() && !file.isDirectory()) {
       this.logger.debug("Loading cached image content: {} bytes", file.length());
       FileInputStream input = null;
 
       try {
         input = new FileInputStream(file);
-        byte[] result = IOUtils.readFully(input, (int) file.length());
-        input.close();
-        return result;
+        result = IOUtils.readFully(input, (int) file.length());
       } catch (Exception error) {
         this.logger.error("Failed to load cached image", error);
       } finally {
-        if (input != null) input.close();
+        input.close();
       }
+
+      return result;
     }
 
     this.logger.debug("No image in cache");

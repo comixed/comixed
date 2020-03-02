@@ -20,6 +20,7 @@ package org.comixed.adaptors.archive;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import org.comixed.ComiXedTestContext;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
@@ -98,7 +99,7 @@ public class RarArchiveAdaptorTest {
   }
 
   @Test(expected = ArchiveAdaptorException.class)
-  public void testSaveComic() throws ArchiveAdaptorException {
+  public void testSaveComic() throws ArchiveAdaptorException, IOException {
     archiveAdaptor.saveComic(comic, false);
   }
 

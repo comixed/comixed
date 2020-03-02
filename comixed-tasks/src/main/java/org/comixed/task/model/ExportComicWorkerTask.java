@@ -18,6 +18,7 @@
 
 package org.comixed.task.model;
 
+import java.io.IOException;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandler;
@@ -72,7 +73,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask {
     try {
       Comic result = this.archiveAdaptor.saveComic(this.comic, this.renamePages);
       this.comicRepository.save(result);
-    } catch (ArchiveAdaptorException error) {
+    } catch (ArchiveAdaptorException | IOException error) {
       throw new WorkerTaskException("Unable to convert comic", error);
     }
   }

@@ -20,6 +20,7 @@ package org.comixed.adaptors.archive;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.compress.archivers.zip.ZipFile;
@@ -105,7 +106,7 @@ public class ZipArchiveAdaptorTest {
   }
 
   @Test
-  public void testSaveComic() throws ArchiveAdaptorException {
+  public void testSaveComic() throws ArchiveAdaptorException, IOException {
     // load an existing comic
     archiveAdaptor.loadComic(comic);
 
@@ -120,7 +121,7 @@ public class ZipArchiveAdaptorTest {
   }
 
   @Test
-  public void testSaveComicRenamePages() throws ArchiveAdaptorException {
+  public void testSaveComicRenamePages() throws ArchiveAdaptorException, IOException {
     // load an existing comic
     archiveAdaptor.loadComic(comic);
 
@@ -135,7 +136,7 @@ public class ZipArchiveAdaptorTest {
   }
 
   @Test
-  public void testSaveComicDeletePages() throws ArchiveAdaptorException {
+  public void testSaveComicDeletePages() throws ArchiveAdaptorException, IOException {
     // load an existing comic
     archiveAdaptor.loadComic(comic);
 
@@ -164,7 +165,7 @@ public class ZipArchiveAdaptorTest {
   }
 
   @Test
-  public void testEncodeFileToStream() throws ArchiveAdaptorException {
+  public void testEncodeFileToStream() throws ArchiveAdaptorException, IOException {
     Map<String, byte[]> content = new HashMap<String, byte[]>();
     content.put("file1", "This is file one".getBytes());
     content.put("file2", "This is file two".getBytes());
