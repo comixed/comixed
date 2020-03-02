@@ -18,40 +18,23 @@
 
 package org.comixed.model.user;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
+import org.comixed.model.library.Comic;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BookmarkTest {
 
-  private static final long BOOK_ID = 100;
-  private static final String MARK = "10";
+  private static final long TEST_COMIC_ID = 100;
+  private static final String TEST_BOOKMARK = "10";
 
-  private Bookmark bookmark;
-
-  @Before
-  public void setUp() {
-    ComiXedUser user = new ComiXedUser();
-    bookmark = new Bookmark(user, BOOK_ID, MARK);
-  }
-
-  @Test
-  public void testHasBook() {
-    assertEquals(BOOK_ID, bookmark.getBook());
-  }
-
-  @Test
-  public void testCanUpdateBook() {
-    long newBookId = 105;
-    bookmark.setBook(newBookId);
-    assertEquals(newBookId, bookmark.getBook());
-  }
-
-  @Test
-  public void testHasMark() {
-    assertEquals(MARK, bookmark.getMark());
-  }
+  @Mock private Comic comic;
+  @Mock private ComiXedUser user;
+  private Bookmark bookmark = new Bookmark(user, comic, TEST_BOOKMARK);
 
   @Test
   public void testCanUpdateMark() {
