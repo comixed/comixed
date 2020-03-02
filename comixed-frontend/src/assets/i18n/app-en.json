@@ -252,6 +252,32 @@
   "users-page": {
     "title": "ComiXed: Manager User Accounts"
   },
+  "comic-list": {
+    "label": {
+      "series": "Series",
+      "volume": "Volume",
+      "issue-number": "Issue #"
+    },
+    "text": {
+      "no-comics-to-scrape": "No comics to scrape..."
+    },
+    "popup": {
+      "open-comic": "Open comic...",
+      "select-all": "Select all",
+      "deselect-all": "Deselect all",
+      "scrape-comics": "Scrape comics...",
+      "delete-comics": "Delete comics...",
+      "reading-lists": "Reading lists"
+    },
+    "delete-comics": {
+      "header": "Delete {count} Comics",
+      "message": "Are you sure you want to delete these comics?"
+    },
+    "remove-from-reading-list": {
+      "header": "Remove From Reading List",
+      "message": "Are you sure you want to remove these comics from '{reading_list_name}?"
+    }
+  },
   "issue-details": {
     "label": {
       "description": "Description",

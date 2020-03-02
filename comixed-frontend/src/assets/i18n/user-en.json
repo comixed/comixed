@@ -22,12 +22,28 @@
       }
     }
   },
+  "account-page": {
+    "title": "ComiXed: {email}",
+    "label": {
+      "details": "Details",
+      "edit-details": "Edit Details",
+      "preferences": "Preferences"
+    },
+    "save-user": {
+      "header": "Update Your Account",
+      "message": "Are you sure you want to save these changes to your login account? You will need to log in again if your email address was changed."
+    }
+  },
+  "users-page": {
+    "title": "ComiXed: Manager User Accounts"
+  },
   "user-details-editor": {
     "user-form": {
       "email-required": "Email is required.",
       "email-invalid": "Email address is invalid.",
       "password-required": "Password is required",
-      "password-required-length": "Password must be at least {length} characters.",
+      "password-min-length": "Password must be at least {length} characters.",
+      "password-max-length": "Password must be no more than {length} characters.",
       "passwords-must-match": "Passwords must match."
     },
     "label": {

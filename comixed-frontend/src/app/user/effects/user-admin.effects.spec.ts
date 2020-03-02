@@ -16,13 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
-
-import { UserAdminEffects } from './user-admin.effects';
-import { UserAdminService } from 'app/user/services/user-admin.service';
-import { MessageService } from 'primeng/api';
 import { TranslateModule } from '@ngx-translate/core';
 import { USER_ADMIN, USER_READER } from 'app/user';
 import {
@@ -36,9 +32,14 @@ import {
   UserAdminSaved,
   UserAdminSaveFailed
 } from 'app/user/actions/user-admin.actions';
-import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { SaveUserDetails } from 'app/user/models/save-user-details';
+import { UserAdminService } from 'app/user/services/user-admin.service';
+import { hot } from 'jasmine-marbles';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MessageService } from 'primeng/api';
+import { Observable, of, throwError } from 'rxjs';
+
+import { UserAdminEffects } from './user-admin.effects';
 import objectContaining = jasmine.objectContaining;
 
 describe('UserAdminEffects', () => {
@@ -52,7 +53,7 @@ describe('UserAdminEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      imports: [LoggerTestingModule, TranslateModule.forRoot()],
       providers: [
         UserAdminEffects,
         provideMockActions(() => actions$),

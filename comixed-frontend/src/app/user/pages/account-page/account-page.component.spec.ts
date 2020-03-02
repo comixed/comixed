@@ -18,35 +18,58 @@
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { UserService } from 'app/services/user.service';
-import { AuthenticationAdaptor, TokenService } from 'app/user';
+import { AppState, AuthenticationAdaptor, TokenService } from 'app/user';
+import { AuthUserLoaded } from 'app/user/actions/authentication.actions';
+import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 import { AccountPreferencesComponent } from 'app/user/components/account-preferences/account-preferences.component';
+import { UserDetailsEditorComponent } from 'app/user/components/user-details-editor/user-details-editor.component';
 import { UserDetailsComponent } from 'app/user/components/user-details/user-details.component';
 import { AuthenticationEffects } from 'app/user/effects/authentication.effects';
-import { USER_READER } from 'app/user/models/user.fixtures';
+import { USER_ADMIN, USER_READER } from 'app/user/models/user.fixtures';
 import {
   AUTHENTICATION_FEATURE_KEY,
   reducer
 } from 'app/user/reducers/authentication.reducer';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { MessageService } from 'primeng/api';
+import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
+import {
+  ButtonModule,
+  InputSwitchModule,
+  PanelModule,
+  ToggleButtonModule
+} from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { AccountPageComponent } from './account-page.component';
+import objectContaining = jasmine.objectContaining;
 
 describe('AccountPageComponent', () => {
+  const USER = USER_READER;
+  const PASSWORD = 'this!is!a!password';
+
   let component: AccountPageComponent;
   let fixture: ComponentFixture<AccountPageComponent>;
-  let auth_adaptor: AuthenticationAdaptor;
+  let authenticationAdaptor: AuthenticationAdaptor;
+  let userAdminAdaptor: UserAdminAdaptor;
+  let confirmationService: ConfirmationService;
+  let store: Store<AppState>;
+  let breadcrumbAdaptor: BreadcrumbAdaptor;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
@@ -56,30 +79,89 @@ describe('AccountPageComponent', () => {
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([AuthenticationEffects]),
         TabViewModule,
-        TableModule
+        TableModule,
+        ToggleButtonModule,
+        ButtonModule,
+        PanelModule,
+        InputSwitchModule
       ],
       declarations: [
         AccountPageComponent,
         AccountPreferencesComponent,
-        UserDetailsComponent
+        UserDetailsComponent,
+        UserDetailsEditorComponent
       ],
       providers: [
         AuthenticationAdaptor,
+        UserAdminAdaptor,
         BreadcrumbAdaptor,
         MessageService,
         UserService,
-        TokenService
+        TokenService,
+        ConfirmationService
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AccountPageComponent);
     component = fixture.componentInstance;
-    auth_adaptor = TestBed.get(AuthenticationAdaptor);
-    component.user = USER_READER;
+    authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
+    userAdminAdaptor = TestBed.get(UserAdminAdaptor);
+    confirmationService = TestBed.get(ConfirmationService);
+    store = TestBed.get(Store);
+    store.dispatch(new AuthUserLoaded({ user: USER }));
+    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
+    spyOn(breadcrumbAdaptor, 'loadEntries');
+    translateService = TestBed.get(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the user changes', () => {
+    beforeEach(() => {
+      store.dispatch(new AuthUserLoaded({ user: USER_ADMIN }));
+    });
+
+    it('sets the user field', () => {
+      expect(component.user).toEqual(USER_ADMIN);
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('updates the breadcrumb trail', () => {
+      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
+    });
+  });
+
+  describe('saving the user', () => {
+    beforeEach(() => {
+      spyOn(userAdminAdaptor, 'saveUser');
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.accept()
+      );
+      component.saveUser({
+        id: USER.id,
+        email: USER.email,
+        isAdmin: true,
+        password: PASSWORD
+      });
+    });
+
+    it('uses the adaptor', () => {
+      expect(userAdminAdaptor.saveUser).toHaveBeenCalledWith(
+        objectContaining({
+          id: USER.id,
+          email: USER.email,
+          isAdmin: true,
+          password: PASSWORD
+        })
+      );
+    });
   });
 });

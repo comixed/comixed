@@ -38,7 +38,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PanelModule } from 'primeng/panel';
-import { ToolbarModule } from 'primeng/primeng';
+import { InputSwitchModule, ToolbarModule } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
@@ -68,7 +68,8 @@ describe('UsersPageComponent', () => {
         ConfirmDialogModule,
         TooltipModule,
         ToggleButtonModule,
-        ToolbarModule
+        ToolbarModule,
+        InputSwitchModule
       ],
       declarations: [UsersPageComponent, UserDetailsEditorComponent],
       providers: [

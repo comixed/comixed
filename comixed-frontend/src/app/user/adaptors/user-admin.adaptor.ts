@@ -17,12 +17,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { AppState, User } from 'app/user';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import * as _ from 'lodash';
-import { USER_ADMIN_FEATURE_KEY } from 'app/user/reducers/user-admin.reducer';
-import { filter } from 'rxjs/operators';
+import { AppState, User } from 'app/user';
 import {
   UserAdminClearCurrent,
   UserAdminCreateNew,
@@ -32,6 +28,11 @@ import {
   UserAdminSetCurrent
 } from 'app/user/actions/user-admin.actions';
 import { SaveUserDetails } from 'app/user/models/save-user-details';
+import { USER_ADMIN_FEATURE_KEY } from 'app/user/reducers/user-admin.reducer';
+import * as _ from 'lodash';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Injectable()
 export class UserAdminAdaptor {
@@ -42,11 +43,12 @@ export class UserAdminAdaptor {
   private _saved$ = new BehaviorSubject<boolean>(false);
   private _deleting$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<AppState>) {
+  constructor(private logger: NGXLogger, private store: Store<AppState>) {
     this.store
       .select(USER_ADMIN_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe(state => {
+        this.logger.debug('user admin state updated:', state);
         if (!_.isEqual(state.users, this._user$.getValue())) {
           this._user$.next(state.users);
         }
@@ -69,6 +71,7 @@ export class UserAdminAdaptor {
   }
 
   getAllUsers() {
+    this.logger.debug('action: get all users');
     this.store.dispatch(new UserAdminGetAll());
   }
 
@@ -81,10 +84,12 @@ export class UserAdminAdaptor {
   }
 
   createNewUser(): void {
+    this.logger.debug('action: create new user');
     this.store.dispatch(new UserAdminCreateNew());
   }
 
   saveUser(details: SaveUserDetails): void {
+    this.logger.debug('action: saving user:', details);
     this.store.dispatch(new UserAdminSave({ details: details }));
   }
 
@@ -101,14 +106,17 @@ export class UserAdminAdaptor {
   }
 
   setCurrent(user: User): void {
+    this.logger.debug('action: set current user:', user);
     this.store.dispatch(new UserAdminSetCurrent({ user: user }));
   }
 
   clearCurrent(): void {
+    this.logger.debug('action: clear current user');
     this.store.dispatch(new UserAdminClearCurrent());
   }
 
   deleteUser(user: User): void {
+    this.logger.debug('action: delete user:', user);
     this.store.dispatch(new UserAdminDeleteUser({ user: user }));
   }
 
