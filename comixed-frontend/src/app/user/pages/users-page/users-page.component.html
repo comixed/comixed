@@ -1,16 +1,16 @@
 <p-toolbar>
-    <div class='ui-toolbar-group-left'>
-        <button *ngIf='isAdmin'
-                pButton
-                type='button'
-                [style]='{ float: "right" }'
-                label='{{"admin.users.button.new-user"|translate}}'
-                icon='fa fa-fw fa-user-plus'
-                (click)='setNewUser()'></button>
-    </div>
-    <div class='ui-toolbar-group-right'>
+  <div class='ui-toolbar-group-left'>
+    <button *ngIf='isAdmin'
+            pButton
+            type='button'
+            [style]='{ float: "right" }'
+            label='{{"admin.users.button.new-user"|translate}}'
+            icon='fa fa-fw fa-user-plus'
+            (click)='setNewUser()'></button>
+  </div>
+  <div class='ui-toolbar-group-right'>
 
-    </div>
+  </div>
 </p-toolbar>
 
 <div *ngIf='current'
@@ -31,33 +31,31 @@
          selectionMode='single'
          (onRowSelect)='setCurrentUser($event.data)'
          (onRowUnselect)='setCurrentUser(null)'>
-    <ng-template pTemplate='header'>
-        <tr>
-            <th></th>
-            <th>{{'admin.users.label.email'|translate}}</th>
-            <th>{{'admin.users.label.roles'|translate}}</th>
-            <th>{{'admin.users.label.member-since'|translate}}</th>
-            <th>{{'admin.users.label.last-logged-on'|translate}}</th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate='body'
-                 let-user>
-        <tr [pSelectableRow]='user'>
-            <td>
-                <button pButton
-                        type='button'
-                        icon='fa fa-fw fa-user-times'
-                        pTooltip='{{(user.id === loggedInUser.id ? "users-page.text.cant-delete-yourself" : "users-page.text.delete-user")|translate}}'
-                        (click)='deleteUser(user)'></button>
-            </td>
-            <td>{{user.email}}</td>
-            <td>
-                <span *ngFor='let role of user.roles'>[{{role.name}}]</span>
-            </td>
-            <td>{{user.first_login_date|date: 'medium'}}</td>
-            <td>{{user.last_login_date|date: 'medium'}}</td>
-            <td></td>
-        </tr>
-    </ng-template>
+  <ng-template pTemplate='header'>
+    <tr>
+      <th id='user-list-action'></th>
+      <th id='user-list-email'>{{'admin.users.label.email'|translate}}</th>
+      <th id='user-list-roles'>{{'admin.users.label.roles'|translate}}</th>
+      <th id='user-list-member-since'>{{'admin.users.label.member-since'|translate}}</th>
+      <th id='user-list-last-logged-in'>{{'admin.users.label.last-logged-on'|translate}}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate='body'
+               let-user>
+    <tr [pSelectableRow]='user'>
+      <td>
+        <button pButton
+                type='button'
+                icon='fa fa-fw fa-user-times'
+                pTooltip='{{(user.id === loggedInUser.id ? "users-page.text.cant-delete-yourself" : "users-page.text.delete-user")|translate}}'
+                (click)='deleteUser(user)'></button>
+      </td>
+      <td>{{user.email}}</td>
+      <td>
+        <span *ngFor='let role of user.roles'>[{{role.name}}]</span>
+      </td>
+      <td>{{user.first_login_date|date: 'medium'}}</td>
+      <td>{{user.last_login_date|date: 'medium'}}</td>
+    </tr>
+  </ng-template>
 </p-table>

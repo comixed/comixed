@@ -104,6 +104,7 @@ public class LibraryController {
           Thread.sleep(1000L);
         } catch (InterruptedException error) {
           this.log.error("error while waiting for updates", error);
+          Thread.currentThread().interrupt();
         }
       }
     }

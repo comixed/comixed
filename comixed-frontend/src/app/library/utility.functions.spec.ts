@@ -38,20 +38,20 @@ describe('Utility Functions', () => {
 
     it('merges non-overlapping sets', () => {
       expect(
-        mergeComics(NO_OVERLAP, UPDATE).sort(
+        [...mergeComics(NO_OVERLAP, UPDATE)].sort(
           (left, right) => left.id - right.id
         )
       ).toEqual(
-        NO_OVERLAP.concat(UPDATE).sort((left, right) => left.id - right.id)
+        [...NO_OVERLAP.concat(UPDATE)].sort((left, right) => left.id - right.id)
       );
     });
 
     it('merges overlapping sets', () => {
       expect(
-        mergeComics(SOME_OVERLAP, UPDATE).sort(
+        [...mergeComics(SOME_OVERLAP, UPDATE)].sort(
           (left, right) => left.id - right.id
         )
-      ).toEqual(OVERLAP_UPDATED.sort((left, right) => left.id - right.id));
+      ).toEqual([...OVERLAP_UPDATED].sort((left, right) => left.id - right.id));
     });
   });
 

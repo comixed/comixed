@@ -25,6 +25,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.comixed.adaptors.ComicDataAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandlerException;
@@ -37,7 +38,6 @@ import org.comixed.net.GetLibraryUpdatesRequest;
 import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ComicFormatRepository;
-import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.repositories.library.ScanTypeRepository;
 import org.comixed.service.file.FileService;
@@ -70,7 +70,6 @@ public class ComicController {
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileService fileService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
-  @Autowired private ComicRepository comicRepository;
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private LastReadDatesRepository lastReadRepository;
   @Autowired private ScanTypeRepository scanTypeRepository;
@@ -89,16 +88,16 @@ public class ComicController {
 
   @RequestMapping(value = "/{id}/metadata", method = RequestMethod.DELETE)
   @JsonView(ComicDetails.class)
-  public Comic deleteMetadata(@PathVariable("id") long id) {
+  public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
     this.logger.debug("Updating comic: id={}", id);
 
-    Comic comic = this.comicRepository.findById(id).get();
+    Comic comic = this.comicService.getComic(id);
 
     if (comic != null) {
       this.logger.debug("Clearing metadata for comic");
       this.comicDataAdaptor.clear(comic);
       this.logger.debug("Saving updates to comic");
-      this.comicRepository.save(comic);
+      this.comicService.save(comic);
       ComicController.stopWaitingForStatus();
     } else {
       this.logger.debug("No such comic found");
@@ -263,17 +262,17 @@ public class ComicController {
   }
 
   @RequestMapping(value = "/{id}/format", method = RequestMethod.PUT)
-  public void setFormat(
-      @PathVariable("id") long comicId, @RequestParam("format_id") long formatId) {
+  public void setFormat(@PathVariable("id") long comicId, @RequestParam("format_id") long formatId)
+      throws ComicException {
     this.logger.debug("Setting format: comicId={} formatId={}", comicId, formatId);
 
-    Comic comic = this.comicRepository.findById(comicId).get();
-    ComicFormat format = this.comicFormatRepository.findById(formatId).get();
+    Comic comic = this.comicService.getComic(comicId);
+    Optional<ComicFormat> formatRecord = this.comicFormatRepository.findById(formatId);
 
-    if (comic != null) {
-      comic.setFormat(format);
+    if (comic != null && formatRecord.isPresent()) {
+      comic.setFormat(formatRecord.get());
       this.logger.debug("Saving update to comic");
-      this.comicRepository.save(comic);
+      this.comicService.save(comic);
     } else {
       this.logger.debug("No such comic found");
     }
@@ -281,16 +280,17 @@ public class ComicController {
 
   @RequestMapping(value = "/{id}/scan_type", method = RequestMethod.PUT)
   public void setScanType(
-      @PathVariable("id") long comicId, @RequestParam("scan_type_id") long scanTypeId) {
+      @PathVariable("id") long comicId, @RequestParam("scan_type_id") long scanTypeId)
+      throws ComicException {
     this.logger.debug("Setting scan type: comicId={} scanTypeId={}", comicId, scanTypeId);
 
-    Comic comic = this.comicRepository.findById(comicId).get();
-    ScanType scanType = this.scanTypeRepository.findById(scanTypeId).get();
+    Comic comic = this.comicService.getComic(comicId);
+    Optional<ScanType> scanTypeRecord = this.scanTypeRepository.findById(scanTypeId);
 
-    if (comic != null) {
-      comic.setScanType(scanType);
+    if (comic != null && scanTypeRecord.isPresent()) {
+      comic.setScanType(scanTypeRecord.get());
       this.logger.debug("Saving update to comic");
-      this.comicRepository.save(comic);
+      this.comicService.save(comic);
     } else {
       this.logger.debug("No such comic found");
     }
@@ -298,15 +298,16 @@ public class ComicController {
 
   @RequestMapping(value = "/{id}/sort_name", method = RequestMethod.PUT)
   public void setSortName(
-      @PathVariable("id") long comicId, @RequestParam("sort_name") String sortName) {
+      @PathVariable("id") long comicId, @RequestParam("sort_name") String sortName)
+      throws ComicException {
     this.logger.debug("Setting sort name: comicId={} sortName={}", comicId, sortName);
 
-    Comic comic = this.comicRepository.findById(comicId).get();
+    Comic comic = this.comicService.getComic(comicId);
 
     if (comic != null) {
       comic.setSortName(sortName);
       this.logger.debug("Saving update to comic");
-      this.comicRepository.save(comic);
+      this.comicService.save(comic);
     } else {
       this.logger.debug("No such comic found");
     }

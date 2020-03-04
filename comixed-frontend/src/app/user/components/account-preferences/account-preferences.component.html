@@ -1,11 +1,13 @@
-<p-table [value]="user.preferences" [sortField]="'name'">
+<p-table [value]="user.preferences"
+         [sortField]="'name'">
   <ng-template pTemplate="header">
     <tr>
-      <th>{{ 'account-preferences.label.preference-name' | translate }}</th>
-      <th>{{ 'account-preferences.label.preference-value' | translate }}</th>
+      <th id='user-preference-name'>{{ 'account-preferences.label.preference-name' | translate }}</th>
+      <th id='user-preference'>{{ 'account-preferences.label.preference-value' | translate }}</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-preference>
+  <ng-template pTemplate="body"
+               let-preference>
     <tr>
       <td>{{ preference.name }}</td>
       <td>{{ preference.value }}</td>

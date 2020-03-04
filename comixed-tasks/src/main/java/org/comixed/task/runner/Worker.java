@@ -84,6 +84,7 @@ public class Worker implements Runnable, InitializingBean {
 
     } catch (InterruptedException error) {
       this.logger.error("Unable to queue task", error);
+      Thread.currentThread().interrupt();
     }
     this.logger.debug("Queue size is now {}", this.queue.size());
     this.wakeUpWorker();
@@ -151,6 +152,7 @@ public class Worker implements Runnable, InitializingBean {
             }
           } catch (InterruptedException cause) {
             this.logger.error("Worker interrupted", cause);
+            Thread.currentThread().interrupt();
           }
         }
         if (!this.queue.isEmpty() && (this.state != State.STOP)) {
