@@ -79,7 +79,7 @@ describe('Selection Reducer', () => {
           comics: [COMIC_1, COMIC_2, COMIC_3]
         })
       );
-      expect(state.comics.sort((c1, c2) => c1.id - c2.id)).toEqual(
+      expect([...state.comics].sort((c1, c2) => c1.id - c2.id)).toEqual(
         [COMIC_1, COMIC_3, COMIC_5, COMIC_2].sort((c1, c2) => c1.id - c2.id)
       );
     });

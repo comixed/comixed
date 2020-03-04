@@ -2,7 +2,8 @@
 <div class='ui-g'>
     <div class='ui-g-3'>
         <p-card *ngIf='currentComic'>
-            <img [src]='currentComic|comicCoverUrl'
+            <img alt='comic cover'
+                 [src]='currentComic|comicCoverUrl'
                  width='100%'
                  height='auto'/>
         </p-card>

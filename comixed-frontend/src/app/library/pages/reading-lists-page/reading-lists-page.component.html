@@ -2,11 +2,10 @@
   <div class="ui-g-12">
     <h2>{{ 'reading-lists-page.title' | translate }}</h2>
     <div class="cx-right-align-container">
-      <button
-        pButton
-        type="button"
-        [label]="'reading-lists-page.button.new-reading-list' | translate"
-        (click)="create_new_reading_list()"
+      <button pButton
+              type="button"
+              [label]="'reading-lists-page.button.new-reading-list' | translate"
+              (click)="create_new_reading_list()"
       ></button>
     </div>
   </div>
@@ -14,14 +13,13 @@
     <p-table [value]="readingLists">
       <ng-template pTemplate="header">
         <tr>
-          <th>{{ 'reading-lists-page.table.headers.name' | translate }}</th>
-          <th>{{ 'reading-lists-page.table.headers.summary' | translate }}</th>
-          <th>
-            {{ 'reading-lists-page.table.headers.comic-count' | translate }}
-          </th>
+          <th id='reading-list-name'>{{ 'reading-lists-page.table.headers.name' | translate }}</th>
+          <th id='reading-list-summary'>{{ 'reading-lists-page.table.headers.summary' | translate }}</th>
+          <th id='reading-list-comic-count'>{{ 'reading-lists-page.table.headers.comic-count' | translate }}</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-list>
+      <ng-template pTemplate="body"
+                   let-list>
         <tr>
           <td>
             <a [routerLink]="['/lists', list.id]">{{ list.name }}</a>

@@ -125,7 +125,7 @@ public class ReadingListService {
     if (readingList.isPresent()) {
       final ComiXedUser owner = readingList.get().getOwner();
 
-      if (owner.getId() == user.getId()) {
+      if (owner.getId().equals(user.getId())) {
         return readingList.get();
       }
 

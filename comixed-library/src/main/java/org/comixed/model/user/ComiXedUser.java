@@ -164,7 +164,11 @@ public class ComiXedUser {
   }
 
   public void deleteProperty(final String name) {
-    this.preferences.remove(name);
+    for (int index = 0; index < this.preferences.size(); index++) {
+      if (this.preferences.get(index).getName().equals(name)) {
+        this.preferences.remove(index);
+      }
+    }
   }
 
   public List<Bookmark> getBookmarks() {

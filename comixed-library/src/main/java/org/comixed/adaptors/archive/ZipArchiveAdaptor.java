@@ -135,7 +135,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
 
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
-      throws ArchiveAdaptorException {
+      throws ArchiveAdaptorException, IOException {
     logger.debug("Creating temporary file: " + filename);
 
     ZipArchiveOutputStream zoutput = null;
@@ -171,11 +171,13 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
         zoutput.write(page.getContent());
         zoutput.closeArchiveEntry();
       }
-
-      zoutput.finish();
-      zoutput.close();
     } catch (IOException | ArchiveException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);
+    } finally {
+      if (zoutput != null) {
+        zoutput.finish();
+        zoutput.close();
+      }
     }
   }
 
