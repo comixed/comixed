@@ -38,8 +38,8 @@
             </goals>
             <phase>initialize</phase>
             <configuration>
-              <nodeVersion>v10.15.3</nodeVersion>
-              <yarnVersion>v1.13.0</yarnVersion>
+              <nodeVersion>v10.16.3</nodeVersion>
+              <yarnVersion>v1.17.3</yarnVersion>
             </configuration>
           </execution>
           <execution>
