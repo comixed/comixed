@@ -30,11 +30,11 @@ import {
 import * as fromRouter from '@ngrx/router-store';
 import * as fromAuth from './reducers/authentication.reducer';
 import * as fromUserAdmin from './reducers/user-admin.reducer';
+import { UserAdminState } from './reducers/user-admin.reducer';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { Params } from '@angular/router';
 import { AuthenticationState } from './models/authentication-state';
-import { UserAdminState } from './reducers/user-admin.reducer';
 
 export { User } from './models/user';
 export { Role } from './models/role';
@@ -63,16 +63,16 @@ interface RouterStateUrl {
 
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
-  user: AuthenticationState;
-  userAdmin: UserAdminState;
+  auth_state: AuthenticationState;
+  user_admin_state: UserAdminState;
 }
 
 export type State = AppState;
 
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
-  user: fromAuth.reducer,
-  userAdmin: fromUserAdmin.reducer
+  auth_state: fromAuth.reducer,
+  user_admin_state: fromUserAdmin.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
