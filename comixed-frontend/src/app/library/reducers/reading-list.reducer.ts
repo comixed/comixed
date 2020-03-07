@@ -40,7 +40,7 @@ export const initial_state: ReadingListState = {
   saving_reading_list_failed: false
 };
 
-export const READING_LIST_FEATURE_KEY = 'readingList';
+export const READING_LIST_FEATURE_KEY = 'reading_list_state';
 
 export function reducer(
   state = initial_state,

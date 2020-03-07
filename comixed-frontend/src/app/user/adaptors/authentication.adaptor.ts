@@ -18,9 +18,8 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
 import { Roles } from 'app/models/ui/roles';
-import { User } from 'app/user';
+import { AppState, User } from 'app/user';
 import {
   AuthCheckState,
   AuthHideLogin,
@@ -32,6 +31,7 @@ import {
 import { AuthenticationState } from 'app/user/models/authentication-state';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { AUTHENTICATION_FEATURE_KEY } from 'app/user/reducers/authentication.reducer';
 
 @Injectable()
 export class AuthenticationAdaptor {
@@ -47,7 +47,7 @@ export class AuthenticationAdaptor {
 
   constructor(private store: Store<AppState>) {
     this.store
-      .select('auth_state')
+      .select(AUTHENTICATION_FEATURE_KEY)
       .pipe(filter(state => !!state))
       .subscribe((auth_state: AuthenticationState) => {
         this._initialized$.next(auth_state.initialized);

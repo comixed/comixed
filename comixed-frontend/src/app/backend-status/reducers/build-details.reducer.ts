@@ -22,7 +22,7 @@ import {
 } from '../actions/build-details.actions';
 import { BuildDetails } from 'app/backend-status/models/build-details';
 
-export const BUILD_DETAILS_FEATURE_KEY = 'buildDetails';
+export const BUILD_DETAILS_FEATURE_KEY = 'build_details';
 
 export interface BuildDetailsState {
   fetching_details: boolean;
