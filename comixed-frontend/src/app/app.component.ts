@@ -32,7 +32,7 @@ import { NGXLogger } from 'ngx-logger';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  @ViewChild(MainMenuComponent)
+  @ViewChild(MainMenuComponent, { static: false })
   mainmenu: MainMenuComponent;
 
   title = 'ComiXed';

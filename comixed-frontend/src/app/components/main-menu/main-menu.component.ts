@@ -29,7 +29,7 @@ import { NGXLogger, NgxLoggerLevel } from 'ngx-logger';
   styleUrls: ['./main-menu.component.scss']
 })
 export class MainMenuComponent implements OnInit {
-  @ViewChild(TieredMenu)
+  @ViewChild(TieredMenu, { static: false })
   menu: TieredMenu;
 
   items: MenuItem[];
