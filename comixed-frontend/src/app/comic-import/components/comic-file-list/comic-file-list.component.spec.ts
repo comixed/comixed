@@ -57,7 +57,6 @@ import {
   CardModule,
   CheckboxModule,
   ConfirmationService,
-  ContextMenu,
   ContextMenuModule,
   DropdownModule,
   MessageService,
@@ -82,7 +81,6 @@ describe('ComicFileListComponent', () => {
   let fixture: ComponentFixture<ComicFileListComponent>;
   let comicImportAdaptor: ComicImportAdaptor;
   let contextMenuAdaptor: ContextMenuAdaptor;
-  let contextMenu: ContextMenu;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
@@ -135,7 +133,6 @@ describe('ComicFileListComponent', () => {
     component = fixture.componentInstance;
     comicImportAdaptor = TestBed.get(ComicImportAdaptor);
     contextMenuAdaptor = TestBed.get(ContextMenuAdaptor);
-    contextMenu = component.contextMenu;
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
 
@@ -213,12 +210,12 @@ describe('ComicFileListComponent', () => {
     const MOUSE_EVENT = new MouseEvent('mousedown');
 
     beforeEach(() => {
-      spyOn(contextMenu, 'show');
+      spyOn(component.contextMenu, 'show');
       store.dispatch(new ContextMenuShow({ event: MOUSE_EVENT }));
     });
 
     it('notifies the context menu', () => {
-      expect(contextMenu.show).toHaveBeenCalledWith(MOUSE_EVENT);
+      expect(component.contextMenu.show).toHaveBeenCalledWith(MOUSE_EVENT);
     });
   });
 
