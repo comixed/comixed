@@ -283,13 +283,17 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
   @Override
   public String getFirstImageFileName(String filename) throws ArchiveAdaptorException {
-    I archiveRef = this.openArchive(new File(filename));
+    I archiveRef = null;
 
+    // get the list of entries
+    archiveRef = this.openArchive(new File(filename));
     List<String> entries = this.getEntryFilenames(archiveRef);
     Collections.sort(entries);
     String result = null;
+    this.closeArchive(archiveRef);
 
     for (String entry : entries) {
+      archiveRef = this.openArchive(new File(filename));
       byte[] content = this.loadSingleFileInternal(archiveRef, entry);
       String contentType = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
 
