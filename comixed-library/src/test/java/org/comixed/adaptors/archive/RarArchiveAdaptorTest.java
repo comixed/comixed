@@ -113,6 +113,6 @@ public class RarArchiveAdaptorTest {
 
   @Test
   public void testGetFirstImageFileName() throws ArchiveAdaptorException {
-    assertEquals(TEST_FILE_ENTRY_1, archiveAdaptor.getFirstImageFileName(TEST_CBR_FILE));
+    assertEquals(TEST_FILE_ENTRY_0, archiveAdaptor.getFirstImageFileName(TEST_CBR_FILE));
   }
 }

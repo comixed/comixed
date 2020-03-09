@@ -59,10 +59,11 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
   @Autowired protected FileTypeIdentifier fileTypeIdentifier;
   @Autowired protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
-  protected List<EntryLoaderForType> loaders = new ArrayList<>();
-  protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
   @Autowired private ApplicationContext context;
   @Autowired private ComicFileHandler comicFileHandler;
+
+  protected List<EntryLoaderForType> loaders = new ArrayList<>();
+  protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
   private String defaultExtension;
 
   public AbstractArchiveAdaptor(String defaultExtension) {
@@ -285,8 +286,8 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   public String getFirstImageFileName(String filename) throws ArchiveAdaptorException {
     I archiveRef = this.openArchive(new File(filename));
 
+    // get the list of entries
     List<String> entries = this.getEntryFilenames(archiveRef);
-    Collections.sort(entries);
     String result = null;
 
     for (String entry : entries) {
