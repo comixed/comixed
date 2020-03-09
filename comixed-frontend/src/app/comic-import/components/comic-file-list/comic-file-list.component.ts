@@ -43,7 +43,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   @Input() busy: boolean;
   @Input() directory: string;
 
-  @ViewChild('contextMenu') contextMenu: ContextMenu;
+  @ViewChild('contextMenu', { static: false }) contextMenu: ContextMenu;
 
   _comicFiles: Array<ComicFile> = [];
   _selectedComicFiles: Array<ComicFile> = [];

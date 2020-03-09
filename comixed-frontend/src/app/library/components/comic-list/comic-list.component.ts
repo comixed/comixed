@@ -67,7 +67,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
   @Input() showSelections: boolean;
   @Output() loadPage = new EventEmitter<LoadPageEvent>();
 
-  @ViewChild('contextMenu') contextMenu: ContextMenu;
+  @ViewChild('contextMenu', { static: false }) contextMenu: ContextMenu;
 
   activatedRouteSubscription: Subscription;
   contextMenuItemsSubscription: Subscription;
