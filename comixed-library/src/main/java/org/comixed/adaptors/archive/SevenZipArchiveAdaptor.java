@@ -128,6 +128,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
   protected byte[] loadSingleFileInternal(SevenZFile archiveReference, String entryName)
       throws ArchiveAdaptorException {
     byte[] result = null;
+
     try {
       boolean done = false;
       SevenZArchiveEntry entry = archiveReference.getNextEntry();
