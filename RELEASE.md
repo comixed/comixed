@@ -1,5 +1,12 @@
 # Release notes.
 
+### 2020-03-09: Release 0.5.1-1
+  #174  [Issue #173] Fix loading the first image from a 7zip encoded archive.
+  #173  Unable to open a file archived with 7zip.
+  #171  Fix the frontend state references
+  #167  Issue #166: Remove uniqueness constraint from book in bookmarks table.
+  #166  Importer fails on second bookmark
+
 ### 2020-01-27: Release 0.5.0-0.1
   #136  Feature/issue 133
   #133  Redirect the user to the home page when their session expires 

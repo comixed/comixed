@@ -17,13 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Build project
-        run: mvn package -Pci -DskipTests -Dassembly-name=RC1
+        run: mvn package -Pci -DskipTests -Dassembly-name=RELEASE
       - name: Upload release artifact
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body_path: RELEASE.md
           files: |
-            comixed-app/target/artifacts/comixed-app-0.5.0-0.1-RC1.zip
+            comixed-app/target/artifacts/comixed-app-0.5.1-1-RELEASE.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
