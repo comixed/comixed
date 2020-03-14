@@ -125,6 +125,7 @@ public class ComicService {
       final Comic comic = record.get();
       this.logger.debug("Updating the comic fields");
 
+      comic.setPublisher(update.getPublisher());
       comic.setSeries(update.getSeries());
       comic.setVolume(update.getVolume());
       comic.setIssueNumber(update.getIssueNumber());

@@ -57,6 +57,7 @@ public class ComicServiceTest {
   private static final long TEST_TIMESTAMP = System.currentTimeMillis();
   private static final long TEST_COMIC_ID = 5;
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
+  private static final String TEST_PUBLISHER = "Awesome Publications";
   private static final String TEST_SERIES = "Series Name";
   private static final String TEST_VOLUME = "Volume Name";
   private static final String TEST_ISSUE_NUMBER = "237";
@@ -289,18 +290,13 @@ public class ComicServiceTest {
   @Test
   public void testUpdateComic() {
     Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
+    Mockito.when(incomingComic.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(incomingComic.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
     Mockito.when(incomingComic.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
     Mockito.when(incomingComic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
     Mockito.when(incomingComic.getSortName()).thenReturn(TEST_SORTABLE_NAME);
-    Mockito.doNothing().when(comic).setSortName(Mockito.anyString());
     Mockito.when(incomingComic.getScanType()).thenReturn(TEST_SCAN_TYPE);
-    Mockito.doNothing().when(comic).setScanType(Mockito.any(ScanType.class));
     Mockito.when(incomingComic.getFormat()).thenReturn(TEST_COMIC_FORMAT);
-    Mockito.doNothing().when(comic).setFormat(Mockito.any(ComicFormat.class));
     Mockito.doNothing().when(comic).setDateLastUpdated(lastUpdatedDateCaptor.capture());
     Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
 
@@ -310,17 +306,12 @@ public class ComicServiceTest {
     assertSame(comic, result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
-    Mockito.verify(incomingComic, Mockito.times(1)).getSeries();
+    Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
     Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(incomingComic, Mockito.times(1)).getVolume();
     Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(incomingComic, Mockito.times(1)).getIssueNumber();
     Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(incomingComic, Mockito.times(1)).getSortName();
     Mockito.verify(comic, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
-    Mockito.verify(incomingComic, Mockito.times(1)).getScanType();
     Mockito.verify(comic, Mockito.times(1)).setScanType(TEST_SCAN_TYPE);
-    Mockito.verify(incomingComic, Mockito.times(1)).getFormat();
     Mockito.verify(comic, Mockito.times(1)).setFormat(TEST_COMIC_FORMAT);
     Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(lastUpdatedDateCaptor.getValue());
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
