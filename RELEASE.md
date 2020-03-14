@@ -1,5 +1,8 @@
 # Release notes.
 
+### 2020-03-13: Release 0.5.2-1
+  #178  Unable to import from root of drive.
+
 ### 2020-03-09: Release 0.5.1-1
   #174  [Issue #173] Fix loading the first image from a 7zip encoded archive.
   #173  Unable to open a file archived with 7zip.
