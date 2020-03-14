@@ -57,7 +57,7 @@ public class FileControllerTest {
   @Mock private List<FileDetails> fileDetailsList;
 
   @Test
-  public void testGetImportFileCover() throws ComicFileHandlerException, ArchiveAdaptorException {
+  public void testGetImportFileCover() throws ArchiveAdaptorException, ComicFileHandlerException {
     Mockito.when(fileService.getImportFileCover(Mockito.anyString())).thenReturn(IMAGE_CONTENT);
 
     final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
