@@ -99,22 +99,24 @@ public class FileService {
   private void loadFilesUnder(final List<FileDetails> files, final File directory)
       throws IOException {
     this.logger.debug("Loading files in directory: {}", directory);
-    for (File file : directory.listFiles()) {
-      if (file.isDirectory()) {
-        this.loadFilesUnder(files, file);
-      } else {
-        if (ComicFileUtils.isComicFile(file)) {
-          final String filePath = file.getCanonicalPath();
-          final long fileSize = file.length();
+    if (directory.listFiles() != null) {
+      for (File file : directory.listFiles()) {
+        if (file.isDirectory()) {
+          this.loadFilesUnder(files, file);
+        } else {
+          if (ComicFileUtils.isComicFile(file)) {
+            final String filePath = file.getCanonicalPath();
+            final long fileSize = file.length();
 
-          final Comic comic = this.comicRepository.findByFilename(filePath);
+            final Comic comic = this.comicRepository.findByFilename(filePath);
 
-          if (comic != null) {
-            this.logger.debug("File already in the library: id={}", comic.getId());
-          } else {
-            this.logger.debug("Adding file: {} ({} bytes)", filePath, fileSize);
+            if (comic != null) {
+              this.logger.debug("File already in the library: id={}", comic.getId());
+            } else {
+              this.logger.debug("Adding file: {} ({} bytes)", filePath, fileSize);
 
-            files.add(new FileDetails(filePath, fileSize));
+              files.add(new FileDetails(filePath, fileSize));
+            }
           }
         }
       }
