@@ -28,6 +28,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.imageio.ImageIO;
 import javax.persistence.*;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.views.View.ComicList;
@@ -183,9 +184,18 @@ public class Page {
         return this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
       }
     } catch (ArchiveAdaptorException error) {
-      this.logger.warn(
+      this.logger.error(
           "failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(), error);
     }
+
+    // if we're here then return the missing page image since we didn't load the one we wanted
+    try {
+      return IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing.png"));
+    } catch (IOException error) {
+      this.logger.error("failed to load missing page image", error);
+    }
+
+    // if we're here, we have nothing to return
     return null;
   }
 

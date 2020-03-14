@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import org.apache.commons.io.IOUtils;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.controller.library.ComicController;
 import org.comixed.handlers.ComicFileHandlerException;
@@ -89,15 +90,30 @@ public class FileController {
   }
 
   @RequestMapping(value = "/import/cover", method = RequestMethod.GET)
-  public byte[] getImportFileCover(@RequestParam("filename") String filename)
-      throws ComicFileHandlerException, ArchiveAdaptorException {
+  public byte[] getImportFileCover(@RequestParam("filename") String filename) {
     // for some reason, during development, this value ALWAYS had a trailing
     // space...
     filename = filename.trim();
 
     this.logger.info("Getting cover image for archive: filename={}", filename);
 
-    return this.fileService.getImportFileCover(filename);
+    byte[] result = null;
+
+    try {
+      result = this.fileService.getImportFileCover(filename);
+    } catch (ComicFileHandlerException | ArchiveAdaptorException error) {
+      this.logger.error("Failed to load cover from import file", error);
+    }
+
+    if (result == null) {
+      try {
+        result = IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing.png"));
+      } catch (IOException error) {
+        this.logger.error("Failed to load the missing page image", error);
+      }
+    }
+
+    return result;
   }
 
   @RequestMapping(value = "/import/status", method = RequestMethod.GET)
