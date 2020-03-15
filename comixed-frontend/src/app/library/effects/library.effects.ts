@@ -30,6 +30,9 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   LibraryActionTypes,
+  LibraryComicsConverting,
+  LibraryConvertComics,
+  LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
   LibraryGetUpdates,
@@ -198,6 +201,49 @@ export class LibraryEffects {
         )
       });
       return of(new LibraryDeleteMultipleComicsFailed());
+    })
+  );
+
+  @Effect()
+  convertComics$: Observable<Action> = this.actions$.pipe(
+    ofType(LibraryActionTypes.ConvertComics),
+    map((action: LibraryConvertComics) => action.payload),
+    tap(action => this.logger.debug('effect: convert comics:', action)),
+    switchMap(action =>
+      this.libraryService
+        .convertComics(action.comics, action.archiveType, action.renamePages)
+        .pipe(
+          tap(response => this.logger.debug('received response:', response)),
+          tap(() =>
+            this.messageService.add({
+              severity: 'info',
+              detail: this.translateService.instant(
+                'library-effects.convert-comics.success.detail'
+              )
+            })
+          ),
+          map(() => new LibraryComicsConverting()),
+          catchError(error => {
+            this.logger.error('service failure converting comics:', error);
+            this.messageService.add({
+              severity: 'error',
+              detail: this.translateService.instant(
+                'library-effects.convert-comics.error.details'
+              )
+            });
+            return of(new LibraryConvertComicsFailed());
+          })
+        )
+    ),
+    catchError(error => {
+      this.logger.error('general failure converting comics:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'library-effects.convert-comics.error.details'
+        )
+      });
+      return of(new LibraryConvertComicsFailed());
     })
   );
 }

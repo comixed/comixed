@@ -55,6 +55,14 @@
       "error": {
         "detail": "Failed to delete multiple comics."
       }
+    },
+    "convert-comics": {
+      "success": {
+        "detail": "Comics are now converting."
+      },
+      "error": {
+        "detail": "Failed to convert comics."
+      }
     }
   },
   "import-effects": {

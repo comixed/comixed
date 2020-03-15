@@ -18,15 +18,18 @@
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  DELETE_MULTIPLE_COMICS_URL,
-  START_RESCAN_URL
-} from 'app/app.constants';
 import { interpolate } from 'app/app.functions';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { GET_LIBRARY_UPDATES_URL } from 'app/library/library.constants';
+import {
+  CONVERT_COMICS_URL,
+  DELETE_MULTIPLE_COMICS_URL,
+  GET_LIBRARY_UPDATES_URL,
+  START_RESCAN_URL
+} from 'app/library/library.constants';
+import { ConvertComicsRequest } from 'app/library/models/net/convert-comics-request';
+import { Comic } from 'app/comics';
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +65,18 @@ export class LibraryService {
     this.logger.debug(`deleting multiple comics: ids=${ids}`);
     const params = new HttpParams().set('comic_ids', ids.toString());
     return this.http.post(interpolate(DELETE_MULTIPLE_COMICS_URL), params);
+  }
+
+  convertComics(
+    comics: Comic[],
+    archiveType: string,
+    renamePages: boolean
+  ): Observable<any> {
+    this.logger.debug('converting comics:', comics, archiveType, renamePages);
+    return this.http.post(interpolate(CONVERT_COMICS_URL), {
+      ids: comics.map(comic => comic.id),
+      archiveType: archiveType,
+      renamePages: renamePages
+    } as ConvertComicsRequest);
   }
 }

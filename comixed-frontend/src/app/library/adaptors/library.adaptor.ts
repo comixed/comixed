@@ -30,6 +30,7 @@ import { filter } from 'rxjs/operators';
 import { extractField } from 'app/library/utility.functions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import {
+  LibraryConvertComics,
   LibraryDeleteMultipleComics,
   LibraryGetUpdates,
   LibraryReset,
@@ -58,6 +59,7 @@ export class LibraryAdaptor {
   private comicId = -1;
   private _timeout = 60;
   private _maximum = 100;
+  private _converting$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private store: Store<AppState>,
@@ -112,6 +114,9 @@ export class LibraryAdaptor {
           this._lastComicId$.getValue() !== state.lastComicId
         ) {
           this._lastComicId$.next(state.lastComicId);
+        }
+        if (state.convertingComics !== this._converting$.getValue()) {
+          this._converting$.next(state.convertingComics);
         }
       });
   }
@@ -215,5 +220,25 @@ export class LibraryAdaptor {
     const index = comics.findIndex(entry => entry.id === comic.id);
 
     return index < comics.length ? comics[index + 1] : null;
+  }
+
+  convertComics(comics: Comic[], archiveType: string, renamePages: boolean) {
+    this.logger.debug(
+      'firing action to convert comics:',
+      comics,
+      archiveType,
+      renamePages
+    );
+    this.store.dispatch(
+      new LibraryConvertComics({
+        comics: comics,
+        archiveType: archiveType,
+        renamePages: renamePages
+      })
+    );
+  }
+
+  get converting$(): Observable<boolean> {
+    return this._converting$.asObservable();
   }
 }

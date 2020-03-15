@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export const COMIXED_API_ROOT = '/api';
-
-export const GET_READING_LISTS_URL = `${COMIXED_API_ROOT}/lists`;
-export const GET_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
-export const CREATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists`;
-export const SAVE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
-
-export const GET_BUILD_DETAILS_URL = `${COMIXED_API_ROOT}/core/build-details`;
+export interface ConvertComicsRequest {
+  ids: number[];
+  archiveType: string;
+  renamePages: boolean;
+}
