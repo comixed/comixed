@@ -22,8 +22,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.LastReadDate;
+import org.comixed.net.ConvertComicsRequest;
 import org.comixed.net.GetUpdatedComicsRequest;
 import org.comixed.net.GetUpdatedComicsResponse;
 import org.comixed.service.library.ComicService;
@@ -116,5 +118,21 @@ public class LibraryController {
     this.log.debug("Returning result");
     return new GetUpdatedComicsResponse(
         comics, lastComicId, mostRecentUpdate, lastReadDates, moreUpdates, processingCount);
+  }
+
+  @PostMapping(value = "/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public void convertComics(@RequestBody() ConvertComicsRequest request) {
+    List<Long> idList = request.getComicIdList();
+    ArchiveType archiveType = request.getArchiveType();
+    boolean renamePages = request.getRenamePages();
+
+    this.log.info(
+        "Converting {} comic{} to {}{}",
+        idList.size(),
+        idList.size() == 1 ? "" : "s",
+        archiveType,
+        renamePages ? " (rename pages)" : "");
+
+    this.libraryService.convertComics(idList, archiveType, renamePages);
   }
 }
