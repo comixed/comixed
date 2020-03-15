@@ -16,8 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { reducer, initialState, UserAdminState } from './user-admin.reducer';
-import Any = jasmine.Any;
+import {
+  initialState,
+  NEW_USER,
+  reducer,
+  UserAdminState
+} from './user-admin.reducer';
 import {
   UserAdminAllReceived,
   UserAdminClearCurrent,
@@ -32,7 +36,7 @@ import {
   UserAdminSaveFailed,
   UserAdminSetCurrent
 } from 'app/user/actions/user-admin.actions';
-import { User, USER_ADMIN, USER_READER } from 'app/user';
+import { USER_ADMIN, USER_READER } from 'app/user';
 import { SaveUserDetails } from 'app/user/models/save-user-details';
 
 describe('UserAdmin Reducer', () => {
@@ -42,12 +46,12 @@ describe('UserAdmin Reducer', () => {
   let state: UserAdminState;
 
   beforeEach(() => {
-    state = { ...initialState };
+    state = initialState;
   });
 
   describe('the default state', () => {
     beforeEach(() => {
-      state = reducer({ ...state }, {} as any);
+      state = reducer(state, {} as any);
     });
 
     it('clears the fetching all users flag', () => {
@@ -121,7 +125,7 @@ describe('UserAdmin Reducer', () => {
     });
 
     it('creates an empty user', () => {
-      expect(state.current).toEqual({} as User);
+      expect(state.current).toEqual(NEW_USER);
     });
   });
 
