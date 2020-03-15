@@ -21,7 +21,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppState, User, USER_ADMIN, USER_READER } from 'app/user';
+import { AppState, USER_ADMIN, USER_READER } from 'app/user';
 import {
   UserAdminAllReceived,
   UserAdminCreateNew,
@@ -33,6 +33,7 @@ import {
 import { UserAdminEffects } from 'app/user/effects/user-admin.effects';
 import { SaveUserDetails } from 'app/user/models/save-user-details';
 import {
+  NEW_USER,
   reducer,
   USER_ADMIN_FEATURE_KEY
 } from 'app/user/reducers/user-admin.reducer';
@@ -112,7 +113,7 @@ describe('UserAdminAdaptor', () => {
 
     it('updates the current user', () => {
       adaptor.current$.subscribe(response =>
-        expect(response).toEqual({} as User)
+        expect(response).toEqual(NEW_USER)
       );
     });
   });

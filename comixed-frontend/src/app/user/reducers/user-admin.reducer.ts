@@ -24,6 +24,15 @@ import { User } from 'app/user';
 
 export const USER_ADMIN_FEATURE_KEY = 'user_admin_state';
 
+export const NEW_USER: User = {
+  email: undefined,
+  first_login_date: undefined,
+  id: undefined,
+  last_login_date: undefined,
+  preferences: [],
+  roles: []
+};
+
 export interface UserAdminState {
   fetchingAll: boolean;
   users: User[];
@@ -57,7 +66,7 @@ export function reducer(
       return { ...state, fetchingAll: false };
 
     case UserAdminActionTypes.NewUser:
-      return { ...state, current: {} as User };
+      return { ...state, current: NEW_USER };
 
     case UserAdminActionTypes.SetCurrent:
       return { ...state, current: action.payload.user };
