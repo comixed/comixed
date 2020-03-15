@@ -103,7 +103,17 @@ import { TooltipModule } from 'primeng/tooltip';
     BrowserAnimationsModule,
     AppRouting,
     HttpClientModule,
-    StoreModule.forRoot({}),
+    StoreModule.forRoot(
+      {},
+      {
+        runtimeChecks: {
+          strictStateSerializability: false,
+          strictActionSerializability: false,
+          strictStateImmutability: false,
+          strictActionImmutability: false
+        }
+      }
+    ),
     EffectsModule.forRoot([]),
     MenubarModule,
     SidebarModule,
