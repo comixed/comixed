@@ -40,6 +40,14 @@ public enum ArchiveType {
     this.mimeType = mimeType;
   }
 
+  public static ArchiveType forValue(String name) {
+    for (ArchiveType value : values()) {
+      if (value.toString().equals(name)) return value;
+    }
+
+    throw new IllegalArgumentException("No such archive type: " + name);
+  }
+
   public ArchiveAdaptor getArchiveAdaptor() {
     return this.archiveAdaptor;
   }
