@@ -1,3 +1,8 @@
+<p-dialog [header]='"comic-list.header.convert-comics"|translate'
+          [visible]='showConvertComics'
+          [modal]='true'>
+  <app-convert-comics-settings (cancel)='showConvertComics = false'></app-convert-comics-settings>
+</p-dialog>
 <p-contextMenu #contextMenu
                [model]='contextMenuItems'
                (onHide)='hideContextMenu()'></p-contextMenu>
@@ -5,32 +10,32 @@
                         [dataView]='comicListDataview'
                         (startScraping)='scrapeComics()'></app-comic-list-toolbar>
 <div>
-    <p-dataView #comicListDataview
-                (onPage)='setIndexOfFirst($event.first)'
-                [alwaysShowPaginator]='true'
-                [first]='indexOfFirst'
-                [layout]='layout'
-                [paginator]='true'
-                [rows]='rows'
-                [sortField]='sortField'
-                [sortOrder]='sortOrder'
-                [value]='comics'
-                paginatorPosition='both'>
-        <ng-template let-comic
-                     pTemplate='listItem'>
-            <app-comic-list-item [comic]='comic'
-                                 [coverSize]="coverSize"
-                                 [useSameHeight]="sameHeight"
-                                 [selected]='selectedComics.includes(comic)'
-                                 (click)='toggleComicSelection($event.comic, $event.selected)'></app-comic-list-item>
-        </ng-template>
-        <ng-template let-comic
-                     pTemplate='gridItem'>
-            <app-comic-grid-item [comic]='comic'
-                                 [coverSize]="coverSize"
-                                 [useSameHeight]="sameHeight"
-                                 [selected]='selectedComics.includes(comic)'
-                                 (click)='toggleComicSelection($event.comic, $event.selected)'></app-comic-grid-item>
-        </ng-template>
-    </p-dataView>
+  <p-dataView #comicListDataview
+              (onPage)='setIndexOfFirst($event.first)'
+              [alwaysShowPaginator]='true'
+              [first]='indexOfFirst'
+              [layout]='layout'
+              [paginator]='true'
+              [rows]='rows'
+              [sortField]='sortField'
+              [sortOrder]='sortOrder'
+              [value]='comics'
+              paginatorPosition='both'>
+    <ng-template let-comic
+                 pTemplate='listItem'>
+      <app-comic-list-item [comic]='comic'
+                           [coverSize]="coverSize"
+                           [useSameHeight]="sameHeight"
+                           [selected]='selectedComics.includes(comic)'
+                           (click)='toggleComicSelection($event.comic, $event.selected)'></app-comic-list-item>
+    </ng-template>
+    <ng-template let-comic
+                 pTemplate='gridItem'>
+      <app-comic-grid-item [comic]='comic'
+                           [coverSize]="coverSize"
+                           [useSameHeight]="sameHeight"
+                           [selected]='selectedComics.includes(comic)'
+                           (click)='toggleComicSelection($event.comic, $event.selected)'></app-comic-grid-item>
+    </ng-template>
+  </p-dataView>
 </div>

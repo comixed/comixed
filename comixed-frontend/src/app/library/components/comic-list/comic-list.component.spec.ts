@@ -59,6 +59,7 @@ import {
   ConfirmationService,
   ConfirmDialogModule,
   ContextMenuModule,
+  DialogModule,
   MessageService,
   ProgressSpinnerModule,
   ToolbarModule,
@@ -73,6 +74,7 @@ import {
   COMIC_LIST_MENU_SELECT_ALL,
   ComicListComponent
 } from './comic-list.component';
+import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -121,13 +123,15 @@ describe('ComicListComponent', () => {
         TooltipModule,
         ToolbarModule,
         ProgressSpinnerModule,
-        CheckboxModule
+        CheckboxModule,
+        DialogModule
       ],
       declarations: [
         ComicListComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        ComicListToolbarComponent
+        ComicListToolbarComponent,
+        ConvertComicsSettingsComponent
       ],
       providers: [
         AuthenticationAdaptor,

@@ -58,6 +58,8 @@
     }
   },
   "import-page": {
+    "importing-title": "Importing Blocked While Processing {count, plural, =1{One Comic} other{# Comics}}...",
+    "title": "ComiXed: Import",
     "title-no-comics": "No Comic Files Loaded",
     "title-with-comics": "Selected {selectedCount} Of {comicCount, plural, =1{One Comic File} other{# Comic Files}}",
     "label": {

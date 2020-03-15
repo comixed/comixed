@@ -109,10 +109,6 @@
       }
     }
   },
-  "import-page": {
-    "importing-title": "Importing {count, plural, =1{One File} other{# Files}}...",
-    "title": "ComiXed: Import"
-  },
   "library-page": {
     "title": "ComiXed: Library - {count, plural, =1{One Comic} other{# Comics}}"
   },
@@ -186,6 +182,9 @@
     "title": "ComiXed: Library Administration"
   },
   "comic-list": {
+    "header": {
+      "convert-comics": "Convert Selected Comics"
+    },
     "label": {
       "series": "Series",
       "volume": "Volume",
@@ -206,7 +205,8 @@
       "select-all": "Select all",
       "deselect-all": "Deselect all",
       "delete-selected": "Delete selections...",
-      "scrape-selected": "Scrape selections"
+      "scrape-selected": "Scrape selections",
+      "convert-comic": "Convert comic..."
     },
     "start-scraping": {
       "header": "Scrape Selected Comic",
@@ -362,6 +362,24 @@
   },
   "multi-comic-scraping-page": {
     "title": "Scraping {count, plural, =1{One Comic} other{# Comics}}"
+  },
+  "convert-comics-settings": {
+    "label": {
+      "archive-type": "Archive Type",
+      "rename-pages": "Rename Pages"
+    },
+    "option": {
+      "cbz": "CBZ (Zip)",
+      "cb7": "CB7 (7Zip)"
+    },
+    "button": {
+      "start": "Convert",
+      "cancel": "Cancel"
+    },
+    "start-conversion": {
+      "header": "Convert Comics",
+      "message": "Are you sure you want to convert {count, plural, =1{one comic} other{# comics}} to {archiveType}?"
+    }
   },
   "breadcrumb": {
     "collections": {
