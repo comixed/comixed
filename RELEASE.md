@@ -1,5 +1,9 @@
 # Release notes.
 
+### 2020-03-17: Release 0.5.2-1.1
+  #173  Revert changes introduced since they created a new bug.
+  [CVE-2020-7598] Bump acorn from 6.4.0 to 6.4.1 in /comixed-frontend (#186
+
 ### 2020-03-13: Release 0.5.2-1
   #178  Unable to import from root of drive.
 

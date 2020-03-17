@@ -24,6 +24,6 @@ jobs:
         with:
           body_path: RELEASE.md
           files: |
-            comixed-app/target/artifacts/comixed-app-0.5.1-1-RELEASE.zip
+            comixed-app/target/artifacts/comixed-app-0.5.2-1.1-RELEASE.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
