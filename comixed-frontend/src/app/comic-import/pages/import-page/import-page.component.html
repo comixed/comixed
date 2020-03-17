@@ -1,5 +1,5 @@
 <h2 *ngIf='!comicFiles.length && !importing'>{{'import-page.title-no-comics'|translate}}</h2>
-<h2 *ngIf='comicFiles.length'>{{'import-page.title-with-comics'|translate:{
+<h2 *ngIf='comicFiles.length && !importing'>{{'import-page.title-with-comics'|translate:{
     comicCount: comicFiles.length,
     selectedCount: selectedComicFiles.length
 } }}</h2>
