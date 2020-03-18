@@ -59,6 +59,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InplaceModule } from 'primeng/inplace';
 import { PanelModule } from 'primeng/panel';
 import {
+  AutoCompleteModule,
   ContextMenuModule,
   InputTextModule,
   ProgressBarModule,
@@ -113,15 +114,16 @@ import * as fromScraping from './reducers/scraping.reducer';
     TranslateModule.forRoot(),
     StoreModule.forFeature(fromComics.COMIC_FEATURE_KEY, fromComics.reducer),
     StoreModule.forFeature(
-        fromScraping.SCRAPING_FEATURE_KEY,
-        fromScraping.reducer
+      fromScraping.SCRAPING_FEATURE_KEY,
+      fromScraping.reducer
     ),
     EffectsModule.forFeature([ComicEffects, ScrapingEffects]),
     ProgressSpinnerModule,
     TooltipModule,
     InputTextModule,
     ToolbarModule,
-    ContextMenuModule
+    ContextMenuModule,
+    AutoCompleteModule
   ],
   exports: [
     CommonModule,

@@ -22,6 +22,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { Comic, ComicFormat, ScanType } from 'app/comics';
+import { LibraryAdaptor } from 'app/library';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-comic-overview',
@@ -32,26 +34,28 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
   @Input() comic: Comic;
   @Input() is_admin: boolean;
 
+  comicBackup: Comic;
   scanTypes: ScanType[];
   scanTypeOptions: SelectItem[];
   formats: ComicFormat[];
   formatOptions: SelectItem[];
-
   scanTypeSubscription: Subscription;
-  scanType: ScanType;
   formatSubscription: Subscription;
-  format: ComicFormat;
-  sortName: string;
+  editing = false;
+  publishersSubscription: Subscription;
+  publishersNames: string[] = [];
+  publisherNameOptions: string[] = [];
+  seriesSubscription: Subscription;
+  seriesNames: string[] = [];
+  seriesNameOptions: string[] = [];
 
   constructor(
+    private logger: NGXLogger,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
-    private comicAdaptor: ComicAdaptor
-  ) {}
-
-  ngOnInit() {
-    this.format = this.comic.format;
-    this.scanType = this.comic.scanType;
+    private comicAdaptor: ComicAdaptor,
+    private libraryAdaptor: LibraryAdaptor
+  ) {
     this.scanTypeSubscription = this.comicAdaptor.scanTypes$.subscribe(
       scanTypes => {
         this.scanTypes = scanTypes;
@@ -64,7 +68,23 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
       this.loadFormatOptions();
     });
     this.comicAdaptor.getFormats();
+    this.publishersSubscription = this.libraryAdaptor.publishers$.subscribe(
+      publishers => {
+        this.logger.debug('received publishers:', publishers);
+        this.publishersNames = publishers
+          .filter(publisher => !!publisher.name)
+          .map(publisher => publisher.name);
+      }
+    );
+    this.seriesSubscription = this.libraryAdaptor.series$.subscribe(series => {
+      this.logger.debug('received series:', series);
+      this.seriesNames = series
+        .filter(entry => !!entry.name)
+        .map(entry => entry.name);
+    });
   }
+
+  ngOnInit() {}
 
   loadScanTypeOptions(): void {
     this.scanTypeOptions = [
@@ -97,30 +117,8 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.scanTypeSubscription.unsubscribe();
     this.formatSubscription.unsubscribe();
-  }
-
-  copyComicFormat(): void {
-    this.format = this.comic.format;
-  }
-
-  setComicFormat(format: ComicFormat): void {
-    this.comicAdaptor.saveComic({ ...this.comic, format: format });
-  }
-
-  copyScanType(): void {
-    this.scanType = this.comic.scanType;
-  }
-
-  setScanType(scanType: ScanType): void {
-    this.comicAdaptor.saveComic({ ...this.comic, scanType: scanType });
-  }
-
-  copySortName(): void {
-    this.sortName = this.comic.sortName || '';
-  }
-
-  saveSortName(): void {
-    this.comicAdaptor.saveComic({ ...this.comic, sortName: this.sortName });
+    this.publishersSubscription.unsubscribe();
+    this.seriesSubscription.unsubscribe();
   }
 
   clearMetadata(): void {
@@ -151,5 +149,46 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
 
   undeleteComic() {
     this.comicAdaptor.restoreComic(this.comic);
+  }
+
+  startEditing() {
+    this.editing = true;
+    this.backupComic();
+  }
+
+  filterPublisherNames(nameEntered: string) {
+    this.publisherNameOptions = this.publishersNames.filter(name =>
+      name.toLowerCase().startsWith(nameEntered.toLowerCase())
+    );
+  }
+
+  backupComic() {
+    this.comicBackup = Object.assign({}, this.comic);
+  }
+
+  saveChanges() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant('comic-overview.save-comic.header'),
+      message: this.translateService.instant(
+        'comic-overview.save-comic.message'
+      ),
+      icon: 'fa fa-save',
+      accept: () => {
+        this.comicAdaptor.saveComic(this.comic);
+        this.editing = false;
+      }
+    });
+  }
+
+  undoChanges() {
+    this.logger.debug('undoing changes:', this.comicBackup);
+    this.comic = Object.assign({}, this.comicBackup);
+    this.editing = false;
+  }
+
+  filterSeriesNames(nameEntered: string) {
+    this.seriesNameOptions = this.seriesNames.filter(name =>
+      name.toLowerCase().startsWith(nameEntered.toLowerCase())
+    );
   }
 }

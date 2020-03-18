@@ -57,11 +57,13 @@ import { DataViewModule } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
 import { InplaceModule } from 'primeng/inplace';
 import {
+  AutoCompleteModule,
   ProgressBarModule,
   SplitButtonModule,
   ToolbarModule
 } from 'primeng/primeng';
 import { ComicDetailsPageComponent } from './comic-details-page.component';
+import { LibraryAdaptor } from 'app/library';
 
 describe('ComicDetailsPageComponent', () => {
   let component: ComicDetailsPageComponent;
@@ -94,7 +96,8 @@ describe('ComicDetailsPageComponent', () => {
         BlockUIModule,
         ProgressBarModule,
         SplitButtonModule,
-        ToolbarModule
+        ToolbarModule,
+        AutoCompleteModule
       ],
       declarations: [
         ComicDetailsPageComponent,
@@ -116,7 +119,8 @@ describe('ComicDetailsPageComponent', () => {
         ComicAdaptor,
         BreadcrumbAdaptor,
         MessageService,
-        ConfirmationService
+        ConfirmationService,
+        LibraryAdaptor
       ]
     }).compileComponents();
 

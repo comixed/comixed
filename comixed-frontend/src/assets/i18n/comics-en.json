@@ -78,9 +78,14 @@
     }
   },
   "comic-overview": {
+    "save-comic": {
+      "header": "Save Changes",
+      "message": "Are you sure you want to save the changes made to this comic?"
+    },
     "label": {
       "filename": "The filename is <strong>{filename}</strong> on the host machine.",
       "publisher": "Publisher",
+      "edit-publisher": "Edit the publisher...",
       "series": "Series",
       "volume": "Volume",
       "cover-date": "Cover Date",
@@ -108,6 +113,7 @@
       "delete-comic": "Are you sure you want to mark this comic for deletion?"
     },
     "text": {
+      "volume-placeholder": "The year the first issue was publisher...",
       "deleted-date": "(Deleted {date})",
       "format-placeholder": "Click to set format...",
       "scan-type-placeholder": "Click to set scan type...",
@@ -116,17 +122,19 @@
     },
     "scan-type": {
       "option": {
-        "select-one": "Select a scan type..."
+        "select-one": "Clear scan type..."
       }
     },
     "format": {
       "option": {
-        "select-one": "Select a format..."
+        "select-one": "Clear format..."
       }
     },
     "tooltip": {
       "delete-comic": "Mark comic for deletion.",
-      "undelete-comic": "Do not mark comic for deletion."
+      "undelete-comic": "Do not mark comic for deletion.",
+      "save-changes": "Save changes.",
+      "undo-changes": "Undo changes."
     }
   },
   "comic-story": {
