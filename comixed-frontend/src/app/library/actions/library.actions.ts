@@ -30,7 +30,10 @@ export enum LibraryActionTypes {
   RescanFailedToStart = '[LIBRARY] Failed to start scanning library',
   DeleteMultipleComics = '[LIBRARY] Delete multiple comics',
   MultipleComicsDeleted = '[LIBRARY] Multiple comics deleted',
-  DeleteMultipleComicsFailed = '[LIBRARY] Failed to delete multiple comics'
+  DeleteMultipleComicsFailed = '[LIBRARY] Failed to delete multiple comics',
+  ConvertComics = '[LIBRARY] Convert comics to a new archive type',
+  ComicsConverting = '[LIBRARY] Comics converting to a new archive type',
+  ConvertComicsFailed = '[LIBRARY] Failed to convert comics'
 }
 
 export class LibraryReset implements Action {
@@ -110,6 +113,30 @@ export class LibraryDeleteMultipleComicsFailed implements Action {
   constructor() {}
 }
 
+export class LibraryConvertComics implements Action {
+  readonly type = LibraryActionTypes.ConvertComics;
+
+  constructor(
+    public payload: {
+      comics: Comic[];
+      archiveType: string;
+      renamePages: boolean;
+    }
+  ) {}
+}
+
+export class LibraryComicsConverting implements Action {
+  readonly type = LibraryActionTypes.ComicsConverting;
+
+  constructor() {}
+}
+
+export class LibraryConvertComicsFailed implements Action {
+  readonly type = LibraryActionTypes.ConvertComicsFailed;
+
+  constructor() {}
+}
+
 export type LibraryActions =
   | LibraryReset
   | LibraryGetUpdates
@@ -120,4 +147,7 @@ export type LibraryActions =
   | LibraryStartRescanFailed
   | LibraryDeleteMultipleComics
   | LibraryMultipleComicsDeleted
-  | LibraryDeleteMultipleComicsFailed;
+  | LibraryDeleteMultipleComicsFailed
+  | LibraryConvertComics
+  | LibraryComicsConverting
+  | LibraryConvertComicsFailed;

@@ -21,13 +21,17 @@ package org.comixed.service.library;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.task.TaskService;
+import org.comixed.task.model.ConvertComicsWorkerTask;
+import org.comixed.task.runner.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,8 @@ public class LibraryService {
 
   @Autowired private ComicRepository comicRepository;
   @Autowired private TaskService taskService;
+  @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
+  @Autowired private Worker worker;
 
   public List<Comic> getComicsUpdatedSince(
       String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
@@ -78,5 +84,28 @@ public class LibraryService {
   public long getProcessingCount() {
     this.logger.debug("Getting processing count");
     return this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
+  }
+
+  public void convertComics(
+      List<Long> comicIdList, ArchiveType targetArchiveType, boolean renamePages) {
+    this.logger.debug(
+        "Converting {} comic{} to {}{}",
+        comicIdList.size(),
+        comicIdList.size() == 1 ? "" : "s",
+        targetArchiveType,
+        renamePages ? " (renaming pages)" : "");
+    List<Comic> comics = new ArrayList<>();
+    for (long id : comicIdList) {
+      comics.add(this.comicRepository.getById(id));
+    }
+    this.logger.debug("Getting save comics worker task");
+    ConvertComicsWorkerTask task = this.convertComicsWorkerTaskObjectFactory.getObject();
+
+    task.setComicList(comics);
+    task.setTargetArchiveType(targetArchiveType);
+    task.setRenamePages(renamePages);
+
+    this.logger.debug("Queueing save comics worker task");
+    this.worker.addTasksToQueue(task);
   }
 }

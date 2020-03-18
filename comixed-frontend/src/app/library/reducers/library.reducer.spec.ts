@@ -24,6 +24,9 @@ import {
   COMIC_5
 } from 'app/comics/models/comic.fixtures';
 import {
+  LibraryComicsConverting,
+  LibraryConvertComics,
+  LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
   LibraryGetUpdates,
@@ -100,6 +103,10 @@ describe('Library Reducer', () => {
 
     it('clears the deleting multiple comics flag', () => {
       expect(state.deletingComics).toBeFalsy();
+    });
+
+    it('clears the converting comics flag', () => {
+      expect(state.convertingComics).toBeFalsy();
     });
   });
 
@@ -278,6 +285,49 @@ describe('Library Reducer', () => {
 
     it('clears the deleting multiple comics flag', () => {
       expect(state.deletingComics).toBeFalsy();
+    });
+  });
+
+  describe('when converting comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, convertingComics: false },
+        new LibraryConvertComics({
+          comics: COMICS,
+          archiveType: 'CBZ',
+          renamePages: true
+        })
+      );
+    });
+
+    it('sets the converting comics flag', () => {
+      expect(state.convertingComics).toBeTruthy();
+    });
+  });
+
+  describe('when comics have started converting', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, convertingComics: true },
+        new LibraryComicsConverting()
+      );
+    });
+
+    it('clears the converting comics flag', () => {
+      expect(state.convertingComics).toBeFalsy();
+    });
+  });
+
+  describe('when comics fail to start converting', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, convertingComics: true },
+        new LibraryConvertComicsFailed()
+      );
+    });
+
+    it('clears the converting comics flag', () => {
+      expect(state.convertingComics).toBeFalsy();
     });
   });
 });

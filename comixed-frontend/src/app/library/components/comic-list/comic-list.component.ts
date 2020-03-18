@@ -52,6 +52,7 @@ export const COMIC_LIST_MENU_SELECT_ALL = 'comic-list-scrape-select-all';
 export const COMIC_LIST_MENU_DESELECT_ALL = 'comic-list-scrape-deselect-all';
 export const COMIC_LIST_MENU_DELETE_SELECTED = 'comic-list-delete-selected';
 export const COMIC_LIST_MENU_SCRAPE_SELECTED = 'comic-list-scrape-selected';
+export const COMIC_LIST_MENU_CONVERT_COMIC = 'comic-list-convert-comic';
 
 @Component({
   selector: 'app-comic-list',
@@ -90,6 +91,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
   coverSize: number;
   displayFilters = false;
   filters = null;
+  showConvertComics = false;
 
   constructor(
     private logger: NGXLogger,
@@ -390,6 +392,14 @@ export class ComicListComponent implements OnInit, OnDestroy {
       true,
       () => this.scrapeComics()
     );
+    this.contextMenuAdaptor.addItem(
+      COMIC_LIST_MENU_CONVERT_COMIC,
+      'fa fa-fw fa-file-archive',
+      'comic-list.context-menu.convert-comic',
+      false,
+      true,
+      () => this.showConvertDialog()
+    );
   }
 
   private removeContextMenuItems() {
@@ -397,6 +407,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     this.contextMenuAdaptor.removeItem(COMIC_LIST_MENU_DESELECT_ALL);
     this.contextMenuAdaptor.removeItem(COMIC_LIST_MENU_DELETE_SELECTED);
     this.contextMenuAdaptor.removeItem(COMIC_LIST_MENU_SCRAPE_SELECTED);
+    this.contextMenuAdaptor.removeItem(COMIC_LIST_MENU_CONVERT_COMIC);
   }
 
   private toggleMenuItems() {
@@ -412,11 +423,19 @@ export class ComicListComponent implements OnInit, OnDestroy {
       this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_DESELECT_ALL);
       this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_DELETE_SELECTED);
       this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_SCRAPE_SELECTED);
+      if (this.authenticationAdaptor.isAdmin) {
+        this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_CONVERT_COMIC);
+      }
     } else {
       this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_SELECT_ALL);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_DESELECT_ALL);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_DELETE_SELECTED);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_SCRAPE_SELECTED);
+      this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_CONVERT_COMIC);
     }
+  }
+
+  private showConvertDialog() {
+    this.showConvertComics = true;
   }
 }

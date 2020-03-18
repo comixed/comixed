@@ -17,12 +17,16 @@
  */
 
 import { API_ROOT_URL } from 'app/app.functions';
+import { COMIXED_API_ROOT } from 'app/app.constants';
 
 export const GET_LIBRARY_UPDATES_URL = `${API_ROOT_URL}/library/updates`;
 
 export const GET_ALL_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/pages/duplicates`;
 export const SET_BLOCKING_STATE_URL = `${API_ROOT_URL}/pages/hashes/blocking`;
 export const SET_DELETED_STATE_URL = `${API_ROOT_URL}/pages/hashes/deleted`;
+export const START_RESCAN_URL = `${COMIXED_API_ROOT}/comics/rescan`;
+export const DELETE_MULTIPLE_COMICS_URL = `${COMIXED_API_ROOT}/comics/multiple/delete`;
+export const CONVERT_COMICS_URL = `${COMIXED_API_ROOT}/library/convert`;
 
 export const GET_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${type}`;
 export const GET_PAGE_FOR_ENTRY_URL = `${API_ROOT_URL}/collections/\${type}/\${name}`;

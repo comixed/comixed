@@ -5,15 +5,20 @@ import static junit.framework.TestCase.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.task.TaskService;
+import org.comixed.task.model.ConvertComicsWorkerTask;
+import org.comixed.task.runner.Worker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -23,16 +28,25 @@ public class LibraryServiceTest {
   private static final int TEST_MAXIMUM_COMICS = 100;
   private static final long TEST_LAST_COMIC_ID = 23579;
   private static final int TEST_PROCESSING_COUNT = 273;
+  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
+  private static final Random RANDOM = new Random();
+  private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
   @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
+  @Mock private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
+  @Mock private ConvertComicsWorkerTask convertComicsWorkerTask;
+  @Mock private Comic comic;
+  @Captor private ArgumentCaptor<List<Comic>> comicListArgumentCaptor;
+  @Mock private Worker worker;
 
   private Comic comic1 = new Comic();
   private Comic comic2 = new Comic();
   private Comic comic3 = new Comic();
   private Comic comic4 = new Comic();
+  private List<Long> comicIdList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -87,5 +101,31 @@ public class LibraryServiceTest {
     long result = libraryService.getProcessingCount();
 
     assertEquals(TEST_PROCESSING_COUNT, result);
+  }
+
+  @Test
+  public void testConvertComicArchiving() {
+    for (long index = 0; index < 15; index++) {
+      comicIdList.add(index);
+    }
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(convertComicsWorkerTaskObjectFactory.getObject())
+        .thenReturn(convertComicsWorkerTask);
+    Mockito.doNothing()
+        .when(convertComicsWorkerTask)
+        .setComicList(comicListArgumentCaptor.capture());
+
+    libraryService.convertComics(comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES);
+
+    assertEquals(comicIdList.size(), comicListArgumentCaptor.getValue().size());
+
+    Mockito.verify(comicRepository, Mockito.times(comicIdList.size())).getById(Mockito.anyLong());
+    Mockito.verify(convertComicsWorkerTaskObjectFactory, Mockito.times(1)).getObject();
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
+        .setComicList(comicListArgumentCaptor.getValue());
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
+        .setTargetArchiveType(TEST_ARCHIVE_TYPE);
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
+    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(convertComicsWorkerTask);
   }
 }

@@ -23,9 +23,12 @@ import static junit.framework.TestCase.*;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
+import org.comixed.net.ConvertComicsRequest;
 import org.comixed.net.GetUpdatedComicsRequest;
 import org.comixed.net.GetUpdatedComicsResponse;
 import org.comixed.service.library.ComicService;
@@ -47,6 +50,9 @@ public class LibraryControllerTest {
   private static final long TEST_PROCESSING_COUNT = 797L;
   private static final Long TEST_TIMEOUT = 1L;
   private static final Date TEST_LAST_UPDATED_DATE = new Date();
+  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
+  private static final Random RANDOM = new Random();
+  private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
 
   @InjectMocks private LibraryController libraryController;
   @Mock private LibraryService libraryService;
@@ -57,6 +63,7 @@ public class LibraryControllerTest {
   @Mock private List<LastReadDate> lastReadList;
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
+  @Mock private List<Long> comicIdList;
 
   @Test
   public void testGetUpdatedComics() {
@@ -187,5 +194,14 @@ public class LibraryControllerTest {
             TEST_MOST_RECENT_COMIC_ID);
     Mockito.verify(libraryService, Mockito.times(1))
         .getLastReadDatesSince(TEST_USER_EMAIL, TEST_LATEST_UPDATED_DATE);
+  }
+
+  @Test
+  public void testConvertComics() {
+    libraryController.convertComics(
+        new ConvertComicsRequest(comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES));
+
+    Mockito.verify(libraryService, Mockito.times(1))
+        .convertComics(comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES);
   }
 }
