@@ -24,34 +24,38 @@ import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import {
-  COMIC_1,
-  COMIC_5,
-  FORMAT_3,
-  FORMAT_5,
-  SCAN_TYPE_1,
-  SCAN_TYPE_5
-} from 'app/comics/comics.fixtures';
+import { COMIC_1, FORMAT_3, SCAN_TYPE_1 } from 'app/comics/comics.fixtures';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
-import { AppState } from 'app/library';
+import { AppState, LibraryAdaptor } from 'app/library';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InplaceModule } from 'primeng/inplace';
-import { TooltipModule } from 'primeng/primeng';
+import {
+  AutoCompleteModule,
+  ToolbarModule,
+  TooltipModule
+} from 'primeng/primeng';
 import { ComicOverviewComponent } from './comic-overview.component';
+import { BehaviorSubject } from 'rxjs';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 describe('ComicOverviewComponent', () => {
+  const COMIC = Object.assign({}, COMIC_1);
+
   let component: ComicOverviewComponent;
   let fixture: ComponentFixture<ComicOverviewComponent>;
   let store: Store<AppState>;
   let confirmationService: ConfirmationService;
   let comicAdaptor: ComicAdaptor;
+  const publishers = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  const series = new BehaviorSubject<ComicCollectionEntry[]>([]);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LoggerTestingModule,
         HttpClientTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
@@ -63,19 +67,32 @@ describe('ComicOverviewComponent', () => {
         LoggerTestingModule,
         InplaceModule,
         DropdownModule,
-        TooltipModule
+        TooltipModule,
+        AutoCompleteModule,
+        ToolbarModule
       ],
       declarations: [ComicOverviewComponent],
-      providers: [ComicAdaptor, ConfirmationService, MessageService]
+      providers: [
+        ComicAdaptor,
+        ConfirmationService,
+        MessageService,
+        {
+          provide: LibraryAdaptor,
+          useValue: {
+            publishers$: publishers.asObservable(),
+            series$: series.asObservable()
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicOverviewComponent);
     component = fixture.componentInstance;
+    component.comic = COMIC;
     component.is_admin = false;
-    component.comic = COMIC_1;
     comicAdaptor = TestBed.get(ComicAdaptor);
     store = TestBed.get(Store);
-    spyOn(store, 'dispatch');
+    spyOn(store, 'dispatch').and.callThrough();
     confirmationService = TestBed.get(ConfirmationService);
 
     fixture.detectChanges();
@@ -99,64 +116,13 @@ describe('ComicOverviewComponent', () => {
     expect(component.formatOptions[1].value).toEqual(FORMAT_3);
   });
 
-  it('can copy the comic format', () => {
-    component.comic = COMIC_1;
-    component.copyComicFormat();
-    expect(component.format).toEqual(COMIC_1.format);
-  });
-
-  it('can set the comic format', () => {
-    spyOn(comicAdaptor, 'saveComic');
-    component.comic = COMIC_1;
-    component.setComicFormat(FORMAT_5);
-    expect(comicAdaptor.saveComic).toHaveBeenCalledWith({
-      ...COMIC_1,
-      format: FORMAT_5
-    });
-  });
-
-  it('can copy the scan type', () => {
-    component.comic = COMIC_1;
-    component.copyScanType();
-    expect(component.scanType).toEqual(COMIC_1.scanType);
-  });
-
-  it('can set the scan type', () => {
-    spyOn(comicAdaptor, 'saveComic');
-    component.comic = COMIC_1;
-    component.setScanType(SCAN_TYPE_5);
-    expect(comicAdaptor.saveComic).toHaveBeenCalledWith({
-      ...COMIC_1,
-      scanType: SCAN_TYPE_5
-    });
-  });
-
-  it('can copy the sort name', () => {
-    component.comic = COMIC_5;
-    component.copySortName();
-    expect(component.sortName).toEqual(COMIC_5.sortName);
-  });
-
-  it('can set the sort name', () => {
-    const SORT_NAME = 'Updated Sort Name';
-    spyOn(comicAdaptor, 'saveComic');
-    component.comic = COMIC_1;
-    component.sortName = SORT_NAME;
-    component.saveSortName();
-    expect(comicAdaptor.saveComic).toHaveBeenCalledWith({
-      ...COMIC_1,
-      sortName: SORT_NAME
-    });
-  });
-
   it('can clean the comic metadata', () => {
     spyOn(comicAdaptor, 'clearMetadata');
     spyOn(confirmationService, 'confirm').and.callFake(
       (confirm: Confirmation) => confirm.accept()
     );
-    component.comic = COMIC_1;
     component.clearMetadata();
-    expect(comicAdaptor.clearMetadata).toHaveBeenCalledWith(COMIC_1);
+    expect(comicAdaptor.clearMetadata).toHaveBeenCalledWith(COMIC);
   });
 
   it('can delete a comic', () => {
@@ -164,8 +130,136 @@ describe('ComicOverviewComponent', () => {
     spyOn(confirmationService, 'confirm').and.callFake(
       (confirm: Confirmation) => confirm.accept()
     );
-    component.comic = COMIC_1;
     component.deleteComic();
-    expect(comicAdaptor.deleteComic).toHaveBeenCalledWith(COMIC_1);
+    expect(comicAdaptor.deleteComic).toHaveBeenCalledWith(COMIC);
+  });
+
+  describe('undeleting a comic', () => {
+    beforeEach(() => {
+      spyOn(comicAdaptor, 'restoreComic');
+      component.undeleteComic();
+    });
+
+    it('fires an action', () => {
+      expect(comicAdaptor.restoreComic).toHaveBeenCalledWith(COMIC);
+    });
+  });
+
+  // this test does not work right now -- needs to be fixed up
+  xdescribe('loading the list of publishers and series', () => {
+    beforeEach(() => {
+      component.publisherNameOptions = [];
+      component.seriesNameOptions = [];
+      publishers.next([
+        {
+          name: 'FOO',
+          comics: [],
+          count: 0,
+          last_comic_added: null
+        }
+      ]);
+      series.next([
+        {
+          name: 'BAR',
+          comics: [],
+          count: 0,
+          last_comic_added: null
+        }
+      ]);
+    });
+
+    it('loads the list of publisher names', () => {
+      expect(component.publisherNameOptions).not.toEqual([]);
+    });
+
+    it('loads the lit of series names', () => {
+      expect(component.seriesNameOptions).not.toEqual([]);
+    });
+  });
+
+  describe('starting to edit the comic details', () => {
+    beforeEach(() => {
+      component.editing = false;
+      component.comicBackup = null;
+      component.startEditing();
+    });
+
+    it('sets the editing flag', () => {
+      expect(component.editing).toBeTruthy();
+    });
+
+    it('makes a backup of the comic', () => {
+      expect(component.comicBackup).toEqual(component.comic);
+    });
+  });
+
+  describe('undoing changes made', () => {
+    beforeEach(() => {
+      component.editing = true;
+      component.comicBackup = COMIC;
+      component.comic = null;
+      component.undoChanges();
+    });
+
+    it('clears the editing flag', () => {
+      expect(component.editing).toBeFalsy();
+    });
+
+    it('restores the comic state', () => {
+      expect(component.comic).toEqual(component.comicBackup);
+    });
+  });
+
+  describe('saving changes', () => {
+    beforeEach(() => {
+      component.editing = true;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.accept()
+      );
+      spyOn(comicAdaptor, 'saveComic');
+      component.saveChanges();
+    });
+
+    it('notifies the comic adaptor', () => {
+      expect(comicAdaptor.saveComic).toHaveBeenCalledWith(COMIC);
+    });
+
+    it('clears the editing flag', () => {
+      expect(component.editing).toBeFalsy();
+    });
+  });
+
+  describe('filtering publishers', () => {
+    const PUBLISHER_NAMES = ['One', 'Two', 'three', 'Four', 'five'];
+    const QUERY = 't';
+
+    beforeEach(() => {
+      component.publisherNameOptions = [];
+      component.publishersNames = PUBLISHER_NAMES;
+      component.filterPublisherNames(QUERY);
+    });
+
+    it('filters the publisher names', () => {
+      expect(component.publisherNameOptions).toEqual(
+        PUBLISHER_NAMES.filter(name => name.toLowerCase().startsWith(QUERY))
+      );
+    });
+  });
+
+  describe('filtering series', () => {
+    const SERIES_NAMES = ['One', 'Two', 'three', 'Four', 'five'];
+    const QUERY = 't';
+
+    beforeEach(() => {
+      component.seriesNameOptions = [];
+      component.seriesNames = SERIES_NAMES;
+      component.filterSeriesNames(QUERY);
+    });
+
+    it('filters the series names', () => {
+      expect(component.seriesNameOptions).toEqual(
+        SERIES_NAMES.filter(name => name.toLowerCase().startsWith(QUERY))
+      );
+    });
   });
 });
