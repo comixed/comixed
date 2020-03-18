@@ -35,6 +35,7 @@ export interface LibraryState {
   processingCount: number;
   startingRescan: boolean;
   deletingComics: boolean;
+  convertingComics: boolean;
 }
 
 export const initialState: LibraryState = {
@@ -48,7 +49,8 @@ export const initialState: LibraryState = {
   latestUpdatedDate: new Date(0),
   processingCount: 0,
   startingRescan: false,
-  deletingComics: false
+  deletingComics: false,
+  convertingComics: false
 };
 
 export function reducer(
@@ -101,6 +103,15 @@ export function reducer(
 
     case LibraryActionTypes.DeleteMultipleComicsFailed:
       return { ...state, deletingComics: false };
+
+    case LibraryActionTypes.ConvertComics:
+      return { ...state, convertingComics: true };
+
+    case LibraryActionTypes.ComicsConverting:
+      return { ...state, convertingComics: false };
+
+    case LibraryActionTypes.ConvertComicsFailed:
+      return { ...state, convertingComics: false };
 
     default:
       return state;

@@ -45,6 +45,7 @@ import { LoggerModule } from 'ngx-logger';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import {
+  DialogModule,
   ProgressSpinnerModule,
   ScrollPanelModule,
   SliderModule,
@@ -71,6 +72,7 @@ import * as fromSelection from './reducers/selection.reducer';
 import { LibraryService } from './services/library.service';
 import { ReadingListService } from './services/reading-list.service';
 import { UserExperienceModule } from 'app/user-experience/user-experience.module';
+import { ConvertComicsSettingsComponent } from './components/convert-comics-settings/convert-comics-settings.component';
 
 @NgModule({
   imports: [
@@ -107,7 +109,8 @@ import { UserExperienceModule } from 'app/user-experience/user-experience.module
     ScrollPanelModule,
     ToolbarModule,
     ProgressSpinnerModule,
-    TooltipModule
+    TooltipModule,
+    DialogModule
   ],
   exports: [CommonModule, LoggerModule, ComicsModule, ComicListComponent],
   declarations: [
@@ -127,7 +130,8 @@ import { UserExperienceModule } from 'app/user-experience/user-experience.module
     DuplicatesPageToolbarComponent,
     DuplicatePageListItemComponent,
     CollectionDetailsPageComponent,
-    CollectionPageComponent
+    CollectionPageComponent,
+    ConvertComicsSettingsComponent
   ],
   providers: [
     LibraryService,

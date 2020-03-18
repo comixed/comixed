@@ -1,0 +1,32 @@
+<form [formGroup]='conversionForm'>
+  <div class='ui-g'>
+    <div class='ui-g-12'>
+      <label for='archive-type'>{{'convert-comics-settings.label.archive-type'|translate}}</label>
+    </div>
+    <div class='ui-g-12'>
+      <p-dropdown id='archive-type'
+                  [options]='archiveTypeOptions'
+                  formControlName='archiveType'></p-dropdown>
+    </div>
+    <div class='ui-g-12'>
+      <label for='rename-pages'>{{'convert-comics-settings.label.rename-pages'|translate}}</label>
+    </div>
+    <div class='ui-g-12'>
+      <p-checkbox id='rename-pages'
+                  [binary]='true'
+                  formControlName='renamePages'></p-checkbox>
+    </div>
+    <div class='ui-g-12 cx-container-centered-text'>
+      <button pButton
+              type='button'
+              class='cx-action-button ui-button-info'
+              [label]='"convert-comics-settings.button.start"|translate'
+              (click)='startConversion()'></button>
+      <button pButton
+              type='button'
+              class='cx-action-button ui-button-danger'
+              [label]='"convert-comics-settings.button.cancel"|translate'
+              (click)='cancelConversion()'></button>
+    </div>
+  </div>
+</form>

@@ -21,10 +21,6 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import {
-  DELETE_MULTIPLE_COMICS_URL,
-  START_RESCAN_URL
-} from 'app/app.constants';
 import { interpolate } from 'app/app.functions';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
@@ -35,7 +31,14 @@ import { StartRescanResponse } from 'app/library/models/net/start-rescan-respons
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { LibraryService } from './library.service';
-import { GET_LIBRARY_UPDATES_URL } from 'app/library/library.constants';
+import {
+  CONVERT_COMICS_URL,
+  DELETE_MULTIPLE_COMICS_URL,
+  GET_LIBRARY_UPDATES_URL,
+  START_RESCAN_URL
+} from 'app/library/library.constants';
+import { HttpResponse } from '@angular/common/http';
+import { ConvertComicsRequest } from 'app/library/models/net/convert-comics-request';
 
 describe('LibraryService', () => {
   const LAST_UPDATED_DATE = new Date();
@@ -128,5 +131,22 @@ describe('LibraryService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body.get('comic_ids')).toEqual(IDS.toString());
     req.flush({ count: IDS.length } as DeleteMultipleComicsResponse);
+  });
+
+  it('can convert comics', () => {
+    service
+      .convertComics(COMICS, 'CBZ', true)
+      .subscribe((response: HttpResponse<any>) =>
+        expect(response.status).toEqual(200)
+      );
+
+    const req = httpMock.expectOne(interpolate(CONVERT_COMICS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMICS.map(comic => comic.id),
+      archiveType: 'CBZ',
+      renamePages: true
+    } as ConvertComicsRequest);
+    req.flush(new HttpResponse<any>({ status: 200 }));
   });
 });

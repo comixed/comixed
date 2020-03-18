@@ -44,6 +44,9 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MessageService } from 'primeng/api';
 import * as LibraryActions from '../actions/library.actions';
 import {
+  LibraryComicsConverting,
+  LibraryConvertComics,
+  LibraryConvertComicsFailed,
   LibraryGetUpdates,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
@@ -59,6 +62,8 @@ describe('LibraryAdaptor', () => {
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
   const COMIC = COMIC_1;
   const IDS = [7, 17, 65, 1, 29, 71];
+  const ARCHIVE_TYPE = 'CBZ';
+  const RENAME_PAGES = true;
 
   let adaptor: LibraryAdaptor;
   let store: Store<AppState>;
@@ -264,6 +269,46 @@ describe('LibraryAdaptor', () => {
 
     it('can get the previous comic', () => {
       expect(adaptor.getPreviousIssue(COMIC_3)).toEqual(COMIC_2);
+    });
+  });
+
+  describe('converting comics', () => {
+    beforeEach(() => {
+      adaptor.convertComics(COMICS, ARCHIVE_TYPE, RENAME_PAGES);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryConvertComics({
+          comics: COMICS,
+          archiveType: ARCHIVE_TYPE,
+          renamePages: RENAME_PAGES
+        })
+      );
+    });
+
+    it('provides updates on conversion', () => {
+      adaptor.converting$.subscribe(response => expect(response).toBeTruthy());
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryComicsConverting());
+      });
+
+      it('provides updates on conversion', () => {
+        adaptor.converting$.subscribe(response => expect(response).toBeFalsy());
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryConvertComicsFailed());
+      });
+
+      it('provides updates on conversion', () => {
+        adaptor.converting$.subscribe(response => expect(response).toBeFalsy());
+      });
     });
   });
 });
