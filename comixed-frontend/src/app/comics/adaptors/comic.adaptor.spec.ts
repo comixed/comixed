@@ -28,6 +28,7 @@ import {
   ComicDeleted,
   ComicGetFormats,
   ComicGetIssue,
+  ComicGetIssueFailed,
   ComicGetPageTypes,
   ComicGetScanTypes,
   ComicGotFormats,
@@ -176,19 +177,58 @@ describe('ComicAdaptor', () => {
     });
   });
 
-  it('provides notice when fetching a comic', () => {
-    store.dispatch(new ComicGetIssue({ id: 17 }));
-    adaptor.fetchingIssue$.subscribe(result => expect(result).toBeTruthy());
-  });
+  describe('fetching a single comic', () => {
+    beforeEach(() => {
+      adaptor.getComicById(COMIC.id);
+    });
 
-  it('provides notice when the comic changes', () => {
-    store.dispatch(new ComicGotIssue({ comic: COMIC }));
-    adaptor.comic$.subscribe(result => expect(result).toEqual(COMIC));
-  });
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ComicGetIssue({ id: COMIC.id })
+      );
+    });
 
-  it('can get a comic by id', () => {
-    adaptor.getComicById(17);
-    expect(store.dispatch).toHaveBeenCalledWith(new ComicGetIssue({ id: 17 }));
+    it('provides updates on fetching', () => {
+      adaptor.fetchingIssue$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    it('provides updates on no comic', () => {
+      adaptor.noComic$.subscribe(response => expect(response).toBeFalsy());
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicGotIssue({ comic: COMIC }));
+      });
+
+      it('provides updates on fetching', () => {
+        adaptor.fetchingIssue$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('provides updates on the comic', () => {
+        adaptor.comic$.subscribe(result => expect(result).toEqual(COMIC));
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicGetIssueFailed());
+      });
+
+      it('provides updates on fetching', () => {
+        adaptor.fetchingIssue$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('provides updates on no comic', () => {
+        adaptor.noComic$.subscribe(response => expect(response).toBeTruthy());
+      });
+    });
   });
 
   it('can save changes to a page', () => {

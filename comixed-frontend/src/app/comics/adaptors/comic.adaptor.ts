@@ -53,6 +53,7 @@ export class ComicAdaptor {
   private _formatsLoaded$ = new BehaviorSubject<boolean>(false);
   private _formats$ = new BehaviorSubject<ComicFormat[]>([]);
   private _fetchingIssue$ = new BehaviorSubject<boolean>(false);
+  private _noComic$ = new BehaviorSubject<boolean>(false);
   private _fetchingPageTypes$ = new BehaviorSubject<boolean>(false);
   private _pageTypes$ = new BehaviorSubject<PageType[]>([]);
   private _pageTypesLoaded$ = new BehaviorSubject<boolean>(false);
@@ -89,6 +90,9 @@ export class ComicAdaptor {
         }
         if (state.fetchingComic !== this._fetchingIssue$.getValue()) {
           this._fetchingIssue$.next(state.fetchingComic);
+        }
+        if (state.noComic !== this._noComic$.getValue()) {
+          this._noComic$.next(state.noComic);
         }
         if (state.deletingComic !== this._deletingComic$.getValue()) {
           this._deletingComic$.next(state.deletingComic);
@@ -146,6 +150,10 @@ export class ComicAdaptor {
 
   get fetchingIssue$(): Observable<boolean> {
     return this._fetchingIssue$.asObservable();
+  }
+
+  get noComic$(): Observable<boolean> {
+    return this._noComic$.asObservable();
   }
 
   get comic$(): Observable<Comic> {

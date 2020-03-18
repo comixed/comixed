@@ -22,17 +22,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AppState } from 'app/comics';
-import { ComicGotIssue } from 'app/comics/actions/comic.actions';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { routes } from 'app/comics/comics-routing.module';
-import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
 import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
 import { ComicGroupingCardComponent } from 'app/comics/components/comic-grouping-card/comic-grouping-card.component';
@@ -64,14 +61,22 @@ import {
 } from 'primeng/primeng';
 import { ComicDetailsPageComponent } from './comic-details-page.component';
 import { LibraryAdaptor } from 'app/library';
+import { BehaviorSubject } from 'rxjs';
+import { COMIC_2 } from 'app/comics/comics.fixtures';
+import {
+  ComicGetIssueFailed,
+  ComicGotIssue
+} from 'app/comics/actions/comic.actions';
 
 describe('ComicDetailsPageComponent', () => {
+  const COMIC = COMIC_2;
+
   let component: ComicDetailsPageComponent;
   let fixture: ComponentFixture<ComicDetailsPageComponent>;
-  let downloadLink: DebugElement;
   let comicAdaptor: ComicAdaptor;
   let messageService: MessageService;
   let router: Router;
+  let activatedRoute: ActivatedRoute;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
@@ -84,7 +89,7 @@ describe('ComicDetailsPageComponent', () => {
         HttpClientTestingModule,
         TranslateModule.forRoot(),
         LoggerTestingModule,
-        RouterTestingModule.withRoutes(routes),
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
@@ -120,7 +125,17 @@ describe('ComicDetailsPageComponent', () => {
         BreadcrumbAdaptor,
         MessageService,
         ConfirmationService,
-        LibraryAdaptor
+        LibraryAdaptor,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<{}>({}),
+            snapshot: {
+              queryParams: new BehaviorSubject<{}>({})
+            }
+          }
+        }
       ]
     }).compileComponents();
 
@@ -128,21 +143,56 @@ describe('ComicDetailsPageComponent', () => {
     component = fixture.componentInstance;
     comicAdaptor = TestBed.get(ComicAdaptor);
     router = TestBed.get(Router);
+    activatedRoute = TestBed.get(ActivatedRoute);
     messageService = TestBed.get(MessageService);
     store = TestBed.get(Store);
-
-    store.dispatch(new ComicGotIssue({ comic: COMIC_1 }));
+    spyOn(store, 'dispatch').and.callThrough();
 
     fixture.detectChanges();
-
-    downloadLink = fixture.debugElement.query(By.css('#cx-download-link'));
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('loading comic from the id provided', () => {
+    beforeEach(() => {
+      component.id = -1;
+      spyOn(comicAdaptor, 'getComicById');
+      (activatedRoute.params as BehaviorSubject<{}>).next({
+        id: `${COMIC.id}`
+      });
+    });
+
+    it('sets the id', () => {
+      expect(component.id).toEqual(COMIC.id);
+    });
+
+    it('fetches the comic', () => {
+      expect(comicAdaptor.getComicById).toHaveBeenCalledWith(COMIC.id);
+    });
+
+    describe('when the id is invalid', () => {
+      beforeEach(() => {
+        spyOn(router, 'navigateByUrl');
+        store.dispatch(new ComicGetIssueFailed());
+      });
+
+      it('redirects the browser', () => {
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/home');
+      });
+    });
+  });
+
   describe('download link', () => {
+    let downloadLink: DebugElement;
+
+    beforeEach(() => {
+      store.dispatch(new ComicGotIssue({ comic: COMIC }));
+      fixture.detectChanges();
+      downloadLink = fixture.debugElement.query(By.css('#cx-download-link'));
+    });
+
     it('contains a link', () => {
       expect(downloadLink).toBeTruthy();
     });
