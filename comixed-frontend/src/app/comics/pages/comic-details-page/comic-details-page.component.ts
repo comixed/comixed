@@ -27,6 +27,7 @@ import { AuthenticationAdaptor } from 'app/user';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
+import { filter } from 'rxjs/operators';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -39,6 +40,9 @@ export const CURRENT_PAGE_PARAMETER = 'page';
 export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   comicSubscription: Subscription;
   comic: Comic;
+  noComicSubscription: Subscription;
+  fetchingSubscription: Subscription;
+  fetching = false;
   langChangeSubscription: Subscription;
 
   id = -1;
@@ -77,10 +81,14 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     });
     activatedRoute.queryParams.subscribe(params => {
       this.currentTab = this.loadParameter(params[this.TAB_PARAMETER], 0);
+      this.setPageSize(
+        parseInt(this.loadParameter(params[PAGE_SIZE_PARAMETER], '100'), 10)
+      );
+      this.setCurrentPage(
+        parseInt(this.loadParameter(params[CURRENT_PAGE_PARAMETER], '0'), 10)
+      );
+      this.currentTab = this.loadParameter(params[this.TAB_PARAMETER], 0);
     });
-  }
-
-  ngOnInit() {
     this.authSubscription = this.authenticationAdaptor.role$.subscribe(
       roles => (this.isAdmin = roles.admin)
     );
@@ -88,8 +96,9 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
       () => this.loadTranslations()
     );
     this.loadTranslations();
-    this.comicSubscription = this.comicAdaptor.comic$.subscribe(comic => {
-      if (comic) {
+    this.comicSubscription = this.comicAdaptor.comic$
+      .pipe(filter(comic => !!comic))
+      .subscribe(comic => {
         this.comic = comic;
         this.loadTranslations();
         this.characters = comic.characters;
@@ -105,35 +114,26 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
             issue_number: this.comic.issueNumber
           })
         );
-      } else {
-        this.messageService.add({
-          severity: 'error',
-          detail: this.translateService.instant(
-            'comic-details-page.error.no-such-comic.detail',
-            { id: this.id }
-          )
-        });
-        this.router.navigateByUrl('/home');
+      });
+    this.fetchingSubscription = this.comicAdaptor.fetchingIssue$.subscribe(
+      fetching => (this.fetching = fetching)
+    );
+    this.noComicSubscription = this.comicAdaptor.noComic$.subscribe(
+      notFound => {
+        if (notFound && this.id !== -1 && !this.fetching) {
+          this.router.navigateByUrl('/home');
+        }
       }
-    });
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.setPageSize(
-        parseInt(this.loadParameter(params[PAGE_SIZE_PARAMETER], '100'), 10)
-      );
-      this.setCurrentPage(
-        parseInt(this.loadParameter(params[CURRENT_PAGE_PARAMETER], '0'), 10)
-      );
-      this.currentTab = this.loadParameter(params[this.TAB_PARAMETER], 0);
-    });
+    );
   }
 
+  ngOnInit() {}
+
   ngOnDestroy() {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
-    if (this.comicSubscription) {
-      this.comicSubscription.unsubscribe();
-    }
+    this.authSubscription.unsubscribe();
+    this.comicSubscription.unsubscribe();
+    this.fetchingSubscription.unsubscribe();
+    this.noComicSubscription.unsubscribe();
   }
 
   setPageSize(page_size: number): void {

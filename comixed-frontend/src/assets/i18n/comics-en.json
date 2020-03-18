@@ -206,11 +206,6 @@
     },
     "text": {
       "download-link": "Download This Comic"
-    },
-    "error": {
-      "no-such-comic": {
-        "detail": "No such comic found: id={id}."
-      }
     }
   },
   "comic-list-item": {

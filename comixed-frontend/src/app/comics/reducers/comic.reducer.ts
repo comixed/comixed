@@ -32,6 +32,7 @@ export interface ComicState {
   pageTypes: PageType[];
   pageTypesLoaded: boolean;
   fetchingComic: boolean;
+  noComic: boolean;
   comic: Comic;
   savingPage: boolean;
   blockingPageHash: boolean;
@@ -53,6 +54,7 @@ export const initialState: ComicState = {
   pageTypes: [],
   pageTypesLoaded: false,
   fetchingComic: false,
+  noComic: false,
   comic: null,
   savingPage: false,
   blockingPageHash: false,
@@ -111,13 +113,13 @@ export function reducer(
       return { ...state, fetchingPageTypes: false, pageTypesLoaded: false };
 
     case ComicActionTypes.GetIssue:
-      return { ...state, fetchingComic: true };
+      return { ...state, fetchingComic: true, noComic: false };
 
     case ComicActionTypes.GotIssue:
       return { ...state, fetchingComic: false, comic: action.payload.comic };
 
     case ComicActionTypes.GetIssueFailed:
-      return { ...state, fetchingComic: false };
+      return { ...state, fetchingComic: false, noComic: true };
 
     case ComicActionTypes.SavePage:
       return { ...state, savingPage: true };

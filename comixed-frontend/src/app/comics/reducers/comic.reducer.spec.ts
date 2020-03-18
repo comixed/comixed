@@ -121,6 +121,10 @@ describe('Comic Reducer', () => {
       expect(state.fetchingComic).toBeFalsy();
     });
 
+    it('clears the no comic flag', () => {
+      expect(state.noComic).toBeFalsy();
+    });
+
     it('has no comic loaded', () => {
       expect(state.comic).toBeNull();
     });
@@ -326,9 +330,13 @@ describe('Comic Reducer', () => {
   describe('when loading a comic', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetchingComic: false },
+        { ...state, fetchingComic: false, noComic: true },
         new ComicGetIssue({ id: 17 })
       );
+    });
+
+    it('clears the no comic flag', () => {
+      expect(state.noComic).toBeFalsy();
     });
 
     it('sets the fetching comic flag', () => {
@@ -356,9 +364,13 @@ describe('Comic Reducer', () => {
   describe('when getting a comic fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetchingComic: true },
+        { ...state, fetchingComic: true, noComic: false },
         new ComicGetIssueFailed()
       );
+    });
+
+    it('sets the no comic flag', () => {
+      expect(state.noComic).toBeTruthy();
     });
 
     it('clears the fetching comic flag', () => {
