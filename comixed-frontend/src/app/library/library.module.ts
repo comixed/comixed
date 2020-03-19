@@ -72,6 +72,9 @@ import { LibraryService } from './services/library.service';
 import { ReadingListService } from './services/reading-list.service';
 import { UserExperienceModule } from 'app/user-experience/user-experience.module';
 import { ConvertComicsSettingsComponent } from './components/convert-comics-settings/convert-comics-settings.component';
+import * as fromPublisher from 'app/library/reducers/publisher.reducer';
+import { PublisherEffects } from 'app/library/effects/publisher.effects';
+import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
 
 @NgModule({
   imports: [
@@ -96,10 +99,15 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
       fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
       fromDupes.reducer
     ),
+    StoreModule.forFeature(
+      fromPublisher.PUBLISHER_FEATURE_KEY,
+      fromPublisher.reducer
+    ),
     EffectsModule.forFeature([
       LibraryEffects,
       ReadingListEffects,
-      DuplicatePagesEffects
+      DuplicatePagesEffects,
+      PublisherEffects
     ]),
     ContextMenuModule,
     CheckboxModule,
@@ -139,7 +147,8 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
     DuplicatePagesAdaptors,
     ReadingListService,
     ReadingListAdaptor,
-    DuplicatePagesService
+    DuplicatePagesService,
+    PublisherAdaptor
   ]
 })
 export class LibraryModule {

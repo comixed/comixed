@@ -381,6 +381,13 @@
       "message": "Are you sure you want to convert {count, plural, =1{one comic} other{# comics}} to {archiveType}?"
     }
   },
+  "publisher-effects": {
+    "get-publisher-by-name": {
+      "error": {
+        "detail": "Could not find publisher named {name}"
+      }
+    }
+  },
   "breadcrumb": {
     "collections": {
       "root": "Collections",
