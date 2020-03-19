@@ -432,4 +432,9 @@
                                  sequence="2"
                                  created="2019-11-01 09:14:00"
                                  content="Third entry"/>
+  <publishers ID="1000"
+              NAME="Super Soft Publishing"
+              COMIC_VINE_ID="23173"
+              COMIC_VINE_URL="http://localhost"
+              DESCRIPTION="This is a publisher"/>
 </dataset>
