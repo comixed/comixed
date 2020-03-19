@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="002_isue-120_add_publisher_details_fields.xml"
+             author="mcpierce">
+
+    <createTable tableName="publishers">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="name"
+              type="varchar(256)">
+        <constraints nullable="false"
+                     unique="true"/>
+      </column>
+      <column name="comic_vine_id"
+              type="varchar(64)">
+        <constraints unique="true"
+                     nullable="false"/>
+      </column>
+      <column name="comic_vine_url"
+              type="varchar(256)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description"
+              type="clob">
+        <constraints nullable="true"/>
+      </column>
+      <column name="thumbnail"
+              type="blob">
+        <constraints nullable="true"/>
+      </column>
+      <column name="logo"
+              type="blob">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="publishers"
+                      columnName="id"
+                      columnDataType="bigint"
+                      startWith="100"/>
+
+    <createIndex tableName="publishers"
+                 indexName="publisher_name_idx">
+      <column name="name"/>
+    </createIndex>
+
+    <createIndex tableName="publishers"
+                 indexName="publisher_comic_vine_id_idx">
+      <column name="comic_vine_id"></column>
+    </createIndex>
+
+  </changeSet>
+</databaseChangeLog>

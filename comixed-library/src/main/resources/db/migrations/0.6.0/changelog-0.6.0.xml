@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/0.6.0/001_issue-143_add_persisted_task_tables.xml"/>
+  <include file="/db/migrations/0.6.0/002_issue-120_add_publisher_details_fields.xml"/>
 
 </databaseChangeLog>
