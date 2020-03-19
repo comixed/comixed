@@ -35,11 +35,11 @@ public class Publisher {
   private String name;
 
   @Column(name = "comic_vine_id", length = 64, updatable = false, nullable = false, unique = true)
-  @JsonProperty("comic_vine_id")
+  @JsonProperty("comicVineId")
   private String comicVineId;
 
   @Column(name = "comic_vine_url", length = 256, updatable = true, nullable = false)
-  @JsonProperty("comic_vine_url")
+  @JsonProperty("comicVineUrl")
   private String comicVineUrl;
 
   @Lob

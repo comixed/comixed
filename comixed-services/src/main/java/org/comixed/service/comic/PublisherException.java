@@ -16,16 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories.comic;
+package org.comixed.service.comic;
 
-import org.comixed.model.comic.Publisher;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface PublisherRepository extends CrudRepository<Publisher, Long> {
-  Publisher findByComicVineId(@Param("comicVineId") String comicVineId);
-
-  Publisher findByName(@Param("name") String name);
+public class PublisherException extends Exception {
+  public PublisherException(String message) {
+    super(message);
+  }
 }
