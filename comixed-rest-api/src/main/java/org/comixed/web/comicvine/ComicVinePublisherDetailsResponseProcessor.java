@@ -21,9 +21,13 @@ package org.comixed.web.comicvine;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.io.IOUtils;
+import org.comixed.model.comic.Publisher;
 import org.comixed.model.library.Comic;
+import org.comixed.repositories.comic.PublisherRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +96,7 @@ public class ComicVinePublisherDetailsResponseProcessor {
 
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ComicVineResponseAdaptor responseAdaptor;
+  @Autowired private PublisherRepository publisherRepository;
 
   public void process(byte[] content, Comic comic) throws ComicVineAdaptorException {
     this.logger.debug("Validating ComicVine response content");
@@ -100,6 +105,11 @@ public class ComicVinePublisherDetailsResponseProcessor {
     try {
       JsonNode jsonNode = this.objectMapper.readTree(content);
       String publisher = jsonNode.get("results").get("name").asText();
+      String comicVineId = jsonNode.get("results").get("id").asText();
+      String comicVineUrl = jsonNode.get("results").get("api_detail_url").asText();
+      String description = jsonNode.get("results").get("deck").asText();
+      String thumbnailUrl = jsonNode.get("results").get("image").get("thumb_url").asText();
+      String logoUrl = jsonNode.get("results").get("image").get("original_url").asText();
       String imprint = null;
 
       if (IMPRINT_MAPPINGS.containsKey(publisher)) {
@@ -109,8 +119,32 @@ public class ComicVinePublisherDetailsResponseProcessor {
 
       comic.setPublisher(publisher);
       comic.setImprint(imprint);
+
+      // create or update the publisher record
+      this.logger.debug("Updating publisher record");
+      Publisher publisherRecord = this.publisherRepository.findByComicVineId(comicVineId);
+      if (publisherRecord == null) {
+        this.logger.debug("No such publisher: creating new record");
+        publisherRecord = new Publisher();
+        publisherRecord.setComicVineId(comicVineId);
+        publisherRecord.setComicVineUrl(comicVineUrl);
+      }
+      publisherRecord.setName(publisher);
+      publisherRecord.setDescription(description);
+      publisherRecord.setLogo(this.loadImageFromUrl(logoUrl));
+      publisherRecord.setThumbnail(this.loadImageFromUrl(thumbnailUrl));
+      this.publisherRepository.save(publisherRecord);
     } catch (IOException error) {
       throw new ComicVineAdaptorException("Failed to get publisher details", error);
     }
+  }
+
+  private byte[] loadImageFromUrl(String url) {
+    try {
+      return IOUtils.toByteArray(new URL(url));
+    } catch (IOException error) {
+      this.logger.error("failed to load image from url: " + url, error);
+    }
+    return null;
   }
 }

@@ -20,12 +20,14 @@ package org.comixed.web.comicvine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.comixed.model.library.Comic;
+import org.comixed.repositories.comic.PublisherRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -38,14 +40,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class ComicVinePublisherDetailsResponseProcessorTest {
   private static final byte[] BAD_DATA = "This is not a valid response".getBytes();
   private static final byte[] GOOD_DATA =
-      "{\"error\":\"OK\",\"limit\":1,\"offset\":0,\"number_of_page_results\":1,\"number_of_total_results\":1,\"status_code\":1,\"results\":{\"name\":\"DC Comics\"},\"version\":\"1.0\"}"
+      "{\"error\":\"OK\",\"limit\":1,\"offset\":0,\"number_of_page_results\":1,\"number_of_total_results\":1,\"status_code\":1,\"results\":{\"api_detail_url\":\"https:\\/\\/comicvine.gamespot.com\\/api\\/publisher\\/4010-10\\/\",\"deck\":\"Originally known as \\\"National Publications\\\", DC is a publisher of comic books featuring iconic characters and teams such as Superman, Batman, Wonder Woman, Green Lantern, the Justice League of America, and the Teen Titans, and is considered the originator of the American superhero genre. DC, along with rival Marvel Comics, is one of the \\\"big two\\\" American comic book publishers. DC Entertainment is a subsidiary of Warner Brothers and its parent company Time Warner.\",\"id\":10,\"image\":{\"icon_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/square_avatar\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"medium_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_medium\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"screen_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/screen_medium\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"screen_large_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/screen_kubrick\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"small_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_small\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"super_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_large\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"thumb_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_avatar\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"tiny_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/square_mini\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"original_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/original\\/0\\/40\\/5213245-dc_logo_blue_final.jpg\",\"image_tags\":\"All Images,DC Comics logo\"},\"name\":\"DC Comics\"},\"version\":\"1.0\"}"
           .getBytes();
   private static final byte[] IMPRINT_DATA =
-      "{\"error\":\"OK\",\"limit\":1,\"offset\":0,\"number_of_page_results\":1,\"number_of_total_results\":1,\"status_code\":1,\"results\":{\"name\":\"Vertigo\"},\"version\":\"1.0\"}"
+      "{\"error\":\"OK\",\"limit\":1,\"offset\":0,\"number_of_page_results\":1,\"number_of_total_results\":1,\"status_code\":1,\"results\":{\"api_detail_url\":\"https:\\/\\/comicvine.gamespot.com\\/api\\/publisher\\/4010-521\\/\",\"deck\":\"Vertigo is an imprint of  DC Comics suggested for mature readers and is a continuity separate from the DC Universe that has included Sandman, Swamp Thing, John Constantine (Hellblazer) and many others. However, nowadays the imprint is mostly focused upon creator-owned material.\",\"id\":521,\"image\":{\"icon_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/square_avatar\\/6\\/67663\\/4717683-logo.jpg\",\"medium_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_medium\\/6\\/67663\\/4717683-logo.jpg\",\"screen_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/screen_medium\\/6\\/67663\\/4717683-logo.jpg\",\"screen_large_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/screen_kubrick\\/6\\/67663\\/4717683-logo.jpg\",\"small_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_small\\/6\\/67663\\/4717683-logo.jpg\",\"super_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_large\\/6\\/67663\\/4717683-logo.jpg\",\"thumb_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_avatar\\/6\\/67663\\/4717683-logo.jpg\",\"tiny_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/square_mini\\/6\\/67663\\/4717683-logo.jpg\",\"original_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/original\\/6\\/67663\\/4717683-logo.jpg\",\"image_tags\":\"All Images\"},\"name\":\"Vertigo\"},\"version\":\"1.0\"}"
           .getBytes();
 
   @Autowired private ComicVinePublisherDetailsResponseProcessor processor;
   @Mock private Comic comic;
+  @MockBean private PublisherRepository publisherRepository;
 
   @Test(expected = ComicVineAdaptorException.class)
   public void testProcessBadData() throws ComicVineAdaptorException {
