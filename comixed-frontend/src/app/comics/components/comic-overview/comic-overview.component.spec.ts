@@ -40,6 +40,7 @@ import {
 import { ComicOverviewComponent } from './comic-overview.component';
 import { BehaviorSubject } from 'rxjs';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-url.pipe';
 
 describe('ComicOverviewComponent', () => {
   const COMIC = Object.assign({}, COMIC_1);
@@ -71,7 +72,7 @@ describe('ComicOverviewComponent', () => {
         AutoCompleteModule,
         ToolbarModule
       ],
-      declarations: [ComicOverviewComponent],
+      declarations: [ComicOverviewComponent, PublisherThumbnailUrlPipe],
       providers: [
         ComicAdaptor,
         ConfirmationService,

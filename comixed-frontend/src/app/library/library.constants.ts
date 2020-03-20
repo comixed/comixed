@@ -30,3 +30,7 @@ export const CONVERT_COMICS_URL = `${COMIXED_API_ROOT}/library/convert`;
 
 export const GET_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${type}`;
 export const GET_PAGE_FOR_ENTRY_URL = `${API_ROOT_URL}/collections/\${type}/\${name}`;
+
+export const GET_PUBLISHER_BY_NAME_URL = `${API_ROOT_URL}/publishers/\${name}`;
+export const GET_PUBLISHER_LOGO_URL = `${API_ROOT_URL}/publishers/\${name}/logo`;
+export const GET_PUBLISHER_THUMBNAIL_URL = `${API_ROOT_URL}/publishers/\${name}/thumbnail`;

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { interpolate } from 'app/app.functions';
-import {
-  GET_COMIC_COVER_URL,
-  MISSING_COMIC_IMAGE_URL
-} from 'app/comics/comics.constants';
-import { Comic } from 'app/comics';
+import { GET_PUBLISHER_BY_NAME_URL } from 'app/library/library.constants';
+import { LoggerService } from '@angular-ru/logger';
 
-@Pipe({
-  name: 'comicCoverUrl'
+@Injectable({
+  providedIn: 'root'
 })
-export class ComicCoverUrlPipe implements PipeTransform {
-  transform(comic: Comic): string {
-    if (!!comic && !comic.missing) {
-      return interpolate(GET_COMIC_COVER_URL, { id: comic.id });
-    }
-    return MISSING_COMIC_IMAGE_URL;
+export class PublisherService {
+  constructor(private http: HttpClient, private logger: LoggerService) {}
+
+  getPublisherByName(name: string): Observable<any> {
+    this.logger.debug('[GET] http request: getting publisher name name:', name);
+    return this.http.get(
+      interpolate(GET_PUBLISHER_BY_NAME_URL, { name: name })
+    );
   }
 }

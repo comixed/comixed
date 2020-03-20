@@ -73,6 +73,7 @@ import { TableModule } from 'primeng/table';
 import { ScrapingIssueCoverUrlPipe } from './pipes/scraping-issue-cover-url.pipe';
 import * as fromComics from './reducers/comic.reducer';
 import * as fromScraping from './reducers/scraping.reducer';
+import { PublisherThumbnailUrlPipe } from './pipes/publisher-thumbnail-url.pipe';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import * as fromScraping from './reducers/scraping.reducer';
     ComicTitlePipe,
     ComicCoverUrlPipe,
     ComicDownloadLinkPipe,
-    ScrapingIssueCoverUrlPipe
+    ScrapingIssueCoverUrlPipe,
+    PublisherThumbnailUrlPipe
   ],
   imports: [
     UserModule,

@@ -46,16 +46,16 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   DbUnitTestExecutionListener.class
 })
 public class PublisherRepositoryTest {
-  private static final Long TEST_PUBLISHER_ID = 1000L;
+  private static final String TEST_PUBLISHER_NAME = "Super Soft Publishing";
   private static final String TEST_COMIC_VINE_ID = "23173";
   @Autowired private PublisherRepository publisherRepository;
 
   @Test
-  public void testGetById() {
-    Publisher result = publisherRepository.getById(TEST_PUBLISHER_ID);
+  public void testGetByName() {
+    Publisher result = publisherRepository.findByName(TEST_PUBLISHER_NAME);
 
     assertNotNull(result);
-    assertEquals(TEST_PUBLISHER_ID, result.getId());
+    assertEquals(TEST_PUBLISHER_NAME, result.getName());
   }
 
   @Test

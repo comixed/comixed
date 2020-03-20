@@ -67,6 +67,7 @@ import {
   ComicGetIssueFailed,
   ComicGotIssue
 } from 'app/comics/actions/comic.actions';
+import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-url.pipe';
 
 describe('ComicDetailsPageComponent', () => {
   const COMIC = COMIC_2;
@@ -118,7 +119,8 @@ describe('ComicDetailsPageComponent', () => {
         ComicDownloadLinkPipe,
         ComicPageUrlPipe,
         ScrapingIssueTitlePipe,
-        ScrapingIssueCoverUrlPipe
+        ScrapingIssueCoverUrlPipe,
+        PublisherThumbnailUrlPipe
       ],
       providers: [
         ComicAdaptor,

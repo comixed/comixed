@@ -28,6 +28,10 @@ import { MessageService } from 'primeng/api';
 import { Observable, Subscription } from 'rxjs';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LoggerService } from '@angular-ru/logger';
+import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
+import { filter } from 'rxjs/operators';
+import { interpolate } from 'app/app.functions';
+import { GET_PUBLISHER_LOGO_URL } from 'app/library/library.constants';
 
 @Component({
   selector: 'app-collection-details-page',
@@ -43,6 +47,10 @@ export class CollectionDetailsPageComponent implements OnInit, OnDestroy {
   comics: Comic[] = [];
   selectedComicsSubscription: Subscription;
   selectedComics: Comic[] = [];
+  publisherSubscription: Subscription;
+  imageUrl = null;
+  description = null;
+  comicVineUrl = null;
 
   constructor(
     private logger: LoggerService,
@@ -53,13 +61,15 @@ export class CollectionDetailsPageComponent implements OnInit, OnDestroy {
     private libraryAdaptor: LibraryAdaptor,
     private translateService: TranslateService,
     private messageService: MessageService,
-    private selectionAdaptor: SelectionAdaptor
-  ) {}
-
-  ngOnInit() {
+    private selectionAdaptor: SelectionAdaptor,
+    private publisherAdaptor: PublisherAdaptor
+  ) {
     this.routeParamsSubscription = this.activatedRoute.params.subscribe(
       params => {
         this.logger.debug('params updated:', params);
+        if (!params['collectionType']) {
+          return;
+        }
         const typeName = params['collectionType'].toString().toUpperCase();
         this.collectionType = CollectionType[typeName] as CollectionType;
         if (!!this.collectionType) {
@@ -72,6 +82,16 @@ export class CollectionDetailsPageComponent implements OnInit, OnDestroy {
           switch (this.collectionType) {
             case CollectionType.PUBLISHERS:
               target = this.libraryAdaptor.publishers$;
+              this.publisherAdaptor.getPublisherByName(this.collectionName);
+              this.publisherSubscription = this.publisherAdaptor.publisher$
+                .pipe(filter(publisher => !!publisher))
+                .subscribe(publisher => {
+                  this.description = publisher.description;
+                  this.imageUrl = interpolate(GET_PUBLISHER_LOGO_URL, {
+                    name: publisher.name
+                  });
+                  this.comicVineUrl = publisher.comicVineUrl;
+                });
               break;
             case CollectionType.SERIES:
               target = this.libraryAdaptor.series$;
@@ -118,19 +138,26 @@ export class CollectionDetailsPageComponent implements OnInit, OnDestroy {
     );
   }
 
+  ngOnInit() {}
+
   ngOnDestroy() {
     this.routeParamsSubscription.unsubscribe();
     this.collectionSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
+    if (!!this.publisherSubscription) {
+      this.publisherSubscription.unsubscribe();
+    }
   }
 
   private loadTranslations() {
-    this.titleService.setTitle(
-      this.translateService.instant('collection-details-page.title', {
-        collectionType: this.collectionType.toString().toUpperCase(),
-        name: this.collectionName
-      })
-    );
+    if (!!this.collectionType) {
+      this.titleService.setTitle(
+        this.translateService.instant('collection-details-page.title', {
+          collectionType: this.collectionType.toString().toUpperCase(),
+          name: this.collectionName
+        })
+      );
+    }
     this.breadcrumbAdaptor.loadEntries([
       {
         label: this.translateService.instant('breadcrumb.collections.root')

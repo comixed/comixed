@@ -16,12 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  ComicCoverUrlPipe,
-  MISSING_COMIC_IMAGE_URL
-} from './comic-cover-url.pipe';
+import { ComicCoverUrlPipe } from './comic-cover-url.pipe';
 import { API_ROOT_URL } from 'app/app.functions';
 import { COMIC_1, COMIC_4 } from 'app/comics/comics.fixtures';
+import { MISSING_COMIC_IMAGE_URL } from 'app/comics/comics.constants';
 
 describe('ComicCoverUrlPipe', () => {
   const pipe = new ComicCoverUrlPipe();

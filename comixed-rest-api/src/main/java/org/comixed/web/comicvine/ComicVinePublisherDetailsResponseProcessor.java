@@ -106,7 +106,7 @@ public class ComicVinePublisherDetailsResponseProcessor {
       JsonNode jsonNode = this.objectMapper.readTree(content);
       String publisher = jsonNode.get("results").get("name").asText();
       String comicVineId = jsonNode.get("results").get("id").asText();
-      String comicVineUrl = jsonNode.get("results").get("api_detail_url").asText();
+      String comicVineUrl = jsonNode.get("results").get("site_detail_url").asText();
       String description = jsonNode.get("results").get("deck").asText();
       String thumbnailUrl = jsonNode.get("results").get("image").get("thumb_url").asText();
       String logoUrl = jsonNode.get("results").get("image").get("original_url").asText();

@@ -44,6 +44,7 @@ import {
   ConfirmationService,
   DropdownModule,
   MessageService,
+  SidebarModule,
   SliderModule,
   ToolbarModule,
   TooltipModule
@@ -86,7 +87,8 @@ describe('ComicListToolbarComponent', () => {
         TooltipModule,
         DropdownModule,
         SliderModule,
-        CheckboxModule
+        CheckboxModule,
+        SidebarModule
       ],
       declarations: [ComicListToolbarComponent],
       providers: [

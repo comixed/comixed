@@ -69,6 +69,7 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { CollectionDetailsPageComponent } from './collection-details-page.component';
 import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
+import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionDetailsPageComponent', () => {
@@ -129,6 +130,7 @@ describe('CollectionDetailsPageComponent', () => {
         SelectionAdaptor,
         ReadingListAdaptor,
         BreadcrumbAdaptor,
+        PublisherAdaptor,
         MessageService,
         ConfirmationService,
         {

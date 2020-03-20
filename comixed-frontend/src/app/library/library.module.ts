@@ -46,7 +46,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import {
   DialogModule,
   ProgressSpinnerModule,
-  ScrollPanelModule,
+  ScrollPanelModule, SidebarModule,
   SliderModule,
   ToolbarModule,
   TooltipModule
@@ -72,6 +72,9 @@ import { LibraryService } from './services/library.service';
 import { ReadingListService } from './services/reading-list.service';
 import { UserExperienceModule } from 'app/user-experience/user-experience.module';
 import { ConvertComicsSettingsComponent } from './components/convert-comics-settings/convert-comics-settings.component';
+import * as fromPublisher from 'app/library/reducers/publisher.reducer';
+import { PublisherEffects } from 'app/library/effects/publisher.effects';
+import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
 
 @NgModule({
   imports: [
@@ -81,25 +84,30 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
     UserExperienceModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(
-      fromLibrary.LIBRARY_FEATURE_KEY,
-      fromLibrary.reducer
+        fromLibrary.LIBRARY_FEATURE_KEY,
+        fromLibrary.reducer
     ),
     StoreModule.forFeature(
-      fromSelection.SELECTION_FEATURE_KEY,
-      fromSelection.reducer
+        fromSelection.SELECTION_FEATURE_KEY,
+        fromSelection.reducer
     ),
     StoreModule.forFeature(
-      fromReadingList.READING_LIST_FEATURE_KEY,
-      fromReadingList.reducer
+        fromReadingList.READING_LIST_FEATURE_KEY,
+        fromReadingList.reducer
     ),
     StoreModule.forFeature(
-      fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
-      fromDupes.reducer
+        fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
+        fromDupes.reducer
+    ),
+    StoreModule.forFeature(
+        fromPublisher.PUBLISHER_FEATURE_KEY,
+        fromPublisher.reducer
     ),
     EffectsModule.forFeature([
       LibraryEffects,
       ReadingListEffects,
-      DuplicatePagesEffects
+      DuplicatePagesEffects,
+      PublisherEffects
     ]),
     ContextMenuModule,
     CheckboxModule,
@@ -108,7 +116,8 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
     ToolbarModule,
     ProgressSpinnerModule,
     TooltipModule,
-    DialogModule
+    DialogModule,
+    SidebarModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
@@ -139,7 +148,8 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
     DuplicatePagesAdaptors,
     ReadingListService,
     ReadingListAdaptor,
-    DuplicatePagesService
+    DuplicatePagesService,
+    PublisherAdaptor
   ]
 })
 export class LibraryModule {

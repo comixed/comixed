@@ -147,67 +147,6 @@
       }
     }
   },
-  "comic-list-toolbar": {
-    "options": {
-      "sort-field": {
-        "series": "Sort by series",
-        "publisher": "Sort by publisher",
-        "volume": "Sort by volume",
-        "issue-number": "Sort by issue #",
-        "added-date": "Sort by date added",
-        "cover-date": "Sort by cover date",
-        "last-read-date": "Sort by last read"
-      }
-    }
-  },
-  "duplicate-pages": {
-    "label": {
-      "hash": "Hash"
-    },
-    "text": {
-      "no-duplicates": "There are no duplicate pages! Yay!",
-      "cover-size": "Cover Size: {cover_size}px",
-      "found-in-file-count": "Found in {file_count} Files",
-      "instance-count": "{file_count} Instances"
-    }
-  },
-  "page-hash": {
-    "label": {
-      "in-comic": "In Comic",
-      "page-number": "Page #",
-      "comic-filename": "Comic Filename",
-      "image-filename": "Image Filename"
-    }
-  },
-  "admin": {
-    "users": {
-      "label": {
-        "user-details": "User Details",
-        "email": "Email",
-        "roles": "Roles",
-        "member-since": "Member Since",
-        "last-logged-on": "Last Logged On"
-      },
-      "tooltip": {
-        "delete-user": "Delete this user?"
-      },
-      "button": {
-        "new-user": "New User"
-      }
-    },
-    "user-editor": {
-      "label": {
-        "new-user": "[New User]",
-        "email-address": "Email Address",
-        "password": "Password",
-        "verify-password": "Re-enter Password"
-      },
-      "button": {
-        "admin": "Admin",
-        "reader": "Reader"
-      }
-    }
-  },
   "library-admin-page": {
     "rescan": {
       "header": "Rescan Library",

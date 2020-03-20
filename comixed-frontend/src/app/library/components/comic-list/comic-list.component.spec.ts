@@ -62,6 +62,7 @@ import {
   DialogModule,
   MessageService,
   ProgressSpinnerModule,
+  SidebarModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
@@ -124,7 +125,8 @@ describe('ComicListComponent', () => {
         ToolbarModule,
         ProgressSpinnerModule,
         CheckboxModule,
-        DialogModule
+        DialogModule,
+        SidebarModule
       ],
       declarations: [
         ComicListComponent,
