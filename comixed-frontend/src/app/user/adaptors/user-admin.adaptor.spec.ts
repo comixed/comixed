@@ -37,7 +37,7 @@ import {
   reducer,
   USER_ADMIN_FEATURE_KEY
 } from 'app/user/reducers/user-admin.reducer';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { UserAdminAdaptor } from './user-admin.adaptor';
 
@@ -53,7 +53,7 @@ describe('UserAdminAdaptor', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(USER_ADMIN_FEATURE_KEY, reducer),

@@ -21,7 +21,7 @@ import { AuthenticationAdaptor, User } from 'app/user';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 export const LIBRARY_DISPLAY_LAYOUT = 'library_display_layout';
 export const LIBRARY_DISPLAY_LAYOUT_DEFAULT = 'grid';
@@ -62,7 +62,7 @@ export class LibraryDisplayAdaptor {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authenticationAdaptor: AuthenticationAdaptor,
-    private logger: NGXLogger
+    private logger: LoggerService
   ) {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.logger.debug('query parameters changed:', params);

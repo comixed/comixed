@@ -46,7 +46,7 @@ import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover
 import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { UserModule } from 'app/user/user.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
 import { CardModule } from 'primeng/card';
@@ -88,7 +88,7 @@ describe('ComicDetailsPageComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),

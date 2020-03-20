@@ -32,7 +32,7 @@ import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import { AuthenticationAdaptor, COMICVINE_API_KEY } from 'app/user';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
@@ -70,7 +70,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   skipCache = false;
 
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private authenticationAdaptor: AuthenticationAdaptor,
     private comicAdaptor: ComicAdaptor,
     private scrapingAdaptor: ScrapingAdaptor,
@@ -158,7 +158,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   private getVolumes(skipCache: boolean): void {
-    this.logger.debug(`'getting volumes for comic: skipCache=${skipCache}`);
+    this.logger.info(`'getting volumes for comic: skipCache=${skipCache}`);
     this.skipCache = skipCache;
     this.scrapingAdaptor.getVolumes(
       this.getApiKey(),

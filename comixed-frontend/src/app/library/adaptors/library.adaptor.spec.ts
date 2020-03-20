@@ -40,7 +40,7 @@ import {
   reducer
 } from 'app/library/reducers/library.reducer';
 import { extractField } from 'app/library/utility.functions';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import * as LibraryActions from '../actions/library.actions';
 import {
@@ -75,7 +75,7 @@ describe('LibraryAdaptor', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

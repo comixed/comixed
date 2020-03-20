@@ -39,7 +39,7 @@ import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pi
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { AuthenticationAdaptor, COMICVINE_API_KEY } from 'app/user';
 import { UserModule } from 'app/user/user.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { BlockUIModule } from 'primeng/blockui';
 import {
   CardModule,
@@ -80,7 +80,7 @@ describe('ComicDetailsEditorComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

@@ -27,7 +27,7 @@ import { CollectionType } from 'app/library/models/collection-type.enum';
 import { MessageService } from 'primeng/api';
 import { Observable, Subscription } from 'rxjs';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'app-collection-details-page',
@@ -45,7 +45,7 @@ export class CollectionDetailsPageComponent implements OnInit, OnDestroy {
   selectedComics: Comic[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
@@ -91,13 +91,13 @@ export class CollectionDetailsPageComponent implements OnInit, OnDestroy {
           }
 
           this.collectionSubscription = target.subscribe(collection => {
-            this.logger.debug('finding the collection entry:', collection);
+            this.logger.info('finding the collection entry:', collection);
             const entry = collection.find(c => c.name === this.collectionName);
             this.comics = !!entry ? entry.comics : [];
             this.logger.debug('collection comics:', this.comics);
           });
         } else {
-          this.logger.debug('invalid collection type:', typeName);
+          this.logger.info('invalid collection type:', typeName);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(

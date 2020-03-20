@@ -43,7 +43,7 @@ import { DuplicatePagesEffects } from 'app/library/effects/duplicate-pages.effec
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MessageService } from 'primeng/api';
 import { DUPLICATE_PAGE_2 } from 'app/library/models/duplicate-page.fixtures';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('DuplicatePagesAdaptors', () => {
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
@@ -56,7 +56,7 @@ describe('DuplicatePagesAdaptors', () => {
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(DUPLICATE_PAGES_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

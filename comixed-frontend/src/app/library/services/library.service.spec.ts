@@ -28,7 +28,7 @@ import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-mult
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 import { LibraryService } from './library.service';
 import {
@@ -60,7 +60,7 @@ describe('LibraryService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerTestingModule],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
       providers: [LibraryService]
     });
 

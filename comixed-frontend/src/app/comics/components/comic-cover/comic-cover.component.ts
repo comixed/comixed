@@ -33,7 +33,7 @@ import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { LibraryAdaptor } from 'app/library';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
@@ -62,7 +62,7 @@ export class ComicCoverComponent implements OnInit, OnDestroy {
   baseMenuId = '';
 
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private router: Router,
     private contextMenuAdaptor: ContextMenuAdaptor,
     private libraryAdaptor: LibraryAdaptor,

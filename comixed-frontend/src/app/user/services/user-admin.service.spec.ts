@@ -31,7 +31,7 @@ import {
   SAVE_NEW_USER_URL,
   SAVE_USER_URL
 } from 'app/user/user.constants';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 import { UserAdminService } from './user-admin.service';
 
@@ -44,7 +44,7 @@ describe('UserAdminService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerTestingModule],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
       providers: [UserAdminService]
     });
 

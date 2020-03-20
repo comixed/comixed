@@ -5,7 +5,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -32,7 +32,7 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
   selectedComics: Comic[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
@@ -115,7 +115,7 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
           RENAME_PAGES_ON_CONVERT,
           renamePages ? '1' : '0'
         );
-        this.logger.debug('calling adaptor to start conversion');
+        this.logger.info('calling adaptor to start conversion');
         this.libraryAdaptor.convertComics(
           this.selectedComics,
           archiveType,

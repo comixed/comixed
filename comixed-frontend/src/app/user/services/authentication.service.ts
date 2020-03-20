@@ -24,14 +24,14 @@ import {
   AUTH_SUBMIT_LOGIN_DATA_URL,
   GET_AUTHENTICATED_USER_URL
 } from 'app/services/url.constants';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  constructor(private logger: NGXLogger, private http: HttpClient) {}
+  constructor(private logger: LoggerService, private http: HttpClient) {}
 
   getAuthenticatedUser(): Observable<any> {
     this.logger.debug('[GET] http request: get authenticated user');

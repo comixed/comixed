@@ -24,7 +24,7 @@ import { LoginResponse } from 'app/models/net/login-response';
 import { User } from 'app/user';
 import { AuthenticationService } from 'app/user/services/authentication.service';
 import { TokenService } from 'app/user/services/token.service';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of } from 'rxjs';
 
@@ -46,7 +46,7 @@ import {
 export class AuthenticationEffects {
   constructor(
     private actions$: Actions,
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private authenticationService: AuthenticationService,
     private tokenService: TokenService,
     private translateService: TranslateService,

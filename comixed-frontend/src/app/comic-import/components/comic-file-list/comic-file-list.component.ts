@@ -23,7 +23,7 @@ import { ComicFile } from 'app/comic-import/models/comic-file';
 import { LibraryDisplayAdaptor } from 'app/library';
 import { generateContextMenuItems } from 'app/user-experience';
 import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { MenuItem } from 'primeng/api';
 import { ContextMenu } from 'primeng/contextmenu';
 import { Subscription } from 'rxjs';
@@ -67,7 +67,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
   showSelections = false;
 
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private comicImportAdaptor: ComicImportAdaptor,
     private contextMenuAdaptor: ContextMenuAdaptor,

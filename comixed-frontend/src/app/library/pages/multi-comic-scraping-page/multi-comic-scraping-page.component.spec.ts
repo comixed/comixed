@@ -29,7 +29,7 @@ import {
   SCRAPING_FEATURE_KEY
 } from 'app/comics/reducers/scraping.reducer';
 import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { MultiComicScrapingPageComponent } from './multi-comic-scraping-page.component';
 
@@ -44,7 +44,7 @@ describe('MultiComicScrapingPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(SCRAPING_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

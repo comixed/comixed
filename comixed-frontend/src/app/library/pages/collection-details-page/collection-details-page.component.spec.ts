@@ -18,7 +18,7 @@
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -49,7 +49,7 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { AuthenticationAdaptor } from 'app/user';
 import { UserExperienceModule } from 'app/user-experience/user-experience.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { DataViewModule } from 'primeng/dataview';
 import {
   ButtonModule,
@@ -57,6 +57,7 @@ import {
   CheckboxModule,
   ConfirmationService,
   ContextMenuModule,
+  DialogModule,
   DropdownModule,
   MessageService,
   ProgressSpinnerModule,
@@ -67,6 +68,7 @@ import {
 } from 'primeng/primeng';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionDetailsPageComponent } from './collection-details-page.component';
+import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionDetailsPageComponent', () => {
@@ -86,8 +88,9 @@ describe('CollectionDetailsPageComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,
+        ReactiveFormsModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
@@ -102,7 +105,8 @@ describe('CollectionDetailsPageComponent', () => {
         SliderModule,
         ToolbarModule,
         CardModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        DialogModule
       ],
       declarations: [
         CollectionDetailsPageComponent,
@@ -112,7 +116,8 @@ describe('CollectionDetailsPageComponent', () => {
         ComicGridItemComponent,
         ComicCoverComponent,
         ComicCoverUrlPipe,
-        ComicTitlePipe
+        ComicTitlePipe,
+        ConvertComicsSettingsComponent
       ],
       providers: [
         LibraryAdaptor,
