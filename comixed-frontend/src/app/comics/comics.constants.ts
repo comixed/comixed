@@ -29,6 +29,8 @@ export const RESTORE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}/restore`;
 export const DOWNLOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}/download`;
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 
+export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
+
 export const SAVE_PAGE_URL = `${API_ROOT_URL}/pages/\${id}`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 export const BLOCK_PAGE_HASH_URL = `${API_ROOT_URL}/pages/\${id}/block/\${hash}`;

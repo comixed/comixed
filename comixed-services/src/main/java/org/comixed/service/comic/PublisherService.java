@@ -16,16 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories.comic;
+package org.comixed.service.comic;
 
 import org.comixed.model.comic.Publisher;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.comixed.repositories.comic.PublisherRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Repository
-public interface PublisherRepository extends CrudRepository<Publisher, Long> {
-  Publisher findByComicVineId(@Param("comicVineId") String comicVineId);
+@Service
+public class PublisherService {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  Publisher findByName(@Param("name") String name);
+  @Autowired private PublisherRepository publisherRepository;
+
+  public Publisher getByName(String name) throws PublisherException {
+    this.logger.debug("Getting publisher: name={}", name);
+    Publisher result = this.publisherRepository.findByName(name);
+
+    if (result == null) throw new PublisherException("No such publisher: name=" + name);
+
+    return result;
+  }
 }

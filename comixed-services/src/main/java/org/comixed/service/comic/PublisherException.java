@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
-import { interpolate } from 'app/app.functions';
-import {
-  GET_COMIC_COVER_URL,
-  MISSING_COMIC_IMAGE_URL
-} from 'app/comics/comics.constants';
-import { Comic } from 'app/comics';
+package org.comixed.service.comic;
 
-@Pipe({
-  name: 'comicCoverUrl'
-})
-export class ComicCoverUrlPipe implements PipeTransform {
-  transform(comic: Comic): string {
-    if (!!comic && !comic.missing) {
-      return interpolate(GET_COMIC_COVER_URL, { id: comic.id });
-    }
-    return MISSING_COMIC_IMAGE_URL;
+public class PublisherException extends Exception {
+  public PublisherException(String message) {
+    super(message);
   }
 }

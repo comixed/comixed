@@ -246,7 +246,8 @@
       "select-all": "Select All Comics",
       "deselect-all": "Deselect All Comics",
       "scrape": "Scrape Selected Comics",
-      "delete": "Delete Selected Comics"
+      "delete": "Delete Selected Comics",
+      "show-details": "Show details."
     },
     "delete-comics": {
       "header": "Delete Selected Comics",
@@ -337,7 +338,10 @@
   },
   "collection-details-page": {
     "page-title": "{name} - {count, plural, =1{One Comic} other{# Comics}}",
-    "title": "{collectionType}: {name}"
+    "title": "{collectionType}: {name}",
+    "link": {
+      "comic-vine-details": "Open The ComicVine Details Page"
+    }
   },
   "collections": {
     "error": {
@@ -379,6 +383,13 @@
     "start-conversion": {
       "header": "Convert Comics",
       "message": "Are you sure you want to convert {count, plural, =1{one comic} other{# comics}} to {archiveType}?"
+    }
+  },
+  "publisher-effects": {
+    "get-publisher-by-name": {
+      "error": {
+        "detail": "Could not find publisher named {name}"
+      }
     }
   },
   "breadcrumb": {

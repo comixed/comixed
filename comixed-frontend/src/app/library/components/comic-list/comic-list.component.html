@@ -8,7 +8,10 @@
                (onHide)='hideContextMenu()'></p-contextMenu>
 <app-comic-list-toolbar [comics]='comics'
                         [dataView]='comicListDataview'
-                        (startScraping)='scrapeComics()'></app-comic-list-toolbar>
+                        (startScraping)='scrapeComics()'
+                        [imageUrl]='imageUrl'
+                        [description]='description'
+                        [comicVineUrl]='comicVineUrl'></app-comic-list-toolbar>
 <div>
   <p-dataView #comicListDataview
               (onPage)='setIndexOfFirst($event.first)'

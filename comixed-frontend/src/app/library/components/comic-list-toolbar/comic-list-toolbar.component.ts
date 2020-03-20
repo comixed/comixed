@@ -44,6 +44,7 @@ import { Subscription } from 'rxjs';
 export class ComicListToolbarComponent implements OnInit, OnDestroy {
   @Input() comics: Comic[] = [];
   @Input() dataView: any;
+  @Input() comicVineUrl: string;
   @Output() startScraping = new EventEmitter<any>();
 
   selectionSubscription: Subscription;
@@ -61,6 +62,10 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
   sameHeight = true;
   coverSizeSubscription: Subscription;
   coverSize = 200;
+  showDetails = false;
+  enableDetails = false;
+  private _description: string = null;
+  private _imageUrl: string = null;
 
   constructor(
     private translateService: TranslateService,
@@ -70,9 +75,7 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
     private selectionAdaptor: SelectionAdaptor,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private scrapingAdaptor: ScrapingAdaptor
-  ) {}
-
-  ngOnInit() {
+  ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -97,6 +100,8 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
     );
   }
 
+  ngOnInit() {}
+
   ngOnDestroy() {
     this.langChangeSubscription.unsubscribe();
     this.selectionSubscription.unsubscribe();
@@ -105,6 +110,26 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
     this.layoutSubscription.unsubscribe();
     this.sameHeightSubscription.unsubscribe();
     this.coverSizeSubscription.unsubscribe();
+  }
+
+  @Input()
+  set description(description: string) {
+    this._description = description;
+    this.enableDetails = !!this._imageUrl && !!this._description;
+  }
+
+  get description(): string {
+    return this._description;
+  }
+
+  @Input()
+  set imageUrl(url: string) {
+    this._imageUrl = url;
+    this.enableDetails = !!this._imageUrl && !!this._description;
+  }
+
+  get imageUrl(): string {
+    return this._imageUrl;
   }
 
   selectAll(): void {
@@ -244,5 +269,9 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
 
   fireStartScraping() {
     this.startScraping.emit(true);
+  }
+
+  setDetailsVisible() {
+    this.showDetails = true;
   }
 }
