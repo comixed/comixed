@@ -22,7 +22,7 @@ import { Action } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { ReadingList } from 'app/library/models/reading-list/reading-list';
 import { ReadingListService } from 'app/library/services/reading-list.service';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of } from 'rxjs';
 
@@ -47,7 +47,7 @@ export class ReadingListEffects {
     private readingListService: ReadingListService,
     private translateService: TranslateService,
     private messageService: MessageService,
-    private logger: NGXLogger
+    private logger: LoggerService
   ) {}
 
   @Effect()

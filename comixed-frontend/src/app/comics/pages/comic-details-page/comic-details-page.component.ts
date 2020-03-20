@@ -26,7 +26,7 @@ import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { AuthenticationAdaptor } from 'app/user';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { filter } from 'rxjs/operators';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
@@ -60,7 +60,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   protected currentPage: number;
 
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private titleService: Title,
     private translateService: TranslateService,
     private messageService: MessageService,
@@ -73,7 +73,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(params => {
       if (params['id']) {
         this.id = +params['id'];
-        this.logger.debug(`query parameter: id=${this.id}`);
+        this.logger.info(`query parameter: id=${this.id}`);
         this.comicAdaptor.getComicById(+params['id']);
       } else {
         this.router.navigateByUrl('/home');

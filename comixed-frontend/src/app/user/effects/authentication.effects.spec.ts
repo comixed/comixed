@@ -26,7 +26,7 @@ import * as AuthActions from 'app/user/actions/authentication.actions';
 import { AuthenticationService } from 'app/user/services/authentication.service';
 import { TokenService } from 'app/user/services/token.service';
 import { cold, hot } from 'jasmine-marbles';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 import { AuthenticationEffects } from './authentication.effects';
@@ -51,7 +51,7 @@ describe('AuthenticationEffects', () => {
       imports: [
         RouterTestingModule.withRoutes([{ path: 'home', redirectTo: '' }]),
         TranslateModule.forRoot(),
-        LoggerTestingModule
+        LoggerModule.forRoot()
       ],
       providers: [
         AuthenticationEffects,

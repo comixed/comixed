@@ -24,7 +24,7 @@ import { Subscription } from 'rxjs';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { MenuItem } from 'primeng/api';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'app-root',
@@ -55,9 +55,9 @@ export class AppComponent implements OnInit {
     private authenticationAdaptor: AuthenticationAdaptor,
     private libraryAdaptor: LibraryAdaptor,
     private breadcrumbsAdaptor: BreadcrumbAdaptor,
-    private logger: NGXLogger
+    private logger: LoggerService
   ) {
-    this.logger.debug('Setting default language');
+    this.logger.level = LoggerLevel.INFO;
     translateService.setDefaultLang('en');
   }
 

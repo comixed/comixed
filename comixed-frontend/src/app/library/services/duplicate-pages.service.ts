@@ -26,7 +26,7 @@ import {
 } from 'app/library/library.constants';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { SetBlockingStateRequest } from 'app/library/models/net/set-blocking-state-request';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 import { SetDeletedStateRequest } from 'app/library/models/net/set-deleted-state-request';
 
@@ -34,7 +34,7 @@ import { SetDeletedStateRequest } from 'app/library/models/net/set-deleted-state
   providedIn: 'root'
 })
 export class DuplicatePagesService {
-  constructor(private http: HttpClient, private logger: NGXLogger) {}
+  constructor(private http: HttpClient, private logger: LoggerService) {}
 
   getAll(): Observable<any> {
     this.logger.debug('[GET] http request getting all duplicate pages');

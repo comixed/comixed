@@ -27,14 +27,14 @@ import {
 import { interpolate } from 'app/app.functions';
 import { SaveReadingListRequest } from 'app/library/models/net/save-reading-list-request';
 import { ReadingList } from 'app/library/models/reading-list/reading-list';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReadingListService {
-  constructor(private http: HttpClient, private logger: NGXLogger) {}
+  constructor(private http: HttpClient, private logger: LoggerService) {}
 
   get_all(): Observable<any> {
     this.logger.debug('getting all reading lists');

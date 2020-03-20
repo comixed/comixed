@@ -32,7 +32,7 @@ import {
   SelectionState
 } from 'app/library/reducers/selection.reducer';
 import * as _ from 'lodash';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -40,7 +40,7 @@ import { filter } from 'rxjs/operators';
 export class SelectionAdaptor {
   private _comicSelection$ = new BehaviorSubject<Comic[]>([]);
 
-  constructor(private store: Store<AppState>, private logger: NGXLogger) {
+  constructor(private store: Store<AppState>, private logger: LoggerService) {
     this.store
       .select(SELECTION_FEATURE_KEY)
       .pipe(filter(state => !!state))

@@ -16,6 +16,7 @@
   "private": true,
   "dependencies": {
     "@angular-devkit/schematics": "^8.2.14",
+    "@angular-ru/logger": "^1.11.0",
     "@angular/animations": "~8.2.14",
     "@angular/cdk": "8.2.3",
     "@angular/common": "~8.2.14",
@@ -42,7 +43,6 @@
     "lodash": "4.17.13",
     "messageformat": "^2.3.0",
     "ngx-filesaver": "^2.2.1",
-    "ngx-logger": "^4.0.7",
     "ngx-translate-messageformat-compiler": "^4.5.0",
     "ngx-translate-multi-http-loader": "^3.0.0",
     "node-sass": "^4.13.0",
@@ -67,7 +67,7 @@
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
-    "codelyzer": "5",
+    "codelyzer": "5.2.1",
     "jasmine-core": "~2.99.1",
     "jasmine-marbles": "^0.5.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -82,7 +82,7 @@
     "karma-verbose-reporter": "^0.0.6",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
-    "tslint": "~5.11.0",
+    "tslint": "~5.20.1",
     "typescript": "~3.5.3"
   }
 }

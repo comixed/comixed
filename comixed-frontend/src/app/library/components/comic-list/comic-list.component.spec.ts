@@ -47,7 +47,7 @@ import { AuthenticationAdaptor } from 'app/user';
 import { ContextMenuShow } from 'app/user-experience/actions/context-menu.actions';
 import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
 import { UserExperienceModule } from 'app/user-experience/user-experience.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DataViewModule } from 'primeng/dataview';
@@ -104,7 +104,7 @@ describe('ComicListComponent', () => {
         RouterTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

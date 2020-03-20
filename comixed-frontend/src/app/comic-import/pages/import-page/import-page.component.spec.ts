@@ -39,7 +39,7 @@ import { LibraryModule } from 'app/library/library.module';
 import { UserService } from 'app/services/user.service';
 import { AuthenticationAdaptor } from 'app/user';
 import { UserModule } from 'app/user/user.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
@@ -80,7 +80,7 @@ describe('ImportPageComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         DataViewModule,

@@ -36,7 +36,7 @@ import {
   ContextMenuState
 } from 'app/user-experience/reducers/context-menu.reducer';
 import * as _ from 'lodash';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -46,7 +46,7 @@ export class ContextMenuAdaptor {
   private _mouseEvent$ = new BehaviorSubject<MouseEvent>(null);
   private _items$ = new BehaviorSubject<ContextMenuItem[]>([]);
 
-  constructor(private logger: NGXLogger, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
       .select(CONTEXT_MENU_FEATURE_KEY)
       .pipe(filter(state => !!state))

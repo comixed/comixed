@@ -34,7 +34,7 @@ import {
   DuplicatePagesSetBlocking,
   DuplicatePagesSetDeleted
 } from 'app/library/actions/duplicate-pages.actions';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class DuplicatePagesAdaptors {
@@ -44,7 +44,7 @@ export class DuplicatePagesAdaptors {
   private _setBlocking$ = new BehaviorSubject<boolean>(false);
   private _setDeleted$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<AppState>, private logger: NGXLogger) {
+  constructor(private store: Store<AppState>, private logger: LoggerService) {
     this.store
       .select(DUPLICATE_PAGES_FEATURE_KEY)
       .pipe(filter(state => !!state))

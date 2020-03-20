@@ -49,7 +49,7 @@ import { UserService } from 'app/services/user.service';
 import { AuthenticationAdaptor } from 'app/user';
 import { ContextMenuShow } from 'app/user-experience/actions/context-menu.actions';
 import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import {
@@ -92,7 +92,7 @@ describe('ComicFileListComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

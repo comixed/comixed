@@ -37,7 +37,7 @@ import { AppState } from 'app/comics';
 import { ComicGotPageTypes } from 'app/comics/actions/comic.actions';
 import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1, PAGE_2 } from 'app/comics/models/page.fixtures';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('ComicPagesComponent', () => {
   let component: ComicPagesComponent;
@@ -51,7 +51,7 @@ describe('ComicPagesComponent', () => {
         HttpClientTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

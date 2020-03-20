@@ -23,7 +23,7 @@ import { Subscription } from 'rxjs';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { Comic, ComicFormat, ScanType } from 'app/comics';
 import { LibraryAdaptor } from 'app/library';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'app-comic-overview',
@@ -50,7 +50,7 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
   seriesNameOptions: string[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private comicAdaptor: ComicAdaptor,
@@ -70,14 +70,14 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
     this.comicAdaptor.getFormats();
     this.publishersSubscription = this.libraryAdaptor.publishers$.subscribe(
       publishers => {
-        this.logger.debug('received publishers:', publishers);
+        this.logger.info('received publishers:', publishers);
         this.publishersNames = publishers
           .filter(publisher => !!publisher.name)
           .map(publisher => publisher.name);
       }
     );
     this.seriesSubscription = this.libraryAdaptor.series$.subscribe(series => {
-      this.logger.debug('received series:', series);
+      this.logger.info('received series:', series);
       this.seriesNames = series
         .filter(entry => !!entry.name)
         .map(entry => entry.name);

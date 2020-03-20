@@ -38,7 +38,7 @@ import {
   AuthUserLoaded
 } from 'app/user/actions/authentication.actions';
 import { UserModule } from 'app/user/user.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -78,7 +78,7 @@ describe('AppComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         MenubarModule,

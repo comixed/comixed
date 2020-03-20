@@ -42,7 +42,7 @@ import {
 } from 'primeng/primeng';
 
 import { DuplicatesPageToolbarComponent } from './duplicates-page-toolbar.component';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('DuplicatesPageToolbarComponent', () => {
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
@@ -60,7 +60,7 @@ describe('DuplicatesPageToolbarComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         ButtonModule,

@@ -24,7 +24,7 @@ import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-mult
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
 import { LibraryService } from 'app/library/services/library.service';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -50,7 +50,7 @@ export class LibraryEffects {
     private libraryService: LibraryService,
     private translateService: TranslateService,
     private messageService: MessageService,
-    private logger: NGXLogger
+    private logger: LoggerService
   ) {}
 
   @Effect()

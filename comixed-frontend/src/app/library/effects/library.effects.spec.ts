@@ -41,7 +41,7 @@ import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-upd
 import { StartRescanResponse } from 'app/library/models/net/start-rescan-response';
 import { LibraryService } from 'app/library/services/library.service';
 import { cold, hot } from 'jasmine-marbles';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 import { LibraryEffects } from './library.effects';
@@ -62,7 +62,7 @@ describe('LibraryEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), LoggerTestingModule],
+      imports: [TranslateModule.forRoot(), LoggerModule.forRoot()],
       providers: [
         LibraryEffects,
         provideMockActions(() => actions$),

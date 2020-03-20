@@ -34,7 +34,7 @@ import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('LibraryAdminPageComponent', () => {
   let component: LibraryAdminPageComponent;
@@ -52,7 +52,7 @@ describe('LibraryAdminPageComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         FileSaverModule,

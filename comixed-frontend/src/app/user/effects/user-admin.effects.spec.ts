@@ -35,7 +35,7 @@ import {
 import { SaveUserDetails } from 'app/user/models/save-user-details';
 import { UserAdminService } from 'app/user/services/user-admin.service';
 import { hot } from 'jasmine-marbles';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 
@@ -53,7 +53,7 @@ describe('UserAdminEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [LoggerTestingModule, TranslateModule.forRoot()],
+      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()],
       providers: [
         UserAdminEffects,
         provideMockActions(() => actions$),

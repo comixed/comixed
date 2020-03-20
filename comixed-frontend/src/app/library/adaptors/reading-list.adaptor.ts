@@ -32,7 +32,7 @@ import {
   ReadingListState
 } from 'app/library/reducers/reading-list.reducer';
 import * as _ from 'lodash';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -42,7 +42,7 @@ export class ReadingListAdaptor {
   _reading_list$ = new BehaviorSubject<ReadingList[]>([]);
   _current_list$ = new BehaviorSubject<ReadingList>(null);
 
-  constructor(private store: Store<AppState>, private logger: NGXLogger) {
+  constructor(private store: Store<AppState>, private logger: LoggerService) {
     this.store
       .select(READING_LIST_FEATURE_KEY)
       .pipe(filter(state => !!state))

@@ -42,7 +42,7 @@ import {
 } from 'app/comics/models/scraping-volume.fixtures';
 import { ScrapingService } from 'app/comics/services/scraping.service';
 import { hot } from 'jasmine-marbles';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 
@@ -72,7 +72,7 @@ describe('ScrapingEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), LoggerTestingModule],
+      imports: [TranslateModule.forRoot(), LoggerModule.forRoot()],
       providers: [
         ScrapingEffects,
         provideMockActions(() => actions$),

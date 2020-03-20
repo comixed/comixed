@@ -22,7 +22,7 @@ import { Action } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { User } from 'app/user';
 import { UserAdminService } from 'app/user/services/user-admin.service';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of } from 'rxjs';
 
@@ -41,7 +41,7 @@ import {
 @Injectable()
 export class UserAdminEffects {
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private actions$: Actions<UserAdminActions>,
     private userAdminService: UserAdminService,
     private messageService: MessageService,

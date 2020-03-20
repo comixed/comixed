@@ -44,7 +44,7 @@ import {
   COMIC_IMPORT_FEATURE_KEY,
   reducer
 } from 'app/comic-import/reducers/comic-import.reducer';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { ComicImportAdaptor } from './comic-import.adaptor';
 
@@ -61,7 +61,7 @@ describe('ComicImportAdaptor', () => {
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

@@ -36,6 +36,7 @@ import {
   ConfirmationService,
   ConfirmDialogModule,
   ContextMenuModule,
+  DialogModule,
   DropdownModule,
   MessageService,
   OverlayPanelModule,
@@ -72,7 +73,8 @@ import {
   reducer
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
+import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -92,7 +94,7 @@ describe('ReadingListPageComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
@@ -112,14 +114,16 @@ describe('ReadingListPageComponent', () => {
         ContextMenuModule,
         ToolbarModule,
         TooltipModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        DialogModule
       ],
       declarations: [
         ReadingListPageComponent,
         ComicListComponent,
         ComicListToolbarComponent,
         ComicListItemComponent,
-        ComicGridItemComponent
+        ComicGridItemComponent,
+        ConvertComicsSettingsComponent
       ],
       providers: [
         AuthenticationAdaptor,

@@ -39,7 +39,7 @@ import { LibraryDisplayAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { UserService } from 'app/services/user.service';
 import { AuthenticationAdaptor } from 'app/user';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import {
   ButtonModule,
   CheckboxModule,
@@ -79,7 +79,7 @@ describe('ComicFileListToolbarComponent', () => {
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([ComicImportEffects]),
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         ToolbarModule,
         InputTextModule,
         ButtonModule,

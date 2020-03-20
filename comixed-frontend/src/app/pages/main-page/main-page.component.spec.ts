@@ -30,7 +30,7 @@ import { UserService } from 'app/services/user.service';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
@@ -47,7 +47,7 @@ describe('MainPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule.withRoutes(routes),
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         ChartModule,

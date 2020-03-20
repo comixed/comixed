@@ -34,7 +34,7 @@ import {
 import { READING_LIST_1 } from 'app/library/models/reading-list/reading-list.fixtures';
 import { ReadingListService } from 'app/library/services/reading-list.service';
 import { hot } from 'jasmine-marbles';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 
@@ -51,7 +51,7 @@ describe('ReadingListEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), LoggerTestingModule],
+      imports: [TranslateModule.forRoot(), LoggerModule.forRoot()],
       providers: [
         ReadingListEffects,
         provideMockActions(() => actions$),

@@ -48,7 +48,6 @@ import { UserService } from 'app/services/user.service';
 import { UserModule } from 'app/user/user.module';
 import { XhrInterceptor } from 'app/xhr.interceptor';
 import { FileSaverModule } from 'ngx-filesaver';
-import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -84,6 +83,7 @@ import { ToastModule } from 'primeng/toast';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
+import { LoggerModule } from '@angular-ru/logger';
 
 @NgModule({
   declarations: [
@@ -158,11 +158,7 @@ import { TooltipModule } from 'primeng/tooltip';
         useClass: TranslateMessageFormatCompiler
       }
     }),
-    LoggerModule.forRoot({
-      level: NgxLoggerLevel.DEBUG,
-      disableConsoleLogging: false,
-      enableSourceMaps: true
-    }),
+    LoggerModule.forRoot(),
     FileSaverModule,
     BreadcrumbModule
   ],

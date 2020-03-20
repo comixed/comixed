@@ -27,14 +27,14 @@ import {
   SAVE_NEW_USER_URL,
   SAVE_USER_URL
 } from 'app/user/user.constants';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserAdminService {
-  constructor(private logger: NGXLogger, private http: HttpClient) {}
+  constructor(private logger: LoggerService, private http: HttpClient) {}
 
   getAll(): Observable<any> {
     this.logger.debug('[GET] http request: get all users');

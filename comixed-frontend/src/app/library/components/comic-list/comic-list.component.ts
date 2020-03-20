@@ -42,7 +42,7 @@ import { LoadPageEvent } from 'app/library/models/ui/load-page-event';
 import { AuthenticationAdaptor } from 'app/user';
 import { generateContextMenuItems } from 'app/user-experience';
 import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { ConfirmationService, SelectItem } from 'primeng/api';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { ContextMenu } from 'primeng/contextmenu';
@@ -94,7 +94,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
   showConvertComics = false;
 
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private authenticationAdaptor: AuthenticationAdaptor,
     private libraryAdaptor: LibraryAdaptor,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
