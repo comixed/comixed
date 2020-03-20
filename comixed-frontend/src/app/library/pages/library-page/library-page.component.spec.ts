@@ -17,7 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
@@ -49,6 +49,7 @@ import { UserServiceMock } from 'app/services/user.service.mock';
 import { LibraryPageComponent } from './library-page.component';
 import {
   ContextMenuModule,
+  DialogModule,
   ProgressSpinnerModule,
   ToolbarModule,
   TooltipModule
@@ -66,6 +67,7 @@ import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
 import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
+import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -82,6 +84,7 @@ describe('LibraryPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         FormsModule,
+        ReactiveFormsModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
@@ -105,14 +108,15 @@ describe('LibraryPageComponent', () => {
         TooltipModule,
         ToolbarModule,
         ProgressSpinnerModule,
-        CheckboxModule
+        DialogModule
       ],
       declarations: [
         LibraryPageComponent,
         ComicListComponent,
         ComicListToolbarComponent,
         ComicListItemComponent,
-        ComicGridItemComponent
+        ComicGridItemComponent,
+        ConvertComicsSettingsComponent
       ],
       providers: [
         LibraryAdaptor,

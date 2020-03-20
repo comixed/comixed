@@ -32,6 +32,7 @@ import {
   ConfirmationService,
   ConfirmDialogModule,
   ContextMenuModule,
+  DialogModule,
   DropdownModule,
   MessageService,
   OverlayPanelModule,
@@ -44,7 +45,7 @@ import {
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationAdaptor } from 'app/user';
@@ -66,6 +67,7 @@ import {
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { ComicsModule } from 'app/comics/comics.module';
 import { LoggerModule } from '@angular-ru/logger';
+import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 
 describe('MissingComicsPageComponent', () => {
   let component: MissingComicsPageComponent;
@@ -78,6 +80,7 @@ describe('MissingComicsPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         FormsModule,
+        ReactiveFormsModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
@@ -100,7 +103,8 @@ describe('MissingComicsPageComponent', () => {
         TooltipModule,
         ToolbarModule,
         ProgressSpinnerModule,
-        CheckboxModule
+        CheckboxModule,
+        DialogModule
       ],
       declarations: [
         MissingComicsPageComponent,
@@ -108,7 +112,8 @@ describe('MissingComicsPageComponent', () => {
         MissingComicsPipe,
         ComicListToolbarComponent,
         ComicListItemComponent,
-        ComicGridItemComponent
+        ComicGridItemComponent,
+        ConvertComicsSettingsComponent
       ],
       providers: [
         AuthenticationAdaptor,
