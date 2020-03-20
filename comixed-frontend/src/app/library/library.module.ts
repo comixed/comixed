@@ -46,7 +46,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import {
   DialogModule,
   ProgressSpinnerModule,
-  ScrollPanelModule,
+  ScrollPanelModule, SidebarModule,
   SliderModule,
   ToolbarModule,
   TooltipModule
@@ -84,24 +84,24 @@ import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
     UserExperienceModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(
-      fromLibrary.LIBRARY_FEATURE_KEY,
-      fromLibrary.reducer
+        fromLibrary.LIBRARY_FEATURE_KEY,
+        fromLibrary.reducer
     ),
     StoreModule.forFeature(
-      fromSelection.SELECTION_FEATURE_KEY,
-      fromSelection.reducer
+        fromSelection.SELECTION_FEATURE_KEY,
+        fromSelection.reducer
     ),
     StoreModule.forFeature(
-      fromReadingList.READING_LIST_FEATURE_KEY,
-      fromReadingList.reducer
+        fromReadingList.READING_LIST_FEATURE_KEY,
+        fromReadingList.reducer
     ),
     StoreModule.forFeature(
-      fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
-      fromDupes.reducer
+        fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
+        fromDupes.reducer
     ),
     StoreModule.forFeature(
-      fromPublisher.PUBLISHER_FEATURE_KEY,
-      fromPublisher.reducer
+        fromPublisher.PUBLISHER_FEATURE_KEY,
+        fromPublisher.reducer
     ),
     EffectsModule.forFeature([
       LibraryEffects,
@@ -116,7 +116,8 @@ import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
     ToolbarModule,
     ProgressSpinnerModule,
     TooltipModule,
-    DialogModule
+    DialogModule,
+    SidebarModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [

@@ -45,83 +45,97 @@
 <div class='ui-g'>
   <div class='ui-g-4'>
     <div class='ui-g'>
-      <div class='ui-g-12'>
-        <strong>{{"comic-overview.label.publisher"|translate}}</strong>
+      <div class='ui-g-2'>
+        <img [src]='comic|publisherThumbnailUrl'
+             alt='publisher thumbnail'
+             width='100%'
+             height='auto'>
       </div>
-      <div class='ui-g-12'>
-        <p-inplace [disabled]='!is_admin '
-                   (onActivate)='startEditing()'
-                   [active]='editing'>
+      <div class='ui-g-10'>
+        <div class='ui-g'>
+          <div class='ui-g-12'>
+            <div class='ui-g'>
+              <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.publisher"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>
+                <p-inplace [disabled]='!is_admin '
+                           (onActivate)='startEditing()'
+                           [active]='editing'>
           <span pInplaceDisplay>
           <a [routerLink]='["/collections", "publishers", comic.publisher||"undefined"]'>{{comic.imprint || comic.publisher || "text.unknown"|translate}}</a>
             <span class='pi pi-pencil'></span>
           <span *ngIf='comic.imprint'> ({{comic.publisher}})</span>
           </span>
-          <span pInplaceContent>
+                  <span pInplaceContent>
             <p-autoComplete [(ngModel)]='comic.publisher'
                             [suggestions]='publisherNameOptions'
                             (completeMethod)='filterPublisherNames($event.query)'></p-autoComplete>
           </span>
-        </p-inplace>
-      </div>
-      <div class='ui-g-12'>
-        <strong>{{"comic-overview.label.series"|translate}}</strong>
-      </div>
-      <div class='ui-g-12'>
-        <p-inplace [disabled]='!is_admin || editing'
-                   (onActivate)='startEditing()'
-                   [active]='editing'>
+                </p-inplace>
+              </div>
+              <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.series"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>
+                <p-inplace [disabled]='!is_admin || editing'
+                           (onActivate)='startEditing()'
+                           [active]='editing'>
           <span pInplaceDisplay>
         <a [routerLink]='["/collections","series", comic.series||"undefine"]'>{{comic.series || "text.unknown"|translate}}</a>
             <span class='pi pi-pencil'></span>
           </span>
-          <span pInplaceContent>
+                  <span pInplaceContent>
             <p-autoComplete [(ngModel)]='comic.series'
                             [suggestions]='seriesNameOptions'
                             (completeMethod)='filterSeriesNames($event.query)'></p-autoComplete>
           </span>
-        </p-inplace>
-      </div>
-      <div class='ui-g-12'>
-        <strong>{{"comic-overview.label.volume"|translate}}</strong>
-      </div>
-      <div class='ui-g-12'>
-        <p-inplace [disabled]='!is_admin || editing'
-                   (onActivate)='startEditing()'
-                   [active]='editing'>
+                </p-inplace>
+              </div>
+              <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.volume"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>
+                <p-inplace [disabled]='!is_admin || editing'
+                           (onActivate)='startEditing()'
+                           [active]='editing'>
           <span pInplaceDisplay>
         {{comic.volume || "text.unknown"|translate}}
             <span class='pi pi-pencil'></span>
           </span>
-          <span pInplaceContent>
+                  <span pInplaceContent>
             <input pInputText
                    [(ngModel)]='comic.volume'
                    [placeholder]='"comic-overview.text.volume-placeholder"|translate'>
           </span>
-        </p-inplace>
-      </div>
-      <div class='ui-g-12'>
-        <strong>{{"comic-overview.label.cover-date"|translate}}</strong>
-      </div>
-      <div class='ui-g-12'>{{comic.coverDate|date}}</div>
-      <div class='ui-g-12'>
-        <strong>{{"comic-overview.label.issue-number"|translate}}</strong>
-      </div>
-      <div class='ui-g-12'>
-        <p-inplace [disabled]='!is_admin || editing'
-                   (onActivate)='startEditing()'
-                   [active]='editing'>
+                </p-inplace>
+              </div>
+              <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.cover-date"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>{{comic.coverDate|date}}</div>
+              <div class='ui-g-12'>
+                <strong>{{"comic-overview.label.issue-number"|translate}}</strong>
+              </div>
+              <div class='ui-g-12'>
+                <p-inplace [disabled]='!is_admin || editing'
+                           (onActivate)='startEditing()'
+                           [active]='editing'>
           <span pInplaceDisplay>
         {{comic.issueNumber || "text.unknown"|translate}}
             <span class='pi pi-pencil'></span>
           </span>
-          <span pInplaceContent>
+                  <span pInplaceContent>
             <input pInputText
                    maxlength='10'
                    [(ngModel)]='comic.issueNumber'
                    [placeholder]='"comic-overview.text.volume-placeholder"|translate'>
           </span>
-        </p-inplace>
+                </p-inplace>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

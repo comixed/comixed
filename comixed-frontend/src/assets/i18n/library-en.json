@@ -246,7 +246,8 @@
       "select-all": "Select All Comics",
       "deselect-all": "Deselect All Comics",
       "scrape": "Scrape Selected Comics",
-      "delete": "Delete Selected Comics"
+      "delete": "Delete Selected Comics",
+      "show-details": "Show details."
     },
     "delete-comics": {
       "header": "Delete Selected Comics",
@@ -337,7 +338,10 @@
   },
   "collection-details-page": {
     "page-title": "{name} - {count, plural, =1{One Comic} other{# Comics}}",
-    "title": "{collectionType}: {name}"
+    "title": "{collectionType}: {name}",
+    "link": {
+      "comic-vine-details": "Open The ComicVine Details Page"
+    }
   },
   "collections": {
     "error": {
