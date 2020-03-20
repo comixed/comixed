@@ -30,7 +30,7 @@ import { MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionPageComponent } from './collection-page.component';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import {
   LIBRARY_FEATURE_KEY,
   reducer
@@ -52,7 +52,7 @@ describe('CollectionPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

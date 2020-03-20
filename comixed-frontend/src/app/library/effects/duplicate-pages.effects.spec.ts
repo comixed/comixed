@@ -40,7 +40,7 @@ import {
 } from 'app/library/reducers/duplicate-pages.reducer';
 import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
 import { hot } from 'jasmine-marbles';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 import { DuplicatePagesEffects } from './duplicate-pages.effects';
@@ -58,7 +58,7 @@ describe('DuplicatePagesEffects', () => {
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(DUPLICATE_PAGES_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

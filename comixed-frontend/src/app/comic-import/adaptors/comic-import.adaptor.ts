@@ -35,7 +35,7 @@ import {
   ComicImportSetDirectory,
   ComicImportStart
 } from 'app/comic-import/actions/comic-import.actions';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class ComicImportAdaptor {
@@ -45,7 +45,7 @@ export class ComicImportAdaptor {
   private _selectedComicFile$ = new BehaviorSubject<ComicFile[]>([]);
   private _startingImport$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private logger: NGXLogger, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
       .select(COMIC_IMPORT_FEATURE_KEY)
       .pipe(filter(state => !!state))

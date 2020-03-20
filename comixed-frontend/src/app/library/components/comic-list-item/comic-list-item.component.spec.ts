@@ -33,7 +33,7 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { UserService } from 'app/services/user.service';
 import { UserExperienceModule } from 'app/user-experience/user-experience.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -54,7 +54,7 @@ describe('ComicListItemComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

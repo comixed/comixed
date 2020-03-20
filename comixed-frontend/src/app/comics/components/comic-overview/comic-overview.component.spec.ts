@@ -28,7 +28,7 @@ import { COMIC_1, FORMAT_3, SCAN_TYPE_1 } from 'app/comics/comics.fixtures';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { AppState, LibraryAdaptor } from 'app/library';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InplaceModule } from 'primeng/inplace';
@@ -55,7 +55,7 @@ describe('ComicOverviewComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         HttpClientTestingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
@@ -64,7 +64,7 @@ describe('ComicOverviewComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         InplaceModule,
         DropdownModule,
         TooltipModule,

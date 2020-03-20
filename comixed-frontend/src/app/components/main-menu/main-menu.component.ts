@@ -21,7 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { TieredMenu } from 'primeng/primeng';
-import { NGXLogger, NgxLoggerLevel } from 'ngx-logger';
+import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'app-main-menu',
@@ -39,7 +39,7 @@ export class MainMenuComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
     private authenticationAdaptor: AuthenticationAdaptor,
-    private logger: NGXLogger
+    private logger: LoggerService
   ) {}
 
   toggle(event: any): void {
@@ -246,10 +246,7 @@ export class MainMenuComponent implements OnInit {
   private toggleDebugging(debugging: boolean) {
     this.logger.info(`toggling debugging output ${debugging ? 'on' : 'off'}`);
     this.debugging = debugging;
-    this.logger.updateConfig({
-      ...this.logger.getConfigSnapshot(),
-      level: this.debugging ? NgxLoggerLevel.DEBUG : NgxLoggerLevel.ERROR
-    });
+    this.logger.level = this.debugging ? LoggerLevel.DEBUG : LoggerLevel.INFO;
     this.loadMenuItems();
   }
 }

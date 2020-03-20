@@ -35,7 +35,7 @@ import {
   AuthLogout,
   AuthUserLoaded
 } from 'app/user/actions/authentication.actions';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('MainMenuComponent', () => {
   let component: MainMenuComponent;
@@ -50,7 +50,7 @@ describe('MainMenuComponent', () => {
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         TieredMenuModule,

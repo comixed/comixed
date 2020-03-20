@@ -36,7 +36,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { generate_random_string } from '../../../test/testing-utils';
 import { BehaviorSubject } from 'rxjs';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('LibraryDisplayAdaptor', () => {
   const USER = { ...USER_READER };
@@ -50,7 +50,7 @@ describe('LibraryDisplayAdaptor', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([])
       ],

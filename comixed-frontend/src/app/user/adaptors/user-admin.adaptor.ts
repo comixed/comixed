@@ -30,7 +30,7 @@ import {
 import { SaveUserDetails } from 'app/user/models/save-user-details';
 import { USER_ADMIN_FEATURE_KEY } from 'app/user/reducers/user-admin.reducer';
 import * as _ from 'lodash';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -43,7 +43,7 @@ export class UserAdminAdaptor {
   private _saved$ = new BehaviorSubject<boolean>(false);
   private _deleting$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private logger: NGXLogger, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
       .select(USER_ADMIN_FEATURE_KEY)
       .pipe(filter(state => !!state))

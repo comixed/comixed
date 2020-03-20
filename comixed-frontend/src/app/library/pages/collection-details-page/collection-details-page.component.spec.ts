@@ -49,7 +49,7 @@ import {
 } from 'app/library/reducers/library.reducer';
 import { AuthenticationAdaptor } from 'app/user';
 import { UserExperienceModule } from 'app/user-experience/user-experience.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { DataViewModule } from 'primeng/dataview';
 import {
   ButtonModule,
@@ -87,7 +87,7 @@ describe('CollectionDetailsPageComponent', () => {
         HttpClientTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

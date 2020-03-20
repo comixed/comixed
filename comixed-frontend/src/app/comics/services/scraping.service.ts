@@ -28,13 +28,13 @@ import {
 import { GetVolumesRequest } from 'app/comics/models/net/get-volumes-request';
 import { GetScrapingIssueRequest } from 'app/comics/models/net/get-scraping-issue-request';
 import { LoadMetadataRequest } from 'app/comics/models/net/load-metadata-request';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScrapingService {
-  constructor(private logger: NGXLogger, private http: HttpClient) {}
+  constructor(private logger: LoggerService, private http: HttpClient) {}
 
   getVolumes(
     apiKey: string,

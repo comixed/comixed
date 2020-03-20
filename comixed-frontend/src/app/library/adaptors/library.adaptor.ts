@@ -39,7 +39,7 @@ import {
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { ComicGetIssue } from 'app/comics/actions/comic.actions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class LibraryAdaptor {
@@ -64,7 +64,7 @@ export class LibraryAdaptor {
   constructor(
     private store: Store<AppState>,
     private comicAdaptor: ComicAdaptor,
-    private logger: NGXLogger
+    private logger: LoggerService
   ) {
     this.comicAdaptor.comic$.subscribe(
       comic => (this.comicId = !!comic ? comic.id : -1)

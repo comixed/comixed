@@ -33,7 +33,7 @@ import {
   AUTHENTICATION_FEATURE_KEY,
   reducer
 } from 'app/user/reducers/authentication.reducer';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -57,7 +57,7 @@ describe('UsersPageComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(AUTHENTICATION_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

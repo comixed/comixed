@@ -20,7 +20,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interpolate } from 'app/app.functions';
 import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-updates-request';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 import {
   CONVERT_COMICS_URL,
@@ -35,7 +35,7 @@ import { Comic } from 'app/comics';
   providedIn: 'root'
 })
 export class LibraryService {
-  constructor(private http: HttpClient, private logger: NGXLogger) {}
+  constructor(private http: HttpClient, private logger: LoggerService) {}
 
   getUpdatesSince(
     lastUpdateDate: Date,

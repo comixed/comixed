@@ -12,7 +12,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationAdaptor, TokenService } from 'app/user';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 /*
@@ -38,7 +38,7 @@ export const TOKEN_HEADER_KEY = 'Authorization';
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private tokenService: TokenService,
     private router: Router,
     private authenticationAdaptor: AuthenticationAdaptor

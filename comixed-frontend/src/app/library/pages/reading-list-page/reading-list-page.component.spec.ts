@@ -72,7 +72,7 @@ import {
   reducer
 } from 'app/library/reducers/library.reducer';
 import { LibraryEffects } from 'app/library/effects/library.effects';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -92,7 +92,7 @@ describe('ReadingListPageComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

@@ -37,7 +37,7 @@ import { LibraryEffects } from 'app/library/effects/library.effects';
 import * as fromLibrary from 'app/library/reducers/library.reducer';
 import * as fromSelect from 'app/library/reducers/selection.reducer';
 import { AuthenticationAdaptor } from 'app/user';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import {
   ButtonModule,
   CheckboxModule,
@@ -69,7 +69,7 @@ describe('ComicListToolbarComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(
           fromLibrary.LIBRARY_FEATURE_KEY,

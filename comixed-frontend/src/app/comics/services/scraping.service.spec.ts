@@ -39,7 +39,7 @@ import {
   SCRAPING_VOLUME_1004,
   SCRAPING_VOLUME_1005
 } from 'app/comics/models/scraping-volume.fixtures';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 import { ScrapingService } from './scraping.service';
 
@@ -64,7 +64,7 @@ describe('ScrapingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerTestingModule],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
       providers: [ScrapingService]
     });
 

@@ -36,7 +36,7 @@ import {
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class ScrapingAdaptor {
@@ -48,7 +48,7 @@ export class ScrapingAdaptor {
   private _issue$ = new BehaviorSubject<ScrapingIssue>(null);
   private _scraping$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private logger: NGXLogger, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
       .select(SCRAPING_FEATURE_KEY)
       .pipe(filter(state => !!state))

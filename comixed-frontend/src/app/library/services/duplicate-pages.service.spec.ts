@@ -29,7 +29,7 @@ import {
 } from 'app/library/library.constants';
 import { DUPLICATE_PAGE_1 } from 'app/library/models/duplicate-page.fixtures';
 import { SetBlockingStateRequest } from 'app/library/models/net/set-blocking-state-request';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { DuplicatePagesService } from './duplicate-pages.service';
 import { SetDeletedStateRequest } from 'app/library/models/net/set-deleted-state-request';
 
@@ -42,7 +42,7 @@ describe('DuplicatePagesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerTestingModule],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
       providers: [DuplicatePagesService]
     });
 

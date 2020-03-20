@@ -41,7 +41,6 @@ import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/re
 import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
 import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
 import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
-import { LoggerModule } from 'ngx-logger';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import {
@@ -81,7 +80,6 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
     ComicsModule,
     UserExperienceModule,
     TranslateModule.forRoot(),
-    LoggerModule.forChild(),
     StoreModule.forFeature(
       fromLibrary.LIBRARY_FEATURE_KEY,
       fromLibrary.reducer
@@ -112,7 +110,7 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
     TooltipModule,
     DialogModule
   ],
-  exports: [CommonModule, LoggerModule, ComicsModule, ComicListComponent],
+  exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
     LibraryPageComponent,
     ComicGridItemComponent,

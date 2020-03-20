@@ -36,7 +36,7 @@ import {
   reducer,
   SCRAPING_FEATURE_KEY
 } from 'app/comics/reducers/scraping.reducer';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { MessageService, TooltipModule } from 'primeng/primeng';
@@ -78,7 +78,7 @@ describe('VolumeListComponent', () => {
         FormsModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(SCRAPING_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

@@ -27,7 +27,7 @@ import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
 import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
 import { LibraryModule } from 'app/library/library.module';
 import { UserService } from 'app/services/user.service';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import {
   CardModule,
   ConfirmationService,
@@ -50,7 +50,7 @@ describe('ComicFileListItemComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         OverlayPanelModule,

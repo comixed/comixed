@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConvertComicsSettingsComponent } from './convert-comics-settings.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { ComicsModule } from 'app/comics/comics.module';
 
-fdescribe('ConvertComicsSettingsComponent', () => {
+describe('ConvertComicsSettingsComponent', () => {
   let component: ConvertComicsSettingsComponent;
   let fixture: ComponentFixture<ConvertComicsSettingsComponent>;
 
@@ -27,7 +27,7 @@ fdescribe('ConvertComicsSettingsComponent', () => {
         HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),

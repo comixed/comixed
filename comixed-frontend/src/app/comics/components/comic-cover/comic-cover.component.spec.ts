@@ -31,7 +31,7 @@ import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { LibraryAdaptor } from 'app/library';
 import { UserExperienceModule } from 'app/user-experience/user-experience.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -55,7 +55,7 @@ describe('ComicCoverComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         OverlayPanelModule,

@@ -37,12 +37,12 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { Comic } from 'app/comics';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class ScrapingEffects {
   constructor(
-    private logger: NGXLogger,
+    private logger: LoggerService,
     private actions$: Actions<ScrapingActions>,
     private scrapingService: ScrapingService,
     private messageService: MessageService,
@@ -64,7 +64,7 @@ export class ScrapingEffects {
         )
         .pipe(
           tap(response =>
-            this.logger.debug('get coic volumes response:', response)
+            this.logger.debug('get comic volumes response:', response)
           ),
           tap((response: ScrapingVolume[]) =>
             this.messageService.add({

@@ -26,7 +26,7 @@ import {
   READING_LIST_FEATURE_KEY,
   reducer
 } from 'app/library/reducers/reading-list.reducer';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { ReadingListAdaptor } from './reading-list.adaptor';
 
@@ -38,7 +38,7 @@ describe('ReadingListAdaptor', () => {
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(READING_LIST_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

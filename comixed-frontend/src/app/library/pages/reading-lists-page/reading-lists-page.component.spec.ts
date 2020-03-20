@@ -32,7 +32,7 @@ import { UserModule } from 'app/user/user.module';
 import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('ReadingListsPageComponent', () => {
   let component: ReadingListsPageComponent;
@@ -48,7 +48,7 @@ describe('ReadingListsPageComponent', () => {
           { path: 'lists/new', component: ReadingListsPageComponent }
         ]),
         TranslateModule.forRoot(),
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
         ButtonModule,

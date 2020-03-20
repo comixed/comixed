@@ -44,7 +44,7 @@ import {
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class ComicAdaptor {
@@ -61,7 +61,7 @@ export class ComicAdaptor {
   private _deletingComic$ = new BehaviorSubject<boolean>(false);
   private _restoringComic$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private logger: NGXLogger, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
       .select(COMIC_FEATURE_KEY)
       .pipe(filter(state => !!state))

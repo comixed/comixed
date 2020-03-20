@@ -30,7 +30,7 @@ import {
 } from 'app/services/url.constants';
 import { User } from 'app/user';
 import { USER_READER } from 'app/user/models/user.fixtures';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 
 import { AuthenticationService } from './authentication.service';
 
@@ -46,7 +46,7 @@ describe('AuthenticationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerTestingModule],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
       providers: [AuthenticationService]
     });
 

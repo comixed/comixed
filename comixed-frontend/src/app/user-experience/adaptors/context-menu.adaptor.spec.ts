@@ -41,7 +41,7 @@ import {
   CONTEXT_MENU_ITEM_4,
   CONTEXT_MENU_ITEM_5
 } from 'app/user-experience/user-experience.fixtures';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LoggerModule } from '@angular-ru/logger';
 import { ContextMenuAdaptor } from './context-menu.adaptor';
 
 describe('ContextMenuAdaptor', () => {
@@ -66,7 +66,7 @@ describe('ContextMenuAdaptor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        LoggerTestingModule,
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(CONTEXT_MENU_FEATURE_KEY, reducer)
       ],
