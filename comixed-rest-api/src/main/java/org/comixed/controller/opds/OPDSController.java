@@ -25,14 +25,13 @@ import java.text.ParseException;
 import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListService;
 import org.comixed.utils.FileTypeIdentifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -50,13 +49,10 @@ import sun.awt.image.ToolkitImage;
  * @author Darryl L. Pierce
  */
 @RestController
+@Log4j2
 public class OPDSController {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicRepository comicRepository;
-
   @Autowired private ReadingListService readingListService;
-
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
 
   @ResponseBody
@@ -104,12 +100,12 @@ public class OPDSController {
   public ResponseEntity<InputStreamResource> downloadComic(
       @PathVariable("id") long id, @PathVariable("filename") String filename)
       throws FileNotFoundException, IOException {
-    this.logger.debug("Attempting to download comic: id={}", id);
+    this.log.debug("Attempting to download comic: id={}", id);
 
     Optional<Comic> record = this.comicRepository.findById(id);
 
     if (!record.isPresent()) {
-      this.logger.error("No such comic");
+      this.log.error("No such comic");
       return null;
     }
 
@@ -117,7 +113,7 @@ public class OPDSController {
     File file = new File(comic.getFilename());
 
     if (!file.exists() || !file.isFile()) {
-      this.logger.error("Missing or invalid comic file: {}", comic.getFilename());
+      this.log.error("Missing or invalid comic file: {}", comic.getFilename());
       return null;
     }
 
@@ -137,7 +133,7 @@ public class OPDSController {
       @PathVariable("index") int index,
       @PathVariable("maxWidth") int maxWidth)
       throws IOException {
-    this.logger.debug("Getting the image for comic: id={} index={}", id, index);
+    this.log.debug("Getting the image for comic: id={} index={}", id, index);
 
     Optional<Comic> record = this.comicRepository.findById(id);
 
@@ -172,7 +168,7 @@ public class OPDSController {
           this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content))
               + "/"
               + this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
-      this.logger.debug("Image {} mimetype: {}", index, type);
+      this.log.debug("Image {} mimetype: {}", index, type);
       return ResponseEntity.ok()
           .contentLength(content.length)
           .contentType(MediaType.valueOf(type))
@@ -180,9 +176,9 @@ public class OPDSController {
     }
 
     if (!record.isPresent()) {
-      this.logger.debug("Could now download page. No such comic: id={}", id);
+      this.log.debug("Could now download page. No such comic: id={}", id);
     } else {
-      this.logger.debug("No such page: index={} page count={}", index, record.get().getPageCount());
+      this.log.debug("No such page: index={} page count={}", index, record.get().getPageCount());
     }
 
     return null;

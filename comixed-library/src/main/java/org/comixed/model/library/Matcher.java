@@ -25,8 +25,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import org.comixed.views.View;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <code>SmartReadingList</code> represents a reading list of comics.
@@ -36,8 +34,6 @@ import org.slf4j.LoggerFactory;
 @Entity
 @Table(name = "matchers")
 public class Matcher {
-  @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")

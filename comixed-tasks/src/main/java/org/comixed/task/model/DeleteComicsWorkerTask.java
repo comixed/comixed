@@ -20,14 +20,13 @@ package org.comixed.task.model;
 
 import java.text.MessageFormat;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.task.TaskException;
 import org.comixed.task.adaptors.TaskAdaptor;
 import org.comixed.task.encoders.DeleteComicTaskEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,9 +34,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class DeleteComicsWorkerTask extends AbstractWorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicRepository comicRepository;
   @Autowired private TaskAdaptor taskAdaptor;
   private List<Long> comicIds;
@@ -63,7 +61,7 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask {
           encoder.setDeleteComicFile(false);
           this.taskAdaptor.save(encoder.encode());
         } catch (TaskException error) {
-          this.logger.error("Failed to encode delete comic task", error);
+          this.log.error("Failed to encode delete comic task", error);
         }
       }
     }

@@ -21,6 +21,7 @@ package org.comixed.controller.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Preference;
 import org.comixed.model.user.Role;
@@ -30,8 +31,6 @@ import org.comixed.service.user.UserService;
 import org.comixed.utils.Utils;
 import org.comixed.views.View.UserDetails;
 import org.comixed.views.View.UserList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,9 +39,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api")
+@Log4j2
 public class UserController implements InitializingBean {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   Role readerRole;
   Role adminRole;
 
@@ -61,7 +59,7 @@ public class UserController implements InitializingBean {
 
   @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.DELETE)
   public void deleteUser(@PathVariable("id") long userId) throws ComiXedUserException {
-    this.logger.info("Deleting user: id={}", userId);
+    this.log.info("Deleting user: id={}", userId);
 
     this.userService.delete(userId);
   }
@@ -69,7 +67,7 @@ public class UserController implements InitializingBean {
   @GetMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(UserList.class)
   public List<ComiXedUser> getAllUsers() {
-    this.logger.info("Getting all user accounts");
+    this.log.info("Getting all user accounts");
 
     return this.userService.findAll();
   }
@@ -77,18 +75,18 @@ public class UserController implements InitializingBean {
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   @JsonView(UserDetails.class)
   public ComiXedUser getCurrentUser(Principal user) throws ComiXedUserException {
-    this.logger.debug("Returning current user");
+    this.log.debug("Returning current user");
 
     if (user == null) {
-      this.logger.debug("Not authenticated");
+      this.log.debug("Not authenticated");
       return null;
     }
 
-    this.logger.debug("Loading user: {}", user.getName());
+    this.log.debug("Loading user: {}", user.getName());
     ComiXedUser comiXedUser = this.userService.findByEmail(user.getName());
 
     if (comiXedUser != null) {
-      this.logger.debug("Setting authenticated flag");
+      this.log.debug("Setting authenticated flag");
       comiXedUser.setAuthenticated(true);
     }
 
@@ -98,20 +96,20 @@ public class UserController implements InitializingBean {
   @RequestMapping(value = "/user/preferences", method = RequestMethod.GET)
   public List<Preference> getUserPreferences(Authentication authentication)
       throws ComiXedUserException {
-    this.logger.debug("Getting user preferences");
+    this.log.debug("Getting user preferences");
 
     if (authentication == null) {
-      this.logger.debug("User is not authenticated");
+      this.log.debug("User is not authenticated");
       return null;
     }
 
     String email = authentication.getName();
 
-    this.logger.debug("Loading user: email={}", email);
+    this.log.debug("Loading user: email={}", email);
     ComiXedUser user = this.userService.findByEmail(email);
 
     if (user == null) {
-      this.logger.debug("No such user: {}", email);
+      this.log.debug("No such user: {}", email);
       return null;
     }
 
@@ -124,7 +122,7 @@ public class UserController implements InitializingBean {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComiXedUser saveNewUser(@RequestBody() final SaveUserRequest request)
       throws ComiXedUserException {
-    this.logger.info(
+    this.log.info(
         "Creating new user: email={} admin={}",
         request.getEmail(),
         request.getIsAdmin() ? "Yes" : "No");
@@ -139,7 +137,7 @@ public class UserController implements InitializingBean {
       throws ComiXedUserException {
     final String email = authentication.getName();
 
-    this.logger.info("Setting user property: email={} property[{}]={}", email, name, value);
+    this.log.info("Setting user property: email={} property[{}]={}", email, name, value);
 
     return this.userService.setUserProperty(email, name, value);
   }
@@ -150,7 +148,7 @@ public class UserController implements InitializingBean {
       throws ComiXedUserException {
     final String email = authentication.getName();
 
-    this.logger.info("Updating email address for: email={} new={}", email, username);
+    this.log.info("Updating email address for: email={} new={}", email, username);
 
     return this.userService.setUserEmail(email, username);
   }
@@ -161,7 +159,7 @@ public class UserController implements InitializingBean {
       throws ComiXedUserException {
     final String email = authentication.getName();
 
-    this.logger.info("Updating password for: email={}", email);
+    this.log.info("Updating password for: email={}", email);
 
     return this.userService.setUserPassword(email, password);
   }
@@ -177,23 +175,23 @@ public class UserController implements InitializingBean {
       throws ComiXedUserException {
     final ComiXedUser authUser = this.userService.findByEmail(principal.getName());
 
-    this.logger.info("Updating user: id={}", id);
+    this.log.info("Updating user: id={}", id);
     ComiXedUser user = this.userService.findById(id);
 
     if (user == null) {
-      this.logger.debug("No such user");
+      this.log.debug("No such user");
       return null;
     }
 
     user.setEmail(request.getEmail());
 
     if ((request.getPassword() != null) && !request.getPassword().isEmpty()) {
-      this.logger.debug("Updating user's password");
+      this.log.debug("Updating user's password");
       user.setPasswordHash(this.utils.createHash(request.getPassword().getBytes()));
     }
 
     if (authUser.isAdmin()) {
-      this.logger.debug("Auth user is admin: updating roles");
+      this.log.debug("Auth user is admin: updating roles");
       if (authUser.getId() != id) {
         user.clearRoles();
         user.addRole(this.readerRole);
@@ -201,10 +199,10 @@ public class UserController implements InitializingBean {
           user.addRole(this.adminRole);
         }
       } else {
-        this.logger.debug("Admins cannot change their own roles");
+        this.log.debug("Admins cannot change their own roles");
       }
     }
-    this.logger.debug(
+    this.log.debug(
         "Updating user: id={} email={} is_admin={}",
         id,
         request.getEmail(),
@@ -225,7 +223,7 @@ public class UserController implements InitializingBean {
       final Authentication authentication, @PathVariable("name") final String propertyName) {
 
     final String email = authentication.getName();
-    this.logger.info("Deleting user property: email={} property={}", email, propertyName);
+    this.log.info("Deleting user property: email={} property={}", email, propertyName);
     return this.userService.deleteUserProperty(email, propertyName);
   }
 }

@@ -18,14 +18,13 @@
 
 package org.comixed.controller.opds;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.opds.OPDSBookmark;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.service.library.ComicException;
 import org.comixed.service.library.ComicService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,21 +41,20 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/user-api")
+@Log4j2
 public class OPDSBookmarkController {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private ComicService comicService;
 
   @GetMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
   public OPDSBookmark getBookmark(@RequestParam("docId") long comicId) throws ComicException {
-    this.logger.debug("Loading comic: id={}", comicId);
+    this.log.debug("Loading comic: id={}", comicId);
     final Comic comic = this.comicService.getComic(comicId);
     if (comic == null) {
       throw new ComicException("No such comic: id=" + comicId);
     }
 
-    this.logger.debug("Getting book bookmark: id={}", comicId);
+    this.log.debug("Getting book bookmark: id={}", comicId);
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     ComiXedUser user = this.userRepository.findByEmail(email);
     final String bookmark = user.getBookmark(comic);
@@ -72,14 +70,14 @@ public class OPDSBookmarkController {
   public ResponseEntity setBookmark(
       @RequestParam("docId") long comicId, @RequestBody() final OPDSBookmark opdsBookmark)
       throws ComicException {
-    this.logger.debug("Loading comic: id={}", comicId);
+    this.log.debug("Loading comic: id={}", comicId);
     final Comic comic = this.comicService.getComic(comicId);
 
     if (comic == null) {
       throw new ComicException("No such comic: id=" + comicId);
     }
 
-    this.logger.debug("Setting book bookmark: id={}", comicId);
+    this.log.debug("Setting book bookmark: id={}", comicId);
 
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     ComiXedUser user = this.userRepository.findByEmail(email);

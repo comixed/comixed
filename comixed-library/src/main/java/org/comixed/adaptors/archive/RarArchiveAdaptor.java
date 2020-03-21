@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.springframework.stereotype.Component;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
   public RarArchiveAdaptor() {
     super("cbr");
@@ -132,7 +134,7 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
       throws ArchiveAdaptorException {
-    this.logger.warn("Saving RAR comics is not supported");
+    this.log.warn("Saving RAR comics is not supported");
     throw new ArchiveAdaptorException("Saving CBR comics is not supported");
   }
 }

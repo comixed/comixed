@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -43,6 +44,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   public ZipArchiveAdaptor() {
     super("cbz");
@@ -72,7 +74,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   @Override
   protected void loadAllFiles(Comic comic, ZipFile archiveReference)
       throws ArchiveAdaptorException {
-    this.logger.debug("Processing entries for archive");
+    this.log.debug("Processing entries for archive");
     comic.setArchiveType(ArchiveType.CBZ);
 
     Enumeration<ZipArchiveEntry> entries = archiveReference.getEntries();
@@ -81,7 +83,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       ZipArchiveEntry entry = entries.nextElement();
       String filename = entry.getName();
       long fileSize = entry.getSize();
-      this.logger.debug("Loading file: name={} size={}", filename, fileSize);
+      this.log.debug("Loading file: name={} size={}", filename, fileSize);
 
       long started = System.currentTimeMillis();
       try {
@@ -91,7 +93,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       } catch (IOException error) {
         throw new ArchiveAdaptorException("failed to load entry: " + filename, error);
       }
-      this.logger.debug("Processing time: {}ms", (System.currentTimeMillis() - started));
+      this.log.debug("Processing time: {}ms", (System.currentTimeMillis() - started));
     }
   }
 
@@ -136,7 +138,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
       throws ArchiveAdaptorException, IOException {
-    logger.debug("Creating temporary file: " + filename);
+    this.log.debug("Creating temporary file: " + filename);
 
     ZipArchiveOutputStream zoutput = null;
     try {
@@ -148,7 +150,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
                   .createArchiveOutputStream(
                       ArchiveStreamFactory.ZIP, new FileOutputStream(filename));
 
-      logger.debug("Adding the ComicInfo.xml entry");
+      this.log.debug("Adding the ComicInfo.xml entry");
       entry = new ZipArchiveEntry("ComicInfo.xml");
       byte[] content = comicInfoEntryAdaptor.saveContent(source);
       entry.setSize(content.length);
@@ -159,12 +161,12 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       for (int index = 0; index < source.getPageCount(); index++) {
         Page page = source.getPage(index);
         if (page.isMarkedDeleted()) {
-          logger.debug("Skipping offset marked for deletion");
+          this.log.debug("Skipping offset marked for deletion");
           continue;
         }
         String pagename =
             renamePages ? getFilenameForEntry(page.getFilename(), index) : page.getFilename();
-        logger.debug("Adding entry: " + pagename + " size=" + page.getContent().length);
+        this.log.debug("Adding entry: " + pagename + " size=" + page.getContent().length);
         entry = new ZipArchiveEntry(pagename);
         entry.setSize(page.getContent().length);
         zoutput.putArchiveEntry(entry);
@@ -184,7 +186,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   @Override
   public byte[] encodeFileToStream(Map<String, byte[]> content)
       throws ArchiveAdaptorException, IOException {
-    this.logger.debug("Encoding {} files", content.size());
+    this.log.debug("Encoding {} files", content.size());
 
     ByteArrayOutputStream result = new ByteArrayOutputStream();
     ZipArchiveOutputStream zoutput = null;
@@ -197,12 +199,12 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       ZipArchiveEntry zipEntry = null;
 
       for (String filename : content.keySet()) {
-        this.logger.debug("Adding entry: {}", filename);
+        this.log.debug("Adding entry: {}", filename);
 
         byte[] entryData = content.get(filename);
         zipEntry = new ZipArchiveEntry(filename);
 
-        this.logger.debug("Encoding {} bytes", entryData.length);
+        this.log.debug("Encoding {} bytes", entryData.length);
         zipEntry.setSize(entryData.length);
         zoutput.putArchiveEntry(zipEntry);
         zoutput.write(entryData);
@@ -217,7 +219,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       }
     }
 
-    this.logger.debug("Encoding to {} bytes", result.size());
+    this.log.debug("Encoding to {} bytes", result.size());
 
     return result.toByteArray();
   }

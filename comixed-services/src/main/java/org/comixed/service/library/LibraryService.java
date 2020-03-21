@@ -21,6 +21,7 @@ package org.comixed.service.library;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.TaskType;
@@ -29,17 +30,14 @@ import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.task.TaskService;
 import org.comixed.task.model.ConvertComicsWorkerTask;
 import org.comixed.task.runner.Worker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class LibraryService {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicRepository comicRepository;
   @Autowired private TaskService taskService;
   @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
@@ -47,7 +45,7 @@ public class LibraryService {
 
   public List<Comic> getComicsUpdatedSince(
       String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
-    this.logger.debug(
+    this.log.debug(
         "Finding up to {} comics updated since {} for {}", maximumComics, latestUpdatedDate, email);
 
     List<Comic> comics =
@@ -59,7 +57,7 @@ public class LibraryService {
       Comic comic = comics.get(index);
       final long thisTimestamp = comic.getDateLastUpdated().getTime();
       final Long thisId = comic.getId();
-      this.logger.debug(
+      this.log.debug(
           "Checking comic: timestamp: {} >= {} id: {} > {}",
           thisTimestamp,
           timestamp,
@@ -68,12 +66,12 @@ public class LibraryService {
       boolean include = thisTimestamp > timestamp || thisId > lastComicId;
 
       if (include) {
-        this.logger.debug("Including comic: id={}", thisId);
+        this.log.debug("Including comic: id={}", thisId);
         result.add(comic);
       }
     }
 
-    this.logger.debug("Returning {} updated comic{}", result.size(), result.size() == 1 ? "" : "s");
+    this.log.debug("Returning {} updated comic{}", result.size(), result.size() == 1 ? "" : "s");
     return result;
   }
 
@@ -82,13 +80,13 @@ public class LibraryService {
   }
 
   public long getProcessingCount() {
-    this.logger.debug("Getting processing count");
+    this.log.debug("Getting processing count");
     return this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
   }
 
   public void convertComics(
       List<Long> comicIdList, ArchiveType targetArchiveType, boolean renamePages) {
-    this.logger.debug(
+    this.log.debug(
         "Converting {} comic{} to {}{}",
         comicIdList.size(),
         comicIdList.size() == 1 ? "" : "s",
@@ -98,14 +96,14 @@ public class LibraryService {
     for (long id : comicIdList) {
       comics.add(this.comicRepository.getById(id));
     }
-    this.logger.debug("Getting save comics worker task");
+    this.log.debug("Getting save comics worker task");
     ConvertComicsWorkerTask task = this.convertComicsWorkerTaskObjectFactory.getObject();
 
     task.setComicList(comics);
     task.setTargetArchiveType(targetArchiveType);
     task.setRenamePages(renamePages);
 
-    this.logger.debug("Queueing save comics worker task");
+    this.log.debug("Queueing save comics worker task");
     this.worker.addTasksToQueue(task);
   }
 }

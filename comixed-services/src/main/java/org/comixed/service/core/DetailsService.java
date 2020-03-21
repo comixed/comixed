@@ -20,18 +20,16 @@ package org.comixed.service.core;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.core.BuildDetails;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Service
 @PropertySource({"classpath:/build-details.properties"})
+@Log4j2
 public class DetailsService {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   private SimpleDateFormat dateParser = new SimpleDateFormat("yyyyMMddhhmmss");
 
   @Value("${build-details.branch}")
@@ -68,6 +66,7 @@ public class DetailsService {
   private String remoteOriginURL;
 
   public BuildDetails getBuildDetails() throws ParseException {
+    this.log.debug("Getting build details");
     final BuildDetails result = new BuildDetails();
 
     result.setBranch(branch);

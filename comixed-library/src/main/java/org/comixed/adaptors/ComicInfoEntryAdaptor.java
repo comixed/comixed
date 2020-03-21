@@ -24,11 +24,10 @@ import java.util.*;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.loaders.EntryLoader;
 import org.comixed.loaders.EntryLoaderException;
 import org.comixed.model.library.Comic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,8 +36,8 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class ComicInfoEntryAdaptor implements EntryLoader {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private final XMLInputFactory xmlInputFactory;
 
   public ComicInfoEntryAdaptor() {
@@ -63,7 +62,7 @@ public class ComicInfoEntryAdaptor implements EntryLoader {
     while (xmlInputReader.hasNext()) {
       if (xmlInputReader.isStartElement()) {
         final String tagName = xmlInputReader.getLocalName();
-        this.logger.debug("Processing tag: " + tagName);
+        this.log.debug("Processing tag: " + tagName);
         switch (tagName) {
           case "Publisher":
             comic.setPublisher(xmlInputReader.getElementText());
@@ -128,13 +127,13 @@ public class ComicInfoEntryAdaptor implements EntryLoader {
                 if (role.equals("coverartist")) {
                   role = "cover";
                 }
-                this.logger.debug("Adding role: {}={}", role, name);
+                this.log.debug("Adding role: {}={}", role, name);
                 comic.addCredit(name, role);
               }
             }
             break;
           default:
-            this.logger.debug("Unrecognized tag");
+            this.log.debug("Unrecognized tag");
             break;
         }
       }
@@ -169,7 +168,7 @@ public class ComicInfoEntryAdaptor implements EntryLoader {
    * @throws IOException if an error occurs
    */
   public byte[] saveContent(Comic comic) throws IOException {
-    this.logger.debug("Generating comic info data from comic");
+    this.log.debug("Generating comic info data from comic");
     ByteArrayOutputStream result = new ByteArrayOutputStream();
     PrintWriter writer = new PrintWriter(new OutputStreamWriter(result));
 

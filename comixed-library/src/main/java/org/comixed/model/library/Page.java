@@ -28,6 +28,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.imageio.ImageIO;
 import javax.persistence.*;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
@@ -36,8 +37,6 @@ import org.comixed.views.View.DatabaseBackup;
 import org.comixed.views.View.DuplicatePageList;
 import org.comixed.views.View.PageList;
 import org.hibernate.annotations.Formula;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <code>Page</code> represents a single offset from a comic.
@@ -55,9 +54,8 @@ import org.slf4j.LoggerFactory;
       name = "Page.updateDeleteOnAllWithHash",
       query = "UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash")
 })
+@Log4j2
 public class Page {
-  @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
@@ -114,7 +112,7 @@ public class Page {
    * @param pageType the offset type
    */
   public Page(String filename, byte[] content, PageType pageType) {
-    this.logger.debug("Creating offset: filename=" + filename + " content.size=" + content.length);
+    this.log.debug("Creating offset: filename=" + filename + " content.size=" + content.length);
     this.filename = filename;
     this.hash = this.createHash(content);
     this.pageType = pageType;
@@ -126,7 +124,7 @@ public class Page {
   }
 
   private String createHash(byte[] bytes) {
-    this.logger.debug("Generating MD5 hash");
+    this.log.debug("Generating MD5 hash");
     String result = "";
     MessageDigest md;
     try {
@@ -135,9 +133,9 @@ public class Page {
       result =
           StringUtils.leftPad(new BigInteger(1, md.digest()).toString(16).toUpperCase(), 32, "0");
     } catch (NoSuchAlgorithmException error) {
-      this.logger.error("Failed to generate hash", error);
+      this.log.error("Failed to generate hash", error);
     }
-    this.logger.debug("Returning: " + result);
+    this.log.debug("Returning: " + result);
     return result;
   }
 
@@ -178,13 +176,13 @@ public class Page {
    */
   @JsonIgnore
   public byte[] getContent() {
-    this.logger.debug("Loading offset image: filename=" + this.filename);
+    this.log.debug("Loading offset image: filename=" + this.filename);
     try {
       if (this.comic.archiveType != null) {
         return this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
       }
     } catch (ArchiveAdaptorException error) {
-      this.logger.error(
+      this.log.error(
           "failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(), error);
     }
 
@@ -192,7 +190,7 @@ public class Page {
     try {
       return IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing.png"));
     } catch (IOException error) {
-      this.logger.error("failed to load missing page image", error);
+      this.log.error("failed to load missing page image", error);
     }
 
     // if we're here, we have nothing to return
@@ -214,7 +212,7 @@ public class Page {
    * @param filename the new filename
    */
   public void setFilename(String filename) {
-    this.logger.debug("Changing filename: " + this.filename + " -> " + filename);
+    this.log.debug("Changing filename: " + this.filename + " -> " + filename);
     this.filename = filename;
   }
 
@@ -258,7 +256,7 @@ public class Page {
    * @param pageType the offset type
    */
   public void setPageType(PageType pageType) {
-    this.logger.debug("Changing offset type: {}", pageType.getId());
+    this.log.debug("Changing offset type: {}", pageType.getId());
     this.pageType = pageType;
   }
 
@@ -315,7 +313,7 @@ public class Page {
    * @param deleted true if the offset is to be deleted
    */
   public void markDeleted(boolean deleted) {
-    this.logger.debug("Mark deletion: " + deleted);
+    this.log.debug("Mark deletion: " + deleted);
     this.deleted = deleted;
   }
 

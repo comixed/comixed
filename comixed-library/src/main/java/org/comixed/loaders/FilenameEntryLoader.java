@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "comic.filename-entry", ignoreUnknownFields = false)
+@Log4j2
 public class FilenameEntryLoader extends AbstractEntryLoader implements InitializingBean {
   public static class EntryLoaderEntry {
     public String mask;
@@ -87,13 +89,13 @@ public class FilenameEntryLoader extends AbstractEntryLoader implements Initiali
       throws EntryLoaderException {
     // get the filename.ext only
     String key = new File(filename).getName();
-    this.logger.debug("Determining filename adaptor for: " + filename);
+    this.log.debug("Determining filename adaptor for: " + filename);
     EntryLoader loader = this.entryLoaders.get(key);
     if (loader != null) {
-      this.logger.debug("Using adaptor: " + loader);
+      this.log.debug("Using adaptor: " + loader);
       loader.loadContent(comic, filename, content);
     } else {
-      this.logger.debug("No filename adaptor defined");
+      this.log.debug("No filename adaptor defined");
     }
   }
 }

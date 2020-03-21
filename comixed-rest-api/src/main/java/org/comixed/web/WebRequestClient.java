@@ -18,10 +18,9 @@
 
 package org.comixed.web;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,16 +29,15 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class WebRequestClient {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   /**
    * Creates an HTTP client object for use in a web request.
    *
    * @return a client
    */
   public HttpClient createClient() {
-    logger.debug("Creating a HTTP client");
+    this.log.debug("Creating a HTTP client");
     return HttpClients.createDefault();
   }
 }

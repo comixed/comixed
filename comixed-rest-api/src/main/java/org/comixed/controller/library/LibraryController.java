@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.LastReadDate;
@@ -32,8 +33,6 @@ import org.comixed.service.library.ComicService;
 import org.comixed.service.library.LibraryService;
 import org.comixed.service.user.UserService;
 import org.comixed.views.View;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,9 +42,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api")
+@Log4j2
 public class LibraryController {
-  protected final Logger log = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;
   @Autowired private UserService userService;

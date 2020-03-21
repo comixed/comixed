@@ -21,6 +21,7 @@ package org.comixed.controller.library;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.ReadingList;
 import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.repositories.library.ReadingListRepository;
@@ -29,17 +30,14 @@ import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListNameException;
 import org.comixed.service.library.ReadingListService;
 import org.comixed.views.View;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@Log4j2
 public class ReadingListController {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired ReadingListRepository readingListRepository;
   @Autowired ReadingListService readingListService;
 
@@ -53,7 +51,7 @@ public class ReadingListController {
       throws NoSuchReadingListException, ReadingListNameException, ComicException {
     final String email = principal.getName();
 
-    this.logger.info("Creating reading list for user: email={} name={}", email, name);
+    this.log.info("Creating reading list for user: email={} name={}", email, name);
 
     return this.readingListService.createReadingList(email, name, summary, entries);
   }
@@ -73,7 +71,7 @@ public class ReadingListController {
     final String summary = request.getSummary();
     final List<Long> entries = request.getEntries();
 
-    this.logger.info(
+    this.log.info(
         "Updating reading list for user: email={} id={} name={} summary={}",
         email,
         id,
@@ -91,11 +89,11 @@ public class ReadingListController {
     }
     final String email = principal.getName();
 
-    this.logger.info("Getting reading lists: user={}", email);
+    this.log.info("Getting reading lists: user={}", email);
 
     final List<ReadingList> result = this.readingListService.getReadingListsForUser(email);
 
-    this.logger.debug("Returning {} lists{}", result.size(), result.size() == 1 ? "" : "s");
+    this.log.debug("Returning {} lists{}", result.size(), result.size() == 1 ? "" : "s");
     return result;
   }
 
@@ -104,7 +102,7 @@ public class ReadingListController {
   public ReadingList getReadingList(final Principal principal, @PathVariable("id") final long id)
       throws NoSuchReadingListException {
     final String email = principal.getName();
-    this.logger.info("Getting reading list for user: email={} id={}", email, id);
+    this.log.info("Getting reading list for user: email={} id={}", email, id);
 
     return this.readingListService.getReadingListForUser(email, id);
   }

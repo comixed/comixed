@@ -25,23 +25,21 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class ComicVineIssueDetailsResponseProcessor {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   private SimpleDateFormat simpleDataFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ComicVineResponseAdaptor responseAdaptor;
 
   public String process(byte[] content, Comic comic) throws ComicVineAdaptorException {
-    this.logger.debug("Validating ComicVine response content");
+    this.log.debug("Validating ComicVine response content");
     this.responseAdaptor.checkForErrors(content);
 
     try {

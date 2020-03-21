@@ -18,12 +18,11 @@
 
 package org.comixed.controller.user;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.web.authentication.AuthToken;
 import org.comixed.web.authentication.JwtTokenUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,9 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/token")
+@Log4j2
 public class ComiXedAuthenticationController {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private AuthenticationManager authenticationManager;
 
   @Autowired private JwtTokenUtil jwtTokenUtil;
@@ -51,7 +49,7 @@ public class ComiXedAuthenticationController {
   public ResponseEntity<AuthToken> register(
       @RequestParam("email") String email, @RequestParam("password") String password)
       throws AuthenticationException {
-    logger.debug("Attemping to authenticate user: {}", email);
+    this.log.debug("Attemping to authenticate user: {}", email);
     final Authentication authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(email, password));

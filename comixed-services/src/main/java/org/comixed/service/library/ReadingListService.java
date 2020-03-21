@@ -20,21 +20,19 @@ package org.comixed.service.library;
 
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.*;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ReadingListRepository;
 import org.comixed.repositories.library.SmartReadingListRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Log4j2
 public class ReadingListService {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired ReadingListRepository readingListRepository;
   @Autowired SmartReadingListRepository smartReadingListRepository;
   @Autowired ComiXedUserRepository userRepository;
@@ -44,9 +42,9 @@ public class ReadingListService {
   public ReadingList createReadingList(
       final String email, final String name, final String summary, final List<Long> entries)
       throws ReadingListNameException, ComicException {
-    this.logger.debug("Creating reading list: email={} name={}", email, name);
+    this.log.debug("Creating reading list: email={} name={}", email, name);
 
-    this.logger.debug("Getting owner");
+    this.log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
     ReadingList readingList = this.readingListRepository.findReadingListForUser(owner, name);
 
@@ -54,7 +52,7 @@ public class ReadingListService {
       throw new ReadingListNameException("Name already used: " + name);
     }
 
-    this.logger.debug("Creating reading list object");
+    this.log.debug("Creating reading list object");
     readingList = new ReadingList();
     readingList.setOwner(owner);
     readingList.setName(name);
@@ -62,26 +60,26 @@ public class ReadingListService {
 
     loadComics(entries, readingList);
 
-    this.logger.debug("Saving reading list");
+    this.log.debug("Saving reading list");
     return this.readingListRepository.save(readingList);
   }
 
   private void loadComics(final List<Long> entries, final ReadingList readingList)
       throws ComicException {
-    this.logger.debug("Adding comics to list");
+    this.log.debug("Adding comics to list");
     readingList.getEntries().clear();
     for (int index = 0; index < entries.size(); index++) {
       final Long id = entries.get(index);
-      this.logger.debug("Loading comic: id={}", id);
+      this.log.debug("Loading comic: id={}", id);
       final Comic comic = this.comicService.getComic(id);
       readingList.getEntries().add(new ReadingListEntry(comic, readingList));
     }
   }
 
   public List<ReadingList> getReadingListsForUser(final String email) {
-    this.logger.debug("Getting reading lists for user: email={}", email);
+    this.log.debug("Getting reading lists for user: email={}", email);
 
-    this.logger.debug("Getting owner");
+    this.log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
 
     return this.readingListRepository.findAllReadingListsForUser(owner);
@@ -95,25 +93,25 @@ public class ReadingListService {
       final String summary,
       final List<Long> entries)
       throws NoSuchReadingListException, ComicException {
-    this.logger.debug("Updating reading list: owner={} id={} name={}", email, id, name);
+    this.log.debug("Updating reading list: owner={} id={} name={}", email, id, name);
 
-    this.logger.debug("Getting owner");
+    this.log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
 
-    this.logger.debug("Getting reading list");
+    this.log.debug("Getting reading list");
     final Optional<ReadingList> readingList = this.readingListRepository.findById(id);
 
     if (!readingList.isPresent()) {
       throw new NoSuchReadingListException("No such reading list: id=" + id);
     }
 
-    this.logger.debug("Updating reading list details");
+    this.log.debug("Updating reading list details");
     readingList.get().setName(name);
     readingList.get().setSummary(summary);
 
     loadComics(entries, readingList.get());
 
-    this.logger.debug("Updating reading list");
+    this.log.debug("Updating reading list");
     return this.readingListRepository.save(readingList.get());
   }
 
@@ -145,9 +143,9 @@ public class ReadingListService {
       final String mode,
       final List<Matcher> matchers)
       throws ReadingListNameException {
-    this.logger.debug("Creating smart reading list: email={} name={}", email, name);
+    this.log.debug("Creating smart reading list: email={} name={}", email, name);
 
-    this.logger.debug("Getting owner");
+    this.log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
     SmartReadingList smartReadingList =
         this.smartReadingListRepository.findSmartReadingListForUser(owner, name);
@@ -155,7 +153,7 @@ public class ReadingListService {
     if (smartReadingList != null) {
       throw new ReadingListNameException("Name already used: " + name);
     }
-    this.logger.debug("Creating reading list object");
+    this.log.debug("Creating reading list object");
     smartReadingList = new SmartReadingList();
     smartReadingList.setOwner(owner);
     smartReadingList.setName(name);
@@ -166,13 +164,13 @@ public class ReadingListService {
       smartReadingList.addMatcher(matcher);
     }
 
-    this.logger.debug("Saving smart reading list");
+    this.log.debug("Saving smart reading list");
     return this.smartReadingListRepository.save(smartReadingList);
   }
 
   public Matcher createMatcher(
       final String type, final boolean not, final String mode, final List<Matcher> matchers) {
-    this.logger.debug("Creating Group matcher: type={} not={} mode={}", type, not, mode);
+    this.log.debug("Creating Group matcher: type={} not={} mode={}", type, not, mode);
 
     Matcher matcher = new Matcher();
     matcher.setType(type);
@@ -187,7 +185,7 @@ public class ReadingListService {
 
   public Matcher createMatcher(
       final String type, final boolean not, final String operator, final String value) {
-    this.logger.debug(
+    this.log.debug(
         "Creating Item matcher: type={} not={} operator={} value={}", type, not, operator, value);
 
     Matcher matcher = new Matcher();

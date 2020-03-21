@@ -19,13 +19,12 @@
 package org.comixed.task.model;
 
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.encoders.ConvertComicTaskEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -35,9 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class ConvertComicsWorkerTask extends AbstractWorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<ConvertComicTaskEncoder> saveComicTaskEncoderObjectFactory;
 
@@ -67,13 +65,13 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.logger.debug(
+    this.log.debug(
         "Queueing up {} save comic task{}",
         this.comicList.size(),
         this.comicList.size() == 1 ? "" : "s");
 
     for (Comic comic : this.comicList) {
-      this.logger.debug("Queueing task to save comic: id={}", comic.getId());
+      this.log.debug("Queueing task to save comic: id={}", comic.getId());
       ConvertComicTaskEncoder encoder = this.saveComicTaskEncoderObjectFactory.getObject();
 
       encoder.setComic(comic);

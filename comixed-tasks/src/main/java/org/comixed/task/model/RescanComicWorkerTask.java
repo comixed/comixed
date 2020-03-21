@@ -18,11 +18,10 @@
 
 package org.comixed.task.model;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
 import org.comixed.repositories.library.PageRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -30,23 +29,22 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class RescanComicWorkerTask extends AbstractWorkerTask {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private PageRepository pageRepository;
 
   private Comic comic;
 
   @Override
   public void startTask() throws WorkerTaskException {
-    this.logger.debug("Rescanning comic: id={} {}", this.comic.getId(), this.comic.getFilename());
+    this.log.debug("Rescanning comic: id={} {}", this.comic.getId(), this.comic.getFilename());
 
     for (Page page : this.comic.getPages()) {
-      this.logger.debug("Updating page metrics: {}", page.getFilename());
+      this.log.debug("Updating page metrics: {}", page.getFilename());
       page.getWidth();
       page.getHeight();
 
-      this.logger.debug("Saving page details");
+      this.log.debug("Saving page details");
       this.pageRepository.save(page);
     }
   }

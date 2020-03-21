@@ -20,9 +20,8 @@ package org.comixed;
 
 import static java.lang.System.exit;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.importer.ImportFileProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -32,12 +31,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties
+@Log4j2
 public class ComiXedImporterApp implements ApplicationRunner {
   public static final String SOURCE_CMDLINE_ARG = "source";
   public static final String REPLACEMENTS_CMDLINE_ARG = "replacements";
   public static final String USER_CMDLINE_ARG = "user";
-
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private ImportFileProcessor importFileProcessor;
 
@@ -47,14 +45,14 @@ public class ComiXedImporterApp implements ApplicationRunner {
   }
 
   private void missingArgument(String name) {
-    this.logger.info("Missing required argument: {}", name);
+    this.log.info("Missing required argument: {}", name);
     exit(1);
   }
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
     if (args.getSourceArgs().length == 0) {
-      this.logger.error("No commandline options provided. Exiting...");
+      this.log.error("No commandline options provided. Exiting...");
       exit(1);
     }
 
@@ -72,7 +70,7 @@ public class ComiXedImporterApp implements ApplicationRunner {
       this.importFileProcessor.setImportUser(args.getOptionValues(USER_CMDLINE_ARG).get(0));
     }
 
-    this.logger.info("Source file: {}", source);
+    this.log.info("Source file: {}", source);
 
     this.importFileProcessor.process(source);
 

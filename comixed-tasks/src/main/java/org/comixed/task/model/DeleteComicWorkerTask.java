@@ -22,19 +22,17 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.repositories.library.ComicRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Log4j2
 public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicRepository repository;
 
   private boolean deleteFile;
@@ -49,18 +47,18 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
   public void startTask() throws WorkerTaskException {
     if (this.deleteFile) {
       final String filename = this.comic.getFilename();
-      this.logger.debug("Deleting comic file: {}", filename);
+      this.log.debug("Deleting comic file: {}", filename);
       File file = new File(filename);
 
       try {
         FileUtils.forceDelete(file);
-        this.logger.debug("Removing comic from repository: id={}", this.comic.getId());
+        this.log.debug("Removing comic from repository: id={}", this.comic.getId());
         this.repository.delete(this.comic);
       } catch (IOException error) {
-        this.logger.error("Unable to delete comic: {}", filename, error);
+        this.log.error("Unable to delete comic: {}", filename, error);
       }
     } else {
-      this.logger.debug("Marking comic for deletion: id={}", this.comic.getId());
+      this.log.debug("Marking comic for deletion: id={}", this.comic.getId());
       comic.setDateDeleted(new Date());
       comic.setDateLastUpdated(new Date());
       this.repository.save(this.comic);
