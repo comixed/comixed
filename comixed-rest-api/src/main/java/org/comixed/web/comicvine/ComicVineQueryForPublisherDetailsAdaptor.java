@@ -18,22 +18,20 @@
 
 package org.comixed.web.comicvine;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.scraping.ComicVinePublisher;
 import org.comixed.repositories.ComicVinePublisherRepository;
 import org.comixed.web.ComicVinePublisherDetailsWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class ComicVineQueryForPublisherDetailsAdaptor {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ObjectFactory<ComicVinePublisherDetailsWebRequest> webRequestFactory;
   @Autowired private WebRequestProcessor webRequestProcessor;
   @Autowired private ComicVinePublisherDetailsResponseProcessor contentProcessor;
@@ -41,7 +39,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
 
   public void execute(String apiKey, String publisherId, Comic comic, boolean skipCache)
       throws ComicVineAdaptorException {
-    this.logger.debug("Fetching publisher details: publisherId={}", publisherId);
+    this.log.debug("Fetching publisher details: publisherId={}", publisherId);
 
     ComicVinePublisher publisher = null;
     String content = null;
@@ -49,7 +47,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
     publisher = this.comicVinePublisherRepository.findByPublisherId(publisherId);
 
     if (skipCache || (publisher == null)) {
-      this.logger.debug("Fetching publisher details from ComicVine...");
+      this.log.debug("Fetching publisher details from ComicVine...");
 
       ComicVinePublisherDetailsWebRequest request = this.webRequestFactory.getObject();
 
@@ -64,7 +62,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
           this.comicVinePublisherRepository.delete(publisher);
         }
 
-        this.logger.debug("Saving retrieved publisher data...");
+        this.log.debug("Saving retrieved publisher data...");
         publisher = new ComicVinePublisher();
         publisher.setPublisherId(publisherId);
         publisher.setContent(content);
@@ -73,7 +71,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
         throw new ComicVineAdaptorException("Failed to retrieve publisher details", error);
       }
     } else {
-      this.logger.debug("Publisher found in database.");
+      this.log.debug("Publisher found in database.");
       content = publisher.getContent();
     }
 

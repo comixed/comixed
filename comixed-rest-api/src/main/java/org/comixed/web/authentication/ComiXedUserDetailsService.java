@@ -18,11 +18,10 @@
 
 package org.comixed.web.authentication;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
@@ -32,14 +31,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class ComiXedUserDetailsService implements UserDetailsService {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComiXedUserRepository userRepository;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    logger.debug("Loading user: email={}", email);
+    this.log.debug("Loading user: email={}", email);
 
     ComiXedUser user = userRepository.findByEmail(email);
 

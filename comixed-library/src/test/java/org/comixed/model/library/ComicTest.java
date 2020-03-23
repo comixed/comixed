@@ -18,16 +18,15 @@
 
 package org.comixed.model.library;
 
-import org.apache.commons.io.FileUtils;
-import org.comixed.adaptors.ArchiveType;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-
-import static org.junit.Assert.*;
+import org.apache.commons.io.FileUtils;
+import org.comixed.adaptors.ArchiveType;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ComicTest {
   private static final String TEST_SERIES = "Batman";

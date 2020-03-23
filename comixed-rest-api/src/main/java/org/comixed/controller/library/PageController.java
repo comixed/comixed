@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.DuplicatePage;
 import org.comixed.model.library.Page;
@@ -34,8 +35,6 @@ import org.comixed.service.library.PageService;
 import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.views.View;
 import org.comixed.views.View.PageList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +42,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@Log4j2
 public class PageController {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private PageService pageService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
@@ -58,21 +56,21 @@ public class PageController {
   public Comic addBlockedPageHash(
       @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
       throws PageException {
-    this.logger.info("Blocking page hash: {}", hash);
+    this.log.info("Blocking page hash: {}", hash);
 
     return this.pageService.addBlockedPageHash(pageId, hash);
   }
 
   @DeleteMapping(value = "/pages/hash/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   public int deleteAllWithHash(@PathVariable("hash") String hash) {
-    this.logger.info("Marking all pages with hash as deleted: {}", hash);
+    this.log.info("Marking all pages with hash as deleted: {}", hash);
 
     return this.pageService.deleteAllWithHash(hash);
   }
 
   @DeleteMapping(value = "/pages/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public boolean deletePage(@PathVariable("id") long id) {
-    this.logger.info("Deleting page: id={}", id);
+    this.log.info("Deleting page: id={}", id);
 
     return this.pageService.deletePage(id) != null;
   }
@@ -80,14 +78,14 @@ public class PageController {
   @GetMapping(value = "/comics/{id}/pages", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(PageList.class)
   public List<Page> getAllPagesForComic(@PathVariable("id") long id) {
-    this.logger.info("Getting all pages for comic: id={}", id);
+    this.log.info("Getting all pages for comic: id={}", id);
 
     return this.pageService.getAllPagesForComic(id);
   }
 
   @GetMapping(value = "/pages/blocked", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<String> getAllBlockedPageHashes() {
-    this.logger.debug("Getting all blocked page hashes");
+    this.log.debug("Getting all blocked page hashes");
 
     return this.pageService.getAllBlockedPageHashes();
   }
@@ -95,7 +93,7 @@ public class PageController {
   @GetMapping(value = "/pages/duplicates", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageList.class)
   public List<DuplicatePage> getDuplicatePages() {
-    this.logger.info("Getting duplicate pages");
+    this.log.info("Getting duplicate pages");
 
     return this.pageService.getDuplicatePages();
   }
@@ -105,7 +103,7 @@ public class PageController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<byte[]> getImageInComicByIndex(
       @PathVariable("id") long id, @PathVariable("index") int index) throws IOException {
-    this.logger.debug("Getting image content for comic: id={} index={}", id, index);
+    this.log.debug("Getting image content for comic: id={} index={}", id, index);
 
     final Page page = this.pageService.getPageInComicByIndex(id, index);
 
@@ -113,13 +111,13 @@ public class PageController {
   }
 
   private ResponseEntity<byte[]> getResponseEntityForPage(Page page) throws IOException {
-    this.logger.debug("creating response entity for page: id={}", page.getId());
+    this.log.debug("creating response entity for page: id={}", page.getId());
     byte[] content = this.pageCacheService.findByHash(page.getHash());
 
     if (content == null) {
-      this.logger.debug("Fetching content for page");
+      this.log.debug("Fetching content for page");
       content = page.getContent();
-      this.logger.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
+      this.log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
       this.pageCacheService.saveByHash(page.getHash(), content);
     }
 
@@ -127,7 +125,7 @@ public class PageController {
         this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content))
             + "/"
             + this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
-    this.logger.debug("Page type: {}", type);
+    this.log.debug("Page type: {}", type);
 
     return ResponseEntity.ok()
         .contentLength(content.length)
@@ -138,14 +136,14 @@ public class PageController {
 
   @GetMapping(value = "/pages/{id}/content", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<byte[]> getPageContent(@PathVariable("id") long id) throws IOException {
-    this.logger.info("Getting page content: id={}", id);
+    this.log.info("Getting page content: id={}", id);
     final Page page = this.pageService.findById(id);
 
     if (page != null) {
       return this.getResponseEntityForPage(page);
     }
 
-    this.logger.warn("No such page");
+    this.log.warn("No such page");
     return null;
   }
 
@@ -154,14 +152,14 @@ public class PageController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public Page getPageInComicByIndex(
       @PathVariable("comic_id") long comicId, @PathVariable("index") int index) {
-    this.logger.info("Getting page in comic: comic id={} page index={}", comicId, index);
+    this.log.info("Getting page in comic: comic id={} page index={}", comicId, index);
 
     return this.pageService.getPageInComicByIndex(comicId, index);
   }
 
   @GetMapping(value = "/pages/types", produces = MediaType.APPLICATION_JSON_VALUE)
   public Iterable<PageType> getPageTypes() {
-    this.logger.info("Fetching page types");
+    this.log.info("Fetching page types");
 
     return this.pageService.getPageTypes();
   }
@@ -171,21 +169,21 @@ public class PageController {
   public Comic removeBlockedPageHash(
       @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
       throws PageException {
-    this.logger.info("Unblocking page hash: {}", hash);
+    this.log.info("Unblocking page hash: {}", hash);
 
     return this.pageService.removeBlockedPageHash(pageId, hash);
   }
 
   @PutMapping(value = "/pages/hash/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   public int undeleteAllWithHash(@PathVariable("hash") String hash) {
-    this.logger.info("Marking all pages with hash as undeleted: {}", hash);
+    this.log.info("Marking all pages with hash as undeleted: {}", hash);
 
     return this.pageService.undeleteAllWithHash(hash);
   }
 
   @PostMapping(value = "/pages/{id}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
   public boolean undeletePage(@PathVariable("id") long id) {
-    this.logger.info("Undeleting page: id={}", id);
+    this.log.info("Undeleting page: id={}", id);
 
     return this.pageService.undeletePage(id) != null;
   }
@@ -193,7 +191,7 @@ public class PageController {
   @PutMapping(value = "/pages/{id}/type", produces = MediaType.APPLICATION_JSON_VALUE)
   public Page updateTypeForPage(
       @PathVariable("id") long id, @RequestParam("type_id") long pageTypeId) throws PageException {
-    this.logger.info("Setting page type: id={} typeId={}", id, pageTypeId);
+    this.log.info("Setting page type: id={} typeId={}", id, pageTypeId);
 
     return this.pageService.updateTypeForPage(id, pageTypeId);
   }
@@ -205,7 +203,7 @@ public class PageController {
   @JsonView(View.DuplicatePageList.class)
   public List<DuplicatePage> setBlockingState(
       @RequestBody() final SetBlockingStateRequest request) {
-    this.logger.info(
+    this.log.info(
         "Setting blocked state for {} hash{} to {}",
         request.getHashes().size(),
         request.getHashes().size() == 1 ? "" : "es",
@@ -221,7 +219,7 @@ public class PageController {
   @JsonView(View.DuplicatePageList.class)
   public List<DuplicatePage> setDeletedState(@RequestBody() final SetDeletedStateRequest request) {
     final List<String> hashes = request.getHashes();
-    this.logger.info(
+    this.log.info(
         "{}arking {} page hash{} for deletion",
         request.getDeleted() ? "M" : "Unm",
         hashes.size(),

@@ -18,11 +18,8 @@
 
 package org.comixed.model.scraping;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -32,8 +29,6 @@ import org.springframework.stereotype.Component;
 @Entity
 @Table(name = "comic_vine_issues")
 public class ComicVineIssue {
-  @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")

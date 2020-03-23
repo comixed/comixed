@@ -20,12 +20,11 @@ package org.comixed.web;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,11 +35,11 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class WebRequestProcessor {
   public static final String AGENT_HEADER = "User-Agent";
   // TODO insert the version from the configuration
   public static final String AGENT_NAME = "ComiXed/0.4.0";
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private WebRequestClient clientSource;
 
@@ -53,7 +52,7 @@ public class WebRequestProcessor {
    */
   public String execute(WebRequest request) throws WebRequestException {
     String url = request.getURL();
-    this.logger.debug("Executing web request: " + url);
+    this.log.debug("Executing web request: " + url);
 
     HttpClient client = this.clientSource.createClient();
     HttpGet getRequest = new HttpGet(url);
@@ -63,7 +62,7 @@ public class WebRequestProcessor {
     try {
       HttpResponse response = client.execute(getRequest);
       String result = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
-      this.logger.debug("Returning {} byte response", result.length());
+      this.log.debug("Returning {} byte response", result.length());
       return result;
     } catch (IOException error) {
       throw new WebRequestException("Failed to execute request", error);

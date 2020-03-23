@@ -22,13 +22,12 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.TaskException;
 import org.comixed.task.encoders.TaskEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -43,9 +42,8 @@ import org.springframework.transaction.annotation.Transactional;
 @EnableConfigurationProperties
 @PropertySource("classpath:task-adaptors.properties")
 @ConfigurationProperties(prefix = "task", ignoreUnknownFields = false)
+@Log4j2
 public class TaskAdaptor implements InitializingBean {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ApplicationContext applicationContext;
   @Autowired private TaskRepository taskRepository;
 
@@ -57,25 +55,25 @@ public class TaskAdaptor implements InitializingBean {
   }
 
   public List<Task> getNextTask() {
-    this.logger.debug("Getting the next task to run");
+    this.log.debug("Getting the next task to run");
     return this.taskRepository.getTasksToRun(PageRequest.of(0, 1));
   }
 
   @Transactional
   public Task save(final Task task) {
-    this.logger.debug("Saving task: type={}", task.getTaskType());
+    this.log.debug("Saving task: type={}", task.getTaskType());
     return this.taskRepository.save(task);
   }
 
   @Transactional
   public void delete(final Task task) {
-    this.logger.debug("Deleting task: id={} type={}", task.getId(), task.getTaskType());
+    this.log.debug("Deleting task: id={} type={}", task.getId(), task.getTaskType());
     this.taskRepository.delete(task);
   }
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    this.logger.debug("Loading task action configuration");
+    this.log.debug("Loading task action configuration");
     this.adaptorMap.clear();
     for (TaskTypeEntry entry : this.adaptors) {
       if (this.adaptorMap.containsKey(entry.getType())) {
@@ -97,7 +95,7 @@ public class TaskAdaptor implements InitializingBean {
    * @throws TaskException if no adaptor is configured
    */
   public <T extends TaskEncoder> T getEncoder(final TaskType taskType) throws TaskException {
-    this.logger.debug("Getting task adaptor: type={}", taskType);
+    this.log.debug("Getting task adaptor: type={}", taskType);
 
     if (!this.adaptorMap.containsKey(taskType))
       throw new TaskException("No adaptor configured: " + taskType);

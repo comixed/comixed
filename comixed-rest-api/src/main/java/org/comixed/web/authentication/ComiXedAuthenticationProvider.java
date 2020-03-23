@@ -21,12 +21,11 @@ package org.comixed.web.authentication;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,11 +36,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class ComiXedAuthenticationProvider implements AuthenticationProvider {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComiXedUserRepository userRepository;
-
   @Autowired private Utils utils;
 
   @Override
@@ -49,22 +46,22 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
     String email = authentication.getName();
     String password = authentication.getCredentials().toString();
 
-    logger.debug("Attempting to authenticate: email={}", email);
+    this.log.debug("Attempting to authenticate: email={}", email);
 
     ComiXedUser user = userRepository.findByEmail(email);
 
     if (user == null) {
-      logger.debug("No such user");
+      this.log.debug("No such user");
       return null;
     }
 
     if (utils.createHash(password.getBytes()).equals(user.getPasswordHash())) {
-      logger.debug("Passwords match!");
+      this.log.debug("Passwords match!");
 
       List<GrantedAuthority> roles = new ArrayList<>();
 
       for (Role role : user.getRoles()) {
-        logger.debug("Granting role: {}", role.getName());
+        this.log.debug("Granting role: {}", role.getName());
         roles.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
       }
       // update the last authenticated date
@@ -73,7 +70,7 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
       return new UsernamePasswordAuthenticationToken(email, password, roles);
     }
 
-    logger.debug("Passwords did not match!");
+    this.log.debug("Passwords did not match!");
 
     return null;
   }

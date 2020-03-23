@@ -19,26 +19,26 @@
 package org.comixed.task.model;
 
 import java.io.IOException;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.model.library.Comic;
 import org.comixed.repositories.library.ComicRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
+@Log4j2
 public class ExportComicWorkerTask extends AbstractWorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private Comic comic;
-  private ArchiveAdaptor archiveAdaptor;
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicFileHandler comicFileHandler;
+
+  private Comic comic;
+  private ArchiveAdaptor archiveAdaptor;
   private boolean renamePages = false;
 
   public void setArchiveAdaptor(ArchiveAdaptor archiveAdaptor) {
@@ -55,20 +55,20 @@ public class ExportComicWorkerTask extends AbstractWorkerTask {
    * @param renamePages the flag
    */
   public void setRenamePages(boolean renamePages) {
-    this.logger.debug("Setting renamePages={}", renamePages);
+    this.log.debug("Setting renamePages={}", renamePages);
     this.renamePages = renamePages;
   }
 
   @Override
   public void startTask() throws WorkerTaskException {
-    this.logger.debug("Loading comic to be converted: " + this.comic.getFilename());
+    this.log.debug("Loading comic to be converted: " + this.comic.getFilename());
     try {
       this.comicFileHandler.loadComic(this.comic);
     } catch (ComicFileHandlerException error) {
       throw new WorkerTaskException(
           "unable to load comic file: " + this.comic.getFilename(), error);
     }
-    this.logger.debug("Converting comic");
+    this.log.debug("Converting comic");
 
     try {
       Comic result = this.archiveAdaptor.saveComic(this.comic, this.renamePages);

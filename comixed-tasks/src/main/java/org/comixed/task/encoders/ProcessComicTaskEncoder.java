@@ -18,6 +18,7 @@
 
 package org.comixed.task.encoders;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class ProcessComicTaskEncoder extends AbstractTaskEncoder<ProcessComicTask> {
   public static final String DELETE_BLOCKED_PAGES = "delete-blocked-pages";
   public static final String IGNORE_METADATA = "ignore-metadata";
@@ -42,7 +44,7 @@ public class ProcessComicTaskEncoder extends AbstractTaskEncoder<ProcessComicTas
 
   @Override
   public Task encode() {
-    this.logger.debug(
+    this.log.debug(
         "Encoding process comic task: comic={} delete blocked pages={} ignore metadata={}",
         this.comic.getId(),
         this.deleteBlockedPages,
@@ -61,7 +63,7 @@ public class ProcessComicTaskEncoder extends AbstractTaskEncoder<ProcessComicTas
   @Override
   public ProcessComicTask decode(final Task task) {
     this.deleteTask(task);
-    this.logger.debug("Decoding process comic task: comic={}", task.getComic().getId());
+    this.log.debug("Decoding process comic task: comic={}", task.getComic().getId());
 
     final ProcessComicTask result = this.processComicTaskObjectFactory.getObject();
     result.setComic(task.getComic());

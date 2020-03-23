@@ -18,11 +18,10 @@
 
 package org.comixed.task.encoders;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.tasks.Task;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.model.AbstractWorkerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,14 +31,13 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Darryl L. Pierce
  */
+@Log4j2
 public abstract class AbstractTaskEncoder<T extends AbstractWorkerTask> implements TaskEncoder<T> {
-  final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private TaskRepository taskRepository;
 
   @Transactional
   public void deleteTask(final Task task) {
-    this.logger.debug("Deleting persisted task: id={} type={}", task.getId(), task.getTaskType());
+    this.log.debug("Deleting persisted task: id={} type={}", task.getId(), task.getTaskType());
     this.taskRepository.delete(task);
   }
 }

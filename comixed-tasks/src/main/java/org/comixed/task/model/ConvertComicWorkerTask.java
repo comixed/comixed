@@ -20,6 +20,7 @@ package org.comixed.task.model;
 
 import java.io.IOException;
 import java.util.Date;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
@@ -27,8 +28,6 @@ import org.comixed.model.library.Comic;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.encoders.ProcessComicTaskEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,9 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class ConvertComicWorkerTask extends AbstractWorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicRepository comicRepository;
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
@@ -62,16 +60,16 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.logger.debug(
+    this.log.debug(
         "Saving comic: id={} target archive type={}", this.comic.getId(), this.targetArchiveType);
     ArchiveAdaptor targetArchiveAdaptor = this.targetArchiveType.getArchiveAdaptor();
     try {
       Comic result = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
-      this.logger.debug("Saving updated comic");
+      this.log.debug("Saving updated comic");
       result.setDateLastUpdated(new Date());
       this.comicRepository.save(result);
 
-      this.logger.debug("Queueing up a comic processing task");
+      this.log.debug("Queueing up a comic processing task");
       ProcessComicTaskEncoder taskEncoder = this.processComicTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
       taskEncoder.setIgnoreMetadata(false);

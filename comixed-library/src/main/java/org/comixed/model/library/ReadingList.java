@@ -18,7 +18,6 @@
 
 package org.comixed.model.library;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
@@ -27,8 +26,6 @@ import java.util.Set;
 import javax.persistence.*;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.views.View;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <code>ReadingList</code> represents a reading list of comics.
@@ -38,8 +35,6 @@ import org.slf4j.LoggerFactory;
 @Entity
 @Table(name = "reading_lists")
 public class ReadingList {
-  @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @JsonProperty("entries")
   @OneToMany(
       mappedBy = "readingList",

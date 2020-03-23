@@ -18,10 +18,9 @@
 
 package org.comixed.service.task;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.tasks.TaskRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +30,8 @@ import org.springframework.stereotype.Service;
  * @author Darryl L. Pierce
  */
 @Service
+@Log4j2
 public class TaskService {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private TaskRepository taskRepository;
 
   /**
@@ -44,7 +42,7 @@ public class TaskService {
    */
   public int getTaskCount(final TaskType taskType) {
     final int result = this.taskRepository.getTaskCount(taskType);
-    this.logger.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", taskType);
+    this.log.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", taskType);
     return result;
   }
 }

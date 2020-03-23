@@ -20,22 +20,20 @@ package org.comixed.service.user;
 
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.RoleRepository;
 import org.comixed.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Log4j2
 public class UserService implements InitializingBean {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private RoleRepository roleRepository;
   @Autowired private Utils utils;
@@ -44,22 +42,22 @@ public class UserService implements InitializingBean {
   private Role adminRole;
 
   public ComiXedUser findByEmail(String email) throws ComiXedUserException {
-    this.logger.debug("Finding user by email: {}", email);
+    this.log.debug("Finding user by email: {}", email);
 
     final ComiXedUser result = this.userRepository.findByEmail(email);
 
     if (result == null) {
-      this.logger.warn("No such user: {}", email);
+      this.log.warn("No such user: {}", email);
       throw new ComiXedUserException("No such user: " + email);
     }
 
-    this.logger.debug("Found user: id={}", result.getId());
+    this.log.debug("Found user: id={}", result.getId());
 
     return result;
   }
 
   public void delete(long id) throws ComiXedUserException {
-    this.logger.debug("Deleting user: id={}", id);
+    this.log.debug("Deleting user: id={}", id);
 
     final Optional<ComiXedUser> record = this.userRepository.findById(id);
 
@@ -67,12 +65,12 @@ public class UserService implements InitializingBean {
       throw new ComiXedUserException("No such user: id=" + id);
     }
 
-    this.logger.debug("Deleting user record");
+    this.log.debug("Deleting user record");
     this.userRepository.delete(record.get());
   }
 
   public ComiXedUser save(final ComiXedUser user) throws ComiXedUserException {
-    this.logger.debug(
+    this.log.debug(
         "{} user: email={}", user.getId() != null ? "Updating" : "Saving", user.getEmail());
 
     try {
@@ -83,17 +81,17 @@ public class UserService implements InitializingBean {
   }
 
   public List<ComiXedUser> findAll() {
-    this.logger.debug("Getting all users");
+    this.log.debug("Getting all users");
 
     final List<ComiXedUser> result = this.userRepository.findAll();
 
-    this.logger.debug("Returning {} records", result.size());
+    this.log.debug("Returning {} records", result.size());
 
     return result;
   }
 
   public ComiXedUser findById(final long id) throws ComiXedUserException {
-    this.logger.debug("Finding user: id={}", id);
+    this.log.debug("Finding user: id={}", id);
 
     final Optional<ComiXedUser> record = this.userRepository.findById(id);
 
@@ -105,12 +103,12 @@ public class UserService implements InitializingBean {
   }
 
   public Role findRoleByName(final String name) throws ComiXedUserException {
-    this.logger.debug("Finding role: name={}", name);
+    this.log.debug("Finding role: name={}", name);
 
     final Role record = this.roleRepository.findByName(name);
 
     if (record == null) {
-      this.logger.debug("No such role exists");
+      this.log.debug("No such role exists");
       throw new ComiXedUserException("Invalid role: name=" + name);
     }
 
@@ -120,7 +118,7 @@ public class UserService implements InitializingBean {
   public ComiXedUser setUserProperty(
       final String email, final String propertyName, final String propertyValue)
       throws ComiXedUserException {
-    this.logger.debug(
+    this.log.debug(
         "Setting user property: email={} property[{}]={}", email, propertyName, propertyValue);
 
     final ComiXedUser user = this.userRepository.findByEmail(email);
@@ -132,7 +130,7 @@ public class UserService implements InitializingBean {
 
   public ComiXedUser setUserPassword(final String email, final String password)
       throws ComiXedUserException {
-    this.logger.debug("Updating password for user: email={} length={}", email, password.length());
+    this.log.debug("Updating password for user: email={} length={}", email, password.length());
 
     final ComiXedUser record = this.userRepository.findByEmail(email);
 
@@ -147,7 +145,7 @@ public class UserService implements InitializingBean {
 
   public ComiXedUser setUserEmail(final String currentEmail, final String newEmail)
       throws ComiXedUserException {
-    this.logger.debug("Setting user email: old={} new={}", currentEmail, newEmail);
+    this.log.debug("Setting user email: old={} new={}", currentEmail, newEmail);
 
     final ComiXedUser record = this.userRepository.findByEmail(currentEmail);
 
@@ -162,7 +160,7 @@ public class UserService implements InitializingBean {
 
   @Transactional
   public ComiXedUser deleteUserProperty(final String email, final String property) {
-    this.logger.debug("Deleting user property: email={} property={}", email, property);
+    this.log.debug("Deleting user property: email={} property={}", email, property);
     final ComiXedUser user = this.userRepository.findByEmail(email);
     user.deleteProperty(property);
     return this.userRepository.save(user);
@@ -171,7 +169,7 @@ public class UserService implements InitializingBean {
   @Transactional
   public ComiXedUser createUser(final String email, final String password, final boolean isAdmin)
       throws ComiXedUserException {
-    this.logger.debug("Creating new user: email={}", email);
+    this.log.debug("Creating new user: email={}", email);
 
     ComiXedUser user = this.userRepository.findByEmail(email);
 
@@ -187,7 +185,7 @@ public class UserService implements InitializingBean {
       user.addRole(this.adminRole);
     }
 
-    this.logger.debug("Saving new user");
+    this.log.debug("Saving new user");
 
     return this.userRepository.save(user);
   }

@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandler;
@@ -36,16 +37,13 @@ import org.comixed.service.task.TaskService;
 import org.comixed.task.model.QueueComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.ComicFileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class FileService {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicRepository comicRepository;
   @Autowired private Worker worker;
@@ -56,31 +54,31 @@ public class FileService {
 
   public byte[] getImportFileCover(final String comicArchive)
       throws ComicFileHandlerException, ArchiveAdaptorException {
-    this.logger.debug("Getting first image from archive: {}", comicArchive);
+    this.log.debug("Getting first image from archive: {}", comicArchive);
 
     byte[] result = null;
     final ArchiveAdaptor archiveAdaptor = this.comicFileHandler.getArchiveAdaptorFor(comicArchive);
     if (archiveAdaptor == null) {
-      this.logger.debug("No archive adaptor available");
+      this.log.debug("No archive adaptor available");
       return null;
     }
 
     final String coverFile = archiveAdaptor.getFirstImageFileName(comicArchive);
     if (coverFile == null) {
-      this.logger.debug("Archive contains no images");
+      this.log.debug("Archive contains no images");
       return null;
     }
 
-    this.logger.debug("Fetching image content: entry={}", coverFile);
+    this.log.debug("Fetching image content: entry={}", coverFile);
     result = archiveAdaptor.loadSingleFile(comicArchive, coverFile);
 
-    this.logger.debug("Returning {} bytes", result == null ? 0 : result.length);
+    this.log.debug("Returning {} bytes", result == null ? 0 : result.length);
 
     return result;
   }
 
   public List<FileDetails> getAllComicsUnder(final String rootDirectory) throws IOException {
-    this.logger.debug("Getting comics below root: {}", rootDirectory);
+    this.log.debug("Getting comics below root: {}", rootDirectory);
 
     final File rootFile = new File(rootDirectory);
     final List<FileDetails> result = new ArrayList<>();
@@ -89,10 +87,10 @@ public class FileService {
       if (rootFile.isDirectory()) {
         this.loadFilesUnder(result, rootFile);
       } else {
-        this.logger.debug("Cannot process a file");
+        this.log.debug("Cannot process a file");
       }
     } else {
-      this.logger.debug("Directory not found");
+      this.log.debug("Directory not found");
     }
 
     return result;
@@ -100,7 +98,7 @@ public class FileService {
 
   private void loadFilesUnder(final List<FileDetails> files, final File directory)
       throws IOException {
-    this.logger.debug("Loading files in directory: {}", directory);
+    this.log.debug("Loading files in directory: {}", directory);
     if (directory.listFiles() != null) {
       for (File file : directory.listFiles()) {
         if (file.isDirectory()) {
@@ -113,9 +111,9 @@ public class FileService {
             final Comic comic = this.comicRepository.findByFilename(filePath);
 
             if (comic != null) {
-              this.logger.debug("File already in the library: id={}", comic.getId());
+              this.log.debug("File already in the library: id={}", comic.getId());
             } else {
-              this.logger.debug("Adding file: {} ({} bytes)", filePath, fileSize);
+              this.log.debug("Adding file: {} ({} bytes)", filePath, fileSize);
 
               files.add(new FileDetails(filePath, fileSize));
             }
@@ -133,7 +131,7 @@ public class FileService {
   public int importComicFiles(
       final String[] filenames, final boolean deleteBlockedPages, final boolean ignoreMetadata)
       throws UnsupportedEncodingException {
-    this.logger.debug(
+    this.log.debug(
         "Preparing to import {} comic files: delete blocked pages={} ignore metadata={}",
         filenames.length,
         deleteBlockedPages ? "Yes" : "No",
@@ -145,7 +143,7 @@ public class FileService {
     task.setDeleteBlockedPages(deleteBlockedPages);
     task.setIgnoreMetadata(ignoreMetadata);
 
-    this.logger.debug("Adding import task to queue");
+    this.log.debug("Adding import task to queue");
     this.worker.addTasksToQueue(task);
 
     return filenames.length;

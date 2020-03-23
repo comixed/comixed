@@ -19,12 +19,11 @@
 package org.comixed.task.model;
 
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.encoders.AddComicTaskEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -33,9 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class QueueComicsWorkerTask extends AbstractWorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private TaskRepository taskRepository;
 
   private List<String> filenames;
@@ -67,7 +65,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.logger.debug(
+    this.log.debug(
         "Enqueueing {} comic{}: delete blocked pages={} ignore metadata={}",
         this.filenames.size(),
         this.filenames.size() == 1 ? "" : "s",
@@ -79,7 +77,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
     for (String filename : this.filenames) {
       final Task task = new Task();
 
-      this.logger.debug("Comic file: {}", filename);
+      this.log.debug("Comic file: {}", filename);
 
       task.setTaskType(TaskType.ADD_COMIC);
       task.setProperty(AddComicTaskEncoder.FILENAME, filename);
@@ -89,8 +87,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
       this.taskRepository.save(task);
     }
 
-    this.logger.debug(
-        "Finished processing comics queue: {}ms", System.currentTimeMillis() - started);
+    this.log.debug("Finished processing comics queue: {}ms", System.currentTimeMillis() - started);
   }
 
   @Override

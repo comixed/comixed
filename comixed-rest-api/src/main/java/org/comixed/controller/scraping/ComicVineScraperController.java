@@ -20,6 +20,7 @@ package org.comixed.controller.scraping;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.net.ComicScrapeRequest;
 import org.comixed.net.GetScrapingIssueRequest;
@@ -31,17 +32,14 @@ import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.*;
 import org.comixed.web.model.ScrapingIssue;
 import org.comixed.web.model.ScrapingVolume;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/scraping")
+@Log4j2
 public class ComicVineScraperController {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicVineQueryForVolumesAdaptor queryForVolumesAdaptor;
   @Autowired private ComicVineQueryForIssueAdaptor queryForIssuesAdaptor;
   @Autowired private ComicVineQueryForIssueDetailsAdaptor queryForIssueDetailsAdaptor;
@@ -58,7 +56,7 @@ public class ComicVineScraperController {
       @PathVariable("issue") final String issue,
       @RequestBody() final GetScrapingIssueRequest request)
       throws ComicVineAdaptorException {
-    this.logger.info(
+    this.log.info(
         "Preparing to retrieve issue={} for volume={} (skipCache={})",
         issue,
         volume,
@@ -75,7 +73,7 @@ public class ComicVineScraperController {
       @PathVariable("seriesName") final String seriesName,
       @RequestBody() final GetVolumesRequest request)
       throws WebRequestException, ComicVineAdaptorException {
-    this.logger.info(
+    this.log.info(
         "Getting volumes: series={}{}",
         seriesName,
         request.getSkipCache() ? " (Skipping cache)" : "");
@@ -94,28 +92,28 @@ public class ComicVineScraperController {
       @PathVariable("issueId") final String issueId,
       @RequestBody() final ComicScrapeRequest request)
       throws ComicVineAdaptorException, ComicException {
-    this.logger.info(
+    this.log.info(
         "Scraping code: id={} issue id={} (skip cache={})",
         comicId,
         issueId,
         request.getSkipCache());
 
-    this.logger.debug("Loading comic");
+    this.log.debug("Loading comic");
     Comic comic = this.comicService.getComic(comicId);
 
-    this.logger.debug("Fetching details for comic");
+    this.log.debug("Fetching details for comic");
     String volumeId =
         this.queryForIssueDetailsAdaptor.execute(
             request.getApiKey(), comicId, issueId, comic, request.getSkipCache());
-    this.logger.debug("Fetching details for volume");
+    this.log.debug("Fetching details for volume");
     String publisherId =
         this.queryForVolumeDetailsAdaptor.execute(
             request.getApiKey(), volumeId, comic, request.getSkipCache());
-    this.logger.debug("Fetching publisher details");
+    this.log.debug("Fetching publisher details");
     this.queryForPublisherDetailsAdaptor.execute(
         request.getApiKey(), publisherId, comic, request.getSkipCache());
 
-    this.logger.debug("Updating details for comic in database");
+    this.log.debug("Updating details for comic in database");
     return this.comicService.save(comic);
   }
 }

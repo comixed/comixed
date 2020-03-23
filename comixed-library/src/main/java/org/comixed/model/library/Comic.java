@@ -27,6 +27,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.*;
 import javax.persistence.*;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
@@ -35,8 +36,6 @@ import org.comixed.views.View.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -56,9 +55,8 @@ import org.springframework.stereotype.Component;
       query =
           "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)")
 })
+@Log4j2
 public class Comic {
-  @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -278,16 +276,16 @@ public class Comic {
    * @param character the character
    */
   public void addCharacter(String character) {
-    this.logger.debug("Adding character=" + character);
+    this.log.debug("Adding character=" + character);
     if (this.characters.contains(character)) {
-      this.logger.debug("Duplicate character");
+      this.log.debug("Duplicate character");
       return;
     }
     this.characters.add(character);
   }
 
   public void addCredit(String name, String role) {
-    this.logger.debug("Adding a credit: name={} role={}", name, role);
+    this.log.debug("Adding a credit: name={} role={}", name, role);
     Credit credit = new Credit(name, role);
 
     credit.setComic(this);
@@ -300,9 +298,9 @@ public class Comic {
    * @param location the location
    */
   public void addLocation(String location) {
-    this.logger.debug("Adding location=" + location);
+    this.log.debug("Adding location=" + location);
     if (this.locations.contains(location)) {
-      this.logger.debug("Duplication location");
+      this.log.debug("Duplication location");
       return;
     }
     this.locations.add(location);
@@ -315,7 +313,7 @@ public class Comic {
    * @param offset the offset
    */
   public void addPage(int index, Page page) {
-    this.logger.debug("Adding offset: index=" + index + " hash=" + page.getHash());
+    this.log.debug("Adding offset: index=" + index + " hash=" + page.getHash());
     page.setComic(this);
     page.setPageNumber(index);
     this.pages.add(index, page);
@@ -327,9 +325,9 @@ public class Comic {
    * @param series the story arc series
    */
   public void addStoryArc(String name) {
-    this.logger.debug("Adding story arc=" + name);
+    this.log.debug("Adding story arc=" + name);
     if (this.storyArcs.contains(name)) {
-      this.logger.debug("Duplicate story arc");
+      this.log.debug("Duplicate story arc");
       return;
     }
     this.storyArcs.add(name);
@@ -341,9 +339,9 @@ public class Comic {
    * @param team the team
    */
   public void addTeam(String team) {
-    this.logger.debug("Adding team=" + team);
+    this.log.debug("Adding team=" + team);
     if (this.teams.contains(team)) {
-      this.logger.debug("Duplicate team");
+      this.log.debug("Duplicate team");
       return;
     }
     this.teams.add(team);
@@ -356,25 +354,25 @@ public class Comic {
 
   /** Removes all associated credits. */
   public void clearCredits() {
-    this.logger.debug("Clearing credits");
+    this.log.debug("Clearing credits");
     this.credits.clear();
   }
 
   /** Removes all location references from the comic. */
   public void clearLocations() {
-    this.logger.debug("Clearing location references");
+    this.log.debug("Clearing location references");
     this.locations.clear();
   }
 
   /** Clears out all story arc references. */
   public void clearStoryArcs() {
-    this.logger.debug("Clearing story arcs");
+    this.log.debug("Clearing story arcs");
     this.storyArcs.clear();
   }
 
   /** Removes all team references from the comic. */
   public void clearTeams() {
-    this.logger.debug("Clearing out teams");
+    this.log.debug("Clearing out teams");
     this.teams.clear();
   }
 
@@ -384,7 +382,7 @@ public class Comic {
    * @param index the offset index
    */
   public void deletePage(int index) {
-    this.logger.debug("Deleting offset: index=" + index);
+    this.log.debug("Deleting offset: index=" + index);
     this.pages.remove(index);
   }
 
@@ -428,7 +426,7 @@ public class Comic {
    * @return the character reference
    */
   public String getCharacter(int index) {
-    this.logger.debug("Getting character at index=" + index);
+    this.log.debug("Getting character at index=" + index);
     return this.characters.get(index);
   }
 
@@ -461,7 +459,7 @@ public class Comic {
    * @param id the id
    */
   public void setComicVineId(String id) {
-    this.logger.debug("Setting the comicvine.com id=" + id);
+    this.log.debug("Setting the comicvine.com id=" + id);
     this.comicVineId = id;
   }
 
@@ -490,7 +488,7 @@ public class Comic {
    * @return the cover, or <code>null</code> if the comic is empty
    */
   public Page getCover() {
-    this.logger.debug("Getting cover for comic: filename=" + this.filename);
+    this.log.debug("Getting cover for comic: filename=" + this.filename);
     /*
      * if there are no pages or the underlying file is missing then show the
      * missing
@@ -531,7 +529,7 @@ public class Comic {
    * @param date the cover date
    */
   public void setCoverDate(Date date) {
-    this.logger.debug("Setting cover date=" + this.formatDate(date));
+    this.log.debug("Setting cover date=" + this.formatDate(date));
     this.coverDate = date;
   }
 
@@ -558,7 +556,7 @@ public class Comic {
    * @param date the date
    */
   public void setDateAdded(Date date) {
-    this.logger.debug("Setting the date added=" + this.formatDate(date));
+    this.log.debug("Setting the date added=" + this.formatDate(date));
     if (date == null) throw new IllegalArgumentException("Date added cannot be null");
     this.dateAdded = date;
   }
@@ -598,7 +596,7 @@ public class Comic {
    * @param description the description
    */
   public void setDescription(String description) {
-    this.logger.debug("Setting description: " + description);
+    this.log.debug("Setting description: " + description);
     this.description = description;
   }
 
@@ -617,7 +615,7 @@ public class Comic {
    * @param filename the filename
    */
   public void setFilename(String filename) {
-    this.logger.debug("Setting filename: " + filename);
+    this.log.debug("Setting filename: " + filename);
     this.filename = filename;
   }
 
@@ -653,7 +651,7 @@ public class Comic {
   }
 
   public void setImprint(String imprint) {
-    this.logger.debug("Setting imprint={}", imprint);
+    this.log.debug("Setting imprint={}", imprint);
     this.imprint = imprint;
   }
 
@@ -687,9 +685,9 @@ public class Comic {
    * @param issueNumber the issue number
    */
   public void setIssueNumber(String issueNumber) {
-    this.logger.debug("Setting issue number=" + issueNumber);
+    this.log.debug("Setting issue number=" + issueNumber);
     if ((issueNumber != null) && issueNumber.startsWith("0")) {
-      this.logger.debug("Removing leading 0s from issue number");
+      this.log.debug("Removing leading 0s from issue number");
       while (issueNumber.startsWith("0") && !issueNumber.equals("0")) {
         issueNumber = issueNumber.substring(1);
       }
@@ -741,7 +739,7 @@ public class Comic {
    * @param notes the notes
    */
   public void setNotes(String notes) {
-    this.logger.debug("Setting the notes");
+    this.log.debug("Setting the notes");
     this.notes = notes;
   }
 
@@ -752,7 +750,7 @@ public class Comic {
    * @return the offset
    */
   public Page getPage(int index) {
-    this.logger.debug("Returning offset: index=" + index);
+    this.log.debug("Returning offset: index=" + index);
     return this.pages.get(index);
   }
 
@@ -794,7 +792,7 @@ public class Comic {
    * @param publisher
    */
   public void setPublisher(String publisher) {
-    this.logger.debug("Setting publisher=" + publisher);
+    this.log.debug("Setting publisher=" + publisher);
     this.publisher = publisher;
   }
 
@@ -826,7 +824,7 @@ public class Comic {
    * @param series the series
    */
   public void setSeries(String name) {
-    this.logger.debug("Setting series=" + name);
+    this.log.debug("Setting series=" + name);
     this.series = name;
   }
 
@@ -845,7 +843,7 @@ public class Comic {
    * @return the story arc series
    */
   public String getStoryArc(int index) {
-    this.logger.debug("Getting story arc: index=" + index);
+    this.log.debug("Getting story arc: index=" + index);
     return this.storyArcs.get(index);
   }
 
@@ -856,7 +854,7 @@ public class Comic {
    */
   @JsonIgnore
   public int getStoryArcCount() {
-    this.logger.debug("Getting story arc count");
+    this.log.debug("Getting story arc count");
     return this.storyArcs.size();
   }
 
@@ -884,7 +882,7 @@ public class Comic {
    * @param summary the summary
    */
   public void setSummary(String summary) {
-    this.logger.debug("Setting summary: " + summary);
+    this.log.debug("Setting summary: " + summary);
     this.summary = summary;
   }
 
@@ -895,7 +893,7 @@ public class Comic {
    * @return
    */
   public String getTeam(int index) {
-    this.logger.debug("Retrieving team index=" + index);
+    this.log.debug("Retrieving team index=" + index);
     return this.teams.get(index);
   }
 
@@ -933,7 +931,7 @@ public class Comic {
    * @param title the title
    */
   public void setTitle(String title) {
-    this.logger.debug("Setting title=" + title);
+    this.log.debug("Setting title=" + title);
     this.title = title;
   }
 
@@ -952,7 +950,7 @@ public class Comic {
    * @param volume the volume
    */
   public void setVolume(String volume) {
-    this.logger.debug("Setting volume=" + volume);
+    this.log.debug("Setting volume=" + volume);
     this.volume = volume;
   }
 

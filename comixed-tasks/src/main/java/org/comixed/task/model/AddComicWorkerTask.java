@@ -19,6 +19,7 @@
 package org.comixed.task.model;
 
 import java.io.File;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.AdaptorException;
 import org.comixed.adaptors.FilenameScraperAdaptor;
 import org.comixed.handlers.ComicFileHandler;
@@ -28,8 +29,6 @@ import org.comixed.model.tasks.Task;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.encoders.ProcessComicTaskEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -41,9 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ConfigurationProperties(prefix = "comic-file.handlers")
+@Log4j2
 public class AddComicWorkerTask extends AbstractWorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ObjectFactory<Comic> comicFactory;
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicRepository comicRepository;
@@ -58,36 +56,36 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.logger.debug("Adding file to library: {}", this.filename);
+    this.log.debug("Adding file to library: {}", this.filename);
 
     final File file = new File(this.filename);
     Comic result = this.comicRepository.findByFilename(file.getAbsolutePath());
 
     if (result != null) {
-      this.logger.debug("Comic already imported: " + file.getAbsolutePath());
+      this.log.debug("Comic already imported: " + file.getAbsolutePath());
       return;
     }
 
     try {
       result = this.comicFactory.getObject();
-      this.logger.debug("Setting comic filename");
+      this.log.debug("Setting comic filename");
       result.setFilename(file.getAbsolutePath());
-      this.logger.debug("Scraping details from filename");
+      this.log.debug("Scraping details from filename");
       this.filenameScraper.execute(result);
-      this.logger.debug("Loading comic details");
+      this.log.debug("Loading comic details");
       this.comicFileHandler.loadComicArchiveType(result);
 
-      this.logger.debug("Saving comic");
+      this.log.debug("Saving comic");
       result = this.comicRepository.save(result);
 
-      this.logger.debug("Encoding process comic task");
+      this.log.debug("Encoding process comic task");
       final ProcessComicTaskEncoder taskEncoder =
           this.processComicTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
       taskEncoder.setDeleteBlockedPages(this.deleteBlockedPages);
       taskEncoder.setIgnoreMetadata(this.ignoreMetadata);
 
-      this.logger.debug("Saving process comic task");
+      this.log.debug("Saving process comic task");
       final Task task = taskEncoder.encode();
       this.taskRepository.save(task);
     } catch (ComicFileHandlerException | AdaptorException error) {

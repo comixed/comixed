@@ -22,7 +22,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
@@ -34,8 +38,6 @@ import org.comixed.loaders.EntryLoaderException;
 import org.comixed.model.library.Comic;
 import org.comixed.utils.ComicFileUtils;
 import org.comixed.utils.FileTypeIdentifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -55,15 +57,14 @@ import org.springframework.stereotype.Component;
 @EnableConfigurationProperties
 @PropertySource("classpath:entryloaders.properties")
 @ConfigurationProperties(prefix = "comic.entry", ignoreUnknownFields = false)
+@Log4j2
 public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, InitializingBean {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
   @Autowired protected FileTypeIdentifier fileTypeIdentifier;
   @Autowired protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
-  @Autowired private ApplicationContext context;
-  @Autowired private ComicFileHandler comicFileHandler;
-
   protected List<EntryLoaderForType> loaders = new ArrayList<>();
   protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
+  @Autowired private ApplicationContext context;
+  @Autowired private ComicFileHandler comicFileHandler;
   private String defaultExtension;
 
   public AbstractArchiveAdaptor(String defaultExtension) {
@@ -79,14 +80,14 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
         if (this.context.containsBean(entry.bean)) {
           this.entryLoaders.put(entry.type, (EntryLoader) this.context.getBean(entry.bean));
         } else {
-          this.logger.debug("No such entry adaptor bean: {}", entry.bean);
+          this.log.debug("No such entry adaptor bean: {}", entry.bean);
         }
       } else {
         if ((entry.type == null) || entry.type.isEmpty()) {
-          this.logger.debug("Missing type for entry adaptor");
+          this.log.debug("Missing type for entry adaptor");
         }
         if ((entry.bean == null) || entry.bean.isEmpty()) {
-          this.logger.debug("Missing bean for entry adaptor");
+          this.log.debug("Missing bean for entry adaptor");
         }
       }
     }
@@ -115,7 +116,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   protected EntryLoader getLoaderForContent(byte[] content) {
     String type = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
 
-    this.logger.debug("Content type: {}", type);
+    this.log.debug("Content type: {}", type);
 
     return this.entryLoaders.get(type);
   }
@@ -128,23 +129,23 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   public void loadComic(Comic comic) throws ArchiveAdaptorException {
     I archiveReference = null;
 
-    this.logger.debug("Processing archive: {}", comic.getFilename());
+    this.log.debug("Processing archive: {}", comic.getFilename());
     long started = System.currentTimeMillis();
 
     try {
       File comicFile = this.validateFile(comic);
       archiveReference = this.openArchive(comicFile);
 
-      this.logger.debug("Loading entire comic: {}", comic.getFilename());
+      this.log.debug("Loading entire comic: {}", comic.getFilename());
       this.loadAllFiles(comic, archiveReference);
     } finally {
       // clean up
       if (archiveReference != null) {
-        this.logger.debug("Closing archive: {}", comic.getFilename());
+        this.log.debug("Closing archive: {}", comic.getFilename());
         this.closeArchive(archiveReference);
       }
       long duration = System.currentTimeMillis() - started;
-      this.logger.debug("Processing time: {}ms", duration);
+      this.log.debug("Processing time: {}ms", duration);
     }
   }
 
@@ -158,7 +159,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
       throws ArchiveAdaptorException;
 
   protected byte[] loadContent(String filename, long size, InputStream input) throws IOException {
-    this.logger.debug("Loading entry: name={} size={}", filename, size);
+    this.log.debug("Loading entry: name={} size={}", filename, size);
     byte[] content = new byte[(int) size];
 
     IOUtils.readFully(input, content);
@@ -168,7 +169,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
   @Override
   public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException {
-    this.logger.debug(
+    this.log.debug(
         "Loading single entry from comic: comic={} entry={}", comic.getFilename(), entryName);
 
     return this.loadSingleFile(comic.getFilename(), entryName);
@@ -176,7 +177,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
   @Override
   public byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException {
-    this.logger.debug("Loading single entry from file: filename={} entry={}", filename, entryName);
+    this.log.debug("Loading single entry from file: filename={} entry={}", filename, entryName);
     I archiveReference = this.openArchive(new File(filename));
     byte[] result = this.loadSingleFileInternal(archiveReference, entryName);
     this.closeArchive(archiveReference);
@@ -208,20 +209,20 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     EntryLoader loader = this.getLoaderForContent(content);
     if (loader != null) {
       try {
-        this.logger.debug("Loading content: filename={} length={}", filename, content.length);
+        this.log.debug("Loading content: filename={} length={}", filename, content.length);
         loader.loadContent(comic, filename, content);
       } catch (EntryLoaderException error) {
-        this.logger.error("Error loading content", error);
+        this.log.error("Error loading content", error);
       }
     } else {
-      this.logger.debug("No registered adaptor for type");
+      this.log.debug("No registered adaptor for type");
     }
   }
 
   @Override
   public Comic saveComic(Comic source, boolean renamePages)
       throws ArchiveAdaptorException, IOException {
-    this.logger.debug("Saving comic: {}", source.getFilename());
+    this.log.debug("Saving comic: {}", source.getFilename());
 
     String tempFilename;
     try {
@@ -240,7 +241,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     File file1 = new File(tempFilename);
     File file2 = new File(filename);
     try {
-      this.logger.debug("Copying {} to {}", tempFilename, filename);
+      this.log.debug("Copying {} to {}", tempFilename, filename);
       FileUtils.copyFile(file1, file2);
     } catch (IOException error) {
       throw new ArchiveAdaptorException("Unable to copy file", error);

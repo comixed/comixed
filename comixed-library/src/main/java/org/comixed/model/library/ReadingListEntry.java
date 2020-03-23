@@ -24,8 +24,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import javax.persistence.*;
 import org.comixed.views.View;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <code>ReadingListEntry</code> represents a single entry in a {@link ReadingList}.
@@ -35,8 +33,6 @@ import org.slf4j.LoggerFactory;
 @Entity
 @Table(name = "reading_list_entries")
 public class ReadingListEntry {
-  @Transient @JsonIgnore private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
