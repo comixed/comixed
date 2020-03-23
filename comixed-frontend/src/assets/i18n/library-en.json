@@ -63,6 +63,14 @@
       "error": {
         "detail": "Failed to convert comics."
       }
+    },
+    "consolidate": {
+      "success": {
+        "detail": "Library successfully consolidated."
+      },
+      "error": {
+        "detail": "There was an error consolidating the library."
+      }
     }
   },
   "import-effects": {

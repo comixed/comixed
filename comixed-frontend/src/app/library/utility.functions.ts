@@ -28,6 +28,14 @@ export function mergeComics(base: Comic[], update: Comic[]): Comic[] {
   return result.concat(update);
 }
 
+export function deleteComics(base: Comic[], deleted: Comic[]): Comic[] {
+  return base.filter(baseEntry => {
+    return (
+      deleted.some(deletedEntry => deletedEntry.id === baseEntry.id) === false
+    );
+  });
+}
+
 function latestDateForField(comics: Comic[], field_name: string): number {
   if (!comics.length) {
     return 0;

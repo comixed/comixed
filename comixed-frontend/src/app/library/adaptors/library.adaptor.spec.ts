@@ -45,6 +45,9 @@ import { MessageService } from 'primeng/api';
 import * as LibraryActions from '../actions/library.actions';
 import {
   LibraryComicsConverting,
+  LibraryConsolidate,
+  LibraryConsolidated,
+  LibraryConsolidateFailed,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryGetUpdates,
@@ -308,6 +311,71 @@ describe('LibraryAdaptor', () => {
 
       it('provides updates on conversion', () => {
         adaptor.converting$.subscribe(response => expect(response).toBeFalsy());
+      });
+    });
+  });
+
+  describe('consolidating the library', () => {
+    beforeEach(() => {
+      adaptor.consolidate(true);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryConsolidate({ deletePhysicalFiles: true })
+      );
+    });
+
+    it('provides updates on consolidating', () => {
+      adaptor.consolidating$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      const DELETED_COMICS = [COMICS[2]];
+
+      beforeEach(() => {
+        // preload the library
+        store.dispatch(
+          new LibraryUpdatesReceived({
+            lastComicId: LAST_COMIC_ID,
+            mostRecentUpdate: MOST_RECENT_UPDATE,
+            moreUpdates: MORE_UPDATES,
+            processingCount: PROCESSING_COUNT,
+            comics: COMICS,
+            lastReadDates: []
+          })
+        );
+        store.dispatch(
+          new LibraryConsolidated({ deletedComics: DELETED_COMICS })
+        );
+      });
+
+      it('provides updates on consolidating', () => {
+        adaptor.consolidating$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('provides updates on comics', () => {
+        DELETED_COMICS.forEach(comic => {
+          adaptor.comic$.subscribe(comics =>
+            expect(comics).not.toContain(comic)
+          );
+        });
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryConsolidateFailed());
+      });
+
+      it('provides updates on consolidating', () => {
+        adaptor.consolidating$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
       });
     });
   });

@@ -23,6 +23,7 @@ import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-upd
 import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 import {
+  CONSOLIDATE_LIBRARY_URL,
   CONVERT_COMICS_URL,
   DELETE_MULTIPLE_COMICS_URL,
   GET_LIBRARY_UPDATES_URL,
@@ -30,6 +31,7 @@ import {
 } from 'app/library/library.constants';
 import { ConvertComicsRequest } from 'app/library/models/net/convert-comics-request';
 import { Comic } from 'app/comics';
+import { ConsolidateLibraryRequest } from 'app/library/models/net/consolidate-library-request';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +47,7 @@ export class LibraryService {
     timeout: number
   ): Observable<any> {
     this.logger.debug(
-      `getting comic updates: lastUpdateDate=${lastUpdateDate} lastComicId=${lastComicId} maximumComics=${maximumComics}`
+      `[POST] http request: getting comic updates: lastUpdateDate=${lastUpdateDate} lastComicId=${lastComicId} maximumComics=${maximumComics}`
     );
     return this.http.post(interpolate(GET_LIBRARY_UPDATES_URL), {
       lastUpdatedDate: lastUpdateDate.getTime(),
@@ -57,12 +59,14 @@ export class LibraryService {
   }
 
   startRescan(): Observable<any> {
-    this.logger.debug('starting rescan');
+    this.logger.debug('[POST] http request: starting rescan');
     return this.http.post(interpolate(START_RESCAN_URL), { start: true });
   }
 
   deleteMultipleComics(ids: number[]): Observable<any> {
-    this.logger.debug(`deleting multiple comics: ids=${ids}`);
+    this.logger.debug(
+      `[POST] http request: deleting multiple comics: ids=${ids}`
+    );
     const params = new HttpParams().set('comic_ids', ids.toString());
     return this.http.post(interpolate(DELETE_MULTIPLE_COMICS_URL), params);
   }
@@ -72,11 +76,25 @@ export class LibraryService {
     archiveType: string,
     renamePages: boolean
   ): Observable<any> {
-    this.logger.debug('converting comics:', comics, archiveType, renamePages);
+    this.logger.debug(
+      '[POST] http request: converting comics:',
+      comics,
+      archiveType,
+      renamePages
+    );
     return this.http.post(interpolate(CONVERT_COMICS_URL), {
       ids: comics.map(comic => comic.id),
       archiveType: archiveType,
       renamePages: renamePages
     } as ConvertComicsRequest);
+  }
+
+  consolidate(deletePhysicalFiles: boolean): Observable<any> {
+    this.logger.debug(
+      `[POST] http request consolidate library: deletePhysicalFiles=${deletePhysicalFiles}`
+    );
+    return this.http.post(interpolate(CONSOLIDATE_LIBRARY_URL), {
+      deletePhysicalFiles: deletePhysicalFiles
+    } as ConsolidateLibraryRequest);
   }
 }
