@@ -37,7 +37,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class FileTypeIdentifier {
-  public static final List<String> IMAGE_TYPES = Arrays.asList(new String[] {"jpeg", "png", "gif"});
+  // TODO this needs to be loaded from the entryloaders.properties file
+  public static final List<String> IMAGE_TYPES =
+      Arrays.asList(new String[] {"jpeg", "png", "gif", "webp"});
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
