@@ -27,14 +27,13 @@ import java.util.*;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.time.DateUtils;
 import org.comixed.importer.model.ComicBookGroupMatcher;
 import org.comixed.importer.model.ComicBookItemMatcher;
 import org.comixed.importer.model.ComicBookMatcher;
 import org.comixed.importer.model.ComicSmartListItem;
 import org.comixed.model.library.Comic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,8 +44,8 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class ComicRackBackupAdaptor {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private final XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
   private static final String COMICIDLISTITEM = "ComicIdListItem";
   private static final String COMICSMARTLISTITEM = "ComicSmartListItem";
@@ -73,14 +72,14 @@ public class ComicRackBackupAdaptor {
       File filename, Map<String, String> currentPages, Map<String, String> booksguids)
       throws ImportAdaptorException {
 
-    this.logger.debug("Opening file for reading");
+    this.log.debug("Opening file for reading");
 
     try (FileInputStream istream = new FileInputStream(filename)) {
 
-      this.logger.debug("Processing file content");
+      this.log.debug("Processing file content");
       List<Comic> result = this.loadFromXml(istream, currentPages, booksguids);
 
-      this.logger.debug("Returning {} comic entries", result.size());
+      this.log.debug("Returning {} comic entries", result.size());
       return result;
     } catch (IOException | XMLStreamException | ParseException error) {
       throw new ImportAdaptorException("unable to read file", error);
@@ -93,7 +92,7 @@ public class ComicRackBackupAdaptor {
     List<Comic> result = new ArrayList<>();
     final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
 
-    this.logger.debug("Reading contents of XML file");
+    this.log.debug("Reading contents of XML file");
 
     Comic comic = null;
 
@@ -104,10 +103,10 @@ public class ComicRackBackupAdaptor {
         switch (tagName) {
           case "Book":
             {
-              this.logger.debug("Starting new comic file");
+              this.log.debug("Starting new comic file");
               comic = new Comic();
               String filename = xmlInputReader.getAttributeValue(null, "File");
-              this.logger.debug("Filename: {}", filename);
+              this.log.debug("Filename: {}", filename);
               comic.setFilename(filename);
               result.add(comic);
               booksguids.put(xmlInputReader.getAttributeValue(null, "Id"), filename);
@@ -115,24 +114,24 @@ public class ComicRackBackupAdaptor {
             break;
           case "Added":
             {
-              this.logger.debug("Setting added date");
+              this.log.debug("Setting added date");
               Date date =
                   DateUtils.parseDate(
                       xmlInputReader.getElementText(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-              this.logger.debug("Added date: {}", date);
+              this.log.debug("Added date: {}", date);
               if (comic != null) comic.setDateAdded(date);
             }
             break;
           case "CurrentPage":
             {
-              this.logger.debug("Setting current page");
+              this.log.debug("Setting current page");
               String currentPage = xmlInputReader.getElementText();
-              this.logger.debug("Added current page: {}", currentPage);
+              this.log.debug("Added current page: {}", currentPage);
               if (comic != null) currentPages.put(comic.getFilename(), currentPage);
             }
             break;
           default:
-            this.logger.debug("Unsupported tag");
+            this.log.debug("Unsupported tag");
             break;
         }
       }
@@ -149,13 +148,13 @@ public class ComicRackBackupAdaptor {
    */
   public Map<String, Object> loadLists(File filename, Map<String, String> booksguids)
       throws ImportAdaptorException {
-    this.logger.debug("Opening file for reading");
+    this.log.debug("Opening file for reading");
     try (FileInputStream istream = new FileInputStream(filename)) {
 
-      this.logger.debug("Processing file content");
+      this.log.debug("Processing file content");
       Map<String, Object> result = this.loadListsFromXml(istream, booksguids);
 
-      this.logger.debug("Returning {} comic entries", result.size());
+      this.log.debug("Returning {} comic entries", result.size());
       return result;
     } catch (IOException | XMLStreamException error) {
       throw new ImportAdaptorException("unable to read file", error);
@@ -167,7 +166,7 @@ public class ComicRackBackupAdaptor {
     Map<String, Object> result = new HashMap<>();
     final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
 
-    this.logger.debug("Reading lists of XML file");
+    this.log.debug("Reading lists of XML file");
 
     while (xmlInputReader.hasNext()) {
       if (xmlInputReader.isStartElement()
@@ -184,7 +183,7 @@ public class ComicRackBackupAdaptor {
 
         ComicSmartListItem smartList = readComicSmartListItem(xmlInputReader);
         result.put(smartList.getName(), smartList);
-        this.logger.debug("Loaded smart list: {}", smartList.getName());
+        this.log.debug("Loaded smart list: {}", smartList.getName());
       }
       xmlInputReader.next();
     }
@@ -201,7 +200,7 @@ public class ComicRackBackupAdaptor {
       if (xmlInputReader.isStartElement() && xmlInputReader.getLocalName().equalsIgnoreCase(GUID)) {
         String guid = xmlInputReader.getElementText();
         String filename = booksguids.get(guid);
-        if (filename == null) this.logger.debug("Book not found for guid {}", guid);
+        if (filename == null) this.log.debug("Book not found for guid {}", guid);
         else comics.add(filename);
       }
       xmlInputReader.next();
@@ -209,7 +208,7 @@ public class ComicRackBackupAdaptor {
         break;
     }
     result.put(listName, comics);
-    this.logger.debug("Loaded list: {}", listName);
+    this.log.debug("Loaded list: {}", listName);
   }
 
   private ComicSmartListItem readComicSmartListItem(XMLStreamReader xmlInputReader)

@@ -18,6 +18,7 @@
 
 package org.comixed.task.encoders;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.tasks.Task;
 import org.comixed.task.model.AddComicWorkerTask;
 import org.springframework.beans.factory.ObjectFactory;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask> {
   public static final String FILENAME = "filename";
   public static final String DELETE_BLOCKED_PAGES = "delete-blocked-pages";
@@ -46,7 +48,7 @@ public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask>
 
   @Override
   public Task encode() {
-    this.logger.debug(
+    this.log.debug(
         "Encoding add comic task: filename={} delete blocked pages={} ignore metadata={}",
         this.comicFilename,
         this.deleteBlockedPages,
@@ -64,10 +66,10 @@ public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask>
   @Override
   public AddComicWorkerTask decode(final Task task) {
     this.deleteTask(task);
-    this.logger.debug("Decoding persisted task: id={} type={}", task.getId(), task.getTaskType());
+    this.log.debug("Decoding persisted task: id={} type={}", task.getId(), task.getTaskType());
     final AddComicWorkerTask result = this.addComicWorkerTaskObjectFactory.getObject();
 
-    this.logger.debug("Loading task state");
+    this.log.debug("Loading task state");
     result.setFilename(task.getProperty(FILENAME));
     result.setDeleteBlockedPages(Boolean.valueOf(task.getProperty(DELETE_BLOCKED_PAGES)));
     result.setIgnoreMetadata(Boolean.valueOf(task.getProperty(IGNORE_METADATA)));

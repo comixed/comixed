@@ -26,9 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.web.model.ScrapingVolume;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +38,8 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class ComicVineVolumesResponseProcessor {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ComicVineResponseAdaptor responseAdaptor;
 
@@ -56,7 +54,7 @@ public class ComicVineVolumesResponseProcessor {
    */
   public boolean process(List<ScrapingVolume> list, byte[] content)
       throws ComicVineAdaptorException {
-    this.logger.debug("Checking ComicVine response content");
+    this.log.debug("Checking ComicVine response content");
     this.responseAdaptor.checkForErrors(content);
 
     boolean result = true;

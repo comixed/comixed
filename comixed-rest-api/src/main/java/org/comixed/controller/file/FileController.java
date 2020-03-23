@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.controller.library.ComicController;
@@ -34,8 +35,6 @@ import org.comixed.repositories.library.ComicRepository;
 import org.comixed.service.file.FileService;
 import org.comixed.utils.ComicFileUtils;
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
@@ -49,9 +48,8 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/files")
+@Log4j2
 public class FileController {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicRepository comicRepository;
   @Autowired private FileService fileService;
 
@@ -64,11 +62,11 @@ public class FileController {
   @Secured("ROLE_ADMIN")
   public List<FileDetails> getAllComicsUnder(@RequestBody() final GetAllComicsUnderRequest request)
       throws IOException, JSONException {
-    this.logger.info("Getting all comic files: root={}", request.getDirectory());
+    this.log.info("Getting all comic files: root={}", request.getDirectory());
 
     final List<FileDetails> result = this.fileService.getAllComicsUnder(request.getDirectory());
 
-    this.logger.info("Returning {} file{}", result.size(), result.size() != 1 ? "s" : "");
+    this.log.info("Returning {} file{}", result.size(), result.size() != 1 ? "s" : "");
 
     return result;
   }
@@ -76,13 +74,13 @@ public class FileController {
   private void getAllFilesUnder(File root, List<FileDetails> result) throws IOException {
     for (File file : root.listFiles()) {
       if (file.isDirectory()) {
-        this.logger.debug("Searching directory: " + file.getAbsolutePath());
+        this.log.debug("Searching directory: " + file.getAbsolutePath());
         this.getAllFilesUnder(file, result);
       } else {
 
         if (ComicFileUtils.isComicFile(file)
             && (this.comicRepository.findByFilename(file.getCanonicalPath()) == null)) {
-          this.logger.debug("Adding file: " + file.getCanonicalPath());
+          this.log.debug("Adding file: " + file.getCanonicalPath());
           result.add(new FileDetails(file.getCanonicalPath(), file.length()));
         }
       }
@@ -95,21 +93,21 @@ public class FileController {
     // space...
     filename = filename.trim();
 
-    this.logger.info("Getting cover image for archive: filename={}", filename);
+    this.log.info("Getting cover image for archive: filename={}", filename);
 
     byte[] result = null;
 
     try {
       result = this.fileService.getImportFileCover(filename);
     } catch (ComicFileHandlerException | ArchiveAdaptorException error) {
-      this.logger.error("Failed to load cover from import file", error);
+      this.log.error("Failed to load cover from import file", error);
     }
 
     if (result == null) {
       try {
         result = IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing.png"));
       } catch (IOException error) {
-        this.logger.error("Failed to load the missing page image", error);
+        this.log.error("Failed to load the missing page image", error);
       }
     }
 
@@ -118,11 +116,11 @@ public class FileController {
 
   @RequestMapping(value = "/import/status", method = RequestMethod.GET)
   public int getImportStatus() throws InterruptedException {
-    this.logger.info("Getting import status");
+    this.log.info("Getting import status");
 
     final int result = this.fileService.getImportStatus();
 
-    this.logger.debug("Returning {}", result);
+    this.log.debug("Returning {}", result);
 
     return result;
   }
@@ -134,7 +132,7 @@ public class FileController {
   @Secured("ROLE_ADMIN")
   public ImportComicFilesResponse importComicFiles(@RequestBody() ImportRequestBody request)
       throws UnsupportedEncodingException {
-    this.logger.info(
+    this.log.info(
         "Importing {} comic files: delete blocked pages={} ignore metadata={}",
         request.getFilenames().length,
         request.isDeleteBlockedPages(),
@@ -143,7 +141,7 @@ public class FileController {
     this.fileService.importComicFiles(
         request.getFilenames(), request.isDeleteBlockedPages(), request.isIgnoreMetadata());
 
-    this.logger.debug("Notifying waiting processes");
+    this.log.debug("Notifying waiting processes");
     ComicController.stopWaitingForStatus();
 
     final ImportComicFilesResponse response = new ImportComicFilesResponse();

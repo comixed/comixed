@@ -19,10 +19,9 @@
 package org.comixed.controller.core;
 
 import java.text.ParseException;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.core.BuildDetails;
 import org.comixed.service.core.DetailsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,14 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/core")
+@Log4j2
 public class DetailsController {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private DetailsService detailsService;
 
   @GetMapping("/build-details")
   public BuildDetails getBuildDetails() throws ParseException {
-    this.logger.info("Getting application build details");
+    this.log.info("Getting application build details");
 
     return this.detailsService.getBuildDetails();
   }

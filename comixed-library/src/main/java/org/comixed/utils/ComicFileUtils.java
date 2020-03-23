@@ -20,8 +20,7 @@ package org.comixed.utils;
 
 import java.io.File;
 import java.text.MessageFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * <code>ComicFileUtils</code> provides a set of utility methods related to comic files and
@@ -29,9 +28,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author Darryl L. Pierce
  */
+@Log4j2
 public class ComicFileUtils {
-  protected static final Logger logger = LoggerFactory.getLogger(ComicFileUtils.class);
-
   public static String findAvailableFilename(
       String filename, int attempt, String defaultExtension) {
     String candidate = filename;
@@ -42,7 +40,6 @@ public class ComicFileUtils {
       candidate = MessageFormat.format("{0}.{1}", filename, defaultExtension);
     }
 
-    logger.debug("Candidate filename=" + candidate);
     File file = new File(candidate);
     return (!file.exists())
         ? candidate
@@ -52,7 +49,6 @@ public class ComicFileUtils {
   public static boolean isComicFile(File file) {
     String name = file.getName().toUpperCase();
     boolean result = (name.endsWith("CBZ") || name.endsWith("CBR") || name.endsWith("CB7"));
-    logger.debug("Is {} a comic? {}", file.getName(), result ? "Yes" : "No");
     return result;
   }
 }

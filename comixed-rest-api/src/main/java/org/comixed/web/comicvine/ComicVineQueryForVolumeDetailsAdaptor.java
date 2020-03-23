@@ -18,28 +18,23 @@
 
 package org.comixed.web.comicvine;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.scraping.ComicVineVolume;
 import org.comixed.repositories.ComicVineVolumeRepository;
 import org.comixed.web.ComicVineVolumeDetailsWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class ComicVineQueryForVolumeDetailsAdaptor {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ObjectFactory<ComicVineVolumeDetailsWebRequest> requestFactory;
-
   @Autowired private WebRequestProcessor webRequestProcessor;
-
   @Autowired private ComicVineVolumeDetailsResponseProcessor responseProcessor;
-
   @Autowired private ComicVineVolumeRepository comicVineVolumeRepository;
 
   public String execute(String apiKey, String volumeId, Comic comic, boolean skipCache)
@@ -48,12 +43,12 @@ public class ComicVineQueryForVolumeDetailsAdaptor {
     String content = null;
     ComicVineVolume volume = null;
 
-    this.logger.debug("Fetching volume details: volumeId={}", volumeId);
+    this.log.debug("Fetching volume details: volumeId={}", volumeId);
 
     volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
 
     if (skipCache || (volume == null)) {
-      this.logger.debug("Fetching volume details from ComicVine...");
+      this.log.debug("Fetching volume details from ComicVine...");
 
       ComicVineVolumeDetailsWebRequest request = this.requestFactory.getObject();
       request.setApiKey(apiKey);
@@ -65,7 +60,7 @@ public class ComicVineQueryForVolumeDetailsAdaptor {
           this.comicVineVolumeRepository.delete(volume);
         }
 
-        this.logger.debug("Saving retrieved volume data...");
+        this.log.debug("Saving retrieved volume data...");
         volume = new ComicVineVolume();
         volume.setVolumeId(volumeId);
         volume.setContent(content.toString());
@@ -75,7 +70,7 @@ public class ComicVineQueryForVolumeDetailsAdaptor {
         throw new ComicVineAdaptorException("Failed to get volume details", error);
       }
     } else {
-      this.logger.debug("Volume found in database.");
+      this.log.debug("Volume found in database.");
       content = volume.getContent();
     }
 

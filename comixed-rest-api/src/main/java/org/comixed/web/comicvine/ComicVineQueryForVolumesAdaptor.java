@@ -20,33 +20,28 @@ package org.comixed.web.comicvine;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.scraping.ComicVineVolumeQueryCacheEntry;
 import org.comixed.repositories.ComicVineVolumeQueryCacheRepository;
 import org.comixed.web.ComicVineQueryWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
 import org.comixed.web.model.ScrapingVolume;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class ComicVineQueryForVolumesAdaptor {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private WebRequestProcessor webRequestProcessor;
-
   @Autowired private ObjectFactory<ComicVineQueryWebRequest> webRequestFactory;
-
   @Autowired private ComicVineVolumesResponseProcessor responseProcessor;
-
   @Autowired private ComicVineVolumeQueryCacheRepository queryRepository;
 
   public List<ScrapingVolume> execute(String apiKey, String name, boolean skipCache)
       throws ComicVineAdaptorException, WebRequestException {
-    this.logger.debug("Fetching volumes: name=\"{}\"", name, apiKey);
+    this.log.debug("Fetching volumes: name=\"{}\"", name, apiKey);
 
     List<ScrapingVolume> result = new ArrayList<>();
     boolean done = false;
@@ -64,12 +59,12 @@ public class ComicVineQueryForVolumesAdaptor {
     }
 
     if (entriesExpired) {
-      logger.debug("Volume query is expired ({} days old);. Skipping...", aging);
+      this.log.debug("Volume query is expired ({} days old);. Skipping...", aging);
     }
 
     if (skipCache || (entries == null) || entries.isEmpty() || entriesExpired) {
       while (!done) {
-        this.logger.debug("Fetching volumes from ComicVine...");
+        this.log.debug("Fetching volumes from ComicVine...");
 
         ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
         request.setApiKey(apiKey);
@@ -77,7 +72,7 @@ public class ComicVineQueryForVolumesAdaptor {
 
         page++;
         if (page > 1) {
-          this.logger.debug("Setting offset to {}", page);
+          this.log.debug("Setting offset to {}", page);
           request.setPage(page);
         }
 
@@ -102,13 +97,13 @@ public class ComicVineQueryForVolumesAdaptor {
         }
       }
     } else {
-      this.logger.debug("Processing {} cached query entries...", entries.size());
+      this.log.debug("Processing {} cached query entries...", entries.size());
       for (int index = 0; index < entries.size(); index++) {
         this.responseProcessor.process(result, entries.get(index).getContent().getBytes());
       }
     }
 
-    this.logger.debug("Returning {} volumes", result.size());
+    this.log.debug("Returning {} volumes", result.size());
 
     return result;
   }

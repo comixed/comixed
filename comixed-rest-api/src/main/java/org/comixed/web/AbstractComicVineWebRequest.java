@@ -21,6 +21,7 @@ package org.comixed.web;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -29,6 +30,7 @@ import org.codehaus.plexus.util.StringUtils;
  *
  * @author Darryl L. Pierce
  */
+@Log4j2
 public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
   private static final String COMICVINE_URL_PATTERN =
       "http://comicvine.gamespot.com/api/{0}/?api_key={1}&format=json{2}{3}";
@@ -55,7 +57,7 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
    * @param value the filter value
    */
   public void addFilter(String name, String value) {
-    this.logger.debug("Adding request filter: " + name + "=" + value);
+    this.log.debug("Adding request filter: " + name + "=" + value);
     this.filterset.put(name, value);
   }
 
@@ -66,7 +68,7 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
    * @param value the parameter value
    */
   protected void addParameter(String name, String value) {
-    this.logger.debug("Adding parameter: {}={}", name, value);
+    this.log.debug("Adding parameter: {}={}", name, value);
     this.parameterSet.put(name, value);
   }
 
@@ -80,13 +82,13 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
     if (this.endpoint == null) throw new WebRequestException("Missing or undefined endpoint");
     if (StringUtils.isEmpty(this.apiKey))
       throw new WebRequestException("Missing or undefined API key");
-    this.logger.debug("Generating ComicVine URL");
+    this.log.debug("Generating ComicVine URL");
     StringBuffer parameters = new StringBuffer();
     if (!this.parameterSet.isEmpty()) {
-      this.logger.debug("Adding parameters");
+      this.log.debug("Adding parameters");
       for (String key : this.parameterSet.keySet()) {
         String value = this.parameterSet.get(key);
-        this.logger.debug("Adding parameter: {}={}", key, value);
+        this.log.debug("Adding parameter: {}={}", key, value);
 
         parameters.append("&");
         parameters.append(key);
@@ -97,10 +99,10 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
 
     StringBuffer filtering = new StringBuffer();
     if (!this.filterset.isEmpty()) {
-      this.logger.debug("Adding filters");
+      this.log.debug("Adding filters");
       for (String key : this.filterset.keySet()) {
         String value = this.filterset.get(key);
-        this.logger.debug("Adding filter: " + key + "=" + value);
+        this.log.debug("Adding filter: " + key + "=" + value);
         String f = MessageFormat.format(FILTER_FORMAT, key, value);
         if (filtering.length() > 0) {
           filtering.append(",");

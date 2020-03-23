@@ -24,10 +24,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.model.library.Comic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,6 +35,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class FilenameScraperAdaptor {
   // SERIES Vol.VVVV #nnn (Month, YYYY)
   private static final RuleSet RULESET1 =
@@ -57,7 +57,6 @@ public class FilenameScraperAdaptor {
       new RuleSet[] {
         RULESET1, RULESET2, RULESET3, RULESET4,
       };
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private boolean applyRule(Comic comic, String filename, RuleSet ruleset) throws AdaptorException {
     boolean result = false;
@@ -77,7 +76,7 @@ public class FilenameScraperAdaptor {
         if (this.parseCoverDate(comic, ruleset, elements[ruleset.coverDate], ruleset.dateFormat)
             || this.parseCoverDate(
                 comic, ruleset, elements[ruleset.coverDate], ruleset.fallbackDateFormat)) {
-          this.logger.debug("Cover date parsed: {}", comic.getCoverDate());
+          this.log.debug("Cover date parsed: {}", comic.getCoverDate());
         } else {
           throw new AdaptorException("Failed to parse date: " + elements[ruleset.coverDate]);
         }
@@ -89,11 +88,11 @@ public class FilenameScraperAdaptor {
 
   private boolean parseCoverDate(
       Comic comic, RuleSet ruleset, String coverDate, SimpleDateFormat dateFormat) {
-    this.logger.debug(
+    this.log.debug(
         "Parsing date using: {} (locale={})", dateFormat.toPattern(), Locale.getDefault());
     try {
       comic.setCoverDate(ruleset.parseCoverDate(coverDate, dateFormat));
-      this.logger.debug("Parsed cover date using {}", dateFormat);
+      this.log.debug("Parsed cover date using {}", dateFormat);
       return true;
     } catch (ParseException error) {
       return false;
@@ -108,18 +107,17 @@ public class FilenameScraperAdaptor {
    */
   public void execute(Comic comic) throws AdaptorException {
     String filename = FilenameUtils.getName(comic.getFilename());
-    this.logger.debug("Attempting to extract comic meta-data from filename: {}", filename);
+    this.log.debug("Attempting to extract comic meta-data from filename: {}", filename);
 
     boolean done = false;
     for (int index = 0; !done && (index < RULESET.length); index++) {
-      this.logger.debug("Attempting to use ruleset #{}", index);
+      this.log.debug("Attempting to use ruleset #{}", index);
       done = (this.applyRule(comic, filename, RULESET[index]));
     }
   }
 
+  @Log4j2
   private static class RuleSet {
-    public final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public final Pattern expression;
     public final int series;
     public final int volume;
@@ -137,7 +135,7 @@ public class FilenameScraperAdaptor {
       this.coverDate = coverDate;
       this.dateFormat = new SimpleDateFormat(dateFormat);
       this.fallbackDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
-      logger.debug(
+      this.log.debug(
           "Creating ruleset: expression={} series={} volume={} issue={} coverDate={} dateFormat={}",
           expression,
           series,
@@ -152,14 +150,14 @@ public class FilenameScraperAdaptor {
     }
 
     public String[] process(String filename) {
-      this.logger.debug("Processing filename: {}", filename);
+      this.log.debug("Processing filename: {}", filename);
       Matcher matches = this.expression.matcher(filename);
       String[] result = new String[matches.groupCount() + 1];
 
       while (matches.find()) {
         for (int index = 0; index < result.length; index++) {
           result[index] = matches.group(index);
-          this.logger.debug("Setting index={} to {}", index, result[index]);
+          this.log.debug("Setting index={} to {}", index, result[index]);
         }
       }
 

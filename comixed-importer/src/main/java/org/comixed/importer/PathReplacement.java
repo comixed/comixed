@@ -20,17 +20,15 @@ package org.comixed.importer;
 
 import java.io.File;
 import java.util.StringTokenizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * <code>PathReplacement</code> handles processing comic paths, applying replacement rules.
  *
  * @author Darryl L. Pierce
  */
+@Log4j2
 public class PathReplacement {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   String source;
   String destination;
 
@@ -50,7 +48,7 @@ public class PathReplacement {
       if (this.destination.endsWith(File.separator)) {
         this.destination = this.destination.substring(0, this.destination.length() - 1);
       }
-      this.logger.debug("Created replacement rule: {} => {}", this.source, this.destination);
+      this.log.debug("Created replacement rule: {} => {}", this.source, this.destination);
     } else {
       throw new RuntimeException("malformed path replacement rule:" + rule);
     }
@@ -63,9 +61,9 @@ public class PathReplacement {
    * @return true if the path is a match
    */
   public boolean isMatch(String path) {
-    this.logger.debug("Comparing: path={} source={}", path, this.source);
+    this.log.debug("Comparing: path={} source={}", path, this.source);
     boolean result = path.startsWith(this.source);
-    this.logger.debug("Returning {}", result);
+    this.log.debug("Returning {}", result);
     return result;
   }
 
@@ -77,7 +75,7 @@ public class PathReplacement {
    */
   public String getReplacement(String file) {
     String result = this.destination + file.substring(this.source.length());
-    this.logger.debug("Replaced: {} => {}", file, this.destination);
+    this.log.debug("Replaced: {} => {}", file, this.destination);
 
     return result;
   }

@@ -20,14 +20,14 @@ package org.comixed.task.model;
 
 import java.io.File;
 import java.io.IOException;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.repositories.library.ComicRepository;
 import org.comixed.utils.ComicFileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -38,10 +38,9 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
-@Scope("prototype")
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class MoveComicWorkerTask extends AbstractWorkerTask {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ComicRepository comicRepository;
 
   private Comic comic;
@@ -66,21 +65,21 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
 
     // if the source and target are the same, then skip the file
     if (destFile.equals(sourceFile)) {
-      this.logger.debug("Source and target are the same: " + destFile.getAbsolutePath());
+      this.log.debug("Source and target are the same: " + destFile.getAbsolutePath());
       return;
     }
 
     // create the directory if it doesn't exist
     if (!destFile.getParentFile().exists()) {
-      this.logger.debug("Creating directory: " + destFile.getParentFile().getAbsolutePath());
+      this.log.debug("Creating directory: " + destFile.getParentFile().getAbsolutePath());
       destFile.getParentFile().mkdirs();
     }
     try {
-      this.logger.debug("Moving comic: " + this.comic.getFilename() + " -> " + this.destination);
+      this.log.debug("Moving comic: " + this.comic.getFilename() + " -> " + this.destination);
 
       FileUtils.moveFile(sourceFile, destFile);
 
-      this.logger.debug("Updating comic in database");
+      this.log.debug("Updating comic in database");
       this.comic.setFilename(destFile.getAbsolutePath());
       this.comicRepository.save(this.comic);
     } catch (IOException error) {

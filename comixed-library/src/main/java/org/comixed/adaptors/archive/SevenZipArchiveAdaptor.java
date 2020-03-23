@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
 
   public SevenZipArchiveAdaptor() {
@@ -46,10 +48,10 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
 
   private void addFileToArchive(SevenZOutputFile archive, String filename, byte[] content)
       throws IOException {
-    this.logger.debug("Saving file to archive: " + filename + " [size=" + content.length + "]");
+    this.log.debug("Saving file to archive: " + filename + " [size=" + content.length + "]");
 
     File tempFile = File.createTempFile("comixed", "tmp");
-    this.logger.debug("Saving entry as temporary filename: " + tempFile.getAbsolutePath());
+    this.log.debug("Saving entry as temporary filename: " + tempFile.getAbsolutePath());
     FileOutputStream output = null;
 
     try {
@@ -61,13 +63,13 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
       }
     }
 
-    this.logger.debug("Adding temporary file to archive");
+    this.log.debug("Adding temporary file to archive");
     SevenZArchiveEntry entry = archive.createArchiveEntry(tempFile, filename);
     archive.putArchiveEntry(entry);
     archive.write(content);
     archive.closeArchiveEntry();
 
-    this.logger.debug("Cleaning up the temporary file");
+    this.log.debug("Cleaning up the temporary file");
     tempFile.delete();
   }
 
@@ -95,7 +97,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
   @Override
   protected void loadAllFiles(Comic comic, SevenZFile archiveReference)
       throws ArchiveAdaptorException {
-    this.logger.debug("Processing entries for archive");
+    this.log.debug("Processing entries for archive");
     comic.setArchiveType(ArchiveType.CB7);
     boolean done = false;
 
@@ -165,14 +167,14 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
       throws ArchiveAdaptorException, IOException {
-    this.logger.debug("Creating temporary file: " + filename);
+    this.log.debug("Creating temporary file: " + filename);
     SevenZOutputFile sevenzcomic = null;
 
     try {
       sevenzcomic = new SevenZOutputFile(new File(filename));
       sevenzcomic.setContentCompression(SevenZMethod.LZMA2);
 
-      this.logger.debug("Adding the ComicInfo.xml entry");
+      this.log.debug("Adding the ComicInfo.xml entry");
 
       this.addFileToArchive(
           sevenzcomic, "ComicInfo.xml", this.comicInfoEntryAdaptor.saveContent(source));
@@ -180,12 +182,12 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
       for (int index = 0; index < source.getPageCount(); index++) {
         Page page = source.getPage(index);
         if (page.isMarkedDeleted()) {
-          this.logger.debug("Skipping offset marked for deletion");
+          this.log.debug("Skipping offset marked for deletion");
           continue;
         }
         String pagename =
             renamePages ? this.getFilenameForEntry(page.getFilename(), index) : page.getFilename();
-        this.logger.debug("Adding entry: " + pagename);
+        this.log.debug("Adding entry: " + pagename);
         this.addFileToArchive(sevenzcomic, pagename, page.getContent());
       }
     } catch (IOException error) {

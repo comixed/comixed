@@ -18,11 +18,10 @@
 
 package org.comixed.controller.comic;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.comic.Publisher;
 import org.comixed.service.comic.PublisherException;
 import org.comixed.service.comic.PublisherService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,14 +31,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Log4j2
 public class PublisherController {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private PublisherService publisherService;
 
   @GetMapping(value = "/api/publishers/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Publisher getByName(@PathVariable("name") String name) throws PublisherException {
-    this.logger.info("Getting publisher: name={}", name);
+    this.log.info("Getting publisher: name={}", name);
     return this.publisherService.getByName(name);
   }
 
@@ -48,7 +46,7 @@ public class PublisherController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<byte[]> getThumbnail(@PathVariable("name") String name)
       throws PublisherException {
-    this.logger.debug("Getting thumbnail image for publisher: {}", name);
+    this.log.debug("Getting thumbnail image for publisher: {}", name);
     Publisher publisher = this.publisherService.getByName(name);
 
     return new ResponseEntity<>(publisher.getThumbnail(), HttpStatus.OK);
@@ -57,7 +55,7 @@ public class PublisherController {
   @GetMapping(value = "/api/publishers/{name}/logo", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<byte[]> getLogo(@PathVariable("name") String name)
       throws PublisherException {
-    this.logger.debug("Getting logo image for publisher: {}", name);
+    this.log.debug("Getting logo image for publisher: {}", name);
     Publisher publisher = this.publisherService.getByName(name);
 
     return new ResponseEntity<>(publisher.getLogo(), HttpStatus.OK);

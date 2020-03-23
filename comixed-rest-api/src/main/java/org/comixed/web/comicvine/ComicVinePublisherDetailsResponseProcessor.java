@@ -24,16 +24,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.comixed.model.comic.Publisher;
 import org.comixed.model.library.Comic;
 import org.comixed.repositories.comic.PublisherRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class ComicVinePublisherDetailsResponseProcessor {
   private static final Map<String, String> IMPRINT_MAPPINGS = new HashMap<>();
 
@@ -92,14 +92,12 @@ public class ComicVinePublisherDetailsResponseProcessor {
     IMPRINT_MAPPINGS.put("Zuda Comics", "DC Comics");
   }
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ComicVineResponseAdaptor responseAdaptor;
   @Autowired private PublisherRepository publisherRepository;
 
   public void process(byte[] content, Comic comic) throws ComicVineAdaptorException {
-    this.logger.debug("Validating ComicVine response content");
+    this.log.debug("Validating ComicVine response content");
     this.responseAdaptor.checkForErrors(content);
 
     try {
@@ -121,10 +119,10 @@ public class ComicVinePublisherDetailsResponseProcessor {
       comic.setImprint(imprint);
 
       // create or update the publisher record
-      this.logger.debug("Updating publisher record");
+      this.log.debug("Updating publisher record");
       Publisher publisherRecord = this.publisherRepository.findByComicVineId(comicVineId);
       if (publisherRecord == null) {
-        this.logger.debug("No such publisher: creating new record");
+        this.log.debug("No such publisher: creating new record");
         publisherRecord = new Publisher();
         publisherRecord.setComicVineId(comicVineId);
         publisherRecord.setComicVineUrl(comicVineUrl);
@@ -143,7 +141,7 @@ public class ComicVinePublisherDetailsResponseProcessor {
     try {
       return IOUtils.toByteArray(new URL(url));
     } catch (IOException error) {
-      this.logger.error("failed to load image from url: " + url, error);
+      this.log.error("failed to load image from url: " + url, error);
     }
     return null;
   }

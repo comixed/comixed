@@ -22,33 +22,31 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class PageCacheService {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Value("${comixed.images.cache.location}")
   private String cacheDirectory;
 
   public byte[] findByHash(final String hash) throws IOException {
-    this.logger.debug("Searching for cached image: hash={}", hash);
+    this.log.debug("Searching for cached image: hash={}", hash);
 
     final File file = this.getFileForHash(hash);
     byte[] result = null;
     if (file.exists() && !file.isDirectory()) {
-      this.logger.debug("Loading cached image content: {} bytes", file.length());
+      this.log.debug("Loading cached image content: {} bytes", file.length());
       FileInputStream input = null;
 
       try {
         input = new FileInputStream(file);
         result = IOUtils.readFully(input, (int) file.length());
       } catch (Exception error) {
-        this.logger.error("Failed to load cached image", error);
+        this.log.error("Failed to load cached image", error);
       } finally {
         if (input != null) {
           input.close();
@@ -58,7 +56,7 @@ public class PageCacheService {
       return result;
     }
 
-    this.logger.debug("No image in cache");
+    this.log.debug("No image in cache");
     return null;
   }
 
@@ -81,7 +79,7 @@ public class PageCacheService {
   }
 
   public void saveByHash(final String hash, final byte[] content) throws IOException {
-    this.logger.debug("Saving image to cache: hash={}", hash);
+    this.log.debug("Saving image to cache: hash={}", hash);
     final File file = this.getFileForHash(hash);
     file.getParentFile().mkdirs();
     IOUtils.write(content, new FileOutputStream(file, false));

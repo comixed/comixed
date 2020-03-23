@@ -25,12 +25,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import lombok.extern.log4j.Log4j2;
 import org.codehaus.plexus.util.StringUtils;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Credit;
 import org.comixed.model.library.ReadingList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <code>OPDSEntry</code> represents a single entry within an OPDS feed.
@@ -39,11 +38,9 @@ import org.slf4j.LoggerFactory;
  * @author Giao Phan
  * @author Darryl L. Pierce
  */
+@Log4j2
 public class OPDSEntry {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   public String title;
-
   public String id;
 
   @JacksonXmlElementWrapper(useWrapping = false)
@@ -77,7 +74,7 @@ public class OPDSEntry {
     this.authors = new ArrayList<>();
     for (Credit credit : comic.getCredits()) {
       if (StringUtils.equals(credit.getRole().toUpperCase(), "WRITER")) {
-        this.logger.debug("Adding author: {}", credit.getName());
+        this.log.debug("Adding author: {}", credit.getName());
         this.authors.add(new OPDSAuthor(credit.getName(), ""));
       }
     }
@@ -87,7 +84,7 @@ public class OPDSEntry {
     String urlPrefix = "/opds-comics/feed/comics/" + comic.getId();
 
     if (!comic.isMissing()) {
-      this.logger.debug("Added comic to feed: {}", comic.getFilename());
+      this.log.debug("Added comic to feed: {}", comic.getFilename());
 
       String coverUrl = urlPrefix + "/0/0";
       String thumbnailUrl = urlPrefix + "/0/160";
@@ -99,13 +96,13 @@ public class OPDSEntry {
                 + "/download/"
                 + URLEncoder.encode(comic.getBaseFilename(), StandardCharsets.UTF_8.toString());
       } catch (UnsupportedEncodingException error) {
-        this.logger.error("error encoding comic filename", error);
+        this.log.error("error encoding comic filename", error);
         comicUrl = urlPrefix + "/download/" + comic.getBaseFilename();
       }
 
-      this.logger.debug("coverUrl: {}", coverUrl);
-      this.logger.debug("thumbnailUrl: {}", thumbnailUrl);
-      this.logger.debug("comicUrl: {}", comicUrl);
+      this.log.debug("coverUrl: {}", coverUrl);
+      this.log.debug("thumbnailUrl: {}", thumbnailUrl);
+      this.log.debug("comicUrl: {}", comicUrl);
 
       // TODO need to get the correct mime types for the cover
       this.links =
@@ -125,7 +122,7 @@ public class OPDSEntry {
                   "/opds-comics/feed/comics/" + comic.getId() + "/{pageNumber}/{maxWidth}",
                   comic.getPageCount()));
     } else {
-      this.logger.debug("Comic file missing: {}", comic.getFilename());
+      this.log.debug("Comic file missing: {}", comic.getFilename());
     }
   }
 

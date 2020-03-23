@@ -18,6 +18,7 @@
 
 package org.comixed.loaders;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.Comic;
 import org.comixed.model.library.Page;
 import org.comixed.repositories.library.PageTypeRepository;
@@ -30,15 +31,16 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class ImageEntryLoader extends AbstractEntryLoader {
   @Autowired private PageTypeRepository pageTypeRepository;
 
   @Override
   public void loadContent(Comic comic, String filename, byte[] content) {
-    this.logger.debug("Loading image into comic");
+    this.log.debug("Loading image into comic");
     // if the comic already has this offset then update the offset's content
     if (comic.hasPageWithFilename(filename)) {
-      this.logger.debug("Ignore known file: {}", filename);
+      this.log.debug("Ignore known file: {}", filename);
       //            comic.getPageWithFilename(filename)
       //                 .setContent(content);
     } else {

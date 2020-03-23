@@ -22,11 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,18 +35,17 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@Log4j2
 public class FileTypeIdentifier {
   // TODO this needs to be loaded from the entryloaders.properties file
   public static final List<String> IMAGE_TYPES =
       Arrays.asList(new String[] {"jpeg", "png", "gif", "webp"});
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private Tika tika;
   @Autowired private Metadata metadata;
 
   private MediaType getMimeType(InputStream input) {
-    this.logger.debug("Attempting to detect mime type for stream");
+    this.log.debug("Attempting to detect mime type for stream");
     MediaType result = null;
 
     try {
@@ -55,10 +53,10 @@ public class FileTypeIdentifier {
       result = this.tika.getDetector().detect(input, this.metadata);
       input.reset();
     } catch (IOException error) {
-      this.logger.error("Error determining filetype from stream", error);
+      this.log.error("Error determining filetype from stream", error);
     }
 
-    this.logger.debug("result=" + result);
+    this.log.debug("result=" + result);
 
     return result;
   }

@@ -18,29 +18,25 @@
 
 package org.comixed.web.comicvine;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.web.ComicVineIssuesWebRequest;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.WebRequestProcessor;
 import org.comixed.web.model.ScrapingIssue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class ComicVineQueryForIssueAdaptor {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private ObjectFactory<ComicVineIssuesWebRequest> webRequestFactory;
-
   @Autowired private WebRequestProcessor webRequestProcessor;
-
   @Autowired private ComicVineIssueResponseProcessor responseProcessor;
 
   public ScrapingIssue execute(String apiKey, Integer volume, String issueNumber)
       throws ComicVineAdaptorException {
-    this.logger.debug("Getting issue={} for volume={} ", issueNumber, volume);
+    this.log.debug("Getting issue={} for volume={} ", issueNumber, volume);
 
     while (!issueNumber.isEmpty()
         && !issueNumber.equals("0")
@@ -63,9 +59,9 @@ public class ComicVineQueryForIssueAdaptor {
     }
 
     if (result != null) {
-      this.logger.debug("Returning an issue");
+      this.log.debug("Returning an issue");
     } else {
-      this.logger.debug("No comic found");
+      this.log.debug("No comic found");
     }
 
     return result;

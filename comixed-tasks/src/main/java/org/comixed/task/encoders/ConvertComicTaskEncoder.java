@@ -18,6 +18,7 @@
 
 package org.comixed.task.encoders;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.Task;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWorkerTask> {
   public static final String RENAME_PAGES = "rename-pages";
   public static final String ARCHIVE_TYPE = "target-archive-type";
@@ -46,7 +48,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
 
   @Override
   public Task encode() {
-    this.logger.debug("Encoding save comic task");
+    this.log.debug("Encoding save comic task");
 
     Task result = new Task();
     result.setTaskType(TaskType.CONVERT_COMIC);
@@ -60,7 +62,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
   @Override
   @Transactional
   public ConvertComicWorkerTask decode(Task task) {
-    this.logger.debug("Decoding save comic task: id={}", task.getId());
+    this.log.debug("Decoding save comic task: id={}", task.getId());
 
     ConvertComicWorkerTask result = this.convertComicWorkerTaskObjectFactory.getObject();
     result.setComic(task.getComic());
@@ -68,19 +70,19 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
     result.setTargetArchiveType(targetArchiveType);
     result.setRenamePages(Boolean.valueOf(task.getProperty(RENAME_PAGES)));
 
-    this.logger.debug("Deleting persisted task");
+    this.log.debug("Deleting persisted task");
     this.taskRepository.delete(task);
 
     return result;
   }
 
   public void setComic(final Comic comic) {
-    this.logger.debug("Setting comic: id={}", comic.isMissing());
+    this.log.debug("Setting comic: id={}", comic.isMissing());
     this.comic = comic;
   }
 
   public void setTargetArchiveType(ArchiveType archiveType) {
-    this.logger.debug("Setting target archive type: {}", archiveType);
+    this.log.debug("Setting target archive type: {}", archiveType);
     this.archiveType = archiveType;
   }
 

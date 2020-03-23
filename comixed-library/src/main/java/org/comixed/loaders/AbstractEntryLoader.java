@@ -18,8 +18,7 @@
 
 package org.comixed.loaders;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * <code>AbstractEntryLoader</code> provides a base class for creating new implementations of {@link
@@ -27,6 +26,5 @@ import org.slf4j.LoggerFactory;
  *
  * @author Darryl L. Pierce
  */
-public abstract class AbstractEntryLoader implements EntryLoader {
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-}
+@Log4j2
+public abstract class AbstractEntryLoader implements EntryLoader {}

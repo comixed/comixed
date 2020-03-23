@@ -18,21 +18,19 @@
 
 package org.comixed.service.comic;
 
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.comic.Publisher;
 import org.comixed.repositories.comic.PublisherRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class PublisherService {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Autowired private PublisherRepository publisherRepository;
 
   public Publisher getByName(String name) throws PublisherException {
-    this.logger.debug("Getting publisher: name={}", name);
+    this.log.debug("Getting publisher: name={}", name);
     Publisher result = this.publisherRepository.findByName(name);
 
     if (result == null) throw new PublisherException("No such publisher: name=" + name);

@@ -18,6 +18,10 @@
 
 package org.comixed.task.model;
 
+import static junit.framework.TestCase.assertEquals;
+
+import java.io.IOException;
+import java.io.InputStream;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.model.library.Comic;
@@ -30,11 +34,6 @@ import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import static junit.framework.TestCase.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
