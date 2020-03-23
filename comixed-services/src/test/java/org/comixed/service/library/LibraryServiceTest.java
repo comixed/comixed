@@ -2,10 +2,12 @@ package org.comixed.service.library;
 
 import static junit.framework.TestCase.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.io.FileUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.TaskType;
@@ -17,11 +19,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.data.domain.Pageable;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({FileUtils.class})
 public class LibraryServiceTest {
   private static final String TEST_EMAIL = "reader@comixed.org";
   private static final Date TEST_LAST_UPDATED_TIMESTAMP = new Date();
@@ -31,6 +36,8 @@ public class LibraryServiceTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
+  private static final Boolean TEST_DELETE_PHYSICAL_FILES = RANDOM.nextBoolean();
+  private static final String TEST_FILENAME = "/home/comixeduser/Library/comicfile.cbz";
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
@@ -41,7 +48,9 @@ public class LibraryServiceTest {
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<List<Comic>> comicListArgumentCaptor;
   @Mock private Worker worker;
+  @Mock private File file;
 
+  private List<Comic> comicList = new ArrayList<>();
   private Comic comic1 = new Comic();
   private Comic comic2 = new Comic();
   private Comic comic3 = new Comic();
@@ -127,5 +136,43 @@ public class LibraryServiceTest {
         .setTargetArchiveType(TEST_ARCHIVE_TYPE);
     Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
     Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(convertComicsWorkerTask);
+  }
+
+  @Test
+  public void testConsolidateLibraryNoDeleteFile() {
+    Mockito.when(comicRepository.findAllMarkedForDeletion()).thenReturn(comicList);
+    Mockito.doNothing().when(comicRepository).delete(Mockito.any(Comic.class));
+
+    List<Comic> result = libraryService.consolidateLibrary(false);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(comicList.size())).delete(comic);
+  }
+
+  @Test
+  public void testConsolidateLibraryDeleteFile() throws Exception {
+    for (int index = 0; index < 25; index++) {
+      comicList.add(comic);
+    }
+
+    Mockito.when(comicRepository.findAllMarkedForDeletion()).thenReturn(comicList);
+    Mockito.doNothing().when(comicRepository).delete(Mockito.any(Comic.class));
+    Mockito.when(comic.getFilename()).thenReturn(TEST_FILENAME);
+    Mockito.when(comic.getFile()).thenReturn(file);
+    PowerMockito.mockStatic(FileUtils.class);
+    Mockito.when(FileUtils.deleteQuietly(Mockito.any(File.class))).thenReturn(true);
+
+    List<Comic> result = libraryService.consolidateLibrary(true);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(comicList.size())).delete(comic);
+    Mockito.verify(comic, Mockito.times(comicList.size())).getFilename();
+    Mockito.verify(comic, Mockito.times(comicList.size())).getFile();
+    PowerMockito.verifyStatic(FileUtils.class, Mockito.times(comicList.size()));
+    FileUtils.deleteQuietly(file);
   }
 }

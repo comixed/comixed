@@ -391,7 +391,7 @@ public class ComicRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(6, result.size());
+    assertEquals(7, result.size());
   }
 
   @Test
@@ -432,7 +432,7 @@ public class ComicRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(7, result.size());
+    assertEquals(8, result.size());
     testComicOrder(0L, 0L, result);
   }
 
@@ -445,7 +445,7 @@ public class ComicRepositoryTest {
     testComicOrder(0, timestamp.getTime(), result);
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(5, result.size());
+    assertEquals(6, result.size());
   }
 
   private void testComicOrder(long id, long timestamp, List<Comic> comicList) {
@@ -516,6 +516,17 @@ public class ComicRepositoryTest {
     assertEquals(TEST_PREV_ISSUE_ID, result.get(0).getId());
     for (int index = 0; index < result.size(); index++) {
       assertTrue(result.get(index).getIssueNumber().compareTo(TEST_ISSUE_WITH_PREV) < 0);
+    }
+  }
+
+  @Test
+  public void testFindAllMarkedForDeletion() {
+    List<Comic> result = repository.findAllMarkedForDeletion();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    for (Comic comic : result) {
+      assertNotNull(comic.getDateDeleted());
     }
   }
 }

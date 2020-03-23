@@ -28,6 +28,7 @@ import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
+import org.comixed.net.ConsolidateLibraryRequest;
 import org.comixed.net.ConvertComicsRequest;
 import org.comixed.net.GetUpdatedComicsRequest;
 import org.comixed.net.GetUpdatedComicsResponse;
@@ -53,6 +54,7 @@ public class LibraryControllerTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
+  private static final Boolean TEST_DELETE_PHYSICAL_FILES = RANDOM.nextBoolean();
 
   @InjectMocks private LibraryController libraryController;
   @Mock private LibraryService libraryService;
@@ -203,5 +205,19 @@ public class LibraryControllerTest {
 
     Mockito.verify(libraryService, Mockito.times(1))
         .convertComics(comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES);
+  }
+
+  @Test
+  public void testConsolidate() {
+    Mockito.when(libraryService.consolidateLibrary(Mockito.anyBoolean())).thenReturn(comicList);
+
+    List<Comic> response =
+        libraryController.consolidateLibrary(
+            new ConsolidateLibraryRequest(TEST_DELETE_PHYSICAL_FILES));
+
+    assertNotNull(response);
+    assertSame(comicList, response);
+
+    Mockito.verify(libraryService, Mockito.times(1)).consolidateLibrary(TEST_DELETE_PHYSICAL_FILES);
   }
 }
