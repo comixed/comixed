@@ -75,6 +75,7 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
 import * as fromPublisher from 'app/library/reducers/publisher.reducer';
 import { PublisherEffects } from 'app/library/effects/publisher.effects';
 import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
+import { ConsolidateLibraryComponent } from './components/consolidate-library/consolidate-library.component';
 
 @NgModule({
   imports: [
@@ -138,7 +139,8 @@ import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
     DuplicatePageListItemComponent,
     CollectionDetailsPageComponent,
     CollectionPageComponent,
-    ConvertComicsSettingsComponent
+    ConvertComicsSettingsComponent,
+    ConsolidateLibraryComponent
   ],
   providers: [
     LibraryService,
