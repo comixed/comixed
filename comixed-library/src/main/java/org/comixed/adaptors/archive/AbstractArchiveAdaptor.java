@@ -22,10 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
@@ -45,6 +42,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>AbstractArchiveAdaptor</code> provides a foundation for creating new instances of {@link
@@ -61,10 +59,13 @@ import org.springframework.stereotype.Component;
 public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, InitializingBean {
   @Autowired protected FileTypeIdentifier fileTypeIdentifier;
   @Autowired protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
-  protected List<EntryLoaderForType> loaders = new ArrayList<>();
-  protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
   @Autowired private ApplicationContext context;
   @Autowired private ComicFileHandler comicFileHandler;
+
+  protected List<EntryLoaderForType> loaders = new ArrayList<>();
+  protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
+  private Set<String> imageTypes = new HashSet<>();
+
   private String defaultExtension;
 
   public AbstractArchiveAdaptor(String defaultExtension) {
@@ -79,6 +80,10 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
       if (entry.isValid()) {
         if (this.context.containsBean(entry.bean)) {
           this.entryLoaders.put(entry.type, (EntryLoader) this.context.getBean(entry.bean));
+          if (entry.entryType == ArchiveEntryType.IMAGE) {
+            this.log.debug("Adding image adaptor: {}={}", entry.entryType, entry.bean);
+            this.imageTypes.add(entry.type);
+          }
         } else {
           this.log.debug("No such entry adaptor bean: {}", entry.bean);
         }
@@ -295,7 +300,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
       byte[] content = this.loadSingleFileInternal(archiveRef, entry);
       String contentType = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
 
-      if (contentType != null && FileTypeIdentifier.IMAGE_TYPES.contains(contentType)) {
+      if (contentType != null && this.imageTypes.contains(contentType)) {
         result = entry;
         break;
       }
@@ -315,12 +320,12 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   public static class EntryLoaderForType {
     private String type;
     private String bean;
+    private ArchiveEntryType entryType;
 
     public boolean isValid() {
-      return (this.type != null)
-          && !this.type.isEmpty()
-          && (this.bean != null)
-          && !this.bean.isEmpty();
+      return !StringUtils.isEmpty(this.type)
+          && !StringUtils.isEmpty(this.bean)
+          && this.entryType != null;
     }
 
     public void setBean(String bean) {
@@ -329,6 +334,10 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
     public void setType(String type) {
       this.type = type;
+    }
+
+    public void setEntryType(ArchiveEntryType entryType) {
+      this.entryType = entryType;
     }
   }
 }
