@@ -44,9 +44,11 @@ import { DuplicatePagesService } from 'app/library/services/duplicate-pages.serv
 import { CheckboxModule } from 'primeng/checkbox';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import {
+  ButtonModule,
   DialogModule,
   ProgressSpinnerModule,
-  ScrollPanelModule, SidebarModule,
+  ScrollPanelModule,
+  SidebarModule,
   SliderModule,
   ToolbarModule,
   TooltipModule
@@ -75,6 +77,9 @@ import { ConvertComicsSettingsComponent } from './components/convert-comics-sett
 import * as fromPublisher from 'app/library/reducers/publisher.reducer';
 import { PublisherEffects } from 'app/library/effects/publisher.effects';
 import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
+import { ConsolidateLibraryComponent } from './components/consolidate-library/consolidate-library.component';
+import { LibraryAdminPageComponent } from 'app/library/pages/library-admin-page/library-admin-page.component';
+import { FileSaverModule } from 'ngx-filesaver';
 
 @NgModule({
   imports: [
@@ -84,24 +89,24 @@ import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
     UserExperienceModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(
-        fromLibrary.LIBRARY_FEATURE_KEY,
-        fromLibrary.reducer
+      fromLibrary.LIBRARY_FEATURE_KEY,
+      fromLibrary.reducer
     ),
     StoreModule.forFeature(
-        fromSelection.SELECTION_FEATURE_KEY,
-        fromSelection.reducer
+      fromSelection.SELECTION_FEATURE_KEY,
+      fromSelection.reducer
     ),
     StoreModule.forFeature(
-        fromReadingList.READING_LIST_FEATURE_KEY,
-        fromReadingList.reducer
+      fromReadingList.READING_LIST_FEATURE_KEY,
+      fromReadingList.reducer
     ),
     StoreModule.forFeature(
-        fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
-        fromDupes.reducer
+      fromDupes.DUPLICATE_PAGES_FEATURE_KEY,
+      fromDupes.reducer
     ),
     StoreModule.forFeature(
-        fromPublisher.PUBLISHER_FEATURE_KEY,
-        fromPublisher.reducer
+      fromPublisher.PUBLISHER_FEATURE_KEY,
+      fromPublisher.reducer
     ),
     EffectsModule.forFeature([
       LibraryEffects,
@@ -117,7 +122,9 @@ import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
     ProgressSpinnerModule,
     TooltipModule,
     DialogModule,
-    SidebarModule
+    SidebarModule,
+    ButtonModule,
+    FileSaverModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
@@ -138,7 +145,9 @@ import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
     DuplicatePageListItemComponent,
     CollectionDetailsPageComponent,
     CollectionPageComponent,
-    ConvertComicsSettingsComponent
+    ConvertComicsSettingsComponent,
+    ConsolidateLibraryComponent,
+    LibraryAdminPageComponent
   ],
   providers: [
     LibraryService,

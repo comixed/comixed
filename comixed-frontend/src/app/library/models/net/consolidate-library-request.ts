@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export const LIBRARY_SORT = 'library.sort-by';
-export const LIBRARY_ROWS = 'library.rows';
-export const LIBRARY_COVER_SIZE = 'library.cover-size';
-export const LIBRARY_CURRENT_TAB = 'library.current-tab';
-export const CONSOLIDATE_DELETE_PHYSICAL_FILES =
-  'library.consolidate.delete-physical-file';
-
-export const IMPORT_SORT = 'import.sort-by';
-export const IMPORT_ROWS = 'import.rows';
-export const IMPORT_COVER_SIZE = 'import.cover-size';
-export const IMPORT_LAST_DIRECTORY = 'import.last-directory';
-
-export const COMICVINE_API_KEY = 'comicvine.api-key';
+export interface ConsolidateLibraryRequest {
+  deletePhysicalFiles: boolean;
+}

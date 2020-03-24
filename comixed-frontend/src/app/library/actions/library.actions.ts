@@ -33,7 +33,10 @@ export enum LibraryActionTypes {
   DeleteMultipleComicsFailed = '[LIBRARY] Failed to delete multiple comics',
   ConvertComics = '[LIBRARY] Convert comics to a new archive type',
   ComicsConverting = '[LIBRARY] Comics converting to a new archive type',
-  ConvertComicsFailed = '[LIBRARY] Failed to convert comics'
+  ConvertComicsFailed = '[LIBRARY] Failed to convert comics',
+  Consolidate = '[LIBRARY] Consolidate the library',
+  Consolidated = '[LIBRARY] Library is consolidated',
+  ConsolidateFailed = '[LIBRARY] Failed to consolidate libary'
 }
 
 export class LibraryReset implements Action {
@@ -137,6 +140,24 @@ export class LibraryConvertComicsFailed implements Action {
   constructor() {}
 }
 
+export class LibraryConsolidate implements Action {
+  readonly type = LibraryActionTypes.Consolidate;
+
+  constructor(public payload: { deletePhysicalFiles: boolean }) {}
+}
+
+export class LibraryConsolidated implements Action {
+  readonly type = LibraryActionTypes.Consolidated;
+
+  constructor(public payload: { deletedComics: Comic[] }) {}
+}
+
+export class LibraryConsolidateFailed implements Action {
+  readonly type = LibraryActionTypes.ConsolidateFailed;
+
+  constructor() {}
+}
+
 export type LibraryActions =
   | LibraryReset
   | LibraryGetUpdates
@@ -150,4 +171,7 @@ export type LibraryActions =
   | LibraryDeleteMultipleComicsFailed
   | LibraryConvertComics
   | LibraryComicsConverting
-  | LibraryConvertComicsFailed;
+  | LibraryConvertComicsFailed
+  | LibraryConsolidate
+  | LibraryConsolidated
+  | LibraryConsolidateFailed;

@@ -98,4 +98,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
       @Param("series") String series,
       @Param("volume") String volume,
       @Param("issueNumber") String issueNumber);
+
+  @Query("SELECT c FROM Comic c WHERE c.dateDeleted IS NOT NULL")
+  List<Comic> findAllMarkedForDeletion();
 }

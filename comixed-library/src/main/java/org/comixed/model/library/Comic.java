@@ -62,6 +62,7 @@ public class Comic {
   @JsonProperty("id")
   @JsonView({
     ComicList.class,
+    DeletedComicList.class,
     PageList.class,
     DuplicatePageList.class,
     DatabaseBackup.class,
@@ -1061,5 +1062,10 @@ public class Comic {
   public void setFileDetails(final ComicFileDetails fileDetails) {
     fileDetails.setComic(this);
     this.fileDetails = fileDetails;
+  }
+
+  @Transient
+  public File getFile() {
+    return new File(this.filename);
   }
 }
