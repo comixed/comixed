@@ -18,19 +18,12 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminGuard } from 'app/user';
 import { MainPageComponent } from 'app/pages/main-page/main-page.component';
-import { LibraryAdminPageComponent } from 'app/pages/admin/library-admin-page/library-admin-page.component';
 
 export const routes: Routes = [
   {
     path: 'home',
     component: MainPageComponent
-  },
-  {
-    path: 'admin/library',
-    component: LibraryAdminPageComponent,
-    canActivate: [AdminGuard]
   },
   {
     path: '',

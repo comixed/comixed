@@ -32,6 +32,7 @@ import { LoggerModule } from '@angular-ru/logger';
 
 import { LibraryService } from './library.service';
 import {
+  CONSOLIDATE_LIBRARY_URL,
   CONVERT_COMICS_URL,
   DELETE_MULTIPLE_COMICS_URL,
   GET_LIBRARY_UPDATES_URL,
@@ -39,6 +40,7 @@ import {
 } from 'app/library/library.constants';
 import { HttpResponse } from '@angular/common/http';
 import { ConvertComicsRequest } from 'app/library/models/net/convert-comics-request';
+import { ConsolidateLibraryRequest } from 'app/library/models/net/consolidate-library-request';
 
 describe('LibraryService', () => {
   const LAST_UPDATED_DATE = new Date();
@@ -148,5 +150,18 @@ describe('LibraryService', () => {
       renamePages: true
     } as ConvertComicsRequest);
     req.flush(new HttpResponse<any>({ status: 200 }));
+  });
+
+  it('can consolidate the library', () => {
+    service
+      .consolidate(true)
+      .subscribe(response => expect(response).toEqual(COMICS));
+
+    const req = httpMock.expectOne(interpolate(CONSOLIDATE_LIBRARY_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      deletePhysicalFiles: true
+    } as ConsolidateLibraryRequest);
+    req.flush(COMICS);
   });
 });

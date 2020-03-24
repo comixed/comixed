@@ -31,6 +31,9 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   LibraryActionTypes,
   LibraryComicsConverting,
+  LibraryConsolidate,
+  LibraryConsolidated,
+  LibraryConsolidateFailed,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
@@ -42,6 +45,7 @@ import {
   LibraryStartRescanFailed,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
+import { Comic } from 'app/comics';
 
 @Injectable()
 export class LibraryEffects {
@@ -240,10 +244,54 @@ export class LibraryEffects {
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
-          'library-effects.convert-comics.error.details'
+          'general-message.error.general-service-failure'
         )
       });
       return of(new LibraryConvertComicsFailed());
+    })
+  );
+
+  @Effect()
+  consolidate$: Observable<Action> = this.actions$.pipe(
+    ofType(LibraryActionTypes.Consolidate),
+    tap(action => this.logger.debug('effect: consolidate library:', action)),
+    map((action: LibraryConsolidate) => action.payload),
+    switchMap(action =>
+      this.libraryService.consolidate(action.deletePhysicalFiles).pipe(
+        tap(response => this.logger.debug('received response:', response)),
+        tap(() =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'library-effects.consolidate.success.detail'
+            )
+          })
+        ),
+        map(
+          (response: Comic[]) =>
+            new LibraryConsolidated({ deletedComics: response })
+        ),
+        catchError(error => {
+          this.logger.error('service failure conslidating library:', error);
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'library-effects.consolidate.error.detail'
+            )
+          });
+          return of(new LibraryConsolidateFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.error('general failure conslidating library:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new LibraryConsolidateFailed());
     })
   );
 }

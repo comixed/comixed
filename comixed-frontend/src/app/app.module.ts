@@ -42,12 +42,10 @@ import { ComicsModule } from 'app/comics/comics.module';
 import { LoginComponent } from 'app/components/login/login.component';
 import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 import { LibraryModule } from 'app/library/library.module';
-import { LibraryAdminPageComponent } from 'app/pages/admin/library-admin-page/library-admin-page.component';
 import { MainPageComponent } from 'app/pages/main-page/main-page.component';
 import { UserService } from 'app/services/user.service';
 import { UserModule } from 'app/user/user.module';
 import { XhrInterceptor } from 'app/xhr.interceptor';
-import { FileSaverModule } from 'ngx-filesaver';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -90,7 +88,6 @@ import { LoggerModule } from '@angular-ru/logger';
     AppComponent,
     MainPageComponent,
     LoginComponent,
-    LibraryAdminPageComponent,
     MainMenuComponent
   ],
   imports: [
@@ -159,7 +156,6 @@ import { LoggerModule } from '@angular-ru/logger';
       }
     }),
     LoggerModule.forRoot(),
-    FileSaverModule,
     BreadcrumbModule
   ],
   providers: [

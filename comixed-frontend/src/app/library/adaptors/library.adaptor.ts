@@ -30,6 +30,7 @@ import { filter } from 'rxjs/operators';
 import { extractField } from 'app/library/utility.functions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import {
+  LibraryConsolidate,
   LibraryConvertComics,
   LibraryDeleteMultipleComics,
   LibraryGetUpdates,
@@ -60,6 +61,7 @@ export class LibraryAdaptor {
   private _timeout = 60;
   private _maximum = 100;
   private _converting$ = new BehaviorSubject<boolean>(false);
+  private _consolidating$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private store: Store<AppState>,
@@ -117,6 +119,9 @@ export class LibraryAdaptor {
         }
         if (state.convertingComics !== this._converting$.getValue()) {
           this._converting$.next(state.convertingComics);
+        }
+        if (state.consolidating !== this._consolidating$.getValue()) {
+          this._consolidating$.next(state.consolidating);
         }
       });
   }
@@ -240,5 +245,18 @@ export class LibraryAdaptor {
 
   get converting$(): Observable<boolean> {
     return this._converting$.asObservable();
+  }
+
+  consolidate(deletePhysicalFiles: boolean): void {
+    this.logger.debug(
+      `firing action to consolidate library: deletePhysicalFiles=${deletePhysicalFiles}`
+    );
+    this.store.dispatch(
+      new LibraryConsolidate({ deletePhysicalFiles: deletePhysicalFiles })
+    );
+  }
+
+  get consolidating$(): Observable<boolean> {
+    return this._consolidating$.asObservable();
   }
 }

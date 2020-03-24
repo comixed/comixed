@@ -26,27 +26,34 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserService } from 'app/services/user.service';
-import { LibraryModule } from 'app/library/library.module';
 import { LibraryAdaptor } from 'app/library';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerModule } from '@angular-ru/logger';
+import { ConsolidateLibraryComponent } from 'app/library/components/consolidate-library/consolidate-library.component';
+import { CheckboxModule } from 'primeng/checkbox';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserModule } from 'app/user/user.module';
+import { ComicsModule } from 'app/comics/comics.module';
 
 describe('LibraryAdminPageComponent', () => {
   let component: LibraryAdminPageComponent;
   let fixture: ComponentFixture<LibraryAdminPageComponent>;
-  let rescan_button: DebugElement;
-  let export_button: DebugElement;
-  let library_adaptor: LibraryAdaptor;
+  let rescanButton: DebugElement;
+  let exportButton: DebugElement;
+  let libraryAdaptor: LibraryAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        LibraryModule,
+        UserModule,
+        ComicsModule,
+        FormsModule,
+        ReactiveFormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
@@ -57,20 +64,27 @@ describe('LibraryAdminPageComponent', () => {
         EffectsModule.forRoot([]),
         FileSaverModule,
         ButtonModule,
-        PanelModule
+        PanelModule,
+        CheckboxModule
       ],
-      declarations: [LibraryAdminPageComponent],
-      providers: [MessageService, UserService, BreadcrumbAdaptor]
+      declarations: [LibraryAdminPageComponent, ConsolidateLibraryComponent],
+      providers: [
+        LibraryAdaptor,
+        MessageService,
+        UserService,
+        BreadcrumbAdaptor,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryAdminPageComponent);
     component = fixture.componentInstance;
-    library_adaptor = TestBed.get(LibraryAdaptor);
+    libraryAdaptor = TestBed.get(LibraryAdaptor);
 
     fixture.detectChanges();
 
-    rescan_button = fixture.debugElement.query(By.css('#cx-rescan-button'));
-    export_button = fixture.debugElement.query(By.css('#cx-export-button'));
+    rescanButton = fixture.debugElement.query(By.css('#cx-rescan-button'));
+    exportButton = fixture.debugElement.query(By.css('#cx-export-button'));
   }));
 
   it('should create', () => {
@@ -84,11 +98,11 @@ describe('LibraryAdminPageComponent', () => {
     });
 
     it('disables the rescan button', () => {
-      expect(rescan_button.nativeElement.disabled).toBeTruthy();
+      expect(rescanButton.nativeElement.disabled).toBeTruthy();
     });
 
     it('disables the backup button', () => {
-      expect(export_button.nativeElement.disabled).toBeTruthy();
+      expect(exportButton.nativeElement.disabled).toBeTruthy();
     });
   });
 
@@ -99,22 +113,22 @@ describe('LibraryAdminPageComponent', () => {
     });
 
     it('enables the rescan button', () => {
-      expect(rescan_button.nativeElement.disabled).toBeFalsy();
+      expect(rescanButton.nativeElement.disabled).toBeFalsy();
     });
 
     it('enables the export button', () => {
-      expect(export_button.nativeElement.disabled).toBeFalsy();
+      expect(exportButton.nativeElement.disabled).toBeFalsy();
     });
 
     describe('and a rescan is requested', () => {
       beforeEach(() => {
-        spyOn(library_adaptor, 'startRescan');
+        spyOn(libraryAdaptor, 'startRescan');
         component.rescanLibrary();
         fixture.detectChanges();
       });
 
       it('sends a notice to start a rescan', () => {
-        expect(library_adaptor.startRescan).toHaveBeenCalled();
+        expect(libraryAdaptor.startRescan).toHaveBeenCalled();
       });
     });
   });

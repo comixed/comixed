@@ -31,6 +31,9 @@ public class View {
   /** Show minimal details for more than one comic. */
   public interface ComicList {}
 
+  /** Used when deleting comics. */
+  public interface DeletedComicList {}
+
   /** Show full details on a single page. */
   public interface PageDetails extends PageList {}
 
@@ -51,6 +54,6 @@ public class View {
   /** Used when fetching a smart reading list. */
   public interface SmartReadingList {}
 
-  /** Uses when fetching the list of duplicate pages. */
+  /** Used when fetching the list of duplicate pages. */
   public class DuplicatePageList {}
 }

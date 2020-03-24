@@ -1,0 +1,17 @@
+<div class='ui-g'>
+  <form [formGroup]='consolidationForm'>
+    <div class='ui-g-12'>
+      <p-checkbox id='delete-physical-files'
+                  [binary]='true'
+                  formControlName='deletePhysicalFiles'></p-checkbox>
+      <label for='delete-physical-files'>{{'consolidate-library.label.delete-physical-files'|translate}}</label>
+    </div>
+    <div class='ui-g-12 cx-container-centered-text'>
+      <button pButton
+              type='button'
+              class='cx-action-button'
+              [label]='"consolidate-library.button.start"|translate'
+              (click)='consolidateLibrary()'></button>
+    </div>
+  </form>
+</div>

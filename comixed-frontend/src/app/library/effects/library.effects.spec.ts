@@ -23,6 +23,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
 import {
   LibraryComicsConverting,
+  LibraryConsolidate,
+  LibraryConsolidated,
+  LibraryConsolidateFailed,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
@@ -77,7 +80,8 @@ describe('LibraryEffects', () => {
             deleteMultipleComics: jasmine.createSpy(
               'LibraryService.deleteMultipleComics()'
             ),
-            convertComics: jasmine.createSpy('LibraryService.convertComics()')
+            convertComics: jasmine.createSpy('LibraryService.convertComics()'),
+            consolidate: jasmine.createSpy('LibraryService.consolidate()')
           }
         },
         MessageService
@@ -325,6 +329,52 @@ describe('LibraryEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.convertComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('consolidating the library', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = COMICS;
+      const action = new LibraryConsolidate({ deletePhysicalFiles: true });
+      const outcome = new LibraryConsolidated({ deletedComics: COMICS });
+
+      actions$ = hot('-a', { a: action });
+      libraryService.consolidate.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.consolidate$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new LibraryConsolidate({ deletePhysicalFiles: true });
+      const outcome = new LibraryConsolidateFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.consolidate.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.consolidate$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new LibraryConsolidate({ deletePhysicalFiles: true });
+      const outcome = new LibraryConsolidateFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.consolidate.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.consolidate$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

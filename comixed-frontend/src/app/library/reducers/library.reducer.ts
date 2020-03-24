@@ -17,7 +17,7 @@
  */
 
 import { LibraryActions, LibraryActionTypes } from '../actions/library.actions';
-import { mergeComics } from 'app/library/utility.functions';
+import {deleteComics, mergeComics} from 'app/library/utility.functions';
 import { Comic } from 'app/comics';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
@@ -36,6 +36,7 @@ export interface LibraryState {
   startingRescan: boolean;
   deletingComics: boolean;
   convertingComics: boolean;
+  consolidating: boolean;
 }
 
 export const initialState: LibraryState = {
@@ -50,7 +51,8 @@ export const initialState: LibraryState = {
   processingCount: 0,
   startingRescan: false,
   deletingComics: false,
-  convertingComics: false
+  convertingComics: false,
+  consolidating: false
 };
 
 export function reducer(
@@ -112,6 +114,17 @@ export function reducer(
 
     case LibraryActionTypes.ConvertComicsFailed:
       return { ...state, convertingComics: false };
+
+    case LibraryActionTypes.Consolidate:
+      return { ...state, consolidating: true };
+
+    case LibraryActionTypes.Consolidated: {
+      const comics = deleteComics(state.comics, action.payload.deletedComics);
+      return { ...state, consolidating: false, comics: comics };
+    }
+
+    case LibraryActionTypes.ConsolidateFailed:
+      return { ...state, consolidating: false };
 
     default:
       return state;

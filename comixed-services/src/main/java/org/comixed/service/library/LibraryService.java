@@ -18,10 +18,12 @@
 
 package org.comixed.service.library;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.tasks.TaskType;
@@ -34,6 +36,7 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Log4j2
@@ -105,5 +108,25 @@ public class LibraryService {
 
     this.log.debug("Queueing save comics worker task");
     this.worker.addTasksToQueue(task);
+  }
+
+  @Transactional
+  public List<Comic> consolidateLibrary(boolean deletePhysicalFiles) {
+    this.log.debug("Consolidating library: delete physical files={}", deletePhysicalFiles);
+
+    List<Comic> result = this.comicRepository.findAllMarkedForDeletion();
+
+    for (Comic comic : result) {
+      this.log.debug("Removing deleted comics from library");
+      this.comicRepository.delete(comic);
+
+      if (deletePhysicalFiles) {
+        String filename = comic.getFilename();
+        File file = comic.getFile();
+        this.log.debug("Deleting physical file: {}", filename);
+        FileUtils.deleteQuietly(file);
+      }
+    }
+    return result;
   }
 }

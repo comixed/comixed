@@ -25,6 +25,9 @@ import {
 } from 'app/comics/models/comic.fixtures';
 import {
   LibraryComicsConverting,
+  LibraryConsolidate,
+  LibraryConsolidated,
+  LibraryConsolidateFailed,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
@@ -107,6 +110,10 @@ describe('Library Reducer', () => {
 
     it('clears the converting comics flag', () => {
       expect(state.convertingComics).toBeFalsy();
+    });
+
+    it('clears the consolidating library flag', () => {
+      expect(state.consolidating).toBeFalsy();
     });
   });
 
@@ -328,6 +335,57 @@ describe('Library Reducer', () => {
 
     it('clears the converting comics flag', () => {
       expect(state.convertingComics).toBeFalsy();
+    });
+  });
+
+  describe('when consolidating the library', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, consolidating: false },
+        new LibraryConsolidate({ deletePhysicalFiles: true })
+      );
+    });
+
+    it('sets the consolidating library flag', () => {
+      expect(state.consolidating).toBeTruthy();
+    });
+  });
+
+  describe('when the library is consolidated', () => {
+    const DELETED_COMICS = [COMICS[2]];
+
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          consolidating: true,
+          comics: COMICS
+        },
+        new LibraryConsolidated({ deletedComics: DELETED_COMICS })
+      );
+    });
+
+    it('clears the consolidating library flag', () => {
+      expect(state.consolidating).toBeFalsy();
+    });
+
+    it('removes the deleted comics from the state', () => {
+      DELETED_COMICS.forEach(comic =>
+        expect(state.comics).not.toContain(comic)
+      );
+    });
+  });
+
+  describe('when consolidation fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, consolidating: true },
+        new LibraryConsolidateFailed()
+      );
+    });
+
+    it('clears the consolidating library flag', () => {
+      expect(state.consolidating).toBeFalsy();
     });
   });
 });

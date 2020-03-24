@@ -26,6 +26,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.library.Comic;
 import org.comixed.model.user.LastReadDate;
+import org.comixed.net.ConsolidateLibraryRequest;
 import org.comixed.net.ConvertComicsRequest;
 import org.comixed.net.GetUpdatedComicsRequest;
 import org.comixed.net.GetUpdatedComicsResponse;
@@ -132,5 +133,16 @@ public class LibraryController {
         renamePages ? " (rename pages)" : "");
 
     this.libraryService.convertComics(idList, archiveType, renamePages);
+  }
+
+  @PostMapping(
+      value = "/library/consolidate",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.DeletedComicList.class)
+  public List<Comic> consolidateLibrary(@RequestBody() ConsolidateLibraryRequest request) {
+    this.log.info(
+        "Consolidating library: delete physic files={}", request.getDeletePhysicalFiles());
+    return this.libraryService.consolidateLibrary(request.getDeletePhysicalFiles());
   }
 }

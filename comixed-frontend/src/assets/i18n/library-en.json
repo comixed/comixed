@@ -63,6 +63,14 @@
       "error": {
         "detail": "Failed to convert comics."
       }
+    },
+    "consolidate": {
+      "success": {
+        "detail": "Library successfully consolidated."
+      },
+      "error": {
+        "detail": "There was an error consolidating the library."
+      }
     }
   },
   "import-effects": {
@@ -390,6 +398,47 @@
       "error": {
         "detail": "Could not find publisher named {name}"
       }
+    }
+  },
+  "consolidate-library": {
+    "label": {
+      "delete-physical-files": "Delete The Physical Comic Files."
+    },
+    "button": {
+      "start": "Start Consolidation"
+    },
+    "confirm": {
+      "header": "Consolidate Library",
+      "message": "Are you sure you want to consolidate the library and {deletePhysicalFiles, select, true{delete} other{not delete}} the comic files?"
+    }
+  },
+  "library-admin-page": {
+    "rescan": {
+      "header": "Rescan Library",
+      "paragraph1": "<p>Use this button to force rescanning your entire library.</p>",
+      "paragraph2": "<p>The server will re-evaluate each of the comics in your library, updating what it knows about each file.</p>",
+      "paragraph3": "<p><em>NOTE:</em> While the library is being rescanned, you will not be able to import new comics.</p>",
+      "already-running": "<p>A rescan is current running on the server...</p>",
+      "buttons": {
+        "rescan-library": "Rescan Library"
+      }
+    },
+    "backup": {
+      "header": "Library Backup/Restore",
+      "paragraph1": "<p>Use this section to download and restore snapshots of your library database.</p>",
+      "paragraph2": "<p>To download the current database content, click on the <strong>Export Library</strong> button.</p>",
+      "buttons": {
+        "export-library": "Export Library"
+      }
+    },
+    "consolidate": {
+      "header": "Consolidate Library Files"
+    }
+  },
+  "account-preferences": {
+    "label": {
+      "preference-name": "Name",
+      "preference-value": "Value"
     }
   },
   "breadcrumb": {

@@ -27,6 +27,7 @@ export const SET_DELETED_STATE_URL = `${API_ROOT_URL}/pages/hashes/deleted`;
 export const START_RESCAN_URL = `${COMIXED_API_ROOT}/comics/rescan`;
 export const DELETE_MULTIPLE_COMICS_URL = `${COMIXED_API_ROOT}/comics/multiple/delete`;
 export const CONVERT_COMICS_URL = `${COMIXED_API_ROOT}/library/convert`;
+export const CONSOLIDATE_LIBRARY_URL = `${COMIXED_API_ROOT}/library/consolidate`;
 
 export const GET_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${type}`;
 export const GET_PAGE_FOR_ENTRY_URL = `${API_ROOT_URL}/collections/\${type}/\${name}`;
