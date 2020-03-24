@@ -20,8 +20,6 @@ package org.comixed.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
@@ -37,10 +35,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class FileTypeIdentifier {
-  // TODO this needs to be loaded from the entryloaders.properties file
-  public static final List<String> IMAGE_TYPES =
-      Arrays.asList(new String[] {"jpeg", "png", "gif", "webp"});
-
   @Autowired private Tika tika;
   @Autowired private Metadata metadata;
 
