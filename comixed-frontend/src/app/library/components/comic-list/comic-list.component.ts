@@ -226,6 +226,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
   }
 
   openComic(comic: Comic): void {
+    this.selectionAdaptor.clearComicSelections();
     this.router.navigate(['/comics', comic.id]);
   }
 
