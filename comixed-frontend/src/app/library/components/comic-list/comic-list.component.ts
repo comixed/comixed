@@ -111,9 +111,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.addContextMenuItems();
-  }
-
-  ngOnInit() {
     this.contextMenuItemsSubscription = this.contextMenuAdaptor.items$.subscribe(
       items => {
         this.contextMenuItems = generateContextMenuItems(
@@ -124,7 +121,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     );
     this.mouseEventSubscription = this.contextMenuAdaptor.mouseEvent$.subscribe(
       event => {
-        if (!!event) {
+        if (!!event && !!this.contextMenu) {
           this.contextMenu.show(event);
         }
       }
@@ -166,6 +163,8 @@ export class ComicListComponent implements OnInit, OnDestroy {
     );
     this.readingListAdaptor.get_reading_lists();
   }
+
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.contextMenuItemsSubscription.unsubscribe();
