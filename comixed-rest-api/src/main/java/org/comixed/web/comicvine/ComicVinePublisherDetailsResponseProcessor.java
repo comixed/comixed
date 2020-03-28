@@ -108,15 +108,16 @@ public class ComicVinePublisherDetailsResponseProcessor {
       String description = jsonNode.get("results").get("deck").asText();
       String thumbnailUrl = jsonNode.get("results").get("image").get("thumb_url").asText();
       String logoUrl = jsonNode.get("results").get("image").get("original_url").asText();
-      String imprint = null;
 
       if (IMPRINT_MAPPINGS.containsKey(publisher)) {
-        imprint = publisher;
-        publisher = IMPRINT_MAPPINGS.get(publisher);
+        this.log.debug("Publisher is an imprint");
+        comic.setPublisher(IMPRINT_MAPPINGS.get(publisher));
+        comic.setImprint(publisher);
+      } else {
+        this.log.debug("Publisher is not an imprint");
+        comic.setPublisher(publisher);
+        comic.setImprint("");
       }
-
-      comic.setPublisher(publisher);
-      comic.setImprint(imprint);
 
       // create or update the publisher record
       this.log.debug("Updating publisher record");
