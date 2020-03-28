@@ -164,6 +164,7 @@ public class ComicService {
     return this.lastReadDatesRepository.findAllForUser(user.getId());
   }
 
+  @Transactional
   public Comic save(final Comic comic) {
     this.log.debug("Saving comic: filename={}", comic.getFilename());
 
