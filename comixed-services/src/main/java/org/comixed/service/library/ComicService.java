@@ -124,6 +124,7 @@ public class ComicService {
       this.log.debug("Updating the comic fields");
 
       comic.setPublisher(update.getPublisher());
+      comic.setImprint(update.getImprint());
       comic.setSeries(update.getSeries());
       comic.setVolume(update.getVolume());
       comic.setIssueNumber(update.getIssueNumber());
