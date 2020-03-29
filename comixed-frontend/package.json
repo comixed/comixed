@@ -42,6 +42,7 @@
     "jquery": "3.4.0",
     "lodash": "4.17.13",
     "messageformat": "^2.3.0",
+    "minimist": "1.2.2",
     "ngx-filesaver": "^2.2.1",
     "ngx-translate-messageformat-compiler": "^4.5.0",
     "ngx-translate-multi-http-loader": "^3.0.0",
