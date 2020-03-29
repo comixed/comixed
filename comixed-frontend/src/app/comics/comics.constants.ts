@@ -40,3 +40,5 @@ export const GET_VOLUMES_URL = `${API_ROOT_URL}/scraping/series/\${series}`;
 export const GET_ISSUE_URL = `${API_ROOT_URL}/scraping/volumes/\${volume}/issues/\${issue}`;
 
 export const LOAD_METADATA_URL = `${API_ROOT_URL}/scraping/comics/\${comicId}/issue/\${issueId}`;
+
+export const PUBLISHER_IMPRINT_FORMAT = `\${publisher} (\${imprint})`;

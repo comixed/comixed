@@ -74,6 +74,7 @@ import { ScrapingIssueCoverUrlPipe } from './pipes/scraping-issue-cover-url.pipe
 import * as fromComics from './reducers/comic.reducer';
 import * as fromScraping from './reducers/scraping.reducer';
 import { PublisherThumbnailUrlPipe } from './pipes/publisher-thumbnail-url.pipe';
+import { PublisherPipe } from './pipes/publisher.pipe';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { PublisherThumbnailUrlPipe } from './pipes/publisher-thumbnail-url.pipe'
     ComicCoverUrlPipe,
     ComicDownloadLinkPipe,
     ScrapingIssueCoverUrlPipe,
-    PublisherThumbnailUrlPipe
+    PublisherThumbnailUrlPipe,
+    PublisherPipe
   ],
   imports: [
     UserModule,
