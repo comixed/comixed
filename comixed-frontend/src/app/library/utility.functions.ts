@@ -59,29 +59,36 @@ interface ExtractEntry {
 
 export function extractField(
   comics: Comic[],
-  field_name: string
+  primaryFieldName: string,
+  secondaryFieldName: string = null
 ): ComicCollectionEntry[] {
-  let extracted_data: ExtractEntry[] = [];
+  let extractedData: ExtractEntry[] = [];
 
   comics.forEach(comic => {
-    const field_value = comic[field_name];
+    const primaryFieldValue = comic[primaryFieldName];
+    const secondaryFieldValue = !!secondaryFieldName
+      ? comic[secondaryFieldName]
+      : null;
+    const fieldValue = !!secondaryFieldValue
+      ? secondaryFieldValue
+      : primaryFieldValue;
 
-    if (!!field_value && field_value.constructor === Array) {
-      extracted_data = extracted_data.concat(
-        field_value.map(value => {
+    if (!!fieldValue && fieldValue.constructor === Array) {
+      extractedData = extractedData.concat(
+        fieldValue.map(value => {
           return { name: value, comic: comic } as ExtractEntry;
         })
       );
     } else {
-      extracted_data.push({
-        name: field_value || '',
+      extractedData.push({
+        name: fieldValue || '',
         comic: comic
       } as ExtractEntry);
     }
   });
 
   const comics_by_field = new Map<string, Comic[]>();
-  extracted_data.forEach(extract_entry => {
+  extractedData.forEach(extract_entry => {
     let collection_entry: Comic[] = comics_by_field[extract_entry.name];
 
     if (!collection_entry) {

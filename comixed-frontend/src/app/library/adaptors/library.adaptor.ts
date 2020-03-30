@@ -104,7 +104,7 @@ export class LibraryAdaptor {
         this._fetchingUpdate$.next(state.fetchingUpdates);
         if (!_.isEqual(this._comic$.getValue(), state.comics)) {
           this._comic$.next(state.comics);
-          this._publishers$.next(extractField(state.comics, 'publisher'));
+          this._publishers$.next(extractField(state.comics, 'publisher', 'imprint'));
           this._series$.next(extractField(state.comics, 'series'));
           this._characters$.next(extractField(state.comics, 'characters'));
           this._teams$.next(extractField(state.comics, 'teams'));
