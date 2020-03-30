@@ -63,14 +63,15 @@
                            (onActivate)='startEditing()'
                            [active]='editing'>
           <span pInplaceDisplay>
-          <a [routerLink]='["/collections", "publishers", comic.publisher||"undefined"]'>{{comic.imprint || comic.publisher || "text.unknown"|translate}}</a>
+          <a [routerLink]='["/collections", "publishers", comic.publisher||"undefined"]'>{{comic|publisher}}</a>
             <span class='pi pi-pencil'></span>
-          <span *ngIf='comic.imprint'> ({{comic.publisher}})</span>
           </span>
                   <span pInplaceContent>
             <p-autoComplete [(ngModel)]='comic.publisher'
                             [suggestions]='publisherNameOptions'
                             (completeMethod)='filterPublisherNames($event.query)'></p-autoComplete>
+                    <input pInputText
+                           [(ngModel)]='comic.imprint'>
           </span>
                 </p-inplace>
               </div>
