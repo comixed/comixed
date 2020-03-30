@@ -58,6 +58,7 @@ public class ComicServiceTest {
   private static final long TEST_COMIC_ID = 5;
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
   private static final String TEST_PUBLISHER = "Awesome Publications";
+  private static final String TEST_IMPRINT = "Incredible Imprints";
   private static final String TEST_SERIES = "Series Name";
   private static final String TEST_VOLUME = "Volume Name";
   private static final String TEST_ISSUE_NUMBER = "237";
@@ -291,6 +292,7 @@ public class ComicServiceTest {
   public void testUpdateComic() {
     Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
     Mockito.when(incomingComic.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(incomingComic.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(incomingComic.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(incomingComic.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(incomingComic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
@@ -307,6 +309,7 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
     Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
     Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
     Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
     Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
