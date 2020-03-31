@@ -451,5 +451,20 @@
       "locations": "Locations",
       "stories": "Stories"
     }
+  },
+  "library-navigation-tree": {
+    "title": "Library Contents",
+    "label": {
+      "unnamed-entry": "Unnamed ({count})",
+      "all-comics": "All Comics ({count})",
+      "publishers": "Publishers ({count})",
+      "series": "Series ({count})",
+      "characters": "Characters ({count})",
+      "teams": "Teams ({count})",
+      "locations": "Locations ({count})",
+      "stories": "Stories ({count})",
+      "reading-lists": "Reading Lists ({count})",
+      "leaf-entry": "{name} ({count})"
+    }
   }
 }

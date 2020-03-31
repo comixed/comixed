@@ -51,7 +51,8 @@ import {
   SidebarModule,
   SliderModule,
   ToolbarModule,
-  TooltipModule
+  TooltipModule,
+  TreeModule
 } from 'primeng/primeng';
 import { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
 import { LibraryAdaptor } from './adaptors/library.adaptor';
@@ -80,6 +81,7 @@ import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
 import { ConsolidateLibraryComponent } from './components/consolidate-library/consolidate-library.component';
 import { LibraryAdminPageComponent } from 'app/library/pages/library-admin-page/library-admin-page.component';
 import { FileSaverModule } from 'ngx-filesaver';
+import { LibraryNavigationTreeComponent } from './components/library-navigation-tree/library-navigation-tree.component';
 
 @NgModule({
   imports: [
@@ -124,7 +126,9 @@ import { FileSaverModule } from 'ngx-filesaver';
     DialogModule,
     SidebarModule,
     ButtonModule,
-    FileSaverModule
+    FileSaverModule,
+    TreeModule,
+    ScrollPanelModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
@@ -147,7 +151,8 @@ import { FileSaverModule } from 'ngx-filesaver';
     CollectionPageComponent,
     ConvertComicsSettingsComponent,
     ConsolidateLibraryComponent,
-    LibraryAdminPageComponent
+    LibraryAdminPageComponent,
+    LibraryNavigationTreeComponent
   ],
   providers: [
     LibraryService,
