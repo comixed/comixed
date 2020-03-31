@@ -66,6 +66,7 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
   enableDetails = false;
   private _description: string = null;
   private _imageUrl: string = null;
+  showNavigationTree = false;
 
   constructor(
     private translateService: TranslateService,

@@ -47,7 +47,8 @@ import {
   SliderModule,
   SplitButtonModule,
   ToolbarModule,
-  TooltipModule
+  TooltipModule,
+  TreeModule
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationAdaptor } from 'app/user';
@@ -75,6 +76,7 @@ import {
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { LoggerModule } from '@angular-ru/logger';
 import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
+import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
 
 describe('ReadingListPageComponent', () => {
   let component: ReadingListPageComponent;
@@ -115,7 +117,8 @@ describe('ReadingListPageComponent', () => {
         ToolbarModule,
         TooltipModule,
         ProgressSpinnerModule,
-        DialogModule
+        DialogModule,
+        TreeModule
       ],
       declarations: [
         ReadingListPageComponent,
@@ -123,7 +126,8 @@ describe('ReadingListPageComponent', () => {
         ComicListToolbarComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        ConvertComicsSettingsComponent
+        ConvertComicsSettingsComponent,
+        LibraryNavigationTreeComponent
       ],
       providers: [
         AuthenticationAdaptor,

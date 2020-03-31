@@ -233,7 +233,8 @@
     "tooltip": {
       "show-filters": "Show library filters.",
       "list-layout": "Show comics as a list.",
-      "grid-layout": "Show comics as a grid."
+      "grid-layout": "Show comics as a grid.",
+      "show-navigation-tree": "Show library contents..."
     },
     "options": {
       "rows": {
