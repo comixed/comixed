@@ -18,12 +18,13 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
-import { LibraryAdaptor } from 'app/library';
+import { LibraryAdaptor, ReadingListAdaptor } from 'app/library';
 import { TreeNode } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { NavigationDataPayload } from 'app/library/models/navigation-data-payload';
+import { ReadingList } from 'app/library/models/reading-list/reading-list';
 
 const PUBLISHER_NODE = 0;
 const SERIES_NODE = 1;
@@ -56,6 +57,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
   private teamSubscription: Subscription;
   private locationSubscription: Subscription;
   private storiesSubscription: Subscription;
+  private readingListSubscription: Subscription;
 
   nodes: TreeNode[];
   treeFilter = '';
@@ -63,7 +65,8 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
   constructor(
     private logger: LoggerService,
     private translateService: TranslateService,
-    private libraryAdaptor: LibraryAdaptor
+    private libraryAdaptor: LibraryAdaptor,
+    private readingListAdaptor: ReadingListAdaptor
   ) {
     this.nodes = [
       {
@@ -149,6 +152,9 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
     this.storiesSubscription = this.libraryAdaptor.stories$.subscribe(stories =>
       this.createChildNodes(STORY_NODE, stories)
     );
+    this.readingListSubscription = this.readingListAdaptor.reading_list$.subscribe(
+      lists => this.loadReadingLists(lists)
+    );
   }
 
   ngOnInit() {}
@@ -208,5 +214,33 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
       (node.data as NavigationDataPayload).comics,
       (node.data as NavigationDataPayload).title
     );
+  }
+
+  private loadReadingLists(lists: ReadingList[]) {
+    this.nodes[0].children[READING_LISTS] = {
+      label: this.translateService.instant(
+        'library-navigation-tree.label.reading-lists',
+        { count: lists.length }
+      ),
+      children: lists.map(list => {
+        return {
+          label: this.translateService.instant(
+            'library-navigation-tree.label.reading-list',
+            {
+              name: list.name,
+              count: list.entries.length
+            }
+          ),
+          key: list.name,
+          data: {
+            title: list.name,
+            comics: list.entries.map(entry => entry.comic)
+          } as NavigationDataPayload,
+          icon: 'pi pi-list',
+          expanded: false,
+          selectable: list.entries.length > 0
+        } as TreeNode;
+      })
+    } as TreeNode;
   }
 }

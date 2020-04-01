@@ -466,6 +466,7 @@
       "locations": "Locations ({count})",
       "stories": "Stories ({count})",
       "reading-lists": "Reading Lists ({count})",
+      "reading-list": "{name} ({count})",
       "leaf-entry": "{name} ({count})"
     }
   }
