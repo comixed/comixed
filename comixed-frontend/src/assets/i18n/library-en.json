@@ -118,7 +118,7 @@
     }
   },
   "library-page": {
-    "title": "ComiXed: Library - {count, plural, =1{One Comic} other{# Comics}}"
+    "title": "ComiXed: {title} - {count, plural, =1{One Comic} other{# Comics}}"
   },
   "reading-lists-page": {
     "title": "ComiXed: Reading Lists - {count, plural, =1{One List} other{# Lists}}"
@@ -458,6 +458,7 @@
     "label": {
       "unnamed-entry": "Unnamed",
       "all-comics": "All Comics ({count})",
+      "all-comics-title": "All Comics",
       "publishers": "Publishers ({count})",
       "series": "Series ({count})",
       "characters": "Characters ({count})",
@@ -465,6 +466,7 @@
       "locations": "Locations ({count})",
       "stories": "Stories ({count})",
       "reading-lists": "Reading Lists ({count})",
+      "reading-list": "{name} ({count})",
       "leaf-entry": "{name} ({count})"
     }
   }
