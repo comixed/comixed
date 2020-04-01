@@ -456,7 +456,7 @@
   "library-navigation-tree": {
     "title": "Library Contents",
     "label": {
-      "unnamed-entry": "Unnamed ({count})",
+      "unnamed-entry": "Unnamed",
       "all-comics": "All Comics ({count})",
       "publishers": "Publishers ({count})",
       "series": "Series ({count})",

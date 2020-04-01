@@ -58,6 +58,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
   private storiesSubscription: Subscription;
 
   nodes: TreeNode[];
+  treeFilter = '';
 
   constructor(
     private logger: LoggerService,
@@ -182,6 +183,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
         );
         return {
           label: title,
+          key: entry.name || 'unnammed',
           data: {
             title: title,
             comics: entry.comics
