@@ -70,6 +70,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
         // all comics
         label: '',
         icon: 'pi pi-folder',
+        selectable: true,
         children: [
           {
             // publishers
@@ -107,7 +108,8 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
               'library-navigation-tree.label.reading-lists',
               { count: 0 }
             ),
-            icon: 'pi pi-folder'
+            icon: 'pi pi-folder',
+            selectable: false
           } as TreeNode
         ]
       } as TreeNode
@@ -120,7 +122,12 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
             'library-navigation-tree.label.all-comics',
             { count: comics.length }
           ),
-          data: comics,
+          data: {
+            title: this.translateService.instant(
+              'library-navigation-tree.label.all-comics-title'
+            ),
+            comics: comics
+          } as NavigationDataPayload,
           children: this.nodes[0].children
         })
     );
@@ -167,6 +174,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
           count: collection.length
         }
       ),
+      selectable: false,
       children: collection.map(entry => {
         let entryName = entry.name;
         if (!entryName || entryName.length === 0) {
@@ -185,7 +193,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
           label: title,
           key: entry.name || 'unnammed',
           data: {
-            title: title,
+            title: entryName,
             comics: entry.comics
           } as NavigationDataPayload,
           icon: 'pi pi-list',
@@ -193,5 +201,12 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
         } as TreeNode;
       })
     } as TreeNode;
+  }
+
+  setDisplayComics(node: TreeNode) {
+    this.libraryAdaptor.displayComics(
+      (node.data as NavigationDataPayload).comics,
+      (node.data as NavigationDataPayload).title
+    );
   }
 }
