@@ -61,15 +61,18 @@ import {
   DropdownModule,
   MessageService,
   ProgressSpinnerModule,
+  ScrollPanelModule,
   SidebarModule,
   SliderModule,
   ToolbarModule,
-  TooltipModule
+  TooltipModule,
+  TreeModule
 } from 'primeng/primeng';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionDetailsPageComponent } from './collection-details-page.component';
 import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 import { PublisherAdaptor } from 'app/library/adaptors/publisher.adaptor';
+import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
 import objectContaining = jasmine.objectContaining;
 
 describe('CollectionDetailsPageComponent', () => {
@@ -107,7 +110,9 @@ describe('CollectionDetailsPageComponent', () => {
         ToolbarModule,
         CardModule,
         ProgressSpinnerModule,
-        DialogModule
+        DialogModule,
+        TreeModule,
+        ScrollPanelModule
       ],
       declarations: [
         CollectionDetailsPageComponent,
@@ -118,7 +123,8 @@ describe('CollectionDetailsPageComponent', () => {
         ComicCoverComponent,
         ComicCoverUrlPipe,
         ComicTitlePipe,
-        ConvertComicsSettingsComponent
+        ConvertComicsSettingsComponent,
+        LibraryNavigationTreeComponent
       ],
       providers: [
         LibraryAdaptor,

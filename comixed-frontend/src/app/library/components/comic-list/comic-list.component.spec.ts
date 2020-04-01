@@ -64,7 +64,8 @@ import {
   ProgressSpinnerModule,
   SidebarModule,
   ToolbarModule,
-  TooltipModule
+  TooltipModule,
+  TreeModule
 } from 'primeng/primeng';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { SliderModule } from 'primeng/slider';
@@ -76,6 +77,7 @@ import {
   ComicListComponent
 } from './comic-list.component';
 import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
+import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -126,14 +128,16 @@ describe('ComicListComponent', () => {
         ProgressSpinnerModule,
         CheckboxModule,
         DialogModule,
-        SidebarModule
+        SidebarModule,
+        TreeModule
       ],
       declarations: [
         ComicListComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
         ComicListToolbarComponent,
-        ConvertComicsSettingsComponent
+        ConvertComicsSettingsComponent,
+        LibraryNavigationTreeComponent
       ],
       providers: [
         AuthenticationAdaptor,

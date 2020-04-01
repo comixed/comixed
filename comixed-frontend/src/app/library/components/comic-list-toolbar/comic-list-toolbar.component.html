@@ -1,3 +1,7 @@
+<p-sidebar [visible]='showNavigationTree'
+           (onHide)='showNavigationTree = false'>
+  <app-library-navigation-tree></app-library-navigation-tree>
+</p-sidebar>
 <p-sidebar *ngIf='!!imageUrl && !!description'
            [visible]='showDetails'
            (onHide)='showDetails = false'
@@ -24,6 +28,13 @@
 <p-toolbar styleClass='cx-library-toolbar'>
   <div class='ui-toolbar-group-left'>
     <button pButton
+            type='button'
+            icon='fa fa-fw fa-arrow-right'
+            class='ui-button-info'
+            [pTooltip]='"comic-list-toolbar.tooltip.show-navigation-tree"|translate'
+            (click)='showNavigationTree = true'></button>
+    <button pButton
+            type='button'
             [icon]='gridLayout?"fa fa-fw fa-th":"fa fa-fw fa-list"'
             (click)='setGridLayout(!gridLayout)'
             [pTooltip]='"comic-list-toolbar.tooltip."+(gridLayout?"grid":"list")+"-layout"|translate'></button>

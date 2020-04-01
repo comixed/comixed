@@ -44,12 +44,16 @@ import {
   ConfirmationService,
   DropdownModule,
   MessageService,
+  ScrollPanelModule,
   SidebarModule,
   SliderModule,
   ToolbarModule,
-  TooltipModule
+  TooltipModule,
+  TreeModule
 } from 'primeng/primeng';
 import { ComicListToolbarComponent } from './comic-list-toolbar.component';
+import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ComicListToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -66,6 +70,7 @@ describe('ComicListToolbarComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         ComicsModule,
+        BrowserAnimationsModule,
         HttpClientTestingModule,
         FormsModule,
         RouterTestingModule,
@@ -88,9 +93,11 @@ describe('ComicListToolbarComponent', () => {
         DropdownModule,
         SliderModule,
         CheckboxModule,
-        SidebarModule
+        SidebarModule,
+        TreeModule,
+        ScrollPanelModule
       ],
-      declarations: [ComicListToolbarComponent],
+      declarations: [ComicListToolbarComponent, LibraryNavigationTreeComponent],
       providers: [
         AuthenticationAdaptor,
         SelectionAdaptor,
