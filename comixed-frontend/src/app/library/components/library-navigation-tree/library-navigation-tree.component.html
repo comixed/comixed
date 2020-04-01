@@ -2,5 +2,7 @@
   <h3>{{'library-navigation-tree.title'|translate}}</h3>
   <p-tree #navigationTree
           [value]='nodes'
-          filter='true'></p-tree>
+          selectionMode='single'
+          filter='true'
+          (onNodeSelect)='setDisplayComics($event.node)'></p-tree>
 </p-scrollPanel>

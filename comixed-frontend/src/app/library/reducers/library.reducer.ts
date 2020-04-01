@@ -17,7 +17,7 @@
  */
 
 import { LibraryActions, LibraryActionTypes } from '../actions/library.actions';
-import {deleteComics, mergeComics} from 'app/library/utility.functions';
+import { deleteComics, mergeComics } from 'app/library/utility.functions';
 import { Comic } from 'app/comics';
 import { LastReadDate } from 'app/library/models/last-read-date';
 
@@ -26,6 +26,8 @@ export const LIBRARY_FEATURE_KEY = 'library_state';
 export interface LibraryState {
   fetchingUpdates: boolean;
   comics: Comic[];
+  displayComics: Comic[];
+  displayTitle: string;
   lastComicId: number;
   moreUpdates: boolean;
   updatedIds: number[];
@@ -42,6 +44,8 @@ export interface LibraryState {
 export const initialState: LibraryState = {
   fetchingUpdates: false,
   comics: [],
+  displayComics: null,
+  displayTitle: '',
   lastComicId: 0,
   moreUpdates: false,
   updatedIds: [],
@@ -125,6 +129,13 @@ export function reducer(
 
     case LibraryActionTypes.ConsolidateFailed:
       return { ...state, consolidating: false };
+
+    case LibraryActionTypes.DisplayComics:
+      return {
+        ...state,
+        displayComics: action.payload.comics,
+        displayTitle: action.payload.title
+      };
 
     default:
       return state;

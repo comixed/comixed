@@ -31,6 +31,7 @@ import {
   AppState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
+  ReadingListAdaptor,
   SelectionAdaptor
 } from 'app/library';
 import { LibraryEffects } from 'app/library/effects/library.effects';
@@ -103,6 +104,7 @@ describe('ComicListToolbarComponent', () => {
         SelectionAdaptor,
         LibraryAdaptor,
         LibraryDisplayAdaptor,
+        ReadingListAdaptor,
         ConfirmationService,
         MessageService
       ]

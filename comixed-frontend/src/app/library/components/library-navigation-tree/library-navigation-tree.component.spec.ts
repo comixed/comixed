@@ -23,7 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageService, ScrollPanelModule, TreeModule } from 'primeng/primeng';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { LibraryAdaptor } from 'app/library';
+import { LibraryAdaptor, ReadingListAdaptor } from 'app/library';
 import {
   LIBRARY_FEATURE_KEY,
   reducer
@@ -54,7 +54,7 @@ describe('LibraryNavigationTreeComponent', () => {
         ScrollPanelModule
       ],
       declarations: [LibraryNavigationTreeComponent],
-      providers: [LibraryAdaptor, MessageService]
+      providers: [LibraryAdaptor, ReadingListAdaptor, MessageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryNavigationTreeComponent);

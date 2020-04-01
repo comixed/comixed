@@ -27,6 +27,7 @@ import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Comic } from 'app/comics';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-library-page',
@@ -37,12 +38,16 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   authSubscription: Subscription;
   user: User;
   comicsSubscription: Subscription;
+  displayComicsSubscription: Subscription;
+  displayTitleSubscription: Subscription;
   comics: Comic[] = [];
   selectedComicsSubscription: Subscription;
   selectedComics: Comic[] = [];
   processingCount = 0;
   importCountSubscription: Subscription;
   langChangeSubscription: Subscription;
+
+  title: string;
 
   constructor(
     private titleService: Title,
@@ -54,9 +59,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private breadcrumbAdaptor: BreadcrumbAdaptor
-  ) {}
-
-  ngOnInit() {
+  ) {
     this.authSubscription = this.authenticationAdaptor.user$.subscribe(
       user => (this.user = user)
     );
@@ -68,6 +71,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         })
       );
     });
+    this.displayComicsSubscription = this.libraryAdaptor.displayComics$
+      .pipe(filter(comics => !!comics))
+      .subscribe(comics => {
+        this.comics = comics;
+      });
+    this.displayTitleSubscription = this.libraryAdaptor.displayTitle$
+      .pipe(filter(title => !!title && title.length > 0))
+      .subscribe(title => (this.title = title));
     this.selectedComicsSubscription = this.selectionAdaptor.comicSelection$.subscribe(
       selected_comics => (this.selectedComics = selected_comics)
     );
@@ -80,9 +91,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.loadTranslations();
   }
 
+  ngOnInit() {}
+
   ngOnDestroy() {
     this.authSubscription.unsubscribe();
     this.comicsSubscription.unsubscribe();
+    this.displayComicsSubscription.unsubscribe();
+    this.displayTitleSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
     this.importCountSubscription.unsubscribe();
   }

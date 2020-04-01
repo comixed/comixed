@@ -32,6 +32,7 @@ import {
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
   LibraryDeleteMultipleComicsFailed,
+  LibraryDisplayComics,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryMultipleComicsDeleted,
@@ -56,6 +57,7 @@ describe('Library Reducer', () => {
   const ASCENDING = true;
   const COMIC_COUNT = 2372;
   const LATEST_UPDATED_DATE = new Date();
+  const TITLE = 'The Display Title';
 
   let state: LibraryState;
 
@@ -74,6 +76,14 @@ describe('Library Reducer', () => {
 
     it('has an empty array of comics', () => {
       expect(state.comics).toEqual([]);
+    });
+
+    it('has no display comics', () => {
+      expect(state.displayComics).toBeNull();
+    });
+
+    it('has no display title', () => {
+      expect(state.displayTitle).toEqual('');
     });
 
     it('has a zero last comic id', () => {
@@ -386,6 +396,23 @@ describe('Library Reducer', () => {
 
     it('clears the consolidating library flag', () => {
       expect(state.consolidating).toBeFalsy();
+    });
+  });
+
+  describe('setting the comics to display', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, displayComics: null },
+        new LibraryDisplayComics({ title: TITLE, comics: COMICS })
+      );
+    });
+
+    it('updates the set of display comics', () => {
+      expect(state.displayComics).toEqual(COMICS);
+    });
+
+    it('updates the display title', () => {
+      expect(state.displayTitle).toEqual(TITLE);
     });
   });
 });
