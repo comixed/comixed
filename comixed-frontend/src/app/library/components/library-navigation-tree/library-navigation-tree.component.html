@@ -1,4 +1,6 @@
 <p-scrollPanel>
   <h3>{{'library-navigation-tree.title'|translate}}</h3>
-  <p-tree [value]='nodes'></p-tree>
+  <p-tree #navigationTree
+          [value]='nodes'
+          filter='true'></p-tree>
 </p-scrollPanel>
