@@ -18,7 +18,9 @@
 
 package org.comixed.controller.comic;
 
+import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.IOUtils;
 import org.comixed.model.comic.Publisher;
 import org.comixed.service.comic.PublisherException;
 import org.comixed.service.comic.PublisherService;
@@ -36,7 +38,7 @@ public class PublisherController {
   @Autowired private PublisherService publisherService;
 
   @GetMapping(value = "/api/publishers/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Publisher getByName(@PathVariable("name") String name) throws PublisherException {
+  public Publisher getByName(@PathVariable("name") String name) {
     this.log.info("Getting publisher: name={}", name);
     return this.publisherService.getByName(name);
   }
@@ -44,20 +46,32 @@ public class PublisherController {
   @GetMapping(
       value = "/api/publishers/{name}/thumbnail",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<byte[]> getThumbnail(@PathVariable("name") String name)
-      throws PublisherException {
+  public ResponseEntity<byte[]> getThumbnail(@PathVariable("name") String name) throws IOException {
     this.log.debug("Getting thumbnail image for publisher: {}", name);
     Publisher publisher = this.publisherService.getByName(name);
+    byte[] content = null;
+    if (publisher != null) {
+      content = publisher.getThumbnail();
+    } else {
+      content =
+          IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing-publisher.png"));
+    }
 
-    return new ResponseEntity<>(publisher.getThumbnail(), HttpStatus.OK);
+    return new ResponseEntity<>(content, HttpStatus.OK);
   }
 
   @GetMapping(value = "/api/publishers/{name}/logo", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<byte[]> getLogo(@PathVariable("name") String name)
-      throws PublisherException {
+      throws PublisherException, IOException {
     this.log.debug("Getting logo image for publisher: {}", name);
     Publisher publisher = this.publisherService.getByName(name);
+    byte[] content = null;
+    if (publisher != null) {
+      content = publisher.getLogo();
+    } else {
+      content = IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing.png"));
+    }
 
-    return new ResponseEntity<>(publisher.getLogo(), HttpStatus.OK);
+    return new ResponseEntity<>(content, HttpStatus.OK);
   }
 }

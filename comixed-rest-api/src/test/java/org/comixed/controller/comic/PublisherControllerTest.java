@@ -18,9 +18,9 @@
 
 package org.comixed.controller.comic;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
+import java.io.IOException;
 import org.comixed.model.comic.Publisher;
 import org.comixed.service.comic.PublisherException;
 import org.comixed.service.comic.PublisherService;
@@ -41,20 +41,19 @@ public class PublisherControllerTest {
   @Mock private PublisherService publisherService;
   @Mock private Publisher publisher;
 
-  @Test(expected = PublisherException.class)
-  public void testGetByNameNoSuchPublisher() throws PublisherException {
-    Mockito.when(publisherService.getByName(Mockito.anyString()))
-        .thenThrow(PublisherException.class);
+  @Test
+  public void testGetByNameNoSuchPublisher() {
+    Mockito.when(publisherService.getByName(Mockito.anyString())).thenReturn(null);
 
-    try {
-      publisherController.getByName(TEST_PUBLISHER_NAME);
-    } finally {
-      Mockito.verify(publisherService, Mockito.times(1)).getByName(TEST_PUBLISHER_NAME);
-    }
+    Publisher result = publisherController.getByName(TEST_PUBLISHER_NAME);
+
+    assertNull(result);
+
+    Mockito.verify(publisherService, Mockito.times(1)).getByName(TEST_PUBLISHER_NAME);
   }
 
   @Test
-  public void testGetByName() throws PublisherException {
+  public void testGetByName() {
     Mockito.when(publisherService.getByName(Mockito.anyString())).thenReturn(publisher);
 
     Publisher result = publisherController.getByName(TEST_PUBLISHER_NAME);
@@ -65,20 +64,20 @@ public class PublisherControllerTest {
     Mockito.verify(publisherService, Mockito.times(1)).getByName(TEST_PUBLISHER_NAME);
   }
 
-  @Test(expected = PublisherException.class)
-  public void testGetThumnailNoSuchPublisher() throws PublisherException {
-    Mockito.when(publisherService.getByName(Mockito.anyString()))
-        .thenThrow(PublisherException.class);
+  @Test
+  public void testGetThumnailNoSuchPublisher() throws IOException {
+    Mockito.when(publisherService.getByName(Mockito.anyString())).thenReturn(null);
 
-    try {
-      publisherController.getThumbnail(TEST_PUBLISHER_NAME);
-    } finally {
-      Mockito.verify(publisherService, Mockito.times(1)).getByName(TEST_PUBLISHER_NAME);
-    }
+    ResponseEntity<byte[]> result = publisherController.getThumbnail(TEST_PUBLISHER_NAME);
+
+    assertNotNull(result);
+    assertNotNull(result.getBody());
+
+    Mockito.verify(publisherService, Mockito.times(1)).getByName(TEST_PUBLISHER_NAME);
   }
 
   @Test
-  public void testGetThumbnail() throws PublisherException {
+  public void testGetThumbnail() throws IOException {
     Mockito.when(publisherService.getByName(Mockito.anyString())).thenReturn(publisher);
     Mockito.when(publisher.getThumbnail()).thenReturn(TEST_IMAGE_DATA);
 
@@ -91,20 +90,20 @@ public class PublisherControllerTest {
     Mockito.verify(publisher, Mockito.times(1)).getThumbnail();
   }
 
-  @Test(expected = PublisherException.class)
-  public void testGetLogoNoSuchPublisher() throws PublisherException {
-    Mockito.when(publisherService.getByName(Mockito.anyString()))
-        .thenThrow(PublisherException.class);
+  @Test
+  public void testGetLogoNoSuchPublisher() throws PublisherException, IOException {
+    Mockito.when(publisherService.getByName(Mockito.anyString())).thenReturn(null);
 
-    try {
-      publisherController.getThumbnail(TEST_PUBLISHER_NAME);
-    } finally {
-      Mockito.verify(publisherService, Mockito.times(1)).getByName(TEST_PUBLISHER_NAME);
-    }
+    ResponseEntity<byte[]> result = publisherController.getThumbnail(TEST_PUBLISHER_NAME);
+
+    assertNotNull(result);
+    assertNotNull(result.getBody());
+
+    Mockito.verify(publisherService, Mockito.times(1)).getByName(TEST_PUBLISHER_NAME);
   }
 
   @Test
-  public void testGetLogo() throws PublisherException {
+  public void testGetLogo() throws PublisherException, IOException {
     Mockito.when(publisherService.getByName(Mockito.anyString())).thenReturn(publisher);
     Mockito.when(publisher.getLogo()).thenReturn(TEST_IMAGE_DATA);
 

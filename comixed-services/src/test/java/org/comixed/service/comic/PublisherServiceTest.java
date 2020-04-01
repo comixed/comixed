@@ -18,8 +18,7 @@
 
 package org.comixed.service.comic;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import org.comixed.model.comic.Publisher;
 import org.comixed.repositories.comic.PublisherRepository;
@@ -38,19 +37,19 @@ public class PublisherServiceTest {
   @Mock private PublisherRepository publisherRepository;
   @Mock private Publisher publisher;
 
-  @Test(expected = PublisherException.class)
-  public void testGetByNameMissing() throws PublisherException {
+  @Test
+  public void testGetByNameMissing() {
     Mockito.when(publisherRepository.findByName(Mockito.anyString())).thenReturn(null);
 
-    try {
-      publisherService.getByName(TEST_PUBLISHER_NAME);
-    } finally {
-      Mockito.verify(publisherRepository, Mockito.times(1)).findByName(TEST_PUBLISHER_NAME);
-    }
+    Publisher result = publisherService.getByName(TEST_PUBLISHER_NAME);
+
+    assertNull(result);
+
+    Mockito.verify(publisherRepository, Mockito.times(1)).findByName(TEST_PUBLISHER_NAME);
   }
 
   @Test
-  public void testGetByName() throws PublisherException {
+  public void testGetByName() {
     Mockito.when(publisherRepository.findByName(Mockito.anyString())).thenReturn(publisher);
 
     Publisher result = publisherService.getByName(TEST_PUBLISHER_NAME);
