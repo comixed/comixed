@@ -29,12 +29,8 @@ import org.springframework.stereotype.Service;
 public class PublisherService {
   @Autowired private PublisherRepository publisherRepository;
 
-  public Publisher getByName(String name) throws PublisherException {
+  public Publisher getByName(String name) {
     this.log.debug("Getting publisher: name={}", name);
-    Publisher result = this.publisherRepository.findByName(name);
-
-    if (result == null) throw new PublisherException("No such publisher: name=" + name);
-
-    return result;
+    return this.publisherRepository.findByName(name);
   }
 }
