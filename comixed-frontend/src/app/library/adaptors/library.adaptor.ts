@@ -33,6 +33,7 @@ import {
   LibraryConsolidate,
   LibraryConvertComics,
   LibraryDeleteMultipleComics,
+  LibraryDisplayComics,
   LibraryGetUpdates,
   LibraryReset,
   LibraryStartRescan
@@ -62,6 +63,8 @@ export class LibraryAdaptor {
   private _maximum = 100;
   private _converting$ = new BehaviorSubject<boolean>(false);
   private _consolidating$ = new BehaviorSubject<boolean>(false);
+  private _displayTitle$ = new BehaviorSubject<string>('');
+  private _displayComics$ = new BehaviorSubject<Comic[]>(null);
 
   constructor(
     private store: Store<AppState>,
@@ -104,7 +107,9 @@ export class LibraryAdaptor {
         this._fetchingUpdate$.next(state.fetchingUpdates);
         if (!_.isEqual(this._comic$.getValue(), state.comics)) {
           this._comic$.next(state.comics);
-          this._publishers$.next(extractField(state.comics, 'publisher', 'imprint'));
+          this._publishers$.next(
+            extractField(state.comics, 'publisher', 'imprint')
+          );
           this._series$.next(extractField(state.comics, 'series'));
           this._characters$.next(extractField(state.comics, 'characters'));
           this._teams$.next(extractField(state.comics, 'teams'));
@@ -122,6 +127,12 @@ export class LibraryAdaptor {
         }
         if (state.consolidating !== this._consolidating$.getValue()) {
           this._consolidating$.next(state.consolidating);
+        }
+        if (state.displayTitle !== this._displayTitle$.getValue()) {
+          this._displayTitle$.next(state.displayTitle);
+        }
+        if (!_.isEqual(state.displayComics, this._displayComics$.getValue())) {
+          this._displayComics$.next(state.displayComics);
         }
       });
   }
@@ -258,5 +269,24 @@ export class LibraryAdaptor {
 
   get consolidating$(): Observable<boolean> {
     return this._consolidating$.asObservable();
+  }
+
+  displayComics(comics: Comic[], title: string) {
+    this.logger.debug(
+      'firing action to update displayed comics:',
+      comics,
+      title
+    );
+    this.store.dispatch(
+      new LibraryDisplayComics({ comics: comics, title: title })
+    );
+  }
+
+  get displayTitle$(): Observable<string> {
+    return this._displayTitle$.asObservable();
+  }
+
+  get displayComics$(): Observable<Comic[]> {
+    return this._displayComics$.asObservable();
   }
 }
