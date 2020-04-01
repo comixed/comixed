@@ -52,7 +52,8 @@ import {
   DialogModule,
   ProgressSpinnerModule,
   ToolbarModule,
-  TooltipModule
+  TooltipModule,
+  TreeModule
 } from 'primeng/primeng';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -68,6 +69,7 @@ import { ComicsModule } from 'app/comics/comics.module';
 import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
 import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
+import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -108,7 +110,8 @@ describe('LibraryPageComponent', () => {
         TooltipModule,
         ToolbarModule,
         ProgressSpinnerModule,
-        DialogModule
+        DialogModule,
+        TreeModule
       ],
       declarations: [
         LibraryPageComponent,
@@ -116,7 +119,8 @@ describe('LibraryPageComponent', () => {
         ComicListToolbarComponent,
         ComicListItemComponent,
         ComicGridItemComponent,
-        ConvertComicsSettingsComponent
+        ConvertComicsSettingsComponent,
+        LibraryNavigationTreeComponent
       ],
       providers: [
         LibraryAdaptor,
