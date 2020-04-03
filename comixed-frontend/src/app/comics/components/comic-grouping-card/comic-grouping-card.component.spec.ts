@@ -22,9 +22,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CardModule } from 'primeng/card';
 import { ComicGroupingCardComponent } from './comic-grouping-card.component';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 
 export const DEFAULT_COMIC_GROUPING: ComicCollectionEntry = {
   name: 'grouping name',
+  type: CollectionType.PUBLISHERS,
   count: 0,
   comics: [],
   last_comic_added: 0

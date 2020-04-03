@@ -42,6 +42,7 @@ import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { ComicGetIssue } from 'app/comics/actions/comic.actions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LoggerService } from '@angular-ru/logger';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 
 @Injectable()
 export class LibraryAdaptor {
@@ -108,13 +109,28 @@ export class LibraryAdaptor {
         if (!_.isEqual(this._comic$.getValue(), state.comics)) {
           this._comic$.next(state.comics);
           this._publishers$.next(
-            extractField(state.comics, 'publisher', 'imprint')
+            extractField(
+              state.comics,
+              CollectionType.PUBLISHERS,
+              'publisher',
+              'imprint'
+            )
           );
-          this._series$.next(extractField(state.comics, 'series'));
-          this._characters$.next(extractField(state.comics, 'characters'));
-          this._teams$.next(extractField(state.comics, 'teams'));
-          this._locations$.next(extractField(state.comics, 'locations'));
-          this._stories$.next(extractField(state.comics, 'storyArcs'));
+          this._series$.next(
+            extractField(state.comics, CollectionType.SERIES, 'series')
+          );
+          this._characters$.next(
+            extractField(state.comics, CollectionType.CHARACTERS, 'characters')
+          );
+          this._teams$.next(
+            extractField(state.comics, CollectionType.TEAMS, 'teams')
+          );
+          this._locations$.next(
+            extractField(state.comics, CollectionType.LOCATIONS, 'locations')
+          );
+          this._stories$.next(
+            extractField(state.comics, CollectionType.STORIES, 'storyArcs')
+          );
         }
         if (
           !!state.lastComicId &&

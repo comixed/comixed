@@ -42,6 +42,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-url.pipe';
 import { PublisherPipe } from 'app/comics/pipes/publisher.pipe';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 
 describe('ComicOverviewComponent', () => {
   const COMIC = Object.assign({}, COMIC_1);
@@ -159,6 +160,7 @@ describe('ComicOverviewComponent', () => {
       publishers.next([
         {
           name: 'FOO',
+          type: CollectionType.SERIES,
           comics: [],
           count: 0,
           last_comic_added: null
@@ -167,6 +169,7 @@ describe('ComicOverviewComponent', () => {
       series.next([
         {
           name: 'BAR',
+          type: CollectionType.SERIES,
           comics: [],
           count: 0,
           last_comic_added: null

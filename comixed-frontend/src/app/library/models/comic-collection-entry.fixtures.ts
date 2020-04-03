@@ -24,17 +24,20 @@ import {
   COMIC_4,
   COMIC_5
 } from 'app/comics/comics.fixtures';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 
 export const COMIC_COLLECTION_ENTRY_1: ComicCollectionEntry = {
   comics: [COMIC_1, COMIC_3, COMIC_5],
   count: 3,
   last_comic_added: 0,
-  name: 'collection1'
+  name: 'collection1',
+  type: CollectionType.STORIES
 };
 
 export const COMIC_COLLECTION_ENTRY_2: ComicCollectionEntry = {
   comics: [COMIC_2, COMIC_4, COMIC_5],
   count: 3,
   last_comic_added: 0,
-  name: 'collection2'
+  name: 'collection2',
+  type: CollectionType.PUBLISHERS
 };
