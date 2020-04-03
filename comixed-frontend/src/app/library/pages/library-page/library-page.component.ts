@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { UserService } from 'app/services/user.service';
@@ -28,6 +28,8 @@ import { Title } from '@angular/platform-browser';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Comic } from 'app/comics';
 import { filter } from 'rxjs/operators';
+import { CollectionType } from 'app/library/models/collection-type.enum';
+import { LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'app-library-page',
@@ -46,12 +48,15 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   processingCount = 0;
   importCountSubscription: Subscription;
   langChangeSubscription: Subscription;
+  queryParamsSubscription: Subscription;
 
   title: string;
 
   constructor(
+    private logger: LoggerService,
     private titleService: Title,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private authenticationAdaptor: AuthenticationAdaptor,
     private libraryAdaptor: LibraryAdaptor,
     private selectionAdaptor: SelectionAdaptor,
@@ -63,14 +68,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authenticationAdaptor.user$.subscribe(
       user => (this.user = user)
     );
-    this.comicsSubscription = this.libraryAdaptor.comic$.subscribe(comics => {
-      this.comics = comics;
-      this.titleService.setTitle(
-        this.translateService.instant('library-page.title', {
-          count: this.comics.length
-        })
-      );
-    });
     this.displayComicsSubscription = this.libraryAdaptor.displayComics$
       .pipe(filter(comics => !!comics))
       .subscribe(comics => {
@@ -89,6 +86,61 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       () => this.loadTranslations()
     );
     this.loadTranslations();
+    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
+      params => {
+        if (!!this.comicsSubscription) {
+          this.comicsSubscription.unsubscribe();
+        }
+        if (!!params['type'] && !!params['name']) {
+          this.logger.debug(
+            'preparing to display collection entries:',
+            params['type'],
+            params['name']
+          );
+          let comicSource = null;
+
+          switch (CollectionType[params['type']]) {
+            case CollectionType.PUBLISHERS:
+              comicSource = this.libraryAdaptor.publishers$;
+              break;
+            case CollectionType.STORIES:
+              comicSource = this.libraryAdaptor.series$;
+              break;
+            case CollectionType.CHARACTERS:
+              comicSource = this.libraryAdaptor.characters$;
+              break;
+            case CollectionType.TEAMS:
+              comicSource = this.libraryAdaptor.teams$;
+              break;
+            case CollectionType.LOCATIONS:
+              comicSource = this.libraryAdaptor.locations$;
+              break;
+            case CollectionType.STORIES:
+              comicSource = this.libraryAdaptor.stories$;
+              break;
+            default:
+              this.logger.error('no such collection type:', params['type']);
+          }
+
+          if (!!comicSource) {
+            this.comicsSubscription = comicSource.subscribe(
+              comics => (this.comics = comics)
+            );
+          }
+        } else {
+          this.comicsSubscription = this.libraryAdaptor.comic$.subscribe(
+            comics => {
+              this.comics = comics;
+              this.titleService.setTitle(
+                this.translateService.instant('library-page.title', {
+                  count: this.comics.length
+                })
+              );
+            }
+          );
+        }
+      }
+    );
   }
 
   ngOnInit() {}
