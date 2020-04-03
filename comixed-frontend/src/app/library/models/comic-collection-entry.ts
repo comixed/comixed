@@ -17,9 +17,11 @@
  */
 
 import { Comic } from 'app/comics/models/comic';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 
 export interface ComicCollectionEntry {
   name: string;
+  type: CollectionType;
   count: number;
   comics: Comic[];
   last_comic_added: number;

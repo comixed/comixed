@@ -19,6 +19,7 @@
 import * as _ from 'lodash';
 import { Comic } from 'app/comics/models/comic';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 
 export function mergeComics(base: Comic[], update: Comic[]): Comic[] {
   const result = base.filter(base_entry => {
@@ -59,6 +60,7 @@ interface ExtractEntry {
 
 export function extractField(
   comics: Comic[],
+  type: CollectionType,
   primaryFieldName: string,
   secondaryFieldName: string = null
 ): ComicCollectionEntry[] {
@@ -87,21 +89,22 @@ export function extractField(
     }
   });
 
-  const comics_by_field = new Map<string, Comic[]>();
-  extractedData.forEach(extract_entry => {
-    let collection_entry: Comic[] = comics_by_field[extract_entry.name];
+  const comicsByField = new Map<string, Comic[]>();
+  extractedData.forEach(extractEntry => {
+    let collection_entry: Comic[] = comicsByField[extractEntry.name];
 
     if (!collection_entry) {
       collection_entry = [];
-      comics_by_field[extract_entry.name] = collection_entry;
+      comicsByField[extractEntry.name] = collection_entry;
     }
-    collection_entry.push(extract_entry.comic);
+    collection_entry.push(extractEntry.comic);
   });
 
   const result: ComicCollectionEntry[] = [];
-  _.forEach(comics_by_field, (value: Comic[], key: string) => {
+  _.forEach(comicsByField, (value: Comic[], key: string) => {
     result.push({
       name: key,
+      type: type,
       count: value.length,
       comics: value,
       last_comic_added: latestComicAddedDate(value)

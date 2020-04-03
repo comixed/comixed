@@ -55,6 +55,7 @@ import {
   LibraryUpdatesReceived
 } from '../actions/library.actions';
 import { LibraryAdaptor } from './library.adaptor';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 
 describe('LibraryAdaptor', () => {
   const ASCENDING = false;
@@ -132,12 +133,24 @@ describe('LibraryAdaptor', () => {
     });
 
     describe('when updates are received', () => {
-      const PUBLISHERS = extractField(COMICS, 'publisher');
-      const SERIES = extractField(COMICS, 'series');
-      const CHARACTERS = extractField(COMICS, 'characters');
-      const TEAMS = extractField(COMICS, 'teams');
-      const LOCATIONS = extractField(COMICS, 'locations');
-      const STORIES = extractField(COMICS, 'storyArcs');
+      const PUBLISHERS = extractField(
+        COMICS,
+        CollectionType.PUBLISHERS,
+        'publisher'
+      );
+      const SERIES = extractField(COMICS, CollectionType.SERIES, 'series');
+      const CHARACTERS = extractField(
+        COMICS,
+        CollectionType.CHARACTERS,
+        'characters'
+      );
+      const TEAMS = extractField(COMICS, CollectionType.TEAMS, 'teams');
+      const LOCATIONS = extractField(
+        COMICS,
+        CollectionType.LOCATIONS,
+        'locations'
+      );
+      const STORIES = extractField(COMICS, CollectionType.STORIES, 'storyArcs');
 
       beforeEach(() => {
         store.dispatch(
