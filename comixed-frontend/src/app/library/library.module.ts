@@ -64,8 +64,6 @@ import { DuplicatePageListItemComponent } from './components/duplicate-page-list
 import { DuplicatesPageToolbarComponent } from './components/duplicates-page-toolbar/duplicates-page-toolbar.component';
 import { LibraryEffects } from './effects/library.effects';
 import { ReadingListEffects } from './effects/reading-list.effects';
-import { CollectionDetailsPageComponent } from './pages/collection-details-page/collection-details-page.component';
-import { CollectionPageComponent } from './pages/collection-page/collection-page.component';
 import { DuplicatesPageComponent } from './pages/duplicates-page/duplicates-page.component';
 import * as fromDupes from './reducers/duplicate-pages.reducer';
 import * as fromLibrary from './reducers/library.reducer';
@@ -147,8 +145,6 @@ import { LibraryNavigationTreeComponent } from './components/library-navigation-
     DuplicatePageGridItemComponent,
     DuplicatesPageToolbarComponent,
     DuplicatePageListItemComponent,
-    CollectionDetailsPageComponent,
-    CollectionPageComponent,
     ConvertComicsSettingsComponent,
     ConsolidateLibraryComponent,
     LibraryAdminPageComponent,

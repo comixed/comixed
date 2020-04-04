@@ -18,8 +18,6 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CollectionDetailsPageComponent } from 'app/library/pages/collection-details-page/collection-details-page.component';
-import { CollectionPageComponent } from 'app/library/pages/collection-page/collection-page.component';
 import { DuplicatesPageComponent } from 'app/library/pages/duplicates-page/duplicates-page.component';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
 import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
@@ -38,16 +36,6 @@ const routes: Routes = [
   {
     path: 'comics/:type/:name',
     component: LibraryPageComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'collections/:collectionType/:collectionName',
-    component: CollectionDetailsPageComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'collections/:collectionType',
-    component: CollectionPageComponent,
     canActivate: [ReaderGuard]
   },
   {

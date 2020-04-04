@@ -349,34 +349,6 @@
       }
     }
   },
-  "collection-details-page": {
-    "page-title": "{name} - {count, plural, =1{One Comic} other{# Comics}}",
-    "title": "{collectionType}: {name}",
-    "link": {
-      "comic-vine-details": "Open The ComicVine Details Page"
-    }
-  },
-  "collections": {
-    "error": {
-      "invalid-collection-type": "No such collection type: {name}"
-    }
-  },
-  "collection-page": {
-    "page-title": "{collectionType} - {count, plural, =1{One Entry} other{# Entries}}",
-    "title": "{collectionType}",
-    "table": {
-      "header": {
-        "collection-name": "{collectionType} NAME",
-        "collection-count": "# OF COMICS"
-      },
-      "value": {
-        "collection-count": "{count, plural, =1{1 COMIC} other{# COMICS}}"
-      }
-    },
-    "error": {
-      "invalid-collection-type": "No such collection type: {name}"
-    }
-  },
   "multi-comic-scraping-page": {
     "title": "Scraping {count, plural, =1{One Comic} other{# Comics}}"
   },
