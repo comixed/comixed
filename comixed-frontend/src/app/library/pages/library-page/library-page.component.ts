@@ -21,7 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { UserService } from 'app/services/user.service';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
@@ -30,6 +30,7 @@ import { Comic } from 'app/comics';
 import { filter } from 'rxjs/operators';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import { LoggerService } from '@angular-ru/logger';
+import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 
 @Component({
   selector: 'app-library-page',
@@ -48,7 +49,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   processingCount = 0;
   importCountSubscription: Subscription;
   langChangeSubscription: Subscription;
-  queryParamsSubscription: Subscription;
+  paramsSubscription: Subscription;
+  collectionType: CollectionType;
+  collectionName: string;
 
   title: string;
 
@@ -63,6 +66,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
+    private messageService: MessageService,
     private breadcrumbAdaptor: BreadcrumbAdaptor
   ) {
     this.authSubscription = this.authenticationAdaptor.user$.subscribe(
@@ -86,61 +90,82 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       () => this.loadTranslations()
     );
     this.loadTranslations();
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (!!this.comicsSubscription) {
-          this.comicsSubscription.unsubscribe();
+    this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
+      if (!!this.comicsSubscription) {
+        this.comicsSubscription.unsubscribe();
+      }
+      this.collectionType = params['type'];
+      this.collectionName = params['name'];
+      if (!!this.collectionType && !!this.collectionName) {
+        this.logger.debug(
+          'preparing to display collection entries:',
+          this.collectionType,
+          this.collectionName
+        );
+        let comicSource = null;
+
+        switch (this.collectionType) {
+          case CollectionType.PUBLISHERS:
+            comicSource = this.libraryAdaptor.publishers$;
+            break;
+          case CollectionType.SERIES:
+            comicSource = this.libraryAdaptor.series$;
+            break;
+          case CollectionType.CHARACTERS:
+            comicSource = this.libraryAdaptor.characters$;
+            break;
+          case CollectionType.TEAMS:
+            comicSource = this.libraryAdaptor.teams$;
+            break;
+          case CollectionType.LOCATIONS:
+            comicSource = this.libraryAdaptor.locations$;
+            break;
+          case CollectionType.STORIES:
+            comicSource = this.libraryAdaptor.stories$;
+            break;
+          default:
+            this.logger.error('no such collection type:', this.collectionType);
         }
-        if (!!params['type'] && !!params['name']) {
-          this.logger.debug(
-            'preparing to display collection entries:',
-            params['type'],
-            params['name']
-          );
-          let comicSource = null;
 
-          switch (CollectionType[params['type']]) {
-            case CollectionType.PUBLISHERS:
-              comicSource = this.libraryAdaptor.publishers$;
-              break;
-            case CollectionType.STORIES:
-              comicSource = this.libraryAdaptor.series$;
-              break;
-            case CollectionType.CHARACTERS:
-              comicSource = this.libraryAdaptor.characters$;
-              break;
-            case CollectionType.TEAMS:
-              comicSource = this.libraryAdaptor.teams$;
-              break;
-            case CollectionType.LOCATIONS:
-              comicSource = this.libraryAdaptor.locations$;
-              break;
-            case CollectionType.STORIES:
-              comicSource = this.libraryAdaptor.stories$;
-              break;
-            default:
-              this.logger.error('no such collection type:', params['type']);
-          }
-
-          if (!!comicSource) {
-            this.comicsSubscription = comicSource.subscribe(
-              comics => (this.comics = comics)
+        if (!!comicSource) {
+          this.comicsSubscription = comicSource
+            .pipe(
+              filter(
+                (collection: ComicCollectionEntry[]) =>
+                  !!collection &&
+                  collection.some(entry => entry.name === this.collectionName)
+              )
+            )
+            .subscribe(collection => {
+              console.log('found collection:', collection);
+              this.comics = collection.find(
+                entry => entry.name === this.collectionName
+              ).comics;
+            });
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'library-page.error.no-such-type',
+              { type: params['type'] }
+            )
+          });
+        }
+      } else {
+        this.collectionType = null;
+        this.collectionName = null;
+        this.comicsSubscription = this.libraryAdaptor.comic$.subscribe(
+          comics => {
+            this.comics = comics;
+            this.titleService.setTitle(
+              this.translateService.instant('library-page.title', {
+                count: this.comics.length
+              })
             );
           }
-        } else {
-          this.comicsSubscription = this.libraryAdaptor.comic$.subscribe(
-            comics => {
-              this.comics = comics;
-              this.titleService.setTitle(
-                this.translateService.instant('library-page.title', {
-                  count: this.comics.length
-                })
-              );
-            }
-          );
-        }
+        );
       }
-    );
+    });
   }
 
   ngOnInit() {}
