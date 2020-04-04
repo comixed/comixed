@@ -257,8 +257,8 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
           ),
           key: list.name,
           data: {
-            title: list.name,
-            comics: list.entries.map(entry => entry.comic)
+            type: CollectionType.READING_LISTS,
+            name: list.name
           } as NavigationDataPayload,
           icon: 'pi pi-list',
           expanded: false,
