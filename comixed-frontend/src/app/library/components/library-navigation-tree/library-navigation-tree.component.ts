@@ -25,6 +25,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { NavigationDataPayload } from 'app/library/models/navigation-data-payload';
 import { ReadingList } from 'app/library/models/reading-list/reading-list';
+import { CollectionType } from 'app/library/models/collection-type.enum';
+import { Router } from '@angular/router';
 
 const PUBLISHER_NODE = 0;
 const SERIES_NODE = 1;
@@ -66,7 +68,8 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private translateService: TranslateService,
     private libraryAdaptor: LibraryAdaptor,
-    private readingListAdaptor: ReadingListAdaptor
+    private readingListAdaptor: ReadingListAdaptor,
+    private router: Router
   ) {
     this.nodes = [
       {
@@ -126,31 +129,44 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
             { count: comics.length }
           ),
           data: {
-            title: this.translateService.instant(
-              'library-navigation-tree.label.all-comics-title'
-            ),
-            comics: comics
+            type: CollectionType.ALL_COMICS,
+            name: null
           } as NavigationDataPayload,
           children: this.nodes[0].children
         })
     );
     this.publisherSubscription = this.libraryAdaptor.publishers$.subscribe(
-      publishers => this.createChildNodes(PUBLISHER_NODE, publishers)
+      publishers =>
+        this.createChildNodes(
+          CollectionType.PUBLISHERS,
+          PUBLISHER_NODE,
+          publishers
+        )
     );
     this.seriesSubscription = this.libraryAdaptor.series$.subscribe(series =>
-      this.createChildNodes(SERIES_NODE, series)
+      this.createChildNodes(CollectionType.SERIES, SERIES_NODE, series)
     );
     this.characterSubscription = this.libraryAdaptor.characters$.subscribe(
-      characters => this.createChildNodes(CHARACTER_NODE, characters)
+      characters =>
+        this.createChildNodes(
+          CollectionType.CHARACTERS,
+          CHARACTER_NODE,
+          characters
+        )
     );
     this.teamSubscription = this.libraryAdaptor.teams$.subscribe(teams =>
-      this.createChildNodes(TEAM_NODE, teams)
+      this.createChildNodes(CollectionType.TEAMS, TEAM_NODE, teams)
     );
     this.locationSubscription = this.libraryAdaptor.locations$.subscribe(
-      locations => this.createChildNodes(LOCATION_NODE, locations)
+      locations =>
+        this.createChildNodes(
+          CollectionType.LOCATIONS,
+          LOCATION_NODE,
+          locations
+        )
     );
     this.storiesSubscription = this.libraryAdaptor.stories$.subscribe(stories =>
-      this.createChildNodes(STORY_NODE, stories)
+      this.createChildNodes(CollectionType.STORIES, STORY_NODE, stories)
     );
     this.readingListSubscription = this.readingListAdaptor.reading_list$.subscribe(
       lists => this.loadReadingLists(lists)
@@ -169,6 +185,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
   }
 
   private createChildNodes(
+    type: CollectionType,
     index: number,
     collection: ComicCollectionEntry[]
   ): void {
@@ -199,8 +216,8 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
           label: title,
           key: entry.name || 'unnammed',
           data: {
-            title: entryName,
-            comics: entry.comics
+            type: type,
+            name: entryName
           } as NavigationDataPayload,
           icon: 'pi pi-list',
           expanded: this.nodes[0].children[index].expanded
@@ -209,11 +226,18 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
     } as TreeNode;
   }
 
-  setDisplayComics(node: TreeNode) {
-    this.libraryAdaptor.displayComics(
-      (node.data as NavigationDataPayload).comics,
-      (node.data as NavigationDataPayload).title
-    );
+  showSelectedCollection(node: TreeNode) {
+    const nodeData = node.data as NavigationDataPayload;
+    switch (nodeData.type) {
+      case CollectionType.PUBLISHERS:
+      case CollectionType.SERIES:
+      case CollectionType.CHARACTERS:
+      case CollectionType.TEAMS:
+      case CollectionType.LOCATIONS:
+      case CollectionType.STORIES:
+        this.router.navigate(['comics', nodeData.type, nodeData.name]);
+        break;
+    }
   }
 
   private loadReadingLists(lists: ReadingList[]) {
