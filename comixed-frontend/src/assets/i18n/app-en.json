@@ -9,16 +9,7 @@
       "reading-lists": "Reading Lists",
       "import": "Import",
       "duplicate-pages": "Duplicate Pages",
-      "missing-comics": "Missing Comics",
-      "collections": {
-        "label": "Collections",
-        "publishers": "Publishers",
-        "series": "Series",
-        "characters": "Characters",
-        "teams": "Teams",
-        "locations": "Locations",
-        "story-arcs": "Story Arcs"
-      }
+      "missing-comics": "Missing Comics"
     },
     "admin": {
       "root": "Admin",

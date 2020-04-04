@@ -84,61 +84,6 @@ export class MainMenuComponent implements OnInit {
         ]
       },
       {
-        label: this.translateService.instant('main-menu.item.collections.root'),
-        icon: 'fas fa-bookmark',
-        visible: this.authenticationAdaptor.isReader,
-        items: [
-          {
-            label: this.translateService.instant(
-              'main-menu.item.collections.publishers'
-            ),
-            icon: 'fas fa-newspaper',
-            routerLink: ['/collections/publishers'],
-            visible: this.authenticationAdaptor.authenticated
-          },
-          {
-            label: this.translateService.instant(
-              'main-menu.item.collections.series'
-            ),
-            icon: 'fa fa-fw fa-book',
-            routerLink: ['/collections/series'],
-            visible: this.authenticationAdaptor.authenticated
-          },
-          {
-            label: this.translateService.instant(
-              'main-menu.item.collections.characters'
-            ),
-            icon: 'fas fa-user',
-            routerLink: ['/collections/characters'],
-            visible: this.authenticationAdaptor.authenticated
-          },
-          {
-            label: this.translateService.instant(
-              'main-menu.item.collections.teams'
-            ),
-            icon: 'fas fa-users',
-            routerLink: ['/collections/teams'],
-            visible: this.authenticationAdaptor.authenticated
-          },
-          {
-            label: this.translateService.instant(
-              'main-menu.item.collections.locations'
-            ),
-            icon: 'fas fa-location-arrow',
-            routerLink: ['/collections/locations'],
-            visible: this.authenticationAdaptor.authenticated
-          },
-          {
-            label: this.translateService.instant(
-              'main-menu.item.collections.story-arcs'
-            ),
-            icon: 'fas fa-folder-open',
-            routerLink: ['/collections/stories'],
-            visible: this.authenticationAdaptor.authenticated
-          }
-        ]
-      },
-      {
         separator: true,
         visible: this.authenticationAdaptor.isAdmin
       },
