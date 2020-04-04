@@ -36,7 +36,7 @@ const routes: Routes = [
     canActivate: [ReaderGuard]
   },
   {
-    path: 'commics/:type/:name',
+    path: 'comics/:type/:name',
     component: LibraryPageComponent,
     canActivate: [ReaderGuard]
   },
