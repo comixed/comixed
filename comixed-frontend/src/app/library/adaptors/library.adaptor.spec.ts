@@ -50,7 +50,6 @@ import {
   LibraryConsolidateFailed,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
-  LibraryDisplayComics,
   LibraryGetUpdates,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
@@ -69,7 +68,6 @@ describe('LibraryAdaptor', () => {
   const IDS = [7, 17, 65, 1, 29, 71];
   const ARCHIVE_TYPE = 'CBZ';
   const RENAME_PAGES = true;
-  const TITLE = 'The Title';
 
   let adaptor: LibraryAdaptor;
   let store: Store<AppState>;
@@ -392,30 +390,6 @@ describe('LibraryAdaptor', () => {
           expect(response).toBeFalsy()
         );
       });
-    });
-  });
-
-  describe('setting the list of comics to display', () => {
-    beforeEach(() => {
-      adaptor.displayComics(COMICS, TITLE);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryDisplayComics({ title: TITLE, comics: COMICS })
-      );
-    });
-
-    it('provides updates on the display title', () => {
-      adaptor.displayTitle$.subscribe(response =>
-        expect(response).toEqual(TITLE)
-      );
-    });
-
-    it('provides updates on the display comics', () => {
-      adaptor.displayComics$.subscribe(response =>
-        expect(response).toEqual(COMICS)
-      );
     });
   });
 });
