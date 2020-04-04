@@ -41,8 +41,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   authSubscription: Subscription;
   user: User;
   comicsSubscription: Subscription;
-  displayComicsSubscription: Subscription;
-  displayTitleSubscription: Subscription;
   comics: Comic[] = [];
   selectedComicsSubscription: Subscription;
   selectedComics: Comic[] = [];
@@ -72,14 +70,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authenticationAdaptor.user$.subscribe(
       user => (this.user = user)
     );
-    this.displayComicsSubscription = this.libraryAdaptor.displayComics$
-      .pipe(filter(comics => !!comics))
-      .subscribe(comics => {
-        this.comics = comics;
-      });
-    this.displayTitleSubscription = this.libraryAdaptor.displayTitle$
-      .pipe(filter(title => !!title && title.length > 0))
-      .subscribe(title => (this.title = title));
     this.selectedComicsSubscription = this.selectionAdaptor.comicSelection$.subscribe(
       selected_comics => (this.selectedComics = selected_comics)
     );
@@ -173,8 +163,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.authSubscription.unsubscribe();
     this.comicsSubscription.unsubscribe();
-    this.displayComicsSubscription.unsubscribe();
-    this.displayTitleSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
     this.importCountSubscription.unsubscribe();
   }

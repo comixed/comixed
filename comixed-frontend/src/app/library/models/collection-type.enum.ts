@@ -18,6 +18,7 @@
 
 export enum CollectionType {
   ALL_COMICS = 'allcomics',
+  READING_LISTS = 'lists',
   PUBLISHERS = 'publishers',
   SERIES = 'series',
   CHARACTERS = 'characters',
