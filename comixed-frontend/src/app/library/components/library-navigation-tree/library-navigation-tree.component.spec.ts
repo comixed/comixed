@@ -33,6 +33,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComicsModule } from 'app/comics/comics.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LibraryNavigationTreeComponent', () => {
   let component: LibraryNavigationTreeComponent;
@@ -43,6 +44,7 @@ describe('LibraryNavigationTreeComponent', () => {
       imports: [
         ComicsModule,
         HttpClientTestingModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         BrowserAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
