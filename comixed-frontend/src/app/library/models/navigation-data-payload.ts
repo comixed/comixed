@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic } from 'app/comics';
+import { CollectionType } from 'app/library/models/collection-type.enum';
 
 export interface NavigationDataPayload {
-  title: string;
-  comics: Comic[];
+  type: CollectionType;
+  name: string;
 }
