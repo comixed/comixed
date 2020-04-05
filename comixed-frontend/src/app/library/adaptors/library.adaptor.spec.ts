@@ -131,24 +131,12 @@ describe('LibraryAdaptor', () => {
     });
 
     describe('when updates are received', () => {
-      const PUBLISHERS = extractField(
-        COMICS,
-        CollectionType.PUBLISHERS,
-        'publisher'
-      );
-      const SERIES = extractField(COMICS, CollectionType.SERIES, 'series');
-      const CHARACTERS = extractField(
-        COMICS,
-        CollectionType.CHARACTERS,
-        'characters'
-      );
-      const TEAMS = extractField(COMICS, CollectionType.TEAMS, 'teams');
-      const LOCATIONS = extractField(
-        COMICS,
-        CollectionType.LOCATIONS,
-        'locations'
-      );
-      const STORIES = extractField(COMICS, CollectionType.STORIES, 'storyArcs');
+      const PUBLISHERS = extractField(COMICS, CollectionType.PUBLISHERS);
+      const SERIES = extractField(COMICS, CollectionType.SERIES);
+      const CHARACTERS = extractField(COMICS, CollectionType.CHARACTERS);
+      const TEAMS = extractField(COMICS, CollectionType.TEAMS);
+      const LOCATIONS = extractField(COMICS, CollectionType.LOCATIONS);
+      const STORIES = extractField(COMICS, CollectionType.STORIES);
 
       beforeEach(() => {
         store.dispatch(
@@ -263,29 +251,6 @@ describe('LibraryAdaptor', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       new LibraryActions.LibraryDeleteMultipleComics({ ids: IDS })
     );
-  });
-
-  describe('when getting comics in a series', () => {
-    beforeEach(() => {
-      store.dispatch(
-        new LibraryUpdatesReceived({
-          comics: COMICS,
-          lastComicId: LAST_COMIC_ID,
-          moreUpdates: MORE_UPDATES,
-          mostRecentUpdate: MOST_RECENT_UPDATE,
-          lastReadDates: [],
-          processingCount: 0
-        })
-      );
-    });
-
-    it('can get the next comic', () => {
-      expect(adaptor.getNextIssue(COMIC_2)).toEqual(COMIC_3);
-    });
-
-    it('can get the previous comic', () => {
-      expect(adaptor.getPreviousIssue(COMIC_3)).toEqual(COMIC_2);
-    });
   });
 
   describe('converting comics', () => {

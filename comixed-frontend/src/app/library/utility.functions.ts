@@ -42,7 +42,10 @@ function latestDateForField(comics: Comic[], field_name: string): number {
     return 0;
   }
 
-  return Math.max.apply(null, comics.map(comic => comic[field_name] || 0));
+  return Math.max.apply(
+    null,
+    comics.map(comic => comic[field_name] || 0)
+  );
 }
 
 export function latestUpdatedDate(comics: Comic[]): number {
@@ -60,10 +63,32 @@ interface ExtractEntry {
 
 export function extractField(
   comics: Comic[],
-  type: CollectionType,
-  primaryFieldName: string,
-  secondaryFieldName: string = null
+  type: CollectionType
 ): ComicCollectionEntry[] {
+  let primaryFieldName = null;
+  let secondaryFieldName = null;
+
+  switch (type) {
+    case CollectionType.PUBLISHERS:
+      primaryFieldName = 'publisher';
+      secondaryFieldName = 'imprint';
+      break;
+    case CollectionType.SERIES:
+      primaryFieldName = 'series';
+      break;
+    case CollectionType.CHARACTERS:
+      primaryFieldName = 'characters';
+      break;
+    case CollectionType.TEAMS:
+      primaryFieldName = 'teams';
+      break;
+    case CollectionType.LOCATIONS:
+      primaryFieldName = 'locations';
+      break;
+    case CollectionType.STORIES:
+      primaryFieldName = 'storyArcs';
+      break;
+  }
   let extractedData: ExtractEntry[] = [];
 
   comics.forEach(comic => {
@@ -82,8 +107,16 @@ export function extractField(
         })
       );
     } else {
+      let name = !!fieldValue ? fieldValue : '';
+      if (name.length === 0) {
+        name = 'unknown';
+      }
+      // if we're processing series then add the volume
+      if (type === CollectionType.SERIES) {
+        name = `${name} v${comic.volume || '????'}`;
+      }
       extractedData.push({
-        name: fieldValue || '',
+        name: name,
         comic: comic
       } as ExtractEntry);
     }

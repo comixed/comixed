@@ -114,7 +114,7 @@ export const COMIC_3: Comic = {
   imprint: null,
   sortName: 'comicfile1',
   series: 'First Series',
-  volume: '1953',
+  volume: '2015',
   issueNumber: '3',
   sortableIssueNumber: '00001',
   title: 'First Comic Title',

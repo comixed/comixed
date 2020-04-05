@@ -106,27 +106,18 @@ export class LibraryAdaptor {
         if (!_.isEqual(this._comic$.getValue(), state.comics)) {
           this._comic$.next(state.comics);
           this._publishers$.next(
-            extractField(
-              state.comics,
-              CollectionType.PUBLISHERS,
-              'publisher',
-              'imprint'
-            )
+            extractField(state.comics, CollectionType.PUBLISHERS)
           );
-          this._series$.next(
-            extractField(state.comics, CollectionType.SERIES, 'series')
-          );
+          this._series$.next(extractField(state.comics, CollectionType.SERIES));
           this._characters$.next(
-            extractField(state.comics, CollectionType.CHARACTERS, 'characters')
+            extractField(state.comics, CollectionType.CHARACTERS)
           );
-          this._teams$.next(
-            extractField(state.comics, CollectionType.TEAMS, 'teams')
-          );
+          this._teams$.next(extractField(state.comics, CollectionType.TEAMS));
           this._locations$.next(
-            extractField(state.comics, CollectionType.LOCATIONS, 'locations')
+            extractField(state.comics, CollectionType.LOCATIONS)
           );
           this._stories$.next(
-            extractField(state.comics, CollectionType.STORIES, 'storyArcs')
+            extractField(state.comics, CollectionType.STORIES)
           );
         }
         if (
@@ -227,22 +218,6 @@ export class LibraryAdaptor {
           c2.sortableIssueNumber || '0'
         )
       );
-  }
-
-  getPreviousIssue(comic: Comic): Comic {
-    this.logger.debug('getting previous issue for comic:', comic);
-    const comics = this.getComicsForSeries(comic.series);
-    const index = comics.findIndex(entry => entry.id === comic.id);
-
-    return index > 0 ? comics[index - 1] : null;
-  }
-
-  getNextIssue(comic: Comic): Comic {
-    this.logger.debug('getting next issue for comic:', comic);
-    const comics = this.getComicsForSeries(comic.series);
-    const index = comics.findIndex(entry => entry.id === comic.id);
-
-    return index < comics.length ? comics[index + 1] : null;
   }
 
   convertComics(comics: Comic[], archiveType: string, renamePages: boolean) {
