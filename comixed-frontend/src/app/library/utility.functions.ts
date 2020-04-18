@@ -20,6 +20,7 @@ import * as _ from 'lodash';
 import { Comic } from 'app/comics/models/comic';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { CollectionType } from 'app/library/models/collection-type.enum';
+import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
 
 export function mergeComics(base: Comic[], update: Comic[]): Comic[] {
   const result = base.filter(base_entry => {
@@ -42,10 +43,7 @@ function latestDateForField(comics: Comic[], field_name: string): number {
     return 0;
   }
 
-  return Math.max.apply(
-    null,
-    comics.map(comic => comic[field_name] || 0)
-  );
+  return Math.max.apply(null, comics.map(comic => comic[field_name] || 0));
 }
 
 export function latestUpdatedDate(comics: Comic[]): number {
@@ -113,7 +111,7 @@ export function extractField(
       }
       // if we're processing series then add the volume
       if (type === CollectionType.SERIES) {
-        name = `${name} v${comic.volume || '????'}`;
+        name = new SeriesCollectionNamePipe().transform(comic);
       }
       extractedData.push({
         name: name,

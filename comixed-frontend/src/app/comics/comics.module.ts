@@ -157,7 +157,8 @@ import { SeriesCollectionNamePipe } from './pipes/series-collection-name.pipe';
     VolumeListComponent,
     ComicPageUrlPipe,
     ComicCoverUrlPipe,
-    ComicTitlePipe
+    ComicTitlePipe,
+    SeriesCollectionNamePipe
   ],
   providers: [
     ComicAdaptor,

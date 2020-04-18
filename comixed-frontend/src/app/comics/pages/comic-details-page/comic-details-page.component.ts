@@ -28,6 +28,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { filter } from 'rxjs/operators';
+import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -224,7 +225,10 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
           'breadcrumb.entry.comic-details-page.series',
           { name: this.comic.series }
         ),
-        routerLink: ['/comics/series', this.comic.series]
+        routerLink: [
+          '/comics/series',
+          new SeriesCollectionNamePipe().transform(this.comic)
+        ]
       });
     } else {
       entries.push({ label: '?' });
