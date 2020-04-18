@@ -63,7 +63,7 @@
                            (onActivate)='startEditing()'
                            [active]='editing'>
           <span pInplaceDisplay>
-          <a [routerLink]='["/collections", "publishers", comic.publisher||"undefined"]'>{{comic|publisher}}</a>
+          <a [routerLink]='["/comics", "publishers", comic.publisher||"undefined"]'>{{comic|publisher}}</a>
             <span class='pi pi-pencil'></span>
           </span>
                   <span pInplaceContent>
@@ -83,7 +83,7 @@
                            (onActivate)='startEditing()'
                            [active]='editing'>
           <span pInplaceDisplay>
-        <a [routerLink]='["/collections","series", comic.series||"undefine"]'>{{comic.series || "text.unknown"|translate}}</a>
+        <a [routerLink]='["/comics","series", comic | seriesCollectionName]'>{{comic.series || "text.unknown"|translate}}</a>
             <span class='pi pi-pencil'></span>
           </span>
                   <span pInplaceContent>
