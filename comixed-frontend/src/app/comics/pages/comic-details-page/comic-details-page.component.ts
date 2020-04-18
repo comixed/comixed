@@ -213,7 +213,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
           'breadcrumb.entry.comic-details-page.publisher',
           { name: this.comic.publisher }
         ),
-        routerLink: ['/collections/publishers', this.comic.publisher]
+        routerLink: ['/comics/publishers', this.comic.publisher]
       });
     } else {
       entries.push({ label: '?' });
@@ -224,7 +224,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
           'breadcrumb.entry.comic-details-page.series',
           { name: this.comic.series }
         ),
-        routerLink: ['/collections/series', this.comic.series]
+        routerLink: ['/comics/series', this.comic.series]
       });
     } else {
       entries.push({ label: '?' });
