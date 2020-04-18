@@ -107,7 +107,7 @@ export function extractField(
         })
       );
     } else {
-      let name = !!fieldValue ? fieldValue : '';
+      let name = !!fieldValue ? fieldValue : 'undefined';
       if (name.length === 0) {
         name = 'unknown';
       }
