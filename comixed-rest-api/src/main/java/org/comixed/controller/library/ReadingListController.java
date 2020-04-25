@@ -25,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.ReadingList;
 import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.repositories.library.ReadingListRepository;
-import org.comixed.service.library.ComicException;
+import org.comixed.service.comic.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListNameException;
 import org.comixed.service.library.ReadingListService;

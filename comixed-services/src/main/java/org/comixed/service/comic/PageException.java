@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.loaders;
+package org.comixed.service.comic;
 
-import org.comixed.model.comic.Comic;
-
-/**
- * <code>EntryLoader</code> defines a type that processes entry content and sets it on a given
- * {@link Comic}.
- *
- * @author Darryl L. Pierce
- */
-public interface EntryLoader {
-  /**
-   * Loads content into the specified comic.
-   *
-   * @param comic the comic
-   * @param filename the content's filename
-   * @param content the content
-   * @throws EntryLoaderException if an error occurs while loading the content
-   */
-  void loadContent(Comic comic, String filename, byte[] content) throws EntryLoaderException;
+public class PageException extends Exception {
+  public PageException(final String message) {
+    super(message);
+  }
 }

@@ -26,7 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;
 import lombok.extern.log4j.Log4j2;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

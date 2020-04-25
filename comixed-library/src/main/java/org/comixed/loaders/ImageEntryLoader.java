@@ -19,9 +19,9 @@
 package org.comixed.loaders;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Page;
-import org.comixed.repositories.library.PageTypeRepository;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
+import org.comixed.repositories.comic.PageTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -16,22 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.controller.library;
+package org.comixed.controller.comic;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
+import org.comixed.model.comic.PageType;
 import org.comixed.model.library.DuplicatePage;
-import org.comixed.model.library.Page;
-import org.comixed.model.library.PageType;
 import org.comixed.net.SetBlockingStateRequest;
 import org.comixed.net.SetDeletedStateRequest;
-import org.comixed.service.library.PageCacheService;
-import org.comixed.service.library.PageException;
-import org.comixed.service.library.PageService;
+import org.comixed.service.comic.PageCacheService;
+import org.comixed.service.comic.PageException;
+import org.comixed.service.comic.PageService;
 import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.views.View;
 import org.comixed.views.View.PageList;
@@ -221,7 +221,7 @@ public class PageController {
     final List<String> hashes = request.getHashes();
     this.log.info(
         "{}arking {} page hash{} for deletion",
-        request.getDeleted() ? "M" : "Unm",
+        request.getDeleted().booleanValue() ? "M" : "Unm",
         hashes.size(),
         hashes.size() == 1 ? "" : "es");
     this.pageService.setDeletedState(hashes, request.getDeleted());

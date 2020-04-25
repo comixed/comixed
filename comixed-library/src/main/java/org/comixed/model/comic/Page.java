@@ -15,7 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.model.library;
+package org.comixed.model.comic;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,15 +45,6 @@ import org.hibernate.annotations.Formula;
  */
 @Entity
 @Table(name = "pages")
-@NamedQueries({
-  @NamedQuery(
-      name = "Page.getDuplicatePages",
-      query =
-          "SELECT p FROM Page p JOIN p.comic WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash"),
-  @NamedQuery(
-      name = "Page.updateDeleteOnAllWithHash",
-      query = "UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash")
-})
 @Log4j2
 public class Page {
   @Id
@@ -144,9 +135,8 @@ public class Page {
       BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(content));
       this.width = bimage.getWidth();
       this.height = bimage.getHeight();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    } catch (IOException error) {
+      this.log.error("failed to get image metrics", error);
     }
   }
 

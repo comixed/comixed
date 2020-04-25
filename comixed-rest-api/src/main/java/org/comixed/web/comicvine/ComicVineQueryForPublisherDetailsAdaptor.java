@@ -19,7 +19,7 @@
 package org.comixed.web.comicvine;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.scraping.ComicVinePublisher;
 import org.comixed.repositories.ComicVinePublisherRepository;
 import org.comixed.web.ComicVinePublisherDetailsWebRequest;

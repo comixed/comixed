@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories.library;
+package org.comixed.repositories.comic;
 
-import org.comixed.model.library.ComicFormat;
+import org.comixed.model.comic.ScanType;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ComicFormatRepository extends CrudRepository<ComicFormat, Long> {}
+public interface ScanTypeRepository extends CrudRepository<ScanType, Long> {}

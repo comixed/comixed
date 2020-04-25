@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories.library;
+package org.comixed.repositories.comic;
 
 import java.util.List;
-import org.comixed.model.library.Page;
+import org.comixed.model.comic.Page;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -34,6 +34,8 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    *
    * @return a list of Page objects with duplicate hashes
    */
+  @Query(
+      "SELECT p FROM Page p JOIN p.comic WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash")
   List<Page> getDuplicatePages();
 
   /**
@@ -45,6 +47,7 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    */
   @Modifying
   @Transactional
+  @Query("UPDATE Page p SET p.deleted = :deleted WHERE p.hash = :hash")
   int updateDeleteOnAllWithHash(@Param("hash") String hash, @Param("deleted") boolean deleted);
 
   @Query("SELECT p FROM Page p WHERE p.comic.id = :id")

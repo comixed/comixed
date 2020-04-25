@@ -21,12 +21,14 @@ package org.comixed.service.library;
 import static org.junit.Assert.*;
 
 import java.util.*;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ReadingListRepository;
+import org.comixed.service.comic.ComicException;
+import org.comixed.service.comic.ComicService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;

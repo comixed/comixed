@@ -20,10 +20,10 @@ package org.comixed.task.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
-import org.comixed.repositories.library.ComicRepository;
+import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.task.TaskException;
 import org.comixed.task.adaptors.TaskAdaptor;
 import org.comixed.task.encoders.DeleteComicTaskEncoder;

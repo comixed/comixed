@@ -21,7 +21,7 @@ package org.comixed.task.encoders;
 import static junit.framework.TestCase.*;
 
 import java.util.Random;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.tasks.TaskRepository;

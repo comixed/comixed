@@ -27,8 +27,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.codehaus.plexus.util.StringUtils;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Credit;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Credit;
 import org.comixed.model.library.ReadingList;
 
 /**

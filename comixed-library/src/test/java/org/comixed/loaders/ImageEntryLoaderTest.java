@@ -21,9 +21,9 @@ package org.comixed.loaders;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.PageType;
-import org.comixed.repositories.library.PageTypeRepository;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.PageType;
+import org.comixed.repositories.comic.PageTypeRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -20,7 +20,7 @@ package org.comixed.adaptors.archive;
 
 import java.io.IOException;
 import java.util.Map;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 
 /**
  * <code>ArchiveAdaptor</code> defines a type which handles loading from and saving to an archive

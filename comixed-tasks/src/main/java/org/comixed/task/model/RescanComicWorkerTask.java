@@ -19,9 +19,9 @@
 package org.comixed.task.model;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Page;
-import org.comixed.repositories.library.PageRepository;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
+import org.comixed.repositories.comic.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

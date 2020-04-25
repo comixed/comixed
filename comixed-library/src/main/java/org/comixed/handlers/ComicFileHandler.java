@@ -31,7 +31,7 @@ import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.ComicDataAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

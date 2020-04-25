@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.service.library;
+package org.comixed.service.comic;
 
 import static junit.framework.TestCase.*;
 

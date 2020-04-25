@@ -20,12 +20,12 @@ package org.comixed.controller.opds;
 
 import static org.junit.Assert.*;
 
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.opds.OPDSBookmark;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.service.library.ComicException;
-import org.comixed.service.library.ComicService;
+import org.comixed.service.comic.ComicException;
+import org.comixed.service.comic.ComicService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

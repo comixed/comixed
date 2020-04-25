@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.controller.library;
+package org.comixed.controller.comic;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.ByteArrayInputStream;
@@ -30,21 +30,21 @@ import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ComicDataAdaptor;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandlerException;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.ComicFormat;
-import org.comixed.model.library.Page;
-import org.comixed.model.library.ScanType;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.ComicFormat;
+import org.comixed.model.comic.Page;
+import org.comixed.model.comic.ScanType;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.net.GetLibraryUpdatesRequest;
 import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.library.ComicFormatRepository;
+import org.comixed.repositories.comic.ComicFormatRepository;
+import org.comixed.repositories.comic.ScanTypeRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
-import org.comixed.repositories.library.ScanTypeRepository;
+import org.comixed.service.comic.ComicException;
+import org.comixed.service.comic.ComicService;
+import org.comixed.service.comic.PageCacheService;
 import org.comixed.service.file.FileService;
-import org.comixed.service.library.ComicException;
-import org.comixed.service.library.ComicService;
-import org.comixed.service.library.PageCacheService;
 import org.comixed.task.model.DeleteComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.FileTypeIdentifier;
@@ -83,7 +83,7 @@ public class ComicController {
     return this.comicService.deleteComic(id);
   }
 
-  @RequestMapping(value = "/{id}/metadata", method = RequestMethod.DELETE)
+  @DeleteMapping(value = "/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetails.class)
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
     this.log.debug("Updating comic: id={}", id);
@@ -110,7 +110,7 @@ public class ComicController {
     }
   }
 
-  @RequestMapping(value = "/multiple/delete", method = RequestMethod.POST)
+  @PostMapping(value = "/multiple/delete")
   public boolean deleteMultipleComics(@RequestParam("comic_ids") List<Long> comicIds) {
     this.log.debug("Deleting multiple comics: ids={}", comicIds.toArray());
 
@@ -125,7 +125,7 @@ public class ComicController {
     return true;
   }
 
-  @RequestMapping(value = "/{id}/download", method = RequestMethod.GET)
+  @GetMapping(value = "/{id}/download")
   public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
       throws IOException, ComicException {
     this.log.info("Preparing to download comic: id={}", id);
@@ -163,7 +163,7 @@ public class ComicController {
     return result;
   }
 
-  @RequestMapping(value = "/formats", method = RequestMethod.GET)
+  @GetMapping(value = "/formats")
   public Iterable<ComicFormat> getComicFormats() {
     this.log.debug("Fetching all comic format types");
     return this.comicFormatRepository.findAll();
@@ -238,13 +238,13 @@ public class ComicController {
     return new GetLibraryUpdatesResponse(comics, lastReadDates, rescanCount, processCount);
   }
 
-  @RequestMapping(value = "/scan_types", method = RequestMethod.GET)
+  @GetMapping(value = "/scan_types")
   public Iterable<ScanType> getScanTypes() {
     this.log.debug("Fetching all scan types");
     return this.scanTypeRepository.findAll();
   }
 
-  @RequestMapping(value = "/rescan", method = RequestMethod.POST)
+  @PostMapping(value = "/rescan")
   public int rescanComics() {
     this.log.info("Beginning rescan of library");
 
@@ -257,7 +257,7 @@ public class ComicController {
     return result;
   }
 
-  @RequestMapping(value = "/{id}/format", method = RequestMethod.PUT)
+  @PutMapping(value = "/{id}/format")
   public void setFormat(@PathVariable("id") long comicId, @RequestParam("format_id") long formatId)
       throws ComicException {
     this.log.debug("Setting format: comicId={} formatId={}", comicId, formatId);
@@ -267,14 +267,14 @@ public class ComicController {
 
     if (comic != null && formatRecord.isPresent()) {
       comic.setFormat(formatRecord.get());
-      this.log.debug("Saving update to comic");
+      this.log.debug("Saving updated format");
       this.comicService.save(comic);
     } else {
       this.log.debug("No such comic found");
     }
   }
 
-  @RequestMapping(value = "/{id}/scan_type", method = RequestMethod.PUT)
+  @PutMapping(value = "/{id}/scan_type")
   public void setScanType(
       @PathVariable("id") long comicId, @RequestParam("scan_type_id") long scanTypeId)
       throws ComicException {
@@ -285,14 +285,14 @@ public class ComicController {
 
     if (comic != null && scanTypeRecord.isPresent()) {
       comic.setScanType(scanTypeRecord.get());
-      this.log.debug("Saving update to comic");
+      this.log.debug("Saving updated scan type");
       this.comicService.save(comic);
     } else {
       this.log.debug("No such comic found");
     }
   }
 
-  @RequestMapping(value = "/{id}/sort_name", method = RequestMethod.PUT)
+  @PuttMapping(value = "/{id}/sort_name")
   public void setSortName(
       @PathVariable("id") long comicId, @RequestParam("sort_name") String sortName)
       throws ComicException {
@@ -302,7 +302,7 @@ public class ComicController {
 
     if (comic != null) {
       comic.setSortName(sortName);
-      this.log.debug("Saving update to comic");
+      this.log.debug("Saving updated sorted name");
       this.comicService.save(comic);
     } else {
       this.log.debug("No such comic found");
