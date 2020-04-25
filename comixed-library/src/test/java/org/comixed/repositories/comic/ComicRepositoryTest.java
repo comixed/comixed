@@ -59,9 +59,9 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 public class ComicRepositoryTest {
   private static final String TEST_COMIC_SORT_NAME = "My First Comic";
   private static final String TEST_COMIC_VINE_ID = "ABCDEFG";
-  private static final long TEST_COMIC = 1000L;
-  private static final long TEST_COMIC_WITH_BLOCKED_PAGES = 1001L;
-  private static final Long TEST_COMIC_WITH_DELETED_PAGES = 1002L;
+  private static final long TEST_COMIC_ID = 1000L;
+  private static final long TEST_COMIC_ID_WITH_BLOCKED_PAGES = 1001L;
+  private static final Long TEST_COMIC_ID_WITH_DELETED_PAGES = 1002L;
   private static final String TEST_IMPRINT = "This is an imprint";
   private static final Long TEST_USER_ID = 1000L;
   private static final long TEST_INVALID_ID = 9797L;
@@ -73,6 +73,7 @@ public class ComicRepositoryTest {
   private static final Long TEST_PREV_ISSUE_ID = 1000L;
   private static final String TEST_ISSUE_WITH_NO_PREV = "249";
   private static final String TEST_ISSUE_WITH_PREV = "513";
+  private static final Long TEST_COMIC_ID_WITH_DUPLICATES = 1020L;
 
   @Autowired private ComicRepository repository;
   @Autowired private PageTypeRepository pageTypeRepository;
@@ -83,7 +84,7 @@ public class ComicRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    comic = repository.getById(TEST_COMIC);
+    comic = repository.getById(TEST_COMIC_ID);
   }
 
   @Test(expected = DataIntegrityViolationException.class)
@@ -293,21 +294,21 @@ public class ComicRepositoryTest {
 
   @Test
   public void testComicsReturnTheirBlockedPageCount() {
-    Comic result = repository.findById(TEST_COMIC_WITH_BLOCKED_PAGES).get();
+    Comic result = repository.findById(TEST_COMIC_ID_WITH_BLOCKED_PAGES).get();
 
     assertEquals(1, result.getBlockedPageCount());
   }
 
   @Test
   public void testComicsReturnTheirDeletedPageCount() {
-    Comic result = repository.findById(TEST_COMIC_WITH_DELETED_PAGES).get();
+    Comic result = repository.findById(TEST_COMIC_ID_WITH_DELETED_PAGES).get();
 
     assertEquals(3, result.getDeletedPageCount());
   }
 
   @Test
   public void testComicReturnWithTheirScanType() {
-    Comic result = repository.findById(TEST_COMIC).get();
+    Comic result = repository.findById(TEST_COMIC_ID).get();
 
     assertNotNull(result.getScanType());
     assertEquals(1, result.getScanType().getId());
@@ -317,18 +318,18 @@ public class ComicRepositoryTest {
   public void testComicScanTypeCanBeChanged() {
     ScanType scanType = scanTypeRepository.findById(2L).get();
 
-    Comic record = repository.findById(TEST_COMIC).get();
+    Comic record = repository.findById(TEST_COMIC_ID).get();
     record.setScanType(scanType);
 
     repository.save(record);
 
-    Comic result = repository.findById(TEST_COMIC).get();
+    Comic result = repository.findById(TEST_COMIC_ID).get();
     assertEquals(scanType.getId(), result.getScanType().getId());
   }
 
   @Test
   public void testComicReturnWithTheirFormat() {
-    Comic result = repository.findById(TEST_COMIC).get();
+    Comic result = repository.findById(TEST_COMIC_ID).get();
 
     assertNotNull(result.getFormat());
     assertEquals(1L, result.getFormat().getId());
@@ -338,18 +339,18 @@ public class ComicRepositoryTest {
   public void testComicFormatCanBeChanged() {
     ComicFormat format = comicFormatRepository.findById(2L).get();
 
-    Comic record = repository.findById(TEST_COMIC).get();
+    Comic record = repository.findById(TEST_COMIC_ID).get();
     record.setFormat(format);
 
     repository.save(record);
 
-    Comic result = repository.findById(TEST_COMIC).get();
+    Comic result = repository.findById(TEST_COMIC_ID).get();
     assertEquals(format.getId(), result.getFormat().getId());
   }
 
   @Test
   public void testComicsReturnWithTheirImprint() {
-    Comic result = repository.findById(TEST_COMIC).get();
+    Comic result = repository.findById(TEST_COMIC_ID).get();
 
     assertNotNull(result.getImprint());
     assertEquals("Marvel Digital", result.getImprint());
@@ -357,18 +358,18 @@ public class ComicRepositoryTest {
 
   @Test
   public void testComicsImprintCanBeChanged() {
-    Comic record = repository.findById(TEST_COMIC).get();
+    Comic record = repository.findById(TEST_COMIC_ID).get();
     record.setImprint(TEST_IMPRINT);
 
     repository.save(record);
 
-    Comic result = repository.findById(TEST_COMIC).get();
+    Comic result = repository.findById(TEST_COMIC_ID).get();
     assertEquals(TEST_IMPRINT, result.getImprint());
   }
 
   @Test
   public void testComicsReturnWithSortName() {
-    Comic result = repository.findById(TEST_COMIC).get();
+    Comic result = repository.findById(TEST_COMIC_ID).get();
 
     assertNotNull(result.getSortName());
     assertEquals(TEST_COMIC_SORT_NAME, result.getSortName());
@@ -376,12 +377,12 @@ public class ComicRepositoryTest {
 
   @Test
   public void testComicSortNameCanBeChanged() {
-    Comic record = repository.findById(TEST_COMIC).get();
+    Comic record = repository.findById(TEST_COMIC_ID).get();
 
     record.setSortName("Farkle");
     repository.save(record);
 
-    Comic result = repository.findById(TEST_COMIC).get();
+    Comic result = repository.findById(TEST_COMIC_ID).get();
     assertEquals("Farkle", result.getSortName());
   }
 
@@ -391,7 +392,7 @@ public class ComicRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(7, result.size());
+    assertEquals(9, result.size());
   }
 
   @Test
@@ -432,7 +433,7 @@ public class ComicRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(8, result.size());
+    assertEquals(10, result.size());
     testComicOrder(0L, 0L, result);
   }
 
@@ -473,7 +474,7 @@ public class ComicRepositoryTest {
 
   @Test
   public void testGetById() {
-    Comic result = this.repository.getById(TEST_COMIC);
+    Comic result = this.repository.getById(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertFalse(result.getPages().isEmpty());
@@ -528,5 +529,33 @@ public class ComicRepositoryTest {
     for (Comic comic : result) {
       assertNotNull(comic.getDateDeleted());
     }
+  }
+
+  @Test
+  public void testComicWithDuplicates() {
+    List<Comic> result = repository.findAll();
+
+    for (int index = 0; index < result.size(); index++) {
+      if (result.get(index).getId().equals(TEST_COMIC_ID_WITH_DUPLICATES)) {
+        assertTrue(result.get(index).getDuplicateCount() > 0);
+        return;
+      }
+    }
+
+    fail("Did not find the expected comic");
+  }
+
+  @Test
+  public void testComicWithoutDuplicates() {
+    List<Comic> result = repository.findAll();
+
+    for (int index = 0; index < result.size(); index++) {
+      if (!result.get(index).getId().equals(TEST_COMIC_ID_WITH_DUPLICATES)) {
+        assertTrue(result.get(index).getDuplicateCount() == 0);
+        return;
+      }
+    }
+
+    fail("Did not find the expected comic");
   }
 }
