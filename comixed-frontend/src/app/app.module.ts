@@ -92,8 +92,8 @@ import { LoggerModule } from '@angular-ru/logger';
   ],
   imports: [
     UserModule,
-    ComicsModule,
     LibraryModule,
+    ComicsModule,
     ComicImportModule,
     BackendStatusModule,
     BrowserModule,
