@@ -26,11 +26,17 @@ import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/re
 import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
 import { AdminGuard, ReaderGuard } from 'app/user';
 import { LibraryAdminPageComponent } from 'app/library/pages/library-admin-page/library-admin-page.component';
+import { DuplicateComicsPageComponent } from 'app/library/pages/duplicate-comics-page/duplicate-comics-page.component';
 
 const routes: Routes = [
   {
     path: 'comics',
     component: LibraryPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'comics/duplicates',
+    component: DuplicateComicsPageComponent,
     canActivate: [ReaderGuard]
   },
   {
