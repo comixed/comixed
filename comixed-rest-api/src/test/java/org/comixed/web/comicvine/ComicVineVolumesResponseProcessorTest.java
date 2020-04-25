@@ -64,7 +64,7 @@ public class ComicVineVolumesResponseProcessorTest {
 
     ScrapingVolume volume = volumes.get(0);
     assertEquals("Batman", volume.getName());
-    assertEquals(717, volume.getIssueCount());
+    assertEquals(716, volume.getIssueCount());
     assertEquals(796, volume.getId());
     assertEquals("1940", volume.getStartYear());
     assertEquals("DC Comics", volume.getPublisher());
@@ -79,7 +79,7 @@ public class ComicVineVolumesResponseProcessorTest {
 
     ScrapingVolume volume = volumes.get(0);
     assertEquals("Superman & Batman: World's Finest", volume.getName());
-    assertEquals(1, volume.getIssueCount());
+    assertEquals(0, volume.getIssueCount());
     assertEquals(55645, volume.getId());
     assertEquals("", volume.getStartYear());
     assertEquals("", volume.getPublisher());

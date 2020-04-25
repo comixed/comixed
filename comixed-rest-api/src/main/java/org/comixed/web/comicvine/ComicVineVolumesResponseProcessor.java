@@ -107,8 +107,7 @@ public class ComicVineVolumesResponseProcessor {
     }
 
     public int getIssueCount() {
-      // BUG ComicVine returns the issue count - 1 for some reason
-      return this.issueCount + 1;
+      return this.issueCount;
     }
 
     public String getName() {
