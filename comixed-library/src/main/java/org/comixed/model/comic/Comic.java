@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.model.library;
+package org.comixed.model.comic;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -49,12 +49,6 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
 @Table(name = "comics")
-@NamedQueries({
-  @NamedQuery(
-      name = "Comic.findAllUnreadByUser",
-      query =
-          "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)")
-})
 @Log4j2
 public class Comic {
   @Id
@@ -764,9 +758,9 @@ public class Comic {
   @JsonProperty("pageCount")
   @JsonView(ComicList.class)
   public int getPageCount() {
-    return this.pages.isEmpty()
-        ? (this.calculatedPageCount != null ? this.calculatedPageCount.intValue() : 0)
-        : this.pages.size();
+    if (!this.pages.isEmpty()) return this.pages.size();
+    if (this.calculatedPageCount != null) return this.calculatedPageCount.intValue();
+    return 0;
   }
 
   /**
@@ -958,7 +952,12 @@ public class Comic {
   @Transient
   @JsonProperty(value = "publishedYear")
   public int getYearPublished() {
-    return this.coverDate != null ? this.coverDate.getYear() + 1900 : 0;
+    if (this.coverDate != null) {
+      GregorianCalendar calendar = new GregorianCalendar();
+      calendar.setTime(this.coverDate);
+      return calendar.get(Calendar.YEAR);
+    }
+    return 0;
   }
 
   /**
@@ -967,7 +966,7 @@ public class Comic {
    * @return true if the comic has character references
    */
   public boolean hasCharacters() {
-    return (this.characters.isEmpty() == false);
+    return !this.characters.isEmpty();
   }
 
   /**
@@ -976,7 +975,7 @@ public class Comic {
    * @return true if the comic references locations
    */
   public boolean hasLocations() {
-    return (this.locations.isEmpty() == false);
+    return !this.locations.isEmpty();
   }
 
   /**
@@ -1010,7 +1009,7 @@ public class Comic {
    * @return true if there are story arcs
    */
   public boolean hasStoryArcs() {
-    return this.storyArcs.isEmpty() == false;
+    return !this.storyArcs.isEmpty();
   }
 
   /**
@@ -1019,17 +1018,11 @@ public class Comic {
    * @return true if teams are present
    */
   public boolean hasTeams() {
-    return (this.teams.isEmpty() == false);
+    return !this.teams.isEmpty();
   }
 
   public void sortPages() {
-    this.pages.sort(
-        new Comparator<Page>() {
-          @Override
-          public int compare(Page p1, Page p2) {
-            return p1.getFilename().compareTo(p2.getFilename());
-          }
-        });
+    this.pages.sort((Page p1, Page p2) -> p1.getFilename().compareTo(p2.getFilename()));
     for (int index = 0; index < this.pages.size(); index++) {
       this.pages.get(index).setPageNumber(index);
     }

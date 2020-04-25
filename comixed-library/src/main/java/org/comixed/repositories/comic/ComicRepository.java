@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories.library;
+package org.comixed.repositories.comic;
 
 import java.util.Date;
 import java.util.List;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,6 +35,8 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @param userId the user's id
    * @return the list of comics
    */
+  @Query(
+      "SELECT c FROM Comic c WHERE c.id NOT IN (SELECT r.comic.id FROM LastReadDate r WHERE r.user.id = :userId)")
   List<Comic> findAllUnreadByUser(@Param("userId") long userId);
 
   /**

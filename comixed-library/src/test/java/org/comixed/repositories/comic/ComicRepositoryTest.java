@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories.library;
+package org.comixed.repositories.comic;
 
 import static org.junit.Assert.*;
 
@@ -26,9 +26,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.ComicFormat;
-import org.comixed.model.library.ScanType;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.ComicFormat;
+import org.comixed.model.comic.ScanType;
 import org.comixed.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;

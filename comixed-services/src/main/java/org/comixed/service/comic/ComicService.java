@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.service.library;
+package org.comixed.service.comic;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,12 +26,12 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.library.ComicRepository;
+import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.service.task.TaskService;
 import org.comixed.task.TaskException;
@@ -107,10 +107,6 @@ public class ComicService {
       }
     }
     return result;
-  }
-
-  public Comic getComicSummary(final long id) {
-    return null;
   }
 
   @Transactional

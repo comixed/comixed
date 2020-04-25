@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.service.library;
+package org.comixed.service.comic;
 
 import static junit.framework.TestCase.*;
 
@@ -25,15 +25,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.ComicFormat;
-import org.comixed.model.library.ScanType;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.ComicFormat;
+import org.comixed.model.comic.ScanType;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.repositories.library.ComicRepository;
+import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.service.task.TaskService;
 import org.comixed.task.TaskException;

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.repositories.library;
+package org.comixed.repositories.comic;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +24,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.ArrayList;
 import java.util.List;
-import org.comixed.model.library.Page;
+import org.comixed.model.comic.Page;
 import org.comixed.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;

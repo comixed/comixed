@@ -18,7 +18,7 @@
 
 package org.comixed.adaptors;
 
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.springframework.stereotype.Component;
 
 @Component

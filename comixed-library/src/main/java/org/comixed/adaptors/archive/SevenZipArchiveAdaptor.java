@@ -29,8 +29,8 @@ import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.comixed.adaptors.ArchiveType;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Page;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
 import org.springframework.stereotype.Component;
 
 /**

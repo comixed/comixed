@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.*;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 
 @Entity
 @Table(name = "tasks")

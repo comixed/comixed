@@ -19,12 +19,12 @@
 package org.comixed.controller.opds;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.opds.OPDSBookmark;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
-import org.comixed.service.library.ComicException;
-import org.comixed.service.library.ComicService;
+import org.comixed.service.comic.ComicException;
+import org.comixed.service.comic.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

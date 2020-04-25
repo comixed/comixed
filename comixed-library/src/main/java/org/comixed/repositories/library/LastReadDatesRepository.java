@@ -19,7 +19,7 @@
 package org.comixed.repositories.library;
 
 import java.util.List;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.springframework.data.repository.CrudRepository;

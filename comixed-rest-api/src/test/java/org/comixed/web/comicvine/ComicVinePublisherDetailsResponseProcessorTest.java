@@ -19,7 +19,7 @@
 package org.comixed.web.comicvine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.repositories.comic.PublisherRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

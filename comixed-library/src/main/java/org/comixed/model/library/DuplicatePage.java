@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.List;
+import org.comixed.model.comic.Page;
 import org.comixed.views.View;
 
 public class DuplicatePage {

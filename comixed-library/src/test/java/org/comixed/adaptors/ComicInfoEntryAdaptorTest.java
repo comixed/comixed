@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import org.comixed.loaders.BaseLoaderTest;
 import org.comixed.loaders.EntryLoaderException;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

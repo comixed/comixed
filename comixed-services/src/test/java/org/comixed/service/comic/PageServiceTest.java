@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.service.library;
+package org.comixed.service.comic;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.*;
@@ -25,11 +25,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
+import org.comixed.model.comic.PageType;
 import org.comixed.model.library.*;
+import org.comixed.repositories.comic.ComicRepository;
+import org.comixed.repositories.comic.PageRepository;
+import org.comixed.repositories.comic.PageTypeRepository;
 import org.comixed.repositories.library.BlockedPageHashRepository;
-import org.comixed.repositories.library.ComicRepository;
-import org.comixed.repositories.library.PageRepository;
-import org.comixed.repositories.library.PageTypeRepository;
 import org.comixed.utils.FileTypeIdentifier;
 import org.junit.Assert;
 import org.junit.Test;

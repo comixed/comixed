@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.model.library;
+package org.comixed.model.comic;
 
 import static org.junit.Assert.*;
 

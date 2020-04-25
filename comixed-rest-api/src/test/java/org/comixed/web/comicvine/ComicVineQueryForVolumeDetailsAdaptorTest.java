@@ -21,7 +21,7 @@ package org.comixed.web.comicvine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.scraping.ComicVineVolume;
 import org.comixed.repositories.ComicVineVolumeRepository;
 import org.comixed.web.ComicVineVolumeDetailsWebRequest;

@@ -20,7 +20,7 @@ package org.comixed.web.comicvine;
 
 import static org.junit.Assert.assertEquals;
 
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.scraping.ComicVinePublisher;
 import org.comixed.repositories.ComicVinePublisherRepository;
 import org.comixed.web.ComicVinePublisherDetailsWebRequest;

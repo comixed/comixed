@@ -21,7 +21,7 @@ package org.comixed.task.encoders;
 import static junit.framework.TestCase.*;
 import static org.comixed.task.encoders.DeleteComicTaskEncoder.DELETE_COMIC;
 
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.model.DeleteComicWorkerTask;

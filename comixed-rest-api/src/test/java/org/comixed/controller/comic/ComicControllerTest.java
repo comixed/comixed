@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.controller.library;
+package org.comixed.controller.comic;
 
 import static org.junit.Assert.*;
 
@@ -29,18 +29,18 @@ import java.util.List;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptorException;
 import org.comixed.handlers.ComicFileHandlerException;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Page;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.net.GetLibraryUpdatesRequest;
 import org.comixed.net.GetLibraryUpdatesResponse;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
+import org.comixed.service.comic.ComicException;
+import org.comixed.service.comic.ComicService;
+import org.comixed.service.comic.PageCacheService;
 import org.comixed.service.file.FileService;
-import org.comixed.service.library.ComicException;
-import org.comixed.service.library.ComicService;
-import org.comixed.service.library.PageCacheService;
 import org.comixed.task.model.DeleteComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.FileTypeIdentifier;
