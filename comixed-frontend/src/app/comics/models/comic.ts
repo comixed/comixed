@@ -60,4 +60,5 @@ export interface Comic {
   summary?: string;
   comicVineURL?: string;
   pages?: Page[];
+  duplicateCount?: number;
 }
