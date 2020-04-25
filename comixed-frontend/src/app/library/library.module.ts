@@ -80,6 +80,7 @@ import { ConsolidateLibraryComponent } from './components/consolidate-library/co
 import { LibraryAdminPageComponent } from 'app/library/pages/library-admin-page/library-admin-page.component';
 import { FileSaverModule } from 'ngx-filesaver';
 import { LibraryNavigationTreeComponent } from './components/library-navigation-tree/library-navigation-tree.component';
+import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/duplicate-comics-page.component';
 
 @NgModule({
   imports: [
@@ -148,7 +149,8 @@ import { LibraryNavigationTreeComponent } from './components/library-navigation-
     ConvertComicsSettingsComponent,
     ConsolidateLibraryComponent,
     LibraryAdminPageComponent,
-    LibraryNavigationTreeComponent
+    LibraryNavigationTreeComponent,
+    DuplicateComicsPageComponent
   ],
   providers: [
     LibraryService,

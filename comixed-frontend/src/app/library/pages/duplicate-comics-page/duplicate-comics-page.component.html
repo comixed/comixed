@@ -1,0 +1,4 @@
+<h2>{{'duplicate-comics-page.title'|translate:{count:duplicates.length} }}</h2>
+<app-comic-list *ngIf='duplicates'
+                [comics]='duplicates'
+                [selectedComics]='selectedComics'></app-comic-list>

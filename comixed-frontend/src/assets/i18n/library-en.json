@@ -445,5 +445,8 @@
       "reading-list": "{name} ({count})",
       "leaf-entry": "{name} ({count})"
     }
+  },
+  "duplicate-comics-page": {
+    "title": "Duplicate Comics ({count})"
   }
 }
