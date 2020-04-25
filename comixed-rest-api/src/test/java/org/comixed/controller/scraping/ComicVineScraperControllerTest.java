@@ -22,12 +22,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.net.ComicScrapeRequest;
 import org.comixed.net.GetScrapingIssueRequest;
 import org.comixed.net.GetVolumesRequest;
-import org.comixed.service.library.ComicException;
-import org.comixed.service.library.ComicService;
+import org.comixed.service.comic.ComicException;
+import org.comixed.service.comic.ComicService;
 import org.comixed.web.WebRequestException;
 import org.comixed.web.comicvine.*;
 import org.comixed.web.model.ScrapingIssue;

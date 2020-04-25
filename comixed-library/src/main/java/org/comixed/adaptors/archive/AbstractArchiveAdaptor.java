@@ -32,7 +32,7 @@ import org.comixed.handlers.ComicFileHandler;
 import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.loaders.EntryLoader;
 import org.comixed.loaders.EntryLoaderException;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.utils.ComicFileUtils;
 import org.comixed.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.InitializingBean;

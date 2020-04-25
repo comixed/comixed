@@ -20,7 +20,7 @@ package org.comixed.loaders;
 
 import java.io.IOException;
 import java.util.Map;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

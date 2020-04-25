@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import javax.persistence.*;
+import org.comixed.model.comic.Comic;
 import org.comixed.views.View;
 
 /**

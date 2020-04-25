@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

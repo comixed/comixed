@@ -1,4 +1,4 @@
-package org.comixed.repositories.library;
+package org.comixed.repositories.comic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
-import org.comixed.model.library.PageType;
+import org.comixed.model.comic.PageType;
 import org.comixed.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;

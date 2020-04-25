@@ -33,7 +33,7 @@ import org.comixed.importer.model.ComicBookGroupMatcher;
 import org.comixed.importer.model.ComicBookItemMatcher;
 import org.comixed.importer.model.ComicBookMatcher;
 import org.comixed.importer.model.ComicSmartListItem;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.springframework.stereotype.Component;
 
 /**

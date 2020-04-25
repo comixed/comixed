@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project.
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,42 +16,51 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.model.library;
+package org.comixed.model.comic;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import org.comixed.views.View.ComicDetails;
 import org.comixed.views.View.ComicList;
-import org.comixed.views.View.PageList;
 
-/**
- * <code>PageType</code> describes the type of a {@link Page}.
- *
- * @author The ComiXed Project
- */
 @Entity
-@Table(name = "page_types")
-public class PageType {
+@Table(name = "comic_file_details")
+public class ComicFileDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView({ComicList.class, PageList.class})
+  @JsonProperty("id")
+  @JsonView({ComicList.class, ComicDetails.class})
   private Long id;
 
-  @Column(name = "name", updatable = false, nullable = false)
-  @JsonView({ComicList.class, PageList.class})
-  private String name;
+  @OneToOne
+  @JoinColumn(name = "comic_id", nullable = false, updatable = false)
+  private Comic comic;
 
-  public PageType() {}
+  @Column(name = "file_hash", length = 32, nullable = false, updatable = true)
+  @JsonProperty("hash")
+  @JsonView({ComicList.class, ComicDetails.class})
+  private String hash;
+
+  public ComicFileDetails() {}
 
   public Long getId() {
     return id;
   }
 
-  public String getName() {
-    return name;
+  public Comic getComic() {
+    return comic;
+  }
+
+  public void setComic(final Comic comic) {
+    this.comic = comic;
+  }
+
+  public String getHash() {
+    return hash;
+  }
+
+  public void setHash(final String hash) {
+    this.hash = hash;
   }
 }

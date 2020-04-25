@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.controller.library;
+package org.comixed.controller.comic;
 
 import static org.junit.Assert.*;
 
@@ -24,12 +24,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
+import org.comixed.model.comic.PageType;
 import org.comixed.model.library.*;
 import org.comixed.net.SetBlockingStateRequest;
 import org.comixed.net.SetDeletedStateRequest;
-import org.comixed.service.library.PageCacheService;
-import org.comixed.service.library.PageException;
-import org.comixed.service.library.PageService;
+import org.comixed.service.comic.PageCacheService;
+import org.comixed.service.comic.PageException;
+import org.comixed.service.comic.PageService;
 import org.comixed.utils.FileTypeIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;

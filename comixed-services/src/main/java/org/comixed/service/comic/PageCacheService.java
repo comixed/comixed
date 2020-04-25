@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.service.library;
+package org.comixed.service.comic;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,17 +40,11 @@ public class PageCacheService {
     byte[] result = null;
     if (file.exists() && !file.isDirectory()) {
       this.log.debug("Loading cached image content: {} bytes", file.length());
-      FileInputStream input = null;
 
-      try {
-        input = new FileInputStream(file);
+      try (FileInputStream input = new FileInputStream(file)) {
         result = IOUtils.readFully(input, (int) file.length());
       } catch (Exception error) {
         this.log.error("Failed to load cached image", error);
-      } finally {
-        if (input != null) {
-          input.close();
-        }
       }
 
       return result;

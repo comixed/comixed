@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2018, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.model.library;
+package org.comixed.model.comic;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
@@ -27,26 +27,31 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.comixed.views.View.ComicList;
 import org.comixed.views.View.PageList;
-import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * <code>PageType</code> describes the type of a {@link Page}.
+ *
+ * @author The ComiXed Project
+ */
 @Entity
-@Table(name = "scan_types")
-public class ScanType {
+@Table(name = "page_types")
+public class PageType {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonView({ComicList.class, PageList.class})
-  private long id;
+  private Long id;
 
   @Column(name = "name", updatable = false, nullable = false)
   @JsonView({ComicList.class, PageList.class})
   private String name;
 
-  public long getId() {
-    return this.id;
+  public PageType() {}
+
+  public Long getId() {
+    return id;
   }
 
   public String getName() {
-    return this.name;
+    return name;
   }
 }

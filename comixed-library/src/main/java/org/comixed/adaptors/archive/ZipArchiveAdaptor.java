@@ -33,8 +33,8 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixed.adaptors.ArchiveType;
-import org.comixed.model.library.Comic;
-import org.comixed.model.library.Page;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
 import org.springframework.stereotype.Component;
 
 /**

@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

@@ -19,7 +19,7 @@
 package org.comixed.task.encoders;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.model.tasks.TaskType;
 import org.comixed.task.model.DeleteComicWorkerTask;

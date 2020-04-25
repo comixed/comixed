@@ -20,7 +20,7 @@ package org.comixed.model.user;
 
 import static org.junit.Assert.assertEquals;
 
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

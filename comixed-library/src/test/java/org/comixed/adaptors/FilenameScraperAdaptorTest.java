@@ -23,7 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

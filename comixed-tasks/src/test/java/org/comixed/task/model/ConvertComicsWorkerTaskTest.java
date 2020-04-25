@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.comixed.adaptors.ArchiveType;
-import org.comixed.model.library.Comic;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.Task;
 import org.comixed.repositories.tasks.TaskRepository;
 import org.comixed.task.encoders.ConvertComicTaskEncoder;

@@ -16,15 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.service.library;
+package org.comixed.service.comic;
 
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.Page;
+import org.comixed.model.comic.PageType;
 import org.comixed.model.library.*;
+import org.comixed.repositories.comic.ComicRepository;
+import org.comixed.repositories.comic.PageRepository;
+import org.comixed.repositories.comic.PageTypeRepository;
 import org.comixed.repositories.library.BlockedPageHashRepository;
-import org.comixed.repositories.library.ComicRepository;
-import org.comixed.repositories.library.PageRepository;
-import org.comixed.repositories.library.PageTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
