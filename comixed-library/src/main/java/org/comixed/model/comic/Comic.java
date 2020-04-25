@@ -257,6 +257,12 @@ public class Comic {
   @JsonView({ComicDetails.class, DatabaseBackup.class})
   private String summary;
 
+  @Formula(
+      "(SELECT COUNT(*) FROM comics c WHERE c.series = series AND c.volume = volume AND C.issue_number = issue_number)")
+  @JsonProperty("duplicateCount")
+  @JsonView({ComicList.class})
+  private Integer duplicateCount;
+
   public Date getDateLastUpdated() {
     return dateLastUpdated;
   }
@@ -1060,5 +1066,9 @@ public class Comic {
   @Transient
   public File getFile() {
     return new File(this.filename);
+  }
+
+  public Integer getDuplicateCount() {
+    return (this.duplicateCount != null) ? (this.duplicateCount - 1) : 0;
   }
 }
