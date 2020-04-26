@@ -18,6 +18,7 @@
 
 package org.comixed.model.library;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
@@ -41,34 +42,34 @@ public class ReadingList {
       cascade = CascadeType.ALL,
       fetch = FetchType.EAGER,
       orphanRemoval = true)
-  @JsonView(View.ReadingList.class)
   Set<ReadingListEntry> entries = new HashSet<>();
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView(View.ReadingList.class)
+  @JsonView(View.ComicList.class)
   private Long id;
 
   @Column(name = "name", length = 128)
   @JsonProperty("name")
-  @JsonView(View.ReadingList.class)
+  @JsonView(View.ComicList.class)
   private String name;
 
   @Column(name = "summary", length = 256, nullable = true)
   @JsonProperty("summary")
-  @JsonView(View.ReadingList.class)
+  @JsonView(View.ComicList.class)
   private String summary;
 
   @JsonProperty("owner")
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "owner_id")
-  @JsonView(View.ReadingList.class)
+  @JsonView(View.ComicList.class)
   private ComiXedUser owner;
 
   @Column(name = "created")
-  @JsonProperty("created_date")
-  @JsonView(View.ReadingList.class)
+  @JsonProperty("createdDate")
+  @JsonView(View.ComicList.class)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   private Date created = new Date();
 
   public Long getId() {

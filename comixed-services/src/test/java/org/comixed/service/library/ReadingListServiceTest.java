@@ -72,6 +72,9 @@ public class ReadingListServiceTest {
   @Captor private ArgumentCaptor<ReadingListEntry> readingListEntry;
   @Captor private ArgumentCaptor<ReadingList> readingListCaptor;
 
+  private List<Comic> comicList = new ArrayList<>();
+  private List<ReadingList> readingListList = new ArrayList<>();
+
   @Test(expected = ReadingListNameException.class)
   public void testCreateReadingListNameAlreadyUsed()
       throws NoSuchReadingListException, ReadingListNameException, ComicException {
@@ -233,5 +236,28 @@ public class ReadingListServiceTest {
     Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
     Mockito.verify(readingList, Mockito.times(1)).getOwner();
     Mockito.verify(user, Mockito.atLeast(2)).getId();
+  }
+
+  @Test
+  public void getReadingListsForComics() {
+    List<ReadingList> comicReadingList = new ArrayList<>();
+
+    for (int index = 0; index < 25; index++) {
+      comicList.add(comic);
+    }
+    readingListList.add(readingList);
+
+    Mockito.when(comic.getReadingLists()).thenReturn(comicReadingList);
+    Mockito.when(
+            readingListRepository.findByOwnerAndComic(
+                Mockito.anyString(), Mockito.any(Comic.class)))
+        .thenReturn(readingListList);
+
+    readingListService.getReadingListsForComics(TEST_USER_EMAIL, comicList);
+
+    assertEquals(comicList.size(), comicReadingList.size());
+
+    Mockito.verify(readingListRepository, Mockito.times(comicList.size()))
+        .findByOwnerAndComic(TEST_USER_EMAIL, comic);
   }
 }

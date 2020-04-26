@@ -19,10 +19,12 @@
 package org.comixed.repositories.library;
 
 import java.util.List;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -32,4 +34,8 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
 
   @Query("SELECT list FROM ReadingList list WHERE list.owner = :owner AND list.name = :listName")
   ReadingList findReadingListForUser(ComiXedUser owner, String listName);
+
+  @Query(
+      "SELECT l FROM ReadingList l WHERE l.owner.email = :email AND l IN (SELECT e FROM ReadingListEntry e WHERE e.comic = :comic)")
+  List<ReadingList> findByOwnerAndComic(@Param("email") String email, @Param("comic") Comic comic);
 }
