@@ -37,24 +37,22 @@ public class ReadingListEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView(View.ReadingList.class)
+  @JsonView(View.ComicList.class)
   private Long id;
 
   @ManyToOne
   @JoinColumn(name = "reading_list_id")
   @JsonIgnore
-  @JsonView(View.ReadingList.class)
   private ReadingList readingList;
 
   @ManyToOne
   @JoinColumn(name = "comic_id")
   @JsonProperty("comic")
-  @JsonView(View.ReadingList.class)
   private Comic comic;
 
   @Column(name = "added")
   @JsonProperty("added_date")
-  @JsonView(View.ReadingList.class)
+  @JsonView(View.ComicList.class)
   private Date added = new Date();
 
   public ReadingListEntry() {

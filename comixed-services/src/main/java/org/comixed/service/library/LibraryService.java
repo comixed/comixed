@@ -43,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LibraryService {
   @Autowired private ComicRepository comicRepository;
   @Autowired private TaskService taskService;
+  @Autowired private ReadingListService readingListService;
   @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private Worker worker;
 
@@ -73,6 +74,9 @@ public class LibraryService {
         result.add(comic);
       }
     }
+
+    this.log.debug("Loading reading lists");
+    this.readingListService.getReadingListsForComics(email, result);
 
     this.log.debug("Returning {} updated comic{}", result.size(), result.size() == 1 ? "" : "s");
     return result;

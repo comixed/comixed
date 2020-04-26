@@ -31,8 +31,8 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
+import org.comixed.model.library.ReadingList;
 import org.comixed.views.View;
-import org.comixed.views.View.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -55,41 +55,41 @@ public class Comic {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
   @JsonView({
-    ComicList.class,
-    DeletedComicList.class,
-    PageList.class,
-    DuplicatePageList.class,
-    DatabaseBackup.class,
+    View.ComicList.class,
+    View.DeletedComicList.class,
+    View.PageList.class,
+    View.DuplicatePageList.class,
+    View.DatabaseBackup.class,
     View.ReadingList.class
   })
   private Long id;
 
   @Enumerated(EnumType.STRING)
   @JsonProperty("archiveType")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   ArchiveType archiveType;
 
   @ManyToOne
   @JoinColumn(name = "scan_type_id")
   @JsonProperty("scanType")
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.PageList.class, View.DatabaseBackup.class})
   private ScanType scanType;
 
   @ManyToOne
   @JoinColumn(name = "format_id")
   @JsonProperty("format")
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.PageList.class, View.DatabaseBackup.class})
   private ComicFormat format;
 
   @Column(name = "filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.PageList.class, View.DatabaseBackup.class})
   private String filename;
 
   @Transient @JsonIgnore File backingFile;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "comic", orphanRemoval = true)
-  @JsonView({ComicList.class, ComicDetails.class})
+  @JsonView({View.ComicList.class, View.ComicDetails.class})
   private ComicFileDetails fileDetails;
 
   @Formula(value = "(SELECT COUNT(*) FROM pages p WHERE p.comic_id = id)")
@@ -104,68 +104,83 @@ public class Comic {
   @Column(name = "added_date", updatable = false, nullable = false)
   @JsonProperty("addedDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   @Temporal(TemporalType.TIMESTAMP)
   private Date dateAdded = new Date();
 
   @Column(name = "deleted_date", updatable = true, nullable = true)
   @JsonProperty("deletedDate")
   @JsonFormat(shape = Shape.NUMBER)
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   @Temporal(TemporalType.TIMESTAMP)
   private Date dateDeleted;
 
   @Column(name = "last_updated_date", updatable = true, nullable = false)
   @JsonProperty("lastUpdatedDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   @Temporal(TemporalType.TIMESTAMP)
   private Date dateLastUpdated = new Date();
 
   @Column(name = "publisher", length = 128)
   @JsonProperty("publisher")
-  @JsonView({ComicList.class, DuplicatePageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DuplicatePageList.class, View.DatabaseBackup.class})
   private String publisher;
 
   @Column(name = "series", length = 128)
   @JsonProperty("series")
-  @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
+  @JsonView({
+    View.ComicList.class,
+    View.PageList.class,
+    View.DuplicatePageList.class,
+    View.DatabaseBackup.class
+  })
   private String series;
 
   @Column(name = "volume", length = 4)
   @JsonProperty("volume")
-  @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
+  @JsonView({
+    View.ComicList.class,
+    View.PageList.class,
+    View.DuplicatePageList.class,
+    View.DatabaseBackup.class
+  })
   private String volume;
 
   @Column(name = "issue_number", length = 16)
   @JsonProperty("issueNumber")
-  @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
+  @JsonView({
+    View.ComicList.class,
+    View.PageList.class,
+    View.DuplicatePageList.class,
+    View.DatabaseBackup.class
+  })
   private String issueNumber;
 
   @Column(name = "imprint")
   @JsonProperty("imprint")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private String imprint;
 
   @Column(name = "comic_vine_id", length = 16)
   @JsonProperty("comicVineId")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private String comicVineId;
 
   @Column(name = "cover_date", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("coverDate")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private Date coverDate;
 
   @Column(name = "title", length = 128)
   @JsonProperty("title")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private String title;
 
   @Column(name = "sort_name", length = 128)
   @JsonProperty("sortName")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private String sortName;
 
   @ElementCollection
@@ -173,7 +188,7 @@ public class Comic {
   @CollectionTable(name = "comic_characters", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "character_name")
   @JsonProperty("characters")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private List<String> characters = new ArrayList<>();
 
   @ElementCollection
@@ -181,7 +196,7 @@ public class Comic {
   @CollectionTable(name = "comic_teams", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "team_name")
   @JsonProperty("teams")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private List<String> teams = new ArrayList<>();
 
   @ElementCollection
@@ -189,7 +204,7 @@ public class Comic {
   @CollectionTable(name = "comic_locations", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "location_name")
   @JsonProperty("locations")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private List<String> locations = new ArrayList<>();
 
   @ElementCollection
@@ -197,7 +212,7 @@ public class Comic {
   @CollectionTable(name = "comic_story_arcs", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "story_name")
   @JsonProperty("storyArcs")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   List<String> storyArcs = new ArrayList<>();
 
   @OneToMany(
@@ -206,62 +221,67 @@ public class Comic {
       fetch = FetchType.EAGER,
       orphanRemoval = true)
   @JsonProperty("credits")
-  @JsonView({ComicList.class, DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private Set<Credit> credits = new HashSet<>();
 
   @Transient
   @JsonProperty("nextIssueId")
-  @JsonView({ComicDetails.class})
+  @JsonView({View.ComicDetails.class})
   private Long nextIssueId;
 
   @Transient
   @JsonProperty("previousIssueId")
-  @JsonView({ComicDetails.class})
+  @JsonView({View.ComicDetails.class})
   private Long previousIssueId;
 
   @Formula(
       value =
           "(SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d))")
   @JsonProperty("blockedPageCount")
-  @JsonView({ComicList.class})
+  @JsonView(View.ComicList.class)
   private int blockedPageCount;
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "page_number")
   @JsonProperty("pages")
   @JsonView({
-    ComicDetails.class,
+    View.ComicDetails.class,
   })
   List<Page> pages = new ArrayList<>();
 
   @Transient
   @JsonProperty("comicVineURL")
-  @JsonView({ComicDetails.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetails.class, View.DatabaseBackup.class})
   private String comicVineURL;
 
   @Column(name = "description")
   @Lob
   @JsonProperty("description")
-  @JsonView({ComicDetails.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetails.class, View.DatabaseBackup.class})
   private String description;
 
   @Column(name = "notes")
   @Lob
   @JsonProperty("notes")
-  @JsonView({ComicDetails.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetails.class, View.DatabaseBackup.class})
   private String notes;
 
   @Column(name = "summary")
   @Lob
   @JsonProperty("summary")
-  @JsonView({ComicDetails.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetails.class, View.DatabaseBackup.class})
   private String summary;
 
   @Formula(
       "(SELECT COUNT(*) FROM comics c WHERE c.series = series AND c.volume = volume AND C.issue_number = issue_number)")
   @JsonProperty("duplicateCount")
-  @JsonView({ComicList.class})
+  @JsonView(View.ComicList.class)
   private Integer duplicateCount;
+
+  @Transient
+  @JsonProperty("readingLists")
+  @JsonView(View.ComicList.class)
+  private List<ReadingList> readingLists = new ArrayList<>();
 
   public Date getDateLastUpdated() {
     return dateLastUpdated;
@@ -406,7 +426,7 @@ public class Comic {
    * @return the filename
    */
   @JsonProperty("baseFilename")
-  @JsonView(ComicList.class)
+  @JsonView(View.ComicList.class)
   public String getBaseFilename() {
     return FilenameUtils.getName(this.filename);
   }
@@ -504,7 +524,7 @@ public class Comic {
    * @return <code>true</code> if the file is missing
    */
   @JsonProperty("missing")
-  @JsonView(ComicList.class)
+  @JsonView(View.ComicList.class)
   public boolean isMissing() {
     if (this.backingFile == null) {
       this.backingFile = new File(this.filename);
@@ -577,7 +597,7 @@ public class Comic {
    */
   @Transient
   @JsonProperty("deletedPageCount")
-  @JsonView(ComicList.class)
+  @JsonView(View.ComicList.class)
   public int getDeletedPageCount() {
     return this.calculatedDeletedPageCount;
   }
@@ -664,7 +684,7 @@ public class Comic {
 
   @Transient
   @JsonProperty("sortableIssueNumber")
-  @JsonView(ComicList.class)
+  @JsonView(View.ComicList.class)
   public String getSortableIssueNumber() {
     final String result = "00000" + (this.issueNumber != null ? this.issueNumber : "");
 
@@ -762,7 +782,7 @@ public class Comic {
    */
   @Transient
   @JsonProperty("pageCount")
-  @JsonView(ComicList.class)
+  @JsonView(View.ComicList.class)
   public int getPageCount() {
     if (!this.pages.isEmpty()) return this.pages.size();
     if (this.calculatedPageCount != null) return this.calculatedPageCount.intValue();
@@ -1070,5 +1090,9 @@ public class Comic {
 
   public Integer getDuplicateCount() {
     return (this.duplicateCount != null) ? (this.duplicateCount - 1) : 0;
+  }
+
+  public List<ReadingList> getReadingLists() {
+    return this.readingLists;
   }
 }

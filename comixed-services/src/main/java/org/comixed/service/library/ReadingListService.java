@@ -22,7 +22,10 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.model.comic.Comic;
-import org.comixed.model.library.*;
+import org.comixed.model.library.Matcher;
+import org.comixed.model.library.ReadingList;
+import org.comixed.model.library.ReadingListEntry;
+import org.comixed.model.library.SmartReadingList;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ReadingListRepository;
@@ -198,5 +201,21 @@ public class ReadingListService {
     matcher.setValue(value);
 
     return matcher;
+  }
+
+  public void getReadingListsForComics(String email, List<Comic> comics) {
+    this.log.debug("Loading reading lists for user: email={}", email);
+    for (Comic comic : comics) {
+      List<ReadingList> readingLists = this.readingListRepository.findByOwnerAndComic(email, comic);
+
+      this.log.debug(
+          "Found {} reading list{} for comic: id={}",
+          readingLists.size(),
+          readingLists.size() == 1 ? "" : "s",
+          comic.getId());
+      for (int index = 0; index < readingLists.size(); index++) {
+        comic.getReadingLists().add(readingLists.get(index));
+      }
+    }
   }
 }
