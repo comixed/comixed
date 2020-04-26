@@ -41,6 +41,7 @@ public class LibraryServiceTest {
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
+  @Mock private ReadingListService readingListService;
   @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Mock private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
@@ -100,6 +101,8 @@ public class LibraryServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1))
         .getLibraryUpdates(comic3.getDateLastUpdated(), pageableArgumentCaptor.getValue());
+    Mockito.verify(readingListService, Mockito.times(1))
+        .getReadingListsForComics(TEST_EMAIL, result);
   }
 
   @Test
