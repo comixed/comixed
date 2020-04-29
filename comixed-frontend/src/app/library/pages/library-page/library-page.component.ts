@@ -93,30 +93,43 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           this.collectionName
         );
         let comicSource = null;
+        let titleKey = null;
 
         switch (this.collectionType) {
           case CollectionType.PUBLISHERS:
             comicSource = this.libraryAdaptor.publishers$;
+            titleKey = 'publishers';
             break;
           case CollectionType.SERIES:
             comicSource = this.libraryAdaptor.series$;
+            titleKey = 'series';
             break;
           case CollectionType.CHARACTERS:
             comicSource = this.libraryAdaptor.characters$;
+            titleKey = 'characters';
             break;
           case CollectionType.TEAMS:
             comicSource = this.libraryAdaptor.teams$;
+            titleKey = 'teams';
             break;
           case CollectionType.LOCATIONS:
             comicSource = this.libraryAdaptor.locations$;
+            titleKey = 'locations';
             break;
           case CollectionType.STORIES:
             comicSource = this.libraryAdaptor.stories$;
+            titleKey = 'stories';
             break;
           default:
             this.logger.error('no such collection type:', this.collectionType);
+            titleKey = '';
         }
 
+        this.titleService.setTitle(
+          this.translateService.instant(`library-page.title.${titleKey}`, {
+            name: this.collectionName
+          })
+        );
         if (!!comicSource) {
           this.comicsSubscription = comicSource
             .pipe(
@@ -148,7 +161,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           comics => {
             this.comics = comics;
             this.titleService.setTitle(
-              this.translateService.instant('library-page.title', {
+              this.translateService.instant('library-page.title.all-comics', {
                 count: this.comics.length
               })
             );

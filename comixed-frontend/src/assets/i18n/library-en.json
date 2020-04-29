@@ -118,6 +118,15 @@
     }
   },
   "library-page": {
+    "title": {
+      "publishers": "Publishers : {name}",
+      "series": "Series : {name}",
+      "characters": "Characters : {name}",
+      "teams": "Teams : {name}",
+      "locations": "Locations : {name}",
+      "stories": "Stories : {name}",
+      "all-comics": "Library"
+    },
     "title-no-collection": "All Comics - {count, plural, =1{One Comic} other{# Comics}}",
     "title-for-collection": "{name} [{type, select, publishers{Publisher} series{Series} characters{Character} teams{Team} locations{Location} stories{Story} other{Unknown}}] - {count, plural, =1{One Comic} other{# Comics}}",
     "error": {
