@@ -48,19 +48,17 @@ public class ComicVineScraperController {
   @Autowired private ComicService comicService;
 
   @PostMapping(
-      value = "/volumes/{volume}/issues/{issue}",
+      value = "/volumes/{volume}/issues",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ScrapingIssue queryForIssue(
       @PathVariable("volume") final Integer volume,
-      @PathVariable("issue") final String issue,
       @RequestBody() final GetScrapingIssueRequest request)
       throws ComicVineAdaptorException {
+    String issue = request.getIssueNumber();
+    boolean skipCache = request.isSkipCache();
     this.log.info(
-        "Preparing to retrieve issue={} for volume={} (skipCache={})",
-        issue,
-        volume,
-        request.isSkipCache());
+        "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
     return this.queryForIssuesAdaptor.execute(request.getApiKey(), volume, issue);
   }

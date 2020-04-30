@@ -19,4 +19,5 @@
 export interface GetScrapingIssueRequest {
   apiKey: string;
   skipCache: boolean;
+  issueNumber: string;
 }

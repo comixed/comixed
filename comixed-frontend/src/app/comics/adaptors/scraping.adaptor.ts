@@ -131,7 +131,7 @@ export class ScrapingAdaptor {
       new ScrapingGetIssue({
         apiKey: apiKey,
         volumeId: volumeId,
-        issueNumber: issueNumber,
+        issueNumber: encodeURI(issueNumber),
         skipCache: skipCache
       })
     );

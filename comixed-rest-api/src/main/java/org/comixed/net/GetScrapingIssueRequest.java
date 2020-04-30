@@ -18,16 +18,25 @@
 
 package org.comixed.net;
 
-public class GetScrapingIssueRequest {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class GetScrapingIssueRequest {
+  @JsonProperty("apiKey")
   private String apiKey;
+
+  @JsonProperty("skipCache")
   private boolean skipCache;
+
+  @JsonProperty("issueNumber")
+  private String issueNumber;
 
   public GetScrapingIssueRequest() {}
 
-  public GetScrapingIssueRequest(final String apiKey, final boolean skipCache) {
+  public GetScrapingIssueRequest(
+      final String apiKey, final boolean skipCache, final String issueNumber) {
     this.apiKey = apiKey;
     this.skipCache = skipCache;
+    this.issueNumber = issueNumber;
   }
 
   public String getApiKey() {
@@ -36,5 +45,9 @@ public class GetScrapingIssueRequest {
 
   public boolean isSkipCache() {
     return skipCache;
+  }
+
+  public String getIssueNumber() {
+    return issueNumber;
   }
 }
