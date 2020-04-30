@@ -101,14 +101,14 @@ describe('ScrapingService', () => {
 
     const req = httpMock.expectOne(
       interpolate(GET_ISSUE_URL, {
-        volume: SCRAPING_VOLUME.id,
-        issue: ISSUE.issueNumber
+        volume: SCRAPING_VOLUME.id
       })
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       apiKey: API_KEY,
-      skipCache: SKIP_CACHE
+      skipCache: SKIP_CACHE,
+      issueNumber: ISSUE.issueNumber
     } as GetScrapingIssueRequest);
     req.flush(ISSUE);
   });

@@ -40,7 +40,8 @@ public class ComicVineQueryForIssueAdaptor {
 
     while (!issueNumber.isEmpty()
         && !issueNumber.equals("0")
-        && "123456789".indexOf(issueNumber.substring(0, 1)) == -1) {
+        && "123456789%ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(issueNumber.toUpperCase().substring(0, 1))
+            == -1) {
       issueNumber = issueNumber.substring(1);
     }
 
