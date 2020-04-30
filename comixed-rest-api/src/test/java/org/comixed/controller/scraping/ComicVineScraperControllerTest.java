@@ -124,8 +124,7 @@ public class ComicVineScraperControllerTest {
     try {
       controller.queryForIssue(
           TEST_VOLUME,
-          TEST_ISSUE_NUMBER,
-          new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE));
+          new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
     } finally {
       Mockito.verify(queryForIssueAdaptor, Mockito.times(1))
           .execute(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER);
@@ -142,8 +141,7 @@ public class ComicVineScraperControllerTest {
     ScrapingIssue result =
         controller.queryForIssue(
             TEST_VOLUME,
-            TEST_ISSUE_NUMBER,
-            new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE));
+            new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
 
     assertNotNull(result);
     assertSame(comicIssue, result);

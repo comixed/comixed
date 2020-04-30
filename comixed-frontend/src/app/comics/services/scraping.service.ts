@@ -16,36 +16,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { interpolate } from 'app/app.functions';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {interpolate} from 'app/app.functions';
 import {
   GET_ISSUE_URL,
   GET_VOLUMES_URL,
   LOAD_METADATA_URL
 } from 'app/comics/comics.constants';
-import { GetVolumesRequest } from 'app/comics/models/net/get-volumes-request';
-import { GetScrapingIssueRequest } from 'app/comics/models/net/get-scraping-issue-request';
-import { LoadMetadataRequest } from 'app/comics/models/net/load-metadata-request';
-import { LoggerService } from '@angular-ru/logger';
+import {GetVolumesRequest} from 'app/comics/models/net/get-volumes-request';
+import {GetScrapingIssueRequest} from 'app/comics/models/net/get-scraping-issue-request';
+import {LoadMetadataRequest} from 'app/comics/models/net/load-metadata-request';
+import {LoggerService} from '@angular-ru/logger';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScrapingService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  constructor(private logger: LoggerService, private http: HttpClient) {
+  }
 
   getVolumes(
-    apiKey: string,
-    series: string,
-    volume: string,
-    skipCache: boolean
+      apiKey: string,
+      series: string,
+      volume: string,
+      skipCache: boolean
   ): Observable<any> {
     this.logger.debug(
-      `[POST] http request: get volumes: apiKey=${apiKey} series=${series} volume=${volume} skipCache=${skipCache}`
+        `[POST] http request: get volumes: apiKey=${apiKey} series=${series} volume=${volume} skipCache=${skipCache}`
     );
-    return this.http.post(interpolate(GET_VOLUMES_URL, { series: series }), {
+    return this.http.post(interpolate(GET_VOLUMES_URL, {series: series}), {
       apiKey: apiKey,
       series: series,
       volume: volume,
@@ -54,38 +55,39 @@ export class ScrapingService {
   }
 
   getIssue(
-    apiKey: string,
-    volumeId: number,
-    issueId: string,
-    skipCache: boolean
+      apiKey: string,
+      volumeId: number,
+      issueNumber: string,
+      skipCache: boolean
   ): Observable<any> {
     this.logger.debug(
-      `[POST] http request: get scraping issue: apiKey=${apiKey} volumeId=${volumeId} issueId=${issueId} skipCache=${skipCache}`
+        `[POST] http request: get scraping issue: apiKey=${apiKey} volumeId=${volumeId} issueNumber=${issueNumber} skipCache=${skipCache}`
     );
     return this.http.post(
-      interpolate(GET_ISSUE_URL, { volume: `${volumeId}`, issue: issueId }),
-      {
-        apiKey: apiKey,
-        skipCache: skipCache
-      } as GetScrapingIssueRequest
+        interpolate(GET_ISSUE_URL, {volume: `${volumeId}`}),
+        {
+          apiKey: apiKey,
+          skipCache: skipCache,
+          issueNumber: issueNumber
+        } as GetScrapingIssueRequest
     );
   }
 
   loadMetadata(
-    apiKey: string,
-    comicId: number,
-    issueId: string,
-    skipCache: boolean
+      apiKey: string,
+      comicId: number,
+      issueId: string,
+      skipCache: boolean
   ): Observable<any> {
     this.logger.debug(
-      `[POST] http request: load metadata: apiKey=${apiKey} comicId=${comicId} issueId=${issueId} skipCache=${skipCache}`
+        `[POST] http request: load metadata: apiKey=${apiKey} comicId=${comicId} issueId=${issueId} skipCache=${skipCache}`
     );
     return this.http.post(
-      interpolate(LOAD_METADATA_URL, { comicId: comicId, issueId: issueId }),
-      {
-        apiKey: apiKey,
-        skipCache: skipCache
-      } as LoadMetadataRequest
+        interpolate(LOAD_METADATA_URL, {comicId: comicId, issueId: issueId}),
+        {
+          apiKey: apiKey,
+          skipCache: skipCache
+        } as LoadMetadataRequest
     );
   }
 }
