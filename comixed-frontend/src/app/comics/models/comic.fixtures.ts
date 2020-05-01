@@ -63,7 +63,8 @@ export const COMIC_1: Comic = {
   lastUpdatedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  readingLists: []
 };
 
 export const COMIC_2: Comic = {
@@ -103,7 +104,8 @@ export const COMIC_2: Comic = {
   lastUpdatedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  readingLists: []
 };
 
 export const COMIC_3: Comic = {
@@ -143,7 +145,8 @@ export const COMIC_3: Comic = {
   lastUpdatedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  readingLists: []
 };
 
 export const COMIC_4: Comic = {
@@ -183,7 +186,8 @@ export const COMIC_4: Comic = {
   lastUpdatedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  readingLists: []
 };
 
 export const COMIC_5: Comic = {
@@ -223,5 +227,6 @@ export const COMIC_5: Comic = {
   lastUpdatedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  readingLists: []
 };
