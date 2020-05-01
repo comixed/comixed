@@ -21,6 +21,7 @@ import { ComicFormat } from './comic-format';
 import { Page } from './page';
 import { ComicCredit } from './comic-credit';
 import { FileDetails } from 'app/comics/models/file-details';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 export interface Comic {
   id: number;
@@ -61,4 +62,5 @@ export interface Comic {
   comicVineURL?: string;
   pages?: Page[];
   duplicateCount?: number;
+  readingLists: ReadingList[];
 }
