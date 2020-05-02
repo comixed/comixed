@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Random;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
+import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.net.ConsolidateLibraryRequest;
@@ -34,6 +35,7 @@ import org.comixed.net.GetUpdatedComicsRequest;
 import org.comixed.net.GetUpdatedComicsResponse;
 import org.comixed.service.comic.ComicService;
 import org.comixed.service.library.LibraryService;
+import org.comixed.service.library.ReadingListService;
 import org.comixed.service.user.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,6 +68,8 @@ public class LibraryControllerTest {
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
   @Mock private List<Long> comicIdList;
+  @Mock private ReadingListService readingListService;
+  @Mock private List<ReadingList> readingLists;
 
   @Test
   public void testGetUpdatedComics() {
@@ -82,6 +86,9 @@ public class LibraryControllerTest {
     Mockito.when(libraryService.getLastReadDatesSince(Mockito.anyString(), Mockito.any(Date.class)))
         .thenReturn(lastReadList);
     Mockito.when(libraryService.getProcessingCount()).thenReturn(TEST_PROCESSING_COUNT);
+    Mockito.when(
+            readingListService.getReadingListsForUser(Mockito.anyString(), Mockito.any(Date.class)))
+        .thenReturn(readingLists);
 
     GetUpdatedComicsResponse result =
         libraryController.getUpdatedComics(
@@ -100,6 +107,7 @@ public class LibraryControllerTest {
     assertSame(lastReadList, result.getLastReadDates());
     assertFalse(result.hasMoreUpdates());
     assertEquals(TEST_PROCESSING_COUNT, result.getProcessingCount());
+    assertEquals(readingLists, result.getReadingLists());
 
     Mockito.verify(libraryService, Mockito.times(1))
         .getComicsUpdatedSince(
@@ -109,6 +117,8 @@ public class LibraryControllerTest {
             TEST_MOST_RECENT_COMIC_ID);
     Mockito.verify(libraryService, Mockito.times(1))
         .getLastReadDatesSince(TEST_USER_EMAIL, TEST_LATEST_UPDATED_DATE);
+    Mockito.verify(readingListService, Mockito.times(1))
+        .getReadingListsForUser(TEST_USER_EMAIL, TEST_LAST_UPDATED_DATE);
   }
 
   @Test
@@ -214,7 +224,7 @@ public class LibraryControllerTest {
     List<Comic> response =
         libraryController.consolidateLibrary(
             new ConsolidateLibraryRequest(TEST_DELETE_PHYSICAL_FILES));
-k
+
     assertNotNull(response);
     assertSame(comicList, response);
 

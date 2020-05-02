@@ -22,10 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
@@ -55,6 +52,7 @@ public class ReadingListControllerTest {
   private static final Long TEST_COMIC_ID_3 = 1002L;
   private static final Long TEST_COMIC_ID_4 = 1003L;
   private static final Long TEST_COMIC_ID_5 = 1004L;
+  private static final Date TEST_LAST_UPDATED_DATE = new Date();
 
   static {
     TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_1);
@@ -105,15 +103,17 @@ public class ReadingListControllerTest {
   @Test
   public void testGetReadingListsForUser() {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-    Mockito.when(readingListService.getReadingListsForUser(Mockito.anyString()))
+    Mockito.when(
+            readingListService.getReadingListsForUser(Mockito.anyString(), Mockito.any(Date.class)))
         .thenReturn(readingLists);
 
-    List<ReadingList> result = controller.getReadingListsForUser(principal);
+    List<ReadingList> result = controller.getReadingListsForUser(principal, TEST_LAST_UPDATED_DATE);
 
     assertNotNull(result);
     assertSame(readingLists, result);
 
-    Mockito.verify(readingListService, Mockito.times(1)).getReadingListsForUser(TEST_USER_EMAIL);
+    Mockito.verify(readingListService, Mockito.times(1))
+        .getReadingListsForUser(TEST_USER_EMAIL, TEST_LAST_UPDATED_DATE);
     Mockito.verify(principal, Mockito.atLeast(1)).getName();
   }
 

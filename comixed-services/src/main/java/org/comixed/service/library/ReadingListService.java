@@ -83,13 +83,13 @@ public class ReadingListService {
     }
   }
 
-  public List<ReadingList> getReadingListsForUser(final String email) {
-    this.log.debug("Getting reading lists for user: email={}", email);
+  public List<ReadingList> getReadingListsForUser(final String email, final Date lastUpdated) {
+    this.log.debug("Getting reading lists for user: email={} updated after={}", email, lastUpdated);
 
     this.log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
 
-    return this.readingListRepository.findAllReadingListsForUser(owner);
+    return this.readingListRepository.getAllReadingListsForOwnerUpdatedAfter(owner, lastUpdated);
   }
 
   @Transactional
