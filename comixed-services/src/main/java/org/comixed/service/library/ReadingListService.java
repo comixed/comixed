@@ -18,6 +18,7 @@
 
 package org.comixed.service.library;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
@@ -114,6 +115,7 @@ public class ReadingListService {
     this.log.debug("Updating reading list details");
     readingList.get().setName(name);
     readingList.get().setSummary(summary);
+    readingList.get().setLastUpdated(new Date());
 
     loadComics(entries, readingList.get());
 
