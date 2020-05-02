@@ -195,6 +195,7 @@ public class ReadingListServiceTest {
     Mockito.verify(readingList, Mockito.times(1)).setName(TEST_READING_LIST_NAME);
     Mockito.verify(readingList, Mockito.times(1)).setSummary(TEST_READING_LIST_SUMMARY);
     Mockito.verify(readingList, Mockito.times(1 + TEST_READING_LIST_ENTRIES.size())).getEntries();
+    Mockito.verify(readingList, Mockito.times(1)).setLastUpdated(Mockito.any(Date.class));
     Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
   }
 
