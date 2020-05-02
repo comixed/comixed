@@ -21,13 +21,16 @@ package org.comixed.net;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.comixed.model.comic.Comic;
+import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.views.View;
 
 public class GetUpdatedComicsResponse {
+
   @JsonProperty("comics")
   @JsonView(View.ComicList.class)
   private List<Comic> comics;
@@ -45,6 +48,10 @@ public class GetUpdatedComicsResponse {
   @JsonView(View.ComicList.class)
   private List<LastReadDate> lastReadDates;
 
+  @JsonProperty("readingLists")
+  @JsonView(View.ComicList.class)
+  private List<ReadingList> readingLists = new ArrayList<>();
+
   @JsonProperty("moreUpdates")
   @JsonView(View.ComicList.class)
   private boolean moreUpdates;
@@ -60,12 +67,14 @@ public class GetUpdatedComicsResponse {
       Long lastComicId,
       Date mostRecentUpdate,
       List<LastReadDate> lastReadDates,
+      List<ReadingList> readingLists,
       boolean moreUpdates,
       long processingCount) {
     this.comics = comics;
     this.lastComicId = lastComicId;
     this.mostRecentUpdate = mostRecentUpdate;
     this.lastReadDates = lastReadDates;
+    this.readingLists = readingLists;
     this.moreUpdates = moreUpdates;
     this.processingCount = processingCount;
   }
@@ -92,5 +101,9 @@ public class GetUpdatedComicsResponse {
 
   public long getProcessingCount() {
     return processingCount;
+  }
+
+  public List<ReadingList> getReadingLists() {
+    return this.readingLists;
   }
 }

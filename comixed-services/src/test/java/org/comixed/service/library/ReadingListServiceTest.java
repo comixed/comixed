@@ -51,6 +51,7 @@ public class ReadingListServiceTest {
   private static final Long TEST_COMIC_ID_5 = 1004L;
   private static final Long TEST_USER_ID = 17L;
   private static final Long TEST_OTHER_USER_ID = 29L;
+  private static final Date TEST_LAST_UPDATED_DATE = new Date();
 
   static {
     TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_1);
@@ -135,16 +136,20 @@ public class ReadingListServiceTest {
   @Test
   public void testGetReadingListsForUser() {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(readingListRepository.findAllReadingListsForUser(Mockito.any(ComiXedUser.class)))
+    Mockito.when(
+            readingListRepository.getAllReadingListsForOwnerUpdatedAfter(
+                Mockito.any(ComiXedUser.class), Mockito.any(Date.class)))
         .thenReturn(readingLists);
 
-    List<ReadingList> result = readingListService.getReadingListsForUser(TEST_USER_EMAIL);
+    List<ReadingList> result =
+        readingListService.getReadingListsForUser(TEST_USER_EMAIL, TEST_LAST_UPDATED_DATE);
 
     assertNotNull(result);
     assertSame(readingLists, result);
 
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-    Mockito.verify(readingListRepository, Mockito.times(1)).findAllReadingListsForUser(user);
+    Mockito.verify(readingListRepository, Mockito.times(1))
+        .getAllReadingListsForOwnerUpdatedAfter(user, TEST_LAST_UPDATED_DATE);
   }
 
   @Test(expected = NoSuchReadingListException.class)

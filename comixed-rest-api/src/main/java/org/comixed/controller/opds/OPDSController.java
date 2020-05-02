@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -80,7 +81,7 @@ public class OPDSController {
     return new OPDSNavigationFeed(
         "/opds/all?groupByFolder=true",
         "Comics - ",
-        this.readingListService.getReadingListsForUser(authentication.getName()));
+        this.readingListService.getReadingListsForUser(authentication.getName(), new Date(0L)));
   }
 
   @ResponseBody

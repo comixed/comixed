@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.comixed.model.comic.Comic;
@@ -74,7 +75,8 @@ public class ReadingListRepositoryTest {
 
   @Test
   public void testFindAllReadingListsForUser() {
-    List<ReadingList> result = repository.findAllReadingListsForUser(reader);
+    List<ReadingList> result =
+        repository.getAllReadingListsForOwnerUpdatedAfter(reader, new Date(0L));
 
     assertNotNull(result);
     assertEquals(2, result.size());
@@ -89,6 +91,15 @@ public class ReadingListRepositoryTest {
           break;
       }
     }
+  }
+
+  @Test
+  public void testFindAllReadingListsForUserNoneUpdated() {
+    List<ReadingList> result =
+        repository.getAllReadingListsForOwnerUpdatedAfter(reader, new Date());
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
