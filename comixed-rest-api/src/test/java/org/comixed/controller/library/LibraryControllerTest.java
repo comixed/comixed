@@ -214,7 +214,7 @@ public class LibraryControllerTest {
     List<Comic> response =
         libraryController.consolidateLibrary(
             new ConsolidateLibraryRequest(TEST_DELETE_PHYSICAL_FILES));
-
+k
     assertNotNull(response);
     assertSame(comicList, response);
 
