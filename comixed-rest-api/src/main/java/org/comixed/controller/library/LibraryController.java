@@ -25,6 +25,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
+import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.net.ConsolidateLibraryRequest;
 import org.comixed.net.ConvertComicsRequest;
@@ -32,6 +33,7 @@ import org.comixed.net.GetUpdatedComicsRequest;
 import org.comixed.net.GetUpdatedComicsResponse;
 import org.comixed.service.comic.ComicService;
 import org.comixed.service.library.LibraryService;
+import org.comixed.service.library.ReadingListService;
 import org.comixed.service.user.UserService;
 import org.comixed.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,7 @@ public class LibraryController {
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;
   @Autowired private UserService userService;
+  @Autowired private ReadingListService readingListService;
 
   @PostMapping(
       value = "/library/updates",
@@ -57,10 +60,11 @@ public class LibraryController {
   public GetUpdatedComicsResponse getUpdatedComics(
       Principal principal, @RequestBody() GetUpdatedComicsRequest request) {
     Date latestUpdateDate = new Date(request.getLastUpdatedDate());
+    String email = principal.getName();
     this.log.info(
         "Getting comics updated since {} for {} (max: {}, last id: {}, timeout: {}s)",
         latestUpdateDate,
-        principal.getName(),
+        email,
         request.getMaximumComics(),
         request.getLastComicId(),
         request.getTimeout());
@@ -76,10 +80,7 @@ public class LibraryController {
     while (!done) {
       comics =
           this.libraryService.getComicsUpdatedSince(
-              principal.getName(),
-              latestUpdateDate,
-              request.getMaximumComics() + 1,
-              request.getLastComicId());
+              email, latestUpdateDate, request.getMaximumComics() + 1, request.getLastComicId());
 
       if (comics.size() > request.getMaximumComics()) {
         this.log.debug("More updates are waiting");
@@ -112,11 +113,21 @@ public class LibraryController {
 
     this.log.debug("Loading updated last read dates");
     List<LastReadDate> lastReadDates =
-        this.libraryService.getLastReadDatesSince(principal.getName(), latestUpdateDate);
+        this.libraryService.getLastReadDatesSince(email, latestUpdateDate);
+
+    this.log.debug("Getting updated reading lists");
+    List<ReadingList> readingLists =
+        this.readingListService.getReadingListsForUser(email, latestUpdateDate);
 
     this.log.debug("Returning result");
     return new GetUpdatedComicsResponse(
-        comics, lastComicId, mostRecentUpdate, lastReadDates, moreUpdates, processingCount);
+        comics,
+        lastComicId,
+        mostRecentUpdate,
+        lastReadDates,
+        readingLists,
+        moreUpdates,
+        processingCount);
   }
 
   @PostMapping(value = "/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)

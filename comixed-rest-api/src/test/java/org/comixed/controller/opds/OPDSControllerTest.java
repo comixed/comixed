@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import java.security.Principal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
@@ -97,7 +98,8 @@ public class OPDSControllerTest {
     Mockito.when(autentication.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(securityContext.getAuthentication()).thenReturn(autentication);
     BDDMockito.given(SecurityContextHolder.getContext()).willReturn(securityContext);
-    Mockito.when(readingListService.getReadingListsForUser(TEST_USER_EMAIL))
+    Mockito.when(
+            readingListService.getReadingListsForUser(Mockito.anyString(), Mockito.any(Date.class)))
         .thenReturn(readingLists);
 
     OPDSFeed result = controller.getAllLists();

@@ -18,6 +18,7 @@
 
 package org.comixed.repositories.library;
 
+import java.util.Date;
 import java.util.List;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
@@ -29,8 +30,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReadingListRepository extends CrudRepository<ReadingList, Long> {
-  @Query("SELECT list FROM ReadingList list WHERE list.owner = :owner")
-  List<ReadingList> findAllReadingListsForUser(ComiXedUser owner);
+  @Query("SELECT l FROM ReadingList l WHERE l.owner = :owner AND l.lastUpdated > :lastUpdated")
+  List<ReadingList> getAllReadingListsForOwnerUpdatedAfter(
+      @Param("owner") ComiXedUser owner, @Param("lastUpdated") Date lastUpdated);
 
   @Query("SELECT list FROM ReadingList list WHERE list.owner = :owner AND list.name = :listName")
   ReadingList findReadingListForUser(ComiXedUser owner, String listName);

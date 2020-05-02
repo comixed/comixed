@@ -20,6 +20,7 @@ package org.comixed.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.ReadingList;
@@ -83,7 +84,7 @@ public class ReadingListController {
 
   @RequestMapping(value = "/lists", method = RequestMethod.GET)
   @JsonView(View.ReadingList.class)
-  public List<ReadingList> getReadingListsForUser(Principal principal) {
+  public List<ReadingList> getReadingListsForUser(Principal principal, final Date lastUpdated) {
     if (principal == null) {
       return null;
     }
@@ -91,7 +92,8 @@ public class ReadingListController {
 
     this.log.info("Getting reading lists: user={}", email);
 
-    final List<ReadingList> result = this.readingListService.getReadingListsForUser(email);
+    final List<ReadingList> result =
+        this.readingListService.getReadingListsForUser(email, lastUpdated);
 
     this.log.debug("Returning {} lists{}", result.size(), result.size() == 1 ? "" : "s");
     return result;
