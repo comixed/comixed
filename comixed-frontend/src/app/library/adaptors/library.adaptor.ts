@@ -42,6 +42,7 @@ import { ComicGetIssue } from 'app/comics/actions/comic.actions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LoggerService } from '@angular-ru/logger';
 import { CollectionType } from 'app/library/models/collection-type.enum';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 @Injectable()
 export class LibraryAdaptor {
@@ -57,6 +58,7 @@ export class LibraryAdaptor {
   private _teams$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _locations$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _readingLists$ = new BehaviorSubject<ReadingList[]>([]);
   private _processingCount$ = new BehaviorSubject<number>(0);
   private comicId = -1;
   private _timeout = 60;
@@ -119,6 +121,9 @@ export class LibraryAdaptor {
           this._stories$.next(
             extractField(state.comics, CollectionType.STORIES)
           );
+        }
+        if (!_.isEqual(this._readingLists$.getValue(), state.readingLists)) {
+          this._readingLists$.next(state.readingLists);
         }
         if (
           !!state.lastComicId &&
@@ -190,6 +195,10 @@ export class LibraryAdaptor {
 
   get stories$(): Observable<ComicCollectionEntry[]> {
     return this._stories$.asObservable();
+  }
+
+  get readingLists$(): Observable<ReadingList[]> {
+    return this._readingLists$.asObservable();
   }
 
   get processingCount$(): Observable<number> {

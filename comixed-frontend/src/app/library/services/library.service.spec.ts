@@ -79,13 +79,15 @@ describe('LibraryService', () => {
     const PENDING_RESCANS = 17;
     const PROCESSING_COUNT = 32;
     const RESCAN_COUNT = 66;
+    const READING_LISTS = [];
     const RESPONSE: GetLibraryUpdateResponse = {
       comics: COMICS,
       lastComicId: LAST_COMIC_ID,
       mostRecentUpdate: LAST_UPDATED_DATE,
       moreUpdates: MORE_UPDATES,
       lastReadDates: LAST_READ_DATES,
-      processingCount: PENDING_IMPORTS
+      processingCount: PENDING_IMPORTS,
+      readingLists: READING_LISTS
     };
 
     service

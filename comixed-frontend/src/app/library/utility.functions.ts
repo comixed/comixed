@@ -21,6 +21,7 @@ import { Comic } from 'app/comics/models/comic';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 export function mergeComics(base: Comic[], update: Comic[]): Comic[] {
   const result = base.filter(base_entry => {
@@ -28,6 +29,31 @@ export function mergeComics(base: Comic[], update: Comic[]): Comic[] {
   });
 
   return result.concat(update);
+}
+
+export function mergeReadingLists(
+  base: ReadingList[],
+  update: ReadingList[],
+  comics: Comic[]
+): ReadingList[] {
+  let result = base.filter(base_entry => {
+    return update.every(update_entry => update_entry.id !== base_entry.id);
+  });
+
+  result = result.concat(update);
+
+  comics.forEach(comic => {
+    comic.readingLists.forEach(readingList => {
+      const entry = result.find(listEntry => listEntry.id === readingList.id);
+
+      if (!!entry) {
+        entry.comics = entry.comics || [];
+        entry.comics.push(comic);
+      }
+    });
+  });
+
+  return result;
 }
 
 export function deleteComics(base: Comic[], deleted: Comic[]): Comic[] {

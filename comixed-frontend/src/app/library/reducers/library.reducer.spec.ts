@@ -41,8 +41,12 @@ import {
   LibraryStartRescanFailed,
   LibraryUpdatesReceived
 } from 'app/library/actions/library.actions';
-import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
-import { initialState, LibraryState, reducer } from './library.reducer';
+import {COMIC_1_LAST_READ_DATE} from 'app/library/models/last-read-date.fixtures';
+import {initialState, LibraryState, reducer} from './library.reducer';
+import {
+  READING_LIST_1,
+  READING_LIST_2
+} from 'app/comics/models/reading-list.fixtures';
 
 describe('Library Reducer', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -60,7 +64,7 @@ describe('Library Reducer', () => {
   let state: LibraryState;
 
   beforeEach(() => {
-    state = { ...initialState };
+    state = {...initialState};
   });
 
   describe('the initial state', () => {
@@ -115,29 +119,37 @@ describe('Library Reducer', () => {
     it('clears the consolidating library flag', () => {
       expect(state.consolidating).toBeFalsy();
     });
+
+    it('has no reading lists', () => {
+      expect(state.readingLists).toEqual([]);
+    });
   });
 
   describe('when resetting the library', () => {
     beforeEach(() => {
-      state = reducer({ ...state, comics: COMICS }, new LibraryReset());
+      state = reducer({...state, comics: COMICS}, new LibraryReset());
     });
 
     it('clears the comics', () => {
       expect(state.comics).toEqual([]);
+    });
+
+    it('has no reading lists', () => {
+      expect(state.readingLists).toEqual([]);
     });
   });
 
   describe('when getting library updates', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetchingUpdates: false },
-        new LibraryGetUpdates({
-          lastUpdateDate: new Date(),
-          timeout: 60,
-          maximumComics: 100,
-          processingCount: 27,
-          lastComicId: 1010
-        })
+          {...state, fetchingUpdates: false},
+          new LibraryGetUpdates({
+            lastUpdateDate: new Date(),
+            timeout: 60,
+            maximumComics: 100,
+            processingCount: 27,
+            lastComicId: 1010
+          })
       );
     });
 
@@ -148,30 +160,33 @@ describe('Library Reducer', () => {
 
   describe('when updates are received', () => {
     const LATEST_UPDATE = new Date().getTime();
-    const UPDATED_COMIC = { ...COMIC_2, lastUpdatedDate: LATEST_UPDATE };
+    const UPDATED_COMIC = {...COMIC_2, lastUpdatedDate: LATEST_UPDATE};
     const CURRENT_COMICS = [
-      { ...COMIC_1, lastUpdatedDate: 0 },
-      { ...COMIC_3, lastUpdatedDate: 0 },
-      { ...COMIC_5, lastUpdatedDate: 0 }
+      {...COMIC_1, lastUpdatedDate: 0},
+      {...COMIC_3, lastUpdatedDate: 0},
+      {...COMIC_5, lastUpdatedDate: 0}
     ];
-    const UPDATE_COMICS = [UPDATED_COMIC, { ...COMIC_4, lastUpdatedDate: 0 }];
+    const UPDATE_COMICS = [UPDATED_COMIC, {...COMIC_4, lastUpdatedDate: 0}];
     const PROCESSING_COUNT = 20;
+    const READING_LISTS = [READING_LIST_2];
 
     beforeEach(() => {
       state = reducer(
-        {
-          ...state,
-          fetchingUpdates: true,
-          comics: CURRENT_COMICS
-        },
-        new LibraryUpdatesReceived({
-          comics: UPDATE_COMICS,
-          lastComicId: LAST_COMIC_ID,
-          mostRecentUpdate: MOST_RECENT_UPDATE,
-          lastReadDates: LAST_READ_DATES,
-          moreUpdates: MORE_UPDATES,
-          processingCount: PROCESSING_COUNT
-        })
+          {
+            ...state,
+            fetchingUpdates: true,
+            comics: CURRENT_COMICS,
+            readingLists: [READING_LIST_1]
+          },
+          new LibraryUpdatesReceived({
+            comics: UPDATE_COMICS,
+            lastComicId: LAST_COMIC_ID,
+            mostRecentUpdate: MOST_RECENT_UPDATE,
+            lastReadDates: LAST_READ_DATES,
+            moreUpdates: MORE_UPDATES,
+            processingCount: PROCESSING_COUNT,
+            readingLists: READING_LISTS
+          })
       );
     });
 
@@ -202,13 +217,17 @@ describe('Library Reducer', () => {
     it('sets the more updates flag', () => {
       expect(state.moreUpdates).toEqual(MORE_UPDATES);
     });
+
+    it('updates the reading lists', () => {
+      expect(state.readingLists).toEqual([READING_LIST_1, READING_LIST_2]);
+    });
   });
 
   describe('when getting updates fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetchingUpdates: true },
-        new LibraryGetUpdatesFailed()
+          {...state, fetchingUpdates: true},
+          new LibraryGetUpdatesFailed()
       );
     });
 
@@ -220,8 +239,8 @@ describe('Library Reducer', () => {
   describe('when starting a rescan', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, startingRescan: false },
-        new LibraryStartRescan()
+          {...state, startingRescan: false},
+          new LibraryStartRescan()
       );
     });
 
@@ -233,8 +252,8 @@ describe('Library Reducer', () => {
   describe('when rescanning has started', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, startingRescan: true },
-        new LibraryRescanStarted({ count: 17 })
+          {...state, startingRescan: true},
+          new LibraryRescanStarted({count: 17})
       );
     });
 
@@ -246,8 +265,8 @@ describe('Library Reducer', () => {
   describe('when starting the rescan fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, startingRescan: true },
-        new LibraryStartRescanFailed()
+          {...state, startingRescan: true},
+          new LibraryStartRescanFailed()
       );
     });
 
@@ -259,8 +278,8 @@ describe('Library Reducer', () => {
   describe('when deleting multiple comics', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, deletingComics: false },
-        new LibraryDeleteMultipleComics({ ids: [1, 2, 3, 4] })
+          {...state, deletingComics: false},
+          new LibraryDeleteMultipleComics({ids: [1, 2, 3, 4]})
       );
     });
 
@@ -272,8 +291,8 @@ describe('Library Reducer', () => {
   describe('when multiple comics are deleted', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, deletingComics: true },
-        new LibraryMultipleComicsDeleted({ count: 5 })
+          {...state, deletingComics: true},
+          new LibraryMultipleComicsDeleted({count: 5})
       );
     });
 
@@ -285,8 +304,8 @@ describe('Library Reducer', () => {
   describe('when deleting multiple comics fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, deletingComics: true },
-        new LibraryDeleteMultipleComicsFailed()
+          {...state, deletingComics: true},
+          new LibraryDeleteMultipleComicsFailed()
       );
     });
 
@@ -298,12 +317,12 @@ describe('Library Reducer', () => {
   describe('when converting comics', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, convertingComics: false },
-        new LibraryConvertComics({
-          comics: COMICS,
-          archiveType: 'CBZ',
-          renamePages: true
-        })
+          {...state, convertingComics: false},
+          new LibraryConvertComics({
+            comics: COMICS,
+            archiveType: 'CBZ',
+            renamePages: true
+          })
       );
     });
 
@@ -315,8 +334,8 @@ describe('Library Reducer', () => {
   describe('when comics have started converting', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, convertingComics: true },
-        new LibraryComicsConverting()
+          {...state, convertingComics: true},
+          new LibraryComicsConverting()
       );
     });
 
@@ -328,8 +347,8 @@ describe('Library Reducer', () => {
   describe('when comics fail to start converting', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, convertingComics: true },
-        new LibraryConvertComicsFailed()
+          {...state, convertingComics: true},
+          new LibraryConvertComicsFailed()
       );
     });
 
@@ -341,8 +360,8 @@ describe('Library Reducer', () => {
   describe('when consolidating the library', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, consolidating: false },
-        new LibraryConsolidate({ deletePhysicalFiles: true })
+          {...state, consolidating: false},
+          new LibraryConsolidate({deletePhysicalFiles: true})
       );
     });
 
@@ -356,12 +375,12 @@ describe('Library Reducer', () => {
 
     beforeEach(() => {
       state = reducer(
-        {
-          ...state,
-          consolidating: true,
-          comics: COMICS
-        },
-        new LibraryConsolidated({ deletedComics: DELETED_COMICS })
+          {
+            ...state,
+            consolidating: true,
+            comics: COMICS
+          },
+          new LibraryConsolidated({deletedComics: DELETED_COMICS})
       );
     });
 
@@ -371,7 +390,7 @@ describe('Library Reducer', () => {
 
     it('removes the deleted comics from the state', () => {
       DELETED_COMICS.forEach(comic =>
-        expect(state.comics).not.toContain(comic)
+          expect(state.comics).not.toContain(comic)
       );
     });
   });
@@ -379,8 +398,8 @@ describe('Library Reducer', () => {
   describe('when consolidation fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, consolidating: true },
-        new LibraryConsolidateFailed()
+          {...state, consolidating: true},
+          new LibraryConsolidateFailed()
       );
     });
 
