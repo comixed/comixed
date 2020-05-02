@@ -66,11 +66,11 @@ public class ReadingList {
   @JsonView(View.ComicList.class)
   private ComiXedUser owner;
 
-  @Column(name = "created")
-  @JsonProperty("createdDate")
+  @Column(name = "last_updated")
+  @JsonProperty("lastUpdated")
   @JsonView(View.ComicList.class)
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  private Date created = new Date();
+  private Date lastUpdated = new Date();
 
   public Long getId() {
     return this.id;
@@ -102,5 +102,13 @@ public class ReadingList {
 
   public void setSummary(String summary) {
     this.summary = summary;
+  }
+
+  public Date getLastUpdated() {
+    return lastUpdated;
+  }
+
+  public void setLastUpdated(Date lastUpdated) {
+    this.lastUpdated = lastUpdated;
   }
 }
