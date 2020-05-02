@@ -17,9 +17,14 @@
  */
 
 import { LibraryActions, LibraryActionTypes } from '../actions/library.actions';
-import { deleteComics, mergeComics } from 'app/library/utility.functions';
+import {
+  deleteComics,
+  mergeComics,
+  mergeReadingLists
+} from 'app/library/utility.functions';
 import { Comic } from 'app/comics';
 import { LastReadDate } from 'app/library/models/last-read-date';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
@@ -37,6 +42,7 @@ export interface LibraryState {
   deletingComics: boolean;
   convertingComics: boolean;
   consolidating: boolean;
+  readingLists: ReadingList[];
 }
 
 export const initialState: LibraryState = {
@@ -52,7 +58,8 @@ export const initialState: LibraryState = {
   startingRescan: false,
   deletingComics: false,
   convertingComics: false,
-  consolidating: false
+  consolidating: false,
+  readingLists: []
 };
 
 export function reducer(
@@ -71,6 +78,10 @@ export function reducer(
       const lastComicId = action.payload.lastComicId || state.lastComicId;
       const latestUpdatedDate =
         action.payload.mostRecentUpdate || state.latestUpdatedDate;
+      const readingLists = mergeReadingLists(
+        state.readingLists,
+        action.payload.readingLists
+      );
 
       return {
         ...state,
@@ -81,7 +92,8 @@ export function reducer(
         moreUpdates: action.payload.moreUpdates,
         updatedIds: action.payload.comics.map(comic => comic.id),
         lastReadDates: action.payload.lastReadDates,
-        processingCount: action.payload.processingCount
+        processingCount: action.payload.processingCount,
+        readingLists: readingLists
       };
     }
 

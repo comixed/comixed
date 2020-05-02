@@ -152,7 +152,8 @@ describe('DuplicateComicsPageComponent', () => {
           lastReadDates: [],
           moreUpdates: false,
           mostRecentUpdate: new Date(),
-          processingCount: 0
+          processingCount: 0,
+          readingLists: []
         })
       );
     });

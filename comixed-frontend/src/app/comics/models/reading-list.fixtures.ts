@@ -16,12 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic } from 'app/comics';
+import { ReadingList } from 'app/comics/models/reading-list';
 
-export interface ReadingList {
-  id: number;
-  name: string;
-  summary: string;
-  lastUpdated: Date;
-  comics?: Comic[];
-}
+export const READING_LIST_1: ReadingList = {
+  id: 1,
+  name: 'First Reading List',
+  summary: 'My First Reading List',
+  lastUpdated: new Date()
+};
+
+export const READING_LIST_2: ReadingList = {
+  id: 2,
+  name: 'Second Reading List',
+  summary: 'My Second Reading List',
+  lastUpdated: new Date()
+};

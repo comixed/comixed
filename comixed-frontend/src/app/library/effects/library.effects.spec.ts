@@ -100,13 +100,14 @@ describe('LibraryEffects', () => {
 
   describe('when getting library updates', () => {
     it('fires an action on success', () => {
-      const service_response = {
+      const serviceResponse = {
         comics: COMICS,
         lastComicId: LAST_COMIC_ID,
         mostRecentUpdate: MOST_RECENT_UPDATE,
         moreUpdates: false,
         lastReadDates: LAST_READ_DATES,
-        processingCount: 0
+        processingCount: 0,
+        readingLists: []
       } as GetLibraryUpdateResponse;
       const action = new LibraryGetUpdates({
         lastUpdateDate: new Date(),
@@ -121,18 +122,19 @@ describe('LibraryEffects', () => {
         mostRecentUpdate: MOST_RECENT_UPDATE,
         lastReadDates: LAST_READ_DATES,
         processingCount: 0,
-        moreUpdates: false
+        moreUpdates: false,
+        readingLists: []
       });
 
       actions$ = hot('-a', { a: action });
-      libraryService.getUpdatesSince.and.returnValue(of(service_response));
+      libraryService.getUpdatesSince.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getUpdates$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new LibraryGetUpdates({
         lastUpdateDate: new Date(),
         timeout: 60,
@@ -144,7 +146,7 @@ describe('LibraryEffects', () => {
 
       actions$ = hot('-a', { a: action });
       libraryService.getUpdatesSince.and.returnValue(
-        throwError(service_response)
+        throwError(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
@@ -177,12 +179,12 @@ describe('LibraryEffects', () => {
 
   describe('when starting a rescan', () => {
     it('fires an action on success', () => {
-      const service_response = { count: COUNT } as StartRescanResponse;
+      const serviceResponse = { count: COUNT } as StartRescanResponse;
       const action = new LibraryStartRescan();
       const outcome = new LibraryRescanStarted({ count: COUNT });
 
       actions$ = hot('-a', { a: action });
-      libraryService.startRescan.and.returnValue(of(service_response));
+      libraryService.startRescan.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.startRescan$).toBeObservable(expected);
@@ -192,12 +194,12 @@ describe('LibraryEffects', () => {
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new LibraryStartRescan();
       const outcome = new LibraryStartRescanFailed();
 
       actions$ = hot('-a', { a: action });
-      libraryService.startRescan.and.returnValue(throwError(service_response));
+      libraryService.startRescan.and.returnValue(throwError(serviceResponse));
 
       const expected = cold('-b', { b: outcome });
       expect(effects.startRescan$).toBeObservable(expected);
@@ -223,7 +225,7 @@ describe('LibraryEffects', () => {
 
   describe('when deleting multiple comics', () => {
     it('fires an action on success', () => {
-      const service_response = { count: COUNT } as DeleteMultipleComicsResponse;
+      const serviceResponse = { count: COUNT } as DeleteMultipleComicsResponse;
       const action = new LibraryDeleteMultipleComics({
         ids: [7, 17, 65]
       });
@@ -232,7 +234,7 @@ describe('LibraryEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      libraryService.deleteMultipleComics.and.returnValue(of(service_response));
+      libraryService.deleteMultipleComics.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.deleteMultipleComics$).toBeObservable(expected);
@@ -242,7 +244,7 @@ describe('LibraryEffects', () => {
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
+      const serviceResponse = new HttpErrorResponse({});
       const action = new LibraryDeleteMultipleComics({
         ids: [7, 17, 65]
       });
@@ -250,7 +252,7 @@ describe('LibraryEffects', () => {
 
       actions$ = hot('-a', { a: action });
       libraryService.deleteMultipleComics.and.returnValue(
-        throwError(service_response)
+        throwError(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });

@@ -138,7 +138,8 @@ describe('ImportPageComponent', () => {
           mostRecentUpdate: null,
           moreUpdates: false,
           lastReadDates: [],
-          processingCount: 0
+          processingCount: 0,
+          readingLists: []
         })
       );
       fixture.detectChanges();
@@ -166,7 +167,8 @@ describe('ImportPageComponent', () => {
           mostRecentUpdate: null,
           moreUpdates: false,
           lastReadDates: [],
-          processingCount: 17
+          processingCount: 17,
+          readingLists: []
         })
       );
       fixture.detectChanges();

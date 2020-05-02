@@ -19,6 +19,7 @@
 import { Action } from '@ngrx/store';
 import { Comic } from '../../comics/models/comic';
 import { LastReadDate } from 'app/library/models/last-read-date';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 export enum LibraryActionTypes {
   Reset = '[LIBRARY] Reset the library',
@@ -70,6 +71,7 @@ export class LibraryUpdatesReceived implements Action {
       moreUpdates: boolean;
       lastReadDates: LastReadDate[];
       processingCount: number;
+      readingLists: ReadingList[];
     }
   ) {}
 }
