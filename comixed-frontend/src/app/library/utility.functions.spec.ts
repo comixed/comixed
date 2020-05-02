@@ -23,7 +23,17 @@ import {
   COMIC_4,
   COMIC_5
 } from 'app/comics/models/comic.fixtures';
-import { latestUpdatedDate, mergeComics } from './utility.functions';
+import {
+  latestUpdatedDate,
+  mergeComics,
+  mergeReadingLists
+} from './utility.functions';
+import {
+  READING_LIST_1,
+  READING_LIST_2
+} from 'app/comics/models/reading-list.fixtures';
+import * as _ from 'lodash';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 describe('Utility Functions', () => {
   describe('merging comics', () => {
@@ -52,6 +62,31 @@ describe('Utility Functions', () => {
           (left, right) => left.id - right.id
         )
       ).toEqual([...OVERLAP_UPDATED].sort((left, right) => left.id - right.id));
+    });
+  });
+
+  describe('merging reading lists', () => {
+    const UPDATE = [READING_LIST_1];
+    const UPDATED: ReadingList = {
+      ...READING_LIST_1,
+      name: 'Updated Reading List'
+    };
+
+    it('updates an empty list', () => {
+      expect(mergeReadingLists([], UPDATE)).toEqual(UPDATE);
+    });
+
+    it('merges non-overlapping sets', () => {
+      expect(
+        _.isEqual(mergeReadingLists([READING_LIST_2], UPDATE), [
+          READING_LIST_2,
+          READING_LIST_1
+        ])
+      ).toBeTruthy();
+    });
+
+    it('merges overlapping sets', () => {
+      expect(mergeReadingLists(UPDATE, [UPDATED])).toEqual([UPDATED]);
     });
   });
 

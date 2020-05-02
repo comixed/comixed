@@ -89,7 +89,8 @@ export class LibraryEffects {
                   : null,
                 moreUpdates: response.moreUpdates,
                 lastReadDates: response.lastReadDates,
-                processingCount: response.processingCount
+                processingCount: response.processingCount,
+                readingLists: response.readingLists
               })
           ),
           catchError(error => {

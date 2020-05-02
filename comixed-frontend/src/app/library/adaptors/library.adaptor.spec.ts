@@ -55,6 +55,10 @@ import {
 } from '../actions/library.actions';
 import { LibraryAdaptor } from './library.adaptor';
 import { CollectionType } from 'app/library/models/collection-type.enum';
+import {
+  READING_LIST_1,
+  READING_LIST_2
+} from 'app/comics/models/reading-list.fixtures';
 
 describe('LibraryAdaptor', () => {
   const ASCENDING = false;
@@ -68,6 +72,7 @@ describe('LibraryAdaptor', () => {
   const IDS = [7, 17, 65, 1, 29, 71];
   const ARCHIVE_TYPE = 'CBZ';
   const RENAME_PAGES = true;
+  const READING_LISTS = [READING_LIST_1, READING_LIST_2];
 
   let adaptor: LibraryAdaptor;
   let store: Store<AppState>;
@@ -106,7 +111,8 @@ describe('LibraryAdaptor', () => {
           moreUpdates: MORE_UPDATES,
           processingCount: PROCESSING_COUNT,
           comics: [],
-          lastReadDates: []
+          lastReadDates: [],
+          readingLists: []
         })
       );
       adaptor.getLibraryUpdates();
@@ -146,7 +152,8 @@ describe('LibraryAdaptor', () => {
             mostRecentUpdate: MOST_RECENT_UPDATE,
             moreUpdates: MORE_UPDATES,
             lastReadDates: LAST_READ_DATES,
-            processingCount: PROCESSING_COUNT
+            processingCount: PROCESSING_COUNT,
+            readingLists: READING_LISTS
           })
         );
       });
@@ -202,6 +209,12 @@ describe('LibraryAdaptor', () => {
       it('provides updates on story arcs', () => {
         adaptor.stories$.subscribe(result => expect(result).toEqual(STORIES));
       });
+
+      it('provides updates on the reading lists', () => {
+        adaptor.readingLists$.subscribe(result =>
+          expect(result).not.toEqual([])
+        );
+      });
     });
 
     describe('when one of the updates is the current comic', () => {
@@ -219,7 +232,8 @@ describe('LibraryAdaptor', () => {
             moreUpdates: MORE_UPDATES,
             mostRecentUpdate: MOST_RECENT_UPDATE,
             lastReadDates: LAST_READ_DATES,
-            processingCount: 7
+            processingCount: 7,
+            readingLists: READING_LISTS
           })
         );
       });
@@ -322,7 +336,8 @@ describe('LibraryAdaptor', () => {
             moreUpdates: MORE_UPDATES,
             processingCount: PROCESSING_COUNT,
             comics: COMICS,
-            lastReadDates: []
+            lastReadDates: [],
+            readingLists: []
           })
         );
         store.dispatch(
