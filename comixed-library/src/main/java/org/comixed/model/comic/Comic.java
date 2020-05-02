@@ -273,7 +273,7 @@ public class Comic {
   private String summary;
 
   @Formula(
-      "(SELECT COUNT(*) FROM comics c WHERE c.series = series AND c.volume = volume AND C.issue_number = issue_number)")
+      "(SELECT COUNT(*) FROM comics c WHERE c.series = series AND c.volume = volume AND c.issue_number = issueNumber)")
   @JsonProperty("duplicateCount")
   @JsonView(View.ComicList.class)
   private Integer duplicateCount;

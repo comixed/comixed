@@ -412,12 +412,12 @@
                  name="First Reading List"
                  owner_id="1000"
                  summary="This is my reading list"
-                 created="2019-01-01 13:00:00"/>
+                 last_updated="2019-01-01 13:00:00"/>
   <reading_lists id="1001"
                  name="Second Reading List"
                  owner_id="1000"
                  summary="This is my other reading list"
-                 created="2019-02-01 13:00:00"/>
+                 last_updated="2019-02-01 13:00:00"/>
   <reading_list_entries id="1000"
                         reading_list_id="1000"
                         comic_id="1000"
