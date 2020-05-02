@@ -24,9 +24,9 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { NavigationDataPayload } from 'app/library/models/navigation-data-payload';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import { Router } from '@angular/router';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 const PUBLISHER_NODE = 0;
 const SERIES_NODE = 1;
@@ -168,7 +168,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
     this.storiesSubscription = this.libraryAdaptor.stories$.subscribe(stories =>
       this.createChildNodes(CollectionType.STORIES, STORY_NODE, stories)
     );
-    this.readingListSubscription = this.readingListAdaptor.reading_list$.subscribe(
+    this.readingListSubscription = this.libraryAdaptor.readingLists$.subscribe(
       lists => this.loadReadingLists(lists)
     );
   }
@@ -252,7 +252,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
             'library-navigation-tree.label.reading-list',
             {
               name: list.name,
-              count: list.entries.length
+              count: list.comics.length
             }
           ),
           key: list.name,
@@ -262,7 +262,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
           } as NavigationDataPayload,
           icon: 'pi pi-list',
           expanded: false,
-          selectable: list.entries.length > 0
+          selectable: list.comics.length > 0
         } as TreeNode;
       })
     } as TreeNode;
