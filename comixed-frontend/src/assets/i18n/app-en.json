@@ -6,7 +6,6 @@
     "library": {
       "root": "Library",
       "comics": "Comics",
-      "reading-lists": "Reading Lists",
       "import": "Import",
       "duplicate-pages": "Duplicate Pages",
       "missing-comics": "Missing Comics"
@@ -345,35 +344,6 @@
     "selected": "Selected",
     "not-selected": "Not Selected"
   },
-  "reading-list-page": {
-    "label": {
-      "name": "List Name",
-      "summary": "Summary"
-    },
-    "text": {
-      "name-placeholder": "Enter a unique name..."
-    },
-    "button": {
-      "save": "Save List"
-    },
-    "remove-comics": {
-      "header": "Remove Selected Comics",
-      "message": "Are you sure you want to remove {comic_count} selected comics?"
-    }
-  },
-  "reading-lists-page": {
-    "title": "Reading Lists",
-    "table": {
-      "headers": {
-        "name": "Name",
-        "summary": "Summary",
-        "comic-count": "Comic Count"
-      }
-    },
-    "button": {
-      "new-reading-list": "New List"
-    }
-  },
   "user-effects": {
     "login": {
       "summary": {
@@ -408,7 +378,6 @@
         "issue-number": "Issue #{issue}"
       },
       "multi-comic-scraping-page": "Scraping",
-      "reading-lists-page": "Reading Lists",
       "account-page": "Account",
       "help": {
         "root": "Help",
