@@ -38,6 +38,6 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
   ReadingList findReadingListForUser(ComiXedUser owner, String listName);
 
   @Query(
-      "SELECT l FROM ReadingList l WHERE l.owner.email = :email AND l IN (SELECT e FROM ReadingListEntry e WHERE e.comic = :comic)")
+      "SELECT l FROM ReadingList l WHERE l.owner.email = :email AND l IN (SELECT e.readingList FROM ReadingListEntry e WHERE e.comic = :comic)")
   List<ReadingList> findByOwnerAndComic(@Param("email") String email, @Param("comic") Comic comic);
 }
