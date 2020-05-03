@@ -75,8 +75,10 @@ public class LibraryService {
       }
     }
 
-    this.log.debug("Loading reading lists");
-    this.readingListService.getReadingListsForComics(email, result);
+    if (!result.isEmpty()) {
+      this.log.debug("Loading reading lists");
+      this.readingListService.getReadingListsForComics(email, result);
+    }
 
     this.log.debug("Returning {} updated comic{}", result.size(), result.size() == 1 ? "" : "s");
     return result;
