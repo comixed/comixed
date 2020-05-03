@@ -22,8 +22,6 @@ import { DuplicatesPageComponent } from 'app/library/pages/duplicates-page/dupli
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
 import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
 import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
-import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
-import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
 import { AdminGuard, ReaderGuard } from 'app/user';
 import { LibraryAdminPageComponent } from 'app/library/pages/library-admin-page/library-admin-page.component';
 import { DuplicateComicsPageComponent } from 'app/library/pages/duplicate-comics-page/duplicate-comics-page.component';
@@ -53,21 +51,6 @@ const routes: Routes = [
     path: 'scraping',
     component: MultiComicScrapingPageComponent,
     canActivate: [AdminGuard]
-  },
-  {
-    path: 'lists/new',
-    component: ReadingListPageComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'lists/:id',
-    component: ReadingListPageComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'lists',
-    component: ReadingListsPageComponent,
-    canActivate: [ReaderGuard]
   },
   {
     path: 'duplicates',
