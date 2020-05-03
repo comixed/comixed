@@ -26,7 +26,6 @@ import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry'
 import { NavigationDataPayload } from 'app/library/models/navigation-data-payload';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import { Router } from '@angular/router';
-import { ReadingList } from 'app/comics/models/reading-list';
 
 const PUBLISHER_NODE = 0;
 const SERIES_NODE = 1;
@@ -235,12 +234,13 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
       case CollectionType.TEAMS:
       case CollectionType.LOCATIONS:
       case CollectionType.STORIES:
+      case CollectionType.READING_LISTS:
         this.router.navigate(['comics', nodeData.type, nodeData.name]);
         break;
     }
   }
 
-  private loadReadingLists(lists: ReadingList[]) {
+  private loadReadingLists(lists: ComicCollectionEntry[]) {
     this.nodes[0].children[READING_LISTS] = {
       label: this.translateService.instant(
         'library-navigation-tree.label.reading-lists',

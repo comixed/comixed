@@ -33,27 +33,13 @@ export function mergeComics(base: Comic[], update: Comic[]): Comic[] {
 
 export function mergeReadingLists(
   base: ReadingList[],
-  update: ReadingList[],
-  comics: Comic[]
+  update: ReadingList[]
 ): ReadingList[] {
-  let result = base.filter(base_entry => {
+  const result = base.filter(base_entry => {
     return update.every(update_entry => update_entry.id !== base_entry.id);
   });
 
-  result = result.concat(update);
-
-  comics.forEach(comic => {
-    comic.readingLists.forEach(readingList => {
-      const entry = result.find(listEntry => listEntry.id === readingList.id);
-
-      if (!!entry) {
-        entry.comics = entry.comics || [];
-        entry.comics.push(comic);
-      }
-    });
-  });
-
-  return result;
+  return result.concat(update);
 }
 
 export function deleteComics(base: Comic[], deleted: Comic[]): Comic[] {
@@ -87,7 +73,8 @@ interface ExtractEntry {
 
 export function extractField(
   comics: Comic[],
-  type: CollectionType
+  type: CollectionType,
+  readingLists: ReadingList[] = []
 ): ComicCollectionEntry[] {
   let primaryFieldName = null;
   let secondaryFieldName = null;
@@ -112,17 +99,28 @@ export function extractField(
     case CollectionType.STORIES:
       primaryFieldName = 'storyArcs';
       break;
+    case CollectionType.READING_LISTS:
+      primaryFieldName = 'readingLists';
+      break;
   }
   let extractedData: ExtractEntry[] = [];
 
   comics.forEach(comic => {
-    const primaryFieldValue = comic[primaryFieldName];
-    const secondaryFieldValue = !!secondaryFieldName
-      ? comic[secondaryFieldName]
-      : null;
-    const fieldValue = !!secondaryFieldValue
-      ? secondaryFieldValue
-      : primaryFieldValue;
+    let fieldValue = null;
+
+    // if we're dealing with reading lists then we only need the name and not the whole object
+    if (type === CollectionType.READING_LISTS) {
+      fieldValue = comic.readingLists.map(list => list.name);
+    } else {
+      const primaryFieldValue = comic[primaryFieldName];
+      const secondaryFieldValue = !!secondaryFieldName
+        ? comic[secondaryFieldName]
+        : null;
+
+      fieldValue = !!secondaryFieldValue
+        ? secondaryFieldValue
+        : primaryFieldValue;
+    }
 
     if (!!fieldValue && fieldValue.constructor === Array) {
       extractedData = extractedData.concat(
