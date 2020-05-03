@@ -120,6 +120,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
             comicSource = this.libraryAdaptor.stories$;
             titleKey = 'stories';
             break;
+          case CollectionType.READING_LISTS:
+            comicSource = this.libraryAdaptor.readingLists$;
+            titleKey = 'reading-list';
+            break;
           default:
             this.logger.error('no such collection type:', this.collectionType);
             titleKey = '';
