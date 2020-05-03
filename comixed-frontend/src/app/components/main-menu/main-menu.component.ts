@@ -80,14 +80,6 @@ export class MainMenuComponent implements OnInit {
             icon: 'fa fw fas fa-clone',
             routerLink: ['/comics/duplicates'],
             visible: this.authenticationAdaptor.authenticated
-          },
-          {
-            label: this.translateService.instant(
-                'main-menu.item.library.reading-lists'
-            ),
-            icon: 'fas fa-glasses',
-            routerLink: ['/lists'],
-            visible: this.authenticationAdaptor.authenticated
           }
         ]
       },

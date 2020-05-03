@@ -37,8 +37,6 @@ import { LibraryRoutingModule } from 'app/library/library-routing.module';
 import { LibraryPageComponent } from 'app/library/pages/library-page/library-page.component';
 import { MissingComicsPageComponent } from 'app/library/pages/missing-comics-page/missing-comics-page.component';
 import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-scraping-page/multi-comic-scraping-page.component';
-import { ReadingListPageComponent } from 'app/library/pages/reading-list-page/reading-list-page.component';
-import { ReadingListsPageComponent } from 'app/library/pages/reading-lists-page/reading-lists-page.component';
 import { MissingComicsPipe } from 'app/library/pipes/missing-comics.pipe';
 import { DuplicatePagesService } from 'app/library/services/duplicate-pages.service';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -139,8 +137,6 @@ import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/dupl
     MissingComicsPageComponent,
     MultiComicScrapingPageComponent,
     ScrapingComicListComponent,
-    ReadingListsPageComponent,
-    ReadingListPageComponent,
     MissingComicsPipe,
     DuplicatesPageComponent,
     DuplicatePageGridItemComponent,
