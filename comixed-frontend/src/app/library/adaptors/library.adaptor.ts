@@ -42,7 +42,6 @@ import { ComicGetIssue } from 'app/comics/actions/comic.actions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LoggerService } from '@angular-ru/logger';
 import { CollectionType } from 'app/library/models/collection-type.enum';
-import { ReadingList } from 'app/comics/models/reading-list';
 
 @Injectable()
 export class LibraryAdaptor {
@@ -58,7 +57,7 @@ export class LibraryAdaptor {
   private _teams$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _locations$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
-  private _readingLists$ = new BehaviorSubject<ReadingList[]>([]);
+  private _readingLists$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _processingCount$ = new BehaviorSubject<number>(0);
   private comicId = -1;
   private _timeout = 60;
@@ -121,9 +120,28 @@ export class LibraryAdaptor {
           this._stories$.next(
             extractField(state.comics, CollectionType.STORIES)
           );
-        }
-        if (!_.isEqual(this._readingLists$.getValue(), state.readingLists)) {
-          this._readingLists$.next(state.readingLists);
+          const readingLists = extractField(
+            state.comics,
+            CollectionType.READING_LISTS,
+            state.readingLists
+          );
+          // merge in any reading lists that have no comics
+          state.readingLists.forEach(readingList => {
+            const existing = readingLists.find(
+              entry => entry.name === readingList.name
+            );
+            if (!existing) {
+              this.logger.debug('pushing reading list:', readingList);
+              readingLists.push({
+                name: readingList.name,
+                comics: [],
+                count: 0,
+                last_comic_added: 0,
+                type: CollectionType.READING_LISTS
+              } as ComicCollectionEntry);
+            }
+          });
+          this._readingLists$.next(readingLists);
         }
         if (
           !!state.lastComicId &&
@@ -197,7 +215,7 @@ export class LibraryAdaptor {
     return this._stories$.asObservable();
   }
 
-  get readingLists$(): Observable<ReadingList[]> {
+  get readingLists$(): Observable<ComicCollectionEntry[]> {
     return this._readingLists$.asObservable();
   }
 

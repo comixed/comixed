@@ -128,7 +128,7 @@
       "all-comics": "Library"
     },
     "title-no-collection": "All Comics - {count, plural, =1{One Comic} other{# Comics}}",
-    "title-for-collection": "{name} [{type, select, publishers{Publisher} series{Series} characters{Character} teams{Team} locations{Location} stories{Story} other{Unknown}}] - {count, plural, =1{One Comic} other{# Comics}}",
+    "title-for-collection": "{name} [{type, select, publishers{Publisher} series{Series} characters{Character} teams{Team} locations{Location} stories{Story} lists{Reading List} other{Unknown}}] - {count, plural, =1{One Comic} other{# Comics}}",
     "error": {
       "no-such-type": "No such collection type: {type}"
     }
