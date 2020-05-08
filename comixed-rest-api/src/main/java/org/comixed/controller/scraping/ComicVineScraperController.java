@@ -64,7 +64,7 @@ public class ComicVineScraperController {
   }
 
   @PostMapping(
-      value = "/series",
+      value = "/volumes",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public List<ScrapingVolume> queryForVolumes(@RequestBody() final GetVolumesRequest request)
