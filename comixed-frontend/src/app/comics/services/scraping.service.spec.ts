@@ -82,7 +82,7 @@ describe('ScrapingService', () => {
       .subscribe(response => expect(response).toEqual(VOLUMES));
 
     const req = httpMock.expectOne(
-      interpolate(GET_VOLUMES_URL, { series: SERIES })
+      interpolate(GET_VOLUMES_URL)
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({

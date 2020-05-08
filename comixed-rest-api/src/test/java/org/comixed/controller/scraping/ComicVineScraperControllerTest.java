@@ -75,7 +75,7 @@ public class ComicVineScraperControllerTest {
         .thenThrow(new ComicVineAdaptorException("expected"));
 
     try {
-      controller.queryForVolumes(TEST_SERIES_NAME, new GetVolumesRequest(TEST_API_KEY, false));
+      controller.queryForVolumes(new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, false));
     } finally {
       Mockito.verify(queryForVolumesAdaptor, Mockito.times(1))
           .execute(TEST_API_KEY, TEST_SERIES_NAME, false);
@@ -90,7 +90,7 @@ public class ComicVineScraperControllerTest {
         .thenReturn(comicVolumeList);
 
     final List<ScrapingVolume> result =
-        controller.queryForVolumes(TEST_SERIES_NAME, new GetVolumesRequest(TEST_API_KEY, false));
+        controller.queryForVolumes(new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, false));
 
     assertSame(comicVolumeList, result);
 
@@ -106,7 +106,7 @@ public class ComicVineScraperControllerTest {
         .thenReturn(comicVolumeList);
 
     final List<ScrapingVolume> result =
-        controller.queryForVolumes(TEST_SERIES_NAME, new GetVolumesRequest(TEST_API_KEY, true));
+        controller.queryForVolumes(new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, true));
 
     assertSame(comicVolumeList, result);
 
