@@ -67,7 +67,7 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
    * @param name the parameter name
    * @param value the parameter value
    */
-  protected void addParameter(String name, String value) {
+  public void addParameter(String name, String value) {
     this.log.debug("Adding parameter: {}={}", name, value);
     this.parameterSet.put(name, value);
   }
