@@ -64,20 +64,16 @@ public class ComicVineScraperController {
   }
 
   @PostMapping(
-      value = "/series/{seriesName}",
+      value = "/series",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public List<ScrapingVolume> queryForVolumes(
-      @PathVariable("seriesName") final String seriesName,
-      @RequestBody() final GetVolumesRequest request)
+  public List<ScrapingVolume> queryForVolumes(@RequestBody() final GetVolumesRequest request)
       throws WebRequestException, ComicVineAdaptorException {
+    String series = request.getSeries();
     this.log.info(
-        "Getting volumes: series={}{}",
-        seriesName,
-        request.getSkipCache() ? " (Skipping cache)" : "");
+        "Getting volumes: series={}{}", series, request.getSkipCache() ? " (Skipping cache)" : "");
 
-    return this.queryForVolumesAdaptor.execute(
-        request.getApiKey(), seriesName, request.getSkipCache());
+    return this.queryForVolumesAdaptor.execute(request.getApiKey(), series, request.getSkipCache());
   }
 
   @PostMapping(

@@ -24,18 +24,26 @@ public class GetVolumesRequest {
   @JsonProperty("apiKey")
   private String apiKey;
 
+  @JsonProperty("series")
+  private String series;
+
   @JsonProperty("skipCache")
   private Boolean skipCache;
 
   public GetVolumesRequest() {}
 
-  public GetVolumesRequest(final String apiKey, final Boolean skipCache) {
+  public GetVolumesRequest(final String apiKey, final String series, final Boolean skipCache) {
     this.apiKey = apiKey;
+    this.series = series;
     this.skipCache = skipCache;
   }
 
   public String getApiKey() {
     return apiKey;
+  }
+
+  public String getSeries() {
+    return series;
   }
 
   public Boolean getSkipCache() {

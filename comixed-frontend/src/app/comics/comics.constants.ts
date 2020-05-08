@@ -36,7 +36,7 @@ export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 export const BLOCK_PAGE_HASH_URL = `${API_ROOT_URL}/pages/\${id}/block/\${hash}`;
 export const UNBLOCK_PAGE_HASH_URL = `${API_ROOT_URL}/pages/\${id}/unblock/\${hash}`;
 
-export const GET_VOLUMES_URL = `${API_ROOT_URL}/scraping/series/\${series}`;
+export const GET_VOLUMES_URL = `${API_ROOT_URL}/scraping/series`;
 export const GET_ISSUE_URL = `${API_ROOT_URL}/scraping/volumes/\${volume}/issues`;
 
 export const LOAD_METADATA_URL = `${API_ROOT_URL}/scraping/comics/\${comicId}/issue/\${issueId}`;
