@@ -53,7 +53,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
 
       request.setApiKey(apiKey);
       request.setPublisherId(publisherId);
-      request.addFilter("field_list", "id,name,image,api_detail_url,deck");
+      request.addParameter("field_list", "id,name,image,api_detail_url,deck,site_detail_url");
 
       try {
         content = this.webRequestProcessor.execute(request);
