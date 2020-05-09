@@ -57,10 +57,12 @@ public class ComicVineScraperController {
       throws ComicVineAdaptorException {
     String issue = request.getIssueNumber();
     boolean skipCache = request.isSkipCache();
+    String apiKey = request.getApiKey();
+
     this.log.info(
         "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
-    return this.queryForIssuesAdaptor.execute(request.getApiKey(), volume, issue);
+    return this.queryForIssuesAdaptor.execute(apiKey, volume, issue);
   }
 
   @PostMapping(
@@ -71,13 +73,12 @@ public class ComicVineScraperController {
       @PathVariable("seriesName") final String seriesName,
       @RequestBody() final GetVolumesRequest request)
       throws WebRequestException, ComicVineAdaptorException {
-    this.log.info(
-        "Getting volumes: series={}{}",
-        seriesName,
-        request.getSkipCache() ? " (Skipping cache)" : "");
+    String apiKey = request.getApiKey();
+    boolean skipCache = request.getSkipCache();
 
-    return this.queryForVolumesAdaptor.execute(
-        request.getApiKey(), seriesName, request.getSkipCache());
+    this.log.info("Getting volumes: series={}{}", seriesName, skipCache ? " (Skipping cache)" : "");
+
+    return this.queryForVolumesAdaptor.execute(apiKey, seriesName, skipCache);
   }
 
   @PostMapping(
@@ -90,26 +91,22 @@ public class ComicVineScraperController {
       @PathVariable("issueId") final String issueId,
       @RequestBody() final ComicScrapeRequest request)
       throws ComicVineAdaptorException, ComicException {
-    this.log.info(
-        "Scraping code: id={} issue id={} (skip cache={})",
-        comicId,
-        issueId,
-        request.getSkipCache());
+    boolean skipCache = request.getSkipCache();
+    String apiKey = request.getApiKey();
+
+    this.log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);
 
     this.log.debug("Loading comic");
     Comic comic = this.comicService.getComic(comicId);
 
     this.log.debug("Fetching details for comic");
     String volumeId =
-        this.queryForIssueDetailsAdaptor.execute(
-            request.getApiKey(), comicId, issueId, comic, request.getSkipCache());
+        this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, comic, skipCache);
     this.log.debug("Fetching details for volume");
     String publisherId =
-        this.queryForVolumeDetailsAdaptor.execute(
-            request.getApiKey(), volumeId, comic, request.getSkipCache());
+        this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, comic, skipCache);
     this.log.debug("Fetching publisher details");
-    this.queryForPublisherDetailsAdaptor.execute(
-        request.getApiKey(), publisherId, comic, request.getSkipCache());
+    this.queryForPublisherDetailsAdaptor.execute(apiKey, publisherId, comic, skipCache);
 
     this.log.debug("Updating details for comic in database");
     return this.comicService.save(comic);
