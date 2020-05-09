@@ -5,19 +5,7 @@
         <div *ngIf='importCount !== 0'
              class='ui-g-12'
              [innerHTML]='"library-admin-page.rescan.already-running" | translate'></div>
-        <div class='ui-g-2'>
-          <div class='cx-button-box-vertical'>
-            <button id='cx-rescan-button'
-                    type='button'
-                    pButton
-                    class='cx-selection-button ui-button-success'
-                    [disabled]='importCount !== 0'
-                    [label]='"library-admin-page.rescan.buttons.rescan-library" | translate'
-                    icon='fa fa-refresh'
-                    (click)='rescanLibrary()'></button>
-          </div>
-        </div>
-        <div class='ui-g-10'>
+        <div class='ui-g-12'>
           <div class='ui-g'>
             <div class='ui-g-12'
                  [innerHTML]='"library-admin-page.rescan.paragraph1" | translate'></div>
@@ -25,6 +13,18 @@
                  [innerHTML]='"library-admin-page.rescan.paragraph2" | translate'></div>
             <div class='ui-g-12'
                  [innerHTML]='"library-admin-page.rescan.paragraph3" | translate'></div>
+          </div>
+        </div>
+        <div class='ui-g-12'>
+          <div class='cx-button-box-vertical'>
+            <button id='cx-rescan-button'
+                    type='button'
+                    pButton
+                    class='ui-button-success'
+                    [disabled]='importCount !== 0'
+                    [label]='"library-admin-page.rescan.buttons.rescan-library" | translate'
+                    icon='fa fa-fw fa-sync'
+                    (click)='rescanLibrary()'></button>
           </div>
         </div>
       </div>
@@ -38,27 +38,27 @@
   <div class='ui-g-6'>
     <p-panel [header]='"library-admin-page.backup.header" | translate'>
       <div class='ui-g'>
-        <div class='ui-g-2'>
-          <div class='cx-button-box-vertical'>
-            <button id='cx-export-button'
-                    type='button'
-                    pButton
-                    fileSaver
-                    class='cx-selection-button ui-button-success'
-                    [label]='"library-admin-page.backup.buttons.export-library" | translate'
-                    icon='fa fa-fw fa-step-backward'
-                    [disabled]='importCount !== 0'
-                    [method]='"GET"'
-                    [url]='"/api/admin/data/export"'
-                    [fileName]='"comixed_backup.zip"'></button>
-          </div>
-        </div>
-        <div class='ui-g-10'>
+        <div class='ui-g-12'>
           <div class='ui-g'>
             <div class='ui-g-12'
                  [innerHTML]='"library-admin-page.backup.paragraph1" | translate'></div>
             <div class='ui-g-12'
                  [innerHTML]='"library-admin-page.backup.paragraph2" | translate'></div>
+          </div>
+        </div>
+        <div class='ui-g-12'>
+          <div class='cx-button-box-vertical'>
+            <button id='cx-export-button'
+                    type='button'
+                    pButton
+                    fileSaver
+                    class='ui-button-success'
+                    [label]='"library-admin-page.backup.buttons.export-library" | translate'
+                    icon='fa fa-fw fa-file-download'
+                    [disabled]='importCount !== 0'
+                    [method]='"GET"'
+                    [url]='"/api/admin/data/export"'
+                    [fileName]='"comixed_backup.zip"'></button>
           </div>
         </div>
       </div>
