@@ -396,6 +396,9 @@
     "confirm": {
       "header": "Consolidate Library",
       "message": "Are you sure you want to consolidate the library and {deletePhysicalFiles, select, true{delete} other{not delete}} the comic files?"
+    },
+    "text": {
+      "paragraph-1": "Consolidating the library involves the following actions: deleting comic files marked for deletion."
     }
   },
   "library-admin-page": {
