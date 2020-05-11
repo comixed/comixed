@@ -199,9 +199,6 @@
       "next-comic": "Next Issue"
     }
   },
-  "library-admin-page": {
-    "title": "ComiXed: Library Administration"
-  },
   "comic-list": {
     "header": {
       "convert-comics": "Convert Selected Comics"
@@ -402,6 +399,7 @@
     }
   },
   "library-admin-page": {
+    "title": "ComiXed: Library Administration",
     "rescan": {
       "header": "Rescan Library",
       "paragraph1": "<p>Use this button to force rescanning your entire library.</p>",
