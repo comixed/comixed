@@ -11,7 +11,15 @@
   },
   "prettier": {
     "singleQuote": true,
-    "useTabs": false
+    "useTabs": false,
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true,
+    "langs": [
+      "js",
+      "javascript",
+      "typescript",
+      "html"
+    ]
   },
   "private": true,
   "dependencies": {
