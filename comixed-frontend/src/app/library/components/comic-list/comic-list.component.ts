@@ -34,10 +34,7 @@ import {
   LibraryDisplayAdaptor,
   SelectionAdaptor
 } from 'app/library';
-import { ReadingListAdaptor } from 'app/library/adaptors/reading-list.adaptor';
 import { LibraryFilter } from 'app/library/models/library-filter';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
-import { ReadingListEntry } from 'app/library/models/reading-list/reading-list-entry';
 import { LoadPageEvent } from 'app/library/models/ui/load-page-event';
 import { AuthenticationAdaptor } from 'app/user';
 import { generateContextMenuItems } from 'app/user-experience';
@@ -62,8 +59,6 @@ export const COMIC_LIST_MENU_CONVERT_COMIC = 'comic-list-convert-comic';
 export class ComicListComponent implements OnInit, OnDestroy {
   _comics: Comic[] = [];
   _selectedComics: Comic[] = [];
-  readingListsSubscription: Subscription;
-  readingLists: ReadingList[];
 
   @Input() showSelections: boolean;
   @Input() imageUrl: string;
@@ -102,7 +97,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
     private libraryAdaptor: LibraryAdaptor,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private selectionAdaptor: SelectionAdaptor,
-    private readingListAdaptor: ReadingListAdaptor,
     private contextMenuAdaptor: ContextMenuAdaptor,
     private scrapingAdaptor: ScrapingAdaptor,
     private translateService: TranslateService,
@@ -158,10 +152,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
         }
       }
     );
-    this.readingListsSubscription = this.readingListAdaptor.reading_list$.subscribe(
-      reading_lists => (this.readingLists = reading_lists)
-    );
-    this.readingListAdaptor.get_reading_lists();
   }
 
   ngOnInit() {}
@@ -175,7 +165,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
     this.sameHeightSubscription.unsubscribe();
     this.coverSizeSubscription.unsubscribe();
     this.activatedRouteSubscription.unsubscribe();
-    this.readingListsSubscription.unsubscribe();
     this.removeContextMenuItems();
   }
 
@@ -265,65 +254,6 @@ export class ComicListComponent implements OnInit, OnDestroy {
           this._selectedComics.map(comic => comic.id)
         )
     });
-  }
-
-  addToReadingList(readingList: ReadingList): void {
-    const entries = readingList.entries;
-    this.selectedComics.forEach((comic: Comic) => {
-      if (
-        !entries.find((entry: ReadingListEntry) => entry.comic.id === comic.id)
-      ) {
-        entries.push({ id: null, comic: comic });
-      }
-    });
-
-    this.saveReadingList(readingList, entries);
-  }
-
-  removeFromReadingList(readingList: ReadingList): void {
-    this.confirmationService.confirm({
-      header: this.translateService.instant(
-        'comic-list.remove-from-reading-list.header'
-      ),
-      message: this.translateService.instant(
-        'comic-list.remove-from-reading-list.message',
-        { reading_list_name: readingList.name }
-      ),
-      accept: () => {
-        const entries = readingList.entries.filter(
-          (entry: ReadingListEntry) => {
-            return !this.selectedComics.some(
-              comic => comic.id === entry.comic.id
-            );
-          }
-        );
-        this.saveReadingList(readingList, entries);
-      }
-    });
-  }
-
-  saveReadingList(readingList: ReadingList, entries: ReadingListEntry[]): void {
-    this.readingListAdaptor.save(readingList, entries);
-  }
-
-  alreadyInReadingList(readingList: ReadingList): boolean {
-    const result = readingList.entries.some((entry: ReadingListEntry) => {
-      return this.selectedComics.some((comic: Comic) => {
-        return comic.id === entry.comic.id;
-      });
-    });
-
-    return result;
-  }
-
-  allInReadingList(readingList: ReadingList): boolean {
-    const result = readingList.entries.some((entry: ReadingListEntry) => {
-      return this.selectedComics.every((comic: Comic) => {
-        return comic.id === entry.comic.id;
-      });
-    });
-
-    return result;
   }
 
   toggleComicSelection(comic: Comic, selected: boolean): void {
