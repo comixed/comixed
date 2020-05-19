@@ -1,0 +1,46 @@
+<p-dialog [visible]='editingReadingList'
+          modal='true'
+          [header]='"reading-list-edit.title"|translate'>
+  <form [formGroup]='readingListForm'>
+    <div class='ui-g'>
+      <div class='ui-g-12 cx-input-label'>
+        <label for='reading-list-name'>
+          {{'reading-list-edit.label.reading-list-name'|translate}}
+        </label>
+      </div>
+      <div class='ui-g-12 cx-input-field'>
+        <input id='reading-list-name'
+               class='form-control'
+               formControlName='name'
+               pInputText>
+      </div>
+      <div class='ui-g-12 cx-input-label'>
+        <label for='reading-list-summary'
+               class='cx-input-label'>
+          {{'reading-list-edit.label.reading-list-summary'|translate}}
+        </label>
+      </div>
+      <div class='ui-g-12 cx-input-field'>
+        <input id='reading-list-summary'
+               class='form-control cx-input-field'
+               formControlName='summary'
+               pInputText>
+      </div>
+      <div class='ui-g-12'>
+        <button pButton
+                type='button'
+                class='cx-action-button ui-button-info'
+                [label]='"button.save"|translate'
+                icon='fa fa-fw fa-save'
+                [disabled]='!readingListForm.valid'
+                (click)='saveReadingList()'></button>
+        <button pButton
+                type='button'
+                class='cx-action-button ui-button-danger'
+                [label]='"button.cancel"|translate'
+                icon='fa fa-fw fa-window-close'
+                (click)='cancelEditing()'></button>
+      </div>
+    </div>
+  </form>
+</p-dialog>
