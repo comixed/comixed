@@ -44,6 +44,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import {
   ButtonModule,
   DialogModule,
+  InputTextModule,
   ProgressSpinnerModule,
   ScrollPanelModule,
   SidebarModule,
@@ -79,6 +80,7 @@ import { LibraryAdminPageComponent } from 'app/library/pages/library-admin-page/
 import { FileSaverModule } from 'ngx-filesaver';
 import { LibraryNavigationTreeComponent } from './components/library-navigation-tree/library-navigation-tree.component';
 import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/duplicate-comics-page.component';
+import { ReadingListEditComponent } from './components/reading-list-edit/reading-list-edit.component';
 
 @NgModule({
   imports: [
@@ -125,7 +127,8 @@ import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/dupl
     ButtonModule,
     FileSaverModule,
     TreeModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    InputTextModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
@@ -146,7 +149,8 @@ import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/dupl
     ConsolidateLibraryComponent,
     LibraryAdminPageComponent,
     LibraryNavigationTreeComponent,
-    DuplicateComicsPageComponent
+    DuplicateComicsPageComponent,
+    ReadingListEditComponent
   ],
   providers: [
     LibraryService,
@@ -161,17 +165,17 @@ import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/dupl
   ]
 })
 export class LibraryModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: LibraryModule
-    };
-  }
-
   constructor(@Optional() @SkipSelf() parentModule?: LibraryModule) {
     if (parentModule) {
       throw new Error(
         'LibraryModule is already loaded. Import it in the AppModule only'
       );
     }
+  }
+
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: LibraryModule
+    };
   }
 }
