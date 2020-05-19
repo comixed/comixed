@@ -26,6 +26,7 @@ import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry'
 import { NavigationDataPayload } from 'app/library/models/navigation-data-payload';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/components/common/menuitem';
 
 const PUBLISHER_NODE = 0;
 const SERIES_NODE = 1;
@@ -59,9 +60,11 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
   private locationSubscription: Subscription;
   private storiesSubscription: Subscription;
   private readingListSubscription: Subscription;
+  private langChangeSubscription: Subscription;
 
   nodes: TreeNode[];
   treeFilter = '';
+  navTreeMenuItems: MenuItem[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -170,6 +173,10 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
     this.readingListSubscription = this.libraryAdaptor.readingLists$.subscribe(
       lists => this.loadReadingLists(lists)
     );
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.loadTranslations();
   }
 
   ngOnInit() {}
@@ -225,7 +232,7 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
     } as TreeNode;
   }
 
-  showSelectedCollection(node: TreeNode) {
+  nodeSelected(node: TreeNode) {
     const nodeData = node.data as NavigationDataPayload;
     switch (nodeData.type) {
       case CollectionType.PUBLISHERS:
@@ -258,7 +265,8 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
           key: list.name,
           data: {
             type: CollectionType.READING_LISTS,
-            name: list.name
+            name: list.name,
+            original: list
           } as NavigationDataPayload,
           icon: 'pi pi-list',
           expanded: false,
@@ -266,5 +274,40 @@ export class LibraryNavigationTreeComponent implements OnInit, OnDestroy {
         } as TreeNode;
       })
     } as TreeNode;
+  }
+
+  private loadTranslations() {
+    this.loadNavTreeMenuItems();
+  }
+
+  private loadNavTreeMenuItems() {
+    this.navTreeMenuItems = [];
+  }
+
+  showContextMenu(event: MouseEvent, node: TreeNode): void {
+    this.loadNavTreeMenuItems();
+    if (node === this.nodes[0].children[READING_LISTS]) {
+      this.navTreeMenuItems.push({
+        label: this.translateService.instant(
+          'library-navigation-tree.popup-menu.create-reading-list'
+        ),
+        icon: 'fa fa-fw fa-list',
+        command: () => this.readingListAdaptor.create()
+      });
+    } else if (!!node.data && node.data.type === CollectionType.READING_LISTS) {
+      const readingList = this.libraryAdaptor.getReadingList(
+        node.data.original.name
+      );
+      this.navTreeMenuItems = this.navTreeMenuItems.concat([
+        {
+          label: this.translateService.instant(
+            'library-navigation-tree.popup-menu.edit-reading-list',
+            { name: readingList.name }
+          ),
+          icon: 'fa fa-fw fa-edit',
+          command: () => this.readingListAdaptor.edit(readingList)
+        }
+      ]);
+    }
   }
 }

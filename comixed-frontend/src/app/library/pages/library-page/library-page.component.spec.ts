@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {RouterTestingModule} from '@angular/router/testing';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {TranslateModule} from '@ngx-translate/core';
+import {Store, StoreModule} from '@ngrx/store';
 import {
   AppState,
   LibraryAdaptor,
@@ -29,24 +29,24 @@ import {
   ReadingListAdaptor,
   SelectionAdaptor
 } from 'app/library';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DataViewModule } from 'primeng/dataview';
-import { SliderModule } from 'primeng/slider';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DropdownModule } from 'primeng/dropdown';
-import { PanelModule } from 'primeng/panel';
-import { SidebarModule } from 'primeng/sidebar';
-import { SplitButtonModule } from 'primeng/splitbutton';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { CardModule } from 'primeng/card';
-import { ComicListComponent } from 'app/library/components/comic-list/comic-list.component';
-import { ComicListItemComponent } from 'app/library/components/comic-list-item/comic-list-item.component';
-import { ComicGridItemComponent } from 'app/library/components/comic-grid-item/comic-grid-item.component';
-import { UserService } from 'app/services/user.service';
-import { UserServiceMock } from 'app/services/user.service.mock';
-import { LibraryPageComponent } from './library-page.component';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {DataViewModule} from 'primeng/dataview';
+import {SliderModule} from 'primeng/slider';
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {CheckboxModule} from 'primeng/checkbox';
+import {DropdownModule} from 'primeng/dropdown';
+import {PanelModule} from 'primeng/panel';
+import {SidebarModule} from 'primeng/sidebar';
+import {SplitButtonModule} from 'primeng/splitbutton';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+import {CardModule} from 'primeng/card';
+import {ComicListComponent} from 'app/library/components/comic-list/comic-list.component';
+import {ComicListItemComponent} from 'app/library/components/comic-list-item/comic-list-item.component';
+import {ComicGridItemComponent} from 'app/library/components/comic-grid-item/comic-grid-item.component';
+import {UserService} from 'app/services/user.service';
+import {UserServiceMock} from 'app/services/user.service.mock';
+import {LibraryPageComponent} from './library-page.component';
 import {
   ContextMenuModule,
   DialogModule,
@@ -55,21 +55,22 @@ import {
   TooltipModule,
   TreeModule
 } from 'primeng/primeng';
-import { UserModule } from 'app/user/user.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
+import {UserModule} from 'app/user/user.module';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {EffectsModule} from '@ngrx/effects';
+import {BreadcrumbAdaptor} from 'app/adaptors/breadcrumb.adaptor';
+import {ComicListToolbarComponent} from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
 import {
   LIBRARY_FEATURE_KEY,
   reducer
 } from 'app/library/reducers/library.reducer';
-import { LibraryEffects } from 'app/library/effects/library.effects';
-import { ComicsModule } from 'app/comics/comics.module';
-import { COMIC_1 } from 'app/comics/comics.fixtures';
-import { LoggerModule } from '@angular-ru/logger';
-import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
-import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
+import {LibraryEffects} from 'app/library/effects/library.effects';
+import {ComicsModule} from 'app/comics/comics.module';
+import {COMIC_1} from 'app/comics/comics.fixtures';
+import {LoggerModule} from '@angular-ru/logger';
+import {ConvertComicsSettingsComponent} from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
+import {LibraryNavigationTreeComponent} from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
+import {ReadingListEditComponent} from 'app/library/components/reading-list-edit/reading-list-edit.component';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -120,7 +121,8 @@ describe('LibraryPageComponent', () => {
         ComicListItemComponent,
         ComicGridItemComponent,
         ConvertComicsSettingsComponent,
-        LibraryNavigationTreeComponent
+        LibraryNavigationTreeComponent,
+        ReadingListEditComponent
       ],
       providers: [
         LibraryAdaptor,
@@ -131,7 +133,7 @@ describe('LibraryPageComponent', () => {
         ConfirmationService,
         MessageService,
         UserService,
-        { provide: UserService, useClass: UserServiceMock }
+        {provide: UserService, useClass: UserServiceMock}
       ]
     }).compileComponents();
 

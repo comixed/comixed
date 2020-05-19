@@ -4,5 +4,9 @@
           [value]='nodes'
           selectionMode='single'
           filter='true'
-          (onNodeSelect)='showSelectedCollection($event.node)'></p-tree>
+          [contextMenu]='navTreeMenu'
+          (onNodeSelect)='nodeSelected($event.node)'
+          (onNodeContextMenuSelect)='showContextMenu($event.originalEvent, $event.node)'></p-tree>
+  <p-contextMenu #navTreeMenu
+                 [model]='navTreeMenuItems'></p-contextMenu>
 </p-scrollPanel>

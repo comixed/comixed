@@ -20,7 +20,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LibraryNavigationTreeComponent } from './library-navigation-tree.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MessageService, ScrollPanelModule, TreeModule } from 'primeng/primeng';
+import {
+  ContextMenuModule,
+  MessageService,
+  ScrollPanelModule,
+  TreeModule
+} from 'primeng/primeng';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { LibraryAdaptor, ReadingListAdaptor } from 'app/library';
@@ -53,7 +58,8 @@ describe('LibraryNavigationTreeComponent', () => {
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([LibraryEffects]),
         TreeModule,
-        ScrollPanelModule
+        ScrollPanelModule,
+        ContextMenuModule
       ],
       declarations: [LibraryNavigationTreeComponent],
       providers: [LibraryAdaptor, ReadingListAdaptor, MessageService]
