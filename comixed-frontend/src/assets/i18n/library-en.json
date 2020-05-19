@@ -454,6 +454,10 @@
       "reading-lists": "Reading Lists ({count})",
       "reading-list": "{name} ({count})",
       "leaf-entry": "{name} ({count})"
+    },
+    "popup-menu": {
+      "create-reading-list": "New reading list...",
+      "edit-reading-list": "Edit {name}..."
     }
   },
   "duplicate-comics-page": {

@@ -21,4 +21,5 @@ import { CollectionType } from 'app/library/models/collection-type.enum';
 export interface NavigationDataPayload {
   type: CollectionType;
   name: string;
+  original?: any;
 }
