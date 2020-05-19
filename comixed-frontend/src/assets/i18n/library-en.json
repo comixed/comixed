@@ -458,5 +458,16 @@
   },
   "duplicate-comics-page": {
     "title": "Duplicate Comics ({count})"
+  },
+  "reading-list-edit": {
+    "title": "Reading List Details",
+    "label": {
+      "reading-list-name": "Name",
+      "reading-list-summary": "Summary"
+    },
+    "save": {
+      "header": "Save Reading List",
+      "message": "Save changes to \"{name}\"?"
+    }
   }
 }
