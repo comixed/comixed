@@ -206,6 +206,17 @@ describe('AuthenticationAdaptor', () => {
     });
   });
 
+  describe('when login failed', () => {
+    beforeEach(() => {
+      spyOn(store, 'dispatch');
+      auth_adaptor.authenticationFailed();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(new AuthActions.AuthLoginFailed());
+    });
+  });
+
   describe('when setting a user preference', () => {
     beforeEach(() => {
       spyOn(store, 'dispatch');
