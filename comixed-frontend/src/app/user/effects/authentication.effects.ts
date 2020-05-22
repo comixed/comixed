@@ -151,6 +151,22 @@ export class AuthenticationEffects {
   );
 
   @Effect()
+  authenticationFailed$: Observable<Action> = this.actions$.pipe(
+    ofType(AuthenticationActionTypes.AUTH_LOGIN_FAILED),
+    tap(action => this.logger.debug('effect: logging failed:', action)),
+    tap(() => this.tokenService.signout()),
+    tap(() =>
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'authentication-effects.submit-login-data.failure.detail'
+        )
+      })
+    ),
+    map(() => new AuthCheckState())
+  );
+
+  @Effect()
   setPreference$: Observable<Action> = this.actions$.pipe(
     ofType(AuthenticationActionTypes.AUTH_SET_PREFERENCE),
     map((action: AuthSetPreference) => action.payload),

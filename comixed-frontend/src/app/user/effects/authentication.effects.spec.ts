@@ -221,6 +221,21 @@ describe('AuthenticationEffects', () => {
     });
   });
 
+  describe('when the login failed', () => {
+    it('fires an action', () => {
+      const action = new AuthActions.AuthLoginFailed();
+      const outcome = new AuthActions.AuthCheckState();
+
+      actions = hot('-a', { a: action });
+
+      const expected = cold('-b', { b: outcome });
+      expect(effects.authenticationFailed$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({severity: 'error' })
+      );
+    });
+  });
+
   describe('when setting a preference', () => {
     it('fires an action one success', () => {
       const serviceResponse = USER;
