@@ -77,7 +77,7 @@ export class XhrInterceptor implements HttpInterceptor {
             return;
           case 401:
             this.logger.error('[XHR] user not authenticated:', error);
-            this.authenticationAdaptor.startLogout();
+            this.authenticationAdaptor.authenticationFailed();
             this.router.navigateByUrl('/');
             break;
           default:

@@ -22,7 +22,7 @@ import { Roles } from 'app/models/ui/roles';
 import { AppState, User } from 'app/user';
 import {
   AuthCheckState,
-  AuthHideLogin,
+  AuthHideLogin, AuthLoginFailed,
   AuthLogout,
   AuthSetPreference,
   AuthShowLogin,
@@ -135,6 +135,11 @@ export class AuthenticationAdaptor {
 
   startLogout(): void {
     this.store.dispatch(new AuthLogout());
+  }
+
+  authenticationFailed(): void {
+    this.store.dispatch(new AuthLoginFailed());
+    this.store.dispatch(new AuthHideLogin());
   }
 
   setPreference(name: string, value: string): void {
