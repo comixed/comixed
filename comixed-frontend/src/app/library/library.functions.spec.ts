@@ -27,7 +27,7 @@ import {
   latestUpdatedDate,
   mergeComics,
   mergeReadingLists
-} from './utility.functions';
+} from './library.functions';
 import {
   READING_LIST_1,
   READING_LIST_2

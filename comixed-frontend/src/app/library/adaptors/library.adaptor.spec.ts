@@ -39,7 +39,7 @@ import {
   LIBRARY_FEATURE_KEY,
   reducer
 } from 'app/library/reducers/library.reducer';
-import { extractField } from 'app/library/utility.functions';
+import { extractField } from 'app/library/library.functions';
 import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import * as LibraryActions from '../actions/library.actions';

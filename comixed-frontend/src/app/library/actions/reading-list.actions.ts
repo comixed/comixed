@@ -17,55 +17,15 @@
  */
 
 import { Action } from '@ngrx/store';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 export enum ReadingListActionTypes {
-  GetAll = '[READING LIST] Load reading lists',
-  AllReceived = '[READING LIST] All reading lists loaded',
-  GetAllFailed = '[READING LIST] Failed to load reading lists',
-  Get = '[READING LIST] Get a single reading list',
-  Received = '[READING LIST] Received a single reading list',
-  GetFailed = '[READING LIST] Failed get a single reading list',
   Create = '[READING LIST] Create a new reading list',
+  Edit = '[READING LIST] Edit a reading list',
+  CancelEdit = '[READING LIST] Cancel editing a reading list',
   Save = '[READING LIST] Save a reading list',
   Saved = '[READING LIST] Saved the reading list',
   SaveFailed = '[READING LIST] Failed to save the reading list'
-}
-
-export class ReadingListsLoad implements Action {
-  readonly type = ReadingListActionTypes.GetAll;
-
-  constructor() {}
-}
-
-export class ReadingListsLoaded implements Action {
-  readonly type = ReadingListActionTypes.AllReceived;
-
-  constructor(public payload: { reading_lists: ReadingList[] }) {}
-}
-
-export class ReadingListLoadFailed implements Action {
-  readonly type = ReadingListActionTypes.GetAllFailed;
-
-  constructor() {}
-}
-
-export class ReadingListGet implements Action {
-  readonly type = ReadingListActionTypes.Get;
-
-  constructor(public payload: { id: number }) {}
-}
-
-export class ReadingListReceived implements Action {
-  readonly type = ReadingListActionTypes.Received;
-
-  constructor(public payload: { reading_list: ReadingList }) {}
-}
-
-export class ReadingListGetFailed implements Action {
-  readonly type = ReadingListActionTypes.GetFailed;
-
-  constructor() {}
 }
 
 export class ReadingListCreate implements Action {
@@ -74,16 +34,28 @@ export class ReadingListCreate implements Action {
   constructor() {}
 }
 
+export class ReadingListEdit implements Action {
+  readonly type = ReadingListActionTypes.Edit;
+
+  constructor(public payload: { readingList: ReadingList }) {}
+}
+
+export class ReadingListCancelEdit implements Action {
+  readonly type = ReadingListActionTypes.CancelEdit;
+
+  constructor() {}
+}
+
 export class ReadingListSave implements Action {
   readonly type = ReadingListActionTypes.Save;
 
-  constructor(public payload: { reading_list: ReadingList }) {}
+  constructor(public payload: { id: number; name: string; summary: string }) {}
 }
 
 export class ReadingListSaved implements Action {
   readonly type = ReadingListActionTypes.Saved;
 
-  constructor(public payload: { reading_list: ReadingList }) {}
+  constructor(public payload: { readingList: ReadingList }) {}
 }
 
 export class ReadingListSaveFailed implements Action {
@@ -93,13 +65,9 @@ export class ReadingListSaveFailed implements Action {
 }
 
 export type ReadingListActions =
-  | ReadingListsLoad
-  | ReadingListsLoaded
-  | ReadingListLoadFailed
-  | ReadingListGet
-  | ReadingListReceived
-  | ReadingListGetFailed
   | ReadingListCreate
+  | ReadingListEdit
+  | ReadingListCancelEdit
   | ReadingListSave
   | ReadingListSaved
   | ReadingListSaveFailed;

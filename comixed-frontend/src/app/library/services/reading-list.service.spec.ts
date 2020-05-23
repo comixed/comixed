@@ -16,25 +16,27 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { ReadingListService } from './reading-list.service';
+import {ReadingListService} from './reading-list.service';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { READING_LIST_1 } from 'app/library/models/reading-list/reading-list.fixtures';
-import { interpolate } from 'app/app.functions';
+import {interpolate} from 'app/app.functions';
+import {SaveReadingListRequest} from 'app/library/models/net/save-reading-list-request';
+import {LoggerModule} from '@angular-ru/logger';
 import {
-  GET_READING_LIST_URL,
-  GET_READING_LISTS_URL,
-  SAVE_READING_LIST_URL
-} from 'app/app.constants';
-import { SaveReadingListRequest } from 'app/library/models/net/save-reading-list-request';
-import { LoggerModule } from '@angular-ru/logger';
+  CREATE_READING_LIST_URL,
+  UPDATE_READING_LIST_URL
+} from 'app/library/library.constants';
+import {READING_LIST_1} from 'app/comics/models/reading-list.fixtures';
 
 describe('ReadingListService', () => {
-  const READING_LISTS = [READING_LIST_1];
+  const READING_LIST = READING_LIST_1;
+  const READING_LIST_ID = READING_LIST.id;
+  const READING_LIST_NAME = READING_LIST.name;
+  const READING_LIST_SUMMARY = READING_LIST.summary;
 
   let service: ReadingListService;
   let http_mock: HttpTestingController;
@@ -53,42 +55,33 @@ describe('ReadingListService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('can load reading lists', () => {
-    service
-      .get_all()
-      .subscribe(response => expect(response).toEqual(READING_LISTS));
-
-    const req = http_mock.expectOne(interpolate(GET_READING_LISTS_URL));
-    expect(req.request.method).toEqual('GET');
-    req.flush(READING_LISTS);
-  });
-
-  it('can get a single reading list', () => {
-    service
-      .get_reading_list(READING_LIST_1.id)
-      .subscribe(response => expect(response).toEqual(READING_LIST_1));
-
-    const req = http_mock.expectOne(
-      interpolate(GET_READING_LIST_URL, { id: READING_LIST_1.id })
-    );
-    expect(req.request.method).toEqual('GET');
-    req.flush(READING_LIST_1);
-  });
-
   it('can save a reading list', () => {
     service
-      .save_reading_list(READING_LIST_1)
-      .subscribe(response => expect(response).toEqual(READING_LIST_1));
+        .save(null, READING_LIST_NAME, READING_LIST_SUMMARY)
+        .subscribe(response => expect(response).toEqual(READING_LIST));
+
+    const req = http_mock.expectOne(interpolate(CREATE_READING_LIST_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      name: READING_LIST_NAME,
+      summary: READING_LIST_SUMMARY
+    } as SaveReadingListRequest);
+    req.flush(READING_LIST);
+  });
+
+  it('can update a reading list', () => {
+    service
+        .save(READING_LIST_ID, READING_LIST_NAME, READING_LIST_SUMMARY)
+        .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = http_mock.expectOne(
-      interpolate(SAVE_READING_LIST_URL, { id: READING_LIST_1.id })
+        interpolate(UPDATE_READING_LIST_URL, {id: READING_LIST_ID})
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
-      name: READING_LIST_1.name,
-      entries: READING_LIST_1.entries.map(entry => entry.comic.id),
-      summary: READING_LIST_1.summary
+      name: READING_LIST_NAME,
+      summary: READING_LIST_SUMMARY
     } as SaveReadingListRequest);
-    req.flush(READING_LIST_1);
+    req.flush(READING_LIST);
   });
 });
