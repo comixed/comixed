@@ -18,6 +18,7 @@
 
 import { API_ROOT_URL } from 'app/app.functions';
 import { COMIXED_API_ROOT } from 'app/app.constants';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 export const GET_LIBRARY_UPDATES_URL = `${API_ROOT_URL}/library/updates`;
 
@@ -35,3 +36,14 @@ export const GET_PAGE_FOR_ENTRY_URL = `${API_ROOT_URL}/collections/\${type}/\${n
 export const GET_PUBLISHER_BY_NAME_URL = `${API_ROOT_URL}/publishers/\${name}`;
 export const GET_PUBLISHER_LOGO_URL = `${API_ROOT_URL}/publishers/\${name}/logo`;
 export const GET_PUBLISHER_THUMBNAIL_URL = `${API_ROOT_URL}/publishers/\${name}/thumbnail`;
+
+export const CREATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists`;
+export const UPDATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
+
+export const NEW_READING_LIST: ReadingList = {
+  id: null,
+  name: '',
+  summary: '',
+  lastUpdated: null,
+  comics: []
+};

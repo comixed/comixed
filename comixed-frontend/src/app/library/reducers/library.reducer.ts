@@ -21,7 +21,7 @@ import {
   deleteComics,
   mergeComics,
   mergeReadingLists
-} from 'app/library/utility.functions';
+} from 'app/library/library.functions';
 import { Comic } from 'app/comics';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import { ReadingList } from 'app/comics/models/reading-list';

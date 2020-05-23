@@ -73,8 +73,7 @@ interface ExtractEntry {
 
 export function extractField(
   comics: Comic[],
-  type: CollectionType,
-  readingLists: ReadingList[] = []
+  type: CollectionType
 ): ComicCollectionEntry[] {
   let primaryFieldName = null;
   let secondaryFieldName = null;

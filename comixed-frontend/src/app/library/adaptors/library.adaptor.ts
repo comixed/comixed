@@ -27,7 +27,7 @@ import {
 } from 'app/library/reducers/library.reducer';
 import * as _ from 'lodash';
 import { filter } from 'rxjs/operators';
-import { extractField } from 'app/library/utility.functions';
+import { extractField } from 'app/library/library.functions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import {
   LibraryConsolidate,
@@ -42,6 +42,7 @@ import { ComicGetIssue } from 'app/comics/actions/comic.actions';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LoggerService } from '@angular-ru/logger';
 import { CollectionType } from 'app/library/models/collection-type.enum';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 @Injectable()
 export class LibraryAdaptor {
@@ -58,6 +59,7 @@ export class LibraryAdaptor {
   private _locations$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _stories$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
   private _readingLists$ = new BehaviorSubject<ComicCollectionEntry[]>([]);
+  private _lists$ = new BehaviorSubject<ReadingList[]>([]);
   private _processingCount$ = new BehaviorSubject<number>(0);
   private comicId = -1;
   private _timeout = 60;
@@ -122,8 +124,7 @@ export class LibraryAdaptor {
           );
           const readingLists = extractField(
             state.comics,
-            CollectionType.READING_LISTS,
-            state.readingLists
+            CollectionType.READING_LISTS
           );
           // merge in any reading lists that have no comics
           state.readingLists.forEach(readingList => {
@@ -142,6 +143,9 @@ export class LibraryAdaptor {
             }
           });
           this._readingLists$.next(readingLists);
+        }
+        if (!_.isEqual(this._lists$.getValue(), state.readingLists)) {
+          this._lists$.next(state.readingLists);
         }
         if (
           !!state.lastComicId &&
@@ -278,5 +282,9 @@ export class LibraryAdaptor {
 
   get consolidating$(): Observable<boolean> {
     return this._consolidating$.asObservable();
+  }
+
+  getReadingList(name: string): ReadingList {
+    return this._lists$.getValue().find(list => list.name === name);
   }
 }
