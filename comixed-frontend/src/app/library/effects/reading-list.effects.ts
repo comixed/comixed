@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
 import { ReadingListService } from 'app/library/services/reading-list.service';
 import { LoggerService } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
@@ -30,15 +29,11 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   ReadingListActions,
   ReadingListActionTypes,
-  ReadingListGet,
-  ReadingListGetFailed,
-  ReadingListLoadFailed,
-  ReadingListReceived,
   ReadingListSave,
   ReadingListSaved,
-  ReadingListSaveFailed,
-  ReadingListsLoaded
+  ReadingListSaveFailed
 } from '../actions/reading-list.actions';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 @Injectable()
 export class ReadingListEffects {
@@ -51,96 +46,11 @@ export class ReadingListEffects {
   ) {}
 
   @Effect()
-  getAll$: Observable<Action> = this.actions$.pipe(
-    ofType(ReadingListActionTypes.GetAll),
-    switchMap(action =>
-      this.readingListService.get_all().pipe(
-        tap((response: ReadingList[]) =>
-          this.messageService.add({
-            severity: 'info',
-            detail: this.translateService.instant(
-              'reading-list-effects.get-all.success.detail',
-              { count: response.length }
-            )
-          })
-        ),
-        map(
-          (response: ReadingList[]) =>
-            new ReadingListsLoaded({ reading_lists: response })
-        ),
-        catchError(error => {
-          this.logger.error('get all reading lists service failure:', error);
-          this.messageService.add({
-            severity: 'error',
-            detail: this.translateService.instant(
-              'reading-list-effects.get-all.error.detail'
-            )
-          });
-          return of(new ReadingListLoadFailed());
-        })
-      )
-    ),
-    catchError(error => {
-      this.logger.error('get all reading lists general failure:', error);
-      this.messageService.add({
-        severity: 'error',
-        detail: this.translateService.instant(
-          'general-message.error.general-service-failure'
-        )
-      });
-      return of(new ReadingListLoadFailed());
-    })
-  );
-
-  @Effect()
-  getReadingList$: Observable<Action> = this.actions$.pipe(
-    ofType(ReadingListActionTypes.Get),
-    map((action: ReadingListGet) => action.payload),
-    switchMap(action =>
-      this.readingListService.get_reading_list(action.id).pipe(
-        tap((response: ReadingList) =>
-          this.messageService.add({
-            severity: 'info',
-            detail: this.translateService.instant(
-              'reading-list-effects.get-reading-list.success.detail',
-              { name: response.name }
-            )
-          })
-        ),
-        map(
-          (response: ReadingList) =>
-            new ReadingListReceived({ reading_list: response })
-        ),
-        catchError(error => {
-          this.logger.error('get reading list service failure:', error);
-          this.messageService.add({
-            severity: 'error',
-            detail: this.translateService.instant(
-              'reading-list-effects.get-reading-list.error.detail'
-            )
-          });
-          return of(new ReadingListGetFailed());
-        })
-      )
-    ),
-    catchError(error => {
-      this.logger.error('get reading list general failure:', error);
-      this.messageService.add({
-        severity: 'error',
-        detail: this.translateService.instant(
-          'general-message.error.general-service-failure'
-        )
-      });
-      return of(new ReadingListGetFailed());
-    })
-  );
-
-  @Effect()
-  savingReadingList$: Observable<Action> = this.actions$.pipe(
+  save$: Observable<Action> = this.actions$.pipe(
     ofType(ReadingListActionTypes.Save),
     map((action: ReadingListSave) => action.payload),
     switchMap(action =>
-      this.readingListService.save_reading_list(action.reading_list).pipe(
+      this.readingListService.save(action.id, action.name, action.summary).pipe(
         tap((response: ReadingList) =>
           this.messageService.add({
             severity: 'info',
@@ -152,7 +62,7 @@ export class ReadingListEffects {
         ),
         map(
           (response: ReadingList) =>
-            new ReadingListSaved({ reading_list: response })
+            new ReadingListSaved({ readingList: response })
         ),
         catchError(error => {
           this.logger.error('save reading list service failure:', error);

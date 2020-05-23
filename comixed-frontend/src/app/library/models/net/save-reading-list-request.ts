@@ -19,5 +19,4 @@
 export interface SaveReadingListRequest {
   name: string;
   summary: string;
-  entries: number[];
 }

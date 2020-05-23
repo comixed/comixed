@@ -20,13 +20,11 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/library';
 import {
+  ReadingListCancelEdit,
   ReadingListCreate,
-  ReadingListGet,
-  ReadingListSave,
-  ReadingListsLoad
+  ReadingListEdit,
+  ReadingListSave
 } from 'app/library/actions/reading-list.actions';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
-import { ReadingListEntry } from 'app/library/models/reading-list/reading-list-entry';
 import {
   READING_LIST_FEATURE_KEY,
   ReadingListState
@@ -35,12 +33,14 @@ import * as _ from 'lodash';
 import { LoggerService } from '@angular-ru/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { ReadingList } from 'app/comics/models/reading-list';
 
 @Injectable()
 export class ReadingListAdaptor {
-  _updated$ = new BehaviorSubject<Date>(null);
-  _reading_list$ = new BehaviorSubject<ReadingList[]>([]);
-  _current_list$ = new BehaviorSubject<ReadingList>(null);
+  private _updated$ = new BehaviorSubject<Date>(null);
+  private _current$ = new BehaviorSubject<ReadingList>(null);
+  private _editing$ = new BehaviorSubject<boolean>(false);
+  private _saving$ = new BehaviorSubject<boolean>(false);
 
   constructor(private store: Store<AppState>, private logger: LoggerService) {
     this.store
@@ -48,45 +48,56 @@ export class ReadingListAdaptor {
       .pipe(filter(state => !!state))
       .subscribe((state: ReadingListState) => {
         this.logger.debug('reading list state changed:', state);
-        if (!_.isEqual(this._reading_list$.getValue(), state.reading_lists)) {
-          this._reading_list$.next(state.reading_lists);
+        if (!_.isEqual(this._current$.getValue(), state.current)) {
+          this._current$.next(state.current);
         }
-        if (!_.isEqual(this._current_list$.getValue(), state.current_list)) {
-          this._current_list$.next(state.current_list);
+        if (this._editing$.getValue() !== state.editingList) {
+          this._editing$.next(state.editingList);
+        }
+        if (this._saving$.getValue() !== state.savingList) {
+          this._saving$.next(state.savingList);
         }
         this._updated$.next(new Date());
       });
   }
 
-  get reading_list$(): Observable<ReadingList[]> {
-    return this._reading_list$.asObservable();
-  }
-
-  get_reading_lists(): void {
-    this.store.dispatch(new ReadingListsLoad());
-  }
-
-  get current_list$(): Observable<ReadingList> {
-    return this._current_list$.asObservable();
-  }
-
-  save(reading_list: ReadingList, entries: ReadingListEntry[]): void {
-    this.logger.debug('saving reading list:', reading_list, entries);
+  save(id: number, name: string, summary: string): void {
+    this.logger.debug(
+      `firing action to save a reading list: id=${id} name=${name}`
+    );
     this.store.dispatch(
       new ReadingListSave({
-        reading_list: {
-          ...reading_list,
-          entries: entries
-        }
+        id: id,
+        name: name,
+        summary: summary
       })
     );
   }
 
-  create_reading_list() {
+  create() {
+    this.logger.debug('firing action to reading a reading list:');
     this.store.dispatch(new ReadingListCreate());
   }
 
-  get_reading_list(id: number): void {
-    this.store.dispatch(new ReadingListGet({ id: id }));
+  edit(readingList: ReadingList) {
+    this.logger.debug('firing action to edit a reading list:', readingList);
+    this.store.dispatch(new ReadingListEdit({ readingList: readingList }));
+  }
+
+  cancelEdit() {
+    this.logger.debug('firing action to cancel editing a reading list');
+    this.store.dispatch(new ReadingListCancelEdit());
+  }
+
+  get current$(): Observable<ReadingList> {
+    return this._current$.asObservable();
+  }
+
+  get editing$(): Observable<boolean> {
+    return this._editing$.asObservable();
+  }
+
+  get saving$(): Observable<boolean> {
+    return this._saving$.asObservable();
   }
 }

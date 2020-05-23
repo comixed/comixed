@@ -25,4 +25,5 @@ export interface ComicCollectionEntry {
   count: number;
   comics: Comic[];
   last_comic_added: number;
+  data?: any;
 }

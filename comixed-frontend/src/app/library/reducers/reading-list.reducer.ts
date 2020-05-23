@@ -20,85 +20,62 @@ import {
   ReadingListActions,
   ReadingListActionTypes
 } from '../actions/reading-list.actions';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
+import { ReadingList } from 'app/comics/models/reading-list';
+import { NEW_READING_LIST } from 'app/library/library.constants';
 
 export interface ReadingListState {
-  fetching_lists: boolean;
-  reading_lists: ReadingList[];
-  fetching_list: boolean;
-  current_list: ReadingList;
-  saving_reading_list: boolean;
-  saving_reading_list_failed: boolean;
+  current: ReadingList;
+  savingList: boolean;
+  editingList: boolean;
 }
 
-export const initial_state: ReadingListState = {
-  fetching_lists: false,
-  reading_lists: [],
-  fetching_list: false,
-  current_list: null,
-  saving_reading_list: false,
-  saving_reading_list_failed: false
+export const initialState: ReadingListState = {
+  current: null,
+  savingList: false,
+  editingList: false
 };
 
 export const READING_LIST_FEATURE_KEY = 'reading_list_state';
 
 export function reducer(
-  state = initial_state,
+  state = initialState,
   action: ReadingListActions
 ): ReadingListState {
   switch (action.type) {
-    case ReadingListActionTypes.GetAll:
-      return { ...state, fetching_lists: true };
-
-    case ReadingListActionTypes.AllReceived:
-      return {
-        ...state,
-        fetching_lists: false,
-        reading_lists: action.payload.reading_lists
-      };
-
-    case ReadingListActionTypes.GetAllFailed:
-      return { ...state, fetching_lists: false };
-
-    case ReadingListActionTypes.Get:
-      return { ...state, fetching_list: true };
-
-    case ReadingListActionTypes.Received:
-      return {
-        ...state,
-        fetching_list: false,
-        current_list: action.payload.reading_list
-      };
-
-    case ReadingListActionTypes.GetFailed:
-      return { ...state, fetching_list: false };
-
     case ReadingListActionTypes.Create:
-      return { ...state, current_list: {} as ReadingList };
+      return {
+        ...state,
+        current: NEW_READING_LIST,
+        editingList: true,
+        savingList: false
+      };
+
+    case ReadingListActionTypes.Edit:
+      return {
+        ...state,
+        editingList: true,
+        current: action.payload.readingList,
+        savingList: false
+      };
+
+    case ReadingListActionTypes.CancelEdit:
+      return { ...state, editingList: false, current: null };
 
     case ReadingListActionTypes.Save:
-      return { ...state, saving_reading_list: true };
+      return { ...state, savingList: true };
 
-    case ReadingListActionTypes.Saved: {
-      const lists = state.reading_lists.filter(
-        list => list.id !== action.payload.reading_list.id
-      );
-      lists.push(action.payload.reading_list);
-
+    case ReadingListActionTypes.Saved:
       return {
         ...state,
-        saving_reading_list: false,
-        saving_reading_list_failed: false,
-        reading_lists: lists,
-        current_list: action.payload.reading_list
+        savingList: false,
+        editingList: false,
+        current: action.payload.readingList
       };
-    }
 
     case ReadingListActionTypes.SaveFailed:
       return {
         ...state,
-        saving_reading_list: false,
-        saving_reading_list_failed: true
+        savingList: false
       };
 
     default:

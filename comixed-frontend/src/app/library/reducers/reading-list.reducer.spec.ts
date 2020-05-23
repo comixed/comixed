@@ -17,32 +17,27 @@
  */
 
 import {
-  initial_state,
+  initialState,
   ReadingListState,
   reducer
 } from './reading-list.reducer';
 import {
+  ReadingListCancelEdit,
   ReadingListCreate,
-  ReadingListGet,
-  ReadingListGetFailed,
-  ReadingListLoadFailed,
-  ReadingListReceived,
+  ReadingListEdit,
   ReadingListSave,
   ReadingListSaved,
-  ReadingListSaveFailed,
-  ReadingListsLoad,
-  ReadingListsLoaded
+  ReadingListSaveFailed
 } from 'app/library/actions/reading-list.actions';
-import { READING_LIST_1 } from 'app/library/models/reading-list/reading-list.fixtures';
-import { ReadingList } from 'app/library/models/reading-list/reading-list';
+import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
 
 describe('ReadingList Reducer', () => {
-  const READING_LISTS = [READING_LIST_1];
+  const READING_LIST = READING_LIST_1;
 
   let state: ReadingListState;
 
   beforeEach(() => {
-    state = initial_state;
+    state = initialState;
   });
 
   describe('the initial state', () => {
@@ -50,177 +45,122 @@ describe('ReadingList Reducer', () => {
       state = reducer(state, {} as any);
     });
 
-    it('clears the loading reading lists flag', () => {
-      expect(state.fetching_lists).toBeFalsy();
-    });
-
-    it('has an empty set of reading lists', () => {
-      expect(state.reading_lists).toEqual([]);
-    });
-
-    it('clears the fetching list flag', () => {
-      expect(state.fetching_list).toBeFalsy();
-    });
-
     it('does not have a current list', () => {
-      expect(state.current_list).toBeNull();
+      expect(state.current).toBeNull();
+    });
+
+    it('clears the editing reading list flag', () => {
+      expect(state.editingList).toBeFalsy();
     });
 
     it('clears the saving reading list flag', () => {
-      expect(state.saving_reading_list).toBeFalsy();
-    });
-
-    it('clears the saving failed flag', () => {
-      expect(state.saving_reading_list_failed).toBeFalsy();
+      expect(state.savingList).toBeFalsy();
     });
   });
 
-  describe('getting the set of reading lists', () => {
+  describe('creating a new reading list', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_lists: false },
-        new ReadingListsLoad()
-      );
-    });
-
-    it('sets the loading reading lists flag', () => {
-      expect(state.fetching_lists).toBeTruthy();
-    });
-  });
-
-  describe('when the reading lists are received', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetching_lists: true, reading_lists: [] },
-        new ReadingListsLoaded({ reading_lists: READING_LISTS })
-      );
-    });
-
-    it('clears the fetching lists flag', () => {
-      expect(state.fetching_lists).toBeFalsy();
-    });
-
-    it('sets the reading lists', () => {
-      expect(state.reading_lists).toEqual(READING_LISTS);
-    });
-  });
-
-  describe('when getting the reading lists failed', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetching_lists: true },
-        new ReadingListLoadFailed()
-      );
-    });
-
-    it('clears the fetching lists flag', () => {
-      expect(state.fetching_lists).toBeFalsy();
-    });
-  });
-
-  describe('when getting a reading list', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetching_list: false },
-        new ReadingListGet({ id: READING_LIST_1.id })
-      );
-    });
-
-    it('sets the fetching list flag', () => {
-      expect(state.fetching_list).toBeTruthy();
-    });
-  });
-
-  describe('when the reading list is received', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetching_list: true, current_list: null },
-        new ReadingListReceived({ reading_list: READING_LIST_1 })
-      );
-    });
-
-    it('clears the fetching list flag', () => {
-      expect(state.fetching_list).toBeFalsy();
-    });
-
-    it('sets the current list', () => {
-      expect(state.current_list).toEqual(READING_LIST_1);
-    });
-  });
-
-  describe('when getting the reading list fails', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetching_list: true },
-        new ReadingListGetFailed()
-      );
-    });
-
-    it('clears the fetching list flag', () => {
-      expect(state.fetching_list).toBeFalsy();
-    });
-  });
-
-  describe('when creating a new reading list', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, current_list: READING_LIST_1 },
+        { ...state, current: null, editingList: false },
         new ReadingListCreate()
       );
     });
 
     it('sets a default reading list as the current one', () => {
-      expect(state.current_list).toEqual({} as ReadingList);
+      expect(state.current).not.toBeNull();
+    });
+
+    it('sets the editing list flag', () => {
+      expect(state.editingList).toBeTruthy();
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.savingList).toBeFalsy();
+    });
+  });
+
+  describe('editing a reading list', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, current: null, editingList: false, savingList: true },
+        new ReadingListEdit({ readingList: READING_LIST })
+      );
+    });
+
+    it('sets a default reading list as the current one', () => {
+      expect(state.current).toEqual(READING_LIST);
+    });
+
+    it('sets the editing list flag', () => {
+      expect(state.editingList).toBeTruthy();
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.savingList).toBeFalsy();
+    });
+  });
+
+  describe('canceling editing a reading list', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, current: READING_LIST, editingList: true },
+        new ReadingListCancelEdit()
+      );
+    });
+
+    it('clears the current reading list', () => {
+      expect(state.current).toBeNull();
+    });
+
+    it('clears the editing list flag', () => {
+      expect(state.editingList).toBeFalsy();
     });
   });
 
   describe('when saving a reading list', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, saving_reading_list: false },
-        new ReadingListSave({ reading_list: READING_LIST_1 })
+        { ...state, savingList: false },
+        new ReadingListSave({
+          id: READING_LIST.id,
+          name: READING_LIST.name,
+          summary: READING_LIST.summary
+        })
       );
     });
 
     it('sets the saving flag', () => {
-      expect(state.saving_reading_list).toBeTruthy();
+      expect(state.savingList).toBeTruthy();
+    });
+
+    it('clears the editing flag', () => {
+      expect(state.editingList).toBeFalsy();
     });
   });
 
   describe('when the reading list is saved', () => {
-    const UPDATED_LIST = {
-      ...READING_LISTS[0],
-      summary: 'This is the updated summary'
-    };
-
     beforeEach(() => {
       state = reducer(
         {
           ...state,
-          reading_lists: READING_LISTS,
-          saving_reading_list: true,
-          saving_reading_list_failed: true,
-          current_list: null
+          savingList: true,
+          editingList: true,
+          current: null
         },
-        new ReadingListSaved({ reading_list: UPDATED_LIST })
+        new ReadingListSaved({ readingList: READING_LIST })
       );
     });
 
     it('clears the saving reading list flag', () => {
-      expect(state.saving_reading_list).toBeFalsy();
+      expect(state.savingList).toBeFalsy();
     });
 
-    it('clears the saving reading list failed flag', () => {
-      expect(state.saving_reading_list_failed).toBeFalsy();
-    });
-
-    it('replaces the list in the set', () => {
-      expect(state.reading_lists).not.toContain(READING_LISTS[0]);
-      expect(state.reading_lists).toContain(UPDATED_LIST);
+    it('clears the editing reading list failed flag', () => {
+      expect(state.editingList).toBeFalsy();
     });
 
     it('sets the reading list', () => {
-      expect(state.current_list).toEqual(UPDATED_LIST);
+      expect(state.current).toEqual(READING_LIST);
     });
   });
 
@@ -229,19 +169,14 @@ describe('ReadingList Reducer', () => {
       state = reducer(
         {
           ...state,
-          saving_reading_list: true,
-          saving_reading_list_failed: false
+          savingList: true
         },
         new ReadingListSaveFailed()
       );
     });
 
     it('clears the saving reading list flag', () => {
-      expect(state.saving_reading_list).toBeFalsy();
-    });
-
-    it('sets the saving reading list failed flag', () => {
-      expect(state.saving_reading_list_failed).toBeTruthy();
+      expect(state.savingList).toBeFalsy();
     });
   });
 });
