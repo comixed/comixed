@@ -87,10 +87,7 @@ public class ReadingListServiceTest {
 
     try {
       readingListService.createReadingList(
-          TEST_USER_EMAIL,
-          TEST_READING_LIST_NAME,
-          TEST_READING_LIST_SUMMARY,
-          TEST_READING_LIST_ENTRIES);
+          TEST_USER_EMAIL, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
     } finally {
       Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
       Mockito.verify(readingListRepository, Mockito.times(1))
@@ -99,37 +96,30 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testCreateReadingListName()
+  public void testCreateReadingList()
       throws NoSuchReadingListException, ReadingListNameException, ComicException {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
             readingListRepository.findReadingListForUser(
                 Mockito.any(ComiXedUser.class), Mockito.anyString()))
         .thenReturn(null);
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(readingListRepository.save(readingListCaptor.capture())).thenReturn(readingList);
 
     ReadingList result =
         readingListService.createReadingList(
-            TEST_USER_EMAIL,
-            TEST_READING_LIST_NAME,
-            TEST_READING_LIST_SUMMARY,
-            TEST_READING_LIST_ENTRIES);
+            TEST_USER_EMAIL, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
 
     assertNotNull(result);
     assertSame(readingList, result);
     assertSame(user, readingListCaptor.getValue().getOwner());
     assertEquals(TEST_READING_LIST_NAME, readingListCaptor.getValue().getName());
     assertEquals(TEST_READING_LIST_SUMMARY, readingListCaptor.getValue().getSummary());
-    assertEquals(
-        TEST_READING_LIST_ENTRIES.size(), readingListCaptor.getValue().getEntries().size());
+    assertEquals(0, readingListCaptor.getValue().getEntries().size());
+    assertNotNull(readingListCaptor.getValue().getLastUpdated());
 
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     Mockito.verify(readingListRepository, Mockito.times(1))
         .findReadingListForUser(user, TEST_READING_LIST_NAME);
-    for (int index = 0; index < TEST_READING_LIST_ENTRIES.size(); index++) {
-      Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_READING_LIST_ENTRIES.get(index));
-    }
     Mockito.verify(readingListRepository, Mockito.times(1)).save(readingListCaptor.getValue());
   }
 
@@ -159,11 +149,7 @@ public class ReadingListServiceTest {
 
     try {
       readingListService.updateReadingList(
-          TEST_USER_EMAIL,
-          TEST_READING_LIST_ID,
-          TEST_READING_LIST_NAME,
-          TEST_READING_LIST_SUMMARY,
-          TEST_READING_LIST_ENTRIES);
+          TEST_USER_EMAIL, TEST_READING_LIST_ID, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
     } finally {
       Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
       Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
@@ -179,8 +165,6 @@ public class ReadingListServiceTest {
         .thenReturn(Optional.of(readingList));
     Mockito.doNothing().when(readingList).setName(Mockito.anyString());
     Mockito.doNothing().when(readingList).setSummary(Mockito.anyString());
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(readingList.getEntries()).thenReturn(entries);
     Mockito.when(readingListRepository.save(Mockito.any())).thenReturn(readingList);
 
     ReadingList result =
@@ -188,18 +172,15 @@ public class ReadingListServiceTest {
             TEST_USER_EMAIL,
             TEST_READING_LIST_ID,
             TEST_READING_LIST_NAME,
-            TEST_READING_LIST_SUMMARY,
-            TEST_READING_LIST_ENTRIES);
+            TEST_READING_LIST_SUMMARY);
 
     assertNotNull(result);
     assertSame(readingList, result);
-    assertEquals(TEST_READING_LIST_ENTRIES.size(), entries.size());
 
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
     Mockito.verify(readingList, Mockito.times(1)).setName(TEST_READING_LIST_NAME);
     Mockito.verify(readingList, Mockito.times(1)).setSummary(TEST_READING_LIST_SUMMARY);
-    Mockito.verify(readingList, Mockito.times(1 + TEST_READING_LIST_ENTRIES.size())).getEntries();
     Mockito.verify(readingList, Mockito.times(1)).setLastUpdated(Mockito.any(Date.class));
     Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
   }

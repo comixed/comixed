@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.ReadingList;
+import org.comixed.net.CreateReadingListRequest;
 import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.repositories.library.ReadingListRepository;
 import org.comixed.service.comic.ComicException;
@@ -45,16 +46,15 @@ public class ReadingListController {
   @RequestMapping(value = "/lists", method = RequestMethod.POST)
   @JsonView(View.ReadingList.class)
   public ReadingList createReadingList(
-      Principal principal,
-      @RequestParam("name") String name,
-      @RequestParam("summary") String summary,
-      @RequestParam("entries") List<Long> entries)
+      Principal principal, @RequestBody() CreateReadingListRequest request)
       throws NoSuchReadingListException, ReadingListNameException, ComicException {
     final String email = principal.getName();
+    final String name = request.getName();
+    final String summary = request.getSummary();
 
     this.log.info("Creating reading list for user: email={} name={}", email, name);
 
-    return this.readingListService.createReadingList(email, name, summary, entries);
+    return this.readingListService.createReadingList(email, name, summary);
   }
 
   @PutMapping(
@@ -70,7 +70,6 @@ public class ReadingListController {
     final String email = principal.getName();
     final String name = request.getName();
     final String summary = request.getSummary();
-    final List<Long> entries = request.getEntries();
 
     this.log.info(
         "Updating reading list for user: email={} id={} name={} summary={}",
@@ -79,7 +78,7 @@ public class ReadingListController {
         name,
         summary);
 
-    return this.readingListService.updateReadingList(email, id, name, summary, entries);
+    return this.readingListService.updateReadingList(email, id, name, summary);
   }
 
   @RequestMapping(value = "/lists", method = RequestMethod.GET)
