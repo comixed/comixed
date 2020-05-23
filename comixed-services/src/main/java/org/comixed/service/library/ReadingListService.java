@@ -25,7 +25,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.Matcher;
 import org.comixed.model.library.ReadingList;
-import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.library.SmartReadingList;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
@@ -46,8 +45,7 @@ public class ReadingListService {
   @Autowired ComicService comicService;
 
   @Transactional
-  public ReadingList createReadingList(
-      final String email, final String name, final String summary, final List<Long> entries)
+  public ReadingList createReadingList(final String email, final String name, final String summary)
       throws ReadingListNameException, ComicException {
     this.log.debug("Creating reading list: email={} name={}", email, name);
 
@@ -64,23 +62,10 @@ public class ReadingListService {
     readingList.setOwner(owner);
     readingList.setName(name);
     readingList.setSummary(summary);
-
-    loadComics(entries, readingList);
+    readingList.setLastUpdated(new Date());
 
     this.log.debug("Saving reading list");
     return this.readingListRepository.save(readingList);
-  }
-
-  private void loadComics(final List<Long> entries, final ReadingList readingList)
-      throws ComicException {
-    this.log.debug("Adding comics to list");
-    readingList.getEntries().clear();
-    for (int index = 0; index < entries.size(); index++) {
-      final Long id = entries.get(index);
-      this.log.debug("Loading comic: id={}", id);
-      final Comic comic = this.comicService.getComic(id);
-      readingList.getEntries().add(new ReadingListEntry(comic, readingList));
-    }
   }
 
   public List<ReadingList> getReadingListsForUser(final String email, final Date lastUpdated) {
@@ -94,11 +79,7 @@ public class ReadingListService {
 
   @Transactional
   public ReadingList updateReadingList(
-      final String email,
-      final long id,
-      final String name,
-      final String summary,
-      final List<Long> entries)
+      final String email, final long id, final String name, final String summary)
       throws NoSuchReadingListException, ComicException {
     this.log.debug("Updating reading list: owner={} id={} name={}", email, id, name);
 
@@ -116,8 +97,6 @@ public class ReadingListService {
     readingList.get().setName(name);
     readingList.get().setSummary(summary);
     readingList.get().setLastUpdated(new Date());
-
-    loadComics(entries, readingList.get());
 
     this.log.debug("Updating reading list");
     return this.readingListRepository.save(readingList.get());

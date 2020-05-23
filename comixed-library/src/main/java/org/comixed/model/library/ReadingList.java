@@ -47,28 +47,28 @@ public class ReadingList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView(View.ComicList.class)
+  @JsonView({View.ComicList.class, View.ReadingList.class})
   private Long id;
 
   @Column(name = "name", length = 128)
   @JsonProperty("name")
-  @JsonView(View.ComicList.class)
+  @JsonView({View.ComicList.class, View.ReadingList.class})
   private String name;
 
   @Column(name = "summary", length = 256, nullable = true)
   @JsonProperty("summary")
-  @JsonView(View.ComicList.class)
+  @JsonView({View.ComicList.class, View.ReadingList.class})
   private String summary;
 
   @JsonProperty("owner")
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "owner_id")
-  @JsonView(View.ComicList.class)
+  @JsonView({View.ComicList.class, View.ReadingList.class})
   private ComiXedUser owner;
 
   @Column(name = "last_updated")
   @JsonProperty("lastUpdated")
-  @JsonView(View.ComicList.class)
+  @JsonView({View.ComicList.class, View.ReadingList.class})
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   private Date lastUpdated = new Date();
 
