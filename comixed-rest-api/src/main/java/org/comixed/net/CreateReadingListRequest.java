@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project.
+ * Copyright (C) 2020, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@ package org.comixed.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UpdateReadingListRequest {
+public class CreateReadingListRequest {
   @JsonProperty("name")
   private String name;
 
   @JsonProperty("summary")
   private String summary;
 
-  public UpdateReadingListRequest() {}
+  public CreateReadingListRequest() {}
 
-  public UpdateReadingListRequest(String name, String summary) {
+  public CreateReadingListRequest(String name, String summary) {
     this.name = name;
     this.summary = summary;
   }

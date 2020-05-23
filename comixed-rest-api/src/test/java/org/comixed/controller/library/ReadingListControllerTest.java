@@ -27,6 +27,7 @@ import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
+import org.comixed.net.CreateReadingListRequest;
 import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.service.comic.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
@@ -78,26 +79,20 @@ public class ReadingListControllerTest {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(
             readingListService.createReadingList(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(readingList);
 
     ReadingList result =
         controller.createReadingList(
             principal,
-            TEST_READING_LIST_NAME,
-            TEST_READING_LIST_SUMMARY,
-            TEST_READING_LIST_ENTRIES);
+            new CreateReadingListRequest(TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY));
 
     assertNotNull(result);
     assertSame(result, readingList);
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(readingListService, Mockito.times(1))
-        .createReadingList(
-            TEST_USER_EMAIL,
-            TEST_READING_LIST_NAME,
-            TEST_READING_LIST_SUMMARY,
-            TEST_READING_LIST_ENTRIES);
+        .createReadingList(TEST_USER_EMAIL, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
   }
 
   @Test
@@ -155,19 +150,14 @@ public class ReadingListControllerTest {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(
             readingListService.updateReadingList(
-                Mockito.anyString(),
-                Mockito.anyLong(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyList()))
+                Mockito.anyString(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(readingList);
 
-    final UpdateReadingListRequest request = new UpdateReadingListRequest();
-    request.setName(TEST_READING_LIST_NAME);
-    request.setSummary(TEST_READING_LIST_SUMMARY);
-    request.setEntries(TEST_READING_LIST_ENTRIES);
-
-    ReadingList result = controller.updateReadingList(principal, TEST_READING_LIST_ID, request);
+    ReadingList result =
+        controller.updateReadingList(
+            principal,
+            TEST_READING_LIST_ID,
+            new UpdateReadingListRequest(TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY));
 
     assertNotNull(result);
     assertSame(readingList, result);
@@ -178,7 +168,6 @@ public class ReadingListControllerTest {
             TEST_USER_EMAIL,
             TEST_READING_LIST_ID,
             TEST_READING_LIST_NAME,
-            TEST_READING_LIST_SUMMARY,
-            TEST_READING_LIST_ENTRIES);
+            TEST_READING_LIST_SUMMARY);
   }
 }

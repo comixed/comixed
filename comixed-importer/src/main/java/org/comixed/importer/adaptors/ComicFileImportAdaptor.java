@@ -157,8 +157,7 @@ public class ComicFileImportAdaptor {
     }
 
     try {
-      this.readingListService.createReadingList(
-          email, listName, "Imported from ComicRack", entries);
+      this.readingListService.createReadingList(email, listName, "Imported from ComicRack");
     } catch (ReadingListNameException e) {
       this.log.error("Reading list {} already exists!", listName);
     }
