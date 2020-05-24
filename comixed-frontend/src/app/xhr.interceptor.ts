@@ -7,7 +7,7 @@ import {
   HttpRequest,
   HttpResponse,
   HttpSentEvent,
-  HttpUserEvent
+  HttpUserEvent,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -59,11 +59,11 @@ export class XhrInterceptor implements HttpInterceptor {
       authReq = req.clone({
         headers: req.headers
           .set(TOKEN_HEADER_KEY, `Bearer ${this.tokenService.getToken()}`)
-          .set('X-Request-With', 'XMLHttpRequest')
+          .set('X-Request-With', 'XMLHttpRequest'),
       });
     } else {
       authReq = req.clone({
-        headers: req.headers.set('X-Request-With', 'XMLHttpRequest')
+        headers: req.headers.set('X-Request-With', 'XMLHttpRequest'),
       });
     }
     return next.handle(authReq).pipe(
@@ -76,8 +76,13 @@ export class XhrInterceptor implements HttpInterceptor {
             this.logger.debug('[XHR] no error:', error);
             return;
           case 401:
-            this.logger.error('[XHR] user not authenticated:', error);
-            this.authenticationAdaptor.authenticationFailed();
+            if (this.authenticationAdaptor.authenticating) {
+              this.logger.error('[XHR] Authentication attempt failed:', error);
+              this.authenticationAdaptor.authenticationFailed();
+            } else {
+              this.logger.debug('[XHR] No valid auth token');
+              this.authenticationAdaptor.startLogout();
+            }
             this.router.navigateByUrl('/');
             break;
           default:

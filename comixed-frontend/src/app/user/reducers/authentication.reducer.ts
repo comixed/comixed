@@ -18,12 +18,11 @@
 
 import {
   AuthenticationActions,
-  AuthenticationActionTypes
+  AuthenticationActionTypes,
 } from '../actions/authentication.actions';
-import * as AuthActions from 'app/user/actions/authentication.actions';
 import {
   AuthenticationState,
-  initial_state
+  initial_state,
 } from 'app/user/models/authentication-state';
 
 export const AUTHENTICATION_FEATURE_KEY = 'auth_state';
@@ -36,6 +35,9 @@ export function reducer(
     case AuthenticationActionTypes.AUTH_CHECK_STATE:
       return { ...state, authenticating: true };
 
+    case AuthenticationActionTypes.AUTH_SUBMIT_LOGIN:
+      return { ...state, authenticating: true };
+
     case AuthenticationActionTypes.AUTH_USER_LOADED:
       return {
         ...state,
@@ -43,7 +45,7 @@ export function reducer(
         authenticated: true,
         authenticating: false,
         show_login: false,
-        user: action.payload.user
+        user: action.payload.user,
       };
 
     case AuthenticationActionTypes.AUTH_NO_USER_LOADED:
@@ -52,14 +54,14 @@ export function reducer(
         initialized: true,
         authenticating: false,
         authenticated: false,
-        user: null
+        user: null,
       };
 
     case AuthenticationActionTypes.AUTH_SET_TOKEN:
       return {
         ...state,
         authenticated: true,
-        auth_token: action.payload.token
+        auth_token: action.payload.token,
       };
 
     case AuthenticationActionTypes.AUTH_CLEAR_TOKEN:

@@ -38,7 +38,7 @@ describe('AuthenticationAdaptor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [StoreModule.forRoot({ auth_state: reducer })],
-      providers: [AuthenticationAdaptor]
+      providers: [AuthenticationAdaptor],
     });
 
     auth_adaptor = TestBed.get(AuthenticationAdaptor);
@@ -113,6 +113,18 @@ describe('AuthenticationAdaptor', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new AuthActions.AuthCheckState()
       );
+    });
+  });
+
+  describe('when sending the loading data', () => {
+    beforeEach(() => {
+      store.dispatch(
+        new AuthActions.AuthSubmitLogin({ email: EMAIL, password: PASSWORD })
+      );
+    });
+
+    it('returns true for the authenticating', () => {
+      expect(auth_adaptor.authenticating).toBeTruthy();
     });
   });
 
@@ -213,7 +225,9 @@ describe('AuthenticationAdaptor', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(new AuthActions.AuthLoginFailed());
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new AuthActions.AuthLoginFailed()
+      );
     });
   });
 
@@ -227,7 +241,7 @@ describe('AuthenticationAdaptor', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new AuthActions.AuthSetPreference({
           name: PREFERENCE_NAME,
-          value: PREFERENCE_VALUE
+          value: PREFERENCE_VALUE,
         })
       );
     });
@@ -239,8 +253,8 @@ describe('AuthenticationAdaptor', () => {
         new AuthActions.AuthUserLoaded({
           user: {
             ...USER_READER,
-            preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }]
-          }
+            preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }],
+          },
         })
       );
     });

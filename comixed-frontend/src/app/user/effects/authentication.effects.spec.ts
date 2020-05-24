@@ -51,7 +51,7 @@ describe('AuthenticationEffects', () => {
       imports: [
         RouterTestingModule.withRoutes([{ path: 'home', redirectTo: '' }]),
         TranslateModule.forRoot(),
-        LoggerModule.forRoot()
+        LoggerModule.forRoot(),
       ],
       providers: [
         AuthenticationEffects,
@@ -67,12 +67,12 @@ describe('AuthenticationEffects', () => {
             ),
             setPreference: jasmine.createSpy(
               'AuthenticationService.setPreference'
-            )
-          }
+            ),
+          },
         },
         TokenService,
-        MessageService
-      ]
+        MessageService,
+      ],
     });
 
     effects = TestBed.get(AuthenticationEffects);
@@ -93,7 +93,7 @@ describe('AuthenticationEffects', () => {
       const serviceResponse = { email: USER_READER.email, token: AUTH_TOKEN };
       const action = new AuthActions.AuthSubmitLogin({
         email: EMAIL,
-        password: PASSWORD
+        password: PASSWORD,
       });
       const outcome1 = new AuthActions.AuthCheckState();
       const outcome2 = new AuthActions.AuthSetToken({ token: AUTH_TOKEN });
@@ -115,7 +115,7 @@ describe('AuthenticationEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = new AuthActions.AuthSubmitLogin({
         email: EMAIL,
-        password: PASSWORD
+        password: PASSWORD,
       });
       const outcome = new AuthActions.AuthNoUserLoaded();
 
@@ -134,7 +134,7 @@ describe('AuthenticationEffects', () => {
     it('fires an action on general failure', () => {
       const action = new AuthActions.AuthSubmitLogin({
         email: EMAIL,
-        password: PASSWORD
+        password: PASSWORD,
       });
       const outcome = new AuthActions.AuthNoUserLoaded();
 
@@ -154,7 +154,7 @@ describe('AuthenticationEffects', () => {
       const serviceResponse = USER;
       const action = new AuthActions.AuthCheckState();
       const outcome = new AuthActions.AuthUserLoaded({
-        user: serviceResponse
+        user: serviceResponse,
       });
 
       actions = hot('-a', { a: action });
@@ -231,7 +231,7 @@ describe('AuthenticationEffects', () => {
       const expected = cold('-b', { b: outcome });
       expect(effects.authenticationFailed$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({severity: 'error' })
+        objectContaining({ severity: 'error' })
       );
     });
   });
@@ -241,7 +241,7 @@ describe('AuthenticationEffects', () => {
       const serviceResponse = USER;
       const action = new AuthActions.AuthSetPreference({
         name: PREFERENCE_NAME,
-        value: PREFERENCE_VALUE
+        value: PREFERENCE_VALUE,
       });
       const outcome = new AuthActions.AuthPreferenceSet({ user: USER });
 
@@ -256,7 +256,7 @@ describe('AuthenticationEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = new AuthActions.AuthSetPreference({
         name: PREFERENCE_NAME,
-        value: PREFERENCE_VALUE
+        value: PREFERENCE_VALUE,
       });
       const outcome = new AuthActions.AuthSetPreferenceFailed();
 
@@ -272,7 +272,7 @@ describe('AuthenticationEffects', () => {
     it('fires an action on general failure', () => {
       const action = new AuthActions.AuthSetPreference({
         name: PREFERENCE_NAME,
-        value: PREFERENCE_VALUE
+        value: PREFERENCE_VALUE,
       });
       const outcome = new AuthActions.AuthSetPreferenceFailed();
 
