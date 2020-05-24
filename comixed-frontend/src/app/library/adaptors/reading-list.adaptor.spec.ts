@@ -90,7 +90,7 @@ describe('ReadingListAdaptor', () => {
     });
 
     it('provides updates on editing', () => {
-      adaptor.editing$.subscribe(response => expect(response).toBeTruthy());
+      adaptor.editingList$.subscribe(response => expect(response).toBeTruthy());
     });
   });
 
@@ -112,7 +112,7 @@ describe('ReadingListAdaptor', () => {
     });
 
     it('provides updates on editing', () => {
-      adaptor.editing$.subscribe(response => expect(response).toBeTruthy());
+      adaptor.editingList$.subscribe(response => expect(response).toBeTruthy());
     });
 
     describe('canceling the edit', () => {
@@ -127,7 +127,7 @@ describe('ReadingListAdaptor', () => {
       });
 
       it('provides updates on editing', () => {
-        adaptor.editing$.subscribe(response => expect(response).toBeFalsy());
+        adaptor.editingList$.subscribe(response => expect(response).toBeFalsy());
       });
     });
 
@@ -147,7 +147,7 @@ describe('ReadingListAdaptor', () => {
       });
 
       it('provides updates on saving', () => {
-        adaptor.saving$.subscribe(response => expect(response).toBeTruthy());
+        adaptor.savingList$.subscribe(response => expect(response).toBeTruthy());
       });
 
       describe('success', () => {
@@ -163,11 +163,11 @@ describe('ReadingListAdaptor', () => {
         });
 
         it('provides updates on saving', () => {
-          adaptor.saving$.subscribe(response => expect(response).toBeFalsy());
+          adaptor.savingList$.subscribe(response => expect(response).toBeFalsy());
         });
 
         it('provides updates on editing', () => {
-          adaptor.editing$.subscribe(response => expect(response).toBeFalsy());
+          adaptor.editingList$.subscribe(response => expect(response).toBeFalsy());
         });
 
         it('provides updates on the reading list', () => {
@@ -183,7 +183,7 @@ describe('ReadingListAdaptor', () => {
         });
 
         it('provides updates on saving', () => {
-          adaptor.saving$.subscribe(response => expect(response).toBeFalsy());
+          adaptor.savingList$.subscribe(response => expect(response).toBeFalsy());
         });
       });
     });
