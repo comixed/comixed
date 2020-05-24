@@ -39,8 +39,8 @@ import { ReadingList } from 'app/comics/models/reading-list';
 export class ReadingListAdaptor {
   private _updated$ = new BehaviorSubject<Date>(null);
   private _current$ = new BehaviorSubject<ReadingList>(null);
-  private _editing$ = new BehaviorSubject<boolean>(false);
-  private _saving$ = new BehaviorSubject<boolean>(false);
+  private _editingList$ = new BehaviorSubject<boolean>(false);
+  private _savingList$ = new BehaviorSubject<boolean>(false);
 
   constructor(private store: Store<AppState>, private logger: LoggerService) {
     this.store
@@ -51,11 +51,11 @@ export class ReadingListAdaptor {
         if (!_.isEqual(this._current$.getValue(), state.current)) {
           this._current$.next(state.current);
         }
-        if (this._editing$.getValue() !== state.editingList) {
-          this._editing$.next(state.editingList);
+        if (this._editingList$.getValue() !== state.editingList) {
+          this._editingList$.next(state.editingList);
         }
-        if (this._saving$.getValue() !== state.savingList) {
-          this._saving$.next(state.savingList);
+        if (this._savingList$.getValue() !== state.savingList) {
+          this._savingList$.next(state.savingList);
         }
         this._updated$.next(new Date());
       });
@@ -93,11 +93,11 @@ export class ReadingListAdaptor {
     return this._current$.asObservable();
   }
 
-  get editing$(): Observable<boolean> {
-    return this._editing$.asObservable();
+  get editingList$(): Observable<boolean> {
+    return this._editingList$.asObservable();
   }
 
-  get saving$(): Observable<boolean> {
-    return this._saving$.asObservable();
+  get savingList$(): Observable<boolean> {
+    return this._savingList$.asObservable();
   }
 }
