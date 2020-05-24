@@ -86,10 +86,18 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
     this.layoutSubscription = this.libraryDisplayAdaptor.layout$.subscribe(
       layout => (this.gridLayout = layout === 'grid')
     );
-    this.sortFieldSubscription = this.libraryDisplayAdaptor.sortField$.subscribe(field => this.sortField = field);
-    this.rowsSubscription = this.libraryDisplayAdaptor.rows$.subscribe(rows => this.rows = rows);
-    this.sameHeightSubscription = this.libraryDisplayAdaptor.sameHeight$.subscribe(sameHeight => this.sameHeight = sameHeight);
-    this.coverSizeSubscription = this.libraryDisplayAdaptor.coverSize$.subscribe(coverSize => this.coverSize = coverSize);
+    this.sortFieldSubscription = this.libraryDisplayAdaptor.sortField$.subscribe(
+      field => (this.sortField = field)
+    );
+    this.rowsSubscription = this.libraryDisplayAdaptor.rows$.subscribe(
+      rows => (this.rows = rows)
+    );
+    this.sameHeightSubscription = this.libraryDisplayAdaptor.sameHeight$.subscribe(
+      sameHeight => (this.sameHeight = sameHeight)
+    );
+    this.coverSizeSubscription = this.libraryDisplayAdaptor.coverSize$.subscribe(
+      coverSize => (this.coverSize = coverSize)
+    );
   }
 
   ngOnDestroy() {

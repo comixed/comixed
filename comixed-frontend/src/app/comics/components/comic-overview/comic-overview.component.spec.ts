@@ -127,18 +127,20 @@ describe('ComicOverviewComponent', () => {
 
   it('can clean the comic metadata', () => {
     spyOn(comicAdaptor, 'clearMetadata');
-    spyOn(confirmationService, 'confirm').and.callFake(
-      (confirm: Confirmation) => confirm.accept()
-    );
+    spyOn(
+      confirmationService,
+      'confirm'
+    ).and.callFake((confirm: Confirmation) => confirm.accept());
     component.clearMetadata();
     expect(comicAdaptor.clearMetadata).toHaveBeenCalledWith(COMIC);
   });
 
   it('can delete a comic', () => {
     spyOn(comicAdaptor, 'deleteComic');
-    spyOn(confirmationService, 'confirm').and.callFake(
-      (confirm: Confirmation) => confirm.accept()
-    );
+    spyOn(
+      confirmationService,
+      'confirm'
+    ).and.callFake((confirm: Confirmation) => confirm.accept());
     component.deleteComic();
     expect(comicAdaptor.deleteComic).toHaveBeenCalledWith(COMIC);
   });
@@ -224,9 +226,10 @@ describe('ComicOverviewComponent', () => {
   describe('saving changes', () => {
     beforeEach(() => {
       component.editing = true;
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirm: Confirmation) => confirm.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirm: Confirmation) => confirm.accept());
       spyOn(comicAdaptor, 'saveComic');
       component.saveChanges();
     });

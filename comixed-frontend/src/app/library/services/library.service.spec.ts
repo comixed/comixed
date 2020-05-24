@@ -151,7 +151,9 @@ describe('LibraryService', () => {
       archiveType: 'CBZ',
       renamePages: true
     } as ConvertComicsRequest);
-    req.flush(new HttpResponse<any>({ status: 200 }));
+    req.flush(
+      new HttpResponse<any>({ status: 200 })
+    );
   });
 
   it('can consolidate the library', () => {

@@ -265,9 +265,10 @@ describe('ComicFileListToolbarComponent', () => {
 
   describe('starting the import', () => {
     beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirm: Confirmation) => confirm.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirm: Confirmation) => confirm.accept());
       spyOn(comicImportAdaptor, 'startImport');
       component.selectedComicFiles = COMIC_FILES;
     });

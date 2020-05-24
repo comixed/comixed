@@ -19,11 +19,11 @@
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 
 export const SCRAPING_ISSUE_1000: ScrapingIssue = {
-         id: 1000,
-         coverDate: '0',
-         coverUrl: 'http://comixed.org/issues/1000',
-         issueNumber: '1000',
-         name: 'Issue1000',
-         volumeName: '2009',
-         volumeId: 1000
-       };
+  id: 1000,
+  coverDate: '0',
+  coverUrl: 'http://comixed.org/issues/1000',
+  issueNumber: '1000',
+  name: 'Issue1000',
+  volumeName: '2009',
+  volumeId: 1000
+};

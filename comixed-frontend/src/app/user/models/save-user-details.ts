@@ -17,8 +17,8 @@
  */
 
 export interface SaveUserDetails {
-    id: number;
-    email: string;
-    password: string;
-    isAdmin: boolean;
+  id: number;
+  email: string;
+  password: string;
+  isAdmin: boolean;
 }

@@ -55,7 +55,10 @@ function latestDateForField(comics: Comic[], field_name: string): number {
     return 0;
   }
 
-  return Math.max.apply(null, comics.map(comic => comic[field_name] || 0));
+  return Math.max.apply(
+    null,
+    comics.map(comic => comic[field_name] || 0)
+  );
 }
 
 export function latestUpdatedDate(comics: Comic[]): number {

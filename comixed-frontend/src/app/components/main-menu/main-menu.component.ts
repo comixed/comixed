@@ -75,7 +75,7 @@ export class MainMenuComponent implements OnInit {
           },
           {
             label: this.translateService.instant(
-                'main-menu.item.library.duplicates'
+              'main-menu.item.library.duplicates'
             ),
             icon: 'fa fw fas fa-clone',
             routerLink: ['/comics/duplicates'],

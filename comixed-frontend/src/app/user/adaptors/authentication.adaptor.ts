@@ -27,7 +27,7 @@ import {
   AuthLogout,
   AuthSetPreference,
   AuthShowLogin,
-  AuthSubmitLogin,
+  AuthSubmitLogin
 } from 'app/user/actions/authentication.actions';
 import { AuthenticationState } from 'app/user/models/authentication-state';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -44,13 +44,13 @@ export class AuthenticationAdaptor {
   _user$ = new BehaviorSubject<User>(null);
   _role$ = new BehaviorSubject<Roles>({
     admin: false,
-    reader: false,
+    reader: false
   });
 
   constructor(private store: Store<AppState>) {
     this.store
       .select(AUTHENTICATION_FEATURE_KEY)
-      .pipe(filter((state) => !!state))
+      .pipe(filter(state => !!state))
       .subscribe((auth_state: AuthenticationState) => {
         this._initialized$.next(auth_state.initialized);
         this._authenticating$.next(auth_state.authenticating);
@@ -61,7 +61,7 @@ export class AuthenticationAdaptor {
           reader:
             this.hasRole(auth_state.user, 'READER') ||
             this.hasRole(auth_state.user, 'ADMIN'),
-          admin: this.hasRole(auth_state.user, 'ADMIN'),
+          admin: this.hasRole(auth_state.user, 'ADMIN')
         });
         this._user$.next(auth_state.user);
       });
@@ -69,7 +69,7 @@ export class AuthenticationAdaptor {
 
   private hasRole(user: User, name: string): boolean {
     if (user) {
-      return user.roles.some((role) => role.name === name);
+      return user.roles.some(role => role.name === name);
     }
     return false;
   }
@@ -156,7 +156,7 @@ export class AuthenticationAdaptor {
     if (this._user$.getValue()) {
       const preference = this._user$
         .getValue()
-        .preferences.find((entry) => entry.name === name);
+        .preferences.find(entry => entry.name === name);
 
       if (preference) {
         return preference.value;

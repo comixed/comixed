@@ -15,31 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
-import {Params} from '@angular/router';
+import { Params } from '@angular/router';
 import * as fromRouter from '@ngrx/router-store';
 import * as fromImporting from './reducers/comic-import.reducer';
-import {ComicImportState} from './reducers/comic-import.reducer';
-import {ActionReducerMap, MetaReducer} from '@ngrx/store';
-import {environment} from '../../environments/environment';
+import { ComicImportState } from './reducers/comic-import.reducer';
+import { ActionReducerMap, MetaReducer } from '@ngrx/store';
+import { environment } from '../../environments/environment';
 
 interface RouterStateUrl {
-    url: string;
-    params: Params;
-    queryParams: Params;
+  url: string;
+  params: Params;
+  queryParams: Params;
 }
 
 export interface AppState {
-    router: fromRouter.RouterReducerState<RouterStateUrl>;
-    comicImport: ComicImportState;
+  router: fromRouter.RouterReducerState<RouterStateUrl>;
+  comicImport: ComicImportState;
 }
 
 export type State = AppState;
 
 export const reducers: ActionReducerMap<AppState> = {
-    router: fromRouter.routerReducer,
-    comicImport: fromImporting.reducer
+  router: fromRouter.routerReducer,
+  comicImport: fromImporting.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
-    ? []
-    : [];
+  ? []
+  : [];

@@ -286,9 +286,10 @@ describe('ComicDetailsEditorComponent', () => {
     beforeEach(() => {
       component.comic = COMIC;
       spyOn(comicAdaptor, 'saveComic');
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.accept());
       component.comicDetailsForm.controls['seriesName'].setValue(NEW_SERIES);
       component.comicDetailsForm.controls['volumeName'].setValue(NEW_VOLUME);
       component.comicDetailsForm.controls['issueNumber'].setValue(NEW_ISSUE);
@@ -404,9 +405,10 @@ describe('ComicDetailsEditorComponent', () => {
       component.currentVolume = VOLUME;
       component.comicDetailsForm.controls['apiKey'].setValue(API_KEY);
       spyOn(scrapingAdaptor, 'loadMetadata');
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.accept());
     });
 
     describe('while not skipping the cache', () => {

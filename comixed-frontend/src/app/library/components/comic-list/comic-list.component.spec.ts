@@ -298,9 +298,10 @@ describe('ComicListComponent', () => {
     beforeEach(() => {
       component._selectedComics = COMICS;
       spyOn(router, 'navigateByUrl');
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirm: Confirmation) => confirm.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirm: Confirmation) => confirm.accept());
       component.scrapeComics();
     });
 

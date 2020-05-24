@@ -142,9 +142,10 @@ describe('AccountPageComponent', () => {
   describe('saving the user', () => {
     beforeEach(() => {
       spyOn(userAdminAdaptor, 'saveUser');
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.accept());
       component.saveUser({
         id: USER.id,
         email: USER.email,
