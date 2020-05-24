@@ -39,7 +39,7 @@ import {
   AuthSetPreference,
   AuthSetPreferenceFailed,
   AuthSetToken,
-  AuthSubmitLogin,
+  AuthSubmitLogin
 } from '../actions/authentication.actions';
 
 @Injectable()
@@ -56,12 +56,12 @@ export class AuthenticationEffects {
   @Effect()
   getAuthenticatedUser$: Observable<Action> = this.actions$.pipe(
     ofType(AuthenticationActionTypes.AUTH_CHECK_STATE),
-    tap((action) =>
+    tap(action =>
       this.logger.debug('effect: getting authenticated user:', action)
     ),
-    switchMap((action) =>
+    switchMap(action =>
       this.authenticationService.getAuthenticatedUser().pipe(
-        tap((response) =>
+        tap(response =>
           this.logger.debug('getting authenticated user response:', response)
         ),
         map((response: User) =>
@@ -69,7 +69,7 @@ export class AuthenticationEffects {
             ? new AuthenticationActions.AuthUserLoaded({ user: response })
             : new AuthNoUserLoaded()
         ),
-        catchError((error) => {
+        catchError(error => {
           this.logger.error(
             'service failure getting authenticated user:',
             error
@@ -78,7 +78,7 @@ export class AuthenticationEffects {
         })
       )
     ),
-    catchError((error) => {
+    catchError(error => {
       this.logger.error('general failure getting authenticated user:', error);
       return of(new AuthNoUserLoaded());
     })
@@ -88,13 +88,13 @@ export class AuthenticationEffects {
   submitLoginData$: Observable<Action> = this.actions$.pipe(
     ofType(AuthenticationActionTypes.AUTH_SUBMIT_LOGIN),
     map((action: AuthSubmitLogin) => action.payload),
-    tap((action) => this.logger.debug('effect: submit login data:', action)),
-    switchMap((action) =>
+    tap(action => this.logger.debug('effect: submit login data:', action)),
+    switchMap(action =>
       this.authenticationService
         .submitLoginData(action.email, action.password)
         .pipe(
-          tap((data) => this.tokenService.saveToken(data.token)),
-          tap((response) =>
+          tap(data => this.tokenService.saveToken(data.token)),
+          tap(response =>
             this.logger.debug('submit login data response:', response)
           ),
           tap(() =>
@@ -102,21 +102,21 @@ export class AuthenticationEffects {
               severity: 'info',
               detail: this.translateService.instant(
                 'authentication-effects.submit-login-data.success.detail'
-              ),
+              )
             })
           ),
           switchMap((response: LoginResponse) => [
             new AuthCheckState(),
             new AuthSetToken({ token: response.token }),
-            new AuthHideLogin(),
+            new AuthHideLogin()
           ]),
-          catchError((error) => {
+          catchError(error => {
             this.logger.error('service failure submitting login data:', error);
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
                 'authentication-effects.submit-login-data.failure.detail'
-              ),
+              )
             });
             return of(new AuthNoUserLoaded());
           })
@@ -128,7 +128,7 @@ export class AuthenticationEffects {
         severity: 'error',
         detail: this.translateService.instant(
           'authentication-effects.submit-login-data.failure.detail'
-        ),
+        )
       });
       return of(new AuthNoUserLoaded());
     })
@@ -137,14 +137,14 @@ export class AuthenticationEffects {
   @Effect()
   logout$: Observable<Action> = this.actions$.pipe(
     ofType(AuthenticationActionTypes.AUTH_LOGOUT),
-    tap((action) => this.logger.debug('effect: logging out:', action)),
+    tap(action => this.logger.debug('effect: logging out:', action)),
     tap(() => this.tokenService.signout()),
     tap(() =>
       this.messageService.add({
         severity: 'info',
         detail: this.translateService.instant(
           'authentication-effects.logout.detail'
-        ),
+        )
       })
     ),
     map(() => new AuthCheckState())
@@ -153,14 +153,14 @@ export class AuthenticationEffects {
   @Effect()
   authenticationFailed$: Observable<Action> = this.actions$.pipe(
     ofType(AuthenticationActionTypes.AUTH_LOGIN_FAILED),
-    tap((action) => this.logger.debug('effect: logging failed:', action)),
+    tap(action => this.logger.debug('effect: logging failed:', action)),
     tap(() => this.tokenService.signout()),
     tap(() =>
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
           'authentication-effects.submit-login-data.failure.detail'
-        ),
+        )
       })
     ),
     map(() => new AuthCheckState())
@@ -170,22 +170,22 @@ export class AuthenticationEffects {
   setPreference$: Observable<Action> = this.actions$.pipe(
     ofType(AuthenticationActionTypes.AUTH_SET_PREFERENCE),
     map((action: AuthSetPreference) => action.payload),
-    tap((action) =>
+    tap(action =>
       this.logger.debug('effect: setting user preference:', action)
     ),
-    switchMap((action) =>
+    switchMap(action =>
       this.authenticationService.setPreference(action.name, action.value).pipe(
-        tap((response) =>
+        tap(response =>
           this.logger.debug('setting user preference response:', response)
         ),
         map((response: User) => new AuthPreferenceSet({ user: response })),
-        catchError((error) => {
+        catchError(error => {
           this.logger.error('service failure setting user preference:', error);
           return of(new AuthSetPreferenceFailed());
         })
       )
     ),
-    catchError((error) => {
+    catchError(error => {
       this.logger.error('service failure setting user preference:', error);
       return of(new AuthSetPreferenceFailed());
     })

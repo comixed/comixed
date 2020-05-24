@@ -117,10 +117,9 @@ describe('DuplicatesPageToolbarComponent', () => {
 
   describe('turn on blocked for selected pages', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirm: Confirmation) => confirm.accept());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.accept()
+      );
       spyOn(duplicatesPagesAdaptors, 'setBlocking');
       component.selectedPages = PAGES;
       component.setBlocking(true);
@@ -136,10 +135,9 @@ describe('DuplicatesPageToolbarComponent', () => {
 
   describe('turn off blocked for selected pages', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirm: Confirmation) => confirm.accept());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.accept()
+      );
       spyOn(duplicatesPagesAdaptors, 'setBlocking');
       component.selectedPages = PAGES;
       component.setBlocking(false);

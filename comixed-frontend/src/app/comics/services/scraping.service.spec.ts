@@ -81,9 +81,7 @@ describe('ScrapingService', () => {
       .getVolumes(API_KEY, SERIES, VOLUME, SKIP_CACHE)
       .subscribe(response => expect(response).toEqual(VOLUMES));
 
-    const req = httpMock.expectOne(
-      interpolate(GET_VOLUMES_URL)
-    );
+    const req = httpMock.expectOne(interpolate(GET_VOLUMES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       apiKey: API_KEY,

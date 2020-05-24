@@ -118,10 +118,9 @@ describe('ConsolidateLibraryComponent', () => {
 
   describe('consolidating the library', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirm: Confirmation) => confirm.accept());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.accept()
+      );
       spyOn(libraryAdaptor, 'consolidate');
       spyOn(authenticationAdaptor, 'setPreference');
     });

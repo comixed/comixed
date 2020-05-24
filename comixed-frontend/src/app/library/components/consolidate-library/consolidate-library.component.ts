@@ -75,7 +75,9 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
       message: this.translateService.instant(
         'consolidate-library.confirm.message',
         {
-          deletePhysicalFiles: this.consolidationForm.controls['deletePhysicalFiles'].value
+          deletePhysicalFiles: this.consolidationForm.controls[
+            'deletePhysicalFiles'
+          ].value
         }
       ),
       accept: () => {

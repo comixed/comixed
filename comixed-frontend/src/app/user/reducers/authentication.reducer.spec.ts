@@ -20,7 +20,7 @@ import * as AuthenticationActions from 'app/user/actions/authentication.actions'
 import { USER_ADMIN, USER_READER } from 'app/user/models/user.fixtures';
 import {
   AuthenticationState,
-  initial_state,
+  initial_state
 } from 'app/user/models/authentication-state';
 import { reducer } from 'app/user/reducers/authentication.reducer';
 import * as AuthActions from 'app/user/actions/authentication.actions';
@@ -220,7 +220,7 @@ describe('Authentication Reducer', () => {
           ...state,
           authenticated: true,
           auth_token: AUTH_TOKEN,
-          user: USER_ADMIN,
+          user: USER_ADMIN
         },
         new AuthenticationActions.AuthLogout()
       );
@@ -245,7 +245,7 @@ describe('Authentication Reducer', () => {
         { ...state, setting_preference: false },
         new AuthenticationActions.AuthSetPreference({
           name: PREFERENCE_NAME,
-          value: PREFERENCE_VALUE,
+          value: PREFERENCE_VALUE
         })
       );
     });
@@ -259,7 +259,7 @@ describe('Authentication Reducer', () => {
     const OLD_USER = { ...USER_READER, preferences: [] };
     const NEW_USER = {
       ...USER_READER,
-      preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }],
+      preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }]
     };
 
     beforeEach(() => {
