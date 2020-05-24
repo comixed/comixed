@@ -51,9 +51,9 @@ export class ReadingListEditComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       summary: ['']
     });
-    this.editReadingListSubscription = this.readingListAdaptor.editing$
-      .pipe(filter(readingList => !!readingList))
-      .subscribe(editing => (this.editingReadingList = editing));
+    this.editReadingListSubscription = this.readingListAdaptor.editingList$.subscribe(
+      editing => (this.editingReadingList = editing)
+    );
     this.readingListSubscription = this.readingListAdaptor.current$
       .pipe(filter(readingList => !!readingList))
       .subscribe(readingList => this.loadReadingList(readingList));
