@@ -22,11 +22,12 @@ import { Roles } from 'app/models/ui/roles';
 import { AppState, User } from 'app/user';
 import {
   AuthCheckState,
-  AuthHideLogin, AuthLoginFailed,
+  AuthHideLogin,
+  AuthLoginFailed,
   AuthLogout,
   AuthSetPreference,
   AuthShowLogin,
-  AuthSubmitLogin
+  AuthSubmitLogin,
 } from 'app/user/actions/authentication.actions';
 import { AuthenticationState } from 'app/user/models/authentication-state';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -37,20 +38,22 @@ import { AUTHENTICATION_FEATURE_KEY } from 'app/user/reducers/authentication.red
 export class AuthenticationAdaptor {
   _initialized$ = new BehaviorSubject<boolean>(false);
   _authenticated$ = new BehaviorSubject<boolean>(false);
+  _authenticating$ = new BehaviorSubject<boolean>(false);
   authToken$ = new BehaviorSubject<string>(null);
   _showLogin$ = new BehaviorSubject<boolean>(false);
   _user$ = new BehaviorSubject<User>(null);
   _role$ = new BehaviorSubject<Roles>({
     admin: false,
-    reader: false
+    reader: false,
   });
 
   constructor(private store: Store<AppState>) {
     this.store
       .select(AUTHENTICATION_FEATURE_KEY)
-      .pipe(filter(state => !!state))
+      .pipe(filter((state) => !!state))
       .subscribe((auth_state: AuthenticationState) => {
         this._initialized$.next(auth_state.initialized);
+        this._authenticating$.next(auth_state.authenticating);
         this._authenticated$.next(auth_state.authenticated);
         this.authToken$.next(auth_state.auth_token);
         this._showLogin$.next(auth_state.show_login);
@@ -58,7 +61,7 @@ export class AuthenticationAdaptor {
           reader:
             this.hasRole(auth_state.user, 'READER') ||
             this.hasRole(auth_state.user, 'ADMIN'),
-          admin: this.hasRole(auth_state.user, 'ADMIN')
+          admin: this.hasRole(auth_state.user, 'ADMIN'),
         });
         this._user$.next(auth_state.user);
       });
@@ -66,7 +69,7 @@ export class AuthenticationAdaptor {
 
   private hasRole(user: User, name: string): boolean {
     if (user) {
-      return user.roles.some(role => role.name === name);
+      return user.roles.some((role) => role.name === name);
     }
     return false;
   }
@@ -97,6 +100,10 @@ export class AuthenticationAdaptor {
 
   get authenticated(): boolean {
     return this._authenticated$.getValue();
+  }
+
+  get authenticating(): boolean {
+    return this._authenticating$.getValue();
   }
 
   get isReader(): boolean {
@@ -139,7 +146,6 @@ export class AuthenticationAdaptor {
 
   authenticationFailed(): void {
     this.store.dispatch(new AuthLoginFailed());
-    this.store.dispatch(new AuthHideLogin());
   }
 
   setPreference(name: string, value: string): void {
@@ -150,7 +156,7 @@ export class AuthenticationAdaptor {
     if (this._user$.getValue()) {
       const preference = this._user$
         .getValue()
-        .preferences.find(entry => entry.name === name);
+        .preferences.find((entry) => entry.name === name);
 
       if (preference) {
         return preference.value;

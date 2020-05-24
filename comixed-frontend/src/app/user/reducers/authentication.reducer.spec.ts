@@ -17,18 +17,21 @@
  */
 
 import * as AuthenticationActions from 'app/user/actions/authentication.actions';
-import {USER_ADMIN, USER_READER} from 'app/user/models/user.fixtures';
+import { USER_ADMIN, USER_READER } from 'app/user/models/user.fixtures';
 import {
   AuthenticationState,
-  initial_state
+  initial_state,
 } from 'app/user/models/authentication-state';
 import { reducer } from 'app/user/reducers/authentication.reducer';
+import * as AuthActions from 'app/user/actions/authentication.actions';
 
 describe('Authentication Reducer', () => {
   const USER = USER_ADMIN;
   const AUTH_TOKEN = '1234567890ABCDEF';
   const PREFERENCE_NAME = 'pref.name';
   const PREFERENCE_VALUE = 'pref-value';
+  const EMAIL = USER.email;
+  const PASSWORD = 'abc!123';
 
   let state: AuthenticationState;
 
@@ -75,6 +78,19 @@ describe('Authentication Reducer', () => {
       state = reducer(
         { ...state, authenticating: false },
         new AuthenticationActions.AuthCheckState()
+      );
+    });
+
+    it('sets the authenticating flag', () => {
+      expect(state.authenticating).toBeTruthy();
+    });
+  });
+
+  describe('when sending the login data', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, authenticating: false },
+        new AuthActions.AuthSubmitLogin({ email: EMAIL, password: PASSWORD })
       );
     });
 
@@ -204,7 +220,7 @@ describe('Authentication Reducer', () => {
           ...state,
           authenticated: true,
           auth_token: AUTH_TOKEN,
-          user: USER_ADMIN
+          user: USER_ADMIN,
         },
         new AuthenticationActions.AuthLogout()
       );
@@ -229,7 +245,7 @@ describe('Authentication Reducer', () => {
         { ...state, setting_preference: false },
         new AuthenticationActions.AuthSetPreference({
           name: PREFERENCE_NAME,
-          value: PREFERENCE_VALUE
+          value: PREFERENCE_VALUE,
         })
       );
     });
@@ -243,7 +259,7 @@ describe('Authentication Reducer', () => {
     const OLD_USER = { ...USER_READER, preferences: [] };
     const NEW_USER = {
       ...USER_READER,
-      preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }]
+      preferences: [{ name: PREFERENCE_NAME, value: PREFERENCE_VALUE }],
     };
 
     beforeEach(() => {
