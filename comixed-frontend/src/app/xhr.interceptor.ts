@@ -7,7 +7,7 @@ import {
   HttpRequest,
   HttpResponse,
   HttpSentEvent,
-  HttpUserEvent,
+  HttpUserEvent
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -59,11 +59,11 @@ export class XhrInterceptor implements HttpInterceptor {
       authReq = req.clone({
         headers: req.headers
           .set(TOKEN_HEADER_KEY, `Bearer ${this.tokenService.getToken()}`)
-          .set('X-Request-With', 'XMLHttpRequest'),
+          .set('X-Request-With', 'XMLHttpRequest')
       });
     } else {
       authReq = req.clone({
-        headers: req.headers.set('X-Request-With', 'XMLHttpRequest'),
+        headers: req.headers.set('X-Request-With', 'XMLHttpRequest')
       });
     }
     return next.handle(authReq).pipe(

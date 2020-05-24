@@ -16,21 +16,21 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {ReadingListService} from './reading-list.service';
+import { ReadingListService } from './reading-list.service';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import {interpolate} from 'app/app.functions';
-import {SaveReadingListRequest} from 'app/library/models/net/save-reading-list-request';
-import {LoggerModule} from '@angular-ru/logger';
+import { interpolate } from 'app/app.functions';
+import { SaveReadingListRequest } from 'app/library/models/net/save-reading-list-request';
+import { LoggerModule } from '@angular-ru/logger';
 import {
   CREATE_READING_LIST_URL,
   UPDATE_READING_LIST_URL
 } from 'app/library/library.constants';
-import {READING_LIST_1} from 'app/comics/models/reading-list.fixtures';
+import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
 
 describe('ReadingListService', () => {
   const READING_LIST = READING_LIST_1;
@@ -57,8 +57,8 @@ describe('ReadingListService', () => {
 
   it('can save a reading list', () => {
     service
-        .save(null, READING_LIST_NAME, READING_LIST_SUMMARY)
-        .subscribe(response => expect(response).toEqual(READING_LIST));
+      .save(null, READING_LIST_NAME, READING_LIST_SUMMARY)
+      .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = http_mock.expectOne(interpolate(CREATE_READING_LIST_URL));
     expect(req.request.method).toEqual('POST');
@@ -71,11 +71,11 @@ describe('ReadingListService', () => {
 
   it('can update a reading list', () => {
     service
-        .save(READING_LIST_ID, READING_LIST_NAME, READING_LIST_SUMMARY)
-        .subscribe(response => expect(response).toEqual(READING_LIST));
+      .save(READING_LIST_ID, READING_LIST_NAME, READING_LIST_SUMMARY)
+      .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = http_mock.expectOne(
-        interpolate(UPDATE_READING_LIST_URL, {id: READING_LIST_ID})
+      interpolate(UPDATE_READING_LIST_URL, { id: READING_LIST_ID })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
