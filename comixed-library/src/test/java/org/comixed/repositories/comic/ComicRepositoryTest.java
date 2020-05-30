@@ -558,4 +558,13 @@ public class ComicRepositoryTest {
 
     fail("Did not find the expected comic");
   }
+
+  @Test
+  public void testDelete() {
+    repository.delete(comic);
+
+    Comic result = repository.getById(TEST_COMIC_ID);
+
+    assertNull(result);
+  }
 }
