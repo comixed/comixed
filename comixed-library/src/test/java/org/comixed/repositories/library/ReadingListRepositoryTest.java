@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
-import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.RepositoryContext;
@@ -108,10 +107,7 @@ public class ReadingListRepositoryTest {
 
     assertNotNull(result);
     assertEquals(TEST_EXISTING_LIST_NAME, result.getName());
-    assertEquals(5, result.getEntries().size());
-    for (ReadingListEntry entry : result.getEntries()) {
-      assertEquals(result.getId(), entry.getReadingList().getId());
-    }
+    assertEquals(5, result.getComics().size());
   }
 
   @Test
@@ -120,31 +116,31 @@ public class ReadingListRepositoryTest {
 
     list.setOwner(reader);
     list.setName(TEST_NEW_LIST_NAME);
-    list.getEntries().add(new ReadingListEntry(comic1, list));
-    list.getEntries().add(new ReadingListEntry(comic2, list));
+    list.getComics().add(comic1);
+    list.getComics().add(comic2);
     repository.save(list);
 
     ReadingList result = repository.findReadingListForUser(reader, TEST_NEW_LIST_NAME);
 
     assertNotNull(result);
     assertEquals(reader.getId(), result.getOwner().getId());
-    assertEquals(list.getEntries().size(), result.getEntries().size());
+    assertEquals(list.getComics().size(), result.getComics().size());
   }
 
   @Test
   public void testUpdateReadingList() {
-    ReadingList list = repository.findById(1000L).get();
-    Comic comic = comicRepository.findById(1002L).get();
+    ReadingList list = repository.getById(1000L);
+    Comic comic = comicRepository.getById(1002L);
 
-    list.getEntries().add(new ReadingListEntry(comic, list));
+    list.getComics().add(comic);
     repository.save(list);
 
-    ReadingList result = repository.findById(list.getId()).get();
+    ReadingList result = repository.getById(list.getId());
 
-    assertEquals(list.getEntries().size(), result.getEntries().size());
+    assertEquals(list.getComics().size(), result.getComics().size());
     boolean found = false;
-    for (ReadingListEntry entry : result.getEntries()) {
-      found |= (entry.getComic().getId().longValue() == comic.getId().longValue());
+    for (Comic entry : result.getComics()) {
+      found |= (entry.getId().longValue() == comic.getId().longValue());
     }
     assertTrue(found);
   }

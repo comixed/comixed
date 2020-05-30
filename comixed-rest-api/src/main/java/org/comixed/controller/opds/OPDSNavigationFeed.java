@@ -22,8 +22,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.*;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
-import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.opds.OPDSAuthor;
 import org.comixed.model.opds.OPDSEntry;
 import org.comixed.model.opds.OPDSLink;
@@ -118,11 +118,11 @@ public class OPDSNavigationFeed implements OPDSFeed {
     this.entries = new ArrayList<>();
     this.icon = "/favicon.ico";
     int count = 0;
-    Set<ReadingListEntry> comics = readingList.getEntries();
+    List<Comic> comics = readingList.getComics();
 
-    for (ReadingListEntry comic : comics) {
-      if (!comic.getComic().isMissing()) {
-        this.entries.add(new OPDSEntry(comic.getComic()));
+    for (Comic comic : comics) {
+      if (!comic.isMissing()) {
+        this.entries.add(new OPDSEntry(comic));
         count++;
       }
     }

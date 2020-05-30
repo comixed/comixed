@@ -23,7 +23,6 @@ import static org.junit.Assert.*;
 import java.util.*;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
-import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.library.ReadingListRepository;
@@ -70,7 +69,6 @@ public class ReadingListServiceTest {
   @Mock private ComiXedUser otherUser;
   @Mock private List<ReadingList> readingLists;
   @Mock private Comic comic;
-  @Captor private ArgumentCaptor<ReadingListEntry> readingListEntry;
   @Captor private ArgumentCaptor<ReadingList> readingListCaptor;
 
   private List<Comic> comicList = new ArrayList<>();
@@ -114,7 +112,7 @@ public class ReadingListServiceTest {
     assertSame(user, readingListCaptor.getValue().getOwner());
     assertEquals(TEST_READING_LIST_NAME, readingListCaptor.getValue().getName());
     assertEquals(TEST_READING_LIST_SUMMARY, readingListCaptor.getValue().getSummary());
-    assertEquals(0, readingListCaptor.getValue().getEntries().size());
+    assertEquals(0, readingListCaptor.getValue().getComics().size());
     assertNotNull(readingListCaptor.getValue().getLastUpdated());
 
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
@@ -158,7 +156,7 @@ public class ReadingListServiceTest {
 
   @Test
   public void testUpdateReadingList() throws NoSuchReadingListException, ComicException {
-    Set<ReadingListEntry> entries = new HashSet<>();
+    Set<Comic> entries = new HashSet<>();
 
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(readingListRepository.findById(TEST_READING_LIST_ID))

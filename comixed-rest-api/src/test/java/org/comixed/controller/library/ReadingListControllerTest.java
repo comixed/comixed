@@ -25,7 +25,6 @@ import java.security.Principal;
 import java.util.*;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
-import org.comixed.model.library.ReadingListEntry;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.net.CreateReadingListRequest;
 import org.comixed.net.UpdateReadingListRequest;
@@ -71,7 +70,6 @@ public class ReadingListControllerTest {
   @Mock private ComiXedUser user;
   @Mock private List<ReadingList> readingLists;
   @Mock private Comic comic;
-  @Captor private ArgumentCaptor<ReadingListEntry> readingListEntry;
 
   @Test
   public void testCreateReadingList()
@@ -145,7 +143,7 @@ public class ReadingListControllerTest {
 
   @Test
   public void testUpdateReadingList() throws NoSuchReadingListException, ComicException {
-    Set<ReadingListEntry> entries = new HashSet<>();
+    Set<Comic> entries = new HashSet<>();
 
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(
