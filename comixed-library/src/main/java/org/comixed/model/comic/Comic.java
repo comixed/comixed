@@ -32,6 +32,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
 import org.comixed.model.library.ReadingList;
+import org.comixed.model.tasks.Task;
+import org.comixed.model.user.LastReadDate;
 import org.comixed.views.View;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
@@ -51,6 +53,29 @@ import org.springframework.stereotype.Component;
 @Table(name = "comics")
 @Log4j2
 public class Comic {
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("archiveType")
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
+  ArchiveType archiveType;
+
+  @Transient @JsonIgnore File backingFile;
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "comic_story_arcs", joinColumns = @JoinColumn(name = "comic_id"))
+  @Column(name = "story_name")
+  @JsonProperty("storyArcs")
+  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
+  List<String> storyArcs = new ArrayList<>();
+
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "page_number")
+  @JsonProperty("pages")
+  @JsonView({
+    View.ComicDetails.class,
+  })
+  List<Page> pages = new ArrayList<>();
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -63,11 +88,6 @@ public class Comic {
     View.ReadingList.class
   })
   private Long id;
-
-  @Enumerated(EnumType.STRING)
-  @JsonProperty("archiveType")
-  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
-  ArchiveType archiveType;
 
   @ManyToOne
   @JoinColumn(name = "scan_type_id")
@@ -85,8 +105,6 @@ public class Comic {
   @JsonProperty("filename")
   @JsonView({View.ComicList.class, View.PageList.class, View.DatabaseBackup.class})
   private String filename;
-
-  @Transient @JsonIgnore File backingFile;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "comic", orphanRemoval = true)
   @JsonView({View.ComicList.class, View.ComicDetails.class})
@@ -207,14 +225,6 @@ public class Comic {
   @JsonView({View.ComicList.class, View.DatabaseBackup.class})
   private List<String> locations = new ArrayList<>();
 
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "comic_story_arcs", joinColumns = @JoinColumn(name = "comic_id"))
-  @Column(name = "story_name")
-  @JsonProperty("storyArcs")
-  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
-  List<String> storyArcs = new ArrayList<>();
-
   @OneToMany(
       mappedBy = "comic",
       cascade = CascadeType.ALL,
@@ -240,14 +250,6 @@ public class Comic {
   @JsonProperty("blockedPageCount")
   @JsonView(View.ComicList.class)
   private int blockedPageCount;
-
-  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "page_number")
-  @JsonProperty("pages")
-  @JsonView({
-    View.ComicDetails.class,
-  })
-  List<Page> pages = new ArrayList<>();
 
   @Transient
   @JsonProperty("comicVineURL")
@@ -278,10 +280,16 @@ public class Comic {
   @JsonView(View.ComicList.class)
   private Integer duplicateCount;
 
-  @Transient
+  @ManyToMany(mappedBy = "comics", cascade = CascadeType.ALL)
   @JsonProperty("readingLists")
   @JsonView(View.ComicList.class)
   private List<ReadingList> readingLists = new ArrayList<>();
+
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<Task> tasks = new ArrayList<>();
+
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<LastReadDate> lastReadDates = new ArrayList<>();
 
   public Date getDateLastUpdated() {
     return dateLastUpdated;
@@ -665,6 +673,10 @@ public class Comic {
    */
   public Long getId() {
     return this.id;
+  }
+
+  public void setId(final long id) {
+    this.id = id;
   }
 
   public String getImprint() {
@@ -1068,10 +1080,6 @@ public class Comic {
 
   public void setPreviousIssueId(final Long previousIssueId) {
     this.previousIssueId = previousIssueId;
-  }
-
-  public void setId(final long id) {
-    this.id = id;
   }
 
   public ComicFileDetails getFileDetails() {

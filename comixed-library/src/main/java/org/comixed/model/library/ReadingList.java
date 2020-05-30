@@ -21,10 +21,11 @@ package org.comixed.model.library;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.*;
+import org.comixed.model.comic.Comic;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.views.View;
 
@@ -36,14 +37,6 @@ import org.comixed.views.View;
 @Entity
 @Table(name = "reading_lists")
 public class ReadingList {
-  @JsonProperty("entries")
-  @OneToMany(
-      mappedBy = "readingList",
-      cascade = CascadeType.ALL,
-      fetch = FetchType.EAGER,
-      orphanRemoval = true)
-  Set<ReadingListEntry> entries = new HashSet<>();
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -72,6 +65,13 @@ public class ReadingList {
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   private Date lastUpdated = new Date();
 
+  @ManyToMany
+  @JoinTable(
+      name = "reading_list_entries",
+      joinColumns = {@JoinColumn(name = "reading_list_id")},
+      inverseJoinColumns = {@JoinColumn(name = "comic_id")})
+  private List<Comic> comics = new ArrayList<>();
+
   public Long getId() {
     return this.id;
   }
@@ -92,10 +92,6 @@ public class ReadingList {
     this.owner = owner;
   }
 
-  public Set<ReadingListEntry> getEntries() {
-    return this.entries;
-  }
-
   public String getSummary() {
     return summary;
   }
@@ -110,5 +106,9 @@ public class ReadingList {
 
   public void setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
+  }
+
+  public List<Comic> getComics() {
+    return comics;
   }
 }

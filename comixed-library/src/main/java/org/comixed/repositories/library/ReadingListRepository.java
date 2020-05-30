@@ -34,10 +34,14 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
   List<ReadingList> getAllReadingListsForOwnerUpdatedAfter(
       @Param("owner") ComiXedUser owner, @Param("lastUpdated") Date lastUpdated);
 
-  @Query("SELECT list FROM ReadingList list WHERE list.owner = :owner AND list.name = :listName")
+  @Query(
+      "SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.owner = :owner AND l.name = :listName")
   ReadingList findReadingListForUser(ComiXedUser owner, String listName);
 
   @Query(
-      "SELECT l FROM ReadingList l WHERE l.owner.email = :email AND l IN (SELECT e.readingList FROM ReadingListEntry e WHERE e.comic = :comic)")
+      "SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.owner.email = :email AND :comic MEMBER OF l.comics")
   List<ReadingList> findByOwnerAndComic(@Param("email") String email, @Param("comic") Comic comic);
+
+  @Query("SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.id = :id")
+  ReadingList getById(@Param("id") Long id);
 }
