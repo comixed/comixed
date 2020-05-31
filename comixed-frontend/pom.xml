@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.comixed</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.6.0-0</version>
+    <version>0.6.0-0.rc1</version>
   </parent>
   <groupId>org.comixed</groupId>
   <artifactId>comixed-frontend</artifactId>
