@@ -25,7 +25,9 @@ import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixed.model.comic.Comic;
+import org.comixed.model.library.ReadingList;
 import org.comixed.repositories.comic.ComicRepository;
+import org.comixed.repositories.library.ReadingListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerTask {
   @Autowired private ComicRepository repository;
+  @Autowired private ReadingListRepository readingListRepository;
 
   private boolean deleteFile;
   private Comic comic;
@@ -45,11 +48,24 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
+    if (!comic.getReadingLists().isEmpty()) {
+      this.log.debug(
+          "Removing comic from {} reading list{}",
+          comic.getReadingLists().size(),
+          comic.getReadingLists().size() == 1 ? "" : "s");
+      while (!comic.getReadingLists().isEmpty()) {
+        ReadingList readingList = comic.getReadingLists().get(0);
+        readingList.removeComic(comic);
+        comic.getReadingLists().remove(0);
+        this.log.debug("Updating reading list: {}", readingList.getName());
+        this.readingListRepository.save(readingList);
+      }
+    }
+
     if (this.deleteFile) {
       final String filename = this.comic.getFilename();
       this.log.debug("Deleting comic file: {}", filename);
       File file = new File(filename);
-
       try {
         FileUtils.forceDelete(file);
         this.log.debug("Removing comic from repository: id={}", this.comic.getId());

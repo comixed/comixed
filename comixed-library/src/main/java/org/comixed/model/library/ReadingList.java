@@ -111,4 +111,8 @@ public class ReadingList {
   public List<Comic> getComics() {
     return comics;
   }
+
+  public void removeComic(Comic comic) {
+    this.comics.remove(comic);
+  }
 }
