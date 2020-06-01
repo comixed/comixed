@@ -1103,4 +1103,17 @@ public class Comic {
   public List<ReadingList> getReadingLists() {
     return this.readingLists;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Comic comic = (Comic) o;
+    return this.filename.equals(comic.getFilename());
+  }
+
+  @Override
+  public int hashCode() {
+    return 17 * Objects.hash(filename);
+  }
 }
