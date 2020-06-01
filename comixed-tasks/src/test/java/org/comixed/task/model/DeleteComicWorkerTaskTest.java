@@ -18,13 +18,17 @@
 
 package org.comixed.task.model;
 
+import static junit.framework.TestCase.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.comixed.model.comic.Comic;
+import org.comixed.model.library.ReadingList;
 import org.comixed.repositories.comic.ComicRepository;
+import org.comixed.repositories.library.ReadingListRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,13 +44,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class DeleteComicWorkerTaskTest {
   private static final String TEST_FILENAME = "/Users/comixed/Comics/comic.cbz";
 
-  private static final long TEST_COMIC_ID = 23;
+  private static final int TEST_READING_LIST_COUNT = 25;
 
   @InjectMocks private DeleteComicWorkerTask workerTask;
   @Mock private ComicRepository comicRepository;
+  @Mock private ReadingListRepository readingListRepository;
   @Mock private List<Comic> comicList;
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<File> file;
+  @Mock private ReadingList readingList;
 
   private List<Long> comicIds = new ArrayList<>();
 
@@ -58,11 +64,19 @@ public class DeleteComicWorkerTaskTest {
 
   @Test
   public void testStartTask() throws WorkerTaskException {
+    List<ReadingList> readingLists = new ArrayList<>();
+    for (int index = 0; index < TEST_READING_LIST_COUNT; index++) readingLists.add(readingList);
+    Mockito.when(comic.getReadingLists()).thenReturn(readingLists);
+
     workerTask.setComic(comic);
     workerTask.setDeleteFile(false);
 
     workerTask.startTask();
 
+    assertTrue(readingLists.isEmpty());
+
+    Mockito.verify(readingList, Mockito.times(TEST_READING_LIST_COUNT)).removeComic(comic);
+    Mockito.verify(readingListRepository, Mockito.times(TEST_READING_LIST_COUNT)).save(readingList);
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(Mockito.any());
     Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(Mockito.any());
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
