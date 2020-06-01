@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.TaskType;
@@ -63,15 +64,19 @@ public class LibraryServiceTest {
     // updated now
     comic1.setDateLastUpdated(new Date());
     comic1.setId(1L);
+    comic1.setFilename(RandomStringUtils.random(128));
     // updated yesterday
     comic2.setDateLastUpdated(new Date(System.currentTimeMillis() - 24L * 60L * 60L * 1000L));
     comic2.setId(2L);
+    comic2.setFilename(RandomStringUtils.random(128));
     // updated same as previous comic
     comic3.setDateLastUpdated(comic2.getDateLastUpdated());
     comic3.setId(3L);
+    comic3.setFilename(RandomStringUtils.random(128));
     //
     comic4.setDateLastUpdated(comic3.getDateLastUpdated());
     comic4.setId(4L);
+    comic4.setFilename(RandomStringUtils.random(128));
   }
 
   @Test
