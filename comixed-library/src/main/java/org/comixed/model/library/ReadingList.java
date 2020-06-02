@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.user.ComiXedUser;
@@ -114,5 +115,22 @@ public class ReadingList {
 
   public void removeComic(Comic comic) {
     this.comics.remove(comic);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ReadingList that = (ReadingList) o;
+    return Objects.equals(id, that.id)
+        && Objects.equals(name, that.name)
+        && Objects.equals(summary, that.summary)
+        && Objects.equals(owner, that.owner)
+        && Objects.equals(lastUpdated, that.lastUpdated);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, summary, owner, lastUpdated);
   }
 }
