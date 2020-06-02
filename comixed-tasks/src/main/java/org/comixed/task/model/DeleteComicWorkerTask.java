@@ -54,11 +54,15 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
           comic.getReadingLists().size(),
           comic.getReadingLists().size() == 1 ? "" : "s");
       while (!comic.getReadingLists().isEmpty()) {
-        ReadingList readingList = comic.getReadingLists().get(0);
-        readingList.removeComic(comic);
-        comic.getReadingLists().remove(0);
-        this.log.debug("Updating reading list: {}", readingList.getName());
-        this.readingListRepository.save(readingList);
+        ReadingList[] readingLists =
+            comic.getReadingLists().toArray(new ReadingList[comic.getReadingLists().size()]);
+        for (int index = 0; index < readingLists.length; index++) {
+          ReadingList readingList = readingLists[index];
+          readingList.removeComic(comic);
+          comic.getReadingLists().remove(readingList);
+          this.log.debug("Updating reading list: {}", readingList.getName());
+          this.readingListRepository.save(readingList);
+        }
       }
     }
 
