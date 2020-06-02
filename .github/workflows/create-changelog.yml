@@ -11,28 +11,27 @@ on:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true && contains(toJSON(github.event.pull_request.labels.*.name), '"autorelease"')
+    name: Create Release
     runs-on: ubuntu-latest
-    env:
-      manifest_file: 'manifest.yml'
-      changelog_file: 'CHANGELOG.md'
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          ref: master
-      - run: |
-          git fetch --prune --unshallow
-      - name: Create changelogs
-        id: changelogs
-        uses: heineiuo/create-changelogs@master
+          fetch-depth: 0
+      - name: changelog
+        uses: scottbrenner/generate-changelog-action@master
+        id: Changelog
+        env:
+          REPO: ${{ github.repository }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body: ${{ steps.changelogs.outputs.changelog_text }}
-          draft: false
-          prerelease: ${{ steps.changelogs.outputs.release_type == 'prerelease' }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
+          draft: true
+          prerelease: true
