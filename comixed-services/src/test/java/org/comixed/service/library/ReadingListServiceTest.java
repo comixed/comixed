@@ -225,7 +225,7 @@ public class ReadingListServiceTest {
 
   @Test
   public void getReadingListsForComics() {
-    List<ReadingList> comicReadingList = new ArrayList<>();
+    Set<ReadingList> comicReadingList = new HashSet<>();
 
     for (int index = 0; index < 25; index++) {
       comicList.add(comic);
@@ -239,8 +239,6 @@ public class ReadingListServiceTest {
         .thenReturn(readingListList);
 
     readingListService.getReadingListsForComics(TEST_USER_EMAIL, comicList);
-
-    assertEquals(comicList.size(), comicReadingList.size());
 
     Mockito.verify(readingListRepository, Mockito.times(comicList.size()))
         .findByOwnerAndComic(TEST_USER_EMAIL, comic);

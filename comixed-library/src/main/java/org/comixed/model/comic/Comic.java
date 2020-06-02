@@ -283,7 +283,7 @@ public class Comic {
   @ManyToMany(mappedBy = "comics", cascade = CascadeType.ALL)
   @JsonProperty("readingLists")
   @JsonView(View.ComicList.class)
-  private List<ReadingList> readingLists = new ArrayList<>();
+  private Set<ReadingList> readingLists = new HashSet<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<Task> tasks = new ArrayList<>();
@@ -1100,7 +1100,7 @@ public class Comic {
     return (this.duplicateCount != null) ? (this.duplicateCount - 1) : 0;
   }
 
-  public List<ReadingList> getReadingLists() {
+  public Set<ReadingList> getReadingLists() {
     return this.readingLists;
   }
 
