@@ -23,7 +23,9 @@ import static junit.framework.TestCase.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
@@ -64,8 +66,14 @@ public class DeleteComicWorkerTaskTest {
 
   @Test
   public void testStartTask() throws WorkerTaskException {
-    List<ReadingList> readingLists = new ArrayList<>();
-    for (int index = 0; index < TEST_READING_LIST_COUNT; index++) readingLists.add(readingList);
+    Set<ReadingList> readingLists = new HashSet<>();
+    for (int index = 0; index < TEST_READING_LIST_COUNT; index++) {
+      ReadingList list = new ReadingList();
+      list.setName("List" + index);
+      list.setSummary("List" + index);
+      readingLists.add(list);
+      readingList.getComics().add(comic);
+    }
     Mockito.when(comic.getReadingLists()).thenReturn(readingLists);
 
     workerTask.setComic(comic);
@@ -75,8 +83,8 @@ public class DeleteComicWorkerTaskTest {
 
     assertTrue(readingLists.isEmpty());
 
-    Mockito.verify(readingList, Mockito.times(TEST_READING_LIST_COUNT)).removeComic(comic);
-    Mockito.verify(readingListRepository, Mockito.times(TEST_READING_LIST_COUNT)).save(readingList);
+    Mockito.verify(readingListRepository, Mockito.times(TEST_READING_LIST_COUNT))
+        .save(Mockito.any(ReadingList.class));
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(Mockito.any());
     Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(Mockito.any());
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
