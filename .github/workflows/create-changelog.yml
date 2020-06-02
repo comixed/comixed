@@ -1,0 +1,23 @@
+name: Build and release
+on:
+  push:
+#    branches:
+#      - master
+#  pull_request:
+#    branches:
+#      - master
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true && contains(toJSON(github.event.pull_request.labels.*.name), '"autorelease"')
+    runs-on: ubuntu-latest
+    env:
+      manifest_file: 'manifest.yml'
+      changelog_file: 'CHANGELOG.md'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - uses: heinrichreimer/github-changelog-generator-action@v2.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
