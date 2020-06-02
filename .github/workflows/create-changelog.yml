@@ -10,28 +10,13 @@ on:
 #      - master
 
 jobs:
-  build:
-    name: Create Release
+  changelog:
+    # Job name is Chanegelog
+    name: Chanegelog Generator
+    # This job runs on Linux
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - uses: homeday-de/github-action-changelog-generator@v1.0.0
         with:
-          fetch-depth: 0
-      - name: changelog
-        uses: scottbrenner/generate-changelog-action@master
-        id: Changelog
-        env:
-          REPO: ${{ github.repository }}
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            ${{ steps.Changelog.outputs.changelog }}
-          draft: false
-          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
