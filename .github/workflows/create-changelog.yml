@@ -1,6 +1,8 @@
 name: Build and release
 on:
   push:
+    branches:
+      - feature/issue-291
 #    branches:
 #      - master
 #  pull_request:
