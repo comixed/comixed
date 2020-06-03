@@ -14,7 +14,7 @@
         <include>LICENSE</include>
         <include>QUICKSTART.md</include>
         <include>README.md</include>
-        <include>RELEASE.md</include>
+        <include>CHANGELOG.md</include>
       </includes>
     </fileSet>
     <fileSet>
