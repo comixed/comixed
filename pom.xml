@@ -6,7 +6,7 @@
   <groupId>org.comixed</groupId>
   <artifactId>comixed</artifactId>
   <packaging>pom</packaging>
-  <version>0.6.0-0.rc1</version>
+  <version>0.6.0-0.rc4</version>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -16,7 +16,7 @@
   <url>http://github.com/mcpierce/comixed</url>
   <properties>
     <comixed.url>http://www.github.com/comixed/comixed</comixed.url>
-    <comixed.version>0.6.0-0.rc1</comixed.version>
+    <comixed.version>0.6.0-0.rc4</comixed.version>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
   </properties>
   <profiles>

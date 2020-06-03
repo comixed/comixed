@@ -6,11 +6,11 @@
   <parent>
     <groupId>org.comixed</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.6.0-0.rc1</version>
+    <version>0.6.0-0.rc4</version>
   </parent>
   <groupId>org.comixed</groupId>
   <artifactId>comixed-app</artifactId>
-  <version>0.6.0-0.rc1</version>
+  <version>0.6.0-0.rc4</version>
   <name>comixed-app</name>
   <url>${comixed.url}</url>
   <dependencies>
