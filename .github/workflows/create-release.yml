@@ -18,12 +18,11 @@ jobs:
         uses: actions/checkout@master
       - name: Build project
         run: mvn package -Pci -DskipTests -Dassembly-name=RELEASE
-      - name: Upload release artifact
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Generate release
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          body_path: RELEASE.md
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
           files: |
+            changelog
             comixed-app/target/artifacts/comixed-app-0.6.0-0.rc1-RELEASE.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
