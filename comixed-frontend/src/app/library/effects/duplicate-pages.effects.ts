@@ -93,7 +93,7 @@ export class DuplicatePagesEffects {
               severity: 'info',
               detail: this.translateService.instant(
                 'duplicate-pages-effects.set-blocking.success.detail',
-                { count: action.pages.length, blocked: action.blocking }
+                { blocked: action.blocking }
               )
             })
           ),
@@ -154,10 +154,7 @@ export class DuplicatePagesEffects {
             severity: 'info',
             detail: this.translateService.instant(
               'duplicate-pages-effects.set-deleted.success.detail',
-              {
-                count: response.length,
-                deleted: action.deleted
-              }
+              { deleted: action.deleted }
             )
           })
         ),
