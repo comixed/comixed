@@ -62,6 +62,18 @@ When working on code, please use the following template for your commits:
 where **xxx** is the issue number being addressed by the commit. Using this template, your changes are then
 visible on the ticket's page. This lets everybody know what changes were made for any issue.
 
+### How To Describe The Change
+
+See [Keep A Changelog](https://keepachangelog.com/en/1.0.0/) for a description for how to make a good changelog entry.
+Each commit's summary should start with one of the following verbs:
+
+ * **Added** for a new feature,
+ * **Changed** for changes to existing functionality,
+ * **Deprecated** for soon-to-be removed features,
+ * **Removed** for now removed features,
+ * **Fixed** for any bug fixes, or
+ * **Security** in cases of vulnerabilities.
+
 ## Coding Conventions And Formatting
 
 ### Java
