@@ -368,6 +368,16 @@
     }
   },
   "breadcrumb": {
+    "collections": {
+      "root": "Collections",
+      "publishers": "Publishers",
+      "series": "Series",
+      "characters": "Characters",
+      "teams": "Teams",
+      "locations": "Locations",
+      "stories": "Stories",
+      "lists": "Reading Lists"
+    },
     "entry": {
       "library-page": "Comics",
       "duplicates-page": "Duplicates",
