@@ -16,13 +16,20 @@ jobs:
           java-version: 1.8
       - name: Checkout code
         uses: actions/checkout@master
+      - name: Generate CHANGELOG.md
+        uses: charmixer/auto-changelog-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release_branch: ${{ github.ref }}
+          since_tag: v0.5.2-2
       - name: Build project
         run: mvn package -Pci -DskipTests -Dassembly-name=RELEASE
-      - name: Generate release
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Upload release artifact
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
+          body_path: CHANGELOG.md
           files: |
-            changelog
             comixed-app/target/artifacts/comixed-app-0.6.0-0.rc1-RELEASE.zip
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
