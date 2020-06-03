@@ -337,10 +337,10 @@
   },
   "duplicate-page-grid-item": {
     "tooltip": "This page is {blocked, select, true{blocked} other{not blocked}}, and {deletedCount, plural, =0{none are} =1{# is} other{# are}} marked for deletion.",
-    "caption": "Found in {count, plural, =1{one comic} other{# comics}}."
+    "caption": "Found {count, plural, =1{one copy} other{# copies}}."
   },
   "duplicate-page-list-item": {
-    "title": "Found in {count, plural, =1{one comic} other{# comics}}.",
+    "title": "Found {count, plural, =1{one copy} other{# copies}}.",
     "subtitle": "This page is {blocked, select, true{blocked} other{not blocked}}, and {deletedCount, plural, =0{none are} =1{# is} other{# are}} marked for deletion."
   },
   "collection-effects": {
