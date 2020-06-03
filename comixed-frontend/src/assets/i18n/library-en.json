@@ -296,7 +296,7 @@
     },
     "set-blocking": {
       "success": {
-        "detail": "Successfully {blocked, select, true{blocked} other{unblocked}} {count, plural, =1{one hash} other{# hashes}}."
+        "detail": "Successfully marked selected pages as {blocked, select, true{blocked} other{unblocked}}."
       },
       "error": {
         "detail": "Failed to block page hashes."
@@ -304,7 +304,7 @@
     },
     "set-deleted": {
       "success": {
-        "detail": "Successfully {deleted, select, true{marked} other{unmarked}} {count, plural, =1{one page} other{# pages}} as deleted."
+        "detail": "Successfully {deleted, select, true{marked} other{unmarked}} selected pages."
       },
       "error": {
         "detail": "Failed to {deleted, select, true{mark} other{unmark}} pages for deletion."
