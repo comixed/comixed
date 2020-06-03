@@ -428,17 +428,6 @@
       "preference-value": "Value"
     }
   },
-  "breadcrumb": {
-    "collections": {
-      "root": "Collections",
-      "publishers": "Publishers",
-      "series": "Series",
-      "characters": "Characters",
-      "teams": "Teams",
-      "locations": "Locations",
-      "stories": "Stories"
-    }
-  },
   "library-navigation-tree": {
     "title": "Library Contents",
     "label": {

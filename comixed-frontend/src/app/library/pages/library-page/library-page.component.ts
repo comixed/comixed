@@ -21,7 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { UserService } from 'app/services/user.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
@@ -50,6 +50,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   paramsSubscription: Subscription;
   collectionType: CollectionType;
   collectionName: string;
+  breadcrumbEntryParent: MenuItem;
+  breadcrumbEntryChild: MenuItem;
 
   title: string;
 
@@ -94,6 +96,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         );
         let comicSource = null;
         let titleKey = null;
+        this.breadcrumbEntryParent = {
+          label: this.collectionName
+        } as MenuItem;
+        this.breadcrumbEntryChild = {
+          label: this.translateService.instant(
+            `breadcrumb.collections.${this.collectionType}`
+          )
+        } as MenuItem;
 
         switch (this.collectionType) {
           case CollectionType.PUBLISHERS:
@@ -149,6 +159,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
                 entry => entry.name === this.collectionName
               ).comics;
             });
+          this.loadTranslations();
         } else {
           this.messageService.add({
             severity: 'error',
@@ -219,8 +230,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
+    const entries: MenuItem[] = [
       { label: this.translateService.instant('breadcrumb.entry.library-page') }
-    ]);
+    ];
+    if (!!this.breadcrumbEntryParent) {
+      entries.push(this.breadcrumbEntryChild);
+      entries.push(this.breadcrumbEntryParent);
+    }
+    this.breadcrumbAdaptor.loadEntries(entries);
   }
 }
