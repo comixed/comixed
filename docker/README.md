@@ -12,4 +12,4 @@ The latest version may be a development build. Use this to get the latest releas
 
 You could also pull a specific version:
 
-```docker run -it -p 7171:7171/tcp -v /PATH/TO/COMICS:/comic_dir -v /PATH/TO/COMIXDB:/root/.comixed comixed/comixed:0.6.0-0.rc1```
+```docker run -it -p 7171:7171/tcp -v /PATH/TO/COMICS:/comic_dir -v /PATH/TO/COMIXDB:/root/.comixed comixed/comixed:0.6.0-0.rc4```
