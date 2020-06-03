@@ -21,6 +21,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release_branch: ${{ github.ref }}
+          due_tag: v0.6.0-0.rc4
           since_tag: v0.5.2-2
       - name: Build project
         run: mvn package -Pci -DskipTests -Dassembly-name=RELEASE
