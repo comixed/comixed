@@ -1,9 +1,7 @@
 {
   "main-menu": {
     "item": {
-      "login": "Login",
       "account": "Account",
-      "logout": "Logout",
       "library": {
         "root": "Library",
         "comics": "Comics",
@@ -18,6 +16,12 @@
         "teams": "Teams",
         "locations": "Locations",
         "story-arcs": "Story Arcs"
+      },
+      "account": {
+        "root": "Account",
+        "login": "Login",
+        "logout": "Logout",
+        "details": "Details"
       },
       "admin": {
         "root": "Admin",

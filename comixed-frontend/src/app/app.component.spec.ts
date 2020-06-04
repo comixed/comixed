@@ -46,7 +46,7 @@ import { MenubarModule } from 'primeng/menubar';
 import {
   BreadcrumbModule,
   ConfirmDialogModule,
-  TieredMenuModule
+  MenuModule
 } from 'primeng/primeng';
 import { ToastModule } from 'primeng/toast';
 
@@ -87,7 +87,7 @@ describe('AppComponent', () => {
         DialogModule,
         ConfirmDialogModule,
         BreadcrumbModule,
-        TieredMenuModule
+        MenuModule
       ],
       declarations: [AppComponent, LoginComponent, MainMenuComponent],
       providers: [
