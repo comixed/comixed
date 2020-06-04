@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
   fetchingUpdateSubscription: Subscription;
   breadcrumbs = [];
   home = {
-    icon: 'fa fas fa-bars',
+    icon: 'fa fa-fw fas fa-bars',
     command: (event: any) => this.mainmenu.toggle(event)
   } as MenuItem;
 
