@@ -22,11 +22,7 @@ import { MainMenuComponent } from './main-menu.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import {
-  ButtonModule,
-  MessageService,
-  TieredMenuModule
-} from 'primeng/primeng';
+import { ButtonModule, MenuModule, MessageService } from 'primeng/primeng';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -53,7 +49,7 @@ describe('MainMenuComponent', () => {
         LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
-        TieredMenuModule,
+        MenuModule,
         ButtonModule
       ],
       declarations: [MainMenuComponent],
