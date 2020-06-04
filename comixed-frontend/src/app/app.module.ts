@@ -68,7 +68,7 @@ import { PickListModule } from 'primeng/picklist';
 import {
   BreadcrumbModule,
   ContextMenuModule,
-  TieredMenuModule
+  MenuModule
 } from 'primeng/primeng';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -143,7 +143,6 @@ import { LoggerModule } from '@angular-ru/logger';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TieredMenuModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -156,7 +155,8 @@ import { LoggerModule } from '@angular-ru/logger';
       }
     }),
     LoggerModule.forRoot(),
-    BreadcrumbModule
+    BreadcrumbModule,
+    MenuModule
   ],
   providers: [
     BreadcrumbAdaptor,

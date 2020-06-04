@@ -20,7 +20,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { AuthenticationAdaptor, User } from 'app/user';
-import { TieredMenu } from 'primeng/primeng';
+import { Menu } from 'primeng/primeng';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 
 @Component({
@@ -29,8 +29,8 @@ import { LoggerLevel, LoggerService } from '@angular-ru/logger';
   styleUrls: ['./main-menu.component.scss']
 })
 export class MainMenuComponent implements OnInit {
-  @ViewChild(TieredMenu, { static: false })
-  menu: TieredMenu;
+  @ViewChild(Menu, { static: false })
+  menu: Menu;
 
   items: MenuItem[];
   debugging = false;
@@ -59,7 +59,6 @@ export class MainMenuComponent implements OnInit {
       {
         label: this.translateService.instant('main-menu.item.library.root'),
         icon: 'fa fa-fw fa-book',
-        visible: this.authenticationAdaptor.authenticated,
         items: [
           {
             label: this.translateService.instant(
@@ -80,6 +79,14 @@ export class MainMenuComponent implements OnInit {
             icon: 'fa fw fas fa-clone',
             routerLink: ['/comics/duplicates'],
             visible: this.authenticationAdaptor.authenticated
+          },
+          {
+            label: this.translateService.instant(
+              'main-menu.item.account.login'
+            ),
+            icon: 'fa fa-fw fa-sign-in-alt',
+            command: () => this.authenticationAdaptor.startLogin(),
+            visible: !this.authenticationAdaptor.authenticated
           }
         ]
       },
@@ -135,10 +142,27 @@ export class MainMenuComponent implements OnInit {
         visible: this.authenticationAdaptor.authenticated
       },
       {
-        label: this.translateService.instant('main-menu.item.account'),
+        label: this.translateService.instant('main-menu.item.account.root'),
         icon: 'fa fa-fw fa-user',
-        routerLink: ['/account'],
-        visible: this.authenticationAdaptor.authenticated
+        visible: this.authenticationAdaptor.authenticated,
+        items: [
+          {
+            label: this.translateService.instant(
+              'main-menu.item.account.details'
+            ),
+            routerLink: ['/account'],
+            icon: 'fa fa-fw fa-user',
+            visible: this.authenticationAdaptor.authenticated
+          },
+          {
+            label: this.translateService.instant(
+              'main-menu.item.account.logout'
+            ),
+            icon: 'fa fa-fw fa-sign-in-alt',
+            command: () => this.authenticationAdaptor.startLogout(),
+            visible: this.authenticationAdaptor.authenticated
+          }
+        ]
       },
       {
         separator: true,
@@ -172,18 +196,6 @@ export class MainMenuComponent implements OnInit {
             command: () => this.toggleDebugging(false)
           }
         ]
-      },
-      {
-        label: this.translateService.instant('main-menu.item.login'),
-        icon: 'fa fa-fw fa-sign-in-alt',
-        command: () => this.authenticationAdaptor.startLogin(),
-        visible: !this.authenticationAdaptor.authenticated
-      },
-      {
-        label: this.translateService.instant('main-menu.item.logout'),
-        icon: 'fa fa-fw fa-sign-in-alt',
-        command: () => this.authenticationAdaptor.startLogout(),
-        visible: this.authenticationAdaptor.authenticated
       }
     ];
   }
