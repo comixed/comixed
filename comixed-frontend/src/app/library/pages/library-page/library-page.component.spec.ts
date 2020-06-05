@@ -71,6 +71,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
 import { ReadingListEditComponent } from 'app/library/components/reading-list-edit/reading-list-edit.component';
+import { AddComicsToReadingListComponent } from 'app/library/components/add-comics-to-list-reading-list/add-comics-to-reading-list.component';
 
 describe('LibraryPageComponent', () => {
   const COMIC = COMIC_1;
@@ -122,7 +123,8 @@ describe('LibraryPageComponent', () => {
         ComicGridItemComponent,
         ConvertComicsSettingsComponent,
         LibraryNavigationTreeComponent,
-        ReadingListEditComponent
+        ReadingListEditComponent,
+        AddComicsToReadingListComponent
       ],
       providers: [
         LibraryAdaptor,
