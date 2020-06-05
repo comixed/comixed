@@ -32,6 +32,7 @@ import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import {
   LibraryAdaptor,
   LibraryDisplayAdaptor,
+  ReadingListAdaptor,
   SelectionAdaptor
 } from 'app/library';
 import { LibraryFilter } from 'app/library/models/library-filter';
@@ -50,6 +51,8 @@ export const COMIC_LIST_MENU_DESELECT_ALL = 'comic-list-scrape-deselect-all';
 export const COMIC_LIST_MENU_DELETE_SELECTED = 'comic-list-delete-selected';
 export const COMIC_LIST_MENU_SCRAPE_SELECTED = 'comic-list-scrape-selected';
 export const COMIC_LIST_MENU_CONVERT_COMIC = 'comic-list-convert-comic';
+export const COMIC_LIST_MENU_ADD_TO_READING_LIST =
+  'comic-list-add-to-reading-list';
 
 @Component({
   selector: 'app-comic-list',
@@ -99,6 +102,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     private selectionAdaptor: SelectionAdaptor,
     private contextMenuAdaptor: ContextMenuAdaptor,
     private scrapingAdaptor: ScrapingAdaptor,
+    private readingListAdaptor: ReadingListAdaptor,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
@@ -333,6 +337,14 @@ export class ComicListComponent implements OnInit, OnDestroy {
       true,
       () => this.showConvertDialog()
     );
+    this.contextMenuAdaptor.addItem(
+      COMIC_LIST_MENU_ADD_TO_READING_LIST,
+      'fa fa-fw fa-list',
+      'comic-list.context-menu.add-to-reading-list',
+      false,
+      true,
+      () => this.readingListAdaptor.showSelectDialog()
+    );
   }
 
   private removeContextMenuItems() {
@@ -341,6 +353,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     this.contextMenuAdaptor.removeItem(COMIC_LIST_MENU_DELETE_SELECTED);
     this.contextMenuAdaptor.removeItem(COMIC_LIST_MENU_SCRAPE_SELECTED);
     this.contextMenuAdaptor.removeItem(COMIC_LIST_MENU_CONVERT_COMIC);
+    this.contextMenuAdaptor.removeItem(COMIC_LIST_MENU_ADD_TO_READING_LIST);
   }
 
   private toggleMenuItems() {
@@ -359,12 +372,14 @@ export class ComicListComponent implements OnInit, OnDestroy {
       if (this.authenticationAdaptor.isAdmin) {
         this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_CONVERT_COMIC);
       }
+      this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_ADD_TO_READING_LIST);
     } else {
       this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_SELECT_ALL);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_DESELECT_ALL);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_DELETE_SELECTED);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_SCRAPE_SELECTED);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_CONVERT_COMIC);
+      this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_ADD_TO_READING_LIST);
     }
   }
 

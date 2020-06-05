@@ -233,7 +233,8 @@
       "deselect-all": "Deselect all",
       "delete-selected": "Delete selections...",
       "scrape-selected": "Scrape selections",
-      "convert-comic": "Convert comic..."
+      "convert-comic": "Convert comic...",
+      "add-to-reading-list": "Add to list..."
     },
     "start-scraping": {
       "header": "Scrape Selected Comic",
