@@ -21,6 +21,9 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import {
+  ReadingListAddComics,
+  ReadingListAddComicsFailed,
+  ReadingListComicsAdded,
   ReadingListSave,
   ReadingListSaved,
   ReadingListSaveFailed
@@ -33,6 +36,8 @@ import { Observable, of, throwError } from 'rxjs';
 
 import { ReadingListEffects } from './reading-list.effects';
 import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
+import { AddComicsToReadingListResponse } from 'app/library/models/net/add-comics-to-reading-list-response';
 import objectContaining = jasmine.objectContaining;
 
 describe('ReadingListEffects', () => {
@@ -40,11 +45,12 @@ describe('ReadingListEffects', () => {
   const READING_LIST_ID = READING_LIST.id;
   const READING_LIST_NAME = READING_LIST.name;
   const READING_LIST_SUMMARY = READING_LIST.summary;
+  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
 
   let actions$: Observable<any>;
   let effects: ReadingListEffects;
-  let reading_list_service: jasmine.SpyObj<ReadingListService>;
-  let message_service: MessageService;
+  let readingListService: jasmine.SpyObj<ReadingListService>;
+  let messageService: MessageService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -55,7 +61,8 @@ describe('ReadingListEffects', () => {
         {
           provide: ReadingListService,
           useValue: {
-            save: jasmine.createSpy('ReadingListService.save')
+            save: jasmine.createSpy('ReadingListService.save'),
+            addComics: jasmine.createSpy('ReadingListService.addComics')
           }
         },
         MessageService
@@ -63,9 +70,9 @@ describe('ReadingListEffects', () => {
     });
 
     effects = TestBed.get(ReadingListEffects);
-    reading_list_service = TestBed.get(ReadingListService);
-    message_service = TestBed.get(MessageService);
-    spyOn(message_service, 'add');
+    readingListService = TestBed.get(ReadingListService);
+    messageService = TestBed.get(MessageService);
+    spyOn(messageService, 'add');
   });
 
   it('should be created', () => {
@@ -83,11 +90,11 @@ describe('ReadingListEffects', () => {
       const outcome = new ReadingListSaved({ readingList: READING_LIST });
 
       actions$ = hot('-a', { a: action });
-      reading_list_service.save.and.returnValue(of(service_response));
+      readingListService.save.and.returnValue(of(service_response));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.save$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
+      expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
     });
@@ -102,11 +109,11 @@ describe('ReadingListEffects', () => {
       const outcome = new ReadingListSaveFailed();
 
       actions$ = hot('-a', { a: action });
-      reading_list_service.save.and.returnValue(throwError(service_response));
+      readingListService.save.and.returnValue(throwError(service_response));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.save$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
+      expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
     });
@@ -120,11 +127,68 @@ describe('ReadingListEffects', () => {
       const outcome = new ReadingListSaveFailed();
 
       actions$ = hot('-a', { a: action });
-      reading_list_service.save.and.throwError('expected');
+      readingListService.save.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.save$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('adding comics to a reading list', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = {
+        addedCount: COMICS.length
+      } as AddComicsToReadingListResponse;
+      const action = new ReadingListAddComics({
+        readingList: READING_LIST,
+        comics: COMICS
+      });
+      const outcome = new ReadingListComicsAdded();
+
+      actions$ = hot('-a', { a: action });
+      readingListService.addComics.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.addComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ReadingListAddComics({
+        readingList: READING_LIST,
+        comics: COMICS
+      });
+      const outcome = new ReadingListAddComicsFailed();
+
+      actions$ = hot('-a', { a: action });
+      readingListService.addComics.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.addComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new ReadingListAddComics({
+        readingList: READING_LIST,
+        comics: COMICS
+      });
+      const outcome = new ReadingListAddComicsFailed();
+
+      actions$ = hot('-a', { a: action });
+      readingListService.addComics.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.addComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
     });

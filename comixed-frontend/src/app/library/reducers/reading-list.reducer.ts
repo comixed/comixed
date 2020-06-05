@@ -27,12 +27,18 @@ export interface ReadingListState {
   current: ReadingList;
   savingList: boolean;
   editingList: boolean;
+  addingComics: boolean;
+  comicsAdded: boolean;
+  showSelectionDialog: boolean;
 }
 
 export const initialState: ReadingListState = {
   current: null,
   savingList: false,
-  editingList: false
+  editingList: false,
+  addingComics: false,
+  comicsAdded: false,
+  showSelectionDialog: false
 };
 
 export const READING_LIST_FEATURE_KEY = 'reading_list_state';
@@ -77,6 +83,18 @@ export function reducer(
         ...state,
         savingList: false
       };
+
+    case ReadingListActionTypes.AddComics:
+      return { ...state, addingComics: true, comicsAdded: false };
+
+    case ReadingListActionTypes.ComicsAdded:
+      return { ...state, addingComics: false, comicsAdded: true };
+
+    case ReadingListActionTypes.AddComicsFailed:
+      return { ...state, addingComics: false };
+
+    case ReadingListActionTypes.ToggleSelectDialog:
+      return { ...state, showSelectionDialog: action.payload.show };
 
     default:
       return state;

@@ -30,23 +30,29 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { ReadingListAdaptor } from './reading-list.adaptor';
 import {
+  ReadingListAddComics,
+  ReadingListAddComicsFailed,
   ReadingListCancelEdit,
+  ReadingListComicsAdded,
   ReadingListCreate,
   ReadingListEdit,
   ReadingListSave,
   ReadingListSaved,
-  ReadingListSaveFailed
+  ReadingListSaveFailed,
+  ReadingListToggleSelectDialog
 } from 'app/library/actions/reading-list.actions';
 import { AppState } from 'app/library';
 import { NEW_READING_LIST } from 'app/library/library.constants';
 import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
 import { ReadingList } from 'app/comics/models/reading-list';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
 
 describe('ReadingListAdaptor', () => {
   const READING_LIST = READING_LIST_1;
   const READING_LIST_ID = READING_LIST.id;
   const READING_LIST_NAME = READING_LIST.name;
   const READING_LIST_SUMMARY = READING_LIST.summary;
+  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
 
   let adaptor: ReadingListAdaptor;
   let store: Store<AppState>;
@@ -127,7 +133,9 @@ describe('ReadingListAdaptor', () => {
       });
 
       it('provides updates on editing', () => {
-        adaptor.editingList$.subscribe(response => expect(response).toBeFalsy());
+        adaptor.editingList$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
       });
     });
 
@@ -147,7 +155,9 @@ describe('ReadingListAdaptor', () => {
       });
 
       it('provides updates on saving', () => {
-        adaptor.savingList$.subscribe(response => expect(response).toBeTruthy());
+        adaptor.savingList$.subscribe(response =>
+          expect(response).toBeTruthy()
+        );
       });
 
       describe('success', () => {
@@ -163,11 +173,15 @@ describe('ReadingListAdaptor', () => {
         });
 
         it('provides updates on saving', () => {
-          adaptor.savingList$.subscribe(response => expect(response).toBeFalsy());
+          adaptor.savingList$.subscribe(response =>
+            expect(response).toBeFalsy()
+          );
         });
 
         it('provides updates on editing', () => {
-          adaptor.editingList$.subscribe(response => expect(response).toBeFalsy());
+          adaptor.editingList$.subscribe(response =>
+            expect(response).toBeFalsy()
+          );
         });
 
         it('provides updates on the reading list', () => {
@@ -183,8 +197,100 @@ describe('ReadingListAdaptor', () => {
         });
 
         it('provides updates on saving', () => {
-          adaptor.savingList$.subscribe(response => expect(response).toBeFalsy());
+          adaptor.savingList$.subscribe(response =>
+            expect(response).toBeFalsy()
+          );
         });
+      });
+    });
+  });
+
+  describe('adding comics to a readinglist', () => {
+    beforeEach(() => {
+      adaptor.addComicsToList(READING_LIST, COMICS);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ReadingListAddComics({ readingList: READING_LIST, comics: COMICS })
+      );
+    });
+
+    it('provides updates on adding', () => {
+      adaptor.addingComics$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    it('provides updates on the added status', () => {
+      adaptor.comicsAdded$.subscribe(response => expect(response).toBeFalsy());
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new ReadingListComicsAdded());
+      });
+
+      it('provides updates on adding', () => {
+        adaptor.addingComics$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('provides updates on the added status', () => {
+        adaptor.comicsAdded$.subscribe(response =>
+          expect(response).toBeTruthy()
+        );
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ReadingListAddComicsFailed());
+      });
+
+      it('provides updates on adding', () => {
+        adaptor.addingComics$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+  });
+
+  describe('toggling the selection list dialog', () => {
+    describe('toggling it on', () => {
+      beforeEach(() => {
+        adaptor.showSelectDialog();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new ReadingListToggleSelectDialog({ show: true })
+        );
+      });
+
+      it('provides updates on showing the selection dialog', () => {
+        adaptor.showSelectionDialog$.subscribe(response =>
+          expect(response).toBeTruthy()
+        );
+      });
+    });
+
+    describe('toggling it off', () => {
+      beforeEach(() => {
+        adaptor.hideSelectDialog();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          new ReadingListToggleSelectDialog({ show: false })
+        );
+      });
+
+      it('provides updates on showing the selection dialog', () => {
+        adaptor.showSelectionDialog$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
       });
     });
   });

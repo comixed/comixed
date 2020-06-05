@@ -20,10 +20,12 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/library';
 import {
+  ReadingListAddComics,
   ReadingListCancelEdit,
   ReadingListCreate,
   ReadingListEdit,
-  ReadingListSave
+  ReadingListSave,
+  ReadingListToggleSelectDialog
 } from 'app/library/actions/reading-list.actions';
 import {
   READING_LIST_FEATURE_KEY,
@@ -34,6 +36,7 @@ import { LoggerService } from '@angular-ru/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ReadingList } from 'app/comics/models/reading-list';
+import { Comic } from 'app/comics';
 
 @Injectable()
 export class ReadingListAdaptor {
@@ -41,6 +44,9 @@ export class ReadingListAdaptor {
   private _current$ = new BehaviorSubject<ReadingList>(null);
   private _editingList$ = new BehaviorSubject<boolean>(false);
   private _savingList$ = new BehaviorSubject<boolean>(false);
+  private _addingComics$ = new BehaviorSubject<boolean>(false);
+  private _comicsAdded$ = new BehaviorSubject<boolean>(false);
+  private _showSelectionDialog$ = new BehaviorSubject<boolean>(false);
 
   constructor(private store: Store<AppState>, private logger: LoggerService) {
     this.store
@@ -56,6 +62,17 @@ export class ReadingListAdaptor {
         }
         if (this._savingList$.getValue() !== state.savingList) {
           this._savingList$.next(state.savingList);
+        }
+        if (this._addingComics$.getValue() !== state.addingComics) {
+          this._addingComics$.next(state.addingComics);
+        }
+        if (this._comicsAdded$.getValue() !== state.comicsAdded) {
+          this._comicsAdded$.next(state.comicsAdded);
+        }
+        if (
+          this._showSelectionDialog$.getValue() !== state.showSelectionDialog
+        ) {
+          this._showSelectionDialog$.next(state.showSelectionDialog);
         }
         this._updated$.next(new Date());
       });
@@ -99,5 +116,39 @@ export class ReadingListAdaptor {
 
   get savingList$(): Observable<boolean> {
     return this._savingList$.asObservable();
+  }
+
+  addComicsToList(readingList: ReadingList, comics: Comic[]): void {
+    this.logger.debug(
+      'firing action to add comics to a reading list: readingList:',
+      readingList,
+      ' comics:',
+      comics
+    );
+    this.store.dispatch(
+      new ReadingListAddComics({ readingList: readingList, comics: comics })
+    );
+  }
+
+  get addingComics$(): Observable<boolean> {
+    return this._addingComics$.asObservable();
+  }
+
+  get comicsAdded$(): Observable<boolean> {
+    return this._comicsAdded$.asObservable();
+  }
+
+  showSelectDialog() {
+    this.logger.debug('firing action to show the reading list select dialog');
+    this.store.dispatch(new ReadingListToggleSelectDialog({ show: true }));
+  }
+
+  hideSelectDialog() {
+    this.logger.debug('firing action to hide the reading list select dialog');
+    this.store.dispatch(new ReadingListToggleSelectDialog({ show: false }));
+  }
+
+  get showSelectionDialog$(): Observable<boolean> {
+    return this._showSelectionDialog$.asObservable();
   }
 }

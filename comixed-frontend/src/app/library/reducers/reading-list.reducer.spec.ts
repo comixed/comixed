@@ -22,17 +22,23 @@ import {
   reducer
 } from './reading-list.reducer';
 import {
+  ReadingListAddComics,
+  ReadingListAddComicsFailed,
   ReadingListCancelEdit,
+  ReadingListComicsAdded,
   ReadingListCreate,
   ReadingListEdit,
   ReadingListSave,
   ReadingListSaved,
-  ReadingListSaveFailed
+  ReadingListSaveFailed,
+  ReadingListToggleSelectDialog
 } from 'app/library/actions/reading-list.actions';
 import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
 
 describe('ReadingList Reducer', () => {
   const READING_LIST = READING_LIST_1;
+  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
 
   let state: ReadingListState;
 
@@ -55,6 +61,18 @@ describe('ReadingList Reducer', () => {
 
     it('clears the saving reading list flag', () => {
       expect(state.savingList).toBeFalsy();
+    });
+
+    it('clears the adding comics flag', () => {
+      expect(state.addingComics).toBeFalsy();
+    });
+
+    it('clears the comics added flag', () => {
+      expect(state.comicsAdded).toBeFalsy();
+    });
+
+    it('clears the show selection dialog flag', () => {
+      expect(state.showSelectionDialog).toBeFalsy();
     });
   });
 
@@ -177,6 +195,75 @@ describe('ReadingList Reducer', () => {
 
     it('clears the saving reading list flag', () => {
       expect(state.savingList).toBeFalsy();
+    });
+  });
+
+  describe('adding comics to a reading list', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, addingComics: false, comicsAdded: true },
+        new ReadingListAddComics({
+          readingList: READING_LIST,
+          comics: COMICS
+        })
+      );
+    });
+
+    it('sets the adding comics flag', () => {
+      expect(state.addingComics).toBeTruthy();
+    });
+
+    it('clears the comics added flag', () => {
+      expect(state.comicsAdded).toBeFalsy();
+    });
+  });
+
+  describe('when adding comics succeeds', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, addingComics: true, comicsAdded: false },
+        new ReadingListComicsAdded()
+      );
+    });
+
+    it('clears the adding comics flag', () => {
+      expect(state.addingComics).toBeFalsy();
+    });
+
+    it('sets the comics added flag', () => {
+      expect(state.comicsAdded).toBeTruthy();
+    });
+  });
+
+  describe('when adding comics fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, addingComics: true },
+        new ReadingListAddComicsFailed()
+      );
+    });
+
+    it('clears the adding comics flag', () => {
+      expect(state.addingComics).toBeFalsy();
+    });
+  });
+
+  describe('toggling the selection dialog', () => {
+    it('can be shown', () => {
+      state = reducer(
+        { ...state, showSelectionDialog: false },
+        new ReadingListToggleSelectDialog({ show: true })
+      );
+
+      expect(state.showSelectionDialog).toBeTruthy();
+    });
+
+    it('can be hidden', () => {
+      state = reducer(
+        { ...state, showSelectionDialog: true },
+        new ReadingListToggleSelectDialog({ show: false })
+      );
+      expect(state.showSelectionDialog).toBeFalsy();
     });
   });
 });
