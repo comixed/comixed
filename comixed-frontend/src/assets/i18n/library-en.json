@@ -115,6 +115,14 @@
       "error": {
         "detail": "Failed to save reading list"
       }
+    },
+    "add-comics": {
+      "success": {
+        "detail": "Successfully added {addedCount, plural, =1{one comic} other{# comics}} to the reading list."
+      },
+      "error": {
+        "detail": "Failed to add the comics to the reading list."
+      }
     }
   },
   "library-page": {

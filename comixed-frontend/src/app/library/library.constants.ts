@@ -39,6 +39,7 @@ export const GET_PUBLISHER_THUMBNAIL_URL = `${API_ROOT_URL}/publishers/\${name}/
 
 export const CREATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists`;
 export const UPDATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
+export const ADD_COMICS_TO_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}/comics`;
 
 export const NEW_READING_LIST: ReadingList = {
   id: null,
