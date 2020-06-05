@@ -155,4 +155,16 @@ public class ReadingListRepositoryTest {
 
     assertFalse(result.isPresent());
   }
+
+  @Test
+  public void testAddComicsToReadingList() {
+    ReadingList list = repository.getById(1000L);
+    Comic newComic = comicRepository.getById(1021L);
+
+    list.getComics().add(newComic);
+
+    ReadingList result = repository.save(list);
+
+    assertTrue(result.getComics().contains(newComic));
+  }
 }

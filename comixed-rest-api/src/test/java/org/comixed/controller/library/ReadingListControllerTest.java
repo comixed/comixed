@@ -18,6 +18,7 @@
 
 package org.comixed.controller.library;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
@@ -26,15 +27,20 @@ import java.util.*;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.ComiXedUser;
+import org.comixed.net.AddComicsToReadingListRequest;
+import org.comixed.net.AddComicsToReadingListResponse;
 import org.comixed.net.CreateReadingListRequest;
 import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.service.comic.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
+import org.comixed.service.library.ReadingListException;
 import org.comixed.service.library.ReadingListNameException;
 import org.comixed.service.library.ReadingListService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -53,6 +59,7 @@ public class ReadingListControllerTest {
   private static final Long TEST_COMIC_ID_4 = 1003L;
   private static final Long TEST_COMIC_ID_5 = 1004L;
   private static final Date TEST_LAST_UPDATED_DATE = new Date();
+  private static final int TEST_COMIC_COUNT = 17;
 
   static {
     TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_1);
@@ -70,6 +77,7 @@ public class ReadingListControllerTest {
   @Mock private ComiXedUser user;
   @Mock private List<ReadingList> readingLists;
   @Mock private Comic comic;
+  @Mock private List<Long> comicIdList;
 
   @Test
   public void testCreateReadingList()
@@ -167,5 +175,24 @@ public class ReadingListControllerTest {
             TEST_READING_LIST_ID,
             TEST_READING_LIST_NAME,
             TEST_READING_LIST_SUMMARY);
+  }
+
+  @Test
+  public void testAddComicsToList() throws ReadingListException {
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
+    Mockito.when(
+            readingListService.addComicsToList(
+                Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
+        .thenReturn(TEST_COMIC_COUNT);
+
+    AddComicsToReadingListResponse result =
+        controller.addComicsToList(
+            principal, TEST_READING_LIST_ID, new AddComicsToReadingListRequest(comicIdList));
+
+    assertNotNull(result);
+    assertEquals(TEST_COMIC_COUNT, result.getAddCount().intValue());
+
+    Mockito.verify(readingListService, Mockito.times(1))
+        .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, comicIdList);
   }
 }
