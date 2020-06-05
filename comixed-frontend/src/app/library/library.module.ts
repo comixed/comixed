@@ -81,6 +81,7 @@ import { FileSaverModule } from 'ngx-filesaver';
 import { LibraryNavigationTreeComponent } from './components/library-navigation-tree/library-navigation-tree.component';
 import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/duplicate-comics-page.component';
 import { ReadingListEditComponent } from './components/reading-list-edit/reading-list-edit.component';
+import { AddComicsToReadingListComponent } from './components/add-comics-to-list-reading-list/add-comics-to-reading-list.component';
 
 @NgModule({
   imports: [
@@ -150,7 +151,8 @@ import { ReadingListEditComponent } from './components/reading-list-edit/reading
     LibraryAdminPageComponent,
     LibraryNavigationTreeComponent,
     DuplicateComicsPageComponent,
-    ReadingListEditComponent
+    ReadingListEditComponent,
+    AddComicsToReadingListComponent
   ],
   providers: [
     LibraryService,
