@@ -125,6 +125,7 @@
       "teams": "Teams : {name}",
       "locations": "Locations : {name}",
       "stories": "Stories : {name}",
+      "reading-list": "Reading LIst: {name}",
       "all-comics": "Library"
     },
     "title-no-collection": "All Comics - {count, plural, =1{One Comic} other{# Comics}}",
