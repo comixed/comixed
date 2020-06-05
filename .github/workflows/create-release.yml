@@ -25,12 +25,14 @@ jobs:
           since_tag: v0.5.2-2
       - name: Build project
         run: mvn package -Pci -DskipTests -Dassembly-name=RELEASE
+      - name: Create SHA file.
+        run: shasum comixed-app/target/artifacts/comixed-app-0.6.0-0.rc4-RELEASE.zip > comixed-app-0.6.0-0.rc4.RELEASE.zip-sha
       - name: Upload release artifact
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           body_path: CHANGELOG.md
           files: |
             comixed-app/target/artifacts/comixed-app-0.6.0-0.rc4-RELEASE.zip
+            comixed-app-0.6.0-0.rc4.RELEASE.zip-sha
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
