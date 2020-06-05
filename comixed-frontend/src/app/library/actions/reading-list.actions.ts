@@ -18,6 +18,7 @@
 
 import { Action } from '@ngrx/store';
 import { ReadingList } from 'app/comics/models/reading-list';
+import { Comic } from 'app/comics';
 
 export enum ReadingListActionTypes {
   Create = '[READING LIST] Create a new reading list',
@@ -25,7 +26,11 @@ export enum ReadingListActionTypes {
   CancelEdit = '[READING LIST] Cancel editing a reading list',
   Save = '[READING LIST] Save a reading list',
   Saved = '[READING LIST] Saved the reading list',
-  SaveFailed = '[READING LIST] Failed to save the reading list'
+  SaveFailed = '[READING LIST] Failed to save the reading list',
+  AddComics = '[READING LIST] Add comics to a reading list',
+  ComicsAdded = '[READING LIST] Comics added to a reading list',
+  AddComicsFailed = '[READING LIST] Failed to add comics to a reading list',
+  ToggleSelectDialog = '[READING LIST] Toggle showing the selection dialog'
 }
 
 export class ReadingListCreate implements Action {
@@ -64,10 +69,38 @@ export class ReadingListSaveFailed implements Action {
   constructor() {}
 }
 
+export class ReadingListAddComics implements Action {
+  readonly type = ReadingListActionTypes.AddComics;
+
+  constructor(public payload: { readingList: ReadingList; comics: Comic[] }) {}
+}
+
+export class ReadingListComicsAdded implements Action {
+  readonly type = ReadingListActionTypes.ComicsAdded;
+
+  constructor() {}
+}
+
+export class ReadingListAddComicsFailed implements Action {
+  readonly type = ReadingListActionTypes.AddComicsFailed;
+
+  constructor() {}
+}
+
+export class ReadingListToggleSelectDialog implements Action {
+  readonly type = ReadingListActionTypes.ToggleSelectDialog;
+
+  constructor(public payload: { show: boolean }) {}
+}
+
 export type ReadingListActions =
   | ReadingListCreate
   | ReadingListEdit
   | ReadingListCancelEdit
   | ReadingListSave
   | ReadingListSaved
-  | ReadingListSaveFailed;
+  | ReadingListSaveFailed
+  | ReadingListAddComics
+  | ReadingListComicsAdded
+  | ReadingListAddComicsFailed
+  | ReadingListToggleSelectDialog;
