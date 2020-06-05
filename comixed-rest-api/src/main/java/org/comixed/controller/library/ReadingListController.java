@@ -24,11 +24,14 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.ReadingList;
+import org.comixed.net.AddComicsToReadingListRequest;
+import org.comixed.net.AddComicsToReadingListResponse;
 import org.comixed.net.CreateReadingListRequest;
 import org.comixed.net.UpdateReadingListRequest;
 import org.comixed.repositories.library.ReadingListRepository;
 import org.comixed.service.comic.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
+import org.comixed.service.library.ReadingListException;
 import org.comixed.service.library.ReadingListNameException;
 import org.comixed.service.library.ReadingListService;
 import org.comixed.views.View;
@@ -106,5 +109,29 @@ public class ReadingListController {
     this.log.info("Getting reading list for user: email={} id={}", email, id);
 
     return this.readingListService.getReadingListForUser(email, id);
+  }
+
+  @PostMapping(
+      value = "/lists/{id}/comics",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public AddComicsToReadingListResponse addComicsToList(
+      Principal principal,
+      @PathVariable("id") Long id,
+      @RequestBody() AddComicsToReadingListRequest request)
+      throws ReadingListException {
+    String email = principal.getName();
+    List<Long> ids = request.getIds();
+
+    this.log.info(
+        "Adding {} comic{} to the reading list for {}: id={}",
+        ids.size(),
+        ids.size() == 1 ? "" : "s",
+        email,
+        id);
+
+    int count = this.readingListService.addComicsToList(email, id, ids);
+
+    return new AddComicsToReadingListResponse(count);
   }
 }
