@@ -105,6 +105,10 @@
       <artifactId>spring-boot-starter-test</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
@@ -201,6 +205,7 @@
     <module>comixed-library</module>
     <module>comixed-tasks</module>
     <module>comixed-services</module>
+    <module>comixed-scrapers</module>
     <module>comixed-rest-api</module>
     <module>comixed-frontend</module>
     <module>comixed-app</module>
