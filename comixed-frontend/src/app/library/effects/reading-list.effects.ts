@@ -29,11 +29,14 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   ReadingListActions,
   ReadingListActionTypes,
+  ReadingListAddComicsFailed,
+  ReadingListComicsAdded,
   ReadingListSave,
   ReadingListSaved,
   ReadingListSaveFailed
 } from '../actions/reading-list.actions';
 import { ReadingList } from 'app/comics/models/reading-list';
+import { AddComicsToReadingListResponse } from 'app/library/models/net/add-comics-to-reading-list-response';
 
 @Injectable()
 export class ReadingListEffects {
@@ -85,6 +88,55 @@ export class ReadingListEffects {
         )
       });
       return of(new ReadingListSaveFailed());
+    })
+  );
+
+  @Effect()
+  addComics$: Observable<Action> = this.actions$.pipe(
+    ofType(ReadingListActionTypes.AddComics),
+    tap(action =>
+      this.logger.debug('effect: adding comics to reading list:', action)
+    ),
+    map(action => action.payload),
+    switchMap(action =>
+      this.readingListService.addComics(action.readingList, action.comics).pipe(
+        tap(response =>
+          this.logger.debug('received success response:', response)
+        ),
+        tap((response: AddComicsToReadingListResponse) =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'reading-list-effects.add-comics.success.detail',
+              { addedCount: response.addedCount }
+            )
+          })
+        ),
+        map(
+          (response: AddComicsToReadingListResponse) =>
+            new ReadingListComicsAdded()
+        ),
+        catchError(error => {
+          this.logger.error('service failure adding comics:', error);
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'reading-list-effects.add-comics.error.detail'
+            )
+          });
+          return of(new ReadingListAddComicsFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.error('service failure adding comics:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new ReadingListAddComicsFailed());
     })
   );
 }

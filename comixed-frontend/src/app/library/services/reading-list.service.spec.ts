@@ -27,19 +27,24 @@ import { interpolate } from 'app/app.functions';
 import { SaveReadingListRequest } from 'app/library/models/net/save-reading-list-request';
 import { LoggerModule } from '@angular-ru/logger';
 import {
+  ADD_COMICS_TO_READING_LIST_URL,
   CREATE_READING_LIST_URL,
   UPDATE_READING_LIST_URL
 } from 'app/library/library.constants';
 import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/models/comic.fixtures';
+import { AddComicsToReadingListRequest } from 'app/library/models/net/add-comics-to-reading-list-request';
+import { AddComicsToReadingListResponse } from 'app/library/models/net/add-comics-to-reading-list-response';
 
 describe('ReadingListService', () => {
   const READING_LIST = READING_LIST_1;
   const READING_LIST_ID = READING_LIST.id;
   const READING_LIST_NAME = READING_LIST.name;
   const READING_LIST_SUMMARY = READING_LIST.summary;
+  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
 
   let service: ReadingListService;
-  let http_mock: HttpTestingController;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -48,7 +53,7 @@ describe('ReadingListService', () => {
     });
 
     service = TestBed.get(ReadingListService);
-    http_mock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.get(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -60,7 +65,7 @@ describe('ReadingListService', () => {
       .save(null, READING_LIST_NAME, READING_LIST_SUMMARY)
       .subscribe(response => expect(response).toEqual(READING_LIST));
 
-    const req = http_mock.expectOne(interpolate(CREATE_READING_LIST_URL));
+    const req = httpMock.expectOne(interpolate(CREATE_READING_LIST_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       name: READING_LIST_NAME,
@@ -74,7 +79,7 @@ describe('ReadingListService', () => {
       .save(READING_LIST_ID, READING_LIST_NAME, READING_LIST_SUMMARY)
       .subscribe(response => expect(response).toEqual(READING_LIST));
 
-    const req = http_mock.expectOne(
+    const req = httpMock.expectOne(
       interpolate(UPDATE_READING_LIST_URL, { id: READING_LIST_ID })
     );
     expect(req.request.method).toEqual('PUT');
@@ -83,5 +88,26 @@ describe('ReadingListService', () => {
       summary: READING_LIST_SUMMARY
     } as SaveReadingListRequest);
     req.flush(READING_LIST);
+  });
+
+  it('can add comics to a reading list', () => {
+    const RESULT = {
+      addedCount: COMICS.length
+    } as AddComicsToReadingListResponse;
+
+    service
+      .addComics(READING_LIST, COMICS)
+      .subscribe((response: AddComicsToReadingListResponse) =>
+        expect(response).toEqual(RESULT)
+      );
+
+    const req = httpMock.expectOne(
+      interpolate(ADD_COMICS_TO_READING_LIST_URL, { id: READING_LIST.id })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMICS.map(comic => comic.id)
+    } as AddComicsToReadingListRequest);
+    req.flush(RESULT);
   });
 });

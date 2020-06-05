@@ -23,9 +23,13 @@ import { SaveReadingListRequest } from 'app/library/models/net/save-reading-list
 import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 import {
+  ADD_COMICS_TO_READING_LIST_URL,
   CREATE_READING_LIST_URL,
   UPDATE_READING_LIST_URL
 } from 'app/library/library.constants';
+import { Comic } from 'app/comics';
+import { ReadingList } from 'app/comics/models/reading-list';
+import { AddComicsToReadingListRequest } from 'app/library/models/net/add-comics-to-reading-list-request';
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +54,19 @@ export class ReadingListService {
       this.logger.debug(`http [POST]: creating reading list: name=${name}`);
       return this.http.post(interpolate(CREATE_READING_LIST_URL), encoded);
     }
+  }
+
+  addComics(readingList: ReadingList, comics: Comic[]): Observable<any> {
+    this.logger.debug(
+      'http [POST] adding comics to reading list: readingList:',
+      readingList,
+      ' comics:',
+      comics
+    );
+
+    return this.http.post(
+      interpolate(ADD_COMICS_TO_READING_LIST_URL, { id: readingList.id }),
+      { ids: comics.map(comic => comic.id) } as AddComicsToReadingListRequest
+    );
   }
 }
