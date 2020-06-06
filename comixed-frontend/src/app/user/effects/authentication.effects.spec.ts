@@ -30,6 +30,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 import { AuthenticationEffects } from './authentication.effects';
+import { Router } from '@angular/router';
 import objectContaining = jasmine.objectContaining;
 
 describe('AuthenticationEffects', () => {
@@ -45,6 +46,7 @@ describe('AuthenticationEffects', () => {
   let tokenService: TokenService;
   let messageService: MessageService;
   let actions: Observable<any>;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -82,6 +84,8 @@ describe('AuthenticationEffects', () => {
     spyOn(tokenService, 'signout');
     messageService = TestBed.get(MessageService);
     spyOn(messageService, 'add');
+    router = TestBed.get(Router);
+    spyOn(router, 'navigateByUrl');
   });
 
   it('should be created', () => {
@@ -218,6 +222,7 @@ describe('AuthenticationEffects', () => {
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'info' })
       );
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/');
     });
   });
 
