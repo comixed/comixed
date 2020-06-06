@@ -63,7 +63,7 @@
                            (onActivate)='startEditing()'
                            [active]='editing'>
           <span pInplaceDisplay>
-          <a [routerLink]='["/comics", "publishers", comic.publisher||"undefined"]'>{{comic|publisher}}</a>
+          <a [routerLink]='["/comics", "publishers", comic.imprint||comic.publisher||"undefined"]'>{{comic|publisher}}</a>
             <span class='pi pi-pencil'></span>
           </span>
                   <span pInplaceContent>
