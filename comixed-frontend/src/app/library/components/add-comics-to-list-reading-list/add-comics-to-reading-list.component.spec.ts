@@ -41,6 +41,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { ComicsModule } from 'app/comics/comics.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AddComicsToReadingListComponent', () => {
   let component: AddComicsToReadingListComponent;
@@ -50,6 +51,7 @@ describe('AddComicsToReadingListComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         ComicsModule,
+        RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
