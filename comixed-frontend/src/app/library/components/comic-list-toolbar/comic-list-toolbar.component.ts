@@ -27,10 +27,10 @@ import {
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Comic } from 'app/comics';
-import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import {
   LibraryAdaptor,
   LibraryDisplayAdaptor,
+  ReadingListAdaptor,
   SelectionAdaptor
 } from 'app/library';
 import { ConfirmationService, SelectItem } from 'primeng/api';
@@ -75,7 +75,7 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
     private libraryAdaptor: LibraryAdaptor,
     private selectionAdaptor: SelectionAdaptor,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
-    private scrapingAdaptor: ScrapingAdaptor
+    private readingListAdaptor: ReadingListAdaptor
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -274,5 +274,9 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
 
   setDetailsVisible() {
     this.showDetails = true;
+  }
+
+  fireCreateReadingList() {
+    this.readingListAdaptor.create();
   }
 }

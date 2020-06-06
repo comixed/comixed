@@ -92,7 +92,7 @@ export class ReadingListAdaptor {
   }
 
   create() {
-    this.logger.debug('firing action to reading a reading list:');
+    this.logger.debug('firing action to create a reading list:');
     this.store.dispatch(new ReadingListCreate());
   }
 
