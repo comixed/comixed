@@ -63,34 +63,40 @@
             pButton
             type='button'
             class='ui-button-info'
-            [pTooltip]='"comic-list-toolbar.button.show-details"|translate'
+            [pTooltip]='"comic-list-toolbar.tooltip.show-details"|translate'
             icon='fa fa-fw fa-info-circle'
             (click)='setDetailsVisible()'></button>
     <button pButton
             class='ui-button-success cx-toolbar-button'
             type='button'
-            [pTooltip]='"comic-list-toolbar.button.select-all"|translate'
+            [pTooltip]='"comic-list-toolbar.tooltip.select-all"|translate'
             icon='fa fa-fw fa-plus'
             [disabled]='!comics.length'
             (click)='selectAll()'></button>
     <button pButton
             class='ui-button-success cx-toolbar-button'
             type='button'
-            [pTooltip]='"comic-list-toolbar.button.deselect-all"|translate'
+            [pTooltip]='"comic-list-toolbar.tooltip.deselect-all"|translate'
             icon='fa fa-fw fa-minus'
             [disabled]='!selectedComics.length'
             (click)='deselectAll()'></button>
     <button pButton
+            class='ui-button-success cx-toolbar-button'
+            type='button'
+            [pTooltip]='"comic-list-toolbar.tooltip.create-reading-list"|translate'
+            icon='fa fa-fw fa-list'
+            (click)='fireCreateReadingList()'></button>
+    <button pButton
             class='ui-button-info cx-toolbar-button'
             type='button'
-            [pTooltip]='"comic-list-toolbar.button.scrape"|translate'
+            [pTooltip]='"comic-list-toolbar.tooltip.scrape"|translate'
             icon='fa fa-fw fa-fingerprint'
             [disabled]='!selectedComics.length'
             (click)='fireStartScraping()'></button>
     <button pButton
             class='ui-button-danger cx-toolbar-button'
             type='button'
-            [pTooltip]='"comic-list-toolbar.button.delete"|translate'
+            [pTooltip]='"comic-list-toolbar.tooltip.delete"|translate'
             icon='fa fa-fw fa-trash'
             [disabled]='!selectedComics.length'
             (click)='deleteComics()'></button>
