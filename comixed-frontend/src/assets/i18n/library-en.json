@@ -254,7 +254,13 @@
       "show-filters": "Show library filters.",
       "list-layout": "Show comics as a list.",
       "grid-layout": "Show comics as a grid.",
-      "show-navigation-tree": "Show library contents..."
+      "show-navigation-tree": "Show library contents...",
+      "select-all": "Select All Comics",
+      "deselect-all": "Deselect All Comics",
+      "scrape": "Scrape Selected Comics",
+      "delete": "Delete Selected Comics",
+      "show-details": "Show details.",
+      "create-reading-list": "Create a new reading list..."
     },
     "options": {
       "rows": {
@@ -270,13 +276,6 @@
       "cover-size": {
         "tooltip": "Set the cover size."
       }
-    },
-    "button": {
-      "select-all": "Select All Comics",
-      "deselect-all": "Deselect All Comics",
-      "scrape": "Scrape Selected Comics",
-      "delete": "Delete Selected Comics",
-      "show-details": "Show details."
     },
     "delete-comics": {
       "header": "Delete Selected Comics",
