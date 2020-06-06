@@ -39,6 +39,7 @@ import { ComicsModule } from 'app/comics/comics.module';
 import { AuthUserLoaded } from 'app/user/actions/authentication.actions';
 import { AuthenticationAdaptor, USER_ADMIN } from 'app/user';
 import { CONSOLIDATE_DELETE_PHYSICAL_FILES } from 'app/user/models/preferences.constants';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ConsolidateLibraryComponent', () => {
   let component: ConsolidateLibraryComponent;
@@ -53,6 +54,7 @@ describe('ConsolidateLibraryComponent', () => {
       imports: [
         UserModule,
         ComicsModule,
+        RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
