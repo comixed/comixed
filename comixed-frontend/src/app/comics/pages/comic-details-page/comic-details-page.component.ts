@@ -208,7 +208,15 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
       }
     ];
 
-    if (this.comic.publisher) {
+    if (this.comic.imprint) {
+      entries.push({
+        label: this.translateService.instant(
+          'breadcrumb.entry.comic-details-page.publisher',
+          { name: this.comic.imprint }
+        ),
+        routerLink: ['/comics/publishers', this.comic.imprint]
+      });
+    } else if (this.comic.publisher) {
       entries.push({
         label: this.translateService.instant(
           'breadcrumb.entry.comic-details-page.publisher',
