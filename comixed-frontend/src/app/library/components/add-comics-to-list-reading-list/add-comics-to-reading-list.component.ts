@@ -42,6 +42,9 @@ export class AddComicsToReadingListComponent implements OnInit, OnDestroy {
   readingListOptions: SelectItem[] = [];
   selectedComicsSubscription: Subscription;
   selectedComics: Comic[] = [];
+  addingComicsSubscription: Subscription;
+  addingComics = false;
+  comicsAddedSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,6 +73,16 @@ export class AddComicsToReadingListComponent implements OnInit, OnDestroy {
     this.selectedComicsSubscription = this.selectionAdaptor.comicSelection$.subscribe(
       selected => (this.selectedComics = selected)
     );
+    this.addingComicsSubscription = this.readingListAdaptor.addingComics$.subscribe(
+      adding => (this.addingComics = adding)
+    );
+    this.comicsAddedSubscription = this.readingListAdaptor.comicsAdded$.subscribe(
+      added => {
+        if (added) {
+          this.readingListAdaptor.hideSelectDialog();
+        }
+      }
+    );
   }
 
   ngOnInit() {}
@@ -78,6 +91,8 @@ export class AddComicsToReadingListComponent implements OnInit, OnDestroy {
     this.showDialogSubscription.unsubscribe();
     this.readingListsSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
+    this.addingComicsSubscription.unsubscribe();
+    this.comicsAddedSubscription.unsubscribe();
   }
 
   readingListSelected() {
@@ -87,7 +102,7 @@ export class AddComicsToReadingListComponent implements OnInit, OnDestroy {
     );
   }
 
-  hideSelection() {
+  hideDialog() {
     this.readingListAdaptor.hideSelectDialog();
   }
 }

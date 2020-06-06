@@ -1,5 +1,7 @@
-<p-dialog [visible]='showDialog'
-          [modal]='true'>
+<p-dialog #addToListDialog
+          [visible]='showDialog'
+          [modal]='true'
+          [closable]='false'>
   <form [formGroup]='readingListForm'>
     <div class='ui-g'>
       <div class='ui-g-12 cx-input-label'>
@@ -16,14 +18,15 @@
                 class='cx-action-button ui-button-success'
                 icon='fa fa-fw fa-save'
                 [label]='"button.save"|translate'
-                [disabled]='!readingListForm.valid'
+                [disabled]='!readingListForm.valid || addingComics'
                 (click)='readingListSelected()'></button>
         <button pButton
                 type='button'
                 class='cx-action-button ui-button-danger'
                 icon='fa fa-fw fa-cancel'
                 [label]='"button.cancel"|translate'
-                (click)='hideSelection()'></button>
+                [disabled]='addingComics'
+                (click)='hideDialog()'></button>
       </div>
     </div>
   </form>
