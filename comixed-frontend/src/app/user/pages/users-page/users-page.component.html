@@ -4,7 +4,7 @@
             pButton
             type='button'
             [style]='{ float: "right" }'
-            label='{{"admin.users.button.new-user"|translate}}'
+            label='{{"button.new-user"|translate}}'
             icon='fa fa-fw fa-user-plus'
             (click)='setNewUser()'></button>
   </div>
@@ -15,7 +15,7 @@
 
 <div *ngIf='current'
      id='user-editor-container'>
-    <h2>{{current?.email || "admin.user-editor.label.new-user"|translate}}</h2>
+    <h2>{{current?.email || "user-details.title.new-user"|translate}}</h2>
     <app-user-details-editor *ngIf='current'
                              [user]='current'
                              [isAdmin]='isAdmin'
@@ -34,10 +34,10 @@
   <ng-template pTemplate='header'>
     <tr>
       <th id='user-list-action'></th>
-      <th id='user-list-email'>{{'admin.users.label.email'|translate}}</th>
-      <th id='user-list-roles'>{{'admin.users.label.roles'|translate}}</th>
-      <th id='user-list-member-since'>{{'admin.users.label.member-since'|translate}}</th>
-      <th id='user-list-last-logged-in'>{{'admin.users.label.last-logged-on'|translate}}</th>
+      <th id='user-list-email'>{{'user-details.label.email-address'|translate}}</th>
+      <th id='user-list-roles'>{{'user-details.label.roles'|translate}}</th>
+      <th id='user-list-member-since'>{{'user-details.label.member-since'|translate}}</th>
+      <th id='user-list-last-logged-in'>{{'user-details.label.last-logged-on'|translate}}</th>
     </tr>
   </ng-template>
   <ng-template pTemplate='body'

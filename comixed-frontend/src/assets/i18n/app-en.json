@@ -138,11 +138,14 @@
     }
   },
   "user-details": {
+    "title": {
+      "new-user": "Create New User"
+    },
     "label": {
       "email-address": "Email Address",
       "roles": "Roles",
       "member-since": "Member Since",
-      "last-logged-in": "Last Logged In"
+      "last-logged-on": "Last Logged On"
     }
   },
   "account-page": {
@@ -342,7 +345,8 @@
     "show-comics": "Show Comics",
     "start-scraping": "Start Scraping...",
     "selected": "Selected",
-    "not-selected": "Not Selected"
+    "not-selected": "Not Selected",
+    "new-user": "New User"
   },
   "user-effects": {
     "login": {
