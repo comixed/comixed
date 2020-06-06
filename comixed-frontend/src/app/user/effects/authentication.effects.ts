@@ -41,6 +41,7 @@ import {
   AuthSetToken,
   AuthSubmitLogin
 } from '../actions/authentication.actions';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthenticationEffects {
@@ -50,7 +51,8 @@ export class AuthenticationEffects {
     private authenticationService: AuthenticationService,
     private tokenService: TokenService,
     private translateService: TranslateService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   @Effect()
@@ -139,6 +141,7 @@ export class AuthenticationEffects {
     ofType(AuthenticationActionTypes.AUTH_LOGOUT),
     tap(action => this.logger.debug('effect: logging out:', action)),
     tap(() => this.tokenService.signout()),
+    tap(() => this.router.navigateByUrl('/')),
     tap(() =>
       this.messageService.add({
         severity: 'info',
