@@ -14,6 +14,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { ComicsModule } from 'app/comics/comics.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ConvertComicsSettingsComponent', () => {
   let component: ConvertComicsSettingsComponent;
@@ -24,6 +25,7 @@ describe('ConvertComicsSettingsComponent', () => {
       imports: [
         UserModule,
         ComicsModule,
+        RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
@@ -43,13 +45,11 @@ describe('ConvertComicsSettingsComponent', () => {
         SelectionAdaptor
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ConvertComicsSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
