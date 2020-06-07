@@ -26,8 +26,11 @@ import {
   ReadingListAddComicsFailed,
   ReadingListCancelEdit,
   ReadingListComicsAdded,
+  ReadingListComicsRemoved,
   ReadingListCreate,
   ReadingListEdit,
+  ReadingListRemoveComics,
+  ReadingListRemoveComicsFailed,
   ReadingListSave,
   ReadingListSaved,
   ReadingListSaveFailed,
@@ -73,6 +76,10 @@ describe('ReadingList Reducer', () => {
 
     it('clears the show selection dialog flag', () => {
       expect(state.showSelectionDialog).toBeFalsy();
+    });
+
+    it('clears the removing comics flag', () => {
+      expect(state.removingComics).toBeFalsy();
     });
   });
 
@@ -264,6 +271,48 @@ describe('ReadingList Reducer', () => {
         new ReadingListToggleSelectDialog({ show: false })
       );
       expect(state.showSelectionDialog).toBeFalsy();
+    });
+  });
+
+  describe('removing comics from a reading list', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, removingComics: false },
+        new ReadingListRemoveComics({
+          readingList: READING_LIST,
+          comics: COMICS
+        })
+      );
+    });
+
+    it('sets the removing comics flag', () => {
+      expect(state.removingComics).toBeTruthy();
+    });
+  });
+
+  describe('when removing comics succeeds', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, removingComics: true },
+        new ReadingListComicsRemoved()
+      );
+    });
+
+    it('clears the removing comics flag', () => {
+      expect(state.removingComics).toBeFalsy();
+    });
+  });
+
+  describe('when removing comics fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, removingComics: true },
+        new ReadingListRemoveComicsFailed()
+      );
+    });
+
+    it('clears the removing comics flag', () => {
+      expect(state.removingComics).toBeFalsy();
     });
   });
 });

@@ -31,12 +31,15 @@ import {
   ReadingListActionTypes,
   ReadingListAddComicsFailed,
   ReadingListComicsAdded,
+  ReadingListComicsRemoved,
+  ReadingListRemoveComicsFailed,
   ReadingListSave,
   ReadingListSaved,
   ReadingListSaveFailed
 } from '../actions/reading-list.actions';
 import { ReadingList } from 'app/comics/models/reading-list';
 import { AddComicsToReadingListResponse } from 'app/library/models/net/add-comics-to-reading-list-response';
+import { RemoveComicsFromReadingListResponse } from 'app/library/models/net/remove-comics-from-reading-list-response';
 
 @Injectable()
 export class ReadingListEffects {
@@ -108,7 +111,7 @@ export class ReadingListEffects {
             severity: 'info',
             detail: this.translateService.instant(
               'reading-list-effects.add-comics.success.detail',
-              { addedCount: response.addedCount }
+              { addedCount: response.addCount }
             )
           })
         ),
@@ -137,6 +140,58 @@ export class ReadingListEffects {
         )
       });
       return of(new ReadingListAddComicsFailed());
+    })
+  );
+
+  @Effect()
+  removeComics$: Observable<Action> = this.actions$.pipe(
+    ofType(ReadingListActionTypes.RemoveComics),
+    map(action => action.payload),
+    tap(action =>
+      this.logger.debug('effect: removing comes from reading list:', action)
+    ),
+    switchMap(action =>
+      this.readingListService
+        .removeComics(action.readingList, action.comics)
+        .pipe(
+          tap(response => this.logger.debug('received response:', response)),
+          tap((response: RemoveComicsFromReadingListResponse) =>
+            this.messageService.add({
+              severity: 'info',
+              detail: this.translateService.instant(
+                'reading-list-effects.remove-comics.success.detail',
+                { removeCount: response.removeCount }
+              )
+            })
+          ),
+          map(() => new ReadingListComicsRemoved()),
+          catchError(error => {
+            this.logger.error(
+              'service failure removing comics from a reading list:',
+              error
+            );
+            this.messageService.add({
+              severity: 'error',
+              detail: this.translateService.instant(
+                'reading-list-effects.remove-comics.error.detail'
+              )
+            });
+            return of(new ReadingListRemoveComicsFailed());
+          })
+        )
+    ),
+    catchError(error => {
+      this.logger.error(
+        'service failure removing comics from a reading list:',
+        error
+      );
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new ReadingListRemoveComicsFailed());
     })
   );
 }

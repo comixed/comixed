@@ -25,11 +25,13 @@ import { Observable } from 'rxjs';
 import {
   ADD_COMICS_TO_READING_LIST_URL,
   CREATE_READING_LIST_URL,
+  REMOVE_COMICS_FROM_READING_LIST,
   UPDATE_READING_LIST_URL
 } from 'app/library/library.constants';
 import { Comic } from 'app/comics';
 import { ReadingList } from 'app/comics/models/reading-list';
 import { AddComicsToReadingListRequest } from 'app/library/models/net/add-comics-to-reading-list-request';
+import { RemoveComicsFromReadingListRequest } from 'app/library/models/net/remove-comics-from-reading-list-request';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +69,22 @@ export class ReadingListService {
     return this.http.post(
       interpolate(ADD_COMICS_TO_READING_LIST_URL, { id: readingList.id }),
       { ids: comics.map(comic => comic.id) } as AddComicsToReadingListRequest
+    );
+  }
+
+  removeComics(readingList: ReadingList, comics: Comic[]): Observable<any> {
+    this.logger.debug(
+      'http [POST] removing comics from reading list: readingList:',
+      readingList,
+      ' comics:',
+      comics
+    );
+
+    return this.http.post(
+      interpolate(REMOVE_COMICS_FROM_READING_LIST, { id: readingList.id }),
+      {
+        ids: comics.map(comic => comic.id)
+      } as RemoveComicsFromReadingListRequest
     );
   }
 }

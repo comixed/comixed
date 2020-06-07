@@ -30,7 +30,10 @@ export enum ReadingListActionTypes {
   AddComics = '[READING LIST] Add comics to a reading list',
   ComicsAdded = '[READING LIST] Comics added to a reading list',
   AddComicsFailed = '[READING LIST] Failed to add comics to a reading list',
-  ToggleSelectDialog = '[READING LIST] Toggle showing the selection dialog'
+  ToggleSelectDialog = '[READING LIST] Toggle showing the selection dialog',
+  RemoveComics = '[READING LIST] Remove comics from a reading list',
+  ComicsRemoved = '[READING LIST] Comics removed from a reading list',
+  RemoveComicsFailed = '[READING LIST] Failed to remove comics from a reading list'
 }
 
 export class ReadingListCreate implements Action {
@@ -93,6 +96,24 @@ export class ReadingListToggleSelectDialog implements Action {
   constructor(public payload: { show: boolean }) {}
 }
 
+export class ReadingListRemoveComics implements Action {
+  readonly type = ReadingListActionTypes.RemoveComics;
+
+  constructor(public payload: { readingList: ReadingList; comics: Comic[] }) {}
+}
+
+export class ReadingListComicsRemoved implements Action {
+  readonly type = ReadingListActionTypes.ComicsRemoved;
+
+  constructor() {}
+}
+
+export class ReadingListRemoveComicsFailed implements Action {
+  readonly type = ReadingListActionTypes.RemoveComicsFailed;
+
+  constructor() {}
+}
+
 export type ReadingListActions =
   | ReadingListCreate
   | ReadingListEdit
@@ -103,4 +124,7 @@ export type ReadingListActions =
   | ReadingListAddComics
   | ReadingListComicsAdded
   | ReadingListAddComicsFailed
-  | ReadingListToggleSelectDialog;
+  | ReadingListToggleSelectDialog
+  | ReadingListRemoveComics
+  | ReadingListComicsRemoved
+  | ReadingListRemoveComicsFailed;
