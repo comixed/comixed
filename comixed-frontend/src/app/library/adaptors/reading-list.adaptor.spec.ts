@@ -34,8 +34,11 @@ import {
   ReadingListAddComicsFailed,
   ReadingListCancelEdit,
   ReadingListComicsAdded,
+  ReadingListComicsRemoved,
   ReadingListCreate,
   ReadingListEdit,
+  ReadingListRemoveComics,
+  ReadingListRemoveComicsFailed,
   ReadingListSave,
   ReadingListSaved,
   ReadingListSaveFailed,
@@ -289,6 +292,51 @@ describe('ReadingListAdaptor', () => {
 
       it('provides updates on showing the selection dialog', () => {
         adaptor.showSelectionDialog$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+  });
+
+  describe('removing comics from a reading list', () => {
+    beforeEach(() => {
+      adaptor.removeComics(READING_LIST, COMICS);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ReadingListRemoveComics({
+          readingList: READING_LIST,
+          comics: COMICS
+        })
+      );
+    });
+
+    it('provides updates on removing comics', () => {
+      adaptor.removingComics$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new ReadingListComicsRemoved());
+      });
+
+      it('provides updates on removing comics', () => {
+        adaptor.removingComics$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ReadingListRemoveComicsFailed());
+      });
+
+      it('provides updates on removing comics', () => {
+        adaptor.removingComics$.subscribe(response =>
           expect(response).toBeFalsy()
         );
       });
