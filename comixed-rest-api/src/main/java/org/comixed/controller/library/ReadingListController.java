@@ -24,10 +24,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.model.library.ReadingList;
-import org.comixed.net.AddComicsToReadingListRequest;
-import org.comixed.net.AddComicsToReadingListResponse;
-import org.comixed.net.CreateReadingListRequest;
-import org.comixed.net.UpdateReadingListRequest;
+import org.comixed.net.*;
 import org.comixed.repositories.library.ReadingListRepository;
 import org.comixed.service.comic.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
@@ -121,17 +118,41 @@ public class ReadingListController {
       @RequestBody() AddComicsToReadingListRequest request)
       throws ReadingListException {
     String email = principal.getName();
-    List<Long> ids = request.getIds();
+    List<Long> comicIds = request.getIds();
 
     this.log.info(
         "Adding {} comic{} to the reading list for {}: id={}",
-        ids.size(),
-        ids.size() == 1 ? "" : "s",
+        comicIds.size(),
+        comicIds.size() == 1 ? "" : "s",
         email,
         id);
 
-    int count = this.readingListService.addComicsToList(email, id, ids);
+    int count = this.readingListService.addComicsToList(email, id, comicIds);
 
     return new AddComicsToReadingListResponse(count);
+  }
+
+  @PostMapping(
+      value = "/lists/{id}/comics/remove",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public RemoveComicsFromReadingListResponse removeComicsFromList(
+      Principal principal,
+      @PathVariable("id") long id,
+      @RequestBody() RemoveComicsFromReadingListRequest request)
+      throws ReadingListException {
+    String email = principal.getName();
+    List<Long> comicIds = request.getIds();
+
+    this.log.info(
+        "Removing {} comic{} from the reading list for {}: id={}",
+        comicIds.size(),
+        comicIds.size() == 1 ? "" : "s",
+        email,
+        id);
+
+    int count = this.readingListService.removeComicsFromList(email, id, comicIds);
+
+    return new RemoveComicsFromReadingListResponse(count);
   }
 }

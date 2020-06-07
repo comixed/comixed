@@ -27,10 +27,7 @@ import java.util.*;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.ComiXedUser;
-import org.comixed.net.AddComicsToReadingListRequest;
-import org.comixed.net.AddComicsToReadingListResponse;
-import org.comixed.net.CreateReadingListRequest;
-import org.comixed.net.UpdateReadingListRequest;
+import org.comixed.net.*;
 import org.comixed.service.comic.ComicException;
 import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListException;
@@ -194,5 +191,24 @@ public class ReadingListControllerTest {
 
     Mockito.verify(readingListService, Mockito.times(1))
         .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, comicIdList);
+  }
+
+  @Test
+  public void testRemoveComicsFromList() throws ReadingListException {
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
+    Mockito.when(
+            readingListService.removeComicsFromList(
+                Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
+        .thenReturn(TEST_COMIC_COUNT);
+
+    RemoveComicsFromReadingListResponse result =
+        controller.removeComicsFromList(
+            principal, TEST_READING_LIST_ID, new RemoveComicsFromReadingListRequest(comicIdList));
+
+    assertNotNull(result);
+    assertEquals(TEST_COMIC_COUNT, result.getRemoveCount());
+
+    Mockito.verify(readingListService, Mockito.times(1))
+        .removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, comicIdList);
   }
 }

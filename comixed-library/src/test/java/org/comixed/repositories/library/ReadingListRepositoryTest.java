@@ -167,4 +167,16 @@ public class ReadingListRepositoryTest {
 
     assertTrue(result.getComics().contains(newComic));
   }
+
+  @Test
+  public void testRemoveComicsFromReadingList() {
+    ReadingList list = repository.getById(1000L);
+    Comic comic = comicRepository.getById(1001L);
+
+    list.getComics().remove(comic);
+
+    ReadingList result = repository.save(list);
+
+    assertFalse(result.getComics().contains(comic));
+  }
 }
