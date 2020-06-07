@@ -19,7 +19,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import {
+  LibraryAdaptor,
+  ReadingListAdaptor,
+  SelectionAdaptor
+} from 'app/library';
 import { UserService } from 'app/services/user.service';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
@@ -31,6 +35,8 @@ import { filter } from 'rxjs/operators';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import { LoggerService } from '@angular-ru/logger';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
+import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
+import { REMOVE_READING_LIST_ITEMS } from 'app/library/library.constants';
 
 @Component({
   selector: 'app-library-page',
@@ -67,13 +73,19 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private messageService: MessageService,
-    private breadcrumbAdaptor: BreadcrumbAdaptor
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
+    private contextMenuAdaptor: ContextMenuAdaptor,
+    private readingListAdaptor: ReadingListAdaptor
   ) {
+    this.addContextMenuItems();
     this.authSubscription = this.authenticationAdaptor.user$.subscribe(
       user => (this.user = user)
     );
     this.selectedComicsSubscription = this.selectionAdaptor.comicSelection$.subscribe(
-      selected_comics => (this.selectedComics = selected_comics)
+      selected_comics => {
+        this.selectedComics = selected_comics;
+        this.updateContextMenu();
+      }
     );
     this.importCountSubscription = this.libraryAdaptor.processingCount$.subscribe(
       processing => (this.processingCount = processing)
@@ -138,6 +150,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
             this.logger.error('no such collection type:', this.collectionType);
             titleKey = '';
         }
+        this.addContextMenuItems();
 
         this.titleService.setTitle(
           this.translateService.instant(`library-page.title.${titleKey}`, {
@@ -193,6 +206,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.comicsSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
     this.importCountSubscription.unsubscribe();
+    this.removeContextMenuItems();
   }
 
   deleteComic(comic: Comic): void {
@@ -238,5 +252,65 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       entries.push(this.breadcrumbEntryParent);
     }
     this.breadcrumbAdaptor.loadEntries(entries);
+  }
+
+  private updateContextMenu() {
+    if (this.collectionType === CollectionType.READING_LISTS) {
+      this.logger.info('this.collectionType:', this.collectionType);
+      this.logger.info(
+        'showing remove comics from reading list context menu item'
+      );
+      this.contextMenuAdaptor.showItem(REMOVE_READING_LIST_ITEMS);
+
+      if (this.selectedComics.length > 0) {
+        this.logger.info(
+          'enabling remove comics from reading list context menu item'
+        );
+        this.contextMenuAdaptor.enableItem(REMOVE_READING_LIST_ITEMS);
+      } else {
+        this.logger.info(
+          'disabling remove comics from reading list context menu item'
+        );
+        this.contextMenuAdaptor.disableItem(REMOVE_READING_LIST_ITEMS);
+      }
+    } else {
+      this.logger.info('this.collectionType:', this.collectionType);
+      this.logger.info(
+        'hiding remove comics from reading list context menu item'
+      );
+      this.contextMenuAdaptor.hideItem(REMOVE_READING_LIST_ITEMS);
+    }
+  }
+
+  private removeContextMenuItems() {
+    this.logger.info('removing context menu items');
+    this.contextMenuAdaptor.removeItem(REMOVE_READING_LIST_ITEMS);
+  }
+
+  private addContextMenuItems() {
+    this.logger.info('adding context menu items');
+    this.contextMenuAdaptor.addItem(
+      REMOVE_READING_LIST_ITEMS,
+      'fa fa-fw fa-minus',
+      'comic-list.context-menu.remove-from-reading-list',
+      false,
+      true,
+      () =>
+        this.confirmationService.confirm({
+          header: this.translateService.instant(
+            'library-page.remove-comics-from-reading-list.header',
+            { name: this.collectionName }
+          ),
+          message: this.translateService.instant(
+            'library-page.remove-comics-from-reading-list.message',
+            { count: this.selectedComics.length }
+          ),
+          accept: () =>
+            this.readingListAdaptor.removeComics(
+              this.libraryAdaptor.findReadingList(this.collectionName),
+              this.selectedComics
+            )
+        })
+    );
   }
 }

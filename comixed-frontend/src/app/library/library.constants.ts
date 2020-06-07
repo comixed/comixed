@@ -42,6 +42,15 @@ export const UPDATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
 export const ADD_COMICS_TO_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}/comics/add`;
 export const REMOVE_COMICS_FROM_READING_LIST = `${COMIXED_API_ROOT}/lists/\${id}/comics/remove`;
 
+export const COMIC_LIST_MENU_SELECT_ALL = 'comic-list-scrape-select-all';
+export const COMIC_LIST_MENU_DESELECT_ALL = 'comic-list-scrape-deselect-all';
+export const COMIC_LIST_MENU_DELETE_SELECTED = 'comic-list-delete-selected';
+export const COMIC_LIST_MENU_SCRAPE_SELECTED = 'comic-list-scrape-selected';
+export const COMIC_LIST_MENU_CONVERT_COMIC = 'comic-list-convert-comic';
+export const COMIC_LIST_MENU_ADD_TO_READING_LIST =
+  'comic-list-add-to-reading-list';
+export const REMOVE_READING_LIST_ITEMS = 'comic-list-reading-list-item-remove';
+
 export const NEW_READING_LIST: ReadingList = {
   id: null,
   name: '',
