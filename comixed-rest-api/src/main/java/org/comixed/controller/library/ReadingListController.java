@@ -112,7 +112,7 @@ public class ReadingListController {
   }
 
   @PostMapping(
-      value = "/lists/{id}/comics",
+      value = "/lists/{id}/comics/add",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public AddComicsToReadingListResponse addComicsToList(
