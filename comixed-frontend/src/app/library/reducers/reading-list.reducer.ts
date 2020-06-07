@@ -30,6 +30,7 @@ export interface ReadingListState {
   addingComics: boolean;
   comicsAdded: boolean;
   showSelectionDialog: boolean;
+  removingComics: boolean;
 }
 
 export const initialState: ReadingListState = {
@@ -38,7 +39,8 @@ export const initialState: ReadingListState = {
   editingList: false,
   addingComics: false,
   comicsAdded: false,
-  showSelectionDialog: false
+  showSelectionDialog: false,
+  removingComics: false
 };
 
 export const READING_LIST_FEATURE_KEY = 'reading_list_state';
@@ -95,6 +97,15 @@ export function reducer(
 
     case ReadingListActionTypes.ToggleSelectDialog:
       return { ...state, showSelectionDialog: action.payload.show };
+
+    case ReadingListActionTypes.RemoveComics:
+      return { ...state, removingComics: true };
+
+    case ReadingListActionTypes.ComicsRemoved:
+      return { ...state, removingComics: false };
+
+    case ReadingListActionTypes.RemoveComicsFailed:
+      return { ...state, removingComics: false };
 
     default:
       return state;

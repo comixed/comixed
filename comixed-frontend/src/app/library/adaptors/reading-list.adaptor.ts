@@ -24,6 +24,7 @@ import {
   ReadingListCancelEdit,
   ReadingListCreate,
   ReadingListEdit,
+  ReadingListRemoveComics,
   ReadingListSave,
   ReadingListToggleSelectDialog
 } from 'app/library/actions/reading-list.actions';
@@ -47,6 +48,7 @@ export class ReadingListAdaptor {
   private _addingComics$ = new BehaviorSubject<boolean>(false);
   private _comicsAdded$ = new BehaviorSubject<boolean>(false);
   private _showSelectionDialog$ = new BehaviorSubject<boolean>(false);
+  private _removingComics$ = new BehaviorSubject<boolean>(false);
 
   constructor(private store: Store<AppState>, private logger: LoggerService) {
     this.store
@@ -73,6 +75,9 @@ export class ReadingListAdaptor {
           this._showSelectionDialog$.getValue() !== state.showSelectionDialog
         ) {
           this._showSelectionDialog$.next(state.showSelectionDialog);
+        }
+        if (this._removingComics$.getValue() !== state.removingComics) {
+          this._removingComics$.next(state.removingComics);
         }
         this._updated$.next(new Date());
       });
@@ -150,5 +155,18 @@ export class ReadingListAdaptor {
 
   get showSelectionDialog$(): Observable<boolean> {
     return this._showSelectionDialog$.asObservable();
+  }
+
+  removeComics(readingList: ReadingList, comics: Comic[]) {
+    this.logger.debug(
+      `firing action to remove comics from a reading list: name=${readingList.name}`
+    );
+    this.store.dispatch(
+      new ReadingListRemoveComics({ readingList: readingList, comics: comics })
+    );
+  }
+
+  get removingComics$(): Observable<boolean> {
+    return this._removingComics$.asObservable();
   }
 }
