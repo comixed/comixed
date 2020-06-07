@@ -45,14 +45,14 @@ import { ConfirmationService, SelectItem } from 'primeng/api';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { ContextMenu } from 'primeng/contextmenu';
 import { Subscription } from 'rxjs';
-
-export const COMIC_LIST_MENU_SELECT_ALL = 'comic-list-scrape-select-all';
-export const COMIC_LIST_MENU_DESELECT_ALL = 'comic-list-scrape-deselect-all';
-export const COMIC_LIST_MENU_DELETE_SELECTED = 'comic-list-delete-selected';
-export const COMIC_LIST_MENU_SCRAPE_SELECTED = 'comic-list-scrape-selected';
-export const COMIC_LIST_MENU_CONVERT_COMIC = 'comic-list-convert-comic';
-export const COMIC_LIST_MENU_ADD_TO_READING_LIST =
-  'comic-list-add-to-reading-list';
+import {
+  COMIC_LIST_MENU_ADD_TO_READING_LIST,
+  COMIC_LIST_MENU_CONVERT_COMIC,
+  COMIC_LIST_MENU_DELETE_SELECTED,
+  COMIC_LIST_MENU_DESELECT_ALL,
+  COMIC_LIST_MENU_SCRAPE_SELECTED,
+  COMIC_LIST_MENU_SELECT_ALL
+} from 'app/library/library.constants';
 
 @Component({
   selector: 'app-comic-list',

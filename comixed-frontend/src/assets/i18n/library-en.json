@@ -140,6 +140,10 @@
     "title-for-collection": "{name} [{type, select, publishers{Publisher} series{Series} characters{Character} teams{Team} locations{Location} stories{Story} lists{Reading List} other{Unknown}}] - {count, plural, =1{One Comic} other{# Comics}}",
     "error": {
       "no-such-type": "No such collection type: {type}"
+    },
+    "remove-comics-from-reading-list": {
+      "header": "Remove Selected Comics From {name}",
+      "message": "Are you sure you want to remove {count, plural, =1{one comic} other{# comics}} from this reading list?"
     }
   },
   "reading-lists-page": {
@@ -234,7 +238,8 @@
       "delete-selected": "Delete selections...",
       "scrape-selected": "Scrape selections",
       "convert-comic": "Convert comic...",
-      "add-to-reading-list": "Add to list..."
+      "add-to-reading-list": "Add to list...",
+      "remove-from-reading-list": "Remove from list..."
     },
     "start-scraping": {
       "header": "Scrape Selected Comic",

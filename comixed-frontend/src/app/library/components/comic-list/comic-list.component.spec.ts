@@ -71,13 +71,13 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { SliderModule } from 'primeng/slider';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { BehaviorSubject } from 'rxjs';
-import {
-  COMIC_LIST_MENU_DESELECT_ALL,
-  COMIC_LIST_MENU_SELECT_ALL,
-  ComicListComponent
-} from './comic-list.component';
+import { ComicListComponent } from './comic-list.component';
 import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
+import {
+  COMIC_LIST_MENU_DESELECT_ALL,
+  COMIC_LIST_MENU_SELECT_ALL
+} from 'app/library/library.constants';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
