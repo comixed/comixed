@@ -201,11 +201,12 @@ public class ReadingListService {
   }
 
   @Transactional
-  public int addComicsToList(String email, long id, List<Long> ids) throws ReadingListException {
+  public int addComicsToList(String email, long id, List<Long> comicIds)
+      throws ReadingListException {
     this.log.debug(
         "Adding {} comic{} to reading list: reading list id={} email={}",
-        ids.size(),
-        ids.size() == 1 ? "" : "s",
+        comicIds.size(),
+        comicIds.size() == 1 ? "" : "s",
         id,
         email);
 
@@ -223,14 +224,14 @@ public class ReadingListService {
       throw new ReadingListException(
           "user is not owner: " + email + " != " + readingList.getOwner().getEmail());
     }
-    for (int index = 0; index < ids.size(); index++) {
-      Long comicId = ids.get(index);
-      this.log.debug("Loading comic: id={}", comicId);
+    for (int index = 0; index < comicIds.size(); index++) {
+      Long comicId = comicIds.get(index);
       Comic comic = null;
       try {
+        this.log.debug("Loading comic: id={}", comicId);
         comic = this.comicService.getComic(comicId);
       } catch (ComicException error) {
-        throw new ReadingListException("failed to add comic to reading list", error);
+        throw new ReadingListException("could not add comic to reading list", error);
       }
       this.log.debug("Adding comic to reading list");
       readingList.getComics().add(comic);
@@ -242,7 +243,54 @@ public class ReadingListService {
     readingList.setLastUpdated(new Date());
     this.readingListRepository.save(readingList);
 
-    this.log.debug("Adding {} comic{} to reading list", result, result == 1 ? "" : "s");
+    this.log.debug("Added {} comic{} to reading list", result, result == 1 ? "" : "s");
+    return result;
+  }
+
+  @Transactional
+  public int removeComicsFromList(String email, long id, List<Long> comicIds)
+      throws ReadingListException {
+    this.log.debug(
+        "Removing {} comic{} to reading list: reading list id={} email={}",
+        comicIds.size(),
+        comicIds.size() == 1 ? "" : "s",
+        id,
+        email);
+
+    Optional<ReadingList> record = this.readingListRepository.findById(id);
+
+    if (!record.isPresent()) {
+      throw new ReadingListException("no such reading list: id=" + id);
+    }
+
+    ReadingList readingList = record.get();
+
+    if (!readingList.getOwner().getEmail().equals(email)) {
+      throw new ReadingListException(
+          "user is not owner: " + email + " != " + readingList.getOwner().getEmail());
+    }
+
+    int result = 0;
+
+    for (int index = 0; index < comicIds.size(); index++) {
+      Long comicId = comicIds.get(index);
+      Comic comic = null;
+      try {
+        this.log.debug("Loading comic: id={}", comicId);
+        comic = this.comicService.getComic(comicId);
+      } catch (ComicException error) {
+        throw new ReadingListException("could not remove comic from reading list", error);
+      }
+      readingList.getComics().remove(comic);
+      comic.setDateLastUpdated(new Date());
+      result++;
+    }
+
+    this.log.debug("Saving updated reading list");
+    readingList.setLastUpdated(new Date());
+    this.readingListRepository.save(readingList);
+
+    this.log.debug("Removed {} comic{} to reading list", result, result == 1 ? "" : "s");
     return result;
   }
 }
