@@ -88,14 +88,14 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   Comic getById(@Param("id") long id);
 
   @Query(
-      "SELECT c FROM Comic c WHERE c.series = :series and c.volume = :volume AND c.issueNumber < :issueNumber ORDER BY c.issueNumber DESC")
+      "SELECT c FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate <= (SELECT DISTINCT d.coverDate FROM Comic d WHERE d.series = :series AND d.volume = :volume AND d.issueNumber = :issueNumber) ORDER BY c.issueNumber,c.coverDate DESC")
   List<Comic> findIssuesBeforeComic(
       @Param("series") String series,
       @Param("volume") String volume,
       @Param("issueNumber") String issueNumber);
 
   @Query(
-      "SELECT c FROM Comic c WHERE c.series = :series and c.volume = :volume AND c.issueNumber > :issueNumber ORDER BY c.issueNumber ASC")
+      "SELECT c FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate >= (SELECT DISTINCT d.coverDate FROM Comic d WHERE d.series = :series AND d.volume = :volume AND d.issueNumber = :issueNumber) ORDER BY c.issueNumber,c.coverDate ASC")
   List<Comic> findIssuesAfterComic(
       @Param("series") String series,
       @Param("volume") String volume,

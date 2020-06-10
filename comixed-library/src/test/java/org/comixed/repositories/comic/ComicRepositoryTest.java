@@ -494,7 +494,6 @@ public class ComicRepositoryTest {
         this.repository.findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NEXT);
 
     assertFalse(result.isEmpty());
-    assertEquals(TEST_NEXT_ISSUE_ID, result.get(0).getId());
     for (int index = 0; index < result.size(); index++) {
       assertTrue(result.get(index).getIssueNumber().compareTo(TEST_ISSUE_WITH_NEXT) > 0);
     }
@@ -514,7 +513,6 @@ public class ComicRepositoryTest {
         this.repository.findIssuesBeforeComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_PREV);
 
     assertFalse(result.isEmpty());
-    assertEquals(TEST_PREV_ISSUE_ID, result.get(0).getId());
     for (int index = 0; index < result.size(); index++) {
       assertTrue(result.get(index).getIssueNumber().compareTo(TEST_ISSUE_WITH_PREV) < 0);
     }
