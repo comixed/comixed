@@ -245,10 +245,13 @@ public class ComicService {
       Comic nextComic = null;
       while (nextComic == null && index < next.size()) {
         Comic candidate = next.get(index);
-        if ((candidate.getCoverDate().compareTo(result.getCoverDate()) >= 0)
+        if (candidate.getCoverDate().compareTo(result.getCoverDate()) > 0) {
+          this.log.debug("Found next issue by cover date: id={}", candidate.getId());
+          nextComic = candidate;
+        } else if ((candidate.getCoverDate().compareTo(result.getCoverDate()) == 0)
             && (candidate.getSortableIssueNumber().compareTo(result.getSortableIssueNumber())
                 > 0)) {
-          this.log.debug("Found next issue: id={}", candidate.getId());
+          this.log.debug("Found next issue by issue number: id={}", candidate.getId());
           nextComic = candidate;
         } else {
           index++;
@@ -269,10 +272,13 @@ public class ComicService {
       Comic prevComic = null;
       while (prevComic == null && index >= 0) {
         Comic candidate = prev.get(index);
-        if ((candidate.getCoverDate().compareTo(result.getCoverDate()) <= 0)
+        if (candidate.getCoverDate().compareTo(result.getCoverDate()) < 0) {
+          this.log.debug("Found previous issue by cover date: id={}", candidate.getId());
+          prevComic = candidate;
+        } else if ((candidate.getCoverDate().compareTo(result.getCoverDate()) == 0)
             && (candidate.getSortableIssueNumber().compareTo(result.getSortableIssueNumber())
                 < 0)) {
-          this.log.debug("Found previous issue: id={}", candidate.getId());
+          this.log.debug("Found previous issue by issue number: id={}", candidate.getId());
           prevComic = candidate;
         } else {
           index--;
