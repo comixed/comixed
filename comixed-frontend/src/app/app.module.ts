@@ -171,12 +171,12 @@ export class AppModule {}
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/common-', suffix: '.json' },
-    { prefix: './assets/i18n/app-', suffix: '.json' },
-    { prefix: './assets/i18n/comics-', suffix: '.json' },
-    { prefix: './assets/i18n/library-', suffix: '.json' },
-    { prefix: './assets/i18n/comic-import-', suffix: '.json' },
-    { prefix: './assets/i18n/backend-status-', suffix: '.json' },
-    { prefix: './assets/i18n/user-', suffix: '.json' }
+    { prefix: './assets/i18n/', suffix: '/common.json' },
+    { prefix: './assets/i18n/', suffix: '/app.json' },
+    { prefix: './assets/i18n/', suffix: '/comics.json' },
+    { prefix: './assets/i18n/', suffix: '/library.json' },
+    { prefix: './assets/i18n/', suffix: '/comic-import.json' },
+    { prefix: './assets/i18n/', suffix: '/backend-status.json' },
+    { prefix: './assets/i18n/', suffix: '/user.json' }
   ]);
 }
