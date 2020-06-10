@@ -104,12 +104,15 @@ public class ComicServiceTest {
   public void setUp() {
     previousComic.setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
     previousComic.setId(TEST_PREVIOUS_COMIC_ID);
+    previousComic.setCoverDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
     currentComic.setSeries(TEST_SERIES);
     currentComic.setVolume(TEST_VOLUME);
     currentComic.setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
     currentComic.setId(TEST_CURRENT_COMIC_ID);
+    currentComic.setCoverDate(new Date(System.currentTimeMillis()));
     nextComic.setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
     nextComic.setId(TEST_NEXT_COMIC_ID);
+    nextComic.setCoverDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
     comicsBySeries.add(nextComic);
     comicsBySeries.add(previousComic);
     comicsBySeries.add(currentComic);
