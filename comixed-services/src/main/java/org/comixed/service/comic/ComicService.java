@@ -241,15 +241,49 @@ public class ComicService {
         this.comicRepository.findIssuesAfterComic(
             result.getSeries(), result.getVolume(), result.getIssueNumber());
     if (!next.isEmpty()) {
-      this.log.debug("Setting the next comic: id={}", next.get(0).getId());
-      result.setNextIssueId(next.get(0).getId());
+      int index = 0;
+      Comic nextComic = null;
+      while (nextComic == null && index < next.size()) {
+        Comic candidate = next.get(index);
+        if ((candidate.getCoverDate().compareTo(result.getCoverDate()) >= 0)
+            && (candidate.getSortableIssueNumber().compareTo(result.getSortableIssueNumber())
+                > 0)) {
+          this.log.debug("Found next issue: id={}", candidate.getId());
+          nextComic = candidate;
+        } else {
+          index++;
+        }
+      }
+      if (nextComic != null) {
+        this.log.debug("Setting the next comic: id={}", nextComic.getId());
+        result.setNextIssueId(nextComic.getId());
+      } else {
+        this.log.debug("Did not find a next issue");
+      }
     }
     final List<Comic> prev =
         this.comicRepository.findIssuesBeforeComic(
             result.getSeries(), result.getVolume(), result.getIssueNumber());
     if (!prev.isEmpty()) {
-      this.log.debug("Setting previous comic: id={}", prev.get(0).getId());
-      result.setPreviousIssueId(prev.get(0).getId());
+      int index = prev.size() - 1;
+      Comic prevComic = null;
+      while (prevComic == null && index >= 0) {
+        Comic candidate = prev.get(index);
+        if ((candidate.getCoverDate().compareTo(result.getCoverDate()) <= 0)
+            && (candidate.getSortableIssueNumber().compareTo(result.getSortableIssueNumber())
+                < 0)) {
+          this.log.debug("Found previous issue: id={}", candidate.getId());
+          prevComic = candidate;
+        } else {
+          index--;
+        }
+      }
+      if (prevComic != null) {
+        this.log.debug("Setting previous comic: id={}", prevComic.getId());
+        result.setPreviousIssueId(prevComic.getId());
+      } else {
+        this.log.debug("Did not find a previous issue");
+      }
     }
 
     this.log.debug("Returning comic: id={}", result.getId());
