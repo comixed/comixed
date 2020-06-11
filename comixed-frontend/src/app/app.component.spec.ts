@@ -27,7 +27,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AppComponent } from 'app/app.component';
 import { LoginComponent } from 'app/components/login/login.component';
-import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 import { LibraryAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { UserService } from 'app/services/user.service';
@@ -46,9 +45,11 @@ import { MenubarModule } from 'primeng/menubar';
 import {
   BreadcrumbModule,
   ConfirmDialogModule,
-  MenuModule
+  MenuModule,
+  ToolbarModule
 } from 'primeng/primeng';
 import { ToastModule } from 'primeng/toast';
+import { NavigationBarComponent } from 'app/components/navigation-bar/navigation-bar.component';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -87,9 +88,10 @@ describe('AppComponent', () => {
         DialogModule,
         ConfirmDialogModule,
         BreadcrumbModule,
-        MenuModule
+        MenuModule,
+        ToolbarModule
       ],
-      declarations: [AppComponent, LoginComponent, MainMenuComponent],
+      declarations: [AppComponent, LoginComponent, NavigationBarComponent],
       providers: [
         TranslateService,
         MessageService,
