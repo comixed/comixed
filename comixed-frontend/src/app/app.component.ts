@@ -16,14 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { LibraryAdaptor } from 'app/library';
 import { Subscription } from 'rxjs';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { MenuItem } from 'primeng/api';
-import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 
 @Component({
@@ -32,23 +30,14 @@ import { LoggerLevel, LoggerService } from '@angular-ru/logger';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  @ViewChild(MainMenuComponent, { static: false })
-  mainmenu: MainMenuComponent;
-
   title = 'ComiXed';
-
   user: User;
-
   authenticated = false;
   showLogin = false;
   comicCount = 0;
   processingCount = 0;
   fetchingUpdateSubscription: Subscription;
   breadcrumbs = [];
-  home = {
-    icon: 'fa fa-fw fas fa-bars',
-    command: (event: any) => this.mainmenu.toggle(event)
-  } as MenuItem;
 
   constructor(
     private translateService: TranslateService,

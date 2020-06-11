@@ -40,7 +40,6 @@ import { BackendStatusModule } from 'app/backend-status/backend-status.module';
 import { ComicImportModule } from 'app/comic-import/comic-import.module';
 import { ComicsModule } from 'app/comics/comics.module';
 import { LoginComponent } from 'app/components/login/login.component';
-import { MainMenuComponent } from 'app/components/main-menu/main-menu.component';
 import { LibraryModule } from 'app/library/library.module';
 import { MainPageComponent } from 'app/pages/main-page/main-page.component';
 import { UserService } from 'app/services/user.service';
@@ -89,7 +88,6 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
     AppComponent,
     MainPageComponent,
     LoginComponent,
-    MainMenuComponent,
     NavigationBarComponent
   ],
   imports: [
