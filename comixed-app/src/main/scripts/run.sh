@@ -18,9 +18,11 @@
 
 ME=$(realpath -s $0)
 BINDIR=$(dirname ${ME})
+LIBDIR=$(realpath -s ${BINDIR}/../lib)
 
 JAVA=$(which java)
-OPTIONS=''
+JAROPTIONS=''
+JVMOPTIONS=''
 COMIXED_JAR_FILE=${BINDIR}/comixed-app-*.jar
 DEBUG=false
 FULL_DEBUG=false
@@ -38,6 +40,7 @@ usage() {
   echo " -u [USERNAME]\t\t- Set the database username"
   echo " -p [PASSWORD]\t\t- Set the database password"
   echo " -i [DIR]\t\t- Set the image caching directory"
+  echo " -l [DIR]\t\t-Set the JAR library directory"
   echo ""
   echo "Other options:"
   echo " -d\t\t\t- Debug mode (def. false)"
@@ -46,12 +49,13 @@ usage() {
   exit 0
 }
 
-while getopts "j:u:p:i:dDv" option; do
+while getopts "j:u:p:i:l:dDv" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
   p) DBPWRD="${OPTARG}" ;;
   i) IMGCACHEDIR="${OPTARG}" ;;
+  l) LIBDIR="${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
   v) VERBOSE=true ;;
@@ -70,28 +74,34 @@ fi
 
 if $DEBUG; then
   # enable global logging for CX
-  OPTIONS="${OPTIONS} --logging.level.org.comixed=DEBUG"
+  JAROPTIONS="${JAROPTIONS} --logging.level.org.comixed=DEBUG"
 fi
 
 if $FULL_DEBUG; then
   # enable all debugging for all dependencies
-  OPTIONS="${OPTIONS} --logging.level.root=DEBUG"
+  JAROPTIONS="${JAROPTIONS} --logging.level.root=DEBUG"
 fi
 
 if [[ $JDBCURL ]]; then
-  OPTIONS="${OPTIONS} --spring.datasource.url=${JDBCURL}"
+  JAROPTIONS="${JAROPTIONS} --spring.datasource.url=${JDBCURL}"
 fi
 
 if [[ $DBUSER ]]; then
-  OPTIONS="${OPTIONS} --spring.datasource.username=${DBUSER}"
+  JAROPTIONS="${JAROPTIONS} --spring.datasource.username=${DBUSER}"
 fi
 
 if [[ $DBPWRD ]]; then
-  OPTIONS="${OPTIONS} --spring.datasource.password=${DBPWRD}"
+  JAROPTIONS="${JAROPTIONS} --spring.datasource.password=${DBPWRD}"
 fi
 
 if [[ $IMGCACHEDIR ]]; then
-  OPTIONS="${OPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
+  JAROPTIONS="${JAROPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
 fi
 
-$JAVA -jar $COMIXED_JAR_FILE $OPTIONS
+# build a list of JVM arguments
+
+if [[ $LIBDIR ]]; then
+  JVMOPTIONS="${JVMOPTIONS} -classpath ${LIBDIR}"
+fi
+
+$JAVA ${JVMOPTIONS} -jar ${COMIXED_JAR_FILE} ${JAROPTIONS}
