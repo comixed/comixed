@@ -24,6 +24,18 @@
     "copyright": "<b>Copyright &copy; {years}, The ComiXed Project Team</b>",
     "library-counts": "<b>Total:</b> {comic_count} <b>Read:</b> {read_count} <b>Processing:</b> {import_count}"
   },
+  "language": {
+    "option": {
+      "english": "English",
+      "french": "French",
+      "spanish": "Spanish"
+    }
+  },
+  "navigation-bar": {
+    "text": {
+      "logged-in-as": "Logged in as: {email}"
+    }
+  },
   "main-page": {
     "text": {
       "please-login": "Please login to view the library.",

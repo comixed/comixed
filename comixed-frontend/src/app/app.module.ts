@@ -82,13 +82,15 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { LoggerModule } from '@angular-ru/logger';
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
     LoginComponent,
-    MainMenuComponent
+    MainMenuComponent,
+    NavigationBarComponent
   ],
   imports: [
     UserModule,
