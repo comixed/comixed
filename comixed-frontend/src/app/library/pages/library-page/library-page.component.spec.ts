@@ -50,6 +50,7 @@ import { LibraryPageComponent } from './library-page.component';
 import {
   ContextMenuModule,
   DialogModule,
+  ListboxModule,
   ProgressSpinnerModule,
   ToolbarModule,
   TooltipModule,
@@ -113,7 +114,8 @@ describe('LibraryPageComponent', () => {
         ToolbarModule,
         ProgressSpinnerModule,
         DialogModule,
-        TreeModule
+        TreeModule,
+        ListboxModule
       ],
       declarations: [
         LibraryPageComponent,

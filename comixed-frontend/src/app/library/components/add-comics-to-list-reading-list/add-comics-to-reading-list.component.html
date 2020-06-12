@@ -1,21 +1,22 @@
 <p-dialog #addToListDialog
           [visible]='showDialog'
           [modal]='true'
-          [closable]='false'>
+          [closable]='false'
+          [header]='"add-comics-to-reading-list.title"|translate:{count:selectedComics.length}'>
   <form [formGroup]='readingListForm'>
     <div class='ui-g'>
       <div class='ui-g-12 cx-input-label'>
         <label id='select-reading-list'>{{'add-comics-to-reading-list.label.select-reading-list'|translate}}</label>
       </div>
-      <div class='ui-g-12'>
-        <p-dropdown class='cx-input-field'
-                    [options]='readingListOptions'
-                    formControlName='readingLists'></p-dropdown>
+      <div class='ui-g-12 ui-fluid'>
+        <p-listbox styleClass='cx-reading-list-options'
+                   [options]='readingListOptions'
+                   formControlName='readingLists'></p-listbox>
       </div>
       <div class='ui-g-12 cx-horizontal-centered'>
         <button pButton
                 type='button'
-                class='cx-action-button ui-button-success'
+                class='ui-button-success'
                 icon='fa fa-fw fa-save'
                 [label]='"button.save"|translate'
                 [disabled]='!readingListForm.valid || addingComics'

@@ -21,7 +21,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AddComicsToReadingListComponent } from './add-comics-to-reading-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import {
@@ -42,6 +41,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { ComicsModule } from 'app/comics/comics.module';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ListboxModule } from 'primeng/listbox';
 
 describe('AddComicsToReadingListComponent', () => {
   let component: AddComicsToReadingListComponent;
@@ -65,7 +65,7 @@ describe('AddComicsToReadingListComponent', () => {
         StoreModule.forFeature(LIBRARY_FEATURE_KEY, forLibrary.reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([ReadingListEffects, LibraryEffects]),
-        DropdownModule,
+        ListboxModule,
         DialogModule,
         ButtonModule
       ],
