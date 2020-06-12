@@ -341,8 +341,8 @@ export class ComicListComponent implements OnInit, OnDestroy {
       COMIC_LIST_MENU_ADD_TO_READING_LIST,
       'fa fa-fw fa-list',
       'comic-list.context-menu.add-to-reading-list',
-      false,
       true,
+      false,
       () => this.readingListAdaptor.showSelectDialog()
     );
   }
@@ -372,14 +372,14 @@ export class ComicListComponent implements OnInit, OnDestroy {
       if (this.authenticationAdaptor.isAdmin) {
         this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_CONVERT_COMIC);
       }
-      this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_ADD_TO_READING_LIST);
+      this.contextMenuAdaptor.showItem(COMIC_LIST_MENU_ADD_TO_READING_LIST);
     } else {
       this.contextMenuAdaptor.enableItem(COMIC_LIST_MENU_SELECT_ALL);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_DESELECT_ALL);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_DELETE_SELECTED);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_SCRAPE_SELECTED);
       this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_CONVERT_COMIC);
-      this.contextMenuAdaptor.disableItem(COMIC_LIST_MENU_ADD_TO_READING_LIST);
+      this.contextMenuAdaptor.hideItem(COMIC_LIST_MENU_ADD_TO_READING_LIST);
     }
   }
 
