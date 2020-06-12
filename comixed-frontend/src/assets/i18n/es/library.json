@@ -478,6 +478,7 @@
     }
   },
   "add-comics-to-reading-list": {
+    "title": "Add {count, plural, =1{One Comic} other{# Comics}} To A Reading List",
     "label": {
       "select-reading-list": "Select A Reading List"
     }

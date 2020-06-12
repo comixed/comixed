@@ -45,6 +45,7 @@ import {
   ButtonModule,
   DialogModule,
   InputTextModule,
+  ListboxModule,
   ProgressSpinnerModule,
   ScrollPanelModule,
   SidebarModule,
@@ -129,7 +130,8 @@ import { AddComicsToReadingListComponent } from './components/add-comics-to-list
     FileSaverModule,
     TreeModule,
     ScrollPanelModule,
-    InputTextModule
+    InputTextModule,
+    ListboxModule
   ],
   exports: [CommonModule, ComicsModule, ComicListComponent],
   declarations: [
