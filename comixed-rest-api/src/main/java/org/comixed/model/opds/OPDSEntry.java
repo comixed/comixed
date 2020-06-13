@@ -81,7 +81,7 @@ public class OPDSEntry {
 
     // FIXME: Is there some sort of router interface we can
     // use to build urls
-    String urlPrefix = "/opds-comics/feed/comics/" + comic.getId();
+    String urlPrefix = "/opds/feed/comics/" + comic.getId();
 
     if (!comic.isMissing()) {
       this.log.debug("Added comic to feed: {}", comic.getFilename());
@@ -119,7 +119,7 @@ public class OPDSEntry {
               new OPDSVLink(
                   "image/jpeg",
                   "http://vaemendis.net/opds-pse/stream",
-                  "/opds-comics/feed/comics/" + comic.getId() + "/{pageNumber}/{maxWidth}",
+                  "/opds/feed/comics/" + comic.getId() + "/{pageNumber}/{maxWidth}",
                   comic.getPageCount()));
     } else {
       this.log.debug("Comic file missing: {}", comic.getFilename());
