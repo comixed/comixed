@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -47,7 +47,8 @@ public class OPDSBookmarkController {
   @Autowired private ComicService comicService;
 
   @GetMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
-  public OPDSBookmark getBookmark(@RequestParam("docId") long comicId) throws ComicException {
+  public OPDSBookmark getBookmark(Authentication principal, @RequestParam("docId") long comicId)
+      throws ComicException {
     this.log.debug("Loading comic: id={}", comicId);
     final Comic comic = this.comicService.getComic(comicId);
     if (comic == null) {
@@ -55,7 +56,7 @@ public class OPDSBookmarkController {
     }
 
     this.log.debug("Getting book bookmark: id={}", comicId);
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    String email = principal.getName();
     ComiXedUser user = this.userRepository.findByEmail(email);
     final String bookmark = user.getBookmark(comic);
 
@@ -68,7 +69,9 @@ public class OPDSBookmarkController {
 
   @PutMapping(value = "/bookmark", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity setBookmark(
-      @RequestParam("docId") long comicId, @RequestBody() final OPDSBookmark opdsBookmark)
+      Authentication principal,
+      @RequestParam("docId") long comicId,
+      @RequestBody() final OPDSBookmark opdsBookmark)
       throws ComicException {
     this.log.debug("Loading comic: id={}", comicId);
     final Comic comic = this.comicService.getComic(comicId);
@@ -79,7 +82,7 @@ public class OPDSBookmarkController {
 
     this.log.debug("Setting book bookmark: id={}", comicId);
 
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    String email = principal.getName();
     ComiXedUser user = this.userRepository.findByEmail(email);
     user.setBookmark(comic, opdsBookmark.getMark());
     this.userRepository.save(user);

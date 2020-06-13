@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.TaskType;
@@ -32,6 +31,7 @@ import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.service.task.TaskService;
 import org.comixed.task.model.ConvertComicsWorkerTask;
 import org.comixed.task.runner.Worker;
+import org.comixed.utils.Utils;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -46,6 +46,7 @@ public class LibraryService {
   @Autowired private ReadingListService readingListService;
   @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private Worker worker;
+  @Autowired private Utils utils;
 
   public List<Comic> getComicsUpdatedSince(
       String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
@@ -130,7 +131,7 @@ public class LibraryService {
         String filename = comic.getFilename();
         File file = comic.getFile();
         this.log.debug("Deleting physical file: {}", filename);
-        FileUtils.deleteQuietly(file);
+        this.utils.deleteFile(file);
       }
     }
     return result;

@@ -19,6 +19,7 @@
 
 package org.comixed.web.opds;
 
+import com.fasterxml.jackson.core.io.IOContext;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -72,8 +73,9 @@ public class OPDSXMLOutputConfiguration {
     }
 
     @Override
-    protected XMLStreamWriter _createXmlWriter(OutputStream out) throws IOException {
-      XMLStreamWriter writer = super._createXmlWriter(out);
+    protected XMLStreamWriter _createXmlWriter(IOContext context, OutputStream out)
+        throws IOException {
+      XMLStreamWriter writer = super._createXmlWriter(context, out);
       try {
         writer.setDefaultNamespace(defaultNamespace);
         for (Map.Entry<String, String> e : prefix2Namespace.entrySet()) {

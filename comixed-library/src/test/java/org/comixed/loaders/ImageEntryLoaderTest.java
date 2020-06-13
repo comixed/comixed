@@ -42,9 +42,7 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
   private static final String TEST_WEBP_FILENAME = "src/test/resources/example.webp";
 
   @InjectMocks private ImageEntryLoader loader;
-
   @Mock private PageTypeRepository pageTypeRepository;
-
   @Mock private PageType pageType;
 
   private Comic comic;

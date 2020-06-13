@@ -19,9 +19,10 @@
 package org.comixed.web;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import org.codehaus.plexus.util.StringUtils;
+import org.comixed.utils.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,8 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ComicVineQueryWebRequest extends AbstractComicVineWebRequest {
   static final String SERIES_NAME_KEY = "query";
+
+  @Autowired private Utils utils;
 
   public ComicVineQueryWebRequest() {
     super("search");
@@ -68,7 +71,8 @@ public class ComicVineQueryWebRequest extends AbstractComicVineWebRequest {
         throw new WebRequestException("Series name already set");
 
       try {
-        this.addParameter(SERIES_NAME_KEY, URLEncoder.encode(name, StandardCharsets.UTF_8.name()));
+        this.addParameter(
+            SERIES_NAME_KEY, this.utils.encodeURL(name, StandardCharsets.UTF_8.name()));
       } catch (UnsupportedEncodingException error) {
         throw new WebRequestException("Unable to encode series name", error);
       }

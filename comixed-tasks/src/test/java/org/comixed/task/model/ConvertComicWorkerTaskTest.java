@@ -34,13 +34,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ArchiveType.class})
-public class ConvertComicWorkerTaskTest {
+class ConvertComicWorkerTaskTest {
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
 
@@ -55,6 +57,8 @@ public class ConvertComicWorkerTaskTest {
   @Mock private ProcessComicTaskEncoder processComicTaskEncoder;
   @Mock private Task processComicTask;
   @Mock private TaskRepository taskRepository;
+
+  public ConvertComicWorkerTaskTest() {}
 
   @Test
   public void testExecute() throws IOException, ArchiveAdaptorException, WorkerTaskException {

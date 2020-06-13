@@ -18,35 +18,36 @@
 
 package org.comixed.web;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import org.comixed.utils.Utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({URLEncoder.class})
+@RunWith(MockitoJUnitRunner.class)
 public class ComicVineQueryWebRequestTest {
   private static final String TEST_SERIES_NAME = "A really great comic";
   private static final String TEST_API_KEY = "12345";
+  private static final String TEST_ENCODED_URL = "Encoded URL";
 
   @InjectMocks private ComicVineQueryWebRequest request;
+  @Mock private Utils utils;
 
   @Test
   public void testSetSeriesName() throws WebRequestException, UnsupportedEncodingException {
+    Mockito.when(utils.encodeURL(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(TEST_ENCODED_URL);
+
     request.setSeriesName(TEST_SERIES_NAME);
 
     assertTrue(request.parameterSet.containsKey(ComicVineQueryWebRequest.SERIES_NAME_KEY));
     assertEquals(
-        URLEncoder.encode(TEST_SERIES_NAME, StandardCharsets.UTF_8.name()),
-        request.parameterSet.get(ComicVineQueryWebRequest.SERIES_NAME_KEY));
+        TEST_ENCODED_URL, request.parameterSet.get(ComicVineQueryWebRequest.SERIES_NAME_KEY));
   }
 
   @Test
@@ -76,15 +77,15 @@ public class ComicVineQueryWebRequestTest {
 
   @Test
   public void testGetURL() throws WebRequestException, UnsupportedEncodingException {
+    Mockito.when(utils.encodeURL(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(TEST_ENCODED_URL);
+
     request.setApiKey(TEST_API_KEY);
     request.setSeriesName(TEST_SERIES_NAME);
 
     String result = request.getURL();
 
-    assertTrue(
-        result.indexOf(
-                "&query=" + URLEncoder.encode(TEST_SERIES_NAME, StandardCharsets.UTF_8.name()))
-            != -1);
+    assertNotEquals(-1, result.indexOf("&query=" + TEST_ENCODED_URL));
     assertTrue(
         result.indexOf("&field_list=name,start_year,publisher,id,image,count_of_issues") != -1);
     assertTrue(result.indexOf("&resources=volume") != -1);
