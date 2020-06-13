@@ -80,4 +80,17 @@ public class FileTypeIdentifier {
 
     return result != null ? result.getType() : null;
   }
+
+  /**
+   * Returns the base MIME type for the supplied input stream.
+   *
+   * @param input the input stream, which must support {@link InputStream#mark(int)} and {@link
+   *     InputStream#reset()}
+   * @return the MIME type
+   */
+  public String basetypeFor(InputStream input) {
+    MediaType result = this.getMimeType(input);
+
+    return result != null ? result.getBaseType().toString() : null;
+  }
 }
