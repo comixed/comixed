@@ -34,39 +34,26 @@ import org.comixed.service.library.NoSuchReadingListException;
 import org.comixed.service.library.ReadingListService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.security.*")
-@PrepareForTest({SecurityContextHolder.class})
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class OPDSControllerTest {
   private static final String TEST_USER_EMAIL = "reader@local";
   private static final Long TEST_ID = 1000L;
 
   @InjectMocks private OPDSController controller;
-
   @Mock private Principal principal;
-
   @Mock private ComiXedUser user;
-
   @Mock private ComicRepository comicRepository;
-
   @Mock private SecurityContext securityContext;
-
   @Mock private Authentication autentication;
-
   @Mock private ReadingListService readingListService;
 
   private List<ReadingList> readingLists = new ArrayList<>();
@@ -94,29 +81,23 @@ public class OPDSControllerTest {
 
   @Test
   public void testGetAllLists() throws ParseException {
-    PowerMockito.mockStatic(SecurityContextHolder.class);
-    Mockito.when(autentication.getName()).thenReturn(TEST_USER_EMAIL);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(autentication);
-    BDDMockito.given(SecurityContextHolder.getContext()).willReturn(securityContext);
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(
             readingListService.getReadingListsForUser(Mockito.anyString(), Mockito.any(Date.class)))
         .thenReturn(readingLists);
 
-    OPDSFeed result = controller.getAllLists();
+    OPDSFeed result = controller.getAllLists(principal);
 
     assertNotNull(result);
   }
 
   @Test
   public void testGetList() throws ParseException, NoSuchReadingListException {
-    PowerMockito.mockStatic(SecurityContextHolder.class);
-    Mockito.when(autentication.getName()).thenReturn(TEST_USER_EMAIL);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(autentication);
-    BDDMockito.given(SecurityContextHolder.getContext()).willReturn(securityContext);
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(readingListService.getReadingListForUser(TEST_USER_EMAIL, TEST_ID))
         .thenReturn(readingList);
 
-    OPDSFeed result = controller.getList(TEST_ID);
+    OPDSFeed result = controller.getList(principal, TEST_ID);
 
     assertNotNull(result);
   }

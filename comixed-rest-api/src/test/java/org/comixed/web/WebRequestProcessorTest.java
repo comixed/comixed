@@ -23,26 +23,19 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.comixed.utils.Utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({IOUtils.class})
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class WebRequestProcessorTest {
   private static final String TEST_CONTENT_TEXT = "This is the content";
@@ -50,26 +43,17 @@ public class WebRequestProcessorTest {
   private static final long TEST_CONTENT_LENGTH = 2342L;
 
   @InjectMocks private WebRequestProcessor processor;
-
   @Mock private HttpClient httpClient;
-
   @Mock private WebRequest request;
-
   @Captor private ArgumentCaptor<HttpGet> httpGet;
-
   @Mock private HttpResponse httpResponse;
-
   @Mock private HttpEntity httpEntity;
-
   @Mock private InputStream inputStream;
-
   @Mock private WebRequestClient requestClient;
-
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
-
   @Captor private ArgumentCaptor<Charset> charsetCaptor;
-
   @Captor private ArgumentCaptor<byte[]> content;
+  @Mock private Utils utils;
 
   @Test
   public void testExecute() throws ClientProtocolException, IOException, WebRequestException {
@@ -77,11 +61,9 @@ public class WebRequestProcessorTest {
     Mockito.when(this.request.getURL()).thenReturn(TEST_REQUEST_URL);
     Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
     Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-    Mockito.when(httpEntity.getContentLength()).thenReturn(TEST_CONTENT_LENGTH);
     Mockito.when(httpEntity.getContent()).thenReturn(inputStream);
-    PowerMockito.mockStatic(IOUtils.class);
-    PowerMockito.doReturn(TEST_CONTENT_TEXT).when(IOUtils.class);
-    IOUtils.toString(Mockito.any(InputStream.class), Mockito.any(Charset.class));
+    Mockito.when(utils.streamToString(Mockito.any(InputStream.class), Mockito.any(Charset.class)))
+        .thenReturn(TEST_CONTENT_TEXT);
 
     this.processor.execute(this.request);
 

@@ -21,10 +21,10 @@ package org.comixed.web;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.comixed.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +42,7 @@ public class WebRequestProcessor {
   public static final String AGENT_NAME = "ComiXed/0.4.0";
 
   @Autowired private WebRequestClient clientSource;
+  @Autowired private Utils utils;
 
   /**
    * Executes the provided request.
@@ -61,7 +62,8 @@ public class WebRequestProcessor {
 
     try {
       HttpResponse response = client.execute(getRequest);
-      String result = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
+      String result =
+          this.utils.streamToString(response.getEntity().getContent(), Charset.defaultCharset());
       this.log.debug("Returning {} byte response", result.length());
       return result;
     } catch (IOException error) {
