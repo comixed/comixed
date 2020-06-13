@@ -106,7 +106,7 @@ There should be no errors reported.
 ### Prerequisites
 
 The application depends on the following pieces:
- * [Java Development Kit](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html): Minimum of JDK 8.
+ * [Java Development Kit](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html): Minimum of JDK 12.
  * [NodeJS](https://nodejs.org/en/download/): Minimum of v10.15.3.
  * [Maven](https://maven.apache.org/download.cgi): Maven v3.
 
