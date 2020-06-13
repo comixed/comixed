@@ -16,7 +16,7 @@ jobs:
       - name: Setup build environment
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 12
       - name: Build
         run: mvn clean package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=comixed -Dsonar.projectKey=comixed_comixed -Dsonar.sources=./src -Dsonar.exclusions=**/*test*/** -Dsonar.test.inclusions=**/*test*/** -Pci
         env:

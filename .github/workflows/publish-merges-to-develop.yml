@@ -18,7 +18,7 @@ jobs:
       - name: Setup build environment
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 12
       - name: Build code and run all unit tests
         run: mvn test -Pci
       - name: Apply a tag to the new commit
