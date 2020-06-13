@@ -1,5 +1,5 @@
 FROM alpine:latest
-RUN apk --no-cache add openjdk8 unzip wget
+RUN apk --no-cache add open-jdk-12 unzip wget
 
 MAINTAINER Pidockmedia "pidockmedia@gmail.com"
 
