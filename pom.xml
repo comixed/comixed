@@ -18,6 +18,7 @@
     <comixed.url>http://www.github.com/comixed/comixed</comixed.url>
     <comixed.version>0.7.0-0</comixed.version>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
+    <java-version>1.8</java-version>
   </properties>
   <profiles>
     <profile>
@@ -142,9 +143,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${java-version}</source>
+          <target>${java-version}</target>
         </configuration>
       </plugin>
       <plugin>
