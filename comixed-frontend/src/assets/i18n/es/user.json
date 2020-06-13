@@ -2,62 +2,62 @@
   "user-admin-effects": {
     "get-all": {
       "error": {
-        "detail": "Failed to get all users."
+        "detail": "Error al obtener los usuarios."
       }
     },
     "save": {
       "success": {
-        "detail": "Successfully updated {email}."
+        "detail": "Actualizado con éxito: {email}."
       },
       "error": {
-        "detail": "Failed to {update, select, true{update} other{save}} user."
+        "detail": "Error al {update, select, true{update} other{save}} usuario."
       }
     },
     "delete-user": {
       "success": {
-        "detail": "Deleted user: {email}"
+        "detail": "Usuario eliminado: {email}"
       },
       "error": {
-        "delete": "Failed to delete user."
+        "delete": "Error al eliminar el usuario."
       }
     }
   },
   "account-page": {
     "title": "ComiXed: {email}",
     "label": {
-      "details": "Details",
-      "edit-details": "Edit Details",
-      "preferences": "Preferences"
+      "details": "Detalles",
+      "edit-details": "Editar detalles",
+      "preferences": "Preferencias"
     },
     "save-user": {
-      "header": "Update Your Account",
-      "message": "Are you sure you want to save these changes to your login account? You will need to log in again if your email address was changed."
+      "header": "Actualizar tu cuenta",
+      "message": "¿Seguro que quieres guardar estos cambios a tu cuenta? Necesitarás salir e ingresar de nuevo si has cambiado la dirección de correo electrónico"
     }
   },
   "users-page": {
-    "title": "ComiXed: Manager User Accounts"
+    "title": "ComiXed: Gestionar cuentas de usuarios"
   },
   "user-details-editor": {
     "user-form": {
-      "email-required": "Email is required.",
-      "email-invalid": "Email address is invalid.",
-      "password-required": "Password is required",
-      "password-min-length": "Password must be at least {length} characters.",
-      "password-max-length": "Password must be no more than {length} characters.",
-      "passwords-must-match": "Passwords must match."
+      "email-required": "Es necesario un correo electrónico.",
+      "email-invalid": "Dirección de correo electrónico no válida.",
+      "password-required": "Es necesaria una contraseña",
+      "password-min-length": "La contraseña debe tener al menos {length} caracteres.",
+      "password-max-length": "La contraseña no puede tener más de {length} caracteres.",
+      "passwords-must-match": "Las contraseñas deben coincidir."
     },
     "label": {
-      "email-address": "Email Address",
-      "password": "Password",
-      "password-verify": "Password (Again)",
-      "user-is-reader": "Reader Account",
-      "user-is-admin": "Admin Account"
+      "email-address": "Dirección de correo electrónico",
+      "password": "Contraseña",
+      "password-verify": "Contraseña (repetir)",
+      "user-is-reader": "Cuenta de Lector",
+      "user-is-admin": "Cuenta de Administrador"
     }
   },
   "users-page": {
     "text": {
-      "cant-delete-yourself": "You cannot delete your account",
-      "delete-user": "Delete the current user."
+      "cant-delete-yourself": "No puedes eliminar tu cuenta",
+      "delete-user": "Eliminar al usuario actual."
     }
   }
 }
