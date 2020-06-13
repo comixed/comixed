@@ -1,45 +1,45 @@
 {
   "main-menu": {
     "item": {
-      "account": "Account",
+      "account": "Cuenta",
       "library": {
-        "root": "Library",
+        "root": "Biblioteca",
         "comics": "Comics",
-        "duplicates": "Duplicates",
-        "reading-lists": "Reading Lists"
+        "duplicates": "Duplicados",
+        "reading-lists": "Listas de lectura"
       },
       "collections": {
-        "root": "Collections",
-        "publishers": "Publishers",
+        "root": "Colecciones",
+        "publishers": "Editoriales",
         "series": "Series",
-        "characters": "Characters",
-        "teams": "Teams",
-        "locations": "Locations",
-        "story-arcs": "Story Arcs"
+        "characters": "Personajes",
+        "teams": "Equipos",
+        "locations": "Localizaciones",
+        "story-arcs": "Arcos argumentales"
       },
       "account": {
-        "root": "Account",
-        "login": "Login",
-        "logout": "Logout",
-        "details": "Details"
+        "root": "Cuenta",
+        "login": "Ingresar",
+        "logout": "Salir",
+        "details": "Detalles"
       },
       "admin": {
-        "root": "Admin",
-        "users": "Users",
-        "library": "Library",
-        "import": "Import",
-        "duplicate-pages": "Duplicate Pages",
-        "missing-comics": "Missing Comics"
+        "root": "Administrador",
+        "users": "Usuarios",
+        "library": "Biblioteca",
+        "import": "Importar",
+        "duplicate-pages": "Páginas duplicadas",
+        "missing-comics": "Cómics que faltan"
       },
       "help": {
         "root": "Help",
-        "build-details": "Build Details",
-        "enable-debugging": "Enable Debugging",
-        "disable-debugging": "Disable Debugging"
+        "build-details": "Detalles de la compilación",
+        "enable-debugging": "Habilitar depuración",
+        "disable-debugging": "Deshabilitar depuración"
       }
     },
     "button": {
-      "show-menu": "Menu"
+      "show-menu": "Menú"
     }
   }
 }

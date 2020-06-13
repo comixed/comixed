@@ -2,22 +2,22 @@
   "build-details-effects": {
     "get-build-details": {
       "error": {
-        "details": "Failed to get the build details from the service..."
+        "details": "Error al recabar los datos de compilación desde el servidor..."
       }
     }
   },
   "build-details-page": {
-    "title": "Build Details",
+    "title": "Detalles de la compilación",
     "table": {
-      "branch": "Source Branch",
-      "build-host": "Build Hostname",
-      "build-time": "Built On",
-      "build-version": "Version",
-      "commit-user": "Committer Name",
+      "branch": "Rama origen",
+      "build-host": "Nombre de la compilación",
+      "build-time": "Compilado el",
+      "build-version": "Versión",
+      "commit-user": "Nombre del Committer",
       "commit-id": "Commit Hash",
-      "commit-message": "Commit Message",
-      "commit-time": "Time Of Last Commit",
-      "dirty": "Built From Uncommitted Code?",
+      "commit-message": "Mensaje del Commit",
+      "commit-time": "Fecha del último Commit",
+      "dirty": "¿Compilado desde código Uncommitted?",
       "remote-origin-url": "Remote Origin"
     }
   }
