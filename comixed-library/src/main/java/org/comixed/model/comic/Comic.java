@@ -76,6 +76,10 @@ public class Comic {
   })
   List<Page> pages = new ArrayList<>();
 
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "file_number")
+  List<ComicFileEntry> fileEntries = new ArrayList<>();
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -346,6 +350,12 @@ public class Comic {
     page.setComic(this);
     page.setPageNumber(index);
     this.pages.add(index, page);
+  }
+
+  public void addFileEntry(int index, ComicFileEntry fileEntry) {
+    this.log.debug("Adding file entry: [{}] {}", index, fileEntry.getFileName());
+    fileEntry.setFileNumber(index);
+    this.fileEntries.add(fileEntry);
   }
 
   /**
@@ -808,6 +818,15 @@ public class Comic {
    */
   public List<Page> getPages() {
     return this.pages;
+  }
+
+  /**
+   * Returns all files in the comic archive.
+   *
+   * @return the files
+   */
+  public List<ComicFileEntry> getFileEntries() {
+    return fileEntries;
   }
 
   /**

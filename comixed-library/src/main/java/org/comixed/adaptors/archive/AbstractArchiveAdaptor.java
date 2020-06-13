@@ -33,6 +33,7 @@ import org.comixed.handlers.ComicFileHandlerException;
 import org.comixed.loaders.EntryLoader;
 import org.comixed.loaders.EntryLoaderException;
 import org.comixed.model.comic.Comic;
+import org.comixed.model.comic.ComicFileEntry;
 import org.comixed.utils.ComicFileUtils;
 import org.comixed.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.InitializingBean;
@@ -59,11 +60,10 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, InitializingBean {
   @Autowired protected FileTypeIdentifier fileTypeIdentifier;
   @Autowired protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
-  @Autowired private ApplicationContext context;
-  @Autowired private ComicFileHandler comicFileHandler;
-
   protected List<EntryLoaderForType> loaders = new ArrayList<>();
   protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
+  @Autowired private ApplicationContext context;
+  @Autowired private ComicFileHandler comicFileHandler;
   private Set<String> imageTypes = new HashSet<>();
 
   private String defaultExtension;
@@ -211,6 +211,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   protected abstract I openArchive(File comicFile) throws ArchiveAdaptorException;
 
   protected void processContent(Comic comic, String filename, byte[] content) {
+    this.recordFileEntry(comic, filename, content);
     EntryLoader loader = this.getLoaderForContent(content);
     if (loader != null) {
       try {
@@ -222,6 +223,23 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     } else {
       this.log.debug("No registered adaptor for type");
     }
+  }
+
+  private void recordFileEntry(Comic comic, String filename, byte[] content) {
+    this.log.debug("Recording file entry");
+    ComicFileEntry fileEntry = new ComicFileEntry();
+
+    fileEntry.setComic(comic);
+    fileEntry.setFileName(filename);
+    fileEntry.setFileSize(content.length);
+    fileEntry.setFileType(this.fileTypeIdentifier.basetypeFor(new ByteArrayInputStream(content)));
+    comic.addFileEntry(comic.getFileEntries().size(), fileEntry);
+    this.log.debug(
+        "Added file entry: filename={} size={} index={} type={} ",
+        fileEntry.getFileName(),
+        fileEntry.getFileSize(),
+        fileEntry.getFileNumber(),
+        fileEntry.getFileType());
   }
 
   @Override
