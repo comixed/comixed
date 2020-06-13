@@ -295,14 +295,4 @@ public class ComicService {
     this.log.debug("Returning comic: id={}", result.getId());
     return result;
   }
-
-  public List<LastReadDate> getLastReadDates(final List<Comic> comics, final ComiXedUser user) {
-    this.log.debug(
-        "Getting last read dates for {} comic{} for {}",
-        comics.size(),
-        comics.size() == 1 ? "" : "s",
-        user.getEmail());
-
-    return this.lastReadDatesRepository.findByComicInAndUserIn(comics, user);
-  }
 }

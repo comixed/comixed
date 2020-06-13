@@ -383,18 +383,4 @@ public class ComicServiceTest {
     Mockito.verify(taskAdaptor, Mockito.times(1)).getEncoder(TaskType.RESCAN_COMIC);
     Mockito.verify(taskEncoder, Mockito.times(1)).setComic(comic);
   }
-
-  @Test
-  public void testGetLastReadDates() {
-    Mockito.when(lastReadDatesRepository.findByComicInAndUserIn(Mockito.anyList(), Mockito.any()))
-        .thenReturn(lastReadDateList);
-
-    final List<LastReadDate> result = this.comicService.getLastReadDates(comicList, user);
-
-    assertNotNull(result);
-    assertSame(lastReadDateList, result);
-
-    Mockito.verify(lastReadDatesRepository, Mockito.times(1))
-        .findByComicInAndUserIn(comicList, user);
-  }
 }
