@@ -34,6 +34,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InplaceModule } from 'primeng/inplace';
 import {
   AutoCompleteModule,
+  DialogModule,
+  ScrollPanelModule,
   ToolbarModule,
   TooltipModule
 } from 'primeng/primeng';
@@ -44,6 +46,8 @@ import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-
 import { PublisherPipe } from 'app/comics/pipes/publisher.pipe';
 import { CollectionType } from 'app/library/models/collection-type.enum';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
+import { FileEntryListComponent } from 'app/comics/components/file-entry-list/file-entry-list.component';
+import { TableModule } from 'primeng/table';
 
 describe('ComicOverviewComponent', () => {
   const COMIC = Object.assign({}, COMIC_1);
@@ -73,10 +77,14 @@ describe('ComicOverviewComponent', () => {
         DropdownModule,
         TooltipModule,
         AutoCompleteModule,
-        ToolbarModule
+        ToolbarModule,
+        DialogModule,
+        TableModule,
+        ScrollPanelModule
       ],
       declarations: [
         ComicOverviewComponent,
+        FileEntryListComponent,
         PublisherThumbnailUrlPipe,
         PublisherPipe,
         SeriesCollectionNamePipe

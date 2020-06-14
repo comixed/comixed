@@ -82,6 +82,9 @@
       "header": "Save Changes",
       "message": "Are you sure you want to save the changes made to this comic?"
     },
+    "show-file-entries": {
+      "title": "Archive File List"
+    },
     "label": {
       "filename": "The filename is <strong>{filename}</strong> on the host machine.",
       "publisher": "Publisher",
@@ -94,6 +97,7 @@
       "added-date": "Added to library on",
       "last-read-date": "Last read on",
       "page-count": "# Of Pages",
+      "file-entry-count": "# Of Files",
       "comicvine-details-link": "ComicVine Details Page",
       "format": "Format",
       "scan-type": "Scan Type",
