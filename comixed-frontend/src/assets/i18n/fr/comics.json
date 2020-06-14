@@ -280,5 +280,18 @@
     "option": {
       "skip-cache": "Skip cache"
     }
+  },
+  "file-entry-list": {
+    "table": {
+      "header": {
+        "file-number": "#",
+        "file-name": "Filename",
+        "file-size": "Size",
+        "file-type": "Type"
+      },
+      "column": {
+        "file-size": "{size, plural, =1{One byte} other{# bytes}}"
+      }
+    }
   }
 }
