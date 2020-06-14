@@ -64,6 +64,7 @@ export const COMIC_1: Comic = {
   nextIssueId: null,
   previousIssueId: null,
   fileDetails: FILE_DETAILS_1,
+  fileEntries: [],
   readingLists: []
 };
 
@@ -146,6 +147,7 @@ export const COMIC_3: Comic = {
   nextIssueId: null,
   previousIssueId: null,
   fileDetails: FILE_DETAILS_1,
+  fileEntries: [],
   readingLists: []
 };
 
@@ -187,6 +189,7 @@ export const COMIC_4: Comic = {
   nextIssueId: null,
   previousIssueId: null,
   fileDetails: FILE_DETAILS_1,
+  fileEntries: [],
   readingLists: []
 };
 
@@ -228,5 +231,6 @@ export const COMIC_5: Comic = {
   nextIssueId: null,
   previousIssueId: null,
   fileDetails: FILE_DETAILS_1,
+  fileEntries: [],
   readingLists: []
 };

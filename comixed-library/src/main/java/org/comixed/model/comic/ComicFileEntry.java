@@ -18,7 +18,10 @@
 
 package org.comixed.model.comic;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.*;
+import org.comixed.views.View;
 
 @Entity
 @Table(name = "comic_file_entries")
@@ -32,15 +35,31 @@ public class ComicFileEntry {
   private Comic comic;
 
   @Column(name = "file_number", nullable = false, updatable = false)
+  @JsonProperty("fileNumber")
+  @JsonView({
+    View.ComicDetails.class,
+  })
   private Integer fileNumber;
 
   @Column(name = "file_name", nullable = false, updatable = false, length = 1024)
+  @JsonProperty("fileName")
+  @JsonView({
+    View.ComicDetails.class,
+  })
   private String fileName;
 
   @Column(name = "file_size", nullable = false, updatable = false)
+  @JsonProperty("fileSize")
+  @JsonView({
+    View.ComicDetails.class,
+  })
   private Integer fileSize;
 
   @Column(name = "file_type", nullable = false, updatable = false, length = 256)
+  @JsonProperty("fileType")
+  @JsonView({
+    View.ComicDetails.class,
+  })
   private String fileType;
 
   public ComicFileEntry() {}

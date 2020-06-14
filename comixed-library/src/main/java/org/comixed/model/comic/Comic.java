@@ -78,6 +78,9 @@ public class Comic {
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "file_number")
+  @JsonView({
+    View.ComicDetails.class,
+  })
   List<ComicFileEntry> fileEntries = new ArrayList<>();
 
   @Id
