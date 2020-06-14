@@ -28,7 +28,7 @@ easier, and will help to make your contributions easier to understand.
  Source: http://chris.beams.io/posts/git-commit/#seven-rules
  
 ### Do
- * Write the summary line and description of what you have done in the imperative mood, that is as if you were commanding someone. Start the line with "Fix", "Add", "Change" instead of "Fixed", "Added", "Changed".
+ * Write the summary line and description of what you have done in the imperative mood, that is as if you were narrating the changes. Start the line with "Fixed", "Added", "Changed" instead of "Fixes", "Adds", "Changes".
  * Always leave the second line blank.
  * Line break the commit message (to make the commit message readable without having to scroll horizontally in gitk).
 
