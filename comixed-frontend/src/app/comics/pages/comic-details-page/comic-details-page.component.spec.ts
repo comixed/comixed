@@ -55,7 +55,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InplaceModule } from 'primeng/inplace';
 import {
   AutoCompleteModule,
+  DialogModule,
   ProgressBarModule,
+  ScrollPanelModule,
   SplitButtonModule,
   ToolbarModule
 } from 'primeng/primeng';
@@ -70,6 +72,7 @@ import {
 import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-url.pipe';
 import { PublisherPipe } from 'app/comics/pipes/publisher.pipe';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
+import { FileEntryListComponent } from 'app/comics/components/file-entry-list/file-entry-list.component';
 
 describe('ComicDetailsPageComponent', () => {
   const COMIC = COMIC_2;
@@ -105,7 +108,9 @@ describe('ComicDetailsPageComponent', () => {
         ProgressBarModule,
         SplitButtonModule,
         ToolbarModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        DialogModule,
+        ScrollPanelModule
       ],
       declarations: [
         ComicDetailsPageComponent,
@@ -116,6 +121,7 @@ describe('ComicDetailsPageComponent', () => {
         ComicDetailsEditorComponent,
         ComicGroupingCardComponent,
         VolumeListComponent,
+        FileEntryListComponent,
         ComicTitlePipe,
         ComicCoverUrlPipe,
         ComicDownloadLinkPipe,

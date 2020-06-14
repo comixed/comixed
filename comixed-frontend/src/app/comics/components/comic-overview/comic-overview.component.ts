@@ -48,6 +48,7 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
   seriesSubscription: Subscription;
   seriesNames: string[] = [];
   seriesNameOptions: string[] = [];
+  showFileEntriesDialog = false;
 
   constructor(
     private logger: LoggerService,
@@ -190,5 +191,10 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
     this.seriesNameOptions = this.seriesNames.filter(name =>
       name.toLowerCase().startsWith(nameEntered.toLowerCase())
     );
+  }
+
+  toggleFileEntriesDialog(show: boolean) {
+    this.logger.debug(`${show ? 'showing' : 'hiding'} file entries dialog`);
+    this.showFileEntriesDialog = show;
   }
 }

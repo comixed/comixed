@@ -61,6 +61,7 @@ import { PanelModule } from 'primeng/panel';
 import {
   AutoCompleteModule,
   ContextMenuModule,
+  DialogModule,
   InputTextModule,
   ProgressBarModule,
   ProgressSpinnerModule,
