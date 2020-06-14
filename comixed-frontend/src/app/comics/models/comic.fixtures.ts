@@ -106,6 +106,7 @@ export const COMIC_2: Comic = {
   nextIssueId: null,
   previousIssueId: null,
   fileDetails: FILE_DETAILS_1,
+  fileEntries: [],
   readingLists: []
 };
 
