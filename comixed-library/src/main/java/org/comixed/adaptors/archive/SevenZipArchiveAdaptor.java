@@ -69,8 +69,11 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
     archive.write(content);
     archive.closeArchiveEntry();
 
-    log.debug("Cleaning up the temporary file");
-    tempFile.delete();
+    if (tempFile.delete()) {
+      log.debug("Cleaning up the temporary file");
+    } else {
+      log.debug("Failed to delete temporary file: {}", tempFile.getAbsolutePath());
+    }
   }
 
   @Override
