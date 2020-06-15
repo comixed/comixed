@@ -40,21 +40,21 @@ import org.comixed.model.library.ReadingList;
  */
 @Log4j2
 public class OPDSEntry {
-  public String title;
-  public String id;
-
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "author")
-  public List<OPDSAuthor> authors;
+  private List<OPDSAuthor> authors;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-  public Date updated;
+  private Date updated;
 
-  public OPDSContent content;
+  private OPDSContent content;
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "link")
-  public List<OPDSLink> links;
+  private List<OPDSLink> links;
+
+  private String title;
+  private String id;
 
   public OPDSEntry(Comic comic) {
     this.id = comic.getId().toString();
