@@ -140,15 +140,12 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       throws ArchiveAdaptorException, IOException {
     this.log.debug("Creating temporary file: " + filename);
 
-    ZipArchiveOutputStream zoutput = null;
-    try {
+    try (ZipArchiveOutputStream zoutput =
+        (ZipArchiveOutputStream)
+            new ArchiveStreamFactory()
+                .createArchiveOutputStream(
+                    ArchiveStreamFactory.ZIP, new FileOutputStream(filename))) {
       ZipArchiveEntry entry;
-
-      zoutput =
-          (ZipArchiveOutputStream)
-              new ArchiveStreamFactory()
-                  .createArchiveOutputStream(
-                      ArchiveStreamFactory.ZIP, new FileOutputStream(filename));
 
       this.log.debug("Adding the ComicInfo.xml entry");
       entry = new ZipArchiveEntry("ComicInfo.xml");
@@ -175,11 +172,6 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       }
     } catch (IOException | ArchiveException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);
-    } finally {
-      if (zoutput != null) {
-        zoutput.finish();
-        zoutput.close();
-      }
     }
   }
 
@@ -189,13 +181,11 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
     this.log.debug("Encoding {} files", content.size());
 
     ByteArrayOutputStream result = new ByteArrayOutputStream();
-    ZipArchiveOutputStream zoutput = null;
 
-    try {
-      zoutput =
-          (ZipArchiveOutputStream)
-              new ArchiveStreamFactory()
-                  .createArchiveOutputStream(ArchiveStreamFactory.ZIP, result);
+    try (ZipArchiveOutputStream zoutput =
+        (ZipArchiveOutputStream)
+            new ArchiveStreamFactory()
+                .createArchiveOutputStream(ArchiveStreamFactory.ZIP, result)) {
       ZipArchiveEntry zipEntry = null;
 
       for (String filename : content.keySet()) {
@@ -212,11 +202,6 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       }
     } catch (IOException | ArchiveException error) {
       throw new ArchiveAdaptorException("failed to encode files", error);
-    } finally {
-      if (zoutput != null) {
-        zoutput.finish();
-        zoutput.close();
-      }
     }
 
     this.log.debug("Encoding to {} bytes", result.size());
