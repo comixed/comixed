@@ -61,9 +61,11 @@ import { PanelModule } from 'primeng/panel';
 import {
   AutoCompleteModule,
   ContextMenuModule,
+  DialogModule,
   InputTextModule,
   ProgressBarModule,
   ProgressSpinnerModule,
+  ScrollPanelModule,
   SplitButtonModule,
   TabViewModule,
   ToolbarModule,
@@ -76,6 +78,7 @@ import * as fromScraping from './reducers/scraping.reducer';
 import { PublisherThumbnailUrlPipe } from './pipes/publisher-thumbnail-url.pipe';
 import { PublisherPipe } from './pipes/publisher.pipe';
 import { SeriesCollectionNamePipe } from './pipes/series-collection-name.pipe';
+import { FileEntryListComponent } from './components/file-entry-list/file-entry-list.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +99,8 @@ import { SeriesCollectionNamePipe } from './pipes/series-collection-name.pipe';
     ScrapingIssueCoverUrlPipe,
     PublisherThumbnailUrlPipe,
     PublisherPipe,
-    SeriesCollectionNamePipe
+    SeriesCollectionNamePipe,
+    FileEntryListComponent
   ],
   imports: [
     UserModule,
@@ -129,7 +133,9 @@ import { SeriesCollectionNamePipe } from './pipes/series-collection-name.pipe';
     InputTextModule,
     ToolbarModule,
     ContextMenuModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    DialogModule,
+    ScrollPanelModule
   ],
   exports: [
     CommonModule,

@@ -6,3 +6,8 @@
   background-color: $cx-information-panel-background-color;
   color: $cx-information-panel-text-primary-color;
 }
+
+:host ::ng-deep .ui-scrollpanel {
+  width: 50vw;
+  height: 50vh;
+}

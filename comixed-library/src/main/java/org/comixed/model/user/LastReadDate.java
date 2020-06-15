@@ -28,11 +28,6 @@ import org.comixed.views.View;
 
 @Entity
 @Table(name = "user_last_read_dates")
-@NamedQueries({
-  @NamedQuery(
-      name = "LastReadDate.findAllForUser",
-      query = "SELECT d FROM LastReadDate d WHERE d.user.id = :userId")
-})
 public class LastReadDate {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

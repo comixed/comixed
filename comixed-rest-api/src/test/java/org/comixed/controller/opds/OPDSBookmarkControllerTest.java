@@ -31,23 +31,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.security.*")
-@PrepareForTest({SecurityContextHolder.class})
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class OPDSBookmarkControllerTest {
 
@@ -56,31 +48,25 @@ public class OPDSBookmarkControllerTest {
   private static final long TEST_COMIC_ID = 100L;
   private static final int TEST_PAGE_COUNT = 10;
   private static final String TEST_BOOKMARK = String.valueOf(TEST_PAGE_COUNT);
-
+  @Rule public ExpectedException expectedException = ExpectedException.none();
   @InjectMocks private OPDSBookmarkController controller;
-  @Mock private Authentication autentication;
-  @Mock private SecurityContext securityContext;
+  @Mock private Authentication principal;
   @Mock private ComiXedUserRepository userRepository;
   @Mock private ComicService comicService;
   @Mock private ComiXedUser user;
   @Mock private Comic comic;
-  @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Before
   public void setUp() throws ComicException {
-    PowerMockito.mockStatic(SecurityContextHolder.class);
-    Mockito.when(autentication.getName()).thenReturn(TEST_USER_EMAIL);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(autentication);
-    BDDMockito.given(SecurityContextHolder.getContext()).willReturn(securityContext);
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
   }
 
   @Test(expected = ComicException.class)
   public void testGetBookmarkComicNotfound() throws ComicException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(null);
-    Mockito.when(userRepository.findByEmail(TEST_USER_EMAIL)).thenReturn(user);
 
     try {
-      controller.getBookmark(TEST_COMIC_ID);
+      controller.getBookmark(principal, TEST_COMIC_ID);
     } finally {
       Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     }
@@ -93,7 +79,7 @@ public class OPDSBookmarkControllerTest {
     Mockito.when(user.getBookmark(Mockito.any())).thenReturn(null);
 
     try {
-      controller.getBookmark(TEST_COMIC_ID);
+      controller.getBookmark(principal, TEST_COMIC_ID);
     } finally {
       Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
       Mockito.verify(user, Mockito.times(1)).getBookmark(comic);
@@ -106,7 +92,7 @@ public class OPDSBookmarkControllerTest {
     Mockito.when(userRepository.findByEmail(TEST_USER_EMAIL)).thenReturn(user);
     Mockito.when(user.getBookmark(Mockito.any(Comic.class))).thenReturn(TEST_BOOKMARK);
 
-    OPDSBookmark result = controller.getBookmark(TEST_COMIC_ID);
+    OPDSBookmark result = controller.getBookmark(principal, TEST_COMIC_ID);
 
     assertEquals(TEST_BOOKMARK, result.getMark());
     assertFalse(result.getIsFinished());
@@ -121,7 +107,7 @@ public class OPDSBookmarkControllerTest {
     Mockito.when(userRepository.findByEmail(TEST_USER_EMAIL)).thenReturn(user);
     Mockito.when(user.getBookmark(comic)).thenReturn(TEST_BOOKMARK);
     Mockito.when(comic.getPageCount()).thenReturn(TEST_PAGE_COUNT);
-    OPDSBookmark result = controller.getBookmark(TEST_COMIC_ID);
+    OPDSBookmark result = controller.getBookmark(principal, TEST_COMIC_ID);
 
     assertEquals(TEST_BOOKMARK, result.getMark());
     assertTrue(result.getIsFinished());
@@ -134,10 +120,10 @@ public class OPDSBookmarkControllerTest {
   public void testSetBookmark() throws ComicException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(userRepository.findByEmail(TEST_USER_EMAIL)).thenReturn(user);
-    Mockito.when(user.getBookmark(comic)).thenReturn(TEST_BOOKMARK);
 
     ResponseEntity result =
-        controller.setBookmark(TEST_COMIC_ID, new OPDSBookmark(TEST_COMIC_ID, "1", true));
+        controller.setBookmark(
+            principal, TEST_COMIC_ID, new OPDSBookmark(TEST_COMIC_ID, "1", true));
 
     assertNotNull(result);
   }

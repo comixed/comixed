@@ -1,3 +1,13 @@
+<p-dialog [visible]='showFileEntriesDialog'
+          [modal]='true'
+          [header]='"comic-overview.show-file-entries.title"|translate'
+          [resizable]='false'
+          [draggable]='false'
+          [maximizable]='true'
+          [closable]='false'>
+  <app-file-entry-list [entries]='comic.fileEntries'
+                       (close)='toggleFileEntriesDialog(false)'></app-file-entry-list>
+</p-dialog>
 <p-toolbar>
   <div *ngIf='is_admin'
        class='ui-toolbar-group-left'>
@@ -176,6 +186,14 @@
         <strong>{{"comic-overview.label.page-count"|translate}}</strong>
       </div>
       <div class='ui-g-12'>{{comic.pageCount}}</div>
+      <div class='ui-g-12'>
+        <strong>{{"comic-overview.label.file-entry-count"|translate}}</strong>
+      </div>
+      <div class='ui-g-12'>{{comic.fileEntries.length}}
+        <span *ngIf='!!comic.fileEntries && comic.fileEntries.length > 0'
+              (click)='toggleFileEntriesDialog(true)'
+              class='fa fa-fw fa-eye'></span>
+      </div>
       <div class='ui-g-12'>
         <strong>{{"comic-overview.label.comicvine-details-link"|translate}}</strong>
       </div>

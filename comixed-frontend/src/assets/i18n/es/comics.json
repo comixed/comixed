@@ -82,6 +82,9 @@
       "header": "Guardar cambios",
       "message": "¿Seguro que quieres guardar los cambios en este cómic?"
     },
+    "show-file-entries": {
+      "title": "Archive File List"
+    },
     "label": {
       "filename": "El nombre del fichero es <strong>{filename}</strong> en el equipo host*****.",
       "publisher": "Editorial",
@@ -279,6 +282,19 @@
     },
     "option": {
       "skip-cache": "Ignorar caché"
+    }
+  },
+  "file-entry-list": {
+    "table": {
+      "header": {
+        "file-number": "#",
+        "file-name": "Filename",
+        "file-size": "Size",
+        "file-type": "Type"
+      },
+      "column": {
+        "file-size": "{size, plural, =1{One byte} other{# bytes}}"
+      }
     }
   }
 }

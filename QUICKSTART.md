@@ -6,7 +6,7 @@ This document is to help you go from 0 to running the ComiXed application on you
 
 ## Installation
 
-To install the application, simply place the comixed-app-*.jar file in the directory from which you would like to run it. The JAR file contains all of its dependencies, so you won't need to download any other files to run it: as long as you have Java 8 or later installed you can run the application.
+To install the application, simply place the comixed-app-*.jar file in the directory from which you would like to run it. The JAR file contains all of its dependencies, so you won't need to download any other files to run it: as long as you have Java 12 or later installed you can run the application.
 
 ## Configuring The Application
 

@@ -18,15 +18,16 @@
 
 package org.comixed.controller.opds;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.security.Principal;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import lombok.extern.log4j.Log4j2;
+import marvin.image.MarvinImage;
+import marvinplugins.MarvinPluginCollection;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.comic.Page;
 import org.comixed.repositories.comic.ComicRepository;
@@ -37,10 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import sun.awt.image.ToolkitImage;
 
 /**
  * <code>OPDSController</code> provides the web interface for accessing the OPDS feeds.
@@ -76,24 +74,22 @@ public class OPDSController {
       params = {"groupByFolder"},
       produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
-  public OPDSFeed getAllLists() throws ParseException {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  public OPDSFeed getAllLists(Principal principal) {
     return new OPDSNavigationFeed(
         "/opds/all?groupByFolder=true",
         "Comics - ",
-        this.readingListService.getReadingListsForUser(authentication.getName(), new Date(0L)));
+        this.readingListService.getReadingListsForUser(principal.getName(), new Date(0L)));
   }
 
   @ResponseBody
   @GetMapping(value = "/opds/{id}", produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
-  public OPDSFeed getList(@PathVariable("id") long id)
+  public OPDSFeed getList(Principal principal, @PathVariable("id") long id)
       throws ParseException, NoSuchReadingListException {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return new OPDSNavigationFeed(
         "/opds/" + id,
         "Comics - ",
-        this.readingListService.getReadingListForUser(authentication.getName(), id));
+        this.readingListService.getReadingListForUser(principal.getName(), id));
   }
 
   @GetMapping(value = "/opds/feed/comics/{id}/download/{filename}")
@@ -146,19 +142,12 @@ public class OPDSController {
       BufferedImage image = ImageIO.read(bais);
 
       if (maxWidth != 0 && maxWidth < image.getWidth()) {
-
-        ToolkitImage scaled =
-            (ToolkitImage) image.getScaledInstance(maxWidth, -1, Image.SCALE_SMOOTH);
-
-        Image temporary = new ImageIcon(scaled).getImage();
-        BufferedImage buffered =
-            new BufferedImage(scaled.getWidth(), scaled.getHeight(), BufferedImage.TYPE_INT_RGB);
-
-        Graphics2D g2d = buffered.createGraphics();
-        g2d.drawImage(temporary, 0, 0, null);
-        g2d.dispose();
+        MarvinImage unscaledImage = new MarvinImage(image);
+        MarvinImage scaledImage = new MarvinImage();
+        MarvinPluginCollection.scale(unscaledImage, scaledImage, maxWidth);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedImage buffered = scaledImage.getBufferedImage();
         ImageIO.write(buffered, "jpg", baos);
         baos.flush();
         content = baos.toByteArray();

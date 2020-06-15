@@ -22,6 +22,7 @@ import { Page } from './page';
 import { ComicCredit } from './comic-credit';
 import { FileDetails } from 'app/comics/models/file-details';
 import { ReadingList } from 'app/comics/models/reading-list';
+import { ComicFileEntry } from 'app/comics/models/comic-file-entry';
 
 export interface Comic {
   id: number;
@@ -32,6 +33,7 @@ export interface Comic {
   baseFilename: string;
   missing: boolean;
   fileDetails: FileDetails;
+  fileEntries: ComicFileEntry[];
   addedDate: string;
   deletedDate: number;
   lastUpdatedDate: number;

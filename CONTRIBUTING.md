@@ -28,7 +28,7 @@ easier, and will help to make your contributions easier to understand.
  Source: http://chris.beams.io/posts/git-commit/#seven-rules
  
 ### Do
- * Write the summary line and description of what you have done in the imperative mood, that is as if you were commanding someone. Start the line with "Fix", "Add", "Change" instead of "Fixed", "Added", "Changed".
+ * Write the summary line and description of what you have done in the imperative mood, that is as if you were narrating the changes. Start the line with "Fixed", "Added", "Changed" instead of "Fixes", "Adds", "Changes".
  * Always leave the second line blank.
  * Line break the commit message (to make the commit message readable without having to scroll horizontally in gitk).
 
@@ -106,7 +106,7 @@ There should be no errors reported.
 ### Prerequisites
 
 The application depends on the following pieces:
- * [Java Development Kit](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html): Minimum of JDK 8.
+ * [Java Development Kit](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html): Minimum of JDK 12.
  * [NodeJS](https://nodejs.org/en/download/): Minimum of v10.15.3.
  * [Maven](https://maven.apache.org/download.cgi): Maven v3.
 
