@@ -18,7 +18,16 @@ jobs:
         with:
           java-version: 12
       - name: Build
-        run: mvn clean package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=comixed -Dsonar.projectKey=comixed_comixed -Dsonar.sources=./src -Dsonar.exclusions=**/*test*/** -Dsonar.test.inclusions=**/*test*/** -Pci
+        run: >
+          mvn clean package sonar:sonar
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=comixed
+          -Dsonar.projectKey=comixed_comixed
+          -Dsonar.sources=./src
+          -Dsonar.exclusions=**/*test*/**
+          -Dsonar.test.inclusions=**/*test*/**
+          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+          -Pci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
