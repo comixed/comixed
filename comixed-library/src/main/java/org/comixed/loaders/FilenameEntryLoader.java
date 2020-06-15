@@ -43,28 +43,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "comic.filename-entry", ignoreUnknownFields = false)
 @Log4j2
 public class FilenameEntryLoader extends AbstractEntryLoader implements InitializingBean {
-  public static class EntryLoaderEntry {
-    public String mask;
-    public String bean;
-
-    public boolean isValid() {
-      return (this.mask != null)
-          && !this.mask.isEmpty()
-          && (this.bean != null)
-          && !this.bean.isEmpty();
-    }
-
-    public void setBean(String bean) {
-      this.bean = bean;
-    }
-
-    public void setMask(String mask) {
-      this.mask = mask;
-    }
-  }
-
   @Autowired private ApplicationContext context;
-
   @Autowired private Map<String, EntryLoader> entryLoaders;
   private List<EntryLoaderEntry> loaders = new ArrayList<>();
 
@@ -73,8 +52,8 @@ public class FilenameEntryLoader extends AbstractEntryLoader implements Initiali
     this.entryLoaders = new HashMap<>();
     for (EntryLoaderEntry loader : this.loaders) {
       if (loader.isValid()) {
-        if (this.context.containsBean(loader.bean)) {
-          this.entryLoaders.put(loader.mask, (EntryLoader) this.context.getBean(loader.bean));
+        if (this.context.containsBean(loader.getBean())) {
+          this.entryLoaders.put(loader.getMask(), (EntryLoader) this.context.getBean(loader.bean));
         }
       }
     }
@@ -96,6 +75,34 @@ public class FilenameEntryLoader extends AbstractEntryLoader implements Initiali
       loader.loadContent(comic, filename, content);
     } else {
       log.debug("No filename adaptor defined");
+    }
+  }
+
+  public static class EntryLoaderEntry {
+    private String mask;
+    private String bean;
+
+    public boolean isValid() {
+      return (this.mask != null)
+          && !this.mask.isEmpty()
+          && (this.bean != null)
+          && !this.bean.isEmpty();
+    }
+
+    public String getBean() {
+      return bean;
+    }
+
+    public void setBean(String bean) {
+      this.bean = bean;
+    }
+
+    public String getMask() {
+      return mask;
+    }
+
+    public void setMask(String mask) {
+      this.mask = mask;
     }
   }
 }
