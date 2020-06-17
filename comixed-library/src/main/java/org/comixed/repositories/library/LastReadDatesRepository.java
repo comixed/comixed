@@ -20,6 +20,8 @@ package org.comixed.repositories.library;
 
 import java.util.Date;
 import java.util.List;
+import org.comixed.model.comic.Comic;
+import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -43,4 +45,14 @@ public interface LastReadDatesRepository extends CrudRepository<LastReadDate, Lo
       "SELECT d FROM LastReadDate d WHERE d.user.id = :userId AND d.lastUpdated >= :updatedSince")
   List<LastReadDate> findAllForUser(
       @Param("userId") Long userId, @Param("updatedSince") Date updatedSince);
+
+  /**
+   * Returns the last ready entry for the specific comic by the specified user.
+   *
+   * @param comic the comic
+   * @param user the user
+   * @return the last read date entry
+   */
+  @Query("SELECT d FROM LastReadDate d WHERE d.user = :user AND d.comic = :comic")
+  LastReadDate getForComicAndUser(@Param("comic") Comic comic, @Param("user") ComiXedUser user);
 }

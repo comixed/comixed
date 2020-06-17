@@ -29,6 +29,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.comic.ComicFormat;
 import org.comixed.model.comic.ScanType;
+import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,11 +75,13 @@ public class ComicRepositoryTest {
   private static final String TEST_ISSUE_WITH_NO_PREV = "249";
   private static final String TEST_ISSUE_WITH_PREV = "513";
   private static final Long TEST_COMIC_ID_WITH_DUPLICATES = 1020L;
+  private static final String TEST_USER_EMAIL_NO_READ_COMIC = "comixedreader2@localhost";
 
   @Autowired private ComicRepository repository;
   @Autowired private PageTypeRepository pageTypeRepository;
   @Autowired private ScanTypeRepository scanTypeRepository;
   @Autowired private ComicFormatRepository comicFormatRepository;
+  @Autowired private ComiXedUserRepository userRepository;
 
   private Comic comic;
 

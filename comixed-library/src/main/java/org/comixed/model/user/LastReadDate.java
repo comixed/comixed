@@ -35,15 +35,15 @@ public class LastReadDate {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "comic_id")
+  @JoinColumn(name = "comic_id", insertable = true, updatable = false, nullable = false)
   @JsonProperty("comic")
   private Comic comic;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "user_id", insertable = true, updatable = false, nullable = false)
   private ComiXedUser user;
 
-  @Column(name = "last_read", nullable = false, updatable = false)
+  @Column(name = "last_read", insertable = true, updatable = false, nullable = false)
   @JsonProperty("lastRead")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView({View.UserDetails.class, View.LibraryUpdate.class})
@@ -54,6 +54,10 @@ public class LastReadDate {
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView({View.UserDetails.class, View.LibraryUpdate.class})
   private Date lastUpdated = new Date();
+
+  public void setComic(Comic comic) {
+    this.comic = comic;
+  }
 
   public Comic getComic() {
     return this.comic;
@@ -76,6 +80,10 @@ public class LastReadDate {
 
   public void setLastRead(Date lastRead) {
     this.lastRead = lastRead;
+  }
+
+  public void setUser(ComiXedUser user) {
+    this.user = user;
   }
 
   public ComiXedUser getUser() {

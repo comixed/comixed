@@ -230,11 +230,7 @@ public class Comic {
   @JsonView({View.ComicList.class, View.LibraryUpdate.class})
   private List<String> locations = new ArrayList<>();
 
-  @OneToMany(
-      mappedBy = "comic",
-      cascade = CascadeType.ALL,
-      fetch = FetchType.EAGER,
-      orphanRemoval = true)
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonProperty("credits")
   @JsonView({View.ComicList.class, View.LibraryUpdate.class})
   private Set<Credit> credits = new HashSet<>();
@@ -1136,5 +1132,9 @@ public class Comic {
   @Override
   public int hashCode() {
     return 17 * Objects.hash(filename);
+  }
+
+  public Date getDateLastRead() {
+    return this.lastReadDates.isEmpty() ? null : this.lastReadDates.iterator().next().getLastRead();
   }
 }

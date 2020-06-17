@@ -94,6 +94,7 @@ public class ComicServiceTest {
   @Captor private ArgumentCaptor<Date> deletedCaptor;
   @Mock private LastReadDate lastReadDate;
   @Mock private List<LastReadDate> lastReadDateList;
+  @Captor private ArgumentCaptor<LastReadDate> lastReadDateCaptor;
 
   private List<Comic> comicsBySeries = new ArrayList<>();
   private Comic previousComic = new Comic();
@@ -384,5 +385,90 @@ public class ComicServiceTest {
     Mockito.verify(comicRepository, Mockito.times(1)).findAll();
     Mockito.verify(taskAdaptor, Mockito.times(1)).getEncoder(TaskType.RESCAN_COMIC);
     Mockito.verify(taskEncoder, Mockito.times(1)).setComic(comic);
+  }
+
+  @Test
+  public void testMarkAsReadCurrentlyUnread() throws ComicException {
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(
+            lastReadDatesRepository.getForComicAndUser(
+                Mockito.any(Comic.class), Mockito.any(ComiXedUser.class)))
+        .thenReturn(null, lastReadDate);
+    Mockito.when(lastReadDatesRepository.save(lastReadDateCaptor.capture()))
+        .thenReturn(lastReadDate);
+
+    LastReadDate result = comicService.markAsRead(TEST_EMAIL, TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(lastReadDate, result);
+    assertNotNull(lastReadDateCaptor.getValue());
+    assertSame(comic, lastReadDateCaptor.getValue().getComic());
+    assertNotNull(lastReadDateCaptor.getValue().getLastRead());
+    assertSame(user, lastReadDateCaptor.getValue().getUser());
+
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).save(lastReadDateCaptor.getValue());
+    Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    Mockito.verify(lastReadDatesRepository, Mockito.times(2)).getForComicAndUser(comic, user);
+  }
+
+  @Test
+  public void testMarkAsRead() throws ComicException {
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(
+            lastReadDatesRepository.getForComicAndUser(
+                Mockito.any(Comic.class), Mockito.any(ComiXedUser.class)))
+        .thenReturn(lastReadDate, lastReadDate);
+    Mockito.when(lastReadDatesRepository.save(lastReadDateCaptor.capture()))
+        .thenReturn(lastReadDate);
+
+    LastReadDate result = comicService.markAsRead(TEST_EMAIL, TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(lastReadDate, result);
+
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).save(lastReadDate);
+    Mockito.verify(lastReadDate, Mockito.times(1)).setLastRead(Mockito.any(Date.class));
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).save(lastReadDateCaptor.getValue());
+    Mockito.verify(lastReadDatesRepository, Mockito.times(2)).getForComicAndUser(comic, user);
+  }
+
+  @Test
+  public void testMarkAsUnreadCurrentlyUnread() throws ComicException {
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(
+            lastReadDatesRepository.getForComicAndUser(
+                Mockito.any(Comic.class), Mockito.any(ComiXedUser.class)))
+        .thenReturn(null);
+
+    boolean result = comicService.markAsUnread(TEST_EMAIL, TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(false, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).getForComicAndUser(comic, user);
+  }
+
+  @Test
+  public void testMarkAsUnread() throws ComicException {
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(
+            lastReadDatesRepository.getForComicAndUser(
+                Mockito.any(Comic.class), Mockito.any(ComiXedUser.class)))
+        .thenReturn(lastReadDate);
+    Mockito.doNothing().when(lastReadDatesRepository).delete(Mockito.any(LastReadDate.class));
+
+    boolean result = comicService.markAsUnread(TEST_EMAIL, TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(true, result);
+
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).delete(lastReadDate);
+    Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).getForComicAndUser(comic, user);
   }
 }

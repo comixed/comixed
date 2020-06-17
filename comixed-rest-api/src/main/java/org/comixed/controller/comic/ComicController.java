@@ -378,4 +378,28 @@ public class ComicController {
 
     return this.comicService.restoreComic(id);
   }
+
+  @PutMapping(
+      value = "/{id}/read",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.UserDetails.class)
+  public LastReadDate markAsRead(Principal principal, @PathVariable("id") Long id)
+      throws ComicException {
+    String email = principal.getName();
+    if (email == null) throw new ComicException("not authenticated");
+    this.log.info("Marking comic as read for {}: id={}", email, id);
+
+    return this.comicService.markAsRead(email, id);
+  }
+
+  @DeleteMapping(value = "/{id}/read", produces = MediaType.APPLICATION_JSON_VALUE)
+  public boolean markAsUnread(Principal principal, @PathVariable("id") Long id)
+      throws ComicException {
+    String email = principal.getName();
+    if (email == null) throw new ComicException("not authenticated");
+    this.log.info("Marking comic as unread for {}: id={}", email, id);
+
+    return this.comicService.markAsUnread(email, id);
+  }
 }
