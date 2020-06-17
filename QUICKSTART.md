@@ -6,7 +6,11 @@ This document is to help you go from 0 to running the ComiXed application on you
 
 ## Installation
 
-To install the application, simply place the comixed-app-*.jar file in the directory from which you would like to run it. The JAR file contains all of its dependencies, so you won't need to download any other files to run it: as long as you have Java 12 or later installed you can run the application.
+To install the application, simply place the comixed-app-\*.jar file in the directory from which you would like to run it. The JAR file contains all of its dependencies, so you won't need to download any other files to run it: as long as you have Java 12 or later installed you can run the application.
+
+### A Note On Java Requirements
+
+As of v0.7, ComiXed requires Java 12 or later, and will not run with any version prior to that. Since Oracle no longer ships a JRE (Java Runtime Environment) for Java after 9, you'll instead need to download a Java Development Kit (JDK) from [here](https://www.oracle.com/java/technologies/javase/jdk12-archive-downloads.html).
 
 ## Configuring The Application
 
