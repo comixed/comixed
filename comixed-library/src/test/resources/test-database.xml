@@ -404,6 +404,11 @@
          password_hash="12345"
          first_login_date="2018-01-01 12:00:00"
          last_login_date="2018-12-18 17:57:00"/>
+  <users id="2000"
+         email="comixedreader2@localhost"
+         password_hash="54321"
+         first_login_date="2018-01-01 12:00:00"
+         last_login_date="2018-12-18 17:57:00"/>
   <user_last_read_dates id="1"
                         user_id="1000"
                         comic_id="1000"

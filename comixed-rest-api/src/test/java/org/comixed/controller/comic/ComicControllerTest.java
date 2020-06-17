@@ -89,6 +89,7 @@ public class ComicControllerTest {
   @Mock private FileTypeIdentifier fileTypeIdentifier;
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
   @Mock private Page page;
+  @Mock private LastReadDate lastReadDate;
 
   private List<Comic> emptyComicList = new ArrayList<>();
 
@@ -546,5 +547,57 @@ public class ComicControllerTest {
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStreamCaptor.getValue());
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStreamCaptor.getValue());
+  }
+
+  @Test(expected = ComicException.class)
+  public void testMarkAsReadNotAuthenticated() throws ComicException {
+    Mockito.when(principal.getName()).thenReturn(null);
+
+    try {
+      controller.markAsRead(principal, TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(principal, Mockito.times(1)).getName();
+    }
+  }
+
+  @Test
+  public void testMarkAsRead() throws ComicException {
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
+    Mockito.when(comicService.markAsRead(Mockito.anyString(), Mockito.anyLong()))
+        .thenReturn(lastReadDate);
+
+    LastReadDate result = controller.markAsRead(principal, TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(lastReadDate, result);
+
+    Mockito.verify(principal, Mockito.times(1)).getName();
+    Mockito.verify(comicService, Mockito.times(1)).markAsRead(TEST_EMAIL_ADDRESS, TEST_COMIC_ID);
+  }
+
+  @Test(expected = ComicException.class)
+  public void testMarkAsUnreadNotAuthenticated() throws ComicException {
+    Mockito.when(principal.getName()).thenReturn(null);
+
+    try {
+      controller.markAsUnread(principal, TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(principal, Mockito.times(1)).getName();
+    }
+  }
+
+  @Test
+  public void testMarkAsUnread() throws ComicException {
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
+    Mockito.when(comicService.markAsUnread(Mockito.anyString(), Mockito.anyLong()))
+        .thenReturn(true);
+
+    boolean result = controller.markAsUnread(principal, TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(true, result);
+
+    Mockito.verify(principal, Mockito.times(1)).getName();
+    Mockito.verify(comicService, Mockito.times(1)).markAsUnread(TEST_EMAIL_ADDRESS, TEST_COMIC_ID);
   }
 }

@@ -295,4 +295,51 @@ public class ComicService {
     this.log.debug("Returning comic: id={}", result.getId());
     return result;
   }
+
+  @Transactional
+  public LastReadDate markAsRead(String email, long id) throws ComicException {
+    this.log.debug("Marking comic as read by {}: id={}", email, id);
+    Comic comic = this.comicRepository.getById(id);
+    if (comic == null) throw new ComicException("no such comic: id=" + id);
+
+    ComiXedUser user = this.userRepository.findByEmail(email);
+    LastReadDate lastReadDate = this.lastReadDatesRepository.getForComicAndUser(comic, user);
+
+    if (lastReadDate == null) {
+      this.log.debug("Creating a new last read date record");
+      lastReadDate = new LastReadDate();
+      lastReadDate.setUser(user);
+      lastReadDate.setComic(comic);
+    } else {
+      this.log.debug("Updating last read date");
+      lastReadDate.setLastRead(new Date());
+    }
+
+    this.log.debug("Saving last read date: {}", lastReadDate.getLastRead());
+    this.lastReadDatesRepository.save(lastReadDate);
+
+    this.log.debug("Returning the list of last read dates");
+    return this.lastReadDatesRepository.getForComicAndUser(comic, user);
+  }
+
+  @Transactional
+  public boolean markAsUnread(String email, long id) throws ComicException {
+    this.log.debug("Marking comic as not read by {}: id={}", email, id);
+    Comic comic = this.comicRepository.getById(id);
+    if (comic == null) throw new ComicException("no such comic: id=" + id);
+
+    ComiXedUser user = this.userRepository.findByEmail(email);
+    LastReadDate lastReadDate = this.lastReadDatesRepository.getForComicAndUser(comic, user);
+
+    if (lastReadDate != null) {
+      this.log.debug("Deleting last read record for {}: id={}", email, id);
+      this.lastReadDatesRepository.delete(lastReadDate);
+    } else {
+      this.log.debug("Comic is not already marked as read");
+      return false;
+    }
+
+    this.log.debug("Returning success");
+    return true;
+  }
 }
