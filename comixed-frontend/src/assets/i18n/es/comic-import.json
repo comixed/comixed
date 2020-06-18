@@ -50,18 +50,8 @@
       "import": "Importar"
     },
     "tooltip": {
-<<<<<<< HEAD
-<<<<<<< HEAD
       "delete-blocked-pages": "Las páginas bloqueadas se marcarán para eliminarlas.",
       "allow-blocked-pages": "Las páginas bloqueadas no se marcarán para eliminarlas.",
-=======
-      "delete-blocked-pages": "Las páginas 'bloqueadas' se marcarán para eliminarlas.",
-      "allow-blocked-pages": "Las páginas 'bloqueadas' no se marcarán para eliminarlas.",
->>>>>>> 69b15000... Added Spanish translation (incomplete - ongoing) [#332]
-=======
-      "delete-blocked-pages": "Las páginas bloqueadas se marcarán para eliminarlas.",
-      "allow-blocked-pages": "Las páginas bloqueadas no se marcarán para eliminarlas.",
->>>>>>> 7b5245f6... interim
       "start-import": "Importar los cómics seleccionados.",
       "list-layout": "Mostrar como lista.",
       "grid-layout": "Mostrar como cuadrícula."
@@ -78,15 +68,7 @@
       "search-comic-names": "Buscar nombres de cómics*****"
     },
     "text": {
-<<<<<<< HEAD
-<<<<<<< HEAD
       "blocked-pages-notice": "Las páginas bloqueadas se marcarán automáticamente como eliminadas.",
-=======
-      "blocked-pages-notice": "Las páginas 'bloqueadas' se marcarán automáticamente como 'eliminadas'.",
->>>>>>> 69b15000... Added Spanish translation (incomplete - ongoing) [#332]
-=======
-      "blocked-pages-notice": "Las páginas bloqueadas se marcarán automáticamente como eliminadas.",
->>>>>>> 7b5245f6... interim
       "search-by-series": "Buscar por el nombre de la serie..."
     }
   },
