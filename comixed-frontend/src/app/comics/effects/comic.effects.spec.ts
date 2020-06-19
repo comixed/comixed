@@ -38,6 +38,9 @@ import {
   ComicGotIssue,
   ComicGotPageTypes,
   ComicGotScanTypes,
+  ComicMarkAsRead,
+  ComicMarkAsReadFailed,
+  ComicMarkedAsRead,
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
   ComicPageSaved,
@@ -57,7 +60,7 @@ import {
   FORMAT_3,
   FORMAT_5
 } from 'app/comics/models/comic-format.fixtures';
-import { COMIC_1, COMIC_2 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
 import {
@@ -72,11 +75,14 @@ import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 
 import { ComicEffects } from './comic.effects';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
+import { LoggerModule } from '@angular-ru/logger';
 import objectContaining = jasmine.objectContaining;
 
 describe('ComicEffects', () => {
   const COMIC = COMIC_1;
   const SKIP_CACHE = false;
+  const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
 
   let actions$: Observable<any>;
   let effects: ComicEffects;
@@ -86,7 +92,7 @@ describe('ComicEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), LoggerModule.forRoot()],
       providers: [
         ComicEffects,
         provideMockActions(() => actions$),
@@ -101,7 +107,8 @@ describe('ComicEffects', () => {
             clearMetadata: jasmine.createSpy('ComicService.clearMetadata'),
             deleteComic: jasmine.createSpy('ComicService.deleteComic'),
             restoreComic: jasmine.createSpy('ComicService.restoreComic()'),
-            scrapeComic: jasmine.createSpy('ComicService.scrapeComic')
+            scrapeComic: jasmine.createSpy('ComicService.scrapeComic'),
+            markAsRead: jasmine.createSpy('ComicService.markAsRead')
           }
         },
         {
@@ -497,7 +504,7 @@ describe('ComicEffects', () => {
 
   describe('when deleting a comic', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_2;
+      const serviceResponse = COMIC;
       const action = new ComicDelete({ comic: COMIC });
       const outcome = new ComicDeleted({ comic: serviceResponse });
 
@@ -543,7 +550,7 @@ describe('ComicEffects', () => {
 
   describe('when restoring a comic', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_2;
+      const serviceResponse = COMIC;
       const action = new ComicRestore({ comic: COMIC });
       const outcome = new ComicRestored({ comic: serviceResponse });
 
@@ -581,6 +588,100 @@ describe('ComicEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.restoreComic$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('when marking a comic as read', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = LAST_READ_DATE;
+      const action = new ComicMarkAsRead({ comic: COMIC, read: true });
+      const outcome = new ComicMarkedAsRead({
+        lastRead: serviceResponse.lastRead
+      });
+
+      actions$ = hot('-a', { a: action });
+      comicService.markAsRead.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.markAsRead$).toBeObservable(expected);
+      // expect(messageService.add).toHaveBeenCalledWith(
+      //   objectContaining({ severity: 'info' })
+      // );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ComicMarkAsRead({ comic: COMIC, read: true });
+      const outcome = new ComicMarkAsReadFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.markAsRead.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.markAsRead$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new ComicMarkAsRead({ comic: COMIC, read: true });
+      const outcome = new ComicMarkAsReadFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.markAsRead.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.markAsRead$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('when unmarking a comic as read', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = true;
+      const action = new ComicMarkAsRead({ comic: COMIC, read: false });
+      const outcome = new ComicMarkedAsRead({ lastRead: null });
+
+      actions$ = hot('-a', { a: action });
+      comicService.markAsRead.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.markAsRead$).toBeObservable(expected);
+      // expect(messageService.add).toHaveBeenCalledWith(
+      //   objectContaining({ severity: 'info' })
+      // );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ComicMarkAsRead({ comic: COMIC, read: false });
+      const outcome = new ComicMarkAsReadFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.markAsRead.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.markAsRead$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new ComicMarkAsRead({ comic: COMIC, read: false });
+      const outcome = new ComicMarkAsReadFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.markAsRead.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.markAsRead$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

@@ -75,6 +75,11 @@
       "error": {
         "detail": "Failed to scrape comic."
       }
+    },
+    "mark-as-read": {
+      "error": {
+        "detail": "Failed to change the last read date."
+      }
     }
   },
   "comic-overview": {

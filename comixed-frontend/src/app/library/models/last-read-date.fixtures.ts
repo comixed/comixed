@@ -21,6 +21,6 @@ import { LastReadDate } from 'app/library/models/last-read-date';
 
 export const COMIC_1_LAST_READ_DATE: LastReadDate = {
   comicId: COMIC_1.id,
-  lastReadDate: 65535,
+  lastRead: 65535,
   lastUpdated: 65536
 };

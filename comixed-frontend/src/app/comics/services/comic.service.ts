@@ -27,16 +27,19 @@ import {
   GET_FORMATS_URL,
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
+  MARK_COMIC_AS_READ_URL,
+  MARK_COMIC_AS_UNREAD_URL,
   RESTORE_COMIC_URL,
   SAVE_COMIC_URL
 } from 'app/comics/comics.constants';
 import { Observable } from 'rxjs';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComicService {
-  constructor(private http: HttpClient) {}
+  constructor(private logger: LoggerService, private http: HttpClient) {}
 
   getScanTypes(): Observable<any> {
     return this.http.get(interpolate(GET_SCAN_TYPES_URL));
@@ -68,5 +71,20 @@ export class ComicService {
 
   restoreComic(comic: Comic): Observable<any> {
     return this.http.put(interpolate(RESTORE_COMIC_URL, { id: comic.id }), {});
+  }
+
+  markAsRead(comic: Comic, mark: boolean): Observable<any> {
+    if (mark) {
+      this.logger.debug('http [PUT]: Marking comic as read');
+      return this.http.put(
+        interpolate(MARK_COMIC_AS_READ_URL, { id: comic.id }),
+        {}
+      );
+    } else {
+      this.logger.debug('http [DELETE]: Unmarking comic as read');
+      return this.http.delete(
+        interpolate(MARK_COMIC_AS_UNREAD_URL, { id: comic.id })
+      );
+    }
   }
 }

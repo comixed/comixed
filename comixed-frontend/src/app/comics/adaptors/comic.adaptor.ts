@@ -32,6 +32,7 @@ import {
   ComicGetFormats,
   ComicGetIssue,
   ComicGetScanTypes,
+  ComicMarkAsRead,
   ComicRestore,
   ComicSave,
   ComicSavePage,
@@ -60,6 +61,7 @@ export class ComicAdaptor {
   private _comic$ = new BehaviorSubject<Comic>(null);
   private _deletingComic$ = new BehaviorSubject<boolean>(false);
   private _restoringComic$ = new BehaviorSubject<boolean>(false);
+  private _markingAsRead$ = new BehaviorSubject<boolean>(false);
 
   constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
@@ -102,6 +104,9 @@ export class ComicAdaptor {
         }
         if (!_.isEqual(state.comic, this._comic$.getValue())) {
           this._comic$.next(state.comic);
+        }
+        if (state.settingReadState !== this._markingAsRead$.getValue()) {
+          this._markingAsRead$.next(state.settingReadState);
         }
       });
   }
@@ -210,5 +215,19 @@ export class ComicAdaptor {
 
   get restoringComic$(): Observable<boolean> {
     return this._restoringComic$.asObservable();
+  }
+
+  markAsRead(comic: Comic): void {
+    this.logger.debug('marking comic as read:', comic);
+    this.store.dispatch(new ComicMarkAsRead({ comic: comic, read: true }));
+  }
+
+  get markingAsRead$(): Observable<boolean> {
+    return this._markingAsRead$.asObservable();
+  }
+
+  markAsUnread(comic: Comic): void {
+    this.logger.debug('marking comic as unread:', comic);
+    this.store.dispatch(new ComicMarkAsRead({ comic: comic, read: false }));
   }
 }
