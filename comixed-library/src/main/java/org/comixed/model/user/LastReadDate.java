@@ -45,8 +45,14 @@ public class LastReadDate {
   @Column(name = "last_read", nullable = false, updatable = false)
   @JsonProperty("last_read")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView(View.UserDetails.class)
+  @JsonView({View.UserDetails.class, View.ComicList.class})
   private Date lastRead = new Date();
+
+  @Column(name = "last_updated", nullable = false, updatable = true)
+  @JsonProperty("last_updated")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonView({View.UserDetails.class, View.ComicList.class})
+  private Date lastUpdated = new Date();
 
   public Comic getComic() {
     return this.comic;
@@ -66,5 +72,13 @@ public class LastReadDate {
 
   public ComiXedUser getUser() {
     return this.user;
+  }
+
+  public Date getLastUpdated() {
+    return lastUpdated;
+  }
+
+  public void setLastUpdated(Date lastUpdated) {
+    this.lastUpdated = lastUpdated;
   }
 }
