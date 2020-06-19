@@ -34,6 +34,9 @@ import {
   ComicGotIssue,
   ComicGotPageTypes,
   ComicGotScanTypes,
+  ComicMarkAsRead,
+  ComicMarkAsReadFailed,
+  ComicMarkedAsRead,
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
   ComicPageSaved,
@@ -66,9 +69,11 @@ import {
   SCAN_TYPE_5
 } from 'app/comics/models/scan-type.fixtures';
 import { ComicState, initialState, reducer } from './comic.reducer';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 
 describe('Comic Reducer', () => {
   const COMIC = COMIC_1;
+  const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
 
   let state: ComicState;
 
@@ -155,6 +160,10 @@ describe('Comic Reducer', () => {
 
     it('clears the scraping comic flag', () => {
       expect(state.scrapingComic).toBeFalsy();
+    });
+
+    it('clears the setting read state flag', () => {
+      expect(state.settingReadState).toBeFalsy();
     });
   });
 
@@ -632,6 +641,74 @@ describe('Comic Reducer', () => {
 
     it('clears the restoring flag', () => {
       expect(state.restoringComic).toBeFalsy();
+    });
+  });
+
+  describe('setting the read state', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, settingReadState: false },
+        new ComicMarkAsRead({ comic: COMIC, read: true })
+      );
+    });
+
+    it('sets the marking as read flag', () => {
+      expect(state.settingReadState).toBeTruthy();
+    });
+  });
+
+  describe('when the comic is marked as read', () => {
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          settingReadState: true,
+          comic: { ...COMIC, lastRead: null }
+        },
+        new ComicMarkedAsRead({ lastRead: LAST_READ_DATE.lastRead })
+      );
+    });
+
+    it('clears the marking as read flag', () => {
+      expect(state.settingReadState).toBeFalsy();
+    });
+
+    it('sets the last read date', () => {
+      expect(state.comic.lastRead).toEqual(LAST_READ_DATE.lastRead);
+    });
+  });
+
+  describe('when the last read date is cleared', () => {
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          settingReadState: true,
+          comic: { ...COMIC, lastRead: LAST_READ_DATE.lastRead }
+        },
+        new ComicMarkedAsRead({ lastRead: null })
+      );
+    });
+
+    it('clears the marking as read flag', () => {
+      expect(state.settingReadState).toBeFalsy();
+    });
+
+    it('clears the last read date', () => {
+      expect(state.comic.lastRead).toBeNull();
+    });
+  });
+
+  describe('failure to set the read state', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, settingReadState: true },
+        new ComicMarkAsReadFailed()
+      );
+    });
+
+    it('clears the marking as read flag', () => {
+      expect(state.settingReadState).toBeFalsy();
     });
   });
 });

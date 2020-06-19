@@ -40,6 +40,8 @@ import {
   ComicGotIssue,
   ComicGotPageTypes,
   ComicGotScanTypes,
+  ComicMarkAsReadFailed,
+  ComicMarkedAsRead,
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
   ComicPageSaved,
@@ -50,11 +52,13 @@ import {
   ComicSavePageFailed,
   ComicSetPageHashBlockingFailed
 } from '../actions/comic.actions';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class ComicEffects {
   constructor(
     private actions$: Actions<ComicActions>,
+    private logger: LoggerService,
     private comicService: ComicService,
     private pageService: PageService,
     private messageService: MessageService,
@@ -406,6 +410,44 @@ export class ComicEffects {
         )
       });
       return of(new ComicRestoreFailed());
+    })
+  );
+
+  @Effect()
+  markAsRead$: Observable<Action> = this.actions$.pipe(
+    ofType(ComicActionTypes.MarkAsRead),
+    map(action => action.payload),
+    tap(action => this.logger.debug('effect: mark comic as read:', action)),
+    switchMap(action =>
+      this.comicService.markAsRead(action.comic, action.read).pipe(
+        tap(response => this.logger.debug('response received:', response)),
+        map(
+          response =>
+            new ComicMarkedAsRead({
+              lastRead: !!response.lastRead ? response.lastRead : null
+            })
+        ),
+        catchError(error => {
+          this.logger.debug('general failure setting last read date:', error);
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'comic-effects.mark-as-read.error-details'
+            )
+          });
+          return of(new ComicMarkAsReadFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.debug('service failure setting last read date:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new ComicMarkAsReadFailed());
     })
   );
 }

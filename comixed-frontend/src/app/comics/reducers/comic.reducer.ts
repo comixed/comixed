@@ -41,6 +41,7 @@ export interface ComicState {
   deletingComic: boolean;
   restoringComic: boolean;
   scrapingComic: boolean;
+  settingReadState: boolean;
 }
 
 export const initialState: ComicState = {
@@ -62,7 +63,8 @@ export const initialState: ComicState = {
   clearingMetadata: false,
   deletingComic: false,
   restoringComic: false,
-  scrapingComic: false
+  scrapingComic: false,
+  settingReadState: false
 };
 
 export function reducer(
@@ -174,6 +176,19 @@ export function reducer(
 
     case ComicActionTypes.RestoreComicFailed:
       return { ...state, restoringComic: false };
+
+    case ComicActionTypes.MarkAsRead:
+      return { ...state, settingReadState: true };
+
+    case ComicActionTypes.MarkedAsRead:
+      return {
+        ...state,
+        settingReadState: false,
+        comic: { ...state.comic, lastRead: action.payload.lastRead }
+      };
+
+    case ComicActionTypes.MarkAsReadFailed:
+      return { ...state, settingReadState: false };
 
     default:
       return state;

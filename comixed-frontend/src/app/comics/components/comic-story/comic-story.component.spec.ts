@@ -30,6 +30,7 @@ import { MessageService } from 'primeng/api';
 import { StoreModule } from '@ngrx/store';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('ComicStoryComponent', () => {
   let component: ComicStoryComponent;
@@ -41,6 +42,7 @@ describe('ComicStoryComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
+        LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),

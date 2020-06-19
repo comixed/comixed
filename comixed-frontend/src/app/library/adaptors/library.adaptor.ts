@@ -175,9 +175,7 @@ export class LibraryAdaptor {
             const lastReadDate = state.lastReadDates.find(
               entry => entry.comicId === comic.id
             );
-            comic.lastReadDate = !!lastReadDate
-              ? lastReadDate.lastReadDate
-              : null;
+            comic.lastRead = !!lastReadDate ? lastReadDate.lastRead : null;
           });
           this._comic$.next(state.comics);
         }

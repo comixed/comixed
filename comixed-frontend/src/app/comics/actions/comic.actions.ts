@@ -49,7 +49,10 @@ export enum ComicActionTypes {
   DeleteComicFailed = '[COMIC] Failed to delete comic from the library',
   RestoreComic = '[COMIC] Unmark a comic for deletion',
   RestoreComicSucceeded = '[COMIC] Comic unmarked for deletion',
-  RestoreComicFailed = '[COMIC] Failed to unmark a comic for deletion'
+  RestoreComicFailed = '[COMIC] Failed to unmark a comic for deletion',
+  MarkAsRead = '[COMIC] Change the read state of a comic',
+  MarkedAsRead = '[COMIC} The read state of a comic was changed',
+  MarkAsReadFailed = '[COMIC] Changing the read state of a comic failed'
 }
 
 export class ComicGetScanTypes implements Action {
@@ -232,6 +235,24 @@ export class ComicRestoreFailed implements Action {
   constructor() {}
 }
 
+export class ComicMarkAsRead implements Action {
+  readonly type = ComicActionTypes.MarkAsRead;
+
+  constructor(public payload: { comic: Comic; read: boolean }) {}
+}
+
+export class ComicMarkedAsRead implements Action {
+  readonly type = ComicActionTypes.MarkedAsRead;
+
+  constructor(public payload: { lastRead: number }) {}
+}
+
+export class ComicMarkAsReadFailed implements Action {
+  readonly type = ComicActionTypes.MarkAsReadFailed;
+
+  constructor() {}
+}
+
 export type ComicActions =
   | ComicGetScanTypes
   | ComicGotScanTypes
@@ -262,4 +283,7 @@ export type ComicActions =
   | ComicDeleteFailed
   | ComicRestore
   | ComicRestored
-  | ComicRestoreFailed;
+  | ComicRestoreFailed
+  | ComicMarkAsRead
+  | ComicMarkedAsRead
+  | ComicMarkAsReadFailed;

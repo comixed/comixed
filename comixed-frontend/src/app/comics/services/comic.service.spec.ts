@@ -30,6 +30,7 @@ import {
   GET_FORMATS_URL,
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
+  MARK_COMIC_AS_READ_URL,
   RESTORE_COMIC_URL,
   SAVE_COMIC_URL
 } from 'app/comics/comics.constants';
@@ -47,17 +48,20 @@ import {
 } from 'app/comics/models/scan-type.fixtures';
 
 import { ComicService } from './comic.service';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('ComicService', () => {
   const COMIC = COMIC_1;
   const SKIP_CACHE = false;
+  const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
 
   let service: ComicService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
       providers: [ComicService]
     });
 
@@ -169,5 +173,29 @@ describe('ComicService', () => {
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({});
     req.flush(COMIC);
+  });
+
+  it('can mark a comic as read', () => {
+    service
+      .markAsRead(COMIC, true)
+      .subscribe(response => expect(response).toEqual(LAST_READ_DATE));
+
+    const req = httpMock.expectOne(
+      interpolate(MARK_COMIC_AS_READ_URL, { id: COMIC.id })
+    );
+    expect(req.request.method).toEqual('PUT');
+    req.flush(LAST_READ_DATE);
+  });
+
+  it('can unmark a comic as read', () => {
+    service
+      .markAsRead(COMIC, false)
+      .subscribe(response => expect(response).toBeNull());
+
+    const req = httpMock.expectOne(
+      interpolate(MARK_COMIC_AS_READ_URL, { id: COMIC.id })
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(null);
   });
 });

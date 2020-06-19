@@ -35,6 +35,9 @@ import {
   ComicGotIssue,
   ComicGotPageTypes,
   ComicGotScanTypes,
+  ComicMarkAsRead,
+  ComicMarkAsReadFailed,
+  ComicMarkedAsRead,
   ComicRestore,
   ComicRestored,
   ComicRestoreFailed,
@@ -60,12 +63,14 @@ import * as fromComics from 'app/comics/reducers/comic.reducer';
 import { MessageService } from 'primeng/api';
 import { ComicAdaptor } from './comic.adaptor';
 import { LoggerModule } from '@angular-ru/logger';
+import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 
 describe('ComicAdaptor', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
   const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
   const COMIC = COMIC_1;
   const SKIP_CACHE = false;
+  const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
 
   let adaptor: ComicAdaptor;
   let store: Store<AppState>;
@@ -351,6 +356,130 @@ describe('ComicAdaptor', () => {
       it('provides updates on restoring', () => {
         adaptor.restoringComic$.subscribe(response =>
           expect(response).toBeFalsy()
+        );
+      });
+    });
+  });
+
+  describe('marking a comic as read', () => {
+    beforeEach(() => {
+      store.dispatch(
+        new ComicGotIssue({ comic: { ...COMIC, lastRead: null } })
+      );
+      adaptor.markAsRead(COMIC);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ComicMarkAsRead({ comic: COMIC, read: true })
+      );
+    });
+
+    it('provides updates on marking the comic', () => {
+      adaptor.markingAsRead$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(
+          new ComicMarkedAsRead({ lastRead: LAST_READ_DATE.lastRead })
+        );
+      });
+
+      it('provides updates on marking the comic', () => {
+        adaptor.markingAsRead$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('provides updates on the comic', () => {
+        adaptor.comic$.subscribe(response =>
+          expect(response).toEqual({
+            ...COMIC,
+            lastRead: LAST_READ_DATE.lastRead
+          })
+        );
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicMarkAsReadFailed());
+      });
+
+      it('provides updates on marking the comic', () => {
+        adaptor.markingAsRead$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('provides updates on the comic', () => {
+        adaptor.comic$.subscribe(response =>
+          expect(response.lastRead).toBeNull()
+        );
+      });
+    });
+  });
+
+  describe('marking a comic as not read', () => {
+    beforeEach(() => {
+      store.dispatch(
+        new ComicGotIssue({
+          comic: { ...COMIC, lastRead: LAST_READ_DATE.lastRead }
+        })
+      );
+      adaptor.markAsUnread(COMIC);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ComicMarkAsRead({ comic: COMIC, read: false })
+      );
+    });
+
+    it('provides updates on marking the comic', () => {
+      adaptor.markingAsRead$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicMarkedAsRead({ lastRead: null }));
+      });
+
+      it('provides updates on marking the comic', () => {
+        adaptor.markingAsRead$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('provides updates on the comic', () => {
+        adaptor.comic$.subscribe(response =>
+          expect(response).toEqual({
+            ...COMIC,
+            lastRead: null
+          })
+        );
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicMarkAsReadFailed());
+      });
+
+      it('provides updates on marking the comic', () => {
+        adaptor.markingAsRead$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('provides updates on the comic', () => {
+        adaptor.comic$.subscribe(response =>
+          expect(response.lastRead).toEqual(LAST_READ_DATE.lastRead)
         );
       });
     });
