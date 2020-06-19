@@ -26,9 +26,13 @@ import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.TaskType;
+import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.comic.ComicRepository;
+import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.service.task.TaskService;
+import org.comixed.service.user.ComiXedUserException;
+import org.comixed.service.user.UserService;
 import org.comixed.task.model.ConvertComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.Utils;
@@ -41,8 +45,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class LibraryService {
-  @Autowired private ComicRepository comicRepository;
   @Autowired private TaskService taskService;
+  @Autowired private UserService userService;
+  @Autowired private ComicRepository comicRepository;
+  @Autowired private LastReadDatesRepository lastReadDateRepository;
   @Autowired private ReadingListService readingListService;
   @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private Worker worker;
@@ -85,8 +91,12 @@ public class LibraryService {
     return result;
   }
 
-  public List<LastReadDate> getLastReadDatesSince(String email, Date lastReadDate) {
-    return null;
+  public List<LastReadDate> getLastReadDatesSince(String email, Date lastReadDate)
+      throws ComiXedUserException {
+    ComiXedUser user = this.userService.findByEmail(email);
+    this.log.debug(
+        "Retrieving all last read dates updated since {} for {}", lastReadDate, user.getEmail());
+    return this.lastReadDateRepository.findAllForUser(user.getId(), lastReadDate);
   }
 
   public long getProcessingCount() {

@@ -36,6 +36,7 @@ import org.comixed.net.GetUpdatedComicsResponse;
 import org.comixed.service.comic.ComicService;
 import org.comixed.service.library.LibraryService;
 import org.comixed.service.library.ReadingListService;
+import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,7 +73,7 @@ public class LibraryControllerTest {
   @Mock private List<ReadingList> readingLists;
 
   @Test
-  public void testGetUpdatedComics() {
+  public void testGetUpdatedComics() throws ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(
             libraryService.getComicsUpdatedSince(
@@ -122,7 +123,7 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testGetUpdatedComicsMoreRemaining() {
+  public void testGetUpdatedComicsMoreRemaining() throws ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(
             libraryService.getComicsUpdatedSince(
@@ -168,7 +169,7 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testGetUpdatedComicsNoResult() {
+  public void testGetUpdatedComicsNoResult() throws ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(
             libraryService.getComicsUpdatedSince(

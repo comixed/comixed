@@ -158,7 +158,7 @@ public class ComicService {
 
     final ComiXedUser user = this.userRepository.findByEmail(email);
 
-    return this.lastReadDatesRepository.findAllForUser(user.getId());
+    return this.lastReadDatesRepository.findAllForUser(user.getId(), new Date(timestamp));
   }
 
   @Transactional

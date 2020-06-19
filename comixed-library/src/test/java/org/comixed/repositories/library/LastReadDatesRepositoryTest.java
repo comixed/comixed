@@ -18,12 +18,11 @@
 
 package org.comixed.repositories.library;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import java.util.Date;
 import java.util.List;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.RepositoryContext;
@@ -51,11 +50,13 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 public class LastReadDatesRepositoryTest {
   private static final Long TEST_USER_ID = 1000L;
   private static final Long TEST_COMIC_ID = 1000L;
+
   @Autowired private LastReadDatesRepository repository;
 
   @Test
   public void testFindAllForUser() {
-    List<LastReadDate> result = repository.findAllForUser(TEST_USER_ID);
+    Date lastReadDate = new Date(0);
+    List<LastReadDate> result = repository.findAllForUser(TEST_USER_ID, lastReadDate);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

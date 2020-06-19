@@ -36,6 +36,7 @@ public class LastReadDate {
 
   @ManyToOne
   @JoinColumn(name = "comic_id")
+  @JsonProperty("comic")
   private Comic comic;
 
   @ManyToOne
@@ -43,19 +44,26 @@ public class LastReadDate {
   private ComiXedUser user;
 
   @Column(name = "last_read", nullable = false, updatable = false)
-  @JsonProperty("last_read")
+  @JsonProperty("lastRead")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({View.UserDetails.class, View.ComicList.class})
+  @JsonView({View.UserDetails.class, View.LibraryUpdate.class})
   private Date lastRead = new Date();
 
   @Column(name = "last_updated", nullable = false, updatable = true)
-  @JsonProperty("last_updated")
+  @JsonProperty("lastUpdated")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({View.UserDetails.class, View.ComicList.class})
+  @JsonView({View.UserDetails.class, View.LibraryUpdate.class})
   private Date lastUpdated = new Date();
 
   public Comic getComic() {
     return this.comic;
+  }
+
+  @JsonProperty("comicId")
+  @JsonView({View.UserDetails.class, View.LibraryUpdate.class})
+  @Transient
+  public Long getComicId() {
+    return this.comic.getId();
   }
 
   public Long getId() {
