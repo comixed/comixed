@@ -32,32 +32,32 @@ import org.comixed.views.View;
 public class GetUpdatedComicsResponse {
 
   @JsonProperty("comics")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.LibraryUpdate.class)
   private List<Comic> comics;
 
   @JsonProperty("lastComicId")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.LibraryUpdate.class)
   private Long lastComicId;
 
   @JsonProperty("mostRecentUpdate")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.LibraryUpdate.class)
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   private Date mostRecentUpdate;
 
   @JsonProperty("lastReadDates")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.LibraryUpdate.class)
   private List<LastReadDate> lastReadDates;
 
   @JsonProperty("readingLists")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.LibraryUpdate.class)
   private List<ReadingList> readingLists = new ArrayList<>();
 
   @JsonProperty("moreUpdates")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.LibraryUpdate.class)
   private boolean moreUpdates;
 
   @JsonProperty("processingCount")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.LibraryUpdate.class)
   private long processingCount;
 
   public GetUpdatedComicsResponse() {}

@@ -341,7 +341,8 @@ public class ComicServiceTest {
   public void testGetLastReadDatesSince() {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
-    Mockito.when(lastReadDatesRepository.findAllForUser(TEST_USER_ID)).thenReturn(listLastReadDate);
+    Mockito.when(lastReadDatesRepository.findAllForUser(Mockito.anyLong(), Mockito.any(Date.class)))
+        .thenReturn(listLastReadDate);
 
     final List<LastReadDate> result =
         this.comicService.getLastReadDatesSince(TEST_EMAIL, TEST_TIMESTAMP);
@@ -351,7 +352,8 @@ public class ComicServiceTest {
 
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.times(1)).getId();
-    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).findAllForUser(TEST_USER_ID);
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1))
+        .findAllForUser(TEST_USER_ID, new Date(TEST_TIMESTAMP));
   }
 
   @Test

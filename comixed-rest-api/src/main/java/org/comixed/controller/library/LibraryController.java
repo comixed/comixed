@@ -34,6 +34,7 @@ import org.comixed.net.GetUpdatedComicsResponse;
 import org.comixed.service.comic.ComicService;
 import org.comixed.service.library.LibraryService;
 import org.comixed.service.library.ReadingListService;
+import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
 import org.comixed.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +57,10 @@ public class LibraryController {
       value = "/library/updates",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicList.class)
+  @JsonView(View.LibraryUpdate.class)
   public GetUpdatedComicsResponse getUpdatedComics(
-      Principal principal, @RequestBody() GetUpdatedComicsRequest request) {
+      Principal principal, @RequestBody() GetUpdatedComicsRequest request)
+      throws ComiXedUserException {
     Date latestUpdateDate = new Date(request.getLastUpdatedDate());
     String email = principal.getName();
     this.log.info(

@@ -18,6 +18,7 @@
 
 package org.comixed.repositories.library;
 
+import java.util.Date;
 import java.util.List;
 import org.comixed.model.user.LastReadDate;
 import org.springframework.data.jpa.repository.Query;
@@ -35,8 +36,11 @@ public interface LastReadDatesRepository extends CrudRepository<LastReadDate, Lo
    * Retrieves all last read dates for a single user.
    *
    * @param userId the user id
+   * @param updatedSince the earliest date
    * @return the list of last read dates
    */
-  @Query("SELECT d FROM LastReadDate d WHERE d.user.id = :userId")
-  List<LastReadDate> findAllForUser(@Param("userId") long userId);
+  @Query(
+      "SELECT d FROM LastReadDate d WHERE d.user.id = :userId AND d.lastUpdated >= :updatedSince")
+  List<LastReadDate> findAllForUser(
+      @Param("userId") Long userId, @Param("updatedSince") Date updatedSince);
 }

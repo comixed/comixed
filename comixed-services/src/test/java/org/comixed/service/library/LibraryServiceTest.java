@@ -11,8 +11,13 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.tasks.TaskType;
+import org.comixed.model.user.ComiXedUser;
+import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.comic.ComicRepository;
+import org.comixed.repositories.library.LastReadDatesRepository;
 import org.comixed.service.task.TaskService;
+import org.comixed.service.user.ComiXedUserException;
+import org.comixed.service.user.UserService;
 import org.comixed.task.model.ConvertComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.Utils;
@@ -36,10 +41,12 @@ public class LibraryServiceTest {
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
   private static final Boolean TEST_DELETE_PHYSICAL_FILES = RANDOM.nextBoolean();
   private static final String TEST_FILENAME = "/home/comixeduser/Library/comicfile.cbz";
+  private static final Long TEST_USER_ID = 723L;
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
   @Mock private ReadingListService readingListService;
+  @Mock private UserService userService;
   @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Mock private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
@@ -49,6 +56,9 @@ public class LibraryServiceTest {
   @Mock private Worker worker;
   @Mock private File file;
   @Mock private Utils utils;
+  @Mock private List<LastReadDate> lastReadDateList;
+  @Mock private ComiXedUser user;
+  @Mock private LastReadDatesRepository lastReadDatesRepository;
 
   private List<Comic> comicList = new ArrayList<>();
   private Comic comic1 = new Comic();
@@ -177,5 +187,23 @@ public class LibraryServiceTest {
     Mockito.verify(comic, Mockito.times(comicList.size())).getFilename();
     Mockito.verify(comic, Mockito.times(comicList.size())).getFile();
     Mockito.verify(utils, Mockito.times(comicList.size())).deleteFile(file);
+  }
+
+  @Test
+  public void testGetLastReadDatesForUser() throws ComiXedUserException {
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
+    Mockito.when(lastReadDatesRepository.findAllForUser(Mockito.anyLong(), Mockito.any(Date.class)))
+        .thenReturn(lastReadDateList);
+
+    List<LastReadDate> result =
+        libraryService.getLastReadDatesSince(TEST_EMAIL, TEST_LAST_UPDATED_TIMESTAMP);
+
+    assertNotNull(result);
+    assertSame(lastReadDateList, result);
+
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1))
+        .findAllForUser(TEST_USER_ID, TEST_LAST_UPDATED_TIMESTAMP);
   }
 }
