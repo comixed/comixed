@@ -391,23 +391,27 @@ public class ComicControllerTest {
 
   @Test
   public void testGetComicForNonexistentComic() throws ComicException {
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(null);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
+    Mockito.when(comicService.getComic(Mockito.anyLong(), Mockito.anyString())).thenReturn(null);
 
-    assertNull(controller.getComic(TEST_COMIC_ID));
+    Comic result = controller.getComic(principal, TEST_COMIC_ID);
 
-    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    assertNull(result);
+
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID, TEST_EMAIL_ADDRESS);
   }
 
   @Test
   public void testGetComic() throws ComicException {
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
+    Mockito.when(comicService.getComic(Mockito.anyLong(), Mockito.anyString())).thenReturn(comic);
 
-    Comic result = controller.getComic(TEST_COMIC_ID);
+    Comic result = controller.getComic(principal, TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(comic, result);
 
-    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID, TEST_EMAIL_ADDRESS);
   }
 
   @Test
