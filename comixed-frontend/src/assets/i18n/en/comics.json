@@ -122,7 +122,8 @@
       "format-placeholder": "Click to set format...",
       "scan-type-placeholder": "Click to set scan type...",
       "sort-name-placeholder": "Click to set a sort name...",
-      "comicvine-details-link": "The details can be found <a href='http://comicvine.gamespot.com/issue/4000-{comicVineId}'>here</a>."
+      "comicvine-details-link": "The details can be found <a href='http://comicvine.gamespot.com/issue/4000-{comicVineId}'>here</a>.",
+      "never-read": "Never"
     },
     "scan-type": {
       "option": {

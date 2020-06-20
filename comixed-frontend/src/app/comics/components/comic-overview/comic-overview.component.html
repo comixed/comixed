@@ -180,7 +180,8 @@
         <strong>{{"comic-overview.label.last-read-date"|translate}}</strong>
       </div>
       <div class='ui-g-12'>
-        {{ "Never"}}
+        <span *ngIf='!comic.lastReadDate'>{{'comic-overview.text.never-read'|translate}}</span>
+        <span *ngIf='comic.lastReadDate'>{{comic.lastReadDate|date:'medium'}}</span>
       </div>
       <div class='ui-g-12'>
         <strong>{{"comic-overview.label.page-count"|translate}}</strong>
