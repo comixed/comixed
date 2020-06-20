@@ -144,7 +144,8 @@
       "delete-comic": "Mark comic for deletion.",
       "undelete-comic": "Do not mark comic for deletion.",
       "save-changes": "Save changes.",
-      "undo-changes": "Undo changes."
+      "undo-changes": "Undo changes.",
+      "toggle-read": "{marked, select, true{Clear} other{Set}} the last read date."
     }
   },
   "comic-story": {

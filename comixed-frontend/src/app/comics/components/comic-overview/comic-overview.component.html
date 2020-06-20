@@ -179,9 +179,19 @@
       <div class='ui-g-12'>
         <strong>{{"comic-overview.label.last-read-date"|translate}}</strong>
       </div>
-      <div class='ui-g-12'>
-        <span *ngIf='!comic.lastReadDate'>{{'comic-overview.text.never-read'|translate}}</span>
-        <span *ngIf='comic.lastReadDate'>{{comic.lastReadDate|date:'medium'}}</span>
+      <div *ngIf='!comic.lastRead'
+           class='ui-g-12'>
+        <span class='fa fa-fw fa-square'
+              (click)='markAsRead(true)'
+              [pTooltip]='"comic-overview.tooltip.toggle-read"|translate:{marked:false}'></span>
+        {{'comic-overview.text.never-read'|translate}}
+      </div>
+      <div *ngIf='!!comic.lastRead'
+           class='ui-g-12'>
+        <span class='fa fa-fw fas fa-check-square'
+              (click)='markAsRead(false)'
+              [pTooltip]='"comic-overview.tooltip.toggle-read"|translate:{marked:true}'></span>
+        {{comic.lastRead|date:'medium'}}
       </div>
       <div class='ui-g-12'>
         <strong>{{"comic-overview.label.page-count"|translate}}</strong>
