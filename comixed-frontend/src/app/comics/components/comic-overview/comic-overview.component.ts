@@ -197,4 +197,16 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
     this.logger.debug(`${show ? 'showing' : 'hiding'} file entries dialog`);
     this.showFileEntriesDialog = show;
   }
+
+  markAsRead(read: boolean): void {
+    this.logger.debug(
+      `toggling read start ${read ? 'on' : 'off'} for comic:`,
+      this.comic
+    );
+    if (read) {
+      this.comicAdaptor.markAsRead(this.comic);
+    } else {
+      this.comicAdaptor.markAsUnread(this.comic);
+    }
+  }
 }
