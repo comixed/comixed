@@ -65,4 +65,5 @@ export interface Comic {
   pages?: Page[];
   duplicateCount?: number;
   readingLists: ReadingList[];
+  lastReadDate?: Date;
 }

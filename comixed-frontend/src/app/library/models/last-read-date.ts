@@ -17,8 +17,6 @@
  */
 
 export interface LastReadDate {
-  id: number;
-  comic_id: number;
-  user_id: number;
-  last_read_date: number;
+  comicId: number;
+  lastReadDate: number;
 }
