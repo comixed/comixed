@@ -17,11 +17,10 @@
  */
 
 import { COMIC_1 } from '../../comics/models/comic.fixtures';
-import { USER_READER } from 'app/user';
+import { LastReadDate } from 'app/library/models/last-read-date';
 
-export const COMIC_1_LAST_READ_DATE = {
-  id: 1,
-  comic_id: COMIC_1.id,
-  user_id: USER_READER.id,
-  last_read_date: 65535
+export const COMIC_1_LAST_READ_DATE: LastReadDate = {
+  comicId: COMIC_1.id,
+  lastReadDate: 65535,
+  lastUpdated: 65536
 };

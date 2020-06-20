@@ -19,4 +19,5 @@
 export interface LastReadDate {
   comicId: number;
   lastReadDate: number;
+  lastUpdated: number;
 }
