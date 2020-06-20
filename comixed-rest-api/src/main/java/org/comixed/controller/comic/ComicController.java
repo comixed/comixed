@@ -151,10 +151,11 @@ public class ComicController {
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetails.class)
-  public Comic getComic(@PathVariable("id") long id) throws ComicException {
-    this.log.info("Getting comic: id={}", id);
+  public Comic getComic(Principal principal, @PathVariable("id") long id) throws ComicException {
+    String email = principal.getName();
+    this.log.info("Getting comic for user: id={} user={}", id, email);
 
-    final Comic result = this.comicService.getComic(id);
+    final Comic result = this.comicService.getComic(id, email);
 
     if (result == null) {
       this.log.error("No such comic");

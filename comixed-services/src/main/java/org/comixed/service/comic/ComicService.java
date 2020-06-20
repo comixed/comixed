@@ -342,4 +342,22 @@ public class ComicService {
     this.log.debug("Returning success");
     return true;
   }
+
+  public Comic getComic(long comicId, String email) throws ComicException {
+    Comic result = this.getComic(comicId);
+    ComiXedUser user = this.userRepository.findByEmail(email);
+
+    if (user == null) {
+      throw new ComicException("could not load last read date for non-existent user: " + email);
+    }
+
+    this.log.debug("Loading last read date for comic: user id={}", user.getId());
+    LastReadDate lastRead = this.lastReadDatesRepository.getForComicAndUser(result, user);
+    if (lastRead != null) {
+      this.log.debug("Last read on {}", lastRead.getLastRead());
+      result.setLastRead(lastRead.getLastRead());
+    }
+
+    return result;
+  }
 }

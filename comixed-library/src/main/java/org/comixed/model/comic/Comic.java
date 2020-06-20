@@ -293,6 +293,10 @@ public class Comic {
   @JsonIgnore
   private List<LastReadDate> lastReadDates = new ArrayList<>();
 
+  @Transient
+  @JsonView(View.ComicDetails.class)
+  private Date lastRead;
+
   public Date getDateLastUpdated() {
     return dateLastUpdated;
   }
@@ -1136,5 +1140,9 @@ public class Comic {
 
   public Date getDateLastRead() {
     return this.lastReadDates.isEmpty() ? null : this.lastReadDates.iterator().next().getLastRead();
+  }
+
+  public void setLastRead(Date lastRead) {
+    this.lastRead = lastRead;
   }
 }
