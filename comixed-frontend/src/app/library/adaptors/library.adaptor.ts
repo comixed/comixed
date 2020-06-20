@@ -99,14 +99,20 @@ export class LibraryAdaptor {
         ) {
           this._latestUpdatedDate$.next(state.latestUpdatedDate);
         }
+        let updatedLastReadDates = false;
         if (!_.isEqual(this._lastReadDate$.getValue(), state.lastReadDates)) {
+          this.logger.info('updating last read dates');
           this._lastReadDate$.next(state.lastReadDates);
+          updatedLastReadDates = true;
         }
         if (this._comicCount$.getValue() !== state.comicCount) {
           this._comicCount$.next(state.comicCount);
         }
         this._fetchingUpdate$.next(state.fetchingUpdates);
+        let updatedComics = false;
         if (!_.isEqual(this._comic$.getValue(), state.comics)) {
+          updatedComics = true;
+          this.logger.info('updating comics');
           this._comic$.next(state.comics);
           this._publishers$.next(
             extractField(state.comics, CollectionType.PUBLISHERS)
@@ -158,6 +164,22 @@ export class LibraryAdaptor {
         }
         if (state.consolidating !== this._consolidating$.getValue()) {
           this._consolidating$.next(state.consolidating);
+        }
+
+        // if either the last read dates or comics have changed then update all comics' last read date
+        this.logger.debug(`updatedLastReadDates=${updatedLastReadDates}`);
+        this.logger.debug(`updatedComics=${updatedComics}`);
+        if (updatedLastReadDates || updatedComics) {
+          this.logger.trace('Merging last read dates into library');
+          state.comics.forEach(comic => {
+            const lastReadDate = state.lastReadDates.find(
+              entry => entry.comicId === comic.id
+            );
+            comic.lastReadDate = !!lastReadDate
+              ? lastReadDate.lastReadDate
+              : null;
+          });
+          this._comic$.next(state.comics);
         }
       });
   }
