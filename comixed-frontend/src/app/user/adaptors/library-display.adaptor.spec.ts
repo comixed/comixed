@@ -26,7 +26,7 @@ import {
   ROWS_QUERY_PARAM,
   SAME_HEIGHT_QUERY_PARAM,
   SORT_QUERY_PARAM
-} from 'app/library/adaptors/library-display.adaptor';
+} from 'app/user/adaptors/library-display.adaptor';
 import { TestBed } from '@angular/core/testing';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { StoreModule } from '@ngrx/store';
