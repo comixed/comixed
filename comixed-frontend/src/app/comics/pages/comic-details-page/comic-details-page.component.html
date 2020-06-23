@@ -55,8 +55,8 @@
                 <app-comic-credits [comic]='comic'></app-comic-credits>
             </p-tabPanel>
             <p-tabPanel header='{{ "comic-details-page.tab.pages" | translate }}'>
-                <app-comic-pages [image_size]='pageSize'
-                                 [is_admin]='isAdmin'
+                <app-comic-pages [imageSize]="pageSize"
+                                 [isAdmin]="isAdmin"
                                  [comic]='comic'></app-comic-pages>
             </p-tabPanel>
             <p-tabPanel *ngIf='isAdmin'
