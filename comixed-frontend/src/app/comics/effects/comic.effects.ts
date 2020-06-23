@@ -137,10 +137,11 @@ export class ComicEffects {
             new ComicGotPageTypes({ pageTypes: response })
         ),
         catchError(error => {
+          this.logger.error('service failure getting page types:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.get-pabge-types.error.detail'
+              'comics-effects.get-page-types.error.detail'
             )
           });
           return of(new ComicGetPageTypesFailed());
@@ -148,6 +149,7 @@ export class ComicEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('general failure getting page types:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
