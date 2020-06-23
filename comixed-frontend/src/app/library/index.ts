@@ -34,7 +34,7 @@ import { PublisherState } from 'app/library/reducers/publisher.reducer';
 export { LibraryAdaptor } from './adaptors/library.adaptor';
 export { SelectionAdaptor } from './adaptors/selection.adaptor';
 export { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
-export { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
+export { LibraryDisplayAdaptor } from '../user/adaptors/library-display.adaptor';
 
 interface RouterStateUrl {
   url: string;

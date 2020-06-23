@@ -54,6 +54,7 @@ import { UserAdminEffects } from 'app/user/effects/user-admin.effects';
 import { UserAdminService } from 'app/user/services/user-admin.service';
 import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 import { UserPreferencePipe } from 'app/user/pipes/user-preference.pipe';
+import { LibraryDisplayAdaptor } from 'app/user/adaptors/library-display.adaptor';
 
 @NgModule({
   imports: [
@@ -82,6 +83,7 @@ import { UserPreferencePipe } from 'app/user/pipes/user-preference.pipe';
   ],
   providers: [
     AuthenticationAdaptor,
+    LibraryDisplayAdaptor,
     UserAdminAdaptor,
     TokenService,
     UserAdminService,

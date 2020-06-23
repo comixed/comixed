@@ -54,7 +54,6 @@ import {
   TooltipModule,
   TreeModule
 } from 'primeng/primeng';
-import { LibraryDisplayAdaptor } from './adaptors/library-display.adaptor';
 import { LibraryAdaptor } from './adaptors/library.adaptor';
 import { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
 import { SelectionAdaptor } from './adaptors/selection.adaptor';
@@ -159,7 +158,6 @@ import { AddComicsToReadingListComponent } from './components/add-comics-to-list
   providers: [
     LibraryService,
     LibraryAdaptor,
-    LibraryDisplayAdaptor,
     SelectionAdaptor,
     DuplicatePagesAdaptors,
     ReadingListService,
