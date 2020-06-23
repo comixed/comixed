@@ -31,6 +31,7 @@ import {
   ComicDelete,
   ComicGetFormats,
   ComicGetIssue,
+  ComicGetPageTypes,
   ComicGetScanTypes,
   ComicMarkAsRead,
   ComicRestore,
@@ -139,6 +140,11 @@ export class ComicAdaptor {
 
   get formats$(): Observable<ComicFormat[]> {
     return this._formats$.asObservable();
+  }
+
+  getPageTypes(): void {
+    this.logger.debug('Firing action to load page types');
+    this.store.dispatch(new ComicGetPageTypes());
   }
 
   get fetchingPageTypes$(): Observable<boolean> {

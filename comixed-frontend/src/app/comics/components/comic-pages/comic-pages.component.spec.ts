@@ -20,10 +20,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
-import { DataViewModule } from 'primeng/dataview';
-import { ButtonModule } from 'primeng/button';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
@@ -38,6 +35,11 @@ import { ComicGotPageTypes } from 'app/comics/actions/comic.actions';
 import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1, PAGE_2 } from 'app/comics/models/page.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
+import { TableModule } from 'primeng/table';
+import { InplaceModule } from 'primeng/inplace';
+import { TooltipModule } from 'primeng/primeng';
+import { UserModule } from 'app/user/user.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ComicPagesComponent', () => {
   let component: ComicPagesComponent;
@@ -48,7 +50,9 @@ describe('ComicPagesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        UserModule,
         HttpClientTestingModule,
+        RouterTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
@@ -56,11 +60,11 @@ describe('ComicPagesComponent', () => {
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([ComicEffects]),
-        CardModule,
         DropdownModule,
-        DataViewModule,
-        ButtonModule,
-        MessagesModule
+        MessagesModule,
+        TableModule,
+        InplaceModule,
+        TooltipModule
       ],
       declarations: [ComicPagesComponent, ComicPageUrlPipe],
       providers: [ComicAdaptor, MessageService]
@@ -78,17 +82,9 @@ describe('ComicPagesComponent', () => {
   });
 
   it('subscribes to page type list upates', () => {
+    component.pageTypeOptions = [];
     store.dispatch(new ComicGotPageTypes({ pageTypes: [FRONT_COVER] }));
-    expect(component.pageTypes).not.toEqual([]);
-  });
-
-  it('can change the type of a page', () => {
-    spyOn(comicAdaptor, 'savePage');
-    component.setPageType(PAGE_2, BACK_COVER);
-    expect(comicAdaptor.savePage).toHaveBeenCalledWith({
-      ...PAGE_2,
-      page_type: BACK_COVER
-    });
+    expect(component.pageTypeOptions).not.toEqual([]);
   });
 
   it('can block a page hash', () => {

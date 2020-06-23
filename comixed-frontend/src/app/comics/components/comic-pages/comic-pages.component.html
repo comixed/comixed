@@ -1,99 +1,66 @@
-<p-dataView *ngIf='comic'
-            [value]='comic.pages'>
-    <p-header>
-        <div class='ui-helper-clearfix'>
-            <div class='ui-g'>
-                <div class='ui-g-6 ui-md-4'
-                     style='text-align: right'>
-                    <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
-                </div>
-            </div>
+<p-table *ngIf='!!comic'
+         [value]='comic.pages'
+         [responsive]='true'
+         [rows]='rows'
+         paginator='true'
+         paginatorPosition='both'>
+  <ng-template pTemplate='colgroup'>
+    <col class='cx-table-column-small'/>
+    <col class='cx-table-column-medium'/>
+    <col class='cx-table-column-medium'/>
+    <col class='cx-table-column-medium-large'/>
+    <col/>
+    <col class='cx-table-column-medium'/>
+    <col class='cx-table-column-medium'/>
+  </ng-template>
+  <ng-template pTemplate='header'>
+    <tr>
+      <th>##</th>
+      <th>{{ 'comic-pages.table.header.thumbnail' | translate }}</th>
+      <th>{{ 'comic-pages.table.header.filename' | translate }}</th>
+      <th>{{ 'comic-pages.table.header.page-type' | translate }}</th>
+      <th>{{ 'comic-pages.table.header.hash' | translate }}</th>
+      <th>{{ 'comic-pages.table.header.dimensions' | translate }}</th>
+      <th>{{ 'comic-pages.table.header.blocked-status' | translate }}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate='body'
+               let-page>
+    <tr>
+      <td class='cx-table-column-align-center'>{{ page.index }}</td>
+      <td>
+        <div class='cx-comic-page-thumbnail'>
+          <img src='{{ page | comicPageUrl }}'
+               width='100%'/>
         </div>
-    </p-header>
-    <ng-template let-page
-                 pTemplate='listItem'>
-        <div class='ui-g'>
-            <div class='ui-g-2 ui-sm-6'>
-                <img alt='comic cover'
-                     src='{{ page | comicPageUrl }}'
-                     [style.height]='"auto"'
-                     [style.width]='"100%"'/>
-            </div>
-            <div class='ui-g-10 ui-sm-6'>
-                <div class='ui-g'>
-                    <div class='ui-g-2 ui-sm-6'>
-                        <strong>{{ "comic-pages.label.filename" | translate }}</strong>
-                    </div>
-                    <div class='ui-g-10 ui-sm-6'>{{ page.filename }}</div>
-                    <div class='ui-g-2 ui-sm-6'>
-                        <strong>{{ "comic-pages.label.dimensions" | translate }}</strong>
-                    </div>
-                    <div class='ui-g-10 ui-sm-6'>
-                        {{ page.width }} x {{ page.height }}
-                    </div>
-                    <div *ngIf='page.deleted'
-                         class='ui-g-12 ui-sm-12'>
-                        <em>{{ "comic-pages.text.marked-for-deletion" | translate }} </em>
-                    </div>
-                    <div *ngIf='isAdmin && pageTypeOptions?.length'
-                         class='ui-g-12 ui-sm-12'>
-                        <p-dropdown [options]='pageTypeOptions'
-                                    [(ngModel)]='page.page_type.id'
-                                    (onChange)='setPageType(page, $event.value)'></p-dropdown>
-                    </div>
-                    <div class='ui-g-12 ui-sm-12'>
-                        <button *ngIf='page.blocked'
-                                pButton
-                                type='button'
-                                label='{{ "button.blocked" | translate }}'
-                                icon='pi pi-check'
-                                (click)='unblockPage(page)'></button>
-                        <button *ngIf='!page.blocked'
-                                pButton
-                                type='button'
-                                label='{{ "button.not-blocked" | translate }}'
-                                icon='pi pi-times'
-                                (click)='blockPage(page)'></button>
-                    </div>
-                    <div *ngIf='page.blocked'
-                         class='ui-g-12 ui-sm-12'>
-                        <em>{{ "comic-pages.text.page-is-blocked" | translate }} </em>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ng-template>
-    <ng-template let-page
-                 pTemplate='gridItem'>
-        <p-card><img alt='comic page'
-                     src='{{ page | comicPageUrl }}'
-                     [style.height]='"" + imageSize + "px"'
-                     [style.width]='"auto"'/>
-            <p-footer>
-                <div *ngIf='isAdmin'
-                     class='ui-g'>
-                    <div *ngIf='pageTypeOptions?.length'
-                         class='ui-g-12 ui-sm-12'>
-                        <p-dropdown [options]='pageTypeOptions'
-                                    [(ngModel)]='page.page_type.id'
-                                    (onChange)='setPageType(page, $event.value)'></p-dropdown>
-                    </div>
-                    <div class='ui-g-12 ui-sm-12'>
-                        <button *ngIf='page.blocked'
-                                pButton
-                                type='button'
-                                label='{{ "button.blocked" | translate }}'
-                                icon='pi pi-check'
-                                (click)='unblockPage(page)'></button>
-                        <button *ngIf='!page.blocked'
-                                pButton
-                                type='button'
-                                label='{{ "button.not-blocked" | translate }}'
-                                icon='pi pi-times'
-                                (click)='blockPage(page)'></button>
-                    </div>
-                </div>
-            </p-footer>
-        </p-card>
-    </ng-template>
-</p-dataView>
+      </td>
+      <td>{{ page.filename }}</td>
+      <td class='cx-table-column-align-center'>
+        <p-inplace [disabled]='true'>
+          <span pInplaceDisplay>
+            {{ 'comic-pages.page-type.' + page.page_type.name | translate }}
+          </span>
+          <span pInplaceContent>
+            <p-dropdown
+                [options]='pageTypeOptions'
+                [(ngModel)]='page.page_type'
+                (onChange)='setPageType(page, $event.value)'
+            ></p-dropdown>
+          </span>
+        </p-inplace>
+      </td>
+      <td>{{ page.hash }}</td>
+      <td class='cx-table-column-align-center'>
+        {{ page.width }}x{{ page.height }}
+      </td>
+      <td class='cx-table-column-align-center'>
+        <span
+            class='fa fa-fw fa-switch'
+            (click)='page.blocked ? unblockPage(page) : blockPage(page)'
+            [pTooltip]='"comic-pages.tooltip.blocked"|translate:{blocked:page.blocked}'>
+        {{'comic-pages.table.column.blocked-status'|translate: {blocked: page.blocked} }}
+        </span>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

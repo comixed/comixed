@@ -73,6 +73,7 @@ import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-
 import { PublisherPipe } from 'app/comics/pipes/publisher.pipe';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
 import { FileEntryListComponent } from 'app/comics/components/file-entry-list/file-entry-list.component';
+import { TableModule } from 'primeng/table';
 
 describe('ComicDetailsPageComponent', () => {
   const COMIC = COMIC_2;
@@ -110,7 +111,8 @@ describe('ComicDetailsPageComponent', () => {
         ToolbarModule,
         AutoCompleteModule,
         DialogModule,
-        ScrollPanelModule
+        ScrollPanelModule,
+        TableModule
       ],
       declarations: [
         ComicDetailsPageComponent,
