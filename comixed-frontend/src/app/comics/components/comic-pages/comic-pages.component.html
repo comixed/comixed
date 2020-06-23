@@ -35,9 +35,9 @@
                          class='ui-g-12 ui-sm-12'>
                         <em>{{ "comic-pages.text.marked-for-deletion" | translate }} </em>
                     </div>
-                    <div *ngIf='is_admin && page_type_options?.length'
+                    <div *ngIf='isAdmin && pageTypeOptions?.length'
                          class='ui-g-12 ui-sm-12'>
-                        <p-dropdown [options]='page_type_options'
+                        <p-dropdown [options]='pageTypeOptions'
                                     [(ngModel)]='page.page_type.id'
                                     (onChange)='setPageType(page, $event.value)'></p-dropdown>
                     </div>
@@ -67,14 +67,14 @@
                  pTemplate='gridItem'>
         <p-card><img alt='comic page'
                      src='{{ page | comicPageUrl }}'
-                     [style.height]='"" + image_size + "px"'
+                     [style.height]='"" + imageSize + "px"'
                      [style.width]='"auto"'/>
             <p-footer>
-                <div *ngIf='is_admin'
+                <div *ngIf='isAdmin'
                      class='ui-g'>
-                    <div *ngIf='page_type_options?.length'
+                    <div *ngIf='pageTypeOptions?.length'
                          class='ui-g-12 ui-sm-12'>
-                        <p-dropdown [options]='page_type_options'
+                        <p-dropdown [options]='pageTypeOptions'
                                     [(ngModel)]='page.page_type.id'
                                     (onChange)='setPageType(page, $event.value)'></p-dropdown>
                     </div>

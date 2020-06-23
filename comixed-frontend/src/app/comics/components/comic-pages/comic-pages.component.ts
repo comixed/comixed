@@ -21,6 +21,7 @@ import { SelectItem } from 'primeng/api';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { Subscription } from 'rxjs';
 import { Comic, Page, PageType } from 'app/comics';
+import { LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'app-comic-pages',
@@ -28,37 +29,41 @@ import { Comic, Page, PageType } from 'app/comics';
   styleUrls: ['./comic-pages.component.scss']
 })
 export class ComicPagesComponent implements OnInit {
-  @Input() is_admin: boolean;
+  @Input() isAdmin: boolean;
   @Input() comic: Comic;
-  @Input() image_size: number;
+  @Input() imageSize: number;
   pageTypesSubscription: Subscription;
   pageTypes: PageType[];
-  protected page_type_options: Array<SelectItem> = [];
+  protected pageTypeOptions: SelectItem[] = [];
 
-  constructor(private comicAdaptor: ComicAdaptor) {}
+  constructor(
+    private logger: LoggerService,
+    private comicAdaptor: ComicAdaptor
+  ) {}
 
   ngOnInit() {
     this.pageTypesSubscription = this.comicAdaptor.pageTypes$.subscribe(
       pageTypes => {
-        this.page_type_options = pageTypes.map(pageType => {
+        this.pageTypeOptions = pageTypes.map(pageType => {
           return { label: pageType.name, value: pageType };
         });
       }
     );
-    // TODO fix the preference here
-    //    this.image_size = parseInt(this.user_service.get_user_preference('coverSize', '200'), 10);
   }
 
   setPageType(page: Page, pageType: PageType): void {
+    this.logger.debug('setting page type:', page, pageType);
     page.page_type = pageType;
     this.comicAdaptor.savePage(page);
   }
 
   blockPage(page: Page): void {
+    this.logger.debug('marking page as blocked:', page);
     this.comicAdaptor.blockPageHash(page);
   }
 
   unblockPage(page: Page): void {
+    this.logger.debug('unmarking page as blocked:', page);
     this.comicAdaptor.unblockPageHash(page);
   }
 }
