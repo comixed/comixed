@@ -18,7 +18,7 @@
 
 import { Comic } from 'app/comics/models/comic';
 import { SCAN_TYPE_1 } from './scan-type.fixtures';
-import { PAGE_1 } from './page.fixtures';
+import { PAGE_1, PAGE_2, PAGE_3, PAGE_4 } from './page.fixtures';
 import { FORMAT_1 } from './comic-format.fixtures';
 import {
   COMIC_CREDIT_1,
@@ -54,7 +54,7 @@ export const COMIC_1: Comic = {
   characters: [],
   teams: [],
   locations: [],
-  pages: [PAGE_1],
+  pages: [PAGE_1, PAGE_2, PAGE_3, PAGE_4],
   blockedPageCount: 0,
   deletedPageCount: 0,
   credits: [],

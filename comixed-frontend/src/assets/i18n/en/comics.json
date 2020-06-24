@@ -28,6 +28,14 @@
         "detail": "Failed to save page changes."
       }
     },
+    "set-page-type": {
+      "success": {
+        "detail": "Page type changed."
+      },
+      "error": {
+        "detail": "Failed to change page type."
+      }
+    },
     "set-page-hash-blocking": {
       "success": {
         "detail": "Successfully {state, select, true{blocked} other{unblocked}} pages with the hash {hash}."

@@ -19,22 +19,32 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interpolate } from 'app/app.functions';
-import { Page } from 'app/comics';
+import { Page, PageType } from 'app/comics';
 import {
   BLOCK_PAGE_HASH_URL,
   SAVE_PAGE_URL,
+  SET_PAGE_TYPE_URL,
   UNBLOCK_PAGE_HASH_URL
 } from 'app/comics/comics.constants';
 import { Observable } from 'rxjs';
+import { LoggerService } from '@angular-ru/logger';
+import { SetPageTypeRequest } from 'app/comics/models/net/set-page-type-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PageService {
-  constructor(private http: HttpClient) {}
+  constructor(private logger: LoggerService, private http: HttpClient) {}
 
   savePage(page: Page): Observable<any> {
     return this.http.put(interpolate(SAVE_PAGE_URL, { id: page.id }), page);
+  }
+
+  setPageType(page: Page, pageType: PageType): Observable<any> {
+    this.logger.debug('setting page type:', page, pageType);
+    return this.http.put(interpolate(SET_PAGE_TYPE_URL, { id: page.id }), {
+      pageType: pageType.name
+    } as SetPageTypeRequest);
   }
 
   setPageHashBlocking(page: Page, blocked: boolean): Observable<any> {

@@ -28,6 +28,14 @@
         "detail": "Error al guardar los cambios en la página."
       }
     },
+    "set-page-type": {
+      "success": {
+        "detail": "Page type changed."
+      },
+      "error": {
+        "detail": "Failed to change page type."
+      }
+    },
     "set-page-hash-blocking": {
       "success": {
         "detail": "Páginas con hash {hash} {state, select, true{bloqueadas} other{desbloqueadas}} correctamente."
