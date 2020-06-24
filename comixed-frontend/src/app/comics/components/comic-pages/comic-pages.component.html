@@ -36,7 +36,7 @@
       </td>
       <td>{{ page.filename }}</td>
       <td class='cx-table-column-align-center'>
-        <p-inplace [disabled]='true'>
+        <p-inplace [disabled]='!isAdmin'>
           <span pInplaceDisplay>
             {{ 'comic-pages.page-type.' + page.page_type.name | translate }}
           </span>
@@ -44,8 +44,7 @@
             <p-dropdown
                 [options]='pageTypeOptions'
                 [(ngModel)]='page.page_type'
-                (onChange)='setPageType(page, $event.value)'
-            ></p-dropdown>
+                (onChange)='setPageType(page, $event.value)'></p-dropdown>
           </span>
         </p-inplace>
       </td>
