@@ -28,7 +28,8 @@ import java.util.Optional;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.comic.Page;
 import org.comixed.model.comic.PageType;
-import org.comixed.model.library.*;
+import org.comixed.model.library.BlockedPageHash;
+import org.comixed.model.library.DuplicatePage;
 import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.repositories.comic.PageRepository;
 import org.comixed.repositories.comic.PageTypeRepository;
@@ -53,6 +54,7 @@ public class PageServiceTest {
   private static final int TEST_PAGE_INDEX = 7;
   private static final int TEST_DELETED_PAGE_COUNT = 17;
   private static final String TEST_PAGE_HASH = "12345";
+  private static final String TEST_PAGE_TYPE_NAME = "front-cover";
 
   static {
     BLOCKED_HASH_LIST.add("12345");
@@ -83,7 +85,7 @@ public class PageServiceTest {
     Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
     try {
-      pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_ID);
+      pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
     } finally {
       Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
     }
@@ -92,30 +94,30 @@ public class PageServiceTest {
   @Test(expected = PageException.class)
   public void testSetPageTypeWithNonexistentType() throws PageException {
     Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
-    Mockito.when(pageTypeRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(pageTypeRepository.findByName(Mockito.anyString())).thenReturn(null);
 
     try {
-      pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_ID);
+      pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
     } finally {
       Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-      Mockito.verify(pageTypeRepository, Mockito.times(1)).findById(TEST_PAGE_TYPE_ID);
+      Mockito.verify(pageTypeRepository, Mockito.times(1)).findByName(TEST_PAGE_TYPE_NAME);
     }
   }
 
   @Test
   public void testSetPageType() throws PageException {
     Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
-    Mockito.when(pageTypeRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(pageType));
+    Mockito.when(pageTypeRepository.findByName(Mockito.anyString())).thenReturn(pageType);
     Mockito.doNothing().when(page).setPageType(pageType);
     Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
 
-    final Page result = pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_ID);
+    final Page result = pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
 
     assertNotNull(result);
     assertSame(page, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    Mockito.verify(pageTypeRepository, Mockito.times(1)).findById(TEST_PAGE_TYPE_ID);
+    Mockito.verify(pageTypeRepository, Mockito.times(1)).findByName(TEST_PAGE_TYPE_NAME);
     Mockito.verify(page, Mockito.times(1)).setPageType(pageType);
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
   }

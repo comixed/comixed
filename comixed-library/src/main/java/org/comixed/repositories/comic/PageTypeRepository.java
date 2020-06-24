@@ -22,6 +22,7 @@ import java.util.List;
 import org.comixed.model.comic.PageType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  * <code>PageTypeRepository</code> retrieves instances of {@link PageType} from the database.
@@ -39,4 +40,7 @@ public interface PageTypeRepository extends CrudRepository<PageType, Long> {
 
   @Query("SELECT pt FROM PageType pt")
   List<PageType> findPageTypes();
+
+  @Query("SELECT t FROM PageType t WHERE t.name = :name")
+  PageType findByName(@Param("name") String name);
 }

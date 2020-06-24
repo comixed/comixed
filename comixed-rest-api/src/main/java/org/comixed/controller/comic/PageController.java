@@ -29,6 +29,7 @@ import org.comixed.model.comic.PageType;
 import org.comixed.model.library.DuplicatePage;
 import org.comixed.net.SetBlockingStateRequest;
 import org.comixed.net.SetDeletedStateRequest;
+import org.comixed.net.SetPageTypeRequest;
 import org.comixed.service.comic.PageCacheService;
 import org.comixed.service.comic.PageException;
 import org.comixed.service.comic.PageService;
@@ -189,11 +190,13 @@ public class PageController {
   }
 
   @PutMapping(value = "/pages/{id}/type", produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.PageDetails.class)
   public Page updateTypeForPage(
-      @PathVariable("id") long id, @RequestParam("type_id") long pageTypeId) throws PageException {
-    this.log.info("Setting page type: id={} typeId={}", id, pageTypeId);
+      @PathVariable("id") long id, @RequestBody() SetPageTypeRequest request) throws PageException {
+    String typeName = request.getTypeName();
+    this.log.info("Setting page type: id={} typeName={}", id, typeName);
 
-    return this.pageService.updateTypeForPage(id, pageTypeId);
+    return this.pageService.updateTypeForPage(id, typeName);
   }
 
   @PostMapping(
