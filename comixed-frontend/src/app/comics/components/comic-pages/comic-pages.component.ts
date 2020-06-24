@@ -67,7 +67,7 @@ export class ComicPagesComponent implements OnInit, OnDestroy {
 
   setPageType(page: Page, pageType: PageType): void {
     this.logger.debug('setting page type:', page, pageType);
-    // TODO this needs to be written
+    this.comicAdaptor.setPageType(page, pageType);
   }
 
   blockPage(page: Page): void {
