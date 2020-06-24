@@ -38,12 +38,15 @@ import {
   ComicMarkAsRead,
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
+  ComicPageTypeSet,
   ComicRestore,
   ComicRestored,
   ComicRestoreFailed,
   ComicSave,
   ComicSavePage,
-  ComicSetPageHashBlocking
+  ComicSetPageHashBlocking,
+  ComicSetPageType,
+  ComicSetPageTypeFailed
 } from 'app/comics/actions/comic.actions';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import {
@@ -53,7 +56,6 @@ import {
 } from 'app/comics/models/comic-format.fixtures';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import { FRONT_COVER } from 'app/comics/models/page-type.fixtures';
-import { PAGE_1 } from 'app/comics/models/page.fixtures';
 import {
   SCAN_TYPE_1,
   SCAN_TYPE_3,
@@ -71,6 +73,8 @@ describe('ComicAdaptor', () => {
   const COMIC = COMIC_1;
   const SKIP_CACHE = false;
   const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
+  const PAGE = COMIC.pages[1];
+  const PAGE_TYPE = FRONT_COVER;
 
   let adaptor: ComicAdaptor;
   let store: Store<AppState>;
@@ -237,24 +241,67 @@ describe('ComicAdaptor', () => {
   });
 
   it('can save changes to a page', () => {
-    adaptor.savePage(PAGE_1);
+    adaptor.savePage(PAGE);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new ComicSavePage({ page: PAGE_1 })
+      new ComicSavePage({ page: PAGE })
     );
   });
 
   it('can block a page hash', () => {
-    adaptor.blockPageHash(PAGE_1);
+    adaptor.blockPageHash(PAGE);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new ComicSetPageHashBlocking({ page: PAGE_1, state: true })
+      new ComicSetPageHashBlocking({ page: PAGE, state: true })
     );
   });
 
   it('can unblock a page hash', () => {
-    adaptor.unblockPageHash(PAGE_1);
+    adaptor.unblockPageHash(PAGE);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new ComicSetPageHashBlocking({ page: PAGE_1, state: false })
+      new ComicSetPageHashBlocking({ page: PAGE, state: false })
     );
+  });
+
+  describe('can change the page type', () => {
+    beforeEach(() => {
+      store.dispatch(new ComicGotIssue({ comic: COMIC }));
+      adaptor.setPageType(PAGE, PAGE_TYPE);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ComicSetPageType({ page: PAGE, pageType: PAGE_TYPE })
+      );
+    });
+
+    it('provides updates on setting the page type', () => {
+      adaptor.settingPageType$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicPageTypeSet({ page: PAGE }));
+      });
+
+      it('provides updates on setting the page type', () => {
+        adaptor.settingPageType$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicSetPageTypeFailed());
+      });
+
+      it('provides updates on setting the page type', () => {
+        adaptor.settingPageType$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
   });
 
   it('can save a comic', () => {

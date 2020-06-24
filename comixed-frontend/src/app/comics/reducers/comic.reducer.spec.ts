@@ -40,6 +40,7 @@ import {
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
   ComicPageSaved,
+  ComicPageTypeSet,
   ComicRestore,
   ComicRestored,
   ComicRestoreFailed,
@@ -49,7 +50,9 @@ import {
   ComicSavePage,
   ComicSavePageFailed,
   ComicSetPageHashBlocking,
-  ComicSetPageHashBlockingFailed
+  ComicSetPageHashBlockingFailed,
+  ComicSetPageType,
+  ComicSetPageTypeFailed
 } from 'app/comics/actions/comic.actions';
 import {
   FORMAT_1,
@@ -70,10 +73,13 @@ import {
 } from 'app/comics/models/scan-type.fixtures';
 import { ComicState, initialState, reducer } from './comic.reducer';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
+import { Page } from 'app/comics';
 
 describe('Comic Reducer', () => {
   const COMIC = COMIC_1;
   const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
+  const PAGE = COMIC.pages[1];
+  const PAGE_TYPE = STORY;
 
   let state: ComicState;
 
@@ -136,6 +142,10 @@ describe('Comic Reducer', () => {
 
     it('clears the saving page flag', () => {
       expect(state.savingPage).toBeFalsy();
+    });
+
+    it('clears the setting page type flag', () => {
+      expect(state.settingPageType).toBeFalsy();
     });
 
     it('clears the blocking hash state flag', () => {
@@ -427,6 +437,57 @@ describe('Comic Reducer', () => {
 
     it('clears the saving page flag', () => {
       expect(state.savingPage).toBeFalsy();
+    });
+  });
+
+  describe('setting the page type', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, settingPageType: false },
+        new ComicSetPageType({
+          page: PAGE,
+          pageType: PAGE_TYPE
+        })
+      );
+    });
+
+    it('sets the setting page type flag', () => {
+      expect(state.settingPageType).toBeTruthy();
+    });
+  });
+
+  describe('when the page type is set', () => {
+    const UPDATED_PAGE = {
+      ...PAGE,
+      filename: PAGE.filename.substring(1)
+    } as Page;
+    beforeEach(() => {
+      state = reducer(
+        { ...state, settingPageType: true, comic: { ...COMIC } },
+        new ComicPageTypeSet({ page: UPDATED_PAGE })
+      );
+    });
+
+    it('clears the setting page type flag', () => {
+      expect(state.settingPageType).toBeFalsy();
+    });
+
+    it('updates the page in the comic', () => {
+      expect(state.comic.pages).not.toContain(PAGE);
+      expect(state.comic.pages).toContain(UPDATED_PAGE);
+    });
+  });
+
+  describe('when setting the page type fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, settingPageType: true },
+        new ComicSetPageTypeFailed()
+      );
+    });
+
+    it('clears the setting page type flag', () => {
+      expect(state.settingPageType).toBeFalsy();
     });
   });
 

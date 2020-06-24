@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Comic, ComicFormat, PageType, ScanType } from 'app/comics';
+import { Comic, ComicFormat, Page, PageType, ScanType } from 'app/comics';
 import { ComicService } from 'app/comics/services/comic.service';
 import { PageService } from 'app/comics/services/page.service';
 import { MessageService } from 'primeng/api';
@@ -45,12 +45,14 @@ import {
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
   ComicPageSaved,
+  ComicPageTypeSet,
   ComicRestored,
   ComicRestoreFailed,
   ComicSaved,
   ComicSaveFailed,
   ComicSavePageFailed,
-  ComicSetPageHashBlockingFailed
+  ComicSetPageHashBlockingFailed,
+  ComicSetPageTypeFailed
 } from '../actions/comic.actions';
 import { LoggerService } from '@angular-ru/logger';
 
@@ -228,6 +230,47 @@ export class ComicEffects {
   );
 
   @Effect()
+  setPageType$: Observable<Action> = this.actions$.pipe(
+    ofType(ComicActionTypes.SetPageType),
+    map(action => action.payload),
+    tap(action => this.logger.debug('effect: setting page type:', action)),
+    switchMap(action =>
+      this.pageService.setPageType(action.page, action.pageType).pipe(
+        tap(response => this.logger.debug('received response:', response)),
+        tap(repsonse =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'comics-effects.set-page-type.success.detail'
+            )
+          })
+        ),
+        map((response: Page) => new ComicPageTypeSet({ page: response })),
+        catchError(error => {
+          this.logger.error('service failure setting page type:', error);
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'comics-effects.set-page-type.error.detail'
+            )
+          });
+          return of(new ComicSetPageTypeFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.error('general failure setting page type:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new ComicSetPageTypeFailed());
+    })
+  );
+
+  @Effect()
   setPageHashBlocking$: Observable<Action> = this.actions$.pipe(
     ofType(ComicActionTypes.SetPageHashBlocking),
     map(action => action.payload),
@@ -397,7 +440,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comic-effects.restore-comic.error.detail'
+              'comics-effects.restore-comic.error.detail'
             )
           });
           return of(new ComicRestoreFailed());
@@ -434,7 +477,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comic-effects.mark-as-read.error-details'
+              'comics-effects.mark-as-read.error-details'
             )
           });
           return of(new ComicMarkAsReadFailed());

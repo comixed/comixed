@@ -29,19 +29,24 @@ import { interpolate } from 'app/app.functions';
 import {
   BLOCK_PAGE_HASH_URL,
   SAVE_PAGE_URL,
+  SET_PAGE_TYPE_URL,
   UNBLOCK_PAGE_HASH_URL
 } from 'app/comics/comics.constants';
+import { STORY } from 'app/comics/comics.fixtures';
+import { SetPageTypeRequest } from 'app/comics/models/net/set-page-type-request';
+import { LoggerModule } from '@angular-ru/logger';
 
 describe('PageService', () => {
   const PAGE = PAGE_1;
   const COMIC = COMIC_1;
+  const PAGE_TYPE = STORY;
 
   let service: PageService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
       providers: [PageService]
     });
 
@@ -62,6 +67,21 @@ describe('PageService', () => {
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual(PAGE);
     req.flush(COMIC);
+  });
+
+  it('can set the page type', () => {
+    service
+      .setPageType(PAGE, PAGE_TYPE)
+      .subscribe(response => expect(response).toEqual(PAGE));
+
+    const req = httpMock.expectOne(
+      interpolate(SET_PAGE_TYPE_URL, { id: PAGE.id })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      pageType: PAGE_TYPE.name
+    } as SetPageTypeRequest);
+    req.flush(PAGE);
   });
 
   describe('setting page hash blocking', () => {

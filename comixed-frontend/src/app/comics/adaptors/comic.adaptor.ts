@@ -37,7 +37,8 @@ import {
   ComicRestore,
   ComicSave,
   ComicSavePage,
-  ComicSetPageHashBlocking
+  ComicSetPageHashBlocking,
+  ComicSetPageType
 } from 'app/comics/actions/comic.actions';
 import {
   COMIC_FEATURE_KEY,
@@ -63,6 +64,7 @@ export class ComicAdaptor {
   private _deletingComic$ = new BehaviorSubject<boolean>(false);
   private _restoringComic$ = new BehaviorSubject<boolean>(false);
   private _markingAsRead$ = new BehaviorSubject<boolean>(false);
+  private _settingPageType$ = new BehaviorSubject<boolean>(false);
 
   constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
@@ -108,6 +110,9 @@ export class ComicAdaptor {
         }
         if (state.settingReadState !== this._markingAsRead$.getValue()) {
           this._markingAsRead$.next(state.settingReadState);
+        }
+        if (state.settingPageType !== this._settingPageType$.getValue()) {
+          this._settingPageType$.next(state.settingPageType);
         }
       });
   }
@@ -235,5 +240,16 @@ export class ComicAdaptor {
   markAsUnread(comic: Comic): void {
     this.logger.debug('marking comic as unread:', comic);
     this.store.dispatch(new ComicMarkAsRead({ comic: comic, read: false }));
+  }
+
+  setPageType(page: Page, pageType: PageType): void {
+    this.logger.debug('firing action to set page type:', page, pageType);
+    this.store.dispatch(
+      new ComicSetPageType({ page: page, pageType: pageType })
+    );
+  }
+
+  get settingPageType$(): Observable<boolean> {
+    return this._settingPageType$.asObservable();
   }
 }
