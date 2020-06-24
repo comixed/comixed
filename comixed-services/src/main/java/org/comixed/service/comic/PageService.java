@@ -23,7 +23,8 @@ import lombok.extern.log4j.Log4j2;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.comic.Page;
 import org.comixed.model.comic.PageType;
-import org.comixed.model.library.*;
+import org.comixed.model.library.BlockedPageHash;
+import org.comixed.model.library.DuplicatePage;
 import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.repositories.comic.PageRepository;
 import org.comixed.repositories.comic.PageTypeRepository;
@@ -42,22 +43,22 @@ public class PageService {
   @Autowired private ComicRepository comicRepository;
 
   @Transactional
-  public Page updateTypeForPage(final long id, final long typeId) throws PageException {
-    this.log.debug("Setting page type for page: id={} page type={}", id, typeId);
+  public Page updateTypeForPage(final long id, final String typeName) throws PageException {
+    this.log.debug("Setting page type for page: id={} page type={}", id, typeName);
 
     final Optional<Page> page = this.pageRepository.findById(id);
-    final Optional<PageType> pageType = this.pageTypeRepository.findById(typeId);
+    final PageType pageType = this.pageTypeRepository.findByName(typeName);
 
     if (page.isPresent()) {
-      if (pageType.isPresent()) {
+      if (pageType != null) {
         final Page record = page.get();
 
-        record.setPageType(pageType.get());
+        record.setPageType(pageType);
 
         this.log.debug("Updating page with  new type");
         return this.pageRepository.save(record);
       } else {
-        throw new PageException("Invalid page type: id=" + typeId);
+        throw new PageException("Invalid page type: " + typeName);
       }
     } else {
       throw new PageException("No such page: id=" + id);

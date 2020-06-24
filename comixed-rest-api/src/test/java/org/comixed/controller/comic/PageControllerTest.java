@@ -27,9 +27,11 @@ import java.util.List;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.comic.Page;
 import org.comixed.model.comic.PageType;
-import org.comixed.model.library.*;
+import org.comixed.model.library.BlockedPageHash;
+import org.comixed.model.library.DuplicatePage;
 import org.comixed.net.SetBlockingStateRequest;
 import org.comixed.net.SetDeletedStateRequest;
+import org.comixed.net.SetPageTypeRequest;
 import org.comixed.service.comic.PageCacheService;
 import org.comixed.service.comic.PageException;
 import org.comixed.service.comic.PageService;
@@ -58,6 +60,7 @@ public class PageControllerTest {
   private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
   private static final Boolean TEST_BLOCKING = true;
   private static final Boolean TEST_DELETED = false;
+  private static final String TEST_PAGE_TYPE_NAME = "Story";
 
   static {
     TEST_PAGE_HASH_LIST.add("12345");
@@ -80,16 +83,17 @@ public class PageControllerTest {
 
   @Test
   public void testSetPageType() throws PageException {
-    Mockito.when(pageService.updateTypeForPage(Mockito.anyLong(), Mockito.anyLong()))
+    Mockito.when(pageService.updateTypeForPage(Mockito.anyLong(), Mockito.anyString()))
         .thenReturn(page);
 
-    final Page result = pageController.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_ID);
+    final Page result =
+        pageController.updateTypeForPage(TEST_PAGE_ID, new SetPageTypeRequest(TEST_PAGE_TYPE_NAME));
 
     assertNotNull(result);
     assertSame(page, result);
 
     Mockito.verify(pageService, Mockito.times(1))
-        .updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_ID);
+        .updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
   }
 
   @Test
