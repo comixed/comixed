@@ -19,6 +19,7 @@
 package org.comixed.service.library;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.repositories.library.LastReadDatesRepository;
+import org.comixed.service.comic.PageCacheService;
 import org.comixed.service.task.TaskService;
 import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
@@ -53,6 +55,7 @@ public class LibraryService {
   @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private Worker worker;
   @Autowired private Utils utils;
+  @Autowired private PageCacheService pageCacheService;
 
   public List<Comic> getComicsUpdatedSince(
       String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
@@ -145,5 +148,20 @@ public class LibraryService {
       }
     }
     return result;
+  }
+
+  /**
+   * Removes all files in the image cache directory.
+   *
+   * @throws LibraryException if an error occurs
+   */
+  public void clearImageCache() throws LibraryException {
+    String directory = this.pageCacheService.getRootDirectory();
+    this.log.debug("Clearing the image cache: {}", directory);
+    try {
+      this.utils.deleteDirectoryContents(directory);
+    } catch (IOException error) {
+      throw new LibraryException("failed to clean image cache directory", error);
+    }
   }
 }

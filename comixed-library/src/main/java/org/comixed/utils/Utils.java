@@ -68,4 +68,14 @@ public class Utils {
   public String streamToString(InputStream stream, Charset charset) throws IOException {
     return IOUtils.toString(stream, charset);
   }
+
+  /**
+   * Clears the contents of the specified directory.
+   *
+   * @param path the parent directory
+   * @throws IOException if an error occurs
+   */
+  public void deleteDirectoryContents(String path) throws IOException {
+    FileUtils.cleanDirectory(new File(path));
+  }
 }
