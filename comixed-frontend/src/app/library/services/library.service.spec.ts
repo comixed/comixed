@@ -32,6 +32,7 @@ import { LoggerModule } from '@angular-ru/logger';
 
 import { LibraryService } from './library.service';
 import {
+  CLEAR_IMAGE_CACHE_URL,
   CONSOLIDATE_LIBRARY_URL,
   CONVERT_COMICS_URL,
   DELETE_MULTIPLE_COMICS_URL,
@@ -41,6 +42,7 @@ import {
 import { HttpResponse } from '@angular/common/http';
 import { ConvertComicsRequest } from 'app/library/models/net/convert-comics-request';
 import { ConsolidateLibraryRequest } from 'app/library/models/net/consolidate-library-request';
+import { ClearImageCacheResponse } from 'app/library/models/net/clear-image-cache-response';
 
 describe('LibraryService', () => {
   const LAST_UPDATED_DATE = new Date();
@@ -165,5 +167,16 @@ describe('LibraryService', () => {
       deletePhysicalFiles: true
     } as ConsolidateLibraryRequest);
     req.flush(COMICS);
+  });
+
+  it('can clear the image cache', () => {
+    const RESPONSE = { success: true } as ClearImageCacheResponse;
+    service
+      .clearImageCache()
+      .subscribe(response => expect(response).toEqual(RESPONSE));
+
+    const req = httpMock.expectOne(interpolate(CLEAR_IMAGE_CACHE_URL));
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(RESPONSE);
   });
 });

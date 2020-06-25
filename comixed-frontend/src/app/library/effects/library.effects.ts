@@ -30,6 +30,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   LibraryActionTypes,
+  LibraryClearImageCacheFailed,
   LibraryComicsConverting,
   LibraryConsolidate,
   LibraryConsolidated,
@@ -40,12 +41,14 @@ import {
   LibraryDeleteMultipleComicsFailed,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
+  LibraryImageCacheCleared,
   LibraryMultipleComicsDeleted,
   LibraryRescanStarted,
   LibraryStartRescanFailed,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
 import { Comic } from 'app/comics';
+import { ClearImageCacheResponse } from 'app/library/models/net/clear-image-cache-response';
 
 @Injectable()
 export class LibraryEffects {
@@ -293,6 +296,52 @@ export class LibraryEffects {
         )
       });
       return of(new LibraryConsolidateFailed());
+    })
+  );
+
+  @Effect()
+  clearImageCache$: Observable<Action> = this.actions$.pipe(
+    ofType(LibraryActionTypes.ClearImageCache),
+    tap(action => this.logger.debug('effect: clearing image cache:', action)),
+    switchMap(action =>
+      this.libraryService.clearImageCache().pipe(
+        tap(response => this.logger.debug('received response:', response)),
+        tap((response: ClearImageCacheResponse) =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'library-effects.clear-image-cache.success.detail',
+              { success: response.success }
+            )
+          })
+        ),
+
+        map((response: ClearImageCacheResponse) =>
+          response.success
+            ? new LibraryImageCacheCleared()
+            : new LibraryClearImageCacheFailed()
+        ),
+        catchError(error => {
+          this.logger.error('service failure clearing image cache:', error);
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'library-effects.clear-image-cache.error.detail'
+            )
+          });
+          return of(new LibraryClearImageCacheFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.error('general failure clearing image cache:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new LibraryClearImageCacheFailed());
     })
   );
 }

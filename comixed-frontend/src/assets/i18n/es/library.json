@@ -71,6 +71,14 @@
       "error": {
         "detail": "Error consolidando la biblioteca."
       }
+    },
+    "clear-image-cache": {
+      "success": {
+        "detail": "Image cache {success, select, true{successfully} other{failed to be}} cleared..."
+      },
+      "error": {
+        "detail": "Error clearing image cache..."
+      }
     }
   },
   "import-effects": {
