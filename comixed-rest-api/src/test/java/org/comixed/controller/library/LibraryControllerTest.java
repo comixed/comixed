@@ -29,11 +29,9 @@ import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.ComiXedUser;
 import org.comixed.model.user.LastReadDate;
-import org.comixed.net.ConsolidateLibraryRequest;
-import org.comixed.net.ConvertComicsRequest;
-import org.comixed.net.GetUpdatedComicsRequest;
-import org.comixed.net.GetUpdatedComicsResponse;
+import org.comixed.net.*;
 import org.comixed.service.comic.ComicService;
+import org.comixed.service.library.LibraryException;
 import org.comixed.service.library.LibraryService;
 import org.comixed.service.library.ReadingListService;
 import org.comixed.service.user.ComiXedUserException;
@@ -58,6 +56,7 @@ public class LibraryControllerTest {
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
   private static final Boolean TEST_DELETE_PHYSICAL_FILES = RANDOM.nextBoolean();
+  private static final int TEST_CACHE_ENTRIES_CLEARED = RANDOM.nextInt();
 
   @InjectMocks private LibraryController libraryController;
   @Mock private LibraryService libraryService;
@@ -230,5 +229,30 @@ public class LibraryControllerTest {
     assertSame(comicList, response);
 
     Mockito.verify(libraryService, Mockito.times(1)).consolidateLibrary(TEST_DELETE_PHYSICAL_FILES);
+  }
+
+  @Test
+  public void testClearImageCache() throws LibraryException {
+    Mockito.doNothing().when(libraryService).clearImageCache();
+
+    ClearImageCacheResponse result = libraryController.clearImageCache();
+
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+
+    Mockito.verify(libraryService, Mockito.times(1)).clearImageCache();
+    ;
+  }
+
+  @Test
+  public void testClearImageCacheWithError() throws LibraryException {
+    Mockito.doThrow(LibraryException.class).when(libraryService).clearImageCache();
+
+    ClearImageCacheResponse result = libraryController.clearImageCache();
+
+    assertNotNull(result);
+    assertFalse(result.isSuccess());
+
+    Mockito.verify(libraryService, Mockito.times(1)).clearImageCache();
   }
 }

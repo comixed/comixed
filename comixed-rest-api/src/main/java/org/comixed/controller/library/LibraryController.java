@@ -27,11 +27,9 @@ import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
 import org.comixed.model.library.ReadingList;
 import org.comixed.model.user.LastReadDate;
-import org.comixed.net.ConsolidateLibraryRequest;
-import org.comixed.net.ConvertComicsRequest;
-import org.comixed.net.GetUpdatedComicsRequest;
-import org.comixed.net.GetUpdatedComicsResponse;
+import org.comixed.net.*;
 import org.comixed.service.comic.ComicService;
+import org.comixed.service.library.LibraryException;
 import org.comixed.service.library.LibraryService;
 import org.comixed.service.library.ReadingListService;
 import org.comixed.service.user.ComiXedUserException;
@@ -39,10 +37,7 @@ import org.comixed.service.user.UserService;
 import org.comixed.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -157,5 +152,19 @@ public class LibraryController {
     this.log.info(
         "Consolidating library: delete physic files={}", request.getDeletePhysicalFiles());
     return this.libraryService.consolidateLibrary(request.getDeletePhysicalFiles());
+  }
+
+  @DeleteMapping(value = "/library/cache/images")
+  public ClearImageCacheResponse clearImageCache() {
+    this.log.info("Clearing the image cache");
+
+    try {
+      this.libraryService.clearImageCache();
+    } catch (LibraryException error) {
+      this.log.error("failed to clear image cache", error);
+      return new ClearImageCacheResponse(false);
+    }
+
+    return new ClearImageCacheResponse(true);
   }
 }

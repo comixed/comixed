@@ -78,4 +78,14 @@ public class PageCacheService {
     file.getParentFile().mkdirs();
     IOUtils.write(content, new FileOutputStream(file, false));
   }
+
+  /**
+   * Returns the root directory for the image cache.
+   *
+   * @return the root directory
+   */
+  public String getRootDirectory() {
+    this.log.debug("Getting the image cache root directory: {}", this.cacheDirectory);
+    return this.cacheDirectory;
+  }
 }
