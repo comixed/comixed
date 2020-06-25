@@ -29,7 +29,8 @@
         "library": "Library",
         "import": "Import",
         "duplicate-pages": "Duplicate Pages",
-        "missing-comics": "Missing Comics"
+        "missing-comics": "Missing Comics",
+        "clear-image-cache": "Clear Image Cache"
       },
       "help": {
         "root": "Help",
