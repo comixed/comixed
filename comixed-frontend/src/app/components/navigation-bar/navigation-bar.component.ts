@@ -21,6 +21,7 @@ import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { LibraryAdaptor } from 'app/library';
 
 export const USER_PREFERENCE_DEBUGGING = 'user-preference.debugging';
 export const USER_PREFERENCE_LANGUAGE = 'user-preference.language';
@@ -42,7 +43,8 @@ export class NavigationBarComponent implements OnInit {
   constructor(
     public logger: LoggerService,
     private authenticationAdaptor: AuthenticationAdaptor,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private libraryAdaptor: LibraryAdaptor
   ) {
     this.logger.trace('creating the navigation bar');
     this.authenticationAdaptor.user$.subscribe(user => (this.user = user));
@@ -164,6 +166,14 @@ export class NavigationBarComponent implements OnInit {
             ),
             icon: 'fas fa-ghost',
             routerLink: ['/comics/missing'],
+            visible: this.isAdmin
+          },
+          {
+            label: this.translateService.instant(
+              'main-menu.item.admin.clear-image-cache'
+            ),
+            icon: 'fa fa-fw fa-trash',
+            command: () => this.libraryAdaptor.clearImageCache(),
             visible: this.isAdmin
           }
         ]

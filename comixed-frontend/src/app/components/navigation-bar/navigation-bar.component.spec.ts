@@ -39,6 +39,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthenticationAdaptor, USER_READER } from 'app/user';
+import { LibraryModule } from 'app/library/library.module';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_READER;
@@ -52,6 +53,7 @@ describe('NavigationBarComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         UserModule,
+        LibraryModule,
         HttpClientTestingModule,
         RouterTestingModule,
         FormsModule,
