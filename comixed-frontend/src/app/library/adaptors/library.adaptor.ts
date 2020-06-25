@@ -30,6 +30,7 @@ import { filter } from 'rxjs/operators';
 import { extractField } from 'app/library/library.functions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import {
+  LibraryClearImageCache,
   LibraryConsolidate,
   LibraryConvertComics,
   LibraryDeleteMultipleComics,
@@ -66,6 +67,7 @@ export class LibraryAdaptor {
   private _maximum = 100;
   private _converting$ = new BehaviorSubject<boolean>(false);
   private _consolidating$ = new BehaviorSubject<boolean>(false);
+  private _clearingImageCache$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private store: Store<AppState>,
@@ -164,6 +166,9 @@ export class LibraryAdaptor {
         }
         if (state.consolidating !== this._consolidating$.getValue()) {
           this._consolidating$.next(state.consolidating);
+        }
+        if (state.clearingImageCache !== this._clearingImageCache$.getValue()) {
+          this._clearingImageCache$.next(state.clearingImageCache);
         }
 
         // if either the last read dates or comics have changed then update all comics' last read date
@@ -316,5 +321,14 @@ export class LibraryAdaptor {
     return this._lists$
       .getValue()
       .find(readingList => readingList.name === name);
+  }
+
+  clearImageCache() {
+    this.logger.debug('firing action: clear image cache');
+    this.store.dispatch(new LibraryClearImageCache());
+  }
+
+  get clearingImageCache$(): Observable<boolean> {
+    return this._clearingImageCache$.asObservable();
   }
 }

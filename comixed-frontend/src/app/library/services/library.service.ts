@@ -23,6 +23,7 @@ import { GetLibraryUpdatesRequest } from 'app/library/models/net/get-library-upd
 import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 import {
+  CLEAR_IMAGE_CACHE_URL,
   CONSOLIDATE_LIBRARY_URL,
   CONVERT_COMICS_URL,
   DELETE_MULTIPLE_COMICS_URL,
@@ -96,5 +97,10 @@ export class LibraryService {
     return this.http.post(interpolate(CONSOLIDATE_LIBRARY_URL), {
       deletePhysicalFiles: deletePhysicalFiles
     } as ConsolidateLibraryRequest);
+  }
+
+  clearImageCache(): Observable<any> {
+    this.logger.debug('[DELETE] jhttp request: clear image cache');
+    return this.http.delete(interpolate(CLEAR_IMAGE_CACHE_URL));
   }
 }

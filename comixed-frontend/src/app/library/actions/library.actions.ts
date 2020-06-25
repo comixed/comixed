@@ -37,7 +37,10 @@ export enum LibraryActionTypes {
   ConvertComicsFailed = '[LIBRARY] Failed to convert comics',
   Consolidate = '[LIBRARY] Consolidate the library',
   Consolidated = '[LIBRARY] Library is consolidated',
-  ConsolidateFailed = '[LIBRARY] Failed to consolidate library'
+  ConsolidateFailed = '[LIBRARY] Failed to consolidate library',
+  ClearImageCache = '[LIBRARY] Clear the image cache',
+  ImageCacheCleared = '[LIBRARY] Image cache cleared',
+  ClearImageCacheFailed = '[LIBRARY] Failed to clear the image cache'
 }
 
 export class LibraryReset implements Action {
@@ -160,6 +163,24 @@ export class LibraryConsolidateFailed implements Action {
   constructor() {}
 }
 
+export class LibraryClearImageCache implements Action {
+  readonly type = LibraryActionTypes.ClearImageCache;
+
+  constructor() {}
+}
+
+export class LibraryImageCacheCleared implements Action {
+  readonly type = LibraryActionTypes.ImageCacheCleared;
+
+  constructor() {}
+}
+
+export class LibraryClearImageCacheFailed implements Action {
+  readonly type = LibraryActionTypes.ClearImageCacheFailed;
+
+  constructor() {}
+}
+
 export type LibraryActions =
   | LibraryReset
   | LibraryGetUpdates
@@ -176,4 +197,7 @@ export type LibraryActions =
   | LibraryConvertComicsFailed
   | LibraryConsolidate
   | LibraryConsolidated
-  | LibraryConsolidateFailed;
+  | LibraryConsolidateFailed
+  | LibraryClearImageCache
+  | LibraryImageCacheCleared
+  | LibraryClearImageCacheFailed;

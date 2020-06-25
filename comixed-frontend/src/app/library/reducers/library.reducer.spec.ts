@@ -24,6 +24,8 @@ import {
   COMIC_5
 } from 'app/comics/models/comic.fixtures';
 import {
+  LibraryClearImageCache,
+  LibraryClearImageCacheFailed,
   LibraryComicsConverting,
   LibraryConsolidate,
   LibraryConsolidated,
@@ -34,6 +36,7 @@ import {
   LibraryDeleteMultipleComicsFailed,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
+  LibraryImageCacheCleared,
   LibraryMultipleComicsDeleted,
   LibraryRescanStarted,
   LibraryReset,
@@ -122,6 +125,10 @@ describe('Library Reducer', () => {
 
     it('has no reading lists', () => {
       expect(state.readingLists).toEqual([]);
+    });
+
+    it('clears the clearing image cache flag', () => {
+      expect(state.clearingImageCache).toBeFalsy();
     });
   });
 
@@ -405,6 +412,45 @@ describe('Library Reducer', () => {
 
     it('clears the consolidating library flag', () => {
       expect(state.consolidating).toBeFalsy();
+    });
+  });
+
+  describe('clearing the image cache', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, clearingImageCache: false },
+        new LibraryClearImageCache()
+      );
+    });
+
+    it('sets the clearing image cache flag', () => {
+      expect(state.clearingImageCache).toBeTruthy();
+    });
+  });
+
+  describe('when the image cache is cleared', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, clearingImageCache: true },
+        new LibraryImageCacheCleared()
+      );
+    });
+
+    it('clears the clearing image cache flag', () => {
+      expect(state.clearingImageCache).toBeFalsy();
+    });
+  });
+
+  describe('when the image cache fails to clear', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, clearingImageCache: true },
+        new LibraryClearImageCacheFailed()
+      );
+    });
+
+    it('clears the clearing image cache flag', () => {
+      expect(state.clearingImageCache).toBeFalsy();
     });
   });
 });

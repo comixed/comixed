@@ -44,6 +44,8 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import * as LibraryActions from '../actions/library.actions';
 import {
+  LibraryClearImageCache,
+  LibraryClearImageCacheFailed,
   LibraryComicsConverting,
   LibraryConsolidate,
   LibraryConsolidated,
@@ -51,6 +53,7 @@ import {
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryGetUpdates,
+  LibraryImageCacheCleared,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
 import { LibraryAdaptor } from './library.adaptor';
@@ -367,6 +370,46 @@ describe('LibraryAdaptor', () => {
 
       it('provides updates on consolidating', () => {
         adaptor.consolidating$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+  });
+
+  describe('clearing the image cache', () => {
+    beforeEach(() => {
+      adaptor.clearImageCache();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(new LibraryClearImageCache());
+    });
+
+    it('provides updates on clearing the image cache', () => {
+      adaptor.clearingImageCache$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryImageCacheCleared());
+      });
+
+      it('provides updates on clearing the image cache', () => {
+        adaptor.clearingImageCache$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryClearImageCacheFailed());
+      });
+
+      it('provides updates on clearing the image cache', () => {
+        adaptor.clearingImageCache$.subscribe(response =>
           expect(response).toBeFalsy()
         );
       });

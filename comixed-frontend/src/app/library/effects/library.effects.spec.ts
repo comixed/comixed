@@ -22,6 +22,8 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
 import {
+  LibraryClearImageCache,
+  LibraryClearImageCacheFailed,
   LibraryComicsConverting,
   LibraryConsolidate,
   LibraryConsolidated,
@@ -32,6 +34,7 @@ import {
   LibraryDeleteMultipleComicsFailed,
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
+  LibraryImageCacheCleared,
   LibraryMultipleComicsDeleted,
   LibraryRescanStarted,
   LibraryStartRescan,
@@ -48,6 +51,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 import { LibraryEffects } from './library.effects';
+import { ClearImageCacheResponse } from 'app/library/models/net/clear-image-cache-response';
 import objectContaining = jasmine.objectContaining;
 
 describe('LibraryEffects', () => {
@@ -81,7 +85,10 @@ describe('LibraryEffects', () => {
               'LibraryService.deleteMultipleComics()'
             ),
             convertComics: jasmine.createSpy('LibraryService.convertComics()'),
-            consolidate: jasmine.createSpy('LibraryService.consolidate()')
+            consolidate: jasmine.createSpy('LibraryService.consolidate()'),
+            clearImageCache: jasmine.createSpy(
+              'LibraryService.clearImageCache()'
+            )
           }
         },
         MessageService
@@ -377,6 +384,69 @@ describe('LibraryEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.consolidate$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('consolidating the library', () => {
+    it('fires an action on successful clearing', () => {
+      const serviceResponse = { success: true } as ClearImageCacheResponse;
+      const action = new LibraryClearImageCache();
+      const outcome = new LibraryImageCacheCleared();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.clearImageCache.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.clearImageCache$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on failed clearing', () => {
+      const serviceResponse = { success: false } as ClearImageCacheResponse;
+      const action = new LibraryClearImageCache();
+      const outcome = new LibraryClearImageCacheFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.clearImageCache.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.clearImageCache$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new LibraryClearImageCache();
+      const outcome = new LibraryClearImageCacheFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.clearImageCache.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.clearImageCache$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new LibraryClearImageCache();
+      const outcome = new LibraryClearImageCacheFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.clearImageCache.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.clearImageCache$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );
