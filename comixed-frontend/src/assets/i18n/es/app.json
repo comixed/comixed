@@ -31,11 +31,6 @@
       "spanish": "Español"
     }
   },
-  "navigation-bar": {
-    "text": {
-      "logged-in-as": "Has ingresado como: {email}"
-    }
-  },
   "main-page": {
     "text": {
       "please-login": "Por favor, ingresa para ver la biblioteca.",

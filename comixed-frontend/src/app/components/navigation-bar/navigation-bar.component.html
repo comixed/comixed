@@ -10,8 +10,9 @@
             icon='fa fa-fw fa-diagnoses' (click)='toggleDebugging(false)'></button>
   </div>
   <div class='ui-toolbar-group-right'>
-    <span *ngIf='!!user'>
-      {{'navigation-bar.text.logged-in-as'|translate:{email: user.email} }}</span>
+    <i *ngIf='!!user' aria-hidden="true" class="cx-user-icon fa fa-user"></i>
+    <span *ngIf='!!user'><a class='cx-toolbar-login-name-link' [routerLink]='["/account"]'>
+      {{ user.email }}</a></span>
     <p-dropdown [options]='languageOptions' (onChange)='changeLanguage($event.value)' [(ngModel)]='language'></p-dropdown>
   </div>
 </p-toolbar>
