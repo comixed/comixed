@@ -41,7 +41,7 @@ public class ComicVineQueryForVolumesAdaptor {
 
   public List<ScrapingVolume> execute(String apiKey, String name, boolean skipCache)
       throws ComicVineAdaptorException, WebRequestException {
-    this.log.debug("Fetching volumes: name=\"{}\"", name, apiKey);
+    log.debug("Fetching volumes: name=\"{}\"", name, apiKey);
 
     List<ScrapingVolume> result = new ArrayList<>();
     boolean done = false;
@@ -59,12 +59,12 @@ public class ComicVineQueryForVolumesAdaptor {
     }
 
     if (entriesExpired) {
-      this.log.debug("Volume query is expired ({} days old);. Skipping...", aging);
+      log.debug("Volume query is expired ({} days old);. Skipping...", aging);
     }
 
     if (skipCache || (entries == null) || entries.isEmpty() || entriesExpired) {
       while (!done) {
-        this.log.debug("Fetching volumes from ComicVine...");
+        log.debug("Fetching volumes from ComicVine...");
 
         ComicVineQueryWebRequest request = this.webRequestFactory.getObject();
         request.setApiKey(apiKey);
@@ -72,7 +72,7 @@ public class ComicVineQueryForVolumesAdaptor {
 
         page++;
         if (page > 1) {
-          this.log.debug("Setting offset to {}", page);
+          log.debug("Setting offset to {}", page);
           request.setPage(page);
         }
 
@@ -97,13 +97,13 @@ public class ComicVineQueryForVolumesAdaptor {
         }
       }
     } else {
-      this.log.debug("Processing {} cached query entries...", entries.size());
+      log.debug("Processing {} cached query entries...", entries.size());
       for (int index = 0; index < entries.size(); index++) {
         this.responseProcessor.process(result, entries.get(index).getContent().getBytes());
       }
     }
 
-    this.log.debug("Returning {} volumes", result.size());
+    log.debug("Returning {} volumes", result.size());
 
     return result;
   }

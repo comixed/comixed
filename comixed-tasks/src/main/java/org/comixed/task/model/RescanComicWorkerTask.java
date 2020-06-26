@@ -37,14 +37,14 @@ public class RescanComicWorkerTask extends AbstractWorkerTask {
 
   @Override
   public void startTask() throws WorkerTaskException {
-    this.log.debug("Rescanning comic: id={} {}", this.comic.getId(), this.comic.getFilename());
+    log.debug("Rescanning comic: id={} {}", this.comic.getId(), this.comic.getFilename());
 
     for (Page page : this.comic.getPages()) {
-      this.log.debug("Updating page metrics: {}", page.getFilename());
+      log.debug("Updating page metrics: {}", page.getFilename());
       page.getWidth();
       page.getHeight();
 
-      this.log.debug("Saving page details");
+      log.debug("Saving page details");
       this.pageRepository.save(page);
     }
   }

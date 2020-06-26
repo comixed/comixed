@@ -311,16 +311,16 @@ public class Comic {
    * @param character the character
    */
   public void addCharacter(String character) {
-    this.log.debug("Adding character=" + character);
+    log.debug("Adding character=" + character);
     if (this.characters.contains(character)) {
-      this.log.debug("Duplicate character");
+      log.debug("Duplicate character");
       return;
     }
     this.characters.add(character);
   }
 
   public void addCredit(String name, String role) {
-    this.log.debug("Adding a credit: name={} role={}", name, role);
+    log.debug("Adding a credit: name={} role={}", name, role);
     Credit credit = new Credit(name, role);
 
     credit.setComic(this);
@@ -333,9 +333,9 @@ public class Comic {
    * @param location the location
    */
   public void addLocation(String location) {
-    this.log.debug("Adding location=" + location);
+    log.debug("Adding location=" + location);
     if (this.locations.contains(location)) {
-      this.log.debug("Duplication location");
+      log.debug("Duplication location");
       return;
     }
     this.locations.add(location);
@@ -348,14 +348,14 @@ public class Comic {
    * @param offset the offset
    */
   public void addPage(int index, Page page) {
-    this.log.debug("Adding offset: index=" + index + " hash=" + page.getHash());
+    log.debug("Adding offset: index=" + index + " hash=" + page.getHash());
     page.setComic(this);
     page.setPageNumber(index);
     this.pages.add(index, page);
   }
 
   public void addFileEntry(int index, ComicFileEntry fileEntry) {
-    this.log.debug("Adding file entry: [{}] {}", index, fileEntry.getFileName());
+    log.debug("Adding file entry: [{}] {}", index, fileEntry.getFileName());
     fileEntry.setFileNumber(index);
     this.fileEntries.add(fileEntry);
   }
@@ -366,9 +366,9 @@ public class Comic {
    * @param series the story arc series
    */
   public void addStoryArc(String name) {
-    this.log.debug("Adding story arc=" + name);
+    log.debug("Adding story arc=" + name);
     if (this.storyArcs.contains(name)) {
-      this.log.debug("Duplicate story arc");
+      log.debug("Duplicate story arc");
       return;
     }
     this.storyArcs.add(name);
@@ -380,9 +380,9 @@ public class Comic {
    * @param team the team
    */
   public void addTeam(String team) {
-    this.log.debug("Adding team=" + team);
+    log.debug("Adding team=" + team);
     if (this.teams.contains(team)) {
-      this.log.debug("Duplicate team");
+      log.debug("Duplicate team");
       return;
     }
     this.teams.add(team);
@@ -395,25 +395,25 @@ public class Comic {
 
   /** Removes all associated credits. */
   public void clearCredits() {
-    this.log.debug("Clearing credits");
+    log.debug("Clearing credits");
     this.credits.clear();
   }
 
   /** Removes all location references from the comic. */
   public void clearLocations() {
-    this.log.debug("Clearing location references");
+    log.debug("Clearing location references");
     this.locations.clear();
   }
 
   /** Clears out all story arc references. */
   public void clearStoryArcs() {
-    this.log.debug("Clearing story arcs");
+    log.debug("Clearing story arcs");
     this.storyArcs.clear();
   }
 
   /** Removes all team references from the comic. */
   public void clearTeams() {
-    this.log.debug("Clearing out teams");
+    log.debug("Clearing out teams");
     this.teams.clear();
   }
 
@@ -423,7 +423,7 @@ public class Comic {
    * @param index the offset index
    */
   public void deletePage(int index) {
-    this.log.debug("Deleting offset: index=" + index);
+    log.debug("Deleting offset: index=" + index);
     this.pages.remove(index);
   }
 
@@ -467,7 +467,7 @@ public class Comic {
    * @return the character reference
    */
   public String getCharacter(int index) {
-    this.log.debug("Getting character at index=" + index);
+    log.debug("Getting character at index=" + index);
     return this.characters.get(index);
   }
 
@@ -500,7 +500,7 @@ public class Comic {
    * @param id the id
    */
   public void setComicVineId(String id) {
-    this.log.debug("Setting the comicvine.com id=" + id);
+    log.debug("Setting the comicvine.com id=" + id);
     this.comicVineId = id;
   }
 
@@ -529,7 +529,7 @@ public class Comic {
    * @return the cover, or <code>null</code> if the comic is empty
    */
   public Page getCover() {
-    this.log.debug("Getting cover for comic: filename=" + this.filename);
+    log.debug("Getting cover for comic: filename=" + this.filename);
     /*
      * if there are no pages or the underlying file is missing then show the
      * missing

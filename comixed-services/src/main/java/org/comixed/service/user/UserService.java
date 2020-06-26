@@ -42,22 +42,22 @@ public class UserService implements InitializingBean {
   private Role adminRole;
 
   public ComiXedUser findByEmail(String email) throws ComiXedUserException {
-    this.log.debug("Finding user by email: {}", email);
+    log.debug("Finding user by email: {}", email);
 
     final ComiXedUser result = this.userRepository.findByEmail(email);
 
     if (result == null) {
-      this.log.warn("No such user: {}", email);
+      log.warn("No such user: {}", email);
       throw new ComiXedUserException("No such user: " + email);
     }
 
-    this.log.debug("Found user: id={}", result.getId());
+    log.debug("Found user: id={}", result.getId());
 
     return result;
   }
 
   public void delete(long id) throws ComiXedUserException {
-    this.log.debug("Deleting user: id={}", id);
+    log.debug("Deleting user: id={}", id);
 
     final Optional<ComiXedUser> record = this.userRepository.findById(id);
 
@@ -65,7 +65,7 @@ public class UserService implements InitializingBean {
       throw new ComiXedUserException("No such user: id=" + id);
     }
 
-    this.log.debug("Deleting user record");
+    log.debug("Deleting user record");
     this.userRepository.delete(record.get());
   }
 

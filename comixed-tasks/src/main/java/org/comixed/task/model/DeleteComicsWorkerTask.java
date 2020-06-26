@@ -61,7 +61,7 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask {
           encoder.setDeleteComicFile(false);
           this.taskAdaptor.save(encoder.encode());
         } catch (TaskException error) {
-          this.log.error("Failed to encode delete comic task", error);
+          log.error("Failed to encode delete comic task", error);
         }
       }
     }

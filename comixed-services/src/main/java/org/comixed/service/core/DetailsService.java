@@ -66,7 +66,7 @@ public class DetailsService {
   private String remoteOriginURL;
 
   public BuildDetails getBuildDetails() throws ParseException {
-    this.log.debug("Getting build details");
+    log.debug("Getting build details");
     final BuildDetails result = new BuildDetails();
 
     result.setBranch(branch);

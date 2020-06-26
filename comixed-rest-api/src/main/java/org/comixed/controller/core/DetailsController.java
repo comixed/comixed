@@ -35,7 +35,7 @@ public class DetailsController {
 
   @GetMapping("/build-details")
   public BuildDetails getBuildDetails() throws ParseException {
-    this.log.info("Getting application build details");
+    log.info("Getting application build details");
 
     return this.detailsService.getBuildDetails();
   }
