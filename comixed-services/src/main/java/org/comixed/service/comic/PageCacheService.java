@@ -34,23 +34,23 @@ public class PageCacheService {
   private String cacheDirectory;
 
   public byte[] findByHash(final String hash) throws IOException {
-    this.log.debug("Searching for cached image: hash={}", hash);
+    log.debug("Searching for cached image: hash={}", hash);
 
     final File file = this.getFileForHash(hash);
     byte[] result = null;
     if (file.exists() && !file.isDirectory()) {
-      this.log.debug("Loading cached image content: {} bytes", file.length());
+      log.debug("Loading cached image content: {} bytes", file.length());
 
       try (FileInputStream input = new FileInputStream(file)) {
         result = IOUtils.readFully(input, (int) file.length());
       } catch (Exception error) {
-        this.log.error("Failed to load cached image", error);
+        log.error("Failed to load cached image", error);
       }
 
       return result;
     }
 
-    this.log.debug("No image in cache");
+    log.debug("No image in cache");
     return null;
   }
 
@@ -73,7 +73,7 @@ public class PageCacheService {
   }
 
   public void saveByHash(final String hash, final byte[] content) throws IOException {
-    this.log.debug("Saving image to cache: hash={}", hash);
+    log.debug("Saving image to cache: hash={}", hash);
     final File file = this.getFileForHash(hash);
     file.getParentFile().mkdirs();
     IOUtils.write(content, new FileOutputStream(file, false));
@@ -85,7 +85,7 @@ public class PageCacheService {
    * @return the root directory
    */
   public String getRootDirectory() {
-    this.log.debug("Getting the image cache root directory: {}", this.cacheDirectory);
+    log.debug("Getting the image cache root directory: {}", this.cacheDirectory);
     return this.cacheDirectory;
   }
 }

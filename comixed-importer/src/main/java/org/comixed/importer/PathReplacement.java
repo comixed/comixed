@@ -48,7 +48,7 @@ public class PathReplacement {
       if (this.destination.endsWith(File.separator)) {
         this.destination = this.destination.substring(0, this.destination.length() - 1);
       }
-      this.log.debug("Created replacement rule: {} => {}", this.source, this.destination);
+      log.debug("Created replacement rule: {} => {}", this.source, this.destination);
     } else {
       throw new RuntimeException("malformed path replacement rule:" + rule);
     }
@@ -61,9 +61,9 @@ public class PathReplacement {
    * @return true if the path is a match
    */
   public boolean isMatch(String path) {
-    this.log.debug("Comparing: path={} source={}", path, this.source);
+    log.debug("Comparing: path={} source={}", path, this.source);
     boolean result = path.startsWith(this.source);
-    this.log.debug("Returning {}", result);
+    log.debug("Returning {}", result);
     return result;
   }
 
@@ -75,7 +75,7 @@ public class PathReplacement {
    */
   public String getReplacement(String file) {
     String result = this.destination + file.substring(this.source.length());
-    this.log.debug("Replaced: {} => {}", file, this.destination);
+    log.debug("Replaced: {} => {}", file, this.destination);
 
     return result;
   }

@@ -66,7 +66,7 @@ public class Worker implements Runnable, InitializingBean {
    * @param task the task
    */
   public void addTasksToQueue(WorkerTask task) {
-    this.log.debug("Adding task of type {} to queue", task.getClass());
+    log.debug("Adding task of type {} to queue", task.getClass());
     try {
       this.queue.put(task);
 
@@ -77,33 +77,33 @@ public class Worker implements Runnable, InitializingBean {
       }
       count++;
       this.taskCounts.put(task.getClass(), count);
-      this.log.debug(
+      log.debug(
           "There are now {} task{} of type {}", count, count == 1 ? "" : "s", task.getClass());
 
     } catch (InterruptedException error) {
-      this.log.error("Unable to queue task", error);
+      log.error("Unable to queue task", error);
       Thread.currentThread().interrupt();
     }
-    this.log.debug("Queue size is now {}", this.queue.size());
+    log.debug("Queue size is now {}", this.queue.size());
     this.wakeUpWorker();
   }
 
   private void wakeUpWorker() {
-    this.log.debug("Getting mutex lock");
+    log.debug("Getting mutex lock");
     synchronized (this.semaphore) {
-      this.log.debug("Waking up worker thread");
+      log.debug("Waking up worker thread");
       this.semaphore.notifyAll();
     }
   }
 
   public void addWorkerListener(WorkerListener listener) {
-    this.log.debug("Adding worker listener: {}", listener);
+    log.debug("Adding worker listener: {}", listener);
     this.listeners.add(listener);
   }
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    this.log.debug("Starting worker thread");
+    log.debug("Starting worker thread");
 
     new Thread(this, "Jarvis-ComiXed").start();
   }
@@ -130,7 +130,7 @@ public class Worker implements Runnable, InitializingBean {
 
   @Override
   public void run() {
-    this.log.debug("Starting worker queue");
+    log.debug("Starting worker queue");
     this.state = State.RUNNING;
     this.fireWorkerStateChangedEvent();
     while (this.state != State.STOP) {
@@ -138,28 +138,28 @@ public class Worker implements Runnable, InitializingBean {
 
       synchronized (this.semaphore) {
         if (this.queue.isEmpty()) {
-          this.log.debug("Waiting for task or notification");
+          log.debug("Waiting for task or notification");
           try {
             this.state = State.IDLE;
             this.fireWorkerStateChangedEvent();
             this.semaphore.wait(1000L);
-            this.log.debug("Woke up: state={}", this.state.name());
+            log.debug("Woke up: state={}", this.state.name());
             // if we're in the stopped state then exit
             if (this.state == State.STOP) {
-              this.log.debug("We are in the stopped state. Exiting...");
+              log.debug("We are in the stopped state. Exiting...");
             }
           } catch (InterruptedException cause) {
-            this.log.error("Worker interrupted", cause);
+            log.error("Worker interrupted", cause);
             Thread.currentThread().interrupt();
           }
         }
         if (!this.queue.isEmpty() && (this.state != State.STOP)) {
           this.state = State.RUNNING;
           currentTask = this.queue.poll();
-          this.log.debug("Popping task of type {}", currentTask.getClass());
+          log.debug("Popping task of type {}", currentTask.getClass());
           int count = this.taskCounts.get(currentTask.getClass()) - 1;
           this.taskCounts.put(currentTask.getClass(), count);
-          this.log.debug("There are now {} tasks of type {}", count, currentTask.getClass());
+          log.debug("There are now {} tasks of type {}", count, currentTask.getClass());
           this.fireQueueChangedEvent();
         }
         this.semaphore.notifyAll();
@@ -169,34 +169,34 @@ public class Worker implements Runnable, InitializingBean {
         final List<Task> tasks = this.taskAdaptor.getNextTask();
         if (!tasks.isEmpty()) {
           final Task taskToRun = tasks.get(0);
-          this.log.debug("Found a persisted task to run: type={}", taskToRun.getTaskType());
+          log.debug("Found a persisted task to run: type={}", taskToRun.getTaskType());
           final TaskEncoder<?> decoder;
           try {
             decoder = this.taskAdaptor.getEncoder(taskToRun.getTaskType());
             currentTask = decoder.decode(tasks.get(0));
           } catch (TaskException error) {
-            this.log.error("Failed to decode and run task", error);
+            log.error("Failed to decode and run task", error);
           }
         }
       }
 
       if (currentTask != null) {
         try {
-          this.log.debug("Starting task: {}", currentTask.getDescription());
+          log.debug("Starting task: {}", currentTask.getDescription());
           long start = System.currentTimeMillis();
           currentTask.startTask();
-          this.log.debug(
+          log.debug(
               "Finished task: "
                   + currentTask
                   + " ["
                   + (System.currentTimeMillis() - start)
                   + "ms]");
         } catch (WorkerTaskException | RuntimeException error) {
-          this.log.warn("Failed to complete task: {}", currentTask.getDescription(), error);
+          log.warn("Failed to complete task: {}", currentTask.getDescription(), error);
         }
       }
     }
-    this.log.debug("Stop processing the work queue");
+    log.debug("Stop processing the work queue");
     this.fireWorkerStateChangedEvent();
   }
 
@@ -207,7 +207,7 @@ public class Worker implements Runnable, InitializingBean {
   }
 
   void fireQueueChangedEvent() {
-    this.log.debug("Notifying worker listeners");
+    log.debug("Notifying worker listeners");
     for (WorkerListener listener : this.listeners) {
       listener.queueChanged();
     }
@@ -219,7 +219,7 @@ public class Worker implements Runnable, InitializingBean {
    * <p>If a task is current being processed, the worker will wait until that task completes.
    */
   public void stop() {
-    this.log.debug("Stopping worker thread");
+    log.debug("Stopping worker thread");
     this.state = State.STOP;
     this.wakeUpWorker();
   }

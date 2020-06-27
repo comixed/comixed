@@ -33,19 +33,19 @@ public class ComicVineResponseAdaptor {
   public void checkForErrors(final byte[] content) throws ComicVineAdaptorException {
     JsonNode root = null;
 
-    this.log.debug("Verifying that the content is JSON");
+    log.debug("Verifying that the content is JSON");
     try {
       root = objectMapper.readTree(content);
     } catch (IOException error) {
       throw new ComicVineAdaptorException("content not JSON", error);
     }
 
-    this.log.debug("Checking the response node count");
+    log.debug("Checking the response node count");
     if (root.size() == 0) {
       throw new ComicVineAdaptorException("content is empty JSON");
     }
 
-    this.log.debug("Checking the error node value");
+    log.debug("Checking the error node value");
     String errorValue = "";
 
     try {
@@ -54,7 +54,7 @@ public class ComicVineResponseAdaptor {
       throw new ComicVineAdaptorException("missing error node");
     }
 
-    this.log.debug("Node value={}", errorValue);
+    log.debug("Node value={}", errorValue);
 
     if (!"OK".equals(errorValue)) {
       throw new ComicVineAdaptorException("error response received");

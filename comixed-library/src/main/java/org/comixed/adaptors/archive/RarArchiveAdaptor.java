@@ -134,7 +134,7 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
       throws ArchiveAdaptorException {
-    this.log.warn("Saving RAR comics is not supported");
+    log.warn("Saving RAR comics is not supported");
     throw new ArchiveAdaptorException("Saving CBR comics is not supported");
   }
 }

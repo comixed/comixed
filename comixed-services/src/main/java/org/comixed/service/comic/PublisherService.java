@@ -30,7 +30,7 @@ public class PublisherService {
   @Autowired private PublisherRepository publisherRepository;
 
   public Publisher getByName(String name) {
-    this.log.debug("Getting publisher: name={}", name);
+    log.debug("Getting publisher: name={}", name);
     return this.publisherRepository.findByName(name);
   }
 }

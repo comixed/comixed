@@ -55,25 +55,25 @@ public class TaskAdaptor implements InitializingBean {
   }
 
   public List<Task> getNextTask() {
-    this.log.debug("Getting the next task to run");
+    log.debug("Getting the next task to run");
     return this.taskRepository.getTasksToRun(PageRequest.of(0, 1));
   }
 
   @Transactional
   public Task save(final Task task) {
-    this.log.debug("Saving task: type={}", task.getTaskType());
+    log.debug("Saving task: type={}", task.getTaskType());
     return this.taskRepository.save(task);
   }
 
   @Transactional
   public void delete(final Task task) {
-    this.log.debug("Deleting task: id={} type={}", task.getId(), task.getTaskType());
+    log.debug("Deleting task: id={} type={}", task.getId(), task.getTaskType());
     this.taskRepository.delete(task);
   }
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    this.log.debug("Loading task action configuration");
+    log.debug("Loading task action configuration");
     this.adaptorMap.clear();
     for (TaskTypeEntry entry : this.adaptors) {
       if (this.adaptorMap.containsKey(entry.getType())) {
@@ -95,7 +95,7 @@ public class TaskAdaptor implements InitializingBean {
    * @throws TaskException if no adaptor is configured
    */
   public <T extends TaskEncoder> T getEncoder(final TaskType taskType) throws TaskException {
-    this.log.debug("Getting task adaptor: type={}", taskType);
+    log.debug("Getting task adaptor: type={}", taskType);
 
     if (!this.adaptorMap.containsKey(taskType))
       throw new TaskException("No adaptor configured: " + taskType);

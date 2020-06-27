@@ -37,7 +37,7 @@ public class ComiXedUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    this.log.debug("Loading user: email={}", email);
+    log.debug("Loading user: email={}", email);
 
     ComiXedUser user = userRepository.findByEmail(email);
 

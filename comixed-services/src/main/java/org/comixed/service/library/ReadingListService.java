@@ -47,9 +47,9 @@ public class ReadingListService {
   @Transactional
   public ReadingList createReadingList(final String email, final String name, final String summary)
       throws ReadingListNameException, ComicException {
-    this.log.debug("Creating reading list: email={} name={}", email, name);
+    log.debug("Creating reading list: email={} name={}", email, name);
 
-    this.log.debug("Getting owner");
+    log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
     ReadingList readingList = this.readingListRepository.findReadingListForUser(owner, name);
 
@@ -57,21 +57,21 @@ public class ReadingListService {
       throw new ReadingListNameException("Name already used: " + name);
     }
 
-    this.log.debug("Creating reading list object");
+    log.debug("Creating reading list object");
     readingList = new ReadingList();
     readingList.setOwner(owner);
     readingList.setName(name);
     readingList.setSummary(summary);
     readingList.setLastUpdated(new Date());
 
-    this.log.debug("Saving reading list");
+    log.debug("Saving reading list");
     return this.readingListRepository.save(readingList);
   }
 
   public List<ReadingList> getReadingListsForUser(final String email, final Date lastUpdated) {
-    this.log.debug("Getting reading lists for user: email={} updated after={}", email, lastUpdated);
+    log.debug("Getting reading lists for user: email={} updated after={}", email, lastUpdated);
 
-    this.log.debug("Getting owner");
+    log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
 
     return this.readingListRepository.getAllReadingListsForOwnerUpdatedAfter(owner, lastUpdated);
@@ -81,24 +81,24 @@ public class ReadingListService {
   public ReadingList updateReadingList(
       final String email, final long id, final String name, final String summary)
       throws NoSuchReadingListException, ComicException {
-    this.log.debug("Updating reading list: owner={} id={} name={}", email, id, name);
+    log.debug("Updating reading list: owner={} id={} name={}", email, id, name);
 
-    this.log.debug("Getting owner");
+    log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
 
-    this.log.debug("Getting reading list");
+    log.debug("Getting reading list");
     final Optional<ReadingList> readingList = this.readingListRepository.findById(id);
 
     if (!readingList.isPresent()) {
       throw new NoSuchReadingListException("No such reading list: id=" + id);
     }
 
-    this.log.debug("Updating reading list details");
+    log.debug("Updating reading list details");
     readingList.get().setName(name);
     readingList.get().setSummary(summary);
     readingList.get().setLastUpdated(new Date());
 
-    this.log.debug("Updating reading list");
+    log.debug("Updating reading list");
     return this.readingListRepository.save(readingList.get());
   }
 
@@ -130,9 +130,9 @@ public class ReadingListService {
       final String mode,
       final List<Matcher> matchers)
       throws ReadingListNameException {
-    this.log.debug("Creating smart reading list: email={} name={}", email, name);
+    log.debug("Creating smart reading list: email={} name={}", email, name);
 
-    this.log.debug("Getting owner");
+    log.debug("Getting owner");
     final ComiXedUser owner = this.userRepository.findByEmail(email);
     SmartReadingList smartReadingList =
         this.smartReadingListRepository.findSmartReadingListForUser(owner, name);
@@ -140,7 +140,7 @@ public class ReadingListService {
     if (smartReadingList != null) {
       throw new ReadingListNameException("Name already used: " + name);
     }
-    this.log.debug("Creating reading list object");
+    log.debug("Creating reading list object");
     smartReadingList = new SmartReadingList();
     smartReadingList.setOwner(owner);
     smartReadingList.setName(name);
@@ -151,13 +151,13 @@ public class ReadingListService {
       smartReadingList.addMatcher(matcher);
     }
 
-    this.log.debug("Saving smart reading list");
+    log.debug("Saving smart reading list");
     return this.smartReadingListRepository.save(smartReadingList);
   }
 
   public Matcher createMatcher(
       final String type, final boolean not, final String mode, final List<Matcher> matchers) {
-    this.log.debug("Creating Group matcher: type={} not={} mode={}", type, not, mode);
+    log.debug("Creating Group matcher: type={} not={} mode={}", type, not, mode);
 
     Matcher matcher = new Matcher();
     matcher.setType(type);
@@ -172,7 +172,7 @@ public class ReadingListService {
 
   public Matcher createMatcher(
       final String type, final boolean not, final String operator, final String value) {
-    this.log.debug(
+    log.debug(
         "Creating Item matcher: type={} not={} operator={} value={}", type, not, operator, value);
 
     Matcher matcher = new Matcher();
@@ -185,11 +185,11 @@ public class ReadingListService {
   }
 
   public void getReadingListsForComics(String email, List<Comic> comics) {
-    this.log.debug("Loading reading lists for user: email={}", email);
+    log.debug("Loading reading lists for user: email={}", email);
     for (Comic comic : comics) {
       List<ReadingList> readingLists = this.readingListRepository.findByOwnerAndComic(email, comic);
 
-      this.log.debug(
+      log.debug(
           "Found {} reading list{} for comic: id={}",
           readingLists.size(),
           readingLists.size() == 1 ? "" : "s",
@@ -203,7 +203,7 @@ public class ReadingListService {
   @Transactional
   public int addComicsToList(String email, long id, List<Long> comicIds)
       throws ReadingListException {
-    this.log.debug(
+    log.debug(
         "Adding {} comic{} to reading list: reading list id={} email={}",
         comicIds.size(),
         comicIds.size() == 1 ? "" : "s",
@@ -228,29 +228,29 @@ public class ReadingListService {
       Long comicId = comicIds.get(index);
       Comic comic = null;
       try {
-        this.log.debug("Loading comic: id={}", comicId);
+        log.debug("Loading comic: id={}", comicId);
         comic = this.comicService.getComic(comicId);
       } catch (ComicException error) {
         throw new ReadingListException("could not add comic to reading list", error);
       }
-      this.log.debug("Adding comic to reading list");
+      log.debug("Adding comic to reading list");
       readingList.getComics().add(comic);
       comic.setDateLastUpdated(new Date());
       result++;
     }
 
-    this.log.debug("Saving updated reading list");
+    log.debug("Saving updated reading list");
     readingList.setLastUpdated(new Date());
     this.readingListRepository.save(readingList);
 
-    this.log.debug("Added {} comic{} to reading list", result, result == 1 ? "" : "s");
+    log.debug("Added {} comic{} to reading list", result, result == 1 ? "" : "s");
     return result;
   }
 
   @Transactional
   public int removeComicsFromList(String email, long id, List<Long> comicIds)
       throws ReadingListException {
-    this.log.debug(
+    log.debug(
         "Removing {} comic{} to reading list: reading list id={} email={}",
         comicIds.size(),
         comicIds.size() == 1 ? "" : "s",
@@ -276,7 +276,7 @@ public class ReadingListService {
       Long comicId = comicIds.get(index);
       Comic comic = null;
       try {
-        this.log.debug("Loading comic: id={}", comicId);
+        log.debug("Loading comic: id={}", comicId);
         comic = this.comicService.getComic(comicId);
       } catch (ComicException error) {
         throw new ReadingListException("could not remove comic from reading list", error);
@@ -286,11 +286,11 @@ public class ReadingListService {
       result++;
     }
 
-    this.log.debug("Saving updated reading list");
+    log.debug("Saving updated reading list");
     readingList.setLastUpdated(new Date());
     this.readingListRepository.save(readingList);
 
-    this.log.debug("Removed {} comic{} to reading list", result, result == 1 ? "" : "s");
+    log.debug("Removed {} comic{} to reading list", result, result == 1 ? "" : "s");
     return result;
   }
 }

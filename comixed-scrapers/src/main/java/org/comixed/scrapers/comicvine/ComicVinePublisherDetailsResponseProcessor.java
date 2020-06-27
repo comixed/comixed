@@ -97,7 +97,7 @@ public class ComicVinePublisherDetailsResponseProcessor {
   @Autowired private PublisherRepository publisherRepository;
 
   public void process(byte[] content, Comic comic) throws ComicVineAdaptorException {
-    this.log.debug("Validating ComicVine response content");
+    log.debug("Validating ComicVine response content");
     this.responseAdaptor.checkForErrors(content);
 
     try {
@@ -110,20 +110,20 @@ public class ComicVinePublisherDetailsResponseProcessor {
       String logoUrl = jsonNode.get("results").get("image").get("small_url").asText();
 
       if (IMPRINT_MAPPINGS.containsKey(publisher)) {
-        this.log.debug("Publisher is an imprint");
+        log.debug("Publisher is an imprint");
         comic.setPublisher(IMPRINT_MAPPINGS.get(publisher));
         comic.setImprint(publisher);
       } else {
-        this.log.debug("Publisher is not an imprint");
+        log.debug("Publisher is not an imprint");
         comic.setPublisher(publisher);
         comic.setImprint("");
       }
 
       // create or update the publisher record
-      this.log.debug("Updating publisher record");
+      log.debug("Updating publisher record");
       Publisher publisherRecord = this.publisherRepository.findByComicVineId(comicVineId);
       if (publisherRecord == null) {
-        this.log.debug("No such publisher: creating new record");
+        log.debug("No such publisher: creating new record");
         publisherRecord = new Publisher();
         publisherRecord.setComicVineId(comicVineId);
         publisherRecord.setComicVineUrl(comicVineUrl);
@@ -142,7 +142,7 @@ public class ComicVinePublisherDetailsResponseProcessor {
     try {
       return IOUtils.toByteArray(new URL(url));
     } catch (IOException error) {
-      this.log.error("failed to load image from url: " + url, error);
+      log.error("failed to load image from url: " + url, error);
     }
     return null;
   }

@@ -37,7 +37,7 @@ public abstract class AbstractTaskEncoder<T extends AbstractWorkerTask> implemen
 
   @Transactional
   public void deleteTask(final Task task) {
-    this.log.debug("Deleting persisted task: id={} type={}", task.getId(), task.getTaskType());
+    log.debug("Deleting persisted task: id={} type={}", task.getId(), task.getTaskType());
     this.taskRepository.delete(task);
   }
 }

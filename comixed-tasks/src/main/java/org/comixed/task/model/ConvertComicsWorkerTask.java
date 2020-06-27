@@ -65,13 +65,13 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.log.debug(
+    log.debug(
         "Queueing up {} save comic task{}",
         this.comicList.size(),
         this.comicList.size() == 1 ? "" : "s");
 
     for (Comic comic : this.comicList) {
-      this.log.debug("Queueing task to save comic: id={}", comic.getId());
+      log.debug("Queueing task to save comic: id={}", comic.getId());
       ConvertComicTaskEncoder encoder = this.saveComicTaskEncoderObjectFactory.getObject();
 
       encoder.setComic(comic);

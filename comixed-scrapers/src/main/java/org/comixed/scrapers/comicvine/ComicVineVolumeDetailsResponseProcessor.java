@@ -33,7 +33,7 @@ public class ComicVineVolumeDetailsResponseProcessor {
   @Autowired private ComicVineResponseAdaptor responseAdaptor;
 
   public String process(byte[] content, Comic comic) throws ComicVineAdaptorException {
-    this.log.debug("Verifying ComicVine response content");
+    log.debug("Verifying ComicVine response content");
     this.responseAdaptor.checkForErrors(content);
 
     String result = null;

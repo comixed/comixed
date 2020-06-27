@@ -52,7 +52,7 @@ public class ReadingListController {
     final String name = request.getName();
     final String summary = request.getSummary();
 
-    this.log.info("Creating reading list for user: email={} name={}", email, name);
+    log.info("Creating reading list for user: email={} name={}", email, name);
 
     return this.readingListService.createReadingList(email, name, summary);
   }
@@ -71,7 +71,7 @@ public class ReadingListController {
     final String name = request.getName();
     final String summary = request.getSummary();
 
-    this.log.info(
+    log.info(
         "Updating reading list for user: email={} id={} name={} summary={}",
         email,
         id,
@@ -89,12 +89,12 @@ public class ReadingListController {
     }
     final String email = principal.getName();
 
-    this.log.info("Getting reading lists: user={}", email);
+    log.info("Getting reading lists: user={}", email);
 
     final List<ReadingList> result =
         this.readingListService.getReadingListsForUser(email, lastUpdated);
 
-    this.log.debug("Returning {} lists{}", result.size(), result.size() == 1 ? "" : "s");
+    log.debug("Returning {} lists{}", result.size(), result.size() == 1 ? "" : "s");
     return result;
   }
 
@@ -103,7 +103,7 @@ public class ReadingListController {
   public ReadingList getReadingList(final Principal principal, @PathVariable("id") final long id)
       throws NoSuchReadingListException {
     final String email = principal.getName();
-    this.log.info("Getting reading list for user: email={} id={}", email, id);
+    log.info("Getting reading list for user: email={} id={}", email, id);
 
     return this.readingListService.getReadingListForUser(email, id);
   }
@@ -120,7 +120,7 @@ public class ReadingListController {
     String email = principal.getName();
     List<Long> comicIds = request.getIds();
 
-    this.log.info(
+    log.info(
         "Adding {} comic{} to the reading list for {}: id={}",
         comicIds.size(),
         comicIds.size() == 1 ? "" : "s",
@@ -144,7 +144,7 @@ public class ReadingListController {
     String email = principal.getName();
     List<Long> comicIds = request.getIds();
 
-    this.log.info(
+    log.info(
         "Removing {} comic{} from the reading list for {}: id={}",
         comicIds.size(),
         comicIds.size() == 1 ? "" : "s",

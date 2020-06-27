@@ -42,7 +42,7 @@ public class TaskService {
    */
   public int getTaskCount(final TaskType taskType) {
     final int result = this.taskRepository.getTaskCount(taskType);
-    this.log.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", taskType);
+    log.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", taskType);
     return result;
   }
 }

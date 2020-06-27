@@ -48,7 +48,7 @@ public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask>
 
   @Override
   public Task encode() {
-    this.log.debug(
+    log.debug(
         "Encoding add comic task: filename={} delete blocked pages={} ignore metadata={}",
         this.comicFilename,
         this.deleteBlockedPages,
@@ -66,10 +66,10 @@ public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask>
   @Override
   public AddComicWorkerTask decode(final Task task) {
     this.deleteTask(task);
-    this.log.debug("Decoding persisted task: id={} type={}", task.getId(), task.getTaskType());
+    log.debug("Decoding persisted task: id={} type={}", task.getId(), task.getTaskType());
     final AddComicWorkerTask result = this.addComicWorkerTaskObjectFactory.getObject();
 
-    this.log.debug("Loading task state");
+    log.debug("Loading task state");
     result.setFilename(task.getProperty(FILENAME));
     result.setDeleteBlockedPages(Boolean.valueOf(task.getProperty(DELETE_BLOCKED_PAGES)));
     result.setIgnoreMetadata(Boolean.valueOf(task.getProperty(IGNORE_METADATA)));

@@ -37,7 +37,7 @@ public class ComicVineIssueResponseProcessor {
   @Autowired private ComicVineResponseAdaptor responseAdaptor;
 
   public ScrapingIssue process(byte[] content) throws ComicVineAdaptorException {
-    this.log.debug("Validating ComicVine response content");
+    log.debug("Validating ComicVine response content");
     this.responseAdaptor.checkForErrors(content);
 
     ScrapingIssue result = null;

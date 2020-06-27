@@ -60,16 +60,16 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.log.debug(
+    log.debug(
         "Saving comic: id={} target archive type={}", this.comic.getId(), this.targetArchiveType);
     ArchiveAdaptor targetArchiveAdaptor = this.targetArchiveType.getArchiveAdaptor();
     try {
       Comic result = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
-      this.log.debug("Saving updated comic");
+      log.debug("Saving updated comic");
       result.setDateLastUpdated(new Date());
       this.comicRepository.save(result);
 
-      this.log.debug("Queueing up a comic processing task");
+      log.debug("Queueing up a comic processing task");
       ProcessComicTaskEncoder taskEncoder = this.processComicTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
       taskEncoder.setIgnoreMetadata(false);

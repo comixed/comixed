@@ -55,14 +55,14 @@ public class ImportFileProcessor {
   @Autowired private ComiXedUserRepository userRepository;
 
   public void setReplacements(List<String> replacements) {
-    this.log.debug("Processing {} replacement rules", replacements.size());
+    log.debug("Processing {} replacement rules", replacements.size());
     for (String rule : replacements) {
       this.replacements.add(new PathReplacement(rule));
     }
   }
 
   public void setImportUser(String user) {
-    this.log.debug("Setting import user {}", user);
+    log.debug("Setting import user {}", user);
     this.importUser = this.userRepository.findByEmail(user);
   }
 
@@ -72,7 +72,7 @@ public class ImportFileProcessor {
    * @throws ProcessorException if a processing error occurs
    */
   public void process(String source) throws ProcessorException {
-    this.log.debug("Beginning import: file={}", source);
+    log.debug("Beginning import: file={}", source);
     if (source == null) {
       throw new ProcessorException("missing source");
     }
@@ -87,17 +87,17 @@ public class ImportFileProcessor {
     }
 
     try {
-      this.log.debug("Loading comics from source file");
+      log.debug("Loading comics from source file");
       List<Comic> comics = this.backupAdaptor.load(file, this.currentPages, this.booksguids);
 
-      this.log.debug("Importing {} comic(s)", comics.size());
+      log.debug("Importing {} comic(s)", comics.size());
       this.importAdaptor.importComics(
           comics, this.replacements, this.currentPages, this.importUser);
 
-      this.log.debug("Loading comic lists from source file");
+      log.debug("Loading comic lists from source file");
       Map<String, Object> comicsLists = this.backupAdaptor.loadLists(file, this.booksguids);
 
-      this.log.debug("Importing {} comic list(s)", comicsLists.size());
+      log.debug("Importing {} comic list(s)", comicsLists.size());
       this.importAdaptor.importLists(comicsLists, this.importUser);
 
     } catch (ImportAdaptorException error) {

@@ -49,7 +49,7 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
   @Transactional
   public void startTask() throws WorkerTaskException {
     if (!comic.getReadingLists().isEmpty()) {
-      this.log.debug(
+      log.debug(
           "Removing comic from {} reading list{}",
           comic.getReadingLists().size(),
           comic.getReadingLists().size() == 1 ? "" : "s");
@@ -60,7 +60,7 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
           ReadingList readingList = readingLists[index];
           readingList.removeComic(comic);
           comic.getReadingLists().remove(readingList);
-          this.log.debug("Updating reading list: {}", readingList.getName());
+          log.debug("Updating reading list: {}", readingList.getName());
           this.readingListRepository.save(readingList);
         }
       }
@@ -68,17 +68,17 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
 
     if (this.deleteFile) {
       final String filename = this.comic.getFilename();
-      this.log.debug("Deleting comic file: {}", filename);
+      log.debug("Deleting comic file: {}", filename);
       File file = new File(filename);
       try {
         FileUtils.forceDelete(file);
-        this.log.debug("Removing comic from repository: id={}", this.comic.getId());
+        log.debug("Removing comic from repository: id={}", this.comic.getId());
         this.repository.delete(this.comic);
       } catch (IOException error) {
-        this.log.error("Unable to delete comic: {}", filename, error);
+        log.error("Unable to delete comic: {}", filename, error);
       }
     } else {
-      this.log.debug("Marking comic for deletion: id={}", this.comic.getId());
+      log.debug("Marking comic for deletion: id={}", this.comic.getId());
       comic.setDateDeleted(new Date());
       comic.setDateLastUpdated(new Date());
       this.repository.save(this.comic);

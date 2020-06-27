@@ -65,10 +65,10 @@ public class ComicFileImportAdaptor {
       throws ImportAdaptorException {
     for (int index = 0; index < comics.size(); index++) {
       try {
-        this.log.debug("Importing comic: {}", comics.get(index).getFilename());
+        log.debug("Importing comic: {}", comics.get(index).getFilename());
         this.importComic(comics.get(index), replacements, currentPages, importUser);
       } catch (FileNotFoundException error) {
-        this.log.debug("Comic not found: skipping");
+        log.debug("Comic not found: skipping");
       } catch (ComicFileHandlerException error) {
         throw new ImportAdaptorException("unable to load comic file", error);
       }
@@ -84,20 +84,20 @@ public class ComicFileImportAdaptor {
     this.verifyPath(comic, replacements);
 
     if (this.comicRepository.findByFilename(comic.getFilename()) != null) {
-      this.log.debug("Found in the library");
+      log.debug("Found in the library");
       return;
     }
 
     File file = new File(comic.getFilename());
     if (!file.exists()) {
-      this.log.debug("No such file: {}", comic.getFilename());
+      log.debug("No such file: {}", comic.getFilename());
       throw new FileNotFoundException("no such file: " + comic.getFilename());
     }
 
-    this.log.debug("Loading comic details");
+    log.debug("Loading comic details");
     this.comicFileHandler.loadComic(comic);
 
-    this.log.debug("Saving comic to database");
+    log.debug("Saving comic to database");
     this.comicRepository.save(comic);
 
     String currentPage = currentPages.get(comic.getFilename());
@@ -106,18 +106,18 @@ public class ComicFileImportAdaptor {
       importUser.setBookmark(currentComic, currentPage);
       this.userRepository.save(importUser);
     } else {
-      this.log.debug("No import user defined, no bookmark saved");
+      log.debug("No import user defined, no bookmark saved");
     }
   }
 
   public void verifyPath(Comic comic, List<PathReplacement> pathReplacements) {
-    this.log.debug("Verifying path: {} replacement options", pathReplacements.size());
+    log.debug("Verifying path: {} replacement options", pathReplacements.size());
     for (PathReplacement replacement : pathReplacements) {
       if (replacement.isMatch(comic.getFilename())) {
         String oldname = comic.getFilename();
         String newname = replacement.getReplacement(oldname);
 
-        this.log.debug("Replacing filename: {}={}", oldname, newname);
+        log.debug("Replacing filename: {}={}", oldname, newname);
         comic.setFilename(newname);
         return;
       }
@@ -132,13 +132,13 @@ public class ComicFileImportAdaptor {
       String listName = (String) list.getKey();
 
       if (list.getValue() instanceof List) {
-        this.log.debug("Importing list: {}", listName);
+        log.debug("Importing list: {}", listName);
         importList(listName, (List) list.getValue(), importUser);
       } else if (list.getValue() instanceof ComicSmartListItem) {
-        this.log.debug("Importing smart list: {}", listName);
+        log.debug("Importing smart list: {}", listName);
         importSmartList(listName, (ComicSmartListItem) list.getValue(), importUser);
       } else {
-        this.log.error("List {} of unknown type!", listName);
+        log.error("List {} of unknown type!", listName);
       }
     }
   }
@@ -159,7 +159,7 @@ public class ComicFileImportAdaptor {
     try {
       this.readingListService.createReadingList(email, listName, "Imported from ComicRack");
     } catch (ReadingListNameException e) {
-      this.log.error("Reading list {} already exists!", listName);
+      log.error("Reading list {} already exists!", listName);
     }
   }
 
@@ -211,7 +211,7 @@ public class ComicFileImportAdaptor {
           itemMatcher.getValue());
 
     } else {
-      this.log.error("Matcher {} of unknown type!", matcher.getType());
+      log.error("Matcher {} of unknown type!", matcher.getType());
       throw new ImportAdaptorException("Failed to import matcher");
     }
   }

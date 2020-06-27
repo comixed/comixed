@@ -43,12 +43,12 @@ public class ComicVineQueryForVolumeDetailsAdaptor {
     String content = null;
     ComicVineVolume volume = null;
 
-    this.log.debug("Fetching volume details: volumeId={}", volumeId);
+    log.debug("Fetching volume details: volumeId={}", volumeId);
 
     volume = this.comicVineVolumeRepository.findByVolumeId(volumeId);
 
     if (skipCache || (volume == null)) {
-      this.log.debug("Fetching volume details from ComicVine...");
+      log.debug("Fetching volume details from ComicVine...");
 
       ComicVineVolumeDetailsWebRequest request = this.requestFactory.getObject();
       request.setApiKey(apiKey);
@@ -60,7 +60,7 @@ public class ComicVineQueryForVolumeDetailsAdaptor {
           this.comicVineVolumeRepository.delete(volume);
         }
 
-        this.log.debug("Saving retrieved volume data...");
+        log.debug("Saving retrieved volume data...");
         volume = new ComicVineVolume();
         volume.setVolumeId(volumeId);
         volume.setContent(content.toString());
@@ -70,7 +70,7 @@ public class ComicVineQueryForVolumeDetailsAdaptor {
         throw new ComicVineAdaptorException("Failed to get volume details", error);
       }
     } else {
-      this.log.debug("Volume found in database.");
+      log.debug("Volume found in database.");
       content = volume.getContent();
     }
 

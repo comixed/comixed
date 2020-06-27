@@ -570,7 +570,7 @@ public class Comic {
    * @param date the cover date
    */
   public void setCoverDate(Date date) {
-    this.log.debug("Setting cover date=" + this.formatDate(date));
+    log.debug("Setting cover date=" + this.formatDate(date));
     this.coverDate = date;
   }
 
@@ -597,7 +597,7 @@ public class Comic {
    * @param date the date
    */
   public void setDateAdded(Date date) {
-    this.log.debug("Setting the date added=" + this.formatDate(date));
+    log.debug("Setting the date added=" + this.formatDate(date));
     if (date == null) throw new IllegalArgumentException("Date added cannot be null");
     this.dateAdded = date;
   }
@@ -637,7 +637,7 @@ public class Comic {
    * @param description the description
    */
   public void setDescription(String description) {
-    this.log.debug("Setting description: " + description);
+    log.debug("Setting description: " + description);
     this.description = description;
   }
 
@@ -656,7 +656,7 @@ public class Comic {
    * @param filename the filename
    */
   public void setFilename(String filename) {
-    this.log.debug("Setting filename: " + filename);
+    log.debug("Setting filename: " + filename);
     this.filename = filename;
   }
 
@@ -696,7 +696,7 @@ public class Comic {
   }
 
   public void setImprint(String imprint) {
-    this.log.debug("Setting imprint={}", imprint);
+    log.debug("Setting imprint={}", imprint);
     this.imprint = imprint;
   }
 
@@ -730,9 +730,9 @@ public class Comic {
    * @param issueNumber the issue number
    */
   public void setIssueNumber(String issueNumber) {
-    this.log.debug("Setting issue number=" + issueNumber);
+    log.debug("Setting issue number=" + issueNumber);
     if ((issueNumber != null) && issueNumber.startsWith("0")) {
-      this.log.debug("Removing leading 0s from issue number");
+      log.debug("Removing leading 0s from issue number");
       while (issueNumber.startsWith("0") && !issueNumber.equals("0")) {
         issueNumber = issueNumber.substring(1);
       }
@@ -784,7 +784,7 @@ public class Comic {
    * @param notes the notes
    */
   public void setNotes(String notes) {
-    this.log.debug("Setting the notes");
+    log.debug("Setting the notes");
     this.notes = notes;
   }
 
@@ -795,7 +795,7 @@ public class Comic {
    * @return the offset
    */
   public Page getPage(int index) {
-    this.log.debug("Returning offset: index=" + index);
+    log.debug("Returning offset: index=" + index);
     return this.pages.get(index);
   }
 
@@ -846,7 +846,7 @@ public class Comic {
    * @param publisher
    */
   public void setPublisher(String publisher) {
-    this.log.debug("Setting publisher=" + publisher);
+    log.debug("Setting publisher=" + publisher);
     this.publisher = publisher;
   }
 
@@ -878,7 +878,7 @@ public class Comic {
    * @param series the series
    */
   public void setSeries(String name) {
-    this.log.debug("Setting series=" + name);
+    log.debug("Setting series=" + name);
     this.series = name;
   }
 
@@ -897,7 +897,7 @@ public class Comic {
    * @return the story arc series
    */
   public String getStoryArc(int index) {
-    this.log.debug("Getting story arc: index=" + index);
+    log.debug("Getting story arc: index=" + index);
     return this.storyArcs.get(index);
   }
 
@@ -908,7 +908,7 @@ public class Comic {
    */
   @JsonIgnore
   public int getStoryArcCount() {
-    this.log.debug("Getting story arc count");
+    log.debug("Getting story arc count");
     return this.storyArcs.size();
   }
 
@@ -936,7 +936,7 @@ public class Comic {
    * @param summary the summary
    */
   public void setSummary(String summary) {
-    this.log.debug("Setting summary: " + summary);
+    log.debug("Setting summary: " + summary);
     this.summary = summary;
   }
 
@@ -947,7 +947,7 @@ public class Comic {
    * @return
    */
   public String getTeam(int index) {
-    this.log.debug("Retrieving team index=" + index);
+    log.debug("Retrieving team index=" + index);
     return this.teams.get(index);
   }
 
@@ -985,7 +985,7 @@ public class Comic {
    * @param title the title
    */
   public void setTitle(String title) {
-    this.log.debug("Setting title=" + title);
+    log.debug("Setting title=" + title);
     this.title = title;
   }
 
@@ -1004,7 +1004,7 @@ public class Comic {
    * @param volume the volume
    */
   public void setVolume(String volume) {
-    this.log.debug("Setting volume=" + volume);
+    log.debug("Setting volume=" + volume);
     this.volume = volume;
   }
 

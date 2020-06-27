@@ -36,7 +36,7 @@ public class ComicVineQueryForIssueAdaptor {
 
   public ScrapingIssue execute(String apiKey, Integer volume, String issueNumber)
       throws ComicVineAdaptorException {
-    this.log.debug("Getting issue={} for volume={} ", issueNumber, volume);
+    log.debug("Getting issue={} for volume={} ", issueNumber, volume);
 
     while (!issueNumber.isEmpty()
         && !issueNumber.equals("0")
@@ -60,9 +60,9 @@ public class ComicVineQueryForIssueAdaptor {
     }
 
     if (result != null) {
-      this.log.debug("Returning an issue");
+      log.debug("Returning an issue");
     } else {
-      this.log.debug("No comic found");
+      log.debug("No comic found");
     }
 
     return result;
