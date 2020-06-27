@@ -67,7 +67,7 @@ public class ProcessComicTask extends AbstractWorkerTask {
     logger.debug("Setting comic file details");
     ComicFileDetails fileDetails = comic.getFileDetails();
     if (fileDetails == null) {
-      this.logger.debug("Creating new file details entry for comic");
+      logger.debug("Creating new file details entry for comic");
       fileDetails = new ComicFileDetails();
     }
 

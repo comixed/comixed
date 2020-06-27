@@ -56,36 +56,36 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.log.debug("Adding file to library: {}", this.filename);
+    log.debug("Adding file to library: {}", this.filename);
 
     final File file = new File(this.filename);
     Comic result = this.comicRepository.findByFilename(file.getAbsolutePath());
 
     if (result != null) {
-      this.log.debug("Comic already imported: " + file.getAbsolutePath());
+      log.debug("Comic already imported: " + file.getAbsolutePath());
       return;
     }
 
     try {
       result = this.comicFactory.getObject();
-      this.log.debug("Setting comic filename");
+      log.debug("Setting comic filename");
       result.setFilename(file.getAbsolutePath());
-      this.log.debug("Scraping details from filename");
+      log.debug("Scraping details from filename");
       this.filenameScraper.execute(result);
-      this.log.debug("Loading comic details");
+      log.debug("Loading comic details");
       this.comicFileHandler.loadComicArchiveType(result);
 
-      this.log.debug("Saving comic");
+      log.debug("Saving comic");
       result = this.comicRepository.save(result);
 
-      this.log.debug("Encoding process comic task");
+      log.debug("Encoding process comic task");
       final ProcessComicTaskEncoder taskEncoder =
           this.processComicTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
       taskEncoder.setDeleteBlockedPages(this.deleteBlockedPages);
       taskEncoder.setIgnoreMetadata(this.ignoreMetadata);
 
-      this.log.debug("Saving process comic task");
+      log.debug("Saving process comic task");
       final Task task = taskEncoder.encode();
       this.taskRepository.save(task);
     } catch (ComicFileHandlerException | AdaptorException error) {

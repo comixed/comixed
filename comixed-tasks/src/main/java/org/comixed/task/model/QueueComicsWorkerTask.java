@@ -65,7 +65,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
-    this.log.debug(
+    log.debug(
         "Enqueueing {} comic{}: delete blocked pages={} ignore metadata={}",
         this.filenames.size(),
         this.filenames.size() == 1 ? "" : "s",
@@ -77,7 +77,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
     for (String filename : this.filenames) {
       final Task task = new Task();
 
-      this.log.debug("Comic file: {}", filename);
+      log.debug("Comic file: {}", filename);
 
       task.setTaskType(TaskType.ADD_COMIC);
       task.setProperty(AddComicTaskEncoder.FILENAME, filename);
@@ -87,7 +87,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
       this.taskRepository.save(task);
     }
 
-    this.log.debug("Finished processing comics queue: {}ms", System.currentTimeMillis() - started);
+    log.debug("Finished processing comics queue: {}ms", System.currentTimeMillis() - started);
   }
 
   @Override

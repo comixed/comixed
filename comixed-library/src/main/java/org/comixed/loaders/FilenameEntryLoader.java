@@ -89,13 +89,13 @@ public class FilenameEntryLoader extends AbstractEntryLoader implements Initiali
       throws EntryLoaderException {
     // get the filename.ext only
     String key = new File(filename).getName();
-    this.log.debug("Determining filename adaptor for: " + filename);
+    log.debug("Determining filename adaptor for: " + filename);
     EntryLoader loader = this.entryLoaders.get(key);
     if (loader != null) {
-      this.log.debug("Using adaptor: " + loader);
+      log.debug("Using adaptor: " + loader);
       loader.loadContent(comic, filename, content);
     } else {
-      this.log.debug("No filename adaptor defined");
+      log.debug("No filename adaptor defined");
     }
   }
 }

@@ -74,7 +74,7 @@ public class OPDSEntry {
     this.authors = new ArrayList<>();
     for (Credit credit : comic.getCredits()) {
       if (StringUtils.equals(credit.getRole().toUpperCase(), "WRITER")) {
-        this.log.debug("Adding author: {}", credit.getName());
+        log.debug("Adding author: {}", credit.getName());
         this.authors.add(new OPDSAuthor(credit.getName(), ""));
       }
     }
@@ -84,7 +84,7 @@ public class OPDSEntry {
     String urlPrefix = "/opds/feed/comics/" + comic.getId();
 
     if (!comic.isMissing()) {
-      this.log.debug("Added comic to feed: {}", comic.getFilename());
+      log.debug("Added comic to feed: {}", comic.getFilename());
 
       String coverUrl = urlPrefix + "/0/0";
       String thumbnailUrl = urlPrefix + "/0/160";
@@ -96,13 +96,13 @@ public class OPDSEntry {
                 + "/download/"
                 + URLEncoder.encode(comic.getBaseFilename(), StandardCharsets.UTF_8.toString());
       } catch (UnsupportedEncodingException error) {
-        this.log.error("error encoding comic filename", error);
+        log.error("error encoding comic filename", error);
         comicUrl = urlPrefix + "/download/" + comic.getBaseFilename();
       }
 
-      this.log.debug("coverUrl: {}", coverUrl);
-      this.log.debug("thumbnailUrl: {}", thumbnailUrl);
-      this.log.debug("comicUrl: {}", comicUrl);
+      log.debug("coverUrl: {}", coverUrl);
+      log.debug("thumbnailUrl: {}", thumbnailUrl);
+      log.debug("comicUrl: {}", comicUrl);
 
       // TODO need to get the correct mime types for the cover
       this.links =
@@ -122,7 +122,7 @@ public class OPDSEntry {
                   "/opds/feed/comics/" + comic.getId() + "/{pageNumber}/{maxWidth}",
                   comic.getPageCount()));
     } else {
-      this.log.debug("Comic file missing: {}", comic.getFilename());
+      log.debug("Comic file missing: {}", comic.getFilename());
     }
   }
 

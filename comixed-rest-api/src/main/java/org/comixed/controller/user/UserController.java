@@ -59,7 +59,7 @@ public class UserController implements InitializingBean {
 
   @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.DELETE)
   public void deleteUser(@PathVariable("id") long userId) throws ComiXedUserException {
-    this.log.info("Deleting user: id={}", userId);
+    log.info("Deleting user: id={}", userId);
 
     this.userService.delete(userId);
   }
@@ -67,7 +67,7 @@ public class UserController implements InitializingBean {
   @GetMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(UserList.class)
   public List<ComiXedUser> getAllUsers() {
-    this.log.info("Getting all user accounts");
+    log.info("Getting all user accounts");
 
     return this.userService.findAll();
   }
@@ -75,10 +75,10 @@ public class UserController implements InitializingBean {
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   @JsonView(UserDetails.class)
   public ComiXedUser getCurrentUser(Principal user) throws ComiXedUserException {
-    this.log.debug("Returning current user");
+    log.debug("Returning current user");
 
     if (user == null) {
-      this.log.debug("Not authenticated");
+      log.debug("Not authenticated");
       return null;
     }
 

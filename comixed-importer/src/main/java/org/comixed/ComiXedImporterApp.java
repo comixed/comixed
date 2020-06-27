@@ -45,14 +45,14 @@ public class ComiXedImporterApp implements ApplicationRunner {
   }
 
   private void missingArgument(String name) {
-    this.log.info("Missing required argument: {}", name);
+    log.info("Missing required argument: {}", name);
     exit(1);
   }
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
     if (args.getSourceArgs().length == 0) {
-      this.log.error("No commandline options provided. Exiting...");
+      log.error("No commandline options provided. Exiting...");
       exit(1);
     }
 
@@ -70,7 +70,7 @@ public class ComiXedImporterApp implements ApplicationRunner {
       this.importFileProcessor.setImportUser(args.getOptionValues(USER_CMDLINE_ARG).get(0));
     }
 
-    this.log.info("Source file: {}", source);
+    log.info("Source file: {}", source);
 
     this.importFileProcessor.process(source);
 
