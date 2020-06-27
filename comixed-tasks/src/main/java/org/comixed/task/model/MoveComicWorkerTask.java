@@ -65,21 +65,21 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
 
     // if the source and target are the same, then skip the file
     if (destFile.equals(sourceFile)) {
-      this.log.debug("Source and target are the same: " + destFile.getAbsolutePath());
+      log.debug("Source and target are the same: " + destFile.getAbsolutePath());
       return;
     }
 
     // create the directory if it doesn't exist
     if (!destFile.getParentFile().exists()) {
-      this.log.debug("Creating directory: " + destFile.getParentFile().getAbsolutePath());
+      log.debug("Creating directory: " + destFile.getParentFile().getAbsolutePath());
       destFile.getParentFile().mkdirs();
     }
     try {
-      this.log.debug("Moving comic: " + this.comic.getFilename() + " -> " + this.destination);
+      log.debug("Moving comic: " + this.comic.getFilename() + " -> " + this.destination);
 
       FileUtils.moveFile(sourceFile, destFile);
 
-      this.log.debug("Updating comic in database");
+      log.debug("Updating comic in database");
       this.comic.setFilename(destFile.getAbsolutePath());
       this.comicRepository.save(this.comic);
     } catch (IOException error) {

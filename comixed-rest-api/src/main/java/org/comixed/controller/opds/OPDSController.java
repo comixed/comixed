@@ -97,12 +97,12 @@ public class OPDSController {
   public ResponseEntity<InputStreamResource> downloadComic(
       @PathVariable("id") long id, @PathVariable("filename") String filename)
       throws FileNotFoundException, IOException {
-    this.log.debug("Attempting to download comic: id={}", id);
+    log.debug("Attempting to download comic: id={}", id);
 
     Optional<Comic> record = this.comicRepository.findById(id);
 
     if (!record.isPresent()) {
-      this.log.error("No such comic");
+      log.error("No such comic");
       return null;
     }
 
@@ -110,7 +110,7 @@ public class OPDSController {
     File file = new File(comic.getFilename());
 
     if (!file.exists() || !file.isFile()) {
-      this.log.error("Missing or invalid comic file: {}", comic.getFilename());
+      log.error("Missing or invalid comic file: {}", comic.getFilename());
       return null;
     }
 
@@ -130,7 +130,7 @@ public class OPDSController {
       @PathVariable("index") int index,
       @PathVariable("maxWidth") int maxWidth)
       throws IOException {
-    this.log.debug("Getting the image for comic: id={} index={}", id, index);
+    log.debug("Getting the image for comic: id={} index={}", id, index);
 
     Optional<Comic> record = this.comicRepository.findById(id);
 
@@ -158,7 +158,7 @@ public class OPDSController {
           this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content))
               + "/"
               + this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
-      this.log.debug("Image {} mimetype: {}", index, type);
+      log.debug("Image {} mimetype: {}", index, type);
       return ResponseEntity.ok()
           .contentLength(content.length)
           .contentType(MediaType.valueOf(type))
@@ -166,9 +166,9 @@ public class OPDSController {
     }
 
     if (!record.isPresent()) {
-      this.log.debug("Could now download page. No such comic: id={}", id);
+      log.debug("Could now download page. No such comic: id={}", id);
     } else {
-      this.log.debug("No such page: index={} page count={}", index, record.get().getPageCount());
+      log.debug("No such page: index={} page count={}", index, record.get().getPageCount());
     }
 
     return null;

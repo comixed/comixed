@@ -39,7 +39,7 @@ public class PublisherController {
 
   @GetMapping(value = "/api/publishers/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Publisher getByName(@PathVariable("name") String name) {
-    this.log.info("Getting publisher: name={}", name);
+    log.info("Getting publisher: name={}", name);
     return this.publisherService.getByName(name);
   }
 
@@ -47,7 +47,7 @@ public class PublisherController {
       value = "/api/publishers/{name}/thumbnail",
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<byte[]> getThumbnail(@PathVariable("name") String name) throws IOException {
-    this.log.debug("Getting thumbnail image for publisher: {}", name);
+    log.debug("Getting thumbnail image for publisher: {}", name);
     Publisher publisher = this.publisherService.getByName(name);
     byte[] content = null;
     if (publisher != null) {
@@ -63,7 +63,7 @@ public class PublisherController {
   @GetMapping(value = "/api/publishers/{name}/logo", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<byte[]> getLogo(@PathVariable("name") String name)
       throws PublisherException, IOException {
-    this.log.debug("Getting logo image for publisher: {}", name);
+    log.debug("Getting logo image for publisher: {}", name);
     Publisher publisher = this.publisherService.getByName(name);
     byte[] content = null;
     if (publisher != null) {

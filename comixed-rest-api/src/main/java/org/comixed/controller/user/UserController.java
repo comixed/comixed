@@ -82,11 +82,11 @@ public class UserController implements InitializingBean {
       return null;
     }
 
-    this.log.debug("Loading user: {}", user.getName());
+    log.debug("Loading user: {}", user.getName());
     ComiXedUser comiXedUser = this.userService.findByEmail(user.getName());
 
     if (comiXedUser != null) {
-      this.log.debug("Setting authenticated flag");
+      log.debug("Setting authenticated flag");
       comiXedUser.setAuthenticated(true);
     }
 
@@ -96,20 +96,20 @@ public class UserController implements InitializingBean {
   @RequestMapping(value = "/user/preferences", method = RequestMethod.GET)
   public List<Preference> getUserPreferences(Authentication authentication)
       throws ComiXedUserException {
-    this.log.debug("Getting user preferences");
+    log.debug("Getting user preferences");
 
     if (authentication == null) {
-      this.log.debug("User is not authenticated");
+      log.debug("User is not authenticated");
       return null;
     }
 
     String email = authentication.getName();
 
-    this.log.debug("Loading user: email={}", email);
+    log.debug("Loading user: email={}", email);
     ComiXedUser user = this.userService.findByEmail(email);
 
     if (user == null) {
-      this.log.debug("No such user: {}", email);
+      log.debug("No such user: {}", email);
       return null;
     }
 
@@ -122,7 +122,7 @@ public class UserController implements InitializingBean {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComiXedUser saveNewUser(@RequestBody() final SaveUserRequest request)
       throws ComiXedUserException {
-    this.log.info(
+    log.info(
         "Creating new user: email={} admin={}",
         request.getEmail(),
         request.getIsAdmin() ? "Yes" : "No");
@@ -137,7 +137,7 @@ public class UserController implements InitializingBean {
       throws ComiXedUserException {
     final String email = authentication.getName();
 
-    this.log.info("Setting user property: email={} property[{}]={}", email, name, value);
+    log.info("Setting user property: email={} property[{}]={}", email, name, value);
 
     return this.userService.setUserProperty(email, name, value);
   }
@@ -148,7 +148,7 @@ public class UserController implements InitializingBean {
       throws ComiXedUserException {
     final String email = authentication.getName();
 
-    this.log.info("Updating email address for: email={} new={}", email, username);
+    log.info("Updating email address for: email={} new={}", email, username);
 
     return this.userService.setUserEmail(email, username);
   }
@@ -159,7 +159,7 @@ public class UserController implements InitializingBean {
       throws ComiXedUserException {
     final String email = authentication.getName();
 
-    this.log.info("Updating password for: email={}", email);
+    log.info("Updating password for: email={}", email);
 
     return this.userService.setUserPassword(email, password);
   }
@@ -175,23 +175,23 @@ public class UserController implements InitializingBean {
       throws ComiXedUserException {
     final ComiXedUser authUser = this.userService.findByEmail(principal.getName());
 
-    this.log.info("Updating user: id={}", id);
+    log.info("Updating user: id={}", id);
     ComiXedUser user = this.userService.findById(id);
 
     if (user == null) {
-      this.log.debug("No such user");
+      log.debug("No such user");
       return null;
     }
 
     user.setEmail(request.getEmail());
 
     if ((request.getPassword() != null) && !request.getPassword().isEmpty()) {
-      this.log.debug("Updating user's password");
+      log.debug("Updating user's password");
       user.setPasswordHash(this.utils.createHash(request.getPassword().getBytes()));
     }
 
     if (authUser.isAdmin()) {
-      this.log.debug("Auth user is admin: updating roles");
+      log.debug("Auth user is admin: updating roles");
       if (authUser.getId() != id) {
         user.clearRoles();
         user.addRole(this.readerRole);
@@ -199,10 +199,10 @@ public class UserController implements InitializingBean {
           user.addRole(this.adminRole);
         }
       } else {
-        this.log.debug("Admins cannot change their own roles");
+        log.debug("Admins cannot change their own roles");
       }
     }
-    this.log.debug(
+    log.debug(
         "Updating user: id={} email={} is_admin={}",
         id,
         request.getEmail(),
@@ -223,7 +223,7 @@ public class UserController implements InitializingBean {
       final Authentication authentication, @PathVariable("name") final String propertyName) {
 
     final String email = authentication.getName();
-    this.log.info("Deleting user property: email={} property={}", email, propertyName);
+    log.info("Deleting user property: email={} property={}", email, propertyName);
     return this.userService.deleteUserProperty(email, propertyName);
   }
 }

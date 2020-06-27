@@ -37,7 +37,7 @@ public class WebRequestClient {
    * @return a client
    */
   public HttpClient createClient() {
-    this.log.debug("Creating a HTTP client");
+    log.debug("Creating a HTTP client");
     return HttpClients.createDefault();
   }
 }

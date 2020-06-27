@@ -46,22 +46,22 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
     String email = authentication.getName();
     String password = authentication.getCredentials().toString();
 
-    this.log.debug("Attempting to authenticate: email={}", email);
+    log.debug("Attempting to authenticate: email={}", email);
 
     ComiXedUser user = userRepository.findByEmail(email);
 
     if (user == null) {
-      this.log.debug("No such user");
+      log.debug("No such user");
       return null;
     }
 
     if (utils.createHash(password.getBytes()).equals(user.getPasswordHash())) {
-      this.log.debug("Passwords match!");
+      log.debug("Passwords match!");
 
       List<GrantedAuthority> roles = new ArrayList<>();
 
       for (Role role : user.getRoles()) {
-        this.log.debug("Granting role: {}", role.getName());
+        log.debug("Granting role: {}", role.getName());
         roles.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
       }
       // update the last authenticated date
@@ -70,7 +70,7 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
       return new UsernamePasswordAuthenticationToken(email, password, roles);
     }
 
-    this.log.debug("Passwords did not match!");
+    log.debug("Passwords did not match!");
 
     return null;
   }

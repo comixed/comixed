@@ -78,7 +78,7 @@ public class ComicController {
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({View.ComicDetails.class})
   public Comic deleteComic(@PathVariable("id") long id) throws ComicException {
-    this.log.info("Marking comic for deletion: id={}", id);
+    log.info("Marking comic for deletion: id={}", id);
 
     return this.comicService.deleteComic(id);
   }
@@ -86,18 +86,18 @@ public class ComicController {
   @DeleteMapping(value = "/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetails.class)
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
-    this.log.debug("Updating comic: id={}", id);
+    log.debug("Updating comic: id={}", id);
 
     Comic comic = this.comicService.getComic(id);
 
     if (comic != null) {
-      this.log.debug("Clearing metadata for comic");
+      log.debug("Clearing metadata for comic");
       this.comicDataAdaptor.clear(comic);
-      this.log.debug("Saving updates to comic");
+      log.debug("Saving updates to comic");
       this.comicService.save(comic);
       ComicController.stopWaitingForStatus();
     } else {
-      this.log.debug("No such comic found");
+      log.debug("No such comic found");
     }
 
     return comic;
@@ -112,14 +112,14 @@ public class ComicController {
 
   @PostMapping(value = "/multiple/delete")
   public boolean deleteMultipleComics(@RequestParam("comic_ids") List<Long> comicIds) {
-    this.log.debug("Deleting multiple comics: ids={}", comicIds.toArray());
+    log.debug("Deleting multiple comics: ids={}", comicIds.toArray());
 
     DeleteComicsWorkerTask task = this.deleteComicsWorkerTaskFactory.getObject();
 
-    this.log.debug("Setting comic ids");
+    log.debug("Setting comic ids");
     task.setComicIds(comicIds);
 
-    this.log.debug("Queueing the delete task");
+    log.debug("Queueing the delete task");
     this.worker.addTasksToQueue(task);
 
     return true;
@@ -128,17 +128,17 @@ public class ComicController {
   @GetMapping(value = "/{id}/download")
   public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
       throws IOException, ComicException {
-    this.log.info("Preparing to download comic: id={}", id);
+    log.info("Preparing to download comic: id={}", id);
 
     final Comic comic = this.comicService.getComic(id);
     if (comic == null) {
-      this.log.error("No such comic");
+      log.error("No such comic");
       return null;
     }
 
     final byte[] content = this.comicService.getComicContent(comic);
     if (content == null) {
-      this.log.error("No comic content found");
+      log.error("No comic content found");
       return null;
     }
 
@@ -153,12 +153,12 @@ public class ComicController {
   @JsonView(ComicDetails.class)
   public Comic getComic(Principal principal, @PathVariable("id") long id) throws ComicException {
     String email = principal.getName();
-    this.log.info("Getting comic for user: id={} user={}", id, email);
+    log.info("Getting comic for user: id={} user={}", id, email);
 
     final Comic result = this.comicService.getComic(id, email);
 
     if (result == null) {
-      this.log.error("No such comic");
+      log.error("No such comic");
     }
 
     return result;
@@ -166,7 +166,7 @@ public class ComicController {
 
   @GetMapping(value = "/formats")
   public Iterable<ComicFormat> getComicFormats() {
-    this.log.debug("Fetching all comic format types");
+    log.debug("Fetching all comic format types");
     return this.comicFormatRepository.findAll();
   }
 
@@ -188,7 +188,7 @@ public class ComicController {
 
     boolean done = false;
 
-    this.log.info("Getting library updates: user={} timestamp={}", email, lastUpdated);
+    log.info("Getting library updates: user={} timestamp={}", email, lastUpdated);
 
     List<Comic> comics = null;
     List<LastReadDate> lastReadDates = null;
@@ -198,28 +198,27 @@ public class ComicController {
 
     while (!done) {
       if (System.currentTimeMillis() >= latestCheck) {
-        this.log.debug("Timed out checking for library updates");
+        log.debug("Timed out checking for library updates");
         done = true;
       } else {
         if (!firstRun) {
           synchronized (STATUS_SEMAPHORE) {
-            this.log.debug("Sleeping for 1000ms");
+            log.debug("Sleeping for 1000ms");
             STATUS_SEMAPHORE.wait(1000);
           }
         }
         firstRun = false;
         comics = this.comicService.getComicsUpdatedSince(timestamp, maximumResults);
-        this.log.debug(
-            "Found {} new or updated comic{}", comics.size(), comics.size() == 1 ? "" : "s");
+        log.debug("Found {} new or updated comic{}", comics.size(), comics.size() == 1 ? "" : "s");
         lastReadDates = this.comicService.getLastReadDatesSince(email, timestamp);
-        this.log.debug(
+        log.debug(
             "Found {} updated last read record{}",
             lastReadDates.size(),
             lastReadDates.size() == 1 ? "" : "s");
         processCount = this.comicService.getProcessingCount();
-        this.log.debug("Import count: {}", processCount);
+        log.debug("Import count: {}", processCount);
         rescanCount = this.comicService.getRescanCount();
-        this.log.debug("Rescan count: {}", rescanCount);
+        log.debug("Rescan count: {}", rescanCount);
 
         done =
             !comics.isEmpty()
@@ -241,19 +240,19 @@ public class ComicController {
 
   @GetMapping(value = "/scan_types")
   public Iterable<ScanType> getScanTypes() {
-    this.log.debug("Fetching all scan types");
+    log.debug("Fetching all scan types");
     return this.scanTypeRepository.findAll();
   }
 
   @PostMapping(value = "/rescan")
   public int rescanComics() {
-    this.log.info("Beginning rescan of library");
+    log.info("Beginning rescan of library");
 
     final int result = this.comicService.rescanComics();
 
     ComicController.stopWaitingForStatus();
 
-    this.log.debug("Returning: {}", result);
+    log.debug("Returning: {}", result);
 
     return result;
   }
@@ -261,17 +260,17 @@ public class ComicController {
   @PutMapping(value = "/{id}/format")
   public void setFormat(@PathVariable("id") long comicId, @RequestParam("format_id") long formatId)
       throws ComicException {
-    this.log.debug("Setting format: comicId={} formatId={}", comicId, formatId);
+    log.debug("Setting format: comicId={} formatId={}", comicId, formatId);
 
     Comic comic = this.comicService.getComic(comicId);
     Optional<ComicFormat> formatRecord = this.comicFormatRepository.findById(formatId);
 
     if (comic != null && formatRecord.isPresent()) {
       comic.setFormat(formatRecord.get());
-      this.log.debug("Saving updated format");
+      log.debug("Saving updated format");
       this.comicService.save(comic);
     } else {
-      this.log.debug("No such comic found");
+      log.debug("No such comic found");
     }
   }
 
@@ -279,17 +278,17 @@ public class ComicController {
   public void setScanType(
       @PathVariable("id") long comicId, @RequestParam("scan_type_id") long scanTypeId)
       throws ComicException {
-    this.log.debug("Setting scan type: comicId={} scanTypeId={}", comicId, scanTypeId);
+    log.debug("Setting scan type: comicId={} scanTypeId={}", comicId, scanTypeId);
 
     Comic comic = this.comicService.getComic(comicId);
     Optional<ScanType> scanTypeRecord = this.scanTypeRepository.findById(scanTypeId);
 
     if (comic != null && scanTypeRecord.isPresent()) {
       comic.setScanType(scanTypeRecord.get());
-      this.log.debug("Saving updated scan type");
+      log.debug("Saving updated scan type");
       this.comicService.save(comic);
     } else {
-      this.log.debug("No such comic found");
+      log.debug("No such comic found");
     }
   }
 
@@ -297,16 +296,16 @@ public class ComicController {
   public void setSortName(
       @PathVariable("id") long comicId, @RequestParam("sort_name") String sortName)
       throws ComicException {
-    this.log.debug("Setting sort name: comicId={} sortName={}", comicId, sortName);
+    log.debug("Setting sort name: comicId={} sortName={}", comicId, sortName);
 
     Comic comic = this.comicService.getComic(comicId);
 
     if (comic != null) {
       comic.setSortName(sortName);
-      this.log.debug("Saving updated sorted name");
+      log.debug("Saving updated sorted name");
       this.comicService.save(comic);
     } else {
-      this.log.debug("No such comic found");
+      log.debug("No such comic found");
     }
   }
 
@@ -316,12 +315,12 @@ public class ComicController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
   public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic) {
-    this.log.info("Updating comic: id={}", id, comic);
+    log.info("Updating comic: id={}", id, comic);
 
     final Comic result = this.comicService.updateComic(id, comic);
 
     if (result == null) {
-      this.log.error("No such comic");
+      log.error("No such comic");
     }
 
     return result;
@@ -330,7 +329,7 @@ public class ComicController {
   @GetMapping(value = "/{id}/cover/content")
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
       throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
-    this.log.info("Getting cover for comic: id={}", id);
+    log.info("Getting cover for comic: id={}", id);
     final Comic comic = this.comicService.getComic(id);
 
     if (comic.isMissing()) {
@@ -340,17 +339,17 @@ public class ComicController {
     if (comic.getPageCount() > 0) {
       final String filename = comic.getPage(0).getFilename();
       final Page page = comic.getPage(0);
-      this.log.debug("Looking for cached image: hash={}", page.getHash());
+      log.debug("Looking for cached image: hash={}", page.getHash());
       byte[] content = this.pageCacheService.findByHash(page.getHash());
       if (content == null) {
-        this.log.debug("Loading page from archive");
+        log.debug("Loading page from archive");
         content = comic.getPage(0).getContent();
         this.pageCacheService.saveByHash(page.getHash(), content);
       }
-      this.log.debug("Returning comic cover: filename={} size={}", filename, content.length);
+      log.debug("Returning comic cover: filename={} size={}", filename, content.length);
       return this.getResponseEntityForImage(content, filename);
     } else {
-      this.log.debug("Comic is unprocessed; getting the first image instead");
+      log.debug("Comic is unprocessed; getting the first image instead");
       return this.getResponseEntityForImage(
           this.fileService.getImportFileCover(comic.getFilename()), "cover-image");
     }
@@ -375,7 +374,7 @@ public class ComicController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
   public Comic restoreComic(@PathVariable("id") final long id) throws ComicException {
-    this.log.info("Restoring comic: id={}", id);
+    log.info("Restoring comic: id={}", id);
 
     return this.comicService.restoreComic(id);
   }
@@ -389,7 +388,7 @@ public class ComicController {
       throws ComicException {
     String email = principal.getName();
     if (email == null) throw new ComicException("not authenticated");
-    this.log.info("Marking comic as read for {}: id={}", email, id);
+    log.info("Marking comic as read for {}: id={}", email, id);
 
     return this.comicService.markAsRead(email, id);
   }
@@ -399,7 +398,7 @@ public class ComicController {
       throws ComicException {
     String email = principal.getName();
     if (email == null) throw new ComicException("not authenticated");
-    this.log.info("Marking comic as unread for {}: id={}", email, id);
+    log.info("Marking comic as unread for {}: id={}", email, id);
 
     return this.comicService.markAsUnread(email, id);
   }

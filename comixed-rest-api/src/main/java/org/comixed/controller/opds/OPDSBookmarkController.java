@@ -49,13 +49,13 @@ public class OPDSBookmarkController {
   @GetMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
   public OPDSBookmark getBookmark(Authentication principal, @RequestParam("docId") long comicId)
       throws ComicException {
-    this.log.debug("Loading comic: id={}", comicId);
+    log.debug("Loading comic: id={}", comicId);
     final Comic comic = this.comicService.getComic(comicId);
     if (comic == null) {
       throw new ComicException("No such comic: id=" + comicId);
     }
 
-    this.log.debug("Getting book bookmark: id={}", comicId);
+    log.debug("Getting book bookmark: id={}", comicId);
     String email = principal.getName();
     ComiXedUser user = this.userRepository.findByEmail(email);
     final String bookmark = user.getBookmark(comic);
@@ -73,14 +73,14 @@ public class OPDSBookmarkController {
       @RequestParam("docId") long comicId,
       @RequestBody() final OPDSBookmark opdsBookmark)
       throws ComicException {
-    this.log.debug("Loading comic: id={}", comicId);
+    log.debug("Loading comic: id={}", comicId);
     final Comic comic = this.comicService.getComic(comicId);
 
     if (comic == null) {
       throw new ComicException("No such comic: id=" + comicId);
     }
 
-    this.log.debug("Setting book bookmark: id={}", comicId);
+    log.debug("Setting book bookmark: id={}", comicId);
 
     String email = principal.getName();
     ComiXedUser user = this.userRepository.findByEmail(email);

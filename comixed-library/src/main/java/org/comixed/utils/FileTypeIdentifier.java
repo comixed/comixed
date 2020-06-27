@@ -39,7 +39,7 @@ public class FileTypeIdentifier {
   @Autowired private Metadata metadata;
 
   private MediaType getMimeType(InputStream input) {
-    this.log.debug("Attempting to detect mime type for stream");
+    log.debug("Attempting to detect mime type for stream");
     MediaType result = null;
 
     try {
@@ -47,10 +47,10 @@ public class FileTypeIdentifier {
       result = this.tika.getDetector().detect(input, this.metadata);
       input.reset();
     } catch (IOException error) {
-      this.log.error("Error determining filetype from stream", error);
+      log.error("Error determining filetype from stream", error);
     }
 
-    this.log.debug("result=" + result);
+    log.debug("result=" + result);
 
     return result;
   }

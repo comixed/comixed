@@ -57,7 +57,7 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
    * @param value the filter value
    */
   public void addFilter(String name, String value) {
-    this.log.debug("Adding request filter: {}={}", name, value);
+    log.debug("Adding request filter: {}={}", name, value);
     this.filterset.put(name, value);
   }
 
@@ -68,7 +68,7 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
    * @param value the parameter value
    */
   public void addParameter(String name, String value) {
-    this.log.debug("Adding parameter: {}={}", name, value);
+    log.debug("Adding parameter: {}={}", name, value);
     this.parameterSet.put(name, value);
   }
 
@@ -82,14 +82,14 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
     if (this.endpoint == null) throw new WebRequestException("Missing or undefined endpoint");
     if (StringUtils.isEmpty(this.apiKey))
       throw new WebRequestException("Missing or undefined API key");
-    this.log.debug("Generating ComicVine URL");
+    log.debug("Generating ComicVine URL");
     StringBuilder parameters = new StringBuilder();
     if (!this.parameterSet.isEmpty()) {
-      this.log.debug("Adding parameters");
+      log.debug("Adding parameters");
       for (Map.Entry<String, String> entry : this.parameterSet.entrySet()) {
         String key = entry.getKey();
         String value = entry.getValue();
-        this.log.debug("Adding parameter: {}={}", key, value);
+        log.debug("Adding parameter: {}={}", key, value);
 
         parameters.append("&");
         parameters.append(key);
@@ -100,11 +100,11 @@ public abstract class AbstractComicVineWebRequest extends AbstractWebRequest {
 
     StringBuilder filtering = new StringBuilder();
     if (!this.filterset.isEmpty()) {
-      this.log.debug("Adding filters");
+      log.debug("Adding filters");
       for (Map.Entry<String, String> entry : this.filterset.entrySet()) {
         String key = entry.getKey();
         String value = entry.getValue();
-        this.log.debug("Adding filter: {}={}", key, value);
+        log.debug("Adding filter: {}={}", key, value);
         String f = MessageFormat.format(FILTER_FORMAT, key, value);
         if (filtering.length() > 0) {
           filtering.append(",");

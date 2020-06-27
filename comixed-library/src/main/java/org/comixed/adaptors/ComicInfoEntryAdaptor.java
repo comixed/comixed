@@ -62,7 +62,7 @@ public class ComicInfoEntryAdaptor implements EntryLoader {
     while (xmlInputReader.hasNext()) {
       if (xmlInputReader.isStartElement()) {
         final String tagName = xmlInputReader.getLocalName();
-        this.log.debug("Processing tag: " + tagName);
+        log.debug("Processing tag: " + tagName);
         switch (tagName) {
           case "Publisher":
             comic.setPublisher(xmlInputReader.getElementText());
@@ -127,13 +127,13 @@ public class ComicInfoEntryAdaptor implements EntryLoader {
                 if (role.equals("coverartist")) {
                   role = "cover";
                 }
-                this.log.debug("Adding role: {}={}", role, name);
+                log.debug("Adding role: {}={}", role, name);
                 comic.addCredit(name, role);
               }
             }
             break;
           default:
-            this.log.debug("Unrecognized tag");
+            log.debug("Unrecognized tag");
             break;
         }
       }
@@ -168,7 +168,7 @@ public class ComicInfoEntryAdaptor implements EntryLoader {
    * @throws IOException if an error occurs
    */
   public byte[] saveContent(Comic comic) throws IOException {
-    this.log.debug("Generating comic info data from comic");
+    log.debug("Generating comic info data from comic");
     ByteArrayOutputStream result = new ByteArrayOutputStream();
     PrintWriter writer = new PrintWriter(new OutputStreamWriter(result));
 

@@ -49,7 +49,7 @@ public class ComiXedAuthenticationController {
   public ResponseEntity<AuthToken> register(
       @RequestParam("email") String email, @RequestParam("password") String password)
       throws AuthenticationException {
-    this.log.debug("Attemping to authenticate user: {}", email);
+    log.debug("Attemping to authenticate user: {}", email);
     final Authentication authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(email, password));

@@ -70,8 +70,7 @@ public class UserService implements InitializingBean {
   }
 
   public ComiXedUser save(final ComiXedUser user) throws ComiXedUserException {
-    this.log.debug(
-        "{} user: email={}", user.getId() != null ? "Updating" : "Saving", user.getEmail());
+    log.debug("{} user: email={}", user.getId() != null ? "Updating" : "Saving", user.getEmail());
 
     try {
       return this.userRepository.save(user);
@@ -81,17 +80,17 @@ public class UserService implements InitializingBean {
   }
 
   public List<ComiXedUser> findAll() {
-    this.log.debug("Getting all users");
+    log.debug("Getting all users");
 
     final List<ComiXedUser> result = this.userRepository.findAll();
 
-    this.log.debug("Returning {} records", result.size());
+    log.debug("Returning {} records", result.size());
 
     return result;
   }
 
   public ComiXedUser findById(final long id) throws ComiXedUserException {
-    this.log.debug("Finding user: id={}", id);
+    log.debug("Finding user: id={}", id);
 
     final Optional<ComiXedUser> record = this.userRepository.findById(id);
 
@@ -103,12 +102,12 @@ public class UserService implements InitializingBean {
   }
 
   public Role findRoleByName(final String name) throws ComiXedUserException {
-    this.log.debug("Finding role: name={}", name);
+    log.debug("Finding role: name={}", name);
 
     final Role record = this.roleRepository.findByName(name);
 
     if (record == null) {
-      this.log.debug("No such role exists");
+      log.debug("No such role exists");
       throw new ComiXedUserException("Invalid role: name=" + name);
     }
 
@@ -118,7 +117,7 @@ public class UserService implements InitializingBean {
   public ComiXedUser setUserProperty(
       final String email, final String propertyName, final String propertyValue)
       throws ComiXedUserException {
-    this.log.debug(
+    log.debug(
         "Setting user property: email={} property[{}]={}", email, propertyName, propertyValue);
 
     final ComiXedUser user = this.userRepository.findByEmail(email);
@@ -130,7 +129,7 @@ public class UserService implements InitializingBean {
 
   public ComiXedUser setUserPassword(final String email, final String password)
       throws ComiXedUserException {
-    this.log.debug("Updating password for user: email={} length={}", email, password.length());
+    log.debug("Updating password for user: email={} length={}", email, password.length());
 
     final ComiXedUser record = this.userRepository.findByEmail(email);
 
@@ -145,7 +144,7 @@ public class UserService implements InitializingBean {
 
   public ComiXedUser setUserEmail(final String currentEmail, final String newEmail)
       throws ComiXedUserException {
-    this.log.debug("Setting user email: old={} new={}", currentEmail, newEmail);
+    log.debug("Setting user email: old={} new={}", currentEmail, newEmail);
 
     final ComiXedUser record = this.userRepository.findByEmail(currentEmail);
 
@@ -160,7 +159,7 @@ public class UserService implements InitializingBean {
 
   @Transactional
   public ComiXedUser deleteUserProperty(final String email, final String property) {
-    this.log.debug("Deleting user property: email={} property={}", email, property);
+    log.debug("Deleting user property: email={} property={}", email, property);
     final ComiXedUser user = this.userRepository.findByEmail(email);
     user.deleteProperty(property);
     return this.userRepository.save(user);
@@ -169,7 +168,7 @@ public class UserService implements InitializingBean {
   @Transactional
   public ComiXedUser createUser(final String email, final String password, final boolean isAdmin)
       throws ComiXedUserException {
-    this.log.debug("Creating new user: email={}", email);
+    log.debug("Creating new user: email={}", email);
 
     ComiXedUser user = this.userRepository.findByEmail(email);
 
@@ -185,7 +184,7 @@ public class UserService implements InitializingBean {
       user.addRole(this.adminRole);
     }
 
-    this.log.debug("Saving new user");
+    log.debug("Saving new user");
 
     return this.userRepository.save(user);
   }

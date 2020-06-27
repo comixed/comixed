@@ -40,7 +40,7 @@ public class Utils {
    * @return true if the file was deleted, false otherwise
    */
   public boolean deleteFile(File file) {
-    this.log.debug("Deleting file: {}", file.getAbsolutePath());
+    log.debug("Deleting file: {}", file.getAbsolutePath());
     return FileUtils.deleteQuietly(file);
   }
 

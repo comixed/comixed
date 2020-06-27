@@ -44,7 +44,7 @@ public class ProcessComicTaskEncoder extends AbstractTaskEncoder<ProcessComicTas
 
   @Override
   public Task encode() {
-    this.log.debug(
+    log.debug(
         "Encoding process comic task: comic={} delete blocked pages={} ignore metadata={}",
         this.comic.getId(),
         this.deleteBlockedPages,
@@ -63,7 +63,7 @@ public class ProcessComicTaskEncoder extends AbstractTaskEncoder<ProcessComicTas
   @Override
   public ProcessComicTask decode(final Task task) {
     this.deleteTask(task);
-    this.log.debug("Decoding process comic task: comic={}", task.getComic().getId());
+    log.debug("Decoding process comic task: comic={}", task.getComic().getId());
 
     final ProcessComicTask result = this.processComicTaskObjectFactory.getObject();
     result.setComic(task.getComic());

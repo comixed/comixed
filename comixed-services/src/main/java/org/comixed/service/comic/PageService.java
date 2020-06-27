@@ -44,7 +44,7 @@ public class PageService {
 
   @Transactional
   public Page updateTypeForPage(final long id, final String typeName) throws PageException {
-    this.log.debug("Setting page type for page: id={} page type={}", id, typeName);
+    log.debug("Setting page type for page: id={} page type={}", id, typeName);
 
     final Optional<Page> page = this.pageRepository.findById(id);
     final PageType pageType = this.pageTypeRepository.findByName(typeName);
@@ -55,7 +55,7 @@ public class PageService {
 
         record.setPageType(pageType);
 
-        this.log.debug("Updating page with  new type");
+        log.debug("Updating page with  new type");
         return this.pageRepository.save(record);
       } else {
         throw new PageException("Invalid page type: " + typeName);
@@ -67,11 +67,11 @@ public class PageService {
 
   @Transactional
   public Comic addBlockedPageHash(final long pageId, final String hash) throws PageException {
-    this.log.debug("Adding blocked page hash: {}", hash);
+    log.debug("Adding blocked page hash: {}", hash);
     BlockedPageHash existing = this.blockedPageHashRepository.findByHash(hash);
 
     if (existing != null) {
-      this.log.debug("Blocked page hash already exists");
+      log.debug("Blocked page hash already exists");
     } else {
       existing = new BlockedPageHash(hash);
       this.blockedPageHashRepository.save(existing);
@@ -88,10 +88,10 @@ public class PageService {
 
   @Transactional
   public Comic removeBlockedPageHash(final long pageId, final String hash) throws PageException {
-    this.log.debug("Removing blocked page hash: {}", hash);
+    log.debug("Removing blocked page hash: {}", hash);
     final BlockedPageHash entry = this.blockedPageHashRepository.findByHash(hash);
     if (entry == null) {
-      this.log.debug("No such hash");
+      log.debug("No such hash");
     } else {
       this.blockedPageHashRepository.delete(entry);
     }
@@ -106,26 +106,26 @@ public class PageService {
   }
 
   public List<String> getAllBlockedPageHashes() {
-    this.log.debug("Returning all blocked page hashes");
+    log.debug("Returning all blocked page hashes");
 
     return this.blockedPageHashRepository.getAllHashes();
   }
 
   public Page getPageInComicByIndex(final long comicId, final int pageIndex) {
-    this.log.debug("Getting page content for comic: comic id={} page index={}", comicId, pageIndex);
+    log.debug("Getting page content for comic: comic id={} page index={}", comicId, pageIndex);
 
-    this.log.debug("Fetching comic: id={}", comicId);
+    log.debug("Fetching comic: id={}", comicId);
     final Optional<Comic> comic = this.comicRepository.findById(comicId);
 
     if (comic.isPresent()) {
       if (pageIndex < comic.get().getPageCount()) {
-        this.log.debug("Returning page");
+        log.debug("Returning page");
         return comic.get().getPage(pageIndex);
       } else {
-        this.log.warn("Index out of range");
+        log.warn("Index out of range");
       }
     } else {
-      this.log.warn("No such comic");
+      log.warn("No such comic");
     }
 
     return null;
@@ -133,54 +133,54 @@ public class PageService {
 
   @Transactional
   public Page deletePage(final long id) {
-    this.log.debug("Marking page as deleted: id={}", id);
+    log.debug("Marking page as deleted: id={}", id);
     final Optional<Page> page = this.pageRepository.findById(id);
 
     if (page.isPresent()) {
       if (page.get().isMarkedDeleted()) {
-        this.log.debug("Page was already marked as deleted");
+        log.debug("Page was already marked as deleted");
         return page.get();
       } else {
         page.get().markDeleted(true);
         final Page result = this.pageRepository.save(page.get());
-        this.log.debug("Page deleted");
+        log.debug("Page deleted");
         return result;
       }
     }
 
-    this.log.warn("No such page");
+    log.warn("No such page");
     return null;
   }
 
   @Transactional
   public Page undeletePage(final long id) {
-    this.log.debug("Marking page as not deleted: id={}", id);
+    log.debug("Marking page as not deleted: id={}", id);
 
     final Optional<Page> page = this.pageRepository.findById(id);
 
     if (page.isPresent()) {
       if (page.get().isMarkedDeleted()) {
         page.get().markDeleted(false);
-        this.log.debug("Page undeleted");
+        log.debug("Page undeleted");
         return this.pageRepository.save(page.get());
 
       } else {
-        this.log.debug("Page was not marked as deleted");
+        log.debug("Page was not marked as deleted");
         return page.get();
       }
     } else {
-      this.log.warn("No such page");
+      log.warn("No such page");
     }
     return null;
   }
 
   public Page findById(final long id) {
-    this.log.debug("Getting page by id: id={}", id);
+    log.debug("Getting page by id: id={}", id);
 
     final Optional<Page> result = this.pageRepository.findById(id);
 
     if (!result.isPresent()) {
-      this.log.warn("No such page");
+      log.warn("No such page");
       return null;
     }
 
@@ -188,42 +188,42 @@ public class PageService {
   }
 
   public List<Page> getAllPagesForComic(final long comicId) {
-    this.log.debug("Getting all pages for comic: id={}", comicId);
+    log.debug("Getting all pages for comic: id={}", comicId);
 
     return this.pageRepository.findAllByComicId(comicId);
   }
 
   public List<PageType> getPageTypes() {
-    this.log.debug("Getting all page types");
+    log.debug("Getting all page types");
 
     return this.pageTypeRepository.findPageTypes();
   }
 
   @Transactional
   public int deleteAllWithHash(final String hash) {
-    this.log.debug("Deleting pages by hash: {}", hash);
+    log.debug("Deleting pages by hash: {}", hash);
 
     final int result = this.pageRepository.updateDeleteOnAllWithHash(hash, true);
 
-    this.log.debug("Update affected {} record{}", result, result == 1 ? "" : "s");
+    log.debug("Update affected {} record{}", result, result == 1 ? "" : "s");
 
     return result;
   }
 
   @Transactional
   public int undeleteAllWithHash(final String hash) {
-    this.log.debug("Undeleting pages by hash: {}", hash);
+    log.debug("Undeleting pages by hash: {}", hash);
 
     final int result = this.pageRepository.updateDeleteOnAllWithHash(hash, false);
 
-    this.log.debug("Update affected {} record{}", result, result == 1 ? "" : "s");
+    log.debug("Update affected {} record{}", result, result == 1 ? "" : "s");
 
     return result;
   }
 
   @Transactional
   public List<DuplicatePage> setBlockingState(final List<String> hashes, final boolean blocked) {
-    this.log.debug(
+    log.debug(
         "Updating {} hash{} to {}blocked",
         hashes.size(),
         hashes.size() == 1 ? "" : "es",
@@ -235,17 +235,17 @@ public class PageService {
       if (blocked) {
         if (entry == null) {
           entry = new BlockedPageHash(hash);
-          this.log.debug("Creating entry for hash: {}", hash);
+          log.debug("Creating entry for hash: {}", hash);
           this.blockedPageHashRepository.save(entry);
         } else {
-          this.log.debug("Hash already blocked: {}", hash);
+          log.debug("Hash already blocked: {}", hash);
         }
       } else {
         if (entry != null) {
-          this.log.debug("Deleting entry for hash: {}", hash);
+          log.debug("Deleting entry for hash: {}", hash);
           this.blockedPageHashRepository.delete(entry);
         } else {
-          this.log.debug("Hash not already blocked: {}", hash);
+          log.debug("Hash not already blocked: {}", hash);
         }
       }
     }
@@ -255,10 +255,10 @@ public class PageService {
 
   @Transactional(isolation = Isolation.READ_UNCOMMITTED)
   public List<DuplicatePage> getDuplicatePages() {
-    this.log.debug("Getting pages from repository");
+    log.debug("Getting pages from repository");
     final List<Page> pages = this.pageRepository.getDuplicatePages();
 
-    this.log.debug("Build duplicate page list");
+    log.debug("Build duplicate page list");
     Map<String, DuplicatePage> mapped = new HashMap<>();
     for (Page page : pages) {
       DuplicatePage entry = mapped.get(page.getHash());
@@ -280,11 +280,11 @@ public class PageService {
   public void setDeletedState(final List<String> hashes, final boolean deleted) {
     for (int index = 0; index < hashes.size(); index++) {
       final String hash = hashes.get(index);
-      this.log.debug("Loading pages with hash: {}", hash);
+      log.debug("Loading pages with hash: {}", hash);
       final List<Page> pages = this.pageRepository.getPagesWithHash(hash);
       for (int pageIndex = 0; pageIndex < pages.size(); pageIndex++) {
         final Page page = pages.get(pageIndex);
-        this.log.debug("Marking page deleted flag: id={} deleted={}", page.getId(), deleted);
+        log.debug("Marking page deleted flag: id={} deleted={}", page.getId(), deleted);
         page.markDeleted(deleted);
         this.pageRepository.save(page);
       }

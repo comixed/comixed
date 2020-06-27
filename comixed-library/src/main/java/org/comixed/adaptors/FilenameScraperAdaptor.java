@@ -76,7 +76,7 @@ public class FilenameScraperAdaptor {
         if (this.parseCoverDate(comic, ruleset, elements[ruleset.coverDate], ruleset.dateFormat)
             || this.parseCoverDate(
                 comic, ruleset, elements[ruleset.coverDate], ruleset.fallbackDateFormat)) {
-          this.log.debug("Cover date parsed: {}", comic.getCoverDate());
+          log.debug("Cover date parsed: {}", comic.getCoverDate());
         } else {
           throw new AdaptorException("Failed to parse date: " + elements[ruleset.coverDate]);
         }
@@ -88,11 +88,10 @@ public class FilenameScraperAdaptor {
 
   private boolean parseCoverDate(
       Comic comic, RuleSet ruleset, String coverDate, SimpleDateFormat dateFormat) {
-    this.log.debug(
-        "Parsing date using: {} (locale={})", dateFormat.toPattern(), Locale.getDefault());
+    log.debug("Parsing date using: {} (locale={})", dateFormat.toPattern(), Locale.getDefault());
     try {
       comic.setCoverDate(ruleset.parseCoverDate(coverDate, dateFormat));
-      this.log.debug("Parsed cover date using {}", dateFormat);
+      log.debug("Parsed cover date using {}", dateFormat);
       return true;
     } catch (ParseException error) {
       return false;
@@ -107,11 +106,11 @@ public class FilenameScraperAdaptor {
    */
   public void execute(Comic comic) throws AdaptorException {
     String filename = FilenameUtils.getName(comic.getFilename());
-    this.log.debug("Attempting to extract comic meta-data from filename: {}", filename);
+    log.debug("Attempting to extract comic meta-data from filename: {}", filename);
 
     boolean done = false;
     for (int index = 0; !done && (index < RULESET.length); index++) {
-      this.log.debug("Attempting to use ruleset #{}", index);
+      log.debug("Attempting to use ruleset #{}", index);
       done = (this.applyRule(comic, filename, RULESET[index]));
     }
   }
@@ -135,7 +134,7 @@ public class FilenameScraperAdaptor {
       this.coverDate = coverDate;
       this.dateFormat = new SimpleDateFormat(dateFormat);
       this.fallbackDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
-      this.log.debug(
+      log.debug(
           "Creating ruleset: expression={} series={} volume={} issue={} coverDate={} dateFormat={}",
           expression,
           series,
@@ -150,14 +149,14 @@ public class FilenameScraperAdaptor {
     }
 
     public String[] process(String filename) {
-      this.log.debug("Processing filename: {}", filename);
+      log.debug("Processing filename: {}", filename);
       Matcher matches = this.expression.matcher(filename);
       String[] result = new String[matches.groupCount() + 1];
 
       while (matches.find()) {
         for (int index = 0; index < result.length; index++) {
           result[index] = matches.group(index);
-          this.log.debug("Setting index={} to {}", index, result[index]);
+          log.debug("Setting index={} to {}", index, result[index]);
         }
       }
 

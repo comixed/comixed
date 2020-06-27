@@ -55,20 +55,20 @@ public class ExportComicWorkerTask extends AbstractWorkerTask {
    * @param renamePages the flag
    */
   public void setRenamePages(boolean renamePages) {
-    this.log.debug("Setting renamePages={}", renamePages);
+    log.debug("Setting renamePages={}", renamePages);
     this.renamePages = renamePages;
   }
 
   @Override
   public void startTask() throws WorkerTaskException {
-    this.log.debug("Loading comic to be converted: " + this.comic.getFilename());
+    log.debug("Loading comic to be converted: " + this.comic.getFilename());
     try {
       this.comicFileHandler.loadComic(this.comic);
     } catch (ComicFileHandlerException error) {
       throw new WorkerTaskException(
           "unable to load comic file: " + this.comic.getFilename(), error);
     }
-    this.log.debug("Converting comic");
+    log.debug("Converting comic");
 
     try {
       Comic result = this.archiveAdaptor.saveComic(this.comic, this.renamePages);

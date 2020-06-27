@@ -42,7 +42,7 @@ public class DeleteComicTaskEncoder extends AbstractTaskEncoder<DeleteComicWorke
 
   @Override
   public Task encode() {
-    this.log.debug("Encoding delete comic task: comic={}", this.comic.getId());
+    log.debug("Encoding delete comic task: comic={}", this.comic.getId());
 
     final Task result = new Task();
     result.setTaskType(TaskType.DELETE_COMIC);
@@ -53,7 +53,7 @@ public class DeleteComicTaskEncoder extends AbstractTaskEncoder<DeleteComicWorke
 
   @Override
   public DeleteComicWorkerTask decode(final Task task) {
-    this.log.debug("Decoding delete comic task");
+    log.debug("Decoding delete comic task");
     this.deleteTask(task);
 
     final DeleteComicWorkerTask result = this.deleteComicWorkerTaskObjectFactory.getObject();

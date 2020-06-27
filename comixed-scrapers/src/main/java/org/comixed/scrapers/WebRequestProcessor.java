@@ -53,7 +53,7 @@ public class WebRequestProcessor {
    */
   public String execute(WebRequest request) throws WebRequestException {
     String url = request.getURL();
-    this.log.debug("Executing web request: " + url);
+    log.debug("Executing web request: " + url);
 
     HttpClient client = this.clientSource.createClient();
     HttpGet getRequest = new HttpGet(url);
@@ -64,7 +64,7 @@ public class WebRequestProcessor {
       HttpResponse response = client.execute(getRequest);
       String result =
           this.utils.streamToString(response.getEntity().getContent(), Charset.defaultCharset());
-      this.log.debug("Returning {} byte response", result.length());
+      log.debug("Returning {} byte response", result.length());
       return result;
     } catch (IOException error) {
       throw new WebRequestException("Failed to execute request", error);

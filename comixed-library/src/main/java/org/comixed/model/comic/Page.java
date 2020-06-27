@@ -103,7 +103,7 @@ public class Page {
    * @param pageType the offset type
    */
   public Page(String filename, byte[] content, PageType pageType) {
-    this.log.debug("Creating offset: filename=" + filename + " content.size=" + content.length);
+    log.debug("Creating offset: filename=" + filename + " content.size=" + content.length);
     this.filename = filename;
     this.hash = this.createHash(content);
     this.pageType = pageType;
@@ -115,7 +115,7 @@ public class Page {
   }
 
   private String createHash(byte[] bytes) {
-    this.log.debug("Generating MD5 hash");
+    log.debug("Generating MD5 hash");
     String result = "";
     MessageDigest md;
     try {
@@ -124,9 +124,9 @@ public class Page {
       result =
           StringUtils.leftPad(new BigInteger(1, md.digest()).toString(16).toUpperCase(), 32, "0");
     } catch (NoSuchAlgorithmException error) {
-      this.log.error("Failed to generate hash", error);
+      log.error("Failed to generate hash", error);
     }
-    this.log.debug("Returning: " + result);
+    log.debug("Returning: " + result);
     return result;
   }
 
@@ -136,7 +136,7 @@ public class Page {
       this.width = bimage.getWidth();
       this.height = bimage.getHeight();
     } catch (IOException error) {
-      this.log.error("failed to get image metrics", error);
+      log.error("failed to get image metrics", error);
     }
   }
 
@@ -166,13 +166,13 @@ public class Page {
    */
   @JsonIgnore
   public byte[] getContent() {
-    this.log.debug("Loading offset image: filename=" + this.filename);
+    log.debug("Loading offset image: filename=" + this.filename);
     try {
       if (this.comic.archiveType != null) {
         return this.comic.archiveType.getArchiveAdaptor().loadSingleFile(this.comic, this.filename);
       }
     } catch (ArchiveAdaptorException error) {
-      this.log.error(
+      log.error(
           "failed to load entry: " + this.filename + " comic=" + this.comic.getFilename(), error);
     }
 
@@ -180,7 +180,7 @@ public class Page {
     try {
       return IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing.png"));
     } catch (IOException error) {
-      this.log.error("failed to load missing page image", error);
+      log.error("failed to load missing page image", error);
     }
 
     // if we're here, we have nothing to return
@@ -202,7 +202,7 @@ public class Page {
    * @param filename the new filename
    */
   public void setFilename(String filename) {
-    this.log.debug("Changing filename: " + this.filename + " -> " + filename);
+    log.debug("Changing filename: " + this.filename + " -> " + filename);
     this.filename = filename;
   }
 
@@ -246,7 +246,7 @@ public class Page {
    * @param pageType the offset type
    */
   public void setPageType(PageType pageType) {
-    this.log.debug("Changing offset type: {}", pageType.getId());
+    log.debug("Changing offset type: {}", pageType.getId());
     this.pageType = pageType;
   }
 
@@ -303,7 +303,7 @@ public class Page {
    * @param deleted true if the offset is to be deleted
    */
   public void markDeleted(boolean deleted) {
-    this.log.debug("Mark deletion: " + deleted);
+    log.debug("Mark deletion: " + deleted);
     this.deleted = deleted;
   }
 

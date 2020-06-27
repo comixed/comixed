@@ -41,7 +41,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
 
   public void execute(String apiKey, String publisherId, Comic comic, boolean skipCache)
       throws ComicVineAdaptorException {
-    this.log.debug("Fetching publisher details: publisherId={}", publisherId);
+    log.debug("Fetching publisher details: publisherId={}", publisherId);
 
     ComicVinePublisher publisher = null;
     String content = null;
@@ -49,7 +49,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
     publisher = this.comicVinePublisherRepository.findByPublisherId(publisherId);
 
     if (skipCache || (publisher == null)) {
-      this.log.debug("Fetching publisher details from ComicVine...");
+      log.debug("Fetching publisher details from ComicVine...");
 
       ComicVinePublisherDetailsWebRequest request = this.webRequestFactory.getObject();
 
@@ -64,7 +64,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
           this.comicVinePublisherRepository.delete(publisher);
         }
 
-        this.log.debug("Saving retrieved publisher data...");
+        log.debug("Saving retrieved publisher data...");
         publisher = new ComicVinePublisher();
         publisher.setPublisherId(publisherId);
         publisher.setContent(content);
@@ -73,7 +73,7 @@ public class ComicVineQueryForPublisherDetailsAdaptor {
         throw new ComicVineAdaptorException("Failed to retrieve publisher details", error);
       }
     } else {
-      this.log.debug("Publisher found in database.");
+      log.debug("Publisher found in database.");
       content = publisher.getContent();
     }
 

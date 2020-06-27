@@ -54,7 +54,7 @@ public class ComicVineVolumesResponseProcessor {
    */
   public boolean process(List<ScrapingVolume> list, byte[] content)
       throws ComicVineAdaptorException {
-    this.log.debug("Checking ComicVine response content");
+    log.debug("Checking ComicVine response content");
     this.responseAdaptor.checkForErrors(content);
 
     boolean result = true;

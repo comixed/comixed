@@ -45,12 +45,12 @@ public class ComicVineQueryForIssueDetailsAdaptor {
     String content = null;
     ComicVineIssue issue = null;
 
-    this.log.debug("Fetching issue details: issueId={}", issueId);
+    log.debug("Fetching issue details: issueId={}", issueId);
 
     issue = this.comicVineIssueRepository.findByIssueId(issueId);
 
     if (skipCache || (issue == null)) {
-      this.log.debug("Fetching issue details from ComicVine...");
+      log.debug("Fetching issue details from ComicVine...");
 
       ComicVineIssueDetailsWebRequest request = this.webRequestFactory.getObject();
 
@@ -63,7 +63,7 @@ public class ComicVineQueryForIssueDetailsAdaptor {
         if (issue != null) {
           this.comicVineIssueRepository.delete(issue);
         }
-        this.log.debug("Saving retrieved issue data...");
+        log.debug("Saving retrieved issue data...");
         issue = new ComicVineIssue();
         issue.setIssueId(issueId);
         issue.setContent(content);
@@ -72,7 +72,7 @@ public class ComicVineQueryForIssueDetailsAdaptor {
         throw new ComicVineAdaptorException("Failed to scrape comic details", error);
       }
     } else {
-      this.log.debug("Issue found in database.");
+      log.debug("Issue found in database.");
       content = issue.getContent();
     }
 

@@ -48,7 +48,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
 
   @Override
   public Task encode() {
-    this.log.debug("Encoding save comic task");
+    log.debug("Encoding save comic task");
 
     Task result = new Task();
     result.setTaskType(TaskType.CONVERT_COMIC);
@@ -62,7 +62,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
   @Override
   @Transactional
   public ConvertComicWorkerTask decode(Task task) {
-    this.log.debug("Decoding save comic task: id={}", task.getId());
+    log.debug("Decoding save comic task: id={}", task.getId());
 
     ConvertComicWorkerTask result = this.convertComicWorkerTaskObjectFactory.getObject();
     result.setComic(task.getComic());
@@ -70,19 +70,19 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
     result.setTargetArchiveType(targetArchiveType);
     result.setRenamePages(Boolean.valueOf(task.getProperty(RENAME_PAGES)));
 
-    this.log.debug("Deleting persisted task");
+    log.debug("Deleting persisted task");
     this.taskRepository.delete(task);
 
     return result;
   }
 
   public void setComic(final Comic comic) {
-    this.log.debug("Setting comic: id={}", comic.isMissing());
+    log.debug("Setting comic: id={}", comic.isMissing());
     this.comic = comic;
   }
 
   public void setTargetArchiveType(ArchiveType archiveType) {
-    this.log.debug("Setting target archive type: {}", archiveType);
+    log.debug("Setting target archive type: {}", archiveType);
     this.archiveType = archiveType;
   }
 

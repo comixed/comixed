@@ -59,7 +59,7 @@ public class ComicVineScraperController {
     boolean skipCache = request.isSkipCache();
     String apiKey = request.getApiKey();
 
-    this.log.info(
+    log.info(
         "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
     return this.queryForIssuesAdaptor.execute(apiKey, volume, issue);
@@ -74,7 +74,7 @@ public class ComicVineScraperController {
     String apiKey = request.getApiKey();
     boolean skipCache = request.getSkipCache();
     String series = request.getSeries();
-    this.log.info("Getting volumes: series={}{}", series, skipCache ? " (Skipping cache)" : "");
+    log.info("Getting volumes: series={}{}", series, skipCache ? " (Skipping cache)" : "");
 
     return this.queryForVolumesAdaptor.execute(apiKey, series, skipCache);
   }
@@ -92,21 +92,21 @@ public class ComicVineScraperController {
     boolean skipCache = request.getSkipCache();
     String apiKey = request.getApiKey();
 
-    this.log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);
+    log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);
 
-    this.log.debug("Loading comic");
+    log.debug("Loading comic");
     Comic comic = this.comicService.getComic(comicId);
 
-    this.log.debug("Fetching details for comic");
+    log.debug("Fetching details for comic");
     String volumeId =
         this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, comic, skipCache);
-    this.log.debug("Fetching details for volume");
+    log.debug("Fetching details for volume");
     String publisherId =
         this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, comic, skipCache);
-    this.log.debug("Fetching publisher details");
+    log.debug("Fetching publisher details");
     this.queryForPublisherDetailsAdaptor.execute(apiKey, publisherId, comic, skipCache);
 
-    this.log.debug("Updating details for comic in database");
+    log.debug("Updating details for comic in database");
     return this.comicService.save(comic);
   }
 }
