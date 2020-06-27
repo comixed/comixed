@@ -427,12 +427,6 @@
     "tooltip": {
       "unprocessed-comic": "This comic is scheduled for processing.",
       "deleted-comic": "This comic is marked for deletion."
-    },
-    "confirmation": {
-      "logout": {
-        "header": "Logout",
-        "message": "Are you sure you want to log out?"
-      }
     }
   },
   "toolbar": {

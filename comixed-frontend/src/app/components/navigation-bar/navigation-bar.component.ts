@@ -273,6 +273,10 @@ export class NavigationBarComponent implements OnInit {
       {
         label: this.translateService.instant('language.option.spanish'),
         value: 'es'
+      },
+      {
+        label: this.translateService.instant('language.option.portuguese'),
+        value: 'pt'
       }
     ];
   }
