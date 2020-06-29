@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { AuthenticationAdaptor, User } from 'app/user';
-import { MenuItem, SelectItem } from 'primeng/api';
+import { ConfirmationService, MenuItem, SelectItem } from 'primeng/api';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { LibraryAdaptor } from 'app/library';
 
@@ -43,6 +43,7 @@ export class NavigationBarComponent implements OnInit {
   constructor(
     public logger: LoggerService,
     private authenticationAdaptor: AuthenticationAdaptor,
+    private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private libraryAdaptor: LibraryAdaptor
   ) {
@@ -200,7 +201,7 @@ export class NavigationBarComponent implements OnInit {
               'main-menu.item.account.logout'
             ),
             icon: 'fa fa-fw fa-sign-in-alt',
-            command: () => this.authenticationAdaptor.startLogout(),
+            command: () => this.logout(),
             visible: this.authenticated
           }
         ]
@@ -286,5 +287,16 @@ export class NavigationBarComponent implements OnInit {
         language
       );
     }
+  }
+
+  logout(): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'library.messages.confirm-logout-title'
+      ),
+      message: this.translateService.instant('library.messages.confirm-logout'),
+      icon: 'fa fa-exclamation',
+      accept: () => this.authenticationAdaptor.startLogout()
+    });
   }
 }
