@@ -45,18 +45,24 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
 
   private Comic comic;
   private String destination;
+  private String renamingRule;
 
   public void setComic(Comic comic) {
     this.comic = comic;
   }
 
-  public void setDestination(String destination) {
+  public void setDirectory(String destination) {
     this.destination = destination;
   }
 
   @Override
   public void startTask() throws WorkerTaskException {
-    File sourceFile = new File(this.comic.getFilename());
+    File sourceFile = null;
+    try {
+      sourceFile = this.renameOriginalFile();
+    } catch (IOException error) {
+      throw new WorkerTaskException("Could not rename original comic file", error);
+    }
     File destFile = new File(this.getRelativeDestination(), getRelativeComicFilename());
     String defaultExtension = FilenameUtils.getExtension(comic.getFilename());
     destFile =
@@ -85,6 +91,16 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
     } catch (IOException error) {
       throw new WorkerTaskException("Failed to move comic", error);
     }
+  }
+
+  private File renameOriginalFile() throws IOException {
+    String originalFilename = this.comic.getFilename();
+    String newFilename = originalFilename + "-old";
+    File result = new File(newFilename);
+
+    log.debug("Renaming comic file: {} => {}", originalFilename, newFilename);
+    FileUtils.moveFile(new File(originalFilename), result);
+    return result;
   }
 
   private String getRelativeDestination() {
@@ -131,5 +147,14 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
         .append(this.destination);
 
     return result.toString();
+  }
+
+  /**
+   * Sets the renaming rule to use.
+   *
+   * @param renamingRule the renaming rule
+   */
+  public void setRenamingRule(String renamingRule) {
+    this.renamingRule = renamingRule;
   }
 }
