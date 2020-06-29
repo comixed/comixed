@@ -292,9 +292,11 @@ export class NavigationBarComponent implements OnInit {
   logout(): void {
     this.confirmationService.confirm({
       header: this.translateService.instant(
-        'library.messages.confirm-logout-title'
+        'global.confirmation.logout.header'
       ),
-      message: this.translateService.instant('library.messages.confirm-logout'),
+      message: this.translateService.instant(
+        'global.confirmation.logout.message'
+      ),
       icon: 'fa fa-exclamation',
       accept: () => this.authenticationAdaptor.startLogout()
     });

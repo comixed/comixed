@@ -90,8 +90,6 @@
       "no-description": "No description available...",
       "delete-comic-title": "Delete This Comic?",
       "delete-comic-question": "Are you sure? This will not delete the file, but only remove it from the library.",
-      "confirm-logout-title": "Logout",
-      "confirm-logout": "Are you sure you want to log out?",
       "rescan-library-title": "Rescan Library?",
       "rescan-library-message": "Are you sure? This could take a very long time to complete..."
     },
@@ -428,6 +426,12 @@
     "tooltip": {
       "unprocessed-comic": "This comic is scheduled for processing.",
       "deleted-comic": "This comic is marked for deletion."
+    },
+    "confirmation": {
+      "logout": {
+        "header": "Logout",
+        "message": "Are you sure you want to log out?"
+      }
     }
   },
   "toolbar": {
