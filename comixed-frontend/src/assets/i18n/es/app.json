@@ -90,6 +90,8 @@
       "no-description": "No hay un descripción disponible...",
       "delete-comic-title": "¿Eliminar este cómic?",
       "delete-comic-question": "¿Estás seguro? Esto no borrará el archivo, sólo lo eliminará de la biblioteca.",
+      "confirm-logout-title": "Desconexión",
+      "confirm-logout": "¿Estás seguro de que quieres desconectar?",
       "rescan-library-title": "¿Re-escanear Biblioteca?",
       "rescan-library-message": "¿Estás seguro? Esto puede tardar bastante tiempo..."
     },
