@@ -57,6 +57,8 @@ public class LibraryControllerTest {
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
   private static final Boolean TEST_DELETE_PHYSICAL_FILES = RANDOM.nextBoolean();
   private static final int TEST_CACHE_ENTRIES_CLEARED = RANDOM.nextInt();
+  private static final String TEST_RENAMING_RULE = "PUBLISHER/SERIES/VOLUME/SERIES vVOLUME #ISSUE";
+  private static final String TEST_DESTINATION_DIRECTORY = "/home/comixedreader/Documents/comics";
 
   @InjectMocks private LibraryController libraryController;
   @Mock private LibraryService libraryService;
@@ -254,5 +256,23 @@ public class LibraryControllerTest {
     assertFalse(result.isSuccess());
 
     Mockito.verify(libraryService, Mockito.times(1)).clearImageCache();
+  }
+
+  @Test
+  public void testMoveLibrary() {
+    Mockito.doNothing()
+        .when(libraryService)
+        .moveComics(Mockito.anyBoolean(), Mockito.anyString(), Mockito.anyString());
+
+    MoveComicsResponse result =
+        libraryController.moveComics(
+            new MoveComicsRequest(
+                TEST_DELETE_PHYSICAL_FILES, TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE));
+
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+
+    Mockito.verify(libraryService, Mockito.times(1))
+        .moveComics(TEST_DELETE_PHYSICAL_FILES, TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE);
   }
 }

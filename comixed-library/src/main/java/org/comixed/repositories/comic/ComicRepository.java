@@ -21,6 +21,7 @@ package org.comixed.repositories.comic;
 import java.util.Date;
 import java.util.List;
 import org.comixed.model.comic.Comic;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -103,4 +104,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
 
   @Query("SELECT c FROM Comic c WHERE c.dateDeleted IS NOT NULL")
   List<Comic> findAllMarkedForDeletion();
+
+  @Query("SELECT c FROM Comic c")
+  List<Comic> findComicsToMove(PageRequest page);
 }

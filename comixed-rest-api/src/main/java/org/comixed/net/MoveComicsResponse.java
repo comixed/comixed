@@ -16,19 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.model.tasks;
+package org.comixed.net;
 
-/**
- * <code>TaskType</code> defines the list of supported tasks that can be performed.
- *
- * @author Darryl L. Pierce
- */
-public enum TaskType {
-  ADD_COMIC,
-  PROCESS_COMIC,
-  RESCAN_COMIC,
-  DELETE_COMIC,
-  DELETE_COMICS,
-  CONVERT_COMIC,
-  MOVE_COMIC;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class MoveComicsResponse {
+  @JsonProperty("success")
+  private boolean success;
+
+  public MoveComicsResponse(boolean success) {
+    this.success = success;
+  }
+
+  public boolean isSuccess() {
+    return this.success;
+  }
 }

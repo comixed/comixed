@@ -166,4 +166,20 @@ public class LibraryController {
 
     return new ClearImageCacheResponse(true);
   }
+
+  @PostMapping(
+      value = "/library/move",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public MoveComicsResponse moveComics(@RequestBody() MoveComicsRequest request) {
+    String targetDirectory = request.getTargetDirectory();
+    String renamingRule = request.getRenamingRule();
+    Boolean deletePhysicalFiles = request.getDeletePhysicalFiles();
+
+    log.info("Moving comics: targetDirectory={}", targetDirectory);
+    log.info("             : renamingRule={}", renamingRule);
+    this.libraryService.moveComics(deletePhysicalFiles, targetDirectory, renamingRule);
+
+    return new MoveComicsResponse(true);
+  }
 }

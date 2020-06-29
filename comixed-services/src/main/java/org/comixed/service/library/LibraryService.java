@@ -36,6 +36,7 @@ import org.comixed.service.task.TaskService;
 import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
 import org.comixed.task.model.ConvertComicsWorkerTask;
+import org.comixed.task.model.MoveComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.Utils;
 import org.springframework.beans.factory.ObjectFactory;
@@ -56,6 +57,7 @@ public class LibraryService {
   @Autowired private Worker worker;
   @Autowired private Utils utils;
   @Autowired private PageCacheService pageCacheService;
+  @Autowired private ObjectFactory<MoveComicsWorkerTask> moveComicsTaskObjectFactory;
 
   public List<Comic> getComicsUpdatedSince(
       String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
@@ -163,5 +165,23 @@ public class LibraryService {
     } catch (IOException error) {
       throw new LibraryException("failed to clean image cache directory", error);
     }
+  }
+
+  /**
+   * Moves all comics in the library, renaming them using the specified naming rule.
+   *
+   * @param deletePhysicalFiles
+   * @param directory the root directory
+   * @param renamingRule the name rule
+   */
+  public void moveComics(Boolean deletePhysicalFiles, String directory, String renamingRule) {
+    log.debug("Creating move comics task");
+    MoveComicsWorkerTask task = this.moveComicsTaskObjectFactory.getObject();
+    log.debug("Setting directory: {}", directory);
+    task.setDirectory(directory);
+    log.debug("Setting renaming rule: {}", renamingRule);
+    task.setRenamingRule(renamingRule);
+    log.debug("Enqueuing task");
+    this.worker.addTasksToQueue(task);
   }
 }
