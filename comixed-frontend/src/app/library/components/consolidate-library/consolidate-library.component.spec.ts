@@ -38,10 +38,18 @@ import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
 import { ComicsModule } from 'app/comics/comics.module';
 import { AuthUserLoaded } from 'app/user/actions/authentication.actions';
 import { AuthenticationAdaptor, USER_ADMIN } from 'app/user';
-import { CONSOLIDATE_DELETE_PHYSICAL_FILES } from 'app/user/models/preferences.constants';
+import {
+  MOVE_COMICS_DELETE_PHYSICAL_FILE,
+  MOVE_COMICS_RENAMING_RULE,
+  MOVE_COMICS_TARGET_DIRECTORY
+} from 'app/user/models/preferences.constants';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ConsolidateLibraryComponent', () => {
+  const DIRECTORY = '/Users/comixedreader/Documents/comics';
+  const RENAMING_RULE =
+    '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
+
   let component: ConsolidateLibraryComponent;
   let fixture: ComponentFixture<ConsolidateLibraryComponent>;
   let confirmationService: ConfirmationService;
@@ -91,7 +99,7 @@ describe('ConsolidateLibraryComponent', () => {
           user: {
             ...USER_ADMIN,
             preferences: [
-              { name: CONSOLIDATE_DELETE_PHYSICAL_FILES, value: '1' }
+              { name: MOVE_COMICS_DELETE_PHYSICAL_FILE, value: '1' }
             ]
           }
         })
@@ -107,7 +115,7 @@ describe('ConsolidateLibraryComponent', () => {
           user: {
             ...USER_ADMIN,
             preferences: [
-              { name: CONSOLIDATE_DELETE_PHYSICAL_FILES, value: '0' }
+              { name: MOVE_COMICS_DELETE_PHYSICAL_FILE, value: '0' }
             ]
           }
         })
@@ -132,6 +140,12 @@ describe('ConsolidateLibraryComponent', () => {
         component.consolidationForm.controls['deletePhysicalFiles'].setValue(
           true
         );
+        component.consolidationForm.controls['targetDirectory'].setValue(
+          DIRECTORY
+        );
+        component.consolidationForm.controls['renamingRule'].setValue(
+          RENAMING_RULE
+        );
         component.consolidateLibrary();
       });
 
@@ -140,13 +154,31 @@ describe('ConsolidateLibraryComponent', () => {
       });
 
       it('calls the library adaptor', () => {
-        expect(libraryAdaptor.consolidate).toHaveBeenCalledWith(true);
+        expect(libraryAdaptor.consolidate).toHaveBeenCalledWith(
+          true,
+          DIRECTORY,
+          RENAMING_RULE
+        );
       });
 
       it('saves the delete physical files flag as a preference', () => {
         expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
-          CONSOLIDATE_DELETE_PHYSICAL_FILES,
+          MOVE_COMICS_DELETE_PHYSICAL_FILE,
           '1'
+        );
+      });
+
+      it('saves the delete physical files flag as a preference', () => {
+        expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
+          MOVE_COMICS_TARGET_DIRECTORY,
+          DIRECTORY
+        );
+      });
+
+      it('saves the delete physical files flag as a preference', () => {
+        expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
+          MOVE_COMICS_RENAMING_RULE,
+          RENAMING_RULE
         );
       });
     });
@@ -156,6 +188,12 @@ describe('ConsolidateLibraryComponent', () => {
         component.consolidationForm.controls['deletePhysicalFiles'].setValue(
           false
         );
+        component.consolidationForm.controls['targetDirectory'].setValue(
+          DIRECTORY
+        );
+        component.consolidationForm.controls['renamingRule'].setValue(
+          RENAMING_RULE
+        );
         component.consolidateLibrary();
       });
 
@@ -164,13 +202,31 @@ describe('ConsolidateLibraryComponent', () => {
       });
 
       it('calls the library adaptor', () => {
-        expect(libraryAdaptor.consolidate).toHaveBeenCalledWith(false);
+        expect(libraryAdaptor.consolidate).toHaveBeenCalledWith(
+          false,
+          DIRECTORY,
+          RENAMING_RULE
+        );
       });
 
       it('saves the delete physical files flag as a preference', () => {
         expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
-          CONSOLIDATE_DELETE_PHYSICAL_FILES,
+          MOVE_COMICS_DELETE_PHYSICAL_FILE,
           '0'
+        );
+      });
+
+      it('saves the delete physical files flag as a preference', () => {
+        expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
+          MOVE_COMICS_TARGET_DIRECTORY,
+          DIRECTORY
+        );
+      });
+
+      it('saves the delete physical files flag as a preference', () => {
+        expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
+          MOVE_COMICS_RENAMING_RULE,
+          RENAMING_RULE
         );
       });
     });

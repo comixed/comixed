@@ -17,11 +17,15 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/logger';
 import { LibraryAdaptor } from 'app/library';
 import { Subscription } from 'rxjs';
-import { CONSOLIDATE_DELETE_PHYSICAL_FILES } from 'app/user/models/preferences.constants';
+import {
+  MOVE_COMICS_DELETE_PHYSICAL_FILE,
+  MOVE_COMICS_RENAMING_RULE,
+  MOVE_COMICS_TARGET_DIRECTORY
+} from 'app/user/models/preferences.constants';
 import { AuthenticationAdaptor } from 'app/user';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
@@ -47,7 +51,9 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
     private translateService: TranslateService
   ) {
     this.consolidationForm = this.formBuilder.group({
-      deletePhysicalFiles: ['']
+      deletePhysicalFiles: [''],
+      targetDirectory: ['', Validators.required],
+      renamingRule: ['']
     });
     this.consolidatingSubscription = this.libraryAdaptor.consolidating$.subscribe(
       consolidating => (this.consolidating = consolidating)
@@ -55,7 +61,7 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authenticationAdaptor.user$.subscribe(() => {
       this.consolidationForm.controls['deletePhysicalFiles'].setValue(
         this.authenticationAdaptor.getPreference(
-          CONSOLIDATE_DELETE_PHYSICAL_FILES
+          MOVE_COMICS_DELETE_PHYSICAL_FILE
         ) === '1'
       );
     });
@@ -84,11 +90,28 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
         const deletePhysicalFiles = this.consolidationForm.controls[
           'deletePhysicalFiles'
         ].value;
+        const targetDirectory = this.consolidationForm.controls[
+          'targetDirectory'
+        ].value;
+        const renamingRule = this.consolidationForm.controls['renamingRule']
+          .value;
         this.authenticationAdaptor.setPreference(
-          CONSOLIDATE_DELETE_PHYSICAL_FILES,
+          MOVE_COMICS_DELETE_PHYSICAL_FILE,
           deletePhysicalFiles ? '1' : '0'
         );
-        this.libraryAdaptor.consolidate(deletePhysicalFiles);
+        this.authenticationAdaptor.setPreference(
+          MOVE_COMICS_TARGET_DIRECTORY,
+          targetDirectory
+        );
+        this.authenticationAdaptor.setPreference(
+          MOVE_COMICS_RENAMING_RULE,
+          renamingRule
+        );
+        this.libraryAdaptor.consolidate(
+          deletePhysicalFiles,
+          targetDirectory,
+          renamingRule
+        );
       }
     });
   }

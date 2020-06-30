@@ -1,20 +1,40 @@
-<div class='ui-g'>
-  <form [formGroup]='consolidationForm'>
-    <div class='ui-g-12'>
-      <p-checkbox id='delete-physical-files'
-                  [binary]='true'
-                  formControlName='deletePhysicalFiles'></p-checkbox>
-      <label for='delete-physical-files'>{{'consolidate-library.label.delete-physical-files'|translate}}</label>
+<div class="ui-g">
+  <form [formGroup]="consolidationForm">
+    <div class="ui-g-12">
+      <p-checkbox id="delete-physical-files"
+                  [binary]="true"
+                  formControlName="deletePhysicalFiles"></p-checkbox>
+      <label for="delete-physical-files">{{"consolidate-library.label.delete-physical-files"|translate}}</label>
     </div>
-    <div class='ui-g-12'>
-      <p>{{'consolidate-library.text.paragraph-1'|translate}}</p>
+    <div class="ui-g-12">
+      <label for="cx-target-directory"
+             class="cx-input-label">{{"consolidate-library.label.target-directory"|translate}}</label>
     </div>
-    <div class='ui-g-12 cx-container-centered-text'>
+    <div class="ui-g-12">
+      <input pInputText
+             id="cx-target-directory"
+             class="cx-input-field"
+             formControlName="targetDirectory">
+    </div>
+    <div class="ui-g-12">
+      <label for="cx-renaming-rule"
+             class="cx-input-label">{{"consolidate-library.label.renaming-rule"|translate}}</label>
+    </div>
+    <div class="ui-g-12">
+      <input pInputText
+             id="cx-renaming-rule"
+             class="cx-input-field"
+             formControlName="renamingRule">
+    </div>
+    <div class="ui-g-12">
+      <p>{{"consolidate-library.text.paragraph-1"|translate}}</p>
+    </div>
+    <div class="ui-g-12 cx-container-centered-text">
       <button pButton
-              type='button'
-              class='cx-action-button'
-              [label]='"consolidate-library.button.start"|translate'
-              (click)='consolidateLibrary()'></button>
+              type="button"
+              class="cx-action-button"
+              [label]="'consolidate-library.button.start'|translate"
+              (click)="consolidateLibrary()"></button>
     </div>
   </form>
 </div>
