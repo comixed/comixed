@@ -18,4 +18,6 @@
 
 export interface ConsolidateLibraryRequest {
   deletePhysicalFiles: boolean;
+  targetDirectory: string;
+  renamingRule: string;
 }

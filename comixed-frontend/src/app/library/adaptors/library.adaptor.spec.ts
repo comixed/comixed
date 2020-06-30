@@ -47,13 +47,13 @@ import {
   LibraryClearImageCache,
   LibraryClearImageCacheFailed,
   LibraryComicsConverting,
-  LibraryConsolidate,
-  LibraryConsolidated,
-  LibraryConsolidateFailed,
+  LibraryComicsMoved,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryGetUpdates,
   LibraryImageCacheCleared,
+  LibraryMoveComics,
+  LibraryMoveComicsFailed,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
 import { LibraryAdaptor } from './library.adaptor';
@@ -76,6 +76,9 @@ describe('LibraryAdaptor', () => {
   const ARCHIVE_TYPE = 'CBZ';
   const RENAME_PAGES = true;
   const READING_LISTS = [READING_LIST_1, READING_LIST_2];
+  const DIRECTORY = '/Users/comixedreader/Documents/comics';
+  const RENAMING_RULE =
+    '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
 
   let adaptor: LibraryAdaptor;
   let store: Store<AppState>;
@@ -312,12 +315,16 @@ describe('LibraryAdaptor', () => {
 
   describe('consolidating the library', () => {
     beforeEach(() => {
-      adaptor.consolidate(true);
+      adaptor.consolidate(true, DIRECTORY, RENAMING_RULE);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryConsolidate({ deletePhysicalFiles: true })
+        new LibraryMoveComics({
+          deletePhysicalFiles: true,
+          directory: DIRECTORY,
+          renamingRule: RENAMING_RULE
+        })
       );
     });
 
@@ -343,9 +350,7 @@ describe('LibraryAdaptor', () => {
             readingLists: []
           })
         );
-        store.dispatch(
-          new LibraryConsolidated({ deletedComics: DELETED_COMICS })
-        );
+        store.dispatch(new LibraryComicsMoved());
       });
 
       it('provides updates on consolidating', () => {
@@ -353,19 +358,11 @@ describe('LibraryAdaptor', () => {
           expect(response).toBeFalsy()
         );
       });
-
-      it('provides updates on comics', () => {
-        DELETED_COMICS.forEach(comic => {
-          adaptor.comic$.subscribe(comics =>
-            expect(comics).not.toContain(comic)
-          );
-        });
-      });
     });
 
     describe('failure', () => {
       beforeEach(() => {
-        store.dispatch(new LibraryConsolidateFailed());
+        store.dispatch(new LibraryMoveComicsFailed());
       });
 
       it('provides updates on consolidating', () => {

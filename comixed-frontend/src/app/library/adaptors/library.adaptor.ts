@@ -31,10 +31,10 @@ import { extractField } from 'app/library/library.functions';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import {
   LibraryClearImageCache,
-  LibraryConsolidate,
   LibraryConvertComics,
   LibraryDeleteMultipleComics,
   LibraryGetUpdates,
+  LibraryMoveComics,
   LibraryReset,
   LibraryStartRescan
 } from 'app/library/actions/library.actions';
@@ -300,12 +300,20 @@ export class LibraryAdaptor {
     return this._converting$.asObservable();
   }
 
-  consolidate(deletePhysicalFiles: boolean): void {
+  consolidate(
+    deletePhysicalFiles: boolean,
+    targetDirectory: string,
+    renamingRule: string
+  ): void {
     this.logger.debug(
       `firing action to consolidate library: deletePhysicalFiles=${deletePhysicalFiles}`
     );
     this.store.dispatch(
-      new LibraryConsolidate({ deletePhysicalFiles: deletePhysicalFiles })
+      new LibraryMoveComics({
+        deletePhysicalFiles: deletePhysicalFiles,
+        directory: targetDirectory,
+        renamingRule: renamingRule
+      })
     );
   }
 
