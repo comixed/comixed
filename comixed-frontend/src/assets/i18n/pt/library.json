@@ -407,7 +407,9 @@
   },
   "consolidate-library": {
     "label": {
-      "delete-physical-files": "Delete The Physical Comic Files."
+      "delete-physical-files": "Delete The Physical Comic Files.",
+      "target-directory": "Target directory",
+      "renaming-rule": "The renaming rule"
     },
     "button": {
       "start": "Start Consolidation"
