@@ -28,7 +28,7 @@ import { LoggerService } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
 import { Observable, of } from 'rxjs';
 
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as AuthenticationActions from '../actions/authentication.actions';
 import {
   AuthCheckState,
@@ -176,7 +176,7 @@ export class AuthenticationEffects {
     tap(action =>
       this.logger.debug('effect: setting user preference:', action)
     ),
-    switchMap(action =>
+    mergeMap(action =>
       this.authenticationService.setPreference(action.name, action.value).pipe(
         tap(response =>
           this.logger.debug('setting user preference response:', response)
