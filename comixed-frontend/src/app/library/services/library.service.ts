@@ -90,12 +90,19 @@ export class LibraryService {
     } as ConvertComicsRequest);
   }
 
-  consolidate(deletePhysicalFiles: boolean): Observable<any> {
-    this.logger.debug(
-      `[POST] http request consolidate library: deletePhysicalFiles=${deletePhysicalFiles}`
-    );
+  consolidate(
+    deletePhysicalFiles: boolean,
+    targetDirectory: string,
+    renamingRule: string
+  ): Observable<any> {
+    this.logger.debug('[POST] http request consolidate library:');
+    this.logger.debug(`  deletePhysicalFiles=${deletePhysicalFiles}`);
+    this.logger.debug(`  targetDirectory=${targetDirectory}`);
+    this.logger.debug(`  renamingRule=${renamingRule}`);
     return this.http.post(interpolate(CONSOLIDATE_LIBRARY_URL), {
-      deletePhysicalFiles: deletePhysicalFiles
+      deletePhysicalFiles: deletePhysicalFiles,
+      targetDirectory: targetDirectory,
+      renamingRule: renamingRule
     } as ConsolidateLibraryRequest);
   }
 

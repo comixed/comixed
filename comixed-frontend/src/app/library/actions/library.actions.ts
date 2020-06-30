@@ -35,9 +35,9 @@ export enum LibraryActionTypes {
   ConvertComics = '[LIBRARY] Convert comics to a new archive type',
   ComicsConverting = '[LIBRARY] Comics converting to a new archive type',
   ConvertComicsFailed = '[LIBRARY] Failed to convert comics',
-  Consolidate = '[LIBRARY] Consolidate the library',
-  Consolidated = '[LIBRARY] Library is consolidated',
-  ConsolidateFailed = '[LIBRARY] Failed to consolidate library',
+  MoveComics = '[LIBRARY] Move the library',
+  ComicsMoved = '[LIBRARY] Library was moved',
+  MoveComicsFailed = '[LIBRARY] Moving the library failed',
   ClearImageCache = '[LIBRARY] Clear the image cache',
   ImageCacheCleared = '[LIBRARY] Image cache cleared',
   ClearImageCacheFailed = '[LIBRARY] Failed to clear the image cache'
@@ -145,20 +145,26 @@ export class LibraryConvertComicsFailed implements Action {
   constructor() {}
 }
 
-export class LibraryConsolidate implements Action {
-  readonly type = LibraryActionTypes.Consolidate;
+export class LibraryMoveComics implements Action {
+  readonly type = LibraryActionTypes.MoveComics;
 
-  constructor(public payload: { deletePhysicalFiles: boolean }) {}
+  constructor(
+    public payload: {
+      deletePhysicalFiles: boolean;
+      directory: string;
+      renamingRule: string;
+    }
+  ) {}
 }
 
-export class LibraryConsolidated implements Action {
-  readonly type = LibraryActionTypes.Consolidated;
+export class LibraryComicsMoved implements Action {
+  readonly type = LibraryActionTypes.ComicsMoved;
 
-  constructor(public payload: { deletedComics: Comic[] }) {}
+  constructor() {}
 }
 
-export class LibraryConsolidateFailed implements Action {
-  readonly type = LibraryActionTypes.ConsolidateFailed;
+export class LibraryMoveComicsFailed implements Action {
+  readonly type = LibraryActionTypes.MoveComicsFailed;
 
   constructor() {}
 }
@@ -195,9 +201,9 @@ export type LibraryActions =
   | LibraryConvertComics
   | LibraryComicsConverting
   | LibraryConvertComicsFailed
-  | LibraryConsolidate
-  | LibraryConsolidated
-  | LibraryConsolidateFailed
+  | LibraryMoveComics
+  | LibraryComicsMoved
+  | LibraryMoveComicsFailed
   | LibraryClearImageCache
   | LibraryImageCacheCleared
   | LibraryClearImageCacheFailed;

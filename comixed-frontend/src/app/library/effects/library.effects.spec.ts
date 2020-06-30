@@ -25,9 +25,7 @@ import {
   LibraryClearImageCache,
   LibraryClearImageCacheFailed,
   LibraryComicsConverting,
-  LibraryConsolidate,
-  LibraryConsolidated,
-  LibraryConsolidateFailed,
+  LibraryComicsMoved,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
@@ -35,6 +33,8 @@ import {
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryImageCacheCleared,
+  LibraryMoveComics,
+  LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
   LibraryRescanStarted,
   LibraryStartRescan,
@@ -61,6 +61,9 @@ describe('LibraryEffects', () => {
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
   const COUNT = 25;
   const ASCENDING = false;
+  const DIRECTORY = '/Users/comixedreader/Documents/comics';
+  const RENAMING_RULE =
+    '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
 
   let actions$: Observable<any>;
   let effects: LibraryEffects;
@@ -347,8 +350,12 @@ describe('LibraryEffects', () => {
   describe('consolidating the library', () => {
     it('fires an action on success', () => {
       const serviceResponse = COMICS;
-      const action = new LibraryConsolidate({ deletePhysicalFiles: true });
-      const outcome = new LibraryConsolidated({ deletedComics: COMICS });
+      const action = new LibraryMoveComics({
+        deletePhysicalFiles: true,
+        directory: DIRECTORY,
+        renamingRule: RENAMING_RULE
+      });
+      const outcome = new LibraryComicsMoved();
 
       actions$ = hot('-a', { a: action });
       libraryService.consolidate.and.returnValue(of(serviceResponse));
@@ -362,8 +369,12 @@ describe('LibraryEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = new LibraryConsolidate({ deletePhysicalFiles: true });
-      const outcome = new LibraryConsolidateFailed();
+      const action = new LibraryMoveComics({
+        deletePhysicalFiles: true,
+        directory: DIRECTORY,
+        renamingRule: RENAMING_RULE
+      });
+      const outcome = new LibraryMoveComicsFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.consolidate.and.returnValue(throwError(serviceResponse));
@@ -376,8 +387,12 @@ describe('LibraryEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = new LibraryConsolidate({ deletePhysicalFiles: true });
-      const outcome = new LibraryConsolidateFailed();
+      const action = new LibraryMoveComics({
+        deletePhysicalFiles: true,
+        directory: DIRECTORY,
+        renamingRule: RENAMING_RULE
+      });
+      const outcome = new LibraryMoveComicsFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.consolidate.and.throwError('expected');

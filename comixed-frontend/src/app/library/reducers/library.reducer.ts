@@ -17,11 +17,7 @@
  */
 
 import { LibraryActions, LibraryActionTypes } from '../actions/library.actions';
-import {
-  deleteComics,
-  mergeComics,
-  mergeReadingLists
-} from 'app/library/library.functions';
+import { mergeComics, mergeReadingLists } from 'app/library/library.functions';
 import { Comic } from 'app/comics';
 import { LastReadDate } from 'app/library/models/last-read-date';
 import { ReadingList } from 'app/comics/models/reading-list';
@@ -129,15 +125,14 @@ export function reducer(
     case LibraryActionTypes.ConvertComicsFailed:
       return { ...state, convertingComics: false };
 
-    case LibraryActionTypes.Consolidate:
+    case LibraryActionTypes.MoveComics:
       return { ...state, consolidating: true };
 
-    case LibraryActionTypes.Consolidated: {
-      const comics = deleteComics(state.comics, action.payload.deletedComics);
-      return { ...state, consolidating: false, comics: comics };
+    case LibraryActionTypes.ComicsMoved: {
+      return { ...state, consolidating: false };
     }
 
-    case LibraryActionTypes.ConsolidateFailed:
+    case LibraryActionTypes.MoveComicsFailed:
       return { ...state, consolidating: false };
 
     case LibraryActionTypes.ClearImageCache:

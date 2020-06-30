@@ -27,9 +27,7 @@ import {
   LibraryClearImageCache,
   LibraryClearImageCacheFailed,
   LibraryComicsConverting,
-  LibraryConsolidate,
-  LibraryConsolidated,
-  LibraryConsolidateFailed,
+  LibraryComicsMoved,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
@@ -37,6 +35,8 @@ import {
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryImageCacheCleared,
+  LibraryMoveComics,
+  LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
   LibraryRescanStarted,
   LibraryReset,
@@ -63,6 +63,9 @@ describe('Library Reducer', () => {
   const ASCENDING = true;
   const COMIC_COUNT = 2372;
   const LATEST_UPDATED_DATE = new Date();
+  const DIRECTORY = '/Users/comixedreader/Documents/comics';
+  const RENAMING_RULE =
+    '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
 
   let state: LibraryState;
 
@@ -368,7 +371,11 @@ describe('Library Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, consolidating: false },
-        new LibraryConsolidate({ deletePhysicalFiles: true })
+        new LibraryMoveComics({
+          deletePhysicalFiles: true,
+          directory: DIRECTORY,
+          renamingRule: RENAMING_RULE
+        })
       );
     });
 
@@ -378,8 +385,6 @@ describe('Library Reducer', () => {
   });
 
   describe('when the library is consolidated', () => {
-    const DELETED_COMICS = [COMICS[2]];
-
     beforeEach(() => {
       state = reducer(
         {
@@ -387,18 +392,12 @@ describe('Library Reducer', () => {
           consolidating: true,
           comics: COMICS
         },
-        new LibraryConsolidated({ deletedComics: DELETED_COMICS })
+        new LibraryComicsMoved()
       );
     });
 
     it('clears the consolidating library flag', () => {
       expect(state.consolidating).toBeFalsy();
-    });
-
-    it('removes the deleted comics from the state', () => {
-      DELETED_COMICS.forEach(comic =>
-        expect(state.comics).not.toContain(comic)
-      );
     });
   });
 
@@ -406,7 +405,7 @@ describe('Library Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, consolidating: true },
-        new LibraryConsolidateFailed()
+        new LibraryMoveComicsFailed()
       );
     });
 

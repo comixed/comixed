@@ -58,6 +58,9 @@ describe('LibraryService', () => {
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
   const COMIC_COUNT = 2372;
   const LATEST_UPDATED_DATE = new Date();
+  const DIRECTORY = '/Users/comixedreader/Documents/comics';
+  const RENAMING_RULE =
+    '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
@@ -158,13 +161,15 @@ describe('LibraryService', () => {
 
   it('can consolidate the library', () => {
     service
-      .consolidate(true)
+      .consolidate(true, DIRECTORY, RENAMING_RULE)
       .subscribe(response => expect(response).toEqual(COMICS));
 
     const req = httpMock.expectOne(interpolate(CONSOLIDATE_LIBRARY_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      deletePhysicalFiles: true
+      deletePhysicalFiles: true,
+      targetDirectory: DIRECTORY,
+      renamingRule: RENAMING_RULE
     } as ConsolidateLibraryRequest);
     req.flush(COMICS);
   });

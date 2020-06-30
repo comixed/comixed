@@ -20,8 +20,11 @@ export const LIBRARY_SORT = 'library.sort-by';
 export const LIBRARY_ROWS = 'library.rows';
 export const LIBRARY_COVER_SIZE = 'library.cover-size';
 export const LIBRARY_CURRENT_TAB = 'library.current-tab';
-export const CONSOLIDATE_DELETE_PHYSICAL_FILES =
+export const MOVE_COMICS_DELETE_PHYSICAL_FILE =
   'library.consolidate.delete-physical-file';
+export const MOVE_COMICS_TARGET_DIRECTORY =
+  'library.consolidate.target-directory';
+export const MOVE_COMICS_RENAMING_RULE = 'library.consolidate.renaming-rule';
 
 export const IMPORT_SORT = 'import.sort-by';
 export const IMPORT_ROWS = 'import.rows';
