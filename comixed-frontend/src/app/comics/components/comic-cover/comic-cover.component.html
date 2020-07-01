@@ -1,25 +1,25 @@
-<div *ngIf='coverUrl'
-     class='cx-comic-cover-container'
-     [class.cx-comic-cover-dimmed]='unprocessed'
-     [class.selected-comic]='selectSelectedClass && selected'>
-    <p-card [styleClass]='"comic-cover-card"'>
+<div *ngIf="coverUrl"
+     class="cx-comic-cover-container"
+     [class.cx-comic-cover-dimmed]="unprocessed"
+     [class.selected-comic]="selectSelectedClass && selected">
+    <p-card [styleClass]="'comic-cover-card'">
         <p-header></p-header>
-        <img alt='comic cover'
-             [src]='coverUrl'
-             [style.width]='useSameHeight ? "auto" : coverSize + "px"'
-             [style.height]='useSameHeight ? coverSize + "px" : "auto"'
-             (click)='clicked()'
-             (contextmenu)='showContextMenu($event)'/>
-        <p-footer *ngIf='caption'><strong><span class='cx-comic-cover-caption'>{{caption}}</span></strong></p-footer>
+        <img alt="comic cover"
+             [src]="coverUrl"
+             [style.width]="useSameHeight ? 'auto' : coverSize + 'px'"
+             [style.height]="useSameHeight ? coverSize + 'px' : 'auto'"
+             (click)="clicked()"
+             (contextmenu)="showContextMenu($event)"/>
+        <p-footer *ngIf="caption"><strong><span class="cx-comic-cover-caption">{{caption}}</span></strong></p-footer>
     </p-card>
-    <div *ngIf='showOverlay()'
-         class='cx-comic-cover-overlay'
-         [class.cx-comic-deleted]='!!comic.deletedDate'
-         (click)='clicked()'>
-        <p-progressSpinner *ngIf='unprocessed'
-                           [pTooltip]='"global.tooltip.unprocessed-comic"|translate'></p-progressSpinner>
-        <span *ngIf='!!comic.deletedDate'
-              [pTooltip]='"global.tooltip.deleted-comic"|translate'
-              class='fa fa-fw fa-minus-square fa-5x'></span>
+    <div *ngIf="showOverlay()"
+         class="cx-comic-cover-overlay"
+         [class.cx-comic-deleted]="!!comic.deletedDate"
+         (click)="clicked()">
+        <p-progressSpinner *ngIf="unprocessed"
+                           [pTooltip]="'global.tooltip.unprocessed-comic'|translate"></p-progressSpinner>
+        <span *ngIf="!!comic.deletedDate"
+              [pTooltip]="'global.tooltip.deleted-comic'|translate"
+              class="fa fa-fw fa-minus-square fa-5x"></span>
     </div>
 </div>
