@@ -62,9 +62,15 @@ public class FileController {
   @Secured("ROLE_ADMIN")
   public List<FileDetails> getAllComicsUnder(@RequestBody() final GetAllComicsUnderRequest request)
       throws IOException, JSONException {
-    log.info("Getting all comic files: root={}", request.getDirectory());
+    String directory = request.getDirectory();
+    Integer maximum = request.getMaximum();
 
-    final List<FileDetails> result = this.fileService.getAllComicsUnder(request.getDirectory());
+    log.info(
+        "Getting all comic files: root={} maximum={}",
+        directory,
+        maximum > 0 ? maximum : "UNLIMITED");
+
+    final List<FileDetails> result = this.fileService.getAllComicsUnder(directory, maximum);
 
     log.info("Returning {} file{}", result.size(), result.size() != 1 ? "s" : "");
 

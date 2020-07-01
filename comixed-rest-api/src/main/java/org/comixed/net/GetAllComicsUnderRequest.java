@@ -20,21 +20,41 @@ package org.comixed.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * <code>GetAllComicsUnderRequest</code> represents the request body during comic file imports.
+ *
+ * @author Darryl L. Pierce
+ */
 public class GetAllComicsUnderRequest {
   @JsonProperty("directory")
   private String directory;
 
+  @JsonProperty("maximum")
+  private Integer maximum;
+
   public GetAllComicsUnderRequest() {}
 
-  public GetAllComicsUnderRequest(final String directory) {
+  public GetAllComicsUnderRequest(final String directory, final Integer maximum) {
     this.directory = directory;
+    this.maximum = maximum;
   }
 
+  /**
+   * The root directory to be searched.
+   *
+   * @return the directory
+   */
   public String getDirectory() {
     return directory;
   }
 
-  public void setDirectory(final String directory) {
-    this.directory = directory;
+  /**
+   * The maximum number of comics to find. If the value is zero then then all comics found are
+   * returned.
+   *
+   * @return the maximum
+   */
+  public Integer getMaximum() {
+    return maximum;
   }
 }

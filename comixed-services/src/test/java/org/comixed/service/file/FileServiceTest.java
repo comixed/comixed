@@ -57,6 +57,8 @@ public class FileServiceTest {
       TEST_ROOT_DIRECTORY + "/" + TEST_ARCHIVE_FILENAME;
   private static final String[] TEST_FILENAMES =
       new String[] {"First.cbz", "Second.cbz", "Third.cbr", "Fourth.cb7"};
+  private static final Integer TEST_LIMIT = 2;
+  private static final Integer TEST_NO_LIMIT = -1;
 
   @InjectMocks private FileService service;
   @Mock private ComicFileHandler comicFileHandler;
@@ -114,7 +116,7 @@ public class FileServiceTest {
   @Test
   public void testGetAllComicsUnderInvalidDirectory() throws IOException {
     final List<FileDetails> result =
-        service.getAllComicsUnder(TEST_ROOT_DIRECTORY + "/nonexistent");
+        service.getAllComicsUnder(TEST_ROOT_DIRECTORY + "/nonexistent", TEST_LIMIT);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -122,7 +124,7 @@ public class FileServiceTest {
 
   @Test
   public void testGetAllComicsUnderWithFileSupplied() throws IOException {
-    final List<FileDetails> result = service.getAllComicsUnder(TEST_COMIC_ARCHIVE);
+    final List<FileDetails> result = service.getAllComicsUnder(TEST_COMIC_ARCHIVE, TEST_LIMIT);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -132,7 +134,7 @@ public class FileServiceTest {
   public void testGetAllComicsAlreadyImported() throws IOException {
     Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(comic);
 
-    final List<FileDetails> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY);
+    final List<FileDetails> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -142,12 +144,21 @@ public class FileServiceTest {
   }
 
   @Test
-  public void testGetAllComicsUnder() throws IOException {
-    final List<FileDetails> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY);
+  public void testGetAllComicsUnderWithLimit() throws IOException {
+    final List<FileDetails> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(1, result.size());
+    assertEquals(TEST_LIMIT.intValue(), result.size());
+  }
+
+  @Test
+  public void testGetAllComicsUnder() throws IOException {
+    final List<FileDetails> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_NO_LIMIT);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(3, result.size());
   }
 
   @Test
