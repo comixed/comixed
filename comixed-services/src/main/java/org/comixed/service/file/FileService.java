@@ -77,7 +77,8 @@ public class FileService {
     return result;
   }
 
-  public List<FileDetails> getAllComicsUnder(final String rootDirectory) throws IOException {
+  public List<FileDetails> getAllComicsUnder(final String rootDirectory, final Integer maximum)
+      throws IOException {
     log.debug("Getting comics below root: {}", rootDirectory);
 
     final File rootFile = new File(rootDirectory);
@@ -85,7 +86,7 @@ public class FileService {
 
     if (rootFile.exists()) {
       if (rootFile.isDirectory()) {
-        this.loadFilesUnder(result, rootFile);
+        this.loadFilesUnder(result, rootFile, maximum);
       } else {
         log.debug("Cannot process a file");
       }
@@ -96,31 +97,39 @@ public class FileService {
     return result;
   }
 
-  private void loadFilesUnder(final List<FileDetails> files, final File directory)
+  private void loadFilesUnder(
+      final List<FileDetails> files, final File directory, final Integer maximum)
       throws IOException {
     log.debug("Loading files in directory: {}", directory);
     if (directory.listFiles() != null) {
       for (File file : directory.listFiles()) {
+        if (maximum > 0 && files.size() == maximum) {
+          log.debug("Loading maximum comics: {}", maximum);
+          return;
+        }
         if (file.isDirectory()) {
-          this.loadFilesUnder(files, file);
+          this.loadFilesUnder(files, file, maximum);
         } else {
-          if (ComicFileUtils.isComicFile(file)) {
+          if (canBeImported(file)) {
             final String filePath = file.getCanonicalPath();
             final long fileSize = file.length();
 
-            final Comic comic = this.comicRepository.findByFilename(filePath);
+            log.debug("Adding file: {} ({} bytes)", file.getAbsolutePath(), file.length());
 
-            if (comic != null) {
-              log.debug("File already in the library: id={}", comic.getId());
-            } else {
-              log.debug("Adding file: {} ({} bytes)", filePath, fileSize);
-
-              files.add(new FileDetails(filePath, fileSize));
-            }
+            files.add(new FileDetails(filePath, fileSize));
           }
         }
       }
     }
+  }
+
+  private boolean canBeImported(final File file) throws IOException {
+    boolean isComic = ComicFileUtils.isComicFile(file);
+
+    final String filePath = file.getCanonicalPath();
+    final Comic comic = this.comicRepository.findByFilename(filePath);
+
+    return isComic && (comic == null);
   }
 
   public int getImportStatus() throws InterruptedException {
