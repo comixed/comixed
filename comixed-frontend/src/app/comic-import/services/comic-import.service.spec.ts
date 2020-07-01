@@ -40,6 +40,7 @@ import { LoggerModule } from '@angular-ru/logger';
 describe('ComicImportService', () => {
   const DIRECTORY = '/Users/comixedreader/Library';
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_3];
+  const MAXIMUM = 29;
 
   let service: ComicImportService;
   let httpMock: HttpTestingController;
@@ -60,13 +61,14 @@ describe('ComicImportService', () => {
 
   it('can get comic files under a root directory', () => {
     service
-      .getFiles(DIRECTORY)
+      .getFiles(DIRECTORY, MAXIMUM)
       .subscribe(response => expect(response).toEqual(COMIC_FILES));
 
     const req = httpMock.expectOne(interpolate(GET_COMIC_FILES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      directory: DIRECTORY
+      directory: DIRECTORY,
+      maximum: MAXIMUM
     } as GetComicFilesRequest);
     req.flush(COMIC_FILES);
   });

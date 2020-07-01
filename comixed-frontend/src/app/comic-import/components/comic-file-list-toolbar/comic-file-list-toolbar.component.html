@@ -1,75 +1,78 @@
-<p-toolbar id='importing-toolbar'>
-    <div class='ui-inputgroup'>
-        <input id='directory-input'
-               pInputText
-               [(ngModel)]='directory'
-               [disabled]='busy'
-               [placeholder]='"import-toolbar.text.directory-placeholder"|translate'
-               [style.width]='"100%"'
-               type='text'/>
-        <button (click)='findComics()'
-                [disabled]='busy||!directory||!directory.length'
-                [label]='"import-toolbar.button.find"|translate'
-                icon='fa fa-fw fa-search'
-                id='find-comics'
-                pButton
-                type='button'></button>
-    </div>
+<p-toolbar id="importing-toolbar">
+  <div class="ui-inputgroup">
+    <input id="directory-input"
+           pInputText
+           [(ngModel)]="directory"
+           [disabled]="busy"
+           [placeholder]="'import-toolbar.text.directory-placeholder'|translate"
+           [style.width]="'100%'"
+           type="text"/>
+    <button (click)="findComics()"
+            [disabled]="busy||!directory||!directory.length"
+            [label]="'import-toolbar.button.find'|translate"
+            icon="fa fa-fw fa-search"
+            id="find-comics"
+            pButton
+            type="button"></button>
+  </div>
 </p-toolbar>
 <p-toolbar>
-    <div class='ui-toolbar-group-left'>
-        <button pButton
-                [icon]='gridLayout?"fa fa-fw fa-th":"fa fa-fw fa-list"'
-                (click)='setGridLayout(!gridLayout)'
-                [pTooltip]='"import-toolbar.tooltip."+(gridLayout?"grid":"list")+"-layout"|translate'></button>
-        <p-dropdown (onChange)='setSortField($event.value)'
-                    [(ngModel)]='sortField'
-                    [options]='sortFieldOptions'
-                    styleClass='cx-layout-dropdown'></p-dropdown>
-        <p-dropdown (onChange)='setComicsShown($event.value)'
-                    [(ngModel)]='rows'
-                    [options]='rowOptions'
-                    styleClass='cx-layout-dropdown'></p-dropdown>
-        <p-checkbox (onChange)='useSameHeight($event)'
-                    [(ngModel)]='sameHeight'
-                    [label]='"library-contents.options.cover-size.same-height"|translate'
-                    binary='true'></p-checkbox>
-        <p-slider (onChange)='setCoverSize($event.value)'
-                  (onSlideEnd)='saveCoverSize($event.value)'
-                  [(ngModel)]='coverSize'
-                  [max]='400'
-                  [min]='100'></p-slider>
-        {{"library-contents.label.cover-size"|translate: {cover_size: coverSize} }}
-    </div>
-    <div class='ui-toolbar-group-right'>
-        <button pButton
-                type='button'
-                (click)='toggleBlockedPages()'
-                [icon]='deleteBlockedPages?"fa fa-fw fas fa-ban":"fa fa-fw far fa-stop-circle"'
-                [pTooltip]='"import-toolbar.tooltip."+(deleteBlockedPages?"delete-blocked-pages":"allow-blocked-pages")|translate'
-                class='cx-toolbar-button'
-                [class.ui-button-danger]='deleteBlockedPages'
-                [class.ui-button-success]='!deleteBlockedPages'></button>
-        <button (click)='selectAllComicFiles()'
-                [disabled]='!comicFiles.length||selectedComicFiles.length === comicFiles.length'
-                icon='fa fa-fw fa-plus'
-                [pTooltip]='"toolbar.tooltip.select-all"|translate'
-                class='ui-button-secondary cx-toolbar-button'
-                id='select-all-comics'
-                pButton
-                type='button'></button>
-        <button (click)='deselectAllComicFiles()'
-                [disabled]='selectedComicFiles.length === 0'
-                icon='fa fa-fw fa-minus'
-                [pTooltip]='"toolbar.tooltip.deselect-all"|translate'
-                class='ui-button-danger cx-toolbar-button'
-                id='deselect-all-comics'
-                pButton
-                type='button'></button>
-        <p-splitButton [model]='importOptions'
-                       [disabled]='selectedComicFiles.length === 0'
-                       icon='fa fa-fw fa-play'
-                       [pTooltip]='"import-toolbar.tooltip.start-import"|translate'
-                       class='cx-toolbar-button'></p-splitButton>
-    </div>
+  <div class="ui-toolbar-group-left">
+    <button pButton
+            [icon]="gridLayout?'fa fa-fw fa-th':'fa fa-fw fa-list'"
+            (click)="setGridLayout(!gridLayout)"
+            [pTooltip]="'import-toolbar.tooltip.'+(gridLayout?'grid':'list')+'-layout'|translate"></button>
+    <p-dropdown (onChange)="setSortField($event.value)"
+                [(ngModel)]="sortField"
+                [options]="sortFieldOptions"
+                styleClass="cx-layout-dropdown"></p-dropdown>
+    <p-dropdown (onChange)="setComicsShown($event.value)"
+                [(ngModel)]="rows"
+                [options]="rowOptions"
+                styleClass="cx-layout-dropdown"></p-dropdown>
+    <p-dropdown (onChange)="setMaximum($event.value)"
+                [options]='maximumOptions'
+                [(ngModel)]='maximum'></p-dropdown>
+    <p-checkbox (onChange)="useSameHeight($event)"
+                [(ngModel)]="sameHeight"
+                [label]="'library-contents.options.cover-size.same-height'|translate"
+                binary="true"></p-checkbox>
+    <p-slider (onChange)="setCoverSize($event.value)"
+              (onSlideEnd)="saveCoverSize($event.value)"
+              [(ngModel)]="coverSize"
+              [max]="400"
+              [min]="100"></p-slider>
+    {{'library-contents.label.cover-size'|translate: {cover_size: coverSize} }}
+  </div>
+  <div class="ui-toolbar-group-right">
+    <button pButton
+            type="button"
+            (click)="toggleBlockedPages()"
+            [icon]="deleteBlockedPages?'fa fa-fw fas fa-ban':'fa fa-fw far fa-stop-circle'"
+            [pTooltip]="'import-toolbar.tooltip.'+(deleteBlockedPages?'delete-blocked-pages':'allow-blocked-pages')|translate"
+            class="cx-toolbar-button"
+            [class.ui-button-danger]="deleteBlockedPages"
+            [class.ui-button-success]="!deleteBlockedPages"></button>
+    <button (click)="selectAllComicFiles()"
+            [disabled]="!comicFiles.length||selectedComicFiles.length === comicFiles.length"
+            icon="fa fa-fw fa-plus"
+            [pTooltip]="'toolbar.tooltip.select-all'|translate"
+            class="ui-button-secondary cx-toolbar-button"
+            id="select-all-comics"
+            pButton
+            type="button"></button>
+    <button (click)="deselectAllComicFiles()"
+            [disabled]="selectedComicFiles.length === 0"
+            icon="fa fa-fw fa-minus"
+            [pTooltip]="'toolbar.tooltip.deselect-all'|translate"
+            class="ui-button-danger cx-toolbar-button"
+            id="deselect-all-comics"
+            pButton
+            type="button"></button>
+    <p-splitButton [model]="importOptions"
+                   [disabled]="selectedComicFiles.length === 0"
+                   icon="fa fa-fw fa-play"
+                   [pTooltip]="'import-toolbar.tooltip.start-import'|translate"
+                   class="cx-toolbar-button"></p-splitButton>
+  </div>
 </p-toolbar>

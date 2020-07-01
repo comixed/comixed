@@ -1,19 +1,19 @@
-<h2 *ngIf='!comicFiles.length && !importing'>{{'import-page.title-no-comics'|translate}}</h2>
-<h2 *ngIf='comicFiles.length && !importing'>{{'import-page.title-with-comics'|translate:{
+<h2 *ngIf="!comicFiles.length && !importing">{{"import-page.title-no-comics"|translate}}</h2>
+<h2 *ngIf="comicFiles.length && !importing">{{"import-page.title-with-comics"|translate:{
     comicCount: comicFiles.length,
     selectedCount: selectedComicFiles.length
 } }}</h2>
-<div *ngIf='importing'
-     id='import-busy-indicator-container'>
-    <h2>{{'import-page.importing-title'|translate:{count: importCount} }}</h2>
+<div *ngIf="importing"
+     id="import-busy-indicator-container">
+  <h2>{{"import-page.importing-title"|translate:{count: importCount} }}</h2>
 </div>
-<p-progressBar *ngIf='importing||fetchingFiles'
-               mode='indeterminate'></p-progressBar>
-<div *ngIf='!importing'
-     id='comic-file-list-container'>
-    <app-comic-file-list [busy]='fetchingFiles'
-                         [comicFiles]="comicFiles"
-                         [directory]='user | user_preference: "import.directory"'
-                         [selectedComicFiles]="selectedComicFiles"
-                         id='comic-file-list'></app-comic-file-list>
+<p-progressBar *ngIf="importing||fetchingFiles"
+               mode="indeterminate"></p-progressBar>
+<div *ngIf="!importing"
+     id="comic-file-list-container">
+  <app-comic-file-list id="comic-file-list"
+                       [busy]="fetchingFiles"
+                       [comicFiles]='comicFiles'
+                       [directory]="user | user_preference: 'import.directory'"
+                       [selectedComicFiles]='selectedComicFiles'></app-comic-file-list>
 </div>

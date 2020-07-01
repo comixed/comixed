@@ -188,11 +188,6 @@ export class ImportPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  retrieveFiles(directory: string): void {
-    this.authenticationAdaptor.setPreference(IMPORT_LAST_DIRECTORY, directory);
-    this.comicImportAdaptor.getComicFiles(directory);
-  }
-
   toggleSelectAll(select: boolean): void {
     if (select) {
       this.selectComicFiles(this.comicFiles);
