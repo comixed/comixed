@@ -34,9 +34,10 @@ import { StartImportRequest } from 'app/comic-import/models/net/start-import-req
 export class ComicImportService {
   constructor(private http: HttpClient) {}
 
-  getFiles(directory: string): Observable<any> {
+  getFiles(directory: string, maximum: number): Observable<any> {
     return this.http.post(interpolate(GET_COMIC_FILES_URL), {
-      directory: directory
+      directory: directory,
+      maximum: maximum
     } as GetComicFilesRequest);
   }
 

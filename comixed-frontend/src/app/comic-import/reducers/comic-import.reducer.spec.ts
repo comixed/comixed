@@ -42,6 +42,7 @@ import {
 describe('ComicImport Reducer', () => {
   const DIRECTORY = '/Users/comixedreader/Library';
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_3];
+  const MAXIMUM = 17;
 
   let state: ComicImportState;
 
@@ -92,7 +93,7 @@ describe('ComicImport Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, fetchingFiles: false },
-        new ComicImportGetFiles({ directory: DIRECTORY })
+        new ComicImportGetFiles({ directory: DIRECTORY, maximum: MAXIMUM })
       );
     });
 

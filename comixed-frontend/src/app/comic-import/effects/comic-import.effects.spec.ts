@@ -38,11 +38,13 @@ import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 
 import { ComicImportEffects } from './comic-import.effects';
+import { LoggerModule } from '@angular-ru/logger';
 import objectContaining = jasmine.objectContaining;
 
 describe('ComicImportEffects', () => {
   const DIRECTORY = '/Users/comixedreader/Library';
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_3];
+  const MAXIMUM = 23;
 
   let actions$: Observable<any>;
   let effects: ComicImportEffects;
@@ -51,7 +53,7 @@ describe('ComicImportEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), LoggerModule.forRoot()],
       providers: [
         ComicImportEffects,
         provideMockActions(() => actions$),
@@ -79,7 +81,10 @@ describe('ComicImportEffects', () => {
   describe('getting comic files', () => {
     it('fires an action on success', () => {
       const serviceResponse = COMIC_FILES;
-      const action = new ComicImportGetFiles({ directory: DIRECTORY });
+      const action = new ComicImportGetFiles({
+        directory: DIRECTORY,
+        maximum: MAXIMUM
+      });
       const outcome = new ComicImportFilesReceived({ comicFiles: COMIC_FILES });
 
       actions$ = hot('-a', { a: action });
@@ -94,7 +99,10 @@ describe('ComicImportEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = new ComicImportGetFiles({ directory: DIRECTORY });
+      const action = new ComicImportGetFiles({
+        directory: DIRECTORY,
+        maximum: MAXIMUM
+      });
       const outcome = new ComicImportGetFilesFailed();
 
       actions$ = hot('-a', { a: action });
@@ -108,7 +116,10 @@ describe('ComicImportEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = new ComicImportGetFiles({ directory: DIRECTORY });
+      const action = new ComicImportGetFiles({
+        directory: DIRECTORY,
+        maximum: MAXIMUM
+      });
       const outcome = new ComicImportGetFilesFailed();
 
       actions$ = hot('-a', { a: action });

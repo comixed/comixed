@@ -53,12 +53,14 @@ import {
   ToolbarModule
 } from 'primeng/primeng';
 import { ComicFileListToolbarComponent } from './comic-file-list-toolbar.component';
+import { COMIC_IMPORT_MAXIMUM } from 'app/comic-import/comic-import.constants';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 
 describe('ComicFileListToolbarComponent', () => {
   const DIRECTORY = '/home/comixed/Documents/comics';
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
+  const MAXIMUM = 31;
 
   let component: ComicFileListToolbarComponent;
   let fixture: ComponentFixture<ComicFileListToolbarComponent>;
@@ -66,6 +68,7 @@ describe('ComicFileListToolbarComponent', () => {
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
   let libraryDisplayAdaptor: LibraryDisplayAdaptor;
+  let authenticationAdaptor: AuthenticationAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -105,6 +108,8 @@ describe('ComicFileListToolbarComponent', () => {
     translateService = TestBed.get(TranslateService);
     confirmationService = TestBed.get(ConfirmationService);
     libraryDisplayAdaptor = TestBed.get(LibraryDisplayAdaptor);
+    authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
+    spyOn(authenticationAdaptor, 'setPreference');
 
     fixture.detectChanges();
   }));
@@ -138,11 +143,15 @@ describe('ComicFileListToolbarComponent', () => {
     beforeEach(() => {
       spyOn(comicImportAdaptor, 'getComicFiles');
       component.directory = DIRECTORY;
+      component.maximum = MAXIMUM;
       component.findComics();
     });
 
     it('invokes the adaptor', () => {
-      expect(comicImportAdaptor.getComicFiles).toHaveBeenCalledWith(DIRECTORY);
+      expect(comicImportAdaptor.getComicFiles).toHaveBeenCalledWith(
+        DIRECTORY,
+        MAXIMUM
+      );
     });
   });
 
@@ -299,6 +308,19 @@ describe('ComicFileListToolbarComponent', () => {
           component.deleteBlockedPages
         );
       });
+    });
+  });
+
+  describe('setting the maximum comics value', () => {
+    beforeEach(() => {
+      component.setMaximum(MAXIMUM);
+    });
+
+    it('saves the user preference', () => {
+      expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
+        COMIC_IMPORT_MAXIMUM,
+        `${MAXIMUM}`
+      );
     });
   });
 });

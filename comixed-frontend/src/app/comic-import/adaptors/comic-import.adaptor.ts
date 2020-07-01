@@ -82,8 +82,10 @@ export class ComicImportAdaptor {
     return this._directory$.asObservable();
   }
 
-  getComicFiles(directory: string) {
-    this.store.dispatch(new ComicImportGetFiles({ directory: directory }));
+  getComicFiles(directory: string, maximum: number) {
+    this.store.dispatch(
+      new ComicImportGetFiles({ directory: directory, maximum: maximum })
+    );
   }
 
   get fetchingComicFile$(): Observable<boolean> {

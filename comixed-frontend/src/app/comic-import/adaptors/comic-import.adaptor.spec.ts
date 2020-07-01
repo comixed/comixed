@@ -52,6 +52,7 @@ describe('ComicImportAdaptor', () => {
   const DIRECTORY = '/Users/comixedreader/Library';
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_3];
   const COMIC_FILE = COMIC_FILE_2;
+  const MAXIMUM = 13;
 
   let adaptor: ComicImportAdaptor;
   let store: Store<AppState>;
@@ -99,12 +100,12 @@ describe('ComicImportAdaptor', () => {
 
   describe('getting comic files', () => {
     beforeEach(() => {
-      adaptor.getComicFiles(DIRECTORY);
+      adaptor.getComicFiles(DIRECTORY, MAXIMUM);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        new ComicImportGetFiles({ directory: DIRECTORY })
+        new ComicImportGetFiles({ directory: DIRECTORY, maximum: MAXIMUM })
       );
     });
 

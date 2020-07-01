@@ -34,10 +34,12 @@ import {
   ComicImportStarted,
   ComicImportStartFailed
 } from '../actions/comic-import.actions';
+import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class ComicImportEffects {
   constructor(
+    private logger: LoggerService,
     private actions$: Actions<ComicImportActions>,
     private comicImportService: ComicImportService,
     private messageService: MessageService,
@@ -48,8 +50,10 @@ export class ComicImportEffects {
   getFiles$: Observable<Action> = this.actions$.pipe(
     ofType(ComicImportActionTypes.GetFiles),
     map(action => action.payload),
+    tap(action => this.logger.debug('effect: get comic files:', action)),
     switchMap(action =>
-      this.comicImportService.getFiles(action.directory).pipe(
+      this.comicImportService.getFiles(action.directory, action.maximum).pipe(
+        tap(response => this.logger.debug('received response:', response)),
         tap((response: ComicFile[]) =>
           this.messageService.add({
             severity: 'info',
@@ -64,6 +68,7 @@ export class ComicImportEffects {
             new ComicImportFilesReceived({ comicFiles: response })
         ),
         catchError(error => {
+          this.logger.error('service failure getting comic files:', error);
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
@@ -75,6 +80,7 @@ export class ComicImportEffects {
       )
     ),
     catchError(error => {
+      this.logger.error('general failure getting comic files:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(
@@ -89,6 +95,7 @@ export class ComicImportEffects {
   startImport$: Observable<Action> = this.actions$.pipe(
     ofType(ComicImportActionTypes.Start),
     map(action => action.payload),
+    tap(action => this.logger.debug('effect: start import:', action)),
     switchMap(action =>
       this.comicImportService
         .startImport(
@@ -97,6 +104,7 @@ export class ComicImportEffects {
           action.deleteBlockedPages
         )
         .pipe(
+          tap(response => this.logger.debug('received response:', response)),
           tap(() =>
             this.messageService.add({
               severity: 'info',
@@ -108,6 +116,7 @@ export class ComicImportEffects {
           ),
           map(() => new ComicImportStarted()),
           catchError(error => {
+            this.logger.error('service failure getting comic files:', error);
             this.messageService.add({
               severity: 'error',
               detail: this.translateService.instant(
@@ -119,6 +128,7 @@ export class ComicImportEffects {
         )
     ),
     catchError(error => {
+      this.logger.error('general failure getting comic files:', error);
       this.messageService.add({
         severity: 'error',
         detail: this.translateService.instant(

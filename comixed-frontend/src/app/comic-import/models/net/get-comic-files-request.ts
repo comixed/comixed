@@ -18,4 +18,5 @@
 
 export interface GetComicFilesRequest {
   directory: string;
+  maximum: number;
 }

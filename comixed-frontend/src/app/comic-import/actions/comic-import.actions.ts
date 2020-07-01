@@ -41,7 +41,7 @@ export class ComicImportSetDirectory implements Action {
 export class ComicImportGetFiles implements Action {
   readonly type = ComicImportActionTypes.GetFiles;
 
-  constructor(public payload: { directory: string }) {}
+  constructor(public payload: { directory: string; maximum: number }) {}
 }
 
 export class ComicImportFilesReceived implements Action {

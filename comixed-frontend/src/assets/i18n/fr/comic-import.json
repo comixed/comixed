@@ -26,6 +26,12 @@
       "import": {
         "with-metadata": "With Metadata",
         "without-metadata": "Without Metadata"
+      },
+      "maximum": {
+        "unlimited": "All Comics",
+        "50-comics": "50 Comics",
+        "100-comics": "100 Comics",
+        "1000-comics": "1000 Comics"
       }
     },
     "start-import": {

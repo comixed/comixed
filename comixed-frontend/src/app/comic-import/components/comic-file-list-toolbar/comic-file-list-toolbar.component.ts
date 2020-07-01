@@ -31,6 +31,11 @@ import { LibraryDisplayAdaptor } from 'app/library';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import { Subscription } from 'rxjs';
+import {
+  COMIC_IMPORT_DIRECTORY,
+  COMIC_IMPORT_MAXIMUM
+} from 'app/comic-import/comic-import.constants';
+import { LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'app-comic-file-list-toolbar',
@@ -65,8 +70,11 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
   coverSizeSubscription: Subscription;
   coverSize: number;
   deleteBlockedPages = false;
+  maximumOptions: SelectItem[] = [];
+  maximum = 0;
 
   constructor(
+    private logger: LoggerService,
     private authenticationAdaptor: AuthenticationAdaptor,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private comicImportAdaptor: ComicImportAdaptor,
@@ -80,9 +88,13 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
         this.loadTranslations();
       }
     );
-    this.loadSortFieldOptions();
-    this.loadRowsOptions();
-    this.loadImportOptions();
+    this.loadTranslations();
+    this.authenticationAdaptor.user$.subscribe(user => {
+      this.maximum = parseInt(
+        this.authenticationAdaptor.getPreference(COMIC_IMPORT_MAXIMUM) || '0',
+        10
+      );
+    });
     this.layoutSubscription = this.libraryDisplayAdaptor.layout$.subscribe(
       layout => (this.gridLayout = layout === 'grid')
     );
@@ -111,10 +123,10 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
 
   findComics(): void {
     this.authenticationAdaptor.setPreference(
-      'import.directory',
+      COMIC_IMPORT_DIRECTORY,
       this.directory
     );
-    this.comicImportAdaptor.getComicFiles(this.directory);
+    this.comicImportAdaptor.getComicFiles(this.directory, this.maximum);
   }
 
   selectAllComicFiles(): void {
@@ -216,6 +228,7 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
     this.loadSortFieldOptions();
     this.loadRowsOptions();
     this.loadImportOptions();
+    this.loadMaximumOptions();
   }
 
   startImport(withMetadata: boolean): void {
@@ -242,5 +255,39 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
     const layout = useGridLayout ? 'grid' : 'list';
     this.libraryDisplayAdaptor.setLayout(layout);
     this.dataView.changeLayout(layout);
+  }
+
+  private loadMaximumOptions() {
+    this.maximumOptions = [
+      {
+        label: this.translateService.instant(
+          'comic-file-list-toolbar.options.maximum.unlimited'
+        ),
+        value: 0
+      },
+      {
+        label: this.translateService.instant(
+          'comic-file-list-toolbar.options.maximum.50-comics'
+        ),
+        value: 50
+      },
+      {
+        label: this.translateService.instant(
+          'comic-file-list-toolbar.options.maximum.100-comics'
+        ),
+        value: 100
+      },
+      {
+        label: this.translateService.instant(
+          'comic-file-list-toolbar.options.maximum.1000-comics'
+        ),
+        value: 1000
+      }
+    ];
+  }
+
+  setMaximum(value: number): void {
+    this.logger.debug(`setting maximum import values: ${value}`);
+    this.authenticationAdaptor.setPreference(COMIC_IMPORT_MAXIMUM, `${value}`);
   }
 }
