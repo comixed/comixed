@@ -54,12 +54,15 @@ import {
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { ComicDetailsEditorComponent } from './comic-details-editor.component';
+import { USER_PREFERENCE_SKIP_CACHE } from 'app/comics/comics.constants';
 
-describe('ComicDetailsEditorComponent', () => {
+fdescribe('ComicDetailsEditorComponent', () => {
   const API_KEY = 'ABCDEF0123456789';
   const COMIC = COMIC_1;
   const VOLUME = SCRAPING_VOLUME_1000;
   const ISSUE = SCRAPING_ISSUE_1000;
+  const SERIES = 'Series name';
+  const ISSUE_NUMBER = '717';
 
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
@@ -113,6 +116,8 @@ describe('ComicDetailsEditorComponent', () => {
     store = TestBed.get(Store);
     scrapingAdaptor = TestBed.get(ScrapingAdaptor);
     authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
+    spyOn(authenticationAdaptor, 'setPreference');
+    spyOn(authenticationAdaptor, 'getPreference');
     translateService = TestBed.get(TranslateService);
     comicAdaptor = TestBed.get(ComicAdaptor);
     confirmationService = TestBed.get(ConfirmationService);
@@ -144,6 +149,7 @@ describe('ComicDetailsEditorComponent', () => {
     });
 
     it('contains an option to fetch volumes without skipping the cache', () => {
+      component.skipCache = false;
       component.fetchOptions
         .find(
           option =>
@@ -159,6 +165,7 @@ describe('ComicDetailsEditorComponent', () => {
     });
 
     it('contains an option to fetch volumes while skipping the cache', () => {
+      component.skipCache = true;
       component.fetchOptions
         .find(
           option =>
@@ -248,7 +255,6 @@ describe('ComicDetailsEditorComponent', () => {
   describe('saving the API key', () => {
     beforeEach(() => {
       component.comicDetailsForm.controls['apiKey'].setValue(API_KEY);
-      spyOn(authenticationAdaptor, 'setPreference');
       component.saveApiKey();
     });
 
@@ -262,7 +268,6 @@ describe('ComicDetailsEditorComponent', () => {
 
   describe('resetting the API key', () => {
     beforeEach(() => {
-      spyOn(authenticationAdaptor, 'getPreference');
       component.editingApiKey = true;
       component.resetApiKey();
     });
@@ -464,5 +469,61 @@ describe('ComicDetailsEditorComponent', () => {
         expect(response).toEqual(COMIC)
       );
     });
+  });
+
+  describe('fetching volumes', () => {
+    beforeEach(() => {
+      spyOn(scrapingAdaptor, 'getVolumes');
+      component.comicDetailsForm.controls['apiKey'].setValue(API_KEY);
+      component.comicDetailsForm.controls['seriesName'].setValue(SERIES);
+      component.comicDetailsForm.controls['issueNumber'].setValue(ISSUE_NUMBER);
+    });
+
+    describe('skipping the cache', () => {
+      beforeEach(() => {
+        component.skipCache = true;
+        component.doFetchVolumes();
+      });
+
+      it('calls the scraping adaptor', () => {
+        expect(scrapingAdaptor.getVolumes).toHaveBeenCalledWith(
+          API_KEY,
+          SERIES,
+          ISSUE_NUMBER,
+          true
+        );
+      });
+    });
+
+    describe('using the cache', () => {
+      beforeEach(() => {
+        component.skipCache = false;
+        component.doFetchVolumes();
+      });
+
+      it('calls the scraping adaptor', () => {
+        expect(scrapingAdaptor.getVolumes).toHaveBeenCalledWith(
+          API_KEY,
+          SERIES,
+          ISSUE_NUMBER,
+          false
+        );
+      });
+    });
+  });
+
+  it('saves the skip cache preference if it is changed', () => {
+    component.skipCache = false;
+    component.getVolumes(!component.skipCache);
+    expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
+      USER_PREFERENCE_SKIP_CACHE,
+      `${!component.skipCache}`
+    );
+  });
+
+  it('does not save the skip cache preference if it is not changed', () => {
+    component.skipCache = false;
+    component.getVolumes(component.skipCache);
+    expect(authenticationAdaptor.setPreference).not.toHaveBeenCalled();
   });
 });

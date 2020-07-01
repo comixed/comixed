@@ -35,6 +35,7 @@ import { AuthenticationAdaptor, COMICVINE_API_KEY } from 'app/user';
 import { LoggerService } from '@angular-ru/logger';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { USER_PREFERENCE_SKIP_CACHE } from 'app/comics/comics.constants';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -87,11 +88,15 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.userSubscription = this.authenticationAdaptor.user$.subscribe(user =>
+    this.userSubscription = this.authenticationAdaptor.user$.subscribe(user => {
       this.comicDetailsForm.controls['apiKey'].setValue(
         this.authenticationAdaptor.getPreference(COMICVINE_API_KEY)
-      )
-    );
+      );
+      this.skipCache =
+        (this.authenticationAdaptor.getPreference(USER_PREFERENCE_SKIP_CACHE) ||
+          'false') === 'true';
+      this.logger.debug('user preference - skip cache:', this.skipCache);
+    });
     this.scrapingComicsSubscription = this.scrapingAdaptor.comics$.subscribe(
       comics => (this.scrapingComics = comics)
     );
@@ -157,14 +162,19 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     ];
   }
 
-  private getVolumes(skipCache: boolean): void {
-    this.logger.info(`'getting volumes for comic: skipCache=${skipCache}`);
-    this.skipCache = skipCache;
+  getVolumes(skipCache: boolean): void {
+    if (skipCache !== this.skipCache) {
+      this.logger.info(`getting volumes for comic: skipCache=${skipCache}`);
+      this.authenticationAdaptor.setPreference(
+        USER_PREFERENCE_SKIP_CACHE,
+        `${skipCache}`
+      );
+    }
     this.scrapingAdaptor.getVolumes(
       this.getApiKey(),
       this.getSeriesName(),
       this.getIssueNumber(),
-      this.skipCache
+      skipCache
     );
   }
 
@@ -270,5 +280,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   skipCurrentComic() {
     this.skipComic.next(this.comic);
+  }
+
+  doFetchVolumes() {
+    this.getVolumes(this.skipCache);
   }
 }
