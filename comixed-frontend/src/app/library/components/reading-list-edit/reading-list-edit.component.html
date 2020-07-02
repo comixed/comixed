@@ -1,6 +1,7 @@
-<p-dialog [visible]='editingReadingList'
+<p-dialog [(visible)]='editingReadingList'
           modal='true'
-          [header]='"reading-list-edit.title"|translate'>
+          [header]='"reading-list-edit.title"|translate'
+          (onHide)='cancelEditing()'>
   <form [formGroup]='readingListForm'>
     <div class='ui-g'>
       <div class='ui-g-12 cx-input-label'>
