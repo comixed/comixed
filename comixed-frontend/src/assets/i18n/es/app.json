@@ -36,7 +36,8 @@
     "text": {
       "please-login": "Por favor, ingresa para ver la biblioteca.",
       "library-status": "Hay {comic_count} cómics en la biblioteca."
-    }
+    },
+    "title": "ComiXed"
   },
   "iconbar": {
     "home": "Principal",

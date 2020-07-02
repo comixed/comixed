@@ -36,7 +36,8 @@
     "text": {
       "please-login": "Please login to view the library.",
       "library-status": "There are {comic_count} comics in the library."
-    }
+    },
+    "title": "ComiXed"
   },
   "iconbar": {
     "home": "Home",
