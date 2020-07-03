@@ -25,7 +25,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 import { ComicsModule } from 'app/comics/comics.module';
 import {
   AppState,
@@ -75,13 +75,19 @@ import { ComicListComponent } from './comic-list.component';
 import { ConvertComicsSettingsComponent } from 'app/library/components/convert-comics-settings/convert-comics-settings.component';
 import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
 import {
+  COMIC_LIST_MENU_ADD_TO_READING_LIST,
+  COMIC_LIST_MENU_CONVERT_COMIC,
+  COMIC_LIST_MENU_DELETE_SELECTED,
   COMIC_LIST_MENU_DESELECT_ALL,
+  COMIC_LIST_MENU_RESTORE_SELECTED,
+  COMIC_LIST_MENU_SCRAPE_SELECTED,
   COMIC_LIST_MENU_SELECT_ALL
 } from 'app/library/library.constants';
 
 describe('ComicListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const MOUSE_EVENT = new MouseEvent('mousedown');
+  const COMIC = COMICS[1];
 
   let component: ComicListComponent;
   let fixture: ComponentFixture<ComicListComponent>;
@@ -294,13 +300,37 @@ describe('ComicListComponent', () => {
     });
   });
 
+  describe('when deleting selected comics', () => {
+    const SELECTED_COMICS = [{ ...COMIC_1, deletedDate: null }];
+
+    beforeEach(() => {
+      component._selectedComics = SELECTED_COMICS;
+      spyOn(libraryAdaptor, 'deleteComics');
+      spyOn(selectionAdaptor, 'clearComicSelections');
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.accept());
+      component.deleteComics();
+    });
+
+    it('deletes the selected comics', () => {
+      expect(libraryAdaptor.deleteComics).toHaveBeenCalledWith([COMIC_1.id]);
+    });
+
+    it('clears the selection list', () => {
+      expect(selectionAdaptor.clearComicSelections).toHaveBeenCalled();
+    });
+  });
+
   describe('when scraping the selected comics', () => {
     beforeEach(() => {
       component._selectedComics = COMICS;
       spyOn(router, 'navigateByUrl');
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirm: Confirmation) => confirm.accept()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirm: Confirmation) => confirm.accept());
       component.scrapeComics();
     });
 
@@ -326,6 +356,28 @@ describe('ComicListComponent', () => {
       component.deleteComics();
       expect(libraryAdaptor.deleteComics).toHaveBeenCalledWith(
         COMICS.map(comic => comic.id)
+      );
+    });
+  });
+
+  describe('when restoring the selected comics', () => {
+    const DELETED_COMICS = [
+      { ...COMIC_1, deletedDate: new Date().getTime() },
+      { ...COMIC_2, deletedDate: new Date().getTime() },
+      { ...COMIC_3, deletedDate: new Date().getTime() }
+    ];
+    beforeEach(() => {
+      component._selectedComics = DELETED_COMICS;
+    });
+
+    it('fires an action if the user approves', () => {
+      spyOn(confirmationService, 'confirm').and.callFake((params: any) => {
+        params.accept();
+      });
+      spyOn(libraryAdaptor, 'undeleteComics');
+      component.restoreComics();
+      expect(libraryAdaptor.undeleteComics).toHaveBeenCalledWith(
+        DELETED_COMICS.map(comic => comic.id)
       );
     });
   });
@@ -390,6 +442,102 @@ describe('ComicListComponent', () => {
 
     it('notifies the adaptor', () => {
       expect(selectionAdaptor.deselectComics).toHaveBeenCalledWith(COMICS);
+    });
+  });
+
+  describe('deleting all selected comics', () => {
+    beforeEach(() => {
+      component.selectedComics = COMICS;
+      spyOn(selectionAdaptor, 'deselectComics');
+      spyOn(component, 'deleteComics');
+      component.contextMenuItems
+        .find(item => item.id === COMIC_LIST_MENU_DELETE_SELECTED)
+        .command();
+    });
+
+    it('deletes the selected comics', () => {
+      expect(component.deleteComics).toHaveBeenCalled();
+    });
+  });
+
+  describe('restoring deleted comics', () => {
+    beforeEach(() => {
+      component.selectedComics = COMICS;
+      spyOn(selectionAdaptor, 'deselectComics');
+      spyOn(component, 'restoreComics');
+      component.contextMenuItems
+        .find(item => item.id === COMIC_LIST_MENU_RESTORE_SELECTED)
+        .command();
+    });
+
+    it('restores the selected comics', () => {
+      expect(component.restoreComics).toHaveBeenCalled();
+    });
+  });
+
+  describe('scraping all selected comics', () => {
+    beforeEach(() => {
+      component.selectedComics = COMICS;
+      spyOn(selectionAdaptor, 'deselectComics');
+      spyOn(component, 'scrapeComics');
+      component.contextMenuItems
+        .find(item => item.id === COMIC_LIST_MENU_SCRAPE_SELECTED)
+        .command();
+    });
+
+    it('scrapes the selected comics', () => {
+      expect(component.scrapeComics).toHaveBeenCalled();
+    });
+  });
+
+  describe('converting selected comics', () => {
+    beforeEach(() => {
+      component.selectedComics = COMICS;
+      spyOn(selectionAdaptor, 'deselectComics');
+      component.contextMenuItems
+        .find(item => item.id === COMIC_LIST_MENU_CONVERT_COMIC)
+        .command();
+    });
+
+    it('sets the convert comics dialog visible', () => {
+      expect(component.showConvertComics).toBeTruthy();
+    });
+  });
+
+  describe('adding selected comics to a reading list', () => {
+    beforeEach(() => {
+      component.selectedComics = COMICS;
+      spyOn(readingListAdaptor, 'showSelectDialog');
+      component.contextMenuItems
+        .find(item => item.id === COMIC_LIST_MENU_ADD_TO_READING_LIST)
+        .command();
+    });
+
+    it('shows the reading list selection dialog', () => {
+      expect(readingListAdaptor.showSelectDialog).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggling selections', () => {
+    beforeEach(() => {
+      spyOn(selectionAdaptor, 'selectComic');
+      spyOn(selectionAdaptor, 'deselectComic');
+    });
+
+    it('does nothing if the comic is null, which should never happen', () => {
+      component.toggleComicSelection(null, true);
+      expect(selectionAdaptor.selectComic).not.toHaveBeenCalled();
+      expect(selectionAdaptor.deselectComic).not.toHaveBeenCalled();
+    });
+
+    it('can toggle one on', () => {
+      component.toggleComicSelection(COMIC, true);
+      expect(selectionAdaptor.selectComic).toHaveBeenCalledWith(COMIC);
+    });
+
+    it('can toggle one off', () => {
+      component.toggleComicSelection(COMIC, false);
+      expect(selectionAdaptor.deselectComic).toHaveBeenCalledWith(COMIC);
     });
   });
 });

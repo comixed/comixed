@@ -249,11 +249,16 @@
     },
     "context-menu": {
       "open-comic": "Abrir cómic...",
-      "delete-comic": "Eliminar cómic..."
+      "delete-comic": "Eliminar cómic...",
+      "restore-comic": "Restore comic"
     },
     "delete-comic": {
       "header": "¿Eliminar Comic?",
       "message": "¿Seguro que quieres eliminar {title}?"
+    },
+    "restore-comic": {
+      "header": "Restore Comic",
+      "message":"Are you sure you want to restore {title}?"
     }
   },
   "scraping-effects": {

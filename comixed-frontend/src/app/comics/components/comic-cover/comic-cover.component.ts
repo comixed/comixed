@@ -104,6 +104,14 @@ export class ComicCoverComponent implements OnInit, OnDestroy {
       false,
       () => this.deleteComic()
     );
+    this.contextMenuAdaptor.addItem(
+      `${this.baseMenuId}-restore`,
+      'fa fa-fw fa-trash',
+      this.translateService.instant('comic-cover.context-menu.restore-comic'),
+      true,
+      false,
+      () => this.undeleteComic()
+    );
   }
 
   get comic(): Comic {
@@ -138,6 +146,7 @@ export class ComicCoverComponent implements OnInit, OnDestroy {
     if (!!this._comic) {
       this.contextMenuAdaptor.hideItem(`${this.baseMenuId}-open`);
       this.contextMenuAdaptor.hideItem(`${this.baseMenuId}-delete`);
+      this.contextMenuAdaptor.hideItem(`${this.baseMenuId}-restore`);
     }
   }
 
@@ -145,6 +154,10 @@ export class ComicCoverComponent implements OnInit, OnDestroy {
     this.contextMenuAdaptor.hideMenu(); // to disable other menu items
     if (!!this._comic) {
       this.contextMenuAdaptor.showItem(`${this.baseMenuId}-open`);
+      if (!!this._comic.deletedDate) {
+        this.contextMenuAdaptor.showItem(`${this.baseMenuId}-restore`);
+      }
+    } else {
       this.contextMenuAdaptor.showItem(`${this.baseMenuId}-delete`);
     }
     this.contextMenuAdaptor.showMenu($event);
@@ -162,6 +175,19 @@ export class ComicCoverComponent implements OnInit, OnDestroy {
         { title: new ComicTitlePipe().transform(this.comic) }
       ),
       accept: () => this.libraryAdaptor.deleteComics([this.comic.id])
+    });
+  }
+
+  private undeleteComic() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'comic-cover.restore-comic.header'
+      ),
+      message: this.translateService.instant(
+        'comic-cover.restore-comic.message',
+        { title: new ComicTitlePipe().transform(this.comic) }
+      ),
+      accept: () => this.libraryAdaptor.undeleteComics([this.comic.id])
     });
   }
 }

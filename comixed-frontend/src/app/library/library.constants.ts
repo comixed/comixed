@@ -47,6 +47,7 @@ export const REMOVE_COMICS_FROM_READING_LIST = `${COMIXED_API_ROOT}/lists/\${id}
 export const COMIC_LIST_MENU_SELECT_ALL = 'comic-list-scrape-select-all';
 export const COMIC_LIST_MENU_DESELECT_ALL = 'comic-list-scrape-deselect-all';
 export const COMIC_LIST_MENU_DELETE_SELECTED = 'comic-list-delete-selected';
+export const COMIC_LIST_MENU_RESTORE_SELECTED = 'comic-list-restore-selected';
 export const COMIC_LIST_MENU_SCRAPE_SELECTED = 'comic-list-scrape-selected';
 export const COMIC_LIST_MENU_CONVERT_COMIC = 'comic-list-convert-comic';
 export const COMIC_LIST_MENU_ADD_TO_READING_LIST =

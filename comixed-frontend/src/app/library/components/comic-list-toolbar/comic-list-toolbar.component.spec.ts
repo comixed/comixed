@@ -23,7 +23,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 import { ComicsModule } from 'app/comics/comics.module';
@@ -42,6 +42,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import {
   ButtonModule,
   CheckboxModule,
+  Confirmation,
   ConfirmationService,
   ContextMenuModule,
   DropdownModule,
@@ -59,6 +60,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ComicListToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const DESCRIPTION = 'The Description';
+  const IMAGE_URL = 'http://server/image.jpg';
 
   let component: ComicListToolbarComponent;
   let fixture: ComponentFixture<ComicListToolbarComponent>;
@@ -67,6 +70,10 @@ describe('ComicListToolbarComponent', () => {
   let selectionAdaptor: SelectionAdaptor;
   let router: Router;
   let store: Store<AppState>;
+  let translateService: TranslateService;
+  let libraryAdaptor: LibraryAdaptor;
+  let libraryDisplayAdaptor: LibraryDisplayAdaptor;
+  let readingListAdaptor: ReadingListAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -117,9 +124,15 @@ describe('ComicListToolbarComponent', () => {
     confirmationService = TestBed.get(ConfirmationService);
     scrapingAdaptor = TestBed.get(ScrapingAdaptor);
     selectionAdaptor = TestBed.get(SelectionAdaptor);
+    spyOn(selectionAdaptor, 'clearComicSelections');
     store = TestBed.get(Store);
     router = TestBed.get(Router);
     spyOn(router, 'navigateByUrl');
+    translateService = TestBed.get(TranslateService);
+    libraryAdaptor = TestBed.get(LibraryAdaptor);
+    libraryDisplayAdaptor = TestBed.get(LibraryDisplayAdaptor);
+    readingListAdaptor = TestBed.get(ReadingListAdaptor);
+
     fixture.detectChanges();
   }));
 
@@ -137,6 +150,211 @@ describe('ComicListToolbarComponent', () => {
       component.startScraping.subscribe(response =>
         expect(response).toBeTruthy()
       );
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      component.sortOptions = [];
+      component.rowsOptions = [];
+      translateService.use('fr');
+    });
+
+    it('loads the sort options', () => {
+      expect(component.sortOptions).not.toEqual([]);
+    });
+
+    it('loads the row options', () => {
+      expect(component.rowsOptions).not.toEqual([]);
+    });
+  });
+
+  describe('when the description is set', () => {
+    beforeEach(() => {
+      component.imageUrl = null;
+      component.description = DESCRIPTION;
+    });
+
+    it('sets the description', () => {
+      expect(component.description).toEqual(DESCRIPTION);
+    });
+
+    it('does not enable showing details', () => {
+      expect(component.enableDetails).toBeFalsy();
+    });
+
+    it('enables showing details when the image URL is present', () => {
+      component.imageUrl = IMAGE_URL;
+      expect(component.enableDetails).toBeTruthy();
+    });
+  });
+
+  describe('when the image URL is set', () => {
+    beforeEach(() => {
+      component.description = null;
+      component.imageUrl = IMAGE_URL;
+    });
+
+    it('sets the image URL', () => {
+      expect(component.imageUrl).toEqual(IMAGE_URL);
+    });
+
+    it('does not enable showing details', () => {
+      expect(component.enableDetails).toBeFalsy();
+    });
+
+    it('enables showing details when the image URL is present', () => {
+      component.description = DESCRIPTION;
+      expect(component.enableDetails).toBeTruthy();
+    });
+  });
+
+  describe('selecting all comics', () => {
+    beforeEach(() => {
+      component.comics = COMICS;
+      spyOn(selectionAdaptor, 'selectComics');
+      component.selectAll();
+    });
+
+    it('calls the selection adaptor', () => {
+      expect(selectionAdaptor.selectComics).toHaveBeenCalledWith(COMICS);
+    });
+  });
+
+  describe('deselecting all comics', () => {
+    beforeEach(() => {
+      component.comics = COMICS;
+      component.deselectAll();
+    });
+
+    it('calls the selection adaptor', () => {
+      expect(selectionAdaptor.clearComicSelections).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleting the selected comics', () => {
+    const SELECTED_COMICS = [
+      { ...COMIC_1, deletedDate: null },
+      { ...COMIC_3, deletedDate: new Date().getTime() }
+    ];
+
+    beforeEach(() => {
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.accept());
+      spyOn(libraryAdaptor, 'deleteComics');
+      component.selectedComics = SELECTED_COMICS;
+      component.deleteComics();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('calls the library adaptor', () => {
+      expect(libraryAdaptor.deleteComics).toHaveBeenCalledWith(
+        SELECTED_COMICS.filter(comic => !comic.deletedDate).map(
+          comic => comic.id
+        )
+      );
+    });
+
+    it('clears the selections', () => {
+      expect(selectionAdaptor.clearComicSelections).toHaveBeenCalled();
+    });
+  });
+
+  describe('changing the sort field', () => {
+    const SORT_FIELD = 'addedDate';
+
+    beforeEach(() => {
+      spyOn(libraryDisplayAdaptor, 'setSortField');
+      component.changeSortField(SORT_FIELD);
+    });
+
+    it('calls the display adaptor', () => {
+      expect(libraryDisplayAdaptor.setSortField).toHaveBeenCalledWith(
+        SORT_FIELD
+      );
+    });
+  });
+
+  describe('changing the display rows', () => {
+    const ROWS = 27;
+
+    beforeEach(() => {
+      spyOn(libraryDisplayAdaptor, 'setDisplayRows');
+      component.changeRows(ROWS);
+    });
+
+    it('calls the display adaptor', () => {
+      expect(libraryDisplayAdaptor.setDisplayRows).toHaveBeenCalledWith(ROWS);
+    });
+  });
+
+  describe('changing the layout', () => {
+    beforeEach(() => {
+      spyOn(libraryDisplayAdaptor, 'setLayout');
+      component.dataView = {
+        changeLayout: jasmine.createSpy('changeLayout()')
+      };
+    });
+
+    it('stores the preference for grids', () => {
+      component.setGridLayout(true);
+      expect(libraryDisplayAdaptor.setLayout).toHaveBeenCalledWith('grid');
+    });
+
+    it('stores the preference for lists', () => {
+      component.setGridLayout(false);
+      expect(libraryDisplayAdaptor.setLayout).toHaveBeenCalledWith('list');
+    });
+  });
+
+  describe('setting the cover size', () => {
+    const COVER_SIZE = 400;
+
+    beforeEach(() => {
+      spyOn(libraryDisplayAdaptor, 'setCoverSize');
+      component.setCoverSize(COVER_SIZE, true);
+    });
+
+    it('stores the preference', () => {
+      expect(libraryDisplayAdaptor.setCoverSize).toHaveBeenCalledWith(
+        COVER_SIZE,
+        true
+      );
+    });
+  });
+
+  describe('setting the same height', () => {
+    const COVER_SIZE = 400;
+
+    beforeEach(() => {
+      spyOn(libraryDisplayAdaptor, 'setSameHeight');
+      component.useSameHeight(true);
+    });
+
+    it('stores the preference', () => {
+      expect(libraryDisplayAdaptor.setSameHeight).toHaveBeenCalledWith(true);
+    });
+  });
+
+  it('can show the details', () => {
+    component.showDetails = false;
+    component.setDetailsVisible();
+    expect(component.showDetails).toBeTruthy();
+  });
+
+  describe('creating a reading list', () => {
+    beforeEach(() => {
+      spyOn(readingListAdaptor, 'create');
+      component.fireCreateReadingList();
+    });
+
+    it('notifies the reading list adaptor', () => {
+      expect(readingListAdaptor.create).toHaveBeenCalled();
     });
   });
 });
