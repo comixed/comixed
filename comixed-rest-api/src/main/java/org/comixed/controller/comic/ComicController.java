@@ -37,6 +37,8 @@ import org.comixed.model.comic.ScanType;
 import org.comixed.model.user.LastReadDate;
 import org.comixed.net.GetLibraryUpdatesRequest;
 import org.comixed.net.GetLibraryUpdatesResponse;
+import org.comixed.net.UndeleteMultipleComicsRequest;
+import org.comixed.net.UndeleteMultipleComicsResponse;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.comixed.repositories.comic.ComicFormatRepository;
 import org.comixed.repositories.comic.ScanTypeRepository;
@@ -46,6 +48,7 @@ import org.comixed.service.comic.ComicService;
 import org.comixed.service.comic.PageCacheService;
 import org.comixed.service.file.FileService;
 import org.comixed.task.model.DeleteComicsWorkerTask;
+import org.comixed.task.model.UndeleteComicsWorkerTask;
 import org.comixed.task.runner.Worker;
 import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.views.View;
@@ -74,6 +77,7 @@ public class ComicController {
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private Worker worker;
   @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
+  @Autowired private ObjectFactory<UndeleteComicsWorkerTask> undeleteComicsWorkerTaskObjectFactory;
 
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({View.ComicDetails.class})
@@ -401,5 +405,21 @@ public class ComicController {
     log.info("Marking comic as unread for {}: id={}", email, id);
 
     return this.comicService.markAsUnread(email, id);
+  }
+
+  @PostMapping(
+      value = "/multiple/undelete",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public UndeleteMultipleComicsResponse undeleteMultipleComics(
+      @RequestBody() final UndeleteMultipleComicsRequest request) {
+    final List<Long> ids = request.getIds();
+    log.debug("Undeleting {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
+
+    final UndeleteComicsWorkerTask task = this.undeleteComicsWorkerTaskObjectFactory.getObject();
+    task.setIds(ids);
+    this.worker.addTasksToQueue(task);
+
+    return new UndeleteMultipleComicsResponse(true);
   }
 }
