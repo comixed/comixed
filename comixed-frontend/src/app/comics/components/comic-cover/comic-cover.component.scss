@@ -18,16 +18,56 @@
 }
 
 .cx-comic-cover-card {
-  padding: 5px;
-  marging: 10px;
+  position: relative;
+  display: inline-block;
+  padding: 2px;
+  margin: 2px;
 }
 
-.cx-deleted-comic {
-  background-color: $cx-deleted-comic-background-color;
-  color: $cx-deleted-comic-text-color;
+.cx-unselected-comic-file {
+  filter: grayscale(100%);
+}
+
+.cx-selected-comic-file {
+  filter: grayscale(0%);
+  background-color: $cx-selected-comic-background-color !important;
+  color: $cx-selected-comic-text-color;
 }
 
 .cx-selected-comic {
-  background-color: $cx-selected-comic-background-color;
+  filter: sepia(100%) !important;
+  background-color: $cx-selected-comic-background-color !important;
   color: $cx-selected-comic-text-color;
+}
+
+.cx-processing-comic {
+  filter: grayscale(75%);
+  filter: blur(3px);
+}
+
+.cx-deleted-comic {
+  filter: grayscale(25%);
+  filter: brightness(50%);
+  background-color: $cx-deleted-comic-background-color;
+  color: $cx-deleted-comic-text-color;
+  z-index: 1;
+}
+
+.cx-deleted-indicator, .cx-processing-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.cx-deleted-indicator {
+  filter: brightness(100%) !important;
+  filter: grayscale(0%) !important;
+  color: $cx-deleted-comic-indicator-color;
+}
+
+.cx-processing-indicator {
+  width: 100%;
+  height: 100%;
 }
