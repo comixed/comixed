@@ -56,7 +56,7 @@ import { TableModule } from 'primeng/table';
 import { ComicDetailsEditorComponent } from './comic-details-editor.component';
 import { USER_PREFERENCE_SKIP_CACHE } from 'app/comics/comics.constants';
 
-fdescribe('ComicDetailsEditorComponent', () => {
+describe('ComicDetailsEditorComponent', () => {
   const API_KEY = 'ABCDEF0123456789';
   const COMIC = COMIC_1;
   const VOLUME = SCRAPING_VOLUME_1000;

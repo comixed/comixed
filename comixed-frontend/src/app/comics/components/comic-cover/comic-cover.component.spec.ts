@@ -97,30 +97,4 @@ describe('ComicCoverComponent', () => {
     component.clicked();
     component.click.subscribe(result => expect(result).toEqual(COMIC_FILE_1));
   });
-
-  describe('when the comic is not selected', () => {
-    beforeEach(() => {
-      component.comic = COMIC_1;
-      component.selected = false;
-      fixture.detectChanges();
-    });
-
-    it('does not have the selected class on the container', () => {
-      const elements = fixture.debugElement.query(By.css('.selected-comic'));
-      expect(elements).toBeFalsy();
-    });
-  });
-
-  describe('when the comic is selected', () => {
-    beforeEach(() => {
-      component.comic = COMIC_1;
-      component.selected = true;
-      fixture.detectChanges();
-    });
-
-    it('does not have the selected class on the container', () => {
-      const elements = fixture.debugElement.query(By.css('.selected-comic'));
-      expect(elements).toBeTruthy();
-    });
-  });
 });

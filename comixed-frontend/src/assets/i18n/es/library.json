@@ -252,6 +252,7 @@
       "select-all": "Seleccionar todo",
       "deselect-all": "Deseleccionar todo",
       "delete-selected": "Borrar selección...",
+      "restore-selected": "Restore selections...",
       "scrape-selected": "Buscar metadatos de la selección",
       "convert-comic": "Convertir      cómic...",
       "add-to-reading-list": "Añadir a lista...",
@@ -264,6 +265,10 @@
     "delete-comics": {
       "header": "Eliminar {count} cómics",
       "message": "¿Seguro que quieres eliminar estos cómics?"
+    },
+    "restore-comics": {
+      "header": "Restore {count} Comics",
+      "message": "Are you sure you want to restore these comics?"
     },
     "remove-from-reading-list": {
       "header": "Quitar de lista de lectura",

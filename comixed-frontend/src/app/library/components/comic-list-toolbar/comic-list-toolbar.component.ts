@@ -152,7 +152,9 @@ export class ComicListToolbarComponent implements OnInit, OnDestroy {
       ),
       accept: () => {
         this.libraryAdaptor.deleteComics(
-          this.selectedComics.map(comic => comic.id)
+          this.selectedComics
+            .filter(comic => !comic.deletedDate)
+            .map(comic => comic.id)
         );
         this.selectionAdaptor.clearComicSelections();
       }
