@@ -116,6 +116,15 @@ export function reducer(
     case LibraryActionTypes.DeleteMultipleComicsFailed:
       return { ...state, deletingComics: false };
 
+    case LibraryActionTypes.UndeleteMultipleComics:
+      return { ...state, deletingComics: true };
+
+    case LibraryActionTypes.MultipleComicsUndeleted:
+      return { ...state, deletingComics: false };
+
+    case LibraryActionTypes.UndeleteMultipleComicsFailed:
+      return { ...state, deletingComics: false };
+
     case LibraryActionTypes.ConvertComics:
       return { ...state, convertingComics: true };
 

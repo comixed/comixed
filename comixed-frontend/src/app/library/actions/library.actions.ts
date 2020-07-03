@@ -32,6 +32,9 @@ export enum LibraryActionTypes {
   DeleteMultipleComics = '[LIBRARY] Delete multiple comics',
   MultipleComicsDeleted = '[LIBRARY] Multiple comics deleted',
   DeleteMultipleComicsFailed = '[LIBRARY] Failed to delete multiple comics',
+  UndeleteMultipleComics = '[LIBRARY] Undelete multiple comics',
+  MultipleComicsUndeleted = '[LIBRARY] Multiple comics were undeleted',
+  UndeleteMultipleComicsFailed = '[LIBRARY] Undelete multiple comics failed',
   ConvertComics = '[LIBRARY] Convert comics to a new archive type',
   ComicsConverting = '[LIBRARY] Comics converting to a new archive type',
   ConvertComicsFailed = '[LIBRARY] Failed to convert comics',
@@ -121,6 +124,24 @@ export class LibraryDeleteMultipleComicsFailed implements Action {
   constructor() {}
 }
 
+export class LibraryUndeleteMultipleComics implements Action {
+  readonly type = LibraryActionTypes.UndeleteMultipleComics;
+
+  constructor(public payload: { ids: number[] }) {}
+}
+
+export class LibraryMultipleComicsUndeleted implements Action {
+  readonly type = LibraryActionTypes.MultipleComicsUndeleted;
+
+  constructor() {}
+}
+
+export class LibraryUndeleteMultipleComicsFailed implements Action {
+  readonly type = LibraryActionTypes.UndeleteMultipleComicsFailed;
+
+  constructor() {}
+}
+
 export class LibraryConvertComics implements Action {
   readonly type = LibraryActionTypes.ConvertComics;
 
@@ -198,6 +219,9 @@ export type LibraryActions =
   | LibraryDeleteMultipleComics
   | LibraryMultipleComicsDeleted
   | LibraryDeleteMultipleComicsFailed
+  | LibraryUndeleteMultipleComics
+  | LibraryMultipleComicsUndeleted
+  | LibraryUndeleteMultipleComicsFailed
   | LibraryConvertComics
   | LibraryComicsConverting
   | LibraryConvertComicsFailed

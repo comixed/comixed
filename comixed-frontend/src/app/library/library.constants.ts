@@ -27,6 +27,7 @@ export const SET_BLOCKING_STATE_URL = `${API_ROOT_URL}/pages/hashes/blocking`;
 export const SET_DELETED_STATE_URL = `${API_ROOT_URL}/pages/hashes/deleted`;
 export const START_RESCAN_URL = `${COMIXED_API_ROOT}/comics/rescan`;
 export const DELETE_MULTIPLE_COMICS_URL = `${COMIXED_API_ROOT}/comics/multiple/delete`;
+export const UNDELETE_MULTIPLE_COMICS_URL = `${COMIXED_API_ROOT}/comics/multiple/undelete`;
 export const CONVERT_COMICS_URL = `${COMIXED_API_ROOT}/library/convert`;
 export const CONSOLIDATE_LIBRARY_URL = `${COMIXED_API_ROOT}/library/move`;
 export const CLEAR_IMAGE_CACHE_URL = `${COMIXED_API_ROOT}/library/cache/images`;

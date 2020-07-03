@@ -50,10 +50,14 @@ import {
   LibraryComicsMoved,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
+  LibraryDeleteMultipleComicsFailed,
   LibraryGetUpdates,
   LibraryImageCacheCleared,
   LibraryMoveComics,
   LibraryMoveComicsFailed,
+  LibraryMultipleComicsDeleted,
+  LibraryMultipleComicsUndeleted,
+  LibraryUndeleteMultipleComicsFailed,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
 import { LibraryAdaptor } from './library.adaptor';
@@ -266,11 +270,76 @@ describe('LibraryAdaptor', () => {
     );
   });
 
-  it('fires an action when deleting multiple comics', () => {
-    adaptor.deleteComics(IDS);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new LibraryActions.LibraryDeleteMultipleComics({ ids: IDS })
-    );
+  describe('deleting multiple comics', () => {
+    beforeEach(() => {
+      adaptor.deleteComics(IDS);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibraryDeleteMultipleComics({ ids: IDS })
+      );
+    });
+
+    it('provides updates', () => {
+      adaptor.deleting$.subscribe(response => expect(response).toBeTruthy());
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryMultipleComicsDeleted({ count: 17 }));
+      });
+
+      it('provides updates', () => {
+        adaptor.deleting$.subscribe(response => expect(response).toBeFalsy());
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryDeleteMultipleComicsFailed());
+      });
+
+      it('provides updates', () => {
+        adaptor.deleting$.subscribe(response => expect(response).toBeFalsy());
+      });
+    });
+  });
+
+  describe('undeleting multiple comics', () => {
+    beforeEach(() => {
+      adaptor.undeleteComics(IDS);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LibraryActions.LibraryUndeleteMultipleComics({ ids: IDS })
+      );
+    });
+
+    it('provides updates', () => {
+      adaptor.deleting$.subscribe(response => expect(response).toBeTruthy());
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryMultipleComicsUndeleted());
+      });
+
+      it('provides updates', () => {
+        adaptor.deleting$.subscribe(response => expect(response).toBeFalsy());
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new LibraryUndeleteMultipleComicsFailed());
+      });
+
+      it('provides updates', () => {
+        adaptor.deleting$.subscribe(response => expect(response).toBeFalsy());
+      });
+    });
   });
 
   describe('converting comics', () => {
