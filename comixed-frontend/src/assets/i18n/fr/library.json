@@ -56,6 +56,14 @@
         "detail": "Failed to delete multiple comics."
       }
     },
+    "restore-multiple-comics": {
+      "success": {
+        "detail": "Restores comics."
+      },
+      "error": {
+        "detail": "Failed to restore multiple comics."
+      }
+    },
     "convert-comics": {
       "success": {
         "detail": "Comics are now converting."

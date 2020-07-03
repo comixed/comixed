@@ -28,11 +28,13 @@ import {
   CONVERT_COMICS_URL,
   DELETE_MULTIPLE_COMICS_URL,
   GET_LIBRARY_UPDATES_URL,
-  START_RESCAN_URL
+  START_RESCAN_URL,
+  UNDELETE_MULTIPLE_COMICS_URL
 } from 'app/library/library.constants';
 import { ConvertComicsRequest } from 'app/library/models/net/convert-comics-request';
 import { Comic } from 'app/comics';
 import { ConsolidateLibraryRequest } from 'app/library/models/net/consolidate-library-request';
+import { UndeleteMultipleComicsRequest } from 'app/library/models/net/undelete-multiple-comics-request';
 
 @Injectable({
   providedIn: 'root'
@@ -65,11 +67,16 @@ export class LibraryService {
   }
 
   deleteMultipleComics(ids: number[]): Observable<any> {
-    this.logger.debug(
-      `[POST] http request: deleting multiple comics: ids=${ids}`
-    );
+    this.logger.debug('[POST] http request: deleting multiple comics:', ids);
     const params = new HttpParams().set('comic_ids', ids.toString());
     return this.http.post(interpolate(DELETE_MULTIPLE_COMICS_URL), params);
+  }
+
+  undeleteMultipleComics(ids: number[]): Observable<any> {
+    this.logger.debug('[POST] http request: undelete multiple comics:', ids);
+    return this.http.post(interpolate(UNDELETE_MULTIPLE_COMICS_URL), {
+      ids: ids
+    } as UndeleteMultipleComicsRequest);
   }
 
   convertComics(

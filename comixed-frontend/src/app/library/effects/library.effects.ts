@@ -43,8 +43,11 @@ import {
   LibraryMoveComics,
   LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
+  LibraryMultipleComicsUndeleted,
   LibraryRescanStarted,
   LibraryStartRescanFailed,
+  LibraryUndeleteMultipleComics,
+  LibraryUndeleteMultipleComicsFailed,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
 import { Comic } from 'app/comics';
@@ -178,7 +181,7 @@ export class LibraryEffects {
             severity: 'info',
             detail: this.translateService.instant(
               'library-effects.delete-multiple-comics.success.detail',
-              { count: response.count }
+              { count: action.ids.length }
             )
           })
         ),
@@ -209,6 +212,52 @@ export class LibraryEffects {
         )
       });
       return of(new LibraryDeleteMultipleComicsFailed());
+    })
+  );
+
+  @Effect()
+  undeleteMultipleComics$: Observable<Action> = this.actions$.pipe(
+    ofType(LibraryActionTypes.UndeleteMultipleComics),
+    map((action: LibraryUndeleteMultipleComics) => action.payload),
+    tap(action =>
+      this.logger.debug('effect: undelete multiple comics:', action)
+    ),
+    switchMap(action =>
+      this.libraryService.undeleteMultipleComics(action.ids).pipe(
+        tap(response => this.logger.debug('received response:', response)),
+        tap(() =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'library-effects.restore-multiple-comics.success.detail'
+            )
+          })
+        ),
+        map(() => new LibraryMultipleComicsUndeleted()),
+        catchError(error => {
+          this.logger.error(
+            'service failure undeleting multiple comics:',
+            error
+          );
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'library-effects.undelete-multiple-comics.failure.detail'
+            )
+          });
+          return of(new LibraryUndeleteMultipleComicsFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.error('service failure undeleting multiple comics:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new LibraryUndeleteMultipleComicsFailed());
     })
   );
 

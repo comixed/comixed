@@ -38,10 +38,13 @@ import {
   LibraryMoveComics,
   LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
+  LibraryMultipleComicsUndeleted,
   LibraryRescanStarted,
   LibraryReset,
   LibraryStartRescan,
   LibraryStartRescanFailed,
+  LibraryUndeleteMultipleComics,
+  LibraryUndeleteMultipleComicsFailed,
   LibraryUpdatesReceived
 } from 'app/library/actions/library.actions';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
@@ -66,6 +69,7 @@ describe('Library Reducer', () => {
   const DIRECTORY = '/Users/comixedreader/Documents/comics';
   const RENAMING_RULE =
     '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
+  const COMIC_IDS = [1, 2, 3, 4];
 
   let state: LibraryState;
 
@@ -289,7 +293,7 @@ describe('Library Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, deletingComics: false },
-        new LibraryDeleteMultipleComics({ ids: [1, 2, 3, 4] })
+        new LibraryDeleteMultipleComics({ ids: COMIC_IDS })
       );
     });
 
@@ -316,6 +320,45 @@ describe('Library Reducer', () => {
       state = reducer(
         { ...state, deletingComics: true },
         new LibraryDeleteMultipleComicsFailed()
+      );
+    });
+
+    it('clears the deleting multiple comics flag', () => {
+      expect(state.deletingComics).toBeFalsy();
+    });
+  });
+
+  describe('when undeleting multiple comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, deletingComics: false },
+        new LibraryUndeleteMultipleComics({ ids: COMIC_IDS })
+      );
+    });
+
+    it('sets the deleting comics flag', () => {
+      expect(state.deletingComics).toBeTruthy();
+    });
+  });
+
+  describe('when multiple comics are undeleted', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, deletingComics: true },
+        new LibraryMultipleComicsUndeleted()
+      );
+    });
+
+    it('clears the deleting multiple comics flag', () => {
+      expect(state.deletingComics).toBeFalsy();
+    });
+  });
+
+  describe('when undeleting multiple comics fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, deletingComics: true },
+        new LibraryUndeleteMultipleComicsFailed()
       );
     });
 

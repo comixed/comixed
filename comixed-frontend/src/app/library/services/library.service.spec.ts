@@ -37,12 +37,15 @@ import {
   CONVERT_COMICS_URL,
   DELETE_MULTIPLE_COMICS_URL,
   GET_LIBRARY_UPDATES_URL,
-  START_RESCAN_URL
+  START_RESCAN_URL,
+  UNDELETE_MULTIPLE_COMICS_URL
 } from 'app/library/library.constants';
 import { HttpResponse } from '@angular/common/http';
 import { ConvertComicsRequest } from 'app/library/models/net/convert-comics-request';
 import { ConsolidateLibraryRequest } from 'app/library/models/net/consolidate-library-request';
 import { ClearImageCacheResponse } from 'app/library/models/net/clear-image-cache-response';
+import { UndeleteMultipleComicsResponse } from 'app/library/models/net/undelete-multiple-comics-response';
+import { UndeleteMultipleComicsRequest } from 'app/library/models/net/undelete-multiple-comics-request';
 
 describe('LibraryService', () => {
   const LAST_UPDATED_DATE = new Date();
@@ -61,6 +64,7 @@ describe('LibraryService', () => {
   const DIRECTORY = '/Users/comixedreader/Documents/comics';
   const RENAMING_RULE =
     '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
+  const COMIC_IDS = [3, 20, 9, 21, 4, 17];
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
@@ -128,7 +132,7 @@ describe('LibraryService', () => {
   });
 
   it('can delete multiple comics', () => {
-    const IDS = [3, 20, 9, 21, 4, 17];
+    const IDS = COMIC_IDS;
 
     service
       .deleteMultipleComics(IDS)
@@ -140,6 +144,23 @@ describe('LibraryService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body.get('comic_ids')).toEqual(IDS.toString());
     req.flush({ count: IDS.length } as DeleteMultipleComicsResponse);
+  });
+
+  it('can undelete multiple comics', () => {
+    const IDS = COMIC_IDS;
+
+    service.undeleteMultipleComics(IDS).subscribe(response => {
+      expect(response).toEqual({
+        success: true
+      } as UndeleteMultipleComicsResponse);
+    });
+
+    const req = httpMock.expectOne(interpolate(UNDELETE_MULTIPLE_COMICS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMIC_IDS
+    } as UndeleteMultipleComicsRequest);
+    req.flush({ success: true } as UndeleteMultipleComicsResponse);
   });
 
   it('can convert comics', () => {

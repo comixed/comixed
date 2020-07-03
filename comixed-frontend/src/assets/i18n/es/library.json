@@ -56,6 +56,14 @@
         "detail": "Error al eliminar varios cómics."
       }
     },
+    "restore-multiple-comics": {
+      "success": {
+        "detail": "Restores comics."
+      },
+      "error": {
+        "detail": "Failed to restore multiple comics."
+      }
+    },
     "convert-comics": {
       "success": {
         "detail": "Convirtiendo los cómics..."

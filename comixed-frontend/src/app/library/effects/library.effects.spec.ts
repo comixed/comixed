@@ -36,9 +36,12 @@ import {
   LibraryMoveComics,
   LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
+  LibraryMultipleComicsUndeleted,
   LibraryRescanStarted,
   LibraryStartRescan,
   LibraryStartRescanFailed,
+  LibraryUndeleteMultipleComics,
+  LibraryUndeleteMultipleComicsFailed,
   LibraryUpdatesReceived
 } from 'app/library/actions/library.actions';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
@@ -53,6 +56,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { LibraryEffects } from './library.effects';
 import { ClearImageCacheResponse } from 'app/library/models/net/clear-image-cache-response';
 import objectContaining = jasmine.objectContaining;
+import { UndeleteMultipleComicsResponse } from 'app/library/models/net/undelete-multiple-comics-response';
 
 describe('LibraryEffects', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -86,6 +90,9 @@ describe('LibraryEffects', () => {
             startRescan: jasmine.createSpy('LibraryService.startRescan()'),
             deleteMultipleComics: jasmine.createSpy(
               'LibraryService.deleteMultipleComics()'
+            ),
+            undeleteMultipleComics: jasmine.createSpy(
+              'LibraryService.undeleteMultipleComics()'
             ),
             convertComics: jasmine.createSpy('LibraryService.convertComics()'),
             consolidate: jasmine.createSpy('LibraryService.consolidate()'),
@@ -283,6 +290,64 @@ describe('LibraryEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.deleteMultipleComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('when undeleting multiple comics', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = {
+        success: true
+      } as UndeleteMultipleComicsResponse;
+      const action = new LibraryUndeleteMultipleComics({
+        ids: [7, 17, 65]
+      });
+      const outcome = new LibraryMultipleComicsUndeleted();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.undeleteMultipleComics.and.returnValue(
+        of(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.undeleteMultipleComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new LibraryUndeleteMultipleComics({
+        ids: [7, 17, 65]
+      });
+      const outcome = new LibraryUndeleteMultipleComicsFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.undeleteMultipleComics.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.undeleteMultipleComics$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new LibraryUndeleteMultipleComics({
+        ids: [7, 17, 65]
+      });
+      const outcome = new LibraryUndeleteMultipleComicsFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.undeleteMultipleComics.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.undeleteMultipleComics$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

@@ -36,7 +36,8 @@ import {
   LibraryGetUpdates,
   LibraryMoveComics,
   LibraryReset,
-  LibraryStartRescan
+  LibraryStartRescan,
+  LibraryUndeleteMultipleComics
 } from 'app/library/actions/library.actions';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { ComicGetIssue } from 'app/comics/actions/comic.actions';
@@ -68,6 +69,7 @@ export class LibraryAdaptor {
   private _converting$ = new BehaviorSubject<boolean>(false);
   private _consolidating$ = new BehaviorSubject<boolean>(false);
   private _clearingImageCache$ = new BehaviorSubject<boolean>(false);
+  private _deleting$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private store: Store<AppState>,
@@ -170,6 +172,9 @@ export class LibraryAdaptor {
         if (state.clearingImageCache !== this._clearingImageCache$.getValue()) {
           this._clearingImageCache$.next(state.clearingImageCache);
         }
+        if (state.deletingComics !== this._deleting$.getValue()) {
+          this._deleting$.next(state.deletingComics);
+        }
 
         // if either the last read dates or comics have changed then update all comics' last read date
         this.logger.debug(`updatedLastReadDates=${updatedLastReadDates}`);
@@ -265,7 +270,17 @@ export class LibraryAdaptor {
   }
 
   deleteComics(ids: number[]): void {
+    this.logger.debug('firing action to delete comics:', ids);
     this.store.dispatch(new LibraryDeleteMultipleComics({ ids: ids }));
+  }
+
+  get deleting$(): Observable<boolean> {
+    return this._deleting$.asObservable();
+  }
+
+  undeleteComics(ids: number[]): void {
+    this.logger.debug('firing action to undelete comics:', ids);
+    this.store.dispatch(new LibraryUndeleteMultipleComics({ ids: ids }));
   }
 
   private getComicsForSeries(series: string): Comic[] {
