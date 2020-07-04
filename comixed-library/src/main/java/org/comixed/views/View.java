@@ -59,4 +59,7 @@ public class View {
 
   /** Used when fetching library updates. */
   public interface LibraryUpdate {}
+
+  /** Used when viewing the list of plugins. */
+  public interface PluginList {}
 }

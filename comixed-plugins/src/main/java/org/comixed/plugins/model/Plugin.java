@@ -20,7 +20,6 @@ package org.comixed.plugins.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import lombok.extern.log4j.Log4j2;
@@ -50,12 +49,7 @@ public class Plugin {
 
   @Autowired private PluginInterpreterLoader interpreterLoader;
 
-  private Map<String, byte[]> entries = new HashMap<>();
-  private String language;
-  private String name;
-  private String version;
-  private String description;
-  private String author;
+  private PluginDescriptor descriptor;
 
   /**
    * Executes the plugin.
@@ -65,27 +59,27 @@ public class Plugin {
   void execute() throws PluginException {}
 
   public String getLanguage() {
-    return language;
+    return this.descriptor.getLanguage();
   }
 
   public String getName() {
-    return name;
+    return this.descriptor.getName();
   }
 
   public String getVersion() {
-    return version;
+    return this.descriptor.getVersion();
   }
 
   public String getDescription() {
-    return description;
+    return this.descriptor.getDescription();
   }
 
   public String getAuthor() {
-    return author;
+    return this.descriptor.getAuthor();
   }
 
   public Map<String, byte[]> getEntries() {
-    return entries;
+    return this.descriptor.getEntries();
   }
 
   /**
@@ -95,8 +89,10 @@ public class Plugin {
    * @throws PluginException if an error occurs
    */
   public void setEntries(Map<String, byte[]> entries) throws PluginException {
-    this.entries = entries;
-    byte[] content = this.entries.get(MANIFEST_FILENAME);
+    this.descriptor = new PluginDescriptor(this);
+    this.descriptor.setEntries(entries);
+
+    byte[] content = entries.get(MANIFEST_FILENAME);
     if (content == null || content.length == 0)
       throw new PluginException("Missing plugin manifest file");
     log.debug("loading plugin manifest file");
@@ -106,16 +102,26 @@ public class Plugin {
     } catch (IOException error) {
       throw new PluginException("could not read plugin manifest file", error);
     }
-    this.language = (String) properties.get(PLUGIN_LANGUAGE);
-    if (StringUtils.isEmpty(this.language))
+    this.descriptor.setLanguage((String) properties.get(PLUGIN_LANGUAGE));
+    if (StringUtils.isEmpty(this.descriptor.getLanguage()))
       throw new PluginException("plugin must declare a language");
-    if (!this.interpreterLoader.hasLanguage(this.language))
-      throw new PluginException("plugin language not supported: " + this.language);
-    this.name = (String) properties.get(PLUGIN_NAME);
-    if (StringUtils.isEmpty(this.name)) throw new PluginException("plugin must have a name");
-    this.version = (String) properties.getOrDefault(PLUGIN_VERSION, "unknown");
-    this.description = (String) properties.getOrDefault(PLUGIN_DESCRIPTION, "No description");
-    this.author = (String) properties.getOrDefault(PLUGIN_AUTHOR, "anonymous");
-    this.entries = entries;
+    if (!this.interpreterLoader.hasLanguage(this.descriptor.getLanguage()))
+      throw new PluginException("plugin language not supported: " + this.descriptor.getLanguage());
+    this.descriptor.setName((String) properties.get(PLUGIN_NAME));
+    if (StringUtils.isEmpty(this.descriptor.getName()))
+      throw new PluginException("plugin must have a name");
+    this.descriptor.setVersion((String) properties.getOrDefault(PLUGIN_VERSION, "unknown"));
+    this.descriptor.setDescription(
+        (String) properties.getOrDefault(PLUGIN_DESCRIPTION, "No description"));
+    this.descriptor.setAuthor((String) properties.getOrDefault(PLUGIN_AUTHOR, "anonymous"));
+  }
+
+  /**
+   * Creates a {@link PluginDescriptor} for the plugin.
+   *
+   * @return the descriptor
+   */
+  public PluginDescriptor getDescriptor() {
+    return this.descriptor;
   }
 }

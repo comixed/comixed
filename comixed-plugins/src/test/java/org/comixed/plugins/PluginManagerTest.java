@@ -22,9 +22,9 @@ import static junit.framework.TestCase.*;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import org.comixed.plugins.model.Plugin;
+import org.comixed.plugins.model.PluginDescriptor;
 import org.comixed.utils.FileTypeIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,21 +36,14 @@ import org.springframework.beans.factory.ObjectFactory;
 public class PluginManagerTest {
   private static final String TEST_UNDEFINED_PLUGIN_NAME = "plugin-doesnt-exist";
   private static final String TEST_PLUGIN_NAME = "test-plugin";
-  private static final Map<String, byte[]> TEST_PLUGIN_ENTRIES = new HashMap<>();
   private static final String TEST_EXAMPLE_PLUGIN_FILE = "src/test/resources/example-plugin.cxp";
-
-  static {
-    TEST_PLUGIN_ENTRIES.put(
-        Plugin.MANIFEST_FILENAME,
-        ("# this is a test manifest\n" + (Plugin.PLUGIN_NAME + ": " + TEST_PLUGIN_NAME + "\n"))
-            .getBytes());
-  }
 
   @InjectMocks private PluginManager pluginManager;
   @Mock private ObjectFactory<Plugin> pluginObjectFactory;
   @Mock private Plugin plugin;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
   @Captor private ArgumentCaptor<InputStream> inputStreamArgumentCaptor;
+  @Mock private PluginDescriptor pluginDescriptor;
 
   @Test(expected = PluginException.class)
   public void testLoadPluginNotDefined() throws PluginException {
@@ -59,18 +52,14 @@ public class PluginManagerTest {
 
   @Test
   public void testLoadPlugin() throws PluginException {
-    pluginManager.plugins.put(TEST_PLUGIN_NAME, TEST_PLUGIN_ENTRIES);
+    pluginManager.plugins.put(TEST_PLUGIN_NAME, pluginDescriptor);
 
-    Mockito.when(pluginObjectFactory.getObject()).thenReturn(plugin);
-    Mockito.doNothing().when(plugin).setEntries(Mockito.anyMap());
+    Mockito.when(pluginDescriptor.getPlugin()).thenReturn(plugin);
 
     Plugin result = pluginManager.loadPlugin(TEST_PLUGIN_NAME);
 
     assertNotNull(result);
     assertSame(plugin, result);
-
-    Mockito.verify(pluginObjectFactory, Mockito.times(1)).getObject();
-    Mockito.verify(plugin, Mockito.times(1)).setEntries(TEST_PLUGIN_ENTRIES);
   }
 
   @Test(expected = PluginException.class)
@@ -113,5 +102,17 @@ public class PluginManagerTest {
 
     Mockito.verify(fileTypeIdentifier, Mockito.times(1))
         .subtypeFor(inputStreamArgumentCaptor.getValue());
+  }
+
+  @Test
+  public void testGetPluginList() {
+    for (int index = 0; index < 25; index++)
+      pluginManager.plugins.put(TEST_PLUGIN_NAME + index, pluginDescriptor);
+
+    final List<PluginDescriptor> result = pluginManager.getPluginList();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(25, result.size());
   }
 }
