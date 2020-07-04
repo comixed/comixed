@@ -82,6 +82,9 @@ import { LibraryNavigationTreeComponent } from './components/library-navigation-
 import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/duplicate-comics-page.component';
 import { ReadingListEditComponent } from './components/reading-list-edit/reading-list-edit.component';
 import { AddComicsToReadingListComponent } from './components/add-comics-to-list-reading-list/add-comics-to-reading-list.component';
+import { PluginEffects } from './effects/plugin.effects';
+import { PluginAdaptor } from 'app/library/adaptors/plugin.adaptor';
+import * as fromPlugin from 'app/library/reducers/plugin.reducer';
 
 @NgModule({
   imports: [
@@ -110,11 +113,13 @@ import { AddComicsToReadingListComponent } from './components/add-comics-to-list
       fromPublisher.PUBLISHER_FEATURE_KEY,
       fromPublisher.reducer
     ),
+    StoreModule.forFeature(fromPlugin.PLUGIN_FEATURE_KEY, fromPlugin.reducer),
     EffectsModule.forFeature([
       LibraryEffects,
       ReadingListEffects,
       DuplicatePagesEffects,
-      PublisherEffects
+      PublisherEffects,
+      PluginEffects
     ]),
     ContextMenuModule,
     CheckboxModule,
@@ -163,7 +168,8 @@ import { AddComicsToReadingListComponent } from './components/add-comics-to-list
     ReadingListService,
     ReadingListAdaptor,
     DuplicatePagesService,
-    PublisherAdaptor
+    PublisherAdaptor,
+    PluginAdaptor
   ]
 })
 export class LibraryModule {

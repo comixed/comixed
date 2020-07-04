@@ -43,6 +43,8 @@ export const UPDATE_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}`;
 export const ADD_COMICS_TO_READING_LIST_URL = `${COMIXED_API_ROOT}/lists/\${id}/comics/add`;
 export const REMOVE_COMICS_FROM_READING_LIST = `${COMIXED_API_ROOT}/lists/\${id}/comics/remove`;
 
+export const GET_ALL_PLUGINS_URL = `${COMIXED_API_ROOT}/plugins`;
+
 export const COMIC_LIST_MENU_SELECT_ALL = 'comic-list-scrape-select-all';
 export const COMIC_LIST_MENU_DESELECT_ALL = 'comic-list-scrape-deselect-all';
 export const COMIC_LIST_MENU_DELETE_SELECTED = 'comic-list-delete-selected';

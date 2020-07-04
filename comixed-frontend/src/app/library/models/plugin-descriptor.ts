@@ -16,5 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export { DUPLICATE_PAGE_1 } from './models/duplicate-page.fixtures';
-export * from './models/plugin-descriptor.fixtures';
+export interface PluginDescriptor {
+  name: string;
+  language: string;
+  version: string;
+  author: string;
+  description: string;
+}
