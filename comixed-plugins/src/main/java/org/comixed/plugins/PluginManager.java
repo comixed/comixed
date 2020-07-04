@@ -19,16 +19,14 @@
 package org.comixed.plugins;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.comixed.plugins.model.Plugin;
+import org.comixed.plugins.model.PluginDescriptor;
 import org.comixed.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectFactory;
@@ -38,7 +36,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PluginManager</code> handles retrieving and launching the plugins.
+ * <code>PluginManager</code> loads plugins from disk.
  *
  * @author Darryl L. Pierce
  */
@@ -53,7 +51,7 @@ public class PluginManager implements InitializingBean {
   String pluginLocation;
 
   /** the key is the plugin name, the value is a map of a plugin filename to the file's contents */
-  Map<String, Map<String, byte[]>> plugins = new HashMap<>();
+  Map<String, PluginDescriptor> plugins = new HashMap<>();
 
   /**
    * Returns a {@link Plugin} by name.
@@ -64,12 +62,9 @@ public class PluginManager implements InitializingBean {
    */
   public Plugin loadPlugin(String name) throws PluginException {
     log.debug("Loading plugin details");
-    Map<String, byte[]> pluginEntries = this.plugins.get(name);
-    if (pluginEntries == null) throw new PluginException("no such plugin: " + name);
-    log.debug("Rehydrating plugin");
-    Plugin result = this.pluginObjectFactory.getObject();
-    result.setEntries(pluginEntries);
-    return result;
+    PluginDescriptor descriptor = this.plugins.get(name);
+    if (descriptor == null) throw new PluginException("no such plugin: " + name);
+    return descriptor.getPlugin();
   }
 
   @Override
@@ -141,6 +136,22 @@ public class PluginManager implements InitializingBean {
     plugin.setEntries(pluginEntries);
     if (this.plugins.containsKey(plugin.getName()))
       throw new PluginException("plugin already exists with name: " + plugin.getName());
-    this.plugins.put(plugin.getName(), pluginEntries);
+    this.plugins.put(plugin.getName(), plugin.getDescriptor());
+  }
+
+  /**
+   * Returns the list of all currently loaded plugins.
+   *
+   * @return the plugins
+   */
+  public List<PluginDescriptor> getPluginList() {
+    log.debug("Returning the list of plugins");
+    List<PluginDescriptor> result = new ArrayList<>();
+    for (PluginDescriptor value : this.plugins.values()) {
+      log.debug("Adding plugin: {}", value.getName());
+      result.add(value);
+    }
+    log.debug("Returning {} total plugin{}", result.size(), result.size() == 1 ? "" : "s");
+    return result;
   }
 }
