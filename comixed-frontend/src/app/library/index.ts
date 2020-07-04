@@ -30,11 +30,15 @@ import { environment } from '../../environments/environment';
 import { DuplicatePagesState } from 'app/library/reducers/duplicate-pages.reducer';
 import * as fromPublisher from 'app/library/reducers/publisher.reducer';
 import { PublisherState } from 'app/library/reducers/publisher.reducer';
+import * as fromPlugin from 'app/library/reducers/plugin.reducer';
+import { PluginState } from 'app/library/reducers/plugin.reducer';
 
 export { LibraryAdaptor } from './adaptors/library.adaptor';
 export { SelectionAdaptor } from './adaptors/selection.adaptor';
 export { ReadingListAdaptor } from './adaptors/reading-list.adaptor';
-export { LibraryDisplayAdaptor } from '../user/adaptors/library-display.adaptor';
+export {
+  LibraryDisplayAdaptor
+} from '../user/adaptors/library-display.adaptor';
 
 interface RouterStateUrl {
   url: string;
@@ -49,6 +53,7 @@ export interface AppState {
   duplicate_pages_state: DuplicatePagesState;
   reading_list_state: ReadingListState;
   publisher_state: PublisherState;
+  plugin_state: PluginState;
 }
 
 export type State = AppState;
@@ -59,7 +64,8 @@ export const reducers: ActionReducerMap<AppState> = {
   selection_state: fromSelection.reducer,
   duplicate_pages_state: fromDupePages.reducer,
   reading_list_state: fromReadingLists.reducer,
-  publisher_state: fromPublisher.reducer
+  publisher_state: fromPublisher.reducer,
+  plugin_state: fromPlugin.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

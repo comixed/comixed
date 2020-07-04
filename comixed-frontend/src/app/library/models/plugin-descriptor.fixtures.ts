@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,5 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export { DUPLICATE_PAGE_1 } from './models/duplicate-page.fixtures';
-export * from './models/plugin-descriptor.fixtures';
+import { PluginDescriptor } from 'app/library/models/plugin-descriptor';
+
+export const PLUGIN_DESCRIPTOR_1: PluginDescriptor = {
+  name: 'Awesome Plugin',
+  language: 'python',
+  version: '1.0',
+  author: 'ComiXed Contributor',
+  description: 'The greatest plugin ever conceived'
+};

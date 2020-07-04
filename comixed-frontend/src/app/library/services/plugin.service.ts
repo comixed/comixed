@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,5 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export { DUPLICATE_PAGE_1 } from './models/duplicate-page.fixtures';
-export * from './models/plugin-descriptor.fixtures';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { LoggerService } from '@angular-ru/logger';
+import { HttpClient } from '@angular/common/http';
+import { interpolate } from 'app/app.functions';
+import { GET_ALL_PLUGINS_URL } from 'app/library/library.constants';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PluginService {
+  constructor(private logger: LoggerService, private http: HttpClient) {}
+
+  getAllPlugins(): Observable<any> {
+    this.logger.debug('[GET] http request: get all plugins');
+    return this.http.get(interpolate(GET_ALL_PLUGINS_URL));
+  }
+}
