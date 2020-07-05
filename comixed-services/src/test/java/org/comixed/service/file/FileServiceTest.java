@@ -36,7 +36,7 @@ import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.service.task.TaskService;
 import org.comixed.task.model.QueueComicsWorkerTask;
-import org.comixed.task.runner.Worker;
+import org.comixed.task.runner.TaskManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -65,10 +65,10 @@ public class FileServiceTest {
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicRepository comicRepository;
   @Mock private Comic comic;
-  @Mock private Worker worker;
   @Mock private TaskService taskService;
   @Mock private ObjectFactory<QueueComicsWorkerTask> taskFactory;
   @Mock private QueueComicsWorkerTask queueComicsWorkerTask;
+  @Mock private TaskManager taskManager;
 
   @Test
   public void testGetImportFileCoverWithNoHandler()
@@ -184,7 +184,7 @@ public class FileServiceTest {
 
     Mockito.verify(taskFactory, Mockito.times(1)).getObject();
     Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setDeleteBlockedPages(true);
-    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(queueComicsWorkerTask);
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(queueComicsWorkerTask);
   }
 
   @Test
@@ -198,7 +198,7 @@ public class FileServiceTest {
 
     Mockito.verify(taskFactory, Mockito.times(1)).getObject();
     Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setIgnoreMetadata(true);
-    Mockito.verify(worker, Mockito.timeout(1)).addTasksToQueue(queueComicsWorkerTask);
+    Mockito.verify(taskManager, Mockito.timeout(1)).runTask(queueComicsWorkerTask);
   }
 
   @Test
@@ -210,6 +210,6 @@ public class FileServiceTest {
     assertEquals(TEST_FILENAMES.length, result);
 
     Mockito.verify(taskFactory, Mockito.times(1)).getObject();
-    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(queueComicsWorkerTask);
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(queueComicsWorkerTask);
   }
 }

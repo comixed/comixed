@@ -37,7 +37,6 @@ import org.comixed.service.task.TaskService;
 import org.comixed.task.TaskException;
 import org.comixed.task.adaptors.TaskAdaptor;
 import org.comixed.task.encoders.RescanComicTaskEncoder;
-import org.comixed.task.runner.Worker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -50,7 +49,6 @@ public class ComicService {
   @Autowired private LastReadDatesRepository lastReadDatesRepository;
   @Autowired private TaskService taskService;
   @Autowired private ComiXedUserRepository userRepository;
-  @Autowired private Worker worker;
   @Autowired private TaskAdaptor taskAdaptor;
 
   public List<Comic> getComicsUpdatedSince(final long timestamp, final int maximumResults) {

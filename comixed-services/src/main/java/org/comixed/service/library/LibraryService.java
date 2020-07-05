@@ -37,7 +37,7 @@ import org.comixed.service.user.ComiXedUserException;
 import org.comixed.service.user.UserService;
 import org.comixed.task.model.ConvertComicsWorkerTask;
 import org.comixed.task.model.MoveComicsWorkerTask;
-import org.comixed.task.runner.Worker;
+import org.comixed.task.runner.TaskManager;
 import org.comixed.utils.Utils;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class LibraryService {
   @Autowired private LastReadDatesRepository lastReadDateRepository;
   @Autowired private ReadingListService readingListService;
   @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
-  @Autowired private Worker worker;
+  @Autowired private TaskManager taskManager;
   @Autowired private Utils utils;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ObjectFactory<MoveComicsWorkerTask> moveComicsTaskObjectFactory;
@@ -134,7 +134,7 @@ public class LibraryService {
     task.setDeletePages(deletePages);
 
     log.debug("Queueing save comics worker task");
-    this.worker.addTasksToQueue(task);
+    this.taskManager.runTask(task);
   }
 
   @Transactional
@@ -187,6 +187,6 @@ public class LibraryService {
     log.debug("Setting renaming rule: {}", renamingRule);
     task.setRenamingRule(renamingRule);
     log.debug("Enqueuing task");
-    this.worker.addTasksToQueue(task);
+    this.taskManager.runTask(task);
   }
 }

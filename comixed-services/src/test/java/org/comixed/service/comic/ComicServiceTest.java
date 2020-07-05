@@ -40,7 +40,6 @@ import org.comixed.task.TaskException;
 import org.comixed.task.adaptors.TaskAdaptor;
 import org.comixed.task.encoders.RescanComicTaskEncoder;
 import org.comixed.task.model.RescanComicWorkerTask;
-import org.comixed.task.runner.Worker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,7 +82,6 @@ public class ComicServiceTest {
   @Mock private Comic comicListEntry;
   @Mock private Comic comic;
   @Mock private Comic incomingComic;
-  @Mock private Worker worker;
   @Mock private ComiXedUser user;
   @Mock private List<LastReadDate> listLastReadDate;
   @Captor private ArgumentCaptor<Date> lastUpdatedDateCaptor;

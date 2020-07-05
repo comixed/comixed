@@ -49,7 +49,7 @@ import org.comixed.service.comic.PageCacheService;
 import org.comixed.service.file.FileService;
 import org.comixed.task.model.DeleteComicsWorkerTask;
 import org.comixed.task.model.UndeleteComicsWorkerTask;
-import org.comixed.task.runner.Worker;
+import org.comixed.task.runner.TaskManager;
 import org.comixed.utils.FileTypeIdentifier;
 import org.comixed.views.View;
 import org.comixed.views.View.ComicDetails;
@@ -75,7 +75,7 @@ public class ComicController {
   @Autowired private ScanTypeRepository scanTypeRepository;
   @Autowired private ComicFormatRepository comicFormatRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
-  @Autowired private Worker worker;
+  @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
   @Autowired private ObjectFactory<UndeleteComicsWorkerTask> undeleteComicsWorkerTaskObjectFactory;
 
@@ -124,7 +124,7 @@ public class ComicController {
     task.setComicIds(comicIds);
 
     log.debug("Queueing the delete task");
-    this.worker.addTasksToQueue(task);
+    this.taskManager.runTask(task);
 
     return true;
   }
@@ -418,7 +418,7 @@ public class ComicController {
 
     final UndeleteComicsWorkerTask task = this.undeleteComicsWorkerTaskObjectFactory.getObject();
     task.setIds(ids);
-    this.worker.addTasksToQueue(task);
+    this.taskManager.runTask(task);
 
     return new UndeleteMultipleComicsResponse(true);
   }

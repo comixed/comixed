@@ -23,7 +23,7 @@ import org.comixed.service.user.UserService;
 import org.comixed.task.model.ConvertComicsWorkerTask;
 import org.comixed.task.model.MoveComicsWorkerTask;
 import org.comixed.task.model.WorkerTask;
-import org.comixed.task.runner.Worker;
+import org.comixed.task.runner.TaskManager;
 import org.comixed.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +63,6 @@ public class LibraryServiceTest {
   @Mock private ConvertComicsWorkerTask convertComicsWorkerTask;
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<List<Comic>> comicListArgumentCaptor;
-  @Mock private Worker worker;
   @Mock private File file;
   @Mock private Utils utils;
   @Mock private List<LastReadDate> lastReadDateList;
@@ -72,6 +71,7 @@ public class LibraryServiceTest {
   @Mock private PageCacheService pageCacheService;
   @Mock private ObjectFactory<MoveComicsWorkerTask> moveComicsTaskObjectFactory;
   @Mock private MoveComicsWorkerTask moveComicsWorkerTask;
+  @Mock private TaskManager taskManager;
 
   private List<Comic> comicList = new ArrayList<>();
   private Comic comic1 = new Comic();
@@ -165,7 +165,7 @@ public class LibraryServiceTest {
     Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
         .setTargetArchiveType(TEST_ARCHIVE_TYPE);
     Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
-    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(convertComicsWorkerTask);
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(convertComicsWorkerTask);
   }
 
   @Test
@@ -246,12 +246,12 @@ public class LibraryServiceTest {
   @Test
   public void testMoveComics() {
     Mockito.when(moveComicsTaskObjectFactory.getObject()).thenReturn(moveComicsWorkerTask);
-    Mockito.doNothing().when(worker).addTasksToQueue(Mockito.any(WorkerTask.class));
+    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
     libraryService.moveComics(TEST_DELETE_PHYSICAL_FILES, TEST_DIRECTORY, TEST_RENAMING_RULES);
 
     Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setDirectory(TEST_DIRECTORY);
     Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setRenamingRule(TEST_RENAMING_RULES);
-    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(moveComicsWorkerTask);
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(moveComicsWorkerTask);
   }
 }

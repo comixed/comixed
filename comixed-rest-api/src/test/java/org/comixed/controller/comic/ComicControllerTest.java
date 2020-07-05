@@ -45,7 +45,7 @@ import org.comixed.service.comic.PageCacheService;
 import org.comixed.service.file.FileService;
 import org.comixed.task.model.DeleteComicsWorkerTask;
 import org.comixed.task.model.UndeleteComicsWorkerTask;
-import org.comixed.task.runner.Worker;
+import org.comixed.task.runner.TaskManager;
 import org.comixed.utils.FileTypeIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,7 +78,7 @@ public class ComicControllerTest {
   @Mock private ComicService comicService;
   @Mock private PageCacheService pageCacheService;
   @Mock private LastReadDatesRepository lastReadRepository;
-  @Mock private Worker worker;
+  @Mock private TaskManager taskManager;
   @Mock private List<Comic> comicList;
   @Mock private Comic comic;
   @Mock private Principal principal;
@@ -96,7 +96,7 @@ public class ComicControllerTest {
   @Mock private Page page;
   @Mock private LastReadDate lastReadDate;
 
-  private List<Comic> emptyComicList = new ArrayList<>();
+  private final List<Comic> emptyComicList = new ArrayList<>();
 
   @Test
   public void testGetComicsAddedSinceWithComicUpdate() throws ParseException, InterruptedException {
@@ -320,13 +320,13 @@ public class ComicControllerTest {
   public void testDeleteMultipleComics() {
     Mockito.when(this.deleteComicsTaskFactory.getObject()).thenReturn(this.deleteComicsTask);
     Mockito.doNothing().when(this.deleteComicsTask).setComicIds(Mockito.anyList());
-    Mockito.doNothing().when(this.worker).addTasksToQueue(Mockito.any());
+    Mockito.doNothing().when(this.taskManager).runTask(Mockito.any());
 
     assertTrue(controller.deleteMultipleComics(this.comicIds));
 
     Mockito.verify(this.deleteComicsTaskFactory, Mockito.times(1)).getObject();
     Mockito.verify(this.deleteComicsTask, Mockito.times(1)).setComicIds(this.comicIds);
-    Mockito.verify(this.worker, Mockito.times(1)).addTasksToQueue(this.deleteComicsTask);
+    Mockito.verify(this.taskManager, Mockito.times(1)).runTask(this.deleteComicsTask);
   }
 
   @Test
@@ -341,7 +341,7 @@ public class ComicControllerTest {
     assertTrue(result.isSuccess());
 
     Mockito.verify(undeleteComicsWorkerTask, Mockito.times(1)).setIds(this.comicIds);
-    Mockito.verify(worker, Mockito.times(1)).addTasksToQueue(undeleteComicsWorkerTask);
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(undeleteComicsWorkerTask);
   }
 
   @Test
@@ -540,7 +540,6 @@ public class ComicControllerTest {
     Mockito.verify(page, Mockito.times(1)).getContent();
     Mockito.verify(pageCacheService, Mockito.times(1))
         .saveByHash(TEST_PAGE_HASH, TEST_PAGE_CONTENT);
-    ;
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStreamCaptor.getValue());
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStreamCaptor.getValue());
   }
