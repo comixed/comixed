@@ -295,18 +295,25 @@ export class LibraryAdaptor {
       );
   }
 
-  convertComics(comics: Comic[], archiveType: string, renamePages: boolean) {
+  convertComics(
+    comics: Comic[],
+    archiveType: string,
+    renamePages: boolean,
+    deletePages: boolean
+  ) {
     this.logger.debug(
       'firing action to convert comics:',
       comics,
       archiveType,
-      renamePages
+      renamePages,
+      deletePages
     );
     this.store.dispatch(
       new LibraryConvertComics({
         comics: comics,
         archiveType: archiveType,
-        renamePages: renamePages
+        renamePages: renamePages,
+        deletePages: deletePages
       })
     );
   }

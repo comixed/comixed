@@ -45,5 +45,3 @@ export const GET_ISSUE_URL = `${API_ROOT_URL}/scraping/volumes/\${volume}/issues
 export const LOAD_METADATA_URL = `${API_ROOT_URL}/scraping/comics/\${comicId}/issue/\${issueId}`;
 
 export const PUBLISHER_IMPRINT_FORMAT = `\${imprint} (\${publisher})`;
-
-export const USER_PREFERENCE_SKIP_CACHE = 'user-preference.skip-cache';

@@ -13,9 +13,11 @@ import { ConfirmationService, SelectItem } from 'primeng/api';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
 import { Comic } from 'app/comics';
-
-export const TARGET_ARCHIVE_TYPE = 'conversion.target-archive-type';
-export const RENAME_PAGES_ON_CONVERT = 'conversion.rename-pages';
+import {
+  USER_PREFERENCE_DELETE_PAGES_ON_CONVERT,
+  USER_PREFERENCE_RENAME_PAGES_ON_CONVERT,
+  USER_PREFERENCE_TARGET_ARCHIVE_TYPE
+} from 'app/user/user.constants';
 
 @Component({
   selector: 'app-convert-comics-settings',
@@ -42,7 +44,8 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
   ) {
     this.conversionForm = this.formBuilder.group({
       archiveType: ['', Validators.required],
-      renamePages: ['', Validators.required]
+      renamePages: ['', Validators.required],
+      deletePages: ['', Validators.required]
     });
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -55,11 +58,19 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.conversionForm.controls['archiveType'].setValue(
-      this.authenticationAdaptor.getPreference(TARGET_ARCHIVE_TYPE) || 'CBZ'
+      this.authenticationAdaptor.getPreference(
+        USER_PREFERENCE_TARGET_ARCHIVE_TYPE
+      ) || 'CBZ'
     );
     this.conversionForm.controls['renamePages'].setValue(
-      (this.authenticationAdaptor.getPreference(RENAME_PAGES_ON_CONVERT) ||
-        '0') === '1'
+      (this.authenticationAdaptor.getPreference(
+        USER_PREFERENCE_RENAME_PAGES_ON_CONVERT
+      ) || 'false') === 'true'
+    );
+    this.conversionForm.controls['deletePages'].setValue(
+      (this.authenticationAdaptor.getPreference(
+        USER_PREFERENCE_DELETE_PAGES_ON_CONVERT
+      ) || 'false') === 'true'
     );
   }
 
@@ -104,22 +115,28 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
       accept: () => {
         const archiveType = this.conversionForm.controls['archiveType'].value;
         const renamePages = this.conversionForm.controls['renamePages'].value;
+        const deletePages = this.conversionForm.controls['deletePages'].value;
         this.logger.debug(
-          `saving user preferences: archive type=${archiveType} renamePages=${renamePages}`
+          `saving user preferences: archive type=${archiveType} renamePages=${renamePages} deletePages=${deletePages}`
         );
         this.authenticationAdaptor.setPreference(
-          TARGET_ARCHIVE_TYPE,
+          USER_PREFERENCE_TARGET_ARCHIVE_TYPE,
           archiveType
         );
         this.authenticationAdaptor.setPreference(
-          RENAME_PAGES_ON_CONVERT,
-          renamePages ? '1' : '0'
+          USER_PREFERENCE_RENAME_PAGES_ON_CONVERT,
+          `${renamePages}`
+        );
+        this.authenticationAdaptor.setPreference(
+          USER_PREFERENCE_DELETE_PAGES_ON_CONVERT,
+          `${deletePages}`
         );
         this.logger.info('calling adaptor to start conversion');
         this.libraryAdaptor.convertComics(
           this.selectedComics,
           archiveType,
-          renamePages
+          renamePages,
+          deletePages
         );
         this.selectionAdaptor.clearComicSelections();
         this.cancel.emit(true);

@@ -54,7 +54,7 @@ import {
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { ComicDetailsEditorComponent } from './comic-details-editor.component';
-import { USER_PREFERENCE_SKIP_CACHE } from 'app/comics/comics.constants';
+import { USER_PREFERENCE_SKIP_CACHE } from 'app/user/user.constants';
 
 describe('ComicDetailsEditorComponent', () => {
   const API_KEY = 'ABCDEF0123456789';

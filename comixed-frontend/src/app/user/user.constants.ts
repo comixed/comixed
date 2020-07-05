@@ -16,9 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from 'app/app.functions';
+import {API_ROOT_URL} from 'app/app.functions';
 
 export const GET_USERS_URL = `${API_ROOT_URL}/admin/users`;
 export const SAVE_NEW_USER_URL = `${API_ROOT_URL}/admin/users`;
 export const SAVE_USER_URL = `${API_ROOT_URL}/admin/users/\${id}`;
 export const DELETE_USER_URL = `${API_ROOT_URL}/admin/users/\${id}`;
+
+export const USER_PREFERENCE_TARGET_ARCHIVE_TYPE = 'user-preference.conversion-target-archive-type';
+export const USER_PREFERENCE_RENAME_PAGES_ON_CONVERT = 'user-preference.conversion-rename-pages';
+export const USER_PREFERENCE_DELETE_PAGES_ON_CONVERT = 'user-preference.conversion-delete-pages';
+export const USER_PREFERENCE_SKIP_CACHE = 'user-preference.skip-cache';

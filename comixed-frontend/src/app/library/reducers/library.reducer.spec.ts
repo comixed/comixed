@@ -374,7 +374,8 @@ describe('Library Reducer', () => {
         new LibraryConvertComics({
           comics: COMICS,
           archiveType: 'CBZ',
-          renamePages: true
+          renamePages: true,
+          deletePages: true
         })
       );
     });

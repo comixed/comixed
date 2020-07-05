@@ -82,18 +82,21 @@ export class LibraryService {
   convertComics(
     comics: Comic[],
     archiveType: string,
-    renamePages: boolean
+    renamePages: boolean,
+    deletePages: boolean
   ): Observable<any> {
     this.logger.debug(
       '[POST] http request: converting comics:',
       comics,
       archiveType,
-      renamePages
+      renamePages,
+      deletePages
     );
     return this.http.post(interpolate(CONVERT_COMICS_URL), {
       ids: comics.map(comic => comic.id),
       archiveType: archiveType,
-      renamePages: renamePages
+      renamePages: renamePages,
+      deletePages: deletePages
     } as ConvertComicsRequest);
   }
 
