@@ -35,7 +35,7 @@ import org.comixed.model.tasks.TaskType;
 import org.comixed.repositories.comic.ComicRepository;
 import org.comixed.service.task.TaskService;
 import org.comixed.task.model.QueueComicsWorkerTask;
-import org.comixed.task.runner.Worker;
+import org.comixed.task.runner.TaskManager;
 import org.comixed.utils.ComicFileUtils;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ import org.springframework.stereotype.Service;
 public class FileService {
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicRepository comicRepository;
-  @Autowired private Worker worker;
+  @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<QueueComicsWorkerTask> taskFactory;
   @Autowired private TaskService taskService;
 
@@ -153,7 +153,7 @@ public class FileService {
     task.setIgnoreMetadata(ignoreMetadata);
 
     log.debug("Adding import task to queue");
-    this.worker.addTasksToQueue(task);
+    this.taskManager.runTask(task);
 
     return filenames.length;
   }

@@ -73,7 +73,8 @@ public class MonitorTaskQueue extends AbstractWorkerTask implements Initializing
     try {
       Thread.sleep(1000L);
     } catch (InterruptedException error) {
-      throw new WorkerTaskException("monitor interrupted", error);
+      log.error("monitor task queue interrupted", error);
+      Thread.currentThread().interrupt();
     }
   }
 
