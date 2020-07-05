@@ -18,6 +18,8 @@
 
 package org.comixed.task.encoders;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
@@ -36,15 +38,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWorkerTask> {
-  public static final String RENAME_PAGES = "rename-pages";
   public static final String ARCHIVE_TYPE = "target-archive-type";
+  public static final String RENAME_PAGES = "rename-pages";
+  public static final String DELETE_PAGES = "delete-pages";
 
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<ConvertComicWorkerTask> convertComicWorkerTaskObjectFactory;
 
-  private Comic comic;
-  private ArchiveType archiveType;
-  private boolean renamePages;
+  @Getter @Setter private Comic comic;
+  @Getter @Setter private ArchiveType targetArchiveType;
+  @Getter @Setter private boolean renamePages;
+  @Getter @Setter private boolean deletePages;
 
   @Override
   public Task encode() {
@@ -53,8 +57,9 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
     Task result = new Task();
     result.setTaskType(TaskType.CONVERT_COMIC);
     result.setComic(this.comic);
-    result.setProperty(ARCHIVE_TYPE, this.archiveType.toString());
+    result.setProperty(ARCHIVE_TYPE, this.targetArchiveType.toString());
     result.setProperty(RENAME_PAGES, String.valueOf(this.renamePages));
+    result.setProperty(DELETE_PAGES, String.valueOf(this.deletePages));
 
     return result;
   }
@@ -66,27 +71,14 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
 
     ConvertComicWorkerTask result = this.convertComicWorkerTaskObjectFactory.getObject();
     result.setComic(task.getComic());
-    ArchiveType targetArchiveType = ArchiveType.forValue(task.getProperty(ARCHIVE_TYPE));
-    result.setTargetArchiveType(targetArchiveType);
+    ArchiveType archiveType = ArchiveType.forValue(task.getProperty(ARCHIVE_TYPE));
+    result.setTargetArchiveType(archiveType);
     result.setRenamePages(Boolean.valueOf(task.getProperty(RENAME_PAGES)));
+    result.setDeletePages(Boolean.valueOf(task.getProperty(DELETE_PAGES)));
 
     log.debug("Deleting persisted task");
     this.taskRepository.delete(task);
 
     return result;
-  }
-
-  public void setComic(final Comic comic) {
-    log.debug("Setting comic: id={}", comic.isMissing());
-    this.comic = comic;
-  }
-
-  public void setTargetArchiveType(ArchiveType archiveType) {
-    log.debug("Setting target archive type: {}", archiveType);
-    this.archiveType = archiveType;
-  }
-
-  public void setRenamePages(boolean renamePages) {
-    this.renamePages = renamePages;
   }
 }

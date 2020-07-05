@@ -19,6 +19,8 @@
 package org.comixed.task.model;
 
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.model.comic.Comic;
@@ -39,21 +41,10 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<ConvertComicTaskEncoder> saveComicTaskEncoderObjectFactory;
 
-  private List<Comic> comicList;
-  private ArchiveType archiveType;
-  private boolean renamePages;
-
-  public void setComicList(List<Comic> comicList) {
-    this.comicList = comicList;
-  }
-
-  public void setTargetArchiveType(ArchiveType archiveType) {
-    this.archiveType = archiveType;
-  }
-
-  public void setRenamePages(boolean renamePages) {
-    this.renamePages = renamePages;
-  }
+  @Getter @Setter private List<Comic> comicList;
+  @Getter @Setter private ArchiveType targetArchiveType;
+  @Getter @Setter private boolean renamePages;
+  @Getter @Setter private boolean deletePages;
 
   @Override
   protected String createDescription() {
@@ -75,8 +66,9 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
       ConvertComicTaskEncoder encoder = this.saveComicTaskEncoderObjectFactory.getObject();
 
       encoder.setComic(comic);
-      encoder.setTargetArchiveType(this.archiveType);
+      encoder.setTargetArchiveType(this.targetArchiveType);
       encoder.setRenamePages(this.renamePages);
+      encoder.setDeletePages(this.deletePages);
       try {
         Task task = encoder.encode();
         this.taskRepository.save(task);

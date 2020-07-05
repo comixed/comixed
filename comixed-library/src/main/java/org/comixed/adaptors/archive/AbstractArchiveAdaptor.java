@@ -232,7 +232,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     fileEntry.setFileName(filename);
     fileEntry.setFileSize(content.length);
     fileEntry.setFileType(this.fileTypeIdentifier.basetypeFor(new ByteArrayInputStream(content)));
-    comic.addFileEntry(comic.getFileEntries().size(), fileEntry);
+    comic.addFileEntry(fileEntry);
     log.debug(
         "Added file entry: filename={} size={} index={} type={} ",
         fileEntry.getFileName(),

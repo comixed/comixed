@@ -20,6 +20,8 @@ package org.comixed.task.model;
 
 import java.io.IOException;
 import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixed.adaptors.ArchiveType;
 import org.comixed.adaptors.archive.ArchiveAdaptor;
@@ -43,18 +45,20 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
 
-  private Comic comic;
-  private ArchiveType targetArchiveType;
-  private boolean renamePages;
+  @Getter @Setter private Comic comic;
+  @Getter @Setter private ArchiveType targetArchiveType;
+  @Getter @Setter private boolean renamePages;
+  @Getter @Setter private boolean deletePages;
 
   @Override
   protected String createDescription() {
     return String.format(
-        "Saving comic: id=%d source type=%s destination type=%s rename pages=%s",
+        "Saving comic: id=%d source type=%s destination type=%s %s%s",
         this.comic.getId(),
         this.comic.getArchiveType(),
         this.targetArchiveType,
-        this.renamePages ? "Yes" : "No");
+        this.renamePages ? "(renaming pages)" : "",
+        this.deletePages ? "(deleting pages)" : "");
   }
 
   @Override
@@ -64,6 +68,7 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
         "Saving comic: id={} target archive type={}", this.comic.getId(), this.targetArchiveType);
     ArchiveAdaptor targetArchiveAdaptor = this.targetArchiveType.getArchiveAdaptor();
     try {
+      this.comic.removeDeletedPages(this.deletePages);
       Comic result = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
       log.debug("Saving updated comic");
       result.setDateLastUpdated(new Date());
@@ -78,25 +83,5 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
     } catch (ArchiveAdaptorException | IOException error) {
       throw new WorkerTaskException("Failed to save comic", error);
     }
-  }
-
-  public Comic getComic() {
-    return this.comic;
-  }
-
-  public void setComic(Comic comic) {
-    this.comic = comic;
-  }
-
-  public ArchiveType getTargetArchiveType() {
-    return this.targetArchiveType;
-  }
-
-  public void setTargetArchiveType(ArchiveType archiveType) {
-    this.targetArchiveType = archiveType;
-  }
-
-  public void setRenamePages(boolean renamePages) {
-    this.renamePages = renamePages;
   }
 }

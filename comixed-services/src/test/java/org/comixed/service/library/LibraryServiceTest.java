@@ -51,6 +51,7 @@ public class LibraryServiceTest {
   private static final String TEST_DIRECTORY = "/home/comixedreader/Documents/comics";
   private static final String TEST_RENAMING_RULES =
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES [v$VOLUME] #$ISSUE $COVERDATE";
+  private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
@@ -152,7 +153,8 @@ public class LibraryServiceTest {
         .when(convertComicsWorkerTask)
         .setComicList(comicListArgumentCaptor.capture());
 
-    libraryService.convertComics(comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES);
+    libraryService.convertComics(
+        comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
 
     assertEquals(comicIdList.size(), comicListArgumentCaptor.getValue().size());
 

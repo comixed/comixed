@@ -34,28 +34,28 @@ public class ComicFileEntry {
   @JoinColumn(name = "comic_id")
   private Comic comic;
 
-  @Column(name = "file_number", nullable = false, updatable = false)
+  @Column(name = "file_number", nullable = false, updatable = true)
   @JsonProperty("fileNumber")
   @JsonView({
     View.ComicDetails.class,
   })
   private Integer fileNumber;
 
-  @Column(name = "file_name", nullable = false, updatable = false, length = 1024)
+  @Column(name = "file_name", nullable = false, length = 1024)
   @JsonProperty("fileName")
   @JsonView({
     View.ComicDetails.class,
   })
   private String fileName;
 
-  @Column(name = "file_size", nullable = false, updatable = false)
+  @Column(name = "file_size", nullable = false)
   @JsonProperty("fileSize")
   @JsonView({
     View.ComicDetails.class,
   })
   private Integer fileSize;
 
-  @Column(name = "file_type", nullable = false, updatable = false, length = 256)
+  @Column(name = "file_type", nullable = false, length = 256)
   @JsonProperty("fileType")
   @JsonView({
     View.ComicDetails.class,
