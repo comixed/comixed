@@ -35,17 +35,14 @@ public class TaskManager implements InitializingBean {
 
   public void runTask(final WorkerTask task) {
     this.taskExecutor.execute(
-        new Runnable() {
-          @Override
-          public void run() {
-            log.debug("Preparing to run task: {}", task.getDescription());
-            try {
-              task.startTask();
-            } catch (WorkerTaskException error) {
-              log.error("Error executing task: {}" + task.getDescription(), error);
-            } finally {
-              task.afterExecution();
-            }
+        () -> {
+          log.debug("Preparing to run task: {}", task.getDescription());
+          try {
+            task.startTask();
+          } catch (WorkerTaskException error) {
+            log.error("Error executing task: {}" + task.getDescription(), error);
+          } finally {
+            task.afterExecution();
           }
         });
   }
