@@ -148,6 +148,14 @@ export class NavigationBarComponent implements OnInit {
             routerLink: ['/admin/library']
           },
           {
+            label: this.translateService.instant(
+              'main-menu.item.admin.plugins'
+            ),
+            icon: 'fa fa-fw fa-plus-square',
+            visible: this.isAdmin,
+            routerLink: ['/admin/plugins']
+          },
+          {
             label: this.translateService.instant('main-menu.item.admin.import'),
             icon: 'fas fa-file-import',
             routerLink: ['/import'],

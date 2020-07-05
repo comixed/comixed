@@ -27,6 +27,7 @@
         "root": "Administrador",
         "users": "Usuarios",
         "library": "Biblioteca",
+        "plugins": "Plugins",
         "import": "Importar",
         "duplicate-pages": "Páginas duplicadas",
         "missing-comics": "Cómics que faltan",

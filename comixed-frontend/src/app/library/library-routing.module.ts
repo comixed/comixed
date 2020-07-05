@@ -25,6 +25,7 @@ import { MultiComicScrapingPageComponent } from 'app/library/pages/multi-comic-s
 import { AdminGuard, ReaderGuard } from 'app/user';
 import { LibraryAdminPageComponent } from 'app/library/pages/library-admin-page/library-admin-page.component';
 import { DuplicateComicsPageComponent } from 'app/library/pages/duplicate-comics-page/duplicate-comics-page.component';
+import { PluginsPageComponent } from 'app/library/pages/plugins-page/plugins-page.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,11 @@ const routes: Routes = [
   {
     path: 'admin/library',
     component: LibraryAdminPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'admin/plugins',
+    component: PluginsPageComponent,
     canActivate: [AdminGuard]
   }
 ];

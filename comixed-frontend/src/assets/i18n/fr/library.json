@@ -492,5 +492,8 @@
     "label": {
       "select-reading-list": "Select A Reading List"
     }
+  },
+  "plugins-page": {
+    "title": "Plugins"
   }
 }

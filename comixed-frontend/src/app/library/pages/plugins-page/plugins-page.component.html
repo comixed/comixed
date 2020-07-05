@@ -1,0 +1,30 @@
+<p-table [value]="plugins">
+  <ng-template pTemplate="colgroup">
+    <colgroup>
+      <col class="cx-table-column-large">
+      <col class="cx-table-column-large">
+      <col class="cx-table-column-medium">
+      <col class="cx-table-column-large">
+      <col>
+    </colgroup>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th id="cx-plugin-name">{{"plugins-page.table.header.name"|translate}}</th>
+      <th id="cx-plugin-language">{{"plugins-page.table.header.language"|translate}}</th>
+      <th id="cx-plugin-version">{{"plugins-page.table.header.version"|translate}}</th>
+      <th id="cx-plugin-author">{{"plugins-page.table.header.author"|translate}}</th>
+      <th id="cx-plugin-description">{{"plugins-page.table.header.description"|translate}}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body"
+               let-plugin>
+    <tr>
+      <td>{{plugin.name}}</td>
+      <td class="cx-table-column-align-center">{{plugin.language}}</td>
+      <td class="cx-table-column-align-center">{{plugin.version}}</td>
+      <td class="cx-table-column-align-center">{{plugin.author}}</td>
+      <td class="cx-no-wrap-text">{{plugin.description}}</td>
+    </tr>
+  </ng-template>
+</p-table>

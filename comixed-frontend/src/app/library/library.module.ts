@@ -85,6 +85,7 @@ import { AddComicsToReadingListComponent } from './components/add-comics-to-list
 import { PluginEffects } from './effects/plugin.effects';
 import { PluginAdaptor } from 'app/library/adaptors/plugin.adaptor';
 import * as fromPlugin from 'app/library/reducers/plugin.reducer';
+import { PluginsPageComponent } from './pages/plugins-page/plugins-page.component';
 
 @NgModule({
   imports: [
@@ -158,7 +159,8 @@ import * as fromPlugin from 'app/library/reducers/plugin.reducer';
     LibraryNavigationTreeComponent,
     DuplicateComicsPageComponent,
     ReadingListEditComponent,
-    AddComicsToReadingListComponent
+    AddComicsToReadingListComponent,
+    PluginsPageComponent
   ],
   providers: [
     LibraryService,
