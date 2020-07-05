@@ -505,5 +505,17 @@
     "label": {
       "select-reading-list": "Select A Reading List"
     }
+  },
+  "plugins-page": {
+    "title": "Plugins",
+    "table": {
+      "header": {
+        "name": "Name",
+        "language": "Language",
+        "version": "Version",
+        "author": "Author",
+        "description": "Description"
+      }
+    }
   }
 }

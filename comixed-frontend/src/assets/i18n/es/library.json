@@ -505,5 +505,8 @@
     "label": {
       "select-reading-list": "Seleccionar una lista de lectura"
     }
+  },
+  "plugins-page": {
+    "title": "Plugins"
   }
 }

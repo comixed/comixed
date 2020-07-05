@@ -409,6 +409,7 @@
       "admin": {
         "root": "Admin",
         "library-admin": "Biblioteca",
+        "plugins-page": "Plugins",
         "users-admin": "Usuarios",
         "import-page": "Importar cómics",
         "duplicates-page": "Páginas duplicadas",

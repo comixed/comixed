@@ -19,7 +19,7 @@
 import { PluginActions, PluginActionTypes } from '../actions/plugin.actions';
 import { PluginDescriptor } from 'app/library/models/plugin-descriptor';
 
-export const pluginFeatureKey = 'plugin_state';
+export const PLUGIN_FEATURE_KEY = 'plugin_state';
 
 export interface PluginState {
   loading: boolean;
