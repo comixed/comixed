@@ -268,7 +268,12 @@ export class LibraryEffects {
     tap(action => this.logger.debug('effect: convert comics:', action)),
     switchMap(action =>
       this.libraryService
-        .convertComics(action.comics, action.archiveType, action.renamePages)
+        .convertComics(
+          action.comics,
+          action.archiveType,
+          action.renamePages,
+          action.deletePages
+        )
         .pipe(
           tap(response => this.logger.debug('received response:', response)),
           tap(() =>

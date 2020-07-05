@@ -396,7 +396,8 @@
   "convert-comics-settings": {
     "label": {
       "archive-type": "Archive Type",
-      "rename-pages": "Rename Pages"
+      "rename-pages": "Rename Pages",
+      "delete-pages": "Remove Deleted And Blocked Pages"
     },
     "option": {
       "cbz": "CBZ (Zip)",

@@ -79,6 +79,7 @@ describe('LibraryAdaptor', () => {
   const IDS = [7, 17, 65, 1, 29, 71];
   const ARCHIVE_TYPE = 'CBZ';
   const RENAME_PAGES = true;
+  const DELETE_PAGES = false;
   const READING_LISTS = [READING_LIST_1, READING_LIST_2];
   const DIRECTORY = '/Users/comixedreader/Documents/comics';
   const RENAMING_RULE =
@@ -344,7 +345,7 @@ describe('LibraryAdaptor', () => {
 
   describe('converting comics', () => {
     beforeEach(() => {
-      adaptor.convertComics(COMICS, ARCHIVE_TYPE, RENAME_PAGES);
+      adaptor.convertComics(COMICS, ARCHIVE_TYPE, RENAME_PAGES, DELETE_PAGES);
     });
 
     it('fires an action', () => {
@@ -352,7 +353,8 @@ describe('LibraryAdaptor', () => {
         new LibraryConvertComics({
           comics: COMICS,
           archiveType: ARCHIVE_TYPE,
-          renamePages: RENAME_PAGES
+          renamePages: RENAME_PAGES,
+          deletePages: DELETE_PAGES
         })
       );
     });

@@ -35,7 +35,7 @@ import { AuthenticationAdaptor, COMICVINE_API_KEY } from 'app/user';
 import { LoggerService } from '@angular-ru/logger';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { USER_PREFERENCE_SKIP_CACHE } from 'app/comics/comics.constants';
+import { USER_PREFERENCE_SKIP_CACHE } from 'app/user/user.constants';
 
 @Component({
   selector: 'app-comic-details-editor',

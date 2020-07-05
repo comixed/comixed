@@ -360,7 +360,8 @@ describe('LibraryEffects', () => {
       const action = new LibraryConvertComics({
         comics: COMICS,
         archiveType: 'CBZ',
-        renamePages: true
+        renamePages: true,
+        deletePages: true
       });
       const outcome = new LibraryComicsConverting();
 
@@ -379,7 +380,8 @@ describe('LibraryEffects', () => {
       const action = new LibraryConvertComics({
         comics: COMICS,
         archiveType: 'CBZ',
-        renamePages: true
+        renamePages: true,
+        deletePages: true
       });
       const outcome = new LibraryConvertComicsFailed();
 
@@ -397,7 +399,8 @@ describe('LibraryEffects', () => {
       const action = new LibraryConvertComics({
         comics: COMICS,
         archiveType: 'CBZ',
-        renamePages: true
+        renamePages: true,
+        deletePages: true
       });
       const outcome = new LibraryConvertComicsFailed();
 

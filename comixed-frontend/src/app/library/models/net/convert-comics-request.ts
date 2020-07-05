@@ -20,4 +20,5 @@ export interface ConvertComicsRequest {
   ids: number[];
   archiveType: string;
   renamePages: boolean;
+  deletePages: boolean;
 }
