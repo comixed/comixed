@@ -38,4 +38,7 @@ public interface WorkerTask {
    * @return the description
    */
   String getDescription();
+
+  /** Called after the task has completed execution. */
+  void afterExecution();
 }
