@@ -33,7 +33,7 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           base_version: "0.7.0-0"
       - name: Create the release artifact
-        run: mvn package -Pci -DskipTests -Dassembly-name=${{ steps.apply_github_tag.outputs.tag_time }}
+        run: mvn package -Pci -DskipTests -Dassembly.name=${{ steps.apply_github_tag.outputs.tag_time }}
       - name: Publish the release artifact
         id: create_release
         uses: actions/create-release@master

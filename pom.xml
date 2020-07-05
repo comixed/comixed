@@ -15,6 +15,7 @@
   <name>comixed-parent</name>
   <url>http://github.com/mcpierce/comixed</url>
   <properties>
+    <assembly.name>local</assembly.name>
     <comixed.url>http://www.github.com/comixed/comixed</comixed.url>
     <comixed.version>0.7.0-0</comixed.version>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>

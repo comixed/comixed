@@ -29,7 +29,7 @@ jobs:
           due_tag: v0.7.0-0
           since_tag: v0.5.2-2
       - name: Build project
-        run: mvn package -Pci -DskipTests -Dassembly-name=RELEASE
+        run: mvn package -Pci -DskipTests -Dassembly.name=RELEASE
       - name: Create SHA file.
         run: (cd comixed-app/target/artifacts; shasum comixed-app-0.7.0-0-RELEASE.zip > comixed-app-0.7.0-0.RELEASE.zip-sha)
       - name: Upload release artifact
