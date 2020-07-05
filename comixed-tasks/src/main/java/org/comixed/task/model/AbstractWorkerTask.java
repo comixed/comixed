@@ -48,4 +48,7 @@ public abstract class AbstractWorkerTask implements WorkerTask {
    * @return the description
    */
   protected abstract String createDescription();
+
+  @Override
+  public void afterExecution() {}
 }
