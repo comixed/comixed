@@ -20,36 +20,44 @@ package org.comixed.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import org.comixed.adaptors.ArchiveType;
 
+/**
+ * <code>ConvertComicsRequest</code> provides the HTTP request contents when converting comics.
+ *
+ * @author Darryl L. Pierce
+ */
 public class ConvertComicsRequest {
+  @Getter
+  @Setter
   @JsonProperty("ids")
   private List<Long> comicIdList;
 
+  @Getter
+  @Setter
   @JsonProperty("archiveType")
   private ArchiveType archiveType;
 
+  @Getter
+  @Setter
   @JsonProperty("renamePages")
   private boolean renamePages;
 
-  public ConvertComicsRequest() {}
+  @Getter
+  @Setter
+  @JsonProperty("deletePages")
+  private boolean deletePages;
 
   public ConvertComicsRequest(
-      List<Long> comicIdList, ArchiveType archiveType, boolean renamePages) {
+      final List<Long> comicIdList,
+      final ArchiveType archiveType,
+      final boolean renamePages,
+      final Boolean deletePages) {
     this.comicIdList = comicIdList;
     this.archiveType = archiveType;
     this.renamePages = renamePages;
-  }
-
-  public List<Long> getComicIdList() {
-    return comicIdList;
-  }
-
-  public ArchiveType getArchiveType() {
-    return archiveType;
-  }
-
-  public boolean getRenamePages() {
-    return renamePages;
+    this.deletePages = deletePages;
   }
 }

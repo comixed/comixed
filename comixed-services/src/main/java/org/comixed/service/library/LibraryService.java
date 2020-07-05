@@ -110,13 +110,17 @@ public class LibraryService {
   }
 
   public void convertComics(
-      List<Long> comicIdList, ArchiveType targetArchiveType, boolean renamePages) {
+      final List<Long> comicIdList,
+      final ArchiveType targetArchiveType,
+      final boolean renamePages,
+      final boolean deletePages) {
     log.debug(
-        "Converting {} comic{} to {}{}",
+        "Converting {} comic{} to {}{}{}",
         comicIdList.size(),
         comicIdList.size() == 1 ? "" : "s",
         targetArchiveType,
-        renamePages ? " (renaming pages)" : "");
+        renamePages ? " (renaming pages)" : "",
+        deletePages ? " (deleting pages)" : "");
     List<Comic> comics = new ArrayList<>();
     for (long id : comicIdList) {
       comics.add(this.comicRepository.getById(id));
@@ -127,6 +131,7 @@ public class LibraryService {
     task.setComicList(comics);
     task.setTargetArchiveType(targetArchiveType);
     task.setRenamePages(renamePages);
+    task.setDeletePages(deletePages);
 
     log.debug("Queueing save comics worker task");
     this.worker.addTasksToQueue(task);

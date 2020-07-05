@@ -18,6 +18,8 @@
 
 package org.comixed.task.model;
 
+import static junit.framework.TestCase.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,6 +39,7 @@ public class ConvertComicsWorkerTaskTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
+  private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
 
   @InjectMocks private ConvertComicsWorkerTask task;
   @Mock private TaskRepository taskRepository;
@@ -49,6 +52,44 @@ public class ConvertComicsWorkerTaskTest {
   private List<Comic> comicList = new ArrayList<>();
 
   @Test
+  public void testSetComicList() {
+    task.setComicList(comicList);
+
+    assertSame(comicList, task.getComicList());
+  }
+
+  @Test
+  public void testSetTargetArchiveType() {
+    task.setTargetArchiveType(TEST_ARCHIVE_TYPE);
+
+    assertSame(task.getTargetArchiveType(), TEST_ARCHIVE_TYPE);
+  }
+
+  @Test
+  public void testSetRenamePages() {
+    task.setRenamePages(TEST_RENAME_PAGES);
+
+    assertEquals(TEST_RENAME_PAGES, task.isRenamePages());
+  }
+
+  @Test
+  public void testSetDeletePages() {
+    task.setDeletePages(TEST_DELETE_PAGES);
+
+    assertEquals(TEST_DELETE_PAGES, task.isDeletePages());
+  }
+
+  @Test
+  public void testGetDescription() {
+    task.setComicList(comicList);
+    task.setTargetArchiveType(TEST_ARCHIVE_TYPE);
+    task.setRenamePages(TEST_RENAME_PAGES);
+    task.setDeletePages(TEST_DELETE_PAGES);
+
+    assertNotNull(task.getDescription());
+  }
+
+  @Test
   public void testStartTask() throws WorkerTaskException {
     for (int index = 0; index < 25; index++) {
       comicList.add(comic);
@@ -56,6 +97,7 @@ public class ConvertComicsWorkerTaskTest {
     task.setComicList(comicList);
     task.setTargetArchiveType(TEST_ARCHIVE_TYPE);
     task.setRenamePages(TEST_RENAME_PAGES);
+    task.setDeletePages(TEST_DELETE_PAGES);
 
     Mockito.when(saveComicTaskEncoderObjectFactory.getObject()).thenReturn(convertComicTaskEncoder);
     Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(savedTask);
@@ -68,6 +110,8 @@ public class ConvertComicsWorkerTaskTest {
         .setTargetArchiveType(TEST_ARCHIVE_TYPE);
     Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
         .setRenamePages(TEST_RENAME_PAGES);
+    Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
+        .setDeletePages(TEST_DELETE_PAGES);
     Mockito.verify(taskRepository, Mockito.times(comicList.size()))
         .save(taskArgumentCaptor.getValue());
   }

@@ -18,6 +18,9 @@
 
 package org.comixed.task.model;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertSame;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
@@ -45,6 +48,7 @@ import org.springframework.beans.factory.ObjectFactory;
 class ConvertComicWorkerTaskTest {
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
+  private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
 
   @InjectMocks private ConvertComicWorkerTask task;
   @Mock private ComicRepository comicRepository;
@@ -61,10 +65,39 @@ class ConvertComicWorkerTaskTest {
   public ConvertComicWorkerTaskTest() {}
 
   @Test
+  public void testSetComic() {
+    task.setComic(sourceComic);
+
+    assertSame(sourceComic, task.getComic());
+  }
+
+  @Test
+  public void testSetTargetArchiveType() {
+    task.setTargetArchiveType(targetArchiveType);
+
+    assertSame(targetArchiveType, task.getTargetArchiveType());
+  }
+
+  @Test
+  public void testSetRenamePages() {
+    task.setRenamePages(TEST_RENAME_PAGES);
+
+    assertEquals(TEST_RENAME_PAGES, task.isRenamePages());
+  }
+
+  @Test
+  public void testSetDeletePages() {
+    task.setDeletePages(TEST_DELETE_PAGES);
+
+    assertEquals(TEST_DELETE_PAGES, task.isDeletePages());
+  }
+
+  @Test
   public void testExecute() throws IOException, ArchiveAdaptorException, WorkerTaskException {
     task.setComic(sourceComic);
     task.setTargetArchiveType(targetArchiveType);
     task.setRenamePages(TEST_RENAME_PAGES);
+    task.setDeletePages(TEST_DELETE_PAGES);
 
     Mockito.when(targetArchiveType.getArchiveAdaptor()).thenReturn(targetArchiveAdaptor);
     Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
@@ -77,6 +110,7 @@ class ConvertComicWorkerTaskTest {
 
     task.startTask();
 
+    Mockito.verify(sourceComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
     Mockito.verify(targetArchiveAdaptor, Mockito.times(1))
         .saveComic(sourceComic, TEST_RENAME_PAGES);
     Mockito.verify(savedComic, Mockito.times(1)).setDateLastUpdated(Mockito.any(Date.class));

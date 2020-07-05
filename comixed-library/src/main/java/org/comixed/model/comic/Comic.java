@@ -354,10 +354,27 @@ public class Comic {
     this.pages.add(index, page);
   }
 
-  public void addFileEntry(int index, ComicFileEntry fileEntry) {
+  public void addFileEntry(ComicFileEntry fileEntry) {
+    int index = this.fileEntries.size();
+    boolean replacement = false;
+    for (int idx = 0; idx < this.fileEntries.size(); idx++) {
+      if (this.fileEntries.get(idx).getFileName().equals(fileEntry.getFileName())) {
+        index = idx;
+        replacement = true;
+        break;
+      }
+    }
+
+    if (replacement) {
+      log.debug("Removing existing file entry: [{}] {}", index, fileEntry.getFileName());
+      final ComicFileEntry deadEntry = fileEntries.get(index);
+      deadEntry.setComic(null);
+      fileEntries.remove(deadEntry);
+    }
     log.debug("Adding file entry: [{}] {}", index, fileEntry.getFileName());
     fileEntry.setFileNumber(index);
-    this.fileEntries.add(fileEntry);
+    this.fileEntries.add(index, fileEntry);
+    fileEntry.setComic(this);
   }
 
   /**
@@ -1144,5 +1161,20 @@ public class Comic {
 
   public void setLastRead(Date lastRead) {
     this.lastRead = lastRead;
+  }
+
+  public void removeDeletedPages(final boolean deletePages) {
+    log.debug("Remove deleted pages? {}", deletePages);
+    if (deletePages) {
+      Page[] pageArray = this.pages.toArray(new Page[this.pages.size()]);
+      for (int index = 0; index < pageArray.length; index++) {
+        Page page = pageArray[index];
+        if (page.isMarkedDeleted() || page.isBlocked()) {
+          log.debug("Removing page: filename={} hash={}", page.getFilename(), page.getHash());
+          this.pages.remove(page);
+          page.setComic(null);
+        }
+      }
+    }
   }
 }
