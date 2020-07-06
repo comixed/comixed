@@ -239,7 +239,7 @@ public class ComicService {
     final Comic result = comicRecord.get();
     final List<Comic> next =
         this.comicRepository.findIssuesAfterComic(
-            result.getSeries(), result.getVolume(), result.getIssueNumber());
+            result.getSeries(), result.getVolume(), result.getIssueNumber(), result.getCoverDate());
     if (!next.isEmpty()) {
       int index = 0;
       Comic nextComic = null;
@@ -266,7 +266,7 @@ public class ComicService {
     }
     final List<Comic> prev =
         this.comicRepository.findIssuesBeforeComic(
-            result.getSeries(), result.getVolume(), result.getIssueNumber());
+            result.getSeries(), result.getVolume(), result.getIssueNumber(), result.getCoverDate());
     if (!prev.isEmpty()) {
       int index = prev.size() - 1;
       Comic prevComic = null;

@@ -89,18 +89,20 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   Comic getById(@Param("id") long id);
 
   @Query(
-      "SELECT c FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate <= (SELECT DISTINCT d.coverDate FROM Comic d WHERE d.series = :series AND d.volume = :volume AND d.issueNumber = :issueNumber) ORDER BY c.coverDate,c.issueNumber DESC")
+      "SELECT c FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate <= :coverDate ORDER BY c.coverDate,c.issueNumber DESC")
   List<Comic> findIssuesBeforeComic(
-      @Param("series") String series,
-      @Param("volume") String volume,
-      @Param("issueNumber") String issueNumber);
+      @Param("series") final String series,
+      @Param("volume") final String volume,
+      @Param("issueNumber") final String issueNumber,
+      @Param("coverDate") final Date coverDate);
 
   @Query(
-      "SELECT c FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate >= (SELECT DISTINCT d.coverDate FROM Comic d WHERE d.series = :series AND d.volume = :volume AND d.issueNumber = :issueNumber) ORDER BY c.coverDate,c.issueNumber ASC")
+      "SELECT c FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate >= :coverDate ORDER BY c.coverDate,c.issueNumber ASC")
   List<Comic> findIssuesAfterComic(
       @Param("series") String series,
       @Param("volume") String volume,
-      @Param("issueNumber") String issueNumber);
+      @Param("issueNumber") String issueNumber,
+      @Param("coverDate") Date coverDate);
 
   @Query("SELECT c FROM Comic c WHERE c.dateDeleted IS NOT NULL")
   List<Comic> findAllMarkedForDeletion();
