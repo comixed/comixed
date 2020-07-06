@@ -72,6 +72,7 @@ public class ComicServiceTest {
   private static final String TEST_SORTABLE_NAME = "Sortable Name";
   private static final ScanType TEST_SCAN_TYPE = new ScanType();
   private static final ComicFormat TEST_COMIC_FORMAT = new ComicFormat();
+  private static final Date TEST_COVER_DATE = new Date();
 
   @InjectMocks private ComicService comicService;
   @Mock private ComicRepository comicRepository;
@@ -110,6 +111,7 @@ public class ComicServiceTest {
     currentComic.setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
     currentComic.setId(TEST_CURRENT_COMIC_ID);
     currentComic.setCoverDate(new Date(System.currentTimeMillis()));
+    currentComic.setCoverDate(TEST_COVER_DATE);
     nextComic.setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
     nextComic.setId(TEST_NEXT_COMIC_ID);
     nextComic.setCoverDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
@@ -261,11 +263,17 @@ public class ComicServiceTest {
 
     Mockito.when(
             comicRepository.findIssuesBeforeComic(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(Date.class)))
         .thenReturn(previousComics);
     Mockito.when(
             comicRepository.findIssuesAfterComic(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(Date.class)))
         .thenReturn(nextComics);
 
     final Comic result = comicService.getComic(TEST_COMIC_ID);
@@ -277,9 +285,10 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
     Mockito.verify(comicRepository, Mockito.times(1))
-        .findIssuesBeforeComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER);
+        .findIssuesBeforeComic(
+            TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER, TEST_COVER_DATE);
     Mockito.verify(comicRepository, Mockito.times(1))
-        .findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER);
+        .findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER, TEST_COVER_DATE);
   }
 
   @Test
