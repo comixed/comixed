@@ -76,6 +76,10 @@ public class ComicRepositoryTest {
   private static final String TEST_ISSUE_WITH_PREV = "513";
   private static final Long TEST_COMIC_ID_WITH_DUPLICATES = 1020L;
   private static final String TEST_USER_EMAIL_NO_READ_COMIC = "comixedreader2@localhost";
+  private static final Date TEST_COVER_DATE_NO_NEXT = new Date(1490932800000L);
+  private static final Date TEST_COVER_DATE_WITH_NEXT = new Date(1485838800000L);
+  private static final Date TEST_COVER_DATE_NO_PREV = new Date(1425099600000L);
+  private static final Date TEST_COVER_DATE_WITH_PREV = new Date(1488258000000L);
 
   @Autowired private ComicRepository repository;
   @Autowired private PageTypeRepository pageTypeRepository;
@@ -486,7 +490,8 @@ public class ComicRepositoryTest {
   @Test
   public void testGetIssuesAfterComicWithNone() {
     final List<Comic> result =
-        this.repository.findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_NEXT);
+        this.repository.findIssuesAfterComic(
+            TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_NEXT, TEST_COVER_DATE_NO_NEXT);
 
     assertTrue(result.isEmpty());
   }
@@ -494,7 +499,8 @@ public class ComicRepositoryTest {
   @Test
   public void testGetIssuesAfterComic() {
     final List<Comic> result =
-        this.repository.findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NEXT);
+        this.repository.findIssuesAfterComic(
+            TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NEXT, TEST_COVER_DATE_WITH_NEXT);
 
     assertFalse(result.isEmpty());
     for (int index = 0; index < result.size(); index++) {
@@ -505,7 +511,8 @@ public class ComicRepositoryTest {
   @Test
   public void testGetIssuesBeforeComicNone() {
     final List<Comic> result =
-        this.repository.findIssuesBeforeComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_PREV);
+        this.repository.findIssuesBeforeComic(
+            TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_PREV, TEST_COVER_DATE_NO_PREV);
 
     assertTrue(result.isEmpty());
   }
@@ -513,7 +520,8 @@ public class ComicRepositoryTest {
   @Test
   public void testGetIssuesBeforeComic() {
     final List<Comic> result =
-        this.repository.findIssuesBeforeComic(TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_PREV);
+        this.repository.findIssuesBeforeComic(
+            TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_PREV, TEST_COVER_DATE_WITH_PREV);
 
     assertFalse(result.isEmpty());
     for (int index = 0; index < result.size(); index++) {
