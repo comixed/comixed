@@ -41,17 +41,17 @@ public class ReadingList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({View.ComicList.class, View.ReadingList.class})
+  @JsonView({View.ComicList.class, View.ReadingList.class, View.LibraryUpdate.class})
   private Long id;
 
   @Column(name = "name", length = 128)
   @JsonProperty("name")
-  @JsonView({View.ComicList.class, View.ReadingList.class})
+  @JsonView({View.ComicList.class, View.ReadingList.class, View.LibraryUpdate.class})
   private String name;
 
   @Column(name = "summary", length = 256, nullable = true)
   @JsonProperty("summary")
-  @JsonView({View.ComicList.class, View.ReadingList.class})
+  @JsonView({View.ComicList.class, View.ReadingList.class, View.LibraryUpdate.class})
   private String summary;
 
   @JsonProperty("owner")
