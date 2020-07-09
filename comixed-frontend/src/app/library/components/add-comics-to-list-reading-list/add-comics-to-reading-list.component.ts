@@ -60,14 +60,12 @@ export class AddComicsToReadingListComponent implements OnInit, OnDestroy {
     );
     this.readingListsSubscription = this.libraryAdaptor.lists$.subscribe(
       readingLists => {
-        this.readingListOptions = [{ label: '' } as SelectItem].concat(
-          readingLists.map(readingList => {
-            return {
-              label: readingList.name,
-              value: readingList
-            } as SelectItem;
-          })
-        );
+        this.readingListOptions = readingLists.map(readingList => {
+          return {
+            label: readingList.name,
+            value: readingList
+          } as SelectItem;
+        });
       }
     );
     this.selectedComicsSubscription = this.selectionAdaptor.comicSelection$.subscribe(
