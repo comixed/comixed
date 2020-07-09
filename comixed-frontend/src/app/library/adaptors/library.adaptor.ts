@@ -132,26 +132,30 @@ export class LibraryAdaptor {
           this._stories$.next(
             extractField(state.comics, CollectionType.STORIES)
           );
-          const readingLists = extractField(
-            state.comics,
-            CollectionType.READING_LISTS
+        }
+
+        // rebuild the reading lists
+        const readingLists = extractField(
+          state.comics,
+          CollectionType.READING_LISTS
+        );
+        // merge in any reading lists that have no comics
+        state.readingLists.forEach(readingList => {
+          const existing = readingLists.find(
+            entry => entry.name === readingList.name
           );
-          // merge in any reading lists that have no comics
-          state.readingLists.forEach(readingList => {
-            const existing = readingLists.find(
-              entry => entry.name === readingList.name
-            );
-            if (!existing) {
-              this.logger.debug('pushing reading list:', readingList);
-              readingLists.push({
-                name: readingList.name,
-                comics: [],
-                count: 0,
-                last_comic_added: 0,
-                type: CollectionType.READING_LISTS
-              } as ComicCollectionEntry);
-            }
-          });
+          if (!existing) {
+            this.logger.debug('pushing reading list:', readingList);
+            readingLists.push({
+              name: readingList.name,
+              comics: [],
+              count: 0,
+              last_comic_added: 0,
+              type: CollectionType.READING_LISTS
+            } as ComicCollectionEntry);
+          }
+        });
+        if (!_.isEqual(this._readingLists$.getValue(), readingLists)) {
           this._readingLists$.next(readingLists);
         }
         if (!_.isEqual(this._lists$.getValue(), state.readingLists)) {
