@@ -20,8 +20,28 @@
       <version>${comixed.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.comixed</groupId>
+      <artifactId>comixed-services</artifactId>
+      <version>${comixed.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>mockwebserver</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-handler</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
