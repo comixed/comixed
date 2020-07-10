@@ -16,61 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.scrapers.model;
+package org.comixed.scrapers.comicvine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <code>ScrapingIssue</code> represents a single issue.
+ * <code>ComicVineLocation</code> represents a single location.
  *
  * @author Darryl L. Pierce
  */
-public class ScrapingIssue {
-  @JsonProperty(value = "id")
-  @Getter
-  @Setter
-  private int id;
-
-  @JsonProperty(value = "coverDate")
-  @Getter
-  @Setter
-  private Date coverDate;
-
-  @JsonProperty("storeDate")
-  @Getter
-  @Setter
-  private String storeDate;
-
-  @JsonProperty(value = "coverUrl")
-  @Getter
-  @Setter
-  private String coverUrl;
-
-  @JsonProperty(value = "issueNumber")
-  @Getter
-  @Setter
-  private String issueNumber;
-
-  @JsonProperty(value = "description")
-  @Getter
-  @Setter
-  private String description;
-
-  @JsonProperty(value = "name")
+public class ComicVineLocation {
+  @JsonProperty("name")
   @Getter
   @Setter
   private String name;
-
-  @JsonProperty(value = "volumeName")
-  @Getter
-  @Setter
-  private String volumeName;
-
-  @JsonProperty(value = "volumeId")
-  @Getter
-  @Setter
-  private int volumeId;
 }

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,61 +16,65 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.scrapers.model;
+package org.comixed.scrapers.comicvine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <code>ScrapingIssue</code> represents a single issue.
+ * <code>ComciVineImage</code> represents the set of image URLs returned with a ComicVine query.
  *
  * @author Darryl L. Pierce
  */
-public class ScrapingIssue {
-  @JsonProperty(value = "id")
+public class ComicVineImage {
+  @JsonProperty("icon_url")
   @Getter
   @Setter
-  private int id;
+  private String iconUrl;
 
-  @JsonProperty(value = "coverDate")
+  @JsonProperty("medium_url")
   @Getter
   @Setter
-  private Date coverDate;
+  private String mediumUrl;
 
-  @JsonProperty("storeDate")
+  @JsonProperty("screen_url")
   @Getter
   @Setter
-  private String storeDate;
+  private String screenUrl;
 
-  @JsonProperty(value = "coverUrl")
+  @JsonProperty("screen_large_url")
   @Getter
   @Setter
-  private String coverUrl;
+  private String screenLargeUrl;
 
-  @JsonProperty(value = "issueNumber")
+  @JsonProperty("small_url")
   @Getter
   @Setter
-  private String issueNumber;
+  private String smallUrl;
 
-  @JsonProperty(value = "description")
+  @JsonProperty("super_url")
   @Getter
   @Setter
-  private String description;
+  private String superUrl;
 
-  @JsonProperty(value = "name")
+  @JsonProperty("thumb_url")
   @Getter
   @Setter
-  private String name;
+  private String thumbUrl;
 
-  @JsonProperty(value = "volumeName")
+  @JsonProperty("tiny_url")
   @Getter
   @Setter
-  private String volumeName;
+  private String tinyUrl;
 
-  @JsonProperty(value = "volumeId")
+  @JsonProperty("original_url")
   @Getter
   @Setter
-  private int volumeId;
+  private String originalUrl;
+
+  @JsonProperty("image_tags")
+  @Getter
+  @Setter
+  private String imageTags;
 }

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,61 +16,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.scrapers.model;
+package org.comixed.scrapers.comicvine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * <code>ScrapingIssue</code> represents a single issue.
+ * <code>AbstractComicVineQueryResponse</code> provides the common fields for all query results
+ * returned from ComicVine.
  *
  * @author Darryl L. Pierce
  */
-public class ScrapingIssue {
-  @JsonProperty(value = "id")
+public abstract class AbstractComicVineQueryResponse {
+  @JsonProperty("error")
   @Getter
-  @Setter
-  private int id;
+  private String error;
 
-  @JsonProperty(value = "coverDate")
+  @JsonProperty("limit")
   @Getter
-  @Setter
-  private Date coverDate;
+  private Integer limit;
 
-  @JsonProperty("storeDate")
+  @JsonProperty("offset")
   @Getter
-  @Setter
-  private String storeDate;
+  private Integer offset;
 
-  @JsonProperty(value = "coverUrl")
+  @JsonProperty("number_of_page_results")
   @Getter
-  @Setter
-  private String coverUrl;
+  private Integer numberOfPageResults;
 
-  @JsonProperty(value = "issueNumber")
+  @JsonProperty("number_of_total_results")
   @Getter
-  @Setter
-  private String issueNumber;
+  private Integer numberOfTotalResults;
 
-  @JsonProperty(value = "description")
+  @JsonProperty("status_code")
   @Getter
-  @Setter
-  private String description;
+  private Integer statusCode;
 
-  @JsonProperty(value = "name")
+  @JsonProperty("version")
   @Getter
-  @Setter
-  private String name;
-
-  @JsonProperty(value = "volumeName")
-  @Getter
-  @Setter
-  private String volumeName;
-
-  @JsonProperty(value = "volumeId")
-  @Getter
-  @Setter
-  private int volumeId;
+  private String version;
 }

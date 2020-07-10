@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,61 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.scrapers.model;
+package org.comixed.scrapers.comicvine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * <code>ScrapingIssue</code> represents a single issue.
+ * <code>ComicVinePublisher</code> represents a single publisher from ComicVine.
  *
  * @author Darryl L. Pierce
  */
-public class ScrapingIssue {
-  @JsonProperty(value = "id")
+public class ComicVinePublisher {
+  @JsonProperty("id")
   @Getter
-  @Setter
-  private int id;
+  private Integer id;
 
-  @JsonProperty(value = "coverDate")
+  @JsonProperty("name")
   @Getter
-  @Setter
-  private Date coverDate;
-
-  @JsonProperty("storeDate")
-  @Getter
-  @Setter
-  private String storeDate;
-
-  @JsonProperty(value = "coverUrl")
-  @Getter
-  @Setter
-  private String coverUrl;
-
-  @JsonProperty(value = "issueNumber")
-  @Getter
-  @Setter
-  private String issueNumber;
-
-  @JsonProperty(value = "description")
-  @Getter
-  @Setter
-  private String description;
-
-  @JsonProperty(value = "name")
-  @Getter
-  @Setter
   private String name;
 
-  @JsonProperty(value = "volumeName")
+  @JsonProperty("api_detail_url")
   @Getter
-  @Setter
-  private String volumeName;
+  private String detailUrl;
 
-  @JsonProperty(value = "volumeId")
+  @JsonProperty("description")
   @Getter
-  @Setter
-  private int volumeId;
+  private String description;
+
+  @JsonProperty("image")
+  @Getter
+  private ComicVineImage image = new ComicVineImage();
 }
