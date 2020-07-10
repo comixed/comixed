@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,52 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.scrapers.model;
+package org.comixed.scrapers.comicvine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * <code>ComicVolume</code> represents a comic volume.
+ * <code>ComicVineGetVolumeResponse</code> represents the payload of voluem request from ComicVine.
  *
  * @author Darryl L. Pierce
  */
-public class ScrapingVolume {
-  @JsonProperty(value = "id")
+public class ComicVineGetVolumeResponse {
+  @JsonProperty("results")
   @Getter
-  @Setter
-  private long id;
-
-  @JsonProperty(value = "name")
-  @Getter
-  @Setter
-  private String name;
-
-  @JsonProperty(value = "issueCount")
-  @Getter
-  @Setter
-  private int issueCount;
-
-  @JsonProperty(value = "imageUrl")
-  @Getter
-  @Setter
-  private String imageURL;
-
-  @JsonProperty(value = "startYear")
-  @Getter
-  @Setter
-  private String startYear;
-
-  @JsonProperty(value = "publisher")
-  @Getter
-  @Setter
-  private String publisher;
-
-  @JsonProperty(value = "issue")
-  @Getter
-  @Setter
-  private List<ScrapingIssue> comicIssue = new ArrayList<>();
+  private ComicVineVolume results = new ComicVineVolume();
 }

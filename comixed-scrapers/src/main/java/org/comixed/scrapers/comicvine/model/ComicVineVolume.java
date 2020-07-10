@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,61 +16,54 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.scrapers.model;
+package org.comixed.scrapers.comicvine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <code>ScrapingIssue</code> represents a single issue.
+ * <code>ComicVineVolume</code> represents a single volume.
  *
  * @author Darryl L. Pierce
  */
-public class ScrapingIssue {
-  @JsonProperty(value = "id")
+public class ComicVineVolume {
+  @JsonProperty("id")
   @Getter
   @Setter
-  private int id;
+  private Integer id;
 
-  @JsonProperty(value = "coverDate")
+  @JsonProperty("count_of_issues")
   @Getter
   @Setter
-  private Date coverDate;
+  private Integer issueCount;
 
-  @JsonProperty("storeDate")
-  @Getter
-  @Setter
-  private String storeDate;
-
-  @JsonProperty(value = "coverUrl")
-  @Getter
-  @Setter
-  private String coverUrl;
-
-  @JsonProperty(value = "issueNumber")
-  @Getter
-  @Setter
-  private String issueNumber;
-
-  @JsonProperty(value = "description")
-  @Getter
-  @Setter
-  private String description;
-
-  @JsonProperty(value = "name")
+  @JsonProperty("name")
   @Getter
   @Setter
   private String name;
 
-  @JsonProperty(value = "volumeName")
+  @JsonProperty("publisher")
   @Getter
   @Setter
-  private String volumeName;
+  private ComicVinePublisher publisher = new ComicVinePublisher();
 
-  @JsonProperty(value = "volumeId")
+  @JsonProperty("start_year")
   @Getter
   @Setter
-  private int volumeId;
+  private String startYear;
+
+  @JsonProperty("image")
+  @Getter
+  @Setter
+  private ComicVineImage image = new ComicVineImage();
+
+  @JsonProperty("api_detail_url")
+  @Getter
+  @Setter
+  private String detailUrl;
+
+  @JsonProperty("resource_type")
+  @Getter
+  private String resourceType;
 }
