@@ -19,26 +19,24 @@
 package org.comixed.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * <code>ComicScrapeRequest</code> hols the details for scraping a single comic issue.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
 public class ComicScrapeRequest {
   @JsonProperty("apiKey")
-  private String apiKey;
+  @Getter
+  @Setter
+  private final String apiKey;
 
   @JsonProperty("skipCache")
-  private Boolean skipCache;
-
-  public ComicScrapeRequest() {}
-
-  public ComicScrapeRequest(final String apiKey, final boolean skipCache) {
-    this.apiKey = apiKey;
-    this.skipCache = skipCache;
-  }
-
-  public String getApiKey() {
-    return apiKey;
-  }
-
-  public Boolean getSkipCache() {
-    return skipCache;
-  }
+  @Getter
+  @Setter
+  private final Boolean skipCache;
 }

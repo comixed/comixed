@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.scrapers;
-
-import org.springframework.stereotype.Component;
+package org.comixed.controller;
 
 /**
- * <code>ComicVineVolumesWebRequest</code> defines a concrete implementation of {@link
- * AbstractComicVineWebRequest} for retrieving a list of volumes.
+ * <code>RESTException</code> is throw when an error occurs during the processing of a REST API
+ * request.
  *
  * @author Darryl L. Pierce
  */
-@Component
-public class ComicVineVolumesWebRequest extends AbstractComicVineWebRequest {
-  public ComicVineVolumesWebRequest() {
-    super("volumes");
+public class RESTException extends Exception {
+  public RESTException(final String message, final Exception cause) {
+    super(message, cause);
   }
 }

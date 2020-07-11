@@ -21,12 +21,13 @@ package org.comixed.controller.scraping;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixed.controller.RESTException;
 import org.comixed.model.comic.Comic;
 import org.comixed.net.ComicScrapeRequest;
 import org.comixed.net.GetScrapingIssueRequest;
 import org.comixed.net.GetVolumesRequest;
-import org.comixed.scrapers.WebRequestException;
-import org.comixed.scrapers.comicvine.*;
+import org.comixed.scrapers.ScrapingException;
+import org.comixed.scrapers.comicvine.adaptors.ComicVineScrapingAdaptor;
 import org.comixed.scrapers.model.ScrapingIssue;
 import org.comixed.scrapers.model.ScrapingVolume;
 import org.comixed.service.comic.ComicException;
@@ -36,17 +37,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * <code>ComicVineScraperController</code> processes REST APIs relating to scraping comics.
+ *
+ * @author Darryl L. Pierce
+ */
 @RestController
 @RequestMapping("/api/scraping")
 @Log4j2
 public class ComicVineScraperController {
-  @Autowired private ComicVineQueryForVolumesAdaptor queryForVolumesAdaptor;
-  @Autowired private ComicVineQueryForIssueAdaptor queryForIssuesAdaptor;
-  @Autowired private ComicVineQueryForIssueDetailsAdaptor queryForIssueDetailsAdaptor;
-  @Autowired private ComicVineQueryForVolumeDetailsAdaptor queryForVolumeDetailsAdaptor;
-  @Autowired private ComicVineQueryForPublisherDetailsAdaptor queryForPublisherDetailsAdaptor;
+  @Autowired private ComicVineScrapingAdaptor scrapingAdaptor;
   @Autowired private ComicService comicService;
 
+  /**
+   * Retrieves the minimal {@link ScrapingIssue} for the specified issue of the given volume.
+   *
+   * @param volume the volume id
+   * @param request the request body
+   * @return the issue
+   * @throws RESTException if an error occurs
+   */
   @PostMapping(
       value = "/volumes/{volume}/issues",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -54,7 +64,7 @@ public class ComicVineScraperController {
   public ScrapingIssue queryForIssue(
       @PathVariable("volume") final Integer volume,
       @RequestBody() final GetScrapingIssueRequest request)
-      throws ComicVineAdaptorException {
+      throws RESTException {
     String issue = request.getIssueNumber();
     boolean skipCache = request.isSkipCache();
     String apiKey = request.getApiKey();
@@ -62,23 +72,52 @@ public class ComicVineScraperController {
     log.info(
         "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
-    return this.queryForIssuesAdaptor.execute(apiKey, volume, issue);
+    try {
+      return this.scrapingAdaptor.getIssue(apiKey, volume, issue, skipCache);
+    } catch (ScrapingException error) {
+      throw new RESTException("Failed to get single scraping issue", error);
+    }
   }
 
+  /**
+   * Retrieves the list of potential volumes for the given series name.
+   *
+   * @param request the reqwuest body
+   * @return the list of volumes
+   * @throws RESTException if an error occurs
+   */
   @PostMapping(
       value = "/volumes",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public List<ScrapingVolume> queryForVolumes(@RequestBody() final GetVolumesRequest request)
-      throws WebRequestException, ComicVineAdaptorException {
+      throws RESTException {
     String apiKey = request.getApiKey();
     boolean skipCache = request.getSkipCache();
     String series = request.getSeries();
     log.info("Getting volumes: series={}{}", series, skipCache ? " (Skipping cache)" : "");
 
-    return this.queryForVolumesAdaptor.execute(apiKey, series, skipCache);
+    try {
+      final List<ScrapingVolume> result =
+          this.scrapingAdaptor.getVolumes(apiKey, series, skipCache);
+
+      log.debug("Returning {} volume{}", result.size(), result.size() == 1 ? "" : "s");
+
+      return result;
+    } catch (ScrapingException error) {
+      throw new RESTException("Failed to get list of volumes", error);
+    }
   }
 
+  /**
+   * Scrapes a single {@link Comic} using the specified source issue.
+   *
+   * @param comicId the comic id
+   * @param issueId the issue id
+   * @param request the request body
+   * @return the scraped and updaed {@link Comic}
+   * @throws RESTException if an error occurs
+   */
   @PostMapping(
       value = "/comics/{comicId}/issue/{issueId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -88,25 +127,30 @@ public class ComicVineScraperController {
       @PathVariable("comicId") final Long comicId,
       @PathVariable("issueId") final String issueId,
       @RequestBody() final ComicScrapeRequest request)
-      throws ComicVineAdaptorException, ComicException {
+      throws RESTException {
     boolean skipCache = request.getSkipCache();
     String apiKey = request.getApiKey();
 
     log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);
 
     log.debug("Loading comic");
-    Comic comic = this.comicService.getComic(comicId);
+    Comic comic = null;
+    try {
+      comic = this.comicService.getComic(comicId);
+    } catch (ComicException error) {
+      throw new RESTException("Failed to load comic", error);
+    }
 
-    log.debug("Fetching details for comic");
-    String volumeId =
-        this.queryForIssueDetailsAdaptor.execute(apiKey, comicId, issueId, comic, skipCache);
-    log.debug("Fetching details for volume");
-    String publisherId =
-        this.queryForVolumeDetailsAdaptor.execute(apiKey, volumeId, comic, skipCache);
-    log.debug("Fetching publisher details");
-    this.queryForPublisherDetailsAdaptor.execute(apiKey, publisherId, comic, skipCache);
+    try {
+      log.debug("Scraping comic details");
+      this.scrapingAdaptor.scrapeComic(apiKey, issueId, skipCache, comic);
 
-    log.debug("Updating details for comic in database");
-    return this.comicService.save(comic);
+      log.debug("Saving updated comic");
+      this.comicService.save(comic);
+
+      return comic;
+    } catch (ScrapingException error) {
+      throw new RESTException("Failed to scrape comic", error);
+    }
   }
 }
