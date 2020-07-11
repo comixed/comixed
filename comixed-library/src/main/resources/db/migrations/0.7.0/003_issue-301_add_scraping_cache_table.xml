@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="003_issue-301_add_scraping_cache_table.xml"
+             author="mcpierce">
+    <!-- delete the old tables -->
+    <dropTable tableName="comic_vine_issues"/>
+    <dropTable tableName="comic_vine_publishers"/>
+    <dropTable tableName="comic_vine_volume_query_cache"/>
+    <dropTable tableName="comic_vine_volumes"/>
+
+    <!-- create the new tables -->
+    <createTable tableName="scraping_cache">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="source"
+              type="varchar(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="cache_key"
+              type="varchar(256)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="date_fetched"
+              type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="scraping_cache"
+                      columnName="id"
+                      columnDataType="bigint"
+                      incrementBy="1"
+                      startWith="1"/>
+
+    <addUniqueConstraint tableName="scraping_cache"
+                         columnNames="source,cache_key"/>
+
+    <createIndex tableName="scraping_cache"
+                 indexName="scraping_cache_source_key_idx">
+      <column name="source"/>
+      <column name="cache_key"/>
+    </createIndex>
+
+    <createTable tableName="scraping_cache_entries">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="scraping_cache_id"
+              type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="entry_number"
+              type="int">
+        <constraints nullable="false"/>
+      </column>
+      <column name="entry_value"
+              type="clob">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="scraping_cache_entries"
+                      columnName="id"
+                      columnDataType="bigint"
+                      incrementBy="1"
+                      startWith="1"/>
+
+    <addForeignKeyConstraint baseTableName="scraping_cache_entries"
+                             baseColumnNames="scraping_cache_id"
+                             constraintName="scraping_cache_entries_scraping_cache_fk"
+                             referencedTableName="scraping_cache"
+                             referencedColumnNames="id"/>
+
+    <addUniqueConstraint tableName="scraping_cache_entries"
+                         columnNames="scraping_cache_id,entry_number"/>
+  </changeSet>
+</databaseChangeLog>
