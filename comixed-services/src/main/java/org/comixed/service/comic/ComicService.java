@@ -225,6 +225,13 @@ public class ComicService {
     return this.comicRepository.save(comic);
   }
 
+  /**
+   * Retrieves a single comic by id. It is expected that this comic exists.
+   *
+   * @param id the comic id
+   * @return the comic
+   * @throws ComicException if the comic does not exist
+   */
   public Comic getComic(final long id) throws ComicException {
     log.debug("Getting comic: id={}", id);
 
