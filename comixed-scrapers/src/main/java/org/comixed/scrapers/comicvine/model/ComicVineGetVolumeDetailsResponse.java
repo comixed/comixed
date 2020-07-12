@@ -22,11 +22,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 /**
- * <code>ComicVineGetVolumeResponse</code> represents the payload of voluem request from ComicVine.
+ * <code>ComicVineGetVolumeDetailsResponse</code> represents the payload of voluem request from
+ * ComicVine.
  *
  * @author Darryl L. Pierce
  */
-public class ComicVineGetVolumeResponse {
+public class ComicVineGetVolumeDetailsResponse extends AbstractComicVineQueryResponse {
   @JsonProperty("results")
   @Getter
   private ComicVineVolume results = new ComicVineVolume();
