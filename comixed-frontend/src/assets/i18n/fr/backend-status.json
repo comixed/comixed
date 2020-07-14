@@ -32,9 +32,9 @@
     },
     "page-title": "Build Details",
     "table": {
-      "branch": "Source Branch",
-      "build-host": "Build Hostname",
-      "build-time": "Built On",
+      "branch": "Branche source",
+      "build-host": "Nom d'hôte du build",
+      "build-time": "Build réalisé le",
       "build-version": "Version",
       "commit-user": "Committer Name",
       "commit-id": "Commit Hash",
