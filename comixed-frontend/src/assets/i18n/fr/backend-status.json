@@ -2,23 +2,23 @@
   "build-details-effects": {
     "get-build-details": {
       "error": {
-        "details": "Failed to get the build details from the service..."
+        "details": "Échec de la récupération des détails du build depuis le service..."
       }
     }
   },
   "build-details-page": {
-    "title": "Build Details",
+    "title": "Détails du build",
     "table": {
-      "branch": "Source Branch",
-      "build-host": "Build Hostname",
-      "build-time": "Built On",
+      "branch": "Branche source",
+      "build-host": "Nom d'hôte du build",
+      "build-time": "Build réalisé le",
       "build-version": "Version",
-      "commit-user": "Committer Name",
-      "commit-id": "Commit Hash",
-      "commit-message": "Commit Message",
-      "commit-time": "Time Of Last Commit",
-      "dirty": "Built From Uncommitted Code?",
-      "remote-origin-url": "Remote Origin"
+      "commit-user": "Nom du Committer",
+      "commit-id": "Hash du Commit",
+      "commit-message": "Message du Commit",
+      "commit-time": "Date du dernier Commit",
+      "dirty": "Construit à partir d'un code non comité?",
+      "remote-origin-url": "url du \"Remote Origin\""
     }
   }
 }

@@ -2,319 +2,319 @@
   "comics-effects": {
     "get-scan-types": {
       "error": {
-        "detail": "Failed to load scan types."
+        "detail": "Échec du chargement des types de scan."
       }
     },
     "get-formats": {
       "error": {
-        "detail": "Failed to load comic formats."
+        "detail": "Échec du chargement des formats de bande dessinée."
       }
     },
     "get-page-types": {
       "error": {
-        "detail": "Failed to load page types."
+        "detail": "Échec du chargement des types de pages."
       }
     },
     "get-issue": {
       "error": {
-        "detail": "Failed to load comic id={id}."
+        "detail": "Échec du chargement de la bande dessinée id={id}."
       }
     },
     "save-page": {
       "success": {
-        "detail": "Page successfully updated."
+        "detail": "Page mise à jour avec succès."
       },
       "error": {
-        "detail": "Failed to save page changes."
+        "detail": "Échec de l'enregistrement des changements de page."
       }
     },
     "set-page-type": {
       "success": {
-        "detail": "Page type changed."
+        "detail": "Le type de page a changé."
       },
       "error": {
-        "detail": "Failed to change page type."
+        "detail": "Échec du changement de type de page."
       }
     },
     "set-page-hash-blocking": {
       "success": {
-        "detail": "Successfully {state, select, true{blocked} other{unblocked}} pages with the hash {hash}."
+        "detail": "{state, select, true{blocage} other{déblocage}} réussi des pages avec le hash {hash}.\n"
       },
       "error": {
-        "detail": "Failed to block pages with hash {hash}."
+        "detail": "Échec du blocage des pages avec le hash {hash}."
       }
     },
     "save-comic": {
       "success": {
-        "detail": "Comic successfully saved."
+        "detail": "Bande dessinée sauvée avec succès."
       },
       "error": {
-        "detail": "Failed to save comic."
+        "detail": "Échec de l'enregistrement de la bande dessinée."
       }
     },
     "clear-metadata": {
       "success": {
-        "detail": "Metadata successfully cleared."
+        "detail": "Les métadonnées ont été supprimées avec succès."
       },
       "error": {
-        "detail": "Failed to clear the metadata."
+        "detail": "Échec de la suppression des métadonnées."
       }
     },
     "delete-comic": {
       "success": {
-        "detail": "Comic is now marked for deletion"
+        "detail": "La bande dessinée est désormais marquée pour suppression."
       },
       "error": {
-        "detail": "Failed to mark comic for deletion."
+        "detail": "La bande dessinée n'a pu être marquée pour suppression."
       }
     },
     "restore-comic": {
       "success": {
-        "detail": "Comic restored successfully."
+        "detail": "Bande dessinée restaurée avec succès."
       },
       "error": {
-        "detail": "Failed to restore comic."
+        "detail": "Échec de la restauration de la bande dessinée."
       }
     },
     "scrape-comic": {
       "success": {
-        "detail": "Comic successfully scraped."
+        "detail": "Métadonnées de la bande dessinée obtenues avec succès."
       },
       "error": {
-        "detail": "Failed to scrape comic."
+        "detail": "Échec de la récupération des métadonnées."
       }
     },
     "mark-as-read": {
       "error": {
-        "detail": "Failed to change the last read date."
+        "detail": "Échec de la modification de la date de dernière lecture."
       }
     }
   },
   "comic-overview": {
     "save-comic": {
-      "header": "Save Changes",
-      "message": "Are you sure you want to save the changes made to this comic?"
+      "header": "Sauvegarde des changements",
+      "message": "Êtes-vous sûr de vouloir sauvegarder les modifications apportées à cette bande dessinée ?"
     },
     "show-file-entries": {
-      "title": "Archive File List"
+      "title": "Liste des fichiers"
     },
     "label": {
-      "filename": "The filename is <strong>{filename}</strong> on the host machine.",
-      "publisher": "Publisher",
-      "edit-publisher": "Edit the publisher...",
-      "series": "Series",
+      "filename": "Le nom du fichier est <strong>{filename}</strong> sur la machine hôte.",
+      "publisher": "Éditeur",
+      "edit-publisher": "Modifier l'éditeur",
+      "series": "Série",
       "volume": "Volume",
-      "cover-date": "Cover Date",
-      "issue-number": "Issue #",
-      "title": "Title",
-      "added-date": "Added to library on",
-      "last-read-date": "Last read on",
-      "page-count": "# Of Pages",
-      "file-entry-count": "# Of Files",
-      "comicvine-details-link": "ComicVine Details Page",
+      "cover-date": "Date de couverture",
+      "issue-number": "Numéro #",
+      "title": "Titre",
+      "added-date": "Ajouté à la bibliothèque le",
+      "last-read-date": "Dernière lecture le",
+      "page-count": "# de pages",
+      "file-entry-count": "# de fichiers",
+      "comicvine-details-link": "Page de détails de ComicVine",
       "format": "Format",
-      "scan-type": "Scan Type",
-      "sort-name": "Sort Name"
+      "scan-type": "Type de scan",
+      "sort-name": "Nom pour le tri"
     },
     "button": {
-      "clear-metadata": "Clear Metadata",
-      "delete-comic": "Delete Comic",
-      "undelete-comic": "Restore Comic"
+      "clear-metadata": "Supprimer les métadonnées",
+      "delete-comic": "Supprimer la bande dessinée",
+      "undelete-comic": "Restaurer la bande dessinée"
     },
     "title": {
-      "clear-metadata": "Clear Metadata For This Comic",
-      "delete-comic": "Delete This Comic"
+      "clear-metadata": "Supprimer les métadonnées de cette bande dessinée",
+      "delete-comic": "Supprimer cette bande dessinée"
     },
     "message": {
-      "clear-metadata": "Are you sure you want to clear the metadata for this comic?",
-      "delete-comic": "Are you sure you want to mark this comic for deletion?"
+      "clear-metadata": "Êtes-vous sûr de vouloir effacer les métadonnées de cette bande dessinée ?",
+      "delete-comic": "Êtes-vous sûr de vouloir marquer cette bande dessinée pour suppression ?"
     },
     "text": {
-      "volume-placeholder": "The year the first issue was publisher...",
-      "deleted-date": "(Deleted {date})",
-      "format-placeholder": "Click to set format...",
-      "scan-type-placeholder": "Click to set scan type...",
-      "sort-name-placeholder": "Click to set a sort name...",
-      "comicvine-details-link": "The details can be found <a href='http://comicvine.gamespot.com/issue/4000-{comicVineId}'>here</a>.",
-      "never-read": "Never"
+      "volume-placeholder": "L'année où le premier numéro a été publié...",
+      "deleted-date": "(Supprimé {date})",
+      "format-placeholder": "Cliquez pour définir le format...",
+      "scan-type-placeholder": "Cliquez pour définir le type de scan...",
+      "sort-name-placeholder": "Cliquez pour définir un nom pour le tri...",
+      "comicvine-details-link": "Les détails peuvent être trouvés <a href='http://comicvine.gamespot.com/issue/4000-{comicVineId}'>ici</a>.",
+      "never-read": "Jamais"
     },
     "scan-type": {
       "option": {
-        "select-one": "Clear scan type..."
+        "select-one": "Supprimer le type de scan..."
       }
     },
     "format": {
       "option": {
-        "select-one": "Clear format..."
+        "select-one": "Supprimer le format..."
       }
     },
     "tooltip": {
-      "delete-comic": "Mark comic for deletion.",
-      "undelete-comic": "Do not mark comic for deletion.",
-      "save-changes": "Save changes.",
-      "undo-changes": "Undo changes.",
-      "toggle-read": "{marked, select, true{Clear} other{Set}} the last read date."
+      "delete-comic": "Marquer la bande dessinée pour suppression.",
+      "undelete-comic": "Ne pas marquer la bande dessinée pour la suppression.",
+      "save-changes": "Sauvegarder les changements",
+      "undo-changes": "Annuler les changements.",
+      "toggle-read": "{marked, select, true{Annuler} other{Définir}} la date de dernière lecturethe last read date."
     }
   },
   "comic-story": {
     "label": {
-      "summary": "Summary",
+      "summary": "Résumé",
       "description": "Description",
-      "characters": "Characters",
-      "teams": "Teams",
-      "locations": "Locations",
-      "stories": "Story Arcs"
+      "characters": "Personnages",
+      "teams": "Équipes",
+      "locations": "Localisation",
+      "stories": "Arcs narratifs"
     },
     "text": {
-      "no-summary": "No summary for this comic...",
-      "no-description": "No description for this comic..."
+      "no-summary": "Pas de résumé pour cette bande dessinée...",
+      "no-description": "Pas de description pour cette bande dessinée..."
     }
   },
   "comic-pages": {
     "label": {
-      "filename": "Filename",
+      "filename": "Nom du fichier",
       "dimensions": "Dimensions"
     },
     "text": {
-      "marked-for-deletion": "This page is marked for deletion.",
-      "page-is-blocked": "This page is blocked."
+      "marked-for-deletion": "Cette page est marquée pour suppression.",
+      "page-is-blocked": "Cette page est bloquée."
     }
   },
   "comic-details-editor": {
     "label": {
-      "comicvine-api-key": "ComicVine API Key",
-      "series-name": "Series",
+      "comicvine-api-key": "Clé API de ComicVine",
+      "series-name": "Série",
       "volume-name": "Volume",
-      "issue-number": "Issue #"
+      "issue-number": "Numéro #"
     },
     "tooltip": {
-      "comicvine-api-key": "Click to edit...",
-      "save-api-key": "Save the API key.",
-      "reset-api-key": "Reset the API key."
+      "comicvine-api-key": "Cliquez pour modifier...",
+      "save-api-key": "Enregistrez la clé API.",
+      "reset-api-key": "Réinitialiser la clé API."
     },
     "option": {
-      "fetch-with-cache": "Fetch",
-      "fetch-skip-cache": "Fetch (Skip Cache)"
+      "fetch-with-cache": "Récupérer",
+      "fetch-skip-cache": "Récupérer (en ignorant le cache)"
     },
     "text": {
-      "comicvine-api-key-placeholder": "Click to change the API key..."
+      "comicvine-api-key-placeholder": "Cliquez pour changer la clé API ..."
     },
     "button": {
-      "save-changes": "Save Changes",
-      "fetch-volumes": "Fetch Volumes",
-      "reset-changes": "Reset Changes",
-      "skip-comic": "Skip"
+      "save-changes": "Enregistrer les changements",
+      "fetch-volumes": "Récupérer les volumes",
+      "reset-changes": "Annuler les changements",
+      "skip-comic": "Passer"
     },
     "save-changes": {
-      "header": "Save Changes",
-      "message": "Are you sure you want to save the changes made to this comic?"
+      "header": "Enregistrer les changements",
+      "message": "Êtes-vous sûr de vouloir conserver les modifications apportées à cette bande dessinée ?"
     },
     "issue-selected": {
-      "header": "Scrape This Issue?",
-      "message": "Are you sure you want to load this comic with the selected issue from ComicVine?"
+      "header": "Récupérer les métadonnées de ce numéro?",
+      "message": "Êtes-vous sûr de vouloir charger cette bande dessinée avec les informations du numéro sélectionné dans ComicVine ?"
     }
   },
   "comic-details-page": {
     "tab": {
-      "overview": "Overview",
-      "story": "Story",
-      "reader": "Reader",
-      "credits": "Credits",
+      "overview": "Vue d'ensemble",
+      "story": "Histoire",
+      "reader": "Lecteur",
+      "credits": "Crédits",
       "pages": "Pages",
       "comicvine": "ComicVine"
     },
     "text": {
-      "download-link": "Download This Comic"
+      "download-link": "Télécharger cette bande dessinée"
     }
   },
   "comic-list-item": {
     "label": {
-      "publisher": "Publisher",
-      "series": "Series",
+      "publisher": "Éditeur",
+      "series": "Série",
       "volume": "Volume",
-      "issue-number": "Issue #",
-      "cover-date": "Cover Date",
-      "added-date": "Added Date",
-      "no-title": "[no title]",
-      "unknown": "Unknown"
+      "issue-number": "Numéro #",
+      "cover-date": "Date de couverture",
+      "added-date": "Date d'ajout",
+      "no-title": "[pas de titre]",
+      "unknown": "Inconnu"
     },
     "text": {
-      "date-deleted": "Deleted {date}"
+      "date-deleted": "Supprimée {date}"
     }
   },
   "comic-cover": {
     "label": {
       "volume": "v{volume}",
-      "open-comic": "Open Comic"
+      "open-comic": "Ouvrir la bande dessinée"
     },
     "context-menu": {
-      "open-comic": "Open comic...",
-      "delete-comic": "Delete comic...",
-      "restore-comic": "Restore comic"
+      "open-comic": "Ouvrir la bande dessinée...",
+      "delete-comic": "Supprimer la bande dessinée...",
+      "restore-comic": "Restaurer la bande dessinée..."
     },
     "delete-comic": {
-      "header": "Delete Comic?",
-      "message": "Are you sure you want to delete {title}?"
+      "header": "Supprimer la bande dessinée ?",
+      "message": "Etes-vous sûr de vouloir supprimer {titre} ?"
     },
     "restore-comic": {
-      "header": "Restore Comic",
-      "message": "Are you sure you want to restore {title}?"
+      "header": "Restaurer la bande dessinée",
+      "message": "Êtes-vous sûr de vouloir restaurer la bande dessinée : {title} ?"
     }
   },
   "scraping-effects": {
     "get-volumes": {
       "success": {
-        "detail": "Found {count, plural, =1{one volume} other{# volumes}}."
+        "detail": "{count, plural, =1{one volume trouvé} other{# volumes trouvés}}."
       },
       "error": {
-        "detail": "Failed to get volumes for this comic."
+        "detail": "Échec de la récupération des volumes de cette bande dessinée."
       }
     },
     "get-issue": {
       "success": {
-        "detail": "Retrieved issue."
+        "detail": "Numéro récupéré."
       },
       "error": {
-        "detail": "Failed to get issue."
+        "detail": "Échec de la récupération du numéro."
       }
     },
     "load-metadata": {
       "success": {
-        "detail": "Comic successfully scraped."
+        "detail": "Métadonnées de la bande dessinée récupérées avec succès."
       },
       "error": {
-        "detail": "Failed to scrape comic."
+        "detail": "Échec de la récupération de la bande dessinée."
       }
     }
   },
   "volume-list": {
     "columns": {
-      "start-year": "Start Year",
-      "series": "Series",
-      "issues": "Issues",
-      "publisher": "Publisher"
+      "start-year": "Année de début",
+      "series": "Série",
+      "issues": "Numéros",
+      "publisher": "Éditeur"
     },
     "text": {
-      "search-placeholder": "Search volume titles..."
+      "search-placeholder": "Rechercher les titres des volumes..."
     },
     "button": {
-      "back": "Back",
-      "select": "Select"
+      "back": "Retour",
+      "select": "Sélectionner"
     },
     "option": {
-      "skip-cache": "Skip cache"
+      "skip-cache": "Ignorer le cache"
     }
   },
   "file-entry-list": {
     "table": {
       "header": {
         "file-number": "#",
-        "file-name": "Filename",
-        "file-size": "Size",
+        "file-name": "Nom du fichier",
+        "file-size": "Taille",
         "file-type": "Type"
       },
       "column": {
-        "file-size": "{size, plural, =1{One byte} other{# bytes}}"
+        "file-size": "{size, plural, =1{un byte} other{# bytes}}"
       }
     }
   }
