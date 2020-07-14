@@ -9,3 +9,7 @@
   color: $cx-toolbar-text-color;
   margin-right: 2px;
 }
+
+::ng-deep .ui-menu {
+  width: max-content;
+}

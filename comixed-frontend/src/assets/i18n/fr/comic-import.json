@@ -2,102 +2,102 @@
   "comic-import-effects": {
     "get-files": {
       "success": {
-        "detail": "Found {count, plural, =1{one comic file} other{# comic files}}."
+        "detail": "{count, plural, =1{un fichier de bande dessinée trouvée} other{# fichiers de bandes dessinées trouvées}}."
       },
       "failure": {
-        "detail": "Failed to find any files."
+        "detail": "Aucun fichier n'a pu être trouvé."
       }
     },
     "start-import": {
       "success": {
-        "detail": "Started the import of {count, plural, =1{one file} other{# files}}."
+        "detail": "DÉbut de l'import {count, plural, =1{du fichier} other{des # fichiers}}."
       },
       "error": {
-        "detail": "Failed to start the import process."
+        "detail": "Échec du démarrage du processus d'import"
       }
     }
   },
   "comic-file-list-toolbar": {
     "options": {
       "sort-field": {
-        "filename": "Sort by filename",
-        "size": "Sort by file size"
+        "filename": "Trier par nom de fichier",
+        "size": "Trier par taille de fichier"
       },
       "import": {
-        "with-metadata": "With Metadata",
-        "without-metadata": "Without Metadata"
+        "with-metadata": "Avec les métadonnées",
+        "without-metadata": "Sans les métadonnées"
       },
       "maximum": {
-        "unlimited": "All Comics",
-        "50-comics": "50 Comics",
-        "100-comics": "100 Comics",
-        "1000-comics": "1000 Comics"
+        "unlimited": "Toutes les bandes dessinées",
+        "50-comics": "50 bandes dessinées",
+        "100-comics": "100 bandes dessinées",
+        "1000-comics": "1000 bandes dessinées"
       }
     },
     "start-import": {
-      "header": "Import {count, plural, =1{One Comic File} other{# Comic Files}}?",
-      "message": "Import {count, plural, =1{one comic file} other{# comics files}} {withMetadata, select, true{with} other{without}} metadata?"
+      "header": "Importer {count, plural, =1{un fichier de bande dessinée} other{# fichiers de bandes dessinées}}?",
+      "message": "Importer {count, plural, =1{un fichier de bande dessinée} other{# ichiers de bandes dessinées}} {withMetadata, select, true{avec} other{sans}} métadonnées?"
     }
   },
   "comic-file-list-item": {
     "label": {
-      "filesize": "Filesize",
-      "filename": "Filename"
+      "filesize": "Taille des fichiers",
+      "filename": "Nom du fichier"
     }
   },
   "import-toolbar": {
     "text": {
-      "directory-placeholder": "Path to comics...",
-      "filter-placeholder": "Enter filename text..."
+      "directory-placeholder": "Chemin vers la bande dessinée...",
+      "filter-placeholder": "Entrez le nom du fichier..."
     },
     "button": {
-      "find": "Find Comics",
-      "select": "Select",
-      "import": "Import"
+      "find": "Trouver des bandes dessinées",
+      "select": "Sélectionner",
+      "import": "Importer"
     },
     "tooltip": {
-      "delete-blocked-pages": "Blocked pages will be marked for deletion.",
-      "allow-blocked-pages": "Blocked pages will not be marked for deletion.",
-      "start-import": "Import the selected comics.",
-      "list-layout": "Show comics as a list.",
-      "grid-layout": "Show comics as a grid."
+      "delete-blocked-pages": "Les pages bloquées seront marquées pour être supprimées.",
+      "allow-blocked-pages": "Les pages bloquées ne seront pas marquées pour être supprimées.",
+      "start-import": "Importer les bandes dessinées sélectionnées.",
+      "list-layout": "Afficher les bandes dessinées sous forme de liste.",
+      "grid-layout": "Afficher les bandes dessinées sous forme de grille."
     }
   },
   "import-page": {
-    "importing-title": "Importing Blocked While Processing {count, plural, =1{One Comic} other{# Comics}}...",
-    "title": "ComiXed: Import",
-    "title-no-comics": "No Comic Files Loaded",
-    "title-with-comics": "Selected {selectedCount} Of {comicCount, plural, =1{One Comic File} other{# Comic Files}}",
+    "importing-title": "Importation bloquée pendant le traitement {count, plural, =1{d'une bande dessinée} other{de # bandes dessinées}}...",
+    "title": "ComiXed: Importer",
+    "title-no-comics": "Aucun fichier de bande dessinée chargé",
+    "title-with-comics": "{selectedCount} {comicCount, plural, =1{sélectionné sur 1 fichier de brande dessinée } other{sélectionnés sur # fichiers de brande dessinée}}",
     "label": {
-      "filename": "Filename",
-      "file-size": "File Size",
-      "search-comic-names": "Search Comic Names"
+      "filename": "Nom du fichier",
+      "file-size": "Taille des fichiers",
+      "search-comic-names": "Recherche par nom de bandes dessinées"
     },
     "text": {
-      "blocked-pages-notice": "Blocked pages in those comics will be automatically marked as deleted...",
-      "search-by-series": "Search by series name..."
+      "blocked-pages-notice": "Les pages bloquées dans ces bandes dessinées seront automatiquement marquées comme supprimées...",
+      "search-by-series": "Recherche par nom de séries..."
     }
   },
   "comic-file-list": {
     "popup": {
-      "select-all": "Select {comic_count} comics",
-      "deselect-all": "Deselect {comic_count} comics",
+      "select-all": "Sélectionner {comic_count} bandes dessinées",
+      "deselect-all": "Déselectionner {comic_count} bandes dessinées",
       "import": {
-        "label": "Import {comic_count} Comics",
-        "with-metadata": "With Metadata...",
-        "without-metadata": "Without Metadata..."
+        "label": "Importer {comic_count} bandes dessinées",
+        "with-metadata": "Avec métadonnées...",
+        "without-metadata": "Sans métadonnées..."
       },
-      "start-import": "Import {comic_count} comics...",
-      "start-import-ignore-metadata": "Import {comic_count} comics, ignore meta-data..."
+      "start-import": "Importer {comic_count} bandes dessinées...",
+      "start-import-ignore-metadata": "Importer {comic_count} bandes dessinées en ignorant les métadonnées..."
     },
     "context-menu": {
-      "select-all": "Select all",
-      "deselect-all": "Deselect all"
+      "select-all": "Tout sélectionner",
+      "deselect-all": "Tout désélectionner"
     },
     "import": {
-      "header": "Import Comic Files",
-      "message": "Import {comic_count} comics?",
-      "message-ignore-metadata": "Import {comic_count} comic(s), ignoring all included metadata??"
+      "header": "Importer des fichiers de bande dessinée",
+      "message": "Importer {comic_count} bandes dessinées?",
+      "message-ignore-metadata": "Importer {comic_count} bande(s) dessinée(s), en ignorant toutes les métadonnées incluses ??"
     }
   }
 }
