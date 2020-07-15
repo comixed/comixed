@@ -56,7 +56,7 @@
       "success": {
         "detail": "Metadatos borrados correctamente."
       },
-      "error": { 
+      "error": {
         "detail": "Error al borrar los metadatos."
       }
     },
@@ -135,7 +135,7 @@
       "format-placeholder": "Click para elegir formato...",
       "scan-type-placeholder": "Click para elegir tipo de escaneado...",
       "sort-name-placeholder": "Click para elegir un nombre (de ordenación)...",
-      "comicvine-details-link": "Los detalles se encuentran <a href='http://comicvine.gamespot.com/issue/4000-{comicVineId}'>aquí</a>."
+      "comicvine-details-link": "Los detalles se encuentran <a href='http://comicvine.gamespot.com/issue/4000-{comicVineId}'>aquí</a>.",
       "never-read": "Never"
     },
     "scan-type": {
@@ -152,7 +152,7 @@
       "delete-comic": "Marcar el cómic para eliminación.",
       "undelete-comic": "Marcar el cómic para eliminación.",
       "save-changes": "Guardar cambios.",
-      "undo-changes": "Deshacer cambios."
+      "undo-changes": "Deshacer cambios.",
       "toggle-read": "{marked, select, true{Clear} other{Set}} the last read date."
     }
   },
@@ -258,7 +258,7 @@
     },
     "restore-comic": {
       "header": "Restore Comic",
-      "message":"Are you sure you want to restore {title}?"
+      "message": "Are you sure you want to restore {title}?"
     }
   },
   "scraping-effects": {
