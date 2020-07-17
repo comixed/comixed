@@ -8,5 +8,6 @@
 
   <include file="/db/migrations/0.7.0/001_issue-13_add_comic_file_entries_table.xml"/>
   <include file="/db/migrations/0.7.0/002_issue-356_add_created_date_to_last_read_date_table.xml"/>
+  <include file="/db/migrations/0.7.0/004_issue-204_add_task_audit_log.xml"/>
 
 </databaseChangeLog>
