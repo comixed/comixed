@@ -18,8 +18,11 @@
 
 package org.comixed.task.runner;
 
+import java.util.Date;
 import lombok.extern.log4j.Log4j2;
-import org.comixed.task.adaptors.TaskAdaptor;
+import org.comixed.model.tasks.TaskAuditLogEntry;
+import org.comixed.repositories.tasks.TaskAuditLogRepository;
+import org.comixed.task.model.MonitorTaskQueue;
 import org.comixed.task.model.WorkerTask;
 import org.comixed.task.model.WorkerTaskException;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,18 +34,32 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class TaskManager implements InitializingBean {
   @Autowired private ThreadPoolTaskExecutor taskExecutor;
-  @Autowired private TaskAdaptor taskAdaptor;
+  @Autowired private TaskAuditLogRepository auditLogRepository;
 
   public void runTask(final WorkerTask task) {
     this.taskExecutor.execute(
         () -> {
-          log.debug("Preparing to run task: {}", task.getDescription());
+          final String description = task.getDescription();
+          log.debug("Preparing to run task: {}", description);
+          final Date started = new Date();
+          boolean success = false;
           try {
             task.startTask();
+            success = true;
           } catch (WorkerTaskException error) {
-            log.error("Error executing task: {}" + task.getDescription(), error);
+            log.error("Error executing task: {}" + description, error);
           } finally {
             task.afterExecution();
+          }
+          final Date ended = new Date();
+          // do not log MonitorTaskQueue events
+          if (!(task instanceof MonitorTaskQueue)) {
+            final TaskAuditLogEntry entry = new TaskAuditLogEntry();
+            entry.setStartTime(started);
+            entry.setEndTime(ended);
+            entry.setSuccessful(success);
+            entry.setDescription(description);
+            TaskManager.this.auditLogRepository.save(entry);
           }
         });
   }
