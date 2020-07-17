@@ -18,8 +18,11 @@
 
 package org.comixed.task.runner;
 
-import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.*;
 
+import org.comixed.model.tasks.TaskAuditLogEntry;
+import org.comixed.repositories.tasks.TaskAuditLogRepository;
+import org.comixed.task.model.MonitorTaskQueue;
 import org.comixed.task.model.WorkerTask;
 import org.comixed.task.model.WorkerTaskException;
 import org.junit.Test;
@@ -30,14 +33,23 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TaskManagerTest {
+  private static final String TEST_DESCRIPTION = "The task description";
+
   @InjectMocks private TaskManager taskManager;
   @Mock private ThreadPoolTaskExecutor taskExecutor;
   @Mock private WorkerTask workerTask;
   @Captor private ArgumentCaptor<Runnable> runnableArgumentCaptor;
+  @Mock private TaskAuditLogRepository taskAuditLogRepository;
+  @Captor private ArgumentCaptor<TaskAuditLogEntry> logEntryArgumentCaptor;
+  @Mock private TaskAuditLogEntry logEntryRecord;
+  @Mock private MonitorTaskQueue monitorTaskQueue;
 
   @Test
   public void testRunTask() throws WorkerTaskException {
+    Mockito.when(workerTask.getDescription()).thenReturn(TEST_DESCRIPTION);
     Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
+    Mockito.when(taskAuditLogRepository.save(logEntryArgumentCaptor.capture()))
+        .thenReturn(logEntryRecord);
 
     taskManager.runTask(workerTask);
 
@@ -50,6 +62,64 @@ public class TaskManagerTest {
     Mockito.verify(workerTask, Mockito.times(1)).getDescription();
     Mockito.verify(workerTask, Mockito.times(1)).startTask();
     Mockito.verify(workerTask, Mockito.times(1)).afterExecution();
+
+    final TaskAuditLogEntry logEntry = logEntryArgumentCaptor.getValue();
+    assertNotNull(logEntry);
+    assertNotNull(logEntry.getStartTime());
+    assertNotNull(logEntry.getEndTime());
+    assertTrue(logEntry.getSuccessful());
+    assertEquals(TEST_DESCRIPTION, logEntry.getDescription());
+
+    Mockito.verify(taskAuditLogRepository, Mockito.times(1)).save(logEntry);
+  }
+
+  @Test
+  public void testRunTaskDoNotAuditMonitorTaskQueue() throws WorkerTaskException {
+    Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
+
+    taskManager.runTask(monitorTaskQueue);
+
+    assertNotNull(runnableArgumentCaptor.getValue());
+
+    Mockito.verify(taskExecutor, Mockito.times(1)).execute(runnableArgumentCaptor.getValue());
+
+    runnableArgumentCaptor.getValue().run();
+
+    Mockito.verify(monitorTaskQueue, Mockito.times(1)).getDescription();
+    Mockito.verify(monitorTaskQueue, Mockito.times(1)).startTask();
+    Mockito.verify(monitorTaskQueue, Mockito.times(1)).afterExecution();
+
+    Mockito.verify(taskAuditLogRepository, Mockito.never()).save(Mockito.any());
+  }
+
+  @Test
+  public void testRunTaskThrowsException() throws WorkerTaskException {
+    Mockito.when(workerTask.getDescription()).thenReturn(TEST_DESCRIPTION);
+    Mockito.doThrow(WorkerTaskException.class).when(workerTask).startTask();
+    Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
+    Mockito.when(taskAuditLogRepository.save(logEntryArgumentCaptor.capture()))
+        .thenReturn(logEntryRecord);
+
+    taskManager.runTask(workerTask);
+
+    assertNotNull(runnableArgumentCaptor.getValue());
+
+    Mockito.verify(taskExecutor, Mockito.times(1)).execute(runnableArgumentCaptor.getValue());
+
+    runnableArgumentCaptor.getValue().run();
+
+    Mockito.verify(workerTask, Mockito.times(1)).getDescription();
+    Mockito.verify(workerTask, Mockito.times(1)).startTask();
+    Mockito.verify(workerTask, Mockito.times(1)).afterExecution();
+
+    final TaskAuditLogEntry logEntry = logEntryArgumentCaptor.getValue();
+    assertNotNull(logEntry);
+    assertNotNull(logEntry.getStartTime());
+    assertNotNull(logEntry.getEndTime());
+    assertFalse(logEntry.getSuccessful());
+    assertEquals(TEST_DESCRIPTION, logEntry.getDescription());
+
+    Mockito.verify(taskAuditLogRepository, Mockito.times(1)).save(logEntry);
   }
 
   @Test
