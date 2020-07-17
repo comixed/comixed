@@ -211,7 +211,7 @@
     },
     "issue-selected": {
       "header": "¿Obtener metadatos para este número?",
-      "message": "¿Seguro que quieres asignar a este cómic el número seleccionado en ComicVine?"
+      "message": "Are you sure you want to replace this comic's details?"
     }
   },
   "comic-details-page": {
