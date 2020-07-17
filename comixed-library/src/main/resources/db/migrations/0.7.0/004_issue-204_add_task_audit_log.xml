@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="004_issue-204_add_task_audit_log.xml"
+             author="mcpierce">
+
+    <createTable tableName="task_audit_log">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="start_time"
+              type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="end_time"
+              type="timestamp"
+              defaultValueComputed="NOW()">
+        <constraints nullable="false"/>
+      </column>
+      <column name="successful"
+              type="boolean">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description"
+              type="varchar(2048)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="task_audit_log"
+                      columnName="id"
+                      columnDataType="bigint"
+                      incrementBy="1"
+                      startWith="1"/>
+
+    <createIndex tableName="task_audit_log"
+                 indexName="task_audit_log_start_time_idx">
+      <column name="start_time"/>
+    </createIndex>
+
+    <createIndex tableName="task_audit_log"
+                 indexName="task_audit_log_successful_idx">
+      <column name="successful"/>
+    </createIndex>
+
+  </changeSet>
+</databaseChangeLog>
