@@ -211,7 +211,7 @@
     },
     "issue-selected": {
       "header": "Récupérer les métadonnées de ce numéro?",
-      "message": "Êtes-vous sûr de vouloir charger cette bande dessinée avec les informations du numéro sélectionné dans ComicVine ?"
+      "message": "Are you sure you want to replace this comic's details?"
     }
   },
   "comic-details-page": {
