@@ -55,7 +55,7 @@ public class ComicVineScraperController {
    * @param volume the volume id
    * @param request the request body
    * @return the issue
-   * @throws RESTException if an error occurs
+   * @throws ComiXedControllerException if an error occurs
    */
   @PostMapping(
       value = "/volumes/{volume}/issues",
@@ -64,7 +64,7 @@ public class ComicVineScraperController {
   public ScrapingIssue queryForIssue(
       @PathVariable("volume") final Integer volume,
       @RequestBody() final GetScrapingIssueRequest request)
-      throws RESTException {
+      throws ComiXedControllerException {
     String issue = request.getIssueNumber();
     boolean skipCache = request.isSkipCache();
     String apiKey = request.getApiKey();
@@ -75,7 +75,7 @@ public class ComicVineScraperController {
     try {
       return this.scrapingAdaptor.getIssue(apiKey, volume, issue, skipCache);
     } catch (ScrapingException error) {
-      throw new RESTException("Failed to get single scraping issue", error);
+      throw new ComiXedControllerException("Failed to get single scraping issue", error);
     }
   }
 
@@ -84,14 +84,14 @@ public class ComicVineScraperController {
    *
    * @param request the reqwuest body
    * @return the list of volumes
-   * @throws RESTException if an error occurs
+   * @throws ComiXedControllerException if an error occurs
    */
   @PostMapping(
       value = "/volumes",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public List<ScrapingVolume> queryForVolumes(@RequestBody() final GetVolumesRequest request)
-      throws RESTException {
+      throws ComiXedControllerException {
     String apiKey = request.getApiKey();
     boolean skipCache = request.getSkipCache();
     String series = request.getSeries();
@@ -105,7 +105,7 @@ public class ComicVineScraperController {
 
       return result;
     } catch (ScrapingException error) {
-      throw new RESTException("Failed to get list of volumes", error);
+      throw new ComiXedControllerException("Failed to get list of volumes", error);
     }
   }
 
@@ -116,7 +116,7 @@ public class ComicVineScraperController {
    * @param issueId the issue id
    * @param request the request body
    * @return the scraped and updaed {@link Comic}
-   * @throws RESTException if an error occurs
+   * @throws ComiXedControllerException if an error occurs
    */
   @PostMapping(
       value = "/comics/{comicId}/issue/{issueId}",
@@ -127,7 +127,7 @@ public class ComicVineScraperController {
       @PathVariable("comicId") final Long comicId,
       @PathVariable("issueId") final String issueId,
       @RequestBody() final ComicScrapeRequest request)
-      throws RESTException {
+      throws ComiXedControllerException {
     boolean skipCache = request.getSkipCache();
     String apiKey = request.getApiKey();
 
@@ -138,7 +138,7 @@ public class ComicVineScraperController {
     try {
       comic = this.comicService.getComic(comicId);
     } catch (ComicException error) {
-      throw new RESTException("Failed to load comic", error);
+      throw new ComiXedControllerException("Failed to load comic", error);
     }
 
     try {
@@ -150,7 +150,7 @@ public class ComicVineScraperController {
 
       return comic;
     } catch (ScrapingException error) {
-      throw new RESTException("Failed to scrape comic", error);
+      throw new ComiXedControllerException("Failed to scrape comic", error);
     }
   }
 }

@@ -62,4 +62,7 @@ public class View {
 
   /** Used when viewing the list of plugins. */
   public interface PluginList {}
+
+  /** Uses when viewing the list of task audit log entries. */
+  public interface TaskAuditLogEntryList {}
 }

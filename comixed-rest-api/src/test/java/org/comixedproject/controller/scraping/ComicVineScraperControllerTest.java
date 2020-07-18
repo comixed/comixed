@@ -59,8 +59,9 @@ public class ComicVineScraperControllerTest {
   @Mock private ComicService comicService;
   @Mock private Comic comic;
 
-  @Test(expected = RESTException.class)
-  public void testQueryForVolumesAdaptorRaisesException() throws ScrapingException, RESTException {
+  @Test(expected = ComiXedControllerException.class)
+  public void testQueryForVolumesAdaptorRaisesException()
+      throws ScrapingException, ComiXedControllerException {
     Mockito.when(
             scrapingAdaptor.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -75,7 +76,7 @@ public class ComicVineScraperControllerTest {
   }
 
   @Test
-  public void testQueryForVolumes() throws RESTException, ScrapingException {
+  public void testQueryForVolumes() throws ComiXedControllerException, ScrapingException {
     Mockito.when(
             scrapingAdaptor.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -91,7 +92,7 @@ public class ComicVineScraperControllerTest {
   }
 
   @Test
-  public void testQueryForVolumesSkipCache() throws ScrapingException, RESTException {
+  public void testQueryForVolumesSkipCache() throws ScrapingException, ComiXedControllerException {
     Mockito.when(
             scrapingAdaptor.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -106,8 +107,9 @@ public class ComicVineScraperControllerTest {
         .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, true);
   }
 
-  @Test(expected = RESTException.class)
-  public void testQueryForIssueAdaptorRaisesException() throws ScrapingException, RESTException {
+  @Test(expected = ComiXedControllerException.class)
+  public void testQueryForIssueAdaptorRaisesException()
+      throws ScrapingException, ComiXedControllerException {
     Mockito.when(
             scrapingAdaptor.getIssue(
                 Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -124,7 +126,7 @@ public class ComicVineScraperControllerTest {
   }
 
   @Test
-  public void testQueryForIssue() throws ScrapingException, RESTException {
+  public void testQueryForIssue() throws ScrapingException, ComiXedControllerException {
     Mockito.when(
             scrapingAdaptor.getIssue(
                 Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -142,8 +144,9 @@ public class ComicVineScraperControllerTest {
         .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
   }
 
-  @Test(expected = RESTException.class)
-  public void testScrapeAndSaveComicDetailsNoSuchComic() throws ComicException, RESTException {
+  @Test(expected = ComiXedControllerException.class)
+  public void testScrapeAndSaveComicDetailsNoSuchComic()
+      throws ComicException, ComiXedControllerException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
     try {
@@ -154,9 +157,9 @@ public class ComicVineScraperControllerTest {
     }
   }
 
-  @Test(expected = RESTException.class)
+  @Test(expected = ComiXedControllerException.class)
   public void testScrapeAndSaveComicDetailsScrapingAdaptorRaisesException()
-      throws ComicException, ScrapingException, RESTException {
+      throws ComicException, ScrapingException, ComiXedControllerException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
     Mockito.doThrow(ScrapingException.class)
         .when(scrapingAdaptor)
@@ -177,7 +180,7 @@ public class ComicVineScraperControllerTest {
 
   @Test
   public void testScrapeAndSaveComicDetails()
-      throws ComicException, ScrapingException, RESTException {
+      throws ComicException, ScrapingException, ComiXedControllerException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
 
     Comic result =

@@ -18,11 +18,15 @@
 
 package org.comixedproject.model.tasks;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.comixed.views.View;
 
 /**
  * <code>TaskAuditLogEntry</code> represents a single entry in the task audit log table.
@@ -41,21 +45,31 @@ public class TaskAuditLogEntry {
   @Column(name = "start_time", nullable = false, updatable = false)
   @Getter
   @Setter
+  @JsonProperty("startTime")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonView(View.TaskAuditLogEntryList.class)
   private Date startTime = new Date();
 
   @Column(name = "end_time", nullable = false, updatable = false)
   @Getter
   @Setter
+  @JsonProperty("endTime")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonView(View.TaskAuditLogEntryList.class)
   private Date endTime = new Date();
 
   @Column(name = "successful", nullable = false, updatable = false)
   @Getter
   @Setter
+  @JsonProperty("successful")
+  @JsonView(View.TaskAuditLogEntryList.class)
   private Boolean successful;
 
   @Column(name = "description", nullable = false, updatable = false, length = 2048)
   @Getter
   @Setter
+  @JsonProperty("description")
+  @JsonView(View.TaskAuditLogEntryList.class)
   private String description;
 
   @Override
