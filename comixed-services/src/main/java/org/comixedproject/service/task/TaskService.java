@@ -18,6 +18,8 @@
 
 package org.comixedproject.service.task;
 
+import java.util.Date;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.repositories.tasks.TaskRepository;
@@ -32,7 +34,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class TaskService {
+  private static final Object SEMAPHORE = new Object();
+
   @Autowired private TaskRepository taskRepository;
+  @Autowired private TaskAuditLogRepository taskAuditLogRepository;
 
   /**
    * Returns the current number of records with the given task type.
@@ -43,6 +48,41 @@ public class TaskService {
   public int getTaskCount(final TaskType taskType) {
     final int result = this.taskRepository.getTaskCount(taskType);
     log.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", taskType);
+    return result;
+  }
+
+  /**
+   * Return all log entries after the cutoff timestamp.
+   *
+   * @param cutoff the cutoff
+   * @return the log entries
+   * @throws ComiXedServiceException if an error occurs
+   */
+  public List<TaskAuditLogEntry> getAuditLogEntriesAfter(final Date cutoff)
+      throws ComiXedServiceException {
+    log.debug("Finding task audit log entries aftrr date: {}", cutoff);
+
+    List<TaskAuditLogEntry> result = null;
+    boolean done = false;
+    long started = System.currentTimeMillis();
+    while (!done) {
+      result = this.taskAuditLogRepository.findAllByStartTimeGreaterThan(cutoff);
+
+      if (result.isEmpty()) {
+        log.debug("Waiting for task audit log entries");
+        synchronized (SEMAPHORE) {
+          try {
+            SEMAPHORE.wait(1000L);
+          } catch (InterruptedException error) {
+            log.debug("Interrupted while getting task audit log entries", error);
+            Thread.currentThread().interrupt();
+          }
+        }
+      }
+
+      done = !result.isEmpty() || (System.currentTimeMillis() - started > 60000);
+    }
+
     return result;
   }
 }

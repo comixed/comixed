@@ -18,7 +18,7 @@
 
 package org.comixedproject.service.task;
 
-import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.repositories.tasks.TaskRepository;
@@ -32,17 +32,35 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class TaskServiceTest {
   private static final int TEST_TASK_COUNT = 279;
+  private static final Date TEST_AUDIT_LOG_CUTOFF_DATE = new Date();
 
-  @InjectMocks private TaskService service;
+  @InjectMocks private TaskService taskService;
   @Mock private TaskRepository taskRepository;
+  @Mock private TaskAuditLogRepository taskAuditLogRepository;
+  @Mock private List<TaskAuditLogEntry> auditLogEntryList;
 
   @Test
   public void testGetTaskCount() {
     Mockito.when(taskRepository.getTaskCount(Mockito.any(TaskType.class)))
         .thenReturn(TEST_TASK_COUNT);
 
-    final int result = service.getTaskCount(TaskType.ADD_COMIC);
+    final int result = taskService.getTaskCount(TaskType.ADD_COMIC);
 
     assertEquals(TEST_TASK_COUNT, result);
+  }
+
+  @Test
+  public void testGetAuditLogEntriesAfter() throws ComiXedServiceException {
+    Mockito.when(taskAuditLogRepository.findAllByStartTimeGreaterThan(Mockito.any(Date.class)))
+        .thenReturn(auditLogEntryList);
+
+    final List<TaskAuditLogEntry> result =
+        taskService.getAuditLogEntriesAfter(TEST_AUDIT_LOG_CUTOFF_DATE);
+
+    assertNotNull(result);
+    assertSame(auditLogEntryList, result);
+
+    Mockito.verify(taskAuditLogRepository, Mockito.times(1))
+        .findAllByStartTimeGreaterThan(TEST_AUDIT_LOG_CUTOFF_DATE);
   }
 }
