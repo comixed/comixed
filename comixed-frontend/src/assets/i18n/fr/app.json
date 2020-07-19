@@ -418,7 +418,8 @@
         "users-admin": "Utilisateurs",
         "import-page": "Importer des bandes dessinées",
         "duplicates-page": "Page dupliquées",
-        "missing-comics": "Bandes dessinées manquantes"
+        "missing-comics": "Bandes dessinées manquantes",
+        "task-audit-log": "Task Log"
       }
     }
   },

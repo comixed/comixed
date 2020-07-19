@@ -19,11 +19,18 @@
 import { RouterModule, Routes } from '@angular/router';
 import { BuildDetailsPageComponent } from 'app/backend-status/pages/build-details-page/build-details-page.component';
 import { NgModule } from '@angular/core';
+import { TaskAuditLogPageComponent } from 'app/backend-status/pages/task-audit-log-page/task-audit-log-page.component';
+import { AdminGuard } from 'app/user';
 
 const routes: Routes = [
   {
     path: 'build/details',
     component: BuildDetailsPageComponent
+  },
+  {
+    path: 'admin/tasks/logs',
+    component: TaskAuditLogPageComponent,
+    canActivate: [AdminGuard]
   }
 ];
 

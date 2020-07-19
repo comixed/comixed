@@ -1,0 +1,29 @@
+<h2>{{"task-audit-log-page.title"|translate}}</h2>
+<p-table [value]="entries"
+         [rows]="rows"
+         [paginator]="true"
+         paginatorPosition="both">
+  <ng-template pTemplate="colgroup">
+    <col class="cx-table-column-medium"/>
+    <col class="cx-table-column-medium"/>
+    <col class="cx-table-column-medium"/>
+    <col/>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th id="task-start-time">{{"task-audit-log-page.table.header.start-time"|translate}}</th>
+      <th id="task-end-time">{{"task-audit-log-page.table.header.end-time"|translate}}</th>
+      <th id="task-successful">{{"task-audit-log-page.table.header.successful"|translate}}</th>
+      <th id="task-description">{{"task-audit-log-page.table.header.description"|translate}}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body"
+               let-entry>
+    <tr>
+      <td class="cx-table-column-align-center">{{entry.startTime|date:'medium'}}</td>
+      <td class="cx-table-column-align-center">{{entry.endTime|date:'medium'}}</td>
+      <td class="cx-table-column-align-center">{{entry.successful}}</td>
+      <td class="cx-no-wrap-text">{{entry.description}}</td>
+    </tr>
+  </ng-template>
+</p-table>

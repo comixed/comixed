@@ -413,7 +413,8 @@
         "users-admin": "Usuarios",
         "import-page": "Importar cómics",
         "duplicates-page": "Páginas duplicadas",
-        "missing-comics": "Cómics no encontrados"
+        "missing-comics": "Cómics no encontrados",
+        "task-audit-log": "Task Log"
       }
     }
   },
