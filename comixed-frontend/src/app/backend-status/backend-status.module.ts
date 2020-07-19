@@ -31,9 +31,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TaskAuditLogEffects } from 'app/backend-status/effects/task-audit-log.effects';
 import { TaskAuditLogPageComponent } from './pages/task-audit-log-page/task-audit-log-page.component';
 import { TaskAuditLogAdaptor } from 'app/backend-status/adaptors/task-audit-log.adaptor';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
-  declarations: [BuildDetailsPageComponent],
+  declarations: [BuildDetailsPageComponent, TaskAuditLogPageComponent],
   imports: [
     CommonModule,
     BackendStatusRoutingModule,
@@ -46,7 +47,8 @@ import { TaskAuditLogAdaptor } from 'app/backend-status/adaptors/task-audit-log.
       fromTaskAuditLog.TASK_AUDIT_LOG_FEATURE_KEY,
       fromTaskAuditLog.reducer
     ),
-    EffectsModule.forFeature([BuildDetailsEffects, TaskAuditLogEffects])
+    EffectsModule.forFeature([BuildDetailsEffects, TaskAuditLogEffects]),
+    TableModule
   ],
   exports: [CommonModule],
   providers: [BuildDetailsService, BuildDetailsAdaptor, TaskAuditLogAdaptor]

@@ -27,5 +27,16 @@
         "detail": "Failed to get task audit log entries."
       }
     }
+  },
+  "task-audit-log-page": {
+    "title": "Task Logs",
+    "table": {
+      "header": {
+        "start-time": "Started",
+        "end-time": "Ended",
+        "successful": "Success?",
+        "description": "Description"
+      }
+    }
   }
 }

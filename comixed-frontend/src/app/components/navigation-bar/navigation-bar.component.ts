@@ -179,6 +179,14 @@ export class NavigationBarComponent implements OnInit {
           },
           {
             label: this.translateService.instant(
+              'main-menu.item.admin.task-audit-log'
+            ),
+            icon: 'fa fa-fw fas fa-tasks',
+            routerLink: ['/admin/tasks/logs'],
+            visible: this.isAdmin
+          },
+          {
+            label: this.translateService.instant(
               'main-menu.item.admin.clear-image-cache'
             ),
             icon: 'fa fa-fw fa-trash',

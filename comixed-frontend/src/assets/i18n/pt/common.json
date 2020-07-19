@@ -30,6 +30,7 @@
         "import": "Import",
         "duplicate-pages": "Duplicate Pages",
         "missing-comics": "Missing Comics",
+        "task-audit-log": "Task Logs",
         "clear-image-cache": "Clear Image Cache"
       },
       "help": {

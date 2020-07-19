@@ -410,7 +410,8 @@
         "users-admin": "Users",
         "import-page": "Import Comics",
         "duplicates-page": "Duplicates Page",
-        "missing-comics": "Missing Comics"
+        "missing-comics": "Missing Comics",
+        "task-audit-log": "Task Log"
       }
     }
   },
