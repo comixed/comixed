@@ -21,6 +21,7 @@ package org.comixedproject.web.authentication;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -34,6 +35,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@ComponentScan("org.comixed.controller")
 @Log4j2
 public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired private ComiXedAuthenticationEntryPoint unauthorizedHandler;
