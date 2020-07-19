@@ -24,9 +24,13 @@ import { BackendStatusRoutingModule } from 'app/backend-status/backend-status-ro
 import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.adaptor';
 import { StoreModule } from '@ngrx/store';
 import * as fromBuildDetails from './reducers/build-details.reducer';
+import * as fromTaskAuditLog from './reducers/task-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { BuildDetailsEffects } from 'app/backend-status/effects/build-details.effects';
 import { TranslateModule } from '@ngx-translate/core';
+import { TaskAuditLogEffects } from 'app/backend-status/effects/task-audit-log.effects';
+import { TaskAuditLogPageComponent } from './pages/task-audit-log-page/task-audit-log-page.component';
+import { TaskAuditLogAdaptor } from 'app/backend-status/adaptors/task-audit-log.adaptor';
 
 @NgModule({
   declarations: [BuildDetailsPageComponent],
@@ -38,9 +42,13 @@ import { TranslateModule } from '@ngx-translate/core';
       fromBuildDetails.BUILD_DETAILS_FEATURE_KEY,
       fromBuildDetails.reducer
     ),
-    EffectsModule.forFeature([BuildDetailsEffects])
+    StoreModule.forFeature(
+      fromTaskAuditLog.TASK_AUDIT_LOG_FEATURE_KEY,
+      fromTaskAuditLog.reducer
+    ),
+    EffectsModule.forFeature([BuildDetailsEffects, TaskAuditLogEffects])
   ],
   exports: [CommonModule],
-  providers: [BuildDetailsService, BuildDetailsAdaptor]
+  providers: [BuildDetailsService, BuildDetailsAdaptor, TaskAuditLogAdaptor]
 })
 export class BackendStatusModule {}

@@ -20,5 +20,12 @@
       "dirty": "Construit à partir d'un code non comité?",
       "remote-origin-url": "url du \"Remote Origin\""
     }
+  },
+  "task-audit-log-effects": {
+    "get-log-entries": {
+      "error": {
+        "detail": "Failed to get task audit log entries."
+      }
+    }
   }
 }
