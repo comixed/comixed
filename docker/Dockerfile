@@ -1,5 +1,5 @@
 FROM alpine:latest
-RUN apk --no-cache add open-jdk-12 unzip wget
+RUN apk --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing add openjdk12 unzip wget
 
 MAINTAINER Pidockmedia "pidockmedia@gmail.com"
 
@@ -12,7 +12,6 @@ RUN mv comixed*/bin/comixed-app*.jar /app/comixed-app.jar
 WORKDIR /app
 RUN rm -r /ul
 
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
 ENV PATH="$JAVA_HOME/bin:${PATH}"
 
 EXPOSE 7171
