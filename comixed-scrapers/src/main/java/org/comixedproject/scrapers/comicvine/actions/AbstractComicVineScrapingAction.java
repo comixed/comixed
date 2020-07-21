@@ -232,22 +232,4 @@ public abstract class AbstractComicVineScrapingAction<T> extends AbstractScrapin
     }
     return this.maskedApiKey;
   }
-
-  /**
-   * Creates a consistent {@link WebClient} instance to use for requests.
-   *
-   * @param url the url
-   * @return the instance
-   */
-  protected WebClient createWebClient(final String url) {
-    log.debug("Creating web client: url={}", url);
-    return WebClient.builder()
-        .baseUrl(url)
-        .defaultHeaders(
-            headers -> {
-              headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-              headers.add(HttpHeaders.USER_AGENT, "ComiXed/0.7");
-            })
-        .build();
-  }
 }

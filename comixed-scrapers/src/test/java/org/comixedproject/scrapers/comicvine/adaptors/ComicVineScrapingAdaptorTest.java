@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Random;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.scrapers.ScrapingException;
+import org.comixedproject.scrapers.adaptors.ImprintAdaptor;
 import org.comixedproject.scrapers.comicvine.actions.ComicVineGetIssuesAction;
 import org.comixedproject.scrapers.comicvine.actions.ComicVineGetVolumesAction;
 import org.comixedproject.scrapers.comicvine.actions.ComicVineScrapeComicAction;
@@ -70,6 +71,7 @@ public class ComicVineScrapingAdaptorTest {
   @Captor private ArgumentCaptor<List<String>> valuesArgumentCaptor;
   @Mock private Comic comic;
   @Mock private ScrapingIssueDetails scrapingIssueDetails;
+  @Mock private ImprintAdaptor imprintAdaptor;
 
   private List<ScrapingVolume> scrapingVolumeList = new ArrayList<>();
   private List<ScrapingIssue> scrapingIssueList = new ArrayList<>();
@@ -300,6 +302,54 @@ public class ComicVineScrapingAdaptorTest {
         .getFromCache(
             ComicVineScrapingAdaptor.CACHE_KEY,
             scrapingAdaptor.getIssuesKey(TEST_VOLUME_ID, TEST_ISSUE_NUMBER));
+    Mockito.verify(objectMapper, Mockito.never()).writeValueAsString(Mockito.anyString());
+    Mockito.verify(scrapingCacheService, Mockito.never())
+        .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
+  }
+
+  @Test
+  public void testGetIssuesIssueNumberHasLeadingZeroes()
+      throws ScrapingException, JsonProcessingException {
+    entries.add(TEST_ENCODED_VALUE);
+
+    Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(entries);
+    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(scrapingIssue);
+
+    final ScrapingIssue result =
+        scrapingAdaptor.getIssue(TEST_API_KEY, TEST_VOLUME_ID, "0000" + TEST_ISSUE_NUMBER, false);
+
+    assertNotNull(result);
+    assertSame(scrapingIssue, result);
+
+    Mockito.verify(scrapingCacheService, Mockito.times(1))
+        .getFromCache(
+            ComicVineScrapingAdaptor.CACHE_KEY,
+            scrapingAdaptor.getIssuesKey(TEST_VOLUME_ID, TEST_ISSUE_NUMBER));
+    Mockito.verify(objectMapper, Mockito.never()).writeValueAsString(Mockito.anyString());
+    Mockito.verify(scrapingCacheService, Mockito.never())
+        .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
+  }
+
+  @Test
+  public void testGetIssuesIssueNumberIsZero() throws ScrapingException, JsonProcessingException {
+    entries.add(TEST_ENCODED_VALUE);
+
+    Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(entries);
+    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(scrapingIssue);
+
+    final ScrapingIssue result =
+        scrapingAdaptor.getIssue(TEST_API_KEY, TEST_VOLUME_ID, "000", false);
+
+    assertNotNull(result);
+    assertSame(scrapingIssue, result);
+
+    Mockito.verify(scrapingCacheService, Mockito.times(1))
+        .getFromCache(
+            ComicVineScrapingAdaptor.CACHE_KEY, scrapingAdaptor.getIssuesKey(TEST_VOLUME_ID, "0"));
     Mockito.verify(objectMapper, Mockito.never()).writeValueAsString(Mockito.anyString());
     Mockito.verify(scrapingCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
