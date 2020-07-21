@@ -22,6 +22,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
+import org.comixedproject.plugins.PluginException;
 import org.comixedproject.plugins.PluginManager;
 import org.comixedproject.plugins.model.PluginDescriptor;
 import org.junit.Test;
@@ -45,5 +46,19 @@ public class PluginsControllerTest {
 
     assertNotNull(result);
     assertSame(pluginList, result);
+  }
+
+  @Test
+  public void testReloadPlugins() throws PluginException {
+    Mockito.doNothing().when(pluginManager).loadPlugins();
+    Mockito.when(pluginManager.getPluginList()).thenReturn(pluginList);
+
+    final List<PluginDescriptor> result = pluginsController.reloadPlugins();
+
+    assertNotNull(result);
+    assertSame(pluginList, result);
+
+    Mockito.verify(pluginManager, Mockito.times(1)).loadPlugins();
+    Mockito.verify(pluginManager, Mockito.times(1)).getPluginList();
   }
 }

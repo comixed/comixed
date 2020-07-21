@@ -21,12 +21,15 @@ package org.comixedproject.controller.core;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.plugins.PluginException;
 import org.comixedproject.plugins.PluginManager;
 import org.comixedproject.plugins.model.PluginDescriptor;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,10 +44,33 @@ import org.springframework.web.bind.annotation.RestController;
 public class PluginsController {
   @Autowired private PluginManager pluginManager;
 
+  /**
+   * Returns the list of previously loaded plugins.
+   *
+   * @return the list of plugins
+   */
   @GetMapping(value = "/plugins", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.PluginList.class)
   public List<PluginDescriptor> getList() {
     log.info("Fetching the list of plugins");
+    return this.pluginManager.getPluginList();
+  }
+
+  /**
+   * Endpoint for reloading plugins from disk.
+   *
+   * @return the list of plugins
+   * @throws PluginException if an error occurs
+   */
+  @PostMapping(
+      value = "/plugins/reload",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.PluginList.class)
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<PluginDescriptor> reloadPlugins() throws PluginException {
+    log.info("Reloading the list of plugins");
+    this.pluginManager.loadPlugins();
     return this.pluginManager.getPluginList();
   }
 }
