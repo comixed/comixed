@@ -34,9 +34,6 @@
       "message": "Are you sure you want to save these changes to your login account? You will need to log in again if your email address was changed."
     }
   },
-  "users-page": {
-    "title": "ComiXed: Manager User Accounts"
-  },
   "user-details-editor": {
     "user-form": {
       "email-required": "Email is required.",
@@ -55,6 +52,7 @@
     }
   },
   "users-page": {
+    "title": "ComiXed: Manage User Accounts",
     "text": {
       "cant-delete-yourself": "You cannot delete your account",
       "delete-user": "Delete the current user."

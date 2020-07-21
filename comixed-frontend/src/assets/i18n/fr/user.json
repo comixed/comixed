@@ -34,9 +34,6 @@
       "message": "Êtes-vous sûr de vouloir enregistrer ces modifications de votre compte ? Vous devrez vous reconnecter si votre adresse e-mail a été modifiée."
     }
   },
-  "users-page": {
-    "title": "ComiXed: Gestionnaire des comptes utilisateurs"
-  },
   "user-details-editor": {
     "user-form": {
       "email-required": "L'adresse e-mail est obligatoire.",
@@ -55,6 +52,7 @@
     }
   },
   "users-page": {
+    "title": "ComiXed: Gestionnaire des comptes utilisateurs",
     "text": {
       "cant-delete-yourself": "Vous ne pouvez pas supprimer votre compte",
       "delete-user": "Supprimer l'utilisateur actuel."

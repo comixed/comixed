@@ -1,7 +1,6 @@
 {
   "main-menu": {
     "item": {
-      "account": "Account",
       "library": {
         "root": "Library",
         "comics": "Comics",
