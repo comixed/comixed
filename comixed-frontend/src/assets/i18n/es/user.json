@@ -34,9 +34,6 @@
       "message": "¿Seguro que quieres guardar estos cambios a tu cuenta? Necesitarás salir e ingresar de nuevo si has cambiado la dirección de correo electrónico"
     }
   },
-  "users-page": {
-    "title": "ComiXed: Gestionar cuentas de usuarios"
-  },
   "user-details-editor": {
     "user-form": {
       "email-required": "Es necesario un correo electrónico.",
@@ -55,6 +52,7 @@
     }
   },
   "users-page": {
+    "title": "ComiXed: Gestionar cuentas de usuarios",
     "text": {
       "cant-delete-yourself": "No puedes eliminar tu cuenta",
       "delete-user": "Eliminar al usuario actual."
