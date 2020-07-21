@@ -107,7 +107,7 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
   }
 
   @Override
-  public ScrapingIssue getIssue(
+  public ScrapingIssue doGetIssue(
       final String apiKey, final Integer volume, final String issueNumber, final boolean skipCache)
       throws ScrapingException {
     log.debug(
@@ -163,7 +163,7 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
   }
 
   @Override
-  public void scrapeComic(
+  public void doScrapeComic(
       final String apiKey, final String issueId, final Boolean skipCache, final Comic comic)
       throws ScrapingException {
     ScrapingIssueDetails details = null;

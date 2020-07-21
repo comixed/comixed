@@ -18,6 +18,11 @@
 
 package org.comixedproject.scrapers.actions;
 
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.WebClient;
+
 /**
  * <code>AbstractScrapingAction</code> provides a foundation for creating concrete {@link
  * ScrapingAction} types.
@@ -25,4 +30,24 @@ package org.comixedproject.scrapers.actions;
  * @param <T> the result for the action
  * @author Darryl L. Pierce
  */
-public abstract class AbstractScrapingAction<T> implements ScrapingAction<T> {}
+@Log4j2
+public abstract class AbstractScrapingAction<T> implements ScrapingAction<T> {
+  /**
+   * Creates a consistent {@link WebClient} instance to use for requests.
+   *
+   * @param url the url
+   * @return the instance
+   */
+  protected WebClient createWebClient(final String url) {
+    log.debug("Creating web client: url={}", url);
+    return WebClient.builder()
+        .baseUrl(url)
+        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
+        .defaultHeaders(
+            headers -> {
+              headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+              headers.add(HttpHeaders.USER_AGENT, "ComiXed/0.7");
+            })
+        .build();
+  }
+}

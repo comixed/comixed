@@ -235,7 +235,18 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   private getIssueNumber() {
-    return this.comicDetailsForm.controls['issueNumber'].value;
+    let result = this.comicDetailsForm.controls['issueNumber'].value;
+    // strip any leading 0s
+    while (
+      !!result &&
+      result.length > 0 &&
+      result !== '0' &&
+      result.startsWith('0')
+    ) {
+      result = result.substring(1);
+    }
+
+    return result;
   }
 
   private getApiKey() {

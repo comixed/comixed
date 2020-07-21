@@ -21,7 +21,9 @@ package org.comixedproject.scrapers.adaptors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comic.Comic;
 import org.comixedproject.scrapers.ScrapingException;
+import org.comixedproject.scrapers.model.ScrapingIssue;
 import org.comixedproject.service.scraping.ScrapingCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,6 +41,7 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
 
   @Autowired protected ObjectMapper objectMapper;
   @Autowired protected ScrapingCacheService scrapingCacheService;
+  @Autowired private ImprintAdaptor imprintAdaptor;
 
   /**
    * Generates a consistent key for storing and fetching volume data.
@@ -48,7 +51,7 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
    */
   public String getVolumeKey(final String seriesName) {
     log.debug("Generating volume key for: {}", seriesName);
-    return String.format(VOLUMES_KEY, seriesName);
+    return String.format(VOLUMES_KEY, seriesName.toUpperCase());
   }
 
   /**
@@ -59,7 +62,7 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
    * @return the key value
    */
   public String getIssuesKey(final Integer volume, final String issueNumber) {
-    return String.format(ISSUES_KEY, volume, issueNumber);
+    return String.format(ISSUES_KEY, volume, issueNumber.toUpperCase());
   }
 
   /**
@@ -87,4 +90,54 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
       processor.processValue(entries.get(index));
     }
   }
+
+  @Override
+  public void scrapeComic(
+      final String apiKey, final String issueId, final Boolean skipCache, final Comic comic)
+      throws ScrapingException {
+    this.doScrapeComic(apiKey, issueId, skipCache, comic);
+    this.imprintAdaptor.update(comic);
+  }
+
+  /**
+   * Must be overridden by child classes to provide the actual scraping implementation.
+   *
+   * @param apiKey the api key
+   * @param issueId the issue id
+   * @param skipCache the skip cache flag
+   * @param comic the comic
+   * @throws ScrapingException if an error occurs
+   */
+  protected abstract void doScrapeComic(
+      final String apiKey, final String issueId, final Boolean skipCache, final Comic comic)
+      throws ScrapingException;
+
+  @Override
+  public ScrapingIssue getIssue(
+      final String apiKey, final Integer volume, final String issueNumber, final boolean skipCache)
+      throws ScrapingException {
+    String issue = issueNumber;
+    while (!issue.isEmpty()
+        && !issue.equals("0")
+        && "123456789%ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(issue.toUpperCase().substring(0, 1))
+            == -1) {
+      issue = issue.substring(1);
+    }
+
+    return this.doGetIssue(apiKey, volume, issue, skipCache);
+  }
+
+  /**
+   * Must be overridden by child classes to provide the actual issue fetching implementation.
+   *
+   * @param apiKey the api key
+   * @param volume the vname
+   * @param issueNumber the issue number
+   * @param skipCache the skip cache flag
+   * @return the issue
+   * @throws ScrapingException
+   */
+  protected abstract ScrapingIssue doGetIssue(
+      final String apiKey, final Integer volume, final String issueNumber, final boolean skipCache)
+      throws ScrapingException;
 }
