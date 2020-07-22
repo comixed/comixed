@@ -35,7 +35,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@ComponentScan("org.comixed.controller")
+@ComponentScan("org.comixedprojectcontroller")
 @Log4j2
 public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired private ComiXedAuthenticationEntryPoint unauthorizedHandler;

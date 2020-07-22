@@ -26,7 +26,7 @@ import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.comixed.views.View;
+import org.comixedproject.views.View;
 
 /**
  * <code>TaskAuditLogEntry</code> represents a single entry in the task audit log table.

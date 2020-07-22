@@ -21,8 +21,11 @@ package org.comixedproject.service.task;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.model.tasks.TaskType;
+import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
 import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.ComiXedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

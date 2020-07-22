@@ -20,8 +20,13 @@ package org.comixedproject.service.task;
 
 import static junit.framework.TestCase.*;
 
+import java.util.Date;
+import java.util.List;
+import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.model.tasks.TaskType;
+import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
 import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.ComiXedServiceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
