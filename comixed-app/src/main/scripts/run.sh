@@ -74,7 +74,7 @@ fi
 
 if $DEBUG; then
   # enable global logging for CX
-  JAROPTIONS="${JAROPTIONS} --logging.level.org.comixed=DEBUG"
+  JAROPTIONS="${JAROPTIONS} --logging.level.org.comixedproject=DEBUG"
 fi
 
 if $FULL_DEBUG; then

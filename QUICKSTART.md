@@ -36,14 +36,14 @@ This will launch the application in the current window as a text-only applicatio
 2018-07-24 08:38:44.509  INFO 75198 --- [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
 2018-07-24 08:38:44.520  INFO 75198 --- [           main] o.s.c.support.DefaultLifecycleProcessor  : Starting beans in phase 0
 2018-07-24 08:38:44.640  INFO 75198 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 7171 (http)
-2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixed.ComiXedApp                   : Started ComiXedApp in 8.979 seconds (JVM running for 9.62)
+2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixedproject.ComiXedApp            : Started ComiXedApp in 8.979 seconds (JVM running for 9.62)
 ```
 
 ### Enabling Extra Logging
 
 Sometimes you might want (or need) to capture some additional information to report a bug. To increase the amount of logging add the following commandline option:
 ```
- $ java -jar [path to your JAR file] --logging.level.org.comixed=DEBUG
+ $ java -jar [path to your JAR file] --logging.level.org.comixedproject=DEBUG
 ```
 
 To capture the logging to a file, you can add the following commandline option:

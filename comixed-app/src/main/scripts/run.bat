@@ -85,7 +85,7 @@ GOTO exit_script
 SET OPTIONS=
 
 IF "%DEBUG%" == "" GOTO skip_debug
-SET OPTIONS=%OPTIONS% --logging.level.org.comixed=DEBUG
+SET OPTIONS=%OPTIONS% --logging.level.org.comixedproject=DEBUG
 :skip_debug
 
 IF "%FULLDEBUG%" == "" GOTO skip_full_debug
