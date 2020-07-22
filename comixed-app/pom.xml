@@ -4,11 +4,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.comixed</groupId>
+    <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
     <version>0.7.0-0</version>
   </parent>
-  <groupId>org.comixed</groupId>
+  <groupId>org.comixedproject</groupId>
   <artifactId>comixed-app</artifactId>
   <version>0.7.0-0</version>
   <name>comixed-app</name>
@@ -19,22 +19,22 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.comixed</groupId>
+      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-library</artifactId>
       <version>${comixed.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.comixed</groupId>
+      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-frontend</artifactId>
       <version>${comixed.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.comixed</groupId>
+      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-plugins</artifactId>
       <version>${comixed.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.comixed</groupId>
+      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-rest-api</artifactId>
       <version>${comixed.version}</version>
     </dependency>
@@ -49,7 +49,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>org.comixed.ComiXedApp</mainClass>
+          <mainClass>org.comixedproject.ComiXedApp</mainClass>
         </configuration>
       </plugin>
       <plugin>
