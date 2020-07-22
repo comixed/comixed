@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import org.comixedproject.ComiXedTestContext;
-import org.comixedproject.adaptors.ArchiveType;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.junit.Before;
 import org.junit.Test;

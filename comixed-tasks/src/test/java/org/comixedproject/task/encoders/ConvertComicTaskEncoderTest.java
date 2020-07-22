@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.Random;
-import org.comixedproject.adaptors.ArchiveType;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.repositories.tasks.TaskRepository;
