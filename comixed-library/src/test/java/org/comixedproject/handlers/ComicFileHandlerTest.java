@@ -23,10 +23,10 @@ import static org.junit.Assert.assertSame;
 
 import java.io.InputStream;
 import java.util.Map;
-import org.comixedproject.adaptors.ArchiveType;
 import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Test;

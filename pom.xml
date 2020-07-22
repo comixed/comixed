@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed</artifactId>
@@ -16,7 +14,7 @@
   <url>http://github.com/mcpierce/comixed</url>
   <properties>
     <assembly.name>local</assembly.name>
-    <comixed.url>http://www.github.com/comixed/comixed</comixed.url>
+    <comixed.url>http://www.comixedproject.org</comixed.url>
     <comixed.version>0.7.0-0</comixed.version>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
     <java-version>12</java-version>
@@ -210,6 +208,7 @@
     </plugins>
   </build>
   <modules>
+    <module>comixed-model</module>
     <module>comixed-library</module>
     <module>comixed-tasks</module>
     <module>comixed-services</module>

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.comixedproject.adaptors.ArchiveType;
+import org.comixedproject.model.archives.ArchiveType;
 
 /**
  * <code>ConvertComicsRequest</code> provides the HTTP request contents when converting comics.
