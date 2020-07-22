@@ -16,18 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixed.controller.tasks;
+package org.comixedproject.controller.tasks;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.util.Date;
 import java.util.List;
-import org.comixed.controller.ComiXedControllerException;
-import org.comixed.model.tasks.TaskAuditLogEntry;
-import org.comixed.service.ComiXedServiceException;
-import org.comixed.service.task.TaskService;
-import org.comixed.service.user.UserService;
+import org.comixedproject.controller.ComiXedControllerException;
+import org.comixedproject.model.tasks.TaskAuditLogEntry;
+import org.comixedproject.service.ComiXedServiceException;
+import org.comixedproject.service.task.TaskService;
+import org.comixedproject.service.user.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

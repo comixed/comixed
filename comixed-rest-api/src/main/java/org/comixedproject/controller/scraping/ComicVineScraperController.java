@@ -21,7 +21,7 @@ package org.comixedproject.controller.scraping;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.controller.RESTException;
+import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.net.ComicScrapeRequest;
 import org.comixedproject.net.GetScrapingIssueRequest;

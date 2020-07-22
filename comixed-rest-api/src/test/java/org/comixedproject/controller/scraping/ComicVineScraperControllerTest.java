@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
-import org.comixedproject.controller.RESTException;
+import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.net.ComicScrapeRequest;
 import org.comixedproject.net.GetScrapingIssueRequest;
