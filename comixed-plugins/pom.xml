@@ -4,12 +4,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.comixed</groupId>
+    <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
     <version>0.7.0-0</version>
     <relativePath>..</relativePath>
   </parent>
-  <groupId>org.comixed</groupId>
+  <groupId>org.comixedproject</groupId>
   <artifactId>comixed-plugins</artifactId>
   <version>0.7.0-0</version>
   <name>comixed-plugins</name>
@@ -21,7 +21,7 @@
       <version>2.7.0</version>
     </dependency>
     <dependency>
-      <groupId>org.comixed</groupId>
+      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-services</artifactId>
       <version>${comixed.version}</version>
     </dependency>
