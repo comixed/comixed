@@ -96,7 +96,7 @@ public class PageRepositoryTest {
     Iterable<Page> pages = repository.findAll();
     for (Page page : pages) {
       if (page.getHash().equals(TEST_DUPLICATE_PAGE_HASH_1)) {
-        assertTrue(page.isMarkedDeleted());
+        assertTrue(page.isDeleted());
       }
     }
   }
@@ -110,7 +110,7 @@ public class PageRepositoryTest {
     Iterable<Page> pages = repository.findAll();
     for (Page page : pages) {
       if (page.getHash().equals(TEST_DUPLICATE_PAGE_HASH_1)) {
-        assertFalse(page.isMarkedDeleted());
+        assertFalse(page.isDeleted());
       }
     }
   }

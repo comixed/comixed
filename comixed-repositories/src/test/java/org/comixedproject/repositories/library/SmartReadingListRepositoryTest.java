@@ -104,8 +104,8 @@ public class SmartReadingListRepositoryTest {
     list.setOwner(reader);
     list.setName(TEST_NEW_LIST_NAME);
 
-    list.addMatcher(new Matcher());
-    list.addMatcher(new Matcher());
+    list.getMatchers().add(new Matcher(list));
+    list.getMatchers().add(new Matcher(list));
     repository.save(list);
 
     SmartReadingList result = repository.findSmartReadingListForUser(reader, TEST_NEW_LIST_NAME);
@@ -118,10 +118,10 @@ public class SmartReadingListRepositoryTest {
   @Test
   public void testUpdateReadingList() {
     SmartReadingList list = repository.findById(1000L).get();
-    Matcher newMatcher = new Matcher();
+    Matcher newMatcher = new Matcher(list);
     newMatcher.setValue("Marvel");
 
-    list.addMatcher(newMatcher);
+    list.getMatchers().add(newMatcher);
     repository.save(list);
 
     SmartReadingList result = repository.findById(list.getId()).get();

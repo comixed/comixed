@@ -23,12 +23,14 @@ import org.comixedproject.model.comic.PageType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * <code>PageTypeRepository</code> retrieves instances of {@link PageType} from the database.
  *
  * @author The ComiXed Project
  */
+@Repository
 public interface PageTypeRepository extends CrudRepository<PageType, Long> {
   /**
    * Returns the default offset type.
