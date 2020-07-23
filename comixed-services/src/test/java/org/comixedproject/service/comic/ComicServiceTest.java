@@ -51,8 +51,6 @@ import org.springframework.data.domain.Pageable;
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class ComicServiceTest {
-  public static final long TEST_PREVIOUS_COMIC_ID = 1112L;
-  public static final long TEST_NEXT_COMIC_ID = 11110L;
   private static final long TEST_TIMESTAMP = System.currentTimeMillis();
   private static final long TEST_COMIC_ID = 5;
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
@@ -66,7 +64,6 @@ public class ComicServiceTest {
   private static final int TEST_MAXIMUM_COMICS = 100;
   private static final String TEST_PREVIOUS_ISSUE_NUMBER = "5";
   private static final String TEST_CURRENT_ISSUE_NUMBER = "7";
-  private static final Long TEST_CURRENT_COMIC_ID = 77L;
   private static final String TEST_NEXT_ISSUE_NUMBER = "10";
   private static final String TEST_SORTABLE_NAME = "Sortable Name";
   private static final ScanType TEST_SCAN_TYPE = new ScanType();
@@ -103,16 +100,13 @@ public class ComicServiceTest {
   @Before
   public void setUp() {
     previousComic.setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
-    previousComic.setId(TEST_PREVIOUS_COMIC_ID);
     previousComic.setCoverDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
     currentComic.setSeries(TEST_SERIES);
     currentComic.setVolume(TEST_VOLUME);
     currentComic.setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
-    currentComic.setId(TEST_CURRENT_COMIC_ID);
     currentComic.setCoverDate(new Date(System.currentTimeMillis()));
     currentComic.setCoverDate(TEST_COVER_DATE);
     nextComic.setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
-    nextComic.setId(TEST_NEXT_COMIC_ID);
     nextComic.setCoverDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
     comicsBySeries.add(nextComic);
     comicsBySeries.add(previousComic);

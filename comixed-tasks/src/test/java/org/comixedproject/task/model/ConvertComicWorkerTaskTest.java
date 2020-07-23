@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.Random;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
@@ -61,6 +62,7 @@ class ConvertComicWorkerTaskTest {
   @Mock private ProcessComicTaskEncoder processComicTaskEncoder;
   @Mock private Task processComicTask;
   @Mock private TaskRepository taskRepository;
+  @Mock private ComicFileHandler comicFileHandler;
 
   public ConvertComicWorkerTaskTest() {}
 
@@ -99,7 +101,8 @@ class ConvertComicWorkerTaskTest {
     task.setRenamePages(TEST_RENAME_PAGES);
     task.setDeletePages(TEST_DELETE_PAGES);
 
-    Mockito.when(targetArchiveType.getArchiveAdaptor()).thenReturn(targetArchiveAdaptor);
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
+        .thenReturn(targetArchiveAdaptor);
     Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
         .thenReturn(savedComic);
     Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(storedComic);

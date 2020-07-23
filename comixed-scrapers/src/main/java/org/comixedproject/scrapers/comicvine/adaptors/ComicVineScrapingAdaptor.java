@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comic.Credit;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.adaptors.AbstractScrapingAdaptor;
 import org.comixedproject.scrapers.comicvine.actions.ComicVineGetIssuesAction;
@@ -211,16 +212,19 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
       comic.setIssueNumber(details.getIssueNumber());
       comic.setCoverDate(details.getCoverDate());
       comic.setDescription(details.getDescription());
-      comic.clearCharacters();
-      details.getCharacters().forEach(character -> comic.addCharacter(character));
-      comic.clearTeams();
-      details.getTeams().forEach(team -> comic.addTeam(team));
-      comic.clearLocations();
-      details.getLocations().forEach(location -> comic.addLocation(location));
-      comic.clearStoryArcs();
-      details.getStories().forEach(story -> comic.addStoryArc(story));
-      comic.clearCredits();
-      details.getCredits().forEach(entry -> comic.addCredit(entry.getName(), entry.getRole()));
+      comic.getCharacters().clear();
+      details.getCharacters().forEach(character -> comic.getCharacters().add(character));
+      comic.getTeams().clear();
+      details.getTeams().forEach(team -> comic.getTeams().add(team));
+      comic.getLocations().clear();
+      details.getLocations().forEach(location -> comic.getLocations().add(location));
+      comic.getStoryArcs().clear();
+      details.getStories().forEach(story -> comic.getStoryArcs().add(story));
+      comic.getCredits().clear();
+      details
+          .getCredits()
+          .forEach(
+              entry -> comic.getCredits().add(new Credit(comic, entry.getName(), entry.getRole())));
     }
   }
 }

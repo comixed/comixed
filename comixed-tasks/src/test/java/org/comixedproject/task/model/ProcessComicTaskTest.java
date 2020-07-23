@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -48,10 +50,15 @@ public class ProcessComicTaskTest {
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicRepository comicRepository;
   @Mock private Utils utils;
+  @Mock private ComicFileHandler comicFileHandler;
+
+  private ArchiveType archiveType = ArchiveType.CBZ;
 
   @Test
   public void testStartTask() throws WorkerTaskException, ArchiveAdaptorException, IOException {
-    Mockito.when(comic.getArchiveAdaptor()).thenReturn(archiveAdaptor);
+    Mockito.when(comic.getArchiveType()).thenReturn(archiveType);
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
+        .thenReturn(archiveAdaptor);
     Mockito.doNothing().when(archiveAdaptor).loadComic(comic);
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(utils.createHash(Mockito.any(InputStream.class))).thenReturn(TEST_FILE_HASH);
@@ -66,7 +73,7 @@ public class ProcessComicTaskTest {
 
     assertEquals(TEST_FILE_HASH, comicFileDetailsCaptor.getValue().getHash());
 
-    Mockito.verify(comic, Mockito.times(1)).getArchiveAdaptor();
+    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(archiveType);
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);

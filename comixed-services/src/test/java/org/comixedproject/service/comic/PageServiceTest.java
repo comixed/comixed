@@ -268,7 +268,7 @@ public class PageServiceTest {
   @Test
   public void testDeletePageAlreadyMarkedAsDeleted() {
     Mockito.when(pageRepository.findById(TEST_PAGE_ID)).thenReturn(Optional.of(page));
-    Mockito.when(page.isMarkedDeleted()).thenReturn(true);
+    Mockito.when(page.isDeleted()).thenReturn(true);
 
     final Page result = pageService.deletePage(TEST_PAGE_ID);
 
@@ -276,14 +276,14 @@ public class PageServiceTest {
     assertSame(page, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    Mockito.verify(page, Mockito.times(1)).isMarkedDeleted();
+    Mockito.verify(page, Mockito.times(1)).isDeleted();
   }
 
   @Test
   public void testDeletePage() {
     Mockito.when(pageRepository.findById(TEST_PAGE_ID)).thenReturn(Optional.of(page));
-    Mockito.when(page.isMarkedDeleted()).thenReturn(false);
-    Mockito.doNothing().when(page).markDeleted(Mockito.anyBoolean());
+    Mockito.when(page.isDeleted()).thenReturn(false);
+    Mockito.doNothing().when(page).setDeleted(Mockito.anyBoolean());
     Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
 
     final Page result = pageService.deletePage(TEST_PAGE_ID);
@@ -292,8 +292,8 @@ public class PageServiceTest {
     assertSame(page, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    Mockito.verify(page, Mockito.times(1)).isMarkedDeleted();
-    Mockito.verify(page, Mockito.times(1)).markDeleted(true);
+    Mockito.verify(page, Mockito.times(1)).isDeleted();
+    Mockito.verify(page, Mockito.times(1)).setDeleted(true);
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
   }
 
@@ -309,7 +309,7 @@ public class PageServiceTest {
   @Test
   public void testUndeletePageForUnmarkedPage() {
     Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
-    Mockito.when(page.isMarkedDeleted()).thenReturn(false);
+    Mockito.when(page.isDeleted()).thenReturn(false);
 
     final Page result = pageService.undeletePage(TEST_PAGE_ID);
 
@@ -317,14 +317,14 @@ public class PageServiceTest {
     assertSame(page, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    Mockito.verify(page, Mockito.times(1)).isMarkedDeleted();
+    Mockito.verify(page, Mockito.times(1)).isDeleted();
   }
 
   @Test
   public void testUndeletePage() {
     Mockito.when(pageRepository.findById(TEST_PAGE_ID)).thenReturn(Optional.of(page));
-    Mockito.when(page.isMarkedDeleted()).thenReturn(true);
-    Mockito.doNothing().when(page).markDeleted(Mockito.anyBoolean());
+    Mockito.when(page.isDeleted()).thenReturn(true);
+    Mockito.doNothing().when(page).setDeleted(Mockito.anyBoolean());
     Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
 
     final Page result = pageService.undeletePage(TEST_PAGE_ID);
@@ -333,8 +333,8 @@ public class PageServiceTest {
     assertSame(page, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    Mockito.verify(page, Mockito.times(1)).isMarkedDeleted();
-    Mockito.verify(page, Mockito.times(1)).markDeleted(false);
+    Mockito.verify(page, Mockito.times(1)).isDeleted();
+    Mockito.verify(page, Mockito.times(1)).setDeleted(false);
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
   }
 
@@ -500,7 +500,7 @@ public class PageServiceTest {
     pages.add(page);
 
     Mockito.when(pageRepository.getPagesWithHash(Mockito.anyString())).thenReturn(pages);
-    Mockito.doNothing().when(page).markDeleted(Mockito.anyBoolean());
+    Mockito.doNothing().when(page).setDeleted(Mockito.anyBoolean());
     Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
 
     List<String> hashes = new ArrayList<>();
@@ -509,7 +509,7 @@ public class PageServiceTest {
     pageService.setDeletedState(hashes, true);
 
     Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithHash(TEST_PAGE_HASH);
-    Mockito.verify(page, Mockito.times(1)).markDeleted(true);
+    Mockito.verify(page, Mockito.times(1)).setDeleted(true);
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
   }
 
@@ -519,7 +519,7 @@ public class PageServiceTest {
     pages.add(page);
 
     Mockito.when(pageRepository.getPagesWithHash(Mockito.anyString())).thenReturn(pages);
-    Mockito.doNothing().when(page).markDeleted(Mockito.anyBoolean());
+    Mockito.doNothing().when(page).setDeleted(Mockito.anyBoolean());
     Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
 
     List<String> hashes = new ArrayList<>();
@@ -528,7 +528,7 @@ public class PageServiceTest {
     pageService.setDeletedState(hashes, false);
 
     Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithHash(TEST_PAGE_HASH);
-    Mockito.verify(page, Mockito.times(1)).markDeleted(false);
+    Mockito.verify(page, Mockito.times(1)).setDeleted(false);
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
   }
 }

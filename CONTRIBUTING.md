@@ -119,7 +119,11 @@ Once you've installed the requirements, you need to setup your environment:
 ### Running The Build
 
 The application is composed of several modules:
- * **comixed-library**: the domain model, persistence layer and archive adaptors,
+ * **comixed-model**: the domain model
+ * **comixed-repositories**: the repositories,
+ * **comixed-adaptors**: the various adaptors for loading archives, images, etc.,
+ * **comixed-services**: the business logic layer,
+ * **comixed-scrapers**: the library for building comic data scrapers,
  * **comixed-tasks**: the set of worker tasks that run in the backend server
  * **comixed-rest-api**: the web layer and REST API processors,
  * **comixed-frontend**: the Angular frontend, and

@@ -23,6 +23,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.archive.ArchiveAdaptor;
+import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
@@ -48,6 +52,7 @@ public class PageController {
   @Autowired private PageService pageService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
+  @Autowired private ComicFileHandler comicFileHandler;
 
   @PostMapping(
       value = "/pages/{id}/block/{hash}",
@@ -103,7 +108,8 @@ public class PageController {
       value = "/comics/{id}/pages/{index}/content",
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<byte[]> getImageInComicByIndex(
-      @PathVariable("id") long id, @PathVariable("index") int index) throws IOException {
+      @PathVariable("id") long id, @PathVariable("index") int index)
+      throws IOException, ArchiveAdaptorException, ComicFileHandlerException {
     log.debug("Getting image content for comic: id={} index={}", id, index);
 
     final Page page = this.pageService.getPageInComicByIndex(id, index);
@@ -111,13 +117,16 @@ public class PageController {
     return this.getResponseEntityForPage(page);
   }
 
-  private ResponseEntity<byte[]> getResponseEntityForPage(Page page) throws IOException {
+  private ResponseEntity<byte[]> getResponseEntityForPage(Page page)
+      throws IOException, ComicFileHandlerException, ArchiveAdaptorException {
     log.debug("creating response entity for page: id={}", page.getId());
     byte[] content = this.pageCacheService.findByHash(page.getHash());
 
     if (content == null) {
       log.debug("Fetching content for page");
-      content = page.getContent();
+      final ArchiveAdaptor adaptor =
+          this.comicFileHandler.getArchiveAdaptorFor(page.getComic().getArchiveType());
+      content = adaptor.loadSingleFile(page.getComic(), page.getFilename());
       log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
       this.pageCacheService.saveByHash(page.getHash(), content);
     }
@@ -136,7 +145,8 @@ public class PageController {
   }
 
   @GetMapping(value = "/pages/{id}/content", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<byte[]> getPageContent(@PathVariable("id") long id) throws IOException {
+  public ResponseEntity<byte[]> getPageContent(@PathVariable("id") long id)
+      throws IOException, ArchiveAdaptorException, ComicFileHandlerException {
     log.info("Getting page content: id={}", id);
     final Page page = this.pageService.findById(id);
 

@@ -42,5 +42,10 @@
       <artifactId>comixed-plugins</artifactId>
       <version>${comixed.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.downgoon</groupId>
+      <artifactId>MarvinPlugins</artifactId>
+      <version>1.5.5</version>
+    </dependency>
   </dependencies>
 </project>

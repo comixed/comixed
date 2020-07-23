@@ -148,7 +148,8 @@ public class ReadingListService {
     smartReadingList.setNot(not);
     smartReadingList.setMode(mode);
     for (Matcher matcher : matchers) {
-      smartReadingList.addMatcher(matcher);
+      matcher.setSmartList(smartReadingList);
+      smartReadingList.getMatchers().add(matcher);
     }
 
     log.debug("Saving smart reading list");
@@ -164,7 +165,8 @@ public class ReadingListService {
     matcher.setNot(not);
     matcher.setMode(mode);
     for (Matcher matcherMatcher : matchers) {
-      matcher.addMatcher(matcherMatcher);
+      matcherMatcher.setMatcher(matcher);
+      matcher.getMatchers().add(matcherMatcher);
     }
 
     return matcher;

@@ -16,7 +16,12 @@
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-library</artifactId>
+      <artifactId>comixed-repositories</artifactId>
+      <version>${comixed.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-adaptors</artifactId>
       <version>${comixed.version}</version>
     </dependency>
     <dependency>

@@ -20,10 +20,8 @@ package org.comixedproject.task.model;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
-import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -88,7 +86,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
       log.debug("Saving process comic task");
       final Task task = taskEncoder.encode();
       this.taskRepository.save(task);
-    } catch (ComicFileHandlerException | AdaptorException error) {
+    } catch (Exception error) {
       throw new WorkerTaskException("Failed to load comic", error);
     }
   }
