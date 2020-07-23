@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <page_types id="1000"
+              name="story"/>
+  <page_types id="1001"
+              name="front_cover"/>
+  <page_types id="1002"
+              name="back_cover"/>
+</dataset>
