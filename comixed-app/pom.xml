@@ -20,11 +20,6 @@
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-library</artifactId>
-      <version>${comixed.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-frontend</artifactId>
       <version>${comixed.version}</version>
     </dependency>

@@ -24,6 +24,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.comixedproject.adaptors.archive.ArchiveAdaptor;
+import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.handlers.ComicFileHandlerException;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
@@ -61,6 +66,7 @@ public class PageControllerTest {
   private static final Boolean TEST_BLOCKING = true;
   private static final Boolean TEST_DELETED = false;
   private static final String TEST_PAGE_TYPE_NAME = "Story";
+  private static final String TEST_PAGE_FILENAME = "page01.jpg";
 
   static {
     TEST_PAGE_HASH_LIST.add("12345");
@@ -78,8 +84,11 @@ public class PageControllerTest {
   @Mock private List<PageType> pageTypes;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
   @Mock private List<DuplicatePage> duplicatePageList;
+  @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ArchiveAdaptor archiveAdaptor;
 
   @Captor private ArgumentCaptor<InputStream> inputStream;
+  private ArchiveType archiveType = ArchiveType.CB7;
 
   @Test
   public void testSetPageType() throws PageException {
@@ -148,10 +157,17 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetImageInComicByIndex() throws IOException {
+  public void testGetImageInComicByIndex()
+      throws IOException, ArchiveAdaptorException, ComicFileHandlerException {
     Mockito.when(pageService.getPageInComicByIndex(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(page);
-    Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
+    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(comic.getArchiveType()).thenReturn(archiveType);
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
+        .thenReturn(archiveAdaptor);
+    Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_FILENAME);
+    Mockito.when(archiveAdaptor.loadSingleFile(Mockito.any(Comic.class), Mockito.anyString()))
+        .thenReturn(TEST_PAGE_CONTENT);
     Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture()))
         .thenReturn(TEST_PAGE_CONTENT_TYPE);
     Mockito.when(fileTypeIdentifier.subtypeFor(inputStream.capture()))
@@ -165,7 +181,6 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1))
         .getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
-    Mockito.verify(page, Mockito.times(1)).getContent();
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStream.getAllValues().get(0));
     Mockito.verify(fileTypeIdentifier, Mockito.times(1))
         .subtypeFor(inputStream.getAllValues().get(1));
@@ -208,7 +223,8 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetPageContentForNonexistentPage() throws IOException {
+  public void testGetPageContentForNonexistentPage()
+      throws IOException, ArchiveAdaptorException, ComicFileHandlerException {
     Mockito.when(pageService.findById(Mockito.anyLong())).thenReturn(null);
 
     assertNull(pageController.getPageContent(TEST_PAGE_ID));
@@ -217,10 +233,17 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetPageContent() throws IOException {
-    Mockito.when(pageService.findById(TEST_PAGE_ID)).thenReturn(page);
+  public void testGetPageContent()
+      throws IOException, ArchiveAdaptorException, ComicFileHandlerException {
+    Mockito.when(pageService.findById(Mockito.anyLong())).thenReturn(page);
+    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(comic.getArchiveType()).thenReturn(archiveType);
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
+        .thenReturn(archiveAdaptor);
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
-    Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
+    Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_FILENAME);
+    Mockito.when(archiveAdaptor.loadSingleFile(Mockito.any(Comic.class), Mockito.anyString()))
+        .thenReturn(TEST_PAGE_CONTENT);
     Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture()))
         .thenReturn(TEST_PAGE_CONTENT_TYPE);
     Mockito.when(fileTypeIdentifier.subtypeFor(inputStream.capture()))
@@ -237,7 +260,6 @@ public class PageControllerTest {
     assertEquals(HttpStatus.OK, result.getStatusCode());
 
     Mockito.verify(pageService, Mockito.times(1)).findById(TEST_PAGE_ID);
-    Mockito.verify(page, Mockito.times(1)).getContent();
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStream.getAllValues().get(0));
     Mockito.verify(fileTypeIdentifier, Mockito.times(1))
         .subtypeFor(inputStream.getAllValues().get(1));
@@ -247,7 +269,8 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetPageContentCached() throws IOException {
+  public void testGetPageContentCached()
+      throws IOException, ArchiveAdaptorException, ComicFileHandlerException {
     Mockito.when(pageService.findById(TEST_PAGE_ID)).thenReturn(page);
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
     Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture()))

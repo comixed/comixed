@@ -137,11 +137,11 @@ public class PageService {
     final Optional<Page> page = this.pageRepository.findById(id);
 
     if (page.isPresent()) {
-      if (page.get().isMarkedDeleted()) {
+      if (page.get().isDeleted()) {
         log.debug("Page was already marked as deleted");
         return page.get();
       } else {
-        page.get().markDeleted(true);
+        page.get().setDeleted(true);
         final Page result = this.pageRepository.save(page.get());
         log.debug("Page deleted");
         return result;
@@ -159,8 +159,8 @@ public class PageService {
     final Optional<Page> page = this.pageRepository.findById(id);
 
     if (page.isPresent()) {
-      if (page.get().isMarkedDeleted()) {
-        page.get().markDeleted(false);
+      if (page.get().isDeleted()) {
+        page.get().setDeleted(false);
         log.debug("Page undeleted");
         return this.pageRepository.save(page.get());
 
@@ -285,7 +285,7 @@ public class PageService {
       for (int pageIndex = 0; pageIndex < pages.size(); pageIndex++) {
         final Page page = pages.get(pageIndex);
         log.debug("Marking page deleted flag: id={} deleted={}", page.getId(), deleted);
-        page.markDeleted(deleted);
+        page.setDeleted(deleted);
         this.pageRepository.save(page);
       }
     }

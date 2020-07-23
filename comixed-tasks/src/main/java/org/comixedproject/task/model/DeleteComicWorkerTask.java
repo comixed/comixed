@@ -58,7 +58,7 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
             comic.getReadingLists().toArray(new ReadingList[comic.getReadingLists().size()]);
         for (int index = 0; index < readingLists.length; index++) {
           ReadingList readingList = readingLists[index];
-          readingList.removeComic(comic);
+          readingList.getComics().remove(comic);
           comic.getReadingLists().remove(readingList);
           log.debug("Updating reading list: {}", readingList.getName());
           this.readingListRepository.save(readingList);

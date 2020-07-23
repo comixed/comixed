@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Date;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -39,6 +40,7 @@ public class ProcessComicTask extends AbstractWorkerTask {
 
   @Autowired private ComicRepository comicRepository;
   @Autowired private Utils utils;
+  @Autowired private ComicFileHandler comicFileHandler;
 
   private Comic comic;
   private Boolean deleteBlockedPages;
@@ -54,7 +56,9 @@ public class ProcessComicTask extends AbstractWorkerTask {
     logger.debug("Processing comic: id={}", comic.getId());
 
     logger.debug("Getting archive adaptor");
-    final ArchiveAdaptor adaptor = comic.getArchiveAdaptor();
+    final ArchiveAdaptor adaptor =
+        this.comicFileHandler.getArchiveAdaptorFor(this.comic.getArchiveType());
+    if (adaptor == null) throw new WorkerTaskException("No archive adaptor found");
     logger.debug("Loading comic");
     try {
       adaptor.loadComic(comic);
@@ -76,6 +80,8 @@ public class ProcessComicTask extends AbstractWorkerTask {
     } catch (IOException error) {
       throw new WorkerTaskException("failed to get hash for file: " + comic.getFilename(), error);
     }
+
+    fileDetails.setComic(comic);
     comic.setFileDetails(fileDetails);
 
     logger.debug("Updating comic");

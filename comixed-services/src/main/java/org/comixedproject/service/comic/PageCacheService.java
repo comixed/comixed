@@ -38,7 +38,7 @@ public class PageCacheService {
 
     final File file = this.getFileForHash(hash);
     byte[] result = null;
-    if (file.exists() && !file.isDirectory()) {
+    if (file != null && file.exists() && !file.isDirectory()) {
       log.debug("Loading cached image content: {} bytes", file.length());
 
       try (FileInputStream input = new FileInputStream(file)) {

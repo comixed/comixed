@@ -25,6 +25,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -44,6 +45,7 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
   @Autowired private ComicRepository comicRepository;
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
+  @Autowired private ComicFileHandler comicFileHandler;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private ArchiveType targetArchiveType;
@@ -66,13 +68,16 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
   public void startTask() throws WorkerTaskException {
     log.debug(
         "Saving comic: id={} target archive type={}", this.comic.getId(), this.targetArchiveType);
-    ArchiveAdaptor targetArchiveAdaptor = this.targetArchiveType.getArchiveAdaptor();
+    ArchiveAdaptor targetArchiveAdaptor =
+        this.comicFileHandler.getArchiveAdaptorFor(this.targetArchiveType);
+
     try {
       this.comic.removeDeletedPages(this.deletePages);
-      Comic result = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
+      Comic saveComic = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
       log.debug("Saving updated comic");
-      result.setDateLastUpdated(new Date());
-      this.comicRepository.save(result);
+      saveComic.setDateLastUpdated(new Date());
+      final Comic result = this.comicRepository.save(saveComic);
+      this.comicRepository.flush();
 
       log.debug("Queueing up a comic processing task");
       ProcessComicTaskEncoder taskEncoder = this.processComicTaskEncoderObjectFactory.getObject();
