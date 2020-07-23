@@ -210,6 +210,7 @@
   <modules>
     <module>comixed-model</module>
     <module>comixed-repositories</module>
+    <module>comixed-adaptors</module>
     <module>comixed-library</module>
     <module>comixed-tasks</module>
     <module>comixed-services</module>
