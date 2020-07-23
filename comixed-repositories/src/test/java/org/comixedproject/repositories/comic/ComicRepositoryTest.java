@@ -276,22 +276,22 @@ public class ComicRepositoryTest {
 
   @Test
   public void testStoryArcs() {
-    assertEquals(1, comic.getStoryArcCount());
+    assertEquals(1, comic.getStoryArcs().size());
   }
 
   @Test
   public void testTeams() {
-    assertEquals(2, comic.getTeamCount());
+    assertEquals(2, comic.getTeams().size());
   }
 
   @Test
   public void testCharacters() {
-    assertEquals(3, comic.getCharacterCount());
+    assertEquals(3, comic.getCharacters().size());
   }
 
   @Test
   public void testLocations() {
-    assertEquals(3, comic.getLocationCount());
+    assertEquals(3, comic.getLocations().size());
   }
 
   @Test
@@ -310,7 +310,7 @@ public class ComicRepositoryTest {
   public void testComicsReturnTheirDeletedPageCount() {
     Comic result = repository.findById(TEST_COMIC_ID_WITH_DELETED_PAGES).get();
 
-    assertEquals(3, result.getDeletedPageCount());
+    assertEquals(3, result.getCalculatedDeletedPageCount().intValue());
   }
 
   @Test
@@ -339,7 +339,7 @@ public class ComicRepositoryTest {
     Comic result = repository.findById(TEST_COMIC_ID).get();
 
     assertNotNull(result.getFormat());
-    assertEquals(1L, result.getFormat().getId());
+    assertEquals(1L, result.getFormat().getId().longValue());
   }
 
   @Test
@@ -560,7 +560,7 @@ public class ComicRepositoryTest {
 
     for (int index = 0; index < result.size(); index++) {
       if (!result.get(index).getId().equals(TEST_COMIC_ID_WITH_DUPLICATES)) {
-        assertTrue(result.get(index).getDuplicateCount() == 0);
+        assertEquals(0, result.get(index).getDuplicateCount().intValue());
         return;
       }
     }
