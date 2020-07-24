@@ -185,7 +185,8 @@
       "comicvine-api-key": "ComicVine API Key",
       "series-name": "Serie",
       "volume-name": "Volumen",
-      "issue-number": "Número #"
+      "issue-number": "Número #",
+      "max-records": "Max Records To Fetch"
     },
     "tooltip": {
       "comicvine-api-key": "Click para editar...",
@@ -193,8 +194,15 @@
       "reset-api-key": "Borrar la API key."
     },
     "option": {
-      "fetch-with-cache": "Obtener",
-      "fetch-skip-cache": "Obtener (ignorar caché)"
+      "fetch": {
+        "with-cache": "Obtener",
+        "skip-cache": "Obtener (ignorar caché)"
+      },
+      "max-records": {
+        "all-records": "All records",
+        "100-records": "100 Records",
+        "1000-records": "1000 Records"
+      }
     },
     "text": {
       "comicvine-api-key-placeholder": "Click para cambiar la API key..."

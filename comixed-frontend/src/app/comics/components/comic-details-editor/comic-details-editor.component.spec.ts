@@ -45,6 +45,7 @@ import {
   CardModule,
   Confirmation,
   ConfirmationService,
+  DropdownModule,
   InplaceModule,
   MessageService,
   ProgressBarModule,
@@ -63,6 +64,7 @@ describe('ComicDetailsEditorComponent', () => {
   const ISSUE = SCRAPING_ISSUE_1000;
   const SERIES = 'Series name';
   const ISSUE_NUMBER = '717';
+  const MAX_RECORDS = 100;
 
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
@@ -95,7 +97,8 @@ describe('ComicDetailsEditorComponent', () => {
         SplitButtonModule,
         TableModule,
         CardModule,
-        ToolbarModule
+        ToolbarModule,
+        DropdownModule
       ],
       declarations: [
         ComicDetailsEditorComponent,
@@ -131,6 +134,7 @@ describe('ComicDetailsEditorComponent', () => {
 
   describe('the fetch options', () => {
     it('loads them by default', () => {
+      component.maxRecords = MAX_RECORDS;
       expect(component.fetchOptions).not.toEqual([]);
     });
   });
@@ -153,13 +157,14 @@ describe('ComicDetailsEditorComponent', () => {
       component.fetchOptions
         .find(
           option =>
-            option.label === 'comic-details-editor.option.fetch-with-cache'
+            option.label === 'comic-details-editor.option.fetch.with-cache'
         )
         .command();
       expect(scrapingAdaptor.getVolumes).toHaveBeenCalledWith(
         API_KEY,
         COMIC.series,
         COMIC.issueNumber,
+        component.maxRecords,
         false
       );
     });
@@ -169,13 +174,14 @@ describe('ComicDetailsEditorComponent', () => {
       component.fetchOptions
         .find(
           option =>
-            option.label === 'comic-details-editor.option.fetch-skip-cache'
+            option.label === 'comic-details-editor.option.fetch.skip-cache'
         )
         .command();
       expect(scrapingAdaptor.getVolumes).toHaveBeenCalledWith(
         API_KEY,
         COMIC.series,
         COMIC.issueNumber,
+        component.maxRecords,
         true
       );
     });
@@ -474,9 +480,10 @@ describe('ComicDetailsEditorComponent', () => {
   describe('fetching volumes', () => {
     beforeEach(() => {
       spyOn(scrapingAdaptor, 'getVolumes');
-      component.comicDetailsForm.controls['apiKey'].setValue(API_KEY);
-      component.comicDetailsForm.controls['seriesName'].setValue(SERIES);
-      component.comicDetailsForm.controls['issueNumber'].setValue(ISSUE_NUMBER);
+      component.apiKey = API_KEY;
+      component.seriesName = SERIES;
+      component.issueNumber = ISSUE_NUMBER;
+      component.maxRecords = MAX_RECORDS;
     });
 
     describe('skipping the cache', () => {
@@ -490,6 +497,7 @@ describe('ComicDetailsEditorComponent', () => {
           API_KEY,
           SERIES,
           ISSUE_NUMBER,
+          MAX_RECORDS,
           true
         );
       });
@@ -506,6 +514,7 @@ describe('ComicDetailsEditorComponent', () => {
           API_KEY,
           SERIES,
           ISSUE_NUMBER,
+          MAX_RECORDS,
           false
         );
       });

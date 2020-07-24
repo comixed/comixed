@@ -33,9 +33,12 @@ import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import { AuthenticationAdaptor, COMICVINE_API_KEY } from 'app/user';
 import { LoggerService } from '@angular-ru/logger';
-import { ConfirmationService, MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem, SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { USER_PREFERENCE_SKIP_CACHE } from 'app/user/user.constants';
+import {
+  USER_PREFERENCE_MAX_SCRAPING_RECORDS,
+  USER_PREFERENCE_SKIP_CACHE
+} from 'app/user/user.constants';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -69,6 +72,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   fetchOptions: MenuItem[] = [];
   editingApiKey = false;
   skipCache = false;
+  maxRecordsOptions: SelectItem[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -83,7 +87,8 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       apiKey: ['', [Validators.required]],
       seriesName: ['', [Validators.required]],
       volumeName: [''],
-      issueNumber: ['', [Validators.required]]
+      issueNumber: ['', [Validators.required]],
+      maxRecords: ['', [Validators.required]]
     });
   }
 
@@ -95,7 +100,12 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       this.skipCache =
         (this.authenticationAdaptor.getPreference(USER_PREFERENCE_SKIP_CACHE) ||
           'false') === 'true';
-      this.logger.debug('user preference - skip cache:', this.skipCache);
+      this.maxRecords = parseInt(
+        this.authenticationAdaptor.getPreference(
+          USER_PREFERENCE_MAX_SCRAPING_RECORDS
+        ) || '0',
+        10
+      );
     });
     this.scrapingComicsSubscription = this.scrapingAdaptor.comics$.subscribe(
       comics => (this.scrapingComics = comics)
@@ -144,20 +154,48 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslatedOptions() {
+    this.loadFetchOptions();
+    this.loadMaxRecordsOptions();
+  }
+
+  private loadFetchOptions() {
     this.fetchOptions = [
       {
         label: this.translateService.instant(
-          'comic-details-editor.option.fetch-with-cache'
+          'comic-details-editor.option.fetch.with-cache'
         ),
         icon: 'fa fa-fw fa-search',
         command: () => this.getVolumes(false)
       },
       {
         label: this.translateService.instant(
-          'comic-details-editor.option.fetch-skip-cache'
+          'comic-details-editor.option.fetch.skip-cache'
         ),
         icon: 'fa fa-fw fa-search',
         command: () => this.getVolumes(true)
+      }
+    ];
+  }
+
+  private loadMaxRecordsOptions() {
+    this.maxRecordsOptions = [
+      {
+        label: this.translateService.instant(
+          'comic-details-editor.option.max-records.all-records'
+        ),
+        value: 0
+      },
+      {
+        label: this.translateService.instant(
+          'comic-details-editor.option.max-records.100-records'
+        ),
+        value: 100
+      },
+      {
+        label: this.translateService.instant(
+          'comic-details-editor.option.max-records.1000-records'
+        ),
+        value: 1000
       }
     ];
   }
@@ -171,18 +209,16 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       );
     }
     this.scrapingAdaptor.getVolumes(
-      this.getApiKey(),
-      this.getSeriesName(),
-      this.getIssueNumber(),
+      this.apiKey,
+      this.seriesName,
+      this.issueNumber,
+      this.maxRecords,
       skipCache
     );
   }
 
   saveApiKey() {
-    this.authenticationAdaptor.setPreference(
-      COMICVINE_API_KEY,
-      this.getApiKey()
-    );
+    this.authenticationAdaptor.setPreference(COMICVINE_API_KEY, this.apiKey);
     this.editingApiKey = false;
   }
 
@@ -213,9 +249,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       accept: () => {
         this.comicAdaptor.saveComic({
           ...this._comic,
-          series: this.getSeriesName(),
-          volume: this.getVolume(),
-          issueNumber: this.getIssueNumber()
+          series: this.seriesName,
+          volume: this.volume,
+          issueNumber: this.issueNumber
         });
         this.comicDetailsForm.markAsPristine();
       }
@@ -226,15 +262,27 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     this.loadComicDetailsForm();
   }
 
-  private getSeriesName() {
+  set seriesName(seriesName: string) {
+    this.comicDetailsForm.controls['seriesName'].setValue(seriesName);
+  }
+
+  get seriesName(): string {
     return this.comicDetailsForm.controls['seriesName'].value;
   }
 
-  private getVolume() {
+  set volume(volume: string) {
+    this.comicDetailsForm.controls['volume'].setValue(volume);
+  }
+
+  get volume(): string {
     return this.comicDetailsForm.controls['volumeName'].value;
   }
 
-  private getIssueNumber() {
+  set issueNumber(issueNumber: string) {
+    this.comicDetailsForm.controls['issueNumber'].setValue(issueNumber);
+  }
+
+  get issueNumber(): string {
     let result = this.comicDetailsForm.controls['issueNumber'].value;
     // strip any leading 0s
     while (
@@ -249,7 +297,19 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  private getApiKey() {
+  set maxRecords(maxRecords: number) {
+    this.comicDetailsForm.controls['maxRecords'].setValue(maxRecords);
+  }
+
+  get maxRecords(): number {
+    return this.comicDetailsForm.controls['maxRecords'].value;
+  }
+
+  set apiKey(apiKey: string) {
+    this.comicDetailsForm.controls['apiKey'].setValue(apiKey);
+  }
+
+  get apiKey() {
     return this.comicDetailsForm.controls['apiKey'].value;
   }
 
@@ -257,9 +317,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     this.currentVolume = volume;
     if (!!volume) {
       this.scrapingAdaptor.getIssue(
-        this.getApiKey(),
+        this.apiKey,
         volume.id,
-        this.getIssueNumber(),
+        this.issueNumber,
         this.skipCache
       );
     } else {
@@ -277,7 +337,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       ),
       accept: () =>
         this.scrapingAdaptor.loadMetadata(
-          this.getApiKey(),
+          this.apiKey,
           this.comic.id,
           `${issue.id}`,
           this.skipCache
@@ -295,5 +355,13 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   doFetchVolumes() {
     this.getVolumes(this.skipCache);
+  }
+
+  changedMaxRecords(maxRecords: any) {
+    this.logger.debug('saving maximum scraping records preference');
+    this.authenticationAdaptor.setPreference(
+      USER_PREFERENCE_MAX_SCRAPING_RECORDS,
+      `${maxRecords}`
+    );
   }
 }
