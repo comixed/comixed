@@ -48,6 +48,7 @@ public class ComicVineScrapingAdaptorTest {
   private static final Random RANDOM = new Random();
   private static final String TEST_API_KEY = "TEST.API.KEY";
   private static final String TEST_SERIES_NAME = "Super Awesome Comic";
+  private static final Integer TEST_MAX_RECORDS = RANDOM.nextInt();
   private static final String TEST_ENCODED_VALUE = "This is the encoded value";
   private static final Integer TEST_VOLUME_ID = RANDOM.nextInt();
   private static final String TEST_ISSUE_NUMBER = "17";
@@ -94,7 +95,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getVolumesAction.execute()).thenReturn(scrapingVolumeList);
 
     final List<ScrapingVolume> result =
-        scrapingAdaptor.getVolumes(TEST_API_KEY, TEST_SERIES_NAME, true);
+        scrapingAdaptor.getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -103,6 +104,7 @@ public class ComicVineScrapingAdaptorTest {
         .setBaseUrl(ComicVineScrapingAdaptor.BASE_URL);
     Mockito.verify(getVolumesAction, Mockito.times(1)).setApiKey(TEST_API_KEY);
     Mockito.verify(getVolumesAction, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(getVolumesAction, Mockito.times(1)).setMaxRecords(TEST_MAX_RECORDS);
     Mockito.verify(objectMapper, Mockito.never()).writeValueAsString(Mockito.anyString());
     Mockito.verify(scrapingCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
@@ -120,7 +122,7 @@ public class ComicVineScrapingAdaptorTest {
         .saveToCache(Mockito.anyString(), Mockito.anyString(), valuesArgumentCaptor.capture());
 
     final List<ScrapingVolume> result =
-        scrapingAdaptor.getVolumes(TEST_API_KEY, TEST_SERIES_NAME, true);
+        scrapingAdaptor.getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true);
 
     assertNotNull(result);
     assertEquals(scrapingVolumeList.size(), result.size());
@@ -129,6 +131,7 @@ public class ComicVineScrapingAdaptorTest {
         .setBaseUrl(ComicVineScrapingAdaptor.BASE_URL);
     Mockito.verify(getVolumesAction, Mockito.times(1)).setApiKey(TEST_API_KEY);
     Mockito.verify(getVolumesAction, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(getVolumesAction, Mockito.times(1)).setMaxRecords(TEST_MAX_RECORDS);
     Mockito.verify(objectMapper, Mockito.times(scrapingVolumeList.size()))
         .writeValueAsString(scrapingVolume);
     Mockito.verify(scrapingCacheService, Mockito.times(1))
@@ -152,7 +155,7 @@ public class ComicVineScrapingAdaptorTest {
         .saveToCache(Mockito.anyString(), Mockito.anyString(), valuesArgumentCaptor.capture());
 
     final List<ScrapingVolume> result =
-        scrapingAdaptor.getVolumes(TEST_API_KEY, TEST_SERIES_NAME, false);
+        scrapingAdaptor.getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
 
     assertNotNull(result);
     assertEquals(scrapingVolumeList.size(), result.size());
@@ -164,6 +167,7 @@ public class ComicVineScrapingAdaptorTest {
         .setBaseUrl(ComicVineScrapingAdaptor.BASE_URL);
     Mockito.verify(getVolumesAction, Mockito.times(1)).setApiKey(TEST_API_KEY);
     Mockito.verify(getVolumesAction, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(getVolumesAction, Mockito.times(1)).setMaxRecords(TEST_MAX_RECORDS);
     Mockito.verify(objectMapper, Mockito.times(scrapingVolumeList.size()))
         .writeValueAsString(scrapingVolume);
     Mockito.verify(scrapingCacheService, Mockito.times(1))
@@ -183,7 +187,7 @@ public class ComicVineScrapingAdaptorTest {
         .thenReturn(scrapingVolume);
 
     final List<ScrapingVolume> result =
-        scrapingAdaptor.getVolumes(TEST_API_KEY, TEST_SERIES_NAME, false);
+        scrapingAdaptor.getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
 
     assertNotNull(result);
     assertEquals(entries.size(), result.size());

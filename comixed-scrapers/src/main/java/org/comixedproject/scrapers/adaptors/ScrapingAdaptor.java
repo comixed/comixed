@@ -34,13 +34,17 @@ public interface ScrapingAdaptor {
   /**
    * Returns a list of volumes for the given series name.
    *
+   * <p>If <code>maxRecords</code> is a non-positive value then all records are returned.
+   *
    * @param apiKey the API key
    * @param seriesName the series name
+   * @param maxRecords the maximum records to fetch
    * @param skipCache the skip cache flag
    * @return the list of volumes
    * @throws ScrapingException if an error occurs
    */
-  List<ScrapingVolume> getVolumes(String apiKey, String seriesName, boolean skipCache)
+  List<ScrapingVolume> getVolumes(
+      String apiKey, String seriesName, Integer maxRecords, boolean skipCache)
       throws ScrapingException;
 
   /**

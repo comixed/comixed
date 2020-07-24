@@ -53,6 +53,8 @@ public class ComicVineGetVolumesActionTest {
       "https://comicvine1.cbsistatic.com/uploads/screen_medium/0/2/80536-18005-105403-1-action-comics.jpg";
   private static final String TEST_START_YEAR = "1938";
   private static final String TEST_PUBLISHER_NAME = "DC Comics";
+  private static final Integer TEST_ALL_RECORDS = 10;
+  private static final Integer TEST_MAX_RECORDS = 3;
   public MockWebServer comicVineServer;
   @Autowired private ComicVineGetVolumesAction getVolumesAction;
 
@@ -102,10 +104,37 @@ public class ComicVineGetVolumesActionTest {
             .setBody(TEST_RESPONSE_BODY)
             .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
+    getVolumesAction.setMaxRecords(0);
+
     final List<ScrapingVolume> result = getVolumesAction.execute();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
+    assertEquals(TEST_ALL_RECORDS.intValue(), result.size());
+
+    final ScrapingVolume volume = result.get(0);
+
+    assertEquals(TEST_VOLUME_NAME, volume.getName());
+    assertEquals(TEST_ISSUE_COUNT.intValue(), volume.getIssueCount());
+    assertEquals(TEST_IMAGE_URL, volume.getImageURL());
+    assertEquals(TEST_START_YEAR, volume.getStartYear());
+    assertEquals(TEST_PUBLISHER_NAME, volume.getPublisher());
+  }
+
+  @Test
+  public void testExecuteWithLimit() throws ScrapingException {
+    this.comicVineServer.enqueue(
+        new MockResponse()
+            .setBody(TEST_RESPONSE_BODY)
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+
+    getVolumesAction.setMaxRecords(TEST_MAX_RECORDS);
+
+    final List<ScrapingVolume> result = getVolumesAction.execute();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(TEST_MAX_RECORDS.intValue(), result.size());
 
     final ScrapingVolume volume = result.get(0);
 
