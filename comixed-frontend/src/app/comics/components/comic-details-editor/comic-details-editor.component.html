@@ -31,7 +31,7 @@
                 pButton
                 type="button"></button>
         <p-splitButton [disabled]="!comicDetailsForm.valid"
-                       [label]="(skipCache ? 'comic-details-editor.option.fetch-skip-cache' : 'comic-details-editor.option.fetch-with-cache')|translate"
+                       [label]="(skipCache ? 'comic-details-editor.option.fetch.skip-cache' : 'comic-details-editor.option.fetch.with-cache')|translate"
                        [model]="fetchOptions"
                        class="ui-button-secondary"
                        icon="fa fa-fw fa-search"
@@ -118,7 +118,14 @@
           </div>
         </div>
         <div class="ui-g-6">
-          <!-- TODO placeholder for filter widgets -->
+          <div class="cx-input-label">
+            <label for="max-records">{{"comic-details-editor.label.max-records"|translate}}</label>
+          </div>
+          <div>
+            <p-dropdown [options]="maxRecordsOptions"
+                        (onChange)="changedMaxRecords($event.value)"
+                        formControlName="maxRecords"></p-dropdown>
+          </div>
         </div>
       </div>
     </form>
@@ -129,7 +136,7 @@
       <app-volume-list (cancelSelection)="selectionCancelled()"
                        (issueSelected)="issueSelected($event)"
                        (volumeSelected)="volumeSelected($event)"
-                       [apiKey]="getApiKey()"
+                       [apiKey]="apiKey"
                        [comic]="comic"
                        [currentIssue]="currentIssue"
                        [currentVolume]="currentVolume"
