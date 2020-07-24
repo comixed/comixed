@@ -47,6 +47,7 @@ describe('ScrapingService', () => {
   const API_KEY = 'A0B1C2D3E4F56789';
   const SERIES = 'Awesome Comic Series';
   const VOLUME = '2019';
+  const MAX_RECORDS = 14;
   const SKIP_CACHE = true;
   const VOLUMES = [
     SCRAPING_VOLUME_1001,
@@ -78,7 +79,7 @@ describe('ScrapingService', () => {
 
   it('can get a list of volumes for a series', () => {
     service
-      .getVolumes(API_KEY, SERIES, VOLUME, SKIP_CACHE)
+      .getVolumes(API_KEY, SERIES, VOLUME, MAX_RECORDS, SKIP_CACHE)
       .subscribe(response => expect(response).toEqual(VOLUMES));
 
     const req = httpMock.expectOne(interpolate(GET_VOLUMES_URL));
@@ -87,6 +88,7 @@ describe('ScrapingService', () => {
       apiKey: API_KEY,
       series: SERIES,
       volume: VOLUME,
+      maxRecords: MAX_RECORDS,
       skipCache: SKIP_CACHE
     } as GetVolumesRequest);
     req.flush(VOLUMES);

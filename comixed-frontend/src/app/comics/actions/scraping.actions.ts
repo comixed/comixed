@@ -49,6 +49,7 @@ export class ScrapingGetVolumes implements Action {
     public payload: {
       apiKey: string;
       series: string;
+      maxRecords: number;
       volume: string;
       skipCache: boolean;
     }

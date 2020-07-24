@@ -65,6 +65,7 @@ describe('ScrapingAdaptor', () => {
   const API_KEY = 'A0B1C2D3E4F56789';
   const SERIES = 'Awesome Comic Series';
   const VOLUME = '2019';
+  const MAX_RECORDS = 55;
   const SKIP_CACHE = true;
   const VOLUMES = [
     SCRAPING_VOLUME_1001,
@@ -124,7 +125,7 @@ describe('ScrapingAdaptor', () => {
 
   describe('getting volumes for a series', () => {
     beforeEach(() => {
-      adaptor.getVolumes(API_KEY, SERIES, VOLUME, SKIP_CACHE);
+      adaptor.getVolumes(API_KEY, SERIES, VOLUME, MAX_RECORDS, SKIP_CACHE);
     });
 
     it('fires an action', () => {
@@ -133,6 +134,7 @@ describe('ScrapingAdaptor', () => {
           apiKey: API_KEY,
           series: SERIES,
           volume: VOLUME,
+          maxRecords: MAX_RECORDS,
           skipCache: SKIP_CACHE
         })
       );

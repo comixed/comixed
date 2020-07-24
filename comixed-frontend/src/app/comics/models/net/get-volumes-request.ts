@@ -20,5 +20,6 @@ export interface GetVolumesRequest {
   apiKey: string;
   series: string;
   volume: string;
+  maxRecords: number;
   skipCache: boolean;
 }

@@ -95,16 +95,16 @@ export class ScrapingAdaptor {
     apiKey: string,
     series: string,
     volume: string,
+    maxRecords: number,
     skipCache: boolean
   ): void {
-    this.logger.debug(
-      `firing action to get comic volumes: apiKey=${apiKey} series=${series} volume=${volume} skipCache=${skipCache}`
-    );
+    this.logger.debug('firing action to get comic volumes');
     this.store.dispatch(
       new ScrapingGetVolumes({
         apiKey: apiKey,
         series: series,
         volume: volume,
+        maxRecords: maxRecords,
         skipCache: skipCache
       })
     );

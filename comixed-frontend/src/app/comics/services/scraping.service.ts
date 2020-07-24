@@ -40,15 +40,15 @@ export class ScrapingService {
     apiKey: string,
     series: string,
     volume: string,
+    maxRecords: number,
     skipCache: boolean
   ): Observable<any> {
-    this.logger.debug(
-      `[POST] http request: get volumes: apiKey=${apiKey} series=${series} volume=${volume} skipCache=${skipCache}`
-    );
+    this.logger.debug('[POST] http request: get volumes');
     return this.http.post(interpolate(GET_VOLUMES_URL), {
       apiKey: apiKey,
       series: series,
       volume: volume,
+      maxRecords: maxRecords,
       skipCache: skipCache
     } as GetVolumesRequest);
   }

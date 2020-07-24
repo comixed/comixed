@@ -60,6 +60,7 @@ export class ScrapingEffects {
           action.apiKey,
           action.series,
           action.volume,
+          action.maxRecords,
           action.skipCache
         )
         .pipe(

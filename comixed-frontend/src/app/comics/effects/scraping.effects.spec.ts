@@ -53,6 +53,7 @@ describe('ScrapingEffects', () => {
   const API_KEY = 'A0B1C2D3E4F56789';
   const SERIES = 'Awesome Comic Series';
   const VOLUME = '2019';
+  const MAX_RECORDS = 21;
   const SKIP_CACHE = true;
   const VOLUMES = [
     SCRAPING_VOLUME_1001,
@@ -105,6 +106,7 @@ describe('ScrapingEffects', () => {
         apiKey: API_KEY,
         series: SERIES,
         volume: VOLUME,
+        maxRecords: MAX_RECORDS,
         skipCache: SKIP_CACHE
       });
       const outcome = new ScrapingVolumesReceived({ volumes: serviceResponse });
@@ -125,6 +127,7 @@ describe('ScrapingEffects', () => {
         apiKey: API_KEY,
         series: SERIES,
         volume: VOLUME,
+        maxRecords: MAX_RECORDS,
         skipCache: SKIP_CACHE
       });
       const outcome = new ScrapingGetVolumesFailed();
@@ -144,6 +147,7 @@ describe('ScrapingEffects', () => {
         apiKey: API_KEY,
         series: SERIES,
         volume: VOLUME,
+        maxRecords: MAX_RECORDS,
         skipCache: SKIP_CACHE
       });
       const outcome = new ScrapingGetVolumesFailed();
