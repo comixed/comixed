@@ -54,7 +54,10 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
 
   @Override
   public List<ScrapingVolume> getVolumes(
-      final String apiKey, final String seriesName, final boolean skipCache)
+      final String apiKey,
+      final String seriesName,
+      final Integer maxRecords,
+      final boolean skipCache)
       throws ScrapingException {
     log.debug(
         "Fetching volumes from ComicVine: seriesName={} {}",
@@ -81,6 +84,7 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
       action.setBaseUrl(BASE_URL);
       action.setApiKey(apiKey);
       action.setSeries(seriesName);
+      action.setMaxRecords(maxRecords);
 
       log.debug("Executing action");
       result.addAll(action.execute());

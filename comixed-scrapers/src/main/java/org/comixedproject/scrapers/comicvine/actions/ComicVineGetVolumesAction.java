@@ -47,11 +47,13 @@ public class ComicVineGetVolumesAction
     extends AbstractComicVineScrapingAction<List<ScrapingVolume>> {
 
   @Getter @Setter private String series;
+  @Getter @Setter private Integer maxRecords;
 
   @Override
   public List<ScrapingVolume> execute() throws ScrapingException {
     if (StringUtils.isEmpty(this.getApiKey())) throw new ScrapingException("Missing API key");
     if (StringUtils.isEmpty(this.series)) throw new ScrapingException("Missing series name");
+    if (maxRecords == null) throw new ScrapingException("Missing maximum records");
 
     this.addFilter(NAME_FILTER, this.series);
 
@@ -64,6 +66,7 @@ public class ComicVineGetVolumesAction
 
     this.addParameter(RESOURCES_PARAMETER, "volume");
     this.addParameter(QUERY_PARAMETER, this.series);
+    if (maxRecords > 0) this.addParameter(LIMIT_PARAMETER, String.valueOf(this.maxRecords));
 
     List<ScrapingVolume> result = new ArrayList<>();
     int page = 0;
@@ -108,13 +111,20 @@ public class ComicVineGetVolumesAction
         entry.setStartYear(volume.getStartYear());
         entry.setImageURL(volume.getImage().getScreenUrl());
         result.add(entry);
+
+        if (hitMaxRecordLimit(result)) break;
       }
 
       done =
-          (response.getOffset() + response.getNumberOfPageResults())
-              >= response.getNumberOfTotalResults();
+          (hitMaxRecordLimit(result))
+              || (response.getOffset() + response.getNumberOfPageResults())
+                  >= response.getNumberOfTotalResults();
     }
 
     return result;
+  }
+
+  private boolean hitMaxRecordLimit(final List<ScrapingVolume> records) {
+    return this.maxRecords > 0 && records.size() == this.maxRecords;
   }
 }

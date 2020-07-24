@@ -29,9 +29,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.scrapers.actions.AbstractScrapingAction;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * <code>AbstractComicVineScrapingAction</code> is the foundation on which ComicVine scrapers are
@@ -57,6 +54,7 @@ public abstract class AbstractComicVineScrapingAction<T> extends AbstractScrapin
   protected static final String QUERY_PARAMETER = "query";
   protected static final String RESULT_LIMIT_PARAMETER = "limit";
   protected static final String PAGE_PARAMETER = "page";
+  protected static final String LIMIT_PARAMETER = "limit";
   protected static final String NAME_FILTER = "name";
 
   private final Map<String, String> filters = new HashMap<>();
