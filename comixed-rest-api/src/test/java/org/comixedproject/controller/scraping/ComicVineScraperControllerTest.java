@@ -46,6 +46,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ComicVineScraperControllerTest {
   private static final String TEST_API_KEY = "12345";
   private static final String TEST_SERIES_NAME = "Awesome Comic";
+  private static final Integer TEST_MAX_RECORDS = 37;
   private static final Integer TEST_VOLUME = 2018;
   private static final String TEST_ISSUE_NUMBER = "15";
   private static final long TEST_COMIC_ID = 213L;
@@ -64,14 +65,15 @@ public class ComicVineScraperControllerTest {
       throws ScrapingException, ComiXedControllerException {
     Mockito.when(
             scrapingAdaptor.getVolumes(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
     try {
-      controller.queryForVolumes(new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, false));
+      controller.queryForVolumes(
+          new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false));
     } finally {
       Mockito.verify(scrapingAdaptor, Mockito.times(1))
-          .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, false);
+          .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
     }
   }
 
@@ -79,32 +81,34 @@ public class ComicVineScraperControllerTest {
   public void testQueryForVolumes() throws ComiXedControllerException, ScrapingException {
     Mockito.when(
             scrapingAdaptor.getVolumes(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenReturn(comicVolumeList);
 
     final List<ScrapingVolume> result =
-        controller.queryForVolumes(new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, false));
+        controller.queryForVolumes(
+            new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false));
 
     assertSame(comicVolumeList, result);
 
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, false);
+        .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
   }
 
   @Test
   public void testQueryForVolumesSkipCache() throws ScrapingException, ComiXedControllerException {
     Mockito.when(
             scrapingAdaptor.getVolumes(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenReturn(comicVolumeList);
 
     final List<ScrapingVolume> result =
-        controller.queryForVolumes(new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, true));
+        controller.queryForVolumes(
+            new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true));
 
     assertSame(comicVolumeList, result);
 
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, true);
+        .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true);
   }
 
   @Test(expected = ComiXedControllerException.class)

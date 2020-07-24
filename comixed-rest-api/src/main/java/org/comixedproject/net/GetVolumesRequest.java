@@ -19,34 +19,30 @@
 package org.comixedproject.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+/**
+ * <code>GetVolumesRequest</code>> represents the payload for requesting a set of volumes for a
+ * given series.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
 public class GetVolumesRequest {
   @JsonProperty("apiKey")
-  private String apiKey;
+  @Getter
+  private final String apiKey;
 
   @JsonProperty("series")
-  private String series;
+  @Getter
+  private final String series;
+
+  @JsonProperty("maxRecords")
+  @Getter
+  private final Integer maxRecords;
 
   @JsonProperty("skipCache")
-  private Boolean skipCache;
-
-  public GetVolumesRequest() {}
-
-  public GetVolumesRequest(final String apiKey, final String series, final Boolean skipCache) {
-    this.apiKey = apiKey;
-    this.series = series;
-    this.skipCache = skipCache;
-  }
-
-  public String getApiKey() {
-    return apiKey;
-  }
-
-  public String getSeries() {
-    return series;
-  }
-
-  public Boolean getSkipCache() {
-    return skipCache;
-  }
+  @Getter
+  private final Boolean skipCache;
 }
