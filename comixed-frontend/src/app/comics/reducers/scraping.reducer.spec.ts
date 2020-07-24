@@ -52,6 +52,7 @@ describe('Scraping Reducer', () => {
   const API_KEY = 'A0B1C2D3E4F56789';
   const SERIES = 'Awesome Comic Series';
   const VOLUME = '2019';
+  const MAX_RECORDS = 24;
   const SCRAPING_VOLUME = SCRAPING_ISSUE_1000;
   const SKIP_CACHE = true;
   const VOLUMES = [
@@ -136,6 +137,7 @@ describe('Scraping Reducer', () => {
           apiKey: API_KEY,
           series: SERIES,
           volume: VOLUME,
+          maxRecords: MAX_RECORDS,
           skipCache: SKIP_CACHE
         })
       );
