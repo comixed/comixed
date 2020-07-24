@@ -95,11 +95,17 @@ public class ComicVineScraperController {
     String apiKey = request.getApiKey();
     boolean skipCache = request.getSkipCache();
     String series = request.getSeries();
-    log.info("Getting volumes: series={}{}", series, skipCache ? " (Skipping cache)" : "");
+    final Integer maxRecords = request.getMaxRecords();
+
+    log.info(
+        "Getting volumes: series={} (max records={}) {}",
+        series,
+        maxRecords,
+        skipCache ? "(Skipping cache)" : "");
 
     try {
       final List<ScrapingVolume> result =
-          this.scrapingAdaptor.getVolumes(apiKey, series, skipCache);
+          this.scrapingAdaptor.getVolumes(apiKey, series, maxRecords, skipCache);
 
       log.debug("Returning {} volume{}", result.size(), result.size() == 1 ? "" : "s");
 
