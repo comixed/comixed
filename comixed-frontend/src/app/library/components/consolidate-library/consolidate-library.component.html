@@ -3,6 +3,7 @@
     <div class="ui-g-12">
       <p-checkbox id="delete-physical-files"
                   [binary]="true"
+                  (onChange)="showDeleteFilesWarning($event)"
                   formControlName="deletePhysicalFiles"></p-checkbox>
       <label for="delete-physical-files">{{"consolidate-library.label.delete-physical-files"|translate}}</label>
     </div>

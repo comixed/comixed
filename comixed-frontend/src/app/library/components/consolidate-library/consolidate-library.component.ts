@@ -73,6 +73,12 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
     this.consolidatingSubscription.unsubscribe();
   }
 
+  set deletePhysicalFiles(deletePhysicalFiles: boolean) {
+    this.consolidationForm.controls['deletePhysicalFiles'].setValue(
+      deletePhysicalFiles
+    );
+  }
+
   consolidateLibrary() {
     this.confirmationService.confirm({
       header: this.translateService.instant(
@@ -114,5 +120,20 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  showDeleteFilesWarning(checked: boolean) {
+    if (checked) {
+      this.confirmationService.confirm({
+        icon: 'fa fa-fw fas fa-skull-crossbones',
+        header: this.translateService.instant(
+          'consolidate-library.delete-files-warning.header'
+        ),
+        message: this.translateService.instant(
+          'consolidate-library.delete-files-warning.message'
+        ),
+        reject: () => (this.deletePhysicalFiles = false)
+      });
+    }
   }
 }

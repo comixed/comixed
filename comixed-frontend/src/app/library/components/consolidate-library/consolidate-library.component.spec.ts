@@ -231,4 +231,30 @@ describe('ConsolidateLibraryComponent', () => {
       });
     });
   });
+
+  describe('choosing to delete physical files', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.reject()
+      );
+      component.showDeleteFilesWarning(true);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+  });
+
+  describe('choosing not to delete physical files', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.reject()
+      );
+      component.showDeleteFilesWarning(false);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).not.toHaveBeenCalled();
+    });
+  });
 });
