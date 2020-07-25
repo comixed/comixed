@@ -428,6 +428,10 @@
     "button": {
       "start": "Comenzar la consolidación"
     },
+    "delete-files-warning": {
+      "header": "Delete Files Warning",
+      "message": "WARNING! Deleting the physical files can NOT be undone. Are you sure you want to delete the physical files?"
+    },
     "confirm": {
       "header": "Consolidar la biblioteca",
       "message": "¿Seguro que quieres consolidar la biblitoteca y {deletePhysicalFiles, select, true{borrar} other{no borrar}} los archivos físicos de cómics?"
