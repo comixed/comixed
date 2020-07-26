@@ -31,13 +31,13 @@ jobs:
       - name: Build project
         run: mvn package -Pci -DskipTests -Dassembly.name=RELEASE
       - name: Create SHA file.
-        run: (cd comixed-app/target/artifacts; shasum comixed-app-0.7.0-0-RELEASE.zip > comixed-app-0.7.0-0.RELEASE.zip-sha)
+        run: (cd release; shasum comixed-app-0.7.0-0-RELEASE.zip > comixed-app-0.7.0-0.RELEASE.zip-sha)
       - name: Upload release artifact
         uses: softprops/action-gh-release@v1
         with:
           body_path: CHANGELOG.md
           files: |
-            comixed-app/target/artifacts/comixed-app-0.7.0-0-RELEASE.zip
-            comixed-app/target/artifacts/comixed-app-0.7.0-0.RELEASE.zip-sha
+            release/comixed-app-0.7.0-0-RELEASE.zip
+            release/comixed-app-0.7.0-0.RELEASE.zip-sha
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
