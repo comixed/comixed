@@ -1,10 +1,20 @@
-<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
   <id>${assembly.name}</id>
   <formats>
     <format>zip</format>
   </formats>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>bin</outputDirectory>
+      <unpack>false</unpack>
+      <includes>
+        <include>org.comixedproject:comixed-app:jar:</include>
+        <include>org.comixedproject:comixed-importer:jar:</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
   <fileSets>
     <fileSet>
       <directory>${project.basedir}/..</directory>
@@ -18,14 +28,7 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>${project.build.directory}</directory>
-      <outputDirectory>bin</outputDirectory>
-      <includes>
-        <include>*.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>${project.basedir}/src/main/scripts</directory>
+      <directory>${project.basedir}/src/main/assembly/scripts</directory>
       <outputDirectory>bin</outputDirectory>
       <includes>
         <include>*.sh</include>
