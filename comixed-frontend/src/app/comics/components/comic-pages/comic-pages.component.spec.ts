@@ -32,16 +32,18 @@ import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { AppState } from 'app/comics';
 import { ComicGotPageTypes } from 'app/comics/actions/comic.actions';
-import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
-import { PAGE_1, PAGE_2 } from 'app/comics/models/page.fixtures';
+import { FRONT_COVER } from 'app/comics/models/page-type.fixtures';
+import { PAGE_1 } from 'app/comics/models/page.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
 import { TableModule } from 'primeng/table';
 import { InplaceModule } from 'primeng/inplace';
-import { TooltipModule } from 'primeng/primeng';
+import { DialogModule, TooltipModule } from 'primeng/primeng';
 import { UserModule } from 'app/user/user.module';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ComicPagesComponent', () => {
+  const PAGE = PAGE_1;
+
   let component: ComicPagesComponent;
   let fixture: ComponentFixture<ComicPagesComponent>;
   let store: Store<AppState>;
@@ -64,7 +66,8 @@ describe('ComicPagesComponent', () => {
         MessagesModule,
         TableModule,
         InplaceModule,
-        TooltipModule
+        TooltipModule,
+        DialogModule
       ],
       declarations: [ComicPagesComponent, ComicPageUrlPipe],
       providers: [ComicAdaptor, MessageService]
@@ -97,5 +100,26 @@ describe('ComicPagesComponent', () => {
     spyOn(comicAdaptor, 'unblockPageHash');
     component.unblockPage(PAGE_1);
     expect(comicAdaptor.unblockPageHash).toHaveBeenCalledWith(PAGE_1);
+  });
+
+  describe('selecting a page', () => {
+    beforeEach(() => {
+      component.selectedPage = null;
+      component.setSelectedPage(PAGE);
+    });
+
+    it('sets the selected page', () => {
+      expect(component.selectedPage).toEqual(PAGE);
+    });
+
+    describe('unselecting the page', () => {
+      beforeEach(() => {
+        component.clearSelectedPage();
+      });
+
+      it('clears the selected page', () => {
+        expect(component.selectedPage).toBeNull();
+      });
+    });
   });
 });

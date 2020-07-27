@@ -1,63 +1,76 @@
-<p-table *ngIf='!!comic'
-         [value]='comic.pages'
-         [responsive]='true'
-         [rows]='rows'
-         paginator='true'
-         paginatorPosition='both'>
-  <ng-template pTemplate='colgroup'>
-    <col class='cx-table-column-small'/>
-    <col class='cx-table-column-medium'/>
-    <col class='cx-table-column-medium'/>
-    <col class='cx-table-column-medium-large'/>
+<p-dialog [(visible)]="!!selectedPage"
+          [header]="!!selectedPage?selectedPage.filename:''"
+          [resizable]="false"
+          (onHide)="clearSelectedPage()">
+  <img *ngIf="!!selectedPage"
+       [style.height]="'75vh'"
+       [src]="selectedPage|comicPageUrl"
+       [alt]="selectedPage.filename"/>
+</p-dialog>
+<p-table *ngIf="!!comic"
+         [value]="comic.pages"
+         [responsive]="true"
+         [rows]="rows"
+         paginator="true"
+         paginatorPosition="both"
+         selectionMode="single"
+         (onRowSelect)="setSelectedPage($event.data)"
+         (onRowUnselect)="clearSelectedPage()">
+  <ng-template pTemplate="colgroup">
+    <col class="cx-table-column-small"/>
+    <col class="cx-table-column-medium"/>
+    <col class="cx-table-column-medium"/>
+    <col class="cx-table-column-medium-large"/>
     <col/>
-    <col class='cx-table-column-medium'/>
-    <col class='cx-table-column-medium'/>
+    <col class="cx-table-column-medium"/>
+    <col class="cx-table-column-medium"/>
   </ng-template>
-  <ng-template pTemplate='header'>
+  <ng-template pTemplate="header">
     <tr>
-      <th>##</th>
-      <th>{{ 'comic-pages.table.header.thumbnail' | translate }}</th>
-      <th>{{ 'comic-pages.table.header.filename' | translate }}</th>
-      <th>{{ 'comic-pages.table.header.page-type' | translate }}</th>
-      <th>{{ 'comic-pages.table.header.hash' | translate }}</th>
-      <th>{{ 'comic-pages.table.header.dimensions' | translate }}</th>
-      <th>{{ 'comic-pages.table.header.blocked-status' | translate }}</th>
+      <th id="cx-page-number">##</th>
+      <th id="cx-page-thumbnail">{{ "comic-pages.table.header.thumbnail" | translate }}</th>
+      <th id="cx-page-filename">{{ "comic-pages.table.header.filename" | translate }}</th>
+      <th id="cx-page-page-type">{{ "comic-pages.table.header.page-type" | translate }}</th>
+      <th id="cx-page-hash">{{ "comic-pages.table.header.hash" | translate }}</th>
+      <th id="cx-page-dimensions">{{ "comic-pages.table.header.dimensions" | translate }}</th>
+      <th id="cx-page-blocked-status">{{ "comic-pages.table.header.blocked-status" | translate }}</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate='body'
+  <ng-template pTemplate="body"
                let-page>
-    <tr>
-      <td class='cx-table-column-align-center'>{{ page.index }}</td>
+    <tr [pSelectableRow]="page">
+      <td class="cx-table-column-align-center">{{ page.index + 1}}</td>
       <td>
-        <div class='cx-comic-page-thumbnail'>
-          <img src='{{ page | comicPageUrl }}'
-               width='100%'/>
+        <div class="cx-comic-page-thumbnail">
+          <img src="{{ page | comicPageUrl }}"
+               width="100%"
+               [alt]="page.filename"/>
         </div>
       </td>
       <td>{{ page.filename }}</td>
-      <td class='cx-table-column-align-center'>
-        <p-inplace [disabled]='!isAdmin'>
+      <td class="cx-table-column-align-center">
+        <p-inplace [disabled]="!isAdmin">
           <span pInplaceDisplay>
-            {{ 'comic-pages.page-type.' + page.page_type.name | translate }}
+            {{ "comic-pages.page-type." + page.page_type.name | translate }}
           </span>
           <span pInplaceContent>
             <p-dropdown
-                [options]='pageTypeOptions'
-                [(ngModel)]='page.page_type'
-                (onChange)='setPageType(page, $event.value)'></p-dropdown>
+              [options]="pageTypeOptions"
+              [(ngModel)]="page.page_type"
+              (onChange)="setPageType(page, $event.value)"></p-dropdown>
           </span>
         </p-inplace>
       </td>
       <td>{{ page.hash }}</td>
-      <td class='cx-table-column-align-center'>
+      <td class="cx-table-column-align-center">
         {{ page.width }}x{{ page.height }}
       </td>
-      <td class='cx-table-column-align-center'>
+      <td class="cx-table-column-align-center">
         <span
-            class='fa fa-fw fa-switch'
-            (click)='page.blocked ? unblockPage(page) : blockPage(page)'
-            [pTooltip]='"comic-pages.tooltip.blocked"|translate:{blocked:page.blocked}'>
-        {{'comic-pages.table.column.blocked-status'|translate: {blocked: page.blocked} }}
+          class="fa fa-fw fa-switch"
+          (click)="page.blocked ? unblockPage(page) : blockPage(page)"
+          [pTooltip]="'comic-pages.tooltip.blocked'|translate:{blocked:page.blocked}">
+        {{"comic-pages.table.column.blocked-status"|translate: {blocked: page.blocked} }}
         </span>
       </td>
     </tr>
