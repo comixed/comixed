@@ -39,6 +39,7 @@ export class ComicPagesComponent implements OnInit, OnDestroy {
 
   pageTypesSubscription: Subscription;
   pageTypeOptions: SelectItem[] = [];
+  selectedPage: Page = null;
 
   constructor(
     private logger: LoggerService,
@@ -78,5 +79,15 @@ export class ComicPagesComponent implements OnInit, OnDestroy {
   unblockPage(page: Page): void {
     this.logger.debug('unmarking page as blocked:', page);
     this.comicAdaptor.unblockPageHash(page);
+  }
+
+  setSelectedPage(page: Page): void {
+    this.logger.debug('setting selected page:', page);
+    this.selectedPage = page;
+  }
+
+  clearSelectedPage(): void {
+    this.logger.debug('clearing selected page');
+    this.selectedPage = null;
   }
 }
