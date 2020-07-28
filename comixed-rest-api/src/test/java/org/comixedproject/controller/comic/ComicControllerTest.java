@@ -26,7 +26,9 @@ import java.security.Principal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
@@ -95,6 +97,8 @@ public class ComicControllerTest {
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
   @Mock private Page page;
   @Mock private LastReadDate lastReadDate;
+  @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ArchiveAdaptor archiveAdaptor;
 
   private final List<Comic> emptyComicList = new ArrayList<>();
 
@@ -518,7 +522,11 @@ public class ComicControllerTest {
     Mockito.when(comic.getPage(Mockito.anyInt())).thenReturn(page);
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getContent()).thenReturn(TEST_PAGE_CONTENT);
+    Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILE);
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.anyString()))
+        .thenReturn(archiveAdaptor);
+    Mockito.when(archiveAdaptor.loadSingleFile(Mockito.any(Comic.class), Mockito.anyString()))
+        .thenReturn(TEST_PAGE_CONTENT);
     Mockito.doNothing()
         .when(pageCacheService)
         .saveByHash(Mockito.anyString(), Mockito.any(byte[].class));
@@ -537,7 +545,6 @@ public class ComicControllerTest {
     Mockito.verify(comic, Mockito.times(1)).isMissing();
     Mockito.verify(page, Mockito.times(1)).getFilename();
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(page, Mockito.times(1)).getContent();
     Mockito.verify(pageCacheService, Mockito.times(1))
         .saveByHash(TEST_PAGE_HASH, TEST_PAGE_CONTENT);
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStreamCaptor.getValue());
