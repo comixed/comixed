@@ -25,7 +25,6 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.repositories.comic.PageTypeRepository;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +37,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ImageEntryLoader extends AbstractEntryLoader {
-  @Autowired private PageTypeRepository pageTypeRepository;
   @Autowired private Utils utils;
 
   @Override
@@ -54,8 +52,7 @@ public class ImageEntryLoader extends AbstractEntryLoader {
         final BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(content));
         final int width = bimage.getWidth();
         final int height = bimage.getHeight();
-        Page page =
-            new Page(filename, this.pageTypeRepository.getDefaultPageType(), hash, width, height);
+        Page page = new Page(filename, hash, width, height);
         page.setContent(content);
         page.setComic(comic);
         comic.getPages().add(page);

@@ -27,12 +27,10 @@ import java.util.List;
 import java.util.Optional;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.comic.PageType;
 import org.comixedproject.model.library.BlockedPageHash;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.repositories.comic.PageRepository;
-import org.comixedproject.repositories.comic.PageTypeRepository;
 import org.comixedproject.repositories.library.BlockedPageHashRepository;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Assert;
@@ -64,11 +62,9 @@ public class PageServiceTest {
 
   @InjectMocks private PageService pageService;
   @Mock private PageRepository pageRepository;
-  @Mock private PageTypeRepository pageTypeRepository;
   @Mock private BlockedPageHashRepository blockedPageHashRepository;
   @Mock private ComicRepository comicRepository;
   @Mock private ComicService comicService;
-  @Mock private PageType pageType;
   @Mock private Page page;
   @Mock private BlockedPageHash blockedPageHash;
   @Captor private ArgumentCaptor<BlockedPageHash> blockedPageHashCaptor;
@@ -76,51 +72,8 @@ public class PageServiceTest {
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
   @Mock private List<Page> pageList;
-  @Mock private List<PageType> pageTypeList;
 
   private String[] blockedPageHashList = new String[] {BLOCKED_PAGE_HASH_VALUE};
-
-  @Test(expected = PageException.class)
-  public void testSetPageTypeForNonexistentPage() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-
-    try {
-      pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-    } finally {
-      Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    }
-  }
-
-  @Test(expected = PageException.class)
-  public void testSetPageTypeWithNonexistentType() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
-    Mockito.when(pageTypeRepository.findByName(Mockito.anyString())).thenReturn(null);
-
-    try {
-      pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-    } finally {
-      Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-      Mockito.verify(pageTypeRepository, Mockito.times(1)).findByName(TEST_PAGE_TYPE_NAME);
-    }
-  }
-
-  @Test
-  public void testSetPageType() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
-    Mockito.when(pageTypeRepository.findByName(Mockito.anyString())).thenReturn(pageType);
-    Mockito.doNothing().when(page).setPageType(pageType);
-    Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
-
-    final Page result = pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-
-    assertNotNull(result);
-    assertSame(page, result);
-
-    Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    Mockito.verify(pageTypeRepository, Mockito.times(1)).findByName(TEST_PAGE_TYPE_NAME);
-    Mockito.verify(page, Mockito.times(1)).setPageType(pageType);
-    Mockito.verify(pageRepository, Mockito.times(1)).save(page);
-  }
 
   @Test
   public void testAddBlockedPageHash() throws PageException {
@@ -382,15 +335,6 @@ public class PageServiceTest {
     assertSame(pageList, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findAllByComicId(TEST_COMIC_ID);
-  }
-
-  @Test
-  public void testGetPageTypes() {
-    Mockito.when(pageTypeRepository.findPageTypes()).thenReturn(pageTypeList);
-
-    assertSame(pageTypeList, pageService.getPageTypes());
-
-    Mockito.verify(pageTypeRepository, Mockito.times(1)).findPageTypes();
   }
 
   @Test

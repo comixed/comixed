@@ -82,7 +82,6 @@ public class ComicRepositoryTest {
   private static final Date TEST_COVER_DATE_WITH_PREV = new Date(1488258000000L);
 
   @Autowired private ComicRepository repository;
-  @Autowired private PageTypeRepository pageTypeRepository;
   @Autowired private ScanTypeRepository scanTypeRepository;
   @Autowired private ComicFormatRepository comicFormatRepository;
   @Autowired private ComiXedUserRepository userRepository;

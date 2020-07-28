@@ -29,11 +29,9 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.comic.PageType;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.net.SetBlockingStateRequest;
 import org.comixedproject.net.SetDeletedStateRequest;
-import org.comixedproject.net.SetPageTypeRequest;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.comic.PageException;
 import org.comixedproject.service.comic.PageService;
@@ -168,13 +166,6 @@ public class PageController {
     return this.pageService.getPageInComicByIndex(comicId, index);
   }
 
-  @GetMapping(value = "/pages/types", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Iterable<PageType> getPageTypes() {
-    log.info("Fetching page types");
-
-    return this.pageService.getPageTypes();
-  }
-
   @DeleteMapping(value = "/pages/{id}/unblock/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
   public Comic removeBlockedPageHash(
@@ -197,16 +188,6 @@ public class PageController {
     log.info("Undeleting page: id={}", id);
 
     return this.pageService.undeletePage(id) != null;
-  }
-
-  @PutMapping(value = "/pages/{id}/type", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.PageDetails.class)
-  public Page updateTypeForPage(
-      @PathVariable("id") long id, @RequestBody() SetPageTypeRequest request) throws PageException {
-    String typeName = request.getTypeName();
-    log.info("Setting page type: id={} typeName={}", id, typeName);
-
-    return this.pageService.updateTypeForPage(id, typeName);
   }
 
   @PostMapping(

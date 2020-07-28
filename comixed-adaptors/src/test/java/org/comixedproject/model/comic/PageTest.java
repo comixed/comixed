@@ -66,7 +66,7 @@ public class PageTest {
 
   @Before
   public void setUp() throws IOException {
-    page = new Page(TEST_JPG_FILE, new PageType(), TEST_HASH, TEST_WIDTH, TEST_HEIGHT);
+    page = new Page(TEST_JPG_FILE, TEST_HASH, TEST_WIDTH, TEST_HEIGHT);
   }
 
   @Test

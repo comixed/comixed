@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="005_issue-435_remove_page_type.xml"
+             author="mcpierce">
+
+    <dropForeignKeyConstraint baseTableName="pages"
+                              constraintName="pages_page_type_fk"/>
+    <dropColumn tableName="pages"
+                columnName="type_id"/>
+
+    <dropTable tableName="page_types"/>
+
+  </changeSet>
+</databaseChangeLog>

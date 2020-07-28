@@ -31,12 +31,10 @@ import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.comic.PageType;
 import org.comixedproject.model.library.BlockedPageHash;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.net.SetBlockingStateRequest;
 import org.comixedproject.net.SetDeletedStateRequest;
-import org.comixedproject.net.SetPageTypeRequest;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.comic.PageException;
 import org.comixedproject.service.comic.PageService;
@@ -81,7 +79,6 @@ public class PageControllerTest {
   @Mock private BlockedPageHash blockedPageHash = new BlockedPageHash();
   @Mock private List<Page> pageList;
   @Mock private Comic comic;
-  @Mock private List<PageType> pageTypes;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
   @Mock private List<DuplicatePage> duplicatePageList;
   @Mock private ComicFileHandler comicFileHandler;
@@ -89,21 +86,6 @@ public class PageControllerTest {
 
   @Captor private ArgumentCaptor<InputStream> inputStream;
   private ArchiveType archiveType = ArchiveType.CB7;
-
-  @Test
-  public void testSetPageType() throws PageException {
-    Mockito.when(pageService.updateTypeForPage(Mockito.anyLong(), Mockito.anyString()))
-        .thenReturn(page);
-
-    final Page result =
-        pageController.updateTypeForPage(TEST_PAGE_ID, new SetPageTypeRequest(TEST_PAGE_TYPE_NAME));
-
-    assertNotNull(result);
-    assertSame(page, result);
-
-    Mockito.verify(pageService, Mockito.times(1))
-        .updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-  }
 
   @Test
   public void testAddBlockedPageHash() throws PageException {
@@ -338,15 +320,6 @@ public class PageControllerTest {
     assertSame(pageList, result);
 
     Mockito.verify(pageService, Mockito.times(1)).getAllPagesForComic(TEST_COMIC_ID);
-  }
-
-  @Test
-  public void testGetPageTypes() {
-    Mockito.when(pageService.getPageTypes()).thenReturn(pageTypes);
-
-    assertSame(pageTypes, pageController.getPageTypes());
-
-    Mockito.verify(pageService, Mockito.times(1)).getPageTypes();
   }
 
   @Test

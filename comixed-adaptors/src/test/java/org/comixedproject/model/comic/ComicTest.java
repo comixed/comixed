@@ -75,12 +75,11 @@ public class ComicTest {
 
   private Comic comic;
   private Page page;
-  private PageType pageType = new PageType();
 
   @Before
   public void setUp() throws Exception {
     this.comic = new Comic();
-    this.page = new Page(TEST_PAGE_FILENAME, pageType, TEST_HASH, TEST_WIDTH, TEST_HEIGHT);
+    this.page = new Page(TEST_PAGE_FILENAME, TEST_HASH, TEST_WIDTH, TEST_HEIGHT);
   }
 
   @Test

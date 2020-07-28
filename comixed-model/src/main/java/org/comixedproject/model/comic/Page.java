@@ -51,14 +51,6 @@ public class Page {
   @Setter
   private Comic comic;
 
-  @ManyToOne
-  @JoinColumn(name = "type_id", nullable = false)
-  @JsonProperty("page_type")
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
-  @Getter
-  @Setter
-  private PageType pageType;
-
   @Column(name = "filename", length = 128, updatable = true, nullable = false)
   @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
   @Getter
@@ -114,14 +106,8 @@ public class Page {
    * @param content the content
    * @param pageType the offset type
    */
-  public Page(
-      String filename,
-      PageType pageType,
-      final String hash,
-      final Integer width,
-      final Integer height) {
+  public Page(String filename, final String hash, final Integer width, final Integer height) {
     this.filename = filename;
-    this.pageType = pageType;
     this.hash = hash;
     this.width = width;
     this.height = height;
