@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.ComicDataAdaptor;
+import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFormat;
@@ -78,6 +80,7 @@ public class ComicController {
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
   @Autowired private ObjectFactory<UndeleteComicsWorkerTask> undeleteComicsWorkerTaskObjectFactory;
+  @Autowired private ComicFileHandler comicFileHandler;
 
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({View.ComicDetails.class})
@@ -347,7 +350,12 @@ public class ComicController {
       byte[] content = this.pageCacheService.findByHash(page.getHash());
       if (content == null) {
         log.debug("Loading page from archive");
-        content = comic.getPage(0).getContent();
+        final ArchiveAdaptor archiveAdaptor =
+            this.comicFileHandler.getArchiveAdaptorFor(comic.getFilename());
+        if (archiveAdaptor == null) {
+          throw new ComicFileHandlerException("no archive adaptor found");
+        }
+        content = archiveAdaptor.loadSingleFile(comic, filename);
         this.pageCacheService.saveByHash(page.getHash(), content);
       }
       log.debug("Returning comic cover: filename={} size={}", filename, content.length);
