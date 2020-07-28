@@ -29,24 +29,19 @@ import {
   ComicGetFormats,
   ComicGetIssue,
   ComicGetIssueFailed,
-  ComicGetPageTypes,
   ComicGetScanTypes,
   ComicGotFormats,
   ComicGotIssue,
-  ComicGotPageTypes,
   ComicGotScanTypes,
   ComicMarkAsRead,
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
-  ComicPageTypeSet,
   ComicRestore,
   ComicRestored,
   ComicRestoreFailed,
   ComicSave,
   ComicSavePage,
-  ComicSetPageHashBlocking,
-  ComicSetPageType,
-  ComicSetPageTypeFailed
+  ComicSetPageHashBlocking
 } from 'app/comics/actions/comic.actions';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import {
@@ -55,7 +50,6 @@ import {
   FORMAT_5
 } from 'app/comics/models/comic-format.fixtures';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
-import { FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import {
   SCAN_TYPE_1,
   SCAN_TYPE_3,
@@ -74,7 +68,6 @@ describe('ComicAdaptor', () => {
   const SKIP_CACHE = false;
   const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
   const PAGE = COMIC.pages[1];
-  const PAGE_TYPE = FRONT_COVER;
 
   let adaptor: ComicAdaptor;
   let store: Store<AppState>;
@@ -163,29 +156,6 @@ describe('ComicAdaptor', () => {
     });
   });
 
-  it('provides notice when fetching page types', () => {
-    store.dispatch(new ComicGetPageTypes());
-    adaptor.fetchingPageTypes$.subscribe(result => expect(result).toBeTruthy());
-  });
-
-  describe('loading page types', () => {
-    const PAGE_TYPES = [FRONT_COVER];
-
-    beforeEach(() => {
-      store.dispatch(new ComicGotPageTypes({ pageTypes: PAGE_TYPES }));
-    });
-
-    it('provides notice when the the page types are loaded', () => {
-      adaptor.pageTypesLoaded$.subscribe(result => expect(result).toBeTruthy());
-    });
-
-    it('provides notice when the page types change', () => {
-      adaptor.pageTypes$.subscribe(result =>
-        expect(result).toEqual(PAGE_TYPES)
-      );
-    });
-  });
-
   describe('fetching a single comic', () => {
     beforeEach(() => {
       adaptor.getComicById(COMIC.id);
@@ -259,49 +229,6 @@ describe('ComicAdaptor', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       new ComicSetPageHashBlocking({ page: PAGE, state: false })
     );
-  });
-
-  describe('can change the page type', () => {
-    beforeEach(() => {
-      store.dispatch(new ComicGotIssue({ comic: COMIC }));
-      adaptor.setPageType(PAGE, PAGE_TYPE);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new ComicSetPageType({ page: PAGE, pageType: PAGE_TYPE })
-      );
-    });
-
-    it('provides updates on setting the page type', () => {
-      adaptor.settingPageType$.subscribe(response =>
-        expect(response).toBeTruthy()
-      );
-    });
-
-    describe('success', () => {
-      beforeEach(() => {
-        store.dispatch(new ComicPageTypeSet({ page: PAGE }));
-      });
-
-      it('provides updates on setting the page type', () => {
-        adaptor.settingPageType$.subscribe(response =>
-          expect(response).toBeFalsy()
-        );
-      });
-    });
-
-    describe('failure', () => {
-      beforeEach(() => {
-        store.dispatch(new ComicSetPageTypeFailed());
-      });
-
-      it('provides updates on setting the page type', () => {
-        adaptor.settingPageType$.subscribe(response =>
-          expect(response).toBeFalsy()
-        );
-      });
-    });
   });
 
   it('can save a comic', () => {

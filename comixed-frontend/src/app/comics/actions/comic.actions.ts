@@ -17,7 +17,7 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Comic, ComicFormat, Page, PageType, ScanType } from 'app/comics';
+import { Comic, ComicFormat, Page, ScanType } from 'app/comics';
 
 export enum ComicActionTypes {
   GetScanTypes = '[COMIC] Get the set of scan types',
@@ -26,18 +26,12 @@ export enum ComicActionTypes {
   GetFormats = '[COMIC] Get the set of formats',
   GotFormats = '[COMIC] Got the set of formats',
   GetFormatsFailed = '[COMIC] Failed to get the set of formats',
-  GetPageTypes = '[COMIC] Get the set of page types',
-  GotPageTypes = '[COMIC] Got the page types',
-  GetPageTypesFailed = '[COMIC] Failed to get the set of page types',
   GetIssue = '[COMIC] Get a single issue',
   GotIssue = '[COMIC] Got a single issue',
   GetIssueFailed = '[COMIC] Failed to get a single issue',
   SavePage = '[COMIC] Save a single page',
   PageSaved = '[COMIC] Page was saved',
   SavePageFailed = '[COMIC] Page was not saved',
-  SetPageType = '[COMIC] Set the page type',
-  PageTypeSet = '[COMIC] The page type is set',
-  SetPageTypeFailed = '[COMIC] Set the page type failed',
   SetPageHashBlocking = '[COMIC] Set the blocking state for a page hash',
   PageHashBlockingSet = '[COMIC] The blocking state is set for a page hash',
   SetPageHashBlockingFailed = '[COMIC] Failed to set the block state for a page hash',
@@ -94,24 +88,6 @@ export class ComicGetFormatsFailed implements Action {
   constructor() {}
 }
 
-export class ComicGetPageTypes implements Action {
-  readonly type = ComicActionTypes.GetPageTypes;
-
-  constructor() {}
-}
-
-export class ComicGotPageTypes implements Action {
-  readonly type = ComicActionTypes.GotPageTypes;
-
-  constructor(public payload: { pageTypes: PageType[] }) {}
-}
-
-export class ComicGetPageTypesFailed implements Action {
-  readonly type = ComicActionTypes.GetPageTypesFailed;
-
-  constructor() {}
-}
-
 export class ComicGetIssue implements Action {
   readonly type = ComicActionTypes.GetIssue;
 
@@ -144,24 +120,6 @@ export class ComicPageSaved implements Action {
 
 export class ComicSavePageFailed implements Action {
   readonly type = ComicActionTypes.SavePageFailed;
-
-  constructor() {}
-}
-
-export class ComicSetPageType implements Action {
-  readonly type = ComicActionTypes.SetPageType;
-
-  constructor(public payload: { page: Page; pageType: PageType }) {}
-}
-
-export class ComicPageTypeSet implements Action {
-  readonly type = ComicActionTypes.PageTypeSet;
-
-  constructor(public payload: { page: Page }) {}
-}
-
-export class ComicSetPageTypeFailed implements Action {
-  readonly type = ComicActionTypes.SetPageTypeFailed;
 
   constructor() {}
 }
@@ -281,18 +239,12 @@ export type ComicActions =
   | ComicGetFormats
   | ComicGotFormats
   | ComicGetFormatsFailed
-  | ComicGetPageTypes
-  | ComicGotPageTypes
-  | ComicGetPageTypesFailed
   | ComicGetIssue
   | ComicGotIssue
   | ComicGetIssueFailed
   | ComicSavePage
   | ComicPageSaved
   | ComicSavePageFailed
-  | ComicSetPageType
-  | ComicPageTypeSet
-  | ComicSetPageTypeFailed
   | ComicSetPageHashBlocking
   | ComicPageHashBlockingSet
   | ComicSetPageHashBlockingFailed

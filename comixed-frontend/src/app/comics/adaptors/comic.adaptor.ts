@@ -18,27 +18,18 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-  AppState,
-  Comic,
-  ComicFormat,
-  Page,
-  PageType,
-  ScanType
-} from 'app/comics';
+import { AppState, Comic, ComicFormat, Page, ScanType } from 'app/comics';
 import {
   ComicClearMetadata,
   ComicDelete,
   ComicGetFormats,
   ComicGetIssue,
-  ComicGetPageTypes,
   ComicGetScanTypes,
   ComicMarkAsRead,
   ComicRestore,
   ComicSave,
   ComicSavePage,
-  ComicSetPageHashBlocking,
-  ComicSetPageType
+  ComicSetPageHashBlocking
 } from 'app/comics/actions/comic.actions';
 import {
   COMIC_FEATURE_KEY,
@@ -58,13 +49,10 @@ export class ComicAdaptor {
   private _fetchingIssue$ = new BehaviorSubject<boolean>(false);
   private _noComic$ = new BehaviorSubject<boolean>(false);
   private _fetchingPageTypes$ = new BehaviorSubject<boolean>(false);
-  private _pageTypes$ = new BehaviorSubject<PageType[]>([]);
-  private _pageTypesLoaded$ = new BehaviorSubject<boolean>(false);
   private _comic$ = new BehaviorSubject<Comic>(null);
   private _deletingComic$ = new BehaviorSubject<boolean>(false);
   private _restoringComic$ = new BehaviorSubject<boolean>(false);
   private _markingAsRead$ = new BehaviorSubject<boolean>(false);
-  private _settingPageType$ = new BehaviorSubject<boolean>(false);
 
   constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
@@ -84,15 +72,6 @@ export class ComicAdaptor {
         if (!_.isEqual(this._formats$.getValue(), state.formats)) {
           this._formats$.next(state.formats);
         }
-        if (this._fetchingPageTypes$.getValue() !== state.fetchingPageTypes) {
-          this._fetchingPageTypes$.next(state.fetchingPageTypes);
-        }
-        if (this._pageTypesLoaded$.getValue() !== state.pageTypesLoaded) {
-          this._pageTypesLoaded$.next(state.pageTypesLoaded);
-        }
-        if (!_.isEqual(this._pageTypes$.getValue(), state.pageTypes)) {
-          this._pageTypes$.next(state.pageTypes);
-        }
         if (state.fetchingComic !== this._fetchingIssue$.getValue()) {
           this._fetchingIssue$.next(state.fetchingComic);
         }
@@ -110,9 +89,6 @@ export class ComicAdaptor {
         }
         if (state.settingReadState !== this._markingAsRead$.getValue()) {
           this._markingAsRead$.next(state.settingReadState);
-        }
-        if (state.settingPageType !== this._settingPageType$.getValue()) {
-          this._settingPageType$.next(state.settingPageType);
         }
       });
   }
@@ -145,23 +121,6 @@ export class ComicAdaptor {
 
   get formats$(): Observable<ComicFormat[]> {
     return this._formats$.asObservable();
-  }
-
-  getPageTypes(): void {
-    this.logger.debug('Firing action to load page types');
-    this.store.dispatch(new ComicGetPageTypes());
-  }
-
-  get fetchingPageTypes$(): Observable<boolean> {
-    return this._fetchingPageTypes$.asObservable();
-  }
-
-  get pageTypesLoaded$(): Observable<boolean> {
-    return this._pageTypesLoaded$.asObservable();
-  }
-
-  get pageTypes$(): Observable<PageType[]> {
-    return this._pageTypes$.asObservable();
   }
 
   get fetchingIssue$(): Observable<boolean> {
@@ -240,16 +199,5 @@ export class ComicAdaptor {
   markAsUnread(comic: Comic): void {
     this.logger.debug('marking comic as unread:', comic);
     this.store.dispatch(new ComicMarkAsRead({ comic: comic, read: false }));
-  }
-
-  setPageType(page: Page, pageType: PageType): void {
-    this.logger.debug('firing action to set page type:', page, pageType);
-    this.store.dispatch(
-      new ComicSetPageType({ page: page, pageType: pageType })
-    );
-  }
-
-  get settingPageType$(): Observable<boolean> {
-    return this._settingPageType$.asObservable();
   }
 }

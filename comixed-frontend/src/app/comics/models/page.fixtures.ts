@@ -17,7 +17,6 @@
  */
 
 import { Page } from 'app/comics/models/page';
-import { FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 
 export const PAGE_1: Page = {
   id: 1000,
@@ -28,7 +27,6 @@ export const PAGE_1: Page = {
   index: 0,
   hash: 'abcdef1234567890',
   deleted: false,
-  page_type: FRONT_COVER,
   blocked: false
 };
 
@@ -41,7 +39,6 @@ export const PAGE_2: Page = {
   index: 0,
   hash: 'abcdef1234567890',
   deleted: false,
-  page_type: FRONT_COVER,
   blocked: false
 };
 
@@ -54,7 +51,6 @@ export const PAGE_3: Page = {
   index: 0,
   hash: 'abcdef1234567890',
   deleted: false,
-  page_type: FRONT_COVER,
   blocked: false
 };
 
@@ -67,6 +63,5 @@ export const PAGE_4: Page = {
   index: 0,
   hash: 'abcdef1234567890',
   deleted: false,
-  page_type: FRONT_COVER,
   blocked: false
 };

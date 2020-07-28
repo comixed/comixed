@@ -28,7 +28,6 @@ import {
   DELETE_COMIC_URL,
   GET_COMIC_URL,
   GET_FORMATS_URL,
-  GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
   MARK_COMIC_AS_READ_URL,
   RESTORE_COMIC_URL,
@@ -40,7 +39,6 @@ import {
   FORMAT_5
 } from 'app/comics/models/comic-format.fixtures';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
-import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import {
   SCAN_TYPE_1,
   SCAN_TYPE_3,
@@ -95,18 +93,6 @@ describe('ComicService', () => {
     const req = httpMock.expectOne(interpolate(GET_FORMATS_URL));
     expect(req.request.method).toEqual('GET');
     req.flush(FORMATS);
-  });
-
-  it('can get the list of page types', () => {
-    const PAGE_TYPES = [FRONT_COVER, BACK_COVER];
-
-    service
-      .getPageTypes()
-      .subscribe(response => expect(response).toEqual(PAGE_TYPES));
-
-    const req = httpMock.expectOne(interpolate(GET_PAGE_TYPES_URL));
-    expect(req.request.method).toEqual('GET');
-    req.flush(PAGE_TYPES);
   });
 
   it('can get an issue', () => {

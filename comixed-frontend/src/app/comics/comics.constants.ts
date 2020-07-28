@@ -20,7 +20,6 @@ import { API_ROOT_URL } from 'app/app.functions';
 
 export const GET_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scan_types`;
 export const GET_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
-export const GET_PAGE_TYPES_URL = `${API_ROOT_URL}/pages/types`;
 export const GET_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const SAVE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const CLEAR_METADATA_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
@@ -34,7 +33,6 @@ export const MARK_COMIC_AS_UNREAD_URL = `${API_ROOT_URL}/comics/\${id}/read`;
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 
 export const SAVE_PAGE_URL = `${API_ROOT_URL}/pages/\${id}`;
-export const SET_PAGE_TYPE_URL = `${API_ROOT_URL}/pages/\${id}/type`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 export const BLOCK_PAGE_HASH_URL = `${API_ROOT_URL}/pages/\${id}/block/\${hash}`;
 export const UNBLOCK_PAGE_HASH_URL = `${API_ROOT_URL}/pages/\${id}/unblock/\${hash}`;

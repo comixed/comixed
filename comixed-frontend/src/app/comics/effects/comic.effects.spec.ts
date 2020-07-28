@@ -30,13 +30,10 @@ import {
   ComicGetFormatsFailed,
   ComicGetIssue,
   ComicGetIssueFailed,
-  ComicGetPageTypes,
-  ComicGetPageTypesFailed,
   ComicGetScanTypes,
   ComicGetScanTypesFailed,
   ComicGotFormats,
   ComicGotIssue,
-  ComicGotPageTypes,
   ComicGotScanTypes,
   ComicMarkAsRead,
   ComicMarkAsReadFailed,
@@ -44,7 +41,6 @@ import {
   ComicMetadataCleared,
   ComicPageHashBlockingSet,
   ComicPageSaved,
-  ComicPageTypeSet,
   ComicRestore,
   ComicRestored,
   ComicRestoreFailed,
@@ -54,9 +50,7 @@ import {
   ComicSavePage,
   ComicSavePageFailed,
   ComicSetPageHashBlocking,
-  ComicSetPageHashBlockingFailed,
-  ComicSetPageType,
-  ComicSetPageTypeFailed
+  ComicSetPageHashBlockingFailed
 } from 'app/comics/actions/comic.actions';
 import {
   FORMAT_1,
@@ -64,11 +58,6 @@ import {
   FORMAT_5
 } from 'app/comics/models/comic-format.fixtures';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
-import {
-  BACK_COVER,
-  FRONT_COVER,
-  STORY
-} from 'app/comics/models/page-type.fixtures';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
 import {
   SCAN_TYPE_1,
@@ -91,7 +80,6 @@ describe('ComicEffects', () => {
   const SKIP_CACHE = false;
   const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
   const PAGE = PAGE_1;
-  const PAGE_TYPE = STORY;
 
   let actions$: Observable<any>;
   let effects: ComicEffects;
@@ -231,49 +219,6 @@ describe('ComicEffects', () => {
     });
   });
 
-  describe('when getting the page types', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = [FRONT_COVER, BACK_COVER];
-      const action = new ComicGetPageTypes();
-      const outcome = new ComicGotPageTypes({ pageTypes: serviceResponse });
-
-      actions$ = hot('-a', { a: action });
-      comicService.getPageTypes.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.getPageTypes$).toBeObservable(expected);
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = new ComicGetPageTypes();
-      const outcome = new ComicGetPageTypesFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.getPageTypes.and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.getPageTypes$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-
-    it('fires an action on general failure', () => {
-      const action = new ComicGetPageTypes();
-      const outcome = new ComicGetPageTypesFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.getPageTypes.and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.getPageTypes$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-  });
-
   describe('when getting a comic', () => {
     it('fires an action on success', () => {
       const serviceResponse = COMIC;
@@ -357,61 +302,6 @@ describe('ComicEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.savePage$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-  });
-
-  describe('when setting the page type', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = PAGE;
-      const action = new ComicSetPageType({
-        page: PAGE,
-        pageType: PAGE_TYPE
-      });
-      const outcome = new ComicPageTypeSet({ page: PAGE });
-
-      actions$ = hot('-a', { a: action });
-      pageService.setPageType.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.setPageType$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'info' })
-      );
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = new ComicSetPageType({
-        page: PAGE,
-        pageType: PAGE_TYPE
-      });
-      const outcome = new ComicSetPageTypeFailed();
-
-      actions$ = hot('-a', { a: action });
-      pageService.setPageType.and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.setPageType$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-
-    it('fires an action on general failure', () => {
-      const action = new ComicSetPageType({
-        page: PAGE,
-        pageType: PAGE_TYPE
-      });
-      const outcome = new ComicSetPageTypeFailed();
-
-      actions$ = hot('-a', { a: action });
-      pageService.setPageType.and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.setPageType$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

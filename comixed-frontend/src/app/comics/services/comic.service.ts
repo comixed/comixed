@@ -25,7 +25,6 @@ import {
   DELETE_COMIC_URL,
   GET_COMIC_URL,
   GET_FORMATS_URL,
-  GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
   MARK_COMIC_AS_READ_URL,
   MARK_COMIC_AS_UNREAD_URL,
@@ -47,10 +46,6 @@ export class ComicService {
 
   getFormats(): Observable<any> {
     return this.http.get(interpolate(GET_FORMATS_URL));
-  }
-
-  getPageTypes(): Observable<any> {
-    return this.http.get(interpolate(GET_PAGE_TYPES_URL));
   }
 
   getIssue(id: number): Observable<any> {

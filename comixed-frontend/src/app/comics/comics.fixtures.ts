@@ -42,7 +42,6 @@ export {
 } from './models/scan-type.fixtures';
 export { FILE_DETAILS_1 } from './models/file-details.fixtures';
 export { PAGE_1, PAGE_2 } from './models/page.fixtures';
-export { FRONT_COVER, STORY, BACK_COVER } from './models/page-type.fixtures';
 export { SCRAPING_ISSUE_1000 } from './models/scraping-issue.fixtures';
 export {
   SCRAPING_VOLUME_1000,

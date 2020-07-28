@@ -30,7 +30,6 @@ export { ComicFormat } from './models/comic-format';
 export { ScanType } from './models/scan-type';
 export { ComicCredit } from './models/comic-credit';
 export { Page } from './models/page';
-export { PageType } from './models/page-type';
 export { Volume } from './models/volume';
 
 interface RouterStateUrl {

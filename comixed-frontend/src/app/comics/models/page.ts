@@ -16,8 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { PageType } from 'app/comics/models/page-type';
-
 export interface Page {
   id: number;
   comic_id: number;
@@ -27,6 +25,5 @@ export interface Page {
   index: number;
   hash: string;
   deleted: boolean;
-  page_type: PageType;
   blocked: boolean;
 }

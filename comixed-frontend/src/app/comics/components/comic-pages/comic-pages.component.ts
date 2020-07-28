@@ -17,10 +17,9 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { Subscription } from 'rxjs';
-import { Comic, Page, PageType } from 'app/comics';
+import { Comic, Page } from 'app/comics';
 import { LoggerService } from '@angular-ru/logger';
 import { LibraryDisplayAdaptor } from 'app/library';
 
@@ -38,7 +37,6 @@ export class ComicPagesComponent implements OnInit, OnDestroy {
   rows = 10;
 
   pageTypesSubscription: Subscription;
-  pageTypeOptions: SelectItem[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -49,13 +47,6 @@ export class ComicPagesComponent implements OnInit, OnDestroy {
       this.logger.debug(`rows is now ${rows}`);
       this.rows = rows;
     });
-    this.pageTypesSubscription = this.comicAdaptor.pageTypes$.subscribe(
-      pageTypes =>
-        (this.pageTypeOptions = pageTypes.map(pageType => {
-          return { label: pageType.name, value: pageType };
-        }))
-    );
-    this.comicAdaptor.getPageTypes();
   }
 
   ngOnInit() {}
@@ -63,11 +54,6 @@ export class ComicPagesComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.rowsSubscription.unsubscribe();
     this.pageTypesSubscription.unsubscribe();
-  }
-
-  setPageType(page: Page, pageType: PageType): void {
-    this.logger.debug('setting page type:', page, pageType);
-    this.comicAdaptor.setPageType(page, pageType);
   }
 
   blockPage(page: Page): void {

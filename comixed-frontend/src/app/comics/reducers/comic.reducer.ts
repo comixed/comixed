@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic, ComicFormat, PageType, ScanType } from 'app/comics';
+import { Comic, ComicFormat, ScanType } from 'app/comics';
 import { ComicActions, ComicActionTypes } from '../actions/comic.actions';
 
 export const COMIC_FEATURE_KEY = 'comic';
@@ -29,13 +29,10 @@ export interface ComicState {
   formats: ComicFormat[];
   formatsLoaded: boolean;
   fetchingPageTypes: boolean;
-  pageTypes: PageType[];
-  pageTypesLoaded: boolean;
   fetchingComic: boolean;
   noComic: boolean;
   comic: Comic;
   savingPage: boolean;
-  settingPageType: boolean;
   blockingPageHash: boolean;
   savingComic: boolean;
   clearingMetadata: boolean;
@@ -53,13 +50,10 @@ export const initialState: ComicState = {
   formats: [],
   formatsLoaded: false,
   fetchingPageTypes: false,
-  pageTypes: [],
-  pageTypesLoaded: false,
   fetchingComic: false,
   noComic: false,
   comic: null,
   savingPage: false,
-  settingPageType: false,
   blockingPageHash: false,
   savingComic: false,
   clearingMetadata: false,
@@ -102,20 +96,6 @@ export function reducer(
     case ComicActionTypes.GetFormatsFailed:
       return { ...state, fetchingFormats: false, formatsLoaded: false };
 
-    case ComicActionTypes.GetPageTypes:
-      return { ...state, fetchingPageTypes: true };
-
-    case ComicActionTypes.GotPageTypes:
-      return {
-        ...state,
-        fetchingPageTypes: false,
-        pageTypesLoaded: true,
-        pageTypes: action.payload.pageTypes
-      };
-
-    case ComicActionTypes.GetPageTypesFailed:
-      return { ...state, fetchingPageTypes: false, pageTypesLoaded: false };
-
     case ComicActionTypes.GetIssue:
       return { ...state, fetchingComic: true, noComic: false };
 
@@ -133,20 +113,6 @@ export function reducer(
 
     case ComicActionTypes.SavePageFailed:
       return { ...state, savingPage: false };
-
-    case ComicActionTypes.SetPageType:
-      return { ...state, settingPageType: true };
-
-    case ComicActionTypes.PageTypeSet: {
-      const updatedPage = action.payload.page;
-      const comic = state.comic;
-      const index = comic.pages.findIndex(page => page.id === updatedPage.id);
-      comic.pages[index] = updatedPage;
-      return { ...state, settingPageType: false, comic: comic };
-    }
-
-    case ComicActionTypes.SetPageTypeFailed:
-      return { ...state, settingPageType: false };
 
     case ComicActionTypes.SetPageHashBlocking:
       return { ...state, blockingPageHash: true };

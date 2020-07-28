@@ -20,7 +20,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { ComicPageUrlPipe } from 'app/comics/pipes/comic-page-url.pipe';
@@ -31,12 +30,9 @@ import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { AppState } from 'app/comics';
-import { ComicGotPageTypes } from 'app/comics/actions/comic.actions';
-import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
-import { PAGE_1, PAGE_2 } from 'app/comics/models/page.fixtures';
+import { PAGE_1 } from 'app/comics/models/page.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
 import { TableModule } from 'primeng/table';
-import { InplaceModule } from 'primeng/inplace';
 import { TooltipModule } from 'primeng/primeng';
 import { UserModule } from 'app/user/user.module';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -60,10 +56,8 @@ describe('ComicPagesComponent', () => {
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([ComicEffects]),
-        DropdownModule,
         MessagesModule,
         TableModule,
-        InplaceModule,
         TooltipModule
       ],
       declarations: [ComicPagesComponent, ComicPageUrlPipe],
@@ -79,12 +73,6 @@ describe('ComicPagesComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('subscribes to page type list upates', () => {
-    component.pageTypeOptions = [];
-    store.dispatch(new ComicGotPageTypes({ pageTypes: [FRONT_COVER] }));
-    expect(component.pageTypeOptions).not.toEqual([]);
   });
 
   it('can block a page hash', () => {
