@@ -35,14 +35,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 /**
- * <code>ComicVineGetIssuesAction</code> retrieves the list of issues for a given comic volume.
+ * <code>ComicVineGetIssueAction</code> retrieves the list of issues for a given comic volume.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
-public class ComicVineGetIssuesAction extends AbstractComicVineScrapingAction<List<ScrapingIssue>> {
+public class ComicVineGetIssueAction extends AbstractComicVineScrapingAction<List<ScrapingIssue>> {
   @Getter @Setter private Integer volumeId;
   @Getter @Setter private String issueNumber;
 

@@ -19,9 +19,9 @@
 package org.comixedproject.scrapers.adaptors;
 
 import java.util.List;
-import org.comixedproject.model.comic.Comic;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.model.ScrapingIssue;
+import org.comixedproject.scrapers.model.ScrapingIssueDetails;
 import org.comixedproject.scrapers.model.ScrapingVolume;
 
 /**
@@ -39,13 +39,19 @@ public interface ScrapingAdaptor {
    * @param apiKey the API key
    * @param seriesName the series name
    * @param maxRecords the maximum records to fetch
-   * @param skipCache the skip cache flag
    * @return the list of volumes
    * @throws ScrapingException if an error occurs
    */
-  List<ScrapingVolume> getVolumes(
-      String apiKey, String seriesName, Integer maxRecords, boolean skipCache)
+  List<ScrapingVolume> getVolumes(String apiKey, String seriesName, Integer maxRecords)
       throws ScrapingException;
+
+  /**
+   * Generates a consistent key for storing a fetching details for a single comic.
+   *
+   * @param issueId the issue number
+   * @return the key value
+   */
+  String getIssueDetailsKey(Integer issueId);
 
   /**
    * Returns a single issue.
@@ -53,25 +59,28 @@ public interface ScrapingAdaptor {
    * @param apiKey the API key
    * @param volume the volume
    * @param issueNumber the issue number within the volume
-   * @param skipCache the skip cache flag
    * @return the issue or null
    * @throws ScrapingException if an error occurs
    */
-  ScrapingIssue getIssue(String apiKey, Integer volume, String issueNumber, boolean skipCache)
+  ScrapingIssue getIssue(String apiKey, Integer volume, String issueNumber)
       throws ScrapingException;
 
   /**
-   * Retrieves the metadata for an issue and applies it to the given {@link Comic}.
+   * Returns ta single issue with details.
    *
-   * <p><em>NOTE:</em> This method does NOT save the updated comic.
-   *
-   * @param apiKey the API key
+   * @param apiKey the api key
    * @param issueId the issue id
-   * @param skipCache the skip cache flag
-   * @param comic the comic id
+   * @return the issue details
    * @throws ScrapingException if an error occurs
    */
-  void scrapeComic(
-      final String apiKey, final String issueId, final Boolean skipCache, final Comic comic)
-      throws ScrapingException;
+  ScrapingIssueDetails getIssueDetails(String apiKey, Integer issueId) throws ScrapingException;
+
+  /**
+   * Generates a consistent key for storing and fetching issue data.
+   *
+   * @param volume the volume id
+   * @param issueNumber the issue number
+   * @return the key value
+   */
+  String getIssueKey(Integer volume, String issueNumber);
 }

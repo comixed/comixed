@@ -21,19 +21,21 @@ package org.comixedproject.scrapers.comicvine.actions;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comic.Comic;
 import org.comixedproject.scrapers.ScrapingException;
-import org.comixedproject.scrapers.comicvine.model.ComicVineGetIssueDetailsResponse;
-import org.comixedproject.scrapers.comicvine.model.ComicVineIssue;
+import org.comixedproject.scrapers.comicvine.adaptors.ComicVineScrapingAdaptor;
+import org.comixedproject.scrapers.comicvine.model.*;
+import org.comixedproject.scrapers.model.ScrapingIssueDetails;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 /**
- * <code>ComicVineGetIssueDetailsAction</code> retrieves the details for a single issue from
- * ComicVine.
+ * <code>ComicVineScrapeComicAction</code> scrapes the details for a issue {@link Comic} and returns
+ * the unsaved, updated object.
  *
  * @author Darryl L. Pierce
  */
@@ -41,44 +43,85 @@ import reactor.core.publisher.Mono;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class ComicVineGetIssueDetailsAction
-    extends AbstractComicVineScrapingAction<ComicVineIssue> {
-  static final String ENDPOINT = "issue/4000-%s";
+    extends AbstractComicVineScrapingAction<ScrapingIssueDetails> {
 
-  @Getter @Setter private String issueId;
+  @Getter @Setter protected String apiKey;
+  @Getter @Setter protected Integer issueId;
+
+  @Autowired
+  private ObjectFactory<ComicVineGetIssueWithDetailsAction> issueDetailsActionObjectFactory;
+
+  @Autowired
+  private ObjectFactory<ComicVineGetVolumeDetailsAction> volumeDetailsActionObjectFactory;
+
+  @Autowired
+  private ObjectFactory<ComicVineGetPublisherDetailsAction> publisherDetailsActionObjectFactory;
 
   @Override
-  public ComicVineIssue execute() throws ScrapingException {
-    this.addField("volume");
-    this.addField("issue_number");
-    this.addField("cover_date");
-    this.addField("name");
-    this.addField("description");
-    this.addField("character_credits");
-    this.addField("team_credits");
-    this.addField("location_credits");
-    this.addField("story_arc_credits");
-    this.addField("person_credits");
+  public ScrapingIssueDetails execute() throws ScrapingException {
+    if (StringUtils.isEmpty(this.apiKey)) throw new ScrapingException("Missing API key");
+    if (this.issueId == null) throw new ScrapingException("Missing issue id");
 
-    if (StringUtils.isEmpty(this.baseUrl)) throw new ScrapingException("Missing base URL");
-    if (StringUtils.isEmpty(this.getApiKey())) throw new ScrapingException("Missing API key");
-    if (StringUtils.isEmpty(this.issueId)) throw new ScrapingException("Missing issue id");
+    final ComicVineIssue issueDetails = this.getIssueDetails();
+    final ComicVineVolume volumeDetails = this.getVolumeDetails(issueDetails.getVolume());
+    final ComicVinePublisher publisherDetails =
+        this.getPublisherDetails(volumeDetails.getPublisher());
 
-    log.debug(
-        "Querying ComicVine for issue: id={} API key={}", this.issueId, this.getMaskedApiKey());
-    final String url = this.createUrl(this.baseUrl, this.getEndpoint());
-    final WebClient client = this.createWebClient(url);
+    log.debug("Populatie the issue details");
+    final ScrapingIssueDetails result = new ScrapingIssueDetails();
+    result.setPublisher(publisherDetails.getName());
+    result.setSeries(volumeDetails.getName());
+    result.setVolume(volumeDetails.getStartYear());
+    result.setIssueNumber(issueDetails.getIssueNumber());
+    result.setCoverDate(issueDetails.getCoverDate());
+    result.setDescription(issueDetails.getDescription());
 
-    final Mono<ComicVineGetIssueDetailsResponse> request =
-        client.get().uri(url).retrieve().bodyToMono(ComicVineGetIssueDetailsResponse.class);
+    for (ComicVineCharacter character : issueDetails.getCharacters())
+      result.getCharacters().add(character.getName());
+    for (ComicVineTeam team : issueDetails.getTeams()) result.getTeams().add(team.getName());
+    for (ComicVineLocation location : issueDetails.getLocations())
+      result.getLocations().add(location.getName());
+    for (ComicVineStory story : issueDetails.getStories()) result.getStories().add(story.getName());
+    for (ComicVineCredit credit : issueDetails.getPeople())
+      result
+          .getCredits()
+          .add(new ScrapingIssueDetails.CreditEntry(credit.getName(), credit.getRole()));
 
-    try {
-      return request.block().getResults();
-    } catch (Exception error) {
-      throw new ScrapingException("failed to get issue details", error);
-    }
+    return result;
   }
 
-  private String getEndpoint() {
-    return String.format(ENDPOINT, this.issueId);
+  private ComicVinePublisher getPublisherDetails(final ComicVinePublisher publisher)
+      throws ScrapingException {
+    log.debug("Setting up the publisher details request: {}", publisher.getName());
+    final ComicVineGetPublisherDetailsAction getPublisherDetails =
+        this.publisherDetailsActionObjectFactory.getObject();
+    getPublisherDetails.setApiKey(this.apiKey);
+    getPublisherDetails.setApiUrl(publisher.getDetailUrl());
+
+    log.debug("Fetching the publisher details");
+    return getPublisherDetails.execute();
+  }
+
+  private ComicVineVolume getVolumeDetails(final ComicVineVolume volume) throws ScrapingException {
+    log.debug("Setting up the volume details request: id={}", volume.getName());
+    final ComicVineGetVolumeDetailsAction getVolumeDetails =
+        this.volumeDetailsActionObjectFactory.getObject();
+    getVolumeDetails.setApiKey(this.apiKey);
+    getVolumeDetails.setApiUrl(volume.getDetailUrl());
+
+    log.debug("Fetching the volume details");
+    return getVolumeDetails.execute();
+  }
+
+  private ComicVineIssue getIssueDetails() throws ScrapingException {
+    log.debug("Setting up the issue details request");
+    final ComicVineGetIssueWithDetailsAction getIssueDetails =
+        this.issueDetailsActionObjectFactory.getObject();
+    getIssueDetails.setBaseUrl(ComicVineScrapingAdaptor.BASE_URL);
+    getIssueDetails.setApiKey(this.apiKey);
+    getIssueDetails.setIssueId(this.issueId);
+
+    log.debug("Fetching the issue details");
+    return getIssueDetails.execute();
   }
 }

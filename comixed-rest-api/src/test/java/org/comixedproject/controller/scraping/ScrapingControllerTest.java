@@ -28,11 +28,10 @@ import org.comixedproject.net.ComicScrapeRequest;
 import org.comixedproject.net.GetScrapingIssueRequest;
 import org.comixedproject.net.GetVolumesRequest;
 import org.comixedproject.scrapers.ScrapingException;
-import org.comixedproject.scrapers.comicvine.adaptors.ComicVineScrapingAdaptor;
 import org.comixedproject.scrapers.model.ScrapingIssue;
 import org.comixedproject.scrapers.model.ScrapingVolume;
 import org.comixedproject.service.comic.ComicException;
-import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.scraping.ScrapingService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -43,28 +42,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class ComicVineScraperControllerTest {
+public class ScrapingControllerTest {
   private static final String TEST_API_KEY = "12345";
   private static final String TEST_SERIES_NAME = "Awesome Comic";
   private static final Integer TEST_MAX_RECORDS = 37;
   private static final Integer TEST_VOLUME = 2018;
   private static final String TEST_ISSUE_NUMBER = "15";
   private static final long TEST_COMIC_ID = 213L;
-  private static final String TEST_ISSUE_ID = "48132";
+  private static final Integer TEST_ISSUE_ID = 48132;
   private static final boolean TEST_SKIP_CACHE = true;
 
-  @InjectMocks private ComicVineScraperController controller;
-  @Mock private ComicVineScrapingAdaptor scrapingAdaptor;
+  @InjectMocks private ScrapingController controller;
+  @Mock private ScrapingService scrapingService;
   @Mock private List<ScrapingVolume> comicVolumeList;
   @Mock private ScrapingIssue comicIssue;
-  @Mock private ComicService comicService;
   @Mock private Comic comic;
 
   @Test(expected = ComiXedControllerException.class)
   public void testQueryForVolumesAdaptorRaisesException()
       throws ScrapingException, ComiXedControllerException {
     Mockito.when(
-            scrapingAdaptor.getVolumes(
+            scrapingService.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
@@ -72,7 +70,7 @@ public class ComicVineScraperControllerTest {
       controller.queryForVolumes(
           new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false));
     } finally {
-      Mockito.verify(scrapingAdaptor, Mockito.times(1))
+      Mockito.verify(scrapingService, Mockito.times(1))
           .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
     }
   }
@@ -80,7 +78,7 @@ public class ComicVineScraperControllerTest {
   @Test
   public void testQueryForVolumes() throws ComiXedControllerException, ScrapingException {
     Mockito.when(
-            scrapingAdaptor.getVolumes(
+            scrapingService.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenReturn(comicVolumeList);
 
@@ -90,14 +88,14 @@ public class ComicVineScraperControllerTest {
 
     assertSame(comicVolumeList, result);
 
-    Mockito.verify(scrapingAdaptor, Mockito.times(1))
+    Mockito.verify(scrapingService, Mockito.times(1))
         .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
   }
 
   @Test
   public void testQueryForVolumesSkipCache() throws ScrapingException, ComiXedControllerException {
     Mockito.when(
-            scrapingAdaptor.getVolumes(
+            scrapingService.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenReturn(comicVolumeList);
 
@@ -107,7 +105,7 @@ public class ComicVineScraperControllerTest {
 
     assertSame(comicVolumeList, result);
 
-    Mockito.verify(scrapingAdaptor, Mockito.times(1))
+    Mockito.verify(scrapingService, Mockito.times(1))
         .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true);
   }
 
@@ -115,7 +113,7 @@ public class ComicVineScraperControllerTest {
   public void testQueryForIssueAdaptorRaisesException()
       throws ScrapingException, ComiXedControllerException {
     Mockito.when(
-            scrapingAdaptor.getIssue(
+            scrapingService.getIssue(
                 Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
@@ -124,7 +122,7 @@ public class ComicVineScraperControllerTest {
           TEST_VOLUME,
           new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
     } finally {
-      Mockito.verify(scrapingAdaptor, Mockito.times(1))
+      Mockito.verify(scrapingService, Mockito.times(1))
           .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
     }
   }
@@ -132,7 +130,7 @@ public class ComicVineScraperControllerTest {
   @Test
   public void testQueryForIssue() throws ScrapingException, ComiXedControllerException {
     Mockito.when(
-            scrapingAdaptor.getIssue(
+            scrapingService.getIssue(
                 Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(comicIssue);
 
@@ -144,48 +142,34 @@ public class ComicVineScraperControllerTest {
     assertNotNull(result);
     assertSame(comicIssue, result);
 
-    Mockito.verify(scrapingAdaptor, Mockito.times(1))
+    Mockito.verify(scrapingService, Mockito.times(1))
         .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
-  }
-
-  @Test(expected = ComiXedControllerException.class)
-  public void testScrapeAndSaveComicDetailsNoSuchComic()
-      throws ComicException, ComiXedControllerException {
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
-
-    try {
-      controller.scrapeAndSaveComicDetails(
-          TEST_COMIC_ID, TEST_ISSUE_ID, new ComicScrapeRequest(TEST_API_KEY, TEST_SKIP_CACHE));
-    } finally {
-      Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    }
   }
 
   @Test(expected = ComiXedControllerException.class)
   public void testScrapeAndSaveComicDetailsScrapingAdaptorRaisesException()
       throws ComicException, ScrapingException, ComiXedControllerException {
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
-    Mockito.doThrow(ScrapingException.class)
-        .when(scrapingAdaptor)
-        .scrapeComic(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            Mockito.anyBoolean(),
-            Mockito.any(Comic.class));
+    Mockito.when(
+            scrapingService.scrapeComic(
+                Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
+        .thenThrow(ScrapingException.class);
 
     try {
       controller.scrapeAndSaveComicDetails(
           TEST_COMIC_ID, TEST_ISSUE_ID, new ComicScrapeRequest(TEST_API_KEY, TEST_SKIP_CACHE));
     } finally {
-      Mockito.verify(scrapingAdaptor, Mockito.times(1))
-          .scrapeComic(TEST_API_KEY, TEST_ISSUE_ID, TEST_SKIP_CACHE, comic);
+      Mockito.verify(scrapingService, Mockito.times(1))
+          .scrapeComic(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
     }
   }
 
   @Test
   public void testScrapeAndSaveComicDetails()
       throws ComicException, ScrapingException, ComiXedControllerException {
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(
+            scrapingService.scrapeComic(
+                Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
+        .thenReturn(comic);
 
     Comic result =
         controller.scrapeAndSaveComicDetails(
@@ -194,7 +178,7 @@ public class ComicVineScraperControllerTest {
     assertNotNull(result);
     assertSame(comic, result);
 
-    Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .scrapeComic(TEST_API_KEY, TEST_ISSUE_ID, TEST_SKIP_CACHE, comic);
+    Mockito.verify(scrapingService, Mockito.times(1))
+        .scrapeComic(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
   }
 }
