@@ -34,11 +34,6 @@
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-scrapers</artifactId>
-      <version>${comixed.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-plugins</artifactId>
       <version>${comixed.version}</version>
     </dependency>
