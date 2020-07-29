@@ -38,7 +38,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicVineGetIssuesActionTest {
+public class ComicVineGetIssueActionTest {
   private static final Random RANDOM = new Random();
   private static final String TEST_API_KEY = "This.is.the.test.api.key";
   private static final Integer TEST_VOLUME_ID = RANDOM.nextInt();
@@ -47,7 +47,7 @@ public class ComicVineGetIssuesActionTest {
   private static final String TEST_GOOD_BODY =
       "{\"error\":\"OK\",\"limit\":100,\"offset\":0,\"number_of_page_results\":1,\"number_of_total_results\":1,\"status_code\":1,\"results\":[{\"cover_date\":\"2012-05-01\",\"description\":null,\"id\":421092,\"image\":{\"icon_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/square_avatar\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"medium_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_medium\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"screen_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/screen_medium\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"screen_large_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/screen_kubrick\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"small_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_small\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"super_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_large\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"thumb_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/scale_avatar\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"tiny_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/square_mini\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"original_url\":\"https:\\/\\/comicvine1.cbsistatic.com\\/uploads\\/original\\/12\\/124613\\/3227301-action%20lab%20confidential%20v1%20%282012%29%20pagecover.jpg\",\"image_tags\":\"All Images\"},\"issue_number\":\"1\",\"store_date\":\"2012-05-05\",\"volume\":{\"api_detail_url\":\"https:\\/\\/comicvine.gamespot.com\\/api\\/volume\\/4050-66143\\/\",\"id\":66143,\"name\":\"Action Lab Confidential\",\"site_detail_url\":\"https:\\/\\/comicvine.gamespot.com\\/action-lab-confidential\\/4050-66143\\/\"}}],\"version\":\"1.0\"}";
 
-  @InjectMocks private ComicVineGetIssuesAction getIssuesAction;
+  @InjectMocks private ComicVineGetIssueAction getIssuesAction;
   private MockWebServer comicVineServer;
 
   @Before

@@ -27,27 +27,24 @@ import org.comixedproject.net.ComicScrapeRequest;
 import org.comixedproject.net.GetScrapingIssueRequest;
 import org.comixedproject.net.GetVolumesRequest;
 import org.comixedproject.scrapers.ScrapingException;
-import org.comixedproject.scrapers.comicvine.adaptors.ComicVineScrapingAdaptor;
 import org.comixedproject.scrapers.model.ScrapingIssue;
 import org.comixedproject.scrapers.model.ScrapingVolume;
-import org.comixedproject.service.comic.ComicException;
-import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.scraping.ScrapingService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <code>ComicVineScraperController</code> processes REST APIs relating to scraping comics.
+ * <code>ScrapingController</code> processes REST APIs relating to scraping comics.
  *
  * @author Darryl L. Pierce
  */
 @RestController
 @RequestMapping("/api/scraping")
 @Log4j2
-public class ComicVineScraperController {
-  @Autowired private ComicVineScrapingAdaptor scrapingAdaptor;
-  @Autowired private ComicService comicService;
+public class ScrapingController {
+  @Autowired private ScrapingService scrapingService;
 
   /**
    * Retrieves the minimal {@link ScrapingIssue} for the specified issue of the given volume.
@@ -73,7 +70,7 @@ public class ComicVineScraperController {
         "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
     try {
-      return this.scrapingAdaptor.getIssue(apiKey, volume, issue, skipCache);
+      return this.scrapingService.getIssue(apiKey, volume, issue, skipCache);
     } catch (ScrapingException error) {
       throw new ComiXedControllerException("Failed to get single scraping issue", error);
     }
@@ -105,7 +102,7 @@ public class ComicVineScraperController {
 
     try {
       final List<ScrapingVolume> result =
-          this.scrapingAdaptor.getVolumes(apiKey, series, maxRecords, skipCache);
+          this.scrapingService.getVolumes(apiKey, series, maxRecords, skipCache);
 
       log.debug("Returning {} volume{}", result.size(), result.size() == 1 ? "" : "s");
 
@@ -131,7 +128,7 @@ public class ComicVineScraperController {
   @JsonView(View.ComicDetails.class)
   public Comic scrapeAndSaveComicDetails(
       @PathVariable("comicId") final Long comicId,
-      @PathVariable("issueId") final String issueId,
+      @PathVariable("issueId") final Integer issueId,
       @RequestBody() final ComicScrapeRequest request)
       throws ComiXedControllerException {
     boolean skipCache = request.getSkipCache();
@@ -139,22 +136,9 @@ public class ComicVineScraperController {
 
     log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);
 
-    log.debug("Loading comic");
-    Comic comic = null;
-    try {
-      comic = this.comicService.getComic(comicId);
-    } catch (ComicException error) {
-      throw new ComiXedControllerException("Failed to load comic", error);
-    }
-
     try {
       log.debug("Scraping comic details");
-      this.scrapingAdaptor.scrapeComic(apiKey, issueId, skipCache, comic);
-
-      log.debug("Saving updated comic");
-      this.comicService.save(comic);
-
-      return comic;
+      return this.scrapingService.scrapeComic(apiKey, comicId, issueId, skipCache);
     } catch (ScrapingException error) {
       throw new ComiXedControllerException("Failed to scrape comic", error);
     }

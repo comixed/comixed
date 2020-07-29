@@ -16,7 +16,7 @@
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-services</artifactId>
+      <artifactId>comixed-model</artifactId>
       <version>${comixed.version}</version>
     </dependency>
     <dependency>
