@@ -161,7 +161,11 @@ public class ComicService {
 
     comic.setDateLastUpdated(new Date());
 
-    return this.comicRepository.save(comic);
+    final Comic result = this.comicRepository.save(comic);
+
+    this.comicRepository.flush();
+
+    return result;
   }
 
   @Transactional
@@ -378,6 +382,6 @@ public class ComicService {
    */
   public List<Comic> getComicsById(final long threshold, final int max) {
     log.debug("Finding {} comic{} with id greater than {}", max, max == 1 ? "" : "s", threshold);
-    return this.comicRepository.getComicsById(threshold, PageRequest.of(0, max));
+    return this.comicRepository.findComicsWithIdGreaterThan(threshold, PageRequest.of(0, max));
   }
 }

@@ -34,8 +34,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RescanComicWorkerWorkerTaskEncoderTest {
-  @InjectMocks private RescanComicWorkerWorkerTaskEncoder encoder;
+public class RescanComicWorkerTaskEncoderTest {
+  @InjectMocks private RescanComicWorkerTaskEncoder encoder;
   @Mock private Comic comic;
   @Mock private TaskService taskService;
   @Mock private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskObjectFactory;
