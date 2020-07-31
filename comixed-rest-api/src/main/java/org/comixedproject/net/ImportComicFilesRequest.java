@@ -19,33 +19,39 @@
 package org.comixedproject.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
-public class ImportRequestBody {
+/**
+ * <code>ImportComicFilesRequest</code> represents the payload for a request to import comics into
+ * the library.
+ *
+ * @author Darryl L. Pierce
+ */
+public class ImportComicFilesRequest {
   @JsonProperty("filenames")
-  private String[] filenames;
+  @Getter
+  @Setter
+  private List<String> filenames = new ArrayList<>();
 
   @JsonProperty("ignoreMetadata")
+  @Getter
+  @Setter
   private boolean ignoreMetadata;
 
   @JsonProperty("deleteBlockedPages")
+  @Getter
+  @Setter
   private boolean deleteBlockedPages;
 
-  public ImportRequestBody(
-      final String[] filenames, final boolean deleteBlockedPages, final boolean ignoreMetadata) {
+  public ImportComicFilesRequest(
+      final List<String> filenames,
+      final boolean deleteBlockedPages,
+      final boolean ignoreMetadata) {
     this.filenames = filenames;
     this.deleteBlockedPages = deleteBlockedPages;
     this.ignoreMetadata = ignoreMetadata;
-  }
-
-  public String[] getFilenames() {
-    return filenames;
-  }
-
-  public boolean isIgnoreMetadata() {
-    return ignoreMetadata;
-  }
-
-  public boolean isDeleteBlockedPages() {
-    return deleteBlockedPages;
   }
 }

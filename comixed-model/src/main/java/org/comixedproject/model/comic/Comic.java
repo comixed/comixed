@@ -361,13 +361,15 @@ public class Comic {
   /**
    * Adds a file entry, or replaces one if it already exists.
    *
-   * @param fileEntry the file entry
+   * @param name the entry filename
+   * @param size the entry size
+   * @param type the entry MIME type
    */
-  public void addFileEntry(ComicFileEntry fileEntry) {
+  public void addFileEntry(final String name, final int size, final String type) {
     int index = this.fileEntries.size();
     boolean replacement = false;
     for (int idx = 0; idx < this.fileEntries.size(); idx++) {
-      if (this.fileEntries.get(idx).getFileName().equals(fileEntry.getFileName())) {
+      if (this.fileEntries.get(idx).getFileName().equals(name)) {
         index = idx;
         replacement = true;
         break;
@@ -375,16 +377,18 @@ public class Comic {
     }
 
     if (replacement) {
-      log.debug("update existing file entry: [{}] {}", index, fileEntry.getFileName());
-      final ComicFileEntry updatedEntry = fileEntries.get(index);
-      updatedEntry.setComic(this);
-      updatedEntry.setFileNumber(index);
-      updatedEntry.setFileSize(fileEntry.getFileSize());
-      updatedEntry.setFileType(fileEntry.getFileType());
+      log.debug("Updating existing file entry: [{}] {}", index, name);
+      final ComicFileEntry existing = fileEntries.get(index);
+      existing.setFileSize(size);
+      existing.setFileType(type);
     } else {
-      log.debug("Adding file entry: [{}] {}", index, fileEntry.getFileName());
+      log.debug("Adding new file entry: [{}] {}", index, name);
+      final ComicFileEntry fileEntry = new ComicFileEntry();
+      fileEntry.setFileName(name);
+      fileEntry.setFileSize(size);
+      fileEntry.setFileType(type);
       fileEntry.setFileNumber(index);
-      this.fileEntries.add(index, fileEntry);
+      this.fileEntries.add(fileEntry);
       fileEntry.setComic(this);
     }
   }

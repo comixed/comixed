@@ -36,12 +36,17 @@ import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
+import org.comixedproject.task.model.ConvertComicsWorkerTask;
+import org.comixedproject.task.model.MoveComicsWorkerTask;
+import org.comixedproject.task.model.WorkerTask;
+import org.comixedproject.task.runner.TaskManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LibraryControllerTest {
@@ -56,7 +61,6 @@ public class LibraryControllerTest {
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
   private static final Boolean TEST_DELETE_PHYSICAL_FILES = RANDOM.nextBoolean();
-  private static final int TEST_CACHE_ENTRIES_CLEARED = RANDOM.nextInt();
   private static final String TEST_RENAMING_RULE = "PUBLISHER/SERIES/VOLUME/SERIES vVOLUME #ISSUE";
   private static final String TEST_DESTINATION_DIRECTORY = "/home/comixedreader/Documents/comics";
   private static final Boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
@@ -71,9 +75,14 @@ public class LibraryControllerTest {
   @Mock private List<LastReadDate> lastReadList;
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
-  @Mock private List<Long> comicIdList;
+  @Mock private List<Long> idList;
   @Mock private ReadingListService readingListService;
   @Mock private List<ReadingList> readingLists;
+  @Mock private TaskManager taskManager;
+  @Mock private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
+  @Mock private ConvertComicsWorkerTask convertComicsWorkerTask;
+  @Mock private ObjectFactory<MoveComicsWorkerTask> moveComicsWorkerTaskObjectFactory;
+  @Mock private MoveComicsWorkerTask moveComicsWorkerTask;
 
   @Test
   public void testGetUpdatedComics() throws ComiXedUserException {
@@ -214,21 +223,20 @@ public class LibraryControllerTest {
 
   @Test
   public void testConvertComics() {
-    libraryController.convertComics(
-        new ConvertComicsRequest(
-            comicIdList,
-            TEST_ARCHIVE_TYPE,
-            TEST_RENAME_PAGES,
-            TEST_DELETE_PAGES,
-            TEST_DELETE_ORIGINAL_COMIC));
+    Mockito.when(convertComicsWorkerTaskObjectFactory.getObject())
+        .thenReturn(convertComicsWorkerTask);
+    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
-    Mockito.verify(libraryService, Mockito.times(1))
-        .convertComics(
-            comicIdList,
-            TEST_ARCHIVE_TYPE,
-            TEST_RENAME_PAGES,
-            TEST_DELETE_PAGES,
-            TEST_DELETE_ORIGINAL_COMIC);
+    libraryController.convertComics(
+        new ConvertComicsRequest(idList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_PAGES));
+
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(convertComicsWorkerTask);
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setIdList(idList);
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
+        .setTargetArchiveType(TEST_ARCHIVE_TYPE);
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setDeletePages(TEST_DELETE_PAGES);
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
   }
 
   @Test
@@ -272,9 +280,8 @@ public class LibraryControllerTest {
 
   @Test
   public void testMoveLibrary() {
-    Mockito.doNothing()
-        .when(libraryService)
-        .moveComics(Mockito.anyBoolean(), Mockito.anyString(), Mockito.anyString());
+    Mockito.when(moveComicsWorkerTaskObjectFactory.getObject()).thenReturn(moveComicsWorkerTask);
+    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
     MoveComicsResponse result =
         libraryController.moveComics(
@@ -284,7 +291,8 @@ public class LibraryControllerTest {
     assertNotNull(result);
     assertTrue(result.isSuccess());
 
-    Mockito.verify(libraryService, Mockito.times(1))
-        .moveComics(TEST_DELETE_PHYSICAL_FILES, TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE);
+    Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setDirectory(TEST_DESTINATION_DIRECTORY);
+    Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setRenamingRule(TEST_RENAMING_RULE);
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(moveComicsWorkerTask);
   }
 }

@@ -41,10 +41,8 @@ import org.comixedproject.net.GetLibraryUpdatesRequest;
 import org.comixedproject.net.GetLibraryUpdatesResponse;
 import org.comixedproject.net.UndeleteMultipleComicsRequest;
 import org.comixedproject.net.UndeleteMultipleComicsResponse;
-import org.comixedproject.repositories.ComiXedUserRepository;
 import org.comixedproject.repositories.comic.ComicFormatRepository;
 import org.comixedproject.repositories.comic.ScanTypeRepository;
-import org.comixedproject.repositories.library.LastReadDatesRepository;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
@@ -73,14 +71,13 @@ public class ComicController {
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileService fileService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
-  @Autowired private ComiXedUserRepository userRepository;
-  @Autowired private LastReadDatesRepository lastReadRepository;
   @Autowired private ScanTypeRepository scanTypeRepository;
   @Autowired private ComicFormatRepository comicFormatRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
   @Autowired private ObjectFactory<UndeleteComicsWorkerTask> undeleteComicsWorkerTaskObjectFactory;
+  @Autowired private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
   @Autowired private ComicFileHandler comicFileHandler;
 
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -252,17 +249,18 @@ public class ComicController {
     return this.scanTypeRepository.findAll();
   }
 
+  /**
+   * Starts the process of rescanning all comics in the library.
+   *
+   * @return the number of rescan tasks
+   */
   @PostMapping(value = "/rescan")
   public int rescanComics() {
     log.info("Beginning rescan of library");
 
-    final int result = this.comicService.rescanComics();
-
-    ComicController.stopWaitingForStatus();
-
-    log.debug("Returning: {}", result);
-
-    return result;
+    final RescanComicsWorkerTask task = this.rescanComicsWorkerTaskObjectFactory.getObject();
+    this.taskManager.runTask(task);
+    return this.comicService.getRescanCount();
   }
 
   @PutMapping(value = "/{id}/format")

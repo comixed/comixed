@@ -29,12 +29,15 @@ import org.comixedproject.controller.comic.ComicController;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.file.FileDetails;
 import org.comixedproject.net.GetAllComicsUnderRequest;
+import org.comixedproject.net.ImportComicFilesRequest;
 import org.comixedproject.net.ImportComicFilesResponse;
-import org.comixedproject.net.ImportRequestBody;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.file.FileService;
+import org.comixedproject.task.model.QueueComicsWorkerTask;
+import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.ComicFileUtils;
 import org.json.JSONException;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
@@ -50,8 +53,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/files")
 @Log4j2
 public class FileController {
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
   @Autowired private FileService fileService;
+  @Autowired private TaskManager taskManager;
+  @Autowired private ObjectFactory<QueueComicsWorkerTask> queueComicsWorkerTaskObjectFactory;
 
   private int requestId = 0;
 
@@ -85,7 +90,7 @@ public class FileController {
       } else {
 
         if (ComicFileUtils.isComicFile(file)
-            && (this.comicRepository.findByFilename(file.getCanonicalPath()) == null)) {
+            && (this.comicService.findByFilename(file.getCanonicalPath()) == null)) {
           log.debug("Adding file: " + file.getCanonicalPath());
           result.add(new FileDetails(file.getCanonicalPath(), file.length()));
         }
@@ -136,24 +141,29 @@ public class FileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Secured("ROLE_ADMIN")
-  public ImportComicFilesResponse importComicFiles(@RequestBody() ImportRequestBody request)
+  public ImportComicFilesResponse importComicFiles(@RequestBody() ImportComicFilesRequest request)
       throws UnsupportedEncodingException {
+    final List<String> filenames = request.getFilenames();
+    final boolean deleteBlockedPages = request.isDeleteBlockedPages();
+    final boolean ignoreMetadata = request.isIgnoreMetadata();
+
     log.info(
         "Importing {} comic files: delete blocked pages={} ignore metadata={}",
-        request.getFilenames().length,
-        request.isDeleteBlockedPages(),
-        request.isIgnoreMetadata());
+        filenames.size(),
+        deleteBlockedPages,
+        ignoreMetadata);
 
-    this.fileService.importComicFiles(
-        request.getFilenames(), request.isDeleteBlockedPages(), request.isIgnoreMetadata());
+    final QueueComicsWorkerTask task = this.queueComicsWorkerTaskObjectFactory.getObject();
+    task.setFilenames(filenames);
+    task.setDeleteBlockedPages(deleteBlockedPages);
+    task.setIgnoreMetadata(ignoreMetadata);
+
+    log.debug("Enqueueing task");
+    this.taskManager.runTask(task);
 
     log.debug("Notifying waiting processes");
     ComicController.stopWaitingForStatus();
 
-    final ImportComicFilesResponse response = new ImportComicFilesResponse();
-
-    response.setImportComicCount(request.getFilenames().length);
-
-    return response;
+    return new ImportComicFilesResponse(filenames.size());
   }
 }
