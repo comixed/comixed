@@ -34,7 +34,6 @@ import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.loaders.EntryLoader;
 import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.ComicFileEntry;
 import org.comixedproject.utils.ComicFileUtils;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.InitializingBean;
@@ -226,20 +225,11 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   }
 
   private void recordFileEntry(Comic comic, String filename, byte[] content) {
-    log.debug("Recording file entry");
-    ComicFileEntry fileEntry = new ComicFileEntry();
-
-    fileEntry.setComic(comic);
-    fileEntry.setFileName(filename);
-    fileEntry.setFileSize(content.length);
-    fileEntry.setFileType(this.fileTypeIdentifier.basetypeFor(new ByteArrayInputStream(content)));
-    comic.addFileEntry(fileEntry);
-    log.debug(
-        "Added file entry: filename={} size={} index={} type={} ",
-        fileEntry.getFileName(),
-        fileEntry.getFileSize(),
-        fileEntry.getFileNumber(),
-        fileEntry.getFileType());
+    log.debug("Adding file entry");
+    comic.addFileEntry(
+        filename,
+        content.length,
+        this.fileTypeIdentifier.basetypeFor(new ByteArrayInputStream(content)));
   }
 
   @Override

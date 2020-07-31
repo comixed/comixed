@@ -109,4 +109,14 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
 
   @Query("SELECT c FROM Comic c")
   List<Comic> findComicsToMove(PageRequest page);
+
+  /**
+   * Returns a page of {@link Comic} objects with an id greater than the supplied threshold.
+   *
+   * @param threshold the threshold id
+   * @param page the page parameter
+   * @return the list of comics
+   */
+  @Query("SELECT c FROM Comic c WHERE c.id > :threshold ORDER BY c.id")
+  List<Comic> findComicsWithIdGreaterThan(@Param("threshold") Long threshold, Pageable page);
 }

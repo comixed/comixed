@@ -19,16 +19,18 @@
 package org.comixedproject.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+/**
+ * <code>ImportComicFilesResponse</code> represents the response body for q previous {@link
+ * ImportComicFilesRequest}.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
 public class ImportComicFilesResponse {
   @JsonProperty("import_comic_count")
-  private int importComicCount;
-
-  public int getImportComicCount() {
-    return importComicCount;
-  }
-
-  public void setImportComicCount(final int importComicCount) {
-    this.importComicCount = importComicCount;
-  }
+  @Getter
+  private final int importComicCount;
 }

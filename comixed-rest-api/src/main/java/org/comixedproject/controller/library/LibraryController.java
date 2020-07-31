@@ -34,7 +34,11 @@ import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
+import org.comixedproject.task.model.ConvertComicsWorkerTask;
+import org.comixedproject.task.model.MoveComicsWorkerTask;
+import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.views.View;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +51,9 @@ public class LibraryController {
   @Autowired private ComicService comicService;
   @Autowired private UserService userService;
   @Autowired private ReadingListService readingListService;
+  @Autowired private TaskManager taskManager;
+  @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
+  @Autowired private ObjectFactory<MoveComicsWorkerTask> moveComicsWorkerTaskObjectFactory;
 
   @PostMapping(
       value = "/library/updates",
@@ -144,8 +151,14 @@ public class LibraryController {
         deletePages ? " (delete pages)" : "",
         deleteOriginal ? " (delete original comic)" : "");
 
-    this.libraryService.convertComics(
-        idList, archiveType, renamePages, deletePages, deleteOriginal);
+    final ConvertComicsWorkerTask task = this.convertComicsWorkerTaskObjectFactory.getObject();
+    task.setIdList(idList);
+    task.setTargetArchiveType(archiveType);
+    task.setRenamePages(renamePages);
+    task.setDeletePages(deletePages);
+    task.setDeleteOriginal(deleteOriginal);
+
+    this.taskManager.runTask(task);
   }
 
   @PostMapping(
@@ -183,7 +196,12 @@ public class LibraryController {
 
     log.info("Moving comics: targetDirectory={}", targetDirectory);
     log.info("             : renamingRule={}", renamingRule);
-    this.libraryService.moveComics(deletePhysicalFiles, targetDirectory, renamingRule);
+
+    final MoveComicsWorkerTask task = this.moveComicsWorkerTaskObjectFactory.getObject();
+    task.setDirectory(targetDirectory);
+    task.setRenamingRule(renamingRule);
+
+    this.taskManager.runTask(task);
 
     return new MoveComicsResponse(true);
   }

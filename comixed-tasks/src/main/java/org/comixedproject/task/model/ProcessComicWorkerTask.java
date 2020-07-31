@@ -26,8 +26,6 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
-import org.comixedproject.model.comic.ComicFileEntry;
-import org.comixedproject.model.comic.Page;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,20 +60,6 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
   @Override
   public void startTask() throws WorkerTaskException {
     logger.debug("Processing comic: id={}", comic.getId());
-
-    logger.debug("Clearing out comic file entries");
-    while (!comic.getFileEntries().isEmpty()) {
-      final ComicFileEntry entry = comic.getFileEntries().get(0);
-      entry.setComic(null);
-      comic.getFileEntries().remove(0);
-    }
-    logger.debug("Clearing out comic pages");
-    while (!comic.getPages().isEmpty()) {
-      final Page page = comic.getPages().get(0);
-      page.setComic(null);
-      comic.getPages().remove(0);
-    }
-
     logger.debug("Getting archive adaptor");
     final ArchiveAdaptor adaptor =
         this.comicFileHandler.getArchiveAdaptorFor(this.comic.getArchiveType());

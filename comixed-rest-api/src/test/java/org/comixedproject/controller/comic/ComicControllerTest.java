@@ -46,7 +46,9 @@ import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.task.model.DeleteComicsWorkerTask;
+import org.comixedproject.task.model.RescanComicsWorkerTask;
 import org.comixedproject.task.model.UndeleteComicsWorkerTask;
+import org.comixedproject.task.model.WorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Test;
@@ -99,6 +101,8 @@ public class ComicControllerTest {
   @Mock private LastReadDate lastReadDate;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ArchiveAdaptor archiveAdaptor;
+  @Mock private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
+  @Mock private RescanComicsWorkerTask rescanComicsWorkerTask;
 
   private final List<Comic> emptyComicList = new ArrayList<>();
 
@@ -453,13 +457,16 @@ public class ComicControllerTest {
 
   @Test
   public void testRescanComics() {
-    Mockito.when(comicService.rescanComics()).thenReturn(TEST_RESCAN_COUNT);
+    Mockito.when(rescanComicsWorkerTaskObjectFactory.getObject())
+        .thenReturn(rescanComicsWorkerTask);
+    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
+    Mockito.when(comicService.getRescanCount()).thenReturn(TEST_RESCAN_COUNT);
 
     final int result = controller.rescanComics();
 
     assertEquals(TEST_RESCAN_COUNT, result);
 
-    Mockito.verify(comicService, Mockito.times(1)).rescanComics();
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(rescanComicsWorkerTask);
   }
 
   @Test(expected = ComicException.class)
