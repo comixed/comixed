@@ -21,13 +21,16 @@ package org.comixedproject.service.task;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
 import org.comixedproject.repositories.tasks.TaskRepository;
 import org.comixedproject.service.ComiXedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>TaskService</code> provides functions for working with instances of {@link Task}.
@@ -39,6 +42,7 @@ import org.springframework.stereotype.Service;
 public class TaskService {
   private static final Object SEMAPHORE = new Object();
 
+  @Autowired private TaskService taskService;
   @Autowired private TaskRepository taskRepository;
   @Autowired private TaskAuditLogRepository taskAuditLogRepository;
 
@@ -87,5 +91,48 @@ public class TaskService {
     }
 
     return result;
+  }
+
+  /**
+   * Deletes the specified task.
+   *
+   * @param task the task
+   */
+  @Transactional
+  public void delete(final Task task) {
+    log.debug("Deleting task: id={}", task.getId());
+    this.taskRepository.delete(task);
+  }
+
+  /**
+   * Saves the specified task.
+   *
+   * @param task the task
+   * @return the saved task
+   */
+  @Transactional
+  public Task save(final Task task) {
+    log.debug("Saving task: type={}", task.getTaskType());
+    return this.taskRepository.save(task);
+  }
+
+  /**
+   * Returns a list of tasks to be executed.
+   *
+   * @param max the maximum number of taks
+   * @return the tasks
+   */
+  public List<Task> getTasksToRun(final int max) {
+    return this.taskRepository.getTasksToRun(PageRequest.of(0, max));
+  }
+
+  /**
+   * Saves a entry to the audit log table.
+   *
+   * @param entry the entry
+   */
+  @Transactional
+  public void saveAuditLogEntry(final TaskAuditLogEntry entry) {
+    this.taskAuditLogRepository.save(entry);
   }
 }

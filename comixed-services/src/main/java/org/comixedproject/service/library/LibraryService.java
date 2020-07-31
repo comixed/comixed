@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.model.user.ComiXedUser;
@@ -35,12 +34,7 @@ import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.task.model.ConvertComicsWorkerTask;
-import org.comixedproject.task.model.DeleteComicWorkerTask;
-import org.comixedproject.task.model.MoveComicsWorkerTask;
-import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.Utils;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -54,12 +48,8 @@ public class LibraryService {
   @Autowired private ComicRepository comicRepository;
   @Autowired private LastReadDatesRepository lastReadDateRepository;
   @Autowired private ReadingListService readingListService;
-  @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
-  @Autowired private ObjectFactory<DeleteComicWorkerTask> deleteComicWorkerTaskObjectFactory;
-  @Autowired private TaskManager taskManager;
   @Autowired private Utils utils;
   @Autowired private PageCacheService pageCacheService;
-  @Autowired private ObjectFactory<MoveComicsWorkerTask> moveComicsTaskObjectFactory;
 
   public List<Comic> getComicsUpdatedSince(
       String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
@@ -111,37 +101,6 @@ public class LibraryService {
     return this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
   }
 
-  public void convertComics(
-      final List<Long> comicIdList,
-      final ArchiveType targetArchiveType,
-      final boolean renamePages,
-      final boolean deletePages,
-      final boolean deleteOriginal) {
-    log.debug(
-        "Converting {} comic{} to {}{}{}{}",
-        comicIdList.size(),
-        comicIdList.size() == 1 ? "" : "s",
-        targetArchiveType,
-        renamePages ? " (renaming pages)" : "",
-        deletePages ? " (deleting pages)" : "",
-        deleteOriginal ? " (deleting original comic)" : "");
-    List<Comic> comics = new ArrayList<>();
-    for (long id : comicIdList) {
-      comics.add(this.comicRepository.getById(id));
-    }
-    log.debug("Getting save comics worker task");
-    ConvertComicsWorkerTask task = this.convertComicsWorkerTaskObjectFactory.getObject();
-
-    task.setComicList(comics);
-    task.setTargetArchiveType(targetArchiveType);
-    task.setRenamePages(renamePages);
-    task.setDeletePages(deletePages);
-    task.setDeleteOriginal(deleteOriginal);
-
-    log.debug("Queueing save comics worker task");
-    this.taskManager.runTask(task);
-  }
-
   @Transactional
   public List<Comic> consolidateLibrary(boolean deletePhysicalFiles) {
     log.debug("Consolidating library: delete physical files={}", deletePhysicalFiles);
@@ -175,23 +134,5 @@ public class LibraryService {
     } catch (IOException error) {
       throw new LibraryException("failed to clean image cache directory", error);
     }
-  }
-
-  /**
-   * Moves all comics in the library, renaming them using the specified naming rule.
-   *
-   * @param deletePhysicalFiles
-   * @param directory the root directory
-   * @param renamingRule the name rule
-   */
-  public void moveComics(Boolean deletePhysicalFiles, String directory, String renamingRule) {
-    log.debug("Creating move comics task");
-    MoveComicsWorkerTask task = this.moveComicsTaskObjectFactory.getObject();
-    log.debug("Setting directory: {}", directory);
-    task.setDirectory(directory);
-    log.debug("Setting renaming rule: {}", renamingRule);
-    task.setRenamingRule(renamingRule);
-    log.debug("Enqueuing task");
-    this.taskManager.runTask(task);
   }
 }

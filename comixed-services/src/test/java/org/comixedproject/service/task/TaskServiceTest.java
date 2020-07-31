@@ -22,6 +22,7 @@ import static junit.framework.TestCase.*;
 
 import java.util.Date;
 import java.util.List;
+import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
@@ -29,10 +30,9 @@ import org.comixedproject.repositories.tasks.TaskRepository;
 import org.comixedproject.service.ComiXedServiceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.PageRequest;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TaskServiceTest {
@@ -43,6 +43,10 @@ public class TaskServiceTest {
   @Mock private TaskRepository taskRepository;
   @Mock private TaskAuditLogRepository taskAuditLogRepository;
   @Mock private List<TaskAuditLogEntry> auditLogEntryList;
+  @Mock private Task task;
+  @Mock private Task savedTask;
+  @Mock private List<Task> taskList;
+  @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
 
   @Test
   public void testGetTaskCount() {
@@ -67,5 +71,43 @@ public class TaskServiceTest {
 
     Mockito.verify(taskAuditLogRepository, Mockito.times(1))
         .findAllByStartTimeGreaterThan(TEST_AUDIT_LOG_CUTOFF_DATE);
+  }
+
+  @Test
+  public void testDeleteTask() {
+    Mockito.doNothing().when(taskRepository).delete(Mockito.any(Task.class));
+
+    taskService.delete(task);
+
+    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+  }
+
+  @Test
+  public void testSaveTask() {
+    Mockito.when(taskRepository.save(Mockito.any(Task.class))).thenReturn(savedTask);
+
+    final Task result = taskService.save(task);
+
+    assertNotNull(result);
+    assertSame(savedTask, result);
+
+    Mockito.verify(taskRepository, Mockito.times(1)).save(task);
+  }
+
+  @Test
+  public void testGetTasksToRun() {
+    Mockito.when(taskRepository.getTasksToRun(pageRequestArgumentCaptor.capture()))
+        .thenReturn(taskList);
+
+    final List<Task> result = taskService.getTasksToRun(TEST_TASK_COUNT);
+
+    assertNotNull(result);
+    assertSame(taskList, result);
+    assertNotNull(pageRequestArgumentCaptor.getValue());
+    assertEquals(0, pageRequestArgumentCaptor.getValue().getPageNumber());
+    assertEquals(TEST_TASK_COUNT, pageRequestArgumentCaptor.getValue().getPageSize());
+
+    Mockito.verify(taskRepository, Mockito.times(1))
+        .getTasksToRun(pageRequestArgumentCaptor.getValue());
   }
 }

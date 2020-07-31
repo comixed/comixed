@@ -27,11 +27,28 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/**
+ * <code>TaskRepository</code> handles the management of persisted {@link Task} objects.
+ *
+ * @author Darryl L. Pierce
+ */
 @Repository
 public interface TaskRepository extends CrudRepository<Task, Long> {
+  /**
+   * Returns the next set of tasks to be run.
+   *
+   * @param request the constraints
+   * @return the tasks
+   */
   @Query("SELECT t FROM Task t JOIN FETCH t.properties ORDER BY t.created ASC")
   List<Task> getTasksToRun(PageRequest request);
 
+  /**
+   * Returns the number of tasks of the given type that are current in the database.
+   *
+   * @param taskType the task type
+   * @return the task count
+   */
   @Query("SELECT COUNT(*) FROM Task t WHERE t.taskType = :taskType")
   int getTaskCount(@Param("taskType") TaskType taskType);
 }

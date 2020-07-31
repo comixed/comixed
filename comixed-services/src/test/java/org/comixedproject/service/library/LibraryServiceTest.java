@@ -29,7 +29,6 @@ import java.util.Random;
 import org.apache.commons.lang.RandomStringUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -38,17 +37,12 @@ import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.task.model.ConvertComicsWorkerTask;
-import org.comixedproject.task.model.MoveComicsWorkerTask;
-import org.comixedproject.task.model.WorkerTask;
-import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -78,8 +72,6 @@ public class LibraryServiceTest {
   @Mock private UserService userService;
   @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
-  @Mock private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
-  @Mock private ConvertComicsWorkerTask convertComicsWorkerTask;
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<List<Comic>> comicListArgumentCaptor;
   @Mock private File file;
@@ -88,9 +80,6 @@ public class LibraryServiceTest {
   @Mock private ComiXedUser user;
   @Mock private LastReadDatesRepository lastReadDatesRepository;
   @Mock private PageCacheService pageCacheService;
-  @Mock private ObjectFactory<MoveComicsWorkerTask> moveComicsTaskObjectFactory;
-  @Mock private MoveComicsWorkerTask moveComicsWorkerTask;
-  @Mock private TaskManager taskManager;
 
   private List<Comic> comicList = new ArrayList<>();
   private Comic comic1 = new Comic();
@@ -147,49 +136,6 @@ public class LibraryServiceTest {
         .getLibraryUpdates(comic3.getDateLastUpdated(), pageableArgumentCaptor.getValue());
     Mockito.verify(readingListService, Mockito.times(1))
         .getReadingListsForComics(TEST_EMAIL, result);
-  }
-
-  @Test
-  public void testGetProcessingCount() {
-    Mockito.when(taskService.getTaskCount(TaskType.PROCESS_COMIC))
-        .thenReturn(TEST_PROCESSING_COUNT);
-
-    long result = libraryService.getProcessingCount();
-
-    assertEquals(TEST_PROCESSING_COUNT, result);
-  }
-
-  @Test
-  public void testConvertComicArchiving() {
-    for (long index = 0; index < 15; index++) {
-      comicIdList.add(index);
-    }
-    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(convertComicsWorkerTaskObjectFactory.getObject())
-        .thenReturn(convertComicsWorkerTask);
-    Mockito.doNothing()
-        .when(convertComicsWorkerTask)
-        .setComicList(comicListArgumentCaptor.capture());
-
-    libraryService.convertComics(
-        comicIdList,
-        TEST_ARCHIVE_TYPE,
-        TEST_RENAME_PAGES,
-        TEST_DELETE_PAGES,
-        TEST_DELETE_ORIGINAL_COMIC);
-
-    assertEquals(comicIdList.size(), comicListArgumentCaptor.getValue().size());
-
-    Mockito.verify(comicRepository, Mockito.times(comicIdList.size())).getById(Mockito.anyLong());
-    Mockito.verify(convertComicsWorkerTaskObjectFactory, Mockito.times(1)).getObject();
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
-        .setComicList(comicListArgumentCaptor.getValue());
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
-        .setTargetArchiveType(TEST_ARCHIVE_TYPE);
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
-        .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(convertComicsWorkerTask);
   }
 
   @Test
@@ -265,17 +211,5 @@ public class LibraryServiceTest {
 
     Mockito.verify(pageCacheService, Mockito.times(1)).getRootDirectory();
     Mockito.verify(utils, Mockito.times(1)).deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
-  }
-
-  @Test
-  public void testMoveComics() {
-    Mockito.when(moveComicsTaskObjectFactory.getObject()).thenReturn(moveComicsWorkerTask);
-    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
-
-    libraryService.moveComics(TEST_DELETE_PHYSICAL_FILES, TEST_DIRECTORY, TEST_RENAMING_RULES);
-
-    Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setDirectory(TEST_DIRECTORY);
-    Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setRenamingRule(TEST_RENAMING_RULES);
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(moveComicsWorkerTask);
   }
 }

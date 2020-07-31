@@ -34,9 +34,6 @@ import org.comixedproject.repositories.ComiXedUserRepository;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.repositories.library.LastReadDatesRepository;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.TaskException;
-import org.comixedproject.task.adaptors.TaskAdaptor;
-import org.comixedproject.task.encoders.RescanComicTaskEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -49,7 +46,6 @@ public class ComicService {
   @Autowired private LastReadDatesRepository lastReadDatesRepository;
   @Autowired private TaskService taskService;
   @Autowired private ComiXedUserRepository userRepository;
-  @Autowired private TaskAdaptor taskAdaptor;
 
   public List<Comic> getComicsUpdatedSince(final long timestamp, final int maximumResults) {
     final Date lastUpdated = new Date(timestamp);
@@ -178,28 +174,6 @@ public class ComicService {
       log.error("Failed to read comic file content", error);
       return null;
     }
-  }
-
-  public int rescanComics() {
-    log.debug("Rescanning comics in the library");
-
-    final Iterable<Comic> comics = this.comicRepository.findAll();
-    int count = 0;
-
-    for (Comic comic : comics) {
-      count++;
-      try {
-        log.debug("Queueing comic for rescan: {}", comic.getFilename());
-        RescanComicTaskEncoder encoder = this.taskAdaptor.getEncoder(TaskType.RESCAN_COMIC);
-
-        encoder.setComic(comic);
-        this.taskAdaptor.save(encoder.encode());
-      } catch (TaskException error) {
-        log.error("Failed to encode rescan task", error);
-      }
-    }
-
-    return count;
   }
 
   @Transactional
@@ -364,5 +338,34 @@ public class ComicService {
     }
 
     return result;
+  }
+
+  /**
+   * Deletes the specified comic from the library.
+   *
+   * @param comic the comic
+   */
+  @Transactional
+  public void delete(final Comic comic) {
+    log.debug("Deleting comic: id={}", comic.getId());
+    this.comicRepository.delete(comic);
+  }
+
+  /**
+   * @param max the maximum number of comics to return
+   * @return
+   */
+  public List<Comic> findComicsToMove(final int max) {
+    return this.comicRepository.findComicsToMove(PageRequest.of(0, max));
+  }
+
+  /**
+   * Returns a comic with the given absolute filename.
+   *
+   * @param filename the filename
+   * @return the comic
+   */
+  public Comic findByFilename(final String filename) {
+    return this.comicRepository.findByFilename(filename);
   }
 }

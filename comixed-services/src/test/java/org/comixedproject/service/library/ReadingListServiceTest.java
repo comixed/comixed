@@ -65,6 +65,7 @@ public class ReadingListServiceTest {
   @Mock private ComiXedUserRepository userRepository;
   @Mock private ComicService comicService;
   @Mock private ReadingList readingList;
+  @Mock private ReadingList savedReadingList;
   @Mock private ComiXedUser user;
   @Mock private ComiXedUser otherUser;
   @Mock private List<ReadingList> readingLists;
@@ -382,6 +383,20 @@ public class ReadingListServiceTest {
 
     Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
     Mockito.verify(comicService, Mockito.times(ids.size())).getComic(Mockito.anyLong());
+    Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
+  }
+
+  @Test
+  public void testSave() {
+    Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
+        .thenReturn(savedReadingList);
+
+    final ReadingList result = readingListService.save(readingList);
+
+    assertNotNull(result);
+    assertSame(savedReadingList, result);
+
+    Mockito.verify(readingList, Mockito.times(1)).setLastUpdated(Mockito.any(Date.class));
     Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
   }
 }

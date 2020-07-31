@@ -70,6 +70,7 @@ public class PageServiceTest {
   @Mock private ComicService comicService;
   @Mock private PageType pageType;
   @Mock private Page page;
+  @Mock private Page savedPage;
   @Mock private BlockedPageHash blockedPageHash;
   @Captor private ArgumentCaptor<BlockedPageHash> blockedPageHashCaptor;
   @Mock private Comic comic;
@@ -533,6 +534,18 @@ public class PageServiceTest {
 
     Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithHash(TEST_PAGE_HASH);
     Mockito.verify(page, Mockito.times(1)).setDeleted(false);
+    Mockito.verify(pageRepository, Mockito.times(1)).save(page);
+  }
+
+  @Test
+  public void testSave() {
+    Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(savedPage);
+
+    final Page result = pageService.save(page);
+
+    assertNotNull(result);
+    assertSame(savedPage, result);
+
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
   }
 }
