@@ -23,7 +23,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.MoveComicTaskEncoder;
+import org.comixedproject.task.encoders.MoveComicWorkerTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -42,7 +42,8 @@ import org.springframework.stereotype.Component;
 public class MoveComicsWorkerTask extends AbstractWorkerTask {
   private static final int MAX_COMIC_PAGE = 50;
 
-  @Autowired private ObjectFactory<MoveComicTaskEncoder> moveComicWorkerTaskEncoderObjectFactory;
+  @Autowired
+  private ObjectFactory<MoveComicWorkerTaskEncoder> moveComicWorkerTaskEncoderObjectFactory;
 
   @Autowired private TaskService taskService;
   @Autowired private ComicService comicService;
@@ -63,7 +64,8 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
       log.debug("Preparing to page {} of {} comics", page, MAX_COMIC_PAGE);
       List<Comic> comics = this.comicService.findComicsToMove(MAX_COMIC_PAGE + 1);
       for (int index = 0; index < comics.size(); index++) {
-        MoveComicTaskEncoder encoder = this.moveComicWorkerTaskEncoderObjectFactory.getObject();
+        MoveComicWorkerTaskEncoder encoder =
+            this.moveComicWorkerTaskEncoderObjectFactory.getObject();
 
         encoder.setComic(comics.get(index));
         encoder.setDirectory(this.directory);

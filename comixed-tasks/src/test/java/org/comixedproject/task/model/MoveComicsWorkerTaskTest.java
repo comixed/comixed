@@ -24,7 +24,7 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.MoveComicTaskEncoder;
+import org.comixedproject.task.encoders.MoveComicWorkerTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -41,8 +41,8 @@ public class MoveComicsWorkerTaskTest {
 
   @InjectMocks private MoveComicsWorkerTask moveComicsWorkerTask;
   @Mock private ComicService comicService;
-  @Mock private ObjectFactory<MoveComicTaskEncoder> moveComicWorkerTaskEncoderObjectFactory;
-  @Mock private MoveComicTaskEncoder moveComicTaskEncoder;
+  @Mock private ObjectFactory<MoveComicWorkerTaskEncoder> moveComicWorkerTaskEncoderObjectFactory;
+  @Mock private MoveComicWorkerTaskEncoder moveComicTaskEncoder;
   @Mock private MoveComicWorkerTask moveComicWorkerTask;
   @Mock private Task task;
   @Mock private TaskService taskService;

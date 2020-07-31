@@ -37,14 +37,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConvertComicTaskEncoderTest {
+public class ConvertComicWorkerTaskEncoderTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
   private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
   private static final boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
 
-  @InjectMocks private ConvertComicTaskEncoder encoder;
+  @InjectMocks private ConvertComicWorkerTaskEncoder encoder;
   @Mock private ObjectFactory<ConvertComicWorkerTask> convertComicWorkerTaskObjectFactory;
   @Mock private ConvertComicWorkerTask convertComicWorkerTask;
   @Mock private TaskService taskService;
@@ -65,13 +65,14 @@ public class ConvertComicTaskEncoderTest {
     assertNotNull(result);
     assertSame(comic, result.getComic());
     assertEquals(
-        TEST_ARCHIVE_TYPE.toString(), result.getProperty(ConvertComicTaskEncoder.ARCHIVE_TYPE));
+        TEST_ARCHIVE_TYPE.toString(),
+        result.getProperty(ConvertComicWorkerTaskEncoder.ARCHIVE_TYPE));
     assertEquals(
         String.valueOf(TEST_RENAME_PAGES),
-        result.getProperty(ConvertComicTaskEncoder.RENAME_PAGES));
+        result.getProperty(ConvertComicWorkerTaskEncoder.RENAME_PAGES));
     assertEquals(
         String.valueOf(TEST_DELETE_PAGES),
-        result.getProperty(ConvertComicTaskEncoder.DELETE_PAGES));
+        result.getProperty(ConvertComicWorkerTaskEncoder.DELETE_PAGES));
     assertEquals(
         String.valueOf(TEST_DELETE_ORIGINAL_COMIC),
         result.getProperty(ConvertComicTaskEncoder.DELETE_ORIGINAL_COMIC));
@@ -82,11 +83,11 @@ public class ConvertComicTaskEncoderTest {
     Mockito.when(convertComicWorkerTaskObjectFactory.getObject())
         .thenReturn(convertComicWorkerTask);
     Mockito.when(task.getComic()).thenReturn(comic);
-    Mockito.when(task.getProperty(ConvertComicTaskEncoder.ARCHIVE_TYPE))
+    Mockito.when(task.getProperty(ConvertComicWorkerTaskEncoder.ARCHIVE_TYPE))
         .thenReturn(TEST_ARCHIVE_TYPE.toString());
-    Mockito.when(task.getProperty(ConvertComicTaskEncoder.RENAME_PAGES))
+    Mockito.when(task.getProperty(ConvertComicWorkerTaskEncoder.RENAME_PAGES))
         .thenReturn(String.valueOf(TEST_RENAME_PAGES));
-    Mockito.when(task.getProperty(ConvertComicTaskEncoder.DELETE_PAGES))
+    Mockito.when(task.getProperty(ConvertComicWorkerTaskEncoder.DELETE_PAGES))
         .thenReturn(String.valueOf(TEST_DELETE_PAGES));
     Mockito.when(task.getProperty(ConvertComicTaskEncoder.DELETE_ORIGINAL_COMIC))
         .thenReturn(String.valueOf(TEST_DELETE_ORIGINAL_COMIC));

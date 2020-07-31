@@ -19,44 +19,42 @@
 package org.comixedproject.task.encoders;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.task.model.AddComicWorkerTask;
+import org.comixedproject.model.tasks.TaskType;
+import org.comixedproject.task.model.ProcessComicWorkerTask;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-/**
- * <code>AddComicTaskEncoder</code> encodes the details for an {@link AddComicWorkerTask} instance.
- *
- * @author Darryl L. Pierce
- */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
-public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask> {
-  public static final String FILENAME = "filename";
+public class ProcessComicWorkerTaskEncoder
+    extends AbstractWorkerTaskEncoder<ProcessComicWorkerTask> {
   public static final String DELETE_BLOCKED_PAGES = "delete-blocked-pages";
   public static final String IGNORE_METADATA = "ignore-metadata";
 
-  @Autowired private ObjectFactory<AddComicWorkerTask> addComicWorkerTaskObjectFactory;
+  @Autowired private ObjectFactory<ProcessComicWorkerTask> processComicTaskObjectFactory;
 
-  private String comicFilename;
+  private Comic comic;
   private boolean deleteBlockedPages;
   private boolean ignoreMetadata;
 
   @Override
   public Task encode() {
     log.debug(
-        "Encoding add comic task: filename={} delete blocked pages={} ignore metadata={}",
-        this.comicFilename,
+        "Encoding process comic task: comic={} delete blocked pages={} ignore metadata={}",
+        this.comic.getId(),
         this.deleteBlockedPages,
         this.ignoreMetadata);
 
     final Task result = new Task();
 
-    result.setProperty(FILENAME, this.comicFilename);
+    result.setTaskType(TaskType.PROCESS_COMIC);
+    result.setComic(this.comic);
     result.setProperty(DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
     result.setProperty(IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
 
@@ -64,21 +62,20 @@ public class AddComicTaskEncoder extends AbstractTaskEncoder<AddComicWorkerTask>
   }
 
   @Override
-  public AddComicWorkerTask decode(final Task task) {
+  public ProcessComicWorkerTask decode(final Task task) {
     this.deleteTask(task);
-    log.debug("Decoding persisted task: id={} type={}", task.getId(), task.getTaskType());
-    final AddComicWorkerTask result = this.addComicWorkerTaskObjectFactory.getObject();
+    log.debug("Decoding process comic task: comic={}", task.getComic().getId());
 
-    log.debug("Loading task state");
-    result.setFilename(task.getProperty(FILENAME));
+    final ProcessComicWorkerTask result = this.processComicTaskObjectFactory.getObject();
+    result.setComic(task.getComic());
     result.setDeleteBlockedPages(Boolean.valueOf(task.getProperty(DELETE_BLOCKED_PAGES)));
     result.setIgnoreMetadata(Boolean.valueOf(task.getProperty(IGNORE_METADATA)));
 
     return result;
   }
 
-  public void setComicFilename(final String comicFilename) {
-    this.comicFilename = comicFilename;
+  public void setComic(final Comic comic) {
+    this.comic = comic;
   }
 
   public void setDeleteBlockedPages(final boolean deleteBlockedPages) {

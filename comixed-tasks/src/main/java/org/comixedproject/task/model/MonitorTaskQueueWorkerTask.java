@@ -22,25 +22,25 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.task.TaskException;
-import org.comixedproject.task.adaptors.TaskAdaptor;
-import org.comixedproject.task.encoders.TaskEncoder;
+import org.comixedproject.task.adaptors.WorkerTaskAdaptor;
+import org.comixedproject.task.encoders.WorkerTaskEncoder;
 import org.comixedproject.task.runner.TaskManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MonitorTaskQueue</code> is a task that continuous runs,looking for other tasks that have
- * been queued. When it finds them it loads them, decodes them and adds them to the {@link
+ * <code>MonitorTaskQueueWorkerTask</code> is a task that continuous runs,looking for other tasks
+ * that have been queued. When it finds them it loads them, decodes them and adds them to the {@link
  * TaskManager} for execution.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class MonitorTaskQueue extends AbstractWorkerTask implements InitializingBean {
+public class MonitorTaskQueueWorkerTask extends AbstractWorkerTask implements InitializingBean {
   @Autowired private TaskManager taskManager;
-  @Autowired private TaskAdaptor taskAdaptor;
+  @Autowired private WorkerTaskAdaptor workerTaskAdaptor;
 
   @Override
   protected String createDescription() {
@@ -56,13 +56,13 @@ public class MonitorTaskQueue extends AbstractWorkerTask implements Initializing
   @Override
   public void startTask() throws WorkerTaskException {
     log.debug("Checking queue for waiting tasks");
-    final List<Task> taskQueue = this.taskAdaptor.getNextTask();
+    final List<Task> taskQueue = this.workerTaskAdaptor.getNextTask();
     for (int index = 0; index < taskQueue.size(); index++) {
       Task task = taskQueue.get(index);
       log.debug("Rehydrating queued task");
-      TaskEncoder<?> decoder;
+      WorkerTaskEncoder<?> decoder;
       try {
-        decoder = this.taskAdaptor.getEncoder(task.getTaskType());
+        decoder = this.workerTaskAdaptor.getEncoder(task.getTaskType());
       } catch (TaskException error) {
         throw new WorkerTaskException("failed to get task decoder", error);
       }

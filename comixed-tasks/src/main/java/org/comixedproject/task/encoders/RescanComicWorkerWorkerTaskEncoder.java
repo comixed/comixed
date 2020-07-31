@@ -33,7 +33,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
-public class RescanComicTaskEncoder extends AbstractTaskEncoder<RescanComicWorkerTask> {
+public class RescanComicWorkerWorkerTaskEncoder
+    extends AbstractWorkerTaskEncoder<RescanComicWorkerTask> {
   @Autowired private TaskService taskService;
   @Autowired private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskObjectFactory;
 

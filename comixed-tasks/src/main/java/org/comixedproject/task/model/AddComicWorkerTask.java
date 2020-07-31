@@ -26,7 +26,7 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
+import org.comixedproject.task.encoders.ProcessComicWorkerTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -49,7 +49,10 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicService comicService;
   @Autowired private FilenameScraperAdaptor filenameScraper;
-  @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
+
+  @Autowired
+  private ObjectFactory<ProcessComicWorkerTaskEncoder> processComicTaskEncoderObjectFactory;
+
   @Autowired private TaskService taskService;
 
   private String filename;
@@ -82,7 +85,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
       result = this.comicService.save(result);
 
       log.debug("Encoding process comic task");
-      final ProcessComicTaskEncoder taskEncoder =
+      final ProcessComicWorkerTaskEncoder taskEncoder =
           this.processComicTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
       taskEncoder.setDeleteBlockedPages(this.deleteBlockedPages);

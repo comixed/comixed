@@ -29,7 +29,7 @@ import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.ConvertComicTaskEncoder;
+import org.comixedproject.task.encoders.ConvertComicWorkerTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -46,8 +46,8 @@ public class ConvertComicsWorkerTaskTest {
 
   @InjectMocks private ConvertComicsWorkerTask task;
   @Mock private TaskService taskService;
-  @Mock private ObjectFactory<ConvertComicTaskEncoder> saveComicTaskEncoderObjectFactory;
-  @Mock private ConvertComicTaskEncoder convertComicTaskEncoder;
+  @Mock private ObjectFactory<ConvertComicWorkerTaskEncoder> saveComicTaskEncoderObjectFactory;
+  @Mock private ConvertComicWorkerTaskEncoder convertComicTaskEncoder;
   @Mock private Comic comic;
   @Mock private Task savedTask;
   @Captor private ArgumentCaptor<Task> taskArgumentCaptor;

@@ -33,12 +33,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MoveComicTaskEncoderTest {
+public class MoveComicWorkerTaskEncoderTest {
   private static final String TEST_DIRECTORY = "/Users/comixedreader/Documents/comics";
   private static final String TEST_RENAMING_RULE =
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)";
 
-  @InjectMocks private MoveComicTaskEncoder moveComicTaskEncoder;
+  @InjectMocks private MoveComicWorkerTaskEncoder moveComicTaskEncoder;
   @Mock private TaskService taskService;
   @Mock private ObjectFactory<MoveComicWorkerTask> moveComicWorkerTaskObjectFactory;
   @Mock private MoveComicWorkerTask moveComicWorkerTask;
@@ -54,8 +54,8 @@ public class MoveComicTaskEncoderTest {
 
     assertNotNull(result);
     assertSame(comic, result.getComic());
-    assertEquals(TEST_DIRECTORY, result.getProperty(MoveComicTaskEncoder.DIRECTORY));
-    assertEquals(TEST_RENAMING_RULE, result.getProperty(MoveComicTaskEncoder.RENAMING_RULE));
+    assertEquals(TEST_DIRECTORY, result.getProperty(MoveComicWorkerTaskEncoder.DIRECTORY));
+    assertEquals(TEST_RENAMING_RULE, result.getProperty(MoveComicWorkerTaskEncoder.RENAMING_RULE));
   }
 
   @Test
@@ -64,8 +64,8 @@ public class MoveComicTaskEncoderTest {
 
     Task task = new Task();
     task.setComic(comic);
-    task.setProperty(MoveComicTaskEncoder.DIRECTORY, TEST_DIRECTORY);
-    task.setProperty(MoveComicTaskEncoder.RENAMING_RULE, TEST_RENAMING_RULE);
+    task.setProperty(MoveComicWorkerTaskEncoder.DIRECTORY, TEST_DIRECTORY);
+    task.setProperty(MoveComicWorkerTaskEncoder.RENAMING_RULE, TEST_RENAMING_RULE);
 
     MoveComicWorkerTask result = moveComicTaskEncoder.decode(task);
 

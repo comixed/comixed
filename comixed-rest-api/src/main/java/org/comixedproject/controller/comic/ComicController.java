@@ -50,6 +50,7 @@ import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.task.model.DeleteComicsWorkerTask;
+import org.comixedproject.task.model.RescanComicsWorkerTask;
 import org.comixedproject.task.model.UndeleteComicsWorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;

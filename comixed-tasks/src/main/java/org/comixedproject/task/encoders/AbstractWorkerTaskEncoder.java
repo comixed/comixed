@@ -26,13 +26,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>AbstractTaskEncoder</code> provides a foundation for building new {@link TaskEncoder}
- * types.
+ * <code>AbstractWorkerTaskEncoder</code> provides a foundation for building new {@link
+ * WorkerTaskEncoder} types.
  *
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractTaskEncoder<T extends AbstractWorkerTask> implements TaskEncoder<T> {
+public abstract class AbstractWorkerTaskEncoder<T extends AbstractWorkerTask>
+    implements WorkerTaskEncoder<T> {
   @Autowired private TaskService taskService;
 
   @Transactional

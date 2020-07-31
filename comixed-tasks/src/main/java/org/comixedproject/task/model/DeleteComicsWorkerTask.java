@@ -27,8 +27,8 @@ import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.TaskException;
-import org.comixedproject.task.adaptors.TaskAdaptor;
-import org.comixedproject.task.encoders.DeleteComicTaskEncoder;
+import org.comixedproject.task.adaptors.WorkerTaskAdaptor;
+import org.comixedproject.task.encoders.DeleteComicWorkerTaskEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class DeleteComicsWorkerTask extends AbstractWorkerTask {
   @Autowired private ComicService comicService;
-  @Autowired private TaskAdaptor taskAdaptor;
+  @Autowired private WorkerTaskAdaptor workerTaskAdaptor;
   @Autowired private TaskService taskService;
   private List<Long> comicIds;
 
@@ -69,8 +69,8 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask {
 
       if (comic != null) {
         try {
-          final DeleteComicTaskEncoder encoder;
-          encoder = this.taskAdaptor.getEncoder(TaskType.DELETE_COMIC);
+          final DeleteComicWorkerTaskEncoder encoder;
+          encoder = this.workerTaskAdaptor.getEncoder(TaskType.DELETE_COMIC);
           encoder.setComic(comic);
           encoder.setDeleteComicFile(false);
           this.taskService.save(encoder.encode());

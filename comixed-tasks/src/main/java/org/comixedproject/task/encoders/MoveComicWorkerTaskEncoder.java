@@ -31,14 +31,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MoveComicTaskEncoder</code> encodes instances of {@link MoveComicWorkerTask}.
+ * <code>MoveComicWorkerTaskEncoder</code> encodes instances of {@link MoveComicWorkerTask}.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
-public class MoveComicTaskEncoder extends AbstractTaskEncoder<MoveComicWorkerTask> {
+public class MoveComicWorkerTaskEncoder extends AbstractWorkerTaskEncoder<MoveComicWorkerTask> {
   public static final String DIRECTORY = "destination-directory";
   public static final String RENAMING_RULE = "renaming-rule";
 

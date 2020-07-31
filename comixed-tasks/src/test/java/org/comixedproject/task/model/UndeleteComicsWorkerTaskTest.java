@@ -25,7 +25,7 @@ import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.UndeleteComicTaskEncoder;
+import org.comixedproject.task.encoders.UndeleteComicWorkerTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,8 +37,8 @@ import org.springframework.beans.factory.ObjectFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class UndeleteComicsWorkerTaskTest {
   @InjectMocks private UndeleteComicsWorkerTask workerTask;
-  @Mock private ObjectFactory<UndeleteComicTaskEncoder> undeleteComicTaskEncoderObjectFactory;
-  @Mock private UndeleteComicTaskEncoder undeleteComicWorkerTaskEncoder;
+  @Mock private ObjectFactory<UndeleteComicWorkerTaskEncoder> undeleteComicTaskEncoderObjectFactory;
+  @Mock private UndeleteComicWorkerTaskEncoder undeleteComicWorkerTaskEncoder;
   @Mock private Task task;
   @Mock private ComicService comicService;
   @Mock private Comic comic;
