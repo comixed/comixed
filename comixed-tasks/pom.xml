@@ -15,12 +15,12 @@
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-repositories</artifactId>
+      <artifactId>comixed-adaptors</artifactId>
       <version>${comixed.version}</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-adaptors</artifactId>
+      <artifactId>comixed-services</artifactId>
       <version>${comixed.version}</version>
     </dependency>
   </dependencies>

@@ -29,10 +29,5 @@
       <artifactId>comixed-scrapers</artifactId>
       <version>${comixed.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-tasks</artifactId>
-      <version>${comixed.version}</version>
-    </dependency>
   </dependencies>
 </project>
