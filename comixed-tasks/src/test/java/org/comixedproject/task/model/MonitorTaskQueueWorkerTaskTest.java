@@ -25,8 +25,8 @@ import java.util.List;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.task.TaskException;
-import org.comixedproject.task.adaptors.TaskAdaptor;
-import org.comixedproject.task.encoders.TaskEncoder;
+import org.comixedproject.task.adaptors.WorkerTaskAdaptor;
+import org.comixedproject.task.encoders.WorkerTaskEncoder;
 import org.comixedproject.task.runner.TaskManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +36,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MonitorTaskQueueTest {
+public class MonitorTaskQueueWorkerTaskTest {
   private static final TaskType TEST_TASK_TYPE = TaskType.RESCAN_COMIC;
 
-  @InjectMocks private MonitorTaskQueue monitorTaskQueue;
+  @InjectMocks private MonitorTaskQueueWorkerTask monitorTaskQueueWorkerTask;
   @Mock private TaskManager taskManager;
-  @Mock private TaskAdaptor taskAdaptor;
-  @Mock private TaskEncoder<?> taskEncoder;
+  @Mock private WorkerTaskAdaptor workerTaskAdaptor;
+  @Mock private WorkerTaskEncoder<?> workerTaskEncoder;
   @Mock private Task task;
   @Mock private WorkerTask workerTask;
 
@@ -50,58 +50,59 @@ public class MonitorTaskQueueTest {
 
   @Test
   public void testCreateDescription() {
-    assertNotNull(monitorTaskQueue.getDescription());
+    assertNotNull(monitorTaskQueueWorkerTask.getDescription());
   }
 
   @Test
   public void testAfterPropertiesSet() {
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
-    monitorTaskQueue.afterExecution();
+    monitorTaskQueueWorkerTask.afterExecution();
 
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(monitorTaskQueue);
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(monitorTaskQueueWorkerTask);
   }
 
   @Test
   public void testStartTaskNothingQueued() throws WorkerTaskException {
-    Mockito.when(taskAdaptor.getNextTask()).thenReturn(taskList);
+    Mockito.when(workerTaskAdaptor.getNextTask()).thenReturn(taskList);
 
-    monitorTaskQueue.startTask();
+    monitorTaskQueueWorkerTask.startTask();
 
-    Mockito.verify(taskAdaptor, Mockito.times(1)).getNextTask();
+    Mockito.verify(workerTaskAdaptor, Mockito.times(1)).getNextTask();
   }
 
   @Test(expected = WorkerTaskException.class)
   public void testStartTaskNoEncoder() throws WorkerTaskException, TaskException {
     taskList.add(task);
 
-    Mockito.when(taskAdaptor.getNextTask()).thenReturn(taskList);
+    Mockito.when(workerTaskAdaptor.getNextTask()).thenReturn(taskList);
     Mockito.when(task.getTaskType()).thenReturn(TEST_TASK_TYPE);
-    Mockito.when(taskAdaptor.getEncoder(Mockito.any(TaskType.class)))
+    Mockito.when(workerTaskAdaptor.getEncoder(Mockito.any(TaskType.class)))
         .thenThrow(TaskException.class);
 
-    monitorTaskQueue.startTask();
+    monitorTaskQueueWorkerTask.startTask();
 
-    Mockito.verify(taskAdaptor, Mockito.times(1)).getNextTask();
+    Mockito.verify(workerTaskAdaptor, Mockito.times(1)).getNextTask();
     Mockito.verify(task, Mockito.times(1)).getTaskType();
-    Mockito.verify(taskAdaptor, Mockito.times(1)).getEncoder(TEST_TASK_TYPE);
+    Mockito.verify(workerTaskAdaptor, Mockito.times(1)).getEncoder(TEST_TASK_TYPE);
   }
 
   @Test
   public void testStartTask() throws WorkerTaskException, TaskException {
     for (int index = 0; index < 25; index++) taskList.add(task);
 
-    Mockito.when(taskAdaptor.getNextTask()).thenReturn(taskList);
+    Mockito.when(workerTaskAdaptor.getNextTask()).thenReturn(taskList);
     Mockito.when(task.getTaskType()).thenReturn(TEST_TASK_TYPE);
-    Mockito.when(taskAdaptor.getEncoder(Mockito.any(TaskType.class))).thenReturn(taskEncoder);
-    Mockito.when(taskEncoder.decode(Mockito.any(Task.class))).thenReturn(workerTask);
+    Mockito.when(workerTaskAdaptor.getEncoder(Mockito.any(TaskType.class)))
+        .thenReturn(workerTaskEncoder);
+    Mockito.when(workerTaskEncoder.decode(Mockito.any(Task.class))).thenReturn(workerTask);
 
-    monitorTaskQueue.startTask();
+    monitorTaskQueueWorkerTask.startTask();
 
-    Mockito.verify(taskAdaptor, Mockito.times(1)).getNextTask();
+    Mockito.verify(workerTaskAdaptor, Mockito.times(1)).getNextTask();
     Mockito.verify(task, Mockito.times(taskList.size())).getTaskType();
-    Mockito.verify(taskAdaptor, Mockito.times(taskList.size())).getEncoder(TEST_TASK_TYPE);
-    Mockito.verify(taskEncoder, Mockito.times(taskList.size())).decode(task);
+    Mockito.verify(workerTaskAdaptor, Mockito.times(taskList.size())).getEncoder(TEST_TASK_TYPE);
+    Mockito.verify(workerTaskEncoder, Mockito.times(taskList.size())).decode(task);
     Mockito.verify(taskManager, Mockito.times(taskList.size())).runTask(workerTask);
   }
 
@@ -109,8 +110,8 @@ public class MonitorTaskQueueTest {
   public void testAfterExecution() {
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
-    monitorTaskQueue.afterExecution();
+    monitorTaskQueueWorkerTask.afterExecution();
 
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(monitorTaskQueue);
+    Mockito.verify(taskManager, Mockito.times(1)).runTask(monitorTaskQueueWorkerTask);
   }
 }

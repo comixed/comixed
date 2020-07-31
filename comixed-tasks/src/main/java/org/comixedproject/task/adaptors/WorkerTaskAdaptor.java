@@ -27,7 +27,7 @@ import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.TaskException;
-import org.comixedproject.task.encoders.TaskEncoder;
+import org.comixedproject.task.encoders.WorkerTaskEncoder;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -37,8 +37,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 /**
- * <code>TaskAdadptor</code> provides methods for fetching {@link TaskEncoder} objects for encoding
- * and decoding persisted {@link Task} objects.
+ * <code>TaskAdadptor</code> provides methods for fetching {@link WorkerTaskEncoder} objects for
+ * encoding and decoding persisted {@link Task} objects.
  *
  * @author Darryl L. Pierce
  */
@@ -47,7 +47,7 @@ import org.springframework.stereotype.Service;
 @PropertySource("classpath:task-adaptors.properties")
 @ConfigurationProperties(prefix = "task", ignoreUnknownFields = false)
 @Log4j2
-public class TaskAdaptor implements InitializingBean {
+public class WorkerTaskAdaptor implements InitializingBean {
   @Autowired private ApplicationContext applicationContext;
   @Autowired private TaskService taskService;
 
@@ -85,13 +85,13 @@ public class TaskAdaptor implements InitializingBean {
   }
 
   /**
-   * Returns the configured {@link TaskEncoder} for the given {@link TaskType}.
+   * Returns the configured {@link WorkerTaskEncoder} for the given {@link TaskType}.
    *
    * @param taskType the task type
    * @return the adaptor bean
    * @throws TaskException if no adaptor is configured
    */
-  public <T extends TaskEncoder> T getEncoder(final TaskType taskType) throws TaskException {
+  public <T extends WorkerTaskEncoder> T getEncoder(final TaskType taskType) throws TaskException {
     log.debug("Getting task adaptor: type={}", taskType);
 
     if (!this.adaptorMap.containsKey(taskType))

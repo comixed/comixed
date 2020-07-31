@@ -22,7 +22,7 @@ import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.MonitorTaskQueue;
+import org.comixedproject.task.model.MonitorTaskQueueWorkerTask;
 import org.comixedproject.task.model.WorkerTask;
 import org.comixedproject.task.model.WorkerTaskException;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class TaskManagerTest {
   @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<TaskAuditLogEntry> logEntryArgumentCaptor;
   @Mock private TaskAuditLogEntry logEntryRecord;
-  @Mock private MonitorTaskQueue monitorTaskQueue;
+  @Mock private MonitorTaskQueueWorkerTask monitorTaskQueueWorkerTask;
 
   @Test
   public void testRunTask() throws WorkerTaskException {
@@ -76,7 +76,7 @@ public class TaskManagerTest {
   public void testRunTaskDoNotAuditMonitorTaskQueue() throws WorkerTaskException {
     Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
 
-    taskManager.runTask(monitorTaskQueue);
+    taskManager.runTask(monitorTaskQueueWorkerTask);
 
     assertNotNull(runnableArgumentCaptor.getValue());
 
@@ -84,9 +84,9 @@ public class TaskManagerTest {
 
     runnableArgumentCaptor.getValue().run();
 
-    Mockito.verify(monitorTaskQueue, Mockito.times(1)).getDescription();
-    Mockito.verify(monitorTaskQueue, Mockito.times(1)).startTask();
-    Mockito.verify(monitorTaskQueue, Mockito.times(1)).afterExecution();
+    Mockito.verify(monitorTaskQueueWorkerTask, Mockito.times(1)).getDescription();
+    Mockito.verify(monitorTaskQueueWorkerTask, Mockito.times(1)).startTask();
+    Mockito.verify(monitorTaskQueueWorkerTask, Mockito.times(1)).afterExecution();
 
     Mockito.verify(taskService, Mockito.never()).save(Mockito.any());
   }

@@ -40,11 +40,11 @@ import org.springframework.test.context.TestPropertySource;
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest
-public class ProcessComicTaskTest {
+public class ProcessComicWorkerTaskTest {
   private static final String TEST_FILE_HASH = "OICU812";
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
 
-  @InjectMocks private ProcessComicTask task;
+  @InjectMocks private ProcessComicWorkerTask task;
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsCaptor;
   @Mock private ArchiveAdaptor archiveAdaptor;

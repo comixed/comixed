@@ -28,7 +28,7 @@ import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
+import org.comixedproject.task.encoders.ProcessComicWorkerTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -53,8 +53,8 @@ public class AddComicWorkerTaskTest {
   @Mock private Comic comic;
   @Mock private Page page;
   @Mock private FilenameScraperAdaptor filenameScraperAdaptor;
-  @Mock private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
-  @Mock private ProcessComicTaskEncoder processComicTaskEncoder;
+  @Mock private ObjectFactory<ProcessComicWorkerTaskEncoder> processComicTaskEncoderObjectFactory;
+  @Mock private ProcessComicWorkerTaskEncoder processComicTaskEncoder;
   @Mock private Task workerTask;
   @Mock private TaskService taskService;
 

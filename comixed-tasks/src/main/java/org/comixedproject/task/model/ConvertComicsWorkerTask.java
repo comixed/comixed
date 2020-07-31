@@ -28,7 +28,7 @@ import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.ConvertComicTaskEncoder;
+import org.comixedproject.task.encoders.ConvertComicWorkerTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -68,8 +68,8 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
     log.debug(
         "Queueing up {} save comic task{}", this.idList.size(), this.idList.size() == 1 ? "" : "s");
 
-    for (Comic comic : this.comicList) {
-      log.debug("Queueing task to save comic: id={}", comic.getId());
+    for (Long id : this.idList) {
+      log.debug("Queueing task to save comic: id={}", id);
       Comic comic = null;
       try {
         comic = this.comicService.getComic(id);

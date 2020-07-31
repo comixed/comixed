@@ -23,7 +23,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.AddComicTaskEncoder;
+import org.comixedproject.task.encoders.AddComicWorkerTaskEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -86,10 +86,11 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
       log.debug("Comic file: {}", filename);
 
       task.setTaskType(TaskType.ADD_COMIC);
-      task.setProperty(AddComicTaskEncoder.FILENAME, filename);
+      task.setProperty(AddComicWorkerTaskEncoder.FILENAME, filename);
       task.setProperty(
-          AddComicTaskEncoder.DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
-      task.setProperty(AddComicTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
+          AddComicWorkerTaskEncoder.DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
+      task.setProperty(
+          AddComicWorkerTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
       this.taskService.save(task);
     }
 

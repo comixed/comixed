@@ -37,7 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
-public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWorkerTask> {
+public class ConvertComicWorkerTaskEncoder
+    extends AbstractWorkerTaskEncoder<ConvertComicWorkerTask> {
   public static final String ARCHIVE_TYPE = "target-archive-type";
   public static final String RENAME_PAGES = "rename-pages";
   public static final String DELETE_PAGES = "delete-pages";

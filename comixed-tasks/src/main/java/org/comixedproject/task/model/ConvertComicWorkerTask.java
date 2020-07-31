@@ -33,7 +33,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
+import org.comixedproject.task.encoders.ProcessComicWorkerTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -53,7 +53,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ConvertComicWorkerTask extends AbstractWorkerTask {
   @Autowired private ComicService comicService;
   @Autowired private TaskService taskService;
-  @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
+
+  @Autowired
+  private ObjectFactory<ProcessComicWorkerTaskEncoder> processComicTaskEncoderObjectFactory;
+
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ReadingListRepository readingListRepository;
 
@@ -95,7 +98,8 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
         deleteOriginal();
       }
       log.debug("Queueing up a comic processing task");
-      ProcessComicTaskEncoder taskEncoder = this.processComicTaskEncoderObjectFactory.getObject();
+      ProcessComicWorkerTaskEncoder taskEncoder =
+          this.processComicTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
       taskEncoder.setIgnoreMetadata(false);
       taskEncoder.setDeleteBlockedPages(false);

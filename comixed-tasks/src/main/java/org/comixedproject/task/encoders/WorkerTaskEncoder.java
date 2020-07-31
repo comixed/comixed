@@ -22,12 +22,12 @@ import org.comixedproject.model.tasks.Task;
 import org.comixedproject.task.model.WorkerTask;
 
 /**
- * <code>TaskEncoder</code> defines a type that can encode and decode the details for a @{link
+ * <code>WorkerTaskEncoder</code> defines a type that can encode and decode the details for a @{link
  * TaskType}.
  *
  * @author Darryl L. Pierce
  */
-public interface TaskEncoder<T extends WorkerTask> {
+public interface WorkerTaskEncoder<T extends WorkerTask> {
   /**
    * Encodes and returns a {@link Task}.
    *

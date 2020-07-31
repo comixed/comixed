@@ -25,7 +25,7 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.ProcessComicTask;
+import org.comixedproject.task.model.ProcessComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -33,14 +33,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProcessComicTaskEncoderTest {
+public class ProcessComicWorkerWorkerTaskEncoderTest {
   private static final Random RANDOM = new Random();
 
-  @InjectMocks private ProcessComicTaskEncoder encoder;
+  @InjectMocks private ProcessComicWorkerTaskEncoder encoder;
   @Captor private ArgumentCaptor<Task> taskArgumentCaptor;
   @Mock private Comic comic;
-  @Mock private ObjectFactory<ProcessComicTask> processComicTaskObjectFactory;
-  @Mock private ProcessComicTask workerTask;
+  @Mock private ObjectFactory<ProcessComicWorkerTask> processComicTaskObjectFactory;
+  @Mock private ProcessComicWorkerTask workerTask;
   @Mock private TaskService taskService;
 
   private final Boolean deleteBlockedPages = RANDOM.nextBoolean();
@@ -59,10 +59,10 @@ public class ProcessComicTaskEncoderTest {
     assertSame(comic, result.getComic());
     assertEquals(
         this.deleteBlockedPages,
-        Boolean.valueOf(result.getProperty(ProcessComicTaskEncoder.DELETE_BLOCKED_PAGES)));
+        Boolean.valueOf(result.getProperty(ProcessComicWorkerTaskEncoder.DELETE_BLOCKED_PAGES)));
     assertEquals(
         this.ignoreMetadata,
-        Boolean.valueOf(result.getProperty(ProcessComicTaskEncoder.IGNORE_METADATA)));
+        Boolean.valueOf(result.getProperty(ProcessComicWorkerTaskEncoder.IGNORE_METADATA)));
   }
 
   @Test
@@ -72,10 +72,12 @@ public class ProcessComicTaskEncoderTest {
     final Task task = new Task();
     task.setComic(comic);
     task.setProperty(
-        ProcessComicTaskEncoder.DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
-    task.setProperty(ProcessComicTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
+        ProcessComicWorkerTaskEncoder.DELETE_BLOCKED_PAGES,
+        String.valueOf(this.deleteBlockedPages));
+    task.setProperty(
+        ProcessComicWorkerTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
 
-    final ProcessComicTask result = encoder.decode(task);
+    final ProcessComicWorkerTask result = encoder.decode(task);
 
     assertNotNull(result);
     assertSame(workerTask, result);

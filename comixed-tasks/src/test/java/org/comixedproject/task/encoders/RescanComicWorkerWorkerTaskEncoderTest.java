@@ -18,12 +18,13 @@
 
 package org.comixedproject.task.encoders;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.DeleteComicWorkerTask;
+import org.comixedproject.task.model.RescanComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,68 +34,36 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DeleteComicTaskEncoderTest {
-  @InjectMocks private DeleteComicTaskEncoder encoder;
+public class RescanComicWorkerWorkerTaskEncoderTest {
+  @InjectMocks private RescanComicWorkerWorkerTaskEncoder encoder;
   @Mock private Comic comic;
   @Mock private TaskService taskService;
-  @Mock private ObjectFactory<DeleteComicWorkerTask> deleteComicsWorkerTaskObjectFactory;
-  @Mock private DeleteComicWorkerTask deleteComicWorkerTask;
+  @Mock private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskObjectFactory;
+  @Mock private RescanComicWorkerTask workerTask;
 
   @Test
   public void testEncode() {
     encoder.setComic(comic);
-    encoder.setDeleteComicFile(false);
 
     final Task result = encoder.encode();
 
     assertNotNull(result);
     assertSame(comic, result.getComic());
-    assertEquals(Boolean.FALSE.toString(), result.getProperty(DeleteComicTaskEncoder.DELETE_COMIC));
-  }
-
-  @Test
-  public void testEncodeForDeletion() {
-    encoder.setComic(comic);
-    encoder.setDeleteComicFile(true);
-
-    final Task result = encoder.encode();
-
-    assertNotNull(result);
-    assertSame(comic, result.getComic());
-    assertEquals(Boolean.TRUE.toString(), result.getProperty(DeleteComicTaskEncoder.DELETE_COMIC));
   }
 
   @Test
   public void testDecode() {
     final Task task = new Task();
     task.setComic(comic);
-    task.setProperty(DeleteComicTaskEncoder.DELETE_COMIC, String.valueOf(false));
 
-    Mockito.when(deleteComicsWorkerTaskObjectFactory.getObject()).thenReturn(deleteComicWorkerTask);
+    Mockito.when(rescanComicWorkerTaskObjectFactory.getObject()).thenReturn(workerTask);
 
-    final DeleteComicWorkerTask result = encoder.decode(task);
-
-    assertNotNull(result);
-    assertSame(deleteComicWorkerTask, result);
-
-    Mockito.verify(taskService, Mockito.times(1)).delete(task);
-    Mockito.verify(deleteComicWorkerTask, Mockito.times(1)).setComic(comic);
-  }
-
-  @Test
-  public void testDecodeForDeletion() {
-    final Task task = new Task();
-    task.setComic(comic);
-    task.setProperty(DeleteComicTaskEncoder.DELETE_COMIC, String.valueOf(true));
-
-    Mockito.when(deleteComicsWorkerTaskObjectFactory.getObject()).thenReturn(deleteComicWorkerTask);
-
-    final DeleteComicWorkerTask result = encoder.decode(task);
+    final RescanComicWorkerTask result = encoder.decode(task);
 
     assertNotNull(result);
-    assertSame(deleteComicWorkerTask, result);
 
     Mockito.verify(taskService, Mockito.times(1)).delete(task);
-    Mockito.verify(deleteComicWorkerTask, Mockito.times(1)).setComic(comic);
+    Mockito.verify(workerTask, Mockito.times(1)).setComic(comic);
+    Mockito.verify(taskService, Mockito.times(1)).delete(task);
   }
 }

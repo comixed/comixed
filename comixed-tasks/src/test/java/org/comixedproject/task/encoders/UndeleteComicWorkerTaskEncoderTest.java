@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,13 @@
 
 package org.comixedproject.task.encoders;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
+import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.RescanComicWorkerTask;
+import org.comixedproject.task.model.UndeleteComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,36 +34,40 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RescanComicTaskEncoderTest {
-  @InjectMocks private RescanComicTaskEncoder encoder;
+public class UndeleteComicWorkerTaskEncoderTest {
+  @InjectMocks private UndeleteComicWorkerTaskEncoder undeleteComicTaskEncoder;
+  @Mock private ObjectFactory<UndeleteComicWorkerTask> undeleteComicWorkerTaskObjectFactory;
+  @Mock private UndeleteComicWorkerTask undeleteComicWorkerTask;
   @Mock private Comic comic;
   @Mock private TaskService taskService;
-  @Mock private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskObjectFactory;
-  @Mock private RescanComicWorkerTask workerTask;
+
+  private Task task = new Task();
 
   @Test
-  public void testEncode() {
-    encoder.setComic(comic);
+  public void encode() {
+    undeleteComicTaskEncoder.setComic(comic);
 
-    final Task result = encoder.encode();
+    Task result = undeleteComicTaskEncoder.encode();
 
     assertNotNull(result);
+    assertEquals(TaskType.UNDELETE_COMIC, result.getTaskType());
     assertSame(comic, result.getComic());
   }
 
   @Test
   public void testDecode() {
-    final Task task = new Task();
     task.setComic(comic);
+    task.setTaskType(TaskType.UNDELETE_COMIC);
 
-    Mockito.when(rescanComicWorkerTaskObjectFactory.getObject()).thenReturn(workerTask);
+    Mockito.when(undeleteComicWorkerTaskObjectFactory.getObject())
+        .thenReturn(undeleteComicWorkerTask);
 
-    final RescanComicWorkerTask result = encoder.decode(task);
+    final UndeleteComicWorkerTask result = undeleteComicTaskEncoder.decode(task);
 
     assertNotNull(result);
+    assertSame(undeleteComicWorkerTask, result);
 
     Mockito.verify(taskService, Mockito.times(1)).delete(task);
-    Mockito.verify(workerTask, Mockito.times(1)).setComic(comic);
-    Mockito.verify(taskService, Mockito.times(1)).delete(task);
+    Mockito.verify(undeleteComicWorkerTask, Mockito.times(1)).setComic(comic);
   }
 }

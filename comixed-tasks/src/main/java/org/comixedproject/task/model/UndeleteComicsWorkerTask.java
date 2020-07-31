@@ -26,7 +26,7 @@ import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.UndeleteComicTaskEncoder;
+import org.comixedproject.task.encoders.UndeleteComicWorkerTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -43,7 +43,9 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class UndeleteComicsWorkerTask extends AbstractWorkerTask {
-  @Autowired private ObjectFactory<UndeleteComicTaskEncoder> undeleteComicTaskEncoderObjectFactory;
+  @Autowired
+  private ObjectFactory<UndeleteComicWorkerTaskEncoder> undeleteComicTaskEncoderObjectFactory;
+
   @Autowired private ComicService comicService;
   @Autowired private TaskService taskService;
 
@@ -67,7 +69,8 @@ public class UndeleteComicsWorkerTask extends AbstractWorkerTask {
         throw new WorkerTaskException("failed to load comic", error);
       }
       log.debug("Creating undelete task for comic: id={}", comic.getId());
-      UndeleteComicTaskEncoder encoder = this.undeleteComicTaskEncoderObjectFactory.getObject();
+      UndeleteComicWorkerTaskEncoder encoder =
+          this.undeleteComicTaskEncoderObjectFactory.getObject();
       encoder.setComic(comic);
       log.debug("enqueueing undelete task");
       Task task = encoder.encode();

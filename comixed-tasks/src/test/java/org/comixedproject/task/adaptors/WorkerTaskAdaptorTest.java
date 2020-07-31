@@ -27,7 +27,7 @@ import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.TaskException;
-import org.comixedproject.task.encoders.TaskEncoder;
+import org.comixedproject.task.encoders.WorkerTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -36,16 +36,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TaskAdaptorTest {
+public class WorkerTaskAdaptorTest {
   private static final String TEST_ADAPTOR_NAME = "adaptorBeanName";
   private static final int TEST_NEXT_TASK_COUNT = 5;
 
-  @InjectMocks private TaskAdaptor adaptor;
+  @InjectMocks private WorkerTaskAdaptor adaptor;
   @Mock private ApplicationContext applicationContext;
   @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
   @Mock private Task task;
-  @Mock private TaskEncoder<?> taskEncoder;
+  @Mock private WorkerTaskEncoder<?> workerTaskEncoder;
 
   private List<Task> taskList = new ArrayList<>();
 
@@ -59,12 +59,12 @@ public class TaskAdaptorTest {
   @Test
   public void testGetAdaptor() throws TaskException {
     adaptor.adaptorMap.put(TaskType.ADD_COMIC, TEST_ADAPTOR_NAME);
-    Mockito.when(applicationContext.getBean(Mockito.anyString())).thenReturn(taskEncoder);
+    Mockito.when(applicationContext.getBean(Mockito.anyString())).thenReturn(workerTaskEncoder);
 
-    final TaskEncoder<?> result = adaptor.getEncoder(TaskType.ADD_COMIC);
+    final WorkerTaskEncoder<?> result = adaptor.getEncoder(TaskType.ADD_COMIC);
 
     assertNotNull(result);
-    assertSame(taskEncoder, result);
+    assertSame(workerTaskEncoder, result);
   }
 
   @Test

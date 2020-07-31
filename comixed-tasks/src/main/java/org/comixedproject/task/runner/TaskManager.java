@@ -22,7 +22,7 @@ import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.MonitorTaskQueue;
+import org.comixedproject.task.model.MonitorTaskQueueWorkerTask;
 import org.comixedproject.task.model.WorkerTask;
 import org.comixedproject.task.model.WorkerTaskException;
 import org.springframework.beans.factory.InitializingBean;
@@ -57,8 +57,8 @@ public class TaskManager implements InitializingBean {
             task.afterExecution();
           }
           final Date ended = new Date();
-          // do not log MonitorTaskQueue events
-          if (!(task instanceof MonitorTaskQueue)) {
+          // do not log MonitorTaskQueueWorkerTask events
+          if (!(task instanceof MonitorTaskQueueWorkerTask)) {
             final TaskAuditLogEntry entry = new TaskAuditLogEntry();
             entry.setStartTime(started);
             entry.setEndTime(ended);

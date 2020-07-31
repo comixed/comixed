@@ -34,12 +34,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AddComicTaskEncoderTest {
+public class AddComicWorkerTaskEncoderTest {
   private static final Random RANDOM = new Random();
 
   private static final String TEST_FILENAME = "/path/to/comicfile.cbz";
 
-  @InjectMocks private AddComicTaskEncoder adaptor;
+  @InjectMocks private AddComicWorkerTaskEncoder adaptor;
   @Mock private ObjectFactory<AddComicWorkerTask> addComicWorkerTaskObjectFactory;
   @Mock private AddComicWorkerTask addComicWorkerTask;
   @Mock private TaskService taskService;
@@ -56,22 +56,23 @@ public class AddComicTaskEncoderTest {
     final Task result = adaptor.encode();
 
     assertNotNull(result);
-    assertEquals(TEST_FILENAME, result.getProperty(AddComicTaskEncoder.FILENAME));
+    assertEquals(TEST_FILENAME, result.getProperty(AddComicWorkerTaskEncoder.FILENAME));
     assertEquals(
         String.valueOf(this.deleteBlockedPages),
-        result.getProperty(AddComicTaskEncoder.DELETE_BLOCKED_PAGES));
+        result.getProperty(AddComicWorkerTaskEncoder.DELETE_BLOCKED_PAGES));
     assertEquals(
         String.valueOf(this.ignoreMetadata),
-        result.getProperty(AddComicTaskEncoder.IGNORE_METADATA));
+        result.getProperty(AddComicWorkerTaskEncoder.IGNORE_METADATA));
   }
 
   @Test
   public void testDecode() {
     final Task task = new Task();
-    task.setProperty(AddComicTaskEncoder.FILENAME, TEST_FILENAME);
+    task.setProperty(AddComicWorkerTaskEncoder.FILENAME, TEST_FILENAME);
     task.setProperty(
-        AddComicTaskEncoder.DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
-    task.setProperty(AddComicTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
+        AddComicWorkerTaskEncoder.DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
+    task.setProperty(
+        AddComicWorkerTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
 
     Mockito.when(addComicWorkerTaskObjectFactory.getObject()).thenReturn(addComicWorkerTask);
     Mockito.doNothing().when(taskService).delete(Mockito.any());
