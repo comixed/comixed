@@ -70,6 +70,7 @@ public class LibraryServiceTest {
   private static final String TEST_RENAMING_RULES =
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES [v$VOLUME] #$ISSUE $COVERDATE";
   private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
+  private static final boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
@@ -171,7 +172,11 @@ public class LibraryServiceTest {
         .setComicList(comicListArgumentCaptor.capture());
 
     libraryService.convertComics(
-        comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
+        comicIdList,
+        TEST_ARCHIVE_TYPE,
+        TEST_RENAME_PAGES,
+        TEST_DELETE_PAGES,
+        TEST_DELETE_ORIGINAL_COMIC);
 
     assertEquals(comicIdList.size(), comicListArgumentCaptor.getValue().size());
 
@@ -182,6 +187,8 @@ public class LibraryServiceTest {
     Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
         .setTargetArchiveType(TEST_ARCHIVE_TYPE);
     Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
+        .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
     Mockito.verify(taskManager, Mockito.times(1)).runTask(convertComicsWorkerTask);
   }
 

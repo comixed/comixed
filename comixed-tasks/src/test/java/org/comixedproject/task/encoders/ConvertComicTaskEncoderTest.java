@@ -42,6 +42,7 @@ public class ConvertComicTaskEncoderTest {
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
   private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
+  private static final boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
 
   @InjectMocks private ConvertComicTaskEncoder encoder;
   @Mock private ObjectFactory<ConvertComicWorkerTask> convertComicWorkerTaskObjectFactory;
@@ -57,6 +58,7 @@ public class ConvertComicTaskEncoderTest {
     encoder.setRenamePages(TEST_RENAME_PAGES);
     encoder.setDeletePages(TEST_DELETE_PAGES);
     encoder.setDeletePages(TEST_DELETE_PAGES);
+    encoder.setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
 
     Task result = encoder.encode();
 
@@ -70,6 +72,9 @@ public class ConvertComicTaskEncoderTest {
     assertEquals(
         String.valueOf(TEST_DELETE_PAGES),
         result.getProperty(ConvertComicTaskEncoder.DELETE_PAGES));
+    assertEquals(
+        String.valueOf(TEST_DELETE_ORIGINAL_COMIC),
+        result.getProperty(ConvertComicTaskEncoder.DELETE_ORIGINAL_COMIC));
   }
 
   @Test
@@ -83,6 +88,8 @@ public class ConvertComicTaskEncoderTest {
         .thenReturn(String.valueOf(TEST_RENAME_PAGES));
     Mockito.when(task.getProperty(ConvertComicTaskEncoder.DELETE_PAGES))
         .thenReturn(String.valueOf(TEST_DELETE_PAGES));
+    Mockito.when(task.getProperty(ConvertComicTaskEncoder.DELETE_ORIGINAL_COMIC))
+        .thenReturn(String.valueOf(TEST_DELETE_ORIGINAL_COMIC));
 
     ConvertComicWorkerTask result = encoder.decode(task);
 
@@ -94,6 +101,8 @@ public class ConvertComicTaskEncoderTest {
         .setTargetArchiveType(TEST_ARCHIVE_TYPE);
     Mockito.verify(convertComicWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
     Mockito.verify(convertComicWorkerTask, Mockito.times(1)).setDeletePages(TEST_DELETE_PAGES);
+    Mockito.verify(convertComicWorkerTask, Mockito.times(1))
+        .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
     Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
   }
 }

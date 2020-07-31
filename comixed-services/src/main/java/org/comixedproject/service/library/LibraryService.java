@@ -36,6 +36,7 @@ import org.comixedproject.service.task.TaskService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.task.model.ConvertComicsWorkerTask;
+import org.comixedproject.task.model.DeleteComicWorkerTask;
 import org.comixedproject.task.model.MoveComicsWorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.Utils;
@@ -54,6 +55,7 @@ public class LibraryService {
   @Autowired private LastReadDatesRepository lastReadDateRepository;
   @Autowired private ReadingListService readingListService;
   @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
+  @Autowired private ObjectFactory<DeleteComicWorkerTask> deleteComicWorkerTaskObjectFactory;
   @Autowired private TaskManager taskManager;
   @Autowired private Utils utils;
   @Autowired private PageCacheService pageCacheService;
@@ -113,14 +115,16 @@ public class LibraryService {
       final List<Long> comicIdList,
       final ArchiveType targetArchiveType,
       final boolean renamePages,
-      final boolean deletePages) {
+      final boolean deletePages,
+      final boolean deleteOriginal) {
     log.debug(
-        "Converting {} comic{} to {}{}{}",
+        "Converting {} comic{} to {}{}{}{}",
         comicIdList.size(),
         comicIdList.size() == 1 ? "" : "s",
         targetArchiveType,
         renamePages ? " (renaming pages)" : "",
-        deletePages ? " (deleting pages)" : "");
+        deletePages ? " (deleting pages)" : "",
+        deleteOriginal ? " (deleting original comic)" : "");
     List<Comic> comics = new ArrayList<>();
     for (long id : comicIdList) {
       comics.add(this.comicRepository.getById(id));
@@ -132,6 +136,7 @@ public class LibraryService {
     task.setTargetArchiveType(targetArchiveType);
     task.setRenamePages(renamePages);
     task.setDeletePages(deletePages);
+    task.setDeleteOriginal(deleteOriginal);
 
     log.debug("Queueing save comics worker task");
     this.taskManager.runTask(task);

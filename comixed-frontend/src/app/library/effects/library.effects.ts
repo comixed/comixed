@@ -272,7 +272,8 @@ export class LibraryEffects {
           action.comics,
           action.archiveType,
           action.renamePages,
-          action.deletePages
+          action.deletePages,
+          action.deleteOriginal
         )
         .pipe(
           tap(response => this.logger.debug('received response:', response)),

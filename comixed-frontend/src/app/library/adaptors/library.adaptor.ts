@@ -303,21 +303,24 @@ export class LibraryAdaptor {
     comics: Comic[],
     archiveType: string,
     renamePages: boolean,
-    deletePages: boolean
+    deletePages: boolean,
+    deleteOriginal: boolean
   ) {
     this.logger.debug(
       'firing action to convert comics:',
       comics,
       archiveType,
       renamePages,
-      deletePages
+      deletePages,
+      deleteOriginal
     );
     this.store.dispatch(
       new LibraryConvertComics({
         comics: comics,
         archiveType: archiveType,
         renamePages: renamePages,
-        deletePages: deletePages
+        deletePages: deletePages,
+        deleteOriginal: deleteOriginal
       })
     );
   }

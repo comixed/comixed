@@ -397,7 +397,8 @@
     "label": {
       "archive-type": "Archive Type",
       "rename-pages": "Rename Pages",
-      "delete-pages": "Remove Deleted And Blocked Pages"
+      "delete-pages": "Remove Deleted And Blocked Pages",
+      "delete-original": "Delete Original Comic"
     },
     "option": {
       "cbz": "CBZ (Zip)",

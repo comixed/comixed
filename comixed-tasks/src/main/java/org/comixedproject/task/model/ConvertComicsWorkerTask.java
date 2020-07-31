@@ -45,6 +45,7 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
   @Getter @Setter private ArchiveType targetArchiveType;
   @Getter @Setter private boolean renamePages;
   @Getter @Setter private boolean deletePages;
+  @Getter @Setter private boolean deleteOriginal;
 
   @Override
   protected String createDescription() {
@@ -69,6 +70,7 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
       encoder.setTargetArchiveType(this.targetArchiveType);
       encoder.setRenamePages(this.renamePages);
       encoder.setDeletePages(this.deletePages);
+      encoder.setDeleteOriginal(this.deleteOriginal);
       try {
         Task task = encoder.encode();
         this.taskRepository.save(task);

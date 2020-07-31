@@ -84,6 +84,7 @@ describe('LibraryAdaptor', () => {
   const DIRECTORY = '/Users/comixedreader/Documents/comics';
   const RENAMING_RULE =
     '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
+  const DELETE_ORIGINAL_COMIC = false;
 
   let adaptor: LibraryAdaptor;
   let store: Store<AppState>;
@@ -345,7 +346,13 @@ describe('LibraryAdaptor', () => {
 
   describe('converting comics', () => {
     beforeEach(() => {
-      adaptor.convertComics(COMICS, ARCHIVE_TYPE, RENAME_PAGES, DELETE_PAGES);
+      adaptor.convertComics(
+        COMICS,
+        ARCHIVE_TYPE,
+        RENAME_PAGES,
+        DELETE_PAGES,
+        DELETE_ORIGINAL_COMIC
+      );
     });
 
     it('fires an action', () => {
@@ -354,7 +361,8 @@ describe('LibraryAdaptor', () => {
           comics: COMICS,
           archiveType: ARCHIVE_TYPE,
           renamePages: RENAME_PAGES,
-          deletePages: DELETE_PAGES
+          deletePages: DELETE_PAGES,
+          deleteOriginal: DELETE_ORIGINAL_COMIC
         })
       );
     });

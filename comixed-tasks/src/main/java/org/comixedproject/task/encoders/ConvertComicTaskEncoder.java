@@ -41,6 +41,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
   public static final String ARCHIVE_TYPE = "target-archive-type";
   public static final String RENAME_PAGES = "rename-pages";
   public static final String DELETE_PAGES = "delete-pages";
+  public static final String DELETE_ORIGINAL_COMIC = "delete-original-comic";
 
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<ConvertComicWorkerTask> convertComicWorkerTaskObjectFactory;
@@ -49,6 +50,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
   @Getter @Setter private ArchiveType targetArchiveType;
   @Getter @Setter private boolean renamePages;
   @Getter @Setter private boolean deletePages;
+  @Getter @Setter private boolean deleteOriginal;
 
   @Override
   public Task encode() {
@@ -60,6 +62,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
     result.setProperty(ARCHIVE_TYPE, this.targetArchiveType.toString());
     result.setProperty(RENAME_PAGES, String.valueOf(this.renamePages));
     result.setProperty(DELETE_PAGES, String.valueOf(this.deletePages));
+    result.setProperty(DELETE_ORIGINAL_COMIC, String.valueOf(this.deleteOriginal));
 
     return result;
   }
@@ -73,8 +76,9 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
     result.setComic(task.getComic());
     ArchiveType archiveType = ArchiveType.forValue(task.getProperty(ARCHIVE_TYPE));
     result.setTargetArchiveType(archiveType);
-    result.setRenamePages(Boolean.valueOf(task.getProperty(RENAME_PAGES)));
-    result.setDeletePages(Boolean.valueOf(task.getProperty(DELETE_PAGES)));
+    result.setRenamePages(Boolean.parseBoolean(task.getProperty(RENAME_PAGES)));
+    result.setDeletePages(Boolean.parseBoolean(task.getProperty(DELETE_PAGES)));
+    result.setDeleteOriginal(Boolean.parseBoolean(task.getProperty(DELETE_ORIGINAL_COMIC)));
 
     log.debug("Deleting persisted task");
     this.taskRepository.delete(task);

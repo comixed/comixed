@@ -18,17 +18,22 @@
 
 package org.comixedproject.task.model;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.repositories.library.ReadingListRepository;
 import org.comixedproject.repositories.tasks.TaskRepository;
 import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
@@ -46,21 +51,24 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
   @Autowired private TaskRepository taskRepository;
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
   @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ReadingListRepository readingListRepository;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private ArchiveType targetArchiveType;
   @Getter @Setter private boolean renamePages;
   @Getter @Setter private boolean deletePages;
+  @Getter @Setter private boolean deleteOriginal;
 
   @Override
   protected String createDescription() {
     return String.format(
-        "Saving comic: id=%d source type=%s destination type=%s %s%s",
+        "Saving comic: id=%d source type=%s destination type=%s %s%s%s",
         this.comic.getId(),
         this.comic.getArchiveType(),
         this.targetArchiveType,
         this.renamePages ? "(renaming pages)" : "",
-        this.deletePages ? "(deleting pages)" : "");
+        this.deletePages ? "(deleting pages)" : "",
+        this.deleteOriginal ? "(deleting original comic)" : "");
   }
 
   @Override
@@ -76,9 +84,13 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
       Comic saveComic = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
       log.debug("Saving updated comic");
       saveComic.setDateLastUpdated(new Date());
-      final Comic result = this.comicRepository.save(saveComic);
-      this.comicRepository.flush();
 
+      final Comic result = this.comicRepository.save(saveComic);
+      updateReadingList(this.comic, result);
+
+      if (this.deleteOriginal) {
+        deleteOriginal();
+      }
       log.debug("Queueing up a comic processing task");
       ProcessComicTaskEncoder taskEncoder = this.processComicTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
@@ -87,6 +99,40 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
       this.taskRepository.save(taskEncoder.encode());
     } catch (ArchiveAdaptorException | IOException error) {
       throw new WorkerTaskException("Failed to save comic", error);
+    }
+  }
+
+  private void deleteOriginal() throws WorkerTaskException {
+    final String filename = this.comic.getFilename();
+    log.debug("Deleting comic file: {}", filename);
+    File file = new File(filename);
+    try {
+      FileUtils.forceDelete(file);
+      log.debug("Removing comic from repository: id={}", this.comic.getId());
+      this.comicRepository.delete(this.comic);
+    } catch (IOException error) {
+      log.error("Unable to delete comic: {}", filename, error);
+      throw new WorkerTaskException("failed to delete comic", error);
+    }
+  }
+
+  private void updateReadingList(final Comic originalComic, final Comic convertedComic)
+      throws WorkerTaskException {
+    if (originalComic == null) {
+      throw new WorkerTaskException("failed to update reading list");
+    }
+    log.debug("updating reading list{}", originalComic.getReadingLists().size() == 1 ? "" : "s");
+    if (!originalComic.getReadingLists().isEmpty()) {
+      Set<ReadingList> readingLists = originalComic.getReadingLists();
+      for (ReadingList readingList : readingLists) {
+        if (this.deleteOriginal) {
+          readingList.getComics().remove(originalComic);
+          originalComic.getReadingLists().remove(readingList);
+        }
+        readingList.getComics().add(convertedComic);
+        log.debug("Updating reading list: {}", readingList.getName());
+        this.readingListRepository.save(readingList);
+      }
     }
   }
 }

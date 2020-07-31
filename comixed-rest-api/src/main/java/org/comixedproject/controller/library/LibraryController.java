@@ -133,16 +133,19 @@ public class LibraryController {
     ArchiveType archiveType = request.getArchiveType();
     boolean renamePages = request.isRenamePages();
     boolean deletePages = request.isDeletePages();
+    boolean deleteOriginal = request.isDeleteOriginal();
 
     log.info(
-        "Converting {} comic{} to {}{}{}",
+        "Converting {} comic{} to {}{}{}{}",
         idList.size(),
         idList.size() == 1 ? "" : "s",
         archiveType,
         renamePages ? " (rename pages)" : "",
-        deletePages ? " (delete pages)" : "");
+        deletePages ? " (delete pages)" : "",
+        deleteOriginal ? " (delete original comic)" : "");
 
-    this.libraryService.convertComics(idList, archiveType, renamePages, deletePages);
+    this.libraryService.convertComics(
+        idList, archiveType, renamePages, deletePages, deleteOriginal);
   }
 
   @PostMapping(

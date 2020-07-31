@@ -50,14 +50,21 @@ public class ConvertComicsRequest {
   @JsonProperty("deletePages")
   private boolean deletePages;
 
+  @Getter
+  @Setter
+  @JsonProperty("deleteOriginal")
+  private boolean deleteOriginal;
+
   public ConvertComicsRequest(
       final List<Long> comicIdList,
       final ArchiveType archiveType,
       final boolean renamePages,
-      final Boolean deletePages) {
+      final Boolean deletePages,
+      final boolean deleteOriginal) {
     this.comicIdList = comicIdList;
     this.archiveType = archiveType;
     this.renamePages = renamePages;
     this.deletePages = deletePages;
+    this.deleteOriginal = deleteOriginal;
   }
 }
