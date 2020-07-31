@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.RescanComicWorkerTask;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class RescanComicTaskEncoder extends AbstractTaskEncoder<RescanComicWorkerTask> {
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private TaskService taskService;
   @Autowired private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskObjectFactory;
 
   private Comic comic;
@@ -57,7 +57,7 @@ public class RescanComicTaskEncoder extends AbstractTaskEncoder<RescanComicWorke
 
   @Override
   public RescanComicWorkerTask decode(final Task task) {
-    this.taskRepository.delete(task);
+    this.taskService.delete(task);
 
     log.debug("Decoding rescan comic worker task: comic={}", task.getId());
     final RescanComicWorkerTask result = this.rescanComicWorkerTaskObjectFactory.getObject();

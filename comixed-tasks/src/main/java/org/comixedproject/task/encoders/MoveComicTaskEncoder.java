@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.MoveComicWorkerTask;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class MoveComicTaskEncoder extends AbstractTaskEncoder<MoveComicWorkerTas
   public static final String RENAMING_RULE = "renaming-rule";
 
   @Autowired private ObjectFactory<MoveComicWorkerTask> moveComicWorkerTaskObjectFactory;
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private TaskService taskService;
 
   private Comic comic;
   private String directory;
@@ -68,7 +68,7 @@ public class MoveComicTaskEncoder extends AbstractTaskEncoder<MoveComicWorkerTas
 
   @Override
   public MoveComicWorkerTask decode(Task task) {
-    this.taskRepository.delete(task);
+    this.taskService.delete(task);
 
     log.debug("Decoding move comic task: id={}", task.getId());
 

@@ -25,7 +25,7 @@ import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.TaskException;
 import org.comixedproject.task.encoders.TaskEncoder;
 import org.springframework.beans.factory.InitializingBean;
@@ -34,10 +34,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>TaskAdadptor</code> provides methods for fetching {@link TaskEncoder} objects for encoding
+ * and decoding persisted {@link Task} objects.
+ *
+ * @author Darryl L. Pierce
+ */
 @Service
 @EnableConfigurationProperties
 @PropertySource("classpath:task-adaptors.properties")
@@ -45,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class TaskAdaptor implements InitializingBean {
   @Autowired private ApplicationContext applicationContext;
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private TaskService taskService;
 
   private List<TaskTypeEntry> adaptors = new ArrayList<>();
   Map<TaskType, String> adaptorMap = new EnumMap<>(TaskType.class);
@@ -54,21 +58,14 @@ public class TaskAdaptor implements InitializingBean {
     return adaptors;
   }
 
+  /**
+   * Returns the next task to be executed.
+   *
+   * @return the task
+   */
   public List<Task> getNextTask() {
     log.debug("Getting the next task to run");
-    return this.taskRepository.getTasksToRun(PageRequest.of(0, 1));
-  }
-
-  @Transactional
-  public Task save(final Task task) {
-    log.debug("Saving task: type={}", task.getTaskType());
-    return this.taskRepository.save(task);
-  }
-
-  @Transactional
-  public void delete(final Task task) {
-    log.debug("Deleting task: id={} type={}", task.getId(), task.getTaskType());
-    this.taskRepository.delete(task);
+    return this.taskService.getTasksToRun(1);
   }
 
   @Override

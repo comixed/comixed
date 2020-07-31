@@ -24,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.utils.ComicFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class MoveComicWorkerTask extends AbstractWorkerTask {
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
 
   private Comic comic;
   private String destination;
@@ -87,7 +87,7 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
 
       log.debug("Updating comic in database");
       this.comic.setFilename(destFile.getAbsolutePath());
-      this.comicRepository.save(this.comic);
+      this.comicService.save(this.comic);
     } catch (IOException error) {
       throw new WorkerTaskException("Failed to move comic", error);
     }

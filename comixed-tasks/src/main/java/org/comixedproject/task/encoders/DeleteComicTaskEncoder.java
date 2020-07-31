@@ -29,6 +29,12 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>DeleteComicTaskEncoder</code> handles encoding and decoding instances of {@link
+ * DeleteComicWorkerTask}.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2

@@ -437,4 +437,23 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
   }
+
+  @Test
+  public void testGetComicsById() {
+    Mockito.when(
+            comicRepository.findComicsWithIdGreaterThan(
+                Mockito.anyLong(), pageableCaptor.capture()))
+        .thenReturn(comicList);
+
+    final List<Comic> result = comicService.getComicsById(TEST_COMIC_ID, TEST_MAXIMUM_COMICS);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+    assertNotNull(pageableCaptor.getValue());
+    assertEquals(0, pageableCaptor.getValue().getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageableCaptor.getValue().getPageSize());
+
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findComicsWithIdGreaterThan(TEST_COMIC_ID, pageableCaptor.getValue());
+  }
 }

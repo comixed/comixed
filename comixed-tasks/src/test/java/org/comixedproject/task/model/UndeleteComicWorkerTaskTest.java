@@ -20,7 +20,7 @@ package org.comixedproject.task.model;
 
 import java.util.Date;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,19 +31,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class UndeleteComicWorkerTaskTest {
   @InjectMocks private UndeleteComicWorkerTask undeleteComicWorkerTask;
-  @Mock private ComicRepository comicRepository;
+  @Mock private ComicService comicService;
   @Mock private Comic comic;
 
   @Test
   public void testStartTask() throws WorkerTaskException {
     undeleteComicWorkerTask.setComic(comic);
 
-    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
 
     undeleteComicWorkerTask.startTask();
 
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(null);
     Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(Mockito.any(Date.class));
-    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(comicService, Mockito.times(1)).save(comic);
   }
 }

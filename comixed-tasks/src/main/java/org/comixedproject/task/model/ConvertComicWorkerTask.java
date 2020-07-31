@@ -31,10 +31,8 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.library.ReadingList;
-import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.library.ReadingListRepository;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +41,18 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>ConvertComicWorkerTask</code> converts comics from one archive type to, potentially,
+ * another. It also managings renaming and deleting pages.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class ConvertComicWorkerTask extends AbstractWorkerTask {
-  @Autowired private ComicRepository comicRepository;
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private ComicService comicService;
+  @Autowired private TaskService taskService;
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ReadingListRepository readingListRepository;
@@ -84,8 +88,7 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
       Comic saveComic = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
       log.debug("Saving updated comic");
       saveComic.setDateLastUpdated(new Date());
-
-      final Comic result = this.comicRepository.save(saveComic);
+      final Comic result = this.comicService.save(saveComic);
       updateReadingList(this.comic, result);
 
       if (this.deleteOriginal) {
@@ -96,7 +99,7 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
       taskEncoder.setComic(result);
       taskEncoder.setIgnoreMetadata(false);
       taskEncoder.setDeleteBlockedPages(false);
-      this.taskRepository.save(taskEncoder.encode());
+      this.taskService.save(taskEncoder.encode());
     } catch (ArchiveAdaptorException | IOException error) {
       throw new WorkerTaskException("Failed to save comic", error);
     }

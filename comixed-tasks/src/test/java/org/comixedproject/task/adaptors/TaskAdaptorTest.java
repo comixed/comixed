@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.TaskException;
 import org.comixedproject.task.encoders.TaskEncoder;
 import org.junit.Test;
@@ -38,10 +38,11 @@ import org.springframework.data.domain.PageRequest;
 @RunWith(MockitoJUnitRunner.class)
 public class TaskAdaptorTest {
   private static final String TEST_ADAPTOR_NAME = "adaptorBeanName";
+  private static final int TEST_NEXT_TASK_COUNT = 5;
 
   @InjectMocks private TaskAdaptor adaptor;
   @Mock private ApplicationContext applicationContext;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
   @Mock private Task task;
   @Mock private TaskEncoder<?> taskEncoder;
@@ -68,35 +69,27 @@ public class TaskAdaptorTest {
 
   @Test
   public void testSave() {
-    Mockito.when(taskRepository.save(Mockito.any(Task.class))).thenReturn(task);
+    Mockito.when(taskService.save(Mockito.any(Task.class))).thenReturn(task);
 
-    final Task result = adaptor.save(task);
+    final Task result = taskService.save(task);
 
     assertNotNull(result);
     assertSame(task, result);
 
-    Mockito.verify(taskRepository, Mockito.times(1)).save(task);
+    Mockito.verify(taskService, Mockito.times(1)).save(task);
   }
 
   @Test
   public void testGetNextTask() {
     taskList.add(task);
 
-    Mockito.when(taskRepository.getTasksToRun(pageRequestArgumentCaptor.capture()))
-        .thenReturn(taskList);
+    Mockito.when(taskService.getTasksToRun(Mockito.anyInt())).thenReturn(taskList);
 
-    final List<Task> result = adaptor.getNextTask();
+    final List<Task> result = taskService.getTasksToRun(TEST_NEXT_TASK_COUNT);
 
     assertNotNull(result);
     assertSame(taskList, result);
-  }
 
-  @Test
-  public void testDeleteTask() {
-    Mockito.doNothing().when(taskRepository).delete(Mockito.any(Task.class));
-
-    adaptor.delete(task);
-
-    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+    Mockito.verify(taskService, Mockito.times(1)).getTasksToRun(TEST_NEXT_TASK_COUNT);
   }
 }

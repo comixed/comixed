@@ -23,7 +23,9 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicException;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.TaskException;
 import org.comixedproject.task.adaptors.TaskAdaptor;
 import org.comixedproject.task.encoders.DeleteComicTaskEncoder;
@@ -32,12 +34,19 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>DeleteComicsWorkerTask</code> handles creating persisted instances of {@link
+ * DeleteComicWorkerTask}.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class DeleteComicsWorkerTask extends AbstractWorkerTask {
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
   @Autowired private TaskAdaptor taskAdaptor;
+  @Autowired private TaskService taskService;
   private List<Long> comicIds;
 
   @Override
@@ -51,7 +60,12 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask {
   public void startTask() throws WorkerTaskException {
     for (int index = 0; index < this.comicIds.size(); index++) {
       final Long id = this.comicIds.get(index);
-      final Comic comic = this.comicRepository.getById(id);
+      Comic comic;
+      try {
+        comic = this.comicService.getComic(id);
+      } catch (ComicException error) {
+        throw new WorkerTaskException("failed to load comic", error);
+      }
 
       if (comic != null) {
         try {
@@ -59,7 +73,7 @@ public class DeleteComicsWorkerTask extends AbstractWorkerTask {
           encoder = this.taskAdaptor.getEncoder(TaskType.DELETE_COMIC);
           encoder.setComic(comic);
           encoder.setDeleteComicFile(false);
-          this.taskAdaptor.save(encoder.encode());
+          this.taskService.save(encoder.encode());
         } catch (TaskException error) {
           log.error("Failed to encode delete comic task", error);
         }

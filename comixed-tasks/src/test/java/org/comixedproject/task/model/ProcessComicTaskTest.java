@@ -28,7 +28,7 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.utils.Utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +48,7 @@ public class ProcessComicTaskTest {
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsCaptor;
   @Mock private ArchiveAdaptor archiveAdaptor;
-  @Mock private ComicRepository comicRepository;
+  @Mock private ComicService comicService;
   @Mock private Utils utils;
   @Mock private ComicFileHandler comicFileHandler;
 
@@ -63,7 +63,7 @@ public class ProcessComicTaskTest {
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(utils.createHash(Mockito.any(InputStream.class))).thenReturn(TEST_FILE_HASH);
     Mockito.doNothing().when(comic).setFileDetails(comicFileDetailsCaptor.capture());
-    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
 
     task.setComic(comic);
     task.setIgnoreMetadata(false);
@@ -76,6 +76,6 @@ public class ProcessComicTaskTest {
     Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(archiveType);
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(comicService, Mockito.times(1)).save(comic);
   }
 }

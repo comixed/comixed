@@ -22,7 +22,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.AddComicTaskEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -30,15 +30,21 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>QueueComicsWorkerTask</code> is an unpersisted task that creates persisted instances of
+ * {@link AddComicWorkerTask} to import comics.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class QueueComicsWorkerTask extends AbstractWorkerTask {
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private TaskService taskService;
 
+  boolean ignoreMetadata = false;
   private List<String> filenames;
   private boolean deleteBlockedPages = false;
-  boolean ignoreMetadata = false;
 
   public void setDeleteBlockedPages(boolean deleteBlockedPages) {
     this.deleteBlockedPages = deleteBlockedPages;
@@ -84,7 +90,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
       task.setProperty(
           AddComicTaskEncoder.DELETE_BLOCKED_PAGES, String.valueOf(this.deleteBlockedPages));
       task.setProperty(AddComicTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
-      this.taskRepository.save(task);
+      this.taskService.save(task);
     }
 
     log.debug("Finished processing comics queue: {}ms", System.currentTimeMillis() - started);

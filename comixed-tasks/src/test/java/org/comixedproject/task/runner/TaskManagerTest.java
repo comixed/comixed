@@ -21,7 +21,7 @@ package org.comixedproject.task.runner;
 import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
-import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.MonitorTaskQueue;
 import org.comixedproject.task.model.WorkerTask;
 import org.comixedproject.task.model.WorkerTaskException;
@@ -39,7 +39,7 @@ public class TaskManagerTest {
   @Mock private ThreadPoolTaskExecutor taskExecutor;
   @Mock private WorkerTask workerTask;
   @Captor private ArgumentCaptor<Runnable> runnableArgumentCaptor;
-  @Mock private TaskAuditLogRepository taskAuditLogRepository;
+  @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<TaskAuditLogEntry> logEntryArgumentCaptor;
   @Mock private TaskAuditLogEntry logEntryRecord;
   @Mock private MonitorTaskQueue monitorTaskQueue;
@@ -48,8 +48,7 @@ public class TaskManagerTest {
   public void testRunTask() throws WorkerTaskException {
     Mockito.when(workerTask.getDescription()).thenReturn(TEST_DESCRIPTION);
     Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
-    Mockito.when(taskAuditLogRepository.save(logEntryArgumentCaptor.capture()))
-        .thenReturn(logEntryRecord);
+    Mockito.doNothing().when(taskService).saveAuditLogEntry(logEntryArgumentCaptor.capture());
 
     taskManager.runTask(workerTask);
 
@@ -70,7 +69,7 @@ public class TaskManagerTest {
     assertTrue(logEntry.getSuccessful());
     assertEquals(TEST_DESCRIPTION, logEntry.getDescription());
 
-    Mockito.verify(taskAuditLogRepository, Mockito.times(1)).save(logEntry);
+    Mockito.verify(taskService, Mockito.times(1)).saveAuditLogEntry(logEntry);
   }
 
   @Test
@@ -89,7 +88,7 @@ public class TaskManagerTest {
     Mockito.verify(monitorTaskQueue, Mockito.times(1)).startTask();
     Mockito.verify(monitorTaskQueue, Mockito.times(1)).afterExecution();
 
-    Mockito.verify(taskAuditLogRepository, Mockito.never()).save(Mockito.any());
+    Mockito.verify(taskService, Mockito.never()).save(Mockito.any());
   }
 
   @Test
@@ -97,8 +96,7 @@ public class TaskManagerTest {
     Mockito.when(workerTask.getDescription()).thenReturn(TEST_DESCRIPTION);
     Mockito.doThrow(WorkerTaskException.class).when(workerTask).startTask();
     Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
-    Mockito.when(taskAuditLogRepository.save(logEntryArgumentCaptor.capture()))
-        .thenReturn(logEntryRecord);
+    Mockito.doNothing().when(taskService).saveAuditLogEntry(logEntryArgumentCaptor.capture());
 
     taskManager.runTask(workerTask);
 
@@ -119,7 +117,7 @@ public class TaskManagerTest {
     assertFalse(logEntry.getSuccessful());
     assertEquals(TEST_DESCRIPTION, logEntry.getDescription());
 
-    Mockito.verify(taskAuditLogRepository, Mockito.times(1)).save(logEntry);
+    Mockito.verify(taskService, Mockito.times(1)).saveAuditLogEntry(logEntry);
   }
 
   @Test

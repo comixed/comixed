@@ -23,8 +23,9 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.comic.ComicException;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.UndeleteComicTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,8 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class UndeleteComicsWorkerTask extends AbstractWorkerTask {
   @Autowired private ObjectFactory<UndeleteComicTaskEncoder> undeleteComicTaskEncoderObjectFactory;
-  @Autowired private ComicRepository comicRepository;
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private ComicService comicService;
+  @Autowired private TaskService taskService;
 
   private List<Long> ids = new ArrayList<>();
 
@@ -59,13 +60,18 @@ public class UndeleteComicsWorkerTask extends AbstractWorkerTask {
         "Creating tasks to undelete {} comic{}", this.ids.size(), this.ids.size() == 1 ? "" : "s");
     for (int index = 0; index < this.ids.size(); index++) {
       Long id = ids.get(index);
-      Comic comic = this.comicRepository.getById(id);
+      Comic comic = null;
+      try {
+        comic = this.comicService.getComic(id);
+      } catch (ComicException error) {
+        throw new WorkerTaskException("failed to load comic", error);
+      }
       log.debug("Creating undelete task for comic: id={}", comic.getId());
       UndeleteComicTaskEncoder encoder = this.undeleteComicTaskEncoderObjectFactory.getObject();
       encoder.setComic(comic);
       log.debug("enqueueing undelete task");
       Task task = encoder.encode();
-      this.taskRepository.save(task);
+      this.taskService.save(task);
     }
   }
 

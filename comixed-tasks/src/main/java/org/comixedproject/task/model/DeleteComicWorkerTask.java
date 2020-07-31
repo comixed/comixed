@@ -26,17 +26,23 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
-import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.library.ReadingListRepository;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.library.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>DeleteComicWorkerTask</code> deletes a single comic from the library and also the
+ * underlying comic file.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Log4j2
 public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerTask {
-  @Autowired private ComicRepository repository;
-  @Autowired private ReadingListRepository readingListRepository;
+  @Autowired private ComicService comicService;
+  @Autowired private ReadingListService readingListService;
 
   private boolean deleteFile;
   private Comic comic;
@@ -61,7 +67,7 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
           readingList.getComics().remove(comic);
           comic.getReadingLists().remove(readingList);
           log.debug("Updating reading list: {}", readingList.getName());
-          this.readingListRepository.save(readingList);
+          this.readingListService.save(readingList);
         }
       }
     }
@@ -72,8 +78,8 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
       File file = new File(filename);
       try {
         FileUtils.forceDelete(file);
-        log.debug("Removing comic from repository: id={}", this.comic.getId());
-        this.repository.delete(this.comic);
+        log.debug("Removing comic from library: id={}", this.comic.getId());
+        this.comicService.delete(this.comic);
       } catch (IOException error) {
         log.error("Unable to delete comic: {}", filename, error);
       }
@@ -81,7 +87,7 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
       log.debug("Marking comic for deletion: id={}", this.comic.getId());
       comic.setDateDeleted(new Date());
       comic.setDateLastUpdated(new Date());
-      this.repository.save(this.comic);
+      this.comicService.save(this.comic);
     }
   }
 

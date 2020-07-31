@@ -368,4 +368,16 @@ public class ComicService {
   public Comic findByFilename(final String filename) {
     return this.comicRepository.findByFilename(filename);
   }
+
+  /**
+   * Returns a list of comics with ids greater than the threshold specified.
+   *
+   * @param threshold the id threshold
+   * @param max the maximum number of records
+   * @return the list of comics
+   */
+  public List<Comic> getComicsById(final long threshold, final int max) {
+    log.debug("Finding {} comic{} with id greater than {}", max, max == 1 ? "" : "s", threshold);
+    return this.comicRepository.getComicsById(threshold, PageRequest.of(0, max));
+  }
 }

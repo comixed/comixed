@@ -25,7 +25,9 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.comic.ComicException;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ConvertComicTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +36,21 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>ConvertComicsWorkerTask</code> manages creating instances of {@link ConvertComicWorkerTask}
+ * and persisting them for a set of comics.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class ConvertComicsWorkerTask extends AbstractWorkerTask {
-  @Autowired private TaskRepository taskRepository;
-  @Autowired private ObjectFactory<ConvertComicTaskEncoder> saveComicTaskEncoderObjectFactory;
+  @Autowired private TaskService taskService;
+  @Autowired private ComicService comicService;
+  @Autowired private ObjectFactory<ConvertComicWorkerTaskEncoder> saveComicTaskEncoderObjectFactory;
 
-  @Getter @Setter private List<Comic> comicList;
+  @Getter @Setter private List<Long> idList;
   @Getter @Setter private ArchiveType targetArchiveType;
   @Getter @Setter private boolean renamePages;
   @Getter @Setter private boolean deletePages;
@@ -50,21 +59,24 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
   @Override
   protected String createDescription() {
     return String.format(
-        "Preparing to save %d comic%s",
-        this.comicList.size(), this.comicList.size() == 1 ? "" : "s");
+        "Preparing to save %d comic%s", this.idList.size(), this.idList.size() == 1 ? "" : "s");
   }
 
   @Override
   @Transactional
   public void startTask() throws WorkerTaskException {
     log.debug(
-        "Queueing up {} save comic task{}",
-        this.comicList.size(),
-        this.comicList.size() == 1 ? "" : "s");
+        "Queueing up {} save comic task{}", this.idList.size(), this.idList.size() == 1 ? "" : "s");
 
     for (Comic comic : this.comicList) {
       log.debug("Queueing task to save comic: id={}", comic.getId());
-      ConvertComicTaskEncoder encoder = this.saveComicTaskEncoderObjectFactory.getObject();
+      Comic comic = null;
+      try {
+        comic = this.comicService.getComic(id);
+      } catch (ComicException error) {
+        throw new WorkerTaskException("failed to load comic", error);
+      }
+      ConvertComicWorkerTaskEncoder encoder = this.saveComicTaskEncoderObjectFactory.getObject();
 
       encoder.setComic(comic);
       encoder.setTargetArchiveType(this.targetArchiveType);
@@ -73,7 +85,7 @@ public class ConvertComicsWorkerTask extends AbstractWorkerTask {
       encoder.setDeleteOriginal(this.deleteOriginal);
       try {
         Task task = encoder.encode();
-        this.taskRepository.save(task);
+        this.taskService.save(task);
       } catch (Exception error) {
         throw new WorkerTaskException("unable to queue comic conversion", error);
       }

@@ -26,7 +26,7 @@ import java.util.Random;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.ConvertComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +47,7 @@ public class ConvertComicTaskEncoderTest {
   @InjectMocks private ConvertComicTaskEncoder encoder;
   @Mock private ObjectFactory<ConvertComicWorkerTask> convertComicWorkerTaskObjectFactory;
   @Mock private ConvertComicWorkerTask convertComicWorkerTask;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
   @Mock private Comic comic;
   @Mock private Task task;
 
@@ -103,6 +103,6 @@ public class ConvertComicTaskEncoderTest {
     Mockito.verify(convertComicWorkerTask, Mockito.times(1)).setDeletePages(TEST_DELETE_PAGES);
     Mockito.verify(convertComicWorkerTask, Mockito.times(1))
         .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
-    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+    Mockito.verify(taskService, Mockito.times(1)).delete(task);
   }
 }

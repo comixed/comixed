@@ -26,7 +26,9 @@ import java.util.Random;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.comic.ComicException;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ConvertComicTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,20 +45,21 @@ public class ConvertComicsWorkerTaskTest {
   private static final boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
 
   @InjectMocks private ConvertComicsWorkerTask task;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
   @Mock private ObjectFactory<ConvertComicTaskEncoder> saveComicTaskEncoderObjectFactory;
   @Mock private ConvertComicTaskEncoder convertComicTaskEncoder;
   @Mock private Comic comic;
   @Mock private Task savedTask;
   @Captor private ArgumentCaptor<Task> taskArgumentCaptor;
+  @Mock private ComicService comicService;
 
-  private List<Comic> comicList = new ArrayList<>();
+  private List<Long> idList = new ArrayList<>();
 
   @Test
-  public void testSetComicList() {
-    task.setComicList(comicList);
+  public void testSetIdList() {
+    task.setIdList(idList);
 
-    assertSame(comicList, task.getComicList());
+    assertSame(idList, task.getIdList());
   }
 
   @Test
@@ -89,7 +92,7 @@ public class ConvertComicsWorkerTaskTest {
 
   @Test
   public void testGetDescription() {
-    task.setComicList(comicList);
+    task.setIdList(idList);
     task.setTargetArchiveType(TEST_ARCHIVE_TYPE);
     task.setRenamePages(TEST_RENAME_PAGES);
     task.setDeletePages(TEST_DELETE_PAGES);
@@ -103,32 +106,34 @@ public class ConvertComicsWorkerTaskTest {
   }
 
   @Test
-  public void testStartTask() throws WorkerTaskException {
+  public void testStartTask() throws WorkerTaskException, ComicException {
     for (int index = 0; index < 25; index++) {
-      comicList.add(comic);
+      idList.add((long) index);
     }
-    task.setComicList(comicList);
+    task.setIdList(idList);
     task.setTargetArchiveType(TEST_ARCHIVE_TYPE);
     task.setRenamePages(TEST_RENAME_PAGES);
     task.setDeletePages(TEST_DELETE_PAGES);
     task.setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
 
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(saveComicTaskEncoderObjectFactory.getObject()).thenReturn(convertComicTaskEncoder);
-    Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(savedTask);
+    Mockito.when(taskService.save(taskArgumentCaptor.capture())).thenReturn(savedTask);
 
     task.startTask();
 
-    Mockito.verify(saveComicTaskEncoderObjectFactory, Mockito.times(comicList.size())).getObject();
-    Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size())).setComic(comic);
-    Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
+    for (int index = 0; index < idList.size(); index++)
+      Mockito.verify(comicService, Mockito.times(1)).getComic(idList.get(index));
+    Mockito.verify(saveComicTaskEncoderObjectFactory, Mockito.times(idList.size())).getObject();
+    Mockito.verify(convertComicTaskEncoder, Mockito.times(idList.size())).setComic(comic);
+    Mockito.verify(convertComicTaskEncoder, Mockito.times(idList.size()))
         .setTargetArchiveType(TEST_ARCHIVE_TYPE);
-    Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
+    Mockito.verify(convertComicTaskEncoder, Mockito.times(idList.size()))
         .setRenamePages(TEST_RENAME_PAGES);
-    Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
+    Mockito.verify(convertComicTaskEncoder, Mockito.times(idList.size()))
         .setDeletePages(TEST_DELETE_PAGES);
     Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
         .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
-    Mockito.verify(taskRepository, Mockito.times(comicList.size()))
-        .save(taskArgumentCaptor.getValue());
+    Mockito.verify(taskService, Mockito.times(idList.size())).save(taskArgumentCaptor.getValue());
   }
 }

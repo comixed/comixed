@@ -24,7 +24,7 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,7 @@ public class ExportComicWorkerTaskTest {
 
   @InjectMocks private ExportComicWorkerTask workerTask;
   @Mock private ComicFileHandler comicFileHandler;
-  @Mock private ComicRepository comicRepository;
+  @Mock private ComicService comicService;
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private Comic comic;
 

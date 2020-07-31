@@ -22,7 +22,7 @@ import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.MoveComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,7 @@ public class MoveComicTaskEncoderTest {
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)";
 
   @InjectMocks private MoveComicTaskEncoder moveComicTaskEncoder;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
   @Mock private ObjectFactory<MoveComicWorkerTask> moveComicWorkerTaskObjectFactory;
   @Mock private MoveComicWorkerTask moveComicWorkerTask;
   @Mock Comic comic;
@@ -72,7 +72,7 @@ public class MoveComicTaskEncoderTest {
     assertNotNull(result);
     assertSame(moveComicWorkerTask, result);
 
-    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+    Mockito.verify(taskService, Mockito.times(1)).delete(task);
     Mockito.verify(moveComicWorkerTask, Mockito.times(1)).setComic(comic);
     Mockito.verify(moveComicWorkerTask, Mockito.times(1)).setDirectory(TEST_DIRECTORY);
     Mockito.verify(moveComicWorkerTask, Mockito.times(1)).setRenamingRule(TEST_RENAMING_RULE);

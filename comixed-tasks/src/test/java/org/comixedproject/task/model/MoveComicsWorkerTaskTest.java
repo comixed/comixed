@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.MoveComicTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.data.domain.PageRequest;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MoveComicsWorkerTaskTest {
@@ -41,12 +40,12 @@ public class MoveComicsWorkerTaskTest {
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)";
 
   @InjectMocks private MoveComicsWorkerTask moveComicsWorkerTask;
-  @Mock private ComicRepository comicRepository;
+  @Mock private ComicService comicService;
   @Mock private ObjectFactory<MoveComicTaskEncoder> moveComicWorkerTaskEncoderObjectFactory;
   @Mock private MoveComicTaskEncoder moveComicTaskEncoder;
   @Mock private MoveComicWorkerTask moveComicWorkerTask;
   @Mock private Task task;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
   @Mock private Comic comic;
 
   private List<Comic> comicList = new ArrayList<>();
@@ -55,10 +54,9 @@ public class MoveComicsWorkerTaskTest {
   public void testStartTask() throws WorkerTaskException {
     Mockito.when(moveComicWorkerTaskEncoderObjectFactory.getObject())
         .thenReturn(moveComicTaskEncoder);
-    Mockito.when(comicRepository.findComicsToMove(Mockito.any(PageRequest.class)))
-        .thenReturn(comicList);
+    Mockito.when(comicService.findComicsToMove(Mockito.anyInt())).thenReturn(comicList);
     Mockito.when(moveComicTaskEncoder.encode()).thenReturn(task);
-    Mockito.when(taskRepository.save(Mockito.any(Task.class))).thenReturn(task);
+    Mockito.when(taskService.save(Mockito.any(Task.class))).thenReturn(task);
 
     for (int index = 0; index < 25; index++) comicList.add(comic);
     moveComicsWorkerTask.setDirectory(TEST_DIRECTORY);
@@ -73,6 +71,6 @@ public class MoveComicsWorkerTaskTest {
         .setDirectory(TEST_DIRECTORY);
     Mockito.verify(moveComicTaskEncoder, Mockito.times(comicList.size()))
         .setRenamingRule(TEST_RENAMING_RULE);
-    Mockito.verify(taskRepository, Mockito.times(comicList.size())).save(task);
+    Mockito.verify(taskService, Mockito.times(comicList.size())).save(task);
   }
 }
