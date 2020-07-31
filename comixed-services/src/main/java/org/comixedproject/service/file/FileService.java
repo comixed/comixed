@@ -20,9 +20,7 @@ package org.comixedproject.service.file;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
@@ -34,10 +32,7 @@ import org.comixedproject.model.file.FileDetails;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.QueueComicsWorkerTask;
-import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.ComicFileUtils;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +41,6 @@ import org.springframework.stereotype.Service;
 public class FileService {
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicRepository comicRepository;
-  @Autowired private TaskManager taskManager;
-  @Autowired private ObjectFactory<QueueComicsWorkerTask> taskFactory;
   @Autowired private TaskService taskService;
 
   private int requestId = 0;
@@ -135,26 +128,5 @@ public class FileService {
   public int getImportStatus() throws InterruptedException {
     return this.taskService.getTaskCount(TaskType.ADD_COMIC)
         + this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
-  }
-
-  public int importComicFiles(
-      final String[] filenames, final boolean deleteBlockedPages, final boolean ignoreMetadata)
-      throws UnsupportedEncodingException {
-    log.debug(
-        "Preparing to import {} comic files: delete blocked pages={} ignore metadata={}",
-        filenames.length,
-        deleteBlockedPages ? "Yes" : "No",
-        ignoreMetadata ? "Yes" : "No");
-
-    QueueComicsWorkerTask task = this.taskFactory.getObject();
-
-    task.setFilenames(Arrays.asList(filenames));
-    task.setDeleteBlockedPages(deleteBlockedPages);
-    task.setIgnoreMetadata(ignoreMetadata);
-
-    log.debug("Adding import task to queue");
-    this.taskManager.runTask(task);
-
-    return filenames.length;
   }
 }

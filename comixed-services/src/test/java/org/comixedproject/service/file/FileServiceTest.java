@@ -22,9 +22,6 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -32,18 +29,13 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.file.FileDetails;
-import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.QueueComicsWorkerTask;
-import org.comixedproject.task.runner.TaskManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,10 +57,6 @@ public class FileServiceTest {
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicRepository comicRepository;
   @Mock private Comic comic;
-  @Mock private TaskService taskService;
-  @Mock private ObjectFactory<QueueComicsWorkerTask> taskFactory;
-  @Mock private QueueComicsWorkerTask queueComicsWorkerTask;
-  @Mock private TaskManager taskManager;
 
   @Test
   public void testGetImportFileCoverWithNoHandler()
@@ -159,57 +147,5 @@ public class FileServiceTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(3, result.size());
-  }
-
-  @Test
-  public void testGetImportStatus() throws NoSuchAlgorithmException, InterruptedException {
-    int addCount = SecureRandom.getInstanceStrong().nextInt(21275);
-    int importCount = SecureRandom.getInstanceStrong().nextInt(21275);
-    Mockito.when(taskService.getTaskCount(TaskType.ADD_COMIC)).thenReturn(addCount);
-    Mockito.when(taskService.getTaskCount(TaskType.PROCESS_COMIC)).thenReturn(importCount);
-
-    int result = service.getImportStatus();
-
-    assertEquals(addCount + importCount, result);
-  }
-
-  @Test
-  public void testImportComicFilesDeleteBlockedPages() throws UnsupportedEncodingException {
-    Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
-    Mockito.doNothing().when(queueComicsWorkerTask).setDeleteBlockedPages(true);
-
-    final int result = service.importComicFiles(TEST_FILENAMES, true, false);
-
-    assertEquals(TEST_FILENAMES.length, result);
-
-    Mockito.verify(taskFactory, Mockito.times(1)).getObject();
-    Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setDeleteBlockedPages(true);
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(queueComicsWorkerTask);
-  }
-
-  @Test
-  public void testImportComicFilesIgnoreComicInfoXmlFile() throws UnsupportedEncodingException {
-    Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
-    Mockito.doNothing().when(queueComicsWorkerTask).setIgnoreMetadata(true);
-
-    final int result = service.importComicFiles(TEST_FILENAMES, false, true);
-
-    assertEquals(TEST_FILENAMES.length, result);
-
-    Mockito.verify(taskFactory, Mockito.times(1)).getObject();
-    Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setIgnoreMetadata(true);
-    Mockito.verify(taskManager, Mockito.timeout(1)).runTask(queueComicsWorkerTask);
-  }
-
-  @Test
-  public void testImportComicFiles() throws UnsupportedEncodingException {
-    Mockito.when(taskFactory.getObject()).thenReturn(queueComicsWorkerTask);
-
-    final int result = service.importComicFiles(TEST_FILENAMES, false, false);
-
-    assertEquals(TEST_FILENAMES.length, result);
-
-    Mockito.verify(taskFactory, Mockito.times(1)).getObject();
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(queueComicsWorkerTask);
   }
 }

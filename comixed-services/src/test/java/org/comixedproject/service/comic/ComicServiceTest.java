@@ -28,18 +28,11 @@ import java.util.Optional;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFormat;
 import org.comixedproject.model.comic.ScanType;
-import org.comixedproject.model.tasks.Task;
-import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.repositories.ComiXedUserRepository;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.repositories.library.LastReadDatesRepository;
-import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.TaskException;
-import org.comixedproject.task.adaptors.TaskAdaptor;
-import org.comixedproject.task.encoders.RescanComicTaskEncoder;
-import org.comixedproject.task.model.RescanComicWorkerTask;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,7 +67,6 @@ public class ComicServiceTest {
   @Mock private ComicRepository comicRepository;
   @Mock private LastReadDatesRepository lastReadDatesRepository;
   @Mock private ComiXedUserRepository userRepository;
-  @Mock private TaskService taskService;
   @Mock private List<Comic> comicList;
   @Mock private Comic comicListEntry;
   @Mock private Comic comic;
@@ -82,10 +74,6 @@ public class ComicServiceTest {
   @Mock private ComiXedUser user;
   @Mock private List<LastReadDate> listLastReadDate;
   @Captor private ArgumentCaptor<Date> lastUpdatedDateCaptor;
-  @Mock private TaskAdaptor taskAdaptor;
-  @Mock private RescanComicTaskEncoder taskEncoder;
-  @Mock private Task task;
-  @Mock private RescanComicWorkerTask rescanWorkerTask;
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<Date> deletedCaptor;
   @Mock private LastReadDate lastReadDate;
@@ -326,20 +314,6 @@ public class ComicServiceTest {
   }
 
   @Test
-  public void testGetProcessingCount() {
-    Mockito.when(taskService.getTaskCount(TaskType.PROCESS_COMIC)).thenReturn(10);
-
-    assertEquals(10, this.comicService.getProcessingCount());
-  }
-
-  @Test
-  public void testGetRescanCount() {
-    Mockito.when(taskService.getTaskCount(TaskType.RESCAN_COMIC)).thenReturn(10);
-
-    assertEquals(10, this.comicService.getRescanCount());
-  }
-
-  @Test
   public void testGetLastReadDatesSince() {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
@@ -368,24 +342,6 @@ public class ComicServiceTest {
     assertSame(comic, result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
-  }
-
-  @Test
-  public void testRescanComics() throws TaskException {
-    List<Comic> comics = new ArrayList<>();
-    comics.add(comic);
-
-    Mockito.when(comicRepository.findAll()).thenReturn(comics);
-    Mockito.when(taskAdaptor.getEncoder(Mockito.any(TaskType.class))).thenReturn(taskEncoder);
-    Mockito.when(taskEncoder.encode()).thenReturn(task);
-
-    final int result = comicService.rescanComics();
-
-    assertEquals(comics.size(), result);
-
-    Mockito.verify(comicRepository, Mockito.times(1)).findAll();
-    Mockito.verify(taskAdaptor, Mockito.times(1)).getEncoder(TaskType.RESCAN_COMIC);
-    Mockito.verify(taskEncoder, Mockito.times(1)).setComic(comic);
   }
 
   @Test
@@ -471,5 +427,14 @@ public class ComicServiceTest {
     Mockito.verify(lastReadDatesRepository, Mockito.times(1)).delete(lastReadDate);
     Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     Mockito.verify(lastReadDatesRepository, Mockito.times(1)).getForComicAndUser(comic, user);
+  }
+
+  @Test
+  public void testDelete() {
+    Mockito.doNothing().when(comicRepository).delete(Mockito.any(Comic.class));
+
+    comicService.delete(comic);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
   }
 }

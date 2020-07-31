@@ -36,6 +36,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>ReadingListService</code> handles the business logic for working with {@link ReadingList}
+ * instances.
+ *
+ * @author Darryl L. Pierce
+ */
 @Service
 @Log4j2
 public class ReadingListService {
@@ -294,5 +300,18 @@ public class ReadingListService {
 
     log.debug("Removed {} comic{} to reading list", result, result == 1 ? "" : "s");
     return result;
+  }
+
+  /**
+   * Saves a reading list.
+   *
+   * @param readingList the reading list
+   * @return the updated reading list
+   */
+  @Transactional
+  public ReadingList save(final ReadingList readingList) {
+    log.debug("Saving reading list: {}", readingList.getName());
+    readingList.setLastUpdated(new Date());
+    return this.readingListRepository.save(readingList);
   }
 }

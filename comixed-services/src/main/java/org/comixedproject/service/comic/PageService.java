@@ -301,4 +301,16 @@ public class PageService {
       }
     }
   }
+
+  /**
+   * Saves the specified page.
+   *
+   * @param page the page
+   * @return the updated page
+   */
+  @Transactional
+  public Page save(final Page page) {
+    log.debug("Saving page: filename={} index={}", page.getFilename(), page.getIndex());
+    return this.pageRepository.save(page);
+  }
 }
