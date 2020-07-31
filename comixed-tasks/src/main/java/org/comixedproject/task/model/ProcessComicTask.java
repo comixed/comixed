@@ -26,19 +26,25 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>ProcessComicTask</code> handles loading the details of a comic into the library during
+ * import.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessComicTask extends AbstractWorkerTask {
   private static final Object semaphore = new Object();
 
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
   @Autowired private Utils utils;
   @Autowired private ComicFileHandler comicFileHandler;
 
@@ -86,7 +92,7 @@ public class ProcessComicTask extends AbstractWorkerTask {
 
     logger.debug("Updating comic");
     comic.setDateLastUpdated(new Date());
-    this.comicRepository.save(comic);
+    this.comicService.save(comic);
   }
 
   public void setComic(final Comic comic) {

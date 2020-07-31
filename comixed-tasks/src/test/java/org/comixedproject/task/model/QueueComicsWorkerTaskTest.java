@@ -27,7 +27,7 @@ import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.AddComicTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 public class QueueComicsWorkerTaskTest {
   @InjectMocks private QueueComicsWorkerTask workerTask;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
   @Captor private ArgumentCaptor<Task> taskArgumentCaptor;
   @Mock private Task task;
 
@@ -64,7 +64,7 @@ public class QueueComicsWorkerTaskTest {
   public void testStartTaskDeleteBlockedPages() throws WorkerTaskException {
     filenames.add(RandomStringUtils.random(128, true, true));
 
-    Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(task);
+    Mockito.when(taskService.save(taskArgumentCaptor.capture())).thenReturn(task);
 
     workerTask.setFilenames(filenames);
     workerTask.setDeleteBlockedPages(true);
@@ -84,7 +84,7 @@ public class QueueComicsWorkerTaskTest {
   public void testStartTaskIgnoreMetadata() throws WorkerTaskException {
     filenames.add(RandomStringUtils.random(128, true, true));
 
-    Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(task);
+    Mockito.when(taskService.save(taskArgumentCaptor.capture())).thenReturn(task);
 
     workerTask.setFilenames(filenames);
     workerTask.setDeleteBlockedPages(false);
@@ -104,7 +104,7 @@ public class QueueComicsWorkerTaskTest {
   public void testStartTaskDeleteBlockedPagesAndIgnoreMetadata() throws WorkerTaskException {
     filenames.add(RandomStringUtils.random(128, true, true));
 
-    Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(task);
+    Mockito.when(taskService.save(taskArgumentCaptor.capture())).thenReturn(task);
 
     workerTask.setFilenames(filenames);
     workerTask.setDeleteBlockedPages(true);

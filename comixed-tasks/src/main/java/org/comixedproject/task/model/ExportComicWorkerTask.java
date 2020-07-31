@@ -25,7 +25,7 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 @Log4j2
 public class ExportComicWorkerTask extends AbstractWorkerTask {
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
   @Autowired private ComicFileHandler comicFileHandler;
 
   private Comic comic;
@@ -72,7 +72,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask {
 
     try {
       Comic result = this.archiveAdaptor.saveComic(this.comic, this.renamePages);
-      this.comicRepository.save(result);
+      this.comicService.save(result);
     } catch (ArchiveAdaptorException | IOException error) {
       throw new WorkerTaskException("Unable to convert comic", error);
     }

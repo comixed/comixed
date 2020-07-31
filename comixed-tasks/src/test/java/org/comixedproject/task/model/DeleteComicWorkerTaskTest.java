@@ -29,8 +29,8 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
-import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.library.ReadingListRepository;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.library.ReadingListService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,8 +51,8 @@ public class DeleteComicWorkerTaskTest {
   private static final int TEST_READING_LIST_COUNT = 25;
 
   @InjectMocks private DeleteComicWorkerTask workerTask;
-  @Mock private ComicRepository comicRepository;
-  @Mock private ReadingListRepository readingListRepository;
+  @Mock private ComicService comicService;
+  @Mock private ReadingListService readingListService;
   @Mock private List<Comic> comicList;
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<File> file;
@@ -85,11 +85,11 @@ public class DeleteComicWorkerTaskTest {
 
     assertTrue(readingLists.isEmpty());
 
-    Mockito.verify(readingListRepository, Mockito.times(TEST_READING_LIST_COUNT))
+    Mockito.verify(readingListService, Mockito.times(TEST_READING_LIST_COUNT))
         .save(Mockito.any(ReadingList.class));
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(Mockito.any());
     Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(Mockito.any());
-    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(comicService, Mockito.times(1)).save(comic);
   }
 
   @Test
@@ -105,7 +105,7 @@ public class DeleteComicWorkerTaskTest {
 
     workerTask.startTask();
 
-    Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
+    Mockito.verify(comicService, Mockito.times(1)).delete(comic);
     PowerMockito.verifyStatic(FileUtils.class, Mockito.times(1));
     FileUtils.forceDelete(Mockito.any());
   }

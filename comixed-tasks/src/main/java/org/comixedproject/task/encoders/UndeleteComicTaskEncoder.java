@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.UndeleteComicWorkerTask;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class UndeleteComicTaskEncoder extends AbstractTaskEncoder<UndeleteComicWorkerTask> {
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private TaskService taskService;
   @Autowired private ObjectFactory<UndeleteComicWorkerTask> undeleteComicWorkerTaskObjectFactory;
 
   private Comic comic;
@@ -59,7 +59,7 @@ public class UndeleteComicTaskEncoder extends AbstractTaskEncoder<UndeleteComicW
   @Override
   @Transactional(rollbackFor = Exception.class)
   public UndeleteComicWorkerTask decode(Task task) {
-    this.taskRepository.delete(task);
+    this.taskService.delete(task);
 
     log.debug("Decoding undelete comic task: id={}", task.getId());
 

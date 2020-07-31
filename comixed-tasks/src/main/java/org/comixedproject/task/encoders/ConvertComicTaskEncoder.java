@@ -25,7 +25,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.ConvertComicWorkerTask;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
   public static final String DELETE_PAGES = "delete-pages";
   public static final String DELETE_ORIGINAL_COMIC = "delete-original-comic";
 
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private TaskService taskService;
   @Autowired private ObjectFactory<ConvertComicWorkerTask> convertComicWorkerTaskObjectFactory;
 
   @Getter @Setter private Comic comic;
@@ -81,7 +81,7 @@ public class ConvertComicTaskEncoder extends AbstractTaskEncoder<ConvertComicWor
     result.setDeleteOriginal(Boolean.parseBoolean(task.getProperty(DELETE_ORIGINAL_COMIC)));
 
     log.debug("Deleting persisted task");
-    this.taskRepository.delete(task);
+    this.taskService.delete(task);
 
     return result;
   }

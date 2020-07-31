@@ -24,8 +24,8 @@ import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>AddComicWorkerTask</code> handles adding a comic to the library.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ConfigurationProperties(prefix = "comic-file.handlers")
@@ -42,10 +47,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class AddComicWorkerTask extends AbstractWorkerTask {
   @Autowired private ObjectFactory<Comic> comicFactory;
   @Autowired private ComicFileHandler comicFileHandler;
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
   @Autowired private FilenameScraperAdaptor filenameScraper;
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
-  @Autowired private TaskRepository taskRepository;
+  @Autowired private TaskService taskService;
 
   private String filename;
   private boolean deleteBlockedPages = false;
@@ -57,7 +62,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
     log.debug("Adding file to library: {}", this.filename);
 
     final File file = new File(this.filename);
-    Comic result = this.comicRepository.findByFilename(file.getAbsolutePath());
+    Comic result = this.comicService.findByFilename(file.getAbsolutePath());
 
     if (result != null) {
       log.debug("Comic already imported: " + file.getAbsolutePath());
@@ -74,7 +79,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
       this.comicFileHandler.loadComicArchiveType(result);
 
       log.debug("Saving comic");
-      result = this.comicRepository.save(result);
+      result = this.comicService.save(result);
 
       log.debug("Encoding process comic task");
       final ProcessComicTaskEncoder taskEncoder =
@@ -85,7 +90,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
 
       log.debug("Saving process comic task");
       final Task task = taskEncoder.encode();
-      this.taskRepository.save(task);
+      this.taskService.save(task);
     } catch (Exception error) {
       throw new WorkerTaskException("Failed to load comic", error);
     }

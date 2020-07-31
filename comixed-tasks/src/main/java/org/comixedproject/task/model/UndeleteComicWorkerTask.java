@@ -21,7 +21,7 @@ package org.comixedproject.task.model;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.service.comic.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class UndeleteComicWorkerTask extends AbstractWorkerTask {
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
 
   private Comic comic;
 
@@ -54,7 +54,7 @@ public class UndeleteComicWorkerTask extends AbstractWorkerTask {
 
     this.comic.setDateDeleted(null);
     this.comic.setDateLastUpdated(new Date());
-    this.comicRepository.save(this.comic);
+    this.comicService.save(this.comic);
   }
 
   public void setComic(final Comic comic) {

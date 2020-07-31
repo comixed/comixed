@@ -21,14 +21,13 @@ package org.comixedproject.task.model;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.MoveComicTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,8 +44,8 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
 
   @Autowired private ObjectFactory<MoveComicTaskEncoder> moveComicWorkerTaskEncoderObjectFactory;
 
-  @Autowired private TaskRepository taskRepository;
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private TaskService taskService;
+  @Autowired private ComicService comicService;
 
   private String directory;
   private String renamingRule;
@@ -62,8 +61,7 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
     int page = 0;
     while (!done) {
       log.debug("Preparing to page {} of {} comics", page, MAX_COMIC_PAGE);
-      List<Comic> comics =
-          this.comicRepository.findComicsToMove(PageRequest.of(page, MAX_COMIC_PAGE + 1));
+      List<Comic> comics = this.comicService.findComicsToMove(MAX_COMIC_PAGE + 1);
       for (int index = 0; index < comics.size(); index++) {
         MoveComicTaskEncoder encoder = this.moveComicWorkerTaskEncoderObjectFactory.getObject();
 
@@ -71,7 +69,7 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
         encoder.setDirectory(this.directory);
         encoder.setRenamingRule(this.renamingRule);
         log.debug("Saving move comic task");
-        this.taskRepository.save(encoder.encode());
+        this.taskService.save(encoder.encode());
       }
       // we're done when we've processed fewer comics than the page size
       done = comics.size() < (MAX_COMIC_PAGE + 1);

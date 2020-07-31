@@ -24,7 +24,7 @@ import java.util.Random;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.ProcessComicTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ public class ProcessComicTaskEncoderTest {
   @Mock private Comic comic;
   @Mock private ObjectFactory<ProcessComicTask> processComicTaskObjectFactory;
   @Mock private ProcessComicTask workerTask;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
 
   private final Boolean deleteBlockedPages = RANDOM.nextBoolean();
   private final Boolean ignoreMetadata = !this.deleteBlockedPages;
@@ -83,6 +83,6 @@ public class ProcessComicTaskEncoderTest {
     Mockito.verify(workerTask, Mockito.times(1)).setComic(comic);
     Mockito.verify(workerTask, Mockito.times(1)).setDeleteBlockedPages(this.deleteBlockedPages);
     Mockito.verify(workerTask, Mockito.times(1)).setIgnoreMetadata(this.ignoreMetadata);
-    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+    Mockito.verify(taskService, Mockito.times(1)).delete(task);
   }
 }

@@ -21,17 +21,23 @@ package org.comixedproject.task.model;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.repositories.comic.PageRepository;
+import org.comixedproject.service.comic.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>RescanComicWorkerTask</code> handles rescanning a comic and updating its physical data in
+ * the database.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class RescanComicWorkerTask extends AbstractWorkerTask {
-  @Autowired private PageRepository pageRepository;
+  @Autowired private PageService pageService;
 
   private Comic comic;
 
@@ -45,7 +51,7 @@ public class RescanComicWorkerTask extends AbstractWorkerTask {
       page.getHeight();
 
       log.debug("Saving page details");
-      this.pageRepository.save(page);
+      this.pageService.save(page);
     }
   }
 

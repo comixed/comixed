@@ -21,7 +21,7 @@ package org.comixedproject.task.runner;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
-import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.MonitorTaskQueue;
 import org.comixedproject.task.model.WorkerTask;
 import org.comixedproject.task.model.WorkerTaskException;
@@ -30,11 +30,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>TaskManager</code> handles running instances of {@link WorkerTask}.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Log4j2
 public class TaskManager implements InitializingBean {
   @Autowired private ThreadPoolTaskExecutor taskExecutor;
-  @Autowired private TaskAuditLogRepository auditLogRepository;
+  @Autowired private TaskService taskService;
 
   public void runTask(final WorkerTask task) {
     this.taskExecutor.execute(
@@ -59,7 +64,7 @@ public class TaskManager implements InitializingBean {
             entry.setEndTime(ended);
             entry.setSuccessful(success);
             entry.setDescription(description);
-            TaskManager.this.auditLogRepository.save(entry);
+            TaskManager.this.taskService.saveAuditLogEntry(entry);
           }
         });
   }

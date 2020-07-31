@@ -22,7 +22,7 @@ import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.DeleteComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +36,7 @@ import org.springframework.beans.factory.ObjectFactory;
 public class DeleteComicTaskEncoderTest {
   @InjectMocks private DeleteComicTaskEncoder encoder;
   @Mock private Comic comic;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
   @Mock private ObjectFactory<DeleteComicWorkerTask> deleteComicsWorkerTaskObjectFactory;
   @Mock private DeleteComicWorkerTask deleteComicWorkerTask;
 
@@ -77,7 +77,7 @@ public class DeleteComicTaskEncoderTest {
     assertNotNull(result);
     assertSame(deleteComicWorkerTask, result);
 
-    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+    Mockito.verify(taskService, Mockito.times(1)).delete(task);
     Mockito.verify(deleteComicWorkerTask, Mockito.times(1)).setComic(comic);
   }
 
@@ -94,7 +94,7 @@ public class DeleteComicTaskEncoderTest {
     assertNotNull(result);
     assertSame(deleteComicWorkerTask, result);
 
-    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+    Mockito.verify(taskService, Mockito.times(1)).delete(task);
     Mockito.verify(deleteComicWorkerTask, Mockito.times(1)).setComic(comic);
   }
 }

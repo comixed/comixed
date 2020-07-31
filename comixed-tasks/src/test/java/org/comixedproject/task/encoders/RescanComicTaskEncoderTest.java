@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertSame;
 
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.repositories.tasks.TaskRepository;
+import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.RescanComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ import org.springframework.beans.factory.ObjectFactory;
 public class RescanComicTaskEncoderTest {
   @InjectMocks private RescanComicTaskEncoder encoder;
   @Mock private Comic comic;
-  @Mock private TaskRepository taskRepository;
+  @Mock private TaskService taskService;
   @Mock private ObjectFactory<RescanComicWorkerTask> rescanComicWorkerTaskObjectFactory;
   @Mock private RescanComicWorkerTask workerTask;
 
@@ -62,8 +62,8 @@ public class RescanComicTaskEncoderTest {
 
     assertNotNull(result);
 
-    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+    Mockito.verify(taskService, Mockito.times(1)).delete(task);
     Mockito.verify(workerTask, Mockito.times(1)).setComic(comic);
-    Mockito.verify(taskRepository, Mockito.times(1)).delete(task);
+    Mockito.verify(taskService, Mockito.times(1)).delete(task);
   }
 }
